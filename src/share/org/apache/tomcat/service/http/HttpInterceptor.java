@@ -66,7 +66,8 @@ import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.net.*;
+import org.apache.tomcat.util.net.*;
+import org.apache.tomcat.util.net.ServerSocketFactory;
 import org.apache.tomcat.logging.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -87,19 +88,24 @@ import javax.servlet.http.*;
  *  - maxSpareThreads
  *  - maxThreads
  *  - poolOn
- * Extra properties:
- *  - serverSocketFactory ( default simple tcp, shortcut: ssl ). Overrides "secure"
+ * Properties for HTTPS:
+ *  - keystore - certificates - default to ~/.keystore
+ *  - keypass - password
+ *  - clientauth - true if the server should authenticate the client using certs
  */
 public class HttpInterceptor extends BaseInterceptor  implements  TcpConnectionHandler {
+    boolean enabled=true;
+
     // Tcp stuff
     PoolTcpEndpoint ep;
     private ServerSocketFactory socketFactory;
-    private ServerSocket serverSocket;
 
     // properties
     int port;
     InetAddress address;
-
+    String keystore;
+    String keypass;
+    
     
     boolean secure=false;
     ContextManager contextM;
@@ -134,6 +140,8 @@ public class HttpInterceptor extends BaseInterceptor  implements  TcpConnectionH
 	ep.setConnectionHandler( this );
 	try {
 	    ep.setPort( port );
+	    if( socketFactory!=null )
+		ep.setServerSocketFactory( socketFactory );
 	    ep.startEndpoint();
 	    log( "Starting on " + port );
 	} catch( Exception ex ) {
@@ -152,9 +160,39 @@ public class HttpInterceptor extends BaseInterceptor  implements  TcpConnectionH
 
 
     // -------------------- Attributes --------------------
+    public void setKeystore( String k ) {
+	keystore=k;
+    }
+    public void getKeystore() {
+	return keystore;
+    }
     
     public void setSecure( boolean b ) {
-	secure=b;
+	enabled=false;
+	secure=false;
+	if( b == true ) {
+	    if( keystore!=null && ! new File( keystore ).exists() ) {
+		log("Can't find keystore " + keystore );
+		return;
+	    }
+	    try {
+		Class c1=Class.forName( "javax.net.ssl.SSLServerSocketFactory");
+	    } catch( Exception ex ) {
+		log( "Can't find JSSE, HTTPS will not be enabled");
+		return;
+	    }
+	    try {
+		Class chC=Class.forName( "org.apache.tomcat.util.net.SSLSocketFactory" );
+		socketFactory=(ServerSocketFactory)chC.newInstance();
+		if( keystore!=null)
+		    socketFactory.setAttribute( "keystore", keystore);
+	    } catch(Exception ex ) {
+		log( "Error loading SSL socket factory ", ex);
+		return;
+	    }
+	}
+    	secure=b;
+	enabled=true;
     }
 
     // -------------------- Handler implementation --------------------

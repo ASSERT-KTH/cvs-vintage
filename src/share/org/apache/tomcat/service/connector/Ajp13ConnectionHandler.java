@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.5 2000/07/11 03:48:55 alex Exp $
- * $Revision: 1.5 $
- * $Date: 2000/07/11 03:48:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.6 2000/08/14 21:54:24 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/08/14 21:54:24 $
  *
  * ====================================================================
  *
@@ -69,6 +69,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import javax.servlet.*;

@@ -62,7 +62,7 @@ package org.apache.tomcat.service;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.net.*;
+import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;

@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.net;
+package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
@@ -87,7 +87,7 @@ import javax.net.ssl.HandshakeCompletedEvent;
  * @author Costin Manolache
  */
 public class SSLSocketFactory
-    extends org.apache.tomcat.net.ServerSocketFactory
+    extends org.apache.tomcat.util.net.ServerSocketFactory
 {
     private String keystoreType;
 
@@ -156,7 +156,7 @@ public class SSLSocketFactory
 	    String keystoreFile=(String)attributes.get("keystore");
 	    if( keystoreFile==null) keystoreFile=defaultKeystoreFile;
 
-	    String keystoreType=(String)attributes.get("keystoreType");
+	    keystoreType=(String)attributes.get("keystoreType");
 	    if( keystoreType==null) keystoreType=defaultKeystoreType;
 
 	    //determine whether we want client authentication
@@ -241,6 +241,7 @@ public class SSLSocketFactory
 	    throw ioe;	    
 	}
 	catch(Exception ex) {
+	    ex.printStackTrace();
 	    throw new IOException( "Exception trying to load keystore " +
 				   keystoreFile + ": " + ex.getMessage() );
 	}

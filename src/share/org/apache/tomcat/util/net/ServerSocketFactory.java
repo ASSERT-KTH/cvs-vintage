@@ -57,8 +57,7 @@
  *
  */ 
 
-
-package org.apache.tomcat.net;
+package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;

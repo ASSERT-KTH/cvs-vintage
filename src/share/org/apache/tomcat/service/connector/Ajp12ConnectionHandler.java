@@ -69,6 +69,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.util.net.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.service.http.*;

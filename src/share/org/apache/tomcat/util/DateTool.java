@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.4 2000/08/11 06:14:18 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/08/11 06:14:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/DateTool.java,v 1.5 2000/08/14 21:54:31 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/08/14 21:54:31 $
  *
  * ====================================================================
  *
@@ -68,7 +68,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 import java.text.*;
-import org.apache.tomcat.core.Constants;
 
 /**
  *  Common place for date utils.

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/DefaultServerSocketFactory.java,v 1.2 1999/10/15 03:20:28 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/15 03:20:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/TcpConnectionHandler.java,v 1.1 2000/08/14 21:54:37 costin Exp $
+ * $Revision: 1.1 $
+ * $Date: 2000/08/14 21:54:37 $
  *
  * ====================================================================
  *
@@ -61,45 +61,42 @@
  *
  */ 
 
-
-package org.apache.tomcat.net;
+package org.apache.tomcat.util.net;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
+import org.apache.tomcat.util.*;
 
 /**
- * Default server socket factory. Doesn't do much except give us
- * plain ol' server sockets.
- *
- * @author db@eng.sun.com
- * @author Harish Prabandham
+ * 
  */
+public interface TcpConnectionHandler {
+    /** Add informations about the a "controler" object
+     *  specific to the server. In tomcat it will be a
+     *  ContextManager.
+     */
+    public void setServer(Object manager);
 
-// Default implementation of server sockets.
+    
+    /** Used to pass config informations to the handler
+     */
+    public void setAttribute(String name, Object value );
+    
+    /** Called before the call to processConnection.
+     *  If the thread is reused, init() should be called once per thread.
+     *
+     *  It may look strange, but it's a _very_ good way to avoid synchronized
+     *  methods and keep per thread data.
+     *  You are not required to implement it, but if you do - you can save a lot
+     *  in allocation ( since this will be called outside critical path ).
+     */
+    public Object[] init( );
 
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
-class DefaultServerSocketFactory extends ServerSocketFactory {
-
-    DefaultServerSocketFactory () {
-        /* NOTHING */
-    }
-
-    public ServerSocket createSocket (int port)
-    throws IOException {
-        return  new ServerSocket (port);
-    }
-
-    public ServerSocket createSocket (int port, int backlog)
-    throws IOException {
-        return new ServerSocket (port, backlog);
-    }
-
-    public ServerSocket createSocket (int port, int backlog,
-        InetAddress ifAddress)
-    throws IOException {
-        return new ServerSocket (port, backlog, ifAddress);
-    }
+    /**
+     *  Assert: connection!=null
+     *  Assert: connection.getSocket() != null
+     *  Assert: thData != null, result of calling init()
+     */
+    public void processConnection(TcpConnection connection, Object thData[]);    
 }

@@ -148,23 +148,6 @@ public class RequestUtil {
 	return combined;
     }
 
-    /** @deprecated
-     */
-    public static BufferedReader getReader(Request request) throws IOException {
-        // XXX
-	// this won't work in keep alive scenarios. We need to provide
-	// a buffered reader that won't try to read in the stream
-	// past the content length -- if we don't, the buffered reader
-	// will probably try to read into the next request... bad!
-        String encoding = request.getCharacterEncoding();
-        if (encoding == null) {
-            encoding = Constants.DEFAULT_CHAR_ENCODING;
-        }
-	InputStreamReader r =
-            new InputStreamReader(request.getInputStream(), encoding);
-	return new BufferedReader(r);
-    }
-
     public static void processCookies( Request request, Vector cookies ) {
 	// XXX bug in original RequestImpl - might not work if multiple
 	// cookie headers.

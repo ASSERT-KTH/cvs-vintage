@@ -95,6 +95,18 @@
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
          -->
         
+        <!-- new http adapter. Attributes:
+                secure - use SSL ( https )
+                keystore, keypass - certs for SSL
+                port
+                XXX not finished, more attributes will come to match the current 
+                functionality
+         -->
+        <ContextInterceptor className="org.apache.tomcat.service.http.HttpInterceptor"
+                            port="8081"
+                            secure="false"
+         />
+
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
 
         <ContextInterceptor 
@@ -226,7 +238,7 @@
             <Parameter name="port" 
                 value="8443"/>
             <Parameter name="socketFactory" 
-                value="org.apache.tomcat.net.SSLSocketFactory" />
+                value="org.apache.tomcat.util.net.SSLSocketFactory" />
         </Connector>
         -->
 

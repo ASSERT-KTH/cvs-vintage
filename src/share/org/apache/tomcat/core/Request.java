@@ -690,14 +690,6 @@ public class Request {
     }
 
     // -------------------- Utils - facade for RequestUtil
-    /** @deprecated
-     */
-    public BufferedReader getReader()
-	throws IOException
-    {
-	return RequestUtil.getReader( this );
-    }
-
     private void handleParameters() {
    	if(!didParameters) {
 	    String qString=getQueryString();
