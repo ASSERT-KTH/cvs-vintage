@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.5 2001/04/28 21:13:36 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2001/04/28 21:13:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/GetPropertyGenerator.java,v 1.6 2001/05/04 00:57:11 nacho Exp $
+ * $Revision: 1.6 $
+ * $Date: 2001/05/04 00:57:11 $
  *
  * ====================================================================
  * 
@@ -109,10 +109,11 @@ public class GetPropertyGenerator
 	    } else {
                 // Get the class name and then introspect at runtime.
 		writer.println("out.print(" +
-			       Constants.JSP_RUNTIME_PACKAGE +
-			       ".JspRuntimeLibrary.toString(JspRuntimeLibrary." +
+			       Constants.JSP_RUNTIME_PACKAGE + ".JspRuntimeLibrary.toString(" +
+			       Constants.JSP_RUNTIME_PACKAGE + ".JspRuntimeLibrary." +
 			       "handleGetProperty(pageContext.findAttribute(" +
-			       "\"" + name + "\"), \"" + property + "\")));");
+			       "\"" + name + "\"), \"" + property + "\")));"
+	        );
 	    }
     }
     
