@@ -1,4 +1,4 @@
-// $Id: UMLMutableGraphSupport.java,v 1.14 2004/12/28 04:42:06 bobtarling Exp $
+// $Id: UMLMutableGraphSupport.java,v 1.15 2004/12/31 09:35:01 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -167,7 +167,7 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
     public abstract Object getNamespace();
 
     /**
-     * Contruct and add a new edge of the given kind and connect
+     * Construct and add a new edge of the given kind and connect
      * the given ports.
      *
      * @param fromPort   The originating port to connect
@@ -197,12 +197,11 @@ public abstract class UMLMutableGraphSupport extends MutableGraphSupport {
             // Create the UML connection of the given type between the
             // given model elements.
 	    // default aggregation (none)
-            connection =
-		UmlFactory.getFactory().buildConnection(
-                edgeClass, fromPort,
-				style, toPort,
-				null, unidirectional,
-                ProjectManager.getManager().getCurrentProject().getModel());
+            connection = UmlFactory.getFactory().buildConnection(
+                    edgeClass, fromPort,
+                    style, toPort,
+                    null, unidirectional,
+                    ProjectManager.getManager().getCurrentProject().getModel());
         } catch (UmlException ex) {
             // fail silently as we expect users to accidentally drop
             // on to wrong component
