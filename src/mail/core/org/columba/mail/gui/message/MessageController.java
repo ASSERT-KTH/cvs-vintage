@@ -23,6 +23,7 @@ import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.AttributeSet;
@@ -324,7 +325,7 @@ public class MessageController
 	}
 
 	public void mouseClicked(MouseEvent event) {
-		if (event.getButton() != MouseEvent.BUTTON1)
+		if (!SwingUtilities.isLeftMouseButton(event))
 			return;
 
 		String s = extractURL(event);
