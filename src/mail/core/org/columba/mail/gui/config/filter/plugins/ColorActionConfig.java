@@ -1,22 +1,28 @@
-/*
- * Created on 2003-nov-01
- */
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.gui.util.ColorComboBox;
 import org.columba.core.gui.util.ColorFactory;
 import org.columba.core.gui.util.ColorItem;
-import org.columba.core.gui.util.ColorItemRenderer;
 
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ComboBoxModel;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 
 
 /**
@@ -25,9 +31,8 @@ import javax.swing.JComboBox;
  *
  * @author redsolo
  */
-public class ColorActionConfig extends DefaultActionRow
-    implements ActionListener {
-    private JComboBox colorsComboBox;
+public class ColorActionConfig extends DefaultActionRow {
+    private ColorComboBox colorsComboBox;
 
     /**
      * @param list the action list (?)
@@ -40,23 +45,11 @@ public class ColorActionConfig extends DefaultActionRow
     /** {@inheritDoc} */
     public void initComponents() {
         super.initComponents();
-        colorsComboBox = new JComboBox();
-
-        // Add the default colors items.
-        colorsComboBox.addItem(new ColorItem(Color.black, "Black"));
-        colorsComboBox.addItem(new ColorItem(Color.blue, "Blue"));
-        colorsComboBox.addItem(new ColorItem(Color.gray, "Gray"));
-        colorsComboBox.addItem(new ColorItem(Color.green, "Green"));
-        colorsComboBox.addItem(new ColorItem(Color.red, "Red"));
-        colorsComboBox.addItem(new ColorItem(Color.yellow, "Yellow"));
+        colorsComboBox = new ColorComboBox();
 
         // Add the custom color item.
         int rgb = getFilterAction().getInteger("rgb", Color.black.getRGB());
-        colorsComboBox.addItem(new ColorItem(ColorFactory.getColor(rgb),
-                "Custom"));
-
-        ColorItemRenderer renderer = new ColorItemRenderer();
-        colorsComboBox.setRenderer(renderer);
+        colorsComboBox.setCustomColor(ColorFactory.getColor(rgb));
 
         addComponent(colorsComboBox);
     }
@@ -66,43 +59,15 @@ public class ColorActionConfig extends DefaultActionRow
         super.updateComponents(b);
 
         if (b) {
-            ComboBoxModel comboBoxModel = colorsComboBox.getModel();
             String string = getFilterAction().get("color");
-
-            if (string == null) {
-                colorsComboBox.setSelectedIndex(0);
-            } else {
-                for (int i = 0; i < comboBoxModel.getSize(); i++) {
-                    ColorItem object = (ColorItem) comboBoxModel.getElementAt(i);
-
-                    if (object.getName().equalsIgnoreCase(string)) {
-                        colorsComboBox.setSelectedIndex(i);
-
-                        break;
-                    }
-                }
-            }
-
-            colorsComboBox.addActionListener(this);
+            colorsComboBox.setSelectedColor(string);
         } else {
-            ColorItem object = (ColorItem) colorsComboBox.getSelectedItem();
+            ColorItem object = (ColorItem) colorsComboBox.getSelectedColorItem();
 
             if (object != null) {
                 getFilterAction().set("color", object.getName());
                 getFilterAction().set("rgb", object.getColor().getRGB());
             }
-        }
-    }
-
-    /** {@inheritDoc} */
-    public void actionPerformed(ActionEvent e) {
-        ColorItem item = (ColorItem) colorsComboBox.getSelectedItem();
-
-        if (item.getName().equalsIgnoreCase("custom")) {
-            Color newColor = JColorChooser.showDialog(null,
-                    "Choose Background Color", item.getColor());
-            item.setColor(newColor);
-            colorsComboBox.repaint();
         }
     }
 }

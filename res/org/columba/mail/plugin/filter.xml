@@ -46,4 +46,8 @@
  	name="Size" 
  	main_class="org.columba.mail.filter.plugins.SizeFilter" 
  	gui_class="org.columba.mail.gui.config.filter.plugins.SizeCriteriaRow" />
+ <filter 
+ 	name="Color" 
+ 	main_class="org.columba.mail.filter.plugins.ColorFilter" 
+ 	gui_class="org.columba.mail.gui.config.filter.plugins.ColorCriteriaRow" />
 </filterlist>
