@@ -60,7 +60,7 @@ import org.jboss.tm.TxManager;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -84,6 +84,9 @@ import org.jboss.tm.TxManager;
  * <ol>
  *   <li>Added wait(timeout) code, commented out so that we can easily turn it on
  *   when this new code is done with it's trial period.
+ *   <li>Fixed bug when ejbLoad threw an exception and threads waiting 
+ *   on TxLock did not get awakened.
+ *   
  * </ol>
  */
 public class EntityInstanceInterceptor
@@ -382,7 +385,18 @@ public class EntityInstanceInterceptor
                   // Discard instance
                   // EJB 1.1 spec 12.3.1
                   container.getInstanceCache().remove(key);
-						if( trace )
+                  // Notify all those waiting on TxLock. Since this ctx is not TxSynchronized
+                  // there is nobody else to wake up waiting threads.
+                  if (ctx.getTransaction() != null 
+                      && ctx.getTransaction().equals(mi.getTransaction()))
+                  {
+                     ctx.setTransaction(null);
+                     synchronized(ctx.getTxLock())
+                     {
+                        ctx.getTxLock().notifyAll();
+                     }
+                  }
+                  if( trace )
                      log.trace("Ending invoke, exceptionThrown, ctx="+ctx);
                }
 					
