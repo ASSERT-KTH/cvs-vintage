@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.69 2002/12/12 23:55:10 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.70 2002/12/24 10:58:40 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -172,10 +172,12 @@ public abstract class AbstractScarabModule
         "getUnapprovedTemplates";
     protected static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
         "getDefaultTextAttribute";
+    protected static final String GET_AVAILABLE_ISSUE_TYPES =
+        "getAvailableIssueTypes";
 
-    private List parentModules;
+    private List parentModules = null;
 
-    private String domain;
+    private String domain = null;
 
     /** set to true while the setInitialAttributesAndIssueTypes() method is in process */
     private boolean isInitializing = false;
@@ -1030,21 +1032,29 @@ public abstract class AbstractScarabModule
     public List getAvailableIssueTypes()
         throws Exception
     {
-        Criteria crit = new Criteria().add(IssueTypePeer.DELETED, 0);
-        List allIssueTypes = IssueTypePeer.doSelect(crit);
-        List currentIssueTypes = getIssueTypes(false);
-        List availIssueTypes = new ArrayList();
-
-        Iterator iter = allIssueTypes.iterator();
-        while (iter.hasNext())
+        List availIssueTypes = null;
+        Object obj = ScarabCache.get(this, GET_AVAILABLE_ISSUE_TYPES); 
+        if (obj == null) 
         {
-            IssueType issueType = (IssueType)iter.next();
-            if (IssueTypePeer.ROOT_KEY.equals(issueType.getParentId())
-                && !IssueTypePeer.ROOT_KEY.equals(issueType.getIssueTypeId())
-                && !currentIssueTypes.contains(issueType))
+            availIssueTypes = new ArrayList();
+            List allIssueTypes = IssueTypePeer.getAllIssueTypes(false);
+            List currentIssueTypes = getIssueTypes(false);
+            Iterator iter = allIssueTypes.iterator();
+            while (iter.hasNext())
             {
-                availIssueTypes.add(issueType);
+                IssueType issueType = (IssueType)iter.next();
+                if (IssueTypePeer.ROOT_KEY.equals(issueType.getParentId())
+                    && !IssueTypePeer.ROOT_KEY.equals(issueType.getIssueTypeId())
+                    && !currentIssueTypes.contains(issueType))
+                {
+                    availIssueTypes.add(issueType);
+                }
             }
+            ScarabCache.put(availIssueTypes, this, GET_AVAILABLE_ISSUE_TYPES);
+        }
+        else 
+        {
+            availIssueTypes = (List)obj;
         }
         return availIssueTypes;
     }
@@ -1062,12 +1072,14 @@ public abstract class AbstractScarabModule
      * Returns RModuleAttributes associated with this module through the
      * foreign key in the schema. This method will return an empty list, if the
      * RModuleAttributes are inherited from its parent.  Will not return an
-     * RModuleAttribute if the Attribute is deleted.
+     * RModuleAttribute if the Attribute is deleted. NOTE: Do not try to add caching
+     * to this method as it seems to break things when an attribute is changed on
+     * an existing issue. (JSS)
      */
     protected List getRModuleAttributesThisModuleOnly(Criteria crit)
         throws TorqueException
     {
-        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId() );
+        crit.add(RModuleAttributePeer.MODULE_ID, getModuleId());
         crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
                      AttributePeer.ATTRIBUTE_ID);
         crit.add(AttributePeer.DELETED, false);
