@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/EscapeUnicodeWriter.java,v 1.1 1999/10/09 00:20:35 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:35 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/EscapeUnicodeWriter.java,v 1.2 1999/12/22 22:53:12 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/22 22:53:12 $
  *
  * ====================================================================
  * 
@@ -88,7 +88,7 @@ public class EscapeUnicodeWriter extends Writer {
         
 	int ci = off, end = off + len;
 	while ( --len >= 0 ) {
-	    int ch = buf[off++] & 0xff;
+	    int ch = buf[off++] & 0xffff;
 	    /*
 	     * Write out unicode characters as \u0000
 	     */
