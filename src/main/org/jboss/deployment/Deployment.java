@@ -24,7 +24,7 @@ import java.util.jar.Manifest;
  *
  * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class Deployment
 implements java.io.Serializable {
@@ -250,9 +250,6 @@ implements java.io.Serializable {
             String s = ((URL)((Module)it.next()).localUrls.firstElement()).getFile();
             result.add(s.substring(s.lastIndexOf("/")+1));
         }
-        
-        // and the config file
-        result.add("deployment.cfg");
         
         return result;
     }
