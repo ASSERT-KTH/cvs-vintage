@@ -19,28 +19,28 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @see <related>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCBeanExistsCommand extends JDBCQueryCommand
 {
    // Constructors --------------------------------------------------
-   
+
    public JDBCBeanExistsCommand(JDBCCommandFactory factory)
    {
       super(factory, "Exists");
-      String sql = "SELECT COUNT(*) AS Total FROM " + jawsEntity.getTableName() +
+      String sql = "SELECT COUNT(*) FROM " + jawsEntity.getTableName() +
                    " WHERE " + getPkColumnWhereList();
       setSQL(sql);
    }
-   
+
    // Public --------------------------------------------------------
-   
+
    // Checks whether the database already holds the entity
-   
+
    public boolean execute(Object id)
    {
       boolean result = false;
-      
+
       try
       {
          result = ((Boolean)jdbcExecute(id)).booleanValue();
@@ -48,25 +48,25 @@ public class JDBCBeanExistsCommand extends JDBCQueryCommand
       {
 	      log.debug(e);
       }
-      
+
       return result;
    }
-   
+
    // JDBCQueryCommand overrides ------------------------------------
-   
-   protected void setParameters(PreparedStatement stmt, Object argOrArgs) 
+
+   protected void setParameters(PreparedStatement stmt, Object argOrArgs)
       throws Exception
    {
       setPrimaryKeyParameters(stmt, 1, argOrArgs);
    }
-   
+
    protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
    {
       if ( !rs.next() )
       {
          throw new SQLException("Unable to check for EJB in database");
       }
-      int total = rs.getInt("Total");
+      int total = rs.getInt(1);
       return new Boolean(total >= 1);
    }
 }
