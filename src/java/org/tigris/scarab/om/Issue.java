@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.225 2002/12/08 21:24:17 jon Exp $
+ * @version $Id: Issue.java,v 1.226 2002/12/10 06:02:12 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -439,6 +439,51 @@ public class Issue
     }
 
     /**
+     * Adds a url to an issue and passes null as the activity set
+     * to create a new one.
+     */
+    public ActivitySet addUrl(Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        return addUrl(null, attachment, user);
+    }
+
+    /**
+     * Adds a url to an issue.
+     */
+    public ActivitySet addUrl(ActivitySet activitySet, 
+                           Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        attachment.setTextFields(user, this, Attachment.URL__PK);
+        attachment.save();
+
+        String nameFieldString = attachment.getName();
+        String dataFieldString = attachment.getData();
+        // Generate description of modification
+        int length = nameFieldString.length() + 12;
+        // strip off the end
+        if (length > 254)
+        {
+            nameFieldString = nameFieldString.substring(0, 238) + "...";
+        }
+        String description = new StringBuffer(length)
+            .append("Added URL '").append(nameFieldString).append('\'').toString();
+
+        // Save activitySet record
+        if (activitySet == null)
+        {
+            activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();            
+        }
+        // Save activity record
+        ActivityManager
+            .createTextActivity(this, activitySet, description, attachment);
+        
+        return activitySet;
+    }
+
+    /**
      * Adds a comment to an issue and passes null as the activity set
      * to create a new one.
      */
@@ -519,12 +564,44 @@ public class Issue
     /**
      * Adds an attachment file to this issue
      */
-    public void addFile(Attachment attachment)
+    public ActivitySet addFile(Attachment attachment, ScarabUser user)
+        throws Exception
+    {
+        return addFile(null, attachment, user);
+    }
+    
+    /**
+     * Adds an attachment file to this issue
+     */
+    public ActivitySet addFile(ActivitySet activitySet, Attachment attachment, 
+                        ScarabUser user)
         throws Exception
     {
         attachment.setIssue(this);
         attachment.setTypeId(Attachment.FILE__PK);
-        addAttachment(attachment);
+        attachment.setCreatedBy(user.getUserId());
+        super.addAttachment(attachment);
+        this.save();
+
+        // Generate description of modification
+        String name = attachment.getFileName();
+        String path = attachment.getRelativePath();
+        String description = 
+            new StringBuffer(path.length() + name.length() + 17)
+                .append("Added file attachment '").append(name)
+                .append("' path=").append(path).toString();
+
+        if (activitySet == null)
+        {
+            // Save activitySet record
+            activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+            activitySet.save();
+        }
+        // Save activity record
+        ActivityManager
+            .createTextActivity(this, activitySet,
+                                description, attachment);
+        return activitySet;
     }
     
     /** 
@@ -2842,6 +2919,76 @@ public class Issue
         ActivityManager
             .createDeleteDependencyActivity(otherIssue, activitySet, depend,
                                 description);
+        return activitySet;
+    }
+
+    /**
+     * Given a specific attachment object allow us to update
+     * the information in it. If the old matches the new, then
+     * nothing is modified.
+     */
+    public ActivitySet doChangeUrlDescription(ActivitySet activitySet, ScarabUser user,
+                                              Attachment attachment, String oldDescription)
+        throws Exception
+    {
+        String newDescription = attachment.getName();
+        if (!oldDescription.equals(newDescription))
+        {
+            String changeDescription = new StringBuffer()
+                .append("Changed URL description from '").append(oldDescription).append('\'')
+                .append(" to '").append(newDescription).append('\'')
+                .toString();
+            if (changeDescription.length() > 254)
+            { 
+                changeDescription = changeDescription.substring(0,249) + "...";
+            }
+            if (activitySet == null)
+            {
+                // Save activitySet record
+                activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+                activitySet.save();
+            }
+            // Save activity record
+            ActivityManager
+                .createTextActivity(this, activitySet,
+                                    changeDescription, attachment,
+                                    oldDescription, newDescription);
+        }
+        return activitySet;
+    }
+
+    /**
+     * Given a specific attachment object allow us to update
+     * the information in it. If the old matches the new, then
+     * nothing is modified.
+     */
+    public ActivitySet doChangeUrlUrl(ActivitySet activitySet, ScarabUser user,
+                                              Attachment attachment, String oldUrl)
+        throws Exception
+    {
+        String newUrl = attachment.getData();
+        if (!oldUrl.equals(newUrl))
+        {
+            String changeDescription = new StringBuffer()
+                .append("Changed URL from '").append(oldUrl).append('\'')
+                .append(" to '").append(newUrl).append('\'')
+                .toString();
+            if (changeDescription.length() > 254)
+            { 
+                changeDescription = changeDescription.substring(0,249) + "...";
+            }
+            if (activitySet == null)
+            {
+                // Save activitySet record
+                activitySet = getActivitySet(user, ActivitySetTypePeer.EDIT_ISSUE__PK);
+                activitySet.save();
+            }
+            // Save activity record
+            ActivityManager
+                .createTextActivity(this, activitySet,
+                                    changeDescription, attachment,
+                                    oldUrl, newUrl);
+        }
         return activitySet;
     }
 

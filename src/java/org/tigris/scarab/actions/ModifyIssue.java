@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.134 2002/12/08 21:21:18 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.135 2002/12/10 05:59:25 jon Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -256,6 +256,9 @@ public class ModifyIssue extends BaseModifyIssue
     /**
      *  Modifies attachments of type "url".
      */
+    /**
+     *  Modifies attachments of type "url".
+     */
     public void doSaveurl (RunData data, TemplateContext context) 
         throws Exception
     {
@@ -278,9 +281,10 @@ public class ModifyIssue extends BaseModifyIssue
         }
 
         IntakeTool intake = getIntakeTool(context);
-
+        ScarabUser user = (ScarabUser)data.getUser();
 
         List urls = issue.getAttachments();
+        ActivitySet activitySet = null;
         for (int i = 0; i<urls.size(); i++)
         {
             Attachment attachment = (Attachment)urls.get(i);
@@ -308,17 +312,22 @@ public class ModifyIssue extends BaseModifyIssue
                     String newDescription = nameField.toString();
                     String newURL = dataField.toString();
 
-                    if (!oldDescription.equals(newDescription) ||
-                        !oldURL.equals(newURL))
+                    if (!oldDescription.equals(newDescription))
                     {
                         group.setProperties(attachment);
                         attachment.save();
-                        attachment.registerSaveURLActivity(
-                            (ScarabUser)data.getUser(), issue, 
-                            oldDescription, newDescription, 
-                            oldURL, newURL);
+                        activitySet = issue
+                            .doChangeUrlDescription(activitySet, user, 
+                                                    attachment, oldDescription);
                     }
-                
+                    if (!oldURL.equals(newURL))
+                    {
+                        group.setProperties(attachment);
+                        attachment.save();
+                        activitySet = issue
+                            .doChangeUrlUrl(activitySet, user, 
+                                            attachment, oldURL);
+                    }
                 }
             }
         }
@@ -327,13 +336,44 @@ public class ModifyIssue extends BaseModifyIssue
         Group newGroup = intake.get("Attachment", "urlKey", false);
         if (newGroup != null) 
         {
-            Field newNameField = newGroup.get("Name"); 
-            if (newNameField != null && 
-                !newNameField.toString().equals(""))
+            // grab the data from the group
+            Field nameField = newGroup.get("Name"); 
+            Field dataField = newGroup.get("Data");
+            String nameFieldString = nameField.toString();
+            String dataFieldString = dataField.toString();
+            // FIXME: couldn't figure out how to get intake to do what i want here.
+            if ((nameFieldString != null && dataFieldString != null) && 
+                nameFieldString.trim().length() > 0 && dataFieldString.trim().length() > 0)
             {
-               handleAttachment(data, context, Attachment.URL__PK, 
-                                newGroup, issue);
+                // create the new attachment
+                Attachment attachment = AttachmentManager.getInstance();
+                // set the form data to the attachment object
+                newGroup.setProperties(attachment);
+
+                activitySet = issue.addUrl(attachment, user);
+
+                // remove the group
+                intake.remove(newGroup);
+
+                sendEmail(activitySet, issue, l10n.get("UrlSaved"), context);
+                scarabR.setConfirmMessage(l10n.get("UrlSaved"));
             }
+            else
+            {
+                if (nameFieldString.length() == 0)
+                {
+                    nameField.setRequired(true);
+                }
+                if (dataFieldString.length() == 0)
+                {
+                    dataField.setRequired(true);                    
+                }
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
+            }
+        }
+        else
+        {
+            scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
         }
     }
 
@@ -417,75 +457,26 @@ public class ModifyIssue extends BaseModifyIssue
 
         IntakeTool intake = getIntakeTool(context);
         Group group = intake.get("Attachment", "fileKey", false);
-        if (group != null) 
-        {
-            handleAttachment(data, context, Attachment.FILE__PK, group, issue);
-        }
-    }
-
-    private void handleAttachment (RunData data, TemplateContext context, 
-                                 NumberKey typeId, Group group, Issue issue)
-        throws Exception
-    {
-        // grab the data from the group
         Field nameField = group.get("Name"); 
-        Field dataField = group.get("Data");
         // set some required fields
         if (nameField.isValid())
         {
             nameField.setRequired(true);
         }
-        if (dataField.isValid() && (typeId == Attachment.COMMENT__PK 
-                                    || typeId == Attachment.URL__PK))
-        {
-            dataField.setRequired(true);
-        }
-
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        IntakeTool intake = getIntakeTool(context);
         // validate intake
-        if (intake.isAllValid())
+        if (intake.isAllValid() && group != null)
         {
-            // create the new attachment
-            Attachment attachment = AttachmentManager.getInstance();
-            String message = null;
-            boolean addSuccess = false;
-            if (typeId == Attachment.FILE__PK)
+            // adding a file is a special process
+            ActivitySet activitySet =
+                addFileAttachment(issue, group, scarabR, data, intake);
+            if (activitySet != null)
             {
-                // adding a file is a special process
-                addSuccess = addFileAttachment(issue, group, attachment, 
-                              scarabR, data, intake);
-                issue.save();
-                message = "FileSaved";
+                sendEmail(activitySet, issue, l10n.get("FileSaved"), context);
+                scarabR.setConfirmMessage(l10n.get("FileSaved"));
             }
-            else if (typeId == Attachment.URL__PK || typeId == Attachment.COMMENT__PK)
+            else
             {
-                // set the form data to the attachment object
-                group.setProperties(attachment);
-                if (typeId == Attachment.URL__PK)
-                {
-                    message = "UrlSaved";
-                }
-                else
-                {
-                    message = "CommentSaved";
-                }
-                addSuccess = true;
-            }
-
-            if (addSuccess)
-            {
-                ScarabUser user = (ScarabUser)data.getUser();
-                String nameFieldString = nameField.toString();
-                String dataFieldString = dataField.toString();
-                // register the add activity
-                ActivitySet activitySet = attachment.registerAddActivity(user,
-                    issue, typeId, nameFieldString, dataFieldString);
-                // remove the group
-                intake.remove(group);
-                sendEmail(activitySet, issue, l10n.get(message), context);
-                scarabR.setConfirmMessage(l10n.get(message));
+                scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
             }
         }
         else
@@ -494,13 +485,20 @@ public class ModifyIssue extends BaseModifyIssue
         }
     }
 
-    static boolean addFileAttachment(Issue issue, Group group, Attachment attachment, 
-        ScarabRequestTool scarabR, RunData data, IntakeTool intake)
+    static ActivitySet addFileAttachment(Issue issue, Group group, 
+            ScarabRequestTool scarabR, RunData data, IntakeTool intake)
+        throws Exception
+    {
+        return addFileAttachment(issue, group, null, scarabR, data, intake);
+    }
+
+    static ActivitySet addFileAttachment(Issue issue, Group group, Attachment attachment,
+            ScarabRequestTool scarabR, RunData data, IntakeTool intake)
         throws Exception
     {
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
             getTemplateContext(data).get(ScarabConstants.LOCALIZATION_TOOL);
-
+        ActivitySet activitySet = null;
         if (group != null)
         {
             Field nameField = group.get("Name");
@@ -551,17 +549,17 @@ public class ModifyIssue extends BaseModifyIssue
                 mimeAField.setRequired(true);
                 mimeType = mimeA;
             }
-            
             if (group.isAllValid()) 
             {
+                if (attachment == null)
+                {
+                    attachment = AttachmentManager.getInstance();
+                }
                 group.setProperties(attachment);
                 attachment.setMimeType(mimeType);
-                ScarabUser user = (ScarabUser)data.getUser();
-                attachment.setCreatedBy(user.getUserId());
-                issue.addFile(attachment);
+                activitySet = issue.addFile(attachment, (ScarabUser)data.getUser());
                 // remove the group so that the form data doesn't show up again
                 intake.remove(group);
-                return true;
             }
             else
             {
@@ -572,7 +570,7 @@ public class ModifyIssue extends BaseModifyIssue
         {
             scarabR.setAlertMessage(l10n.get("CouldNotLocateAttachmentGroup"));
         }
-        return false;
+        return activitySet;
     }
 
     /**

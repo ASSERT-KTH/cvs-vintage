@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.49 2002/12/09 05:57:51 jon Exp $
+ * @version $Id: Attachment.java,v 1.50 2002/12/10 06:01:20 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -156,104 +156,6 @@ public class Attachment
         }
         setFileName(v.getFileName());
     }    
-
-    /**
-     * Use this to generate the right system messages 
-     * when an attachment is created.
-     */
-    public ActivitySet registerAddActivity(ScarabUser user, Issue issue, NumberKey typeId,
-                                 String nameFieldString, String dataFieldString)
-        throws Exception
-    {
-        ActivitySet activitySet = null;
-        if (typeId == Attachment.URL__PK || typeId == Attachment.COMMENT__PK)
-        {
-            this.setTextFields(user, issue, typeId);
-            this.save();
-            if (typeId == Attachment.URL__PK)
-            {
-                // Generate description of modification
-                String desc = new StringBuffer(nameFieldString.length() + 12)
-                    .append("added URL '").append(nameFieldString).append('\'')
-                    .toString();
-                activitySet = createActivitySet(desc, issue, user, "", nameFieldString);
-            }
-            else
-            {
-                // Generate description of modification
-                StringBuffer descBuf = new StringBuffer(35);
-                descBuf.append("added comment '");
-                if (dataFieldString.length() > 25)
-                { 
-                    descBuf.append(dataFieldString.substring(0,25)).append("...");
-                }
-                else
-                {
-                    descBuf.append(dataFieldString);
-                }
-                String desc = descBuf.append('\'').toString();
-                activitySet = createActivitySet(desc, issue, user, "", nameFieldString);
-            }
-        }
-        else if (typeId == Attachment.FILE__PK)
-        {
-            // Generate description of modification
-            String name = this.getFileName();
-            String path = this.getRelativePath();
-            String desc = 
-                new StringBuffer(path.length() + name.length() + 17)
-                    .append("added file '").append(name)
-                    .append("' at ").append(path).toString();
-            activitySet = createActivitySet(desc, issue, user, "", "");
-        }
-        return activitySet;
-    }
-
-    public void registerSaveURLActivity(ScarabUser user, Issue issue, 
-                                        String oldDescription, String newDescription,
-                                        String oldURL, String newURL)
-        throws Exception
-    {
-        // Generate description of modification
-        String desc = new StringBuffer()
-            .append("changed URL description from '").append(oldDescription).append('\'')
-            .append(" to '").append(newDescription).append('\'')
-            .toString();
-        ActivitySet set = createActivitySet(desc, issue, user, oldDescription, newDescription);
-        desc = new StringBuffer()
-            .append("changed URL from '").append(oldURL).append('\'')
-            .append(" to '").append(newURL).append('\'')
-            .toString();
-        createActivitySet(set, desc, issue, user, oldURL, newURL);
-    }
-
-    private ActivitySet createActivitySet(ActivitySet activitySet, 
-        String description, Issue issue, ScarabUser user,
-        String oldVal, String newVal)
-        throws Exception
-    {
-        if (activitySet == null)
-        {
-            // Save activitySet record
-            activitySet = issue.getActivitySet(user, this,
-                                      ActivitySetTypePeer.EDIT_ISSUE__PK);
-            activitySet.save();
-        }
-        // Save activity record
-        ActivityManager
-            .createTextActivity(issue, null, activitySet,
-                                description, this,
-                                oldVal, newVal);
-        return activitySet;
-    }
-
-    private ActivitySet createActivitySet(String description,
-        Issue issue, ScarabUser user,
-        String oldVal, String newVal)
-        throws Exception
-    {
-        return createActivitySet(null, description, issue, user, oldVal, newVal);
-    }
     
     /**
      * Populates fields for a text (non-file) type of attachment.
@@ -267,7 +169,38 @@ public class Attachment
         //setCreatedDate(new Date());
         setCreatedBy(user.getUserId());
     }
-        
+
+    /**
+     * This is a little method that uses getData() to make a http url
+     * if it isn't already prefixed with "htt://"
+     */
+    public String doMakeURLFromData()
+    {
+        String url = getData();
+        if (AttachmentTypePeer.URL_PK.equals(getTypeId())) 
+        {
+            int stop = Math.min(url.indexOf('/'), url.indexOf('?'));
+            String test = null;
+            if (stop > 0) 
+            {
+                test = url.substring(0, stop);
+            }
+            else 
+            {
+                test = url;
+            }
+            int colon = test.indexOf(':');
+            if (colon < 0) 
+            {
+                // add default http protocol
+                StringBuffer sb = new StringBuffer(url.length() + 7);
+                sb.append("http://").append(url);
+                url = sb.toString();
+            }
+        }
+        return url;
+    }
+
     /**
      * Calls super.save(Connection) and also checks for a FileItem.  if one
      * exists the file is moved to its final location.
@@ -286,28 +219,7 @@ public class Attachment
         // It would be better (from an oo perspective) to do this whenever 
         // setData is called, but we can't be sure the typeId will be 
         // set prior to setting the url, so we will do the check here.
-        if (AttachmentTypePeer.URL_PK.equals(getTypeId())) 
-        {
-            String url = getData();
-            int stop = Math.min(url.indexOf('/'), url.indexOf('?'));
-            String test = null;
-            if (stop > 0) 
-            {
-                test = url.substring(0, stop);
-            }
-            else 
-            {
-                test = url;
-            }
-            int colon = test.indexOf(':');
-            if (colon < 0) 
-            {
-                // add default http protocol
-                StringBuffer sb = new StringBuffer(url.length() + 7);
-                sb.append("http://").append(url);
-                setData(sb.toString());
-            }
-        }
+        setData(doMakeURLFromData());
 
         // need to handle the case where we don't want to be smart
         // and just set the dates to be whatever we want them

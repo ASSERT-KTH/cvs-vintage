@@ -76,6 +76,7 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -89,7 +90,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.152 2002/11/20 21:55:50 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.153 2002/12/10 06:00:06 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -465,12 +466,13 @@ public class ReportIssue extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = scarabR.getReportingIssue();
-        Attachment attachment = new Attachment();
+        Attachment attachment = AttachmentManager.getInstance();
         Group group = intake.get("Attachment", 
                                  attachment.getQueryKey(), false);
 
-        if (ModifyIssue.addFileAttachment(issue, group, attachment, 
-                                  scarabR, data, intake))
+        ActivitySet activitySet = ModifyIssue
+            .addFileAttachment(issue, group, attachment, scarabR, data, intake);
+        if (activitySet != null)
         {        
             ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setConfirmMessage(l10n.get("FileAdded"));
@@ -478,7 +480,7 @@ public class ReportIssue extends RequireLoginFirstAction
 
         // set any attribute values that were entered before adding the file.
         setAttributeValues(issue, intake, context);
-        doGotowizard3(data, context);        
+        doGotowizard3(data, context);
     }
     
     /**

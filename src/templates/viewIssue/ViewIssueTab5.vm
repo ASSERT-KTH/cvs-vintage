@@ -39,8 +39,8 @@
          $l10n.NotProvided
        #end
      #elseif ($act.Attachment)
-       #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
-         $act.Attachment.Data 
+       #if ($act.Attachment.Data && !$act.Attachment.AttachmentType.Name.equals("COMMENT") && !$act.Attachment.AttachmentType.Name.equals("URL"))
+         $act.Attachment.Data
        #else
          $l10n.NotProvided
        #end     

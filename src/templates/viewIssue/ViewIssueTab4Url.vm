@@ -17,6 +17,7 @@
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
+    #set ($counter = $velocityCount)
      #if ($canEdit)
      <td>
        <input type="checkbox" name="url_delete_$url.AttachmentId" />
@@ -37,7 +38,8 @@
     </tr>
    #end
    #if ($canEdit)
-   <tr class="b">
+    #set ($counter = $counter+1)
+    #indexedRows($counter)
      #if (!$currentIssue.Urls.isEmpty())
      <td>&#160;</td>
      <td>New</td>
@@ -56,11 +58,29 @@
    </tr>
    #end
  </table>
+
+#* FIXME: in the future we might want to implement this.
+#if ($canEdit)
+<div class="axial">
+  <table cellpadding="3" cellspacing="2" border="0">
+    <tr>
+      <th>$l10n.Reason</th>
+      <td>
+        #set ($urlGroup = $intake.Attachment.setKey("urlReasonKey"))
+        #textAreaMedium("$urlGroup.Name.Key" "$urlGroup.Name")
+        #fieldErrorMsg($urlGroup.Name "")
+      </td>
+    </tr>
+  </table>
+</div>
+#end
+*#
+
   #if ($canEdit)
 <div class="functnbar3">
   <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
   #if (!$currentIssue.Urls.isEmpty())
-  <input type="submit" value="$l10n.Delete"  name="eventSubmit_doDeleteurl" />
+  <input type="submit" value="$l10n.DeleteSelected"  name="eventSubmit_doDeleteurl" />
   #end
 </div>
   #end
