@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message.command;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,18 +27,21 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.temp.TempFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.SecurityIndicator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
@@ -49,6 +51,7 @@ import org.columba.mail.pgp.MissingPublicKeyException;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.pgp.VerificationException;
+import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.LocalMimePart;
@@ -329,9 +332,19 @@ public class ViewMessageCommand extends FolderCommand {
 		// get attachment structure
 		try {
 			mimePartTree = srcFolder.getMimePartTree(uid);
-		} catch (FileNotFoundException ex) {
-			// message doesn't exist anymore
-			return;
+		} catch (FolderInconsistentException ex) {
+		    Object[] options = new String[] {
+		            MailResourceLoader.getString("", "global", "ok").replaceAll("&",""),
+		    };
+		    int result = JOptionPane.showOptionDialog(null,
+		            MailResourceLoader.getString("dialog", "error",
+								"message_deleted"), "Error",
+		            JOptionPane.DEFAULT_OPTION,
+		            JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+		    
+		    MainInterface.processor.addOp(new ViewHeaderListCommand(
+		            getFrameMediator(), r));		    
+		    return;
 		} //	get RFC822-header
 		header = srcFolder.getMessageHeader(uid);
 		// if this message is signed/encrypted we have to use

@@ -29,6 +29,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.ListTools;
 import org.columba.core.util.Mutex;
 import org.columba.mail.config.FolderItem;
+import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
@@ -37,11 +38,8 @@ import org.columba.mail.message.HeaderList;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.Message;
-import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.parser.HeaderParser;
-import org.columba.ristretto.parser.MessageParser;
 
 /**
  *
@@ -218,43 +216,40 @@ public abstract class CachedFolder extends LocalFolder {
      *      org.columba.core.command.WorkerStatusController)
      */
     protected ColumbaMessage getMessage(Object uid) throws Exception {
-        // check if message was already parsed before
+        //Check if the message is already cached
         if (aktMessage != null) {
             if (aktMessage.getUID().equals(uid)) {
                 // this message is already cached
-                // -> no need to parse it again
-                //return (AbstractMessage) aktMessage.clone();
-                return (ColumbaMessage) aktMessage;
+                return aktMessage;
             }
         }
+        
+        ColumbaMessage message;
+        try {
+            message = super.getMessage(uid);
+        } catch (FolderInconsistentException e) {
+            // update message folder info
+            Flags flags = getFlags(uid);
 
-        // get source of message as string
-        String source = getMessageSource(uid);
+            if (flags.getSeen()) {
+                getMessageFolderInfo().decUnseen();
+            }
 
+            if (flags.getRecent()) {
+                getMessageFolderInfo().decRecent();
+            }
+
+            // remove message from headercache
+            getHeaderCacheInstance().remove(uid);
+            
+            throw e;
+        }
+        // We have to use the header from the HeaderCache
         // get header from cache
         ColumbaHeader header = (ColumbaHeader) getCachedHeaderList().get(uid);
-
-        // generate message object from source
-        Message m = MessageParser.parse(new CharSequenceSource(source));
-        ColumbaMessage message = new ColumbaMessage(header, m);
-
-        // set message uid
-        message.setUID(uid);
-
-        // set message source
-        message.setStringSource(source);
-
-        if (source == null) {
-            source = new String();
-        }
-
-        // this is the new cached message
-        // which should be re-used if possible
-        aktMessage = message;
-
-        // there's no need to clone() here
-        //return (AbstractMessage) message.clone();
-        return (ColumbaMessage) message;
+        message.setHeader( header );
+        
+        return message;
     }
 
     /**

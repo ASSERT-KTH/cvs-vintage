@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
@@ -258,24 +259,40 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
      * @return                                a message object referring to this UID
      * @throws Exception        <class>Exception</class>
      */
-    protected ColumbaMessage getMessage(Object uid) throws Exception {
+    protected ColumbaMessage getMessage(Object uid) throws Exception {        
+        //Check if the message is already cached
         if (aktMessage != null) {
             if (aktMessage.getUID().equals(uid)) {
                 // this message is already cached
-                //ColumbaLogger.log.fine("using already cached message..");
-                return (ColumbaMessage) aktMessage;
-
-                //return (AbstractMessage) aktMessage.clone();
+                return aktMessage;
             }
         }
+        
+        //Parse Message from DataStorage
+        Source source = null;
+        try {
+            source = getDataStorageInstance().getFileSource(uid);
+        } catch (IOException e) {
+            // File is no longer present -> someone else deleted it
+            // from the file system
+            // notify search-engine
+            getSearchEngineInstance().messageRemoved(uid);
 
-        Source source = getDataStorageInstance().getFileSource(uid);
+            // decrement total count of message
+            getMessageFolderInfo().decExists();
+
+            // this folder was modified
+            changed = true;
+            
+            throw new FolderInconsistentException(e);
+        }
         ColumbaMessage message = new ColumbaMessage(MessageParser.parse(source));
 
         message.setUID(uid);
+        
+        //TODO remove this memory waste here
         message.setStringSource(source.toString());
 
-        //message.setHeader(h);
         aktMessage = message;
 
         return message;

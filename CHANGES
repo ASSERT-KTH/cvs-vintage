@@ -33,6 +33,7 @@ New features:
 - refactored Config framework (javaprog)
 - refactored startup process and session management (javaprog)
 - improved mnemonic handling in resource loading framework
+- improved reaction to deleted messages by other applications (e.g. virus killers) while columba is running.
 
 Fixed bugs:
 - fixed error in printing when no character set is specified
