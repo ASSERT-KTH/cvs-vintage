@@ -15,64 +15,69 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
-
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.attachment.AttachmentSelectionChangedEvent;
 import org.columba.mail.gui.attachment.command.OpenAttachmentCommand;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.event.ActionEvent;
-
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
-public class OpenAction extends AbstractColumbaAction
-    implements SelectionListener {
-    public OpenAction(FrameMediator frameMediator) {
-        super(frameMediator,
-            MailResourceLoader.getString("menu", "mainframe", "attachmentopen"));
+public class OpenAction extends AbstractColumbaAction implements
+		SelectionListener {
+	public OpenAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString("menu", "mainframe",
+				"attachmentopen"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
-                "attachmentopen_tooltip").replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString("menu",
+				"mainframe", "attachmentopen_tooltip").replaceAll("&", ""));
 
-        // icons
-        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
-        putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		// icons
+		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
+		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("folder-open.png"));
 
-        if (frameMediator.getSelectionManager() != null) {
-            ((MailFrameMediator) frameMediator).registerAttachmentSelectionListener(this);
-        }
-    }
+		if (frameMediator.getSelectionManager() != null) {
+			((MailFrameMediator) frameMediator)
+					.registerAttachmentSelectionListener(this);
+		}
+	}
 
-    /* (non-Javadoc)
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent evt) {
-        MainInterface.processor.addOp(new OpenAttachmentCommand(
-                getFrameMediator().getSelectionManager()
-                    .getHandler("mail.attachment").getSelection()));
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference[] ref = (FolderCommandReference[]) getFrameMediator()
+				.getSelectionManager().getHandler("mail.attachment")
+				.getSelection();
+		if (ref[0].getAddress() != null)
+			MainInterface.processor.addOp(new OpenAttachmentCommand(ref));
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
- */
-    public void selectionChanged(SelectionChangedEvent e) {
-        if (((AttachmentSelectionChangedEvent) e).getAddress() != null) {
-            setEnabled(true);
-        } else {
-            setEnabled(false);
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.gui.attachment.AttachmentSelectionListener#attachmentSelectionChanged(java.lang.Integer[])
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		if (((AttachmentSelectionChangedEvent) e).getAddress() != null) {
+			setEnabled(true);
+		} else {
+			setEnabled(false);
+		}
+	}
 }

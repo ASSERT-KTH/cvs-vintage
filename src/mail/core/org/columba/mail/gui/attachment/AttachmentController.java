@@ -98,6 +98,8 @@ public class AttachmentController {
     }
 
     private JPopupMenu getPopupMenu() {
+    	if ( menu == null) createPopupMenu();
+    	
         return menu;
     }
 
