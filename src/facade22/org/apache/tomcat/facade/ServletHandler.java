@@ -159,7 +159,7 @@ public final class ServletHandler extends Handler {
 	servletClass=null;
 	this.servletClassName=servletClassName;
 	if( debug>0 && sw.getJspFile()!=null)
-	    log( "setServletClassName for " + sw.getJspFile() +
+	    log( context, "setServletClassName for " + sw.getJspFile() +
 		 ": " + servletClassName);
     }
 
@@ -190,11 +190,7 @@ public final class ServletHandler extends Handler {
 	try {
 	    doDestroy();
 	} catch( Exception ex ) {
-	    if( context!=null )
-		context.log( "Error during destroy ", ex );
-	    else
-		log( "Error during destroy ", ex );
-
+	    log(context,  "Error during destroy ", ex );
 	}
 	
 
@@ -230,13 +226,13 @@ public final class ServletHandler extends Handler {
 		// special preInit() hook
 		preInit();
 		// preInit may either throw exception or setState DELAYED_INIT
+	    } catch( ClassNotFoundException ex ) {
+		log( context, "Class not found: " + servletClassName);
+		setErrorException(ex);
+		setState(STATE_DISABLED);
 	    } catch( Exception ex ) {
 		// save error, assume permanent
-		if(context!=null)
-		    context.log("Exception in preInit  " +
-				ex.getMessage(), ex );
-		else 
-		    log("Exception in preInit  " + ex.getMessage(), ex );
+		log(context, "Exception in preInit " + ex.getMessage(), ex );
 		setErrorException(ex);
 		setState(STATE_DISABLED);
 		return;
@@ -257,7 +253,7 @@ public final class ServletHandler extends Handler {
 		    cI[i].preServletInit( context, this );
 		} catch( TomcatException ex) {
 		    // log, but ignore.
-		    log("preServletInit" , ex);
+		    log(context, "preServletInit" , ex);
 		}
 	    }
 		
@@ -266,10 +262,7 @@ public final class ServletHandler extends Handler {
 		// if success, we are ready to serve
 	    } catch( Exception ex ) {
 		// save error, assume permanent
-		if( context!=null )
-		    context.log("Exception in init  " + ex.getMessage(), ex );
-		else
-		    log("Exception in init  " + ex.getMessage(), ex );
+		log(context, "Exception in init  " + ex.getMessage(), ex );
 		setErrorException(ex);
 		state=STATE_DISABLED;
 	    }
@@ -278,7 +271,7 @@ public final class ServletHandler extends Handler {
 		try {
 		    cI[i].postServletInit( context, this );
 		} catch( TomcatException ex) {
-		    log("postServletInit" , ex);
+		    log(context, "postServletInit" , ex);
 		}
 	    }
 
@@ -297,7 +290,19 @@ public final class ServletHandler extends Handler {
 	}
     }
 
-    
+    private void log( Context ctx, String s ) {
+	if( ctx==null )
+	    log( s );
+	else
+	    ctx.log( s );
+    }
+
+    private void log( Context ctx, String s, Throwable t ) {
+	if( ctx==null )
+	    log( s, t );
+	else
+	    ctx.log( s, t );
+    }
     
     // -------------------- --------------------
 
@@ -306,10 +311,7 @@ public final class ServletHandler extends Handler {
 	    try {
 		destroy();
 	    } catch(Exception ex ) {
-		if( context!=null )
-		    context.log( "Error in destroy ", ex );
-		else
-		    log( "Error in destroy ", ex );
+		log(context,  "Error in destroy ", ex );
 	    }
 	}
 
@@ -331,7 +333,8 @@ public final class ServletHandler extends Handler {
 	    return servlet;
 
 	if( debug>0)
-	    log("LoadServlet " + name + " " + sw.getServletName() + " " +
+	    log(context, "LoadServlet " + name + " " +
+		sw.getServletName() + " " +
 		sw.getServletClassName() + " " + servletClass );
 
 	// default
@@ -358,7 +361,7 @@ public final class ServletHandler extends Handler {
 			try {
 			    cI[i].preServletDestroy( context, this );
 			} catch( TomcatException ex) {
-			    log("preServletDestroy", ex);
+			    log(context, "preServletDestroy", ex);
 			}
 		    }
 		    servlet.destroy();
@@ -367,16 +370,13 @@ public final class ServletHandler extends Handler {
 			try {
 			    cI[i].postServletDestroy( context, this );
 			} catch( TomcatException ex) {
-			    log("postServletDestroy", ex);
+			    log(context, "postServletDestroy", ex);
 			}
 		    }
 		}
 	    } catch(Exception ex) {
 		// Should never come here...
-		if( context!=null)
-		    context.log( "Error in destroy ", ex );
-		else
-		    log( "Error in destroy ", ex );
+		log(context, "Error in destroy ", ex );
 	    }
 	}
     }
@@ -385,7 +385,7 @@ public final class ServletHandler extends Handler {
     protected void preInit() throws Exception
     {
 	if( debug > 0 )
-	    log( "preInit " + servlet + " " + sw.getJspFile() + " " +
+	    log(context, "preInit " + servlet + " " + sw.getJspFile() + " " +
 		 servletClassName);
 
 	// Deal with Unavailable errors
@@ -545,10 +545,7 @@ public final class ServletHandler extends Handler {
 	    String msg=t.getMessage();
 	    String logMsg="UnavailableException in: " + req +
 		", time remaining " + unavailableTime + " seconds : " + msg;
-	    if( context!=null)
-		context.log( logMsg, t);
-	    else
-		log( logMsg, t);
+	    log( context, logMsg, t);
 	    req.setAttribute("javax.servlet.error.message", msg );
             req.setAttribute("tomcat.servlet.error.service.unavailableTime", new Integer(unavailableTime));
 	    contextM.handleStatus( req, res, HttpServletResponse.SC_SERVICE_UNAVAILABLE );
@@ -606,12 +603,7 @@ public final class ServletHandler extends Handler {
 	    // disable the error - it expired
 	    unavailableTime=-1;
 	    setErrorException(null);
-	    if( context!=null)
-		context.log(getName() +
-			    " unavailable time expired, trying again ");
-	    else 
-		log(getName() +
-		    " unavailable time expired, trying again ");
+	    log(context, getName()+" unavailable time expired, trying again ");
 	    return true;
 	}
 	// still unavailable
@@ -634,11 +626,7 @@ public final class ServletHandler extends Handler {
 		    // disable the error - it expired
 		    setErrorException(null);
 		    unavailableTime=-1;
-		    if( context!=null)
-			context.log(getName() +
-			" unavailable time expired, trying again ");
-		    else
-			log(getName() +
+		    log(context, getName() +
 			" unavailable time expired, trying again ");
 		}
 		return true;
