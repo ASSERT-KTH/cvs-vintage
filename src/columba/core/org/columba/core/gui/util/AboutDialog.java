@@ -16,384 +16,383 @@
 
 package org.columba.core.gui.util;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
-import org.columba.mail.gui.util.AddressLabel;
-import org.columba.mail.gui.util.URLLabel;
-
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringWriter;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.text.NumberFormat;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import org.columba.core.io.DiskIO;
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
+import org.columba.mail.gui.util.AddressLabel;
+import org.columba.mail.gui.util.URLLabel;
 
 /**
  * This dialog shows information about Columba.
  */
 public class AboutDialog extends JDialog implements ActionListener {
-    public static final String CMD_CLOSE = "CLOSE";
-    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
-    protected static AboutDialog instance;
-    
-    protected JTabbedPane tabbedPane;
+	public static final String CMD_CLOSE = "CLOSE";
+	private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+	protected static AboutDialog instance;
 
-    /**
-     * Creates a new dialog. This constructor is protected because it should
-     * only get called from the static getInstance() method.
-     */
-    protected AboutDialog() {
-        super((JFrame) null,
-            GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about",
-                "title") + MainInterface.version);
+	protected JTabbedPane tabbedPane;
 
-        tabbedPane = new JTabbedPane();
+	/**
+	 * Creates a new dialog. This constructor is protected because it should
+	 * only get called from the static getInstance() method.
+	 */
+	protected AboutDialog() {
+		super((JFrame) null, GlobalResourceLoader.getString(
+				RESOURCE_BUNDLE_PATH, "about", "title")
+				+ MainInterface.version);
 
-        JPanel authorPanel = new JPanel(new GridBagLayout());
-        authorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		tabbedPane = new JTabbedPane();
 
-        GridBagConstraints c = new GridBagConstraints();
+		JPanel authorPanel = new JPanel(new GridBagLayout());
+		authorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
-        JLabel imageLabel = new JLabel(ImageLoader.getImageIcon("startup.png"));
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.WEST;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        authorPanel.add(imageLabel, c);
+		GridBagConstraints c = new GridBagConstraints();
 
-        JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "about", "authors"));
+		JLabel imageLabel = new JLabel(ImageLoader.getImageIcon("startup.png"));
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		authorPanel.add(imageLabel, c);
 
-        //Font font = MainInterface.columbaTheme.getControlTextFont();
-        Font font = UIManager.getFont("Label.font");
+		JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(
+				RESOURCE_BUNDLE_PATH, "about", "authors"));
 
-        if (font != null) {
-            font = font.deriveFont(Font.BOLD);
-            authorLabel.setFont(font);
-        }
+		//Font font = MainInterface.columbaTheme.getControlTextFont();
+		Font font = UIManager.getFont("Label.font");
 
-        c.gridy = 1;
-        c.gridwidth = 1;
+		if (font != null) {
+			font = font.deriveFont(Font.BOLD);
+			authorLabel.setFont(font);
+		}
 
-        Component box = Box.createRigidArea(new Dimension(10, 10));
-        authorPanel.add(box, c);
+		c.gridy = 1;
+		c.gridwidth = 1;
 
-        c.gridy = 2;
-        authorPanel.add(authorLabel, c);
+		Component box = Box.createRigidArea(new Dimension(10, 10));
+		authorPanel.add(box, c);
 
-        c.gridx = 1;
-        box = Box.createRigidArea(new Dimension(5, 15));
-        authorPanel.add(box, c);
+		c.gridy = 2;
+		authorPanel.add(authorLabel, c);
 
-        AddressLabel a1 = new AddressLabel(
-                "Frederik Dietz <fdietz@users.sourceforge.net>");
-        c.gridx = 2;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        authorPanel.add(a1, c);
+		c.gridx = 1;
+		box = Box.createRigidArea(new Dimension(5, 15));
+		authorPanel.add(box, c);
 
-        AddressLabel a2 = new AddressLabel(
-                "Timo Stich <tstich@users.sourceforge.net>");
-        c.gridy = 3;
-        authorPanel.add(a2, c);
+		AddressLabel a1 = new AddressLabel(
+				"Frederik Dietz <fdietz@users.sourceforge.net>");
+		c.gridx = 2;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		authorPanel.add(a1, c);
 
-        JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "about", "website"));
+		AddressLabel a2 = new AddressLabel(
+				"Timo Stich <tstich@users.sourceforge.net>");
+		c.gridy = 3;
+		authorPanel.add(a2, c);
 
-        if (font != null) {
-            websiteLabel.setFont(font);
-        }
+		JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(
+				RESOURCE_BUNDLE_PATH, "about", "website"));
 
-        c.gridx = 0;
-        c.gridy = 4;
-        c.gridwidth = 1;
-        authorPanel.add(websiteLabel, c);
+		if (font != null) {
+			websiteLabel.setFont(font);
+		}
 
-        URLLabel websiteUrl = null;
+		c.gridx = 0;
+		c.gridy = 4;
+		c.gridwidth = 1;
+		authorPanel.add(websiteLabel, c);
 
-        try {
-            websiteUrl = new URLLabel(new URL("http://columba.sourceforge.net"));
-        } catch (MalformedURLException mue) {
-        }
-         //does not occur
+		URLLabel websiteUrl = null;
 
-        c.gridx = 2;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        authorPanel.add(websiteUrl, c);
+		try {
+			websiteUrl = new URLLabel(new URL("http://columba.sourceforge.net"));
+		} catch (MalformedURLException mue) {
+		}
+		//does not occur
 
-        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
-                "about", "authorsPane"), authorPanel);
+		c.gridx = 2;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		authorPanel.add(websiteUrl, c);
 
-        JPanel contributorPanel = new JPanel(new BorderLayout(0, 5));
-        contributorPanel.setBorder(
-                BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+				"about", "authorsPane"), authorPanel);
 
-        JLabel contributorLabel = new JLabel(GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
-        contributorPanel.add(contributorLabel, BorderLayout.NORTH);
-        JList contributorList = new JList(new String[] {
-                    "Thomas Wabner", "Karl Peder Olesen", "Eric Mattsson",
-                    "Riyad Kalla", "Michael Rudolf", "Luca Santarelli",
-                    "Eduardo P\u00E8rez", "John Murga", "Anthony Parent",
-                    "Jari Vuoksenranta", "Nicolas B\u00E9theuil", "Romain Guy",
-                    "Thomas Singer", "David Jeske", "Christopher Burkey",
-                    "Paul A. Golder", "David Brusowanking", "Paul Nicholls",
-                    "Paul E. Baclace", "Mark Livingstone"
-                });
-        contributorLabel.setLabelFor(contributorList);
-        contributorPanel.add(new JScrollPane(contributorList));
-        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
-                "about", "contributorPane"), contributorPanel);
-        
-        String licenseText = "The license text could not be found. " +
-                "Please check the Columba directory for a file called LICENSE.";
-        try {
-            StringWriter writer = new StringWriter();
-            char[] buffer = new char[1024];
-            int read;
-            BufferedReader reader = new BufferedReader(new FileReader("LICENSE"));
-            while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
-                writer.write(buffer, 0, read);
-            }
-            licenseText = writer.toString();
-            reader.close();
-        } catch (NullPointerException npe) {
-        } catch (IOException ioe) {}
-        JTextArea licenseTextArea = new JTextArea(licenseText);
-        licenseTextArea.setEditable(false);
-        JPanel licensePanel = new JPanel(new BorderLayout());
-        licensePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-        licensePanel.add(new JScrollPane(licenseTextArea));
-        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
-                "about", "license"), licensePanel);
+		JPanel contributorPanel = new JPanel(new BorderLayout(0, 5));
+		contributorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11,
+				11));
 
-        if (MainInterface.DEBUG) {
-            tabbedPane.addTab("Memory", new MemoryPanel());
-        }
+		JLabel contributorLabel = new JLabel(GlobalResourceLoader.getString(
+				RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
+		contributorPanel.add(contributorLabel, BorderLayout.NORTH);
+		
+		contributorPanel.add(new JScrollPane(new InfoViewTextPane(DiskIO
+				.getResourceURL("CONTRIBUTORS"))));
+		tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+				"about", "contributorPane"), contributorPanel);
 
-        getContentPane().add(tabbedPane);
+		JPanel licensePanel = new JPanel(new BorderLayout());
+		licensePanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		licensePanel.add(new JScrollPane(new InfoViewTextPane(DiskIO
+				.getResourceURL("LICENSE"))));
+		tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+				"about", "license"), licensePanel);
 
-        JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JPanel ackPanel = new JPanel(new BorderLayout());
+		ackPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+		JLabel ackLabel = new JLabel(GlobalResourceLoader.getString(
+				RESOURCE_BUNDLE_PATH, "about", "ackLabel"));
+		ackPanel.add(ackLabel, BorderLayout.NORTH);
+		
+		ackPanel.add(new JScrollPane(new InfoViewTextPane(DiskIO
+				.getResourceURL("ACKNOWLEDGEMENT"))));
+		tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+				"about", "ackPane"), ackPanel);
+		
+		if (MainInterface.DEBUG) {
+			tabbedPane.addTab("Memory", new MemoryPanel());
+		}
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                    "global", "global", "close"));
-        closeButton.setActionCommand(CMD_CLOSE);
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton, BorderLayout.EAST);
-        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, CMD_CLOSE,
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-        pack();
-        setLocationRelativeTo(null);
-    }
-    
-    /**
-     * Shows the tab with the given index.
-     */
-    public void showTab(int index) {
-        tabbedPane.setSelectedIndex(index);
-    }
+		getContentPane().add(tabbedPane);
 
-    /**
-     * Called when the user clicks the "Close" button.
-     */
-    public void actionPerformed(ActionEvent e) {
-        if (CMD_CLOSE.equals(e.getActionCommand())) {
-            setVisible(false);
-        }
-    }
+		JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
-    public synchronized static AboutDialog getInstance() {
-        if (instance == null) {
-            instance = new AboutDialog();
-        }
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "close"));
+		closeButton.setActionCommand(CMD_CLOSE);
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton, BorderLayout.EAST);
+		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this, CMD_CLOSE,
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+		pack();
+		setLocationRelativeTo(null);
+	}
 
-        return instance;
-    }
+	/**
+	 * Shows the tab with the given index.
+	 */
+	public void showTab(int index) {
+		tabbedPane.setSelectedIndex(index);
+	}
 
-    protected static class MemoryPanel extends JPanel {
-        protected Thread updaterThread;
-        private int currentMemory = -1;
-        private int totalMemory = -1;
-        protected JFormattedTextField currentMemoryTextField;
-        protected JFormattedTextField maxMemoryTextField;
-        protected JProgressBar progressBar;
-        protected JFormattedTextField totalMemoryTextField;
+	/**
+	 * Called when the user clicks the "Close" button.
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (CMD_CLOSE.equals(e.getActionCommand())) {
+			setVisible(false);
+		}
+	}
 
-        public MemoryPanel() {
-            super(new GridBagLayout());
-            setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
-            initComponents();
+	public synchronized static AboutDialog getInstance() {
+		if (instance == null) {
+			instance = new AboutDialog();
+		}
 
-            if (updaterThread == null) {
-                updaterThread = new MemoryMonitorThread(this);
-                updaterThread.start();
-            }
-        }
+		return instance;
+	}
 
-        public int getCurrentMemory() {
-            return currentMemory;
-        }
+	protected static class MemoryPanel extends JPanel {
+		protected Thread updaterThread;
+		private int currentMemory = -1;
+		private int totalMemory = -1;
+		protected JFormattedTextField currentMemoryTextField;
+		protected JFormattedTextField maxMemoryTextField;
+		protected JProgressBar progressBar;
+		protected JFormattedTextField totalMemoryTextField;
 
-        public void setCurrentMemory(int mem) {
-            currentMemory = mem;
-            currentMemoryTextField.setValue(new Integer(mem));
-            progressBar.setValue(mem);
-        }
+		public MemoryPanel() {
+			super(new GridBagLayout());
+			setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+			initComponents();
 
-        public int getTotalMemory() {
-            return totalMemory;
-        }
+			if (updaterThread == null) {
+				updaterThread = new MemoryMonitorThread(this);
+				updaterThread.start();
+			}
+		}
 
-        public void setTotalMemory(int mem) {
-            totalMemory = mem;
-            totalMemoryTextField.setValue(new Integer(mem));
-            progressBar.setMaximum(mem);
-        }
+		public int getCurrentMemory() {
+			return currentMemory;
+		}
 
-        private void initComponents() {
-            GridBagConstraints c = new GridBagConstraints();
+		public void setCurrentMemory(int mem) {
+			currentMemory = mem;
+			currentMemoryTextField.setValue(new Integer(mem));
+			progressBar.setValue(mem);
+		}
 
-            currentMemoryTextField = new JFormattedTextField(NumberFormat.getInstance());
-            totalMemoryTextField = new JFormattedTextField(NumberFormat.getInstance());
-            maxMemoryTextField = new JFormattedTextField();
+		public int getTotalMemory() {
+			return totalMemory;
+		}
 
-            JButton gcButton = new JButton(ImageLoader.getImageIcon(
-                        "stock_delete-16.png"));
+		public void setTotalMemory(int mem) {
+			totalMemory = mem;
+			totalMemoryTextField.setValue(new Integer(mem));
+			progressBar.setMaximum(mem);
+		}
 
-            JLabel currentMemoryLabel = new JLabel("Used:");
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.WEST;
-            add(currentMemoryLabel, c);
+		private void initComponents() {
+			GridBagConstraints c = new GridBagConstraints();
 
-            currentMemoryTextField.setColumns(5);
-            currentMemoryTextField.setEditable(false);
-            c.gridx = 1;
-            c.insets = new Insets(0, 4, 0, 4);
-            add(currentMemoryTextField, c);
+			currentMemoryTextField = new JFormattedTextField(NumberFormat
+					.getInstance());
+			totalMemoryTextField = new JFormattedTextField(NumberFormat
+					.getInstance());
+			maxMemoryTextField = new JFormattedTextField();
 
-            JLabel currentMemoryKBLabel = new JLabel("KB");
-            c.gridx = 2;
-            c.insets = new Insets(0, 0, 0, 0);
-            add(currentMemoryKBLabel, c);
+			JButton gcButton = new JButton(ImageLoader
+					.getImageIcon("stock_delete-16.png"));
 
-            JLabel totalMemoryLabel = new JLabel("Total:");
-            c.gridx = 3;
-            c.insets = new Insets(0, 10, 0, 0);
-            add(totalMemoryLabel, c);
+			JLabel currentMemoryLabel = new JLabel("Used:");
+			c.gridx = 0;
+			c.gridy = 0;
+			c.anchor = GridBagConstraints.WEST;
+			add(currentMemoryLabel, c);
 
-            totalMemoryTextField.setColumns(5);
-            totalMemoryTextField.setEditable(false);
-            c.gridx = 4;
-            c.insets = new Insets(0, 4, 0, 4);
-            add(totalMemoryTextField, c);
+			currentMemoryTextField.setColumns(5);
+			currentMemoryTextField.setEditable(false);
+			c.gridx = 1;
+			c.insets = new Insets(0, 4, 0, 4);
+			add(currentMemoryTextField, c);
 
-            JLabel totalMemoryKBLabel = new JLabel("KB");
-            c.gridx = 5;
-            c.insets = new Insets(0, 0, 0, 0);
-            add(totalMemoryKBLabel, c);
+			JLabel currentMemoryKBLabel = new JLabel("KB");
+			c.gridx = 2;
+			c.insets = new Insets(0, 0, 0, 0);
+			add(currentMemoryKBLabel, c);
 
-            JLabel maxMemoryLabel = new JLabel("VM Max:");
-            c.gridx = 0;
-            c.gridy = 1;
-            c.insets = new Insets(6, 0, 0, 0);
-            add(maxMemoryLabel, c);
+			JLabel totalMemoryLabel = new JLabel("Total:");
+			c.gridx = 3;
+			c.insets = new Insets(0, 10, 0, 0);
+			add(totalMemoryLabel, c);
 
-            maxMemoryTextField.setColumns(5);
-            maxMemoryTextField.setEditable(false);
-            maxMemoryTextField.setValue(new Integer(
-                    (int) (Runtime.getRuntime().maxMemory() / 1000)));
-            c.gridx = 1;
-            c.insets = new Insets(4, 4, 0, 4);
-            add(maxMemoryTextField, c);
+			totalMemoryTextField.setColumns(5);
+			totalMemoryTextField.setEditable(false);
+			c.gridx = 4;
+			c.insets = new Insets(0, 4, 0, 4);
+			add(totalMemoryTextField, c);
 
-            JLabel maxMemoryKBLabel = new JLabel("KB");
-            c.gridx = 2;
-            c.insets = new Insets(0, 0, 0, 0);
-            add(maxMemoryKBLabel, c);
+			JLabel totalMemoryKBLabel = new JLabel("KB");
+			c.gridx = 5;
+			c.insets = new Insets(0, 0, 0, 0);
+			add(totalMemoryKBLabel, c);
 
-            progressBar = new JProgressBar();
-            progressBar.setPreferredSize(gcButton.getPreferredSize());
-            progressBar.setStringPainted(true);
-            c.gridx = 0;
-            c.gridy = 2;
-            c.insets = new Insets(10, 0, 0, 0);
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridwidth = 5;
-            add(progressBar, c);
+			JLabel maxMemoryLabel = new JLabel("VM Max:");
+			c.gridx = 0;
+			c.gridy = 1;
+			c.insets = new Insets(6, 0, 0, 0);
+			add(maxMemoryLabel, c);
 
-            gcButton.setContentAreaFilled(false);
-            gcButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        System.gc();
-                    }
-                });
-            c.gridx = 5;
-            c.gridwidth = 1;
-            c.insets = new Insets(10, 6, 0, 0);
-            c.fill = GridBagConstraints.NONE;
-            add(gcButton, c);
-        }
-    }
+			maxMemoryTextField.setColumns(5);
+			maxMemoryTextField.setEditable(false);
+			maxMemoryTextField.setValue(new Integer((int) (Runtime.getRuntime()
+					.maxMemory() / 1000)));
+			c.gridx = 1;
+			c.insets = new Insets(4, 4, 0, 4);
+			add(maxMemoryTextField, c);
 
-    protected static class MemoryMonitorThread extends Thread {
-        protected static final int MEMORY_UPDATE_THRESHOLD = 50; // 50k
-        protected MemoryPanel memoryPanel;
-        protected Runtime runtime = Runtime.getRuntime();
+			JLabel maxMemoryKBLabel = new JLabel("KB");
+			c.gridx = 2;
+			c.insets = new Insets(0, 0, 0, 0);
+			add(maxMemoryKBLabel, c);
 
-        public MemoryMonitorThread(MemoryPanel memoryPanel) {
-            this.memoryPanel = memoryPanel;
-            setPriority(Thread.MIN_PRIORITY);
-            setDaemon(true);
-        }
+			progressBar = new JProgressBar();
+			progressBar.setPreferredSize(gcButton.getPreferredSize());
+			progressBar.setStringPainted(true);
+			c.gridx = 0;
+			c.gridy = 2;
+			c.insets = new Insets(10, 0, 0, 0);
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridwidth = 5;
+			add(progressBar, c);
 
-        public void run() {
-            while (!isInterrupted()) {
-                SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            updateDisplay();
-                        }
-                    });
+			gcButton.setContentAreaFilled(false);
+			gcButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					System.gc();
+				}
+			});
+			c.gridx = 5;
+			c.gridwidth = 1;
+			c.insets = new Insets(10, 6, 0, 0);
+			c.fill = GridBagConstraints.NONE;
+			add(gcButton, c);
+		}
+	}
 
-                try {
-                    Thread.sleep(750);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
-            }
-        }
+	protected static class MemoryMonitorThread extends Thread {
+		protected static final int MEMORY_UPDATE_THRESHOLD = 50; // 50k
+		protected MemoryPanel memoryPanel;
+		protected Runtime runtime = Runtime.getRuntime();
 
-        protected void updateDisplay() {
-            int totalMem = (int) (runtime.totalMemory() / 1000);
-            int currMem = (int) (totalMem - (runtime.freeMemory() / 1000));
+		public MemoryMonitorThread(MemoryPanel memoryPanel) {
+			this.memoryPanel = memoryPanel;
+			setPriority(Thread.MIN_PRIORITY);
+			setDaemon(true);
+		}
 
-            if ((memoryPanel.getTotalMemory() < (totalMem -
-                    MEMORY_UPDATE_THRESHOLD)) ||
-                    (memoryPanel.getTotalMemory() > (totalMem +
-                    MEMORY_UPDATE_THRESHOLD))) {
-                memoryPanel.setTotalMemory(totalMem);
-            }
+		public void run() {
+			while (!isInterrupted()) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						updateDisplay();
+					}
+				});
 
-            if ((memoryPanel.getCurrentMemory() < (currMem -
-                    MEMORY_UPDATE_THRESHOLD)) ||
-                    (memoryPanel.getCurrentMemory() > (currMem +
-                    MEMORY_UPDATE_THRESHOLD))) {
-                memoryPanel.setCurrentMemory(currMem);
-            }
-        }
-    }
+				try {
+					Thread.sleep(750);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
+		}
+
+		protected void updateDisplay() {
+			int totalMem = (int) (runtime.totalMemory() / 1000);
+			int currMem = (int) (totalMem - (runtime.freeMemory() / 1000));
+
+			if ((memoryPanel.getTotalMemory() < (totalMem - MEMORY_UPDATE_THRESHOLD))
+					|| (memoryPanel.getTotalMemory() > (totalMem + MEMORY_UPDATE_THRESHOLD))) {
+				memoryPanel.setTotalMemory(totalMem);
+			}
+
+			if ((memoryPanel.getCurrentMemory() < (currMem - MEMORY_UPDATE_THRESHOLD))
+					|| (memoryPanel.getCurrentMemory() > (currMem + MEMORY_UPDATE_THRESHOLD))) {
+				memoryPanel.setCurrentMemory(currMem);
+			}
+		}
+	}
 }

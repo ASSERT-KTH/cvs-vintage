@@ -1,0 +1,17 @@
+Open-Source libraries:
+
+- JUnit http://junit.org
+- Ant http://ant.apache.org/
+- Maven http://maven.apache.org/
+- Jargs http://jargs.sourceforge.net/
+- Forms http://jgoodies.com
+- Looks http://jgoodies.com
+- Lucene http://jakarta.apache.org/lucene/
+- checkstyle http://checkstyle.sourceforge.net/
+- jcoverage http://www.jcoverage.com/
+- JWizz
+
+Commercial libraries:
+
+- JniWrapper and Winpack (thanks go to MIIK, Ltd. who kindly provided us with 
+  a free version of their library) http://www.jniwrapper.com
