@@ -30,6 +30,7 @@ import org.columba.addressbook.parser.DefaultCardLoader;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.config.TableItem;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 /**
  * 
@@ -353,7 +354,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 	public void load(WorkerStatusController worker) throws Exception {
 
-		ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
+                }
 		
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
 		ObjectInputStream p = new ObjectInputStream(istream);
@@ -364,7 +367,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		if (capacity != getMessageFileCount()) {
 			// messagebox headercache-file is corrupted
-			ColumbaLogger.log.info("Messagebox headercache-file is corrupted!");
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("Messagebox headercache-file is corrupted!");
+                        }
 
 			recreateIndex();
 			return;
@@ -420,7 +425,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 	public void save(WorkerStatusController worker) throws Exception {
 
-		ColumbaLogger.log.info("saving header-cache=" + headerFile);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("saving header-cache=" + headerFile);
+                }
 		
 		FileOutputStream istream = new FileOutputStream(headerFile.getPath());
 		ObjectOutputStream p = new ObjectOutputStream(istream);
@@ -466,7 +473,9 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 	}
 
 	public void recreateIndex() {
-		ColumbaLogger.log.info("recreating index");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("recreating index");
+                }
 
 		File[] list = directoryFile.listFiles();
 		Vector v = new Vector();
@@ -549,5 +558,4 @@ public class LocalHeaderCacheFolder extends LocalFolder {
 
 		return searchResult;
 	}
-
 }
