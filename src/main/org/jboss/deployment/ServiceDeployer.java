@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.8 $ <p>
+ * @version   $Revision: 1.9 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -738,6 +738,14 @@ public class ServiceDeployer
                   log.error("problem removing classloader " + cl, e);
                }
             }
+            else 
+            {
+               log.debug("not undeploying classloader " + cl + ", remaining urls: " + urls);
+            }
+               
+
+            } // end of else
+            
          }
       }
    }

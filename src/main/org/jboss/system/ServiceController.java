@@ -39,8 +39,8 @@ import org.w3c.dom.Element;
  *
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @author <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.6 $ <p>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.7 $ <p>
  *
  * <b>Revisions:</b> <p>
  *
