@@ -65,7 +65,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("SUBJECT ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -79,7 +79,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("TO ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -93,7 +93,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("CC ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -107,7 +107,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("BCC ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -121,7 +121,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("FROM ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -137,11 +137,11 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("TO ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 		
 		searchString.append("CC ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
@@ -155,7 +155,7 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		searchString.append("BODY ");
 
-		searchString.append(criteria.getPattern());
+		searchString.append("\""+criteria.getPattern()+"\"");
 
 		return searchString.toString();
 	}
