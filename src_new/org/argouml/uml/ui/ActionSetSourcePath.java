@@ -1,4 +1,4 @@
-// $Id: ActionSetSourcePath.java,v 1.13 2003/09/08 00:36:41 bobtarling Exp $
+// $Id: ActionSetSourcePath.java,v 1.14 2003/09/09 19:57:26 alexb Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,10 +33,9 @@ import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
-import org.argouml.ui.NavigatorPane;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.osdep.OsUtil;
-
+import org.argouml.ui.targetmanager.TargetManager;
 
 
 /** Action to choose and set source path for model elements
@@ -66,7 +65,7 @@ public class ActionSetSourcePath extends UMLAction {
     public void actionPerformed(ActionEvent e) {
 	File f = getNewDirectory();
 	if (f != null) {
-	    Object obj = NavigatorPane.getInstance().getSelectedObject();
+	    Object obj = TargetManager.getInstance().getTarget();
 	    if (ModelFacade.isAModelElement(obj)) {
 		ModelFacade.setTaggedValue(obj, "src_path",f.getPath());
 	    }
@@ -75,7 +74,7 @@ public class ActionSetSourcePath extends UMLAction {
 
     protected File getNewDirectory() {
 	Project p = ProjectManager.getManager().getCurrentProject();
-	Object obj = NavigatorPane.getInstance().getSelectedObject();
+	Object obj = TargetManager.getInstance().getTarget();
 	String name = null;
 	String type = null;
 	String path = null;
