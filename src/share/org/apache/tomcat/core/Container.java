@@ -117,7 +117,7 @@ public class Container implements Cloneable {
     public static final int PATH_MAP=1;
     public static final int PREFIX_MAP=2;
     public static final int EXTENSION_MAP=3;
-    public static final int DEFAULT_MAP=3;
+    public static final int DEFAULT_MAP=4;
     int mapType=0;
     
     // XXX Per method constraints not implemented.

@@ -97,9 +97,9 @@ import java.util.*;
  * it makes a significant difference when normalizing attributes,
  * which is done for each start-element construct.
  *
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-final class SimpleHashtable implements Enumeration
+public final class SimpleHashtable implements Enumeration
 {
     // entries ...
     private Entry		table[];
