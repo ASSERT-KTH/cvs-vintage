@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource EJB server
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.ejb.plugins;
 
 import java.util.TimerTask;
@@ -12,35 +13,42 @@ import java.util.Timer;
 import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
+
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.InstancePoolFeeder;
+
 import org.jboss.metadata.XmlLoadable;
 import org.jboss.metadata.MetaData;
 
+import org.jboss.logging.Logger;
+
 /**
- *
+ * An instance pool feeder which periodically adds instances to the pool.
+ * 
+ * @author ???
+ * @version $Revision: 1.6 $
  */
 public class TimedInstancePoolFeeder
-      extends TimerTask
-      implements XmlLoadable, InstancePoolFeeder
+   extends TimerTask
+   implements XmlLoadable, InstancePoolFeeder
 {
-
-   // Private -------------------------------------------------------
+   private static final Logger log = Logger.getLogger(TimedInstancePoolFeeder.class);
+   
    /** The instance pool we feed */
    private InstancePool ip;
+   
    /** The rate in milliseconds between updates to the InstancePool */
    private int rate;
+   
    /** The number of instances to add to the pool each period */
    private int increment;
 
    private Timer timer;
    private boolean isStarted = false;
 
-   // Constructor ---------------------------------------------------
+   public TimedInstancePoolFeeder() {}
 
-   public TimedInstancePoolFeeder(){}
-
-   // Public --------------------------------------------------------
+   // TimerTask -----------------------------------------------------
 
    public void run()
    {
@@ -57,7 +65,7 @@ public class TimedInstancePoolFeeder
       }
       catch(Exception e)
       {
-         // ignore here
+         log.error("Unexpcted failure; ignoring", e);
       }
    }
 
@@ -65,7 +73,8 @@ public class TimedInstancePoolFeeder
 
    public void start()
    {
-      //Logger.debug("Pool Feeder Start()");
+      log.debug("Starting");
+      
       timer = new Timer();
       timer.schedule(this, 0, rate);
       isStarted = true;
@@ -73,7 +82,8 @@ public class TimedInstancePoolFeeder
 
    public void stop()
    {
-      //Logger.debug("Pool Feeder Stop()");
+      log.debug("Stopping");
+      
       if (timer != null)
       {
          timer.cancel();
@@ -81,7 +91,7 @@ public class TimedInstancePoolFeeder
       }
    }
 
-   public void setInstancePool(InstancePool ip)
+   public void setInstancePool(final InstancePool ip)
    {
       this.ip = ip;
    }
@@ -107,8 +117,7 @@ public class TimedInstancePoolFeeder
       }
       catch (Exception e)
       {
-         throw new DeploymentException("Can't read feeder-policy-conf",e);
+         throw new DeploymentException("Can't read feeder-policy-conf", e);
       }
    }
-
 }
