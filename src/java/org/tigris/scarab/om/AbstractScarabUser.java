@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.8 2001/12/13 20:45:53 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.9 2001/12/17 21:11:43 dr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -119,7 +119,7 @@ public abstract class AbstractScarabUser
         {
             ModuleEntity module = (ModuleEntity)userModules.get(i);
             if (hasPermission(ScarabSecurity.MODULE__EDIT, module)
-               && !(module.getModuleId().toString().equals("0")))
+               && !(module.getModuleId().equals(ModuleEntity.ROOT_ID)))
             {
                 editModules.add(module);
             }
