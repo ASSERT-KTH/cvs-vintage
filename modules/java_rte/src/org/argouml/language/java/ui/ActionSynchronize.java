@@ -1,4 +1,4 @@
-// $Id: ActionSynchronize.java,v 1.4 2003/06/29 23:16:08 linus Exp $
+// $Id: ActionSynchronize.java,v 1.5 2003/09/04 19:09:22 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class ActionSynchronize extends UMLAction implements PluggableMenu
      */
     public void actionPerformed(ActionEvent event) {
 	//Argo.log.info("User clicked on '" + event.getActionCommand() + "'");
-	SynchronizeDialog syndia = new SynchronizeDialog(ProjectBrowser.TheInstance, true);
+	SynchronizeDialog syndia = new SynchronizeDialog(ProjectBrowser.getInstance(), true);
 	syndia.show();
     }
 
