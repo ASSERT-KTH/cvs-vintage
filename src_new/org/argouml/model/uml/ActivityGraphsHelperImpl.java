@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.6 2005/01/29 20:08:22 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.7 2005/02/03 20:40:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,9 +123,10 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
             throw new IllegalArgumentException();
         }
 
-        if ((s == "") || (s == null)) { // TODO: Shouldn't it be "".equals(s)?
+        if ((s == null) || (s.equals(""))) {
             return null;
         }
+
         Collection allStatemachines = ((MClassifier) c).getBehaviors();
         Iterator i = allStatemachines.iterator();
         while (i.hasNext()) {

@@ -1,4 +1,4 @@
-// $Id: CoreHelperImpl.java,v 1.11 2005/01/30 20:48:13 linus Exp $
+// $Id: CoreHelperImpl.java,v 1.12 2005/02/03 20:40:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1614,33 +1614,6 @@ class CoreHelperImpl implements CoreHelper {
             }
         }
         return ret;
-    }
-
-    /**
-     * Returns the base classes (that are the classes that do not have any
-     * generalizations) for some given namespace. Personally, this seems a
-     * pointless operation to me but in GoModelToBaseElements this is done like
-     * this for some reason.
-     * TODO: find out if someone uses this.
-     *
-     * @param o is the given namespace.
-     * @return Collection
-     */
-    public Collection getBaseClasses(Object o) {
-        Collection col = new ArrayList();
-        if (o instanceof MNamespace) {
-            Iterator it =
-                nsmodel.getModelManagementHelper()
-		    .getAllModelElementsOfKind(o, MGeneralizableElement.class)
-		        .iterator();
-            while (it.hasNext()) {
-                MGeneralizableElement gen = (MGeneralizableElement) it.next();
-                if (gen.getGeneralizations().isEmpty()) {
-                    col.add(gen);
-                }
-            }
-        }
-        return col;
     }
 
     /**

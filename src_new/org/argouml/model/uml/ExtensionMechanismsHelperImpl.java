@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsHelperImpl.java,v 1.7 2005/01/30 20:48:14 linus Exp $
+// $Id: ExtensionMechanismsHelperImpl.java,v 1.8 2005/02/03 20:40:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,10 +133,6 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
      * otherwise it will be returned itself!
      *
      * TODO: Should it only search for stereotypes owned by the Model object?
-     *
-     * TODO: This function should get the project as parameter,
-     * and be independent of the ProjectManager.
-     * Or should it not even know what a project is?
      *
      * @param models a collection of models
      * @param stereo is the given stereotype
@@ -273,11 +269,14 @@ class ExtensionMechanismsHelperImpl implements ExtensionMechanismsHelper {
     }
 
     /**
-     * TODO: Should it only search for stereotypes owned by the Model objects?
+     * Get all stereotypes from all Models in the list.
+     *
+     * Finds only stereotypes owned by the Model objects themselves.
      *
      * @return the collection of stereotypes in all models
      *         in the current project
      * @param models the models to search
+     * @throws ClassCastException if an member in the models is not a Model.
      */
     public Collection getStereotypes(Collection models) {
         List ret = new ArrayList();

@@ -1,4 +1,4 @@
-// $Id: ExtensionMechanismsFactoryImpl.java,v 1.4 2005/01/31 20:54:36 linus Exp $
+// $Id: ExtensionMechanismsFactoryImpl.java,v 1.5 2005/02/03 20:40:52 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -145,7 +145,7 @@ public class ExtensionMechanismsFactoryImpl
      */
     public Object buildStereotype(
             Object theModelElementObject,
-			String theName,
+            String theName,
             Object model,
             Collection models) {
         MModelElement me = (MModelElement) theModelElementObject;
