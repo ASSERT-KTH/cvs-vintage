@@ -1,4 +1,4 @@
-// $Id: GUITestParserDisplay.java,v 1.17 2004/12/29 02:44:28 bobtarling Exp $
+// $Id: GUITestParserDisplay.java,v 1.18 2004/12/31 15:32:23 bobtarling Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -998,28 +998,28 @@ public class GUITestParserDisplay extends TestCase {
             ParserDisplay.SINGLETON.parseAttribute(text, feature);
             assertTrue(
             	   text + " gave wrong stereotype "
-            	   + (ModelFacade.getStereoType(feature) != null
-            	      ? ModelFacade.getName(ModelFacade.getStereoType(feature))
+            	   + (ModelFacade.getStereotypes(feature).size() > 0
+            	      ? ModelFacade.getName(ModelFacade.getStereotypes(feature).get(0))
             	      : "(null)"),
-            	   (val == null && ModelFacade.getStereoType(feature) == null)
+            	   (val == null && ModelFacade.getStereotypes(feature).size() == 0)
             	   || (val != null
-            	       && ModelFacade.getStereoType(feature) != null
+            	       && ModelFacade.getStereotypes(feature).size() > 0
             	       && val.equals(ModelFacade.getName(
-            	               ModelFacade.getStereoType(feature)))));
+            	               ModelFacade.getStereotypes(feature).get(0)))));
         } else if (ModelFacade.isAOperation(feature)) {
             ParserDisplay.SINGLETON.parseOperation(text, feature);
             assertTrue(
                    text
                    + " gave wrong stereotype "
-                   + (ModelFacade.getStereoType(feature) != null
+                   + (ModelFacade.getStereotypes(feature).size() > 0
                       ? ModelFacade.getName(
-                              ModelFacade.getStereoType(feature))
+                              ModelFacade.getStereotypes(feature).get(0))
                       : "(null)"),
-                   (val == null && ModelFacade.getStereoType(feature) == null)
+                   (val == null && ModelFacade.getStereotypes(feature).size() == 0)
                    || (val != null
-                       && ModelFacade.getStereoType(feature) != null
+                       && ModelFacade.getStereotypes(feature).size() > 0
                        && val.equals(ModelFacade.getName(
-                               ModelFacade.getStereoType(feature)))));
+                               ModelFacade.getStereotypes(feature).get(0)))));
         }
     }
 
