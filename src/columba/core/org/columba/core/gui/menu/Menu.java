@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -28,96 +30,114 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-
 public class Menu extends JMenuBar {
-    private MouseAdapter handler;
-    private CMenu fetchMessageSubmenu;
-    private CMenu manageSubmenu;
-    private CMenu sortSubMenu;
-    private JMenu fileMenu;
-    private JMenu editMenu;
-    private JMenu viewMenu;
-    private JMenu folderMenu;
-    private JMenu messageMenu;
-    private JMenu utilitiesMenu;
-    private JMenu helpMenu;
+	private MouseAdapter handler;
 
-    //XmlElement menuRoot;
-    private FrameMediator frameController;
-    protected MenuBarGenerator menuGenerator;
+	private CMenu fetchMessageSubmenu;
 
-    public Menu(String xmlRoot, FrameMediator frameController) {
-        super();
+	private CMenu manageSubmenu;
 
-        this.frameController = frameController;
+	private CMenu sortSubMenu;
 
-        menuGenerator = createMenuBarGeneratorInstance(xmlRoot, frameController);
+	private JMenu fileMenu;
 
-        menuGenerator.createMenuBar(this);
+	private JMenu editMenu;
 
-        try {
-            ((MenuPluginHandler) MainInterface.pluginManager.getHandler(
-                "org.columba.core.menu")).insertPlugins(this);
-        } catch (PluginHandlerNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	private JMenu viewMenu;
 
-    public MenuBarGenerator createMenuBarGeneratorInstance(String xmlRoot,
-        FrameMediator frameController) {
-        if (menuGenerator == null) {
-            menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
-        }
+	private JMenu folderMenu;
 
-        return menuGenerator;
-    }
+	private JMenu messageMenu;
 
-    public void extendMenuFromFile(String path) {
-        menuGenerator.extendMenuFromFile(path);
-        menuGenerator.createMenuBar(this);
-    }
+	private JMenu utilitiesMenu;
 
-    public void extendMenu(XmlElement menuExtension) {
-        menuGenerator.extendMenu(menuExtension);
-        menuGenerator.createMenuBar(this);
-    }
+	private JMenu helpMenu;
 
-    public void addMenuEntry(String id, AbstractColumbaAction action) {
-        CMenuItem menuItem = new CMenuItem(action);
-        menuItem.addMouseListener(handler);
+	String menuRoot;
 
-        JMenu menu = getMenu(id);
-        menu.add(menuItem);
-    }
+	private FrameMediator frameController;
 
-    public JMenu getMenu(String id) {
-        for (int i = 0; i < getMenuCount(); i++) {
-            JMenu menu = (JMenu) getComponent(i);
+	protected MenuBarGenerator menuGenerator;
 
-            if (menu.getActionCommand().equalsIgnoreCase(id)) {
-                // found the right menu
-                return menu;
-            }
-        }
+	public Menu(String xmlRoot, FrameMediator frameController) {
+		super();
 
-        return null;
-    }
+		this.menuRoot = xmlRoot;
+		this.frameController = frameController;
 
-    public void addMenuSeparator(String id) {
-        for (int i = 0; i < getMenuCount(); i++) {
-            JMenu menu = (JMenu) getComponent(i);
+		menuGenerator = createMenuBarGeneratorInstance(xmlRoot, frameController);
 
-            if (menu.getActionCommand().equalsIgnoreCase(id)) {
-                // found the right menu
-                menu.addSeparator();
-            }
-        }
-    }
+	}
 
-    /**
- * @return
- */
-    public FrameMediator getFrameController() {
-        return frameController;
-    }
+	public MenuBarGenerator createMenuBarGeneratorInstance(String xmlRoot,
+			FrameMediator frameController) {
+
+		menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
+		menuGenerator.createMenuBar(this);
+
+		try {
+			((MenuPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.core.menu")).insertPlugins(this);
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		return menuGenerator;
+	}
+
+	public void extendMenuFromFile(String path) {
+		menuGenerator.extendMenuFromFile(path);
+		menuGenerator.createMenuBar(this);
+	}
+
+	public void extendMenuFromFile(FrameMediator mediator, String path) {
+		menuGenerator = createMenuBarGeneratorInstance(menuRoot, mediator);
+
+		menuGenerator.extendMenuFromFile(path);
+		menuGenerator.createMenuBar(this);
+	}
+
+	public void extendMenu(XmlElement menuExtension) {
+		menuGenerator.extendMenu(menuExtension);
+		menuGenerator.createMenuBar(this);
+	}
+
+	public void addMenuEntry(String id, AbstractColumbaAction action) {
+		CMenuItem menuItem = new CMenuItem(action);
+		menuItem.addMouseListener(handler);
+
+		JMenu menu = getMenu(id);
+		menu.add(menuItem);
+	}
+
+	public JMenu getMenu(String id) {
+		for (int i = 0; i < getMenuCount(); i++) {
+			JMenu menu = (JMenu) getComponent(i);
+
+			if (menu.getActionCommand().equalsIgnoreCase(id)) {
+				// found the right menu
+				return menu;
+			}
+		}
+
+		return null;
+	}
+
+	public void addMenuSeparator(String id) {
+		for (int i = 0; i < getMenuCount(); i++) {
+			JMenu menu = (JMenu) getComponent(i);
+
+			if (menu.getActionCommand().equalsIgnoreCase(id)) {
+				// found the right menu
+				menu.addSeparator();
+			}
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public FrameMediator getFrameController() {
+		return frameController;
+	}
 }

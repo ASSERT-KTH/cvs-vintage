@@ -84,7 +84,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                     try {
                         AbstractColumbaAction action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
-                                    "action"), frameController);
+                                    "action"), frameMediator);
 
                         if (action != null) {
                             //use our custom CMenuItem here
@@ -93,7 +93,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                             CMenuItem tmp = new CMenuItem(action);
 
                             // display tooltip in statusbar
-                            tmp.addMouseListener(frameController.getMouseTooltipHandler());
+                            tmp.addMouseListener(frameMediator.getMouseTooltipHandler());
                             menu.add(tmp);
                             menu.add(tmp);
                         }
@@ -107,11 +107,11 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                     try {
                         AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
-                                    "checkboxaction"), frameController);
+                                    "checkboxaction"), frameMediator);
                         JCheckBoxMenuItem menuitem = new JCheckBoxMenuItem(action);
 
                         // display tooltip in statusbar
-                        menuitem.addMouseListener(frameController.getMouseTooltipHandler());
+                        menuitem.addMouseListener(frameMediator.getMouseTooltipHandler());
                         menu.add(menuitem);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -121,7 +121,7 @@ public class PopupMenuGenerator extends AbstractMenuGenerator {
                     try {
                         menu.add(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getIMenu(
-                                next.getAttribute("imenu"), frameController));
+                                next.getAttribute("imenu"), frameMediator));
                     } catch (Exception e) {
                         e.printStackTrace();
                         LOG.severe(e.getMessage());

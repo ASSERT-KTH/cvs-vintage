@@ -18,6 +18,7 @@
 
 package org.columba.mail.gui.composer;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
@@ -26,36 +27,43 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.event.EventListenerList;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.view.AbstractView;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ViewPluginHandler;
+import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.composer.action.SaveAsDraftAction;
 import org.columba.mail.gui.composer.html.HtmlEditorController;
+import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
-import org.columba.mail.gui.view.AbstractComposerView;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
+import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.swing.MultipleTransferHandler;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.debug.FormDebugPanel;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * 
@@ -63,9 +71,10 @@ import org.frappucino.swing.MultipleTransferHandler;
  * 
  * @author frd
  */
-public class ComposerController extends AbstractFrameController implements
-		CharsetOwnerInterface, Observer {
+public class ComposerController extends DefaultFrameController implements
+		CharsetOwnerInterface, Observer, ContentPane {
 
+	
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.composer");
@@ -95,8 +104,342 @@ public class ComposerController extends AbstractFrameController implements
 	/** Buffer for listeners used by addContainerListenerForEditor and createView */
 	private List containerListenerBuffer;
 
-	public ComposerController(ViewItem view) {
-		super("Composer", view);
+	private JSplitPane attachmentSplitPane;
+
+	/** Editor viewer resides in this panel */
+	private JPanel editorPanel;
+
+	private LabelWithMnemonic subjectLabel;
+
+	private LabelWithMnemonic smtpLabel;
+
+	private LabelWithMnemonic priorityLabel;
+
+	private JPanel centerPanel = new FormDebugPanel();
+
+	private JPanel topPanel;
+	
+	private HtmlToolbar htmlToolbar;
+
+	public ComposerController(org.columba.core.gui.frame.Container container, ViewItem viewItem) {
+		super(container, viewItem);
+
+		getContainer().getFrame().setTitle(
+				MailResourceLoader.getString("dialog", "composer",
+						"composerview_title")); //$NON-NLS-1$
+
+		// init model (defaults to empty plain text message)
+		composerModel = new ComposerModel();
+
+		// init controllers for different parts of the composer
+		identityInfoPanel = new IdentityInfoPanel();
+		attachmentController = new AttachmentController(this);
+		headerController = new HeaderController(this);
+		subjectController = new SubjectController(this);
+		priorityController = new PriorityController(this);
+		accountController = new AccountController(this);
+		composerSpellCheck = new ComposerSpellCheck(this);
+
+
+		// set default html or text based on stored option
+		// ... can be overridden by setting the composer model
+		XmlElement optionsElement = MailInterface.config
+				.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+
+		// create default element if not available
+		if (htmlElement == null) {
+			htmlElement = optionsElement.addSubElement("html");
+		}
+
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+
+		// set model based on configuration
+		if (enableHtml.equals("true")) {
+			getModel().setHtml(true);
+		} else {
+			getModel().setHtml(false);
+		}
+
+		// Add the composer controller as observer
+		htmlElement.addObserver(this);
+
+		// init controller for the editor depending on message type
+		if (getModel().isHtml()) {
+			editorController = new HtmlEditorController(this);
+		} else {
+			editorController = new TextEditorController(this);
+		}
+
+		initComponents();
+
+//		 add JPanel with useful HTML related actions.
+		htmlToolbar = new HtmlToolbar(this);
+		
+		layoutComponents();
+
+		showAttachmentPanel();
+
+		container.extendMenuFromFile(this, "org/columba/mail/action/composer_menu.xml");
+
+		container.extendToolbar(this, MailInterface.config.get("composer_toolbar").getElement(
+				"toolbar"));
+		
+		// Hack to ensure charset is set correctly at start-up
+		XmlElement charsetElement = optionsElement.getElement("charset");
+
+		if (charsetElement != null) {
+			String charset = charsetElement.getAttribute("name");
+
+			if (charset != null) {
+				try {
+					setCharset(Charset.forName(charset));
+				} catch (UnsupportedCharsetException ex) {
+					//ignore this
+				}
+			}
+		}
+
+		// Setup DnD for the text and attachment list control.
+		ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(
+				attachmentController);
+		attachmentController.getView().setDragEnabled(true);
+		attachmentController.getView().setTransferHandler(dndTransferHandler);
+
+		JEditorPane editorComponent = (JEditorPane) getEditorController()
+				.getComponent();
+		MultipleTransferHandler compositeHandler = new MultipleTransferHandler();
+		compositeHandler.addTransferHandler(editorComponent
+				.getTransferHandler());
+		compositeHandler.addTransferHandler(dndTransferHandler);
+		editorComponent.setDragEnabled(true);
+		editorComponent.setTransferHandler(compositeHandler);
+
+		//getContainer().setContentPane(this);
+
+		// TODO re-add identityinfo panel
+		/*
+		 * if (isAccountInfoPanelVisible()) {
+		 * addToolBar(getIdentityInfoPanel()); }
+		 */
+		getContainer().setInfoPanel(getIdentityInfoPanel());
+
+		//		 *20030917, karlpeder* If ContainerListeners are waiting to be
+		// added, add them now.
+		if (containerListenerBuffer != null) {
+			LOG.fine("Adding ContainerListeners from buffer");
+
+			Iterator ite = containerListenerBuffer.iterator();
+
+			while (ite.hasNext()) {
+				ContainerListener cl = (ContainerListener) ite.next();
+				getEditorPanel().addContainerListener(cl);
+			}
+
+			containerListenerBuffer = null; // done, the buffer has been emptied
+		}
+
+		getContainer().getFrame().setFocusTraversalPolicy(
+				new ComposerFocusTraversalPolicy());
+
+		getContainer().setContentPane(this);
+		
+		//		 To: editor should request focus
+		headerController.getView().getToComboBox().requestFocusInWindow();
+	}
+
+	public IdentityInfoPanel getAccountInfoPanel() {
+
+		return getIdentityInfoPanel();
+	}
+
+	/**
+	 * Show attachment panel
+	 * <p>
+	 * Asks the ComposerModel if message contains attachments. If so, show the
+	 * attachment panel. Otherwise, hide the attachment panel.
+	 */
+	public void showAttachmentPanel() {
+		// remove all components from container
+		centerPanel.removeAll();
+
+		// re-add all top components like recipient editor/subject editor
+		centerPanel.add(topPanel, BorderLayout.NORTH);
+
+		// if message contains attachments
+		if (getAttachmentController().getView().count() > 0) {
+			// create scrollapen
+			JScrollPane attachmentScrollPane = new JScrollPane(
+					getAttachmentController().getView());
+			attachmentScrollPane
+					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1,
+					1, 1, 1));
+			// create splitpane containing the bodytext editor and the
+			// attachment panel
+			attachmentSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+					editorPanel, attachmentScrollPane);
+			attachmentSplitPane.setDividerLocation(0.80);
+			attachmentSplitPane.setBorder(null);
+
+			// add splitpane to the center
+			centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
+
+			// set splitpane position based on configuration settings
+			XmlElement viewElement = MailInterface.config.get(
+					"composer_options").getElement("/options/gui/view");
+			ViewItem viewItem = new ViewItem(viewElement);
+			// default value is 200 pixel
+			int pos = viewItem.getInteger("splitpanes", "attachment", 200);
+			attachmentSplitPane.setDividerLocation(pos);
+		} else {
+			// no attachments
+			// -> only show bodytext editor
+			centerPanel.add(editorPanel, BorderLayout.CENTER);
+		}
+
+		// re-paint composer-view
+		getContainer().getFrame().validate();
+
+	}
+
+	/**
+	 * @return Returns the attachmentSplitPane.
+	 */
+	public JSplitPane getAttachmentSplitPane() {
+		return attachmentSplitPane;
+	}
+
+	/**
+	 * init components
+	 */
+	protected void initComponents() {
+		subjectLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "composer", "subject"));
+		smtpLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "composer", "identity"));
+		priorityLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+				"dialog", "composer", "priority"));
+		
+		editorPanel = new JPanel();
+		editorPanel.setBorder(null);
+		editorPanel.setLayout(new BorderLayout());
+	}
+
+	/**
+	 * Layout components
+	 */
+	public void layoutComponents() {
+		centerPanel.removeAll();
+
+		topPanel = new JPanel();
+		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
+
+		// Create a FormLayout instance.
+		FormLayout layout = new FormLayout(
+				"center:max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
+
+				// 2 columns
+				"fill:default, 3dlu,fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
+
+		// 3 row
+		PanelBuilder builder = new PanelBuilder(topPanel, layout);
+		CellConstraints cc = new CellConstraints();
+
+		layout.setColumnGroups(new int[][] { { 1 } });
+
+		layout.setRowGroups(new int[][] { { 1, 5, 7 } });
+
+		builder.add(smtpLabel, cc.xy(1, 1));
+
+		JPanel smtpPanel = new JPanel();
+		FormLayout l = new FormLayout(
+				"default, 3dlu, right:default:grow, 3dlu, right:default",
+				"fill:default:grow");
+		PanelBuilder b = new PanelBuilder(smtpPanel, l);
+
+		CellConstraints c = new CellConstraints();
+		b.add(getAccountController().getView(), c.xy(1, 1));
+		b.add(priorityLabel, c.xy(3, 1));
+		b.add(getPriorityController().getView(), c.xy(5, 1));
+
+		builder.add(smtpPanel, cc.xy(3, 1));
+
+		builder.add(getHeaderController().getView(), cc.xywh(1, 3, 4, 1));
+
+		builder.add(subjectLabel, cc.xy(1, 5));
+		builder.add(getSubjectController().getView(), cc.xy(3, 5));
+
+		
+
+		builder.add(htmlToolbar, cc.xywh(3, 7, 2, 1));
+
+		
+
+		// *20030907, karlpeder* getViewUIComponent returns view
+		//            already encapsulated in a scroll pane.
+		//JScrollPane scrollPane =
+		//	new JScrollPane(controller.getEditorController().view);
+		//editorPanel.add(scrollPane, BorderLayout.CENTER);
+		editorPanel.add(getEditorController().getViewUIComponent());
+
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		centerPanel.setLayout(new BorderLayout());
+
+		centerPanel.add(topPanel, BorderLayout.NORTH);
+
+		JScrollPane attachmentScrollPane = new JScrollPane(
+				getAttachmentController().getView());
+		attachmentScrollPane
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1,
+				1));
+
+		attachmentSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+				editorPanel, attachmentScrollPane);
+		attachmentSplitPane.setDividerLocation(0.80);
+		attachmentSplitPane.setBorder(null);
+
+		centerPanel.add(attachmentSplitPane, BorderLayout.CENTER);
+
+		XmlElement viewElement = MailInterface.config.get("composer_options")
+				.getElement("/options/gui/view");
+		ViewItem viewItem = new ViewItem(viewElement);
+		int pos = viewItem.getInteger("splitpanes", "attachment", 200);
+		attachmentSplitPane.setDividerLocation(pos);
+
+	}
+
+	/**
+	 * Returns a reference to the panel, that holds the editor view. This is
+	 * used by the ComposerController when adding a listener to that panel.
+	 */
+	public JPanel getEditorPanel() {
+		return editorPanel;
+	}
+
+	/**
+	 * Used to update the panel, that holds the editor viewer. This is necessary
+	 * e.g. if the ComposerModel is changed to hold another message type (text /
+	 * html), which the previous editor can not handle. If so a new editor
+	 * controller is created, and thereby a new view.
+	 */
+	public void setNewEditorView() {
+
+		// update panel
+		editorPanel.removeAll();
+		editorPanel.add(getEditorController().getViewUIComponent());
+		editorPanel.validate();
+	}
+
+	public boolean isAccountInfoPanelVisible() {
+		// TODO fix account info panel check
+
+		/*
+		 * return isToolbarEnabled(ACCOUNTINFOPANEL);
+		 */
+
+		return true;
 	}
 
 	/**
@@ -127,72 +470,8 @@ public class ComposerController extends AbstractFrameController implements
 		headerController.updateComponents(b);
 
 		// show attachment panel if necessary
-		if ( b)
-		((ComposerView) getView()).showAttachmentPanel();
-	}
-
-	/**
-	 * @see org.columba.core.gui.FrameController#createView()
-	 */
-	protected AbstractView createView() {
-		//ComposerView view = new ComposerView(this);
-		// Load "plugin" view instead
-		ViewPluginHandler handler = null;
-
-		try {
-			handler = (ViewPluginHandler) MainInterface.pluginManager
-					.getHandler("org.columba.core.view");
-		} catch (PluginHandlerNotFoundException ex) {
-                        throw new RuntimeException(ex);
-		}
-
-		// get view using the plugin handler found above
-		Object[] args = { this };
-
-		try {
-			view = (AbstractView) handler.getPlugin(getViewItem().getRoot()
-					.getAttribute("frame", id), args);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		if (view.getFrame() != null) {
-			view.getFrame()
-					.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		}
-
-		// *20030917, karlpeder* If ContainerListeners are waiting to be
-		// added, add them now.
-		if (containerListenerBuffer != null) {
-			LOG.fine("Adding ContainerListeners from buffer");
-
-			Iterator ite = containerListenerBuffer.iterator();
-
-			while (ite.hasNext()) {
-				ContainerListener cl = (ContainerListener) ite.next();
-				((AbstractComposerView) view).getEditorPanel()
-						.addContainerListener(cl);
-			}
-
-			containerListenerBuffer = null; // done, the buffer has been emptied
-		}
-		return view;
-	}
-
-	public void openView() {
-		super.openView();
-
-		getView().getFrame().setFocusTraversalPolicy(
-				new ComposerFocusTraversalPolicy());
-
-		// To: editor should request focus
-		headerController.getView().getToComboBox().requestFocusInWindow();
-	}
-
-	/**
-	 * @see org.columba.core.gui.FrameController#initInternActions()
-	 */
-	protected void initInternActions() {
+		if (b)
+			showAttachmentPanel();
 	}
 
 	/**
@@ -259,77 +538,7 @@ public class ComposerController extends AbstractFrameController implements
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
 	protected void init() {
-		// init model (defaults to empty plain text message)
-		composerModel = new ComposerModel();
 
-		// init controllers for different parts of the composer
-		identityInfoPanel = new IdentityInfoPanel();
-		attachmentController = new AttachmentController(this);
-		headerController = new HeaderController(this);
-		subjectController = new SubjectController(this);
-		priorityController = new PriorityController(this);
-		accountController = new AccountController(this);
-		composerSpellCheck = new ComposerSpellCheck(this);
-
-		// set default html or text based on stored option
-		// ... can be overridden by setting the composer model
-		XmlElement optionsElement = MailInterface.config
-				.get("composer_options").getElement("/options");
-		XmlElement htmlElement = optionsElement.getElement("html");
-
-		// create default element if not available
-		if (htmlElement == null) {
-			htmlElement = optionsElement.addSubElement("html");
-		}
-
-		String enableHtml = htmlElement.getAttribute("enable", "false");
-
-		// set model based on configuration
-		if (enableHtml.equals("true")) {
-			getModel().setHtml(true);
-		} else {
-			getModel().setHtml(false);
-		}
-
-		// Add the composer controller as observer
-		htmlElement.addObserver(this);
-
-		// init controller for the editor depending on message type
-		if (getModel().isHtml()) {
-			editorController = new HtmlEditorController(this);
-		} else {
-			editorController = new TextEditorController(this);
-		}
-
-		// Hack to ensure charset is set correctly at start-up
-		XmlElement charsetElement = optionsElement.getElement("charset");
-
-		if (charsetElement != null) {
-			String charset = charsetElement.getAttribute("name");
-
-			if (charset != null) {
-				try {
-					setCharset(Charset.forName(charset));
-				} catch (UnsupportedCharsetException ex) {
-					//ignore this
-				}
-			}
-		}
-
-		// Setup DnD for the text and attachment list control.
-		ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(
-				attachmentController);
-		attachmentController.getView().setDragEnabled(true);
-		attachmentController.getView().setTransferHandler(dndTransferHandler);
-
-		JEditorPane editorComponent = (JEditorPane) getEditorController()
-				.getComponent();
-		MultipleTransferHandler compositeHandler = new MultipleTransferHandler();
-		compositeHandler.addTransferHandler(editorComponent
-				.getTransferHandler());
-		compositeHandler.addTransferHandler(dndTransferHandler);
-		editorComponent.setDragEnabled(true);
-		editorComponent.setTransferHandler(compositeHandler);
 	}
 
 	/**
@@ -409,7 +618,7 @@ public class ComposerController extends AbstractFrameController implements
 		}
 
 		// an update of the view is also necessary.
-		((AbstractComposerView) getView()).setNewEditorView();
+		setNewEditorView();
 	}
 
 	/**
@@ -421,18 +630,10 @@ public class ComposerController extends AbstractFrameController implements
 	 * in setting up the controller-view framework for the composer
 	 */
 	public void addContainerListenerForEditor(ContainerListener cl) {
-		if (view != null) {
-			// add listener
-			((AbstractComposerView) view).getEditorPanel()
-					.addContainerListener(cl);
-		} else {
-			// view not yet created - store listener in buffer
-			if (containerListenerBuffer == null) {
-				containerListenerBuffer = new ArrayList();
-			}
 
-			containerListenerBuffer.add(cl);
-		}
+		// add listener
+		getEditorPanel().addContainerListener(cl);
+
 	}
 
 	/**
@@ -440,8 +641,7 @@ public class ComposerController extends AbstractFrameController implements
 	 * (previously registered using addContainListenerForEditor)
 	 */
 	public void removeContainerListenerForEditor(ContainerListener cl) {
-		((AbstractComposerView) getView()).getEditorPanel()
-				.removeContainerListener(cl);
+		getEditorPanel().removeContainerListener(cl);
 	}
 
 	public Charset getCharset() {
@@ -532,6 +732,61 @@ public class ComposerController extends AbstractFrameController implements
 		}
 	}
 
+	public void savePositions(ViewItem viewItem) {
+		super.savePositions(viewItem);
+
+		XmlElement viewElement = MailInterface.config.get("composer_options")
+				.getElement("/options/gui/view");
+		viewItem = new ViewItem(viewElement);
+
+		// splitpanes
+		if (attachmentSplitPane != null)
+			viewItem.set("splitpanes", "attachment", attachmentSplitPane
+					.getDividerLocation());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.frame.AbstractFrameView#showToolbar()
+	 */
+	public void showToolbar() {
+
+		// TODO: show toolbar
+		/*
+		 * boolean b = isToolbarVisible();
+		 * 
+		 * if (getToolBar() == null) { return; }
+		 * 
+		 * if (b) { toolbarPane.remove(toolbar); ((FrameMediator)
+		 * frameController) .enableToolbar(MAIN_TOOLBAR, false); } else { if
+		 * (isAccountInfoPanelVisible()) { toolbarPane.removeAll();
+		 * toolbarPane.add(toolbar); toolbarPane.add(getAccountInfoPanel()); }
+		 * else { toolbarPane.add(toolbar); }
+		 * 
+		 * ((FrameMediator) frameController).enableToolbar(MAIN_TOOLBAR, true); }
+		 * 
+		 * validate(); repaint();
+		 */
+	}
+
+	public void showAccountInfoPanel() {
+		// TODO show accountinfo panel
+		/*
+		 * boolean b = isAccountInfoPanelVisible();
+		 * 
+		 * if (b) { toolbarPane.remove(getAccountInfoPanel()); ((FrameMediator)
+		 * frameController).enableToolbar(ACCOUNTINFOPANEL, false); } else {
+		 * toolbarPane.add(getAccountInfoPanel());
+		 * 
+		 * ((FrameMediator) frameController).enableToolbar(ACCOUNTINFOPANEL,
+		 * true); }
+		 * 
+		 * validate(); repaint();
+		 */
+	}
+
 	/**
 	 * Window listener prompts the user to save his work when closing the
 	 * dialog.
@@ -551,7 +806,7 @@ public class ComposerController extends AbstractFrameController implements
 			Object[] options = { "Close", "Cancel", "Save" };
 			int n = JOptionPane
 					.showOptionDialog(
-							getView().getFrame(),
+							getContainer().getFrame(),
 							"Message wasn't sent. Would you like to save your changes?",
 							"Warning: Message was modified",
 							JOptionPane.YES_NO_CANCEL_OPTION,
@@ -564,13 +819,13 @@ public class ComposerController extends AbstractFrameController implements
 						.actionPerformed(null);
 
 				// close composer
-				getView().getFrame().setVisible(false);
+				getContainer().getFrame().setVisible(false);
 			} else if (n == 1) {
 				// cancel question dialog and don't close composer
-				getView().getFrame().setVisible(true);
+				getContainer().getFrame().setVisible(true);
 			} else {
 				// close composer
-				getView().getFrame().setVisible(false);
+				getContainer().getFrame().setVisible(false);
 			}
 		}
 	};
@@ -579,15 +834,19 @@ public class ComposerController extends AbstractFrameController implements
 
 		public Component getComponentAfter(Container focusCycleRoot,
 				Component aComponent) {
-			if ( aComponent.equals(accountController.getView()))
+			if (aComponent.equals(accountController.getView()))
 				return priorityController.getView();
-			else if ( aComponent.equals(priorityController.getView()))
-				return headerController.getView().getToComboBox().getTextEditor();
-			else if (aComponent.equals(headerController.getView().getToComboBox().getTextEditor()))
-				return headerController.getView().getCcComboBox().getTextEditor();
+			else if (aComponent.equals(priorityController.getView()))
+				return headerController.getView().getToComboBox()
+						.getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getToComboBox().getTextEditor()))
+				return headerController.getView().getCcComboBox()
+						.getTextEditor();
 			else if (aComponent.equals(headerController.getView()
 					.getCcComboBox().getTextEditor()))
-				return headerController.getView().getBccComboBox().getTextEditor();
+				return headerController.getView().getBccComboBox()
+						.getTextEditor();
 			else if (aComponent.equals(headerController.getView()
 					.getBccComboBox().getTextEditor()))
 				return subjectController.getView();
@@ -602,16 +861,20 @@ public class ComposerController extends AbstractFrameController implements
 			if (aComponent.equals(editorController.getComponent()))
 				return subjectController.getView();
 			else if (aComponent.equals(subjectController.getView()))
-				return headerController.getView().getBccComboBox().getTextEditor();
+				return headerController.getView().getBccComboBox()
+						.getTextEditor();
 			else if (aComponent.equals(headerController.getView()
 					.getBccComboBox().getTextEditor()))
-				return headerController.getView().getCcComboBox().getTextEditor();
+				return headerController.getView().getCcComboBox()
+						.getTextEditor();
 			else if (aComponent.equals(headerController.getView()
 					.getCcComboBox().getTextEditor()))
-				return headerController.getView().getToComboBox().getTextEditor();
-			else if ( aComponent.equals(headerController.getView().getToComboBox().getTextEditor()))
+				return headerController.getView().getToComboBox()
+						.getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getToComboBox().getTextEditor()))
 				return priorityController.getView();
-			else if ( aComponent.equals(priorityController.getView()))
+			else if (aComponent.equals(priorityController.getView()))
 				return accountController.getView();
 
 			return editorController.getComponent();
@@ -628,5 +891,26 @@ public class ComposerController extends AbstractFrameController implements
 		public Component getFirstComponent(Container focusCycleRoot) {
 			return accountController.getView();
 		}
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 */
+	public JComponent getComponent() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
+		panel.add(centerPanel, BorderLayout.CENTER);
+
+		
+
+		return panel;
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public String getString(String sPath, String sName, String sID) {
+		return MailResourceLoader.getString(sPath, sName, sID);
 	}
 }

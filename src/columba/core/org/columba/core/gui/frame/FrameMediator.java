@@ -22,8 +22,6 @@ import java.awt.event.MouseAdapter;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
-import org.columba.core.gui.view.AbstractView;
-
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -41,40 +39,49 @@ import org.columba.core.gui.view.AbstractView;
  * affect code in several other classes. <bre>The Mediator pattern addresses
  * this problem by promoting looser coupling between these classes. Mediators
  * accomplish this by being the only class that has detailed knowledge of the
- * methods of other classes. Classes send inform the mediator when changes
- * occur and the Mediator passes them on to any other classes that need to be
+ * methods of other classes. Classes send inform the mediator when changes occur
+ * and the Mediator passes them on to any other classes that need to be
  * informed.
- *
+ * 
  * @author fdietz
  */
 public interface FrameMediator {
-    
-    /**
-     * Provides access to the View at the basic interface level.
-     */
-    public AbstractView getView();
 
-   /**
-     * Initialize and display the View. (Create if necessary).
-     */
-    public void openView();
+	public StatusBar getStatusBar();
 
-    /**
-     * Save window properties and close the window. This includes telling the
-     * frame model that this window/frame is closing, so it can be
-     * "unregistered" correctly
-     */
-    public void close();
+	public MouseAdapter getMouseTooltipHandler();
 
-    public ViewItem getViewItem();
+	/**
+	 * forwarded from Container.getViewItem()
+	 * 
+	 * @return
+	 */
+	public ViewItem getViewItem();
 
-    public StatusBar getStatusBar();
+	public SelectionManager getSelectionManager();
 
-    public SelectionManager getSelectionManager();
+	/**
+	 * Loads stored information about the previous size and location of the
+	 * view.
+	 */
+	void loadPositions(ViewItem viewItem);
 
-    public MouseAdapter getMouseTooltipHandler();
+	/**
+	 * Saves information about the current size and location of the view
+	 */
+	void savePositions(ViewItem viewItem);
 
-    public void enableToolbar(String id, boolean enable);
+	public Container getContainer();
+	
+	/**
+	 * TODO adapter only --> will be removed!
+	 * @return
+	 */
+	public Container getView();
+	
+	public void setContainer(Container c);
+	
+	String getId();
 
-    public boolean isToolbarEnabled(String id);
+	String getString(String sPath, String sName, String sID);
 }

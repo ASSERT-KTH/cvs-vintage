@@ -16,6 +16,7 @@
 package org.columba.core.loader;
 
 import java.lang.reflect.Constructor;
+import java.util.logging.Logger;
 
 
 /**
@@ -28,6 +29,9 @@ import java.lang.reflect.Constructor;
  * @author fdietz
  */
 public class DefaultClassLoader {
+	
+	private static final Logger LOG = Logger.getLogger("org.columba.core.loader");
+	
     // we can't use SystemClassLoader here, because that doesn't work
     // with java webstart
     // -> instead we use this.getClass().getClassLoader()
@@ -116,6 +120,11 @@ public class DefaultClassLoader {
 
         // couldn't find correct constructor
         if (constructor == null) {
+        	LOG.severe("Couldn't find constructor for "+className+" with matching argument-list: ");
+        	for ( int i=0; i<args.length; i++) {
+        		LOG.severe("argument["+i+"]="+args[i]);
+        	}
+        	
             return null;
         }
 

@@ -13,7 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.core.gui.util;
+package org.columba.core.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -25,24 +25,17 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 
-public class CInfoPanel extends JPanel {
+public class ContainerInfoPanel extends JPanel {
     protected JPanel panel;
     protected GridBagLayout gridbagLayout;
     protected GridBagConstraints gridbagConstraints;
     protected Font font;
 
-    public CInfoPanel() {
+    public ContainerInfoPanel() {
         super();
 
         font = UIManager.getFont("Label.font");
 
-        /*
-font = font.deriveFont(Font.BOLD);
-
-
-int size = font.getSize();
-font = font.deriveFont( Font.BOLD, size+2 );
-*/
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         setLayout(new BorderLayout());

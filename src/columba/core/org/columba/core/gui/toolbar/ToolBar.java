@@ -19,6 +19,7 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
@@ -54,6 +55,18 @@ public class ToolBar extends JToolBar {
     //XmlIO xmlFile;
     FrameMediator frameController;
 
+    public ToolBar(FrameMediator controller) {
+        super();
+     
+        this.frameController = controller;
+
+        createButtons();
+
+        setRollover(true);
+
+        setFloatable(false);
+    }
+    
     public ToolBar(XmlElement rootElement, FrameMediator controller) {
         super();
         this.frameController = controller;
@@ -66,6 +79,41 @@ public class ToolBar extends JToolBar {
 
         setFloatable(false);
     }
+    
+    public void extendToolbar(XmlElement rootElement, FrameMediator mediator) {
+    	this.frameController = mediator;
+    	extendToolbar(rootElement);
+    }
+    
+    public void extendToolbar(XmlElement rootElement) {
+    	 this.rootElement = rootElement;
+    	 
+    	 removeAll();
+    	 
+    	 ListIterator iterator = rootElement.getElements().listIterator();
+         XmlElement buttonElement = null;
+
+         while (iterator.hasNext()) {
+             try {
+                 buttonElement = (XmlElement) iterator.next();
+
+                 if (buttonElement.getName().equals("button")) {
+                     addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                             "org.columba.core.action")).getAction(
+                             buttonElement.getAttribute("action"),
+                             frameController));
+                 } else if (buttonElement.getName().equals("separator")) {
+                     addSeparator();
+                 }
+             } catch (Exception e) {
+                 LOG.info("toolbar-button=" + ((String) buttonElement.getAttribute("action")));
+
+                 e.printStackTrace();
+             }
+         }
+         
+    	 createButtons();
+    }
 
     public boolean getVisible() {
         return Boolean.valueOf(rootElement.getAttribute("visible"))
@@ -73,32 +121,22 @@ public class ToolBar extends JToolBar {
     }
 
     private void createButtons() {
-        removeAll();
+        
 
-        ListIterator iterator = rootElement.getElements().listIterator();
-        XmlElement buttonElement = null;
-
-        while (iterator.hasNext()) {
-            try {
-                buttonElement = (XmlElement) iterator.next();
-
-                if (buttonElement.getName().equals("button")) {
-                    addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
-                            "org.columba.core.action")).getAction(
-                            buttonElement.getAttribute("action"),
-                            frameController));
-                } else if (buttonElement.getName().equals("separator")) {
-                    addSeparator();
-                }
-            } catch (Exception e) {
-                LOG.info("toolbar-button=" + ((String) buttonElement.getAttribute("action")));
-
-                e.printStackTrace();
-            }
-        }
+        //add(Box.createHorizontalGlue());
+       
+        try {
+			addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+			"org.columba.core.action")).getAction(
+			"Cancel",
+			frameController));
+		} catch (PluginHandlerNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         add(Box.createHorizontalGlue());
-
+        
         ImageSequenceTimer image = frameController.getStatusBar()
                                                   .getImageSequenceTimer();
         add(image);

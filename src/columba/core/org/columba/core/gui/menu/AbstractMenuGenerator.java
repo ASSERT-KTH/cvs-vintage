@@ -43,20 +43,20 @@ public abstract class AbstractMenuGenerator {
 
     protected XmlElement menuRoot;
     protected XmlIO xmlFile;
-    protected FrameMediator frameController;
+    protected FrameMediator frameMediator;
 
     /**
      *
      */
-    public AbstractMenuGenerator(FrameMediator frameController, String path) {
-        this.frameController = frameController;
+    public AbstractMenuGenerator(FrameMediator frameMediator, String path) {
+        this.frameMediator = frameMediator;
 
         xmlFile = new XmlIO(DiskIO.getResourceURL(path));
         xmlFile.load();
     }
 
     public String getString(String sPath, String sName, String sID) {
-        return GlobalResourceLoader.getString(sPath, sName, sID);
+        return frameMediator.getString(sPath, sName, sID);
     }
 
     // XmlIO.getRoot().getElement("menubar");
@@ -154,6 +154,7 @@ public abstract class AbstractMenuGenerator {
     }
 
     protected JMenu createMenu(XmlElement menuElement) {
+    	
         List childs = menuElement.getElements();
         ListIterator it = childs.listIterator();
 
@@ -180,7 +181,7 @@ public abstract class AbstractMenuGenerator {
 						try {
 							action = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
 							        "org.columba.core.action")).getAction(next.getAttribute(
-							            "action"), frameController);
+							            "action"), frameMediator);
 						} catch (PluginHandlerNotFoundException e) {
 							if ( MainInterface.DEBUG)
 								e.printStackTrace();
@@ -193,7 +194,7 @@ public abstract class AbstractMenuGenerator {
                             CMenuItem tmp = new CMenuItem(action);
 
                             // display tooltip in statusbar
-                            tmp.addMouseListener(frameController.getMouseTooltipHandler());
+                            tmp.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
                             menu.add(tmp);
                             lastWasSeparator = false;
                         }
@@ -201,13 +202,13 @@ public abstract class AbstractMenuGenerator {
                     try {
                         AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getAction(next.getAttribute(
-                                    "checkboxaction"), frameController);
+                                    "checkboxaction"), frameMediator);
 
                         if (action != null) {
                             CCheckBoxMenuItem menuitem = new CCheckBoxMenuItem(action);
 
                             // display tooltip in statusbar
-                            menuitem.addMouseListener(frameController.getMouseTooltipHandler());
+                            menuitem.addMouseListener(frameMediator.getContainer().getMouseTooltipHandler());
                             menu.add(menuitem);
 
                             lastWasSeparator = false;
@@ -220,7 +221,7 @@ public abstract class AbstractMenuGenerator {
                     try {
                         IMenu imenu = ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
                                 "org.columba.core.action")).getIMenu(next.getAttribute(
-                                    "imenu"), frameController);
+                                    "imenu"), frameMediator);
 
                         if (imenu != null) {
                             menu.add(imenu);

@@ -21,10 +21,16 @@ package org.columba.core.plugin;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.loader.DefaultClassLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
@@ -169,9 +175,9 @@ public abstract class AbstractPluginHandler implements PluginHandler {
      * Shows an error message and disables the plugin.
      */
     protected void handlePluginError(String plugin) {
-        JOptionPane.showMessageDialog(null, MessageFormat.format(
+        JOptionPane.showMessageDialog(null, new MultiLineLabel(MessageFormat.format(
             GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager",
-            "errLoad.msg"), new String[]{plugin}),
+            "errLoad.msg"), new String[]{plugin})),
             GlobalResourceLoader.getString(RESOURCE_PATH, "pluginmanager", 
             "errLoad.title"), JOptionPane.ERROR_MESSAGE);
         

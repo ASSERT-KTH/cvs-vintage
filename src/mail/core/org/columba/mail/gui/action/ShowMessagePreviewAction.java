@@ -26,7 +26,7 @@ import org.columba.core.config.DefaultItem;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.frame.MailFrameView;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 
 /**
  * Show/Hide message previous window.
@@ -48,6 +48,10 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 		ViewItem item = frameMediator.getViewItem();
 				
 		element = item.getRoot().getElement("splitpanes");
+		if ( element == null ) {
+			element = new XmlElement("splitpanes");
+			item.getRoot().addElement(element);
+		}
 		
 		element.addObserver(this);
 
@@ -60,11 +64,13 @@ public class ShowMessagePreviewAction extends AbstractSelectableAction
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 
-		((MailFrameView) frameMediator.getView())
+		
+		((ThreePaneMailFrameController) frameMediator)
 				.enableMessagePreview(getState());
 		
-		DefaultItem item = new DefaultItem(element);
-		item.set("header_enabled", getState());
+		//DefaultItem item = new DefaultItem(element);
+		//item.set("header_enabled", getState());
+		
 	}
 
 	/**

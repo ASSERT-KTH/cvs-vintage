@@ -18,99 +18,97 @@ package org.columba.core.main;
 
 import java.util.logging.Logger;
 
-import org.columba.core.plugin.PluginLoadingFailedException;
-
-//FIXME: Command line handling should me modularized in order to remove
-// dependencies here
-import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.action.NewMessageAction;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
 
 /**
- * This class handles given arguments (in style of commandline arguments. If for example the
- * argument --composer is given, on startup the composer window is viewed. All other arguments like
- * subject ect. also given to the composer, so any values to write a mail can given here as
- * arguments and then a composer window with all values are opened.
- *
+ * This class handles given arguments (in style of commandline arguments. If for
+ * example the argument --composer is given, on startup the composer window is
+ * viewed. All other arguments like subject ect. also given to the composer, so
+ * any values to write a mail can given here as arguments and then a composer
+ * window with all values are opened.
+ * 
  * @author waffel
  */
 public class CmdLineArgumentHandler {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.main");
+	private static final Logger LOG = Logger.getLogger("org.columba.core.main");
 
-    /**
-     * Constructs a new CommandLineArgumentHandler. This Handler parsed the given commandline
-     * Options an if needed starts a composer window. If any commandlineargument unknown a message
-     * is printed out to the error console and the system will exit.
-     * @param args Commandline Arguments to be parsed.
-     */
-    public CmdLineArgumentHandler(ColumbaCmdLineParser cmdLineParser) {
-        String mailURL = cmdLineParser.getMailurlOption();
+	/**
+	 * Constructs a new CommandLineArgumentHandler. This Handler parsed the
+	 * given commandline Options an if needed starts a composer window. If any
+	 * commandlineargument unknown a message is printed out to the error console
+	 * and the system will exit.
+	 * 
+	 * @param args
+	 *            Commandline Arguments to be parsed.
+	 */
+	public CmdLineArgumentHandler(ColumbaCmdLineParser cmdLineParser) {
+		String mailURL = cmdLineParser.getMailurlOption();
 
-        if (mailURL != null) {
-            if (MailUrlParser.isMailUrl(mailURL)) {
-                MailUrlParser mailToParser = new MailUrlParser(mailURL);
-                cmdLineParser.setComposerOption(true);
-                cmdLineParser.setRcptOption((String) mailToParser.get("mailto:"));
-                cmdLineParser.setSubjectOption((String) mailToParser.get(
-                        "subject="));
-                cmdLineParser.setCcOption((String) mailToParser.get("cc="));
-                cmdLineParser.setBccOption((String) mailToParser.get("bcc="));
-                cmdLineParser.setBodyOption((String) mailToParser.get("body="));
-            }
-        }
+		if (mailURL != null) {
+			if (MailUrlParser.isMailUrl(mailURL)) {
+				MailUrlParser mailToParser = new MailUrlParser(mailURL);
+				cmdLineParser.setComposerOption(true);
+				cmdLineParser.setRcptOption((String) mailToParser
+						.get("mailto:"));
+				cmdLineParser.setSubjectOption((String) mailToParser
+						.get("subject="));
+				cmdLineParser.setCcOption((String) mailToParser.get("cc="));
+				cmdLineParser.setBccOption((String) mailToParser.get("bcc="));
+				cmdLineParser.setBodyOption((String) mailToParser.get("body="));
+			}
+		}
 
-        LOG.info("Option Debug: " + MainInterface.DEBUG);
-        LOG.info("Option subject: " + cmdLineParser.getSubjectOption());
-        LOG.info("Option composer: " + cmdLineParser.getComposerOption());
-        LOG.info("Option mailurl: " + cmdLineParser.getMailurlOption());
+		LOG.info("Option Debug: " + MainInterface.DEBUG);
+		LOG.info("Option subject: " + cmdLineParser.getSubjectOption());
+		LOG.info("Option composer: " + cmdLineParser.getComposerOption());
+		LOG.info("Option mailurl: " + cmdLineParser.getMailurlOption());
 
-        if (cmdLineParser.getComposerOption()) {
-            ComposerModel model = new ComposerModel();
+		if (cmdLineParser.getComposerOption()) {
+			ComposerModel model = new ComposerModel();
 
-            if (cmdLineParser.getRcptOption() != null) {
-                model.setTo(cmdLineParser.getRcptOption());
-            }
+			if (cmdLineParser.getRcptOption() != null) {
+				model.setTo(cmdLineParser.getRcptOption());
+			}
 
-            if (cmdLineParser.getSubjectOption() != null) {
-                model.setSubject(cmdLineParser.getSubjectOption());
-            }
+			if (cmdLineParser.getSubjectOption() != null) {
+				model.setSubject(cmdLineParser.getSubjectOption());
+			}
 
-            if (cmdLineParser.getCcOption() != null) {
-                model.setHeaderField("Cc", cmdLineParser.getCcOption());
-            }
+			if (cmdLineParser.getCcOption() != null) {
+				model.setHeaderField("Cc", cmdLineParser.getCcOption());
+			}
 
-            if (cmdLineParser.getBccOption() != null) {
-                model.setHeaderField("Bcc", cmdLineParser.getBccOption());
-            }
+			if (cmdLineParser.getBccOption() != null) {
+				model.setHeaderField("Bcc", cmdLineParser.getBccOption());
+			}
 
-            if (cmdLineParser.getBodyOption() != null) {
-                String body = cmdLineParser.getBodyOption();
+			if (cmdLineParser.getBodyOption() != null) {
+				String body = cmdLineParser.getBodyOption();
 
-                /*
-                 * *20030917, karlpeder* Set the model to html or text
-                 * based on the body specified on the command line. This
-                 * is done using a simple check: Does the body contain
-                 * <html> and </html>
-                 */
-                boolean html = false;
-                String lcase = body.toLowerCase();
+				/*
+				 * *20030917, karlpeder* Set the model to html or text based on
+				 * the body specified on the command line. This is done using a
+				 * simple check: Does the body contain <html> and </html>
+				 */
+				boolean html = false;
+				String lcase = body.toLowerCase();
 
-                if ((lcase.indexOf("<html>") != -1) && (lcase.indexOf("</html>") != -1)) {
-                    html = true;
-                }
+				if ((lcase.indexOf("<html>") != -1)
+						&& (lcase.indexOf("</html>") != -1)) {
+					html = true;
+				}
 
-                model.setHtml(html);
+				model.setHtml(html);
 
-                // set the body text
-                model.setBodyText(body);
-            }
+				// set the body text
+				model.setBodyText(body);
+			}
 
-            try {
-                ComposerController c = (ComposerController)
-                    MainInterface.frameModel.openView("Composer");
-                c.setComposerModel(model);
-            } catch (PluginLoadingFailedException plfe) {} //should not occur
-        }
-    }
+			new NewMessageAction().actionPerformed(null);
+			
+		}
+	}
 }

@@ -24,12 +24,12 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import org.columba.core.gui.util.CInfoPanel;
+import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.config.AccountItem;
 import org.columba.ristretto.message.Address;
 
-public class IdentityInfoPanel extends CInfoPanel {
+public class IdentityInfoPanel extends ContainerInfoPanel {
     private JLabel label;
     private ImageIcon image1;
     private ImageIcon image2;

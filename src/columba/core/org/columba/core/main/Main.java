@@ -128,14 +128,20 @@ public class Main {
 		if (frame != null) {
 			frame.setVisible(false);
 		}
+			
+		//new DefaultContainer();
+		
+		
 
 		if (MainInterface.frameModel.getOpenFrames().length == 0) {
 			MainInterface.frameModel.openStoredViews();
 		}
-
+		
 		// initialize native code wrapper
 		MainInterface.nativeWrapper = new NativeWrapperHandler(
-				MainInterface.frameModel.getOpenFrames()[0]);
+				MainInterface.frameModel.getOpenFrames()[0].getFrameMediator());
+		
+		
 	}
 
 	public static void setShowStartUpFrame(boolean show) {

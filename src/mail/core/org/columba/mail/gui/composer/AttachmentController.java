@@ -149,7 +149,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
           view.removeSelected();  
           
           // hide/show attachment panel
-          ((ComposerView)composerController.getView()).showAttachmentPanel();
+          composerController.showAttachmentPanel();
     }
 
     /**
@@ -173,7 +173,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
         }
         
         // show attachment panel
-        ((ComposerView)composerController.getView()).showAttachmentPanel();
+        composerController.showAttachmentPanel();
     }
 
     /**

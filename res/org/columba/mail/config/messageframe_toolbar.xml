@@ -17,6 +17,6 @@
 	<!--
 	<button action="ShowContextSpecificHelp"/>
 	<separator/>
-	-->
 	<button action="Cancel"/>
+	-->
 </toolbar>    

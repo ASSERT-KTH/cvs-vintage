@@ -18,109 +18,119 @@
 
 package org.columba.addressbook.gui.frame;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
+import org.columba.addressbook.main.AddressbookInterface;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.view.AbstractView;
+import org.columba.core.gui.frame.Container;
+import org.columba.core.gui.frame.ContainerInfoPanel;
+import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.DefaultFrameController;
+import org.columba.core.gui.util.UIFSplitPane;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ViewPluginHandler;
+import org.columba.core.pluginhandler.MenuPluginHandler;
 
 /**
- * @author Timo Stich (tstich@users.sourceforge.net)
- *  
+ * 
+ * 
+ * @author fdietz
  */
-public class AddressbookFrameController extends AbstractFrameController
-    implements AddressbookFrameMediator {
-    
-    protected AbstractAddressbookView view;
-    protected TreeController tree;
-    protected TableController table;
+public class AddressbookFrameController extends DefaultFrameController
+		implements ContentPane, AddressbookFrameMediator {
 
-    /**
- * Constructor for AddressbookController.
- */
-    public AddressbookFrameController(ViewItem viewItem) {
-        super("Addressbook", viewItem);
-    }
+	protected TreeController tree;
 
-    /**
- * @see org.columba.core.gui.FrameController#createView()
- */
-    protected AbstractView createView() {
-        //AddressbookFrameView view = new AddressbookFrameView(this);
-        // Load "plugin" view instead
-        ViewPluginHandler handler = null;
+	protected TableController table;
 
-        try {
-            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
-                    "org.columba.core.view");
-        } catch (PluginHandlerNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
+	/**
+	 * Constructor for AddressbookController.
+	 */
+	public AddressbookFrameController(Container container, ViewItem viewItem) {
+		super(container, viewItem);
 
-        // get view using the plugin handler found above
-        Object[] args = {this};
+		tree = new TreeController(this);
+		table = new TableController(this);
 
-        try {
-            view = (AbstractAddressbookView) handler.getPlugin(
-                getViewItem().getRoot().getAttribute("frame", id), args);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+		container.extendMenuFromFile(this,
+				"org/columba/addressbook/action/menu.xml");
+		try {
+			((MenuPluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.addressbook.menu"))
+					.insertPlugins(getContainer().getMenu());
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
 
-        view.init(tree.getView(), table.getView());
-        view.getFrame().pack();
-        view.getFrame().setVisible(true);
-        return view;
-    }
+		container.extendToolbar(this, AddressbookInterface.config.get(
+				"main_toolbar").getElement("toolbar"));
 
-    /**
- * @see org.columba.core.gui.FrameController#initComponents()
- */
-    protected void init() {
-        tree = new TreeController(this);
-        table = new TableController(this);
+		container.setInfoPanel(new ContainerInfoPanel());
 
-        // table should be updated when tree selection changes
-        tree.getView().addTreeSelectionListener(table);
-    }
+		// table should be updated when tree selection changes
+		tree.getView().addTreeSelectionListener(table);
 
-    /**
- * @see org.columba.core.gui.FrameController#initInternActions()
- */
-    protected void initInternActions() {
-    }
+		getContainer().setContentPane(this);
+	}
 
-    /**
- * @return AddressbookTableController
- */
-    public TableController getTable() {
-        return table;
-    }
+	/**
+	 * @return AddressbookTableController
+	 */
+	public TableController getTable() {
+		return table;
+	}
 
-    /**
- * @return AddressbookTreeController
- */
-    public TreeController getTree() {
-        return tree;
-    }
+	/**
+	 * @return AddressbookTreeController
+	 */
+	public TreeController getTree() {
+		return tree;
+	}
 
-    /**
- * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTableSelectionListener(javax.swing.event.ListSelectionListener)
- */
-    public void addTableSelectionListener(ListSelectionListener listener) {
-        getTable().getView().getSelectionModel().addListSelectionListener(listener);
-    }
+	/**
+	 * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTableSelectionListener(javax.swing.event.ListSelectionListener)
+	 */
+	public void addTableSelectionListener(ListSelectionListener listener) {
+		getTable().getView().getSelectionModel().addListSelectionListener(
+				listener);
+	}
 
-    /**
- * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTreeSelectionListener(javax.swing.event.TreeSelectionListener)
- */
-    public void addTreeSelectionListener(TreeSelectionListener listener) {
-        getTree().getView().addTreeSelectionListener(listener);
-    }
+	/**
+	 * @see org.columba.addressbook.gui.frame.AddressbookFrameMediator#addTreeSelectionListener(javax.swing.event.TreeSelectionListener)
+	 */
+	public void addTreeSelectionListener(TreeSelectionListener listener) {
+		getTree().getView().addTreeSelectionListener(listener);
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 */
+	public JComponent getComponent() {
+		JScrollPane treeScrollPane = new JScrollPane(tree.getView());
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+		JScrollPane tableScrollPane = new JScrollPane(table.getView());
+
+		JSplitPane splitPane = new UIFSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				treeScrollPane, tableScrollPane);
+		splitPane.setBorder(null);
+
+		return splitPane;
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String,
+	 *      java.lang.String, java.lang.String)
+	 */
+	public String getString(String sPath, String sName, String sID) {
+		return AddressbookResourceLoader.getString(sPath, sName, sID);
+	}
 }

@@ -29,7 +29,6 @@
 	</menu>
 	
 	<menu name="menu_view" extensionpoint="show_hide">
-		<menuitem checkboxaction="ViewFolderInfoPanel" />
 		<menuitem checkboxaction="ShowMessagePreview" />
 	</menu>
 	

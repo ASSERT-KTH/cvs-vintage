@@ -27,9 +27,9 @@ import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
-import org.columba.core.gui.util.CInfoPanel;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.AbstractFolder;
 import org.columba.mail.folder.MessageFolder;
@@ -37,7 +37,7 @@ import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 import org.columba.ristretto.message.MailboxInfo;
 
-public class FolderInfoPanel extends CInfoPanel implements SelectionListener {
+public class FolderInfoPanel extends ContainerInfoPanel implements SelectionListener {
     private JLabel leftLabel;
     private JLabel readLabel;
     private JLabel unreadLabel;

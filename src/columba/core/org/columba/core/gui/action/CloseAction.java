@@ -24,33 +24,31 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class CloseAction extends AbstractColumbaAction {
-    public CloseAction(FrameMediator frameMediator) {
-        super(frameMediator, GlobalResourceLoader.getString(null, null, "close"));
+	public CloseAction(FrameMediator frameMediator) {
+		super(frameMediator, GlobalResourceLoader
+				.getString(null, null, "close"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null, "close").replaceAll("&",
-                ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"close").replaceAll("&", ""));
 
-        // short cut key
-        putValue(ACCELERATOR_KEY,
-            KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-    }
+		// short cut key
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W,
+				ActionEvent.CTRL_MASK));
+	}
 
-    /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    public void actionPerformed(ActionEvent evt) {
-        frameMediator.close();
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		frameMediator.getContainer().close();
 
-        //frameMediator.getView().setVisible(false);
-    }
+	}
 }

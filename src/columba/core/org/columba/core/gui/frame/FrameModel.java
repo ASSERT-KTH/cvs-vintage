@@ -21,6 +21,7 @@ package org.columba.core.gui.frame;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 
@@ -44,285 +45,352 @@ import org.columba.core.xml.XmlElement;
  */
 public class FrameModel {
 
-    /** list of frame controllers */
-    protected List activeFrameCtrls = new LinkedList();
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.core.gui.frame");
 
-    /** viewlist xml treenode */
-    protected XmlElement viewList = MainInterface.config.get("options")
-            .getElement("/options/gui/viewlist");
+	/** list of frame controllers */
+	protected List activeFrameCtrls = new LinkedList();
 
-    /** Default view specifications to be used when opening a new view */
-    protected XmlElement defaultViews = MainInterface.config.get("options")
-            .getElement("/options/gui/defaultviews");
-    
-    protected FramePluginHandler handler;
+	/** viewlist xml treenode */
+	protected XmlElement viewList = MainInterface.config.get("options")
+			.getElement("/options/gui/viewlist");
 
-    /**
-     * Obtains a reference to the frame plugin handler and registers a
-     * shutdown hook with the ShutdownManager.
-     */
-    public FrameModel() {
-        // get plugin handler for handling frames
-        try {
-            handler = (FramePluginHandler) MainInterface.pluginManager
-                    .getHandler("org.columba.core.frame");
-        } catch (PluginHandlerNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        //this is executed on shutdown: store all open frames so that they
-        //can be restored on the next start
-        ShutdownManager.getShutdownManager().register(new Runnable() {
-            public void run() {
-                storeViews();
-            }
-        });
-    }
-    
-    /**
-     * Close all frames and re-open them again.
-     * <p>
-     * This is necessary when updating translations, adding
-     * new plugins which extend the menu and probably also
-     * look and feel changes.
-     *
-     */
-    public void refresh() {
-        storeViews();
-        openStoredViews();
-    }
+	/** Default view specifications to be used when opening a new view */
+	protected XmlElement defaultViews = MainInterface.config.get("options")
+			.getElement("/options/gui/defaultviews");
 
-    /**
-     * Store all open frames so that they can be restored on next 
-     * startup.
-     * 
-     */
-    public void storeViews() {
-        //used to temporarily store the values while the original
-        //viewList gets modified by the close method
-        List newViewList = new LinkedList();
+	protected FramePluginHandler handler;
 
-        ViewItem v;
+	/**
+	 * Obtains a reference to the frame plugin handler and registers a shutdown
+	 * hook with the ShutdownManager.
+	 */
+	public FrameModel() {
+		// get plugin handler for handling frames
+		try {
+			handler = (FramePluginHandler) MainInterface.pluginManager
+					.getHandler("org.columba.core.frame");
+		} catch (PluginHandlerNotFoundException ex) {
+			throw new RuntimeException(ex);
+		}
 
-        //we cannot use an iterator here because the close method
-        //manipulates the list
-        while (activeFrameCtrls.size() > 0) {
-            FrameMediator c = (FrameMediator) activeFrameCtrls.get(0);
-            v = c.getViewItem();
+		//this is executed on shutdown: store all open frames so that they
+		//can be restored on the next start
+		ShutdownManager.getShutdownManager().register(new Runnable() {
+			public void run() {
+				storeViews();
+			}
+		});
+	}
 
-            //store every open frame in our temporary list
-            newViewList.add(v.getRoot());
+	/**
+	 * Close all frames and re-open them again.
+	 * <p>
+	 * This is necessary when updating translations, adding new plugins which
+	 * extend the menu and probably also look and feel changes.
+	 *  
+	 */
+	public void refresh() {
+		storeViews();
+		openStoredViews();
+	}
 
-            //close every open frame
-            c.close();
-        }
+	/**
+	 * Store all open frames so that they can be restored on next startup.
+	 *  
+	 */
+	public void storeViews() {
+		//used to temporarily store the values while the original
+		//viewList gets modified by the close method
+		List newViewList = new LinkedList();
 
-        //if not we haven't actually closed a frame, leave viewList as is
-        if (newViewList.size() > 0) {
-            //the close method manipulates the viewList so we have to
-            //remove the existing element and fill in our temporarily
-            //stored ones
-            viewList.removeAllElements();
+		ViewItem v;
 
-            for (Iterator it = newViewList.iterator(); it.hasNext();) {
-                viewList.addElement((XmlElement) it.next());
-            }
-        }
-    }
+		//we cannot use an iterator here because the close method
+		//manipulates the list
+		while (activeFrameCtrls.size() > 0) {
+			Container c = (Container) activeFrameCtrls.get(0);
+			v = c.getViewItem();
 
-    /**
-     * Opens all views stored in the configuration.
-     */
-    public void openStoredViews() {
-        // load all frames from configuration file
-        for (int i = 0; i < viewList.count(); i++) {
-            // get element from view list
-            XmlElement view = viewList.getElement(i);
-            String id = view.getAttribute("id");
+			//store every open frame in our temporary list
+			newViewList.add(v.getRoot());
 
-            // create frame controller for this view...
-            FrameMediator c;
-            try {
-                c = createFrameController(id, new ViewItem(view));
-            } catch (PluginLoadingFailedException plfe) {
-                //should not occur
-                continue;
-            }
+			//close every open frame
+			c.close();
+		}
 
-            // ...and display it
-            c.openView();
-        }
+		//if not we haven't actually closed a frame, leave viewList as is
+		if (newViewList.size() > 0) {
+			//the close method manipulates the viewList so we have to
+			//remove the existing element and fill in our temporarily
+			//stored ones
+			viewList.removeAllElements();
 
-        if (activeFrameCtrls.size() == 0) {
-            try {
-                openView("ThreePaneMail");
-            } catch (PluginLoadingFailedException plfe) {} //should not occur
-        }
-    }
+			for (Iterator it = newViewList.iterator(); it.hasNext();) {
+				viewList.addElement((XmlElement) it.next());
+			}
+		}
+	}
 
-    /**
-     * Returns an array of all open frames.
-     */
-    public FrameMediator[] getOpenFrames() {
-        return (FrameMediator[]) activeFrameCtrls.toArray(new FrameMediator[0]);
-    }
-    
-    /**
-     * Get active/focused frame mediator.
-     * 
-     * @return		active frame mediator
-     */
-    public FrameMediator getActiveFrameMediator() {
-    	Iterator it = activeFrameCtrls.iterator();
-    	while (it.hasNext()) {
-    		FrameMediator m = (FrameMediator) it.next();
-    		JFrame frame = m.getView().getFrame();
-    		if ( frame.isActive() ) return m;
-    	}
-    	
-    	return null;
-    }
-    
-    /**
-     * Get active/focused JFrame.
-     * 
-     * @return		active frame
-     */
-    public JFrame getActiveFrame() {
-    	FrameMediator m = getActiveFrameMediator();
-    	if ( m != null) return m.getView().getFrame();
-    	
-    	// fall-back
-    	return new JFrame();
-    }
+	/**
+	 * Opens all views stored in the configuration.
+	 */
+	public void openStoredViews() {
+		// load all frames from configuration file
+		for (int i = 0; i < viewList.count(); i++) {
+			// get element from view list
+			XmlElement view = viewList.getElement(i);
+			String id = view.getAttribute("id");
 
-    /**
-     * Create new frame controller. FrameControllers are plugins.
-     * 
-     * @see FramePluginHandler
-     * 
-     * @param id
-     *            controller ID
-     * @param viewItem
-     *            ViewItem containing frame properties
-     * 
-     * @return frame controller
-     */
-    public FrameMediator createFrameController(String id, ViewItem viewItem)
-    throws PluginLoadingFailedException {
-        // get frame controller using the plugin handler found above
-        Object[] args = {viewItem};
-        FrameMediator frame = null;
+			// create frame controller for this view...
+			FrameMediator c;
+			try {
+				c = createFrameController(null, new ViewItem(view));
+			} catch (PluginLoadingFailedException plfe) {
+				//should not occur
+				continue;
+			}
 
-        frame = (FrameMediator) handler.getPlugin(id, args);
+			// ...and display it
+			/*
+			 * c.openView();
+			 */
 
-        // save reference to frame controller
-        activeFrameCtrls.add(frame);
+		}
 
-        return frame;
-    }
+		/*
+		 * if (activeFrameCtrls.size() == 0) { try { openView("ThreePaneMail"); }
+		 * catch (PluginLoadingFailedException plfe) {} //should not occur }
+		 */
+	}
 
-    /**
-     * Opens a view of a given type, i.e. with a specific id.
-     * 
-     * @param id
-     *            id specifying view type, e.g. "ThreePaneMail" or "Addressbook"
-     * @return Frame controller for the given view type
-     */
-    public FrameMediator openView(String id) throws PluginLoadingFailedException {
-        // look for default view settings (if not found, null is returned)
-        ViewItem view = loadDefaultView(id);
+	/**
+	 * Returns an array of all open frames.
+	 */
+	public Container[] getOpenFrames() {
+		return (Container[]) activeFrameCtrls.toArray(new Container[0]);
+	}
 
-        // Create a frame controller for this view
-        // view = null => defaults specified by frame controller is used
-        FrameMediator controller = createFrameController(id, view);
+	/**
+	 * Get active/focused frame mediator.
+	 * 
+	 * @return active frame mediator
+	 */
+	public Container getActiveFrameMediator() {
+		Iterator it = activeFrameCtrls.iterator();
+		while (it.hasNext()) {
+			Container m = (Container) it.next();
+			JFrame frame = m.getFrame();
+			if (frame.isActive())
+				return m;
+		}
 
-        // Display the view and return reference
-        controller.openView();
+		return null;
+	}
 
-        return controller;
-    }
+	/**
+	 * Get active/focused JFrame.
+	 * 
+	 * @return active frame
+	 */
+	public JFrame getActiveFrame() {
+		Container m = getActiveFrameMediator();
+		if (m != null)
+			return m.getFrame();
 
-    /**
-     * Gets default view settings for a given view type
-     * 
-     * @param id
-     *            id specifying view type
-     * @return View settings
-     */
-    protected ViewItem loadDefaultView(String id) {
-        // If defaultViews doesn't exist, create it (backward compatibility)
-        if (defaultViews == null) {
-            XmlElement gui = MainInterface.config.get("options").getElement(
-                    "/options/gui");
-            defaultViews = new XmlElement("defaultviews");
-            gui.addElement(defaultViews);
-        }
+		// fall-back
+		return new JFrame();
+	}
 
-        // search through defaultViews to get settings for given id
-        ViewItem view = null;
+	protected XmlElement createDefaultConfiguration(String id) {
+		/*
+		 * *20030831, karlpeder* Moved code here from constructor XmlElement
+		 * child = (XmlElement) defaultView.clone(); child.addAttribute("id",
+		 * id);
+		 */
 
-        for (int i = 0; i < defaultViews.count(); i++) {
-            XmlElement child = defaultViews.getElement(i);
-            String childId = child.getAttribute("id");
+		// initialize default view options
+		XmlElement defaultView = new XmlElement("view");
+		XmlElement window = new XmlElement("window");
+		window.addAttribute("x", "0");
+		window.addAttribute("y", "0");
+		window.addAttribute("width", "640");
+		window.addAttribute("height", "480");
+		window.addAttribute("maximized", "true");
+		defaultView.addElement(window);
 
-            if ((childId != null) && childId.equals(id)) {
-                view = new ViewItem(child);
+		XmlElement toolbars = new XmlElement("toolbars");
+		toolbars.addAttribute("main", "true");
+		defaultView.addElement(toolbars);
 
-                break;
-            }
-        }
+		defaultView.addAttribute("id", id);
 
-        return view;
-    }
+		return defaultView;
+	}
 
-    /**
-     * Saves default view settings for given view type. These will be used as
-     * startup values next a view of this type is opened. Though, views opened
-     * at startup will use settings from viewlist instead.
-     * 
-     * Only one set of settings are stored for each view id.
-     * 
-     * @param view
-     *            view settings to be stored
-     */
-    protected void saveDefaultView(ViewItem view) {
-        if (view == null) { 
-            return; // nothing to save
-        }
+	/**
+	 * Create new frame controller. FrameControllers are plugins.
+	 * 
+	 * @see FramePluginHandler
+	 * 
+	 * @param id
+	 *            controller ID
+	 * @param viewItem
+	 *            ViewItem containing frame properties
+	 * 
+	 * @return frame controller
+	 */
+	protected FrameMediator createFrameController(Container c, ViewItem viewItem)
+			throws PluginLoadingFailedException {
+		// get frame controller using the plugin handler found above
 
-        String id = view.get("id");
+		// if no container re-used -> create new default container
+		boolean newContainer = false;
+		if (c == null) {
+			c = new DefaultContainer(viewItem);
+			newContainer = true;
+		}
 
-        // removed previous default values
-        ViewItem oldView = loadDefaultView(id);
+		Object[] args = { c, viewItem };
+		String id = viewItem.get("id");
+		FrameMediator frame = null;
 
-        if (oldView != null) {
-            defaultViews.removeElement(oldView.getRoot());
-        }
+		frame = (FrameMediator) handler.getPlugin(id, args);
 
-        // store current view settings
-        defaultViews.addElement(view.getRoot());
-    }
+		c.setFrameMediator(frame);
 
-    /**
-     * Called when a frame is closed. The reference is removed from the list of
-     * active (shown) frames. If it's the last open view, the view settings are
-     * stored in the view list.
-     * 
-     * @param c Reference to frame controller for the view which is closed
-     */
-    public void close(FrameMediator c) {
-        // Check if the frame controller has been registered, else do nothing
-        if (activeFrameCtrls.contains(c)) {
-            ViewItem v = c.getViewItem();
-            saveDefaultView(v);
-            activeFrameCtrls.remove(c);
+		// save reference to container
+		if ( newContainer )
+			activeFrameCtrls.add(frame.getContainer());
 
-            if (activeFrameCtrls.size() == 0) {
-                //this is the last frame so store its data in the viewList
-                viewList.removeAllElements();
-                viewList.addElement(v.getRoot());
-            }
-        }
-    }
+		return frame;
+	}
+
+	/**
+	 * Opens a view of a given type, i.e. with a specific id.
+	 * 
+	 * @param id
+	 *            id specifying view type, e.g. "ThreePaneMail" or "Addressbook"
+	 * @return Frame controller for the given view type
+	 */
+	public FrameMediator openView(String id)
+			throws PluginLoadingFailedException {
+		// look for default view settings (if not found, null is returned)
+		ViewItem view = loadDefaultView(id);
+
+		if (view == null)
+			view = new ViewItem(createDefaultConfiguration(id));
+
+		// Create a frame controller for this view
+		// view = null => defaults specified by frame controller is used
+		FrameMediator controller = createFrameController(null, view);
+
+		return controller;
+	}
+
+	public FrameMediator openView(Container c, String id)
+			throws PluginLoadingFailedException {
+		// look for default view settings (if not found, null is returned)
+		ViewItem view = loadDefaultView(id);
+
+		if (view == null)
+			view = new ViewItem(createDefaultConfiguration(id));
+
+		// Create a frame controller for this view
+		// view = null => defaults specified by frame controller is used
+		FrameMediator controller = createFrameController(c, view);
+
+		return controller;
+	}
+
+	/**
+	 * Gets default view settings for a given view type
+	 * 
+	 * @param id
+	 *            id specifying view type
+	 * @return View settings
+	 */
+	protected ViewItem loadDefaultView(String id) {
+		// If defaultViews doesn't exist, create it (backward compatibility)
+		if (defaultViews == null) {
+			XmlElement gui = MainInterface.config.get("options").getElement(
+					"/options/gui");
+			defaultViews = new XmlElement("defaultviews");
+			gui.addElement(defaultViews);
+		}
+
+		// search through defaultViews to get settings for given id
+		ViewItem view = null;
+
+		for (int i = 0; i < defaultViews.count(); i++) {
+			XmlElement child = defaultViews.getElement(i);
+			String childId = child.getAttribute("id");
+
+			if ((childId != null) && childId.equals(id)) {
+				view = new ViewItem(child);
+
+				break;
+			}
+		}
+
+		return view;
+	}
+
+	/**
+	 * Saves default view settings for given view type. These will be used as
+	 * startup values next a view of this type is opened. Though, views opened
+	 * at startup will use settings from viewlist instead.
+	 * 
+	 * Only one set of settings are stored for each view id.
+	 * 
+	 * @param view
+	 *            view settings to be stored
+	 */
+	protected void saveDefaultView(ViewItem view) {
+		if (view == null) {
+			return; // nothing to save
+		}
+
+		String id = view.get("id");
+
+		// removed previous default values
+		ViewItem oldView = loadDefaultView(id);
+
+		if (oldView != null) {
+			defaultViews.removeElement(oldView.getRoot());
+		}
+
+		// store current view settings
+		defaultViews.addElement(view.getRoot());
+	}
+
+	/**
+	 * Called when a frame is closed. The reference is removed from the list of
+	 * active (shown) frames. If it's the last open view, the view settings are
+	 * stored in the view list.
+	 * 
+	 * @param c
+	 *            Reference to frame controller for the view which is closed
+	 */
+	public void close(Container c) {
+		LOG.fine("Closing container: " + c.getClass().getName());
+
+		// Check if the frame controller has been registered, else do nothing
+		if (activeFrameCtrls.contains(c)) {
+			ViewItem v = c.getViewItem();
+			saveDefaultView(v);
+			activeFrameCtrls.remove(c);
+
+			if (activeFrameCtrls.size() == 0) {
+				//this is the last frame so store its data in the viewList
+				viewList.removeAllElements();
+				viewList.addElement(v.getRoot());
+
+				// shutdown Columba if no frame exists anymore
+				if (getOpenFrames().length == 0) {
+					ShutdownManager.getShutdownManager().shutdown(0);
+				}
+			}
+		}
+	}
 }

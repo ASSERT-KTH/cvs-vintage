@@ -18,36 +18,40 @@ package org.columba.core.gui.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.view.AbstractMailView;
-
 
 /**
  * Columba action for hiding/showing the toolbar action.
  */
 public class ViewToolbarAction extends AbstractSelectableAction {
-    /**
-     * Creates a view toolbar action.
-     * @param controller the frame controller
-     */
-    public ViewToolbarAction(FrameMediator controller) {
-        super(controller,
-            GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar"));
+	/**
+	 * Creates a view toolbar action.
+	 * 
+	 * @param controller
+	 *            the frame controller
+	 */
+	public ViewToolbarAction(FrameMediator controller) {
+		super(controller, GlobalResourceLoader.getString(null, null,
+				"menu_view_showtoolbar"));
 
-        // tooltip text
-        putValue(SHORT_DESCRIPTION,
-            GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar")
-                                .replaceAll("&", ""));
+		// tooltip text
+		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(null, null,
+				"menu_view_showtoolbar").replaceAll("&", ""));
 
-        setState(frameMediator.isToolbarEnabled(AbstractMailView.MAIN_TOOLBAR));
-    }
+		setState(frameMediator.getContainer().isToolbarEnabled(
+				Container.MAIN_TOOLBAR));
+	}
 
-    /**
-     * Shows the toolbar.
-     * @param evt the event
-     */
-    public void actionPerformed(ActionEvent evt) {
-        ((AbstractMailView) frameMediator.getView()).showToolbar();
-    }
+	/**
+	 * Shows the toolbar.
+	 * 
+	 * @param evt
+	 *            the event
+	 */
+	public void actionPerformed(ActionEvent evt) {
+		frameMediator.getContainer()
+				.enableToolbar(Container.MAIN_TOOLBAR, getState());
+	}
 }

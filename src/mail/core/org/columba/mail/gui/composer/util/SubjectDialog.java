@@ -30,7 +30,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
@@ -38,17 +38,19 @@ import org.columba.mail.util.MailResourceLoader;
  * @version         1.0
  * @author
  */
-public class SubjectDialog implements ActionListener {
-    private JDialog dialog;
+public class SubjectDialog extends JDialog implements ActionListener {
+    
     private boolean bool = false;
     private JTextField subjectTextField;
     private String subject;
     JButton[] buttons = new JButton[1];
 
     public SubjectDialog() {
+    	super(MainInterface.frameModel.getActiveFrame(), true);
     }
 
     public void showDialog(String subject) {
+    	
         this.subject = subject;
 
         JLabel questionLabel = new JLabel("Please enter subject!");
@@ -66,11 +68,11 @@ public class SubjectDialog implements ActionListener {
         subjectTextField.selectAll();
         subjectTextField.getDocument().addDocumentListener(new MyDocumentListener());
 
-        dialog = DialogStore.getDialog();
-        dialog.setTitle("Enter Subject...");
+       
+        setTitle("Enter Subject...");
 
         //dialog.getContentPane().setLayout( new BoxLayout( dialog.getContentPane(), BoxLayout.Y_AXIS ) );
-        dialog.getContentPane().setLayout(new BorderLayout());
+        getContentPane().setLayout(new BorderLayout());
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
@@ -112,7 +114,7 @@ centerPanel.add( panel );
 */
         //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
         //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
-        dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        getContentPane().add(centerPanel, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BorderLayout());
@@ -124,11 +126,11 @@ centerPanel.add( panel );
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-        dialog.pack();
+        pack();
 
-        dialog.getRootPane().setDefaultButton(buttons[0]);
+        getRootPane().setDefaultButton(buttons[0]);
 
         /*
 java.awt.Dimension dim = new Dimension(300, 200);
@@ -139,8 +141,8 @@ dialog.setLocation(
         screenSize.width / 2 - dim.width / 2,
         screenSize.height / 2 - dim.height / 2);
 */
-        dialog.setLocationRelativeTo(null);
-        dialog.show();
+       setLocationRelativeTo(null);
+        show();
     }
 
     public boolean success() {
@@ -159,7 +161,7 @@ dialog.setLocation(
 
             bool = true;
 
-            dialog.dispose();
+            dispose();
         }
     }
 

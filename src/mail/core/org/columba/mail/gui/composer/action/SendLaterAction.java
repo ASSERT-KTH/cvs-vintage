@@ -87,6 +87,6 @@ public class SendLaterAction extends AbstractColumbaAction {
 			MainInterface.processor.addOp(c1);
 		}
 
-		composerController.close();
+		composerController.getContainer().close();
 	}
 }

@@ -37,12 +37,12 @@ import javax.swing.event.DocumentListener;
 
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 
-public class ChooseViewerDialog implements ActionListener {
+public class ChooseViewerDialog extends JDialog implements ActionListener {
     public static final String CMD_OK = "OK";
     public static final String CMD_CANCEL = "CANCEL";
     public static final String CMD_SEARCH = "SEARCH";
@@ -50,17 +50,18 @@ public class ChooseViewerDialog implements ActionListener {
     private String viewer = null;
     private JCheckBox saveCButton;
     private JButton okButton;
-    private JDialog dialog;
 
     public ChooseViewerDialog(String contentType, String contentSubtype,
         boolean save) {
-        dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog",
+    	super(MainInterface.frameModel.getActiveFrame(), true);
+    	
+        setTitle(MailResourceLoader.getString("dialog",
                     "mimetypeviewer", "dialog_title") + " " + contentType +
                 "/" + contentSubtype);
         init(save);
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void init(boolean save) {
@@ -133,9 +134,9 @@ saveCButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer
         buttonPanel.add(cancelButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         contentPane.add(bottomPanel, BorderLayout.SOUTH);
-        dialog.setContentPane(contentPane);
-        dialog.getRootPane().setDefaultButton(okButton);
-        dialog.getRootPane().registerKeyboardAction(this, CMD_CANCEL,
+        setContentPane(contentPane);
+        getRootPane().setDefaultButton(okButton);
+        getRootPane().registerKeyboardAction(this, CMD_CANCEL,
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
@@ -156,15 +157,15 @@ saveCButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "mimetypeviewer
             fileChooser.setDialogTitle(MailResourceLoader.getString("dialog",
                     "mimetypeviewer", "choose_viewer"));
 
-            if (fileChooser.showDialog(dialog,
+            if (fileChooser.showDialog(this,
                         MailResourceLoader.getString("global", "ok")) == JFileChooser.APPROVE_OPTION) {
                 viewerName.setText(fileChooser.getSelectedFile().toString());
             }
         } else if (command == CMD_OK) {
             viewer = viewerName.getText();
-            dialog.dispose();
+            dispose();
         } else if (command == CMD_CANCEL) {
-            dialog.dispose();
+            dispose();
         }
     }
 }

@@ -24,10 +24,11 @@ import java.awt.event.KeyEvent;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.config.ViewItem;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginLoadingFailedException;
+import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -35,6 +36,11 @@ import org.columba.mail.util.MailResourceLoader;
  * Opens the composer window for creating a new message.
  */
 public class NewMessageAction extends AbstractColumbaAction {
+	
+	public NewMessageAction() {
+		super(null, "New Message Action");
+	}
+	
     public NewMessageAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe", "menu_message_new"));
@@ -51,13 +57,10 @@ public class NewMessageAction extends AbstractColumbaAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        // Open a new composer. Choice btw. text and html will be based on
-        // stored option
-        // only open composer when at least one account exists
-        if (MailInterface.config.getAccountList().count() != 0) {
-            try {
-                MainInterface.frameModel.openView("Composer");
-            } catch (PluginLoadingFailedException plfe) {} //should not occur
-        }
+    	DefaultContainer c = new DefaultContainer(new ViewItem(MailInterface.config.get(
+		"composer_options").getElement("/options/gui/view")));
+    	
+    	new ComposerController(c, new ViewItem(MailInterface.config.get(
+		"composer_options").getElement("/options/gui/view")));
     }
 }

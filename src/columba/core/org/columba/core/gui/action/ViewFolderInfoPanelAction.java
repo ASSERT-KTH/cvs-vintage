@@ -13,28 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-package org.columba.mail.gui.composer.action;
+package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.gui.composer.ComposerView;
+import org.columba.mail.util.MailResourceLoader;
 
 
-/**
- * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
-public class ViewAccountInfoPanelAction extends AbstractSelectableAction {
-    public ViewAccountInfoPanelAction(FrameMediator frameMediator) {
-        super(frameMediator, "AccountInfoPanel");
-        setState(frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL));
+public class ViewFolderInfoPanelAction extends AbstractSelectableAction {
+    public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_folderinfopanel"));
+        
+        setState(frameMediator.getContainer().isInfoPanelEnabled());
+        
     }
 
     public void actionPerformed(ActionEvent evt) {
-        ((ComposerView) frameMediator.getView()).showAccountInfoPanel();
+    	frameMediator.getContainer().enableInfoPanel(getState());
     }
 }

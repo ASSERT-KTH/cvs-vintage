@@ -22,46 +22,49 @@ import java.util.ListIterator;
 
 import javax.swing.JMenuBar;
 
-
 /**
  * @author frd
- *
- * To change this generated comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * 
+ * To change this generated comment go to Window>Preferences>Java>Code
+ * Generation>Code and Comments
  */
 public class MenuBarGenerator extends AbstractMenuGenerator {
-    /**
- * @param path
- */
-    public MenuBarGenerator(FrameMediator frameController, String path) {
-        super(frameController, path);
-    }
+	/**
+	 * @param path
+	 */
+	public MenuBarGenerator(FrameMediator frameController, String path) {
+		super(frameController, path);
+	}
 
-    public void createMenuBar(JMenuBar menuBar) {
-        menuBar.removeAll();
+	public void createMenuBar(JMenuBar menuBar) {
+		menuBar.removeAll();
 
-        ListIterator it = getMenuRoot().getElements().listIterator();
+		ListIterator it = getMenuRoot().getElements().listIterator();
 
-        while (it.hasNext()) {
-            menuBar.add(createMenu((XmlElement) it.next()));
-        }
-    }
+		while (it.hasNext()) {
+			menuBar.add(createMenu((XmlElement) it.next()));
+		}
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.AbstractMenuGenerator#getMenuRoot()
- */
-    public XmlElement getMenuRoot() {
-        return xmlFile.getRoot().getElement("menubar");
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.AbstractMenuGenerator#getMenuRoot()
+	 */
+	public XmlElement getMenuRoot() {
+		return xmlFile.getRoot().getElement("menubar");
+	}
 
-    /* (non-Javadoc)
- * @see org.columba.core.gui.AbstractMenuGenerator#getRootElementName()
- */
-    public String getRootElementName() {
-        return "menubar";
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.core.gui.AbstractMenuGenerator#getRootElementName()
+	 */
+	public String getRootElementName() {
+		return "menubar";
+	}
 
-    public void extendMenuFromFile(String path) {
-        super.extendMenuFromFile(path);
-    }
+	public void extendMenuFromFile(String path) {
+		super.extendMenuFromFile(path);
+	}
 }

@@ -36,6 +36,7 @@ import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.event.FolderEventDelegator;
 import org.columba.mail.folderoptions.FolderOptionsController;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
@@ -52,7 +53,6 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
 import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
-import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.frappucino.treetable.Tree;
@@ -353,9 +353,9 @@ public class TableController implements FocusOwner, ListSelectionListener,
 
 		// update infopanel (gray panel below the toolbar)
 		// showing total/unread/recent messages count
-		if (getFrameController().getView() instanceof AbstractMailView) {
+		if (getFrameController()  instanceof MailFrameMediator) {
 			if (srcFolder != null) {
-				((AbstractMailView) getFrameController().getView())
+				((ThreePaneMailFrameController) getFrameController())
 						.getFolderInfoPanel().setFolder(srcFolder);
 			}
 		}

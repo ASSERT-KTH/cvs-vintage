@@ -18,27 +18,28 @@
 
 package org.columba.mail.gui.messageframe;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.view.AbstractView;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.pluginhandler.ViewPluginHandler;
+import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.frame.DefaultContainer;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.frame.ThreePaneMailFrameController;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Mail frame controller which contains a message viewer only.
  * <p>
- * Note that this frame depends on its parent frame controller for
- * viewing messages.
+ * Note that this frame depends on its parent frame controller for viewing
+ * messages.
  * 
  * @see org.columba.mail.gui.action.NextMessageAction
  * @see org.columba.mail.gui.action.PreviousMessageAction
@@ -47,107 +48,51 @@ import org.columba.mail.main.MailInterface;
  * 
  * @author fdietz
  */
-public class MessageFrameController extends AbstractMailFrameController implements TableViewOwner{
+public class MessageFrameController extends AbstractMailFrameController
+		implements TableViewOwner, ContentPane {
 	FolderCommandReference treeReference;
 
 	FolderCommandReference tableReference;
 
 	FixedTableSelectionHandler tableSelectionHandler;
 
-	protected AbstractMessageFrameView view;
-
 	private ThreePaneMailFrameController parentController;
-	
+
 	/**
 	 * @param viewItem
 	 */
 	public MessageFrameController() {
-		super("MessageFrame", new ViewItem(MailInterface.config.get("options")
-				.getElement("/options/gui/messageframe/view")));
-		
-		getView().loadPositions();
-
-		if (getView().getFrame() != null) {
-			getView().getFrame().setVisible(true);
-		}
-	}
-	
-	/**
-	 * @param parent 	parent frame controller
-	 */
-	public MessageFrameController(ThreePaneMailFrameController parent) {
-		this();
-
-		this.parentController = parent;	
-		
-	}
-
-	protected void init() {
-		super.init();
+		super(new DefaultContainer(new ViewItem(MailInterface.config.get(
+				"options").getElement("/options/gui/messageframe/view"))),
+				new ViewItem(MailInterface.config.get("options").getElement(
+						"/options/gui/messageframe/view")));
 
 		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
 		getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
 		getSelectionManager().addSelectionHandler(
 				new AttachmentSelectionHandler(attachmentController.getView()));
+
+		getContainer().extendMenuFromFile(this, "org/columba/mail/action/messageframe_menu.xml");
+
+		getContainer().extendToolbar(this, MailInterface.config.get("messageframe_toolbar")
+				.getElement("toolbar"));
+
+		getContainer().setContentPane(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.frame.FrameMediator#createView()
+	/**
+	 * @param parent
+	 *            parent frame controller
 	 */
-	public AbstractView createView() {
-		//MessageFrameView view = new MessageFrameView(this);
-		// Load "plugin" view instead
-		ViewPluginHandler handler = null;
+	public MessageFrameController(ThreePaneMailFrameController parent) {
+		this();
 
-		try {
-			handler = (ViewPluginHandler) MainInterface.pluginManager
-					.getHandler("org.columba.core.view");
-		} catch (PluginHandlerNotFoundException ex) {
-			throw new RuntimeException(ex);
-		}
+		this.parentController = parent;
 
-		// get view using the plugin handler found above
-		Object[] args = { this };
-
-		try {
-			view = (AbstractMessageFrameView) handler.getPlugin(getViewItem()
-					.getRoot().getAttribute("frame", id), args);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		/*
-		 * view.setFolderInfoPanel(folderInfoPanel);
-		 */
-		view.init(messageController.getView(), statusBar);
-		view.getFrame().pack();
-		view.getFrame().setVisible(true);
-		return view;
 	}
 
-	/*
-	 * *20030831, karlpeder* Using method on super class instead public void
-	 * close() { view.saveWindowPosition(); view.setVisible(false); }
-	 */
-	/*
-	 * *20030831, karlpeder* Not used, close method is used instead public void
-	 * saveAndClose() {
-	 * 
-	 * super.saveAndClose(); }
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.gui.frame.FrameMediator#initInternActions()
-	 */
-	protected void initInternActions() {
-	}
-
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTableSelection()
 	 */
@@ -155,8 +100,7 @@ public class MessageFrameController extends AbstractMailFrameController implemen
 		return tableReference;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTreeSelection()
 	 */
@@ -180,22 +124,41 @@ public class MessageFrameController extends AbstractMailFrameController implemen
 		tableSelectionHandler.setSelection(tableReference);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
-	 */
-	public boolean hasTable() {
-		return false;
-	}
-
 	/**
 	 * @see org.columba.mail.gui.frame.TableViewOwner#getTableController()
 	 */
 	public TableController getTableController() {
-		if  ( parentController == null ) return null;
-		
+		if (parentController == null)
+			return null;
+
 		// pass it along to parent frame
 		return parentController.getTableController();
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.ContentPane#getComponent()
+	 */
+	public JComponent getComponent() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+
+		panel.add(messageController.getView(), BorderLayout.CENTER);
+
+		ViewItem viewItem = getViewItem();
+
+		// TODO re-add folderinfopanel
+		/*
+		 * if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
+		 * addToolBar(folderInfoPanel); }
+		 */
+
+		return panel;
+	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#getString(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	public String getString(String sPath, String sName, String sID) {
+		return MailResourceLoader.getString(sPath, sName, sID);
 	}
 }

@@ -20,10 +20,10 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.frame.ThreePaneMailFrameController;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.gui.view.AbstractMailView;
 
 
 /**
@@ -73,7 +73,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableModelFilter model = tableController.getTableModelFilteredView();
-        FilterToolbar toolbar = ((AbstractMailView) getMediator().getView()).getFilterToolbar();
+        FilterToolbar toolbar = ((ThreePaneMailFrameController) getMediator()).getFilterToolbar();
 
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));
