@@ -750,7 +750,6 @@ try{
         if ( param == null ) 
         {            
             intake = getIntakeTool();
-System.out.println(parameter + "was null");
         }
         else 
         {
@@ -758,7 +757,6 @@ System.out.println(parameter + "was null");
             StringValueParser parser = new StringValueParser();
             parser.parse(param, '&', '=', true);
             intake.init(parser);
-System.out.println(parameter + "was NOT null: " + parser);
         }
 
         return intake;
