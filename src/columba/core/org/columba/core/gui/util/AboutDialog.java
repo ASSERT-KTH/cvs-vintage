@@ -145,7 +145,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         contributorPanel.add(new JScrollPane(contributorList));
         
         tabbedPane.addTab("Contributors", contributorPanel);
-        if (MainInterface.DEBUG) {
+        if (true) {
                 tabbedPane.addTab("Memory", new MemoryPanel());
         }
         

@@ -990,13 +990,7 @@ public class IMAPStore {
                     // set the attachment flag
                     String contentType = (String) header.get("Content-Type");
 
-                    if (contentType != null) {
-                        if (contentType.indexOf("multipart") != -1) {
-                            header.set("columba.attachment", Boolean.TRUE);
-                        } else {
-                            header.set("columba.attachment", Boolean.FALSE);
-                        }
-                    }
+                    header.set("columba.attachment", header.hasAttachments());
 
                     headerList.add(header, uid);
                 }

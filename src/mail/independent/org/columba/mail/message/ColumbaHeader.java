@@ -21,6 +21,8 @@ import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.MimeType;
 import org.columba.ristretto.parser.HeaderParser;
 
 
@@ -88,7 +90,7 @@ public class ColumbaHeader {
             attributes.put("columba.subject", "");
         }
 
-        attributes.put("columba.attachment", Boolean.FALSE);
+        attributes.put("columba.attachment", hasAttachments());
         attributes.put("columba.size", new Integer(0));
 
         // message colour should be black as default
@@ -240,5 +242,13 @@ public class ColumbaHeader {
      */
     public void setHeader(Header header) {
         this.header = header;
+    }
+    
+    public Boolean hasAttachments() {
+        boolean hasAttachments = false;
+        MimeType mimeType = new MimeHeader(header).getMimeType();
+        hasAttachments = !mimeType.getType().equals("text") && !mimeType.getSubtype().equals("alternative");
+        
+        return new Boolean(hasAttachments);
     }
 }

@@ -182,14 +182,8 @@ public class MessageController implements HyperlinkListener, MouseListener,
             bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
         }
 
-        boolean hasAttachments = false;
-
-        if ((mimePartTree.count() > 1) ||
-                (!mimePartTree.get(0).getHeader().getMimeType().getType()
-                                  .equals("text"))) {
-            hasAttachments = true;
-        }
-
+        boolean hasAttachments = header.hasAttachments().booleanValue();
+        
         attachmentController.setMimePartTree(mimePartTree);
 
         getView().setDoc(header, bodyStream, htmlViewer, hasAttachments);
