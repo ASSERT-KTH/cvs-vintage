@@ -975,7 +975,10 @@ try{
             if (currentModule != null)
             {
                 List navIssueTypes = getCurrentModule().getNavIssueTypes();
-                currentIssueType = (IssueType)navIssueTypes.get(0);
+                if (navIssueTypes.size() > 0)
+                {
+                    currentIssueType = (IssueType)navIssueTypes.get(0);
+                }
             }
         }
         return currentIssueType;
