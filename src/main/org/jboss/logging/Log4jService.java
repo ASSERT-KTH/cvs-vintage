@@ -38,7 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.4 $
+@version $Revision: 1.5 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
@@ -153,7 +153,6 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
             source = "Default";
         //get a category based on the source name, so we can turn on and off pieces of logging.
         Category localCategory = category.getInstance(source);
-        NDC.push(source);
         switch( type )
         {
             case 'W':
@@ -169,7 +168,6 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
                 localCategory.info(msg);
             break;
         }
-        NDC.pop();
     }
 
 // --- Begin MBeanRegistration interface methods
