@@ -67,42 +67,36 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
-    This class is responsible for dealing with the Login
-    Action.
-    
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.24 2001/09/30 18:31:38 jon Exp $
-*/
+ * This class is responsible for dealing with the Login
+ * Action.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Login.java,v 1.25 2001/10/15 18:52:43 jon Exp $
+ */
 public class Login extends ScarabTemplateAction
 {
     /**
-        This manages clicking the Login button
-    */
+     * This manages clicking the Login button
+     */
     public void doLogin( RunData data, TemplateContext context ) throws Exception
     {
         data.setACL(null);
-
         IntakeTool intake = getIntakeTool(context);
-
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
-        
-        if ( intake.isAllValid() && checkUser(data, context) ) 
+
+        if (intake.isAllValid() && checkUser(data, context))
         {
             String template = data.getParameters()
                 .getString(ScarabConstants.NEXT_TEMPLATE, 
                 Turbine.getConfiguration()
-                           .getString("template.homepage", "Start.vm") );
+                           .getString("template.homepage", "Index.vm"));
             setTarget(data, template);
-        }
-        else 
-        {
-            failAction(data);
         }
     }
 
     /**
-        Checks to make sure that the user exists, has been confirmed.
-    */
+     * Checks to make sure that the user exists, has been confirmed.
+     */
     public boolean checkUser(RunData data, TemplateContext context)
         throws Exception
     {
@@ -123,7 +117,7 @@ public class Login extends ScarabTemplateAction
         {
             data.setMessage("Invalid username or password.");
             Log.error ("Login: ", e);
-            return failAction(data);
+            return failAction(data, "Login.vm");
         }
         
         try
@@ -139,8 +133,8 @@ public class Login extends ScarabTemplateAction
                     scarabR.setUser((ScarabUser)user);
                 }
 
-                setTarget(data, "Confirm.vm");
-                throw new TurbineSecurityException("User is not confirmed!");
+                data.setMessage("User is not confirmed!");
+                return failAction(data, "Confirm.vm");
             }
 
             // store the user object
@@ -159,29 +153,29 @@ public class Login extends ScarabTemplateAction
         catch ( TurbineSecurityException e )
         {
             data.setMessage(e.getMessage());
-            return failAction(data);
+            return failAction(data, "Login.vm");
         }
         return true;
     }
 
     /**
      * sets an anonymous user
-     * sets the template to "Login.vm"
+     * sets the template to the passed in template
      */
-    private boolean failAction(RunData data)
+    private boolean failAction(RunData data, String template)
         throws UnknownEntityException
     {
         // Retrieve an anonymous user
         data.setUser (TurbineSecurity.getAnonymousUser());
-        setTarget(data, 
-            data.getParameters().getString(ScarabConstants.TEMPLATE, "Login.vm"));
+        setTarget(data, template);
         return false;
     }
     
     /**
-        calls doLogin()
-    */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+     * calls doLogin()
+     */
+    public void doPerform( RunData data, TemplateContext context )
+        throws Exception
     {
         doLogin(data, context);
     }
