@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.20 2002/04/30 22:11:12 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.21 2002/05/01 01:12:15 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -404,5 +404,17 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             doCancel(data, context);
        }      
 
+    }
+
+    /*
+     * Manages clicking of the AllDone button
+     */
+    public void doDone( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSaveinfo(data, context);
+        doSave(data, context);
+        doSaveuserattributes(data, context);
+        doCancel(data, context);
     }
 }

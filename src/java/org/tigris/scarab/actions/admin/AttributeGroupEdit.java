@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.20 2002/04/30 22:26:53 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.21 2002/05/01 01:12:15 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -258,4 +258,16 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             doCancel(data, context);
         }
     }
+
+    /**
+     * Saves all data when Done is clicked.
+     */
+    public void doDone ( RunData data, TemplateContext context )
+        throws Exception
+    {
+        doSaveinfo( data, context);
+        doSave( data, context);
+        doCancel( data, context);
+    }
+        
 }
