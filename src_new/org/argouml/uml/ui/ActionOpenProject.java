@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.31 2004/01/15 23:31:49 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.32 2004/02/13 21:53:23 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -184,9 +184,9 @@ public class ActionOpenProject extends UMLAction {
 
 	// TODO:
         // This is actually a hack! Some diagram types
-        // (like the state diagrams) access the current
+        // (like the statechart diagrams) access the current
         // diagram to get some info. This might cause 
-        // problems if there's another state diagram
+        // problems if there's another statechart diagram
         // active, so I remove the current project, before
         // loading the new one.
 

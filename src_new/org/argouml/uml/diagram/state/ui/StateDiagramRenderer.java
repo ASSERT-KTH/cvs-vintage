@@ -1,7 +1,4 @@
-
-
-
-// $Id: StateDiagramRenderer.java,v 1.13 2003/09/13 22:06:06 alexb Exp $
+// $Id: StateDiagramRenderer.java,v 1.14 2004/02/13 21:53:10 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +40,8 @@ import org.tigris.gef.graph.GraphNodeRenderer;
 import org.tigris.gef.presentation.FigEdge;
 import org.tigris.gef.presentation.FigNode;
 
-/** This class defines a renderer object for UML State Diagrams. In a
- *  State Diagram the following UML objects are displayed with the
+/** This class defines a renderer object for UML Statechart Diagrams. In a
+ *  Statechart Diagram the following UML objects are displayed with the
  *  following Figs: <p>
  * <pre>
  *  UML Object          ---  Fig

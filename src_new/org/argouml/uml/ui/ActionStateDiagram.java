@@ -1,4 +1,4 @@
-// $Id: ActionStateDiagram.java,v 1.25 2003/11/11 21:54:08 linus Exp $
+// $Id: ActionStateDiagram.java,v 1.26 2004/02/13 21:53:24 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,7 +31,7 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 
-/** Action to create a new state diagram.
+/** Action to create a new statechart diagram.
  * @stereotype singleton
  */
 public class ActionStateDiagram extends ActionAddDiagram {

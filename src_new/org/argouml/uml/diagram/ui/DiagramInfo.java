@@ -1,4 +1,4 @@
-// $Id: DiagramInfo.java,v 1.8 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: DiagramInfo.java,v 1.9 2004/02/13 21:53:19 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -77,7 +77,7 @@ public class DiagramInfo extends JComponent {
 	if (_diagram instanceof UMLClassDiagram)
 	    type = "Class Diagram";
 	if (_diagram instanceof UMLStateDiagram)
-	    type = "State Diagram";
+	    type = "Statechart Diagram";
 	if (_diagram instanceof UMLUseCaseDiagram)
 	    type = "Use Case Diagram";
 	if (_diagram instanceof UMLActivityDiagram)

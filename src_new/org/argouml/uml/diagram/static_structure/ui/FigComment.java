@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.25 2004/01/04 20:17:43 bobtarling Exp $
+// $Id: FigComment.java,v 1.26 2004/02/13 21:53:15 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.25 2004/01/04 20:17:43 bobtarling Exp $
+// $Id: FigComment.java,v 1.26 2004/02/13 21:53:15 mvw Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -198,13 +198,13 @@ public class FigComment
 	// Tell the annotated element, that it has a comment now.
         ModelFacade.addComment(element, comment);
 
-        // Notes in state diagrams need a special treatment, cause
+        // Notes in statechart diagrams need a special treatment, cause
         // the nodes in them don't necessary have a namespace, where
         // we could add the note. So I added this hack... :-(
         // Andreas Rueckert <a_rueckert@gmx.net>
         if (ModelFacade.isAStateVertex(element)) {
 
-	    // If the current target is a state diagram, we have to
+	    // If the current target is a statechart diagram, we have to
 	    // check, if we are editing the diagram.
             ProjectBrowser pb = ProjectBrowser.getInstance(); 
             if (TargetManager.getInstance().getTarget() instanceof UMLStateDiagram) { 
