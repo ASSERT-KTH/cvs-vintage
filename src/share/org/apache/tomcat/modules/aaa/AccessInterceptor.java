@@ -61,6 +61,7 @@ package org.apache.tomcat.modules.aaa;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.util.http.*;
 import java.util.*;
 import java.io.*;
 
@@ -511,8 +512,14 @@ class FormSecurityCheckHandler extends Handler {
     public void doService(Request req, Response res)
 	throws Exception
     {
-	String username=req.getParameter( "j_username" );
-	String password=req.getParameter( "j_password" );
+	// In order to process the form we need to read the POST
+	// body, if any
+	req.handlePostParameters();
+
+	Parameters params=req.parameters();
+	
+	String username=params.getParameter( "j_username" );
+	String password=params.getParameter( "j_password" );
 
 	Context ctx=req.getContext();
 	String errorPage=ctx.getFormErrorPage();
