@@ -41,7 +41,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.26 2002/04/01 04:56:37 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.27 2002/04/12 03:49:45 spestov Exp $
  */
 public class TextUtilities
 {
@@ -108,20 +108,14 @@ public class TextUtilities
 	public static int findMatchingBracket(Buffer buffer, int line, int offset,
 		int startLine, int endLine)
 	{
-		if(buffer.getLength() == 0)
-			return -1;
+		if(offset < 0 || offset >= buffer.getLineLength(line))
+		{
+			throw new ArrayIndexOutOfBoundsException(offset + ":"
+				+ buffer.getLineLength(line));
+		}
 
 		Segment lineText = new Segment();
 		buffer.getLineText(line,lineText);
-
-		if(lineText.count == 0)
-			return -1;
-
-		if(offset < 0 || offset >= lineText.count)
-		{
-			throw new ArrayIndexOutOfBoundsException(offset + ":"
-				+ lineText.count);
-		}
 
 		char c = lineText.array[lineText.offset + offset];
 		char cprime; // corresponding character
