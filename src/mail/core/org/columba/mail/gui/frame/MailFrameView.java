@@ -223,7 +223,7 @@ public class MailFrameView extends FrameView {
 	 */
 	protected Menu createMenu(FrameController controller) {
 		Menu menu = new MailMenu("org/columba/core/action/menu.xml",controller);
-		menu.extendMenuFromFile("org/columba/mail/action/menu.xml");
+		
 
 		return menu;
 	}

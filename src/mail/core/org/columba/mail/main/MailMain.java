@@ -95,6 +95,9 @@ public class MailMain extends DefaultMain {
 
 		MainInterface.pluginManager.registerHandler(
 			new MenuPluginHandler("org.columba.mail.menu"));
+			
+		MainInterface.pluginManager.registerHandler(
+					new MenuPluginHandler("org.columba.mail.composer.menu"));
 
 		MainInterface.pluginManager.registerHandler(new ImportPluginHandler());
 

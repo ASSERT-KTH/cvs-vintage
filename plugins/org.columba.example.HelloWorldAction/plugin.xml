@@ -6,7 +6,7 @@
   <action name="HelloWorld" class="com.mycom.HelloWorldAction" />
  </extension>
  <extension name="org.columba.core.menu">
-  <menu name="menu_file" extensionpoint="main">
+  <menu name="menu_file" extensionpoint="top">
   	<menuitem action="org.columba.example.HelloWorldAction$HelloWorld"/>
   	<separator/>
   </menu>

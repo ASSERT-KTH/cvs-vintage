@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 	<menubar>
-	<menu name="menu_file" extensionpoint="main">
+	<menu name="menu_file" extensionpoint="top">
 		<menuitem imenu="ReceiveMenu" />
 		<separator/>
 		<menuitem action="ReceiveSend"/>	
@@ -9,17 +9,15 @@
 		<menuitem action="SendAll"/>	
 		<separator/>
 		<menuitem imenu="ManageServerMenu" />
-		<separator/>
 	</menu>
 
-	<menu name="menu_edit" extensionpoint="main">
+	<menu name="menu_edit" extensionpoint="bottom">
 		<menuitem action="SearchMessage"/>
 		<separator/>
 		<menuitem action="MailAccount"/>
-		<separator/>
 	</menu>
 	
-	<menu name="menu_view" extensionpoint="sort">
+	<menu name="menu_view" extensionpoint="top">
 		<menuitem imenu="SortMessagesMenu"/>
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
@@ -39,6 +37,8 @@
 	 <separator/>
 	 <menuitem action="ApplyFilter"/>
 	 <menuitem action="FilterPreferences"/>
+	 <extensionpoint name="top" />	
+	 <extensionpoint name="bottom" />	
 	 <separator/>
 	 <menuitem action="SubscribeFolder"/>
 	</menu>
@@ -62,6 +62,8 @@
 		<separator/>
 		<menuitem action="AddSenderToAddressbook"/>
 		<menuitem action="AddAllSendersToAddressbook"/>
+		<extensionpoint name="top" />	
+		<extensionpoint name="bottom" />	
 		<separator/>
 		<menu name="menu_message_mark">
 		 <menuitem action="MarkAsRead"/>
@@ -81,6 +83,9 @@
 	  <menuitem action="CreateVFolderOnFrom"/>
 	  <menuitem action="CreateVFolderOnTo"/>
 	 </menu>
+	 <separator/>
+	 <extensionpoint name="top" />	
+	 <extensionpoint name="bottom" />	
 	 <separator/>
 	 <menuitem action="MailImport"/>
 	</menu>

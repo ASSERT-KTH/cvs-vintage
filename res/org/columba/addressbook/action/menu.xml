@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <menubar>
-	<menu name="menu_file" extensionpoint="main">
+	<menu name="menu_file" extensionpoint="open">
 		<menuitem action="AddContactCard"/>	
-		<menuitem action="AddGroupCard"/>			
-		<separator/>
+		<menuitem action="AddGroupCard"/>	
+	</menu>
+	
+	<menu name="menu_file" extensionpoint="top">
 		<menuitem action="RemoveCard" />
         <menuitem action="EditProperties" />
 		<separator/>

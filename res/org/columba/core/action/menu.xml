@@ -3,19 +3,21 @@
 <menubar>
 
 	<menu name="menu_file">
-	    <menu name="menu_file_opennewwindow">
+	    <menu name="menu_file_new">
 	    	<menuitem action="OpenNewMailWindow"/>
 	    	<menuitem action="OpenNewAddressbookWindow"/>
+	    	<extensionpoint name="open" />
 	    </menu>
+	    <menuitem action="Close"/>
 		<separator/>
-		<extensionpoint name="main" />	
+		<extensionpoint name="top" />	
 		<menuitem action="Print"/>	
-		<menuitem action="PrintSetup"/>			
+		<menuitem action="PrintSetup"/>	
 		<separator/>
-		<menuitem action="Close"/>
-		<separator/>
+		<extensionpoint name="bottom" />			
 		<menuitem action="Exit"/>			
 	</menu>
+	
 	<menu name="menu_edit">
 		<menuitem action="Undo"/>			
 		<menuitem action="Redo"/>			
@@ -29,18 +31,21 @@
 		<menuitem action="Find"/>
 		<menuitem action="FindAgain"/>
 		<separator/>
-		<extensionpoint name="main"/>
+		<extensionpoint name="top"/>
+		<extensionpoint name="bottom"/>
 		<menuitem action="GlobalOptions"/>
 	</menu>
+	
 	<menu name="menu_view">	
 		<menuitem action="Cancel"/>
 		<separator/>
 		<menu name="menu_view_show_hide">
 			<menuitem checkboxaction="ViewToolbar"/>	
+			<extensionpoint name="view_hide"/>
 		</menu>
 		<separator/>
-		<extensionpoint name="sort"/>
-		<separator/>
+		<extensionpoint name="top"/>
+		<extensionpoint name="bottom"/>
 	</menu>
 
 	<menu name="menu_help">

@@ -9,6 +9,10 @@ package org.columba.mail.gui.composer.menu;
 import org.columba.core.gui.frame.FrameController;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.menu.MenuBarGenerator;
+import org.columba.core.gui.menu.MenuPluginHandler;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 /**
  * @author frd
@@ -24,6 +28,17 @@ public class ComposerMenu extends Menu {
 	 */
 	public ComposerMenu(String xmlRoot, FrameController frameController) {
 		super(xmlRoot, frameController);
+
+		try {
+
+			(
+				(MenuPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.mail.composer.menu")).insertPlugins(
+				this);
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
 	}
 

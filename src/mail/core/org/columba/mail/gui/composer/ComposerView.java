@@ -209,7 +209,9 @@ public class ComposerView extends FrameView {
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
 	protected Menu createMenu(FrameController controller) {
-		return new ComposerMenu("org/columba/mail/action/composer_menu.xml", controller);
+		Menu menu = new ComposerMenu("org/columba/core/action/menu.xml",controller);
+				menu.extendMenuFromFile("org/columba/mail/action/composer_menu.xml");
+		return menu;
 	}
 
 	/* (non-Javadoc)
