@@ -396,6 +396,8 @@ public class IMAPFolder extends RemoteFolder {
 		switch (variant) {
 			case MarkMessageCommand.MARK_AS_READ :
 				{
+					if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+						getMessageFolderInfo().decRecent();
 					if (h.get("columba.flags.seen").equals(Boolean.FALSE))
 						getMessageFolderInfo().decUnseen();
 						

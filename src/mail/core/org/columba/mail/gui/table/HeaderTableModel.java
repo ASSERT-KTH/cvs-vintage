@@ -25,6 +25,7 @@ import org.columba.core.config.HeaderTableItem;
 import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
 import org.columba.core.gui.util.treetable.TreeTableModel;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.gui.table.util.TableModelFilteredView;
 import org.columba.mail.gui.table.util.TableModelPlugin;
@@ -179,31 +180,31 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 			if (node != null) {
 				HeaderInterface header = node.getHeader();
-				/*
-								switch (subMode) {
-									case Operation.MARK_READ :
-										{
-											header.getFlags().setSeen(true);
-											header.getFlags().setRecent(false);
-											break;
-										}
-									case Operation.MARK_FLAGGED :
-										{
-											header.getFlags().setFlagged(true);
-											break;
-										}
-									case Operation.MARK_EXPUNGED :
-										{
-											header.getFlags().setDeleted(true);
-											break;
-										}
-									case Operation.MARK_ANSWERED :
-										{
-											header.getFlags().setAnswered(true);
-											break;
-										}
-								}
-				*/
+
+				switch (subMode) {
+					case MarkMessageCommand.MARK_AS_READ :
+						{
+							header.getFlags().setSeen(true);
+							header.getFlags().setRecent(false);
+							break;
+						}
+					case MarkMessageCommand.MARK_AS_FLAGGED :
+						{
+							header.getFlags().setFlagged(true);
+							break;
+						}
+					case MarkMessageCommand.MARK_AS_EXPUNGED :
+						{
+							header.getFlags().setDeleted(true);
+							break;
+						}
+					case MarkMessageCommand.MARK_AS_ANSWERED :
+						{
+							header.getFlags().setAnswered(true);
+							break;
+						}
+				}
+
 				if (uids.length < 100)
 					nodeChanged(node);
 			} else {
@@ -234,12 +235,10 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 			}
 		}
 	}
-	
-	public void addHeaderList( HeaderInterface[] headerList ) throws Exception
-	{
-		for ( int i=0; i<headerList.length; i++ )
-		{
-			addHeader( headerList[i] );
+
+	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
+		for (int i = 0; i < headerList.length; i++) {
+			addHeader(headerList[i]);
 		}
 	}
 
@@ -639,9 +638,10 @@ public class HeaderTableModel extends AbstractTreeTableModel {
 
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
 		HeaderInterface header = null;
-		
-		if ( treeNode.equals( getRootNode() ) ) return null;
-		
+
+		if (treeNode.equals(getRootNode()))
+			return null;
+
 		if (treeNode.getUserObject() instanceof String)
 			return new String("root");
 		else {
