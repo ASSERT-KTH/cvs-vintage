@@ -17,11 +17,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
-
 import java.text.Collator;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -30,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
+
+import org.columba.mail.message.ColumbaHeader;
 
 /**
  * Threaded model using Message-Id:, In-Reply-To: and References: headers to
@@ -272,35 +270,6 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
      * implements TableModelModifier
      *  
      */
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
-    public void modify(Object[] uids) {
-        super.modify(uids);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
-    public void remove(Object[] uids) {
-        super.remove(uids);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-     */
-    public void set(HeaderList headerList) {
-        super.set(headerList);
-
-        update();
-    }
 
     /*
      * (non-Javadoc)

@@ -22,9 +22,9 @@ import org.columba.mail.message.HeaderList;
 
 import java.util.Enumeration;
 
+public class HeaderTableModel extends BasicHeaderTableModel implements
+        TreeTableModelInterface {
 
-public class HeaderTableModel extends BasicHeaderTableModel
-    implements TreeTableModelInterface {
     public HeaderTableModel() {
         super();
     }
@@ -34,15 +34,15 @@ public class HeaderTableModel extends BasicHeaderTableModel
     }
 
     /**
- * ***************************** implements TableModelModifier
- * ******************
- */
+     * ***************************** implements TableModelModifier
+     * ******************
+     */
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
     public void modify(Object[] uids) {
         for (int i = 0; i < uids.length; i++) {
             MessageNode node = (MessageNode) map.get(uids[i]);
@@ -53,15 +53,13 @@ public class HeaderTableModel extends BasicHeaderTableModel
             }
         }
 
-        // notify table
-        fireTableDataChanged();
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
     public void remove(Object[] uids) {
         if (uids != null) {
             for (int i = 0; i < uids.length; i++) {
@@ -76,7 +74,6 @@ public class HeaderTableModel extends BasicHeaderTableModel
                 }
             }
 
-            fireTableDataChanged();
         }
     }
 
@@ -91,14 +88,10 @@ public class HeaderTableModel extends BasicHeaderTableModel
         // clear messagenode cache
         map.clear();
 
-        // set empty root node
-        tree.setRootNode(root);
-
         if ((headerList == null) || (headerList.count() == 0)) {
-            // table is empty
-            // -> just display empty table
-            return;
-        }
+        // table is empty
+        // -> just display empty table
+        return; }
 
         // add every header from HeaderList to the table as MessageNode
         for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
@@ -117,19 +110,21 @@ public class HeaderTableModel extends BasicHeaderTableModel
             // add node to tree
             root.add(child);
         }
+
+        tree.setRootNode(root);
     }
 
     public void clear() {
         root = new MessageNode(new ColumbaHeader(), "0");
         tree.setRootNode(root);
-        fireTableDataChanged();
+
     }
 
     /*
- * (non-Javadoc)
- *
- * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
- */
+     * (non-Javadoc)
+     * 
+     * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
+     */
     public void set(HeaderList headerList) {
         this.headerList = headerList;
 

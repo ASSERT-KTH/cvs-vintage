@@ -27,43 +27,36 @@ import org.columba.mail.message.HeaderList;
 
 import java.util.Vector;
 
-
 /**
- *
- *
- * Extends <class>BasicTableModelSorter</class> with Columba specific stuff.
+ * 
+ * 
+ * Extends <class>BasicTableModelSorter </class> with Columba specific stuff.
  * <p>
- * Sorting order and column are initially loaded/saved from an xml
- * configuration file.
+ * Sorting order and column are initially loaded/saved from an xml configuration
+ * file.
  * <p>
- * It especially implements <interface>TableModelModifier</interface>.
- *
+ * It especially implements <interface>TableModelModifier </interface>.
+ * 
  * @author fdietz
  */
 public class TableModelSorter extends BasicTableModelSorter {
+
     protected WindowItem config;
+
     protected SortingStateObservable sortingStateObservable;
 
     public TableModelSorter(TreeTableModelInterface tableModel) {
         super(tableModel);
 
-        /*
-        XmlElement tableElement = FolderItem.getGlobalOptions();
-        DefaultItem item = new DefaultItem(tableElement);
-
-        String c = item.get("sorting_column");
-        if ( c == null ) c = "Date";
-        */
         setSortingColumn("Date");
 
-        //setSortingOrder(item.getBoolean("sorting_order", false));
         setSortingOrder(true);
 
         // observable connects the sorting table with the sort menu (View->Sort
         // Messages)
         sortingStateObservable = new SortingStateObservable();
         sortingStateObservable.setSortingState(getSortingColumn(),
-            getSortingOrder());
+                getSortingOrder());
     }
 
     /**
@@ -73,24 +66,11 @@ public class TableModelSorter extends BasicTableModelSorter {
         return sortingStateObservable;
     }
 
-    /*
-    public void saveConfig() {
-        TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
-                                                    .getTableItem();
-
-        boolean ascending = getSortingOrder();
-        String sortingColumn = getSortingColumn();
-
-        tableItem.set("ascending", ascending);
-        tableItem.set("selected", sortingColumn);
-    }
-    */
-
     /**
-     *
-     * This method is used by <class>SortMessagesMenu</class> to generate the
+     * 
+     * This method is used by <class>SortMessagesMenu </class> to generate the
      * available menuitem entries
-     *
+     * 
      * @return array of visible columns
      */
     public Object[] getColumns() {
@@ -107,20 +87,6 @@ public class TableModelSorter extends BasicTableModelSorter {
             v.add(name);
         }
 
-        /*
-        TableItem tableItem = (TableItem) MailInterface.config.getMainFrameOptionsConfig()
-                                                    .getTableItem();
-
-        Vector v = new Vector();
-
-        for (int i = 0; i < tableItem.count(); i++) {
-            HeaderItem headerItem = tableItem.getHeaderItem(i);
-
-            if (headerItem.getBoolean("enabled")) {
-                v.add((String) headerItem.get("name"));
-            }
-        }
-        */
         Object[] result = new String[v.size()];
         result = v.toArray();
 
@@ -128,57 +94,13 @@ public class TableModelSorter extends BasicTableModelSorter {
     }
 
     public void loadConfig(TableView view) {
-        /*
-        String column = getSortingColumn();
-        int columnNumber = getSortInt();
-        ImageIcon icon = null;
 
-        if (getSortingOrder() == true) {
-            icon = new AscendingIcon();
-        } else {
-            icon = new DescendingIcon();
-        }
-
-        TableColumnModel columnModel = view.getColumnModel();
-        JLabel renderer =
-            (JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
-
-        renderer.setIcon(icon);
-        */
     }
-
-    /*
-    public void setSortingColumn(String str) {
-        sort = str;
-    }
-
-    public void setSortingOrder(boolean b) {
-        ascending = b;
-    }
-    */
 
     /**
      * ***************************** implements TableModelModifier
      * ******************
      */
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-     */
-    public void modify(Object[] uids) {
-        super.modify(uids);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-     */
-    public void remove(Object[] uids) {
-        super.remove(uids);
-    }
 
     public void sort() {
         super.sort();
@@ -186,13 +108,11 @@ public class TableModelSorter extends BasicTableModelSorter {
         // notify tree
         getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-        // notify table
-        getRealModel().fireTableDataChanged();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.columba.mail.gui.table.model.TableModelModifier#update()
      */
     public void update() {
@@ -204,13 +124,11 @@ public class TableModelSorter extends BasicTableModelSorter {
         // notify tree
         getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-        // notify table
-        getRealModel().fireTableDataChanged();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
      */
     public void set(HeaderList headerList) {
@@ -223,8 +141,6 @@ public class TableModelSorter extends BasicTableModelSorter {
             //		notify tree
             getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-            // notify table
-            getRealModel().fireTableDataChanged();
         }
     }
 }
