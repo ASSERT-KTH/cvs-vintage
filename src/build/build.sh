@@ -1,12 +1,10 @@
 #! /bin/sh
 
-# $Id: build.sh,v 1.2 2000/12/07 20:05:33 tobias Exp $
+# $Id: build.sh,v 1.3 2001/03/14 21:58:39 kimptonc Exp $
 
-TARGET_CLASSPATH=../../lib/ant.jar:\
-../../lib/jaxp.jar:\
-../../lib/parser.jar:\
-../../lib/xmlbeans.jar:\
-../../build/classes:\
-../../lib/javac.jar
+
+TARGET_CLASSPATH=`echo ../../lib/*.jar | tr ' ' ':'`
+
+TARGET_CLASSPATH=${TARGET_CLASSPATH}:../../build/classes
 
 java -classpath $TARGET_CLASSPATH org.apache.tools.ant.Main $*
