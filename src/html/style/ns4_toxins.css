@@ -154,11 +154,15 @@ ul.tasks li {
 	margin-top: .67em;
 	margin-bottom: .67em;
 	}
-.functnbar td {
+.functnbar td, .functnbar2 td {
 	color: #fff;
 	border-left: 2px groove #ccc;
 	}
-.functnbar td.firstchild {
+.functnbar td a, .functnbar2 td a {
+	color: #fff;
+	text-decoration: underline;
+	}
+.functnbar td.firstchild, .functnbar2 td.firstchild {
 	border-left: none;
 	}
 #topmodule {
