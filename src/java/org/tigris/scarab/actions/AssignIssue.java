@@ -106,7 +106,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.63 2002/10/14 19:14:57 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.64 2002/10/17 19:12:02 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -122,7 +122,7 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-            List tempList = getTempList(data, context);
+            List tempList = getWorkingList(data, context, "temp");
             ValueParser params = data.getParameters();
             Object[] keys =  params.getKeys();
             for (int i =0; i<keys.length; i++)
@@ -159,7 +159,7 @@ public class AssignIssue extends BaseModifyIssue
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, 
                                user.getCurrentModule()))
         {
-            List tempList = getTempList(data, context);
+            List tempList = getWorkingList(data, context, "temp");
             ValueParser params = data.getParameters();
             Object[] keys =  params.getKeys();
             for (int i =0; i<keys.length; i++)
@@ -213,7 +213,7 @@ public class AssignIssue extends BaseModifyIssue
     {
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = scarabR.getIssues();
-        List tempList = getTempList(data, context);
+        List finalList = getWorkingList(data, context, "final");
         String action = null;
         Attachment attachment = null;
         ScarabUser assigner = (ScarabUser)data.getUser();
@@ -225,9 +225,9 @@ public class AssignIssue extends BaseModifyIssue
             List oldAssignees = issue.getUserAttributeValues();
            
             // loops through users in temporary working list
-            for (int j=0; j<tempList.size();j++)
+            for (int j=0; j<finalList.size();j++)
             {
-                List pair = (List)tempList.get(j);
+                List pair = (List)finalList.get(j);
                 String attrId = (String)pair.get(0);
                 String assigneeId = (String)pair.get(1);
                 ScarabUser assignee = scarabR.getUser(new NumberKey(assigneeId));
@@ -290,9 +290,9 @@ public class AssignIssue extends BaseModifyIssue
             {
                 boolean userStillAssigned = false;
                 AttributeValue oldAttVal = (AttributeValue)oldAssignees.get(m);
-                for (int n=0; n<tempList.size();n++)
+                for (int n=0; n<finalList.size();n++)
                 {
-                    List pair = (List)tempList.get(n);
+                    List pair = (List)finalList.get(n);
                     String attrId = (String)pair.get(0);
                     String assigneeId = (String)pair.get(1);
                     if (assigneeId.equals(oldAttVal.getUserId().toString()))
@@ -345,26 +345,32 @@ public class AssignIssue extends BaseModifyIssue
     /**
      * Gets temporary working list of assigned users.
      */
-    private List getTempList(RunData data, TemplateContext context) 
+    private List getWorkingList(RunData data, TemplateContext contexti,
+                                String whichList) 
         throws Exception
     {
-        List tempList =  new ArrayList();
+        List workingList =  new ArrayList();
         ValueParser params = data.getParameters();
         Object[] keys =  params.getKeys();
+        String key = "temp_user_attr_";
+        if (whichList.equals("final"))
+        {
+            key = "finl_user_attr_";
+        }
         for (int i =0; i<keys.length; i++)
         {
-            String key = keys[i].toString();
-            if (key.startsWith("temp_user_attr_"))
+            String tempKey = keys[i].toString();
+            if (tempKey.startsWith(key))
             {
                 List pair = new ArrayList();
-                String userId = key.substring(15);
-                String attrId = params.getString(key);
+                String userId = tempKey.substring(15);
+                String attrId = params.getString(tempKey);
                 pair.add(attrId);
                 pair.add(userId);
-                tempList.add(pair);
+                workingList.add(pair);
             }
         }
-        return tempList;
+        return workingList;
     }
 
     /**

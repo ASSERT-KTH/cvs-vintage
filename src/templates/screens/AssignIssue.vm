@@ -120,7 +120,7 @@
 			<td><input type="checkbox" name="remove_user_$userId" value=$attrId>
 			<td><a href="mailto:$assignedUser.Email"><strong>$!assignedUser.Name</strong></a></td>
 			<td>$assignedUser.UserName</td>
-			<td><select name="temp_user_attr_$userId">
+			<td><select name="finl_user_attr_$userId">
 			 #foreach ($selectUserAttr in $userAttrs)
                 #set ($selected = false)
 				#if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
