@@ -83,7 +83,7 @@ public class OutboxFolder extends CachedMHFolder {
 	}
 
 	public String getDefaultChild() {
-		return "CachedMHFolder";
+		return "MHFolder";
 	}
 
 	private void swapListManagers() throws Exception {

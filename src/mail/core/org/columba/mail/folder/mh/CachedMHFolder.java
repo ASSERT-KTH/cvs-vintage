@@ -52,4 +52,11 @@ public class CachedMHFolder extends CachedFolder {
 		return props;
 	}
 
+	/**
+		 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
+		 */
+	public String getDefaultChild() {
+		return "MHFolder";
+	}
+
 }

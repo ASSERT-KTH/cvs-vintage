@@ -43,8 +43,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 	// header-cache implementation
 	protected AbstractHeaderCache headerCache;
-	
-	
+
 	/**
 	 * @param item	<class>FolderItem</class> contains xml configuration of this folder
 	 */
@@ -71,12 +70,12 @@ public abstract class CachedFolder extends LocalFolder {
 		// re-use the header to save us some cpu time
 		ColumbaHeader h =
 			(ColumbaHeader) ((ColumbaHeader) message.getHeader()).clone();
-	
+
 		// decode all headerfields:
-		
+
 		// init encoded word decoder
 		EncodedWordDecoder decoder = new EncodedWordDecoder();
-		
+
 		// get list of used-defined headerfields
 		TableItem v = MailConfig.getMainFrameOptionsConfig().getTableItem();
 		String column;
@@ -90,31 +89,31 @@ public abstract class CachedFolder extends LocalFolder {
 			if (item instanceof String) {
 				String str = (String) item;
 				h.set(column, decoder.decode(str));
-			}		
+			}
 		}
-			
+
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
 		ColumbaHeader strippedHeader = ColumbaHeader.stripHeaders(h);
-		
+
 		// free memory
 		h = null;
-		
+
 		// set UID for new message
 		strippedHeader.set("columba.uid", newUid);
 
 		// increment recent count of messages if appropriate
 		if (strippedHeader.get("columba.flags.recent").equals(Boolean.TRUE))
 			getMessageFolderInfo().incRecent();
-			
+
 		// increment unseen count of messages if appropriate
 		if (strippedHeader.get("columba.flags.seen").equals(Boolean.FALSE))
 			getMessageFolderInfo().incUnseen();
 
 		// add header to header-cache list
 		getHeaderCacheInstance().add(strippedHeader);
-		
+
 		return newUid;
 	}
 
@@ -123,7 +122,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public boolean exists(Object uid, WorkerStatusController worker)
 		throws Exception {
-		
+
 		// check if message with UID exists
 		return getCachedHeaderList(worker).containsKey(uid);
 	}
@@ -149,7 +148,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash if marked as expunged
-				
+
 				// remove message
 				removeMessage(uid, worker);
 
@@ -178,13 +177,6 @@ public abstract class CachedFolder extends LocalFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultChild()
-	 */
-	public String getDefaultChild() {
-		return "CachedMHFolder";
-	}
-
-	/**
 	 * @see org.columba.mail.folder.Folder#getHeaderList(org.columba.core.command.WorkerStatusController)
 	 */
 	public HeaderList getHeaderList(WorkerStatusController worker)
@@ -199,8 +191,7 @@ public abstract class CachedFolder extends LocalFolder {
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception {
-			
-		
+
 		// check if message was already parsed before
 		if (aktMessage != null) {
 			if (aktMessage.getUID().equals(uid)) {
@@ -212,7 +203,7 @@ public abstract class CachedFolder extends LocalFolder {
 
 		// get source of message as string
 		String source = getMessageSource(uid, worker);
-		
+
 		// get header from cache
 		ColumbaHeader header =
 			(ColumbaHeader) getCachedHeaderList(worker).get(uid);
@@ -220,10 +211,10 @@ public abstract class CachedFolder extends LocalFolder {
 		// generate message object from source
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, header, 0);
-			
+
 		// set message uid
 		message.setUID(uid);
-		
+
 		// set message source
 		message.setSource(source);
 
@@ -249,14 +240,14 @@ public abstract class CachedFolder extends LocalFolder {
 			// the actually parsed message with the cached
 			// headerfield count
 			AbstractMessage message = getMessage(uid, worker);
-			
+
 			// number of headerfields
 			int size = message.getHeader().count();
 
 			// get header from cache
 			HeaderInterface h =
 				(ColumbaHeader) getCachedHeaderList(worker).get(uid);
-				
+
 			// message doesn't exist (this shouldn't happen here)
 			if (h == null)
 				return null;
@@ -279,7 +270,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
-		
+
 		int count = getCachedHeaderList(worker).count();
 		Object[] uids = new Object[count];
 		int i = 0;
@@ -420,19 +411,19 @@ public abstract class CachedFolder extends LocalFolder {
 			getHeaderCacheInstance().save(worker);
 			setChanged(false);
 		}
-		
+
 		// call Folder.save() to be sure that messagefolderinfo is saved
 		super.save(worker);
 	}
-	
+
 	/**
 	 * @return
 	 */
 	public AbstractHeaderCache getHeaderCacheInstance() {
-			if (headerCache == null) {
-				headerCache = new LocalHeaderCache(this);
-			}
-			return headerCache;
+		if (headerCache == null) {
+			headerCache = new LocalHeaderCache(this);
 		}
+		return headerCache;
+	}
 
 }
