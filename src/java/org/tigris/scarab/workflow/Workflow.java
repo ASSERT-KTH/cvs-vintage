@@ -62,12 +62,14 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.util.ScarabException;
 
 /**
-    This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
-    into the context to replace the $link that Turbine adds.
-    
-    @author <a href="mailto:elicia@tigris.org">Elicia David</a>
-    @version $Id: Workflow.java,v 1.4 2002/08/15 20:17:18 jon Exp $
-*/
+ * This is the primary interface for workflow within Scarab.
+ * Implementations of this interface are loaded through the
+ * WorkflowFactory interface. It gets which class to load
+ * from the Scarab.properties file.
+ *   
+ * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
+ * @version $Id: Workflow.java,v 1.5 2002/08/15 23:09:30 jon Exp $
+ */
 public interface Workflow
 {
     public boolean canMakeTransition(ScarabUser user,
@@ -124,4 +126,3 @@ public interface Workflow
         throws ScarabException;
 
 }
-
