@@ -88,6 +88,17 @@ public class Application
    }
    
    /**
+    * Returns the requested module if found
+    *
+    * @param pModuleId Id of the Module to be saved. Please use the
+    *                  constants provided in here.
+    * @return Module if found and otherwise null
+    **/
+   public Module getModule( int pModuleId ) {
+      return (Module) mModules.get( new Integer( pModuleId ) );
+   }
+   
+   /**
     * @return Collection of Modules deployed with this application. Each
     *         item is of type {@link org.jboss.mgt.Module Module}.
     **/

@@ -29,6 +29,21 @@ public interface ServerDataCollectorMBean
    // Methods
    // -------------------------------------------------------------------------
 
+   /** @return Sleep period in milliseconds between to refresh cycles **/
+   public int getRefreshSleep();
+   /**
+    * Sets the Sleep time (in milliseconds) between two refresh cycles
+    *
+    * @param pSleep Sleep period in milliseconds
+    **/
+   public void setRefreshSleep( int pSleep );
+   
+   /**
+    * Informs this intance the environment changes and he should update its
+    * data
+    **/
+   public void refresh();
+
    /**
     * Returns an application if found with the given key.
     *

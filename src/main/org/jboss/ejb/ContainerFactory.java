@@ -82,7 +82,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.71 $
+*   @version $Revision: 1.72 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -332,11 +332,9 @@ public class ContainerFactory
       // create the _real_ classloader for this app
       ClassLoader cl = new URLClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
       app.setClassLoader( cl );
-      // Create data container for deployed EJBs management data
-      Module module = new Module( "EJB", "??" );
 
       for( int i = 0; i < jarUrls.length; i++ )
-       deploy( app, jarUrls[ i ], cl, module );
+       deploy( app, jarUrls[ i ], cl );
 
       // Init application
       app.init();
@@ -351,29 +349,6 @@ public class ContainerFactory
       log.log( "Deployed application: " + app.getName() );
       // Register deployment. Use the application name in the hashtable
       deployments.put( appUrl, app );
-      try
-         {
-         // Save EJBs management data: application
-         log.log( "Add module: " + module + ", to app: " + appId );
-         getServer().invoke(
-             new ObjectName( "Management", "service", "Collector" ),
-            "saveModule",
-            new Object[] {
-               appId,
-               new Integer( org.jboss.mgt.Application.EJBS ),
-               module
-            },
-            new String[] {
-               String.class.getName(),
-               Integer.TYPE.getName(),
-               module.getClass().getName()
-            }
-         );
-         }
-      catch( Exception e )
-         {
-         log.exception( e );
-         }
       }
     catch( Exception e )
       {
@@ -398,7 +373,7 @@ public class ContainerFactory
       }
     }
 
-  private void deploy( Application app, URL url, ClassLoader cl, Module module )
+  private void deploy( Application app, URL url, ClassLoader cl )
     throws NamingException, Exception
     {
       // Create a file loader with which to load the files
@@ -463,11 +438,21 @@ public class ContainerFactory
         BeanMetaData bean = (BeanMetaData) beans.next();
 
         log.log( "Deploying " + bean.getEjbName() );
-        EJB ejb = new EJB();
-        module.addItem( ejb );
-        ejb.setName( bean.getEjbName() );
-        app.addContainer( createContainer( bean, cl, localCl, ejb ) );
-        ejb.setDeployed( true );
+        app.addContainer( createContainer( bean, cl, localCl ) );
+        }
+      // Inform the Data Collector that new/old EJBs were deployed
+      try
+        {
+        getServer().invoke(
+          new ObjectName( "Management", "service", "Collector" ),
+          "refresh",
+          new Object[] {},
+          new String[] {}
+        );
+        }
+      catch( Exception e )
+        {
+        e.printStackTrace();
         }
     }
 
@@ -560,38 +545,27 @@ public class ContainerFactory
   // Container Creation
   // ******************
 
-  private Container createContainer( BeanMetaData bean, ClassLoader cl, ClassLoader localCl, EJB ejb )
+  private Container createContainer( BeanMetaData bean, ClassLoader cl, ClassLoader localCl )
     throws Exception
     {
     // Added message driven deployment
     if( bean.isMessageDriven() )
       {
-      ejb.setType( EJB.MESSAGE );
       return createMessageDrivenContainer( bean, cl, localCl );
       }
     else if( bean.isSession() )   // Is session?
       {
       if( ( (SessionMetaData) bean ).isStateless() )   // Is stateless?
         {
-        ejb.setType( EJB.STATELESS_SESSION );
         return createStatelessSessionContainer( bean, cl, localCl );
         }
       else   // Stateful
         {
-        ejb.setType( EJB.STATEFUL_SESSION );
         return createStatefulSessionContainer( bean, cl, localCl );
         }
       }
     else   // Entity
       {
-      if( ( (EntityMetaData) bean ).isBMP() )
-         {
-         ejb.setType( EJB.ENTITY_BMP );
-         }
-      else
-         {
-         ejb.setType( EJB.ENTITY_CMP );
-         }
       return createEntityContainer( bean, cl, localCl );
       }
     }

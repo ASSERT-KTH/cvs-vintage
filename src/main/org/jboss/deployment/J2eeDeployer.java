@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
 *   @author Scott_Stark@displayscape.com
-*   @version $Revision: 1.29 $
+*   @version $Revision: 1.30 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -207,9 +207,7 @@ implements J2eeDeployerMBean
 
 	  try
 	  {
-              // <comment author="cgjung"> factored out for subclass access
-            addToCollector(d,lCollector);
-            
+        // <comment author="cgjung"> factored out for subclass access
 		  startApplication (d);
 		  log.log ("J2EE application: " + _url + " is deployed.");
       } 
@@ -258,33 +256,6 @@ implements J2eeDeployerMBean
       catch( Exception e ) {
         return null;
       }
-   }
-   
-   /** report of addition to data collector factored out for less
-    *  redundancy with subclasses
-    *  @author schaefera
-    *  @author cgjung
-    */
-   protected void addToCollector(Deployment d, ObjectName lCollector) {
-       try {
-           // Now the application is deployed add it to the server data collector
-           Application lApplication = new Application( d.getName(), "DD:Fix later" );
-           server.invoke(
-           lCollector,
-           "saveApplication",
-           new Object[] {
-               d.getName(),
-               lApplication
-           },
-           new String[] {
-               "java.lang.String",
-               lApplication.getClass().getName()
-           }
-           );
-       }
-       catch( Exception e ) {
-           log.log("Report of deployment of J2EE application: " + d.getName() + " could not be reported.");
-       }
    }
    
    /** report of removal to data collector factored out for subclass access 

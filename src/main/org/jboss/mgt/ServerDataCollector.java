@@ -9,6 +9,7 @@ package org.jboss.mgt;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.management.MalformedObjectNameException;
@@ -22,6 +23,7 @@ import javax.naming.NameNotFoundException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
+import org.jboss.ejb.Container;
 import org.jboss.logging.Log;
 import org.jboss.naming.NonSerializableFactory;
 import org.jboss.util.ServiceMBeanSupport;
@@ -50,6 +52,9 @@ public class ServerDataCollector
    private MBeanServer mServer;
    private String mName;
    private Map mApplications = new Hashtable();
+   private Boolean mRefresh = new Boolean( true );
+   private Thread mWorker;
+   private int mRefreshSleep = 2000;
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -78,6 +83,23 @@ public class ServerDataCollector
    // -------------------------------------------------------------------------
    // Methods
    // -------------------------------------------------------------------------  
+
+   public int getRefreshSleep() {
+      return mRefreshSleep;
+   }
+   
+   public void setRefreshSleep( int pSleep ) {
+      if( pSleep > 0 ) {
+         mRefreshSleep = pSleep;
+      }
+   }
+   
+   public void refresh() {
+      // Mark it to be refreshed
+      synchronized( mRefresh ) {
+         mRefresh = new Boolean( true );
+      }
+   }
 
    public ObjectName getObjectName(
       MBeanServer server,
@@ -175,10 +197,12 @@ public class ServerDataCollector
         throws Exception
    {
       bind( this );
-//      refresh();
+      mWorker = new RefreshWorker( log );
+      mWorker.start();
    }
    
    protected void stopService() {
+      mWorker.stop();
       try {
          unbind();
       }
@@ -236,5 +260,83 @@ public class ServerDataCollector
       NonSerializableFactory.unbind( lJNDIName );
       log.log("JBoss Management service '" + lJNDIName + "' removed from JNDI" );
 	}
+   
+   /**
+    * Worker class to perform the refresh of the data
+    **/
+   private class RefreshWorker
+      extends Thread
+   {
+      private Log mLog;
+      
+      public RefreshWorker( Log pLog ) {
+         mLog = pLog;
+      }
+      
+      public void run() {
+         while( true ) {
+            try {
+               synchronized( mRefresh ) {
+                  if( mRefresh.booleanValue() ) {
+                     doRefresh();
+                     mRefresh = new Boolean( false );
+                  }
+               }
+               Thread.sleep( mRefreshSleep );
+            }
+            catch( InterruptedException e ) {
+            }
+         }
+      }
+      
+      private void doRefresh() {
+         try {
+            // Drop the actual info
+            mApplications = new Hashtable();
+            // Look up all the registered Containers for the EJB Module and loop through
+            Iterator i = mServer.queryNames( new ObjectName( "Management:*" ), null ).iterator();
+            while( i.hasNext() ) {
+               ObjectName lName = (ObjectName) i.next();
+               if( lName.getKeyProperty( "container" ) == null ) {
+                  continue;
+               }
+               Container lContainer = (Container) mServer.getAttribute( lName, "Container" );
+               // Check if application name already exists
+               String lApplicationName = lContainer.getApplication().getName();
+               Application lApplication = null;
+               if( mApplications.containsKey( lApplicationName ) ) {
+                  lApplication = (Application) mApplications.get( lApplicationName );
+               }
+               else {
+                  lApplication = new Application( lApplicationName, "DD:Fix it later" );
+                  mApplications.put( lApplicationName, lApplication );
+               }
+               // Check if the EJB module is there
+               Module lModule = lApplication.getModule( Application.EJBS );
+               if( lModule == null ) {
+                  lModule = new Module( "EJB", "DD:Fix it later" );
+                  lApplication.saveModule( Application.EJBS, lModule );
+               }
+               // Add EJB Info
+               int lType = 0;
+               if( lContainer.getBeanMetaData().isSession() ) {
+                  lType = EJB.SESSION;
+               }
+               if( lContainer.getBeanMetaData().isEntity() ) {
+                  lType = EJB.ENTITY;
+               }
+               if( lContainer.getBeanMetaData().isMessageDriven() ) {
+                  lType = EJB.MESSAGE_DRIVEN;
+               }
+               String lEjbName = lContainer.getBeanMetaData().getEjbName();
+               EJB lEjb = new EJB( lEjbName, lType, true );
+               lModule.addItem( lEjb );
+            }
+         }
+         catch( Exception e ) {
+            e.printStackTrace();
+         }
+      }
+   }
 
 }

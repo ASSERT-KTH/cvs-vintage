@@ -18,11 +18,9 @@ public class EJB
    // Constants
    // -------------------------------------------------------------------------  
 
-   public static final int STATELESS_SESSION = 1;
-   public static final int STATEFUL_SESSION = 2;
-   public static final int ENTITY_BMP = 3;
-   public static final int ENTITY_CMP = 4;
-   public static final int MESSAGE = 5;
+   public static final int SESSION = 1;
+   public static final int ENTITY = 2;
+   public static final int MESSAGE_DRIVEN = 3;
 
    // -------------------------------------------------------------------------
    // Members
@@ -95,20 +93,14 @@ public class EJB
    public String toString() {
       String lType = null;
       switch( getType() ) {
-         case STATELESS_SESSION:
-            lType = "Stateless Session";
+         case SESSION:
+            lType = "Session";
             break;
-         case STATEFUL_SESSION:
-            lType = "Statefull Session";
+         case ENTITY:
+            lType = "Entity";
             break;
-         case ENTITY_BMP:
-            lType = "Entity BMP";
-            break;
-         case ENTITY_CMP:
-            lType = "Entity CMP";
-            break;
-         case MESSAGE:
-            lType = "Message";
+         case MESSAGE_DRIVEN:
+            lType = "MessageDriven";
       }
 
       return "EJB [ " + getName() + 

@@ -136,6 +136,13 @@
   </mbean>
 
   <!-- ==================================================================== -->
+  <!-- JBoss Server Management                                              -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jboss.mgt.ServerDataCollector" name="Management:service=Collector">
+    <attribute name="RefreshSleep">5000</attribute>
+  </mbean>
+
+  <!-- ==================================================================== -->
   <!-- J2EE deployment                                                      -->
   <!-- ==================================================================== -->
 
@@ -403,11 +410,6 @@
     <attribute name="User">user_id</attribute>
     <attribute name="Password">password</attribute>
   </mbean>
-
-  <!-- ==================================================================== -->
-  <!-- JBoss Server Management                                              -->
-  <!-- ==================================================================== -->
-  <mbean code="org.jboss.mgt.ServerDataCollector" name="Management:service=Collector"/>
 
   <!-- ==================================================================== -->
   <!-- Uncomment to enable JMX monitoring of the bean cache

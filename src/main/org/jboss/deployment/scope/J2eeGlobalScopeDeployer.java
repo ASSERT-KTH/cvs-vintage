@@ -295,8 +295,6 @@ public class J2eeGlobalScopeDeployer extends org.jboss.deployment.J2eeDeployer {
                 source.onDeploy();
                 // redirect all modules to the responsible deployers
                 startModules(_d,source,oldCl);
-                // and report successful deployment to collector
-                addToCollector(_d,lCollector);
             } catch(Exception e) {
                 stopApplication(_d,new java.util.ArrayList(),null,scope,lCollector);
                 throw new J2eeDeploymentException("could not deploy "+_d.getName());
