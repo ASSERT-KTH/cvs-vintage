@@ -75,7 +75,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.3 2003/01/30 22:24:31 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.4 2003/02/01 03:39:44 jon Exp $
  */
 public class ImportIssues
 {
@@ -194,7 +194,7 @@ public class ImportIssues
         }
         catch(Exception e)
         {
-            log.error("\nThe following error(s) were found: " +
+            log.debug("\nThe following error(s) were found: " +
                       "\n------------------------------------------------------\n" +
                       e.getMessage());
             throw e;
