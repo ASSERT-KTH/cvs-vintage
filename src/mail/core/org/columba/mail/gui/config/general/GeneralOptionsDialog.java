@@ -25,7 +25,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import org.columba.core.gui.config.themes.*;
-import org.columba.core.gui.config.themes.ThemePanel;
 
 import org.columba.mail.util.MailResourceLoader;
 
@@ -43,7 +42,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener
 
 	public GeneralOptionsDialog( JFrame frame )
 	{
-		//LOCALIZE
 		super( frame, MailResourceLoader.getString(
                                     "dialog",
                                     "general",
