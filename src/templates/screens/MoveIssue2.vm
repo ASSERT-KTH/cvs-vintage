@@ -75,11 +75,7 @@
          
         </tr>
 #foreach( $attr in $matchingAttributes )
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
+         $rows ()
          <td>$attr.Attribute.Name 
            #set( $displayValue = $module.getRModuleAttribute($attr.Attribute).getDisplayValue() )
            #if (!$attr.Attribute.Name.equals($displayValue))
@@ -103,11 +99,7 @@
          
         </tr>
 #foreach( $attr in $matchingAttributes )
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
+        #rows ()
          <td>$attr.Attribute.Name
            #set( $displayValue = $newModule.getRModuleAttribute($attr.Attribute).getDisplayValue() )
            #if (!$attr.Attribute.Name.equals($displayValue))
@@ -141,11 +133,7 @@
          
         </tr>
 #foreach( $attr in $orphanAttributes )
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
+          #rows ()
          <td><input type="checkbox" name="x" value="x" checked /></td>
 
          <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>

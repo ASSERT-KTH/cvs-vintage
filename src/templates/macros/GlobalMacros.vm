@@ -162,6 +162,22 @@ value="false" />
          </select>
 #end
 
+#macro (frequencySelectBox $query $id) 
+          #foreach ($frequency in $query.Frequencies )
+          <option value = "$frequency.FrequencyId" #if( $frequency.FrequencyId.equals($id)) selected="selected" #end >
+           $frequency.Name
+          </option>
+           #end
+#end
+
+#macro (rows)
+ #if( $velocityCount % 2 > 0 )
+    <tr class="a">
+ #else 
+    <tr class="b">
+ #end
+#end
+
 #macro ( datatitle $title )
 <h3>$title</h3>
 #end

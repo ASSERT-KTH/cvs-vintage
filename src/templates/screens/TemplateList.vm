@@ -3,13 +3,13 @@
 
 #set ($module = $scarabR.CurrentModule)
 
+#if ( !$module.IssueTemplates.isEmpty() )
 
 <form method="post" action="$action" >
 
         <p class="functnbar"><input type="submit" value="create new" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
         <h3>Templates</h3>
         
-#if ( !$module.IssueTemplates.isEmpty() )
 
 ##        <p>&#171; previous | 1 of 1 | next &#187;</p>
         
@@ -24,11 +24,7 @@
         
 #foreach ( $template in $module.IssueTemplates )
 
-         #if( $velocityCount % 2 > 0 )
-            <tr class="a">
-         #else 
-            <tr class="b">
-         #end
+         #rows ()
         <td><input type="checkbox" name="delete_$template.IssueTemplateId"/></td>
         <td><a href="#">$template.Name</a></td>
         <td>#if ($template.Description) $template.Description #end</td>
