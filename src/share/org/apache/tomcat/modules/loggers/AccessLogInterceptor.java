@@ -231,7 +231,7 @@ public class AccessLogInterceptor extends BaseInterceptor {
 				fw.write(' ');
 				fw.write(request.requestURI().toString());
 				String q = request.queryString().toString();
-				if (q != null) {
+				if (q != null && q.length() > 0) {
 				    fw.write('?');
 				    fw.write(q);
 				}
@@ -239,7 +239,12 @@ public class AccessLogInterceptor extends BaseInterceptor {
 				fw.write(request.protocol().toString().trim());
 				break;
 			    case 'b':
-				fw.write(response.getContentLength());
+				String cl = request.getHeader("Content-Length");
+				if(cl != null) {
+				    fw.write(cl);
+				} else {
+				    fw.write("-");
+				}
 				break;
 			    case 's':
 				fw.write(Integer.
