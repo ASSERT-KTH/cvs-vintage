@@ -4,12 +4,12 @@
  */
 
 INSERT INTO SCARAB_MODULE VALUES (1,'Pacman JVM',NULL,'PAC','Sample project','/PacmanJVM/',0,0,NULL,0,1);
-INSERT INTO SCARAB_MODULE VALUES (2,'Docs',NULL,'PACD','Documentation','/PacmanJVM/docs/',100,0,NULL,0,1);
+INSERT INTO SCARAB_MODULE VALUES (2,'Docs',NULL,'PACD','Documentation','/PacmanJVM/docs/',1,0,NULL,0,1);
 INSERT INTO SCARAB_MODULE VALUES (3,'Turbine',NULL,'TBN','The Turbine Project','/Turbine/',0,0,NULL,0,1);
-INSERT INTO SCARAB_MODULE VALUES (5,'Source',NULL,'PACS','Source','/PacmanJVM/source/',100,0,NULL,0,1);
-INSERT INTO SCARAB_MODULE VALUES (4,'Docs',NULL,'TBND','Documentation','/Turbine/docs',102,0,NULL,0,1);
-INSERT INTO SCARAB_MODULE VALUES (6,'Source',NULL,'TBNS','Source','/Turbine/source/',102,0,NULL,0,1);
-INSERT INTO SCARAB_MODULE VALUES (7,'Java',NULL,'TBNJ','Java','/Turbine/source/java',105,0,NULL,0,1);
+INSERT INTO SCARAB_MODULE VALUES (5,'Source',NULL,'PACS','Source','/PacmanJVM/source/',1,0,NULL,0,1);
+INSERT INTO SCARAB_MODULE VALUES (4,'Docs',NULL,'TBND','Documentation','/Turbine/docs',3,0,NULL,0,1);
+INSERT INTO SCARAB_MODULE VALUES (6,'Source',NULL,'TBNS','Source','/Turbine/source/',3,0,NULL,0,1);
+INSERT INTO SCARAB_MODULE VALUES (7,'Java',NULL,'TBNJ','Java','/Turbine/source/java',6,0,NULL,0,1);
 
 /*
  * Id table
