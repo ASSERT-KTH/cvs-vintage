@@ -1,4 +1,4 @@
-// $Id: ExplorerTreeNode.java,v 1.7 2004/09/01 15:43:20 mvw Exp $
+// $Id: ExplorerTreeNode.java,v 1.8 2004/09/02 20:51:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class ExplorerTreeNode extends DefaultMutableTreeNode {
     /** 
      * Creates a new instance of ExplorerTreeNode.
      * 
-     * @param userObj the first object to put in the new tree
+     * @param userObj the object in the tree
      * @param m the tree model
      */
     public ExplorerTreeNode(Object userObj, ExplorerTreeModel m) {
