@@ -63,7 +63,8 @@ public class ViewMessageSourceAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameController()).getTableSelection();
+			((AbstractMailFrameController) getFrameController())
+					.getTableSelection();
 
 		ViewMessageSourceCommand c =
 			new ViewMessageSourceCommand(getFrameController(), r);
