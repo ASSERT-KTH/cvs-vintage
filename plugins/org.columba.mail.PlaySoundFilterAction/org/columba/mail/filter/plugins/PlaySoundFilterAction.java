@@ -21,7 +21,7 @@ import java.net.URL;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
+import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.util.PlaySound;
 import org.columba.mail.command.FolderCommand;
@@ -75,21 +75,18 @@ public class PlaySoundFilterAction extends AbstractFilterAction {
 	 * To enable and disable the creation of type comments go to
 	 * Window>Preferences>Java>Code Generation.
 	 */
-
 	class PlaySoundCommand extends FolderCommand {
 		public PlaySoundCommand(DefaultCommandReference[] references) {
 			super(references);
 		}
 
-		public void execute(Worker worker) throws Exception {
+		public void execute(WorkerStatusController worker) throws Exception {
 
 			// you need a sound.wav in your program folder
 			File soundFile = new File("sound.wav");
 			URL url = soundFile.toURL();
 
 			PlaySound.play(url);
-
 		}
 	}
-
 }
