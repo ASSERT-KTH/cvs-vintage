@@ -31,11 +31,11 @@ import org.jboss.logging.Logger;
 
 /**
  * This command establishes relationships for CMR fields that have
- * foreign keys mapped to primary keys.
+ * all foreign key fields mapped to primary keys columns.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class JDBCPostCreateEntityCommand
 {
@@ -56,15 +56,15 @@ public class JDBCPostCreateEntityCommand
 
       // Create the Log
       log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
+            this.getClass().getName() +
+            "." +
             manager.getMetaData().getName());
 
       // get CMR fields that have fk that is a part of the pk
       for(Iterator iter=entity.getCMRFields().iterator(); iter.hasNext();)
       {
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
-         if(cmrField.isFkPartOfPk())
+         if(cmrField.allFkFieldsMappedToPkFields())
          {
             // look for the pk field this cmr field is mapped to
             for(Iterator fkIter = cmrField.getForeignKeyFields().iterator();
@@ -75,37 +75,36 @@ public class JDBCPostCreateEntityCommand
                for(Iterator pkIter = cmrField.getEntity().
                   getPrimaryKeyFields().iterator();
                   pkIter.hasNext();) {
-       
+
                   JDBCCMP2xFieldBridge pkField = (JDBCCMP2xFieldBridge)pkIter.next();
 
                   // fk field mapped to pk field have the same JDBCType
                   // see JDBCCMRFieldBridge
                   if(fkField.getJDBCType() == pkField.getJDBCType())
                   {
-                     log.debug("foreign key field " + fkField.getFieldName()
-                        + " is mapped to primary key field "
-                        + pkField.getFieldName());
+                     log.debug(
+                        "foreign key field " + entity.getEntityName() + "." + fkField.getFieldName()
+                        + " is mapped to primary key field " + cmrField.getRelatedEntity().getEntityName()
+                        + "." + pkField.getFieldName()
+                     );
                      pkFieldsByFkField.put(fkField, pkField);
                   }
                }
+
+               // add the field to the list
+               fkPartOfPkCmrFields.add(cmrField);
+               // create related-entity-exists-sql
+               relatedEntityExistsSqlByField.put(cmrField, createRelatedEntityExistsSql(cmrField));
             }
-
-            // add the field to the list
-            fkPartOfPkCmrFields.add(cmrField);
-
-            // create related-entity-exists-sql
-            relatedEntityExistsSqlByField.put(
-               cmrField, createRelatedEntityExistsSql(cmrField));
-
          }
-         else if(cmrField.getRelatedCMRField().isFkPartOfPk())
+         else if(cmrField.getRelatedCMRField().allFkFieldsMappedToPkFields())
          {
             log.debug("found related CMR field mapped to the PK: "
                + cmrField.getFieldName());
             relatedFkPartOfPkCmrFields.add(cmrField);
          }
       }
-   }  
+   }
 
    // Public ----------------------------------------
    public Object execute(Method m,
@@ -190,11 +189,11 @@ public class JDBCPostCreateEntityCommand
          // get the connection
          DataSource dataSource = relatedEntity.getDataSource();
          con = dataSource.getConnection();
-         
+
          // create the statement
          log.debug("Executing SQL: " + sql);
          ps = con.prepareStatement(sql);
-         
+
          // set the parameters
          relatedEntity.setPrimaryKeyParameters(ps, 1, pk);
 
@@ -205,7 +204,7 @@ public class JDBCPostCreateEntityCommand
             throw new CreateException("Error checking if entity exists: " +
                   "result set contains no rows");
          }
-      
+
          // did any rows match
          return rs.getInt(1) > 0;
       }

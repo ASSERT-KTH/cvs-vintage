@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -208,7 +208,7 @@ public class JDBCLoadRelationCommand {
       String relatedTable = cmrField.getRelatedJDBCEntity().getTableName();
       
       // do we need to join the relation table and the related table
-      boolean join = ((preloadFields.size() > 0) || cmrField.isFkPartOfPk())
+      boolean join = ((preloadFields.size() > 0) || cmrField.allFkFieldsMappedToPkFields())
          && !relationTable.equals(relatedTable);
 
       // aliases for the tables, only required if we are joining the tables

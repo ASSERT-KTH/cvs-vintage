@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 /**
  * JDBCLoadEntityCommand loads the data for an instance from the table.
  * This command implements specified eager loading. For CMP 2.x, the
- * entity can be configured to only load some of the fields, which is 
+ * entity can be configured to only load some of the fields, which is
  * helpful for entitys with lots of data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
@@ -41,7 +41,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -54,8 +54,8 @@ public class JDBCLoadEntityCommand {
 
       // Create the Log
       log = Logger.getLogger(
-            this.getClass().getName() + 
-            "." + 
+            this.getClass().getName() +
+            "." +
             manager.getMetaData().getName());
    }
 
@@ -64,7 +64,7 @@ public class JDBCLoadEntityCommand {
    }
 
    public void execute(
-         JDBCCMPFieldBridge requiredField, 
+         JDBCCMPFieldBridge requiredField,
          EntityEnterpriseContext ctx) {
 
       // load the instance primary key fields into the context
@@ -75,10 +75,10 @@ public class JDBCLoadEntityCommand {
 
       // load any prefetched data into the context context
       prefetchCache.loadPrefetchData(ctx);
-      
+
       // determine the fields to load
       List loadFields = getLoadFields(
-            requiredField, 
+            requiredField,
             JDBCContext.getReadAheadMetaData(ctx),
             ctx);
 
@@ -96,13 +96,13 @@ public class JDBCLoadEntityCommand {
 
       // generate the sql
       String sql = getSQL(loadFields, loadKeys.size());
-      
+
       Connection con = null;
       PreparedStatement ps = null;
       try {
          // get the connection
          con = entity.getDataSource().getConnection();
-         
+
          // create the statement
          if(log.isDebugEnabled()) {
             log.debug("Executing SQL: " + sql);
@@ -113,9 +113,9 @@ public class JDBCLoadEntityCommand {
          if(manager.getEntityBridge().getFetchSize() > 0) {
             ps.setFetchSize(manager.getEntityBridge().getFetchSize());
          }
-         
+
          // set the parameters
-         
+
          int paramIndex = 1;
          for(Iterator iter = loadKeys.iterator(); iter.hasNext();) {
             paramIndex = entity.setPrimaryKeyParameters(
@@ -134,7 +134,7 @@ public class JDBCLoadEntityCommand {
 
             // ref must be reset to null before load
             ref[0] = null;
-   
+
             // if we are loading more then one entity, load the pk from the row
             Object pk = null;
             if(loadKeys.size() > 1) {
@@ -148,7 +148,9 @@ public class JDBCLoadEntityCommand {
                // main entity; load the values into the context
                for(Iterator iter = loadFields.iterator(); iter.hasNext();) {
                   JDBCFieldBridge field = (JDBCFieldBridge)iter.next();
+
                   index = field.loadInstanceResults(rs, index, ctx);
+
                   field.setClean(ctx);
                }
                mainEntityLoaded = true;
@@ -159,16 +161,16 @@ public class JDBCLoadEntityCommand {
 
                   // ref must be reset to null before load
                   ref[0] = null;
-   
+
                   // load the result of the field
                   index = field.loadArgumentResults(rs, index, ref);
-   
+
                   // cache the field value
                   prefetchCache.addPrefetchData(pk, field, ref[0]);
                }
             }
          }
-      
+
          // did we load the main results
          if(!mainEntityLoaded) {
             throw new NoSuchEntityException("Entity not found: primaryKey=" +
@@ -217,15 +219,15 @@ public class JDBCLoadEntityCommand {
       //
       // assemble pieces into final statement
       if(entity.getMetaData().hasRowLocking()) {
-         JDBCFunctionMappingMetaData rowLocking = 
+         JDBCFunctionMappingMetaData rowLocking =
                manager.getMetaData().getTypeMapping().getRowLockingTemplate();
          if(rowLocking == null) {
             throw new IllegalStateException("row-locking is not allowed for " +
                   "this type of datastore");
          } else {
             String[] args = new String[] {
-               columnNamesClause.toString(), 
-               tableName, 
+               columnNamesClause.toString(),
+               tableName,
                whereClause.toString()};
             return rowLocking.getFunctionSql(args);
          }
@@ -240,7 +242,7 @@ public class JDBCLoadEntityCommand {
          sql.append(" WHERE ").append(whereClause.toString());
          return sql.toString();
       }
- 
+
    }
 
    private List getLoadFields(
@@ -294,7 +296,7 @@ public class JDBCLoadEntityCommand {
             || field.isLoaded( ctx )
                && (!field.isReadOnly() || !field.isReadTimedOut(ctx))
             || field instanceof JDBCCMRFieldBridge
-               && ((JDBCCMRFieldBridge)field).isFkPartOfPk()) {
+               && ((JDBCCMRFieldBridge)field).allFkFieldsMappedToPkFields()) {
             fields.remove();
          }
       }
