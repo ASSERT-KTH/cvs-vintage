@@ -50,23 +50,23 @@ import org.w3c.dom.NodeList;
 /**
  * As we remove the one one association between container STACK and invoker we
  * keep this around. IN the future the creation of proxies is a task done on a
- * container basis but the container as a logical representation. In other 
- * words, the container "Entity with RMI/IIOP" is not a container stack but 
- * an association at the invocation level that points to all metadata for 
- * a given container. 
- *
- * In other words this is here for legacy reason and to not disrupt the 
- * container at once. 
- * In particular we declare that we "implement" the container invoker 
+ * container basis but the container as a logical representation. In other
+ * words, the container "Entity with RMI/IIOP" is not a container stack but
+ * an association at the invocation level that points to all metadata for
+ * a given container.
+ * <p/>
+ * In other words this is here for legacy reason and to not disrupt the
+ * container at once.
+ * In particular we declare that we "implement" the container invoker
  * interface when we are just implementing the Proxy generation calls.
- * Separation of concern. 
- *
+ * Separation of concern.
+ * <p/>
  * todo eliminate this class, at least in its present form.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -79,20 +79,20 @@ public class ProxyFactory
 
    // Metadata for the proxies
    public EJBMetaData ejbMetaData;
-   
+
    // as of EJB2.1, we may have the case of web-service enabled beans without
    // remote interface, we will simply "mute" this factory in this case
    protected boolean isServiceEndpointOnly;
-   
+
    protected EJBHome home;
    protected EJBObject statelessObject;
-   
+
    // The name of the bean being deployed
    protected String jndiBinding;
    protected ObjectName jmxName;
    protected int jmxNameHash;
    private Integer jmxNameHashInteger;
-      
+
    // The name of the delegate invoker
    // We have a beanInvoker and homeInvoker
    // because clustering has a different invoker for each
@@ -101,11 +101,17 @@ public class ProxyFactory
    protected Invoker homeInvoker;
    protected InvokerProxyBindingMetaData invokerMetaData;
 
-   /** The proxy-config/client-interceptors/home stack */
+   /**
+    * The proxy-config/client-interceptors/home stack
+    */
    protected ArrayList homeInterceptorClasses = new ArrayList();
-   /** The proxy-config/client-interceptors/bean stack */
+   /**
+    * The proxy-config/client-interceptors/bean stack
+    */
    protected ArrayList beanInterceptorClasses = new ArrayList();
-   /** The proxy-config/client-interceptors/entity-list stack */
+   /**
+    * The proxy-config/client-interceptors/entity-list stack
+    */
    protected ArrayList listEntityInterceptorClasses = new ArrayList();
 
    // A pointer to the container this proxy factory is dedicated to
@@ -120,17 +126,17 @@ public class ProxyFactory
    {
       this.container = con;
    }
-   
+
    public void setInvokerMetaData(InvokerProxyBindingMetaData metadata)
    {
       this.invokerMetaData = metadata;
    }
-   
+
    public void setInvokerBinding(String binding)
    {
       this.jndiBinding = binding;
    }
-   
+
    public void create() throws Exception
    {
       jmxName = container.getJmxName();
@@ -139,100 +145,126 @@ public class ProxyFactory
       // Create metadata
 
       BeanMetaData bmd = container.getBeanMetaData();
-      boolean isSession =  !(bmd instanceof EntityMetaData);
+      boolean isSession = !(bmd instanceof EntityMetaData);
       boolean isStatelessSession = false;
-      if( isSession )
+      if(isSession)
       {
-         SessionMetaData smd=(SessionMetaData)bmd;
-         if(bmd.getRemote()==null) {
-            isServiceEndpointOnly=true;
+         SessionMetaData smd = (SessionMetaData) bmd;
+         if(bmd.getRemote() == null)
+         {
+            isServiceEndpointOnly = true;
             // nothing more to do
             return;
          }
-         isStatelessSession = smd.isStateless(); 
+         isStatelessSession = smd.isStateless();
       }
       Class pkClass = null;
-      if (!isSession)
+      if(!isSession)
       {
          EntityMetaData metaData = (EntityMetaData) bmd;
          String pkClassName = metaData.getPrimaryKeyClass();
          try
          {
-            if (pkClassName != null)
+            if(pkClassName != null)
+            {
                pkClass = container.getClassLoader().loadClass(pkClassName);
+            }
             else
-               pkClass = container.getClassLoader().loadClass(metaData.getEjbClass()).getField(metaData.getPrimKeyField()).getClass();
-         } catch (NoSuchFieldException e)
+            {
+               pkClass
+                  = container.getClassLoader()
+                  .loadClass(metaData.getEjbClass())
+                  .getField(metaData.getPrimKeyField())
+                  .getClass();
+            }
+         }
+         catch(NoSuchFieldException e)
          {
-            log.error("Unable to identify Bean's Primary Key class!"
-               + " Did you specify a primary key class and/or field?  Does that field exist?");
+            log.error(
+               "Unable to identify Bean's Primary Key class!"
+               + " Did you specify a primary key class and/or field?  Does that field exist?"
+            );
             throw new RuntimeException("Primary Key Problem");
-         } catch (NullPointerException e)
+         }
+         catch(NullPointerException e)
          {
-            log.error("Unable to identify Bean's Primary Key class!"
-               + " Did you specify a primary key class and/or field?  Does that field exist?");
+            log.error(
+               "Unable to identify Bean's Primary Key class!"
+               + " Did you specify a primary key class and/or field?  Does that field exist?"
+            );
             throw new RuntimeException("Primary Key Problem");
          }
       }
-      
+
       ejbMetaData = new EJBMetaDataImpl(
-         ((EJBProxyFactoryContainer)container).getRemoteClass(),
-         ((EJBProxyFactoryContainer)container).getHomeClass(),
+         ((EJBProxyFactoryContainer) container).getRemoteClass(),
+         ((EJBProxyFactoryContainer) container).getHomeClass(),
          pkClass, //null if not entity
          isSession, //Session
-         isStatelessSession,//Stateless
-         new HomeHandleImpl(jndiBinding));
-      
-      if (log.isDebugEnabled())
-         log.debug("Proxy Factory for "+jndiBinding+" initialized");
+         isStatelessSession, //Stateless
+         new HomeHandleImpl(jndiBinding)
+      );
+
+      if(log.isDebugEnabled())
+      {
+         log.debug("Proxy Factory for " + jndiBinding + " initialized");
+      }
 
       initInterceptorClasses();
    }
 
-   /** Become fully available. At this point our invokers should be started
-    and we can bind the homes into JNDI.
+   /**
+    * Become fully available. At this point our invokers should be started
+    * and we can bind the homes into JNDI.
     */
    public void start() throws Exception
    {
-      if(!isServiceEndpointOnly) {
-         setupInvokers(); 
+      if(!isServiceEndpointOnly)
+      {
+         setupInvokers();
          bindProxy();
       }
    }
 
-   /** Lookup the invokers in the object registry. This typically cannot
-    be done until our start method as the invokers may need to be started
-    themselves.
+   /**
+    * Lookup the invokers in the object registry. This typically cannot
+    * be done until our start method as the invokers may need to be started
+    * themselves.
     */
    protected void setupInvokers() throws Exception
    {
       ObjectName oname = new ObjectName(invokerMetaData.getInvokerMBean());
-      Invoker invoker = (Invoker)Registry.lookup(oname);
-      if (invoker == null)
+      Invoker invoker = (Invoker) Registry.lookup(oname);
+      if(invoker == null)
+      {
          throw new RuntimeException("invoker is null: " + oname);
-      
+      }
+
       homeInvoker = beanInvoker = invoker;
    }
 
 
-   /** Load the client interceptor classes
+   /**
+    * Load the client interceptor classes
     */
    protected void initInterceptorClasses() throws Exception
    {
       HashMap interceptors = new HashMap();
 
       Element proxyConfig = invokerMetaData.getProxyFactoryConfig();
-      Element clientInterceptors = MetaData.getOptionalChild(proxyConfig,
-         "client-interceptors", null);
-      if (clientInterceptors != null)
+      Element clientInterceptors = MetaData.getOptionalChild(
+         proxyConfig,
+         "client-interceptors", null
+      );
+      if(clientInterceptors != null)
       {
          NodeList children = clientInterceptors.getChildNodes();
-         for (int i = 0; i < children.getLength(); i++)
+         for(int i = 0; i < children.getLength(); i++)
          {
             Node currentChild = children.item(i);
-            if (currentChild.getNodeType() == Node.ELEMENT_NODE)
+            if(currentChild.getNodeType() == Node.ELEMENT_NODE)
             {
-               Element interceptor = (Element)children.item(i);
+               Element interceptor = (Element) children.item(i);
                interceptors.put(interceptor.getTagName(), interceptor);
             }
          }
@@ -241,24 +273,29 @@ public class ProxyFactory
       {
          log.debug("client interceptors element is null");
       }
-      Element homeInterceptorConf = (Element)interceptors.get(HOME_INTERCEPTOR);
+      Element homeInterceptorConf = (Element) interceptors.get(HOME_INTERCEPTOR);
       loadInterceptorClasses(homeInterceptorClasses, homeInterceptorConf);
-      if( homeInterceptorClasses.size() == 0 )
+      if(homeInterceptorClasses.size() == 0)
+      {
          throw new DeploymentException("There are no home interface interceptors configured");
+      }
 
-      Element beanInterceptorConf = (Element)interceptors.get(BEAN_INTERCEPTOR);
+      Element beanInterceptorConf = (Element) interceptors.get(BEAN_INTERCEPTOR);
       loadInterceptorClasses(beanInterceptorClasses, beanInterceptorConf);
-      if( beanInterceptorClasses.size() == 0 )
+      if(beanInterceptorClasses.size() == 0)
+      {
          throw new DeploymentException("There are no bean interface interceptors configured");
+      }
 
-      Element listEntityInterceptorConf = (Element)interceptors.get(LIST_ENTITY_INTERCEPTOR);
+      Element listEntityInterceptorConf = (Element) interceptors.get(LIST_ENTITY_INTERCEPTOR);
       loadInterceptorClasses(listEntityInterceptorClasses, listEntityInterceptorConf);
    }
 
    /**
     * The <code>loadInterceptorClasses</code> load an interceptor classes from
     * configuration
-    * @exception Exception if an error occurs
+    *
+    * @throws Exception if an error occurs
     */
    protected void loadInterceptorClasses(ArrayList classes, Element interceptors)
       throws Exception
@@ -266,7 +303,7 @@ public class ProxyFactory
       Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
       ClassLoader loader = container.getClassLoader();
       BeanMetaData beanMetaData = container.getBeanMetaData();
-      while( interceptorElements != null && interceptorElements.hasNext() )
+      while(interceptorElements != null && interceptorElements.hasNext())
       {
          Element ielement = (Element) interceptorElements.next();
          String className = null;
@@ -274,9 +311,9 @@ public class ProxyFactory
 
          // load the invoker interceptor that corresponds to the beans call semantic
          String byValueAttr = MetaData.getElementAttribute(ielement, "call-by-value");
-         if (byValueAttr != null)
+         if(byValueAttr != null)
          {
-            if (beanMetaData.isCallByValue() == new Boolean(byValueAttr).booleanValue())
+            if(beanMetaData.isCallByValue() == new Boolean(byValueAttr).booleanValue())
             {
                Class clazz = loader.loadClass(className);
                classes.add(clazz);
@@ -290,20 +327,21 @@ public class ProxyFactory
       }
    }
 
-   /** The <code>loadInterceptorChain</code> create instances of interceptor
+   /**
+    * The <code>loadInterceptorChain</code> create instances of interceptor
     * classes previously loaded in loadInterceptorClasses
     *
-    * @exception Exception if an error occurs
+    * @throws Exception if an error occurs
     */
    protected void loadInterceptorChain(ArrayList chain, ClientContainer client)
       throws Exception
    {
       Interceptor last = null;
-      for (int i = 0; i < chain.size(); i++)
+      for(int i = 0; i < chain.size(); i++)
       {
-         Class clazz = (Class)chain.get(i);
-         Interceptor interceptor = (Interceptor) clazz.newInstance(); 
-         if (last == null)
+         Class clazz = (Class) chain.get(i);
+         Interceptor interceptor = (Interceptor) clazz.newInstance();
+         if(last == null)
          {
             last = interceptor;
             client.setNext(interceptor);
@@ -316,16 +354,17 @@ public class ProxyFactory
       }
    }
 
-   /** The <code>bindProxy</code> method creates the home proxy and binds
+   /**
+    * The <code>bindProxy</code> method creates the home proxy and binds
     * the home into jndi. It also creates the InvocationContext and client
     * container and interceptor chain.
     *
-    * @exception Exception if an error occurs
+    * @throws Exception if an error occurs
     */
    protected void bindProxy() throws Exception
    {
       try
-      {   
+      {
          // Create a stack from the description (in the future) for now we hardcode it
          InvocationContext context = new InvocationContext();
 
@@ -338,24 +377,25 @@ public class ProxyFactory
 
          ClientContainer client = new ClientContainer(context);
          loadInterceptorChain(homeInterceptorClasses, client);
-         
+
          EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
          // Create the EJBHome
          this.home = (EJBHome) Proxy.newProxyInstance(
-               // Class loader pointing to the right classes from deployment
-               pfc.getHomeClass().getClassLoader(),
-               // The classes we want to implement home and handle
-               new Class[] { pfc.getHomeClass(), Class.forName("javax.ejb.Handle")},
-               // The home proxy as invocation handler
-               client);
+            // Class loader pointing to the right classes from deployment
+            pfc.getHomeClass().getClassLoader(),
+            // The classes we want to implement home and handle
+            new Class[]{pfc.getHomeClass(), Class.forName("javax.ejb.Handle")},
+            // The home proxy as invocation handler
+            client
+         );
 
          // Create stateless session object
          // Same instance is used for all objects
-         if ( ejbMetaData.isStatelessSession() == true )
+         if(ejbMetaData.isStatelessSession() == true)
          {
             // Create a stack from the description (in the future) for now we hardcode it
             context = new InvocationContext();
-            
+
             context.setObjectName(jmxNameHashInteger);
             context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
             // The behavior for home proxying should be isolated in an interceptor FIXME
@@ -364,18 +404,18 @@ public class ProxyFactory
             context.setValue(InvocationKey.EJB_HOME, home);
 
             client = new ClientContainer(context);
-            
+
             loadInterceptorChain(beanInterceptorClasses, client);
-    
-            this.statelessObject = 
-               (EJBObject)Proxy.newProxyInstance(
-                  // Correct CL         
+
+            this.statelessObject =
+               (EJBObject) Proxy.newProxyInstance(
+                  // Correct CL
                   pfc.getRemoteClass().getClassLoader(),
                   // Interfaces    
-                  new Class[] { pfc.getRemoteClass() } ,
+                  new Class[]{pfc.getRemoteClass()},
                   // SLSB proxy as invocation handler
                   client
-                  );
+               );
          }
          else
          {
@@ -383,7 +423,7 @@ public class ProxyFactory
             Class[] intfs = {pfc.getRemoteClass()};
             Class proxyClass = Proxy.getProxyClass(pfc.getRemoteClass().getClassLoader(), intfs);
             final Class[] constructorParams =
-                    {InvocationHandler.class};
+               {InvocationHandler.class};
 
             proxyClassConstructor = proxyClass.getConstructor(constructorParams);
 
@@ -392,16 +432,16 @@ public class ProxyFactory
 
          // Bind the home in the JNDI naming space
          rebindHomeProxy();
-  
-        log.debug("Bound "+container.getBeanMetaData().getEjbName() + " to " + jndiBinding);      
+
+         log.debug("Bound " + container.getBeanMetaData().getEjbName() + " to " + jndiBinding);
       }
-      catch (Exception e)
+      catch(Exception e)
       {
          throw new ServerException("Could not bind home", e);
       }
    }
-   
-   protected void rebindHomeProxy () throws NamingException
+
+   protected void rebindHomeProxy() throws NamingException
    {
       // (Re-)Bind the home in the JNDI naming space
       log.debug("(re-)Binding Home " + jndiBinding);
@@ -411,7 +451,8 @@ public class ProxyFactory
          // Jndi name
          jndiBinding,
          // The Home
-         getEJBHome());
+         getEJBHome()
+      );
    }
 
    public void stop()
@@ -420,14 +461,14 @@ public class ProxyFactory
 
    public void destroy()
    {
-      if (!isServiceEndpointOnly)
+      if(!isServiceEndpointOnly)
       {
          try
          {
             InitialContext ctx = new InitialContext();
             ctx.unbind(jndiBinding);
          }
-         catch (Exception e)
+         catch(Exception e)
          {
             // ignore.
          }
@@ -451,21 +492,23 @@ public class ProxyFactory
    {
       return ejbMetaData;
    }
-   
+
    public Object getEJBHome()
    {
       return home;
    }
-   
-   /** Return the EJBObject proxy for stateless sessions.
+
+   /**
+    * Return the EJBObject proxy for stateless sessions.
     */
    public Object getStatelessSessionEJBObject()
    {
-      
+
       return statelessObject;
    }
-   
-   /** Create an EJBObject proxy for a stateful session given its session id.
+
+   /**
+    * Create an EJBObject proxy for a stateful session given its session id.
     */
    public Object getStatefulSessionEJBObject(Object id)
    {
@@ -492,51 +535,62 @@ public class ProxyFactory
 
       try
       {
-         return (EJBObject)proxyClassConstructor.newInstance(new Object[] {client});
+         return (EJBObject) proxyClassConstructor.newInstance(new Object[]{client});
       }
-      catch (Exception ex)
+      catch(Exception ex)
       {
          throw new NestedRuntimeException(ex);
       }
 
    }
 
-   /** Create an EJBObject proxy for an entity given its primary key.
+   /**
+    * Create an EJBObject proxy for an entity given its primary key.
     */
    public Object getEntityEJBObject(Object id)
    {
-      // Create a stack from the description (in the future) for now we hardcode it
-      InvocationContext context = new InvocationContext();
-      
-      context.setObjectName(jmxNameHashInteger);
-      context.setCacheId(id);
-      context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-      context.setInvoker(beanInvoker);
-      context.setInvokerProxyBinding(invokerMetaData.getName());
-      context.setValue(InvocationKey.EJB_HOME, home);
+      Object result;
+      if(id == null)
+      {
+         result = null;
+      }
+      else
+      {
+         // Create a stack from the description (in the future) for now we hardcode it
+         InvocationContext context = new InvocationContext();
 
-      ClientContainer client = new ClientContainer(context);
-      
-      try
-      {
-         loadInterceptorChain(beanInterceptorClasses, client);
-      }
-      catch(Exception e)
-      {
-         throw new NestedRuntimeException("Failed to load interceptor chain", e);
-      }
+         context.setObjectName(jmxNameHashInteger);
+         context.setCacheId(id);
+         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
+         context.setInvoker(beanInvoker);
+         context.setInvokerProxyBinding(invokerMetaData.getName());
+         context.setValue(InvocationKey.EJB_HOME, home);
 
-      try
-      {
-         return (EJBObject)proxyClassConstructor.newInstance(new Object[] {client});
+         ClientContainer client = new ClientContainer(context);
+
+         try
+         {
+            loadInterceptorChain(beanInterceptorClasses, client);
+         }
+         catch(Exception e)
+         {
+            throw new NestedRuntimeException("Failed to load interceptor chain", e);
+         }
+
+         try
+         {
+            result = proxyClassConstructor.newInstance(new Object[]{client});
+         }
+         catch(Exception ex)
+         {
+            throw new NestedRuntimeException(ex);
+         }
       }
-      catch (Exception ex)
-      {
-         throw new NestedRuntimeException(ex);
-      }
+      return result;
    }
 
-   /** Create a Collection EJBObject proxies for an entity given its primary keys.
+   /**
+    * Create a Collection EJBObject proxies for an entity given its primary keys.
     */
    public Collection getEntityCollection(Collection ids)
    {
@@ -545,38 +599,9 @@ public class ProxyFactory
 
       while(idEnum.hasNext())
       {
-         // Create a stack from the description (in the future) 
-         // for now we hardcode it
-         InvocationContext context = new InvocationContext();
-         context.setObjectName(jmxNameHashInteger);
-         context.setCacheId(idEnum.next());
-         context.setValue(InvocationKey.JNDI_NAME, jndiBinding);
-         context.setInvoker(beanInvoker);
-         context.setInvokerProxyBinding(invokerMetaData.getName());
-         context.setValue(InvocationKey.EJB_HOME, home);
-
-         ClientContainer client = new ClientContainer(context);
-      
-         try
-         {
-            loadInterceptorChain(beanInterceptorClasses, client);
-         }
-         catch(Exception e)
-         {
-            throw new NestedRuntimeException(
-                  "Failed to load interceptor chain", e);
-         }
-
-         try
-         {
-            list.add(proxyClassConstructor.newInstance(new Object[] {client}));
-         }
-         catch (Exception ex)
-         {
-            throw new NestedRuntimeException(ex);
-         }
+         Object nextId = idEnum.next();
+         list.add(getEntityEJBObject(nextId));
       }
       return list;
    }
-
 }
