@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.jaws.metadata.FinderMetaData;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCDefinedFinderCommand extends JDBCFinderCommand
 {
@@ -61,9 +61,9 @@ public class JDBCDefinedFinderCommand extends JDBCFinderCommand
       
       // Construct SQL
       String sql = "SELECT " + getPkColumnList() +
-         (f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
+         (f.getOrder() == null || f.getOrder().equals("") ? "" : ","+f.getOrder()) + 
          " FROM " + jawsEntity.getTableName() + " WHERE " + query;
-      if (!f.getOrder().equals(""))
+      if (f.getOrder() != null && !f.getOrder().equals(""))
       {
          sql += " ORDER BY "+f.getOrder();
       }
