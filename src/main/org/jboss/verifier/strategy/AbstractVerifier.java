@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.27 2002/03/05 18:44:23 ejort Exp $
+ * $Id: AbstractVerifier.java,v 1.28 2002/04/08 02:35:01 jwalters Exp $
  */
 
 // standard imports
@@ -63,6 +63,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * @author  Vinay Menon   (menonv@cpw.co.uk)
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:luke@mkeym.com">Luke Taylor</a>
+ * @author <a href="mailto:jwalters@computer.org">Jay Walters</a>
  *
  * <p><b>Revisions:</b></p>
  * <p><b>20011101: Andy</b>
@@ -76,8 +77,14 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * See Bug 489554 (sub-classed remote return types should be OK)</li>
  * </ul>
  * </p>
+ * <p><b>20020404: jwalters</b>
+ * <ul>
+ * <li>Added new helper methods for Local home and interface matching
+ * pre-existing methods for Remote home and interface.</li>
+ * </ul>
+ * </p>
  *
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -87,6 +94,12 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     protected final static String EJB_HOME_INTERFACE    =
         "javax.ejb.EJBHome";
+
+    protected final static String EJB_LOCAL_OBJECT_INTERFACE  =
+        "javax.ejb.EJBLocalObject";
+
+    protected final static String EJB_LOCAL_HOME_INTERFACE    =
+        "javax.ejb.EJBLocalHome";
 
 
     /**
@@ -338,6 +351,20 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     /*
+     *  checks the return type of method matches the bean's local interface
+     */
+    public boolean hasLocalReturnType(BeanMetaData bean, Method m) {
+        try {
+             Class clazz = classloader.loadClass(bean.getLocal());
+             return m.getReturnType().isAssignableFrom(clazz);
+        } catch(Exception e) {
+           e.printStackTrace();
+           return false;
+        }
+        //return (m.getReturnType().getName().equals());
+    }
+
+    /*
      * checks if a method has a void return type
      */
     public boolean hasVoidReturnType(Method method) {
@@ -366,10 +393,24 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     }
 
     /*
+     * Finds java.ejb.EJBLocalObject interface from the class
+     */
+    public boolean hasEJBLocalObjectInterface(Class c) {
+        return javax.ejb.EJBLocalObject.class.isAssignableFrom(c);
+    }
+
+    /*
      * Finds javax.ejb.EJBHome interface from the class or its superclasses
      */
     public boolean hasEJBHomeInterface(Class c) {
         return javax.ejb.EJBHome.class.isAssignableFrom(c);
+    }
+
+    /*
+     * Finds javax.ejb.EJBLocalHome interface from the class or its superclasses
+     */
+    public boolean hasEJBLocalHomeInterface(Class c) {
+        return javax.ejb.EJBLocalHome.class.isAssignableFrom(c);
     }
 
     /*
@@ -418,6 +459,23 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             String name = method[i].getName();
 
             if (name.startsWith("ejbFind"))
+                return true;
+        }
+
+        return false;
+    }
+
+    /*
+     * check if a home interface has a findByPrimaryKey method
+     */
+    public boolean hasFindByPrimaryKeyMethod(Class c, Class keyC) {
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i <  method.length; ++i) {
+
+            String name = method[i].getName();
+
+            if (name.equals("findByPrimaryKey"))
                 return true;
         }
 
@@ -653,7 +711,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return (count > 1);
     }
 
-
     public boolean hasMatchingExceptions(Method source, Method target) {
 
         // target must be a superset of source
@@ -682,13 +739,12 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return true;
     }
 
-    public boolean hasMatchingMethod(Class bean, Method remote) {
+    public boolean hasMatchingMethod(Class bean, Method intf) {
 
-        String methodName = remote.getName();
+        String methodName = intf.getName();
 
         try {
-            bean.getMethod(methodName, remote.getParameterTypes());
-
+            bean.getMethod(methodName, intf.getParameterTypes());
             return true;
         }
         catch (NoSuchMethodException e) {
@@ -708,7 +764,6 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return false;
         }
     }
-
 
     public boolean hasMatchingEJBCreate(Class bean, Method create) {
         try {
@@ -760,6 +815,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
             return null;
         }
     }
+
+    public boolean hasMatchingEJBHome(Class bean, Method home) {
+        try {
+            return (bean.getMethod(getMatchingEJBHomeName(home.getName()), home.getParameterTypes()) != null);
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
 
 /*
  *************************************************************************
@@ -1000,7 +1065,7 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return true;
     }
 
-    private boolean isRMIIDLValueType(Class type) {
+    protected boolean isRMIIDLValueType(Class type) {
 
         /*
          * A value type MUST NOT either directly or indirectly implement the
@@ -1025,10 +1090,16 @@ public abstract class AbstractVerifier implements VerificationStrategy {
         return true;
     }
 
+    private String getMatchingEJBHomeName(String homeName)
+    {
+       return "ejbHome" + homeName.substring(0,1).toUpperCase() + homeName.substring(1);
+    }
+
     private String getMatchingEJBCreateName(String createName)
     {
        return "ejb" + createName.substring(0,1).toUpperCase() + createName.substring(1);
     }
+
     private String getMatchingEJBPostCreateName(String createName)
     {
        int createIdx = createName.indexOf("Create");
@@ -1073,6 +1144,12 @@ public abstract class AbstractVerifier implements VerificationStrategy {
 
     protected final static String CREATE_METHOD         =
         "create";
+
+    protected final static String HOME_METHOD         =
+        "home";
+
+    protected final static String EJB_HOME_METHOD     =
+        "ejbHome";
 
     private final static String FINALIZE_METHOD       =
         "finalize";
