@@ -22,7 +22,12 @@ import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
+import javax.transaction.Status;
+import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.RollbackException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityCache;
@@ -60,7 +65,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
@@ -1094,7 +1099,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
    }
 
-   private class FieldState {
+   private final class FieldState {
       private EntityEnterpriseContext ctx;
       private List[] setHandle = new List[1];
       private Set relationSet;
@@ -1110,8 +1115,34 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
       public Set getRelationSet() {
          if(relationSet == null) {
-            relationSet = new RelationSet(
-                  JDBCCMRFieldBridge.this, ctx, setHandle);
+            try {
+               // get the curent transaction
+               EntityContainer container = getJDBCStoreManager().getContainer();
+               TransactionManager tm = container.getTransactionManager();
+               Transaction tx = tm.getTransaction();
+
+               // if whe have a valid transaction...
+               if(tx != null &&
+                     (tx.getStatus() == Status.STATUS_ACTIVE ||
+                      tx.getStatus() == Status.STATUS_PREPARING)) {
+
+                  // crete the relation set and register for a tx callback
+                  relationSet = new RelationSet(
+                     JDBCCMRFieldBridge.this, ctx, setHandle);
+                  TxSynchronization sync = new TxSynchronization(setHandle);
+                  tx.registerSynchronization(sync);
+               
+               } else {
+               
+                  // if there is no transaction create a pre-failed list
+                  relationSet = new RelationSet(
+                     JDBCCMRFieldBridge.this, ctx, new List[1]);
+               }
+            } catch(SystemException e) {
+               throw new EJBException("Error while creating RelationSet", e);
+            } catch(RollbackException e) {
+               throw new EJBException("Error while creating RelationSet", e);
+            }
          }
          return relationSet;
       }
@@ -1130,7 +1161,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          relationSet = null;
       }
    }   
-   private class CMRJDBCType implements JDBCType {
+   private final static class CMRJDBCType implements JDBCType {
       private final String[] columnNames;
       private final Class[] javaTypes;
       private final int[] jdbcTypes;
@@ -1195,4 +1226,30 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
          throw new UnsupportedOperationException();
       }
    }
+   private final static class TxSynchronization implements Synchronization {
+      private final WeakReference setHandleRef;
+      
+      private TxSynchronization(List[] setHandle)
+      {
+         if(setHandle == null || setHandle.length != 1) {
+            throw new IllegalArgumentException("setHandle must be an array " +
+                  "of length 1: " + setHandle);
+         }
+         this.setHandleRef = new WeakReference(setHandle);
+      }
+      
+      public void beforeCompletion()
+      {
+         //no-op
+      }
+
+      public void afterCompletion(int status)
+      {
+         List[] setHandle = (List[])setHandleRef.get();
+         if(setHandle != null) {
+            setHandle[0] = null;
+         }
+      }
+   }
+
 }
