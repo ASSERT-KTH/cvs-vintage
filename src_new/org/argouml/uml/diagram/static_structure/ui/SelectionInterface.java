@@ -1,4 +1,4 @@
-// $Id: SelectionInterface.java,v 1.12 2002/12/27 10:08:01 linus Exp $
+// $Id: SelectionInterface.java,v 1.13 2003/06/19 06:04:27 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: SelectionInterface.java
 // Classes: SelectionInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionInterface.java,v 1.12 2002/12/27 10:08:01 linus Exp $
+// $Id: SelectionInterface.java,v 1.13 2003/06/19 06:04:27 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -37,6 +37,7 @@ import javax.swing.Icon;
 
 import org.apache.log4j.Category;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.diagram.ui.ModeCreateEdgeAndNode;
 import org.argouml.uml.diagram.ui.SelectionWButtons;
@@ -157,7 +158,7 @@ public class SelectionInterface extends SelectionWButtons {
 	
   public Object addRealization(MutableGraphModel mgm, MInterface cls,
 			    MClass newCls) {
-    return mgm.connect(newCls, cls, MAbstraction.class);
+    return mgm.connect(newCls, cls, (Class)ModelFacade.ABSTRACTION);
   }
 	
     /**

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.54 2003/06/18 07:28:19 kataka Exp $
+// $Id: ModelFacade.java,v 1.55 2003/06/19 06:04:27 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1701,6 +1701,17 @@ public class ModelFacade {
             ((MAbstraction)a).addSupplier((MClassifier)cls);
         }
     }
+    
+    /**
+     * Adds a supplier dependency to some modelelement
+     * @param supplier the supplier 
+     * @param dependency the dependency
+     */
+    public static void addSupplierDependency(Object supplier, Object dependency) {
+        if (isAModelElement(supplier) && isADependency(dependency)) {
+            ((MModelElement)supplier).addSupplierDependency((MDependency)dependency);
+        }
+    }
 
     /**
      * Adds a client classifier to some abstraction.
@@ -1710,9 +1721,20 @@ public class ModelFacade {
     public static void addClient(Object a, Object cls) {
         if (a != null
             && cls != null
-            && a instanceof MAbstraction
-            && cls instanceof MClassifier) {
+            && ModelFacade.isAAbstraction(a)
+            && cls instanceof MClassifier) {                
             ((MAbstraction)a).addClient((MClassifier)cls);
+        }
+    }
+    
+    /**
+     * Adds a client dependency to some modelelement
+     * @param handle the modelelement
+     * @param dependency the dependency
+     */
+    public static void addClientDependency(Object handle, Object dependency) {
+        if (handle != null && dependency != null && isAModelElement(handle) && isADependency(dependency)) {
+            ((MModelElement)handle).addClientDependency((MDependency)dependency);
         }
     }
 
