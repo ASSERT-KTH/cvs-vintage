@@ -133,7 +133,6 @@ $intake.declareGroups()
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
 #macro (sort $shortName $longName)
-   ##set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()))
      #if ($sortColumn.equals($shortName))
         #if ($sortPolarity.equals("desc"))
            #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))

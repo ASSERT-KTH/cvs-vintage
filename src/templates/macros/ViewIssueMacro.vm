@@ -10,7 +10,8 @@
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="MoveIssue.vm" />
 </div>
 
-
+#set ($fullHistory = $data.Parameters.getString("fullhistory",""))
+#set ($fullComments = $data.Parameters.getString("fullcomments",""))
 #set ($canEdit = $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $module))
 #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($currentIssueId = $currentIssue.UniqueId)
@@ -481,10 +482,16 @@
 
 #if ($currentIssue.isHistoryLong())
   #if ($fullHistory.equals("true"))
-    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false"))
+    #set ($historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false").addPathInfo("resultsPerPage", $resultsPerPage))
+    #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+      #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
+    #end
     <p><a href="$historyLink">Hide complete history</a></p>
   #else
     #set ($historyLink = $link.setPage("$template").addPathInfo("id", $currentIssueId).addPathInfo("resultsPerPage", $resultsPerPage).addPathInfo("fullhistory", "true"))
+    #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+      #set ($historyLink = $historyLink.addPathInfo("issue_ids", $issueId))
+    #end
     <p><a href="$historyLink">Show complete history</a></p>
   #end
 #end

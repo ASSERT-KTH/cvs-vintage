@@ -5,10 +5,6 @@
 #set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage"))
 #set ($pageNum = $data.Parameters.getInt("pageNum"))
 
-#foreach ($issueid in $issueList)
-$issueid
-#end
-
 #if ($issueList.size() > $resultsPerPage)
    #set ($paginated = "true")
    #set ($issueList = $scarabR.getPaginatedList($issueList, $pageNum, $resultsPerPage))

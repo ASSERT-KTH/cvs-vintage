@@ -3,8 +3,6 @@
 #set ($currentIssueId = $data.Parameters.getString("id"))
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 
-#set ($fullHistory = $data.Parameters.getString("fullhistory",""))
-#set ($fullComments = $data.Parameters.getString("fullcomments",""))
 #set ($currentIssueModuleId = $currentIssue.ModuleId)
 #set ($currentModule = $scarabR.CurrentModule)
 #set ($currentModuleId = $currentModule.ModuleId)
