@@ -232,10 +232,10 @@
          <th width="120">issues per page:</th>
 
          <td>
-         <input type="radio" name="$query.ResultsPerPage.Key" value="25" /> 25 
-         <input type="radio" name="$query.ResultsPerPage.Key" value="50" /> 50 
-         <input type="radio" name="$query.ResultsPerPage.Key" value="75" /> 75 
-         <input type="radio" name="$query.ResultsPerPage.Key" 
+         <input type="radio" name="resultsPerPage" value="2" checked="checked" /> 25 
+         <input type="radio" name="resultsPerPage" value="50" /> 50 
+         <input type="radio" name="resultsPerPage" value="75" /> 75 
+         <input type="radio" name="resultsPerPage" 
              value="100" /> 100
          </td>
     </tr>
