@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.24 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.25 2004/09/16 21:09:24 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,13 +27,14 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.24 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.25 2004/09/16 21:09:24 mvw Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionRemoveFromModel;
@@ -94,8 +95,9 @@ public class PropPanelGuard extends PropPanelModelElement {
         //addField(Translator.localize("UMLMenu", "label.language"), 
         // new UMLExpressionLanguageField(expressionModel, true));
 
-	new PropPanelButton(this, getButtonPanel(), navUpIcon, Translator.localize(
-            "UMLMenu", "button.go-up"), "navigateUp", null);
+	new PropPanelButton(this, getButtonPanel(), 
+            ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
+            Translator.localize("UMLMenu", "button.go-up"), "navigateUp", null);
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 

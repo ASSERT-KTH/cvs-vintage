@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.57 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelOperation.java,v 1.58 2004/09/16 21:09:24 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,6 +47,7 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLReflectionListModel;
 import org.argouml.util.ConfigLoader;
+import org.argouml.ui.LookAndFeelMgr;
 
 /**
  * A property panel for operations. TODO: this property panel needs refactoring
@@ -113,7 +114,7 @@ public class PropPanelOperation extends PropPanelFeature {
                 "signal", true, "getRaisedSignals", "setRaisedSignals",
                 "addRaisedSignal", null), true);
         exceptList.setForeground(Color.blue);
-        exceptList.setFont(smallFont);
+        exceptList.setFont(LookAndFeelMgr.getInstance().getSmallFont());
         addField(Translator.localize("UMLMenu", "label.raisedsignals"),
                 new JScrollPane(exceptList));
 

@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.91 2004/09/16 20:56:07 mvw Exp $
+// $Id: PropPanel.java,v 1.92 2004/09/16 21:09:23 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,20 +104,13 @@ public abstract class PropPanel
     private JPanel center;
 
     private JToolBar buttonPanel;
-    private JPanel buttonPanelWithFlowLayout = new JPanel();
+    //private JPanel buttonPanelWithFlowLayout = new JPanel();
 
     private JLabel titleLabel;
 
     private JPanel captionPanel = new JPanel();
 
-    private static ImageIcon deleteIcon =
-	ResourceLoaderWrapper
-	    .lookupIconResource("RedDelete");
-    protected static ImageIcon navUpIcon =
-	ResourceLoaderWrapper
-	    .lookupIconResource("NavigateUp");
-
-    protected Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
+    private Font smallFont = LookAndFeelMgr.getInstance().getSmallFont();
 
     /**
      * Construct new PropPanel using LabelledLayout.<p>
@@ -186,8 +179,8 @@ public abstract class PropPanel
      */
     public JLabel addField(String label, Component component) {
         JLabel jlabel = new JLabel(localize(label));
-        jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
-        component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+        jlabel.setFont(smallFont);
+        component.setFont(smallFont);
         jlabel.setLabelFor(component);
         add(jlabel);
         add(component);
@@ -210,8 +203,8 @@ public abstract class PropPanel
         for (int i = 0; i < nComponent; ++i) {
             if (getComponent(i) == afterComponent) {
                 JLabel jlabel = new JLabel(localize(label));
-                jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
-                component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+                jlabel.setFont(smallFont);
+                component.setFont(smallFont);
                 jlabel.setLabelFor(component);
                 add(jlabel, ++i);
                 add(component, ++i);
@@ -237,8 +230,8 @@ public abstract class PropPanel
         for (int i = 0; i < nComponent; ++i) {
             if (getComponent(i) == beforeComponent) {
                 JLabel jlabel = new JLabel(localize(label));
-                jlabel.setFont(LookAndFeelMgr.getInstance().getSmallFont());
-                component.setFont(LookAndFeelMgr.getInstance().getSmallFont());
+                jlabel.setFont(smallFont);
+                component.setFont(smallFont);
                 jlabel.setLabelFor(component);
                 add(jlabel, i);
                 add(component, ++i);
@@ -289,7 +282,12 @@ public abstract class PropPanel
         add(LabelledLayout.getSeperator());
     }
 
-    public ResourceBundle getResourceBundle() {
+    /**
+     * TODO: Do we need this?
+     * 
+     * @return null
+     */
+    private ResourceBundle getResourceBundle() {
         return null;
     }
 

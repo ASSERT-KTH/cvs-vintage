@@ -1,4 +1,4 @@
-// $Id: PropPanelAbstraction.java,v 1.20 2004/09/16 20:56:06 mvw Exp $
+// $Id: PropPanelAbstraction.java,v 1.21 2004/09/16 21:09:24 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,7 @@
 
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
@@ -61,8 +62,10 @@ public class PropPanelAbstraction extends PropPanelDependency {
                 getClientScroll());
 
         // TODO: add Mapping
-        new PropPanelButton(this, getButtonPanel(), navUpIcon, Translator.localize(
-                "UMLMenu", "button.go-up"), "navigateUp", null);
+        new PropPanelButton(this, getButtonPanel(), 
+                ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
+                Translator.localize("UMLMenu", "button.go-up"), 
+                "navigateUp", null);
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
