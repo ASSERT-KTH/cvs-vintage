@@ -92,7 +92,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.128 2002/10/28 19:14:44 jmcnally Exp $
+ * @version $Id: ModifyIssue.java,v 1.129 2002/10/31 22:15:19 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -264,13 +264,8 @@ public class ModifyIssue extends BaseModifyIssue
             return;
         }
 
-        ScarabUser user = (ScarabUser)data.getUser();
-        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
-                               issue.getModule()))
-        {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-            return;
-        }
+        IntakeTool intake = getIntakeTool(context);
+
 
         List urls = issue.getAttachments();
         for (int i = 0; i<urls.size(); i++)
@@ -279,7 +274,6 @@ public class ModifyIssue extends BaseModifyIssue
             if (attachment.getTypeId().equals(Attachment.URL__PK)
                 && !attachment.getDeleted())
             {
-                IntakeTool intake = getIntakeTool(context);
                 Group group = intake.get("Attachment", attachment.getQueryKey(), false);
 
                 Field nameField = group.get("Name"); 
@@ -312,21 +306,22 @@ public class ModifyIssue extends BaseModifyIssue
                             oldURL, newURL);
                     }
                 
-                    // if there is a new URL, add it
-                    Group newGroup = intake.get("Attachment", "urlKey", false);
-                    if (newGroup != null) 
-                    {
-                        Field newNameField = newGroup.get("Name"); 
-                        if (newNameField != null && 
-                            !newNameField.toString().equals(""))
-                        {
-                           handleAttachment(data, context, Attachment.URL__PK, 
-                                            newGroup, issue);
-                        }
-                    }
                 }
             }
-        } 
+        }
+
+        // if there is a new URL, add it
+        Group newGroup = intake.get("Attachment", "urlKey", false);
+        if (newGroup != null) 
+        {
+            Field newNameField = newGroup.get("Name"); 
+            if (newNameField != null && 
+                !newNameField.toString().equals(""))
+            {
+               handleAttachment(data, context, Attachment.URL__PK, 
+                                newGroup, issue);
+            }
+        }
     }
 
     /**
@@ -949,6 +944,7 @@ public class ModifyIssue extends BaseModifyIssue
                                issue.getModule()))
         {
             data.getParameters().add("issue_ids", issue.getUniqueId());
+            scarabR.resetAssociatedUsers();
             setTarget(data, "AssignIssue.vm");
         }
         else
