@@ -21,7 +21,7 @@ import java.util.HashMap;
  *      
  *      @see <related>
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
- *      @version $Revision: 1.4 $
+ *      @version $Revision: 1.5 $
  */
 public class GenericProxy
    implements java.io.Serializable
@@ -45,7 +45,8 @@ public class GenericProxy
 	
 	public static void setTransactionManager(TransactionManager txMan)
 	{
-		tm = txMan;
+		if (tm == null) 
+		   tm = txMan;
 	}
 
    // Constructors --------------------------------------------------
@@ -69,8 +70,8 @@ public class GenericProxy
    protected void writeObject(java.io.ObjectOutputStream out)
       throws IOException
    {
-   	out.writeUTF(name);
-   	out.writeObject(isLocal() ? container : null);
+   	  out.writeUTF(name);
+   	  out.writeObject(isLocal() ? container : null);
       out.writeLong(containerStartup);
       out.writeBoolean(optimize);
    }
