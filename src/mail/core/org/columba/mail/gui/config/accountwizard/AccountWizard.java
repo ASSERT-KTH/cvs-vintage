@@ -17,7 +17,6 @@
 package org.columba.mail.gui.config.accountwizard;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.wizard.DefaultWizardDialog;
