@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for jBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.7 $
+*   @version $Revision: 1.8 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -266,7 +266,8 @@ implements J2eeDeployerMBean
    {
       
       //check if the deployment dir was set meaningful
-      if (!DEPLOYMENT_DIR.exists ())
+      if (!DEPLOYMENT_DIR.exists () &&
+          !DEPLOYMENT_DIR.mkdirs ())
          throw new IOException ("temporary directory \""+DEPLOYMENT_DIR.getCanonicalPath ()+"\" does not exist!");
       
       // Save JMX name of the deployers
