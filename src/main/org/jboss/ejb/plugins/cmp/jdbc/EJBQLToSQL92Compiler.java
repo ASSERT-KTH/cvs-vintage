@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -257,6 +257,10 @@ public final class EJBQLToSQL92Compiler
          {
             orderByClause = new StringBuffer();
             childNode.jjtAccept(this, orderByClause);
+         }
+         else if(childNode instanceof ASTLimitOffset)
+         {
+            childNode.jjtAccept(this, null);
          }
       }
 
