@@ -242,7 +242,9 @@ public class Main {
 
 				//mainFrame.setVisible(true);
 
-				AccountWizard wizard = new AccountWizard();
+				if (MailConfig.getAccountList().count()==0)
+					new AccountWizard();
+				
 
 				new CmdLineArgumentHandler(args);
 			}
