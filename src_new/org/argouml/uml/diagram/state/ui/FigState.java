@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.17 2004/07/26 11:31:38 mvw Exp $
+// $Id: FigState.java,v 1.18 2004/07/26 22:43:05 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,7 +51,7 @@ public abstract class FigState extends FigStateVertex {
     /**
      * the text inside the state
      */
-    protected FigText internal;
+    private FigText internal;
 
     /**
      * Constructor for FigState.
@@ -216,5 +216,19 @@ public abstract class FigState extends FigStateVertex {
      * @return the initial height
      */
     protected abstract int getInitialHeight();
+
+    /**
+     * @param theInternal The internal to set.
+     */
+    protected void setInternal(FigText theInternal) {
+        this.internal = theInternal;
+    }
+
+    /**
+     * @return Returns the internal.
+     */
+    protected FigText getInternal() {
+        return internal;
+    }
 
 }
