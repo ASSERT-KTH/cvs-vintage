@@ -38,6 +38,9 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.jdesktop.jdic.desktop.Desktop;
 import org.jdesktop.jdic.desktop.DesktopException;
+import org.jdesktop.jdic.filetypes.Action;
+import org.jdesktop.jdic.filetypes.Association;
+import org.jdesktop.jdic.filetypes.AssociationService;
 
 
 /**
@@ -65,14 +68,20 @@ public class ViewMessageSourceCommand extends Command {
  * @see org.columba.core.command.Command#updateGUI()
  */
     public void updateGUI() throws Exception {
-    	try {
-			Desktop.open(tempFile);
-		} catch (DesktopException e) {
+		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
+		if( association == null ) {
 			JOptionPane.showMessageDialog(null, GlobalResourceLoader
 					.getString("dialog", "error", "no_viewer"), "Error",
 					JOptionPane.ERROR_MESSAGE);
 			
+			return;
 		}
+		
+		Action action = association.getActionByVerb("open");
+		
+		
+		Process child = Runtime.getRuntime().exec(
+				action.getCommand() + " " + tempFile.toString());
     }
 
     /**

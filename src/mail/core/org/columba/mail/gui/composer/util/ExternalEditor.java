@@ -102,7 +102,7 @@ public class ExternalEditor {
 				"extern_editor_using_msg"));
 
 		// execute application, enabling blocking
-		Association association = new AssociationService().getFileExtensionAssociation("txt");
+		Association association = new AssociationService().getMimeTypeAssociation("text/plain");
 		Action action = association.getActionByVerb("edit");
 		
 		
