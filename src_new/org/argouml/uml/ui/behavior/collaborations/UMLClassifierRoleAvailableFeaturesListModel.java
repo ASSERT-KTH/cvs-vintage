@@ -1,4 +1,4 @@
-// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.10 2003/06/30 21:59:35 linus Exp $
+// $Id: UMLClassifierRoleAvailableFeaturesListModel.java,v 1.11 2003/08/30 15:10:33 bobtarling Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
 							      "feature");
         } else if (
 		   e.getName().equals("feature")
-		   && ((MClassifierRole) getTarget()).getBases().contains(
+		   && ModelFacade.getBases(getTarget()).contains(
 									  e.getSource())) {
             addElement(getChangedElement(e));
         }
@@ -90,7 +90,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
      */
     public void setTarget(Object target) {
         if (_target != null) {
-            Collection bases = ((MClassifierRole) getTarget()).getBases();
+            Collection bases = ModelFacade.getBases(getTarget());
             Iterator it = bases.iterator();
             while (it.hasNext()) {
                 MBase base = (MBase) it.next();
@@ -109,7 +109,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
             return;
         _target = target;
         if (_target != null) {
-            Collection bases = ((MClassifierRole) _target).getBases();
+            Collection bases = ModelFacade.getBases(_target);
             Iterator it = bases.iterator();
             while (it.hasNext()) {
                 MBase base = (MBase) it.next();
@@ -153,7 +153,7 @@ public class UMLClassifierRoleAvailableFeaturesListModel
 								 "feature");
         } else if (
 		   e.getName().equals("feature")
-		   && ((MClassifierRole) getTarget()).getBases().contains(
+		   && ModelFacade.getBases(getTarget()).contains(
 									 e.getSource())) {
             removeElement(getChangedElement(e));
         }
