@@ -193,6 +193,10 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode {
         return name;
     }
 
+    public String toString() {
+        return getName();
+    }
+    
     /**
      * Sets the folder's name. This method notifies registered FolderListeners.
      */
