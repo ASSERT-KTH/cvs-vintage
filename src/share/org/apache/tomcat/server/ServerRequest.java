@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.1 1999/10/09 00:20:48 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:48 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/server/Attic/ServerRequest.java,v 1.2 1999/10/22 21:54:01 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/22 21:54:01 $
  *
  * ====================================================================
  *
@@ -150,6 +150,8 @@ public class ServerRequest extends RequestImpl {
         String buffer = line.trim();
 	int firstDelim = buffer.indexOf(' ');
 	int lastDelim = buffer.lastIndexOf(' ');
+	// default - set it to HTTP/0.9 or null if we can parse the request
+	protocol = "HTTP/1.0";
 
 	if (firstDelim == -1 && lastDelim == -1) {
 	    if (buffer.trim().length() > 0) {
