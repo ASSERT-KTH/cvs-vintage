@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.4 2004/12/17 17:41:28 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.5 2004/12/19 20:05:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * The file persister for the diagram members.
  * @author Bob Tarling
  */
-class DiagramMemberFilePersister extends MemberFilePersister {
+public class DiagramMemberFilePersister extends MemberFilePersister {
     
     /** logger */
     private static final Logger LOG =
@@ -68,14 +68,14 @@ class DiagramMemberFilePersister extends MemberFilePersister {
     /**
      * @see org.argouml.xml.argo.MemberFilePersister#load(java.util.Map)
      */
-    public void load(Map attribs) throws SAXException {
-        this.attributes = attribs;
+    public void load(int instance) throws SAXException {
         try {
             inputStream =
-                new XmlInputStream(url.openStream(), "member", attribs, true);
-            PGMLParser.getInstance().setOwnerRegistry(project.getUUIDRefs());
+                new XmlInputStream(url.openStream(), "pgml", instance);
+            PGMLParser parser = new PGMLParser();
+            parser.setOwnerRegistry(project.getUUIDRefs());
             ArgoDiagram d =
-                    (ArgoDiagram) PGMLParser.getInstance().readDiagram(
+                    (ArgoDiagram) parser.readDiagram(
                                   inputStream,
                                   false);
             inputStream.close();

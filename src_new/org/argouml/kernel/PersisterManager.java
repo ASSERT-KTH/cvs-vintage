@@ -1,4 +1,4 @@
-// $Id: PersisterManager.java,v 1.3 2004/12/12 14:42:02 mvw Exp $
+// $Id: PersisterManager.java,v 1.4 2004/12/19 20:05:32 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,7 @@ public class PersisterManager {
     public PersisterManager() {
         // These are the file formats I know about:
         defaultPersister = new ZargoFilePersister();
-        otherPersisters.add(new ArgoFilePersister());
+        otherPersisters.add(new UmlFilePersister());
         otherPersisters.add(new XmiFilePersister());
     }
 

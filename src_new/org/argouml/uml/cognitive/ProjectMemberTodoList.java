@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.4 2004/11/21 20:20:09 mvw Exp $
+// $Id: ProjectMemberTodoList.java,v 1.5 2004/12/19 20:05:34 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -147,7 +147,8 @@ public class ProjectMemberTodoList extends ProjectMember {
      * @param is an InputStream
      */
     public void load(InputStream is) {
-        TodoParser.getSingleton().readTodoList(is, true);
+        TodoParser parser = new TodoParser();
+        parser.readTodoList(is, true);
     }
 
     /**

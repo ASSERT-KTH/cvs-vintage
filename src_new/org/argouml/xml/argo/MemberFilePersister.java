@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.3 2004/10/23 11:05:48 mvw Exp $
+// $Id: MemberFilePersister.java,v 1.4 2004/12/19 20:05:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,6 @@
 
 package org.argouml.xml.argo;
 
-import java.util.Map;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -38,7 +36,7 @@ public abstract class MemberFilePersister {
      * which should have been setup in the constructor.
      *
      * @throws SAXException on any parsing errors.
-     * @param attributesMap the map (an object that maps keys to values)
+     * @param instance the instance of the tag to load.
      */
-    public abstract void load(Map attributesMap) throws SAXException;
+    public abstract void load(int instance) throws SAXException;
 }

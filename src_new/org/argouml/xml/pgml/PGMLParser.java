@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.35 2004/11/14 20:46:19 mvw Exp $
+// $Id: PGMLParser.java,v 1.36 2004/12/19 20:05:34 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,14 +70,14 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
     ////////////////////////////////////////////////////////////////
     // static variables
 
-    private static final PGMLParser INSTANCE = new PGMLParser();
+//    private static final PGMLParser INSTANCE = new PGMLParser();
 
     private HashMap translationTable = new HashMap();
 
     /**
      * Constructor
      */
-    protected PGMLParser() {
+    public PGMLParser() {
 	translationTable.put("uci.uml.visual.UMLClassDiagram",
 	    "org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram");
 	translationTable.put("uci.uml.visual.UMLUseCaseDiagram",
@@ -640,12 +640,12 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
     }
     
     
-    /**
-     * @return Returns the singleton instance.
-     */
-    public static PGMLParser getInstance() {
-        return INSTANCE;
-    }
+//    /**
+//     * @return Returns the singleton instance.
+//     */
+//    public static PGMLParser getInstance() {
+//        return INSTANCE;
+//    }
  
  
 

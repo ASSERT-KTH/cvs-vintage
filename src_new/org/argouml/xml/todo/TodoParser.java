@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.9 2004/09/23 20:53:10 mvw Exp $
+// $Id: TodoParser.java,v 1.10 2004/12/19 20:05:34 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,9 +51,6 @@ import org.tigris.gef.util.VectorSet;
 public class TodoParser extends SAXParserBase {
     private static final Logger LOG = Logger.getLogger(TodoParser.class);
 
-    /** The SINGLETON object of this class. */
-    private static TodoParser singleton = new TodoParser();
-
     private TodoTokenTable tokens = new TodoTokenTable();
     private URL url = null;
 
@@ -81,7 +78,7 @@ public class TodoParser extends SAXParserBase {
     /**
      * Creates a new TodoParser.
      */
-    private TodoParser()
+    public TodoParser()
     {
     }
 
@@ -562,13 +559,6 @@ public class TodoParser extends SAXParserBase {
 
 	//cat.debug("encode:\n" + str + "\n -> " + sb.toString());
 	return sb.toString();
-    }
-
-    /**
-     * @return Returns the sINGLETON.
-     */
-    public static TodoParser getSingleton() {
-        return singleton;
     }
 }
 

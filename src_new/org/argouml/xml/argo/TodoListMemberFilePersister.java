@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.3 2004/10/23 11:05:45 mvw Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.4 2004/12/19 20:05:33 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,8 +24,13 @@
 
 package org.argouml.xml.argo;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
+import org.apache.log4j.Logger;
+import org.argouml.kernel.Project;
+import org.argouml.xml.todo.TodoParser;
 import org.xml.sax.SAXException;
 
 /**
@@ -33,12 +38,40 @@ import org.xml.sax.SAXException;
  * @author Bob Tarling
  */
 public class TodoListMemberFilePersister extends MemberFilePersister {
+    
+    private URL url;
+
+    private static final Logger LOG =
+        Logger.getLogger(TodoListMemberFilePersister.class);
+    
+    /**
+     * The constructor.
+     * 
+     * @param theUrl the location where the diagram members 
+     *               are stored persistently
+     * @param theProject the project to persist
+     * @throws SAXException when SAX finds a problem
+     */
+    public TodoListMemberFilePersister(URL theUrl, Project theProject)
+            throws SAXException {
+        url = theUrl;
+    }
+    
     /**
      * Load the todo member.
      * Throws a SAXException on any parsing error.
      *
      * @see org.argouml.xml.argo.MemberFilePersister#load(java.util.Map)
      */
-    public void load(Map attributes) throws SAXException {
+    public void load(int instance) throws SAXException {
+        try {
+            InputStream inputStream =
+                    new XmlInputStream(url.openStream(), "todo");
+            TodoParser parser = new TodoParser();
+            parser.readTodoList(inputStream, true);
+        } catch (IOException e) {
+            LOG.error("IOException caught", e);
+            throw new SAXException(e);
+        }
     }
 }

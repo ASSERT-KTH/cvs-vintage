@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.124 2004/12/17 17:41:29 bobtarling Exp $
+// $Id: Project.java,v 1.125 2004/12/19 20:05:32 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,7 +101,7 @@ public class Project implements java.io.Serializable, TargetListener {
     private Vector searchpath;
     private Vector members;
     private String historyFile;
-
+    
     /**
      * The version number of the persistence format that last
      * saved this project.
@@ -827,6 +827,7 @@ public class Project implements java.io.Serializable, TargetListener {
         }
         return null;
     }
+
 
     /**
      * @param cgp the generation preferences
