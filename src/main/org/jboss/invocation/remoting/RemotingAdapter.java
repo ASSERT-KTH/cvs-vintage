@@ -163,9 +163,7 @@ public class RemotingAdapter
    {
 
       Object result = client.invoke("",
-                                    "invoke",
-                                    new Object[] {new MarshalledInvocation(invocation)},
-                                    new String[] {MarshalledInvocation.class.getName()},
+                                    new MarshalledInvocation(invocation),
                                     null);
       return (InvocationResponse)result;
    }

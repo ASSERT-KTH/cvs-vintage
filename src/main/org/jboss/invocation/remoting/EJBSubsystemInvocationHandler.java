@@ -201,16 +201,7 @@ public class EJBSubsystemInvocationHandler
     */
    public Object invoke(InvocationRequest invocationRequest) throws Throwable
    {
-      String methodName = invocationRequest.getMethodName();
-      Object args [] = invocationRequest.getArgs();
-      String signature [] = invocationRequest.getSignature();
-      String sessionId = invocationRequest.getSessionId();
-
-      if (!methodName.equals("invoke"))
-      {
-         throw new IllegalArgumentException("Unexpected method name: " + methodName);
-      } // end of if ()
-      Invocation invocation = (Invocation)args[0];
+      Invocation invocation = (Invocation)invocationRequest.getParameter();
       ExecutionContext ec = new ExecutionContext();
       ec.setXid((Xid)invocation.getValue(InvocationKey.XID));
       Integer transactionTimeout = (Integer)invocation.getValue(InvocationKey.TX_TIMEOUT);
