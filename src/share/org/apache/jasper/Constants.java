@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.5 1999/10/20 21:20:29 mandar Exp $
- * $Revision: 1.5 $
- * $Date: 1999/10/20 21:20:29 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/Constants.java,v 1.6 1999/10/21 02:47:50 mandar Exp $
+ * $Revision: 1.6 $
+ * $Date: 1999/10/21 02:47:50 $
  *
  * ====================================================================
  * 
@@ -153,7 +153,7 @@ public class Constants {
      * ID and location of the DTD for tag library descriptors. 
      */
     public static final String 
-        TAGLIB_DTD_PUBLIC_ID = "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN";
+        TAGLIB_DTD_PUBLIC_ID = "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN";
     public static final String
         TAGLIB_DTD_RESOURCE = "/org/apache/jasper/resources/web-jsptaglib_1_1.dtd";
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.2 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Parser.java,v 1.3 1999/10/21 02:47:50 mandar Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/21 02:47:50 $
  *
  * ====================================================================
  * 
@@ -738,12 +738,17 @@ public class Parser {
             Mark bodyStart = null;
             Mark bodyStop = null;
 
-	    if (bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_EMPTY)) {
+	    
+	    System.out.println("Tag: "+tag);
+	    System.out.println("BC: "+bc);
+	    
+	    if (reader.matches(CLOSE_1)
+		|| bc.equalsIgnoreCase(TagInfo.BODY_CONTENT_EMPTY)) {
 		if (reader.matches(CLOSE_1))
 		    reader.advance(CLOSE_1.length());
 		else
 		    throw new ParseException(start, "Body is supposed to be empty for "+tag);
-
+		
 		listener.handleTagBegin(start, attrs, prefix,
 					shortTagName, tli, ti);
 		listener.handleTagEnd(start, reader.mark(), prefix, 
@@ -752,6 +757,7 @@ public class Parser {
 		// Body can be either
 		//     - JSP tags
 		//     - tag dependent stuff
+		System.out.println("nextChar before croaking: "+(char) reader.peekChar());
 		if (reader.matches(CLOSE)) {
 		    reader.advance(CLOSE.length());
 		    bodyStart = reader.mark();

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.3 1999/10/20 11:22:54 akv Exp $
- * $Revision: 1.3 $
- * $Date: 1999/10/20 11:22:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.4 1999/10/21 02:47:51 mandar Exp $
+ * $Revision: 1.4 $
+ * $Date: 1999/10/21 02:47:51 $
  *
  * ====================================================================
  * 
@@ -248,18 +248,19 @@ public class TagBeginGenerator
 	writer.pushIndent();
 	
 
-        writer.println("if ("+evalVar+" != Tag.EVAL_BODY_INCLUDE) {");
-        writer.pushIndent();
+	if (implementsBodyTag) {
+	    writer.println("if ("+evalVar+" != Tag.EVAL_BODY_INCLUDE) {");
+	    writer.pushIndent();
 
-	writer.println("out = pageContext.pushBody();");
-	writer.println(thVarName+".setBodyContent((BodyContent) out);");
+	    writer.println("out = pageContext.pushBody();");
+	    writer.println(thVarName+".setBodyContent((BodyContent) out);");
 
-        writer.popIndent();
-        writer.println("}");
+	    writer.popIndent();
+	    writer.println("}");
+	    
+	    writer.println(thVarName+".doInitBody();");
+	}
         
-        if (implementsBodyTag)
-            writer.println(thVarName+".doInitBody();");
-
 	writer.println("do {");
 	writer.pushIndent();
         // Need to declare and update NESTED variables here

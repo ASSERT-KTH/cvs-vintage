@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.4 1999/10/20 22:08:43 akv Exp $
- * $Revision: 1.4 $
- * $Date: 1999/10/20 22:08:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.5 1999/10/21 02:47:51 mandar Exp $
+ * $Revision: 1.5 $
+ * $Date: 1999/10/21 02:47:51 $
  *
  * ====================================================================
  * 
@@ -80,6 +80,7 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.TagInfo;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.http.HttpServletRequest;
 
 import org.w3c.dom.*;
 import org.xml.sax.*;
@@ -191,12 +192,17 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    // "uri" should point to the correct tld location.
 
 	    if (!uri.startsWith("/")) {
-		url = new URL(uri);
-		in = url.openStream();
-	    } else {
-		relativeURL = true;
-		in = ctxt.getServletContext().getResourceAsStream(uri);
+		HttpServletRequest request = ctxt.getRequest();
+		String actURI =  request.getServletPath();
+		String baseURI = actURI.substring(0, actURI.lastIndexOf('/'));
+		uri = baseURI + '/' + uri;
+		//url = new URL(uri);
+		//in = url.openStream();
 	    }
+	    //else {
+	    //relativeURL = true;
+	    in = ctxt.getServletContext().getResourceAsStream(uri);
+	    //}
 	    
 	    if (in == null)
 		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
@@ -357,7 +363,8 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 
     private TagInfo createTagInfo(Element elem) throws JasperException {
         String name = null, tagclass = null, teiclass = null;
-        String bodycontent = null, info = null;
+        String bodycontent = "JSP"; // Default body content is JSP
+	String info = null;
         
         Vector attributeVector = new Vector();
         NodeList list = elem.getChildNodes();
