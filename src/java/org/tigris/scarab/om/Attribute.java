@@ -30,6 +30,9 @@ public class Attribute
     extends BaseAttribute
     implements Persistent
 {
+    public static final NumberKey STATUS__PK = new NumberKey("3");
+    public static final NumberKey RESOLUTION__PK = new NumberKey("4");
+
     private static final String className = "Attribute";
 
     private static Criteria allOptionsCriteria;

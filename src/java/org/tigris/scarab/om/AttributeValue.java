@@ -87,6 +87,13 @@ public abstract class AttributeValue
         return rma.getRequired();
     }
 
+    public boolean isSet()
+       throws Exception
+    {
+        return !(getOptionId() == null && getValue() == null
+                 && getUserId() == null);
+    }
+
     // need a local reference
     private Attribute aAttribute;                 
     public Attribute getAttribute() throws Exception

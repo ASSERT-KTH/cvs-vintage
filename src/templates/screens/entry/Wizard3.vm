@@ -36,7 +36,7 @@
         #set ( $field = "Value" )  
   #end
 
-  #if ( !$attrInput.get($field).isSet() )
+  #if ( !$attVal.isSet() )
 
         <tr>
             <td width="120" class="a">

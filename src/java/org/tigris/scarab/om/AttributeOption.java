@@ -29,6 +29,8 @@ public class AttributeOption
     extends BaseAttributeOption
     implements Persistent
 {
+    public static NumberKey STATUS__CLOSED__PK = new NumberKey("7");
+
     private static HashMap parentChildMap;
     private static HashMap childParentMap;
 

@@ -72,6 +72,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.attribute.OptionAttribute;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.RModuleAttributePeer;
@@ -82,16 +83,13 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.15 2001/06/24 18:40:07 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.16 2001/06/27 00:30:38 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
     public void doSubmitattributes( RunData data, Context context )
         throws Exception
     {
-        //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data,context);
-
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
         
@@ -142,6 +140,19 @@ public class ReportIssue extends VelocityAction
         
         if ( intake.isAllValid() ) 
         {
+            // set the values entered so far
+            iter = avMap.iterator();
+            while (iter.hasNext()) 
+            {
+                aval = (AttributeValue)avMap.get(iter.next());
+                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                if ( group != null ) 
+                {
+                    group.setProperties(aval);
+                }                
+            }
+
+            // search on the option attributes and keywords
             IssueSearch search = new IssueSearch();
             search.setSearchWords(summary.toString());
 
@@ -160,6 +171,8 @@ public class ReportIssue extends VelocityAction
             
             List matchingIssues = search.getMatchingIssues(25);
 
+            // set the template to dedupe unless none exist, then skip
+            // to final entry screen
             String template = null;
             if ( matchingIssues.size() > 0 )
             {
@@ -174,32 +187,67 @@ public class ReportIssue extends VelocityAction
         }
     }
 
+
     public void doEnterissue( RunData data, Context context )
         throws Exception
     {
-        //until we get the user and module set through normal application
-        BaseScarabObject.tempWorkAround(data,context);
-
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
-
-        // Summary is always required.
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = user.getReportingIssue();
-        AttributeValue aval = (AttributeValue)issue
-            .getModuleAttributeValuesMap().get("SUMMARY");
-        Group group = intake.get("AttributeValue", aval.getQueryKey());
-        Field summary = group.get("Value");
-        summary.setRequired(true);
+        AttributeValue aval = null;
+
+        // set any other required flags
+        Criteria crit = new Criteria(3)
+            .add(RModuleAttributePeer.ACTIVE, true)        
+            .add(RModuleAttributePeer.REQUIRED, true);        
+        Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
+        SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
+        Iterator iter = avMap.iterator();
+        while ( iter.hasNext() ) 
+        {
+            aval = (AttributeValue)avMap.get(iter.next());
+            
+            Group group = intake.get("AttributeValue", aval.getQueryKey(), false);
+            if ( group != null ) 
+            {            
+                Field field = null;
+                if ( aval instanceof OptionAttribute ) 
+                {
+                    field = group.get("OptionId");
+                }
+                if ( aval instanceof UserAttribute ) 
+                {
+                    field = group.get("UserId");
+                }
+                else 
+                {
+                    field = group.get("Value");
+                }
+                
+                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+                {
+                    if ( aval.getAttribute().getPrimaryKey().equals(
+                         requiredAttributes[j].getPrimaryKey() )
+                         && !aval.isSet()
+                       ) 
+                    {
+                        field.setRequired(true);
+                        break;
+                    }                    
+                }
+            }
+        }
+
 
         if ( intake.isAllValid() ) 
         {
-            SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
             Iterator i = avMap.iterator();
             while (i.hasNext()) 
             {
                 aval = (AttributeValue)avMap.get(i.next());
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
+                Group group = 
+                    intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null ) 
                 {
                     group.setProperties(aval);
@@ -213,7 +261,7 @@ public class ReportIssue extends VelocityAction
 
                 // save the attachment
                 Attachment attachment = new Attachment();
-                group = intake.get("Attachment", 
+                Group group = intake.get("Attachment", 
                                    attachment.getQueryKey(), false);
                 if ( group != null ) 
                 {
@@ -245,13 +293,25 @@ public class ReportIssue extends VelocityAction
     public void doAddvote( RunData data, Context context ) 
         throws Exception
     {
-        /*
-        ScarabUser user = (ScarabUser)data.getUser();
-        Issue issue = user.getReportingIssue();
-        issue.addVote();
-        */
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
 
+        Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);
         
+        if ( intake.isAllValid() ) 
+        {
+            Issue issue = IssuePeer
+                .retrieveByPK((NumberKey)group.get("Id").getValue());
+            issue.addVote();
+            doCancel(data, context);
+        }
+        doCancel(data, context);
+    }
+
+    public void doGotowizard3( RunData data, Context context )
+        throws Exception
+    {
+        setTemplate(data, "entry,Wizard3.vm");
     }
 
     /**
@@ -259,7 +319,9 @@ public class ReportIssue extends VelocityAction
     */
     public void doCancel( RunData data, Context context ) throws Exception
     {
-        setTemplate(data, "Start.vm");
+        String template = TurbineResources
+            .getString("template.homepage", "Start.vm");
+        setTemplate(data, template);
     }
     /**
         calls doCancel()
