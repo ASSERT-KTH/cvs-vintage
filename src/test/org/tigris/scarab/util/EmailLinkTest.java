@@ -55,7 +55,7 @@ import org.tigris.scarab.util.EmailLink;
  * Used for testing the ScarabUtil.java class.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: EmailLinkTest.java,v 1.3 2003/06/25 16:40:35 dlr Exp $
+ * @version $Id: EmailLinkTest.java,v 1.4 2003/06/25 16:42:22 dlr Exp $
  */
 public class EmailLinkTest extends BaseTestCase
 {
@@ -84,8 +84,6 @@ public class EmailLinkTest extends BaseTestCase
             //"http://10.0.0.1:8080/s/template/Foo.vm/curmodule/5/foo/bar/jjj/aaa";
             "/template/Foo.vm/curmodule/5/foo/bar/jjj/aaa";
         //assertEquals(expected, el.toString());
-        System.out.println(el.toString() + " " + expected + " " +
-                           el.toString().endsWith(expected));
         assertTrue(el.toString().endsWith(expected));
     }
 }
