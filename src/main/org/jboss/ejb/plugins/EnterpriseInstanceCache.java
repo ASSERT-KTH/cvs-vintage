@@ -35,7 +35,7 @@ import org.jboss.metadata.XmlLoadable;
  * </ul>
  *
  * @author Simone Bordet (simone.bordet@compaq.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public abstract class EnterpriseInstanceCache 
 	implements InstanceCache, XmlLoadable
@@ -382,6 +382,7 @@ public abstract class EnterpriseInstanceCache
 									// reinsert the context meaningfully in the cache
 									passivate(ctx);
 									executed();
+									removeLock(id);
 									freeContext(ctx);
 								} 
 								catch (RemoteException x)
