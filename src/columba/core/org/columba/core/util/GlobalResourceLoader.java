@@ -102,6 +102,7 @@ public class GlobalResourceLoader {
                         try {
                                 bundle = ResourceBundle.getBundle(sBundlePath);
                                 htBundles.put(sBundlePath, bundle);
+                                return bundle.getString(sID);
                         } catch (MissingResourceException mre) {
                                 bundle = globalBundle;
                         }
