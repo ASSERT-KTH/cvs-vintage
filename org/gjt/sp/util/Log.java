@@ -32,14 +32,16 @@ import javax.swing.event.*;
  * it is somewhere in between <code>System.out.println()</code> and
  * full-blown logging packages such as log4j.<p>
  *
- * All events are logged to a Swing text document and optionally a stream,
+ * All events are logged to an in-memory buffer and optionally a stream,
  * and those with a high urgency (warnings and errors) are also printed
  * to standard output.<p>
+ *
+ * Logging of exception tracebacks is supported.<p>
  *
  * This class can also optionally redirect standard output and error to the log.
  *
  * @author Slava Pestov
- * @version $Id: Log.java,v 1.10 2003/03/14 22:27:22 spestov Exp $
+ * @version $Id: Log.java,v 1.11 2003/05/22 23:43:16 spestov Exp $
  */
 public class Log
 {

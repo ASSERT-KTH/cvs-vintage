@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.25 2003/05/22 21:23:20 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.26 2003/05/22 23:43:16 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -511,9 +511,9 @@ public class PluginJAR
 			Buffer buffer = jEdit.getFirstBuffer();
 			while(buffer != null)
 			{
-				if(FoldHandler.getFoldHandler(
-					buffer.getStringProperty("folding"))
-					== null)
+				if(buffer.getFoldHandler() != null
+					&& buffer.getFoldHandler().getClass()
+					.getClassLoader() == classLoader)
 				{
 					buffer.setFoldHandler(
 						new DummyFoldHandler());
@@ -1049,8 +1049,6 @@ public class PluginJAR
 			if(null != buffer.getFoldHandler()
 				&& handler != buffer.getFoldHandler())
 			{
-				System.err.println(handler);
-				System.err.println(buffer.getFoldHandler());
 				buffer.setFoldHandler(handler);
 			}
 			buffer = buffer.getNext();

@@ -36,7 +36,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.47 2003/05/22 21:23:21 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.48 2003/05/22 23:43:16 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1447,8 +1447,11 @@ loop:		for(;;)
 			fvmcount = 2;
 			fvm[0] = 0;
 			fvm[1] = buffer.getLineCount();
-			firstLine.reset();
-			scrollLineCount.reset();
+			if(textArea.getDisplayManager() == DisplayManager.this)
+			{
+				firstLine.reset();
+				scrollLineCount.reset();
+			}
 			int collapseFolds = buffer.getIntegerProperty(
 				"collapseFolds",0);
 			if(collapseFolds != 0)
