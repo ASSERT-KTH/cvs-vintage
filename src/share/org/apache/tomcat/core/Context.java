@@ -112,6 +112,8 @@ public class Context {
 
     // -------------------- from web.xml
     private Hashtable initializationParameters = new Hashtable();
+    // all welcome files that are added are treated as "system default"
+    private boolean expectUserWelcomeFiles=false;
     private Vector welcomeFiles = new Vector();
     private Hashtable errorPages = new Hashtable();
     private String description = null;
@@ -218,6 +220,7 @@ public class Context {
     }
 
     // -------------------- Web.xml properties --------------------
+    
     public Enumeration getWelcomeFiles() {
 	return welcomeFiles.elements();
     }
@@ -231,7 +234,23 @@ public class Context {
 	    this.welcomeFiles.removeAllElements();
     }
 
+    /** If any new welcome file is added, remove the old list of
+     *  welcome files and start a new one. This is used as a hack to
+     *  allow a default web.xml file to specifiy welcome files.
+     *  We should use a better mechanism! 
+     */
+    public void expectUserWelcomeFiles() {
+	expectUserWelcomeFiles = true;
+    }
+    
+
     public void addWelcomeFile( String s) {
+	// user specified at least one user welcome file, remove the system
+	// files
+	if(  expectUserWelcomeFiles  ) {
+	    removeWelcomeFiles();
+	    expectUserWelcomeFiles=false;
+	} 
 	welcomeFiles.addElement( s );
     }
 

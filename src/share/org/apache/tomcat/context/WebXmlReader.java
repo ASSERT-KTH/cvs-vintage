@@ -45,6 +45,8 @@ public class WebXmlReader extends BaseInterceptor {
 		throw new TomcatException("Can't find default web.xml configuration");
 	    
 	    processFile(ctx, default_xml.toString());
+	    ctx.expectUserWelcomeFiles();
+	    
 	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
 	    // if relative, base it to cm.home
 	    if (!inf_xml.isAbsolute())

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.23 2000/03/21 00:32:39 costin Exp $
- * $Revision: 1.23 $
- * $Date: 2000/03/21 00:32:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.24 2000/03/28 00:04:02 costin Exp $
+ * $Revision: 1.24 $
+ * $Date: 2000/03/28 00:04:02 $
  *
  * ====================================================================
  *
@@ -101,7 +101,10 @@ public class RequestImpl  implements Request {
     protected String servletPath;
     protected String pathInfo;
     protected String pathTranslated;
-
+    // Need to distinguish between null pathTranslated and
+    // lazy-computed pathTranlsated
+    protected boolean pathTranslatedIsSet=false;
+    
     protected Hashtable parameters = new Hashtable();
     protected int contentLength = -1;
     protected String contentType = null;
@@ -247,27 +250,36 @@ public class RequestImpl  implements Request {
 	return contentType;
     }
 
+    /** All adapters that know the PT needs to call this method,
+	in order to set pathTranslatedIsSet, otherwise tomcat
+	will try to compute it again
+    */
     public void setPathTranslated(String s ) {
 	pathTranslated=s;
+	pathTranslatedIsSet=true;
     }
 
     public String getPathTranslated() {
-	// This is the correct Path_translated, previous implementation returned
-	// the real path for this ( i.e. the URI ).
+	if( pathTranslatedIsSet ) return pathTranslated;
 
-	// Check the PATH_TRANSLATED specs before changing!
-	if( pathTranslated==null) {
-	    String path=getPathInfo();
-	    if(path==null) path="";
-	    pathTranslated=context.getRealPath( path );
-	}
+	// not set yet - we'll compute it
+	pathTranslatedIsSet=true;
+	String path=getPathInfo();
+	// In CGI spec, PATH_TRANSLATED shouldn't be set if no path info is present
+	pathTranslated=null;
+	if(path==null || "".equals( path ) ) return null;
+	pathTranslated=context.getRealPath( path );
 	return pathTranslated;
     }
 
 
+    // XXX XXX Servlet API conflicts with the CGI specs -
+    // PathInfo should be "" if no path info is requested ( as it is in CGI ).
+    // We are following the spec, but IMHO it's a bug ( in the spec )
     public String getPathInfo() {
         return pathInfo;
     }
+    
     public void setRemoteUser(String s) {
 	remoteUser=s;
     }
@@ -493,7 +505,6 @@ public class RequestImpl  implements Request {
 
 
     public void setPathInfo(String pathInfo) {
-	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
         this.pathInfo = pathInfo;
     }
 
@@ -593,7 +604,7 @@ public class RequestImpl  implements Request {
 	didCookies = false;
 	container=null;
 	handler=null;
-    jvmRoute = null;
+	jvmRoute = null;
 	scheme = "http";// no need to use Constants
 	method = "GET";
 	requestURI="/";
@@ -602,7 +613,10 @@ public class RequestImpl  implements Request {
 	headers.clear(); // XXX use recycle pattern
 	serverName="localhost";
 	serverPort=8080;
-
+	pathTranslated=null;
+	pathInfo=null;
+	pathTranslatedIsSet=false;
+	    
 	// XXX a request need to override those if it cares
 	// about security
 	remoteAddr="127.0.0.1";
