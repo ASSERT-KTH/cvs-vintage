@@ -194,7 +194,6 @@ final class HttpSessionFacade implements HttpSession {
                     ((HttpSessionBindingListener) value).valueBound
                         (new HttpSessionBindingEvent( this, name));
                 } catch ( Throwable th ) {
-                    log( "Exception during bound event", th );
                 }
 		realSession.setAttribute( name, value );
 	    }
@@ -281,7 +280,6 @@ final class HttpSessionFacade implements HttpSession {
                         ((HttpSessionBindingListener) object).valueUnbound
                             (new HttpSessionBindingEvent( this, name));
                     } catch ( Throwable th ) {
-                        log("Exception during unbound event", th );
                     }
 		}
 	    }
@@ -316,5 +314,5 @@ final class HttpSessionFacade implements HttpSession {
 	System.err.println( "HttpSessionFacade: " + s );
     }
 
-    
+
 }
