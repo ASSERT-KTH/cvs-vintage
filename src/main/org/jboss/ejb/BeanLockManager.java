@@ -22,7 +22,7 @@ import javax.naming.InitialContext;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * <p><b>Revisions:</b><br>
  * <p><b>20010802: marcf</b>
  * <ol>
@@ -77,6 +77,8 @@ public class BeanLockManager
     */
    public synchronized BeanLock getLock(Object id)
    {
+      if (id == null)
+         throw new IllegalArgumentException("Attempt to get a lock for a null object");
       BeanLock lock = (BeanLock)map.get(id);
       if (lock == null)
       {
@@ -99,6 +101,8 @@ public class BeanLockManager
 
    public synchronized void removeLockRef(Object id)
    {
+      if (id == null)
+         throw new IllegalArgumentException("Attempt to remove a lock for a null object");
       BeanLock lock = (BeanLock)map.get(id);
       if (lock != null)
       {
@@ -108,6 +112,18 @@ public class BeanLockManager
             map.remove(lock.getId());
          }
       }
+   }
+
+   public synchronized boolean canPassivate(Object id)
+   {
+      if (id == null)
+         throw new IllegalArgumentException("Attempt to passivate with lock for a null object");
+      BeanLock lock = (BeanLock)map.get(id);
+      if (lock == null)
+         throw new IllegalStateException("Called from passivator with no lock");
+
+      // The passivate gets a lock before calling this method
+      return (lock.getRefs() > 1);
    }
 	
    public void setLockCLass(Class lockClass) {this.lockClass=lockClass;}

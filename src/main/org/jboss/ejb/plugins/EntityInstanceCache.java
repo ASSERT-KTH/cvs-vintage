@@ -20,7 +20,7 @@ import org.jboss.util.Sync;
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  *
  * <p><b>Revisions:</b>
  * <p><b>2001/01/29: billb</b>
@@ -130,6 +130,10 @@ public class EntityInstanceCache
 		{
 				return false;
 		}
+            else if (m_container.getLockManager().canPassivate(((EntityEnterpriseContext)ctx).getCacheKey()))
+            {
+               return false;
+            }
 		return true;
 	}
 
