@@ -62,6 +62,7 @@ package org.apache.tomcat.facade;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.collections.SimplePool;
+import org.apache.tomcat.util.compat.Jdk11Compat;
 import org.apache.tomcat.core.*;
 import java.io.*;
 import java.net.*;
@@ -179,6 +180,7 @@ public final class Servlet22Interceptor
 	}
     }
 
+    static Jdk11Compat jdk11Compat = Jdk11Compat.getJdkCompat();
 
     /** Call the Servlet22 callbacks when session expires.
      */
@@ -197,6 +199,9 @@ public final class Servlet22Interceptor
 
 	    Vector removed=null; // lazy 
 	    Enumeration e = sess.getAttributeNames();
+	    ClassLoader clSave = jdk11Compat.getContextClassLoader();
+	    jdk11Compat.setContextClassLoader(sess.getContext().
+					      getClassLoader());
 	    // announce all values with listener that we'll remove them
 	    while( e.hasMoreElements() )   {
 		String key = (String) e.nextElement();
@@ -214,6 +219,9 @@ public final class Servlet22Interceptor
 		    if( removed==null) removed=new Vector();
 		    removed.addElement( key );
 		}
+	    }
+	    if( clSave != null ) {
+		jdk11Compat.setContextClassLoader(clSave);
 	    }
 	    if( removed!=null ) {
 		// remove
