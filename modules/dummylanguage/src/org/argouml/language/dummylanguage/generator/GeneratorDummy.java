@@ -1,4 +1,4 @@
-// $Id: GeneratorDummy.java,v 1.4 2003/06/29 23:16:08 linus Exp $
+// $Id: GeneratorDummy.java,v 1.5 2003/09/04 17:37:02 thierrylach Exp $
 // Copyright (c) 2001-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,8 +110,11 @@ public class GeneratorDummy extends Generator implements PluggableNotation {
 	return "Transition(" + m.getName() + ")";
     }
     public String generateAction(MAction m) {
-	return "Action(" + m.getName() + ")";
+		return "Action(" + m.getName() + ")";
     }
+	public String generateAction(Object m) {
+		return "Action(" + m.toString() + ")";
+	}
     public String generateGuard(MGuard m) {
 	return "Guard(" + m.getName() + ")";
     }
@@ -130,6 +133,7 @@ public class GeneratorDummy extends Generator implements PluggableNotation {
     public String getModuleKey() { 
 	return "module.language.generator.dummylanguage"; 
     }
+
 
 } /* end class GeneratorJava */
 
