@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.182 2005/01/13 17:46:41 ejort Exp $ -->
+<!-- $Id: build.xml,v 1.183 2005/01/24 10:26:44 tdiesler Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -433,6 +433,7 @@
         <include name="org/jboss/tm/usertx/client/*.class"/>
         <include name="org/jboss/tm/usertx/interfaces/*.class"/>
         <include name="org/jboss/tm/usertx/server/*Stub.class"/>
+        <include name="org/jboss/webservice/metadata/jaxrpcmapping/*.class"/>
       </fileset>
     </jar>
 
