@@ -216,7 +216,7 @@ public class ComposerController extends DefaultFrameController implements
 		 * if (isAccountInfoPanelVisible()) {
 		 * addToolBar(getIdentityInfoPanel()); }
 		 */
-		getContainer().setInfoPanel(getIdentityInfoPanel());
+		
 
 		//		 *20030917, karlpeder* If ContainerListeners are waiting to be
 		// added, add them now.
@@ -900,6 +900,8 @@ public class ComposerController extends DefaultFrameController implements
 				MailInterface.config.get("composer_toolbar").getElement(
 						"toolbar"));
 
+		getContainer().setInfoPanel(getIdentityInfoPanel());
+		
 		return panel;
 	}
 

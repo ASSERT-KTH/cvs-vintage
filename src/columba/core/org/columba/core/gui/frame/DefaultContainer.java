@@ -193,17 +193,36 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @see org.columba.core.gui.frame.Container#setFrameMediator(org.columba.core.gui.frame.FrameMediator)
 	 */
 	public void setFrameMediator(FrameMediator m) {
-		LOG.fine("changin framemediator to " + m.getClass());
+		LOG.fine("set framemediator to " + m.getClass());
 
 		this.mediator = m;
+
+		m.setContainer(this);
 
 		// use new viewitem
 		viewItem = m.getViewItem();
 
+		switchedFrameMediator = false;
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.Container#switchFrameMediator(org.columba.core.gui.frame.FrameMediator)
+	 */
+	public void switchFrameMediator(FrameMediator m) {
+		LOG.fine("switching framemediator to " + m.getClass());
+
+		this.mediator = m;
+
+		m.setContainer(this);
+
+		// use new viewitem
+		viewItem = m.getViewItem();
+
+		switchedFrameMediator = true;
+
 		// update content-pane
 		setContentPane((ContentPane) m);
 
-		switchedFrameMediator = true;
 	}
 
 	/**
@@ -270,21 +289,21 @@ public class DefaultContainer extends JFrame implements Container,
 		int h = viewItem.getInteger("window", "height");
 		boolean maximized = viewItem.getBoolean("window", "maximized", true);
 
-		if (WindowMaximizer.isWindowMaximized(this) == false) {
-			// if window is maximized -> ignore the window size
-			// properties
-			if (maximized) {
-				WindowMaximizer.maximize(this);
-			} else {
-				// otherwise, use window size property
-				Dimension dim = new Dimension(w, h);
-				Point p = new Point(x, y);
-				setSize(dim);
-				setLocation(p);
+		//if (WindowMaximizer.isWindowMaximized(this) == false) {
+		// if window is maximized -> ignore the window size
+		// properties
+		if (maximized) {
+			WindowMaximizer.maximize(this);
+		} else {
+			// otherwise, use window size property
+			Dimension dim = new Dimension(w, h);
+			Point p = new Point(x, y);
+			setSize(dim);
+			setLocation(p);
 
-				validate();
-			}
+			validate();
 		}
+		//}
 
 		getFrameMediator().loadPositions(viewItem);
 	}
@@ -377,18 +396,29 @@ public class DefaultContainer extends JFrame implements Container,
 	 */
 	public void setContentPane(ContentPane view) {
 
+		// remove all components from content pane
 		contentPane.removeAll();
 
+		// add new componnet
 		contentPane.add(view.getComponent(), BorderLayout.CENTER);
 
+		// show/hide new toolbar
 		enableToolBar(Container.MAIN_TOOLBAR,
 				isToolBarEnabled(Container.MAIN_TOOLBAR));
 
-		loadPositions(getViewItem());
+		// show/hide new infopanel
+		enableInfoPanel(isInfoPanelEnabled());
 
-		validate();
-
+		// make window visible
 		setVisible(true);
+
+		if (!switchedFrameMediator) {
+			// load window position
+			loadPositions(getViewItem());
+			validate();
+		}
+
+		switchedFrameMediator = false;
 
 	}
 
@@ -431,10 +461,10 @@ public class DefaultContainer extends JFrame implements Container,
 		// hide window
 		setVisible(false);
 
-		/*
-		 * Tell frame model that frame is closing. If this frame hasn't been
-		 * opened using FrameModel methods, FrameModel.close does nothing.
-		 */
+		//
+		// Tell frame model that frame is closing. If this frame hasn't been
+		// opened using FrameModel methods, FrameModel.close does nothing.
+		//
 		MainInterface.frameModel.close(this);
 
 	}

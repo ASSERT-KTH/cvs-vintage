@@ -56,6 +56,15 @@ public interface Container {
 	 */
 	void setFrameMediator(FrameMediator m);
 
+	
+	/**
+	 * Switch to new framemediator. This also ensures that the menu,
+	 * toolbar, infobar, etc. get also replaced correctly.
+	 * 
+	 * 
+	 * @param m		new framemediator
+	 */
+	void switchFrameMediator(FrameMediator m);
 	/**
 	 * Get current framemediator this container encapsulates.
 	 * 

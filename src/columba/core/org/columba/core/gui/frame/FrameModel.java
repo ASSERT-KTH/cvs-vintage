@@ -64,10 +64,17 @@ public class FrameModel {
 	protected FramePluginHandler handler;
 
 	/**
+	 * we cache instances for later re-use
+	 */
+	protected Map frameMediatorCache;
+
+	/**
 	 * Obtains a reference to the frame plugin handler and registers a shutdown
 	 * hook with the ShutdownManager.
 	 */
 	public FrameModel() {
+
+		frameMediatorCache = new HashMap();
 
 		// get plugin handler for handling frames
 		try {
@@ -148,7 +155,7 @@ public class FrameModel {
 			// create frame controller for this view...
 			FrameMediator c;
 			try {
-				c = createFrameController(null, new ViewItem(view));
+				c = createFrameController(new ViewItem(view));
 			} catch (PluginLoadingFailedException plfe) {
 				//should not occur
 				continue;
@@ -248,26 +255,57 @@ public class FrameModel {
 
 		String id = viewItem.get("id");
 
-		// if no container re-used -> create new default container
-		boolean newContainer = false;
-		if (c == null) {
-			c = new DefaultContainer(viewItem);
-			newContainer = true;
-		}
+		//	save old framemediator in cache (use containers's old id)
+		frameMediatorCache.put(c.getViewItem().get("id"), c.getFrameMediator());
 
 		FrameMediator frame = null;
+		if (frameMediatorCache.containsKey(id)) {
+			LOG.fine("use cached instance " + id);
 
-		LOG.fine("create new instance " + id);
-		Object[] args = { c, viewItem };
-		// create new instance
-		// -> get frame controller using the plugin handler found above
-		frame = (FrameMediator) handler.getPlugin(id, args);
+			// found cached instance
+			// -> re-use this instance and remove it from cache
+			frame = (FrameMediator) frameMediatorCache.remove(id);
+		} else {
+			LOG.fine("create new instance " + id);
+			Object[] args = { c, viewItem };
+			// create new instance
+			// -> get frame controller using the plugin handler found above
+			frame = (FrameMediator) handler.getPlugin(id, args);
+		}
+
+		c.switchFrameMediator(frame);
+
+		return frame;
+	}
+
+	protected FrameMediator createFrameController(ViewItem viewItem)
+			throws PluginLoadingFailedException {
+
+		String id = viewItem.get("id");
+
+		// create new default container
+		boolean newContainer = false;
+
+		Container c = new DefaultContainer(viewItem);
+
+		FrameMediator frame = null;
+		if (frameMediatorCache.containsKey(id)) {
+			LOG.fine("use cached instance " + id);
+
+			// found cached instance
+			// -> re-use this instance and remove it from cache
+			frame = (FrameMediator) frameMediatorCache.remove(id);
+		} else {
+			LOG.fine("create new instance " + id);
+			Object[] args = { c, viewItem };
+			// create new instance
+			// -> get frame controller using the plugin handler found above
+			frame = (FrameMediator) handler.getPlugin(id, args);
+		}
 
 		c.setFrameMediator(frame);
 
-		// save reference to container
-		if (newContainer)
-			activeFrameCtrls.add(frame.getContainer());
+		activeFrameCtrls.add(c);
 
 		return frame;
 	}
@@ -289,7 +327,7 @@ public class FrameModel {
 
 		// Create a frame controller for this view
 		// view = null => defaults specified by frame controller is used
-		FrameMediator controller = createFrameController(null, view);
+		FrameMediator controller = createFrameController(view);
 
 		return controller;
 	}
@@ -303,7 +341,6 @@ public class FrameModel {
 			view = new ViewItem(createDefaultConfiguration(id));
 
 		// Create a frame controller for this view
-		// view = null => defaults specified by frame controller is used
 		FrameMediator controller = createFrameController(c, view);
 
 		return controller;
@@ -385,6 +422,9 @@ public class FrameModel {
 		if (activeFrameCtrls.contains(c)) {
 			ViewItem v = c.getViewItem();
 
+			// save in cache
+			frameMediatorCache.put(v.get("id"), c.getFrameMediator());
+
 			saveDefaultView(v);
 			activeFrameCtrls.remove(c);
 
@@ -395,6 +435,7 @@ public class FrameModel {
 
 				// shutdown Columba if no frame exists anymore
 				if (getOpenFrames().length == 0) {
+
 					ShutdownManager.getShutdownManager().shutdown(0);
 				}
 			}
