@@ -196,17 +196,17 @@ public class XmlIO extends DefaultHandler {
   }
 
   public void errorDialog(String Msg){
-    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+    JOptionPane.showMessageDialog(null,
                                   "Error: "+Msg);
 
   }
   public void warningDialog(String Msg){
-    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+    JOptionPane.showMessageDialog(null,
                                   "Warning: "+Msg);
 
   }
   public void infoDialog(String Msg){
-    JOptionPane.showMessageDialog(MainInterface.mainFrame,
+    JOptionPane.showMessageDialog(null,
                                   "Info: "+Msg);
 
   }
