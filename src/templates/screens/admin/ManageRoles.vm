@@ -1,11 +1,13 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.1 2001/11/28 19:20:42 dr Exp $
+@version $Id: ManageRoles.vm,v 1.2 2001/11/28 21:15:51 dr Exp $
 *#
+
+$page.setTitle("Role Administration")
 
 <div id="manageRoles" class="app">
 
-<h2>Role Administration</h2>
+<h2>$page.Title</h2>
 
 <h3>Role List</h3>
 
