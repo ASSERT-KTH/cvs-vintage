@@ -61,6 +61,7 @@
 package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import javax.servlet.*;
@@ -240,7 +241,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    getNote( secMapNote );
 	if( ctxSec.patterns==0 ) return 0; // fast exit
 	
-	String reqURI = req.getRequestURI();
+	String reqURI = RequestUtil.URLDecode(req.getRequestURI());
 	String ctxPath= ctx.getPath();
 	String path=reqURI.substring( ctxPath.length());
 	String method=req.getMethod();

@@ -61,6 +61,7 @@
 package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.helper.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
@@ -253,15 +254,19 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    throw new RuntimeException("ASSERT: null path in request URI");
 	if( path.indexOf("?") >=0 )
 	    throw new RuntimeException("ASSERT: ? in requestURI");
-	
+
+	if ((path.indexOf('%') >= 0) || (path.indexOf('+') >= 0)) {
+		// XXX rewrite URLDecode to avoid allocation
+		path = RequestUtil.URLDecode(path);
+	}
 	try {
 	    String host=null;
 
 // 	    MimeHeaders headers=req.getMimeHeaders();
 // 	    MimeHeaderField hostH=headers.find("host");
-	    
+
 	    host=req.getServerName();
-	    
+
 // 	    if( hostH==null ) host=req.getLocalHost();
 // 	    if(hostH==null) host="localhost";
 	    
@@ -370,7 +375,7 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	SimpleHashtable extM=(SimpleHashtable)ctx.
 	    getContainer().getNote( ctExtMapNote );
 	if( extM==null ) return null;
-	
+
 	// Find the container associated with that extension
 	Container container= (Container)extM.get(extension);
 
@@ -387,17 +392,18 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 
     /** Adjust the paths in request after matching a container
      */
-    void fixRequestPaths( String path, Request req, Container container ) {
+    void fixRequestPaths( String path, Request req, Container container ) throws Exception{
 	// Set servlet path and path info
 	// Found a match !
-	// Adjust paths based on the match 
+	// Adjust paths based on the match
 	String s=container.getPath();
 	String ctxP=container.getContext().getPath();
 	int sLen=s.length();
 	int pathLen=path.length();
 	int ctxPLen=ctxP.length();
 	String pathI=null;
-	
+		// Perform URL decoding only if necessary
+
 	switch( container.getMapType()) {
 	case  Container.PREFIX_MAP: 
 	    s=s.substring( 0, sLen -2 );

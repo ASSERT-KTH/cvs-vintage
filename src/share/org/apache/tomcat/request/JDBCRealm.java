@@ -1,4 +1,7 @@
-/*
+/* 
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/request/Attic/JDBCRealm.java,v 1.20 2000/09/22 20:31:40 nacho Exp $
+ * $Revision: 1.20 $
+ * $Date: 2000/09/22 20:31:40 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -578,7 +581,7 @@ public final class JDBCRealm extends BaseInterceptor {
         // XXX check transport
     }
     /**
-     * Digestedentials (password) using MD5 and
+     * Digest password using the algorithm especificied and
      * convert the result to a corresponding hex string.
      * If exception, the plain credentials string is returned
      *
@@ -588,7 +591,7 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param algorithm Algorithm used to do th digest
      *
      */
-    final private static String Digest(String credentials,String algorithm) {
+    final public static String Digest(String credentials,String algorithm) {
         try {
             // Obtain a new message digest with MD5 encryption
             MessageDigest md = (MessageDigest)MessageDigest.getInstance(algorithm).clone();
@@ -606,7 +609,7 @@ public final class JDBCRealm extends BaseInterceptor {
                 return credentials;
         }
     }
-    
+
     public static void main(String args[] ) {
         if (args.length >= 2) {
             if( args[0].equalsIgnoreCase("-a")){

@@ -183,7 +183,7 @@ class AJP12Request extends Request {
 
 // Ajp use Status: instead of Status
 class AJP12Response extends Response {
-    HTTP http=new HTTP();
+    Http10 http=new Http10();
 
     public void setSocket( Socket s ) throws IOException {
 	http.setSocket( s );
