@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.24 2002/03/23 20:43:44 thn Exp $
+// $Id: Modeller.java,v 1.25 2002/07/11 06:38:41 mkl Exp $
 
 
 
@@ -2396,7 +2396,8 @@ public class Modeller
 
 
 
-        if (sCurrentTagData.charAt (sCurrentTagData.length() - 1) == '\n') {
+        if ( sCurrentTagData.length() > 0 &&
+             sCurrentTagData.charAt (sCurrentTagData.length() - 1) == '\n') {
 
           sCurrentTagData = sCurrentTagData.substring (
 
