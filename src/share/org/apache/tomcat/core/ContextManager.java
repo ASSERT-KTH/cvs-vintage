@@ -258,6 +258,9 @@ public class ContextManager {
     public void addRequestInterceptor( RequestInterceptor ri ) {
 	if(debug>0) log(" adding request intereptor " + ri.getClass().getName());
 	requestInterceptors.addElement( ri );
+	// XXX XXX use getMethods() to find what notifications are needed by interceptor
+	// ( instead of calling all interceptors )
+	// No API change - can be done later.
     }
 
     public Enumeration getRequestInterceptors() {
@@ -414,36 +417,6 @@ public class ContextManager {
     
     // -------------------- Sub-Request mechanism --------------------
 
-    // comment from Apache http_request.c
-    /*****************************************************************
-     *
-     * The sub_request mechanism.
-     *
-     * Fns to look up a relative URI from, e.g., a map file or SSI document.
-     * These do all access checks, etc., but don't actually run the transaction
-     * ... use run_sub_req below for that.  Also, be sure to use destroy_sub_req
-     * as appropriate if you're likely to be creating more than a few of these.
-     * (An early Apache version didn't destroy the sub_reqs used in directory
-     * indexing.  The result, when indexing a directory with 800-odd files in
-     * it, was massively excessive storage allocation).
-     *
-     * Note more manipulation of protocol-specific vars in the request
-     * structure...
-     */
-    Request createRequest( String method, String uri, Request orig ) {
-	//  See: ap_sub_req_method_uri()
-
-	// "clone" the usefull info out of req
-
-	// clean up uri ( remove .., etc )
-
-	// location() - find the context
-
-	//  interceptors
-
-	return null;
-    }
-
     /** Create a new sub-request in a given context, set the context "hint"
      *  This is a particular case of sub-request that can't get out of
      *  a context ( and we know the context before - so no need to compute it again)
@@ -478,13 +451,7 @@ public class ContextManager {
 	return lr;
     }
 
-    void runSubRequest( Request req ) {
-	// invoke_handler
-
-	// finalize_sub_req_protocol
-	
-    }
-
+    // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
 	log( "Setting debug " + level );

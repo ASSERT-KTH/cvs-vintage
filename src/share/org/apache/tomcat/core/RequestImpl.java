@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.12 2000/02/01 22:53:31 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/02/01 22:53:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.13 2000/02/03 07:11:52 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/02/03 07:11:52 $
  *
  * ====================================================================
  *
@@ -127,8 +127,6 @@ public class RequestImpl  implements Request {
     // set by interceptors
     ServletWrapper handler = null;
     String mappedPath = null;
-    String resolvedServlet = null;
-    String resouceName=null;
 
     protected String scheme;
     protected String method;
@@ -210,16 +208,6 @@ public class RequestImpl  implements Request {
         return parameters.keys();
     }
 
-    /**
-     * Used by the RequestDispatcherImpl to get a copy of the
-     * original parameters before adding parameters from the
-     * query string, if any.
-     */
-    public Hashtable getParametersCopy() {
-	handleParameters();
-	return (Hashtable) parameters.clone();
-    }
-
     public String getAuthType() {
     	return authType;
     }
@@ -243,17 +231,16 @@ public class RequestImpl  implements Request {
 	// can be null!! -
 	return contentType;
     }
+
+    public void setPathTranslated(String s ) {
+    }
     
     public String getPathTranslated() {
-	try {
-	    URL url = context.getResourceURL(this);
-	    
-	    if (url != null &&	url.getProtocol().equals("file")) {
-		return FileUtil.patch(url.getFile());
-	    }
-	} catch (MalformedURLException e) {
-	}
-	return null;
+	// This is the correct Path_translated, previous implementation returned
+	// the real path for this ( i.e. the URI ).
+
+	// Check the PATH_TRANSLATED specs before changing!
+	return context.getRealPath( getPathInfo() );
     }
 
 
@@ -405,14 +392,6 @@ public class RequestImpl  implements Request {
     }
 
     // -------------------- LookupResult 
-    public String getResolvedServlet() {
-	return resolvedServlet;
-    }
-
-    public void setResolvedServlet(String rs ) {
-	resolvedServlet=rs;
-    }
-
     public ServletWrapper getWrapper() {
 	return handler;
     }
@@ -430,14 +409,6 @@ public class RequestImpl  implements Request {
 
     public void setMappedPath( String m ) {
 	mappedPath=m;
-    }
-
-    public String getResourceName() {
-	return resouceName;
-    }
-
-    public void setResourceName( String m ) {
-	resouceName=m;
     }
 
     public void setRequestURI( String r ) {
@@ -530,7 +501,8 @@ public class RequestImpl  implements Request {
 
     // -------------------- Utils - facade for RequestUtil
     public BufferedReader getReader()
-	throws IOException {
+	throws IOException
+    {
 	return RequestUtil.getReader( this );
     }
 
@@ -614,11 +586,20 @@ public class RequestImpl  implements Request {
 	return remoteHost;
     }    
 
+    /** Fill in the buffer. This method is probably easier to implement than
+	previous.
+	This method should only be called from SerlvetInputStream implementations.
+	No need to implement it if your adapter implements ServletInputStream.
+     */
     // you need to override this method if you want non-empty InputStream
     public  int doRead( byte b[], int off, int len ) throws IOException {
 	return -1; // not implemented - implement getInputStream 
     }
 
+
+    // XXX I hate this - but the only way to remove this method from the
+    // inteface is to implement it on top of doRead(b[]).
+    // Don't use this method if you can ( it is bad for performance !!)
     // you need to override this method if you want non-empty InputStream
     public int doRead() throws IOException {
 	return -1;
@@ -629,20 +610,9 @@ public class RequestImpl  implements Request {
     // and Tom will find the value. You can also use the static
     // methods in RequestImpl
 
-    // server may have it pre-calculated - return null if
-    // it doesn't
-    public String getContextPath() {
-	return null;
-    }
-
     // What's between context path and servlet name ( /servlet )
     // A smart server may use arbitrary prefixes and rewriting
     public String getServletPrefix() {
-	return null;
-    }
-
-    // Servlet name ( a smart server may use aliases and rewriting !!! )
-    public String getServletName() {
 	return null;
     }
 
@@ -688,11 +658,5 @@ public class RequestImpl  implements Request {
 	sb.append( ",MP:" + getMappedPath() );
 	sb.append( "," + getWrapper() +") ");
 	return sb.toString();
-    }
-
-
-    // utility method - should be in a different class
-    public static String getMessage( int status ) {
-	return sm.getString("sc."+ status);
     }
 }

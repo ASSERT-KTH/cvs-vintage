@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.8 2000/02/01 07:37:36 costin Exp $
- * $Revision: 1.8 $
- * $Date: 2000/02/01 07:37:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.9 2000/02/03 07:11:51 costin Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/02/03 07:11:51 $
  *
  * ====================================================================
  * 
@@ -80,6 +80,8 @@ import javax.servlet.ServletOutputStream;
 
 /**
  *
+ * Works only if you extend ResponseImpl and override doWrite() -
+ * all other implementations of Response should provide their own Stream
  *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
@@ -101,8 +103,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     protected int totalCount = 0;
     protected boolean committed = false;
     protected boolean closed = false;
-    //    Response response;
-    Response resA;
+    ResponseImpl resA;
     
     protected BufferedServletOutputStream() {
 	//	System.out.println("new BOS " + closed);
@@ -110,7 +111,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 
     protected BufferedServletOutputStream(Response resA) {
 	//	System.out.println("new BOS " + closed);
-	this.resA=resA;
+	setResponse(resA);
     }
 
 //     public void setResponseAdapter( Response resA ) {
@@ -127,7 +128,7 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     }
 
     public void setResponse( Response response ) {
-	this.resA=response;
+	this.resA=(ResponseImpl)response;
     }
 
     // Hack for the buffering issue.

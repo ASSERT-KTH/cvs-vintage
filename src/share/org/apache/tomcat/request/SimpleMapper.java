@@ -72,11 +72,13 @@ import java.util.Hashtable;
  *  For "production" environment you should use either an optimized version
  *  or a real web server parser.
  */
-public class SimpleMapper  implements  RequestInterceptor {
+public class SimpleMapper extends  BaseInterceptor implements RequestInterceptor {
     int debug=0;
     ContextManager cm;
     
     public SimpleMapper() {
+	methods.addElement("contextMap");
+	methods.addElement("requestMap");	
     }
 
     public void setContextManager( ContextManager cm ) {

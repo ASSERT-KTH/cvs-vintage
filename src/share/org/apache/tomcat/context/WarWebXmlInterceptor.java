@@ -77,13 +77,13 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class WarWebXmlInterceptor implements ContextInterceptor {
+public class WarWebXmlInterceptor extends BaseContextInterceptor implements ContextInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
     
     public WarWebXmlInterceptor() {
     }
 	
-    public int handleContextInit(Context ctx) {
+    public int contextInit(Context ctx) {
 	if (! ctx.getDocumentBase().getProtocol().equalsIgnoreCase("war")) {
 	    return 0;
 	}
@@ -114,10 +114,4 @@ public class WarWebXmlInterceptor implements ContextInterceptor {
 	}
 	return 0;
     }
-
-    public int handleContextShutdown(Context ctx) {
-	return OK;
-    }
-
-    
 }

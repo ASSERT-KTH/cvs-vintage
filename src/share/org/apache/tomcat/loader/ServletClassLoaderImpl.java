@@ -87,7 +87,7 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
     }
 
     private void initURLs() {
-        URL baseURL = context.getServletBase();
+        URL baseURL = context.getDocumentBase();
         String protocol = baseURL.getProtocol();
         int port = baseURL.getPort();
         String hostname = baseURL.getHost();

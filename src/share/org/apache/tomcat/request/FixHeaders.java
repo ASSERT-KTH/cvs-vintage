@@ -72,19 +72,12 @@ import javax.servlet.http.*;
  *  Will generate the output headers ( cookies, etc ) plus tomcat-specific headers.
  * 
  */
-public class FixHeaders implements RequestInterceptor {
+public class FixHeaders extends  BaseInterceptor implements RequestInterceptor {
     
     public FixHeaders() {
+	methods.addElement("beforeBody");
     }
 	
-    public int requestMap(Request request ) {
-	return 0;
-    }
-
-    public int contextMap( Request rrequest ) {
-	return 0;
-    }
-
     public int beforeBody( Request request, Response response ) {
 	HttpDate date = new HttpDate(System.currentTimeMillis());
 	response.setHeader("Date", date.toString());

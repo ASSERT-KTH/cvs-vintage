@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.9 2000/01/27 01:24:51 costin Exp $
+# $Id: tomcat.sh,v 1.10 2000/02/03 07:11:55 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -62,13 +62,13 @@ fi
 
 oldCP=$CLASSPATH
  
-CLASSPATH=${TOMCAT_HOME}/lib/webserver.jar
-CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/servlet.jar
-CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/jasper.jar
-CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/xml.jar
-## CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/webpages/WEB-INF/classes/jsp/beans
+CLASSPATH=.
+for i in ${TOMCAT_HOME}/lib/* ; do
+  CLASSPATH=${CLASSPATH}:$i
+done
 
 CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+echo XXX $CLASSPATH
 
 
 # Backdoor classpath setting for development purposes when all classes

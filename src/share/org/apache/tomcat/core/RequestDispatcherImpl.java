@@ -228,9 +228,12 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	Object old_query_string=realRequest.getAttribute("javax.servlet.include.query_string");
 	realRequest.setAttribute("javax.servlet.include.query_string", queryString);
 
+	
 	// Not explicitely stated, but we need to save the old parameters before
 	// adding the new ones
-	Hashtable old_parameters=realRequest.getParametersCopy();
+	realRequest.getParameterNames(); // force reading of parameters from POST
+	Hashtable old_parameters=(Hashtable)realRequest.getParameters().clone();
+
 	// NOTE: it has a side effect of _reading_ the form data - which
 	// is against the specs ( you can't read the post until asked for
 	// parameters). I see no way of dealing with that -

@@ -71,111 +71,33 @@ import javax.servlet.http.*;
 
 
 /**
- * Interceptor that loads the "load-on-startup" servlets
- *
  * @author costin@dnt.ro
  */
-public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
-    private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
-    
-    public LoadOnStartupInterceptor() {
+public class BaseContextInterceptor implements ContextInterceptor {
+
+    public BaseContextInterceptor() {
     }
 	
     public int contextInit(Context ctx) {
-	init(ctx);
-	Vector orderedKeys = new Vector();
-	Enumeration e=getInitLevels();
-		
-	// order keys
-	while (e.hasMoreElements()) {
-	    Integer key = (Integer)e.nextElement();
-	    int slot = -1;
-	    for (int i = 0; i < orderedKeys.size(); i++) {
-	        if (key.intValue() <
-		    ((Integer)(orderedKeys.elementAt(i))).intValue()) {
-		    slot = i;
-		    break;
-		}
-	    }
-	    if (slot > -1) {
-	        orderedKeys.insertElementAt(key, slot);
-	    } else {
-	        orderedKeys.addElement(key);
-	    }
-	}
-
-	// loaded ordered servlets
-
-	// Priorities IMO, should start with 0.
-	// Only System Servlets should be at 0 and rest of the
-	// servlets should be +ve integers.
-	// WARNING: Please do not change this without talking to:
-	// harishp@eng.sun.com (J2EE impact)
-
-	for (int i = 0; i < orderedKeys.size(); i ++) {
-	    Integer key = (Integer)orderedKeys.elementAt(i);
-
-	    Enumeration sOnLevel = getLoadableServlets( key );
-
-	    while (sOnLevel.hasMoreElements()) {
-		String servletName = (String)sOnLevel.nextElement();
-		ServletWrapper  result = ctx.getServletByName(servletName);
-
-		ctx.log("Loading " + key + " "  + servletName );
-		if(result==null)
-		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
-		else {
-		    try {
-			result.loadServlet();
-		    } catch (Exception ee) {
-			String msg = sm.getString("context.loadServlet.e",
-						  servletName);
-			System.out.println(msg);
-		    } 
-		}
-	    }
-	}
-	return OK;
+	return 0;
     }
 
-    // -------------------- 
-    // Old logic from Context - probably something cleaner can replace it.
+    public int contextShutdown(Context ctx) {
+	return 0;
+    }
 
-    private Hashtable loadableServlets = new Hashtable();
-
-    void init(Context ctx) {
-	Enumeration enum=ctx.getServletNames();
-	while(enum.hasMoreElements()) {
-	    String name=(String)enum.nextElement();
-	    ServletWrapper sw=ctx.getServletByName( name );
-	    int i=sw.getLoadOnStartUp();
-	    if( i!= 0)
-		addLoadableServlet( new Integer(i), name );
-	}
+    /** Notify when a new servlet is added
+     */
+    public int addServlet( Context ctx, ServletWrapper sw) {
+	return 0;
     }
     
-    Enumeration getInitLevels() {
-	return loadableServlets.keys();
+    /** Notify when a servlet is removed from context
+     */
+    public int removeServlet( Context ctx, ServletWrapper sw) {
+	return 0;
     }
 
-    Enumeration getLoadableServlets( Integer level ) {
-	return ((Vector)loadableServlets.get( level )).elements();
-    }
 
-    void setLoadableServlets( Integer level, Vector servlets ) {
-	loadableServlets.put( level, servlets );
-    }
-
-    void addLoadableServlet( Integer level,String name ) {
-	Vector v;
-	if( loadableServlets.get(level) != null ) 
-	    v=(Vector)loadableServlets.get(level);
-	else
-	    v=new Vector();
-	
-	v.addElement(name);
-	loadableServlets.put(level, v);
-    }
     
-
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.15 2000/01/15 03:52:57 costin Exp $
- * $Revision: 1.15 $
- * $Date: 2000/01/15 03:52:57 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.16 2000/02/03 07:11:52 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/02/03 07:11:52 $
  *
  * ====================================================================
  *
@@ -104,6 +104,8 @@ public class ServletWrapper {
     protected long lastAccessed;
     protected int serviceCount = 0;
 
+    int loadOnStartup=0;
+    
     ServletWrapper(Context context) {
         this.context = context;
         config = new ServletConfigImpl(context);
@@ -113,6 +115,14 @@ public class ServletWrapper {
 	return context;
     }
 
+    public void setLoadOnStartUp( int level ) {
+	loadOnStartup=level;
+    }
+
+    public int getLoadOnStartUp() {
+	return loadOnStartup;
+    }
+    
     void setReloadable(boolean reloadable) {
 	isReloadable = reloadable;
     }

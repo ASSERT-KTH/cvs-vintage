@@ -75,13 +75,13 @@ import javax.servlet.http.*;
  *
  * @author costin@dnt.ro
  */
-public class DefaultContextSetter implements ContextInterceptor {
+public class DefaultContextSetter extends BaseContextInterceptor implements ContextInterceptor {
 
     public DefaultContextSetter() {
     }
 
     // sets: engineHeader, requestSecurityProvider, workDir, sessionManager, classPath, libPath
-    public int handleContextInit(Context ctx) {
+    public int contextInit(Context ctx) {
 	setEngineHeader( ctx );
 
 	if( ctx.getWorkDir() == null)
@@ -101,7 +101,7 @@ public class DefaultContextSetter implements ContextInterceptor {
 	return OK;
     }
 
-    public int handleContextShutdown(Context ctx) {
+    public int contextShutdown(Context ctx) {
 	return OK;
     }
     // -------------------- implementation

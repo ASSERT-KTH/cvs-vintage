@@ -149,8 +149,6 @@ public class Context {
     private Hashtable prefixMappedServlets = new Hashtable();
     private Hashtable extensionMappedServlets = new Hashtable();
     private Hashtable pathMappedServlets = new Hashtable();
-    // servlets loaded on startup( String->ServletWrapper )
-    private Hashtable loadableServlets = new Hashtable();
 
     int debug=0;
     
@@ -351,76 +349,28 @@ public class Context {
 	t.printStackTrace(System.err);
     }
 
+    /**
+     * 
+     */
     String getRealPath( String path) {
-        String realPath = null;
+	//	Real Path is the same as PathTranslated for a new request
+	
+	Context base=this; // contextM.getContext("");
+	Request req=contextM.createRequest( base , normPath(path) );
+	contextM.processRequest(req);
+	
+	String mappedPath = req.getMappedPath();
 
-	int i = -1;
- 
-	// norm path
-        while ((i = path.indexOf('\\')) > -1) {
-            String a = path.substring(0, i);
-            String b = "";
- 
-            if (i < path.length() - 1) {
-                b = path.substring(i + 1);
-            } 
- 
-            path = a + "/" + b;
-        }
- 
-        try {
-            URL url = getResource(path);
+	// XXX workaround - need to fix mapper to return mapped path
+	if( mappedPath == null ) 
+	    mappedPath=req.getPathInfo();
+	if(mappedPath == null )
+	    mappedPath=req.getLookupPath();
+	
+	String realPath= this.getDocBase() + mappedPath;
 
-	    if( debug>0 ) log( "getRealPath( " + path + ")=" + url);
-	    
-            if (url != null) {
-                if (url.getProtocol().equalsIgnoreCase("war")) {
-		    if (isWARExpanded()) {
-		        String spec = url.getFile();
-			
-			if (spec.startsWith("/")) {
-			    spec = spec.substring(1);
-			}
-
-			int separator = spec.indexOf('!');
-			URL warURL = null;
-
-			if (separator > -1) {
-			    warURL = new URL(spec.substring(0, separator++));
-			}
-
-			if (warURL.getProtocol().equalsIgnoreCase("file")) {
-			    String s = getWorkDir() +"/" +
-			        Constants.Context.WARExpandDir + path;
-			    File f = new File(s);
-			    String absPath = f.getAbsolutePath();
- 
-			    // take care of File.getAbsolutePath()
-			    // troubles on jdk1.1.x/win
-
-			    realPath = FileUtil.patch(absPath);
-			} else if (url.getProtocol().equalsIgnoreCase("http")) {
-			    // XXX
-			    // need to support http docBase'd context
-			}
-		    } else {
-                        realPath = url.toString();
-		    }
-		} else if (url.getProtocol().equalsIgnoreCase("http")) {
-                    // XXX
-                    // need to support http docBase'd context
-                } else if (url.getProtocol().equalsIgnoreCase("file")) {
-		    // take care of File.getAbsolutePath() troubles on
-		    // jdk1.1.x/win
-
-	            realPath = FileUtil.patch(url.getFile());
-                }
-
-	    }
-        } catch (Exception e) {
-	    e.printStackTrace();
-        }
-	//Log	System.out.println("Get real path " + path + " = " +realPath);
+	// Probably not needed - it will be used on the local FS
+	realPath = FileUtil.patch(realPath);
 
 	return realPath;
     }
@@ -535,20 +485,16 @@ public class Context {
 	this.initialized = true;
 
 	// Set defaults if not already there
-	new DefaultContextSetter().handleContextInit( this );
+	new DefaultContextSetter().contextInit( this );
 	
 	// set up work dir ( attribute + creation )
-	new WorkDirInterceptor().handleContextInit( this );
-
-	// XXX who uses servletBase ???
-	URL servletBase = getDocumentBase();
-        this.setServletBase(servletBase);
+	new WorkDirInterceptor().contextInit( this );
 
 	// Read context's web.xml
-	new WebXmlInterceptor().handleContextInit( this );
+	new WebXmlInterceptor().contextInit( this );
 
 	// load initial servlets
-	new LoadOnStartupInterceptor().handleContextInit( this );
+	new LoadOnStartupInterceptor().contextInit( this );
     }
 
     public SessionManager getSessionManager() {
@@ -580,7 +526,7 @@ public class Context {
 
 	getSessionManager().removeSessions(this);
 
-	new WorkDirInterceptor().handleContextShutdown(this);
+	new WorkDirInterceptor().contextShutdown(this);
 	
 	System.out.println("Context: " + this + " down");
     }
@@ -701,42 +647,6 @@ public class Context {
 	return contextFacade;
     }
 
-
-    public Enumeration getInitLevels() {
-	return loadableServlets.keys();
-    }
-
-    public Enumeration getLoadableServlets( Integer level ) {
-	return ((Vector)loadableServlets.get( level )).elements();
-    }
-
-    public void setLoadableServlets( Integer level, Vector servlets ) {
-	loadableServlets.put( level, servlets );
-    }
-
-    public void addLoadableServlet( Integer level,String name ) {
-	Vector v;
-	if( loadableServlets.get(level) != null ) 
-	    v=(Vector)loadableServlets.get(level);
-	else
-	    v=new Vector();
-	
-	v.addElement(name);
-	loadableServlets.put(level, v);
-    }
-    
-
-    // -------------------- From Container
-
-    public URL getServletBase() {
-        return this.servletBase;
-    }
-
-    public void setServletBase(URL servletBase) {
-        this.servletBase = servletBase;
-    }
-
-
     // --------------------
     
     /** Add a jsp to the "pre-defined" list ( used by web.xml )
@@ -795,10 +705,17 @@ public class Context {
     }
 
     public boolean containsJSP(String path) {
-        ServletWrapper[] sw = getServletsByPath(path);
+	Enumeration enum = servlets.keys();
 
-        return (sw != null &&
-	    sw.length > 0);
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
+
+	    if( (sw instanceof JspWrapper ) &&
+		path.equals( ((JspWrapper)sw).getPath()))
+		return true;
+	}
+	return false;
     }
 
     /** Will remove a JSP from the list of "declared" jsps.
@@ -996,52 +913,9 @@ public class Context {
 	servlets.remove(sw.getServletName());
     }
     
-    /** Return servlets with a specified class name
-     */
-    private ServletWrapper[] getServletsByClassName(String name) {
-        Vector servletWrappers = new Vector();
-	Enumeration enum = servlets.keys();
-
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-
-
-            if (sw.getServletClass() != null &&
-                sw.getServletClass().equals(name)) {
-	        servletWrappers.addElement(sw);
-	    }
-	}
-
-	ServletWrapper[] wrappers =
-	    new ServletWrapper[servletWrappers.size()];
-
-	servletWrappers.copyInto((ServletWrapper[])wrappers);
-
-        return wrappers;
+    public Enumeration getServletNames() {
+	return servlets.keys();
     }
-
-    public ServletWrapper[] getServletsByPath(String path) {
-        Vector servletWrappers = new Vector();
-	Enumeration enum = servlets.keys();
-
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-
-	    if( (sw instanceof JspWrapper ) &&
-		path.equals( ((JspWrapper)sw).getPath()))
-	        servletWrappers.addElement(sw);
-	}
-
-	ServletWrapper[] wrappers =
-	    new ServletWrapper[servletWrappers.size()];
-
-	servletWrappers.copyInto((ServletWrapper[])wrappers);
-
-        return wrappers;
-    }
-
 
     // -------------------- Class Loading --------------------
     public ClassLoader getClassLoader() {
@@ -1098,18 +972,37 @@ public class Context {
         return cp;
     }
 
+    /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {
 	debug=level;
     }
 
-    void log( String msg ) {
+    public void log( String msg ) {
 	System.out.println("Context(" + path  + "): " + msg );
     }
     
     public String toString() {
-	return "Ctx(" + path + ")";
+	return "Ctx(" + path + "," + getDocBase() + ")";
 	// + " , " + getDocumentBase() + " ) ";
     }
 
+
+        // XXX Probably not needed, used by getRealPath()
+    private String normPath( String path ) {
+	int i = -1;
+	// norm path
+        while ((i = path.indexOf('\\')) > -1) {
+            String a = path.substring(0, i);
+            String b = "";
+ 
+            if (i < path.length() - 1) {
+                b = path.substring(i + 1);
+            } 
+ 
+            path = a + "/" + b;
+        }
+	return path;
+    }
+    
 
 }

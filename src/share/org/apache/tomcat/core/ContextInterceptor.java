@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.1 2000/01/13 18:20:32 costin Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/13 18:20:32 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.2 2000/02/03 07:11:51 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/03 07:11:51 $
  *
  * ====================================================================
  *
@@ -75,6 +75,16 @@ import javax.servlet.Servlet;
 public interface ContextInterceptor {
     public static final int OK=0;
     
-    public int handleContextInit(Context ctx);
-    public int handleContextShutdown(Context ctx);
+    public int contextInit(Context ctx);
+    
+    public int contextShutdown(Context ctx);
+
+    /** Notify when a new servlet is added
+     */
+    public int addServlet( Context ctx, ServletWrapper sw);
+
+    /** Notify when a servlet is removed from context
+     */
+    public int removeServlet( Context ctx, ServletWrapper sw);
+    
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.4 2000/01/15 23:30:19 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/01/15 23:30:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.5 2000/02/03 07:11:51 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/02/03 07:11:51 $
  *
  * ====================================================================
  * 
@@ -73,6 +73,8 @@ import javax.servlet.*;
 
 /**
  * Default implementation use RequestAdapter to read data.
+ * Works only if you extend RequestImpl and override doRead() -
+ * all other implementations of Request should provide their own Stream
  *
  * @author James Duncan Davidson <duncan@eng.sun.com>
  * @author Jason Hunter <jch@eng.sun.com>
@@ -87,17 +89,17 @@ public class BufferedServletInputStream extends ServletInputStream {
     
     private int bytesRead = 0;
     private int limit = -1;
-    private Request reqA;
+    private RequestImpl reqA;
     
     public BufferedServletInputStream() {
     }
 
     public BufferedServletInputStream( Request reqA ) {
-	this.reqA=reqA;
+	setRequest(reqA);
     }
     
     public void setRequest(Request reqA ) {
-	this.reqA=reqA;
+	this.reqA=(RequestImpl)reqA;
     }
     
     public int doRead() throws IOException {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.3 2000/02/01 07:37:36 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/01 07:37:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.4 2000/02/03 07:11:52 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/03 07:11:52 $
  *
  * ====================================================================
  *
@@ -64,6 +64,7 @@
 
 package org.apache.tomcat.core;
 import javax.servlet.Servlet;
+import java.util.*;
 
 /**
  * For request processing - before calling service() ( or any LifecycleInterceptors )
@@ -72,6 +73,13 @@ import javax.servlet.Servlet;
  */
 public interface RequestInterceptor {
     public static final int OK=0;
+
+    /** Will return the methods fow which this interceptor is interested
+     *  in notification.
+     */
+    public Enumeration getMethods();
+
+
     
     /** Will detect the context path for a request
      */
@@ -81,26 +89,28 @@ public interface RequestInterceptor {
      */
     public int requestMap(Request request);
 
+    /** Called before service method is invoked.
+     */
+    public int preService(Request request, Response response);
+
     /** Called before the first body write, and before sending
      *  the headers. The interceptor have a chance to change the
      *  output headers.
      */
     public int beforeBody( Request request, Response response);
-    
-    /** Security
+        
+    /** Called before the output buffer is commited
      */
-    //    public int authentication(Request request);
-    //    public int authorization(Request request);
+    public int beforeCommit( Request request, Response response);
 
-    /** This handle knows how to guess the session id
-	from a request ( SSL, cookie, rewriting ).
-	Note that the request need
-    */
-    //    public int sessionId(Request request);
+    /** Called after the output stream is closed ( either by servlet
+     *  or automatically at end of service )
+     */
+    public int afterBody( Request request, Response response);
 
-    //    public int preService(Request request);
-    //    public int postService(Request request);
-
-    //    public int log(Request request);
+    /** Called after service method ends. Log is a particular case
+     */
+    public int postService(Request request, Response response);
 
 }
+

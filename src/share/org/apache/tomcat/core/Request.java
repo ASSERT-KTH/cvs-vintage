@@ -87,6 +87,7 @@ public interface Request  {
 
     public String getProtocol() ;
 
+    // -------------------- Connection information
     public String getServerName() ;
 
     public void setServerName(String serverName) ;
@@ -95,6 +96,9 @@ public interface Request  {
         
     public String getRemoteAddr() ;
 
+    /** Expensive - should be implemented as a callback where
+     *  possible!
+    */
     public String getRemoteHost() ;
 
     // -------------------- Headers -------------------- 
@@ -124,36 +128,45 @@ public interface Request  {
     public String getCharacterEncoding() ;
 
     // -------------------- Mapping --------------------
-    // Will be set by mappers
-    
+    // Will be set by mappers or 
+    // by adapter
+
+    /** Context - will be set by contextMap stage of request interceptors
+     */
     public void setContext(Context context) ;
 
     public Context getContext() ;
 
-    public String getContextPath();
-
-    public String getServletName();
-
-    // Hints - will be set by Interceptors if not set
-    // by adapter
-    public String getLookupPath() ;
-
+    /** Everything after context path ( servletPath + pathInfo + queryInfo )
+     */
     public void setLookupPath( String l ) ;
 
+    public String getLookupPath() ;
+
+    /** Real Path - should be implemented as a callback ( override it in adapters).
+     *  Map interceptor should set it to something reasonable ( context home + path )
+     *  MappedPath is similar - it contain mappings inside a context, for normal
+     *      contexts pathTranslated==context.docBase + mappedPath
+     */
     String getPathTranslated() ;
 
+    void setPathTranslated(String path) ;
+
+    /** Path Info - set be mappers or from adapter
+     */
     public String getPathInfo() ;
 
     public void setPathInfo(String pathInfo) ;
-    
+
+    /** Servlet Path
+     */
     public void setServletPath(String servletPath) ;
 
     public String getServletPath() ;
 
-    public String getResolvedServlet() ;
-
-    public void setResolvedServlet(String rs ) ;
-
+    /** Wrapper - the servlet that will execute the request
+     *  Similar with "handler" in Apache.
+     */
     public ServletWrapper getWrapper() ;
     
     public void setWrapper(ServletWrapper handler) ;
@@ -164,10 +177,6 @@ public interface Request  {
     public String getMappedPath() ;
 
     public void setMappedPath( String m ) ;
-
-    public String getResourceName() ;
-
-    public void setResourceName( String m ) ;
 
     // -------------------- Security --------------------
     // Will be set by security interceptors
@@ -216,9 +225,6 @@ public interface Request  {
 
     public Enumeration getParameterNames() ;
 
-    Hashtable getParametersCopy() ;
-
-    
     // -------------------- Attributes --------------------
     public Object getAttribute(String name) ;
 
@@ -232,18 +238,6 @@ public interface Request  {
     public BufferedReader getReader() 	throws IOException;
 
     public ServletInputStream getInputStream() 	throws IOException;
-
-    /** Fill in the buffer. This method is probably easier to implement than
-	previous.
-	This method should only be called from SerlvetInputStream implementations.
-	No need to implement it if your adapter implements ServletInputStream.
-     */
-    public  int doRead( byte b[], int off, int len ) throws IOException;
-
-    // XXX I hate this - but the only way to remove this method from the
-    // inteface is to implement it on top of doRead(b[]).
-    // Don't use this method if you can ( it is bad for performance !!)
-    public int doRead() throws IOException;
 
     // -------------------- Internal methods --------------------
     /** Support for "pools"

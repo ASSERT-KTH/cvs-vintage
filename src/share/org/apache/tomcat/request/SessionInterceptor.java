@@ -77,9 +77,11 @@ import javax.servlet.http.*;
  * add new interceptors for other methods.
  * 
  */
-public class SessionInterceptor implements RequestInterceptor {
+public class SessionInterceptor extends  BaseInterceptor implements RequestInterceptor {
     
     public SessionInterceptor() {
+	methods.addElement("requestMap");
+	methods.addElement("beforeBody");
     }
 	
     public int requestMap(Request request ) {

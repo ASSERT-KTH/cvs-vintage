@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.5 2000/02/01 07:37:39 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/01 07:37:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpResponseAdapter.java,v 1.6 2000/02/03 07:11:55 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/03 07:11:55 $
  *
  * ====================================================================
  *
@@ -113,14 +113,17 @@ public class HttpResponseAdapter extends  ResponseImpl {
 	Enumeration e = headers.names();
 	while (e.hasMoreElements()) {
 	    String name = (String)e.nextElement();
-	    String value = headers.getHeader(name);
-	    headersSB.setLength(0);
-	    headersSB.append(name).append(": ").append(value).append("\r\n");
-	    try {
-		sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
-	    } catch( IOException ex ) {
-		ex.printStackTrace();
-		//XXX mark the error - should abandon everything 
+	    String values[] = headers.getHeaders(name);
+	    for( int i=0; i< values.length; i++ ) {
+		String value=values[i];
+		headersSB.setLength(0);
+		headersSB.append(name).append(": ").append(value).append("\r\n");
+		try {
+		    sout.write( headersSB.toString().getBytes(Constants.CharacterEncoding.Default) );
+		} catch( IOException ex ) {
+		    ex.printStackTrace();
+		    //XXX mark the error - should abandon everything 
+		}
 	    }
 	}
 	sout.write( CRLF, 0, 2 );

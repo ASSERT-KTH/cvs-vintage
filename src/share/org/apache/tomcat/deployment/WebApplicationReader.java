@@ -814,34 +814,11 @@ public class WebApplicationReader {
 	    // XXX ugly, but outside of context - the whole thing will be
 	    // rewriten, so don't worry
 	    
-	    // if the resource was already defined, override with the new definition
-	    // XXX I have very little ideea about what it does !
-	    if (removeResource) {
-
-	        Enumeration levels = ctx.getInitLevels();
-
-		while (levels.hasMoreElements()) {
-		    Integer level = (Integer)levels.nextElement();
-		    Enumeration servletsOnLevel=ctx.getLoadableServlets( level );
-		    
-		    Vector buf = new Vector();
-		    while (servletsOnLevel.hasMoreElements()) {
-		        String servletName = (String)servletsOnLevel.nextElement();
-
-			if (ctx.containsServletByName(servletName)) {
-			    buf.addElement(servletName);
-			}
-		    }
-		    ctx.setLoadableServlets(level, buf);
-		}
-	    }
-	    
 	    int loadOnStartUp = webComponentDescriptor.getLoadOnStartUp();
 
             if (loadOnStartUp > Integer.MIN_VALUE) {
-	        Integer key = new Integer(loadOnStartUp);
-		ctx.addLoadableServlet( key, name );
-		
+		ServletWrapper swrap=ctx.getServletByName(name);
+		swrap.setLoadOnStartUp( loadOnStartUp );
 	    }
 
 	    Enumeration enum =

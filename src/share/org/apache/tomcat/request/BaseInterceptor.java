@@ -58,10 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.context;
+package org.apache.tomcat.request;
 
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.deployment.*;
 import java.io.*;
@@ -69,113 +68,46 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
 
-
 /**
- * Interceptor that loads the "load-on-startup" servlets
- *
- * @author costin@dnt.ro
  */
-public class LoadOnStartupInterceptor extends BaseContextInterceptor  implements ContextInterceptor {
-    private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
+public class BaseInterceptor implements RequestInterceptor {
     
-    public LoadOnStartupInterceptor() {
+    protected Vector methods=new Vector();
+    
+    public BaseInterceptor() {
     }
 	
-    public int contextInit(Context ctx) {
-	init(ctx);
-	Vector orderedKeys = new Vector();
-	Enumeration e=getInitLevels();
-		
-	// order keys
-	while (e.hasMoreElements()) {
-	    Integer key = (Integer)e.nextElement();
-	    int slot = -1;
-	    for (int i = 0; i < orderedKeys.size(); i++) {
-	        if (key.intValue() <
-		    ((Integer)(orderedKeys.elementAt(i))).intValue()) {
-		    slot = i;
-		    break;
-		}
-	    }
-	    if (slot > -1) {
-	        orderedKeys.insertElementAt(key, slot);
-	    } else {
-	        orderedKeys.addElement(key);
-	    }
-	}
-
-	// loaded ordered servlets
-
-	// Priorities IMO, should start with 0.
-	// Only System Servlets should be at 0 and rest of the
-	// servlets should be +ve integers.
-	// WARNING: Please do not change this without talking to:
-	// harishp@eng.sun.com (J2EE impact)
-
-	for (int i = 0; i < orderedKeys.size(); i ++) {
-	    Integer key = (Integer)orderedKeys.elementAt(i);
-
-	    Enumeration sOnLevel = getLoadableServlets( key );
-
-	    while (sOnLevel.hasMoreElements()) {
-		String servletName = (String)sOnLevel.nextElement();
-		ServletWrapper  result = ctx.getServletByName(servletName);
-
-		ctx.log("Loading " + key + " "  + servletName );
-		if(result==null)
-		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
-		else {
-		    try {
-			result.loadServlet();
-		    } catch (Exception ee) {
-			String msg = sm.getString("context.loadServlet.e",
-						  servletName);
-			System.out.println(msg);
-		    } 
-		}
-	    }
-	}
-	return OK;
+    public int requestMap(Request request ) {
+	return 0;
     }
 
-    // -------------------- 
-    // Old logic from Context - probably something cleaner can replace it.
-
-    private Hashtable loadableServlets = new Hashtable();
-
-    void init(Context ctx) {
-	Enumeration enum=ctx.getServletNames();
-	while(enum.hasMoreElements()) {
-	    String name=(String)enum.nextElement();
-	    ServletWrapper sw=ctx.getServletByName( name );
-	    int i=sw.getLoadOnStartUp();
-	    if( i!= 0)
-		addLoadableServlet( new Integer(i), name );
-	}
-    }
-    
-    Enumeration getInitLevels() {
-	return loadableServlets.keys();
+    public int contextMap( Request rrequest ) {
+	return 0;
     }
 
-    Enumeration getLoadableServlets( Integer level ) {
-	return ((Vector)loadableServlets.get( level )).elements();
+    public int preService(Request request, Response response) {
+	return 0;
     }
 
-    void setLoadableServlets( Integer level, Vector servlets ) {
-	loadableServlets.put( level, servlets );
+    public int beforeBody( Request rrequest, Response response ) {
+	return 0;
     }
 
-    void addLoadableServlet( Integer level,String name ) {
-	Vector v;
-	if( loadableServlets.get(level) != null ) 
-	    v=(Vector)loadableServlets.get(level);
-	else
-	    v=new Vector();
-	
-	v.addElement(name);
-	loadableServlets.put(level, v);
+    public int beforeCommit( Request request, Response response) {
+	return 0;
     }
-    
+
+
+    public int afterBody( Request request, Response response) {
+	return 0;
+    }
+
+    public int postService(Request request, Response response) {
+	return 0;
+    }
+
+    public Enumeration getMethods() {
+	return methods.elements();
+    }
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.12 2000/02/03 02:13:13 mandar Exp $
- * $Revision: 1.12 $
- * $Date: 2000/02/03 02:13:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.13 2000/02/03 07:11:52 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/02/03 07:11:52 $
  *
  * ====================================================================
  *
@@ -403,7 +403,6 @@ public class ResponseImpl implements Response {
 	return out;
     }
     
-
     /** Write a chunk of bytes. Should be called only from ServletOutputStream implementations,
      *	No need to implement it if your adapter implements ServletOutputStream.
      *  Headers and status will be written before this method is exceuted.
