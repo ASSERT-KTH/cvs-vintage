@@ -71,6 +71,7 @@ import javax.servlet.http.*;
  * @author Craig R. McClanahan
  * @author costin@dnt.ro
  * @author Gal Shachor shachor@il.ibm.com
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  */
 public interface SessionManager {
 
@@ -114,6 +115,17 @@ public interface SessionManager {
      */
     public HttpSession findSession(String id);
 
+    /**
+     * Return the set of active Sessions associated with this Manager.
+     * If this Manager has no active Sessions, a zero-length array is returned.
+     */
+    public HttpSession[] findSessions();
+
+	/**
+		This method will return a Hashtable of HttpSession
+		objects.
+	*/
+	public Hashtable getSessions();
 
     /** Will mark the session lastAccess time.
      *  Will be called for each request that has a valid sessionId
