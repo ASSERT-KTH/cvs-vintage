@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.11 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: Configuration.java,v 1.12 2003/09/07 18:02:19 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import java.beans.*;
 import java.util.*;
 import java.net.*;
 import org.apache.log4j.*;
+import org.argouml.application.configuration.ConfigurationKeyImpl;
 
 /**
  *   This class provides the core user configuration implementation
@@ -79,7 +80,8 @@ public class Configuration {
     /** Private constructor so it cannot be instantiated.
      */
     private Configuration() {
-	_config = ConfigurationFactory.getInstance().getConfigurationHandler();
+	ConfigurationFactory factory = ConfigurationFactory.getInstance();
+	_config = factory.getConfigurationHandler();
     }
 
     /** Returns the instance of the configuration singleton.
