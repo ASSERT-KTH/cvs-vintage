@@ -19,12 +19,13 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.15 2000/09/12 01:51:48 mulder Exp $
+ * $Id: EJBVerifier11.java,v 1.16 2000/09/24 15:21:50 juha Exp $
  */
 
 
 // standard imports
 import java.util.Iterator;
+import java.util.Arrays;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.lang.reflect.Member;
@@ -58,7 +59,9 @@ import org.jboss.metadata.EntityMetaData;
  * @see     org.jboss.verifier.strategy.AbstractVerifier
  *
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
- * @version $Revision: 1.15 $
+ * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
+ *
+ * @version $Revision: 1.16 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -232,7 +235,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.6
              */
-            Iterator it = getMethods(home);
+            Iterator it = Arrays.asList(home.getMethods()).iterator(); 
 
             while (it.hasNext()) {
 
@@ -339,7 +342,7 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.5
              */
-            Iterator it = getMethods(remote);
+            Iterator it = Arrays.asList(remote.getMethods()).iterator();
 
             while (it.hasNext()) {
 
@@ -381,33 +384,56 @@ public class EJBVerifier11 extends AbstractVerifier {
              *
              * Spec 6.10.5
              */
-            try {
-                String beanName = session.getEjbClass();
-                Class  bean     = classloader.loadClass(beanName);
+            String beanName   = session.getEjbClass();
+            Class  bean       = classloader.loadClass(beanName);
 
-                if (!hasMatchingMethodNames(remote, bean)) {
+            //Iterator iterator = getMethods(remote);
+            Iterator iterator = Arrays.asList(remote.getDeclaredMethods()).iterator();
+            
+            while (iterator.hasNext()) {
+                
+                Method remoteMethod  = (Method)iterator.next();
+                //Class[] remoteParams = remoteMethod.getParameterTypes();
+                
+//                try {
+                    //String remoteName = remoteMethod.getName();
+                    
+                    if (!hasMatchingMethod(bean, remoteMethod)) {
+  
+                        fireSpecViolationEvent(session, new Section("6.10.5.e"));
 
-                    fireSpecViolationEvent(session, new Section("6.10.5.e"));
-
-                    status = false;
+                        status = false;
+                    }                                            
+//                    Method beanMethod       = bean.getMethod(remoteMethodName, remoteParams);
+                
+                if (hasMatchingMethod(bean, remoteMethod)) {
+                    
+                    try {
+                    Method beanMethod = bean.getMethod(remoteMethod.getName(), remoteMethod.getParameterTypes());
+                    
+                    if (!hasMatchingReturnType(remoteMethod, beanMethod)) {
+                        
+                        fireSpecViolationEvent(session, new Section("6.10.5.f"));
+                        
+                        status = false;
+                    }
+                    
+                    if (!hasMatchingExceptions(remoteMethod, beanMethod)) {
+                        
+                        fireSpecViolationEvent(session, new Section("6.10.5.g"));
+                        
+                        status = false;
+                    }
+                    } catch (NoSuchMethodException ignored) {}
                 }
-
-                if (!hasMatchingMethodArgs(remote, bean)) {
-
-                    fireSpecViolationEvent(session, new Section("6.10.5.f"));
-
-                    status = false;
-                }
-
-                if (!hasMatchingMethodExceptions(remote, bean)) {
-
-                    fireSpecViolationEvent(session, new Section("6.10.5.g"));
-
-                    status = false;
-                }
+//                }
+//                catch (NoSuchMethodException e) {
+                    
+                    //fireSpecViolationEvent(session, new Section("6.10.5.e"));
+                    
+//                    status = false;
+//                }
             }
-
-            catch (ClassNotFoundException ignored) {}
 
         }
         catch (ClassNotFoundException e) {
@@ -662,8 +688,158 @@ public class EJBVerifier11 extends AbstractVerifier {
         try {
             Class home = classloader.loadClass(name);
 
+            /*
+             * Entity bean's home interface MUST extend the javax.ejb.EJBHome
+             * interface.
+             *
+             * Spec 9.2.8
+             */
+            if (!hasEJBHomeInterface(home)) {
+                
+                fireSpecViolationEvent(entity, new Section("9.2.8.a"));
+                
+                status = false;
+            }
+            
+            /*
+             * The methods defined in the entity bean's home interface MUST 
+             * have valid RMI-IIOP argument types.
+             *
+             * The methods defined in the entity bean's home interface MUST
+             * have valid RMI-IIOP return types.
+             *
+             * The methods defined in the entity bean's home interface MUST
+             * have java.rmi.RemoteException in their throws clause.
+             *
+             * Spec 9.2.8
+             */
+            Iterator homeMethods = Arrays.asList(home.getMethods()).iterator(); 
 
+            while (homeMethods.hasNext()) {
 
+                Method method = (Method)homeMethods.next();
+
+                if (!hasLegalRMIIIOPArguments(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.8.b"));
+
+                    status = false;
+                }
+
+                if (!hasLegalRMIIIOPReturnType(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.8.c"));
+
+                    status = false;
+                }
+
+                if (!throwsRemoteException(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.8.d"));
+
+                    status = false;
+                }
+            }
+
+            /*
+             * Each method defined in the entity bean's home interface must be
+             * one of the following:
+             *
+             *    - a create method
+             *    - a finder method
+             *
+             * Spec 9.2.8
+             */
+            homeMethods = Arrays.asList(home.getMethods()).iterator(); 
+
+            while (homeMethods.hasNext()) {
+
+                Method method = (Method)homeMethods.next();
+
+                // Do not check the methods of the javax.ejb.EJBHome interface
+                if (method.getDeclaringClass().getName().equals(EJB_HOME_INTERFACE))
+                    continue;
+                    
+                if (! (isCreateMethod(method) || isFinderMethod(method)) ) {
+                    
+                    fireSpecViolationEvent(entity, new Section("9.2.8.e"));
+                    
+                    status = false;
+                }
+            }
+            
+            /*
+             * Each create(...) method in the entity bean's home interface MUST
+             * have a matching ejbCreate(...) method in the entity bean's class.
+             *
+             * Each create(...) method in the entity bean's home interface MUST
+             * have the same number and types of arguments to its matching
+             * ejbCreate(...) method.
+             *
+             * The return type for a create(...) method MUST be the entity
+             * bean's remote interface type.
+             *
+             * All the exceptions defined in the throws clause of the matching
+             * ejbCreate(...) and ejbPostCreate(...) methods of the enterprise
+             * bean class MUST be included in the throws clause of a matching
+             * create(...) method.
+             *
+             * The throws clause of a create(...) method MUST include the
+             * javax.ejb.CreateException.
+             *
+             * Spec 9.2.8
+             */
+            Iterator createMethods = getCreateMethods(home);
+            
+            try {
+                String beanClass   = entity.getEjbClass();
+                Class  bean        = classloader.loadClass(beanClass);
+                
+                while (createMethods.hasNext()) {
+                    
+                    Method create = (Method)createMethods.next();
+                    
+                    if (!hasMatchingEJBCreate(bean, create)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.8.f"));
+                        
+                        status = false;
+                    }
+                    
+                    if (!hasRemoteReturnType(entity, create)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.8.g"));
+                        
+                        status = false;
+                    }
+                    
+                    if (hasMatchingEJBCreate(bean, create)     && 
+                        hasMatchingEJBPostCreate(bean, create)) {
+                    
+                        Method ejbCreate     = getMatchingEJBCreate(bean, create);
+                        Method ejbPostCreate = getMatchingEJBPostCreate(bean, create);
+                        
+                        if ( !(hasMatchingExceptions(ejbCreate, create)     &&
+                               hasMatchingExceptions(ejbPostCreate, create)) ) {
+                                   
+                            fireSpecViolationEvent(entity, new Section("9.2.8.h"));
+                        }
+                    }
+                    
+                    if (!throwsCreateException(create)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.8.i"));
+                        
+                        status = false;
+                    }
+                }
+            }
+            catch (ClassNotFoundException ignored) {}
+            
+           
+            /* [TODO]   finders   */
+            
+            
         }
         catch (ClassNotFoundException e) {
 
@@ -679,7 +855,6 @@ public class EJBVerifier11 extends AbstractVerifier {
         }
 
         return status;
-
     }
 
 
@@ -703,9 +878,122 @@ public class EJBVerifier11 extends AbstractVerifier {
 
 
         try {
-            Class home = classloader.loadClass(name);
+            Class remote = classloader.loadClass(name);
 
+            /*
+             * Entity bean's remote interface MUST extend
+             * the javax.ejb.EJBObject interface.
+             *
+             * Spec 9.2.7
+             */
+            if (!hasEJBObjectInterface(remote)) {
+                
+                fireSpecViolationEvent(entity, new Section("9.2.7.a"));
+                
+                status = false;
+            }
+            
+            /*
+             * The methods defined in the entity bean's remote interface MUST 
+             * have valid RMI-IIOP argument types.
+             *
+             * The methods defined in the entity bean's home interface MUST
+             * have valid RMI-IIOP return types.
+             *
+             * The methods defined in the entity bean's home interface MUST
+             * have java.rmi.RemoteException in their throws clause.
+             *
+             * Spec 9.2.7
+             */
+            Iterator remoteMethods = Arrays.asList(remote.getMethods()).iterator(); 
 
+            while (remoteMethods.hasNext()) {
+
+                Method method = (Method)remoteMethods.next();
+
+                if (!hasLegalRMIIIOPArguments(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.7.b"));
+
+                    status = false;
+                }
+
+                if (!hasLegalRMIIIOPReturnType(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.7.c"));
+
+                    status = false;
+                }
+
+                if (!throwsRemoteException(method)) {
+
+                    fireSpecViolationEvent(entity, new Section("9.2.7.d"));
+
+                    status = false;
+                }
+            }
+
+            /*
+             * For each method defined in the remote interface, there MUST be
+             * a matching method in the entity bean's class. The matching
+             * method MUST have:
+             *
+             *     - The same name.
+             *     - The same number and types of its arguments.
+             *     - The same return type.
+             *     - All the exceptions defined in the throws clause of the
+             *       matching method of the enterprise Bean class must be
+             *       defined in the throws clause of the method of the remote
+             *       interface.
+             *
+             * Spec 9.2.7
+             */
+            remoteMethods = Arrays.asList(remote.getMethods()).iterator(); 
+
+            try {
+                String beanClass   = entity.getEjbClass();
+                Class  bean        = classloader.loadClass(beanClass);
+
+                while (remoteMethods.hasNext()) {
+                    
+                    Method method = (Method)remoteMethods.next();
+
+                    // Do not check the methods of the javax.ejb.EJBObject interface
+                    if (method.getDeclaringClass().getName().equals(EJB_OBJECT_INTERFACE))
+                        continue;
+                        
+                    if (!hasMatchingMethod(bean, method)) {
+                        
+                        fireSpecViolationEvent(entity, new Section("9.2.7.e"));
+
+                        status = false;
+                    }
+                    
+                    if (hasMatchingMethod(bean, method)) {
+                        
+                        try {
+                            Method beanMethod = bean.getMethod(method.getName(), method.getParameterTypes());
+                        
+                            if (!hasMatchingReturnType(beanMethod, method)) {
+                                
+                                fireSpecViolationEvent(entity, new Section("9.2.7.f"));
+                                
+                                status = false;
+                            }
+                            
+                            if (!hasMatchingExceptions(beanMethod, method)) {
+                                
+                                fireSpecViolationEvent(entity, new Section("9.2.7.g"));
+                                
+                                status = false;
+                            }
+                        }
+                        catch (NoSuchMethodException ignored) {}
+                    }
+                }
+            }
+            catch (ClassNotFoundException ignored) {}
+            
         }
         catch (ClassNotFoundException e) {
 
@@ -944,10 +1232,6 @@ public class EJBVerifier11 extends AbstractVerifier {
              * Spec 9.2.5
              */
             if (entity.isBMP() && (!hasEJBFindByPrimaryKey(bean))) {
-                /* Even though the spec states that all entities must have the
-                 * ejbFindByPrimaryKey() implementation, we only check BMP.
-                 * For CMP it is the responsibility of the container to
-                 * provide the implementation. */
 
                 fireSpecViolationEvent(entity, new Section("9.2.5.a"));
 
