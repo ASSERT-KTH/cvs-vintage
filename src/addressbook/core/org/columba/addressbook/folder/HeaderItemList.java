@@ -63,7 +63,7 @@ public class HeaderItemList {
 	public void replace(int index, HeaderItem item) {
 		if ((index < list.size()) && (index >= 0)) {
 			list.remove(index);
-			list.set(index, item);
+			list.add(index, item);
 		}
 	}
 
