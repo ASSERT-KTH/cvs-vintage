@@ -143,14 +143,29 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		builder.add(toButton, cc.xy(1, 1));
 		builder.add(ccButton, cc.xy(3, 1));
 		builder.add(bccButton, cc.xy(5, 1));
+		
+		return panel;
+	}
+	private JPanel createRemoveButtonPanel() {
+		JPanel panel = new JPanel();
+		FormLayout layout = new FormLayout(
+				"fill:default:grow, 6px, fill:default:grow, 6px, fill:default:grow", //$NON-NLS-1$
+				"default"); //$NON-NLS-1$
 
+		PanelBuilder builder = new PanelBuilder(panel, layout);
+		CellConstraints cc = new CellConstraints();
+
+		builder.add(toRemoveButton, cc.xy(1, 1));
+		builder.add(ccRemoveButton, cc.xy(3, 1));
+		builder.add(bccRemoveButton, cc.xy(5, 1));
+		
 		return panel;
 	}
 
 	private JPanel createAddressbookPanel() {
 		JPanel panel = new JPanel();
 		FormLayout layout = new FormLayout("default, 6px, fill:default:grow", //$NON-NLS-1$
-				"default, 12px, fill:default:grow, 6px, default"); //$NON-NLS-1$
+				"default, 12px, fill:default:grow, 6px, default, 6px, default"); //$NON-NLS-1$
 
 		PanelBuilder builder = new PanelBuilder(panel, layout);
 		CellConstraints cc = new CellConstraints();
@@ -159,6 +174,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		builder.add(chooseButton, cc.xy(3, 1));
 		builder.add(new JScrollPane(addressbook), cc.xywh(1, 3, 3, 1));
 		builder.add(createButtonPanel(), cc.xywh(1, 5, 3, 1));
+		builder.add(createRemoveButtonPanel(), cc.xywh(1, 7, 3, 1));
 
 		return panel;
 	}
@@ -244,32 +260,32 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		bccList.setMinimumSize(new Dimension(150, 150));
 
 		toButton = new JButton(AddressbookResourceLoader.getString("dialog",
-				"selectaddressdialog", "left_arrow_to")); //$NON-NLS-1$
+				"selectaddressdialog", "right_arrow_to")); //$NON-NLS-1$
 		toButton.addActionListener(this);
 		toButton.setActionCommand("TO"); //$NON-NLS-1$
 
 		toRemoveButton = new JButton(AddressbookResourceLoader.getString(
-				"dialog", "selectaddressdialog", "right_arrow_to")); //$NON-NLS-1$
+				"dialog", "selectaddressdialog", "left_arrow_to")); //$NON-NLS-1$
 		toRemoveButton.addActionListener(this);
 		toRemoveButton.setActionCommand("TO_REMOVE"); //$NON-NLS-1$
 
 		ccButton = new JButton(AddressbookResourceLoader.getString("dialog",
-				"selectaddressdialog", "left_arrow_cc")); //$NON-NLS-1$
+				"selectaddressdialog", "right_arrow_cc")); //$NON-NLS-1$
 		ccButton.addActionListener(this);
 		ccButton.setActionCommand("CC"); //$NON-NLS-1$
 
 		ccRemoveButton = new JButton(AddressbookResourceLoader.getString(
-				"dialog", "selectaddressdialog", "right_arrow_cc")); //$NON-NLS-1$
+				"dialog", "selectaddressdialog", "left_arrow_cc")); //$NON-NLS-1$
 		ccRemoveButton.addActionListener(this);
 		ccRemoveButton.setActionCommand("CC_REMOVE"); //$NON-NLS-1$
 
 		bccButton = new JButton(AddressbookResourceLoader.getString("dialog",
-				"selectaddressdialog", "left_arrow_bcc")); //$NON-NLS-1$
+				"selectaddressdialog", "right_arrow_bcc")); //$NON-NLS-1$
 		bccButton.addActionListener(this);
 		bccButton.setActionCommand("BCC"); //$NON-NLS-1$
 
 		bccRemoveButton = new JButton(AddressbookResourceLoader.getString(
-				"dialog", "selectaddressdialog", "right_arrow_bcc")); //$NON-NLS-1$
+				"dialog", "selectaddressdialog", "left_arrow_bcc")); //$NON-NLS-1$
 		bccRemoveButton.addActionListener(this);
 		bccRemoveButton.setActionCommand("BCC_REMOVE"); //$NON-NLS-1$
 
@@ -282,7 +298,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener {
 		chooseButton.addActionListener(this);
 
 		addressbook = new AddressbookDNDListView();
-		addressbook.setMinimumSize(new Dimension(150, 200));
+		addressbook.setMinimumSize(new Dimension(450, 200));
 		addressbook.setAcceptDrop(false);
 
 		okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
