@@ -40,7 +40,7 @@ import org.jboss.tm.TransactionManagerService;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class StdServerSession
    implements Runnable, ServerSession
@@ -74,6 +74,9 @@ public class StdServerSession
                     final XASession xaSession)
       throws JMSException
    {
+      // assert pool != null
+      // assert session != null
+      
       this.serverSessionPool = pool;
       this.session = session;
       this.xaSession = xaSession;
