@@ -58,18 +58,19 @@ import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
  * only filter references that need to be filtered. But it is a start.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.2 2001/11/30 20:47:21 jon Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.3 2002/01/18 17:55:20 jon Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler
 {
     public Object referenceInsert(String reference, Object value)
     {
-//    System.out.println ("reference: " + reference);
+    System.out.println ("reference: '" + reference + "' type: '" + value.getClass().getName());
         if (value instanceof String)
         {
             if (!reference.startsWith("$renderer") && 
-                !reference.startsWith("$intake"))
+                !reference.startsWith("$intake") &&
+                !reference.startsWith("$link"))
             {
                 return filter((String)value);
             }

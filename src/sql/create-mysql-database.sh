@@ -6,11 +6,16 @@ POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
 # Sanity check
 if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo "The population script directory:"
-    echo "'${POPULATION_SCRIPT_DIR}'"
+    echo "${POPULATION_SCRIPT_DIR}"
     echo "does not exist. Please build Scarab first using the"
     echo "ant build system as described in the scarab/README.txt file."
     exit 1
 fi
+
+echo ""
+echo "Note: .sql files are located in:"
+echo "${POPULATION_SCRIPT_DIR}"
+echo ""
 
 # Define these values if you need to
 if [ "$1" != "" ] ; then
