@@ -219,7 +219,7 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
         apache_private_data_t *p = s->ws_private;
 
         if(l) {
-            BUFF *bf = p->r->connection->client;
+            // BUFF *bf = p->r->connection->client;
             size_t w = (size_t)l;
             size_t r = 0;
 
@@ -230,7 +230,8 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             }
             
 	        
-            ap_bwrite(bf, (const char *)b, w, &r);
+            //ap_bwrite(bf, (const char *)b, w, &r);
+	    r = ap_bwrite((const char *)b, w, p->r );
             if(w != r) {
 			    return JK_FALSE;
             }
@@ -238,7 +239,8 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
             /*
              * To allow server push.
              */
-            if(ap_bflush(bf) != APR_SUCCESS) {
+	    //            if(ap_bflush(bf) != APR_SUCCESS) {
+            if(ap_rflush(p->r) != APR_SUCCESS) {
                 return JK_FALSE;
             }
         }
@@ -330,10 +332,10 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     if(r->headers_in && ap_table_elts(r->headers_in)) {
-        ap_array_header_t *t = ap_table_elts(r->headers_in);        
+        apr_array_header_t *t = ap_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
-            ap_table_entry_t *elts = (ap_table_entry_t *)t->elts;
+            apr_table_entry_t *elts = (apr_table_entry_t *)t->elts;
             s->num_headers = t->nelts;
             s->headers_names  = ap_palloc(r->pool, sizeof(char *) * t->nelts);
             s->headers_values = ap_palloc(r->pool, sizeof(char *) * t->nelts);
@@ -446,7 +448,7 @@ static const command_rec jk_cmds[] =
 /* The JK module handlers                                                    */
 /* ========================================================================= */
 
-ap_status_t jk_cleanup_endpoint( void *data ) {
+apr_status_t jk_cleanup_endpoint( void *data ) {
     jk_endpoint_t *end = (jk_endpoint_t *)data;    
     /*     printf("XXX jk_cleanup1 %ld\n", data); */
     end->done(&end, NULL);  
@@ -494,8 +496,8 @@ static int jk_handler(request_rec *r)
 		*/
 
 #ifdef REUSE_WORKER
-		ap_pool_t *rpool=r->pool;
-		ap_pool_t *tpool=rpool->parent->parent;
+		apr_pool_t *rpool=r->pool;
+		apr_pool_t *tpool=rpool->parent->parent;
 		
 		ap_get_userdata( &end, "jk_thread_endpoint", tpool );
                 if(end==NULL ) {
@@ -526,7 +528,7 @@ static int jk_handler(request_rec *r)
     return HTTP_INTERNAL_SERVER_ERROR;
 }
 
-static void *create_jk_config(ap_pool_t *p, server_rec *s)
+static void *create_jk_config(apr_pool_t *p, server_rec *s)
 {
     jk_server_conf_t *c =
         (jk_server_conf_t *) ap_pcalloc(p, sizeof(jk_server_conf_t));
@@ -548,7 +550,7 @@ static void *create_jk_config(ap_pool_t *p, server_rec *s)
 }
 
 
-static void *merge_jk_config(ap_pool_t *p, 
+static void *merge_jk_config(apr_pool_t *p, 
                              void *basev, 
                              void *overridesv)
 {
@@ -585,7 +587,7 @@ static void *merge_jk_config(ap_pool_t *p,
     return overrides;
 }
 
-static void jk_child_init(ap_pool_t *pconf, 
+static void jk_child_init(apr_pool_t *pconf, 
 			  server_rec *s)
 {
     char *p = getenv("WAS_BORN_BY_APACHE");
@@ -619,9 +621,9 @@ static void jk_child_init(ap_pool_t *pconf,
     jk_error_exit(APLOG_MARK, APLOG_EMERG, s, "Error while opening the workers");
 }
 
-static void jk_post_config(ap_pool_t *pconf, 
-                           ap_pool_t *plog, 
-                           ap_pool_t *ptemp, 
+static void jk_post_config(apr_pool_t *pconf, 
+                           apr_pool_t *plog, 
+                           apr_pool_t *ptemp, 
                            server_rec *s)
 {
     if(!s->is_virtual) {
