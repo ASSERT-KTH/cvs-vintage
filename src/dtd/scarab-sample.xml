@@ -38,17 +38,58 @@ ID_CODE, not the primary key column.
         <code>TBNS</code>
         <issue id="101">
             <artifact-type>Defect</artifact-type>
-            <committed-by>jon@latchkey.com</committed-by>
-            <issue-attribute>
-                <name>Status</name>
-                <value>New</value>
-                <type>combo-box</type>
-            </issue-attribute>
-            <issue-attribute>
-                <name>Priority</name>
-                <value>High</value>
-                <type>combo-box</type>
-            </issue-attribute>
+
+            <transaction id="5">
+                <type>Create Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value>New</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS101 had attribute Status set to New
+                    </description>
+                </activity>
+                <activity>
+                    <attribute>
+                        <name>Priority</name>
+                        <value>High</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS101 had attribute Priority set to High
+                    </description>
+                </activity>
+            </transaction>
+
+            <transaction id="7">
+                <type>Edit Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
+                <activity>
+                    <attribute>
+                        <name>Priority</name>
+                        <value>Low</value>
+                        <old-value>High</old-value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS101 had attribute Priority set to Low
+                    </description>
+                </activity>
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value>unconfirmed</value>
+                        <old-value>New</old-value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS101 had attribute Status set to unconfirmed
+                    </description>
+                </activity>
+            </transaction>
 
             <dependency>
                 <type>non-blocking</type>
@@ -71,66 +112,66 @@ ID_CODE, not the primary key column.
                 <created-by>jon@latchkey.com</created-by>
                 <modified-by>jon@latchkey.com</modified-by>
             </attachment>
-
-            <transaction id="7">
-                <type>Edit Issue</type>
-                <committed-by>jon@latchkey.com</committed-by>
-                <activity>
-                    <activity-attribute>
-                        <name>Priority</name>
-                        <value>High</value>
-                        <old-value>NULL</old-value>
-                        <type>combo-box</type>
-                    </activity-attribute>
-                    <description>
-                        Issue TBNS101 had attribute Priority set to high
-                    </description>
-                </activity>
-                <activity>
-                    <activity-attribute>
-                        <name>Status</name>
-                        <value>unconfirmed</value>
-                        <old-value>NULL</old-value>
-                        <type>combo-box</type>
-                    </activity-attribute>
-                    <description>
-                        Issue TBNS101 had attribute Status set to 
-                        unconfirmed
-                    </description>
-                </activity>
-            </transaction>
         </issue>
         <issue id="203">
             <artifact-type>Defect</artifact-type>
-            <committed-by>jon@latchkey.com</committed-by>
-            <issue-attribute>
-                <name>Status</name>
-                <value>Closed</value>
-                <type>combo-box</type>
-            </issue-attribute>
-            <issue-attribute>
-                <name>Resolution</name>
-                <value>Fixed</value>
-                <type>combo-box</type>
-            </issue-attribute>
+
+            <transaction id="5">
+                <type>Create Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value>Closed</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS203 had attribute Status set to Closed
+                    </description>
+                </activity>
+                <activity>
+                    <attribute>
+                        <name>Resolution</name>
+                        <value>Fixed</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS203 had attribute Resolution set to Fixed
+                    </description>
+                </activity>
+            </transaction>
+            
             <dependency>
                 <type>non-blocking</type>
                 <parent>TBNS101</parent>
             </dependency>
         </issue>
-         <issue id="304">
+        <issue id="304">
             <artifact-type>Defect</artifact-type>
-            <committed-by>jon@latchkey.com</committed-by>
-            <issue-attribute>
-                <name>Status</name>
-                <value>Closed</value>
-                <type>combo-box</type>
-            </issue-attribute>
-            <issue-attribute>
-                <name>Resolution</name>
-                <value>Fixed</value>
-                <type>combo-box</type>
-            </issue-attribute>
+            <transaction id="100">
+                <type>Create Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value>Closed</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS304 had attribute Status set to Closed
+                    </description>
+                </activity>
+                <activity>
+                    <attribute>
+                        <name>Resolution</name>
+                        <value>Fixed</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS304 had attribute Resolution set to Fixed
+                    </description>
+                </activity>
+            </transaction>
             <dependency>
                 <type>blocking</type>
                 <parent>TBNS101</parent>
@@ -140,21 +181,27 @@ ID_CODE, not the primary key column.
                 <parent>TBNS405</parent>
             </dependency>
         </issue>
-         <issue id="405">
+        <issue id="405">
             <artifact-type>Defect</artifact-type>
-            <committed-by>jon@latchkey.com</committed-by>
-            <issue-attribute>
-                <name>Status</name>
-                <value>Closed</value>
-                <type>combo-box</type>
-            </issue-attribute>
+            <transaction id="101">
+                <type>Create Issue</type>
+                <committed-by>jon@latchkey.com</committed-by>
+                <activity>
+                    <attribute>
+                        <name>Status</name>
+                        <value>Closed</value>
+                        <type>combo-box</type>
+                    </attribute>
+                    <description>
+                        Issue TBNS405 had attribute Status set to Closed
+                    </description>
+                </activity>
+            </transaction>
             <dependency>
                 <type>blocking</type>
                 <child>TBNS304</child>
             </dependency>
-
         </issue>
-
     </module>
 </scarab>
 

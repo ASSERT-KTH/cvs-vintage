@@ -6,10 +6,8 @@
 <!ATTLIST module id CDATA #REQUIRED>
 <!ATTLIST module parent CDATA #REQUIRED>
 
-<!ELEMENT issue (artifact-type, committed-by, issue-attribute+, dependency*, attachment*, transaction?)>
+<!ELEMENT issue (artifact-type, transaction+, dependency*, attachment*)>
 <!ATTLIST issue id CDATA #REQUIRED>
-
-<!ELEMENT issue-attribute (name, value, type)>
 
 <!ELEMENT dependency (type, (child | parent))>
 
@@ -24,25 +22,25 @@
 <!ELEMENT transaction (type, committed-by, activity+)>
 <!ATTLIST transaction id CDATA #REQUIRED>
 
-<!ELEMENT activity (activity-attribute, description)>
+<!ELEMENT activity (attribute, description)>
 
-<!ELEMENT activity-attribute (name, value, old-value, type)>
+<!ELEMENT attribute (name, value, old-value?, type)>
 
 <!ELEMENT firstname (#PCDATA)>
 <!ELEMENT lastname (#PCDATA)>
 <!ELEMENT email (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT artifact-type (#PCDATA)>
-<!ELEMENT committed-by (#PCDATA)>
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT value (#PCDATA)>
 <!ELEMENT type (#PCDATA)>
-<!ELEMENT old-value (#PCDATA)>
 <!ELEMENT child (#PCDATA)>
 <!ELEMENT parent (#PCDATA)>
 <!ELEMENT path (#PCDATA)>
 <!ELEMENT data (#PCDATA)>
 <!ELEMENT mimetype (#PCDATA)>
-<!ELEMENT modified-by (#PCDATA)>
 <!ELEMENT created-by (#PCDATA)>
+<!ELEMENT modified-by (#PCDATA)>
+<!ELEMENT committed-by (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT old-value (#PCDATA)>
