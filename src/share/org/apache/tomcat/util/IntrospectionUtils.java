@@ -83,7 +83,7 @@ public final class IntrospectionUtils {
 		    // if the method is declared in a top level class
 		    // like BaseInterceptor parent is Object, otherwise
 		    // parent is BaseInterceptor or an intermediate class
-		    if( ! "java.jang.Object".
+		    if( ! "java.lang.Object".
 			equals(parentOfDeclaring.getName() )) {
 			return true;
 		    }
