@@ -95,7 +95,7 @@ import org.tigris.scarab.util.word.QueryResult;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.188 2004/11/27 01:11:12 jorgeuriarte Exp $
+ * @version $Id: ReportIssue.java,v 1.189 2004/11/27 19:29:56 jorgeuriarte Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -350,7 +350,6 @@ public class ReportIssue extends RequireLoginFirstAction
                  * If the field has any conditional constraint, will be added to the collection
                  * in the hash.
                  */ 
-                //if (aval.getRModuleAttribute().getRequiredOptionId() != null)
                 List attributeRequirements = aval.getRModuleAttribute().getRAttributeRequirements(); 
                 if (attributeRequirements.size() > 0)
                 {

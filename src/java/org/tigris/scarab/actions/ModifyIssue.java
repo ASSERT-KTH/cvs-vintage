@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.192 2004/11/27 01:11:12 jorgeuriarte Exp $
+ * @version $Id: ModifyIssue.java,v 1.193 2004/11/27 19:29:56 jorgeuriarte Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -180,7 +180,6 @@ public class ModifyIssue extends BaseModifyIssue
                 /**
                  * If the field has any conditional constraint, will be added to the collection for later query.
                  */ 
-                //if (aval.getRModuleAttribute().getRequiredOptionId() != null)
                 List attributeRequirements = aval.getRModuleAttribute().getRAttributeRequirements(); 
                 if (attributeRequirements.size() > 0)
                 {
