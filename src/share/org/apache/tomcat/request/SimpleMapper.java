@@ -293,7 +293,9 @@ public class SimpleMapper extends  BaseInterceptor  {
 	Hashtable mtable=securityConstraints;
 	if( ct.getHandler() != null )
 	    mtable=contextPaths;
-	//	System.out.println("XXX " + path + " " + ctx.getDebug() + " " + ctxP + " " + ct.getHandler() + " " + ct.getRoles());
+
+	if(debug>0) ctx.log("Add mapping/container " + path + " " + ctx.getDebug() + " " + ctxP + " " +
+			    ct.getHandler() + " " + ct.getRoles());
 	
 	Mappings m=(Mappings)mtable.get(ctxP);
 	if( m==null ) {

@@ -90,197 +90,146 @@ public class InvokerServlet extends HttpServlet {
     public void service(HttpServletRequest request,HttpServletResponse response)
 	throws ServletException, IOException
     {
-        String requestPath = request.getRequestURI();
-	String pathInfo = (String)request.getAttribute(
-            Constants.ATTRIBUTE_PathInfo);
+        String requestURI = request.getRequestURI();
+	String includedRequestURI = (String)request.getAttribute("javax.servlet.include.request_uri");
+	boolean inInclude = (includedRequestURI != null);
 
-	if (pathInfo == null) {
+	// it's possible to have include.pathInfo==null and getPathInfo()!= null
+	String pathInfo;
+	if( inInclude)
+	    pathInfo = (String)request.getAttribute("javax.servlet.include.path_info");
+	else
 	    pathInfo = request.getPathInfo();
+
+	String servletPath;
+	if( inInclude )
+	    servletPath=(String)request.getAttribute("javax.servlet.include.servlet_path");
+	else
+	    servletPath=request.getServletPath();
+	
+        if (pathInfo == null || !pathInfo.startsWith("/") ||  pathInfo.length() < 3) {
+	    // theres not enough information here to invoke a servlet
+	    response.sendError(404, "Not enough information " + request.getRequestURI() + " " + pathInfo);
+            return;
 	}
-
-	String includedRequestURI = (String)request.getAttribute(
-	    Constants.ATTRIBUTE_RequestURI);
-	boolean inInclude = false;
-
-	// XXX XXX XXX in the new model we are _never_ inInclude
-	if (includedRequestURI != null) {
-	    inInclude = true;
-	} else {
-	    inInclude = false;
-	}
-
-        String servletName = "";
-        String newServletPath = "";
-        String newPathInfo = "";
-
+	
         // XXX
         // yet another example of substring overkill -- we can do
         // this better....
+	int piLen=pathInfo.length();
+	String servletName = pathInfo.substring(1, piLen );
 
-        if (pathInfo != null &&
-            pathInfo.startsWith("/") &&
-	    pathInfo.length() > 2) {
-            servletName = pathInfo.substring(1, pathInfo.length());
+	if (servletName.indexOf("/") > -1) {
+	    servletName = servletName.substring(0, servletName.indexOf("/"));
+	}
+	
+	String newServletPath = servletPath + "/" + servletName;
+	
+	String newPathInfo;
+	int sNLen=servletName.length();
+	if( piLen > sNLen +1 )
+	    newPathInfo= pathInfo.substring(sNLen + 1 );
+	else
+	    newPathInfo=null;
 
-            if (servletName.indexOf("/") > -1) {
-                servletName =
-		    servletName.substring(0, servletName.indexOf("/"));
-            }
-
-	    if (! inInclude) {
-		newServletPath = request.getServletPath() +
-		    "/" + servletName;
-	    } else {
-		newServletPath = (String)request.getAttribute
-		    (Constants.ATTRIBUTE_ServletPath)  + "/" +
-                    servletName;
-	    }
+	/*
+	  String newPathInfo = "";
+	  // XXX XXX I think it's wrong inInclude..
+	  if (inInclude) {
+	  newPathInfo = includedRequestURI.substring(
+	  newServletPath.length(),
+	  includedRequestURI.length());
+	  } else {
+	  newPathInfo = requestURI.substring(
+	  context.getPath().length() +
+	  newServletPath.length(),
+	  requestURI.length());
+	  }
+	*/
 	    
-            // XXX
-            // oh, very sloppy here just catching the exception... Do
-            // this for real...
-
-            try {
-		if (inInclude) {
-		    newPathInfo = includedRequestURI.substring(
-			newServletPath.length(),
-			includedRequestURI.length());
-		} else {
-		    newPathInfo = requestPath.substring(
-			context.getPath().length() +
-			    newServletPath.length(),
-			requestPath.length());
-		}
-		
-		int i = newPathInfo.indexOf("?");
-
-		if (i > -1) {
-		    newPathInfo = newPathInfo.substring(0, i);
-		}
-
-		if (newPathInfo.length() < 1) {
-		    newPathInfo = null;
-		}
-            } catch (Exception e) {
-                newPathInfo = null;
-            }
-	} else {
-            // theres not enough information here to invoke a servlet
-            doError(response,"Not enough information " + request.getRequestURI() + " " + pathInfo);
-
-            return;
-        }
+	// RequestURI doesn't include QUERY - no need for that
+	/* int i = newPathInfo.indexOf("?");
+	   if (i > -1) {
+	   newPathInfo = newPathInfo.substring(0, i);
+	   }
+	*/
 
         // try the easy one -- lookup by name
         ServletWrapper wrapper = context.getServletByName(servletName);
-	//	System.out.println("Invoker: getServletByName " + servletName + "=" + wrapper);
 
         if (wrapper == null) {
-	    // Moved loadServlet here //loadServlet(servletName);
-	    wrapper = new ServletWrapper();
-	    wrapper.setContext(context);
-	    wrapper.setServletClass(servletName);
-	    wrapper.setServletName(servletName); // XXX it can create a conflict !
-
+	    // XXX Check if the wrapper is valid -
+	    
+	    
+	    // even if the server doesn't supports dynamic mappings,
+	    // we'll avoid the interceptor for include() and
+	    // it's a much cleaner way to construct the servlet and
+	    // make sure all interceptors are up to date.
 	    try {
-		context.addServlet( wrapper );
-	    } catch(TomcatException ex ) {
+		context.addServletMapping( newServletPath , servletName );
+		wrapper = context.getServletByName( servletName);
+		wrapper.setOrigin( ServletWrapper.ORIGIN_INVOKER );
+	    } catch( TomcatException ex ) {
 		ex.printStackTrace();
+		response.sendError(505, "Error getting the servlet " + ex);
+		return;
 	    }
 
-	    // XXX add mapping - if the engine supports dynamic changes in mappings,
-	    // we'll avoid the extra parsing in Invoker !!!
-
-	    // XXX Invoker can be avoided easily - it's a special mapping, easy to
-	    // support
+	    /* Original code - rollback if anything is broken ( it shouldn't )
+	       // Moved loadServlet here //loadServlet(servletName);
+	       wrapper = new ServletWrapper();
+	       wrapper.setContext(context);
+	       wrapper.setServletClass(servletName);
+	       wrapper.setServletName(servletName); // XXX it can create a conflict !
+	       
+	       try {
+	       context.addServlet( wrapper );
+	       } catch(TomcatException ex ) {
+	       ex.printStackTrace();
+	       }
+	    */
         }
 
-	// System.out.println("CL: " + context.getServletLoader().getClassLoader() +
-	//	   " wrapper: " + wrapper);
-	
-
-	// Can't be null - loadServlet creates a new wrapper .
-	//         if (wrapper == null) {
-	//             // we are out of luck
-	//             doError(response, "Wrapper is null - " + servletName);
-	//             return;
-	//         }
-
-        HttpServletRequestFacade requestfacade =
-	    (HttpServletRequestFacade)request;
-        HttpServletResponseFacade responsefacade =
-	    (HttpServletResponseFacade)response;
+	if( context.getDebug() > 3 ) context.log( "Invoker-based execution " + newServletPath + " " + newPathInfo );
+        HttpServletRequestFacade requestfacade = (HttpServletRequestFacade)request;
+        HttpServletResponseFacade responsefacade = (HttpServletResponseFacade)response;
 	Request realRequest = requestfacade.getRealRequest();
 	Response realResponse = realRequest.getResponse();
 
-	// The saved servlet path, path info are for cases in which a
-	// request dispatcher forwards through the invoker. This is
-	// some seriously sick code here that needs to be done
-	// better, but this will do the trick for now.
-	String savedServletPath=null;
-	String savedPathInfo =null;
-
-
-	// XXX XXX XXX need to be removed after the include hacks are out
-	if( ! inInclude )  {
-	    savedPathInfo=realRequest.getPathInfo();
-	    savedServletPath=realRequest.getServletPath();
-	} else {
-	    savedServletPath = (String)realRequest.getAttribute(
-			       Constants.ATTRIBUTE_ServletPath);
-	    savedPathInfo = (String)realRequest.getAttribute(
-			       Constants.ATTRIBUTE_PathInfo);
-	}
-	
 	if (! inInclude) {
 	    realRequest.setServletPath(newServletPath);
 	    realRequest.setPathInfo(newPathInfo);
 	} else {
-	    if (newServletPath != null) {
-		realRequest.setAttribute(
-                    Constants.ATTRIBUTE_ServletPath, newServletPath);
-	    }
-
+	    realRequest.setAttribute("javax.servlet.include.servlet_path",
+				     newServletPath);
 	    if (newPathInfo != null) {
-		realRequest.setAttribute(
-                    Constants.ATTRIBUTE_PathInfo, newPathInfo);
-	    }
-
-	    if (newPathInfo == null) {
-		// Can't store a null, so remove for same effect
-
-		realRequest.removeAttribute(
-                    Constants.ATTRIBUTE_PathInfo);
+		realRequest.setAttribute("javax.servlet.include.path_info",
+					 newPathInfo);
+	    } else {
+		realRequest.removeAttribute("javax.servlet.include.path_info");
 	    }
 	}
 
         wrapper.handleRequest(realRequest, realResponse);
-	
-	if (!inInclude) {
-	    realRequest.setServletPath( savedServletPath);
-	    realRequest.setPathInfo(savedPathInfo);
-	} else {
-	    if (savedServletPath != null) {
-		realRequest.setAttribute(
-                    Constants.ATTRIBUTE_ServletPath, savedServletPath);
-	    } else {
-		realRequest.removeAttribute(
-                    Constants.ATTRIBUTE_ServletPath);
-	    }
 
-	    if (savedPathInfo != null) {
-		realRequest.setAttribute(
-                    Constants.ATTRIBUTE_PathInfo, savedPathInfo);
+	// restore servletPath and pathInfo.
+	// Usefull because we may include with the same request multiple times.
+	// 
+	if (!inInclude) {
+	    realRequest.setServletPath( servletPath);
+	    realRequest.setPathInfo( pathInfo);
+	} else {
+	    realRequest.setAttribute("javax.servlet.include.servlet_path",
+				     servletPath);
+	    
+	    if (pathInfo != null) {
+		realRequest.setAttribute("javax.servlet.include.path_info",
+					 pathInfo);
 	    } else {
-		realRequest.removeAttribute(
-                    Constants.ATTRIBUTE_PathInfo);
+		realRequest.removeAttribute("javax.servlet.include.path_info");
 	    }
 	}
     }
 
-    public void doError(HttpServletResponse response, String msg)
-	throws ServletException, IOException
-    {
-	response.sendError(404, msg);
-    }    
+    
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.41 2000/04/18 23:16:13 costin Exp $
- * $Revision: 1.41 $
- * $Date: 2000/04/18 23:16:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.42 2000/04/19 17:40:24 costin Exp $
+ * $Revision: 1.42 $
+ * $Date: 2000/04/19 17:40:24 $
  *
  * ====================================================================
  *
@@ -114,7 +114,27 @@ public class ServletWrapper {
 
     Hashtable initArgs=null;
     Hashtable securityRoleRefs=new Hashtable();
+
+    /** The servlet was declared in web.xml
+     */
+    public static final int ORIGIN_WEB_XML=0;
+    public static final int ORIGIN_INVOKER=1;
+    public static final int ORIGIN_JSP=2;
+    /** any tomcat-specific component that can
+	register mappings that are "re-generable",
+	i.e. can be recreated - the mapping can
+	safely be removed. Jsp and invoker are particular
+	cases
+    */
+    public static final int ORIGIN_DYNAMIC=3;
+    /** The servlet was added by the admin, it should be safed
+	preferably in web.xml
+    */
+    public static final int ORIGIN_ADMIN=4;
     
+    // who creates the servlet definition
+    int origin;
+
     public ServletWrapper() {
         config = new ServletConfigImpl();
     }
@@ -522,6 +542,44 @@ public class ServletWrapper {
 	if( servlet!=null ) toS=toS+ "S:" + servlet.getClass().getName();
 	else  toS= toS + servletClassName;
 	return toS + ")";
+    }
+
+    /** Who created this servlet definition - default is 0, i.e. the
+	web.xml mapping. It can also be the Invoker, the admin ( by using a
+	web interface), JSP engine or something else.
+
+	Tomcat can do special actions - for example remove non-used
+	mappings if the source is the invoker or a similar component
+    */
+    public void setOrigin( int origin ) {
+	this.origin=origin;
+    }
+
+    public int getOrigin() {
+	return origin;
+    }
+
+    /** ServletWrapper counts. The accounting desing is not
+	final, but all this is needed to tune up tomcat
+	( and to understand and be able to implement a good
+	solution )
+    */
+    public static final int ACC_LAST_ACCESSED=0;
+    public static final int ACC_INVOCATION_COUNT=1;
+    public static final int ACC_SERVICE_TIME=2;
+    public static final int ACC_ERRORS=3;
+    public static final int ACC_OVERHEAD=4;
+    public static final int ACC_IN_INCLUDE=5;
+    
+    public static final int ACCOUNTS=6;
+    long accTable[]=new long[ACCOUNTS];
+
+    public void setAccount( int pos, long value ) {
+	accTable[pos]=value;
+    }
+
+    public long getAccount( int pos ) {
+	return accTable[pos];
     }
 
 }
