@@ -81,7 +81,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.48 2002/10/25 21:47:32 jmcnally Exp $
+ * @version $Id: Attachment.java,v 1.49 2002/12/09 05:57:51 jon Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -95,7 +95,7 @@ public class Attachment
     public static final NumberKey URL__PK = new NumberKey("3");
     /** ObjectKey for a reason for modification type attachment */
     public static final NumberKey MODIFICATION__PK = new NumberKey("4");
-    
+
     /** Path to the base location for storing files */
     private static String fileRepo = null;
 
