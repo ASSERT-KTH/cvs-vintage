@@ -46,69 +46,54 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
-import java.util.Iterator;
+import java.util.Calendar;
 
-import org.apache.torque.om.NumberKey;
-
-import org.tigris.scarab.om.ScarabModulePeer;
-import org.tigris.scarab.services.module.ModuleEntity;
-import org.tigris.scarab.services.module.ModuleManager;
+import org.tigris.scarab.om.ScarabUserImpl;
+import org.tigris.scarab.om.ScarabUserImplPeer;
 
 import org.tigris.scarab.test.BaseTestCase;
 
 /**
- * A Testing Suite for the om.ScarabModule class.
+ * A Testing Suite for the om.ScarabUserImpl class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: ScarabModuleTest.java,v 1.3 2001/10/24 06:10:59 jon Exp $
+ * @version $Id: ScarabUserTest.java,v 1.1 2001/10/24 06:10:59 jon Exp $
  */
-public class ScarabModuleTest extends BaseTestCase
+public class ScarabUserTest extends BaseTestCase
 {
     /**
      * Creates a new instance.
      *
      */
-    public ScarabModuleTest()
+    public ScarabUserTest()
     {
-        super("ScarabModuleTest");
+        super("ScarabUserTest");
     }
 
     public static junit.framework.Test suite()
     {
-        return new ScarabModuleTest();
+        return new ScarabUserTest();
     }
 
     protected void runTest()
         throws Throwable
     {
-//        testGetParents();
-        testCreateNew();
+        testSetPasswordExpire();
     }
     
-    private void testGetParents() throws Exception
+    private void testSetPasswordExpire()
+        throws Exception
     {
-        log("testGetParents()");
-        ModuleEntity module = (ModuleEntity) ScarabModulePeer.retrieveByPK(new NumberKey(7));
-        List parents = module.getAncestors();
-        Iterator itr = parents.iterator();
-        while (itr.hasNext())
-        {
-            ModuleEntity me = (ModuleEntity) itr.next();
-            System.out.println (me.getName());
-        }
-//        assertEquals (map.size(), 10);  
-    }
-
-    private void testCreateNew() throws Exception
-    {
-        log("testCreateNew()");
-        ModuleEntity me = ModuleManager.getInstance();
-        me.setRealName("New Module");
-        me.setOwnerId(new NumberKey(1));
-        me.setParentId(new NumberKey(1));
-//        me.setCode("NEWMOD");
-        me.setDescription("This is the new module description");
-        me.save();
+        log("testSetPasswordExpire()");
+        ScarabUser user = getUser1();
+        Calendar cal = Calendar.getInstance();
+        cal.set(2010, 9, 2);
+        user.setPasswordExpire(cal);
+        assertEquals(user.isPasswordExpired(), false);
+        cal.set(2001, 9, 2);
+        user.setPasswordExpire(cal);
+        assertEquals(user.isPasswordExpired(), true);
+        user.setPasswordExpire(null);
+        assertEquals(user.isPasswordExpired(), false);        
     }
 }

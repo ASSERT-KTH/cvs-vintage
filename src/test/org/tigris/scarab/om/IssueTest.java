@@ -55,7 +55,7 @@ import org.tigris.scarab.om.Issue;
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.5 2001/10/15 02:37:31 mumbly Exp $
+ * @version $Id: IssueTest.java,v 1.6 2001/10/24 06:10:59 jon Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -77,7 +77,7 @@ public class IssueTest extends BaseTestCase
         throws Throwable
     {
         Issue issue = new Issue();
-        issue.setModuleCast(getModule());
+        issue.setModule(getModule());
 
         testGetAllAttributeValuesMap(issue);
         testGetUniqueId(issue);

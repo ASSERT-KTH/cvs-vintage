@@ -55,9 +55,16 @@ import junit.framework.TestCase;
 
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.*;
+import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserImplPeer;
+import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionTypePeer;
+import org.tigris.scarab.om.Query;
 import org.tigris.scarab.services.module.ModuleEntity;
 
 /**
@@ -66,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.7 2001/10/15 02:41:48 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.8 2001/10/24 06:11:00 jon Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -135,7 +142,7 @@ public class BaseTestCase extends TestCase
     /**
      * If something like an Issue needs a mapping to a ModuleEntity, then
      * this is Module #5 that you can use. For example, you should call:
-     * issue.setModuleCast(getModule()) in your Test before you use any
+     * issue.setModule(getModule()) in your Test before you use any
      * of the rest of the methods on the Issue object.
      */
     protected ModuleEntity getModule()
