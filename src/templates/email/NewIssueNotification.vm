@@ -1,16 +1,17 @@
 #set ($user = $issue.ModifiedBy )
 Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
-#set ($attrValues = $issue.AttributeValuesMap)
+#if ($issue.DefaultTextAttributeValue)
 #set ($attVal = $issue.DefaultTextAttributeValue)
-
 $issue.UniqueId $attVal.RModuleAttribute.DisplayValue:  $attVal.Value 
+#end
 
 You can view the report at the following URL:
 <$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>
 
 $issue.UniqueId Report 
 
+#set ($attrValues = $issue.AttributeValuesMap)
 #foreach ( $attKey in $attrValues.keySet().iterator() )
   #set ($attVal = $attrValues.get($attKey))
   $attVal.RModuleAttribute.DisplayValue: $attVal.Value
