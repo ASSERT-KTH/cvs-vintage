@@ -41,6 +41,8 @@ import org.columba.mail.folder.RemoteFolder;
 import org.columba.mail.folder.RootFolder;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.RemoteHeaderCache;
+import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folder.search.IMAPQueryEngine;
 import org.columba.mail.imap.IMAPStore;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -99,6 +101,8 @@ public class IMAPFolder extends RemoteFolder {
 
 	protected boolean existsOnServer;
 
+	private DefaultSearchEngine engine;
+	
 	/**
 	 *  
 	 */
@@ -113,6 +117,9 @@ public class IMAPFolder extends RemoteFolder {
 		cache = new RemoteHeaderCache(this);
 
 		existsOnServer = true;
+		
+		engine = new DefaultSearchEngine(this);
+		engine.setNonDefaultEngine(new IMAPQueryEngine(this));
 
 		//setChanged(true);
 	}
@@ -127,9 +134,12 @@ public class IMAPFolder extends RemoteFolder {
 	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
 
+		return engine.searchMessages(filter, uids);
+	/*
 		return getStore()
 			.search(uids, filter.getFilterRule(), getImapPath())
 			.toArray();
+			*/
 	}
 
 	/**
@@ -138,12 +148,15 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
 
+		return engine.searchMessages(filter);
+	/*
 		List list = getStore().search(filter.getFilterRule(), getImapPath());
 
 		if (list != null)
 			return list.toArray();
 
 		return null;
+		*/
 	}
 
 	/**
@@ -703,7 +716,7 @@ public class IMAPFolder extends RemoteFolder {
 	 * 
 	 * @return String
 	 */
-	protected String getImapPath() throws Exception {
+	public String getImapPath() throws Exception {
 		StringBuffer path = new StringBuffer();
 		path.append(getName());
 		FolderTreeNode child = this;

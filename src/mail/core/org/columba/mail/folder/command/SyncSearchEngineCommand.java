@@ -11,8 +11,8 @@ import org.columba.core.command.Worker;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.LocalFolder;
-import org.columba.mail.folder.search.AbstractSearchEngine;
-import org.columba.mail.folder.search.LuceneSearchEngine;
+import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folder.search.LuceneQueryEngine;
 import org.columba.mail.main.MailInterface;
 
 /**
@@ -43,10 +43,8 @@ public class SyncSearchEngineCommand extends FolderCommand {
 				
 		// resync search engine
 		// -> this is only needed for Lucene right now
-		AbstractSearchEngine engine = parentFolder.getSearchEngineInstance();
-		if ( engine instanceof LuceneSearchEngine )
-			{
-				((LuceneSearchEngine) engine).sync();
-			}
+		DefaultSearchEngine engine = parentFolder.getSearchEngineInstance();
+		engine.sync();
+			
 	}
 }

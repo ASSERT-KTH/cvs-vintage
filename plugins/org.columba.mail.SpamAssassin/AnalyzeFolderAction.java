@@ -37,7 +37,7 @@ public class AnalyzeFolderAction
 
 		setEnabled(false);
 
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(
 			this);
 	}
 

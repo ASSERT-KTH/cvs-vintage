@@ -45,6 +45,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.command.StatusObservable;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
@@ -73,9 +74,7 @@ import org.columba.ristretto.parser.ParserException;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class LuceneSearchEngine
-	extends AbstractSearchEngine
-	implements TaskInterface {
+public class LuceneQueryEngine implements QueryEngine, TaskInterface {
 
 	private final static int OPTIMIZE_AFTER_N_OPERATIONS = 30;
 
@@ -98,14 +97,16 @@ public class LuceneSearchEngine
 
 	Mutex indexMutex;
 
+	LocalFolder folder;
+
 	private final static String[] caps =
 		{ "Body", "Subject", "From", "To", "Cc", "Bcc", "Custom Headerfield" };
 
 	/**
-	 * Constructor for LuceneSearchEngine.
+	 * Constructor for LuceneQueryEngine.
 	 */
-	public LuceneSearchEngine(LocalFolder folder) {
-		super(folder);
+	public LuceneQueryEngine(LocalFolder folder) {
+		this.folder = folder;
 
 		MainInterface.shutdownManager.register(this);
 
@@ -222,7 +223,6 @@ public class LuceneSearchEngine
 			// FIXME
 			//field = criteria.getHeaderItemString().toLowerCase();
 			field = criteria.getHeaderItemString();
-			
 
 			TokenStream tokenStream =
 				analyzer.tokenStream(
@@ -275,9 +275,7 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected List queryEngine(
-		FilterRule filter)
-		throws Exception {
+	public List queryEngine(FilterRule filter) throws Exception {
 
 		Query query = getLuceneQuery(filter, analyzer);
 
@@ -285,7 +283,7 @@ public class LuceneSearchEngine
 
 		ListTools.substract(result, deleted);
 
-		if(!checkResult(result)) {
+		if (!checkResult(result)) {
 			// Search again
 			result = search(query);
 			ListTools.substract(result, deleted);
@@ -328,9 +326,7 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected List queryEngine(
-		FilterRule filter,
-		Object[] uids)
+	public List queryEngine(FilterRule filter, Object[] uids)
 		throws Exception {
 		List result = queryEngine(filter);
 
@@ -366,9 +362,10 @@ public class LuceneSearchEngine
 
 		if (message.getMimePartTree() == null) {
 			try {
-				Source source = new CharSequenceSource( message.getStringSource() );
-				Message m = MessageParser.parse( source );
-				message.setMimePartTree( m.getMimePartTree() );
+				Source source =
+					new CharSequenceSource(message.getStringSource());
+				Message m = MessageParser.parse(source);
+				message.setMimePartTree(m.getMimePartTree());
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (ParserException e) {
@@ -378,14 +375,15 @@ public class LuceneSearchEngine
 
 		String value;
 
-		for( int i=0; i< caps.length; i++) {
+		for (int i = 0; i < caps.length; i++) {
 			value = (String) header.get(caps[i]);
-			if( value != null ) {
+			if (value != null) {
 				messageDoc.add(Field.UnStored(caps[i], value));
 			}
 		}
 
-		LocalMimePart body = (LocalMimePart) message.getMimePartTree().getFirstTextPart("plain");
+		LocalMimePart body =
+			(LocalMimePart) message.getMimePartTree().getFirstTextPart("plain");
 		if (body != null)
 			messageDoc.add(Field.UnStored("body", body.getBody().toString()));
 		return messageDoc;
@@ -416,7 +414,7 @@ public class LuceneSearchEngine
 		IndexReader ramReader = getRAMReader();
 		IndexReader fileReader = getFileReader();
 
-                ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
+		ColumbaLogger.log.debug("Lucene: Merging RAMIndex to FileIndex");
 
 		/*
 		Document doc;
@@ -502,7 +500,7 @@ public class LuceneSearchEngine
 	}
 
 	/**
-	 * @see org.columba.mail.folder.AbstractSearchEngine#reset()
+	 * @see org.columba.mail.folder.DefaultSearchEngine#reset()
 	 */
 	public void reset() throws Exception {
 		createIndex();
@@ -514,15 +512,16 @@ public class LuceneSearchEngine
 	public void sync() throws Exception {
 		//ColumbaLogger.log.error("Lucene Index inconsistent - recreation forced");
 
-		DataStorageInterface ds = ((LocalFolder)folder).getDataStorageInstance();
-		HeaderList hl = ((LocalFolder)folder).getHeaderList();
+		DataStorageInterface ds =
+			((LocalFolder) folder).getDataStorageInstance();
+		HeaderList hl = ((LocalFolder) folder).getHeaderList();
 
-
-		if ( getObservable() != null )
-		getObservable().setMessage(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "lucene_sync"));
+		if (getObservable() != null)
+			getObservable().setMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"lucene_sync"));
 		getObservable().setCurrent(0);
 
 		try {
@@ -532,24 +531,27 @@ public class LuceneSearchEngine
 
 			int count = hl.count();
 			getObservable().setCurrent(count);
-			
+
 			Object uid;
-			int i=0;
-					
+			int i = 0;
+
 			for (Enumeration e = hl.keys(); e.hasMoreElements();) {
 				uid = e.nextElement();
 
-				String source = ds.loadMessage(uid );
+				String source = ds.loadMessage(uid);
 
-				ColumbaMessage message = new ColumbaMessage( (ColumbaHeader) hl.get(uid), MessageParser.parse(new CharSequenceSource(source)));
+				ColumbaMessage message =
+					new ColumbaMessage(
+						(ColumbaHeader) hl.get(uid),
+						MessageParser.parse(new CharSequenceSource(source)));
 				message.setStringSource(source);
-				
+
 				Document doc = getDocument(message);
 
 				writer.addDocument(doc);
-				
+
 				if (++i % 50 == 0)
-				getObservable().setCurrent(i);
+					getObservable().setCurrent(i);
 			}
 
 			getObservable().setCurrent(count);
@@ -558,9 +560,14 @@ public class LuceneSearchEngine
 			writer.close();
 
 		} catch (Exception e) {
-                        ColumbaLogger.log.error(
-                                    "Creation of Lucene Index failed :" + e.getLocalizedMessage());
-                        //show neat error dialog here
+			ColumbaLogger.log.error(
+				"Creation of Lucene Index failed :" + e.getLocalizedMessage());
+			//show neat error dialog here
 		}
 	}
+
+	public StatusObservable getObservable() {
+		return folder.getObservable();
+	}
+
 }

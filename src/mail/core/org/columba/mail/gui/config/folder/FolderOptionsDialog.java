@@ -49,9 +49,7 @@ import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.folder.command.ExportFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
 import org.columba.mail.folder.command.SyncSearchEngineCommand;
-import org.columba.mail.folder.search.AbstractSearchEngine;
-import org.columba.mail.folder.search.LocalSearchEngine;
-import org.columba.mail.folder.search.LuceneSearchEngine;
+import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.message.MessageFolderInfo;
 
@@ -360,10 +358,10 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 				// cast to Local Folder is safe here
 				LocalFolder localFolder = (LocalFolder) folder;
 
-				AbstractSearchEngine engine = null;
+				DefaultSearchEngine engine = null;
 				if (bool) {
-					engine = new LuceneSearchEngine(localFolder);
-					localFolder.setSearchEngine(engine);
+					//engine = new LuceneQueryEngine(localFolder);
+					localFolder.setSearchEngine(null);
 
 					// execute resyncing command
 					FolderCommandReference[] r = new FolderCommandReference[1];
@@ -371,8 +369,8 @@ public class FolderOptionsDialog extends JDialog implements ActionListener {
 					MainInterface.processor.addOp(
 						new SyncSearchEngineCommand(r));
 				} else {
-					engine = new LocalSearchEngine(localFolder);
-					localFolder.setSearchEngine(engine);
+					//engine = new LocalSearchEngine(localFolder);
+					localFolder.setSearchEngine(null);
 				}
 
 			}

@@ -23,9 +23,8 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.search.AbstractSearchEngine;
-import org.columba.mail.folder.search.LocalSearchEngine;
-import org.columba.mail.folder.search.LuceneSearchEngine;
+import org.columba.mail.folder.search.DefaultSearchEngine;
+import org.columba.mail.folder.search.LuceneQueryEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.ristretto.message.Flags;
@@ -67,7 +66,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	protected DataStorageInterface dataStorage;
 
 	// implement your own search-engine here
-	protected AbstractSearchEngine searchEngine;
+	protected DefaultSearchEngine searchEngine;
 
 	/**
 	 * @param item	<class>FolderItem</class> contains xml configuration of this folder
@@ -313,16 +312,17 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	/**
 	* @return		instance of search-engine implementation
 	*/
-	public AbstractSearchEngine getSearchEngineInstance() {
+	public DefaultSearchEngine getSearchEngineInstance() {
 		// only use lucene backend if specified in tree.xml
 		if (searchEngine == null) {
 			boolean enableLucene =
 				getFolderItem().getBoolean("property", "enable_lucene", false);
 
+			searchEngine = new DefaultSearchEngine(this);
+			
 			if (enableLucene == true)
-				searchEngine = new LuceneSearchEngine(this);
-			else
-				searchEngine = new LocalSearchEngine(this);
+				searchEngine.setNonDefaultEngine( new LuceneQueryEngine(this) );
+			
 		}
 
 		return searchEngine;
@@ -335,7 +335,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	 * 
 	 * @param engine		new search engine
 	 */
-	public void setSearchEngine(AbstractSearchEngine engine) {
+	public void setSearchEngine(DefaultSearchEngine engine) {
 		this.searchEngine = engine;
 	}
 

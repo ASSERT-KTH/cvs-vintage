@@ -31,7 +31,7 @@ import org.columba.mail.filter.Filter;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.MailboxInterface;
-import org.columba.mail.folder.search.AbstractSearchEngine;
+import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
@@ -234,7 +234,7 @@ public class TempFolder extends Folder {
 		return message;
 	}
 
-	public AbstractSearchEngine getSearchEngineInstance() {
+	public DefaultSearchEngine getSearchEngineInstance() {
 		if (searchEngine == null)
 			searchEngine = new DefaultSearchEngine(this);
 
