@@ -31,6 +31,17 @@
 	to generate the roadmap document.  This plugin should download automatically and install.  If not, look at the
 	directions <a href="http://maven-plugins.sourceforge.net/installing.html">here</a>.
 	</p>
+	<p>
+	We use a Findbugs plugin from <a href="http://maven-plugins.sourceforge.net/maven-findbugs-plugin/">Maven-Plugins</a>
+	to look for common errors.  This plugin should download automatically and install.  If not, look at the
+	directions <a href="http://maven-plugins.sourceforge.net/installing.html">here</a>.
+	</p>
+	<p>
+	We use a StatCVS plugin from <a href="http://statcvs-xml.berlios.de/">StatCVS</a>
+	to generate statistics on CVS.  This plugin should download automatically and install.  It requires CVS executable
+	to be in your path.  If you have TortoiseCVS installed on windows, then just add that directory to your path!  The
+	CVS.exe in the TortoiseCVS directory works fine.
+	</p>		
 	</subsection>	
 	
 	<subsection name="Committing Maven Managed Docs">

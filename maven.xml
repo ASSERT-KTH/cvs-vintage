@@ -11,6 +11,8 @@
     <j:if test="${enable == 'true'}">
       <attainGoal name="docbook:transform"/>
     </j:if>   
+    
+    <attainGoal name="torque:doc"/>
   </preGoal>
 
   <preGoal name="java:compile">
@@ -72,7 +74,7 @@
   
   <postGoal name="clean:clean"> 
      <ant:delete>
-	<ant:fileset dir="${basedir}">
+	   <ant:fileset dir="${basedir}">
 	    <ant:include name="**/report.${torque.project}.*.generation"/>
         </ant:fileset>
         <ant:fileset dir="${basedir}"

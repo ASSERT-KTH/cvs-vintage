@@ -22,9 +22,8 @@
   <distributionDirectory></distributionDirectory>
 
   <repository>
-    <!--connection>scm:cvs:pserver:anoncvs@cvs.tigris.org:/cvs:scarab</connection-->
-    <connection>scm:cvs:pserver:${maven.username}@cvs.tigris.org:/cvs:scarab</connection>    
-    <developerConnection>scm:cvs:pserver:${maven.username}@cvs.tigris.org:/cvs:scarab</developerConnection>
+    <connection>scm:cvs:pserver:anoncvs@cvs.tigris.org:/cvs:scarab</connection>
+    <developerConnection>scm:cvs:pserver:anoncvs@cvs.tigris.org:/cvs:scarab</developerConnection>
     <url>http://scarab.tigris.org/source/browse/scarab/</url>
   </repository>
 
@@ -418,12 +417,18 @@
     <dependency>
       <groupId>torque</groupId>
       <artifactId>torque</artifactId>
-      <version>3.1</version>
+      <version>3.1.1-dev</version>
       <type>jar</type>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
     </dependency>
+    <dependency>
+      <groupId>torque</groupId>
+      <artifactId>torque-gen</artifactId>
+      <version>3.1.1-dev</version>
+      <type>jar</type>
+    </dependency>    
     <dependency>
       <groupId>turbine</groupId>
       <artifactId>turbine</artifactId>
@@ -555,6 +560,14 @@
   <!-- End Database Dependencies -->    
   
     <dependency> 
+      <groupId>maven-torque-plugin</groupId> 
+      <artifactId>maven-torque-plugin</artifactId> 
+      <version>3.1.1-dev</version> 
+      <url>http://db.apache.org/torque/maven-plugin/</url> 
+      <type>plugin</type>
+    </dependency> 
+      
+    <dependency> 
       <groupId>maven</groupId> 
       <artifactId>maven-tasks-plugin</artifactId> 
       <version>1.1.0</version> 
@@ -568,6 +581,14 @@
       <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url> 
       <type>plugin</type>
     </dependency> 
+    
+    <dependency> 
+      <groupId>statcvs</groupId> 
+      <artifactId>maven-statcvs-plugin</artifactId> 
+      <version>2.4</version> 
+      <url>http://statcvs-xml.berlios.de/</url> 
+      <type>plugin</type>
+    </dependency>    
   </dependencies>
 
   <build>
@@ -591,18 +612,19 @@
     <report>maven-faq-plugin</report>
     <report>maven-changes-plugin</report>
     <report>maven-jdepend-plugin</report>    
-    <report>maven-changelog-plugin</report>
-    <report>maven-developer-activity-plugin</report>
-    <report>maven-file-activity-plugin</report>
+    <!--report>maven-changelog-plugin</report-->
+    <!--report>maven-developer-activity-plugin</report-->
+    <!--report>maven-file-activity-plugin</report-->
     <report>maven-javadoc-plugin</report>
     <report>maven-jxr-plugin</report>
-    <report>maven-pmd-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <!--report>maven-tasklist-plugin</report-->
   
     <report>maven-jcoverage-plugin</report>
     <report>maven-simian-plugin</report>
-    <report>maven-junit-report-plugin</report>
-    <report>maven-tasklist-plugin</report>
+    <report>maven-pmd-plugin</report>
     <report>maven-tasks-plugin</report>
     <report>maven-findbugs-plugin</report>
+    <report>maven-statcvs-plugin</report>
   </reports>  
 </project>
