@@ -1,4 +1,4 @@
-// $Id: UmlFilePersister.java,v 1.3 2004/12/21 23:02:31 bobtarling Exp $
+// $Id: UmlFilePersister.java,v 1.4 2004/12/21 23:18:43 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -212,7 +212,7 @@ public class UmlFilePersister extends AbstractFilePersister {
                         new XmlInputStream(url.openStream(), "argo");
 
             ArgoParser parser = new ArgoParser();
-            parser.readProject(url, inputStream, false);
+            parser.readProject(url, inputStream);
             inputStream.close();
             
             List memberList = parser.getMemberList();
