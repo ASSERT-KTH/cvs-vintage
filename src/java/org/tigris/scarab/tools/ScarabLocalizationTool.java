@@ -55,11 +55,12 @@ import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;
 
 /**
- * Scarab-specific localiztion tool.  Makes use of the property
- * format:
+ * Scarab-specific localiztion tool.  Uses the following property
+ * format to access Turbine's properties (generally defined in
+ * <code>Scarab.properties</code>):
  *
  * <blockquote><code><pre>
- * [dir/]<scope>.<title>
+ * template.[dir/]<scope>.<title>
  * </pre></code></blockquote>
  *
  * Defaults for scope can be specified using the
@@ -149,7 +150,7 @@ public class ScarabLocalizationTool
             }
             setPrefix(templateName + '.');
 
-            String propName = getPrefix(null) + property;
+            String propName = "template." + getPrefix(null) + property;
             String l10nKey = (String) properties.get(propName);
             Log.debug("ScarabLocalizationTool: Property name '" + propName +
                       "' -> localization key '" + l10nKey + '\'');
