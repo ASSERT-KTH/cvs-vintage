@@ -26,7 +26,7 @@
 // File: WzMEName.java
 // Classes: WzMEName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizMEName.java,v 1.1 2000/09/04 12:50:26 1sturm Exp $
+// $Id: WizMEName.java,v 1.2 2002/07/16 09:02:50 jhraigniac Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,6 +34,7 @@ import java.util.*;
 import java.beans.*;
 import javax.swing.*;
 
+import org.argouml.application.api.*;
 import org.argouml.cognitive.ui.*;
 import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
@@ -50,7 +51,7 @@ public class WizMEName extends Wizard {
 
   protected String _instructions =
   "Please change the name of the offending model element.";
-  protected String _label = "Name:";
+  protected String _label = Argo.localize("UMLMenu", "label.name");
   protected String _suggestion = "suggestion";
   protected String _origSuggest = "suggestion";
   protected boolean _mustEdit = false;

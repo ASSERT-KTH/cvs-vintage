@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.5 2001/04/05 09:22:43 5heyden Exp $
+// $Id: PropPanelGuard.java,v 1.6 2002/07/16 09:02:51 jhraigniac Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -39,6 +39,7 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
+import org.argouml.application.api.*;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 
@@ -51,16 +52,16 @@ public class PropPanelGuard extends PropPanelModelElement {
 
         Class mclass = MGuard.class;
 
-	addCaption("Name:",1,0,0);
+	addCaption(Argo.localize("UMLMenu", "label.name"),1,0,0);
         addField(nameField,1,0,0);
 
         UMLExpressionModel expressionModel = new UMLExpressionModel(this,MGuard.class,"expression",
 		    MBooleanExpression.class,"getExpression","setExpression");
 
-        addCaption("Expression:",2,0,0);
+        addCaption(Argo.localize("UMLMenu", "label.expression"),2,0,0);
         addField(new JScrollPane(new UMLExpressionBodyField(expressionModel,true),JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),2,0,0);
 
-        addCaption("Language:",3,0,0);
+        addCaption(Argo.localize("UMLMenu", "label.language"),3,0,0);
         addField(new UMLExpressionLanguageField(expressionModel,true),3,0,0);
 
         addCaption("Transition:",4,0,1);
@@ -72,9 +73,9 @@ public class PropPanelGuard extends PropPanelModelElement {
 	transitionList.setFont(smallFont);
         addLinkField(new JScrollPane(transitionList,JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),4,0,0);
 
-	new PropPanelButton(this,buttonPanel,_navUpIcon,localize("Go up"),"navigateUp",null);
-	new PropPanelButton(this,buttonPanel,_navBackIcon,localize("Go back"),"navigateBackAction","isNavigateBackEnabled");
-	new PropPanelButton(this,buttonPanel,_navForwardIcon,localize("Go forward"),"navigateForwardAction","isNavigateForwardEnabled");
+	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
+	new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu" ,"button.go-back"),"navigateBackAction","isNavigateBackEnabled");
+	new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
 	//new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
 
   }
