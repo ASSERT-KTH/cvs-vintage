@@ -24,7 +24,7 @@
 // File: Init.java
 // Classes: Init
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Init.java,v 1.7 2002/07/11 05:27:03 mkl Exp $
+// $Id: Init.java,v 1.8 2002/09/14 06:06:51 linus Exp $
 
 // 8 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). CrCrossNamespaceAssoc
 // registration corrected to Association, rather than AssociationClass
@@ -166,7 +166,6 @@ public class Init {
 
   // Pattern specific
   public static Critic crConsiderSingleton = new CrConsiderSingleton();
-  public static Critic crSingletonViolated = new CrSingletonViolated();
   public static Critic crSingletonViolatedMSA =
       new CrSingletonViolatedMissingStaticAttr();
   public static Critic crSingletonViolatedOPC =
@@ -321,7 +320,6 @@ public class Init {
       Agency.register(crUnconventionalPackName, modelCls);
 
       Agency.register(crConsiderSingleton, classCls);
-      Agency.register(crSingletonViolated, classCls);
       Agency.register(crSingletonViolatedMSA, classCls);
       Agency.register(crSingletonViolatedOPC, classCls);
 
