@@ -77,6 +77,7 @@ import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
 import org.tigris.scarab.om.Depend;
 import org.tigris.scarab.om.DependPeer;
+import org.tigris.scarab.om.ScopePeer;
 import org.tigris.scarab.om.ScarabModulePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeGroup;
@@ -883,6 +884,16 @@ try{
             }
         }
         return issues;
+    }
+
+    /**
+     * Get all scopes.
+     *
+     */
+    public List getScopes()
+        throws Exception
+    {
+       return ScopePeer.getAllScopes();
     }
 
     /**
