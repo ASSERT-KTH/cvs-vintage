@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.12 $
+@version $Revision: 1.13 $
  */
 public final class SecurityAssociation
 {
@@ -171,7 +171,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param principal, the current principal identity.
+    @param principal the current principal identity.
     */
    public static void setPrincipal( Principal principal )
    {
@@ -196,7 +196,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param credential, the credential that proves the principal identity.
+    @param credential the credential that proves the principal identity.
     */
    public static void setCredential( Object credential )
    {
@@ -218,7 +218,7 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param principal, the current principal identity.
+    @param subject the current principal identity.
     */
    public static void setSubject(Subject subject)
    {
@@ -240,7 +240,6 @@ public final class SecurityAssociation
     </code>
     permission to ensure it's ok to access principal information.
     If not, a <code>SecurityException</code> will be thrown.
-    @param principal, the current principal identity.
     */
    public static void clear()
    {

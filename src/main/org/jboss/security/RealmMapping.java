@@ -18,7 +18,7 @@ environment Principal belongs via the {@link #getPrincipal(Principal) getPrincip
 method.
 
 @author Scott.Stark@jboss.org
-@version $Revision: 1.7 $
+@version $Revision: 1.8 $
 */
 public interface RealmMapping
 {
@@ -26,15 +26,15 @@ public interface RealmMapping
      domain principal. This is used by the EJBContext.getCallerPrincipal implentation
      to map from the authenticated principal to a principal in the application
      domain.
-    @param principal, the caller principal as known in the operation environment.
+    @param principal the caller principal as known in the operation environment.
     @return the principal 
     */
     public Principal getPrincipal(Principal principal);
 
     /** Validates the application domain roles to which the operational
     environment Principal belongs.
-    @param principal, the caller principal as known in the operation environment.
-    @param The Set<Principal> for the application domain roles that the
+    @param principal the caller principal as known in the operation environment.
+    @param roles The Set<Principal> for the application domain roles that the
      principal is to be validated against.
     @return true if the principal has at least one of the roles in the roles set,
         false otherwise.
