@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.16 $
+ * @version   $Revision: 1.17 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -161,7 +161,7 @@ public class StdServerSessionPool
          });
 
       // finish initializing the session
-      init();
+      create();
       log.debug("Server Session pool set up");
    }
 
@@ -323,7 +323,7 @@ public class StdServerSessionPool
 
    // --- Private methods used internally
 
-   private void init() throws JMSException
+   private void create() throws JMSException
    {
       for (int index = 0; index < poolSize; index++)
       {

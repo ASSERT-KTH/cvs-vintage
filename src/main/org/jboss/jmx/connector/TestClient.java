@@ -126,7 +126,7 @@ public class TestClient {
          // Init and start Factory because all attributes are set
 			lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
-				"init",
+				"create",
 				new Object[] {},
 				new String[] {}
 			);

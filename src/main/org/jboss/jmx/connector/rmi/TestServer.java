@@ -80,7 +80,7 @@ public class TestServer {
 			);
 			System.out.println( "Start the Naming Service" );
 			try {
-			lServer.invoke( lNamingName, "init", new Object[] {}, new String[] {} );
+			lServer.invoke( lNamingName, "create", new Object[] {}, new String[] {} );
 			}
 			catch( MBeanException me ) {
 				System.err.println( "TestServer.main(), caught: " + me +
@@ -99,7 +99,7 @@ public class TestServer {
 				lConnectorName
 			);
 			System.out.println( "Start the Connector" );
-			lServer.invoke( lConnectorName, "init", new Object[] {}, new String[] {} );
+			lServer.invoke( lConnectorName, "create", new Object[] {}, new String[] {} );
 			lServer.invoke( lConnectorName, "start", new Object[] {}, new String[] {} );
 			System.out.println( "Now open a new Terminal or Command Prompt and start the connector.jar test client" );
 		}
