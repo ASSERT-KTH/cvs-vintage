@@ -57,7 +57,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
-import org.apache.commons.lang.Strings;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey; 
@@ -93,7 +93,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.85 2002/07/19 23:03:54 jmcnally Exp $
+ * @version $Id: Search.java,v 1.86 2002/07/23 00:37:39 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -262,7 +262,7 @@ public class Search extends RequireLoginFirstAction
         {
             // if the string is a number, then execute
             // doRunstoredquery()
-            if (Strings.isNumeric(go))
+            if (StringUtils.isNumeric(go))
             {
                 data.getParameters().setString("queryId", go);
                 doRunstoredquery(data, context);

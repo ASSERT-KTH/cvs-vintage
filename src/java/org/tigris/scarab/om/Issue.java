@@ -84,7 +84,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 
-import org.apache.commons.lang.Strings;
+import org.apache.commons.lang.StringUtils;
 
 /** 
  * This class represents an Issue.
@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.168 2002/07/20 01:00:44 elicia Exp $
+ * @version $Id: Issue.java,v 1.169 2002/07/23 00:37:39 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -337,7 +337,7 @@ public class Issue
     public static List parseIssueList(Module module, String theList)
         throws Exception
     {
-        String[] issues = Strings.split(theList, ",");
+        String[] issues = StringUtils.split(theList, ",");
         List results = new ArrayList();
         for (int i = 0; i < issues.length; i++)
         {
@@ -348,7 +348,7 @@ public class Issue
             }
             else
             {
-                String[] issue = Strings.split(issues[i], "-");
+                String[] issue = StringUtils.split(issues[i], "-");
                 if (issue.length != 2)
                 {
                     throw new Exception("Id range not valid: " + issues[i]);

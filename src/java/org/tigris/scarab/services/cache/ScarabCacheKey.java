@@ -47,7 +47,7 @@ package org.tigris.scarab.services.cache;
  */ 
 
 import java.io.Serializable;
-import org.apache.commons.lang.Objects;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.log4j.Category;
 import org.apache.fulcrum.pool.RecyclableSupport;
 
@@ -210,23 +210,23 @@ public class ScarabCacheKey
         {
             ScarabCacheKey sck = (ScarabCacheKey)obj;
             equal = sck.n == n;
-            equal &= Objects.equals(sck.instanceOrClass, instanceOrClass);
-            equal &= Objects.equals(sck.method, method);
+            equal &= ObjectUtils.equals(sck.instanceOrClass, instanceOrClass);
+            equal &= ObjectUtils.equals(sck.method, method);
             if (n > 0) 
             {
-                equal &= Objects.equals(sck.arg1, arg1);
+                equal &= ObjectUtils.equals(sck.arg1, arg1);
                 if (n > 1) 
                 {
-                    equal &= Objects.equals(sck.arg2, arg2);
+                    equal &= ObjectUtils.equals(sck.arg2, arg2);
                     if (n > 2) 
                     {
-                        equal &= Objects.equals(sck.arg3, arg3);
+                        equal &= ObjectUtils.equals(sck.arg3, arg3);
                         if (n > 3) 
                         {
                             for (int i=5; i<n+2; i++) 
                             {
-                                equal &= Objects.equals(sck.moreThanThree[i], 
-                                                        moreThanThree[i]);
+                                equal &= ObjectUtils.equals(sck.moreThanThree[i], 
+                                                            moreThanThree[i]);
                             }
                         }
                     }

@@ -2,7 +2,7 @@
 package org.tigris.scarab.om;
 
 
-import org.apache.commons.lang.Objects;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -96,9 +96,9 @@ public  class MITListItem
         if (obj instanceof MITListItem) 
         {
             MITListItem item = (MITListItem)obj;
-            isEqual = Objects.equals(this.getModuleId(), item.getModuleId());
-            isEqual &= Objects.equals(this.getIssueTypeId(), 
-                                      item.getIssueTypeId());
+            isEqual = ObjectUtils.equals(this.getModuleId(), item.getModuleId());
+            isEqual &= ObjectUtils.equals(this.getIssueTypeId(), 
+                                          item.getIssueTypeId());
         }
         return isEqual;
     }

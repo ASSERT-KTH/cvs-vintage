@@ -63,7 +63,7 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.lang.Strings;
+import org.apache.commons.lang.StringUtils;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
@@ -860,8 +860,8 @@ public class IssueSearch
                 // parts are equal otherwise skip the query, there are no 
                 // matches
                 if ( minFid.getCount() <= maxFid.getCount() 
-                     && Strings.equals(minFid.getPrefix(), maxFid.getPrefix())
-                     && Strings
+                     && StringUtils.equals(minFid.getPrefix(), maxFid.getPrefix())
+                     && StringUtils
                      .equals( minFid.getDomain(), maxFid.getDomain() ))
                 {
                     Criteria.Criterion c1 = crit.getNewCriterion(

@@ -50,7 +50,7 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.lang.Objects;
+import org.apache.commons.lang.ObjectUtils;
 // Turbine classes
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -76,7 +76,7 @@ import org.tigris.scarab.om.ModuleManager;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeValue.java,v 1.65 2002/07/19 01:28:36 jon Exp $
+ * @version $Id: AttributeValue.java,v 1.66 2002/07/23 00:37:39 jmcnally Exp $
  */
 public abstract class AttributeValue 
     extends BaseAttributeValue
@@ -402,7 +402,7 @@ public abstract class AttributeValue
     protected void setOptionIdOnly(NumberKey optionId)
         throws TorqueException
     {
-        if ( !Objects.equals(optionId, getOptionId()) )
+        if ( !ObjectUtils.equals(optionId, getOptionId()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
@@ -441,7 +441,7 @@ public abstract class AttributeValue
     protected void setUserIdOnly(NumberKey value)
         throws TorqueException
     {
-        if ( !Objects.equals(value, getUserId()) )
+        if ( !ObjectUtils.equals(value, getUserId()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value
@@ -523,7 +523,7 @@ public abstract class AttributeValue
 
     protected void setValueOnly(String value)
     {
-        if ( !Objects.equals(value, getValue()) )
+        if ( !ObjectUtils.equals(value, getValue()) )
         { 
             // if the value is set multiple times before saving only
             // save the last saved value

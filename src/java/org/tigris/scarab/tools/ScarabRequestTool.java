@@ -75,7 +75,7 @@ import org.apache.fulcrum.pool.RecyclableSupport;
 import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.lang.Strings;
+import org.apache.commons.lang.StringUtils;
 
 // Scarab
 import org.tigris.scarab.om.ScarabUser;
@@ -1588,7 +1588,7 @@ try{
             // As intake passed from the form
             String sortColumn = data.getParameters().getString("sortColumn");
             if (sortColumn != null && sortColumn.length() > 0 
-                && Strings.isNumeric(sortColumn))
+                && StringUtils.isNumeric(sortColumn))
             {
                 search.setSortAttributeId(new NumberKey(sortColumn));
             }
