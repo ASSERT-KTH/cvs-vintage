@@ -26,7 +26,7 @@
 // File: CrReservedName.java
 // Classes: CrReservedName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrReservedName.java,v 1.10 1999/02/19 22:23:20 jrobbins Exp $
+// $Id: CrReservedName.java,v 1.11 1999/03/16 19:01:35 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -222,9 +222,20 @@ public class CrReservedName extends CrUML {
     return NO_PROBLEM;
   }
 
-  public Icon getClarifier() {
-    return ClClassName.TheInstance;
+  public Icon getClarifier() { return ClClassName.TheInstance; }
+
+  public void initWizard(Wizard w) {
+    if (w instanceof WizMEName) {
+      ToDoItem item = w.getToDoItem();
+      ModelElement me = (ModelElement) item.getOffenders().elementAt(0);
+      String sug = me.getName().getBody();
+      String ins = "Change the name to something different.";
+      ((WizMEName)w).setInstructions(ins);
+      ((WizMEName)w).setSuggestion(sug);
+      ((WizMEName)w).setMustEdit(true);
+    }
   }
+  public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
 
 } /* end class CrReservedName */
 

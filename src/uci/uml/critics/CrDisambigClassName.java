@@ -26,7 +26,7 @@
 // File: CrDisambigClassName.java
 // Classes: CrDisambigClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigClassName.java,v 1.12 1999/02/19 22:22:39 jrobbins Exp $
+// $Id: CrDisambigClassName.java,v 1.13 1999/03/16 19:01:32 jrobbins Exp $
 
 package uci.uml.critics;
 
@@ -87,6 +87,20 @@ public class CrDisambigClassName extends CrUML {
   public Icon getClarifier() {
     return ClClassName.TheInstance;
   }
+
+  public void initWizard(Wizard w) {
+    if (w instanceof WizMEName) {
+      ToDoItem item = w.getToDoItem();
+      ModelElement me = (ModelElement) item.getOffenders().elementAt(0);
+      String sug = me.getName().getBody();
+      String ins = "Change the name to something different.";
+      ((WizMEName)w).setInstructions(ins);
+      ((WizMEName)w).setSuggestion(sug);
+      ((WizMEName)w).setMustEdit(true);
+    }
+  }
+  public Class getWizardClass(ToDoItem item) { return WizMEName.class; }
+
 
 } /* end class CrDisambigClassName.java */
 

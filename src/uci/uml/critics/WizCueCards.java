@@ -22,45 +22,69 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-package uci.uml.util;
+
+// File: WizCueCards.java
+// Classes: WizCueCards
+// Original Author: jrobbins@ics.uci.edu
+// $Id: WizCueCards.java,v 1.1 1999/03/16 19:01:39 jrobbins Exp $
+
+package uci.uml.critics;
 
 import java.util.*;
+import java.beans.*;
+import com.sun.java.swing.*;
 
-import java.util.*;
-
+import uci.argo.kernel.*;
 import uci.util.*;
+import uci.uml.ui.todo.*;
 import uci.uml.Foundation.Core.*;
 import uci.uml.Foundation.Data_Types.*;
+import uci.uml.Model_Management.*;
 
-/** Utility class to generate the children of a class.  In this case
- *  the "children" of a class are the other classes that are
- *  assocaiated with the parent class, and that Association has a
- *  COMPOSITE end at the parent.  This is used in one of the
- *  NavPerspectives. */
 
-public class GenCompositeClasses implements ChildGenerator {
-  public static GenCompositeClasses SINGLETON = new GenCompositeClasses();
+/** A non-modal wizard to help the user change navigability
+ *  of an association. */
 
-  public java.util.Enumeration gen(Object o) {
-    if (!(o instanceof Classifier)) return EnumerationEmpty.theInstance();
-    Classifier cls = (Classifier) o;
-    Vector ends = cls.getInheritedAssociationEnds();
-    if (ends == null) return EnumerationEmpty.theInstance();
-    Vector res = new Vector();
-    java.util.Enumeration enum = ends.elements();
-    while (enum.hasMoreElements()) {
-      AssociationEnd ae = (AssociationEnd) enum.nextElement();
-      if (AggregationKind.COMPOSITE.equals(ae.getAggregation())) {
-	IAssociation asc = ae.getAssociation();
-	Vector conn = asc.getConnection();
-	if (conn == null || conn.size() != 2) continue;
-	Object otherEnd = (ae == conn.elementAt(0)) ?
-	  conn.elementAt(1) : conn.elementAt(0);
-	Classifier componentClass = ((AssociationEnd)otherEnd).getType();
-	res.addElement(componentClass);
+public class WizCueCards extends Wizard {
+
+  protected Vector _cues = new Vector();
+  protected WizStepCue _steps[] = null;
+
+  public WizCueCards() { }
+
+  public int getNumSteps() { return _cues.size(); }
+
+  public ModelElement getModelElement() {
+    if (_item != null) {
+      Set offs = _item.getOffenders();
+      if (offs.size() >= 1) {
+	ModelElement me = (ModelElement) offs.elementAt(0);
+	return me;
       }
     }
-    return res.elements();
+    return null;
   }
-} /* end class GenCompositeClasses */
-  
+
+  public void addCue(String s) { _cues.addElement(s); }
+
+  /** Create a new panel for the given step.  */
+  public JPanel makePanel(int newStep) {
+    if (newStep <= getNumSteps()) {
+      String c = (String) _cues.elementAt(newStep - 1);
+      return new WizStepCue(this, c);
+    }
+    return null;
+  }
+
+  /** This wizard never takes action, it just displays step by step
+   *  instructions. */
+  public void doAction(int oldStep) {  }
+
+  /** This wizard cannot automatically finish the task. It can only be
+   *  finished when the user is on the last step. */
+  public boolean canFinish() {
+    return _step == getNumSteps();
+  }
+
+
+} /* end class WizCueCards */

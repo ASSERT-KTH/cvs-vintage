@@ -26,7 +26,7 @@
 // File: ToDoList.java
 // Class: ToDoList
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ToDoList.java,v 1.15 1999/03/08 22:42:49 jrobbins Exp $
+// $Id: ToDoList.java,v 1.16 1999/03/16 19:01:27 jrobbins Exp $
 
 package uci.argo.kernel;
 
@@ -330,8 +330,8 @@ implements Runnable, java.io.Serializable {
   public void removeToDoListListener(ToDoListListener l) {
     _listenerList.remove(ToDoListListener.class, l);
   }
-  
-  
+
+
   /*
    * Notify all listeners that have registered interest for
    * notification on this event type.  The event instance 
@@ -351,6 +351,24 @@ implements Runnable, java.io.Serializable {
 	// Lazily create the event:
 	if (e == null) e = new ToDoListEvent();
 	((ToDoListListener)listeners[i+1]).toDoListChanged(e);
+      }
+    }
+  }
+
+  protected void fireToDoItemChanged(ToDoItem item) {
+    Object[] listeners = _listenerList.getListenerList();
+    ToDoListEvent e = null;
+    // Process the listeners last to first, notifying
+    // those that are interested in this event
+    for (int i = listeners.length-2; i>=0; i-=2) {
+      if (listeners[i]==ToDoListListener.class) {
+	// Lazily create the event:
+	if (e == null) {
+	  Vector items = new Vector();
+	  items.addElement(item);
+	  e = new ToDoListEvent(items);
+	}
+	((ToDoListListener)listeners[i+1]).toDoItemsChanged(e);
       }
     }
   }

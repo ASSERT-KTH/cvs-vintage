@@ -26,7 +26,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.5 1999/02/19 22:23:42 jrobbins Exp $
+// $Id: CrMultipleInheritance.java,v 1.6 1999/03/16 19:01:42 jrobbins Exp $
 
 package uci.uml.critics.java;
 
@@ -69,6 +69,27 @@ public class CrMultipleInheritance extends CrUML {
     else
       return NO_PROBLEM;
   }
+
+  public void initWizard(Wizard w) {
+    if (w instanceof WizCueCards) {
+      WizCueCards wcc = (WizCueCards) w;
+      ToDoItem item = w.getToDoItem();
+      ModelElement me = (ModelElement) item.getOffenders().elementAt(0);
+      String nameStr = me.getName().getBody();
+      wcc.addCue("Remove the generalization arrow to one of the base "+
+		 "classes of {name}.");
+      wcc.addCue("Optionally, use the Interface tool to create a new "+
+		 "Interface for {name} to implement.");
+      wcc.addCue("Use the Realization tool to add a dashed arrow from "+
+		 "{name} to the new Interface.");
+      wcc.addCue("Move method declarations from the unused base class "+
+		 "to the new Interface and move method bodies down into "+
+		 "{name}.");
+      wcc.addCue("If the unused base class is not used by anything else "+
+		 "then it can be removed.");
+    }
+  }
+  public Class getWizardClass(ToDoItem item) { return WizCueCards.class; }
 
 } /* end class CrMultipleInheritance.java */
 
