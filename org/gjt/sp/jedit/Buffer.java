@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.208 2003/11/22 20:32:28 spestov Exp $
+ * @version $Id: Buffer.java,v 1.209 2004/01/18 19:01:02 spestov Exp $
  */
 public class Buffer
 {
@@ -1538,7 +1538,11 @@ public class Buffer
 	 */
 	public int getTabSize()
 	{
-		return getIntegerProperty("tabSize",8);
+		int tabSize = getIntegerProperty("tabSize",8);
+		if(tabSize <= 0)
+			return 8;
+		else
+			return tabSize;
 	} //}}}
 
 	//{{{ getIndentSize() method
@@ -1550,7 +1554,11 @@ public class Buffer
 	 */
 	public int getIndentSize()
 	{
-		return getIntegerProperty("indentSize",8);
+		int indentSize = getIntegerProperty("indentSize",8);
+		if(indentSize <= 0)
+			return 8;
+		else
+			return indentSize;
 	} //}}}
 
 	//{{{ getProperty() method

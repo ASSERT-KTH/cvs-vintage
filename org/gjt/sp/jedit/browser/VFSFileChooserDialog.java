@@ -39,7 +39,7 @@ import org.gjt.sp.util.*;
 /**
  * Wraps the VFS browser in a modal dialog.
  * @author Slava Pestov
- * @version $Id: VFSFileChooserDialog.java,v 1.42 2003/12/27 19:44:37 spestov Exp $
+ * @version $Id: VFSFileChooserDialog.java,v 1.43 2004/01/18 19:01:02 spestov Exp $
  */
 public class VFSFileChooserDialog extends EnhancedDialog
 {
@@ -431,24 +431,27 @@ public class VFSFileChooserDialog extends EnhancedDialog
 	class WorkThreadHandler implements WorkThreadProgressListener
 	{
 		//{{{ statusUpdate() method
-		public void statusUpdate(WorkThreadPool threadPool, int threadIndex)
+		public void statusUpdate(final WorkThreadPool threadPool,
+			final int threadIndex)
 		{
-			// synchronize with hide/showWaitCursor()
-			synchronized(VFSFileChooserDialog.this)
+			SwingUtilities.invokeLater(new Runnable()
 			{
-				int requestCount = threadPool.getRequestCount();
-				if(requestCount == 0)
+				public void run()
 				{
-					getContentPane().setCursor(
-						Cursor.getDefaultCursor());
+					int requestCount = threadPool.getRequestCount();
+					if(requestCount == 0)
+					{
+						getContentPane().setCursor(
+							Cursor.getDefaultCursor());
+					}
+					else if(requestCount >= 1)
+					{
+						getContentPane().setCursor(
+							Cursor.getPredefinedCursor(
+							Cursor.WAIT_CURSOR));
+					}
 				}
-				else if(requestCount >= 1)
-				{
-					getContentPane().setCursor(
-						Cursor.getPredefinedCursor(
-						Cursor.WAIT_CURSOR));
-				}
-			}
+			});
 		} //}}}
 
 		//{{{ progressUpdate() method
