@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.61 2003/02/15 01:09:21 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.62 2003/03/10 23:48:01 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -166,7 +166,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		super.setBounds(x,y,width,height);
 
 		textArea.recalculateVisibleLines();
-		textArea.recalculateLastPhysicalLine();
+		if(textArea.getBuffer().isLoaded())
+			textArea.recalculateLastPhysicalLine();
 		textArea.propertiesChanged();
 		textArea.scrollBarsInitialized = true;
 	} //}}}
