@@ -4,8 +4,6 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
@@ -23,8 +21,11 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.AddMessageCommand;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.smtp.SMTPServer;
-import org.columba.ristretto.message.Message;
+import org.columba.ristretto.message.Header;
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.smtp.SMTPException;
 
 /**
@@ -60,7 +61,7 @@ public class BounceCommand extends FolderCommand {
 		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
 		// create new message
-		Message message = new Message();
+		ColumbaMessage message = new ColumbaMessage();
 
 		// copy header of message we want to bounce
 		ColumbaHeader header =
@@ -68,12 +69,12 @@ public class BounceCommand extends FolderCommand {
 		message.setHeader(header);
 
 		// copy mimeparts of bounce message
-		MimePartTree mimePartTree = folder.getMimePartTree(uids[0]);
+		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
 		message.setMimePartTree(mimePartTree);
 
 		// copy message-source of bounce message
 		String source = folder.getMessageSource(uids[0]);
-		message.setSource(source);
+		message.setSource(new CharSequenceSource(source));
 
 		// create composer-model
 		// this encapsulates the data we need to
@@ -145,10 +146,13 @@ public class BounceCommand extends FolderCommand {
 		 *                  pass the information to.
 		 * 
 		 */
-	public static void bounceMessage(Message message, ComposerModel model) {
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+	public static void bounceMessage(ColumbaMessage message, ComposerModel model) {
+		//ColumbaHeader header = (ColumbaHeader) message.getHeader();
 
+		model.setHeader((Header) message.getHeader().clone());
+		
 		// copy every headerfield the original message contains
+		/*
 		Hashtable hashtable = header.getHashtable();
 		for (Enumeration e = hashtable.keys(); e.hasMoreElements();) {
 			Object key = e.nextElement();
@@ -162,7 +166,7 @@ public class BounceCommand extends FolderCommand {
 			}
 
 		}
-
+		*/
 		model.setSubject("Undelivered Mail Returned to Sender");
 
 		String host = "";
