@@ -1,4 +1,4 @@
-// $Id: PropPanelInterface.java,v 1.48 2004/11/22 19:34:15 mvw Exp $
+// $Id: PropPanelInterface.java,v 1.49 2004/11/22 20:50:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.CoreFactory;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.argouml.uml.ui.ActionNavigateNamespace;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
@@ -89,9 +90,11 @@ public class PropPanelInterface extends PropPanelClassifier {
 
 	addButton(new PropPanelButton2(this, 
             new ActionNavigateNamespace()));
+	
 	new PropPanelButton(this, lookupIcon("NewOperation"), 
-            Translator.localize(
-            "button.new-operation"), "addOperation", null);
+	    Translator.localize("button.new-operation"), 
+	    new ActionAddOperation());
+    
 	//new PropPanelButton(this,buttonPanel,generalizationIcon, 
 	//    Translator.localize("button.new-generalization"),
         //    "addGeneralization",null);
