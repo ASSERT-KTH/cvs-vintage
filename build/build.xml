@@ -144,11 +144,11 @@
         </copy>
 
         <condition property="template.path" value="/WEB-INF">
-            <equals arg1="${copy.templates}" arg2="true"/>
+            <equals arg1="${scarab.copy.templates}" arg2="true"/>
         </condition>
         <condition property="template.path" value="file://${src.dir}">
             <not>
-                <equals arg1="${copy.templates}" arg2="true"/>
+                <equals arg1="${scarab.copy.templates}" arg2="true"/>
             </not>
         </condition>
 
@@ -228,7 +228,7 @@
     <!-- ================================================================== -->
     <!-- Copies templates to WEB-INF directory, if specified                -->
     <!-- ================================================================== -->
-    <target name="copy-templates" if="copy.templates">
+    <target name="copy-templates" if="scarab.copy.templates">
 
         <copy todir="${build.project.webinf}/templates" filtering="no">
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
