@@ -1,0 +1,160 @@
+body {
+	background: white;
+	color: black;
+	margin:	0;
+	padding: 0;
+	}
+body, div, p, th, td, li, dl, dd {
+	font-family: Lucida, Arial, Helvetica, sans-serif;
+	}
+code, pre {
+	font-family:	'Andale Mono', Courier, monospace;
+	}
+h2, h3, h4 {
+	font-family:	Tahoma, Verdana, Helvetica, Arial, sans-serif;
+	}
+h2 {
+ font-size: 1.5em
+ }
+th, td {
+ text-align: left;
+ vertical-align: top 
+ }
+.right {
+	text-align:	right !important;
+	}
+.center {
+	text-align:	center !important;
+	}
+.left {
+	text-align:	center !important;
+	}
+#globalnav { 
+	font-weight: bold;
+	}
+#leftcol {
+	background: #efefef;
+	border-right: 1px solid #999;
+	border-bottom: 1px solid #999;
+	}
+#leftcol a:link, #leftcol a:visited {
+	color: blue;
+	}
+a:active, a:hover, #leftcol a:active, #leftcol a:hover {
+	color: #f30 !important;
+	}
+#login a:link, #login a:visited {
+	color: black; 
+	text-decoration: underline;
+	}
+#banner a:active, #banner a:hover {
+	color: black !important;
+	}
+#leftcol a  {
+ text-decoration: none;
+ }
+.app th {
+	background-color: #ccc;
+	}
+.a td { 
+	background: #efefef;
+	}
+.b td { 
+	background: #fff;
+	}
+.datatablechild th {
+	background: #efefef;
+	color: #000;
+	}
+.datatablechild tr.a td {
+	background: #cf9;
+	}
+.app .axial th {
+	background-color: #efefef;
+	text-align: right;
+	color: black
+	}
+.app .axial td th {
+	text-align: left;
+	}
+.alert {
+	background: #ff0;
+	}
+.selection {
+	background: #ffc;
+	font-weight: bold
+	}
+body td .stb	{
+	margin-top: 1em;
+	text-indent: 0;
+	}
+body td .mtb	{
+	margin-top: 2em;
+	text-indent: 0;
+	}
+dd	{
+	margin-bottom: .67em;
+	}
+#footer {
+ margin: 4px
+ }
+.username {
+	white-space: nowrap;
+	}
+#login {
+	color: black;
+	}
+#login .username {
+	font-weight: bold;
+	}
+#helptext, #search {
+	margin-top: 1em
+	}
+#helptext td div {
+	margin: .5em
+	}
+#helptext th {
+	background: #cc9;
+	}
+#helptext td {
+	background: #ffc;
+	}
+.docs h2 { color: #666
+ }
+.docs h3 { color: #333
+ }
+.docs h4 { color: #000
+ }
+.tabs a		{
+	text-decoration:	none;
+	}
+.courtesylinks {
+	margin-top: 1em;
+	padding-top: 1em
+	}
+#navcolumn div {
+ margin-bottom: .67em
+ }
+#navcolumn div div {
+ padding-left: 1em;
+ margin-bottom: 0
+ }
+#banner, #banner td { 
+	background: #ccc;
+	color: black;
+	vertical-align: middle;
+	}
+.tabs td, .tabs th {
+	background-color: #ccc;
+	padding-left: 7px;
+	padding-right: 7px;
+	}
+body .tabs th {
+	background-color: #999;
+	color: #fff;
+	}
+.tabs td {
+	background-color: #ccc;
+	padding-left: 7px;
+	padding-right: 7px;
+	}
