@@ -22,7 +22,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class RunAsSecurityInterceptor extends AbstractInterceptor
 {
@@ -50,6 +50,8 @@ public class RunAsSecurityInterceptor extends AbstractInterceptor
          {
             String roleName = secMetaData.getRunAsRoleName();
             String principalName = secMetaData.getRunAsPrincipalName();
+            if( principalName == null )
+               principalName = application.getUnauthenticatedPrincipal();
             // the run-as principal might have extra roles mapped in the assembly-descriptor
             Set extraRoleNames = assemblyDescriptor.getSecurityRoleNamesByPrincipal(principalName);
             runAsIdentity = new RunAsIdentity(roleName, principalName, extraRoleNames);
