@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.3 2000/12/27 21:00:31 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/12/27 21:00:31 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.4 2001/02/09 07:51:34 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/02/09 07:51:34 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ package org.apache.tomcat.util;
  * This class is used by XML Schema binary format validation
  *
  * @author Jeffrey Rodriguez
- * @version $Revision: 1.3 $ $Date: 2000/12/27 21:00:31 $
+ * @version $Revision: 1.4 $ $Date: 2001/02/09 07:51:34 $
  */
 
 public final class Base64 {
@@ -147,7 +147,7 @@ public final class Base64 {
      * @param binaryData Array containing binaryData
      * @return Encoded Base64 array
      */
-    public byte[] encode( byte[] binaryData ) {
+    public static byte[] encode( byte[] binaryData ) {
         int      lengthDataBits    = binaryData.length*EIGHTBIT;
         int      fewerThan24bits   = lengthDataBits%TWENTYFOURBITGROUP;
         int      numberTriplets    = lengthDataBits/TWENTYFOURBITGROUP;

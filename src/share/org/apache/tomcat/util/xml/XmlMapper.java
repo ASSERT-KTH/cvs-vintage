@@ -48,8 +48,8 @@ public class XmlMapper
     boolean validating=false;
 
     public XmlMapper() {
-	attributeStack = new Object[100]; // depth of the xml doc
-	tagStack = new String[100];
+	attributeStack = new Object[200]; // depth of the xml doc
+	tagStack = new String[200];
 	initDefaultRules();
     }
 
@@ -341,8 +341,8 @@ public class XmlMapper
 	    this.action=action;
 	}
     }
-    Rule rules[]=new Rule[100];
-    Rule matching[]=new Rule[100];
+    Rule rules[]=new Rule[200];
+    Rule matching[]=new Rule[200];
     int ruleCount=0;
 
     /**
