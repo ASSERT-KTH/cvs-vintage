@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceComponent.java,v 1.7 2004/12/17 22:56:20 mvw Exp $
+// $Id: UMLUserInterfaceComponent.java,v 1.8 2004/12/18 09:04:54 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,13 +30,9 @@ import ru.novosoft.uml.MElementListener;
  * This interface accepts all notifications signaled by NSUML's
  * MElementListener interface plus accepts notification that a
  * container's target model element has been changed (typically due to
- * navigation).  This interface is implemented by 
- * UMLTextField, UMLMultiplicityComboBox, etc.
+ * navigation).  
  *
  * @author Curt Arnold
- * @see UMLUserInterfaceContainer
- * @see UMLTextField
- * @see UMLMultiplicityComboBox2
  */
 public interface UMLUserInterfaceComponent extends MElementListener {
     /**

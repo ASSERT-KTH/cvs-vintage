@@ -1,4 +1,4 @@
-// $Id: CoreTestSuite.java,v 1.3 2004/08/26 19:45:02 mvw Exp $
+// $Id: CoreTestSuite.java,v 1.4 2004/12/18 09:04:57 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ public class CoreTestSuite {
 			  + CoreTestSuite.class.getPackage().getName());
 	suite.addTestSuite(TestUMLCollaborationInteractionListModel.class);
 	suite.addTestSuite(TestUMLElementOwnershipSpecificationCheckBox.class);
-	suite.addTestSuite(TestUMLElementOwnershipVisibilityButtonGroup.class);
 	suite.addTestSuite(TestUMLFeatureOwnerComboBoxModel.class);
 	suite.addTestSuite(TestUMLFeatureOwnerScopeCheckBox.class);
 	suite.addTestSuite(TestUMLGeneralizationPowertypeComboBoxModel.class);
