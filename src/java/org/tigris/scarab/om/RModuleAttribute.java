@@ -106,10 +106,27 @@ public class RModuleAttribute
         }
         return dispVal;
     }
-
+    /*
+    public List getRModuleOptions(Criteria crit)
+    {
+        List rmos = null;
+        if ( getAttributeId() != null && getModuleId() != null ) 
+        {
+            crit.addJoin(RModuleOptionPeer.OPTION_ID, 
+                         AttributeOptionPeer.OPTION_ID);
+            crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
+            crit.add(AttributeOptionPeer.ATTRIBUTE_ID, getAttributeId());
+            rmos = RModuleOptionPeer.doSelect(crit);
+        }
+        else 
+        {
+            rmos = new ArrayList(0);
+        }
+        
+        return rmos;
+    }
+    */
 }
-
-
 
 
 
