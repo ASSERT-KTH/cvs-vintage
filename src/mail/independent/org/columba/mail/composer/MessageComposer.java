@@ -525,8 +525,13 @@ public class MessageComposer {
         if (model.isEncryptMessage()) {
             PGPItem item = model.getAccountItem().getPGPItem();
 
-            // Set id on recipient
-            item.set("id", model.getRCPTVector().get(0).toString());
+            // Set recipients from the  recipients vector
+            List recipientList = model.getRCPTVector();
+            StringBuffer recipientBuf = new StringBuffer();
+            for (Iterator it = recipientList.iterator(); it.hasNext();) {
+                recipientBuf.append((String)it.next());
+            }
+            item.set("recipients", recipientBuf.toString());
 
             PGPMimePart signPart = new PGPMimePart(new MimeHeader("multipart",
                         "encrypted"), item);
