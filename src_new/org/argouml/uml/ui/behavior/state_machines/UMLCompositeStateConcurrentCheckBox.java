@@ -1,4 +1,4 @@
-// $Id: UMLCompositeStateConcurentCheckBox.java,v 1.8 2004/10/13 05:52:20 linus Exp $
+// $Id: UMLCompositeStateConcurrentCheckBox.java,v 1.1 2004/12/03 18:55:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,12 +32,12 @@ import org.argouml.uml.ui.UMLCheckBox2;
  * @since Dec 14, 2002
  * @author jaap.branderhorst@xs4all.nl
  */
-public class UMLCompositeStateConcurentCheckBox extends UMLCheckBox2 {
+public class UMLCompositeStateConcurrentCheckBox extends UMLCheckBox2 {
 
     /**
-     * Constructor for UMLCompositeStateConcurentCheckBox.
+     * Constructor for UMLCompositeStateConcurrentCheckBox.
      */
-    public UMLCompositeStateConcurentCheckBox() {
+    public UMLCompositeStateConcurrentCheckBox() {
          super(Translator.localize("label.concurrent"), 
             ActionSetCompositeStateConcurrent.getInstance(), 
             "isConcurent");
@@ -47,7 +47,7 @@ public class UMLCompositeStateConcurentCheckBox extends UMLCheckBox2 {
      * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
      */
     public void buildModel() {
-        setSelected(ModelFacade.isConcurent(getTarget()));
+        setSelected(ModelFacade.isConcurrent(getTarget()));
     }
 
 }

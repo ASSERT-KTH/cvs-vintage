@@ -1,4 +1,4 @@
-// $Id: PropPanelCompositeState.java,v 1.20 2004/11/04 17:23:18 bobtarling Exp $
+// $Id: PropPanelCompositeState.java,v 1.21 2004/12/03 18:55:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class PropPanelCompositeState extends PropPanelState {
         addField(Translator.localize("label.container"), 
                 getContainerScroll());
         addField(Translator.localize("label.modifiers"), 
-                new UMLCompositeStateConcurentCheckBox());
+                new UMLCompositeStateConcurrentCheckBox());
         addField(Translator.localize("label.entry"), 
                 getEntryScroll());
         addField(Translator.localize("label.exit"), 
