@@ -13,10 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.help;
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.net.URL;
 
@@ -25,11 +28,9 @@ import java.util.Locale;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.help.JHelp;
+import javax.help.TextHelpModel;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-
+import javax.swing.*;
 
 /**
  * @author fdietz
@@ -48,7 +49,6 @@ public class HelpManager {
     private HelpBroker hb = null;
     private String hsName = null; // name for the HelpSet 
     private String hsPath = null; // URL spec to the HelpSet
-    String title = "";
     private JFrame frame;
 
     /**
@@ -101,14 +101,40 @@ public class HelpManager {
         jh.getCurrentNavigator().setFont(font);
     }
 
+    /**
+     * Opens the help frame.
+     */
     public void openHelpFrame() {
         if (frame == null) {
-            new HelpFrame(jh);
-            frame = HelpFrame.createFrame(hs.getTitle(), null);
-            frame.setVisible(true);
-        } else {
-            frame.setVisible(true);
+            TextHelpModel m = jh.getModel();
+            HelpSet hs = m.getHelpSet();
+            String title = hs.getTitle();
+
+            if (title == null || title.equals("")) {
+                title = "Unnamed HelpSet"; // maybe based on HS?
+            }
+
+            frame = new JFrame(title);
+            frame.getContentPane().add(jh);
+            JMenuBar menuBar = new JMenuBar();
+            JMenuItem mi;
+            JMenu file = (JMenu) menuBar.add(new JMenu("File"));
+            file.setMnemonic('F');
+
+            mi = (JMenuItem) file.add(new JMenuItem("Exit"));
+            mi.setMnemonic('x');
+            mi.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        frame.setVisible(false);
+                    }
+                });
+            //JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
+            //options.setMnemonic('O');
+            frame.setJMenuBar(menuBar);
+            frame.pack();
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
+        frame.setVisible(true);
     }
 
     /**
