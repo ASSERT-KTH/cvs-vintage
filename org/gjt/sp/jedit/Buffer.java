@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.50 2001/12/26 05:32:34 spestov Exp $
+ * @version $Id: Buffer.java,v 1.51 2001/12/28 05:03:58 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -3481,27 +3481,6 @@ public class Buffer implements EBComponent
 	//}}}
 
 	//}}}
-
-	//{{{ PrintTabExpander class
-	static class PrintTabExpander implements TabExpander
-	{
-		private int leftMargin;
-		private int tabSize;
-
-		//{{{ PrintTabExpander constructor
-		public PrintTabExpander(int leftMargin, int tabSize)
-		{
-			this.leftMargin = leftMargin;
-			this.tabSize = tabSize;
-		} //}}}
-
-		//{{{ nextTabStop() method
-		public float nextTabStop(float x, int tabOffset)
-		{
-			int ntabs = ((int)x - leftMargin) / tabSize;
-			return (ntabs + 1) * tabSize + leftMargin;
-		} //}}}
-	} //}}}
 
 	//{{{ TokenList class
 	/**

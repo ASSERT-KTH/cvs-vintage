@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.17 2001/12/27 06:15:07 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.18 2001/12/28 05:03:58 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -741,10 +741,6 @@ public class GUIUtilities
 
 		try
 		{
-			styles[Token.NULL] = new SyntaxStyle(
-				jEdit.getColorProperty("view.fgColor"),
-				jEdit.getColorProperty("view.bgColor"),
-				jEdit.getFontProperty("view.font"));
 			styles[Token.COMMENT1] = GUIUtilities.parseStyle(
 				jEdit.getProperty("view.style.comment1"),
 				family,size,color);

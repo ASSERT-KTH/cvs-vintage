@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.19 2001/12/27 06:15:08 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.20 2001/12/28 05:03:58 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -142,6 +142,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	public final void setStyles(SyntaxStyle[] styles)
 	{
 		this.styles = styles;
+		styles[Token.NULL] = new SyntaxStyle(getForeground(),null,getFont());
 		repaint();
 	} //}}}
 
@@ -681,11 +682,33 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 	//{{{ Package-private members
 
+	public void timeL2LC()
+	{
+		Buffer buffer = textArea.getBuffer();
+		Segment seg = new Segment();
+		java.util.Random r = new java.util.Random();
+		long start = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i++)
+		{
+			int l = Math.abs(r.nextInt() % textArea.getBuffer()
+				.getLineCount());
+			
+			buffer.getLineText(l,seg);
+			lineToChunkList(seg,buffer.markTokens(l).getFirstToken());
+		}
+		System.err.println(System.currentTimeMillis() - start);
+	} //}}}
+
 	//{{{ lineToChunkList() method
 	TextUtilities.Chunk lineToChunkList(Segment seg, Token tokens)
 	{
-		return TextUtilities.lineToChunkList(seg,tokens,styles,
-			fontRenderContext,this);
+		ArrayList l = new ArrayList();
+		TextUtilities.lineToChunkList(seg,tokens,styles,
+			fontRenderContext,this,0.0f,l);
+		if(l.size() == 0)
+			return null;
+		else
+			return (TextUtilities.Chunk)l.get(0);
 	} //}}}
 
 	//}}}
