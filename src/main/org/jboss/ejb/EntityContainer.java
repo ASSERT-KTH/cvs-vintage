@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see EntityEnterpriseContext
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.11 $
+ *   @version $Revision: 1.12 $
  */
 public class EntityContainer
    extends Container
@@ -362,7 +362,7 @@ public class EntityContainer
       {
          // Single entity finder
          Object id = getPersistenceManager().findEntity(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-         return (EJBObject)containerInvoker.getEntityEJBObject(mi.getId());
+		 return (EJBObject)containerInvoker.getEntityEJBObject(id);
       }
    }
 
