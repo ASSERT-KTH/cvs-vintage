@@ -56,6 +56,12 @@ import org.apache.turbine.pipeline.AbstractValve;
 import org.apache.turbine.ValveContext;
 import org.tigris.scarab.util.Log;
 
+/**
+ * This valve determines the target template.  
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: DetermineTargetValve.java,v 1.3 2002/10/29 18:43:44 jon Exp $
+ */
 public class DetermineTargetValve 
     extends AbstractValve
 {

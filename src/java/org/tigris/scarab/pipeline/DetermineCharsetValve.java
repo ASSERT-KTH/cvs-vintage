@@ -58,24 +58,23 @@ import org.apache.log4j.Category;
 
 
 /**
- * 
+ * This valve determines the charset to use.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: DetermineCharsetValve.java,v 1.3 2002/10/29 18:43:44 jon Exp $
  */
 public class DetermineCharsetValve 
     extends AbstractValve
 {
     private static final Category log = 
-        Category.getInstance( ResetCacheValve.class );
+        Category.getInstance( DetermineCharsetValve.class );
         
     private static final String KEY = 
         ResetCacheValve.class.getName() + ".start";
 
-    private static final boolean DEBUG = false;
-
     private static final String requiredCharset = Turbine.getConfiguration().
         getString("locale.default.charset");
-    
+
     /**
      * @see org.apache.turbine.Valve#invoke(RunData, ValveContext)
      */
