@@ -118,7 +118,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.16 $
+@version $Revision: 1.17 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -276,7 +276,7 @@ implements AbstractWebContainerMBean
          WebDescriptorParser webAppParser = new DescriptorParser();
 	    System.out.println("[8] DEBUG performDeploy:"+di.webContext);
          WebApplication warInfo = performDeploy(di.webContext, di.localUrl.toString(), webAppParser);
-         deploymentMap.put(di.localUrl, warInfo);
+         deploymentMap.put(di.localUrl.toString(), warInfo);
       }
       catch(DeploymentException e)
       {
@@ -317,14 +317,14 @@ implements AbstractWebContainerMBean
    public void undeploy(DeploymentInfo sdi) 
    throws DeploymentException 
    {
-      undeploy(sdi.localUrl.getFile());
+      undeploy(sdi.localUrl.toString());
    }
    
    public synchronized void undeploy(String warUrl) throws DeploymentException
    {
       try
       {
-	System.out.println("UNDEPLOY: "+warUrl);
+	 System.out.println("UNDEPLOY: "+warUrl);
          performUndeploy(warUrl);
          // Remove the web application ENC...
          deploymentMap.remove(warUrl);
@@ -347,6 +347,7 @@ implements AbstractWebContainerMBean
    */
    public boolean isDeployed(String warUrl)
    {
+      System.out.println("IS-DEPLOYED: "+warUrl);
       return deploymentMap.containsKey(warUrl);
    }
    
@@ -357,6 +358,7 @@ implements AbstractWebContainerMBean
    */
    public WebApplication getDeployedApp(String warUrl)
    {
+      System.out.println("GET-DEPLOYED-APP: "+warUrl);
       WebApplication appInfo = (WebApplication) deploymentMap.get(warUrl);
       return appInfo;
    }
