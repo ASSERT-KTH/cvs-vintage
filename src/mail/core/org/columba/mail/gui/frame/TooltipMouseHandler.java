@@ -41,6 +41,12 @@ public class TooltipMouseHandler extends MouseAdapter {
 		this.statusBar = statusBar;
 	}
 
+	/**
+	 * Called when the mouse is placed over e.g. a menu or a toolbar 
+	 * button. Either the tooltip text (preferred) or SHORT_DESCRIPTION
+	 * is fetched from the action associated with the menu/button if 
+	 * possible, and displayed in the status bar.
+	 */
 	public void mouseEntered(MouseEvent evt) {
 		if (evt.getSource() instanceof AbstractButton) {
 			AbstractButton button = (AbstractButton) evt.getSource();
@@ -56,5 +62,24 @@ public class TooltipMouseHandler extends MouseAdapter {
 			}
 		}
 	}
+	
+	/** 
+	 * Called when the mouse is moved away from e.g. a menu or a toolbar
+	 * button. Clears the text displayed in the status bar.
+	 */
+	public void mouseExited(MouseEvent e) {
+		// clear the tooltip message previously displayed in the status bar
+		statusBar.displayTooltipMessage("");
+	}
+
+	/**
+	 * Called when the mouse is pressed on e.g. a menu or a toolbar
+	 * button. Clears the text displayed in the status bar.
+	 */
+	public void mousePressed(MouseEvent e) {
+		// clear the tooltip message previously displayed in the status bar
+		statusBar.displayTooltipMessage("");
+	}
+
 
 }
