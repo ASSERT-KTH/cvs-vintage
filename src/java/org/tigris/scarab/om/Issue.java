@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.260 2003/02/01 21:17:48 jon Exp $
+ * @version $Id: Issue.java,v 1.261 2003/02/01 22:23:48 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -798,7 +798,20 @@ public class Issue
         throws Exception
     {
         SequencedHashMap result = null;
-        Object obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP);
+        Object obj = null;
+        // Cache Note:
+        // we check for issue id, so that we only (JCS) cache for saved issues
+        // if we decide to cache results for new issues we should replace
+        // this conditional with (this instanceof IssueSearch) because
+        // we definitely do not want to cache those.
+        if (getIssueId() == null)
+        {
+            obj = ScarabCache.get(this, GET_MODULE_ATTRVALUES_MAP);
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_MODULE_ATTRVALUES_MAP);
+        }        
         if ( obj == null ) 
         {        
             List attributes = getModule().getActiveAttributes(getIssueType());
@@ -821,7 +834,15 @@ public class Issue
                     result.put(key, aval);
                 }
             }
-            getMethodResult().put(result, this, GET_MODULE_ATTRVALUES_MAP);
+            // see Cache Note above
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_MODULE_ATTRVALUES_MAP);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_MODULE_ATTRVALUES_MAP);
+            }
         }
         else 
         {
@@ -1205,7 +1226,18 @@ public class Issue
         throws Exception
     {
         AttributeValue result = null;
-        Object obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUE, attribute.getAttributeId(), user.getUserId()); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_USER_ATTRIBUTEVALUE, 
+                attribute.getAttributeId(), user.getUserId()); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUE, 
+                attribute.getAttributeId(), user.getUserId()); 
+        }
         if (obj == null) 
         {
             Criteria crit = new Criteria()
@@ -1218,7 +1250,17 @@ public class Issue
             {
                 result = (AttributeValue)resultList.get(0);
             }
-            getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUE, attribute.getAttributeId(), user.getUserId());
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_USER_ATTRIBUTEVALUE, 
+                    attribute.getAttributeId(), user.getUserId());
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUE, 
+                    attribute.getAttributeId(), user.getUserId());
+            }
         }
         else 
         {
@@ -1233,7 +1275,16 @@ public class Issue
     public List getUserAttributeValues() throws Exception
     {
         List result = null;
-        Object obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUES); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_USER_ATTRIBUTEVALUES); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_USER_ATTRIBUTEVALUES); 
+        }
         if ( obj == null ) 
         {        
             List attributeList = getModule().getUserAttributes(getIssueType(), true);
@@ -1257,7 +1308,15 @@ public class Issue
             {
                 result = new ArrayList(0);
             }
-            getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUES);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_USER_ATTRIBUTEVALUES);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_USER_ATTRIBUTEVALUES);
+            }
         }
         else 
         {
@@ -1279,7 +1338,16 @@ public class Issue
         ActivitySet activitySet = null;
         if ( !isNew() ) 
         {
-            Object obj = getMethodResult().get(this, GET_INITIAL_ACTIVITYSET);
+            Object obj = null;
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                obj = ScarabCache.get(this, GET_INITIAL_ACTIVITYSET);
+            }
+            else
+            {
+                obj = getMethodResult().get(this, GET_INITIAL_ACTIVITYSET);
+            }
             if (obj == null)
             {
                 NumberKey[] types = {ActivitySetTypePeer.CREATE_ISSUE__PK,
@@ -1293,7 +1361,17 @@ public class Issue
                 if (activitySets != null && activitySets.size() > 0)
                 {
                     activitySet = (ActivitySet)activitySets.get(0);
-                    getMethodResult().put(activitySet, this, GET_INITIAL_ACTIVITYSET);
+                    // see Cache Note in getModuleAttributeValuesMap()
+                    if (getIssueId() == null) 
+                    {
+                        ScarabCache
+                            .put(activitySet, this, GET_INITIAL_ACTIVITYSET);
+                    }
+                    else
+                    {
+                        getMethodResult()
+                            .put(activitySet, this, GET_INITIAL_ACTIVITYSET);
+                    }
                 }
             }
             else
@@ -1502,7 +1580,16 @@ public class Issue
     {
         List result = null;
         Boolean fullBool = (full ? Boolean.TRUE : Boolean.FALSE);
-        Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool);
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_COMMENTS, fullBool);
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_COMMENTS, fullBool);
+        }
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1517,7 +1604,15 @@ public class Issue
                 crit.setLimit(getCommentsLimit());
             }
             result = AttachmentPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_COMMENTS, fullBool);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_COMMENTS, fullBool);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_COMMENTS, fullBool);
+            }
         }
         else 
         {
@@ -1534,7 +1629,16 @@ public class Issue
     public List getUrls() throws Exception
     {
         List result = null;
-        Object obj = getMethodResult().get(this, GET_URLS); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_URLS);
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_URLS);
+        } 
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1545,7 +1649,15 @@ public class Issue
                      Attachment.URL__PK)
                 .add(AttachmentPeer.DELETED, 0);
             result = AttachmentPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_URLS);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_URLS);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_URLS);
+            }
         }
         else 
         {
@@ -1561,7 +1673,16 @@ public class Issue
     public List getExistingAttachments() throws Exception
     {
         List result = null;
-        Object obj = getMethodResult().get(this, GET_EXISTING_ATTACHMENTS); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_EXISTING_ATTACHMENTS); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_EXISTING_ATTACHMENTS); 
+        }
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1572,7 +1693,15 @@ public class Issue
                      Attachment.FILE__PK)
                 .add(AttachmentPeer.DELETED, 0);
             result = AttachmentPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_EXISTING_ATTACHMENTS);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_EXISTING_ATTACHMENTS);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_EXISTING_ATTACHMENTS);
+            }
         }
         else 
         {
@@ -1670,8 +1799,18 @@ public class Issue
     {
         List result = null;
         Boolean fullHistoryObj = fullHistory ? Boolean.TRUE : Boolean.FALSE;
-        Object obj = getMethodResult().get(this, GET_ACTIVITY, fullHistoryObj,
-                                     new Integer(limit)); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_ACTIVITY, fullHistoryObj,
+                                        new Integer(limit)); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_ACTIVITY, fullHistoryObj,
+                                        new Integer(limit)); 
+        }
         if (obj == null)
         {
             Criteria crit = new Criteria()
@@ -1682,8 +1821,17 @@ public class Issue
                 crit.setLimit(limit);
             }
             result = ActivityPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_ACTIVITY, fullHistoryObj,
-                            new Integer(limit));
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_ACTIVITY, 
+                    fullHistoryObj, new Integer(limit));
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_ACTIVITY, 
+                    fullHistoryObj, new Integer(limit));
+            }
         }
         else 
         {
@@ -1795,7 +1943,16 @@ public class Issue
     public List getChildren(boolean hideDeleted) throws Exception  
     {
         List result = null;
-        Object obj = getMethodResult().get(this, GET_CHILDREN); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_CHILDREN); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_CHILDREN); 
+        }
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1805,7 +1962,15 @@ public class Issue
                 crit.add(DependPeer.DELETED, false);
             }
             result = DependPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_CHILDREN);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_CHILDREN);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_CHILDREN);
+            }
         }
         else 
         {
@@ -1830,7 +1995,16 @@ public class Issue
     public List getParents(boolean hideDeleted) throws Exception  
     {
         List result = null;
-        Object obj = getMethodResult().get(this, GET_PARENTS); 
+        Object obj = null;
+        // see Cache Note in getModuleAttributeValuesMap()
+        if (getIssueId() == null) 
+        {
+            obj = ScarabCache.get(this, GET_PARENTS); 
+        }
+        else
+        {
+            obj = getMethodResult().get(this, GET_PARENTS); 
+        }
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria()
@@ -1840,7 +2014,15 @@ public class Issue
                 crit.add(DependPeer.DELETED, false);
             }
             result = DependPeer.doSelect(crit);
-            getMethodResult().put(result, this, GET_PARENTS);
+            // see Cache Note in getModuleAttributeValuesMap()
+            if (getIssueId() == null) 
+            {
+                ScarabCache.put(result, this, GET_PARENTS);
+            }
+            else
+            {
+                getMethodResult().put(result, this, GET_PARENTS);
+            }
         }
         else 
         {
