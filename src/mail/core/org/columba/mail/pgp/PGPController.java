@@ -15,12 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.util.PGPPassphraseDialog;
@@ -51,6 +56,8 @@ public class PGPController {
 	private Map passwords;
 
 	private PGPPassphraseDialog dialog;
+	
+	private File tempFile;
 
 	/**
 	 * here are the utils, from which you can sign, verify, encrypt and decrypt messages
@@ -372,5 +379,19 @@ public class PGPController {
 	public String getPgpMessage() {
 		return pgpMessage;
 	}
+
+	protected File createTempFileFromStream(InputStream in) throws IOException {
+		File tempFile = File.createTempFile("columba-pgp" , ".tmp" );
+		FileOutputStream out = new FileOutputStream( tempFile );
+		StreamUtils.streamCopy(in,out);
+		in.close();
+		out.close();
+		
+		return tempFile;
+	}
+	
+	protected InputStream getTempInputStream() throws IOException {
+		return new FileInputStream( tempFile );
+	} 
 
 }

@@ -221,6 +221,8 @@ public class ViewMessageCommand extends FolderCommand {
 		// all accounts to find a matching PGP id
 		String to = (String) header.get("To");
 		PGPItem pgpItem = MailConfig.getAccountList().getPGPItem(to);
+		// Set the digest-algorithm from content-paramater micalg, cut of "pgp-"
+		pgpItem.setDigestAlgorithm(signedMultipart.getHeader().getContentParameter("micalg").substring(4));
 
 		// getting controller Instance
 		PGPController controller = PGPController.getInstance();

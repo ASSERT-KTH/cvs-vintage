@@ -23,6 +23,7 @@ import org.columba.core.xml.XmlElement;
 public class PGPItem extends DefaultItem
 {
     private String passphrase;
+	private String digestAlgorithm;
 
     public PGPItem( XmlElement e )
     {
@@ -45,6 +46,20 @@ public class PGPItem extends DefaultItem
     {
 		passphrase = s;
     }
+
+	/**
+	 * @return
+	 */
+	public String getDigestAlgorithm() {
+		return digestAlgorithm;
+	}
+
+	/**
+	 * @param digestAlgorithm
+	 */
+	public void setDigestAlgorithm(String digestAlgorithm) {
+		this.digestAlgorithm = digestAlgorithm;
+	}
 
 }
 

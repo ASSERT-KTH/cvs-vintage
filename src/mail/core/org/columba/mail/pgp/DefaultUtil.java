@@ -214,6 +214,9 @@ public abstract class DefaultUtil {
 		if (name.equals("sigfile")) {
 			return item.get("sigfile");
 		}
+		if( name.equals("digest-algo")) {
+			return item.getDigestAlgorithm();
+		}
 
 		return null;
 	}
@@ -334,6 +337,7 @@ public abstract class DefaultUtil {
 		Process p =
 			executeCommand(
 				getCommandString(PGPController.ENCRYPT_ACTION, item));
+				
 		StreamUtils.streamCopy(message, p.getOutputStream());
 		p.getOutputStream().close();
 
