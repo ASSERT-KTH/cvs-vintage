@@ -5,4 +5,12 @@
     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
 
 <web-app>
+  <description>
+     Tomcat Admin 
+  </description>
+
+  <taglib>
+    <taglib-uri>http://jakarta.apache.org/taglibs/tomcat_admin-1.0</taglib-uri>
+    <taglib-location>/WEB-INF/admin.tld</taglib-location>
+  </taglib>
 </web-app>
