@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.8 2004/12/28 13:00:09 mvw Exp $
+// $Id: ActionFileOperations.java,v 1.9 2004/12/28 18:56:44 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,8 +51,6 @@ import org.argouml.ui.ProjectBrowser;
 public abstract class ActionFileOperations extends UMLAction {
     private static final Logger LOG =
         Logger.getLogger(ActionFileOperations.class);
-    
-    private ProjectBrowser pb = ProjectBrowser.getInstance();
 
     /**
      * The constructor.
@@ -93,6 +91,7 @@ public abstract class ActionFileOperations extends UMLAction {
      * @return true if we can continue with opening
      */
     protected boolean askConfirmationAndSave() {
+        ProjectBrowser pb = ProjectBrowser.getInstance();
         Project p = ProjectManager.getManager().getCurrentProject();
 
 
@@ -165,7 +164,8 @@ public abstract class ActionFileOperations extends UMLAction {
                 }
                 p = persister.doLoad(url);
                 
-                pb.showStatus(MessageFormat.format(Translator.localize(
+                ProjectBrowser.getInstance().showStatus(
+                        MessageFormat.format(Translator.localize(
                         "label.open-project-status-read"),
                         new Object[] {
                                 url.toString()
