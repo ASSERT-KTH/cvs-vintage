@@ -75,7 +75,7 @@ import org.apache.velocity.context.Context;
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jvanzyl@zenplex.com">Jason van Zyl</a>
  * @author <a href="mailto:stack@collab.net">Michael Stack</a>
- * @version $Id: VelocityEmail.java,v 1.1 2003/04/24 23:04:07 jon Exp $
+ * @version $Id: VelocityEmail.java,v 1.2 2003/05/03 22:12:58 jon Exp $
  */
 public abstract class VelocityEmail
 {
@@ -109,7 +109,7 @@ public abstract class VelocityEmail
     }
 
     /**
-     * @see org.apache.fulcrum.velocity.VelocityEmailService#handleRequest(Context,
+     * @see org.tigris.scarab.services.email.VelocityEmailService#handleRequest(Context,
      * String, String, String)
      */
     public String handleRequest(Context context, String template,
@@ -131,7 +131,7 @@ public abstract class VelocityEmail
      *
      * @exception Exception Error processing template.
      *
-     * @see org.apache.fulcrum.velocity.VelocityEmailService#handleRequest(Context,
+     * @see org.tigris.scarab.services.email.VelocityEmailService#handleRequest(Context,
      * String, OutputStream)
      */
     public static void handleRequest(Context context, String template,
@@ -154,7 +154,7 @@ public abstract class VelocityEmail
      *
      * @exception Exception Error processing template.
      *
-     * @see org.apache.fulcrum.velocity.VelocityEmailService#handleRequest(Context,
+     * @see org.tigris.scarab.services.email.VelocityEmailService#handleRequest(Context,
      * String, OutputStream)
      */
     public static void handleRequest(Context context, String template,
@@ -166,7 +166,7 @@ public abstract class VelocityEmail
     }
 
     /**
-     * @see org.apache.fulcrum.velocity.VelocityEmailService#handleRequest(Context,
+     * @see org.tigris.scarab.services.email.VelocityEmailService#handleRequest(Context,
      * String, Writer)
      */
     public static void handleRequest(Context context, String filename, 
@@ -177,7 +177,7 @@ public abstract class VelocityEmail
     }
 
     /**
-     * @see org.apache.fulcrum.velocity.VelocityEmailService#handleRequest(Context,
+     * @see org.tigris.scarab.services.email.VelocityEmailService#handleRequest(Context,
      * String, Writer, String)
      */
     public static void handleRequest(Context context, String filename,
