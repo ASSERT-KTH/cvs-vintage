@@ -64,6 +64,19 @@
     </java>
   </target>
 
+  <target name="test-issuetype" depends="compile">
+    <echo>Running IssueType tests...</echo>
+
+    <java classname="${test.runner}" fork="yes" 
+          failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.IssueTypeTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
   <target name="test-attribute" depends="compile">
     <echo>Running Attribute tests...</echo>
 
