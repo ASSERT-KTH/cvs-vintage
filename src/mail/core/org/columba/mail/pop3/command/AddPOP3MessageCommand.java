@@ -75,7 +75,9 @@ public class AddPOP3MessageCommand extends FolderCommand {
 		messageStream.close();
 		inboxFolder.getFlags(uid).set(Flags.RECENT);
 
-		inboxFolder.getMessageFolderInfo().incRecent();
+		// FIXME: this should happen automatically in MessageFolder, because
+		// of message flag RECENT changes
+		//inboxFolder.getMessageFolderInfo().incRecent();
 
 		// apply spam filter
 		boolean messageWasMoved = applySpamFilter(uid, worker);

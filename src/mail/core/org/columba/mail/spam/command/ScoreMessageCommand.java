@@ -166,7 +166,7 @@ public class ScoreMessageCommand extends FolderCommand {
 						.toArray());
 				ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_SPAM);
 				markAsSpamCommand = new MarkMessageCommand(ref);
-				MainInterface.processor.addOp(markAsSpamCommand);
+				markAsSpamCommand.execute(worker);
 			}
 
 			// mark non spam messages
@@ -176,7 +176,7 @@ public class ScoreMessageCommand extends FolderCommand {
 						.toArray());
 				ref[0].setMarkVariant(MarkMessageCommand.MARK_AS_NOTSPAM);
 				markAsNotSpamCommand = new MarkMessageCommand(ref);
-				MainInterface.processor.addOp(markAsNotSpamCommand);
+				markAsNotSpamCommand.execute(worker);
 			}
 
 		}
