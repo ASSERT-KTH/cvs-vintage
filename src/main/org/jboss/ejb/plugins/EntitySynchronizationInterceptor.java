@@ -6,6 +6,7 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 
@@ -47,7 +48,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.72 $
+ * @version $Revision: 1.73 $
  */
 public class EntitySynchronizationInterceptor extends AbstractInterceptor
 {
@@ -245,7 +246,7 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
                   PayloadKey.TRANSIENT);
             getNext().invoke(loadInvocation);
          }
-         catch (Exception ex)
+         catch (Throwable ex)
          {
             // readonly does not synchronize, lock or belong with transaction.
             if(!container.isReadOnly()) 
@@ -262,7 +263,12 @@ public class EntitySynchronizationInterceptor extends AbstractInterceptor
                         log.isTraceEnabled());
                }
             }
-            throw ex;
+            if (ex instanceof Exception)
+               throw (Exception) ex;
+            else if (ex instanceof Error)
+               throw (Error) ex;
+            else
+               throw new InvocationTargetException(ex);
          }
 
          // Now the state is valid
