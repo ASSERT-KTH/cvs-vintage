@@ -130,7 +130,7 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
     private synchronized void loadProtocols() {
 	if(protocolString == System.getProperty(SYS_PROTOCOLS))	
 	    return;
-	protocolString = System.getProperty(SYS_PROTOCOLS);
+	String protocolS = System.getProperty(SYS_PROTOCOLS);
 	StringTokenizer tok = new StringTokenizer(protocolString,"|");
 	protocols.clear();
 	while(tok.hasMoreTokens()) {
@@ -144,6 +144,7 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
 		protocols.put(prot,protC);
 	    }
 	}
+	protocolString = protocolS;
     }
     /** A connection-less <code>URLStreamHandler</code> to allow parsing-only URLs.
      */
