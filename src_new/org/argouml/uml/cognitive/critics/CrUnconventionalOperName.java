@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.23 2005/02/16 23:47:08 bobtarling Exp $
+// $Id: CrUnconventionalOperName.java,v 1.24 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class CrUnconventionalOperName extends AbstractCrUnconventionalName {
      * The constructor.
      */
     public CrUnconventionalOperName() {
-	setHeadline("Choose a Better MOperation Name");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("feature_name");

@@ -1,4 +1,4 @@
-// $Id: CrNoTriggerOrGuard.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
+// $Id: CrNoTriggerOrGuard.java,v 1.15 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrNoTriggerOrGuard.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
+
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -38,10 +38,9 @@ public class CrNoTriggerOrGuard extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrNoTriggerOrGuard() {
-	setHeadline("Add Trigger or Guard to Transistion");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("trigger");

@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalPackName.java,v 1.18 2005/01/30 20:47:38 linus Exp $
+// $Id: CrUnconventionalPackName.java,v 1.19 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class CrUnconventionalPackName extends AbstractCrUnconventionalName {
      * The constructor.
      */
     public CrUnconventionalPackName() {
-	setHeadline("Revise Package Name <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");

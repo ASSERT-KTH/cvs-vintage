@@ -1,4 +1,4 @@
-// $Id: CrOppEndVsAttr.java,v 1.15 2005/02/13 12:55:15 mvw Exp $
+// $Id: CrOppEndVsAttr.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,17 +38,15 @@ import org.argouml.model.Model;
  *
  * @author jrobbins
  */
-
 //TODO: split into one critic for inherited problems and
 //one for pproblems directly in this class.
 public class CrOppEndVsAttr extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrOppEndVsAttr() {
-        setHeadline("Rename Role or MAttribute");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_INHERITANCE);
         addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
         addSupportedDecision(CrUML.DEC_NAMING);

@@ -1,4 +1,4 @@
-// $Id: CrZeroLengthEdge.java,v 1.3 2005/01/09 14:58:36 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.4 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrZeroLengthEdge.java,v 1.3 2005/01/09 14:58:36 linus Exp $
+// $Id: CrZeroLengthEdge.java,v 1.4 2005/02/19 23:22:37 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.Designer;
@@ -45,7 +45,7 @@ public class CrZeroLengthEdge extends CrUML {
      */
     public CrZeroLengthEdge() {
 	// TODO: {name} is not expanded for diagram objects
-	setHeadline("Make Edge More Visible");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);

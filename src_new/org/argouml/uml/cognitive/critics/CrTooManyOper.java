@@ -1,4 +1,4 @@
-// $Id: CrTooManyOper.java,v 1.15 2005/01/30 20:47:38 linus Exp $
+// $Id: CrTooManyOper.java,v 1.16 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,8 +30,10 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
 
-/** A critic to detect when a classifier has to many operations).
- *  TODO: exclude getter and setter operations from count
+/** 
+ * A critic to detect when a classifier has to many operations). <p>
+ * 
+ * TODO: exclude getter and setter operations from count
  */
 public class CrTooManyOper extends AbstractCrTooMany {
 
@@ -40,7 +42,7 @@ public class CrTooManyOper extends AbstractCrTooMany {
      *
      */
     public CrTooManyOper() {
-	setHeadline("Reduce Operations on <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_METHODS);
 	setThreshold(20);
 	addTrigger("behavioralFeature");

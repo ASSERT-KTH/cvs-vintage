@@ -1,4 +1,4 @@
-// $Id: CrNoInstanceVariables.java,v 1.26 2005/01/30 20:47:39 linus Exp $
+// $Id: CrNoInstanceVariables.java,v 1.27 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class CrNoInstanceVariables extends CrUML {
      * The constructor.
      */
     public CrNoInstanceVariables() {
-	setHeadline("Add Instance Variables to <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STORAGE);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("structuralFeature");

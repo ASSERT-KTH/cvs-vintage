@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.15 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizAddOperation.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,8 +43,7 @@ public class WizAddOperation extends UMLWizard {
 
     private WizStepTextField step1 = null;
     private String label = Translator.localize("label.name");
-    private String instructions =
-	"Please change the name of the offending model element.";
+    private String instructions;
 
     /**
      * Creates a new instance of WizAddOperation.

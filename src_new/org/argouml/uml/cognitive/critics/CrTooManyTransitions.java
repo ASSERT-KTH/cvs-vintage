@@ -1,4 +1,4 @@
-// $Id: CrTooManyTransitions.java,v 1.13 2005/01/30 20:47:39 linus Exp $
+// $Id: CrTooManyTransitions.java,v 1.14 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,17 +29,17 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
 
-/** A critic to detect when a state has too many ingoing and
+/** 
+ * A critic to detect when a state has too many ingoing and
  * outgoing transitions.
  */
 public class CrTooManyTransitions extends AbstractCrTooMany {
 
     /**
      * The constructor.
-     *
      */
     public CrTooManyTransitions() {
-	setHeadline("Reduce Transitions on <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setThreshold(10);
 	addTrigger("incoming");

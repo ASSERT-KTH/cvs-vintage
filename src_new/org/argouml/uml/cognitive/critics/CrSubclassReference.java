@@ -1,4 +1,4 @@
-// $Id: CrSubclassReference.java,v 1.15 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: CrSubclassReference.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,10 +48,9 @@ public class CrSubclassReference extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrSubclassReference() {
-	setHeadline("Remove Reference to Specific Subclass");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
 	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SEMANTICS);

@@ -1,4 +1,4 @@
-// $Id: CrNameConflictAC.java,v 1.9 2005/01/09 14:58:36 linus Exp $
+// $Id: CrNameConflictAC.java,v 1.10 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,10 +37,9 @@ public class CrNameConflictAC extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrNameConflictAC() {
-	setHeadline("Role name conflicts with member");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
     }

@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.17 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.18 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,7 @@ import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 
 /**
  * A critic to detect when there are component-instances that
- * are not inside a node-instance
+ * are not inside a node-instance.
  *
  * @author 5eichler
  */
@@ -46,10 +46,9 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrComponentInstanceWithoutClassifier() {
-	setHeadline("Set ComponentInstance-classifier");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 

@@ -1,4 +1,4 @@
-// $Id: WizDescription.java,v 1.21 2005/01/30 20:47:45 linus Exp $
+// $Id: WizDescription.java,v 1.22 2005/02/19 23:22:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,10 +39,13 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
 
 
-
 /**
- * This class represents the description for a wizard.
- *
+ * This class represents the first step of the wizard. 
+ * It contains the description of the
+ * wizard in case the selected target is a todo item. 
+ * An appropriate message is shown in case nothing is selected, or
+ * in case the user selected one of the branches (folders) in the
+ * tree in the todo panel.
  */
 public class WizDescription extends WizStep {
     /**

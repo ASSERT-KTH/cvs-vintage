@@ -1,4 +1,4 @@
-// $Id: CrTooManyAttr.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrTooManyAttr.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,10 +29,10 @@ import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
-/** A critic to detect when a classifier has too many attributes.
+/** 
+ * A critic to detect when a classifier has too many attributes.
  *
  * @author mkl
- *
  */
 public class CrTooManyAttr extends AbstractCrTooMany {
 
@@ -41,7 +41,7 @@ public class CrTooManyAttr extends AbstractCrTooMany {
      *
      */
     public CrTooManyAttr() {
-	setHeadline("Reduce Attributes on <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STORAGE);
 	setThreshold(7);
 	addTrigger("structuralFeature");

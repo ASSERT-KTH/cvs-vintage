@@ -1,4 +1,4 @@
-// $Id: CrClassMustBeAbstract.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.16 2005/02/19 23:22:41 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,7 @@ import org.argouml.model.Model;
 
 /**
  * A critic to detect whether a non abstract class
- * contains abstract operations. It checks whether a non abstract class
- * has any abstract operations.
+ * contains abstract operations. 
  *
  * @author jrobbins
  */
@@ -44,8 +43,7 @@ public class CrClassMustBeAbstract extends CrUML {
      *
      */
     public CrClassMustBeAbstract() {
-	setHeadline("Class Must be Abstract");
-
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedDecision(CrUML.DEC_METHODS);
 	setKnowledgeTypes(Critic.KT_SEMANTICS);

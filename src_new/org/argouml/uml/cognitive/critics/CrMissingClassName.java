@@ -1,4 +1,4 @@
-// $Id: CrMissingClassName.java,v 1.18 2005/01/30 20:47:39 linus Exp $
+// $Id: CrMissingClassName.java,v 1.19 2005/02/19 23:22:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class CrMissingClassName extends CrUML {
      * The constructor.
      */
     public CrMissingClassName() {
-	setHeadline("Choose a Name");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS, Critic.KT_SYNTAX);
 	addTrigger("name");

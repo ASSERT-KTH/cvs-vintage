@@ -1,4 +1,4 @@
-// $Id: CrMissingOperName.java,v 1.19 2005/02/13 12:55:15 mvw Exp $
+// $Id: CrMissingOperName.java,v 1.20 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,7 @@ public class CrMissingOperName extends CrUML {
      * The constructor.
      */
     public CrMissingOperName() {
-	setHeadline("Choose a name");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("name");

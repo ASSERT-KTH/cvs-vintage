@@ -1,4 +1,4 @@
-// $Id: CrMultiComposite.java,v 1.11 2005/01/30 20:47:39 linus Exp $
+// $Id: CrMultiComposite.java,v 1.12 2005/02/19 23:22:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,10 +39,9 @@ public class CrMultiComposite extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrMultiComposite() {
-        setHeadline("Composite Role with MMultiplicity > 1");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_CONTAINMENT);
         setKnowledgeTypes(Critic.KT_SEMANTICS);
         addTrigger("aggregation");

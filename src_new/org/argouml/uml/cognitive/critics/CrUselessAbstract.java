@@ -1,4 +1,4 @@
-// $Id: CrUselessAbstract.java,v 1.16 2005/02/16 23:47:08 bobtarling Exp $
+// $Id: CrUselessAbstract.java,v 1.17 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 
 
-// $Id: CrUselessAbstract.java,v 1.16 2005/02/16 23:47:08 bobtarling Exp $
+// $Id: CrUselessAbstract.java,v 1.17 2005/02/19 23:22:37 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Enumeration;
@@ -45,10 +45,9 @@ public class CrUselessAbstract extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrUselessAbstract() {
-	setHeadline("Define Concrete (Sub)Class");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedGoal(Goal.getUnspecifiedGoal());
 	addTrigger("specialization");

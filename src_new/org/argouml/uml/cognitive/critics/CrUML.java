@@ -1,4 +1,4 @@
-// $Id: CrUML.java,v 1.35 2005/02/16 23:47:08 bobtarling Exp $
+// $Id: CrUML.java,v 1.36 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrUML.java,v 1.35 2005/02/16 23:47:08 bobtarling Exp $
+// $Id: CrUML.java,v 1.36 2005/02/19 23:22:38 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import org.apache.log4j.Logger;
@@ -196,10 +196,12 @@ public class CrUML extends Critic {
      * and the critic description (the detailed explanation that
      * appears in the to-do tab of the details pane).
      *
-     * TODO: Since the parameter is ignored, will be deprecated in good time.
      * MVW: Maybe we can make it part of the constructor CrUML()?
      *
-     * @param s the english headline, but ignored!
+     * @deprecated by mvw, as of ArgoUML V0.17.5. 
+     * Since the parameter is ignored, replaced by {@link setupHeadAndDesc}.
+     *
+     * @see org.argouml.cognitive.critics.Critic#setHeadline(java.lang.String)
      */
     public final void setHeadline(String s) {
 	//
@@ -209,6 +211,18 @@ public class CrUML extends Critic {
 	setResource(className.substring(className.lastIndexOf('.') + 1));
     }
 
+    /**
+     * Set up the locale specific text for the critic headline
+     * (the one liner that appears in the to-do pane)
+     * and the critic description (the detailed explanation that
+     * appears in the to-do tab of the details pane).
+     */
+    public final void setupHeadAndDesc() {
+        String className = getClass().getName();
+        setResource(className.substring(className.lastIndexOf('.') + 1));
+    }
+
+    
     /**
      * @see org.argouml.cognitive.critics.Critic#predicate(
      * java.lang.Object, org.argouml.cognitive.Designer)

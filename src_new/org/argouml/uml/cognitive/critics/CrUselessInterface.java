@@ -1,4 +1,4 @@
-// $Id: CrUselessInterface.java,v 1.14 2005/02/13 12:55:15 mvw Exp $
+// $Id: CrUselessInterface.java,v 1.15 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,10 +41,9 @@ public class CrUselessInterface extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrUselessInterface() {
-	setHeadline("Define Class to Implement <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedGoal(Goal.getUnspecifiedGoal());
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);

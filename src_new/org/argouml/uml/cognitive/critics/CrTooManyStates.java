@@ -1,4 +1,4 @@
-// $Id: CrTooManyStates.java,v 1.13 2005/01/30 20:47:39 linus Exp $
+// $Id: CrTooManyStates.java,v 1.14 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,8 @@ import java.util.Collection;
 import org.argouml.cognitive.Designer;
 import org.argouml.model.Model;
 
-/** A critic to detect when a composite state has too
+/** 
+ * A critic to detect when a composite state has too
  * many subvertices.
  */
 public class CrTooManyStates extends AbstractCrTooMany {
@@ -39,7 +40,7 @@ public class CrTooManyStates extends AbstractCrTooMany {
      *
      */
     public CrTooManyStates() {
-	setHeadline("Reduce States in machine <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setThreshold(20);
 	addTrigger("substate");

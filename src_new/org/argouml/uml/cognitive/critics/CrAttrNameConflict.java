@@ -1,4 +1,4 @@
-// $Id: CrAttrNameConflict.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrAttrNameConflict.java,v 1.16 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,7 @@ public class CrAttrNameConflict extends CrUML {
      *
      */
     public CrAttrNameConflict() {
-	setHeadline("Revise MAttribute Names to Avoid Conflict");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedDecision(CrUML.DEC_STORAGE);
 	addSupportedDecision(CrUML.DEC_NAMING);

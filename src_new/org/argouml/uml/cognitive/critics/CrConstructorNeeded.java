@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.20 2005/01/30 20:47:41 linus Exp $
+// $Id: CrConstructorNeeded.java,v 1.21 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -58,9 +58,7 @@ public class CrConstructorNeeded extends CrUML {
      * "structuralFeature".
      */
     public CrConstructorNeeded() {
-
-        setResource("CrConstructorNeeded");
-
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_STORAGE);
         addKnowledgeType(Critic.KT_CORRECTNESS);
 

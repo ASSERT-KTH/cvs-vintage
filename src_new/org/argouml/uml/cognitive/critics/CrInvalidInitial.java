@@ -1,4 +1,4 @@
-// $Id: CrInvalidInitial.java,v 1.12 2005/01/30 20:47:38 linus Exp $
+// $Id: CrInvalidInitial.java,v 1.13 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,10 +41,9 @@ public class CrInvalidInitial extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrInvalidInitial() {
-	setHeadline("Remove Extra Outgoing Transitions");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	addTrigger("outgoing");
     }

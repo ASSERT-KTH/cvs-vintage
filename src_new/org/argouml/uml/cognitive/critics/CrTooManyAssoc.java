@@ -1,4 +1,4 @@
-// $Id: CrTooManyAssoc.java,v 1.14 2005/01/30 20:47:38 linus Exp $
+// $Id: CrTooManyAssoc.java,v 1.15 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,7 @@ public class CrTooManyAssoc extends AbstractCrTooMany {
      *
      */
     public CrTooManyAssoc() {
-	setHeadline("Reduce Associations on <ocl>self</ocl>");
-
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
 	setThreshold(7);
 	addTrigger("associationEnd");

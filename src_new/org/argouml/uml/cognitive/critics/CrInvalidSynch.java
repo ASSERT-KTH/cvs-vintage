@@ -1,3 +1,4 @@
+// $Id: CrInvalidSynch.java,v 1.2 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,13 +36,20 @@ import java.util.Iterator;
  */
 public class CrInvalidSynch extends CrUML {
 
+    /**
+     * The constructor.
+     */
     public CrInvalidSynch() {
-        setHeadline("Change Synch State Transitions");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_STATE_MACHINES);
         addTrigger("incoming");
         addTrigger("outgoing");
     }
 
+    /**
+     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(java.lang.Object,
+     * org.argouml.cognitive.Designer)
+     */
     public boolean predicate2(Object dm, Designer dsgr) {
         Object destinationRegion = null;
         Object sourceRegion = null;

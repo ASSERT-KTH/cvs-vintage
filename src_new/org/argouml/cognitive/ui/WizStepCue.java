@@ -1,4 +1,4 @@
-// $Id: WizStepCue.java,v 1.7 2005/01/09 14:58:05 linus Exp $
+// $Id: WizStepCue.java,v 1.8 2005/02/19 23:22:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,9 @@ import javax.swing.border.EtchedBorder;
 import org.argouml.swingext.SpacerPanel;
 
 
-/** A simple non-modal wizard step that shows instructions and prompts
- *  the user to enter a string.
+/** 
+ * A non-modal wizard step that shows instructions and prompts
+ * the user to enter a string.
  *
  * @see org.argouml.cognitive.critics.Critic
  * @see org.argouml.cognitive.ui.Wizard
@@ -46,7 +47,7 @@ public class WizStepCue extends WizStep {
     /**
      * The constructor.
      *
-     * @param w the wizard
+     * @param w the wizard (ignored)
      * @param cue the instructions (cue)
      */
     public WizStepCue(Wizard w, String cue) {

@@ -1,4 +1,4 @@
-// $Id: CrInterfaceAllPublic.java,v 1.15 2005/01/30 20:47:42 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.16 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrInterfaceAllPublic.java,v 1.15 2005/01/30 20:47:42 linus Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.16 2005/02/19 23:22:39 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -42,10 +42,9 @@ public class CrInterfaceAllPublic extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrInterfaceAllPublic() {
-	setHeadline("Operations in Interfaces must be public");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_PLANNED_EXTENSIONS);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	addTrigger("behavioralFeature");

@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceInsideElement.java,v 1.12 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: CrNodeInstanceInsideElement.java,v 1.13 2005/02/19 23:22:39 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,7 +46,7 @@ public class CrNodeInstanceInsideElement extends CrUML {
      *
      */
     public CrNodeInstanceInsideElement() {
-	setHeadline("NodeInstances normally have no enclosers");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_PATTERNS);
     }
 

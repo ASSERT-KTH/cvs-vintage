@@ -1,4 +1,4 @@
-// $Id: CrNoTransitions.java,v 1.17 2005/01/30 20:47:40 linus Exp $
+// $Id: CrNoTransitions.java,v 1.18 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,7 @@ public class CrNoTransitions extends CrUML {
      * Constructor.
      */
     public CrNoTransitions() {
-	setHeadline("Add Transitions to <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
 	setKnowledgeTypes(Critic.KT_COMPLETENESS);
 	addTrigger("incoming");

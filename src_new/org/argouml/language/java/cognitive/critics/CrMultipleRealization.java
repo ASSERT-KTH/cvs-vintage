@@ -1,4 +1,4 @@
-// $Id: CrMultipleRealization.java,v 1.12 2005/01/30 20:48:38 linus Exp $
+// $Id: CrMultipleRealization.java,v 1.13 2005/02/19 23:22:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,7 +43,7 @@ public class CrMultipleRealization extends CrUML {
      * The constructor.
      */
     public CrMultipleRealization() {
-	setHeadline("Interface cannot realize another interface");
+        setupHeadAndDesc();;
 	addSupportedDecision(CrUML.DEC_INHERITANCE);
 	addSupportedDecision(CrUML.DEC_CODE_GEN);
 	addTrigger("generalization");

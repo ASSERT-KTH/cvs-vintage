@@ -1,4 +1,4 @@
-// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.9 2005/01/30 20:48:42 linus Exp $
+// $Id: CrSingletonViolatedOnlyPrivateConstructors.java,v 1.10 2005/02/19 23:22:43 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -70,8 +70,7 @@ public class CrSingletonViolatedOnlyPrivateConstructors extends CrUML {
      */
 
     public CrSingletonViolatedOnlyPrivateConstructors() {
-        setResource("CrSingletonViolatedOnlyPrivateConstructors");
-
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_PATTERNS);
         setPriority(ToDoItem.MED_PRIORITY);
 

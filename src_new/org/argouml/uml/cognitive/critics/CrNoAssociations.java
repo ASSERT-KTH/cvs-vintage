@@ -1,4 +1,4 @@
-// $Id: CrNoAssociations.java,v 1.21 2005/01/30 20:47:38 linus Exp $
+// $Id: CrNoAssociations.java,v 1.22 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,7 @@ public class CrNoAssociations extends CrUML {
      * Constructor.
      */
     public CrNoAssociations() {
-        setHeadline("Add Associations to <ocl>self</ocl>");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
         setKnowledgeTypes(Critic.KT_COMPLETENESS);
         addTrigger("associationEnd");

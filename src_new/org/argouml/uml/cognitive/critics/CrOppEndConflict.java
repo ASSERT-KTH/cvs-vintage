@@ -1,4 +1,4 @@
-// $Id: CrOppEndConflict.java,v 1.12 2005/01/30 20:47:35 linus Exp $
+// $Id: CrOppEndConflict.java,v 1.13 2005/02/19 23:22:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,11 +42,12 @@ import org.argouml.model.Model;
 //TODO: split into an inherited attr critic and a local
 //attr critic
 public class CrOppEndConflict extends CrUML {
+
     /**
      * The constructor.
      */
     public CrOppEndConflict() {
-        setHeadline("Rename MAssociation Roles");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_INHERITANCE);
         addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
         addSupportedDecision(CrUML.DEC_NAMING);

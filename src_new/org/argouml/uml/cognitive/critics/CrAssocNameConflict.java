@@ -1,4 +1,4 @@
-// $Id: CrAssocNameConflict.java,v 1.13 2005/01/30 20:47:40 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.14 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: CrAssocNameConflict.java,v 1.13 2005/01/30 20:47:40 linus Exp $
+// $Id: CrAssocNameConflict.java,v 1.14 2005/02/19 23:22:37 mvw Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Collection;
@@ -46,7 +46,7 @@ public class CrAssocNameConflict extends CrUML {
      *
      */
     public CrAssocNameConflict() {
-	setHeadline("Resolve Association Name Conflict");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_NAMING);
 	setKnowledgeTypes(Critic.KT_SYNTAX);
 	// no good trigger

@@ -1,4 +1,4 @@
-// $Id: GenCompositeClasses.java,v 1.19 2005/01/30 20:47:43 linus Exp $
+// $Id: GenCompositeClasses.java,v 1.20 2005/02/19 23:22:44 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,13 +74,15 @@ public class GenCompositeClasses implements ChildGenerator {
 	    if (Model.getAggregationKind().getComposite().equals(
 	            Model.getFacade().getAggregation(ae))) {
 		Object asc = Model.getFacade().getAssociation(ae);
-		ArrayList conn = new ArrayList(Model.getFacade().getConnections(asc));
+		ArrayList conn = 
+		    new ArrayList(Model.getFacade().getConnections(asc));
 		if (conn == null || conn.size() != 2) {
 		    continue;
 		}
 		Object otherEnd =
 		    (ae == conn.get(0)) ? conn.get(1) : conn.get(0);
-		if (Model.getFacade().getType(ae) != Model.getFacade().getType(otherEnd)) {
+		if (Model.getFacade().getType(ae) 
+		        != Model.getFacade().getType(otherEnd)) {
 		    res.add(Model.getFacade().getType(otherEnd));
 		}
 	    }

@@ -1,4 +1,4 @@
-// $Id: CrUtilityViolated.java,v 1.14 2005/01/30 20:47:40 linus Exp $
+// $Id: CrUtilityViolated.java,v 1.15 2005/02/19 23:22:36 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,11 +40,12 @@ import org.argouml.model.Model;
  * @author jrobbins
  */
 public class CrUtilityViolated extends CrUML {
+
     /**
      * The constructor.
      */
     public CrUtilityViolated() {
-        setHeadline("Remove instance variables from Utility Class");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_STORAGE);
         addSupportedDecision(CrUML.DEC_STEREOTYPES);
         addSupportedDecision(CrUML.DEC_CLASS_SELECTION);

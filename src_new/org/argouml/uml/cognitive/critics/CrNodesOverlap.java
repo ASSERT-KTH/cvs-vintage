@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.4 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: CrNodesOverlap.java,v 1.5 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,8 +40,7 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.presentation.FigNode;
 
 /**
- * A critic to detect when a class can never have instances (of
- * itself of any subclasses).
+ * A critic to detect when a modelelements overlap.
  *
  * @author jrobbins
  */
@@ -49,11 +48,10 @@ public class CrNodesOverlap extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrNodesOverlap() {
 	// TODO: {name} is not expanded for diagram objects
-	setHeadline("Clean Up Diagram");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
 	addSupportedDecision(CrUML.DEC_EXPECTED_USAGE);
 	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
@@ -71,8 +69,8 @@ public class CrNodesOverlap extends CrUML {
 	if (!(dm instanceof Diagram)) return NO_PROBLEM;
 	Diagram d = (Diagram) dm;
 
-	// fixes bug #669. Sequencediagrams always overlap, so there is
-	// always a problem
+	// fixes bug #669. Sequencediagrams always overlap, so they shall
+	// never report a problem
 	if (dm
 	    instanceof UMLSequenceDiagram)
 	    return NO_PROBLEM;

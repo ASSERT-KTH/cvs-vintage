@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.13 2005/01/09 14:58:36 linus Exp $
+// $Id: CrTooManyClasses.java,v 1.14 2005/02/19 23:22:38 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,9 @@ package org.argouml.uml.cognitive.critics;
 import org.argouml.cognitive.Designer;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 
-/** A critic to detect when a classdiagram has too many classes.
+/** 
+ * A critic to detect when a classdiagram has too many classes. <p>
+ * 
  * TODO: currently it checks for nodes (classes, interfaces, comments).
  * This critic should be rewritten to work with namespaces.
  */
@@ -39,7 +41,7 @@ public class CrTooManyClasses extends AbstractCrTooMany {
      */
     public CrTooManyClasses() {
 	// TODO: <ocl>self.name</ocl> is not expanded for diagram objects
-	setHeadline("Reduce Classes in diagram <ocl>self</ocl>");
+        setupHeadAndDesc();
 	addSupportedDecision(CrUML.DEC_CLASS_SELECTION);
 	setThreshold(20);
     }

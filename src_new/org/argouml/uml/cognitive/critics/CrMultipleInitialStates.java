@@ -1,4 +1,4 @@
-// $Id: CrMultipleInitialStates.java,v 1.17 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: CrMultipleInitialStates.java,v 1.18 2005/02/19 23:22:37 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,10 +48,9 @@ public class CrMultipleInitialStates extends CrUML {
 
     /**
      * The constructor.
-     *
      */
     public CrMultipleInitialStates() {
-        setHeadline("Remove Extra Initial States");
+        setupHeadAndDesc();
         addSupportedDecision(CrUML.DEC_STATE_MACHINES);
         addTrigger("parent");
         addTrigger("kind");
