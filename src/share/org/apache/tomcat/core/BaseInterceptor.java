@@ -428,19 +428,19 @@ public class BaseInterceptor
 	loghelper.setLogger(ctx.getLog().getLogger());
     }
 
-    protected void log( String s ) {
+    public void log( String s ) {
 	loghelper.log(s);
     }
 
-    protected void log( String s, Throwable t ) {
+    public void log( String s, Throwable t ) {
 	loghelper.log(s, t);
     }
     
-    protected void log( String s, int level ) {
+    public void log( String s, int level ) {
 	loghelper.log(s, level);
     }
     
-    protected void log( String s, Throwable t, int level ) {
+    public void log( String s, Throwable t, int level ) {
 	loghelper.log(s, t, level);
     }
 
