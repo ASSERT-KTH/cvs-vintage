@@ -35,6 +35,7 @@ import org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper;
 import org.objectweb.carol.util.multi.ProtocolCurrent;
 
 import com.sun.jndi.rmi.registry.RemoteReference;
+import com.sun.jndi.rmi.registry.ReferenceWrapper;
 
 /**
  * @author riviereg
@@ -147,8 +148,8 @@ public class JRMPLocalContext implements Context {
 		throws NamingException {
 		try {
 			if ((!(o instanceof Remote)) && (o instanceof Referenceable)) {
-				JNDIReferenceWrapper irw =
-					new JNDIReferenceWrapper(
+				RemoteReference irw =
+					new ReferenceWrapper(
 						((Referenceable) o).getReference());
 				ProtocolCurrent
 					.getCurrent()
@@ -175,8 +176,8 @@ public class JRMPLocalContext implements Context {
 				}
 				return irw;
 			} else if ((!(o instanceof Remote)) && (o instanceof Reference)) {
-				JNDIReferenceWrapper irw =
-					new JNDIReferenceWrapper((Reference) o);
+				ReferenceWrapper irw =
+					new ReferenceWrapper((Reference) o);
 				ProtocolCurrent
 					.getCurrent()
 					.getCurrentPortableRemoteObject()
