@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.3 2001/12/14 14:42:52 kminshull Exp $
+ * @version $Id: XMLImport.java,v 1.4 2001/12/20 15:10:19 kminshull Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -222,12 +222,6 @@ public class XMLImport extends MatchingTask
         DependencyTree dependencyTree = new DependencyTree();
         ArrayList userList = new ArrayList();
         
-/* Why is this here?
-        if (state.equals(STATE_XML_VALIDATION))
-        {
-        }
-        else
-*/ 
         if (state.equals(STATE_DB_VALIDATION) || state.equals(STATE_DB_INSERTION))
         {
             addRules(state, dependencyTree, userList);
@@ -288,11 +282,6 @@ public class XMLImport extends MatchingTask
         getDigester().addRule("scarab/module/code", new ModuleCodeRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue", new IssueRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/artifact-type", new ArtifactTypeRule(getDigester(), state, dependencyTree));
-        getDigester().addRule("scarab/module/issue/committed-by", new CommittedByRule(getDigester(), state, userList));
-        getDigester().addRule("scarab/module/issue/issue-attribute", new IssueAttributeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/issue-attribute/name", new IssueAttributeNameRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/issue-attribute/value", new IssueAttributeValueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/issue-attribute/type", new IssueAttributeTypeRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/dependency", new DependencyRule(getDigester(), state, dependencyTree));
         getDigester().addRule("scarab/module/issue/dependency/type", new DependencyTypeRule(getDigester(),state));
         getDigester().addRule("scarab/module/issue/dependency/child", new DependencyChildRule(getDigester(), state));
@@ -311,10 +300,10 @@ public class XMLImport extends MatchingTask
         getDigester().addRule("scarab/module/issue/transaction/type", new TransactionTypeRule(getDigester(), state));
         getDigester().addRule("scarab/module/issue/transaction/committed-by", new TransactionCommittedByRule(getDigester(), state, userList));
         getDigester().addRule("scarab/module/issue/transaction/activity", new ActivityRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/activity-attribute/name", new ActivityAttributeNameRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/activity-attribute/value", new ActivityAttributeValueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/activity-attribute/old-value", new ActivityAttributeOldValueRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/activity-attribute/type", new ActivityAttributeTypeRule(getDigester(), state));
-        getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityAttributeDescriptionRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/name", new ActivityAttributeNameRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/value", new ActivityAttributeValueRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/old-value", new ActivityAttributeOldValueRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity/attribute/type", new ActivityAttributeTypeRule(getDigester(), state));
+        getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityDescriptionRule(getDigester(), state));
     }
 }
