@@ -127,10 +127,13 @@ public class JspInterceptor extends BaseInterceptor {
 	try {
 	    // Note: URLClassLoader in JDK1.2.2 doesn't work with file URLs
 	    // that contain '\' characters.  Insure only '/' is used.
-	    URL url=new URL( "file", null,
-			ctx.getWorkDir().getAbsolutePath().replace('\\','/') + "/");
-	    ctx.addClassPath( url );
-	    if( debug > 9 ) log( "Added to classpath: " + url );
+	    if( ! useJspServlet ) {
+		// jspServlet uses it's own mechanism
+		URL url=new URL( "file", null,
+		 ctx.getWorkDir().getAbsolutePath().replace('\\','/') + "/");
+		ctx.addClassPath( url );
+		if( debug > 9 ) log( "Added to classpath: " + url );
+	    } 
 	} catch( MalformedURLException ex ) {
 	}
 
@@ -197,6 +200,9 @@ public class JspInterceptor extends BaseInterceptor {
 	}
 
 	if( useJspServlet ) {
+	    // this code can be optimized - but it's tiny compared
+	    // with what happens in jsp servlet ( compiling a java
+	    // program or the jspServlet overhead )
 	    ServletHandler jspServlet=(ServletHandler)wrapper;
 	    if( ! "jsp".equals( jspServlet.getServletClassName())  )
 		return 0; // it's all set, the JspServlet will do the job.
@@ -214,7 +220,9 @@ public class JspInterceptor extends BaseInterceptor {
 	    // is not setup
 	    jspServlet.
 		setServletClassName("org.apache.jasper.servlet.JspServlet");
-
+	    Context ctx=req.getContext();
+	    ctx.setAttribute( "org.apache.tomcat.classloader",
+			      ctx.getClassLoader());
 	    // XXX set the options
 	    // 	 jspServlet.getServletInfo().addInitParam("jspCompilerPlugin",
 	    // 	  "org.apache.jasper.compiler.JikesJavaCompiler");
