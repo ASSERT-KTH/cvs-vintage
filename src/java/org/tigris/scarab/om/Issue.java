@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.167 2002/07/19 01:28:36 jon Exp $
+ * @version $Id: Issue.java,v 1.168 2002/07/20 01:00:44 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -890,6 +890,10 @@ public class Issue
         if ( obj == null ) 
         {        
             List users = new ArrayList();
+            if (action.equals(AttributePeer.EMAIL_TO))
+            {
+                users.add(getCreatedBy());
+            }
             Criteria crit = new Criteria()
                 .add(AttributeValuePeer.ISSUE_ID, getIssueId())
                 .addJoin(AttributeValuePeer.ATTRIBUTE_ID,
@@ -903,16 +907,15 @@ public class Issue
                 try
                 {
                     ScarabUser su = ScarabUserManager.getInstance(attVal.getUserId());
-                    users.add(su);
+                    if (!users.contains(su))
+                    {
+                        users.add(su);
+                    }
                 }
                 catch (Exception e)
                 {
                     throw new Exception("Error in retrieving users.");
                 }
-            }
-            if (action.equals(AttributePeer.EMAIL_TO))
-            {
-                users.add(getCreatedBy());
             }
             result = users;
             ScarabCache.put(result, this, GET_USERS_TO_EMAIL, action);
