@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.243 2002/12/20 02:02:18 jon Exp $
+ * @version $Id: Issue.java,v 1.244 2002/12/20 03:27:52 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3150,7 +3150,7 @@ public class Issue
             throw new Exception(msg);
         }
 
-        // Save explanatory comment
+        // Save explanatory reason
         attachment.setTextFields(user, this, 
                                  Attachment.MODIFICATION__PK);
         attachment.save();
