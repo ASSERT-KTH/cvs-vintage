@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.63 2004/10/26 18:56:03 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.64 2004/12/31 11:05:50 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.uml.diagram.activity.ActivityDiagramGraphModel;
@@ -378,4 +379,16 @@ public class UMLActivityDiagram extends UMLDiagram {
         }
         return actionTransition;
     }
+    
+    /**
+     * @see org.argouml.uml.diagram.ui.UMLDiagram#needsToBeRemoved()
+     */
+    public boolean needsToBeRemoved() {
+        Object context = ModelFacade.getContext(getStateMachine());
+        if (context == null) return true;
+        if (UmlFactory.getFactory().isRemoved(getStateMachine())) return true;
+        if (UmlFactory.getFactory().isRemoved(getNamespace())) return true;
+        return false;
+    }
+    
 } /* end class UMLActivityDiagram */
