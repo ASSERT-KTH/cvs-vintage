@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelState.java,v 1.6 2001/04/02 14:28:46 5heyden Exp $
+// $Id: PropPanelState.java,v 1.7 2001/04/05 09:22:43 5heyden Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -108,7 +108,7 @@ public abstract class PropPanelState extends PropPanelStateVertex {
         if(target instanceof MState) {
             MFactory factory=((MState) target).getFactory();
             entryAction = factory.createCallAction();
-            entryAction.setName("entry");
+            entryAction.setName("anon");
             ((MState) target).setEntry(entryAction);
         }
         return entryAction;
@@ -136,7 +136,7 @@ public abstract class PropPanelState extends PropPanelStateVertex {
         if(target instanceof MState) {
             MFactory factory=((MState) target).getFactory();
             exitAction = factory.createCallAction();
-            exitAction.setName("exit");
+            exitAction.setName("anon");
             ((MState) target).setExit(exitAction);
         }
         return exitAction;
@@ -164,7 +164,7 @@ public abstract class PropPanelState extends PropPanelStateVertex {
         if(target instanceof MState) {
             MFactory factory=((MState) target).getFactory();
             doActivity = factory.createCallAction();
-            doActivity.setName("do");
+            doActivity.setName("anon");
             ((MState) target).setDoActivity(doActivity);
         }
         return doActivity;
@@ -193,7 +193,7 @@ public abstract class PropPanelState extends PropPanelStateVertex {
             MState state=(MState) target;
             MFactory factory=((MState) target).getFactory();
             transition = factory.createTransition();
-            transition.setName("internal");
+            transition.setName("anon");
             transition.setSource(state);
             transition.setTarget(state);
             ((MState) target).addInternalTransition(transition);
