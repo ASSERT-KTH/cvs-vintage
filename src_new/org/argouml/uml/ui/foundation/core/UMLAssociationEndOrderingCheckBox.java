@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: UMLAssociationEndOrderingCheckBox.java,v 1.2 2003/03/12 10:48:11 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
 import org.argouml.application.api.Argo;
@@ -52,9 +52,9 @@ public class UMLAssociationEndOrderingCheckBox extends UMLCheckBox2 {
      * @see org.argouml.uml.ui.UMLCheckBox2#buildModel()
      */
     public void buildModel() {
-        if (getTarget() != null)
-            setSelected(((MAssociationEnd)getTarget()).getOrdering().equals(MOrderingKind.ORDERED) ? true : false);
-            
+        if (getTarget() != null) {
+            MAssociationEnd associationEnd = (MAssociationEnd)getTarget();
+            setSelected(MOrderingKind.ORDERED.equals(associationEnd.getOrdering()));
+        }
     }
-
 }

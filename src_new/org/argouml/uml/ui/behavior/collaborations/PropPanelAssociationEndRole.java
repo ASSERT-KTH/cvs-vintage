@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEndRole.java,v 1.10 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelAssociationEndRole.java,v 1.11 2003/03/12 10:48:11 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,27 +34,31 @@ import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelAssociationEnd;
 import org.argouml.util.ConfigLoader;
 
+import ru.novosoft.uml.behavior.collaborations.MAssociationEndRole;
+
+
 public class PropPanelAssociationEndRole extends PropPanelAssociationEnd {
 
+    /**
+     * Constructs the proppanel and places all scrollpanes etc. on the canvas.
+     * @see java.lang.Object#Object()
+     */
     public PropPanelAssociationEndRole() {
-        super("AssociationEndRole", ConfigLoader.getTabPropsOrientation());
-        
-        addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
-        addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),getStereotypeBox()));
+        super("AssociationEndRoleRole", ConfigLoader.getTabPropsOrientation());
+        setAssociationLabel(Argo.localize("UMLMenu", "label.association-role"));
+        createControls(MAssociationEndRole.class);
+        positionStandardControls();
+        positionControls();
+    }
+
+    protected void positionControls() {
         
         JList baseList = new UMLLinkedList(new UMLAssociationEndRoleBaseListModel());
         baseList.setVisibleRowCount(1);
-        addField(Argo.localize("UMLMenu", "label.base"), 
-            new JScrollPane(baseList));
+        addField(Argo.localize("UMLMenu", "label.base"), new JScrollPane(baseList));
         
-        add(LabelledLayout.getSeperator());
-        
-        
-        
-
-        // makeFields(mclass);
+        super.positionControls();
     }
-
     
 } /* end class PropPanelAssociationEndRole */
 

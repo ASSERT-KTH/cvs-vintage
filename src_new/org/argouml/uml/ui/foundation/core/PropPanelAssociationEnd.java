@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.26 2003/01/29 22:21:57 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.27 2003/03/12 10:48:11 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import javax.swing.border.TitledBorder;
 import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.swingext.Orientation;
+import org.argouml.swingext.GridLayout2;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.UMLComboBox2;
@@ -125,8 +126,24 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
      */
     protected PropPanelAssociationEnd(String name, Orientation orientation) {
         super(name, orientation);
-        Class mclass = MAssociationEnd.class;
+    }
 
+    private String _associationLabel;
+    
+    /**
+     * Constructs the proppanel and places all scrollpanes etc. on the canvas.
+     * @see java.lang.Object#Object()
+     */
+    public PropPanelAssociationEnd() {
+        super("AssociationEnd", ConfigLoader.getTabPropsOrientation());
+        _associationLabel = Argo.localize("UMLMenu", "label.association");
+        Class mclass = MAssociationEnd.class;
+        createControls(mclass);
+        positionStandardControls();
+        positionControls();
+    }
+
+    protected void createControls(Class mclass) {
         _typeCombobox = new UMLComboBox2(new UMLAssociationEndTypeComboBoxModel(), ActionSetAssociationEndType.SINGLETON, true);
         _multiplicityComboBox = new UMLMultiplicityComboBox(this, mclass);
         JList associationList = new UMLLinkedList(new UMLAssociationEndAssociationListModel());
@@ -139,24 +156,21 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         _changeabilityRadioButtonpanel = new UMLAssociationEndChangeabilityRadioButtonPanel(Argo.localize("UMLMenu", "label.changeability"), true);
         _visibilityRadioButtonPanel = new UMLModelElementVisibilityRadioButtonPanel(Argo.localize("UMLMenu", "label.visibility"), true);
         _specificationScroll = new JScrollPane(new UMLMutableLinkedList(new UMLAssociationEndSpecificationListModel(), ActionAddAssociationSpecification.SINGLETON, null, null, true));
-        
     }
 
-    /**
-     * Constructs the proppanel and places all scrollpanes etc. on the canvas.
-     * @see java.lang.Object#Object()
-     */
-    public PropPanelAssociationEnd() {
-        this("AssociationEnd", ConfigLoader.getTabPropsOrientation());
+    protected void positionStandardControls() {
         addField(Argo.localize("UMLMenu", "label.name"), getNameTextField());
         addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"), getStereotypeBox()));
-        addField(Argo.localize("UMLMenu", "label.association"), _associationScroll);
+    }
+    
+    protected void positionControls() {
+        addField(_associationLabel, _associationScroll);
         addField(Argo.localize("UMLMenu", "label.type"), _typeCombobox);
         addField(Argo.localize("UMLMenu", "label.multiplicity"), _multiplicityComboBox);
         
         add(LabelledLayout.getSeperator());
         
-        JPanel panel = new JPanel(new GridLayout());
+        JPanel panel = new JPanel(new GridLayout2());
         panel.add(_navigabilityCheckBox);
         panel.add(_orderingCheckBox);
         panel.add(_targetScopeCheckBox);
@@ -178,7 +192,10 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
         new PropPanelButton(this, buttonPanel, _assocEndIcon, localize("Go to other end"), "gotoOther", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-association-end"), "removeElement", null);
     }
-
+    
+    protected void setAssociationLabel(String label) {
+    }
+    
     /**
      * Happens when the user presses the up button. In this case, ArgoUML navigates
      * to the association that owns this associationend.
