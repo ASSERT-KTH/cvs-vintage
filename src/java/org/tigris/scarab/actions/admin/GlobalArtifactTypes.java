@@ -59,6 +59,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.cache.ScarabCache;
@@ -67,24 +68,26 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.30 2003/01/22 23:37:33 elicia Exp $
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @version $Id: GlobalArtifactTypes.java,v 1.31 2003/02/01 22:46:42 jon Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
-
     /**
      * Used on GlobalAttributeEdit.vm to modify Attribute Name/Description/Type
      * Use doAddormodifyattributeoptions to modify the options.
      */
-    public void doSave( RunData data, TemplateContext context )
+    public void doSave(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issueTypes = IssueTypePeer.getAllIssueTypes(false);
-
-        if ( intake.isAllValid() )
+        boolean dupe = false;
+        boolean saved = false;
+        if (intake.isAllValid())
         {
+            ScarabRequestTool scarabR = getScarabRequestTool(context);
             for (int i=0; i<issueTypes.size(); i++)
             {
                 IssueType issueType = (IssueType)issueTypes.get(i);
@@ -92,97 +95,152 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 // make sure name is unique
                 Field field = group.get("Name");
                 String name = field.toString();
-                if ( IssueTypePeer.isUnique(name, issueType.getPrimaryKey()) ) 
+                if (IssueTypePeer.isUnique(name, issueType.getPrimaryKey())) 
                 {
                     group.setProperties(issueType);
                     issueType.save();
                     ScarabCache.clear();
+                    saved = true;
                 }
                 else 
                 {
-                    getScarabRequestTool(context).setAlertMessage(
-                        l10n.get("ChangesResultDuplicateNames"));
+                    dupe = true;
                     field.setMessage("Duplicate");
                 }
             }
-         }
-     }
+            if (dupe)
+            {
+                scarabR.setAlertMessage(
+                    l10n.get("ChangesResultDuplicateNames"));
+            }
+            else if (saved)
+            {
+                scarabR.setAlertMessage(
+                    l10n.get("YourChangesWereSaved"));
+            }
+            else
+            {
+                scarabR.setAlertMessage(
+                    l10n.get("NoChangesMade"));
+            }
+        }
+    }
                 
-    public void doCopy( RunData data, TemplateContext context )
+    public void doCopy(RunData data, TemplateContext context)
         throws Exception
     {
         Object[] keys = data.getParameters().getKeys();
         String key;
         String id;
         IssueType issueType;
-
+        boolean didCopy = false;
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
             if (key.startsWith("action_"))
             {
-               id = key.substring(7);
-               issueType = IssueTypePeer
-                      .retrieveByPK(new NumberKey(id));
-               issueType.copyIssueType();
-             }
-         }
-     }
+                id = key.substring(7);
+                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                if (issueType != null)
+                {
+                    issueType.copyIssueType();
+                    didCopy = true;
+                }
+            }
+        }
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        if (didCopy)
+        {
+            scarabR.setAlertMessage(l10n.get("GlobalArtifactTypeCopied"));
+        }
+        else
+        {
+            scarabR.setAlertMessage(l10n.get("NoChangesMade"));
+        }
+    }
 
-    public void doDelete( RunData data, TemplateContext context )
+    public void doDelete(RunData data, TemplateContext context)
         throws Exception
     {
+        String key = null;
+        String id = null;
+        IssueType issueType = null;
+        boolean deleted = false;
+        boolean hasIssues = false;
+
         Object[] keys = data.getParameters().getKeys();
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        String key;
-        String id;
-        IssueType issueType;
-
+        IntakeTool intake = getIntakeTool(context);
         for (int i =0; i<keys.length; i++)
         {
-            key = keys[i].toString();
-            if (key.startsWith("action_"))
-            {
-               id = key.substring(7);
-               issueType = IssueTypePeer
-                       .retrieveByPK(new NumberKey(id));
-               if (issueType.hasIssues())
-               {
-                   Group group = getIntakeTool(context).get("IssueType", issueType.getQueryKey());
-                   Field field = group.get("Name");
-                   getScarabRequestTool(context).setAlertMessage(l10n.get("CannotDeleteIssueTypesWithIssues"));
-                   field.setMessage("IssueTypeHasIssues");
-               }
-               else 
-               {
-                   issueType.setDeleted(true);
-                   issueType.save();
-                   getScarabRequestTool(context).setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
-               }
-             }
-         }
-     }
+             key = keys[i].toString();
+             if (key.startsWith("action_"))
+             {
+                id = key.substring(7);
+                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                if (issueType != null)
+                {
+                    if (issueType.hasIssues())
+                    {
+                        Group group = intake.get("IssueType", issueType.getQueryKey());
+                        Field field = group.get("Name");
+                        field.setMessage("IssueTypeHasIssues");
+                        hasIssues = true;
+                    }
+                    else 
+                    {
+                        issueType.setDeleted(true);
+                        issueType.save();
+                        deleted = true;
+                    }
+                }
+            }
+        }
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        if (hasIssues)
+        {
+            scarabR.setAlertMessage(l10n.get("CannotDeleteIssueTypesWithIssues"));
+        }
+        else if (deleted)
+        {
+            scarabR.setConfirmMessage(l10n.get("GlobalIssueTypesDeleted"));
+        }
+        else
+        {
+            scarabR.setConfirmMessage(l10n.get("NoChangesMade"));
+        }
+    }
 
-    public void doUndelete( RunData data, TemplateContext context )
+    public void doUndelete(RunData data, TemplateContext context)
         throws Exception
     {
         Object[] keys = data.getParameters().getKeys();
         String key;
         String id;
         IssueType issueType;
-
+        boolean saved = false;
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
             if (key.startsWith("action_"))
             {
-               id = key.substring(7);
-               issueType = IssueTypePeer
-                      .retrieveByPK(new NumberKey(id));
-               issueType.setDeleted(false);
-               issueType.save();
-               getScarabRequestTool(context).setConfirmMessage(getLocalizationTool(context).get("GlobalIssueTypesUnDeleted"));
-             }
-         }
-     }
+                id = key.substring(7);
+                issueType = IssueTypeManager.getInstance(new NumberKey(id));
+                if (issueType != null)
+                {
+                    issueType.setDeleted(false);
+                    issueType.save();
+                    saved = true;
+                }
+            }
+        }
+        if (saved)
+        {
+            getScarabRequestTool(context)
+                .setConfirmMessage(
+                getLocalizationTool(context)
+                .get("GlobalIssueTypesUnDeleted"));
+        }
+    }
 }
