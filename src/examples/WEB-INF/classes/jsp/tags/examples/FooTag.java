@@ -13,50 +13,55 @@ import java.io.IOException;
  * <foo att1="..." att2="...." att3="...." />
  */
 
-public class FooTag extends Tag {
-
-    private String atts[];
+public class FooTag 
+    extends ExampleTagBase 
+    implements BodyTag 
+{
+    private String atts[] = new String[3];
     int i = 0;
     
-    /**
-     * Create a new Foo tag handler
-     *
-     * @param prefix the tag library prefix used in the directive
-     * @param tagname the tag name described in the TLD
-     */
-    public FooTag(String prefix, String tagname) {
-	super(prefix, tagname);
+    private final void setAtt(int index, String value) {
+        atts[index] = value;
+    }
+    
+    public void setAtt1(String value) {
+        setAtt(0, value);
+    }
+    
+    public void setAtt2(String value) {
+        setAtt(1, value);
     }
 
+    public void setAtt3(String value) {
+        setAtt(2, value);
+    }
+    
     /**
      * Process start tag
      *
-     * @return EVAL_BODY
+     * @return EVAL_BODY_INCLUDE
      */
     public int doStartTag() {
-        atts = new String[3];
-        i = 0;
-	atts[0] = tagData.getAttributeString("att1");
-	atts[1] = tagData.getAttributeString("att2");
-	atts[2] = tagData.getAttributeString("att3");
-        
+	return EVAL_BODY_TAG;
+    }
+
+    public void doInitBody() throws JspError {
         pageContext.setAttribute("member", atts[i]);
-        
-	return EVAL_BODY;
-    }
-
-    public void doBeforeBody() throws JspError {
-    }
-
-    public int doAfterBody() throws JspError {
         i++;
-        if (i == 3) {
-            bodyOut.writeOut(getPreviousOut());
-            return SKIP_BODY;
-        } else
-            pageContext.setAttribute("member", atts[i]);
-        
-        return EVAL_BODY;
+    }
+    
+    public int doAfterBody() throws JspError {
+        try {
+            if (i == 3) {
+                bodyOut.writeOut(bodyOut.getEnclosingWriter());
+                return SKIP_BODY;
+            } else
+                pageContext.setAttribute("member", atts[i]);
+            i++;
+            return EVAL_BODY_TAG;
+        } catch (IOException ex) {
+            throw new JspError(ex.toString());
+        }
     }
 }
 

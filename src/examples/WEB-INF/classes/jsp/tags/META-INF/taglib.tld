@@ -53,7 +53,7 @@
 	Perform a server side action; Log the message.
     </info>
     <attribute>
-	<name>tobrowser</name>
+	<name>toBrowser</name>
 	<required>false</required>
     </attribute>
   </tag>

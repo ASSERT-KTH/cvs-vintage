@@ -12,6 +12,6 @@ Radio stations that rock:
 Did you see me on the stderr window?
 </akv:log>
 
-<akv:log tobrowser="true">
+<akv:log toBrowser="true">
 Did you see me on the browser window as well?
 </akv:log>

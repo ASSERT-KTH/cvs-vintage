@@ -4,29 +4,40 @@ package examples;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
+import java.io.IOException;
+
 /**
  * Log the contents of the body. Could be used to handle errors etc. 
  */
-public class LogTag extends Tag {
+public class LogTag 
+    extends ExampleTagBase
+    implements BodyTag 
+{
     boolean toBrowser = false;
     
-    public LogTag(String prefix, String tagname) {
-        super(prefix, tagname);
+    public void setToBrowser(String value) {
+        if (value == null)
+            toBrowser = false;
+        else if (value.equalsIgnoreCase("true"))
+            toBrowser = true;
+        else
+            toBrowser = false;
     }
-    
 
     public int doStartTag() {
-        String value = tagData.getAttributeString("tobrowser");
-        toBrowser = value.equalsIgnoreCase("true") ? true : false;
-        return EVAL_BODY;
+        return EVAL_BODY_TAG;
     }
     
     public int doAfterBody() throws JspError {
-        String s = bodyOut.getString();
-        System.err.println(s);
-        if (toBrowser)
-            bodyOut.writeOut(getPreviousOut());
-        return SKIP_BODY;
+        try {
+            String s = bodyOut.getString();
+            System.err.println(s);
+            if (toBrowser)
+                bodyOut.writeOut(bodyOut.getEnclosingWriter());
+            return SKIP_BODY;
+        } catch (IOException ex) {
+            throw new JspError(ex.toString());
+        }
     }
 }
 
