@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.8 2002/09/05 09:37:43 kataka Exp $
+// $Id: FigTransition.java,v 1.9 2002/09/10 14:39:36 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -234,6 +234,7 @@ public class FigTransition extends FigEdgeModelElement {
 	/**
 	 * @see org.tigris.gef.presentation.FigEdgePoly#layoutEdge()
 	 */
+/*
 	protected void layoutEdge() {
 		Object owner = getOwner();
     	if (owner != null) {
@@ -286,6 +287,6 @@ public class FigTransition extends FigEdgeModelElement {
 		    ((FigPoly)_fig).setPolygon(routePoly);
     	}			
 	}
-
+*/
 } /* end class FigTransition */
 

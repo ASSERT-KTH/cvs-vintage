@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.11 2002/09/05 21:30:00 kataka Exp $
+// $Id: NavPerspective.java,v 1.12 2002/09/10 14:39:36 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -190,10 +190,18 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(new GoInteractionMessage());
     packageCentric.addSubTreeModel(new GoMessageAction());
     packageCentric.addSubTreeModel(new GoSignalToReception());
-
     packageCentric.addSubTreeModel(new GoLinkStimuli());
     packageCentric.addSubTreeModel(new GoStimulusAction());
-
+    
+    // rules for statemachinediagram and activitydiagram
+    packageCentric.addSubTreeModel(new GoBehavioralFeatureToStateMachine());
+    packageCentric.addSubTreeModel(new GoClassifierToStateMachine());
+	// packageCentric.addSubTreeModel(new GoMachineDiagram());
+    packageCentric.addSubTreeModel(new GoMachineToState());
+    packageCentric.addSubTreeModel(new GoStateToSubstate());
+    packageCentric.addSubTreeModel(new GoStateToIncomingTrans());
+    packageCentric.addSubTreeModel(new GoStateToOutgoingTrans());
+	
     diagramCentric.addSubTreeModel(new GoProjectDiagram());
     diagramCentric.addSubTreeModel(new GoDiagramToNode());
     diagramCentric.addSubTreeModel(new GoDiagramToEdge());
@@ -343,7 +351,6 @@ implements Serializable, TreeModel, Cloneable {
     registerRule(new GoClassToAssocdClass());
     registerRule(new GoClassToAggrClass());
     registerRule(new GoClassToCompositeClass());
-    registerRule(new GoElementToMachine());
     registerRule(new GoMachineToTrans());
     registerRule(new GoMachineToState());
     registerRule(machineToInitialState);
