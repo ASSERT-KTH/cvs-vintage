@@ -40,6 +40,8 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem implements Observer{
 		
 		((CheckBoxAction) getAction()).getObservable().addObserver(this);
 		
+		
+		
 	}
 	
 

@@ -39,10 +39,10 @@ public class CheckBoxAction extends FrameAction {
 		AbstractFrameController frameController,
 		String name) {
 		super(frameController, name);
-		
+
 		observable = new SelectionStateObservable();
 	}
-	
+
 	/**
 	 * @param frameController
 	 * @param name
@@ -73,6 +73,8 @@ public class CheckBoxAction extends FrameAction {
 			big_icon,
 			mnemonic,
 			keyStroke);
+
+		observable = new SelectionStateObservable();
 	}
 
 	/**
@@ -108,6 +110,8 @@ public class CheckBoxAction extends FrameAction {
 			big_icon,
 			mnemonic,
 			keyStroke);
+
+		observable = new SelectionStateObservable();
 	}
 
 	/**

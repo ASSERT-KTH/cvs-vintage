@@ -17,15 +17,14 @@
 package org.columba.core.gui.action;
 
 import java.awt.event.ActionEvent;
-
-import javax.swing.JCheckBoxMenuItem;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class ViewToolbarAction extends CheckBoxAction {
+public class ViewToolbarAction extends CheckBoxAction implements Observer{
 
 	public ViewToolbarAction(AbstractFrameController controller) {
 		super(
@@ -56,18 +55,14 @@ public class ViewToolbarAction extends CheckBoxAction {
 		frameController.getView().showToolbar();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.action.CheckBoxAction#getInitState()
+	
+	/**
+	 * Update checked state of menu item if change occured
+	 * 
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
-	protected boolean getInitState() {
-              return frameController.isToolbarEnabled(AbstractFrameView.MAIN_TOOLBAR);
+	public void update(Observable o, Object arg) {
+		// TODO: implement ViewToolbar->update()
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
-	 */
-	public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem, AbstractFrameView frameView) {
-		super.setCheckBoxMenuItem(checkBoxMenuItem);
-		getCheckBoxMenuItem().setSelected( getInitState() );
-	}
 }

@@ -40,11 +40,17 @@ public class FolderTreeCellRenderer
 	Border unselectedBorder = null;
 	Border selectedBorder = null;
 	boolean isBordered = true;
-	
-	//TreeController treeController;
 
-	private ImageIcon defaultIcon, localhostIcon, remotehostIcon, virtualfolderIcon;
-
+	private ImageIcon defaultIcon,
+		localhostIcon,
+		remotehostIcon,
+		virtualfolderIcon;
+	private ImageIcon draftIcon,
+		templateIcon,
+		sentIcon,
+		inboxIcon,
+		outboxIcon,
+		trashIcon;
 	private Font plainFont, boldFont, italicFont;
 
 	/**
@@ -54,19 +60,15 @@ public class FolderTreeCellRenderer
 	public FolderTreeCellRenderer() {
 		super();
 
-		//this.treeController = treeController;
-
 		boldFont = UIManager.getFont("Tree.font");
 		boldFont = boldFont.deriveFont(Font.BOLD);
 		italicFont = UIManager.getFont("Tree.font");
 		italicFont = italicFont.deriveFont(Font.ITALIC);
 		plainFont = UIManager.getFont("Tree.font");
 
-		defaultIcon = ImageLoader.getSmallImageIcon("folder.png");
-		localhostIcon = ImageLoader.getSmallImageIcon("localhost.png");
-
-		remotehostIcon = ImageLoader.getSmallImageIcon("remotehost.png");
-		virtualfolderIcon = ImageLoader.getSmallImageIcon("virtualfolder.png");
+		inboxIcon = ImageLoader.getSmallImageIcon("inbox-16.png");
+		outboxIcon = ImageLoader.getSmallImageIcon("outbox-16.png");
+		trashIcon = ImageLoader.getSmallImageIcon("stock_delete-16.png");
 
 	}
 
@@ -144,11 +146,25 @@ public class FolderTreeCellRenderer
 
 				setText(name);
 
-				// set icons
+				// set defaul icons 
+				// -> use icons from folders
 				if (expanded) {
 					setIcon(folder.getExpandedIcon());
 				} else {
 					setIcon(folder.getCollapsedIcon());
+				}
+				
+				// overwrite special folders with custom icons
+				// TODO: add same for IMAP folders
+				if (folder.getUid() == 101) {
+					// inbox
+					setIcon(inboxIcon);
+				} else if (folder.getUid() == 103) {
+					// outbox
+					setIcon(outboxIcon);
+				} else if (folder.getUid() == 105) {
+					// trash
+					setIcon(trashIcon);
 				}
 
 				// important for imap

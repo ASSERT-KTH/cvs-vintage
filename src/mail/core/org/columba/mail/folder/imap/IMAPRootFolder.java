@@ -47,8 +47,9 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 
 public class IMAPRootFolder extends Folder implements ActionListener {
+	
 	protected final static ImageIcon imapRootIcon =
-		ImageLoader.getSmallImageIcon("remotehost.png");
+		ImageLoader.getSmallImageIcon("imap-16.png");
 
 	private IMAPProtocol imap;
 	//private boolean select=false;

@@ -18,7 +18,6 @@ package org.columba.core.gui.menu;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 
 import org.columba.core.action.BasicAction;
@@ -211,6 +210,7 @@ public abstract class AbstractMenuGenerator {
 
 					} catch (Exception e) {						
 						ColumbaLogger.log.error(e + ": "+ next.getAttribute("action"));
+						e.printStackTrace();
 					}
 				} else if (next.getAttribute("checkboxaction") != null) {
 					try {
@@ -230,11 +230,14 @@ public abstract class AbstractMenuGenerator {
 							// display tooltip in statusbar
 							menuitem.addMouseListener( frameController.getMouseTooltipHandler() );
 							menu.add(menuitem);
+							
 							action.setCheckBoxMenuItem(menuitem);
+							
 							lastWasSeparator = false;
 						}
 					} catch (Exception e) {
 						ColumbaLogger.log.error(e+" - "+ next.getAttribute("checkboxaction"));
+						e.printStackTrace();
 					}
 				} else if (next.getAttribute("imenu") != null) {
 					try {
