@@ -53,7 +53,10 @@ import java.util.Vector;
 
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Role;
+import org.apache.fulcrum.security.entity.Group;
+import org.apache.fulcrum.security.util.GroupSet;
 import org.apache.fulcrum.security.TurbineSecurity;
+import org.apache.fulcrum.security.impl.db.entity.TurbineUserGroupRolePeer;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.ObjectKey;
@@ -70,7 +73,7 @@ import org.tigris.scarab.om.Issue;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserImpl.java,v 1.17 2001/09/14 19:39:15 elicia Exp $
+    @version $Id: ScarabUserImpl.java,v 1.18 2001/09/28 21:55:45 jon Exp $
 */
 public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
 {    
@@ -217,31 +220,24 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         return criteria;
     }
 
-
     /**
      * Gets all modules which are currently associated with this user 
      * (relationship has not been deleted.)
      */
     public List getModules() throws Exception
     {
-        Criteria crit = new Criteria(3)
-            .add(RModuleUserRolePeer.DELETED, false);
-        List moduleRoles = getRModuleUserRolesJoinScarabModule(crit);
-
-        // this list will contain multiple entries for a module, if
-        // the user has multiple roles
-        List modules = new ArrayList(moduleRoles.size());
-        Iterator i = moduleRoles.iterator();
-        while (i.hasNext()) 
+        Criteria crit = new Criteria();
+        crit.addJoin(TurbineUserGroupRolePeer.USER_ID, ScarabUserImplPeer.USER_ID);
+        crit.addJoin(TurbineUserGroupRolePeer.GROUP_ID, ScarabModulePeer.MODULE_ID);
+        crit.add(TurbineUserGroupRolePeer.USER_ID, this.getUserId());
+        GroupSet groups = TurbineSecurity.getGroups(crit);
+        Iterator itr = groups.elements();
+        List modules = new ArrayList(groups.size());
+        while (itr.hasNext())
         {
-            ModuleEntity module = 
-                (ModuleEntity) ((RModuleUserRole)i.next()).getScarabModule();
-            if ( !modules.contains(module) ) 
-            {
-                modules.add(module);
-            }
+            Group group = (Group) itr.next();
+            modules.add((ModuleEntity)group);
         }
-        
         return modules;
     }
 
@@ -343,6 +339,7 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
     public List getModules(Role role) 
         throws Exception
     {
+    /*
         Criteria crit = new Criteria(3)
             .add(RModuleUserRolePeer.DELETED, false)
             .add(RModuleUserRolePeer.ROLE_ID, 
@@ -360,6 +357,10 @@ public class ScarabUserImpl extends BaseScarabUserImpl implements ScarabUser
         }
 
         return modules;
+*/
+        if (true)
+            throw new Exception ("FIXME: This method doesn't belong here!");
+        return null;
     }
 
     public Issue getReportingIssue(ModuleEntity me) throws Exception

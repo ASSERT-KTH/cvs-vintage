@@ -61,12 +61,33 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.14 2001/09/26 02:12:51 jon Exp $
+ * @version $Id: ModuleEntity.java,v 1.15 2001/09/28 21:55:45 jon Exp $
  */
 public interface ModuleEntity
 {
+    /**
+     * This method is only used by the Turbine Group interface.
+     * The implementation of getName() returns a unique name for
+     * this Module that is human readable because our 
+     * implementation of Flux needs it as well as the fact that 
+     * each Group needs to have a unique name. If you want to get
+     * the actual name of the Module, you need to call the getRealName
+     * method.
+     */
     public String getName();
     public void setName(String name);
+
+    /**
+     * This method is only used by the Turbine Group interface.
+     * The implementation of getName() returns a unique name for
+     * this Module that is human readable because our 
+     * implementation of Flux needs it as well as the fact that 
+     * each Group needs to have a unique name. If you want to get
+     * the actual name of the Module, you need to call the getRealName
+     * method.
+     */
+    public String getRealName();
+    public void setRealName(String name);
 
     public String getCode();
     public void setCode(String code);
@@ -81,18 +102,18 @@ public interface ModuleEntity
     public void setPrimaryKey(ObjectKey key) throws Exception;
     public NumberKey getModuleId();
     
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public NumberKey getQaContactId();
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public void setQaContactId(String v ) throws Exception;
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public void setQaContactId(NumberKey v ) throws Exception;
 
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public NumberKey getOwnerId();
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public void setOwnerId(String v ) throws Exception;
-/** THESE WILL BE DEPRECATED */
+/** @deprecated THESE WILL BE DEPRECATED */
     public void setOwnerId(NumberKey v ) throws Exception;
 
     public void save() throws Exception;
@@ -116,6 +137,8 @@ public interface ModuleEntity
     public NumberKey getParentId();
     public void setParentId(String v ) throws Exception;
     public void setParentId(NumberKey v ) throws Exception;
+    
+    public List getParents() throws Exception;
     
     public Issue getNewIssue(ScarabUser user)
         throws Exception;

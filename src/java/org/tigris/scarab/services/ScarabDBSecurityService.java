@@ -69,7 +69,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * being the Group implementation.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ScarabDBSecurityService.java,v 1.8 2001/09/13 22:37:04 jon Exp $
+ * @version $Id: ScarabDBSecurityService.java,v 1.9 2001/09/28 21:55:45 jon Exp $
  */
 public class ScarabDBSecurityService extends DBSecurityService
 {
@@ -82,13 +82,13 @@ public class ScarabDBSecurityService extends DBSecurityService
     public GroupSet getGroups( Criteria criteria )
         throws DataBackendException
     {
+        /*
         // only supporting getting all modules through this method.
         if ( criteria.size() != 0 ) 
         {
             throw new DataBackendException(
                 "Partial selection of groups not implemented");
         }
-        /*
         Criteria dbCriteria = new Criteria();
         Iterator keys = criteria.keySet().iterator();
         while(keys.hasNext())

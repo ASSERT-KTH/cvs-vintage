@@ -1,0 +1,33 @@
+#set ($userModules = $data.User.Modules)
+#set ($currentModule = $scarabR.CurrentModule)
+
+<h3>Module Selection Page</h3>
+
+<table border="0">
+<tr>
+    <td><b>Current Module Name:</b></td>
+    <td>$currentModule.Name</td>
+</tr>
+<tr>
+    <td><b>Current Module Desc:</b></td>
+    <td>$currentModule.Description</td>
+</tr>
+</table>
+
+<br/>
+
+<form action="$link.setPage("PickModule.vm")" method="get">
+<select name="curmodule">
+#foreach ($module in $userModules)
+ #if ($module.Name.equals($currentModule.Name))
+ <option selected="true" value="$module.ModuleId">$module.Name
+ #else
+ <option value="$module.ModuleId">$module.Name
+ #end
+ <br>
+#end
+</select>
+<p>
+<input type="submit" value="Change Module">
+</p>
+</form>

@@ -550,7 +550,7 @@ try{
      * @return a <code>ModuleEntity</code> value
      */
     public ModuleEntity getModule()
-     throws Exception
+        throws Exception
     {
       try{
         String modId = getIntakeTool()
@@ -565,17 +565,6 @@ try{
         }
       }catch(Exception e){e.printStackTrace();}
        return module;
-    }
-
-    /**
-     * Gets the ModuleEntity associated with the information
-     * passed around in the query string. Returns null if
-     * the Module could not be found.
-     */
-    public ModuleEntity getCurrentModule()
-    {
-        return getModule(
-            data.getParameters().getString(ScarabConstants.CURRENT_MODULE));
     }
 
     /**
@@ -597,6 +586,17 @@ try{
         {
         }
         return me;
+    }
+
+    /**
+     * Gets the ModuleEntity associated with the information
+     * passed around in the query string. Returns null if
+     * the Module could not be found.
+     */
+    public ModuleEntity getCurrentModule()
+    {
+        return getModule(
+            data.getParameters().getString(ScarabConstants.CURRENT_MODULE));
     }
 
     /**

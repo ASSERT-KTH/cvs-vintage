@@ -87,7 +87,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.28 2001/09/28 01:29:30 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.29 2001/09/28 21:55:45 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -99,11 +99,98 @@ public class ScarabModule
     private Attribute[] dedupeAttributes;
     private Attribute[] quicksearchAttributes;
     private Attribute[] requiredAttributes;
+
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
+    private List parentModules;
 
     private Map allRModuleOptionsMap = new HashMap();
     private Map activeRModuleOptionsMap = new HashMap();
+
+    /**
+     * The 'long' name of the module, includes the parents.
+     */
+    private String name = null;
+
+    private static final String NAME_DELIMINATOR = " -> ";
+        
+    /**
+     * This method is an implementation of the Group.getName() method
+     * and returns a module along with its parents
+     */
+    public String getName()
+    {
+        if (name == null)
+        {
+            StringBuffer sb = new StringBuffer();
+            List parents = null;
+            try
+            {
+                parents = getParents();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            Iterator itr = parents.iterator();
+            boolean firstTime = true;
+            while (itr.hasNext())
+            {
+                ModuleEntity me = (ModuleEntity) itr.next();
+                if (!firstTime)
+                {
+                    sb.append(NAME_DELIMINATOR);
+                }
+                sb.append(me.getRealName());
+                firstTime = false;
+            }
+            if (parents.size() == 1)
+            {
+                sb.append(NAME_DELIMINATOR);
+            }
+            sb.append(getRealName());
+            name = sb.toString();
+        }
+        return name;
+    }
+
+    /**
+     * This method is an implementation of the Group.setName() method
+     */
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    /**
+     * Returns this ModuleEntities parents in ascending order. 
+     * It does not return the 0 parent though.
+     */
+    public List getParents()
+        throws Exception
+    {
+        if (parentModules == null)
+        {
+            parentModules = new ArrayList();
+            ModuleEntity me = (ModuleEntity) 
+                this.getModuleRelatedByParentIdCast();
+            addParents(me);
+        }
+        return parentModules;
+    }
+
+    /**
+     * recursive helper method for getParents()
+     */
+    private void addParents(ModuleEntity module)
+        throws Exception
+    {
+        if (!module.getParentId().equals(ROOT_ID))
+        {
+            addParents(module.getModuleRelatedByParentIdCast());
+        }
+        parentModules.add(module);
+    }
 
     public ScarabUser[] getEligibleIssueReporters()
     {

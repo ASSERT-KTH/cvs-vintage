@@ -3,6 +3,18 @@
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 #set ($fullHistory = $data.Parameters.getString("fullhistory",""))
 
+#set ($currentIssueModuleId = $currentIssue.ModuleId)
+#set ($currentModuleId = $scarabR.CurrentModule.ModuleId)
+#set ($currentModuleName = $scarabR.CurrentModule.Name)
+#if ($currentIssueModuleId != $currentModuleId)
+
+<p><strong class="alert">
+The issue id, $currentIssueId, is not valid for the $currentModuleName Module	
+</strong></p>
+
+<p class="warn">
+</p>
+#else
 
 #if ($currentIssue)
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
@@ -21,13 +33,14 @@ $intake.declareGroups()
 #else     ## issue id was not valid
 
     #if ($currentIssueId)
-
+        <p><strong class="alert">
         The issue id, $currentIssueId, is not valid.
-
+        </strong></p>
     #else
-    
+        <p><strong class="alert">
         You need to enter an issue id.
-
+        </strong></p>
     #end
 
+#end
 #end
