@@ -111,15 +111,40 @@ typedef struct {
     jk_map_t *uri_to_context;
     jk_uri_worker_map_t *uw_map;
 
+    /*
+     * SSL Support - via mod_ssl, soon :)
+     */
+    int  ssl_enable;
+    char *https_indicator;
+    char *certs_indicator;
+    char *cipher_indicator;
+    char *sesion_indicator;
+
     int was_initialized;
     server_rec *s;
 } jk_server_conf_t;
 
+/*
+ * The "private", or subclass portion of the web server service class for
+ * Apache 2.0.  An instance of this class is created for each request
+ * handled.  See jk_service.h for details about the ws_service object in
+ * general.
+ */
+
 struct apache_private_data {
+    /*
+     * For memory management for this request.  Aliased to be identical to
+     * the pool in the superclass (jk_ws_service).
+     */
     jk_pool_t p;
     
+    /* True iff response headers have been returned to client */
     int response_started;
+
+    /* True iff request body data has been read from Apache */
     int read_body_started;
+
+    /* Apache request structure */
     request_rec *r;
 };
 typedef struct apache_private_data apache_private_data_t;
@@ -142,10 +167,18 @@ static int JK_METHOD ws_write(jk_ws_service_t *s,
                               const void *b,
                               unsigned l);
 
+/* ====================================================================== */
+/* JK Service step callbacks                                              */
+/* ====================================================================== */
 
-/* ========================================================================= */
-/* JK Service step callbacks                                                 */
-/* ========================================================================= */
+
+/*
+ * Send the HTTP response headers back to the browser.
+ *
+ * Think of this function as a method of the apache1.3-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.
+ */
 
 static int JK_METHOD ws_start_response(jk_ws_service_t *s,
                                        int status,
@@ -197,30 +230,55 @@ static int JK_METHOD ws_start_response(jk_ws_service_t *s,
     return JK_FALSE;
 }
 
+/*
+ * Read a chunk of the request body into a buffer.  Attempt to read len
+ * bytes into the buffer.  Write the number of bytes actually read into
+ * actually_read.
+ *
+ * Think of this function as a method of the apache2.0-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.
+ */
 static int JK_METHOD ws_read(jk_ws_service_t *s,
                              void *b,
-                             unsigned l,
-                             unsigned *a)
+                             unsigned len,
+                             unsigned *actually_read)
 {
-    if(s && s->ws_private && b && a) {
+    if(s && s->ws_private && b && actually_read) {
         apache_private_data_t *p = s->ws_private;
         if(!p->read_body_started) {
-            if(!ap_setup_client_block(p->r, REQUEST_CHUNKED_DECHUNK)) {
-                if(ap_should_client_block(p->r)) { 
-                    p->read_body_started = JK_TRUE; 
-                }
+            if(ap_should_client_block(p->r)) {
+                p->read_body_started = JK_TRUE;
             }
         }
 
         if(p->read_body_started) {
-            *a = ap_get_client_block(p->r, b, l);
+        long rv;
+        if ((rv = ap_get_client_block(p->r, b, len)) < 0) {
+        *actually_read = 0;
+        } else {
+        *actually_read = (unsigned) rv;
+        }
             return JK_TRUE;
         }
     }
     return JK_FALSE;
 }
 
-/* Works with 4096, fails with 8192 */
+/*
+ * Write a chunk of response data back to the browser.  If the headers
+ * haven't yet been sent over, send over default header values (Status =
+ * 200, basically).
+ *
+ * Write len bytes from buffer b.
+ *
+ * Think of this function as a method of the apache2.0-specific subclass of
+ * the jk_ws_service class.  Think of the *s param as a "this" or "self"
+ * pointer.
+ *
+ * Works with 4096, fails with 8192 
+ */
+
 #define CHUNK_SIZE 4096
 
 static int JK_METHOD ws_write(jk_ws_service_t *s,
@@ -319,6 +377,24 @@ static int get_content_length(request_rec *r)
     return 0;
 }
 
+/*
+ * Set up an instance of a ws_service object for a single request.  This
+ * particular instance will be of the Apache 1.3-specific subclass.  Copies
+ * all of the important request information from the Apache request object
+ * into the jk_ws_service_t object.
+ *
+ * Params
+ *
+ * private_data: The subclass-specific data structure, already initialized
+ * (with a pointer to the Apache request_rec structure, among other things)
+ *
+ * s: The base class object.
+ *
+ * conf: Configuration information
+ *
+ * Called from jk_handler().  See jk_service.h for explanations of what most
+ * of these fields mean.
+ */
 static int init_ws_service(apache_private_data_t *private_data,
                            jk_ws_service_t *s)
 {
@@ -380,6 +456,8 @@ static int init_ws_service(apache_private_data_t *private_data,
 
     s->method       = (char *)r->method;
     s->content_length = get_content_length(r);
+    s->is_chunked   = r->read_chunked;
+    s->no_more_chunks = 0;
     s->query_string = r->args;
     s->req_uri      = r->uri;
     
@@ -393,13 +471,17 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->headers_values   = NULL;
     s->num_headers      = 0;
     if(r->headers_in && apr_table_elts(r->headers_in)) {
+        int need_content_length_header = (s->content_length == 0) ? JK_TRUE : JK_FALSE;
         apr_array_header_t *t = apr_table_elts(r->headers_in);        
         if(t && t->nelts) {
             int i;
             apr_table_entry_t *elts = (apr_table_entry_t *)t->elts;
             s->num_headers = t->nelts;
-            s->headers_names  = apr_palloc(r->pool, sizeof(char *) * t->nelts);
-            s->headers_values = apr_palloc(r->pool, sizeof(char *) * t->nelts);
+            /* allocate an extra header slot in case we need to add a content-length header */
+            s->headers_names  = apr_palloc(r->pool, sizeof(char *) * (t->nelts + 1));
+            s->headers_values = apr_palloc(r->pool, sizeof(char *) * (t->nelts + 1));
+            if(!s->headers_names || !s->headers_values)
+                return JK_FALSE;
             for(i = 0 ; i < t->nelts ; i++) {
                 char *hname = apr_pstrdup(r->pool, elts[i].key);
                 s->headers_values[i] = apr_pstrdup(r->pool, elts[i].val);
@@ -408,16 +490,46 @@ static int init_ws_service(apache_private_data_t *private_data,
                     *hname = tolower(*hname);
                     hname++;
                 }
+                if(need_content_length_header &&
+                        !strncmp(s->headers_values[i],"content-length",14)) {
+                    need_content_length_header = JK_FALSE;
+                }
             }
+            /* Add a content-length = 0 header if needed.
+             * Ajp13 assumes an absent content-length header means an unknown,
+             * but non-zero length body.
+             */
+            if(need_content_length_header) {
+                s->headers_names[s->num_headers] = "content-length";
+                s->headers_values[s->num_headers] = "0";
+                s->num_headers++;
+            }
+        }
+        /* Add a content-length = 0 header if needed.*/
+        else if (need_content_length_header) {
+            s->headers_names  = ap_palloc(r->pool, sizeof(char *));
+            s->headers_values = ap_palloc(r->pool, sizeof(char *));
+            if(!s->headers_names || !s->headers_values)
+                return JK_FALSE;
+            s->headers_names[0] = "content-length";
+            s->headers_values[0] = "0";
+            s->num_headers++;
         }
     }
 
     return JK_TRUE;
 }
 
-/* ========================================================================= */
-/* The JK module command processors                                          */
-/* ========================================================================= */
+/*
+ * The JK module command processors
+ *
+ * The below are all installed so that Apache calls them while it is
+ * processing its config files.  This allows configuration info to be
+ * copied into a jk_server_conf_t object, which is then used for request
+ * filtering/processing.
+ *
+ * See jk_cmds definition below for explanations of these options.
+ */
 
 static const char *jk_set_mountcopy(cmd_parms *cmd, 
                                     void *dummy, 
@@ -534,10 +646,12 @@ apr_status_t jk_cleanup_endpoint( void *data ) {
 static int jk_handler(request_rec *r)
 {   
     const char *worker_name;
+    int         rc;
 
     if(strcmp(r->handler,JK_HANDLER))	/* not for me, try next handler */
     return DECLINED;
 
+/*
 	if (1)
 	{
 	jk_server_conf_t *xconf =
@@ -545,6 +659,7 @@ static int jk_handler(request_rec *r)
 	jk_logger_t *xl = xconf->log ? xconf->log : main_log;
 	jk_log(xl, JK_LOG_DEBUG, "Into handler r->proxyreq=%d r->handler=%s r->notes=%d\n", r->proxyreq, r->handler, r->notes); 
 	}
+*/
 
 	worker_name = apr_table_get(r->notes, JK_WORKER_ID);
 
@@ -553,6 +668,11 @@ static int jk_handler(request_rec *r)
         return HTTP_INTERNAL_SERVER_ERROR;
     }
       
+    /* Set up r->read_chunked flags for chunked encoding, if present */
+    if(rc = ap_setup_client_block(r, REQUEST_CHUNKED_DECHUNK)) {
+    return rc;
+    }
+
     if(worker_name) {
         jk_server_conf_t *conf =
             (jk_server_conf_t *)ap_get_module_config(r->server->module_config, &jk_module);
@@ -603,7 +723,7 @@ static int jk_handler(request_rec *r)
                                       l, 
                                       &is_recoverable_error);
 
-			if (s.content_read < s.content_length) {
+			if (s.content_read < s.content_length || s.is_chunked) {
 			/* Toss all further characters left to read fm client */
 				char *buff = apr_palloc(r->pool, 2048);
 				if (buff != NULL) {
