@@ -1,7 +1,6 @@
 <div class="app" id="querylist">
 
 #set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
 #set ($user = $data.User)
 #set ($canDeleteAtLeastOne = false)
 
