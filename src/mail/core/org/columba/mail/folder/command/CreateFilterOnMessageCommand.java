@@ -54,6 +54,9 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 	/** Filter created */
 	private Filter filter = null;
 	
+	/** The source folder where the filter should be added to. */
+	private Folder srcFolder;
+	
 	/**
 	 * Constructor for CreateFilterOnMessageCommand. Calls super
 	 * constructor and saves flag for which kind of filter to
@@ -71,12 +74,17 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 
 	/**
 	 * Displays filter dialog for user modifications after creation
-	 * of the filter in execute.
+	 * of the filter in execute. If the user cancels the dialog then
+	 * the filter is not stored into the filter list in the source
+	 * folder.
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		if (filter != null) {
+		if ((filter != null) && (srcFolder!=null)) {
 			FilterDialog dialog = new FilterDialog(filter);
+			if (!dialog.wasCancelled()) {
+				srcFolder.getFilterList().add(filter);
+			}
 		}
 	}
 
@@ -99,7 +107,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 			return;	// no message selected.
 		}
 		Object uid = uids[0];
-		Folder srcFolder = (Folder) r[0].getFolder();
+		srcFolder = (Folder) r[0].getFolder();
 		// register for status events
  		((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 		
@@ -115,11 +123,7 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 		
 		// create filter
 		String descr = filterType + " contains [" + headerValue + "]";
-		filter = createFilter(descr, filterType, headerValue);
-		
-		// add filter to the folders filterlist
-		srcFolder.getFilterList().add(filter);
-		
+		filter = createFilter(descr, filterType, headerValue);		
 	}
 
 
