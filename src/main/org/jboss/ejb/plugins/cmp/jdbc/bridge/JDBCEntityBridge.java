@@ -57,7 +57,8 @@ import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.28 $
+ * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
+ * @version $Revision: 1.29 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -96,10 +97,15 @@ public class JDBCEntityBridge implements EntityBridge {
 
       this.metadata = metadata;                  
       this.manager = manager;
+
+      // initial context is used to lookup the data source
+      // and key generator factory
+      InitialContext ic = null;
             
       // find the datasource
       try {
-         dataSource = (DataSource)new InitialContext().lookup(
+         InitialContext ic = new InitialContext();
+         dataSource = (DataSource)ic.lookup(
                metadata.getDataSourceName());
       } catch(NamingException e) {
          throw new DeploymentException("Error: can't find data source: " + 
@@ -137,7 +143,7 @@ public class JDBCEntityBridge implements EntityBridge {
             if( cmpField.isUnknownPkField() ) {
                try {
                   KeyGeneratorFactory keyGeneratorFactory =
-                     (KeyGeneratorFactory)new InitialContext().lookup(
+                     (KeyGeneratorFactory)ic.lookup(
                         cmpField.getKeyGeneratorFactory() );
                   keyGenerator = keyGeneratorFactory.getKeyGenerator();
                } catch(NamingException e) {
