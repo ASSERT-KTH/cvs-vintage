@@ -53,7 +53,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -244,7 +244,11 @@ public class JDBCEntityBridge implements EntityBridge {
          throws DeploymentException {
 
       String eagerLoadGroupName = metadata.getEagerLoadGroup();
-      eagerLoadFields = (List)loadGroups.get(eagerLoadGroupName);
+      if(eagerLoadGroupName == null) {
+         eagerLoadFields = Collections.EMPTY_LIST;
+      } else {
+         eagerLoadFields = (List)loadGroups.get(eagerLoadGroupName);
+      }
    }
 
    private void loadLazyLoadGroups(JDBCEntityMetaData metadata)
