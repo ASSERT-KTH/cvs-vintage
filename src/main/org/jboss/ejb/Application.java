@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 
 import javax.ejb.EJBLocalHome;
+import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
-import org.jboss.system.Service;
 import org.jboss.management.j2ee.EJB;
 import org.jboss.management.j2ee.EjbModule;
+import org.jboss.system.Service;
+import org.jboss.system.ServiceControllerMBean;
+import org.jboss.util.jmx.MBeanProxy;
 
 import org.jboss.logging.Logger;
 
@@ -33,7 +35,7 @@ import org.jboss.logging.Logger;
  * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class Application
    implements Service
@@ -60,11 +62,25 @@ public class Application
    
    /** Module Object Name (JSr-77) **/
    private String moduleName;
+
+   private final ServiceControllerMBean serviceController;
+
+   private final MBeanServer server;
    
    // Static --------------------------------------------------------
 
    // Public --------------------------------------------------------
 
+   //constructor with mbeanserver
+
+   public Application(final MBeanServer server)
+   {
+      this.server = server;
+      serviceController = (ServiceControllerMBean)
+	 MBeanProxy.create(ServiceControllerMBean.class,
+			   ServiceControllerMBean.OBJECT_NAME,
+			   server);
+   }
    /**
     * Add a container to this application. This is called by the
     * EJBDeployer.
@@ -202,8 +218,32 @@ public class Application
    }
 	
    // Service implementation ----------------------------------------
-   public void create() throws Exception {}
-   public void destroy(){}
+   public void create() throws Exception 
+   {
+      boolean debug = log.isDebugEnabled();
+      log.debug( "Application.start(), begin" );
+      for (Iterator i = containers.values().iterator(); i.hasNext();)
+      {
+         Container con = (Container)i.next();
+         ObjectName jmxName= con.getJmxName();
+         server.registerMBean(con, jmxName);
+         serviceController.create(jmxName);
+         // Create JSR-77 EJB-Wrapper
+         log.debug( "Application.create(), create JSR-77 EJB-Component" );
+         ObjectName lEJB = EJB.create(
+            server,
+            getModuleName(),
+            con.getBeanMetaData()
+         );
+         if (debug) {
+            log.debug( "Application.start(), EJB: " + lEJB );
+         }
+         if( lEJB != null ) {
+            con.mEJBObjectName = lEJB.toString();
+         }
+      }
+   }
+
    /**
     * The mbean Service interface <code>start</code> method calls
     * the start method on each contatiner, then the init method on each 
@@ -216,33 +256,13 @@ public class Application
    {
       boolean debug = log.isDebugEnabled();
       
-      log.debug( "Application.start(), begin" );
-      for (Iterator i = containers.values().iterator(); i.hasNext();)
-      {
-         Container con = (Container)i.next();
-         con.create();
-      }
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
          if (debug) {
             log.debug( "Application.start(), start container: " + con );
          }
-         
-         con.start();
-         // Create JSR-77 EJB-Wrapper
-         log.debug( "Application.start(), create JSR-77 EJB-Component" );
-         ObjectName lEJB = EJB.create(
-            con.mbeanServer,
-            getModuleName(),
-            con.getBeanMetaData()
-         );
-         if (debug) {
-            log.debug( "Application.start(), EJB: " + lEJB );
-         }
-         if( lEJB != null ) {
-            con.mEJBObjectName = lEJB.toString();
-         }
+         serviceController.start(con.getJmxName());
       }
    }
 	
@@ -254,8 +274,21 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         con.stop();
+         try 
+         {
+            serviceController.stop(con.getJmxName());
+         }
+         catch (Exception e)
+         {
+            //no log here, but this shouldn't happen.
+            //log.error("unexpected exception stopping Container: " + con.getJmxName(), e);
+         } // end of try-catch
+         
       }
+   }
+
+   public void destroy()
+   {
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
@@ -263,7 +296,15 @@ public class Application
          if( con.mEJBObjectName != null ) {
             EJB.destroy( con.mbeanServer, con.mEJBObjectName );
          }
-         con.destroy();
+         try 
+         {
+            serviceController.destroy(con.getJmxName());
+            serviceController.remove(con.getJmxName());
+         }
+         catch (Exception e)
+         {
+            //log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
+         } // end of try-catch
       }
    }
 	

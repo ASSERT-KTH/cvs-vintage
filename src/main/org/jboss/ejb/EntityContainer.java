@@ -62,7 +62,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.68 $
+* @version $Revision: 1.69 $
 *
 * <p><b>Revisions:</b>
 *
@@ -941,29 +941,27 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    {
       MBeanParameterInfo miInfo = new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data");
       MBeanConstructorInfo[] ctorInfo = null;
-      MBeanOperationInfo[] opInfo = {
-         new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
-            new MBeanParameterInfo[] {miInfo},
-            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
-         new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
-            new MBeanParameterInfo[] {miInfo},
-            "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
-         new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
-            null,
-            "java.lang.Class", MBeanOperationInfo.INFO),
-         new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
-            null,
-            "java.lang.Class", MBeanOperationInfo.INFO),
+
+      MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")};
+      MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
+
+      MBeanInfo superInfo = super.getMBeanInfo();
+      int superOpInfoCount = superInfo.getOperations().length;
+      MBeanOperationInfo[] opInfo = new MBeanOperationInfo[superOpInfoCount +2];
+      System.arraycopy(superInfo.getOperations(), 0, opInfo, 0, superOpInfoCount);
+      opInfo[superOpInfoCount] = 
          new MBeanOperationInfo("getCacheSize", "Get the Container cache size.",
-            null,
-            "java.lang.Integer", MBeanOperationInfo.INFO),
+                                noParams,
+                                "java.lang.Integer", MBeanOperationInfo.INFO);
+      opInfo[superOpInfoCount + 1] = 
          new MBeanOperationInfo("flushCache", "Flush the Container cache.",
-            null,
-            "", MBeanOperationInfo.ACTION_INFO)
-      };
-      MBeanNotificationInfo[] notifyInfo = null;
-      return new MBeanInfo(getClass().getName(), "EJB Container MBean",
-         null, ctorInfo, opInfo, notifyInfo);
+            noParams,
+            "void", MBeanOperationInfo.ACTION);
+      return new MBeanInfo(getClass().getName(), 
+                           "EJB Entity Container MBean",
+                           superInfo.getAttributes(),
+                           superInfo.getConstructors(),                           opInfo,
+                           superInfo.getNotifications());
    }
    
    /**
@@ -994,7 +992,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          return null;
       }
       
-      else return super.invoke("", params, signature);
+      else return super.invoke(actionName, params, signature);
    }
    
    

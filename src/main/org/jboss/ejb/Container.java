@@ -7,21 +7,25 @@
 
 package org.jboss.ejb;
 
-import java.lang.reflect.Method;
 
-import java.rmi.MarshalledObject; // tmp
-import java.net.URL;
+
+
+
+
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.MarshalledObject; // tmp
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Set;
-
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
 import javax.management.DynamicMBean;
 import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
@@ -32,34 +36,33 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.Reference;
-import javax.naming.NamingException;
-import javax.naming.StringRefAddr;
-import javax.naming.RefAddr;
+import javax.naming.Name;
 import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.transaction.Transaction; // tmp
 import javax.transaction.TransactionManager;
-
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.BeanLockManager;
+import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.ejb.BeanLockManager;
 import org.jboss.logging.Logger;
-import org.jboss.metadata.BeanMetaData;
-import org.jboss.metadata.EnvEntryMetaData;
-import org.jboss.metadata.EjbRefMetaData;
-import org.jboss.metadata.EjbLocalRefMetaData;
-import org.jboss.metadata.ResourceRefMetaData;
-import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.EjbLocalRefMetaData;
+import org.jboss.metadata.EjbRefMetaData;
+import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.ResourceEnvRefMetaData;
+import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.naming.Util;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
-
-import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
+import org.jboss.util.jmx.ObjectNameFactory;
 
 /**
 * This is the base class for all EJB-containers in JBoss. A Container
@@ -79,7 +82,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @version $Revision: 1.76 $
+* @version $Revision: 1.77 $
 ** <p><b>Revisions:</b>
 *
 * <p><b>2001/07/26 bill burke:</b>
@@ -173,6 +176,9 @@ public abstract class Container implements DynamicMBean
    /** ObjectName of the JSR-77 EJB representation **/
    protected String mEJBObjectName;
    
+    /** ObjectName of Container **/
+   private ObjectName jmxName;
+
    /** 
    * The name of the Remote invoker dedicated to this container, 
    * the type is set through deployment
@@ -185,6 +191,13 @@ public abstract class Container implements DynamicMBean
    // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
    //protected MBeanServer mbeanServer;
    public MBeanServer mbeanServer;
+
+   /**
+    * boolean <code>started</code> indicates if this container is currently started.
+    * if not, calls to non lifecycle methods will raise exceptions.
+    *
+    */
+   private boolean started = false;
    
    // Public --------------------------------------------------------
    
@@ -401,6 +414,21 @@ public abstract class Container implements DynamicMBean
       return getBeanClass().newInstance();
    }
    
+
+   public ObjectName getJmxName()
+   {
+      String jndiName = getBeanMetaData().getJndiName(); 
+      if (jndiName == null) 
+      {
+         throw new IllegalStateException("cannot get Container object name unless jndi name is set!");
+      } // end of if ()
+      if (jmxName == null) 
+      {
+         jmxName = ObjectNameFactory.create("jboss.j2ee:service=EJB,jndiName="+jndiName);
+      } // end of if ()
+      return jmxName;
+   }
+    
    /**
    * The EJBDeployer calls this method.  The EJBDeployer has set
    * all the plugins and interceptors that this bean requires and now proceeds
@@ -445,10 +473,8 @@ public abstract class Container implements DynamicMBean
    */
    public void start() throws Exception
    {
+      started = true;
       localContainerInvoker.start();
-      String jndiName = this.getBeanMetaData().getJndiName();
-      ObjectName jmxName = new ObjectName("jboss.j2ee:service=EJB,jndiName="+jndiName);
-      mbeanServer.registerMBean(this, jmxName);
    }
    
    /**
@@ -458,16 +484,8 @@ public abstract class Container implements DynamicMBean
    */
    public void stop()
    {
+      started = false;
       localContainerInvoker.stop();
-      try
-      {
-         String jndiName = this.getBeanMetaData().getJndiName();
-         ObjectName jmxName = new ObjectName("jboss.j2ee:service=EJB,jndiName="+jndiName);
-         mbeanServer.unregisterMBean(jmxName);
-      }
-      catch(Exception e)
-      {
-      }
    }
    
    /**
@@ -545,29 +563,32 @@ public abstract class Container implements DynamicMBean
    public Object invoke(String ignored, Object[] params, String[] signature)
       throws MBeanException, ReflectionException
    {      
-      if (params != null && params.length == 1 && (params[0] instanceof Invocation) == false) {
-         log.error("Expected zero or single Invocation argument");
-         new IllegalArgumentException("Expected zero or single Invocation argument");
-      }
-      
-      Object value = null;
-      Invocation mi = (Invocation)params[0];
-
-      // Must have a valid Invocation to continue
-      if (mi == null)
+      if (params != null && params.length == 1 && (params[0] instanceof Invocation))
       {
-         log.error("Method invocation object is null");
-         throw new IllegalArgumentException("Method invocation object is null");
-      }
-      
-      ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
-      boolean trace = log.isTraceEnabled();
-      try
-      {
-         Thread.currentThread().setContextClassLoader(this.classLoader);        
-         switch (mi.getType())  
+         if (!started) 
          {
-            // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
+            throw new IllegalStateException("container is not started, you cannot invoke ejb methods on it");
+         } // end of if ()
+         
+      
+         Object value = null;
+         Invocation mi = (Invocation)params[0];
+
+         // Must have a valid Invocation to continue
+         if (mi == null)
+         {
+            log.error("Method invocation object is null");
+            throw new IllegalArgumentException("Method invocation object is null");
+         }
+      
+         ClassLoader callerClassLoader = Thread.currentThread().getContextClassLoader();
+         boolean trace = log.isTraceEnabled();
+         try
+         {
+            Thread.currentThread().setContextClassLoader(this.classLoader);        
+            switch (mi.getType())  
+            {
+               // Check against home, remote, localHome, local, getHome, getRemote, getLocalHome, getLocal
             case Invocation.REMOTE:
                if (mi instanceof MarshalledInvocation)
                {
@@ -660,7 +681,7 @@ public abstract class Container implements DynamicMBean
                
                value = invokeHome(mi);
             
-            break;
+               break;
             
             case Invocation.LOCALHOME:
                
@@ -675,7 +696,7 @@ public abstract class Container implements DynamicMBean
                   value = clazz;
                }
             
-            break;
+               break;
             
             case Invocation.GETREMOTE:
                
@@ -686,34 +707,75 @@ public abstract class Container implements DynamicMBean
                   value = clazz;
                }
             
-            break;
+               break;
             
             case Invocation.GETLOCALHOME:
                
                value = this.localHomeInterface;
             
-            break;
+               break;
             
             case Invocation.GETLOCAL:
                
                value = this.localInterface;
             
-            break;
+               break;
             
-            ///throw new MBeanException(new IllegalArgumentException("Unknown action: "));
+               ///throw new MBeanException(new IllegalArgumentException("Unknown action: "));
          
+            }
          }
-      }
-      catch (Exception e)
-      {
-         throw new MBeanException(e, "invoke failed");
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(callerClassLoader);
-      }
+         catch (Exception e)
+         {
+            throw new MBeanException(e, "invoke failed");
+         }
+         finally
+         {
+            Thread.currentThread().setContextClassLoader(callerClassLoader);
+         }
       
-      return value;
+         return value;
+      }
+      else if (params == null || params.length == 0) 
+      {
+         try 
+         {
+            if ("create".equals(ignored) ) 
+            {
+               create();
+            } // end of if ()
+            else if ("start".equals(ignored)) 
+            {
+               start();
+            } // end of if ()
+            else if ("stop".equals(ignored)) 
+            {
+               stop();
+            } // end of if ()
+            else if ("destroy".equals(ignored)) 
+            {
+               destroy();
+            } // end of if ()
+            else
+            {
+               throw new IllegalArgumentException("unknown operation! " + ignored);
+            } // end of else
+            return null;
+         }
+         catch (Exception e)
+         {
+            log.error("Exception in service lifecyle operation: " + ignored, e);
+            throw new MBeanException(e, "Exception in service lifecyle operation: " + ignored);
+         } // end of try-catch
+         
+            
+      } // end of if ()
+      else
+      {
+         log.error("Expected zero or single Invocation argument");
+         throw new IllegalArgumentException("Expected zero or single Invocation argument");
+      } // end of else
+      
    }
    
    /**
@@ -727,29 +789,51 @@ public abstract class Container implements DynamicMBean
    * <li>'local' -> not implemented;</li>
    * <li>'getHome' -> return EBJHome interface;</li>
    * <li>'getRemote' -> return EJBObject interface</li>
+   * <li>'create' -> create service lifecycle operation</li>
+   * <li>'start' -> start service lifecycle operation</li>
+   * <li>'stop' -> stop service lifecycle operation</li>
+   * <li>'destroy' -> destroy service lifecycle operation</li>
    * </ul>
    */
    public MBeanInfo getMBeanInfo()
    {
-      MBeanParameterInfo miInfo = new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data");
-      MBeanConstructorInfo[] ctorInfo = null;
+      MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")};
+      MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
+      MBeanConstructorInfo[] ctorInfo = new  MBeanConstructorInfo[] {};
+      MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {};
       MBeanOperationInfo[] opInfo = {
          new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
-            new MBeanParameterInfo[] {miInfo},
+            miInfoParams,
             "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
-            new MBeanParameterInfo[] {miInfo},
+            miInfoParams,
             "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
          new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
-            null,
+            noParams,
             "java.lang.Class", MBeanOperationInfo.INFO),
          new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
-            null,
-            "java.lang.Class", MBeanOperationInfo.INFO)
+            noParams,
+            "java.lang.Class", MBeanOperationInfo.INFO),
+         new MBeanOperationInfo("create", "create service lifecycle operation",
+            noParams,
+            "void", MBeanOperationInfo.ACTION),
+         new MBeanOperationInfo("start", "start service lifecycle operation",
+            noParams,
+            "void", MBeanOperationInfo.ACTION),
+         new MBeanOperationInfo("stop", "stop service lifecycle operation",
+            noParams,
+            "void", MBeanOperationInfo.ACTION),
+         new MBeanOperationInfo("destroy", "destroy service lifecycle operation",
+            noParams,
+            "void", MBeanOperationInfo.ACTION)
       };
       MBeanNotificationInfo[] notifyInfo = null;
-      return new MBeanInfo(getClass().getName(), "EJB Container MBean",
-         null, ctorInfo, opInfo, notifyInfo);
+      return new MBeanInfo(getClass().getName(), 
+                           "EJB Container MBean",
+                           attrInfo, 
+                           ctorInfo, 
+                           opInfo, 
+                           notifyInfo);
    }
    
    // End DynamicMBean interface
@@ -854,12 +938,13 @@ public abstract class Container implements DynamicMBean
                {
                   // Internal link
                   log.debug("Binding "+refName+" to bean source: "+ref.getLink());
-                  if (getApplication().getContainer(ref.getLink()) == null)
-                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  /* Create a link from the ENC to the localJndiName where the
-                     which is the location of the local home
-                  */
-                  Util.bind(envCtx, refName, new LinkRef(localJndiName));
+                  Container refContainer = getApplication().getContainer(ref.getLink());
+                  if (refContainer == null)
+                  {
+                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
+                  }
+
+                  Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
                }
                else
                {

@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.9 $ 
+* @version $Revision: 1.10 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -401,7 +401,7 @@ implements EJBDeployerMBean
       NDC.pop();
       
       // Create application
-      Application app = new Application();
+      Application app = new Application(server);
       
       try
       {
@@ -430,7 +430,7 @@ implements EJBDeployerMBean
          }
          
          // Init application
-         //app.create();
+         app.create();
          // Start application
          if (debug)
          {
@@ -470,7 +470,7 @@ implements EJBDeployerMBean
       {
          log.error("Could not deploy " + sdi.url, e);
          app.stop();
-         //app.destroy();
+         app.destroy();
          
          throw new DeploymentException( "Could not deploy " + sdi.url, e );
       }
@@ -504,7 +504,7 @@ implements EJBDeployerMBean
       // Undeploy application
       log.info( "Undeploying:" + url );
       app.stop();
-      //app.destroy();
+      app.destroy();
       
       
       /*
