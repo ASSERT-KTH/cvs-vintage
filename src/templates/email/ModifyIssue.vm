@@ -12,19 +12,15 @@ $l10n.ModifiedBy: $user.Name
 
 $l10n.ModificationsMade:
 ---------------------------------------------------------------------
-#if ($actionString)
-$actionString
 
-#else
-    #foreach ($desc in $uniqueActivityDescriptions)
-    $desc
-    #end
-
-    #if ($attachment.Data)
-    $l10n.Reason:
-    $attachment.Data
+#foreach ($desc in $uniqueActivityDescriptions)
+$desc
 #end
 
+#if ($attachment.Data)
+$l10n.Reason:
+$attachment.Data
+#end
 
 ---------------------------------------------------------------------
 $l10n.EmailFooterA
