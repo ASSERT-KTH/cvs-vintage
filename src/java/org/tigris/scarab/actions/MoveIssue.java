@@ -46,8 +46,11 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 // Turbine Stuff
 import org.apache.turbine.Turbine;
@@ -81,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.59 2003/05/19 23:25:15 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.60 2003/06/07 00:49:39 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -325,11 +328,29 @@ public class MoveIssue extends RequireLoginFirstAction
             String template = Turbine.getConfiguration().
                getString("scarab.email.moveissue.template",
                          "MoveIssue.vm");
-            if (!Email.sendEmail(ectx, newModule,
-                                 user, replyToUser,
-                                 issue.getAllUsersToEmail(AttributePeer.EMAIL_TO),
-                                 issue.getAllUsersToEmail(AttributePeer.CC_TO),
-                                 template))
+            Set allToUsers = issue.getAllUsersToEmail(AttributePeer.EMAIL_TO); 
+            HashSet toUsers = new HashSet();
+            Set allCCUsers = issue.getAllUsersToEmail(AttributePeer.CC_TO); 
+            HashSet ccUsers = new HashSet();
+
+            for (Iterator iter = allToUsers.iterator(); iter.hasNext();) 
+            {
+                ScarabUser su = (ScarabUser)iter.next();
+                if (su.hasPermission(ScarabSecurity.ISSUE__VIEW, newModule))
+                {
+                    toUsers.add(su);
+                }
+            }
+            for (Iterator iter = allCCUsers.iterator(); iter.hasNext();) 
+            {
+                ScarabUser su = (ScarabUser)iter.next();
+                if (su.hasPermission(ScarabSecurity.ISSUE__VIEW, newModule))
+                {
+                    ccUsers.add(su);
+                }
+            }
+            if (!Email.sendEmail(ectx, newModule, user, replyToUser,
+                                 toUsers, ccUsers, template))
             {
                  scarabR.setAlertMessage(l10n.get(EMAIL_ERROR));
             }
