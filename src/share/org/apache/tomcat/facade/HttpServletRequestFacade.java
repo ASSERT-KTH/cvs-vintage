@@ -70,6 +70,7 @@ import java.security.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.apache.tomcat.core.Constants;
 
 /**
  * The facade to the request that a servlet will see.
