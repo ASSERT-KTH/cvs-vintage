@@ -59,6 +59,9 @@ public abstract class LocalProxy
 
     /** {@link EJBObject#isIdentical} method reference. */
     protected static final Method IS_IDENTICAL;
+    
+    protected abstract String getJndiName();
+    protected abstract Object getId();
 
     /**
      * Initialize {@link EJBObject} method references.
@@ -113,19 +116,20 @@ public abstract class LocalProxy
         return new Boolean(pk.equals(b));
     }
 
-      public final Object invoke(final Object proxy,
+      public Object invoke(final Object proxy,
                                final Method m,
-                               Object[] args,
-                               String jndiName,
-                               Object id)
+                               Object[] args)
         throws Throwable
        {
+          Object id = getId();
+          String jndiName = getJndiName();
+          
           // Implement local methods
           if (m.equals(TO_STRING)) {
               return jndiName + ":" + id.toString();
           }
           else if (m.equals(EQUALS)) {
-              return invoke(proxy, IS_IDENTICAL, args, jndiName, id );
+              return invoke(proxy, IS_IDENTICAL, args );
           }
           else if (m.equals(HASH_CODE)) {
             return new Integer(id.hashCode());

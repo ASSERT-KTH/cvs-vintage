@@ -136,7 +136,10 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
    // ContainerInvoker implementation -------------------------------
    public EJBLocalHome getEJBLocalHome()
    {
-      throw new UnsupportedOperationException();
+      ContainerInvokerContainer cic = (ContainerInvokerContainer) container;
+      return (EJBLocalHome) Proxy.newProxyInstance( 
+         cic.getLocalHomeClass().getClassLoader(),
+         new Class[]{cic.getLocalHomeClass()}, new HomeProxy() );
    }
 
    public EJBLocalObject getStatelessSessionEJBLocalObject()
@@ -177,8 +180,7 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
    /**
     *  Invoke a Home interface method.
     */
-   public Object invokeHome(Method m, Object[] args, Transaction tx,
-      Principal identity, Object credential)
+   public Object invokeHome(Method m, Object[] args)
    throws Exception
    {
       // Set the right context classloader
@@ -187,8 +189,8 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
 
       try
       {
-         return container.invokeHome(new MethodInvocation(null, m, args, tx,
-            identity, credential));
+         return container.invokeHome(new MethodInvocation(null, m, args, 
+            getTransaction(), getPrincipal(), getCredential()));
       } finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
@@ -242,6 +244,47 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
          Thread.currentThread().setContextClassLoader(oldCl);
       }
    }
+   
+    
+   class HomeProxy extends LocalHomeProxy
+      implements InvocationHandler
+   {
+       protected String getJndiName()
+       {
+           return jndiName;
+       }
+       
+       protected Object getId()
+       {
+           return jndiName;
+       }
+
+       public final Object invoke(final Object proxy,
+                               final Method m,
+                               Object[] args)
+        throws Throwable
+       {
+          if (args == null)
+              args = EMPTY_ARGS;
+          
+          Object retValue = super.invoke( proxy, m, args );
+          if (retValue != null)
+             return retValue;
+          
+        else if (m.equals(REMOVE_BY_PRIMARY_KEY)) {
+            // The trick is simple we trick the container in believe it
+            // is a remove() on the instance
+            Object id = new CacheKey(args[0]);
+            return BaseLocalContainerInvoker.this.invoke(
+               id, REMOVE_OBJECT, EMPTY_ARGS);
+        }
+          // If not taken care of, go on and call the container
+          else {
+              return BaseLocalContainerInvoker.this.invokeHome(
+               m, args);
+          }
+       }
+   }
 
    class EntityProxy extends LocalProxy 
       implements InvocationHandler
@@ -255,6 +298,17 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
          cacheKey = (CacheKey) id;
       }
       
+       protected String getJndiName()
+       {
+           return jndiName;
+       }
+       
+       protected Object getId()
+       {
+           return cacheKey.id;
+       }
+      
+      
       public final Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
@@ -263,7 +317,7 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
           if (args == null)
               args = EMPTY_ARGS;
           
-          Object retValue = super.invoke( proxy, m, args, jndiName, cacheKey.id );
+          Object retValue = super.invoke( proxy, m, args );
           if (retValue != null)
              return retValue;
           // If not taken care of, go on and call the container
@@ -284,6 +338,16 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
       {
          this.id = id;
       }
+
+       protected String getJndiName()
+       {
+           return jndiName;
+       }
+       
+       protected Object getId()
+       {
+           return id;
+       }  
       
       public final Object invoke(final Object proxy,
                                final Method m,
@@ -293,7 +357,7 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
           if (args == null)
               args = EMPTY_ARGS;
           
-          Object retValue = super.invoke( proxy, m, args, jndiName, id );
+          Object retValue = super.invoke( proxy, m, args );
           if (retValue != null)
              return retValue;
           // If not taken care of, go on and call the container
@@ -307,6 +371,17 @@ public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
    class StatelessSessionProxy extends LocalProxy 
       implements InvocationHandler
    {
+       protected String getJndiName()
+       {
+           return jndiName;
+       }
+       
+       protected Object getId()
+       {
+           return jndiName;
+       }
+      
+      
       public final Object invoke(final Object proxy,
                                final Method m,
                                Object[] args)
