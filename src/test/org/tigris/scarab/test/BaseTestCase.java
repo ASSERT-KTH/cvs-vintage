@@ -73,7 +73,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.9 2002/01/18 22:26:18 jon Exp $
+ * @version $Id: BaseTestCase.java,v 1.10 2002/03/12 01:36:55 elicia Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -81,6 +81,8 @@ public class BaseTestCase extends TestCase
     private static final String TR_PROPS = "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     private static ModuleEntity module = null;
+    protected static int nbrDfltModules = 7;
+    protected static int nbrDfltIssueTypes = 5;
     private ScarabUser user0 = null;
     private ScarabUser user1 = null;
     private ScarabUser user2 = null;
