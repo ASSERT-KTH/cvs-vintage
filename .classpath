@@ -7,20 +7,20 @@
     <classpathentry kind="src" path="/j2ee"/>
     <classpathentry kind="src" path="/common"/>
     <classpathentry kind="src" path="/jmx"/>
-    <classpathentry kind="src" path="/management"/>
     <classpathentry kind="src" path="/transaction"/>
     <classpathentry kind="src" path="/naming"/>
     <classpathentry kind="src" path="/persistence"/>
     <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-pattern.jar"/>
-    <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-util.jar"/>
     <classpathentry kind="lib" path="/thirdparty/gnu-getopt/lib/getopt.jar"/>
     <classpathentry kind="lib" path="/thirdparty/dom4j-dom4j/lib/dom4j.jar"/>
     <classpathentry kind="lib" path="/thirdparty/apache-bcel/lib/bcel.jar"/>
     <classpathentry kind="lib" path="/thirdparty/sun-jsse/lib/jcert.jar"/>
     <classpathentry kind="lib" path="/thirdparty/sun-jsse/lib/jnet.jar"/>
-    <classpathentry kind="lib" path="/thirdparty/sun-jsse/lib/jsse.jar"/>
     <classpathentry kind="lib" path="/thirdparty/mysql-mysql/lib/mysql-connector-java-3.0.0-beta-bin.jar"/>
     <classpathentry kind="lib" path="/thirdparty/oswego-concurrent/lib/concurrent.jar"/>
     <classpathentry kind="lib" path="/thirdparty/informix-informix/lib/ifxjdbc.jar"/>
+    <classpathentry kind="src" path="/remoting"/>
+    <classpathentry kind="var" path="JSSE_LIB"/>
+    <classpathentry kind="lib" path="/thirdparty/gjt-jpl-util/lib/jpl-util.jar"/>
     <classpathentry kind="output" path="output/eclipse-classes"/>
 </classpath>
