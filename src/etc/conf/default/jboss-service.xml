@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.71 2002/12/01 04:37:00 stormy_sky Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.72 2002/12/05 10:45:10 ejort Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -46,7 +46,15 @@
 	 name="jboss.system:type=Log4jService,service=Logging">
     <attribute name="ConfigurationURL">resource:log4j.xml</attribute>
   </mbean>
-
+ 
+  <!-- ==================================================================== -->
+  <!-- JBoss RMI Classloader - only install when available                  -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jboss.util.property.jmx.SystemPropertyClassValue"
+    name="jboss.rmi:type=RMIClassLoader">
+    <attribute name="Property">java.rmi.server.RMIClassLoaderSpi</attribute>
+    <attribute name="ClassName">org.jboss.system.JBossRMIClassLoader</attribute>
+  </mbean>
 
   <!-- ==================================================================== -->
   <!-- Service Binding                                                      -->
