@@ -16,6 +16,11 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 # CACHE REGIONS AVAILABLE 
 # Regions preconfigured for caching
 
+jcs.region.org_tigris_scarab_om_UserPreference=
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes.MaxObjects=200
+jcs.region.org_tigris_scarab_om_UserPreference.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
+
 jcs.region.org_tigris_scarab_om_ScarabUser=
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=1000
