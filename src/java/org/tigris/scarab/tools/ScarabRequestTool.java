@@ -510,7 +510,16 @@ try{
     public ScarabUser getUserByUserName(String username)
      throws Exception
     {
-        return ScarabUserManager.getInstance(username, getIssue().getModule().getDomain());
+        ScarabUser su = null;
+        try
+        {
+            su = ScarabUserManager.getInstance(username, getIssue().getModule().getDomain());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return su;
     }
 
     /**
