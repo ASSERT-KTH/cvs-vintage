@@ -125,7 +125,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.109 2003/09/16 22:39:13 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.110 2003/09/17 01:44:10 dlr Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -202,7 +202,9 @@ public abstract class AbstractScarabModule
         throws Exception;
 
     /**
-     * Must never return <code>null</code>.
+     * @return The unadorned real name of this module; never
+     * <code>null</code>.
+     * @see #getName()
      */
     public abstract String getRealName();
 
