@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier11.java,v 1.16 2000/09/24 15:21:50 juha Exp $
+ * $Id: EJBVerifier11.java,v 1.17 2000/09/25 17:43:27 juha Exp $
  */
 
 
@@ -61,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
  * @author 	Juha Lindfors (jplindfo@helsinki.fi)
  * @author  Aaron Mulder  (ammulder@alumni.princeton.edu)
  *
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier11 extends AbstractVerifier {
@@ -80,7 +80,7 @@ public class EJBVerifier11 extends AbstractVerifier {
 
         URL[] list = { context.getJarLocation() };
 
-        ClassLoader parent = getClass().getClassLoader();
+        ClassLoader parent = Thread.currentThread().getContextClassLoader();
         URLClassLoader cl  = new URLClassLoader(list, parent);
 
         this.classloader   = cl;
