@@ -1,4 +1,4 @@
-// $Id: XmiReader.java,v 1.3 2005/01/05 15:39:17 bobtarling Exp $
+// $Id: XmiReader.java,v 1.4 2005/01/05 21:34:55 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,8 +31,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import ru.novosoft.uml.xmi.NsumlXmiReader;
 
 /**
  * A wrapper around the genuine XmiReader that provides public
