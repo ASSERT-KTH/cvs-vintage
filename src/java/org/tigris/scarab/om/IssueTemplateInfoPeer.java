@@ -57,7 +57,6 @@ public class IssueTemplateInfoPeer
                 Criteria.EQUAL);
             cGlob.or(cPriv1);
             crit.add(cGlob);
-System.out.println(crit);
 
             // Add sort criteria
             if (sortColumn.equals("desc"))
