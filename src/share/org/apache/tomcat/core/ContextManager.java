@@ -995,7 +995,7 @@ public class ContextManager implements LogAware{
 	    //} else if( t instanceof org.apache.jasper.JasperException ) {
 	    // 	    ctx.log("JasperException in " + req, t);
 	} else if( t instanceof IOException ) {
-	    if( ((IOException)t).getMessage().equals("Broken pipe"))
+            if( "Broken pipe".equals(t.getMessage()))
 	    {
 		ctx.log("Broken pipe in " + req, t, Logger.DEBUG);  // tuneme
 		return;
