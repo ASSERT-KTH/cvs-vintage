@@ -82,6 +82,7 @@
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
+				<exclude name="res/**"/>
 				<exclude name="classes/**"/>
 			</fileset>
 		</copy>
@@ -140,8 +141,6 @@
 			<exclude name="run_source_jdk13.sh"/>
 			<exclude name="**/*.zip"/>
 			<exclude name="docs/**"/>
-			<exclude name="res/**"/>
-			<exclude name="src/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.core.main.Main"/>
 				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar"/>
