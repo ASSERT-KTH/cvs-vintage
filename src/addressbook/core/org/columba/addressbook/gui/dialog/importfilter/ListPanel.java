@@ -50,7 +50,7 @@ implements ListSelectionListener {
 		String title, String description,
 		ImageIcon icon)
 	{
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.MIDDLE);
+		super(dialog, listener, title, description, icon);
 	}
 
 	public ListPanel(
@@ -58,7 +58,7 @@ implements ListSelectionListener {
 		String title, String description,
 		ImageIcon icon,	boolean b)
 	{
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.FIRST);
+		super(dialog, listener, title, description, icon);
 	}
 
 	public String getSelection()

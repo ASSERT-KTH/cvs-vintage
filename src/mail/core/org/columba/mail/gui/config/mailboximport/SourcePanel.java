@@ -45,7 +45,7 @@ public class SourcePanel extends DefaultWizardPanel
 		String description,
 		ImageIcon icon)
 	{
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.MIDDLE);
+		super(dialog, listener, title, description, icon);
 	}
 	public SourcePanel(
 		JDialog dialog,
@@ -55,7 +55,7 @@ public class SourcePanel extends DefaultWizardPanel
 		ImageIcon icon,
 		boolean b)
 	{
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.LAST);
+		super(dialog, listener, title, description, icon);
 	}
 
 	public void setSource(String str)

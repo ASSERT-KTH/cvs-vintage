@@ -1,29 +1,29 @@
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Library General Public License for more details.
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+//$Log: AccountWizard.java,v $
 package org.columba.mail.gui.config.accountwizard;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
-
-import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.wizard.DefaultWizardDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
+import org.columba.core.gui.util.wizard.WizardPanelSequence;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.ImapItem;
@@ -33,9 +33,8 @@ import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.config.account.AccountDialog;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
-public class AccountWizard implements ActionListener {
+public class AccountWizard extends DefaultWizardDialog {
 	private WelcomePanel welcomePanel;
 	private IdentityPanel identityPanel;
 	private OutgoingServerPanel outgoingServerPanel;
@@ -45,139 +44,178 @@ public class AccountWizard implements ActionListener {
 
 	private boolean add;
 
-	private JDialog dialog;
+	//private JDialog dialog;
+
+	protected WizardPanelSequence sequence;
 
 	public AccountWizard() {
+		super();
 		int count = MailConfig.getAccountList().count();
 
 		add = false;
 
-		dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog", "accountwizard", "create_a_new_account")); //$NON-NLS-1$
+		//dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog", "accountwizard", "create_a_new_account")); //$NON-NLS-1$
 
-		if (count == 0)
-			init();
+		//init(this,"","",null);
+
+		/*
+				if (count == 0)
+					init();
+					*/
 	}
 
 	public AccountWizard(boolean b) {
+		super();
 		add = b;
-		dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog", "accountwizard", "create_a_new_account")); //$NON-NLS-1$
+
+		//dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog", "accountwizard", "create_a_new_account")); //$NON-NLS-1$
+		/*
 		if (b)
 			addInit();
+		*/
 	}
 
+	public WizardPanelSequence getSequence() {
+		if (sequence == null) {
+			sequence = new WizardPanelSequence();
+
+				welcomePanel = new WelcomePanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "welcome"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "initial_welcome_screen"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"));
+			sequence.addPanel(welcomePanel);
+
+				identityPanel = new IdentityPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "specify_your_identity_information"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"));
+			sequence.addPanel(identityPanel);
+
+				incomingServerPanel = new IncomingServerPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "incoming_server_properties"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"));
+			sequence.addPanel(incomingServerPanel);
+				outgoingServerPanel = new OutgoingServerPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "outgoing_server_properties"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"), true);
+			sequence.addPanel(outgoingServerPanel);
+				advancedPanel = new AdvancedPanel(this, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
+		MailResourceLoader.getString("dialog", "accountwizard", "advanced_options"), //$NON-NLS-1$
+	ImageLoader.getSmallImageIcon("stock_preferences.png"));
+			sequence.addPanel(advancedPanel);
+		}
+
+		return sequence;
+	}
+
+	/*
 	protected void addInit() {
 			welcomePanel = new WelcomePanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "welcome"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "initial_welcome_screen"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
-
+	
 			identityPanel = new IdentityPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "specify_your_identity_information"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"), true);
-
+	
 			incomingServerPanel = new IncomingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "incoming_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		identityPanel.setNext(incomingServerPanel);
 		incomingServerPanel.setPrev(identityPanel);
-
+	
 			outgoingServerPanel = new OutgoingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "outgoing_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"), true);
 		outgoingServerPanel.setPrev(incomingServerPanel);
 		incomingServerPanel.setNext(outgoingServerPanel);
-
+	
 			advancedPanel = new AdvancedPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "advanced_options"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"), true);
 		advancedPanel.setPrev(outgoingServerPanel);
 		outgoingServerPanel.setNext(advancedPanel);
-
+	
 		//identityDialog.showDialog();
 		//dialog.getContentPane().add( identityPanel );
 		setPanel(identityPanel);
-
+	
 		dialog.pack();
-
+	
 		dialog.setSize(600, 480);
-
-		/*
-		java.awt.Dimension dim = dialog.getSize();
+	
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-		*/
-
+	
 		dialog.setLocationRelativeTo(null);
-
+	
 		dialog.setVisible(true);
-
+	
 	}
-
+	
 	protected void init() {
 			welcomePanel = new WelcomePanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "initial_welcome_screen"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
-
+	
 			identityPanel = new IdentityPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "specify_your_identity_information"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		identityPanel.setPrev(welcomePanel);
 		welcomePanel.setNext(identityPanel);
-
+	
 			incomingServerPanel = new IncomingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "incoming_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		identityPanel.setNext(incomingServerPanel);
 		incomingServerPanel.setPrev(identityPanel);
-
+	
 			outgoingServerPanel = new OutgoingServerPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "outgoing_server_properties"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		outgoingServerPanel.setPrev(incomingServerPanel);
 		incomingServerPanel.setNext(outgoingServerPanel);
-
+	
 			advancedPanel = new AdvancedPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "advanced_options"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		advancedPanel.setPrev(outgoingServerPanel);
 		outgoingServerPanel.setNext(advancedPanel);
-
+	
 			finishPanel = new FinishPanel(dialog, this, MailResourceLoader.getString("dialog", "accountwizard", "account_wizard"), //$NON-NLS-1$
 		MailResourceLoader.getString("dialog", "accountwizard", "finished_information_gathering"), //$NON-NLS-1$
 	ImageLoader.getSmallImageIcon("stock_preferences.png"));
 		advancedPanel.setNext(finishPanel);
 		finishPanel.setPrev(advancedPanel);
-
+	
 		///welcomePanel.showDialog();
 		setPanel(welcomePanel);
 		java.awt.Dimension dim = dialog.getSize();
-
+	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
+	
 		dialog.setLocation(
 			screenSize.width / 2 - dim.width / 2,
 			screenSize.height / 2 - dim.height / 2);
 		dialog.setVisible(true);
 	}
+	*/
 
 	public void setPanel(DefaultWizardPanel panel) {
-		dialog.getContentPane().add(panel);
-		dialog.validate();
-		dialog.pack();
+		getContentPane().add(panel);
+		validate();
+		pack();
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		super.actionPerformed(e);
+
 		String action = e.getActionCommand();
 
 		if (action.equals("CANCEL")) {
 			//identityPanel.showDialog();
 			//incomingServerPanel.showDialog();
 			//outgoingServerPanel.showDialog();
+			setVisible(false);
 		} else if (action.equals("ACCOUNT")) {
-			dialog.setVisible(false);
+			setVisible(false);
 
 			AccountItem item = finish();
 
@@ -185,10 +223,10 @@ public class AccountWizard implements ActionListener {
 		} else if (action.equals("FINISH")) {
 			if (add == true)
 				//outgoingServerPanel.hideDialog();
-				dialog.setVisible(false);
+				setVisible(false);
 			else
 				//finishPanel.hideDialog();
-				dialog.setVisible(false);
+				setVisible(false);
 
 			//System.out.println("saving data");
 
@@ -232,7 +270,6 @@ public class AccountWizard implements ActionListener {
 			imap.set("host", incomingServerPanel.getHost());
 			imap.set("user", incomingServerPanel.getLogin());
 
-			
 			IMAPRootFolder parentFolder = new IMAPRootFolder(item);
 
 			MainInterface.treeModel.nodeStructureChanged(

@@ -38,9 +38,21 @@ public class FinishPanel extends DefaultWizardPanel {
 		String title,
 		String description,
 		ImageIcon icon) {
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.LAST);
+		super(dialog, listener, title, description, icon);
+		
+		JPanel panel = this;
+				panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
+				panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+				MultiLineLabel label =
+					new MultiLineLabel(MailResourceLoader.getString("dialog","accountwizard","you_are_now_ready_to_work_with_columba")); //$NON-NLS-1$
+
+				panel.add(label);
+
+				panel.add(Box.createRigidArea(new java.awt.Dimension(0, 80)));
 	}
 
+	/*
 	protected JPanel createPanel(ActionListener listener) {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
@@ -55,5 +67,6 @@ public class FinishPanel extends DefaultWizardPanel {
 
 		return panel;
 	}
-
+	*/
+	
 }

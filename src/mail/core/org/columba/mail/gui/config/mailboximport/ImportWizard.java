@@ -73,8 +73,9 @@ public class ImportWizard implements ActionListener
 				ImageLoader.getSmallImageIcon("stock_preferences.png"),
 				true);
 
-		listPanel.setNext(sourcePanel);
-		sourcePanel.setPrev(listPanel);
+
+		//listPanel.setNext(sourcePanel);
+		//sourcePanel.setPrev(listPanel);
 
 		/*
 		progressPanel =

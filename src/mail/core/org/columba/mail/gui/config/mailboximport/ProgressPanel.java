@@ -48,7 +48,7 @@ public class ProgressPanel extends DefaultWizardPanel
 		String title,
 		String description,
 		ImageIcon icon) {
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.MIDDLE);
+		super(dialog, listener, title, description, icon);
 	}
 	
 	public ProgressPanel(
@@ -58,7 +58,7 @@ public class ProgressPanel extends DefaultWizardPanel
 		String description,
 		ImageIcon icon,
 		boolean b) {
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.LAST);
+		super(dialog, listener, title, description, icon);
 	}
 	
 	

@@ -39,16 +39,26 @@ public class WelcomePanel extends DefaultWizardPanel {
 		String title,
 		String description,
 		ImageIcon icon) {
-		super(dialog, listener, title, description, icon, DefaultWizardPanel.FIRST);
+		super(dialog, listener, title, description, icon);
+
+	
+		setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		MultiLineLabel label = new MultiLineLabel(MailResourceLoader.getString("dialog", "accountwizard", "welcome_to_columba")); //$NON-NLS-1$
+
+		add(label);
+
+		add(Box.createRigidArea(new java.awt.Dimension(0, 140)));
 	}
 
+	/*
 	protected JPanel createPanel(ActionListener listener) {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		MultiLineLabel label =
-			new MultiLineLabel(MailResourceLoader.getString("dialog","accountwizard","welcome_to_columba")); //$NON-NLS-1$
+		MultiLineLabel label = new MultiLineLabel(MailResourceLoader.getString("dialog", "accountwizard", "welcome_to_columba")); //$NON-NLS-1$
 
 		panel.add(label);
 
@@ -56,5 +66,5 @@ public class WelcomePanel extends DefaultWizardPanel {
 
 		return panel;
 	}
-
+	*/
 }
