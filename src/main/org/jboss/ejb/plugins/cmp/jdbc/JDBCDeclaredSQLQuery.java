@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -130,6 +130,7 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          sql.append("DISTINCT ");
       }
       
+      String alias = metadata.getAlias();
       String from = metadata.getFrom();
       if(getSelectField() == null) {
 
@@ -141,7 +142,12 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          loadFields.addAll(getSelectEntity().getPrimaryKeyFields());
          loadFields.addAll(getPreloadFields());
 
-         if(from != null && from.trim().length()>0) {
+         if(alias != null && alias.trim().length()>0) {
+            sql.append(SQLUtil.getColumnNamesClause(loadFields, alias));
+            sql.append(" FROM ");
+            sql.append(table).append(" ").append(alias);
+            sql.append(" ").append(from);
+         } else if(from != null && from.trim().length()>0) {
             sql.append(SQLUtil.getColumnNamesClause(loadFields, table));
             sql.append(" FROM ").append(table).append(" ").append(from);
          } else {
@@ -153,7 +159,12 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
          // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
          String table = selectField.getMetaData().getEntity().getTableName();
-         if(from != null && from.trim().length()>0) {
+         if(alias != null && alias.trim().length()>0) {
+            sql.append(SQLUtil.getColumnNamesClause(selectField, alias));
+            sql.append(" FROM ");
+            sql.append(table).append(" ").append(alias);
+            sql.append(" ").append(from);
+         } else if(from != null && from.trim().length()>0) {
             sql.append(SQLUtil.getColumnNamesClause(selectField, table));
             sql.append(" FROM ").append(table).append(" ").append(from);
          } else {

@@ -331,7 +331,7 @@ Explicitly declared sql fragments.
 <!--
 Delcares what is to be selected.  A finder may only have the distinct element.
 -->
-<!ELEMENT select (distinct?, (ejb-name, field-name?)?)>
+<!ELEMENT select (distinct?, (ejb-name, field-name?)?, alias?)>
 
 
 <!--
@@ -363,6 +363,14 @@ Declares the order clause for the query.
 Example: <order>TITLE</order>
 -->
 <!ELEMENT order (#PCDATA)>
+
+
+<!--
+Declare the alias to use for the main select table.
+
+Example: <alias>my_table</alias>
+-->
+<!ELEMENT alias (#PCDATA)>
 
 
 <!--

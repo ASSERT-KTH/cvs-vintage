@@ -19,7 +19,7 @@ import org.jboss.metadata.QueryMetaData;
  * Imutable class contains information about a declated query.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- *   @version $Revision: 1.10 $
+ *   @version $Revision: 1.11 $
  */
 public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
    /**
@@ -63,6 +63,10 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     */
    private final String fieldName;
 
+   /**
+    * The aliase that is used for the main select table.
+    */
+   private final String alias;
    /**
     * Read ahead meta data.
     */
@@ -124,6 +128,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
             ejbName = null;
             fieldName = null;
          }
+         alias = MetaData.getOptionalChildContent(selectElement, "alias");
       } else {
          if(method.getName().startsWith("ejbSelect")) {
             throw new DeploymentException("The select element of " +
@@ -132,6 +137,7 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
          distinct = false;
          ejbName = null;
          fieldName = null;
+         alias = null;
       }
    }
 
@@ -211,6 +217,15 @@ public final class JDBCDeclaredQueryMetaData implements JDBCQueryMetaData {
     */
    public String getFieldName() {
       return fieldName;
+   }
+   
+   /**
+    * The alias that is used for the select table.
+    * @return the alias that is used for the table from which the entity or
+    * field is selected.
+    */
+   public String getAlias() {
+      return alias;
    }
    
    /**
