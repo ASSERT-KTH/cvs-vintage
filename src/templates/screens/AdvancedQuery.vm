@@ -3,6 +3,16 @@ $page.setTitle("Advanced query")
 <div class="app" id="advancedquery">
 <h2>$page.Title</h2>
 
+<div class="tabs">
+<table cellpadding="3" cellspacing="0" border="0">
+<tr>
+	<td>Avanced query</td>
+	<th><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></th>
+	<td><a href="$link.setPage("QueryList.vm")" title="view saved queries">Saved queries</a></td>
+</tr>
+</table>
+</div>
+
 ##SAVED QUERIES
      #set ($module = $scarabR.CurrentModule)
        #if ($module)
