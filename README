@@ -54,30 +54,25 @@ o Unix/Linux type operating systems:
   bash# ant
   
   Running Columba using JDK1.4:
-  bash# chmod 0775 run.sh
-  bash# run.sh
-  
-  Running Columba using JDK1.3:
-  bash# chmod 0775 run_jdk13.sh
-  bash# run_jdk13.sh
+  bash# chmod 0775 run_source.sh
+  bash# run_source.sh
 
 o Windows type operating systems:
   shell# ant
   
   Running Columba using JDK1.4:
-  shell# run.bat
+  shell# run_source.bat
   
-  Running Columba using JDK1.3:
-  shell# run_jdk13.bat
 
 
 3. Getting Help
 ---------------
-The FAQ is available at 
-http://columba.sourceforge.net/phpwiki/index.php/FAQ%20%28Frequently%20Asked%20Questions%29
 
 The user manual is available at
-http://columba.sourceforge.net/phpwiki/index.php/User%20manual
+http://columba.sourceforge.net/usermanual.php
+
+Our forum offers a great wealth of support material
+http://columba.sourceforge.net/phpBB2/
 
 For the latest information on new releases, website or resource changes, 
 please visit http://columba.sourceforge.net
@@ -99,4 +94,4 @@ Frederik Dietz  (developer)     fdietz@users.sourceforge.net
 Timo Stich      (developer)     tstich@users.sourceforge.net
 
 For more information please visit
-http://columba.sourceforge.net/index.php?page=contact
+http://columba.sourceforge.net/contact.php

@@ -1,4 +1,41 @@
-Version 0.13.0:
+Version 0.14.0 (stable):
+
+Bugs:
+- fixed open attachment bug on win32 (karlpeder)
+- fixed PGP verify using IMAP (tstich)
+- fixed signing of multipart messages (tstich)
+- added send message dialog, block composer window (fdietz)
+- including latest user manual (fdietz)
+- added context-help for almost all dialogs (fdietz)
+- all mail dialogs are now ui guideline conform (fdietz)
+- new startup logo (muruc)
+- fixed jwizz focus problems, disabled left steps pane, using
+  white header as default now (javaprog)
+- removed all not yet implemented features (fdietz)
+- fixed focusing problems with shortcuts, etc. (fdietz)
+- fixed rename folder F2 shortcut (rsk)
+- mail/addressbook import wizards show description (fdietz)
+- nicer password dialog (fdietz) 
+- account-dialog validates user input (fdietz)
+- better automatic configuration of account (fdietz)
+- more tooltips, many mnemonic i18n fixes (karlpeder/fdietz)
+- some new icons (fdietz)
+- use SSL is disabled by default (fdietz)
+- email-address was missing in account-dialog (fdietz)
+- attachment column wasn't working (fdietz)
+- implemented fetchHeaderfield(String[] fields) -> Reply to mailinglist works
+  also when using IMAP (tstich)
+- IMAP size column in message list works (tstich)
+- added testing framework using junit with ant (waffel)
+- use system beep as default sound notification (fdietz)
+- font settings weren't applied correctly (fdietz)
+- nullpointer exception when selection root folders (tstich)
+
+Known Problems:
+- Verifying of Evolution signed messages doesn't work - probably caused
+  by binary signature format
+
+Version 0.13.0 (unstable):
 
 Columba:
 
