@@ -97,7 +97,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.47 2002/10/24 22:59:30 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.48 2002/11/05 22:09:16 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -221,22 +221,30 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return AttributePeer.getAttributes(attributeType);
     }
 
-    /**
-     * gets a list of all Issue Types 
-     */
     public List getAllIssueTypes()
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(true, "name", "asc");
+        return IssueTypePeer.getAllIssueTypes(false, "name", "asc");
+    }
+
+    /**
+     * gets a list of all Issue Types 
+     */
+    public List getAllIssueTypes(boolean deleted)
+        throws Exception
+    {
+System.out.println(deleted);
+        return IssueTypePeer.getAllIssueTypes(deleted, "name", "asc");
     }
     
     /**
      * Gets a List of all of the Attribute objects.
      */
-    public List getAllIssueTypes(String sortColumn, String sortPolarity)
+    public List getAllIssueTypes(boolean deleted, String sortColumn, 
+                                 String sortPolarity)
         throws Exception
     {
-        return IssueTypePeer.getAllIssueTypes(true, sortColumn, sortPolarity);
+        return IssueTypePeer.getAllIssueTypes(deleted, sortColumn, sortPolarity);
     }
     
     /**

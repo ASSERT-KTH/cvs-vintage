@@ -54,21 +54,24 @@ public class IssueTypePeer
      *  Gets a List of all of the Issue types in the database,
      *  That are not template types.
      */
-    public static List getAllIssueTypes(boolean includeDeleted,
+    public static List getAllIssueTypes(boolean deleted,
                        String sortColumn, String sortPolarity)
         throws Exception
     {
         List result = null;
-        Boolean b = includeDeleted ? Boolean.TRUE : Boolean.FALSE;
+        Boolean b = deleted ? Boolean.TRUE : Boolean.FALSE;
         Object obj = ScarabCache.get(ISSUE_TYPE_PEER, GET_ALL_ISSUE_TYPES, b); 
         if ( obj == null ) 
         {        
             Criteria c = new Criteria();
             c.add(IssueTypePeer.PARENT_ID, 0);
-            if (!includeDeleted)
+            if (deleted)
+            {
+                c.add(IssueTypePeer.DELETED, 1);
+            }
+            else
             {
                 c.add(IssueTypePeer.DELETED, 0);
-                c.add(IssueTypePeer.ISSUE_TYPE_ID, 0, Criteria.NOT_EQUAL);
             }
             if (sortColumn != null && sortColumn.equals("desc"))
             {
