@@ -9,70 +9,12 @@
 #end
 
 ## skip the dedupe for now
-#set ( $action = $link.setPage("entry/Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard3.vm") )
+#set ( $action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm") )
 #set ($user = $scarabR.User)
 #set ($module = $user.CurrentModule)
 #set ($issue = $user.ReportingIssue)
 
 <form name="ReportForm" method="post" action="$action">
-
-<table border="0" cellpadding="2" cellspacing="0" width="100%">
-    <tr>
-        <td colspan="5" valign="top" class="Header" bgcolor="#999999">REPORT AN ISSUE</td>
-    </tr>
-
-    <tr>
-        <td colspan="5" valign="top" class="SectionHeader" bgcolor="#CCCCCC">Report an Issue - First Step</td>
-    </tr>
-
-    <tr>
-        <td valign="top">
-        <font color="red">At the top of the page, we will first want to select a project and then make it obvious what project we are reporting the bug on. The project that is initially selected should be determined from the project selected on the Start page.</font>
-
-#* PROJECT IS ASSUMED ALREADY SET
-
-<p>
-#set ($mods = $user.Modules )
-#set ($moduleIntake = $intake.Module.mapTo($module) )
-        Project:
-          <select 
-           name="$moduleIntake.ParentId.Key">
-            #foreach ($project in $user.Modules)
-              #if ($project.ParentId.equals("0") )
-                #set ( $selected = "" )
-                #if ( $project.PrimaryKey == $user.CurrentModule.ParentId )
-                  #set ( $selected = " selected" )
-                #end
-              <option$selected 
-                value="$project.PrimaryKey">$project.Name</option>
-              #end
-            #end
-          </select>
-
-<p>
-        <font color="red">List only the components available in the currently selected
-        project.</font>
-<p>
-
-        Component:
-          <select name="$moduleIntake.Id.Key">
-            #foreach ($component in $user.Modules)
-              #set ( $selected = "" )
-              #if ( $component.PrimaryKey == $module.PrimaryKey )
-                #set ( $selected = " selected" )
-              #end
-              <option$selected 
-                  value="$component.PrimaryKey">$component.Name</option>
-            #end
-          </select>
-*#
-
-
-<p>        
-        <font color="red">Allow the user to enter in a short description of the problem.
-        This description will then be used like an "and" search to display results
-        on the next page for issues that are in the selected component and project 
-        as well as other attributes that are part of the search on this page (to be discussed).</font>
 
 <p>
     #attrValueErrorMsg( $issue "SUMMARY" )<br>
@@ -86,33 +28,28 @@
     A short description of the issue.
 
 <p>
-        </td>
-        <td valign="top">
-            <input type="submit" 
-                name="eventSubmit_doSubmitattributes" value="Next ->">
-        </td>
-    </tr>
-  <tr>
-      <TD>
+
         <SPAN CLASS="SectionHeader">Version: (not in db)<BR>
         <SELECT NAME="selection2">
           <OPTION SELECTED VALUE="">Version 1</OPTION>
           <OPTION VALUE="">Option2</OPTION>
           <OPTION VALUE="">Option3</OPTION>
         </SELECT>
-     </TD>
-      <TD>
+<p>
+
           Platform:<BR>
           #attrValueErrorMsg ($issue "PLATFORM") <br>
           #attrValueSelect ($issue "PLATFORM" "")
-      </TD>
-      <TD>
+<p>
+
           OS:<br>
           #attrValueErrorMsg ($issue "OPERATING SYSTEM") <br>
           #attrValueSelect ($issue "OPERATING SYSTEM" "")
-      </TD>
-  </tr>
-</table>
+<p>
+
+            <input type="submit" 
+                name="eventSubmit_doSubmitattributes" value="Next ->">
+
 </form>
 
 
