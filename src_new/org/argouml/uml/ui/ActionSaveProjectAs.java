@@ -1,4 +1,4 @@
-// $Id: ActionSaveProjectAs.java,v 1.31 2004/12/29 09:23:32 mvw Exp $
+// $Id: ActionSaveProjectAs.java,v 1.32 2005/01/01 20:44:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -144,10 +144,4 @@ public class ActionSaveProjectAs extends ActionSaveProject {
         }
     }
 
-    /**
-     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
-     */
-    public boolean shouldBeEnabled() {
-        return true;
-    }
 } /* end class ActionSaveProjectAs */
