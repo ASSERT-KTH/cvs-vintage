@@ -144,6 +144,16 @@ value="false" />
 #end
 
 
+#macro (templateTypeSelectBox $template)
+         <select name="$templateGroup.TypeId.Key">
+          #foreach ($type in $template.getAllTemplateTypes() )
+          <option value = "$type.TemplateTypeId" #if( $type.TemplateTypeId.equals("template.TypeId")) selected="selected" #end >
+           $type.Name
+          </option>
+           #end
+         </select>
+#end
+
 #macro ( datatitle $title )
 <h3>$title</h3>
 #end
