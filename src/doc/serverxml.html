@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Server.xml configuration in tomcat 3.3</title>
+  <meta name="CREATED" content="20010812;22403100" />
+  <meta name="CHANGED" content="20010813;9534200" />
+</head>
+
+<body>
+<h2>General configuration</h2>
+
+<p>Tomcat is implemented using a set of modules. Each module has a
+number of settable properties and implements one or few 'hooks', implementing a
+piece of functionality.</p>
+
+<p>The modules can be configured and assembled in sevaral ways, but the
+default and most flexible mechanism uses XML files. Each module is described
+by an XML element, with attributes used to set module properties. The main
+configuration file is located in TOMCAT_HOME/conf/server.xml, used to
+configure the server. Additional TOMCAT_HOME/conf/server-[NAME].xml files
+will be read after server.xml, allowing local configurations.</p>
+
+
+<h3>Variable substitution</h3>
+
+<p>Each attribute value may use ant-style variable substitution ( ${variable}
+). The values are stored as ContextManager properties, and defined using
+either &lt;property name='foo' value='bar' /&gt;, as attributes in the
+&lt;ContextManager&gt; element, or in the command line using "-foo bar" 
+syntax, or as system properties.</p>
+
+<h3>Common Parameters</h3>
+
+<p>All modules have the following common attributes:</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><p><b>Attribute</b></p>
+      </td>
+      <td><p><b>Description</b></p>
+      </td>
+      <td><p><b>Default</b></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>debug</p>
+      </td>
+      <td><p>Display debug information on the module execution</p>
+      </td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Configuration Elements</h2>
+
+<p>Server.xml is an XML document. Most elements corespond to tomcat modules,
+with java setters beeing automatically associated with element attributes. The 
+javadoc will contain most details, in this document we focus on the common 
+and supported behaviors. </p>
+
+<!-- ======================================== -->
+
+<h3>Server</h3>
+
+<p>This is the main element in server.xml. It has a single child describing
+the tomcat configuration, ContextManager.</p>
+
+<h4 id="Examples">Examples</h4>
+<pre>&lt;Server&gt;
+   &lt;ContextManager &gt; 
+      ... ( tomcat configuration )
+   &lt;/ContextManager&gt;
+&lt;/Server&gt;</pre>
+
+<!-- ======================================== -->
+
+<h3>ContextManager</h3>
+
+<h4 id="Descriptio">Description</h4>
+
+<p>Main tag, used to set generic tomcat options. It has few types of
+childrens:</p>
+<dl>
+  <dt>&lt;[MODULE_NAME]&gt;</dt>
+    <dd>Define a module. Module names are defined in module.xml, where each tag is
+      associated with a class name that implements the module. Each element
+      attribute coresponds to a setter method in the implementing class </dd>
+  <dt>&lt;Context&gt;</dt>
+    <dd>Defines a web application. As a rule, applications should be defined 
+    in separate config files, named apps-[NAME].xml</dd>
+  <dt>&lt;Property name="NAME" value="VALUE"&gt;</dt>
+    <dd>Adds arbitrary name/values to ContextManager. The properties can be
+     used for variable substitutions, or instead of attributes.</dd>
+  <dt>&lt;module name="MODULE_NAME" javaClass="full.class.name"&gt;</dt>
+    <dd>Define a module. All modules included in the standard distribution are
+      defined in modules.xml, but you can define additional tags and their 
+      associated class in server.xml. This behaves like taskdef in ant.</dd>
+</dl>
+
+<h4 id="Parameters">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><p><b>Attribute</b></p>
+      </td>
+      <td><p><b>Description</b></p>
+      </td>
+      <td><p><b>Default</b></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>install
+      </td>
+      <td>Base directory for tomcat installation. It is typically guessed by the 
+startup program, but you can override it here.
+      </td>
+      <td>TOMCAT_HOME or one level above the location of the startup script or 
+tomcat.jar ( if "java -jar" is used for startup)
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>workDir
+      </td>
+      <td>Directory where temporary files will be created.
+      </td>
+      <td>TOMCAT_HOME/work
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>home
+      </td>
+      <td>Base directory for the tomcat instance. While 'install' is used to 
+find the libraries, 'home' is used to resolve almost  all relative paths -
+webapps, work, etc.  
+      </td>
+      <td>TOMCAT_HOME or the value guessed by the startup program. 
+      </td>
+    </tr>
+</table>
+
+<h4 id="Examples1">Examples</h4>
+<pre style="margin-bottom: 0.5cm">  &lt;ContextManager install='/opt/tomcat' workDir='/var/tomcat' home='/var' /&gt;</pre>
+
+<!-- ======================================== -->
+
+<h3>AutoWebApp</h3>
+
+<h4 id="Descriptio1">Description</h4>
+
+<p>Automatically add web applications from a directory.</p>
+
+<h4 id="Parameters1">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><p><b>Attribute</b></p>
+      </td>
+      <td><p><b>Description</b></p>
+      </td>
+      <td><p><b>Default</b></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>dir</p>
+      </td>
+      <td><p>location to load webapps from.</p>
+      </td>
+      <td><p>${tomcat.home}/webapps</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td><p>host</p>
+      </td>
+      <td><p>Virtual host where each application will be deployed into</p>
+      </td>
+      <td><p>DEFAULT</p>
+      </td>
+    </tr>
+    <tr>
+      <td>ignoreDot</td>
+      <td>Ignore dirs starting with '.'</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>flat</td>
+      <td>Each dir will be treated as a webapp in the same host. If false,
+        each dir will be treated as a host name and its subdirs as
+        webapplication. You can add apps to multiple virtual hosts. </td>
+      <td>true</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="Examples2">Examples</h4>
+<pre style="margin-bottom: 0.5cm">  &lt;AutoWebApp dir='webapps' host='DEFAULT /&gt;
+    &lt;AutoWebApp dir='myhost' host='myhost.com' /&gt; </pre>
+
+<!-- ======================================== -->
+
+<h3>PolicyLoader</h3>
+
+<h4 id="Descriptio3">Description</h4>
+
+<p>Run tomcat in a sandbox. The module will be active only if "sandbox"
+property is set on the ContextManager ( as an attribute or via a command line
+option ). This minimizes the number of command line arguments. 
+Note that it is required to define the policy file before starting tomcat
+( in some VMs it works if you set it at runtime, but it's safer to set it
+in the command line ).</p>
+
+<p>Make sure "-Djava.security.policy=$TOMCAT_HOME/lib/tomcat.policy" is
+included in the startup line, or an equivalent policy is present in the 
+embedding system</p>
+
+<h4 id="Parameters3">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><b>Attribute</b></td>
+      <td><b>Description</b></td>
+      <td><p><b>Default</b></p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>securityManagerClass</td>
+      <td>Customize the security manager</td>
+      <td><p>java.lang.SecurityManager</p>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td>sandbox</td>
+      <td>Force the use of a sandbox, regardless of command line</td>
+      <td>false
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Examples</h4>
+<pre>&lt;PolicyLoader /&gt;</pre>
+
+<!-- ======================================== -->
+
+<h3>AutoDeploy</h3>
+
+<h4 id="Descriptio31">Description</h4>
+
+<p>Automatically expand WAR files on startup.</p>
+
+<h4 id="Parameters31">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><b>Attribute</b></td>
+      <td><b>Description</b></td>
+      <td><b>Default</b></td>
+    </tr>
+    <tr valign="top">
+      <td>source</td>
+      <td>Directory where .war files are located.</td>
+      <td>${tomcat.home}/webapps</td>
+    </tr>
+    <tr valign="top">
+      <td>target</td>
+      <td>Directory where .war files will be expanded</td>
+      <td>${tomcat.home}/webapps</td>
+    </tr>
+    <tr>
+      <td>redeploy</td>
+      <td>Check if the .war file is changed and re-deploy. This works in the
+        same way as reloading.</td>
+      <td>false</td>
+    </tr>
+    <tr valign="top">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Examples</h4>
+<pre>&lt;AutoDeploy source="webapps" target="webapps" /&gt;
+</pre>
+
+<!-- ======================================== -->
+
+<h3>ApacheConfig</h3>
+
+<h4 id="Descriptio311">Description</h4>
+
+<p>Generate configuration files to be included in httpd.conf. See XXX. </p>
+
+<h4 id="Parameters311">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><b>Attribute</b></td>
+      <td><b>Description</b></td>
+      <td><b>Default</b></td>
+    </tr>
+    <tr valign="top">
+      <td>name</td>
+      <td>Desc</td>
+      <td>val.</td>
+    </tr>
+    <tr valign="top">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr valign="top">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Examples</h4>
+
+<!-- ======================================== -->
+
+<h3>ELEMENT</h3>
+
+<h4 id="Descriptio3112">Description</h4>
+
+<p></p>
+
+<h4 id="Parameters3112">Parameters</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr valign="top">
+      <td><b>Attribute</b></td>
+      <td><b>Description</b></td>
+      <td><b>Default</b></td>
+    </tr>
+    <tr valign="top">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr valign="top">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4>Examples</h4>
+
+<pre>
+
+</pre>
+
+
+</body>
+</html>
+
