@@ -1,4 +1,4 @@
-// $Id: TabResults.java,v 1.21 2004/10/18 17:23:30 mvw Exp $
+// $Id: TabResults.java,v 1.22 2004/10/26 19:53:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -353,9 +353,9 @@ public class TabResults
 		}
 	    }
 	    relatedModel.setTarget(related, null);
-	    relatedLabel.setText("Related Elements: "
-				  + related.size()
-				  + " items");
+	    Object[] msgArgs = {new Integer(related.size()) };
+	    relatedLabel.setText(Translator.messageFormat(
+                "dialog.find.related-elements", msgArgs));
 	}
     }
 
@@ -367,12 +367,10 @@ public class TabResults
      */
     public void run()
     {
-	resultsLabel.setText("Searching...");
+	resultsLabel.setText(Translator.localize("dialog.find.searching"));
 	results.removeAllElements();
 	depthFirst(root, null);
 	setResults(results, diagrams);
-	//resultsLabel.setText("Results: " + results.size() + " items");
-	//resultsModel.setTarget(results, diagrams);
     }
 
     private void depthFirst(Object node, Diagram lastDiagram)
