@@ -46,6 +46,5 @@ public class StdServerSessionPoolFactory implements ServerSessionPoolFactory, ja
     public ServerSessionPool getServerSessionPool(Connection con, int maxSession, boolean isTransacted, int ack, MessageListener listener) throws JMSException {
 	    ServerSessionPool pool =  (ServerSessionPool)new StdServerSessionPool(con,  isTransacted, ack, listener,maxSession);
 	    return pool;
-	    //}
     }
 } // StdServerSessionPoolFactory

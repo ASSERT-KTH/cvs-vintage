@@ -45,7 +45,7 @@ public class StdServerSession implements Runnable, ServerSession {
     private StdServerSessionPool serverSessionPool = null;
     private Session session = null;
     private XASession xaSession = null;
-	private TransactionManager tm;
+    private TransactionManager tm;
 
     
     StdServerSession(StdServerSessionPool pool, Session session, XASession xaSession) throws JMSException{
@@ -192,5 +192,23 @@ public class StdServerSession implements Runnable, ServerSession {
     void recycle()
     {
 	serverSessionPool.recycle(this);
+    }
+
+    /**
+     * Called by the ServerSessionPool when the sessions should be closed.
+     */
+    void close() {
+	if (session != null) {
+	    try {
+		session.close();
+	    }catch(Exception ex) {}
+	    session = null;
+	}
+	if (xaSession != null) {
+	    try {
+		xaSession.close();
+	    }catch(Exception ex) {}
+	    xaSession = null;
+	}
     }
 } // StdServerSession

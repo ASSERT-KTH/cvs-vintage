@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Peter Antman (peter.antman@tim.se)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ThreadPool
 {
@@ -41,7 +41,7 @@ public class ThreadPool
     
     // Public --------------------------------------------------------
     
-	public synchronized void clear()
+    public synchronized void clear()
     {
 	for (int i = 0; i < pool.size(); i++)
 	    {

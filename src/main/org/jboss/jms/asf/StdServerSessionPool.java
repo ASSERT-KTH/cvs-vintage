@@ -18,6 +18,7 @@
 package org.jboss.jms.asf;
 
 import java.util.Vector;
+import java.util.Enumeration;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -119,6 +120,28 @@ public class StdServerSessionPool implements ServerSessionPool {
 	return threadPool;
     }
     
+    /**
+     * Clear the pool, clear out both threads and ServerSessions,
+     * connection.stop() should be run before this method.
+     */
+    public void clear() {
+	synchronized (sessionPool){
+	    // FIXME - is there a runaway condition here. What if a 
+	    // ServerSession are taken by a ConnecionConsumer? Should we set 
+	    // a flag somehow so that no
+	    // ServerSessions are recycled and the ThreadPool don't leve any
+	    // more threads out.
+	    Logger.debug("Clearing " + sessionPool.size() + " from ServerSessionPool");
+            for(Enumeration e = sessionPool.elements() ; e.hasMoreElements() ; ){
+		StdServerSession ses = (StdServerSession)e.nextElement();
+		// Should we do any thing to the server session?
+		ses.close();
+	    }
+	    sessionPool.clear();
+	    threadPool.clear();
+	    sessionPool.notifyAll();
+	}
+    }
 
     // --- Private methods used internally
     
