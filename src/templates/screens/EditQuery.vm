@@ -11,7 +11,6 @@
 <form action="$action" method="post">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />   
 <input type="hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="QueryList.vm" />
 
@@ -47,11 +46,12 @@
   <input type="submit" name="eventSubmit_doEditqueryinfo" value="Save changes" />&#160; 
 </div>
 </form>
-
 #set ($action = $link.setPage("EditQuery.vm").setAction("Search").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "IssueList.vm").toString())
 <form action="$action" method="get">
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="searchType" value="advanced" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />   
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="EditQuery.vm" />   
 
 #set ($search = $scarabR.Search)
 #set ($query = $intake.SearchIssue.mapTo($search))
