@@ -22,24 +22,25 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
-import org.columba.core.gui.util.wizard.WizardTopBorder;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.Compatibility;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.ImapItem;
-import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.URLController;
@@ -73,7 +74,12 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//panelChooser.addListSelectionListener(this);
 
 		dialog.pack();
-		dialog.setLocationRelativeTo(null);
+		//		for jdk1.3 compatibility, this is called dynamically
+		Compatibility.simpleSetterInvoke(
+			dialog,
+			"setLocationRelativeTo",
+			Component.class,
+			null);
 		dialog.setVisible(true);
 	}
 

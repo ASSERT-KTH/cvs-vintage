@@ -17,6 +17,7 @@
 package org.columba.addressbook.gui.dialog.contact;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
+import org.columba.core.util.Compatibility;
 
 public class FullNameDialog extends JDialog implements ActionListener
 {
@@ -59,7 +61,7 @@ public class FullNameDialog extends JDialog implements ActionListener
 	public FullNameDialog( JDialog frame, IdentityPanel identityPanel )
 	{
 	
-		super(frame);
+		super(frame, true);
 	
 		this.identityPanel = identityPanel;
 			
@@ -67,7 +69,12 @@ public class FullNameDialog extends JDialog implements ActionListener
 		
 		pack();
 		
-		setLocationRelativeTo(null);
+		//		for jdk1.3 compatibility, this is called dynamically
+		Compatibility.simpleSetterInvoke(
+			this,
+			"setLocationRelativeTo",
+			Component.class,
+			null);
 	}
 	
 	public void updateComponents( ContactCard card, boolean b )

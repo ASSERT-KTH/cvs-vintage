@@ -120,7 +120,7 @@ public class ConfigFrame extends JDialog
 		pack();
 		//		for jdk1.3 compatibility, this is called dynamically
 		Compatibility.simpleSetterInvoke(
-			dialog,
+			this,
 			"setLocationRelativeTo",
 			Component.class,
 			null);
