@@ -54,16 +54,15 @@ public final class Proxies
     *   // x1 == x2
     * MyInterface x3 = (MyInterface) Proxies.newTarget(i);
     *   // x1 != x3, but calls to x3 are forwarded via i to x1
-    * </code>
-    */
+    * </code>    */
    public static ProxyTarget newTarget(ClassLoader parent,
-   InvocationHandler InvocationHandler,
-   Class targetTypes[])
+                                       InvocationHandler invocationHandler,
+                                       Class targetTypes[])
    {
-      return Impl.getImpl(targetTypes).newTarget(InvocationHandler, parent);
+      return Impl.getImpl(targetTypes).newTarget(invocationHandler, parent);
    }
    
-   //    public static ProxyTarget newTarget(InvocationHandler InvocationHandler) {
+   //    public static ProxyTarget newTarget(InvocationHandler invocationHandler) {
    //       return newTarget(InvocationHandler, InvocationHandler.getTargetTypes());
    //    }
    
@@ -143,7 +142,7 @@ public final class Proxies
     * it is a proxy for some original target object; extract and return
     * that object.  Otherwise, just call <tt>newTarget</tt>.
     */
-   public static Object getTarget(InvocationHandler InvocationHandler)
+   public static Object getTarget(InvocationHandler invocationHandler)
    {
       //       if (InvocationHandler instanceof ProxyTargetMemo) {
       //          // this kind of InvocationHandler is able to memoize the ProxyTarget we build
@@ -156,9 +155,9 @@ public final class Proxies
       //          return target;
       //       }
       
-      if (InvocationHandler instanceof ProxyInvocationHandler)
+      if (invocationHandler instanceof ProxyInvocationHandler)
       {
-         Object target = ((ProxyInvocationHandler)InvocationHandler).getTarget();
+         Object target = ((ProxyInvocationHandler)invocationHandler).getTarget();
          if (target != null)
          {
             return target;
@@ -166,7 +165,7 @@ public final class Proxies
          // and fall through...
       }
       
-      //return newTarget(InvocationHandler);
+      //return newTarget(invocationHandler);
       return null;
    }
    
@@ -187,11 +186,11 @@ public final class Proxies
       if (target instanceof ProxyTarget)
       {
          ProxyTarget tproxy = (ProxyTarget)target;
-         InvocationHandler InvocationHandler = tproxy.getInvocationHandler();
+         InvocationHandler invocationHandler = tproxy.getInvocationHandler();
          if (targetTypes == null ||
          Impl.sameTypes(tproxy.getTargetTypes(), targetTypes))
          {
-            return InvocationHandler;
+            return invocationHandler;
          }
          // and fall through...
       }
@@ -580,7 +579,7 @@ public final class Proxies
       }
       
       
-      ProxyTarget newTarget(InvocationHandler InvocationHandler,
+      ProxyTarget newTarget(InvocationHandler invocationHandler,
       ClassLoader parent)
       {
          if (proxyConstructor == null)
@@ -598,7 +597,7 @@ public final class Proxies
          try
          {
             Object arg[] =
-            { InvocationHandler };
+            { invocationHandler };
             return (ProxyTarget) proxyConstructor.newInstance(arg);
          } catch (InvocationTargetException ee)
          {

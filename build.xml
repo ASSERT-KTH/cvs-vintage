@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.75 2002/03/06 01:07:46 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.76 2002/03/07 17:03:53 neales Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -126,6 +126,13 @@
       <pathelement path="${apache.log4j.lib}/log4j.jar"/>
     </path>
 
+    <!-- BCEL -->
+    <property name="apache.bcel.root" value="${project.thirdparty}/apache/bcel"/>
+    <property name="apache.bcel.lib" value="${apache.bcel.root}/lib"/>
+    <path id="apache.bcel.classpath">
+      <pathelement path="${apache.bcel.lib}/bcel.jar"/>
+    </path>
+
     <!-- EDU.oswego.cs.dl.util.concurrent -->
     <property name="oswego.concurrent.root" value="${project.thirdparty}/oswego/concurrent"/>
     <property name="oswego.concurrent.lib" value="${oswego.concurrent.root}/lib"/>
@@ -181,6 +188,7 @@
       <path refid="sun.jsse.classpath"/>
       <path refid="sun.jts.classpath"/>
       <path refid="apache.log4j.classpath"/>
+      <path refid="apache.bcel.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
       <path refid="gnu.getopt.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
