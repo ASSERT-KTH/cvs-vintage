@@ -12,6 +12,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
 import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
@@ -36,7 +37,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class JDBCEntityBridge2
    implements JDBCAbstractEntityBridge
@@ -44,6 +45,7 @@ public class JDBCEntityBridge2
    private final JDBCStoreManager2 manager;
    private final JDBCEntityMetaData metadata;
    private final EntityTable table;
+   private final String tableName;
    private final Logger log;
 
    private JDBCCMPFieldBridge2[] pkFields;
@@ -61,6 +63,7 @@ public class JDBCEntityBridge2
       log = Logger.getLogger(this.getClass().getName() + "." + metadata.getName());
 
       table = manager.getSchema().createEntityTable(metadata, this);
+      tableName = SQLUtil.getTableNameWithoutSchema(metadata.getDefaultTableName());
    }
 
    // Public
@@ -269,6 +272,11 @@ public class JDBCEntityBridge2
    }
 
    public String getTableName()
+   {
+      return tableName;
+   }
+
+   public String getQualifiedTableName()
    {
       return metadata.getDefaultTableName();
    }

@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public final class JDBCStoreEntityCommand
 {
@@ -67,7 +67,7 @@ public final class JDBCStoreEntityCommand
       // generate sql
       StringBuffer sql = new StringBuffer(200);
       sql.append(SQLUtil.UPDATE)
-         .append(entity.getTableName())
+         .append(entity.getQualifiedTableName())
          .append(SQLUtil.SET);
       SQLUtil.getSetClause(dirtyIterator, sql)
          .append(SQLUtil.WHERE);

@@ -26,7 +26,7 @@ import java.sql.ResultSet;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class JDBCCMPFieldBridge2
    implements CMPFieldBridge, JDBCFieldBridge
@@ -157,7 +157,7 @@ public class JDBCCMPFieldBridge2
                + cmpFieldIAmMappedTo.getFieldName()
                +
                " -> "
-               + entity.getTableName()
+               + entity.getQualifiedTableName()
                + "."
                + cmpFieldIAmMappedTo.getColumnName() +
                ", current value=" + curValue + ", new value=" + value

@@ -31,7 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public final class SQLUtil
 {
@@ -90,6 +90,34 @@ public final class SQLUtil
    private static final String EQ_QUESTMARK = "=?";
 
    private static final Vector rwords = new Vector();
+
+   public static String getTableNameWithoutSchema(String tableName)
+   {
+      final int dot = tableName.indexOf('.');
+      if(dot != -1)
+      {
+         char firstChar = tableName.charAt(0);
+         tableName = tableName.substring(dot + 1);
+         if(firstChar == '"' || firstChar == '\'')
+         {
+            tableName = firstChar + tableName;
+         }
+      }
+      return tableName;
+   }
+
+   public static String getSchema(String tableName)
+   {
+      String schema = null;
+      final int dot = tableName.indexOf('.');
+      if(dot != -1)
+      {
+         char firstChar = tableName.charAt(0);
+         final boolean quoted = firstChar == '"' || firstChar == '\'';
+         schema = tableName.substring(quoted ? 1 : 0, dot);
+      }
+      return schema;
+   }
 
    public static String fixTableName(String tableName, DataSource dataSource)
       throws DeploymentException

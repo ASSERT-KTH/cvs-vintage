@@ -76,7 +76,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
 {
@@ -460,7 +460,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
 
          SQLUtil.getColumnNamesClause(childEntity.getPrimaryKeyFields(), childAlias, buf)
             .append(SQLUtil.FROM)
-            .append(childEntity.getTableName()).append(' ').append(childAlias)
+            .append(childEntity.getQualifiedTableName()).append(' ').append(childAlias)
             .append(SQLUtil.WHERE);
          SQLUtil.getJoinClause(cmrField, parentAlias, childAlias, buf);
       }
@@ -470,7 +470,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          buf.append(SQLUtil.SELECT);
          SQLUtil.getColumnNamesClause(cmrField.getTableKeyFields(), relationTableAlias, buf)
             .append(SQLUtil.FROM)
-            .append(cmrField.getTableName())
+            .append(cmrField.getQualifiedTableName())
             .append(' ')
             .append(relationTableAlias)
             .append(SQLUtil.WHERE);
@@ -758,7 +758,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       JDBCEntityBridge entity = (JDBCEntityBridge) path.getEntity(i);
 
       buf.append(SQLUtil.COMMA)
-         .append(entity.getTableName())
+         .append(entity.getQualifiedTableName())
          .append(' ')
          .append(aliasManager.getAlias(path.getPath(i)));
       leftJoins(path.getPath(i), buf);
@@ -767,7 +767,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       {
          String relationTableAlias = aliasManager.getRelationTableAlias(path.getPath(i));
          buf.append(SQLUtil.COMMA)
-            .append(cmrField.getTableName())
+            .append(cmrField.getQualifiedTableName())
             .append(' ')
             .append(relationTableAlias);
       }
@@ -796,7 +796,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
             String childAlias = aliasManager.getAlias(path.getPath());
 
             buf.append(SQLUtil.LEFT_JOIN)
-               .append(childEntity.getTableName())
+               .append(childEntity.getQualifiedTableName())
                .append(' ')
                .append(childAlias)
                .append(SQLUtil.ON);
@@ -806,7 +806,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          {
             String relationTableAlias = aliasManager.getRelationTableAlias(path.getPath());
             buf.append(SQLUtil.LEFT_JOIN)
-               .append(cmrField.getTableName())
+               .append(cmrField.getQualifiedTableName())
                .append(' ')
                .append(relationTableAlias)
                .append(SQLUtil.ON);
@@ -945,7 +945,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       // declare the alias mapping
       aliasManager.addAlias(path.getPath(), alias);
 
-      buf.append(entity.getTableName());
+      buf.append(entity.getQualifiedTableName());
       buf.append(' ');
       buf.append(alias);
       leftJoins(path.getPath(), buf);
@@ -956,7 +956,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       {
          String relationTableAlias = aliasManager.getRelationTableAlias(path.getPath());
          buf.append(SQLUtil.COMMA)
-            .append(cmrField.getTableName())
+            .append(cmrField.getQualifiedTableName())
             .append(' ')
             .append(relationTableAlias);
       }
@@ -972,7 +972,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       JDBCEntityBridge entity = (JDBCEntityBridge) schema.entity;
       ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
 
-      buf.append(entity.getTableName())
+      buf.append(entity.getQualifiedTableName())
          .append(' ')
          .append(aliasManager.getAlias(id.identifier));
       leftJoins(id.identifier, buf);
@@ -1231,7 +1231,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
             buf.append(SQLUtil.SELECT);
             SQLUtil.getColumnNamesClause(toChildEntity.getPrimaryKeyFields(), toChildAlias, buf)
                .append(SQLUtil.FROM)
-               .append(toChildEntity.getTableName())
+               .append(toChildEntity.getQualifiedTableName())
                .append(' ')
                .append(toChildAlias)
                .append(SQLUtil.WHERE);
@@ -1242,7 +1242,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
             buf.append(SQLUtil.SELECT);
             SQLUtil.getColumnNamesClause(toCMRField.getRelatedCMRField().getTableKeyFields(), relationTableAlias, buf)
                .append(SQLUtil.FROM)
-               .append(toCMRField.getTableName())
+               .append(toCMRField.getQualifiedTableName())
                .append(' ')
                .append(relationTableAlias)
                .append(SQLUtil.WHERE);

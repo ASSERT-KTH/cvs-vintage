@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 {
@@ -123,11 +123,11 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
       if(getSelectField() == null)
       {
          // we are selecting a full entity
-         table = getSelectEntity().getTableName();
+         table = getSelectEntity().getQualifiedTableName();
 
          // get a list of all fields to be loaded
          // put pk fields in front
-         String tableAlias = getTableAlias(alias, from, table);
+         String tableAlias = getTableAlias(alias, from, getSelectEntity().getTableName());
          selectList = SQLUtil.getColumnNamesClause(
             getSelectEntity().getPrimaryKeyFields(),
             tableAlias,
@@ -148,9 +148,9 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
          // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
          JDBCStoreManager manager = (JDBCStoreManager)getSelectField().getManager();
-         table = manager.getEntityBridge().getTableName();
+         table = manager.getEntityBridge().getQualifiedTableName();
          selectList = SQLUtil.getColumnNamesClause(
-            selectField, getTableAlias(alias, from, table), new StringBuffer()).toString();
+            selectField, getTableAlias(alias, from, manager.getEntityBridge().getTableName()), new StringBuffer()).toString();
       }
       sql.append(selectList);
       String additionalColumns = metadata.getAdditionalColumns();

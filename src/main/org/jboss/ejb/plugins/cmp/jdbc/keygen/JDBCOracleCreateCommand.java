@@ -51,7 +51,7 @@ public class JDBCOracleCreateCommand extends JDBCIdentityColumnCreateCommand
       jdbcType = pkField.getJDBCType().getJDBCTypes()[0];
 
       StringBuffer sql = new StringBuffer();
-      sql.append("{call INSERT INTO ").append(entity.getTableName());
+      sql.append("{call INSERT INTO ").append(entity.getQualifiedTableName());
       sql.append(" (");
       SQLUtil.getColumnNamesClause(pkField, sql)
          .append(", ");

@@ -47,7 +47,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -432,14 +432,14 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          {
             String relTableAlias = aliasManager.getRelationTableAlias(node.path);
             sb.append(" LEFT OUTER JOIN ")
-               .append(cmrField.getTableName())
+               .append(cmrField.getQualifiedTableName())
                .append(' ')
                .append(relTableAlias)
                .append(" ON ");
             SQLUtil.getRelationTableJoinClause(cmrField, alias, relTableAlias, sb);
 
             sb.append(" LEFT OUTER JOIN ")
-               .append(relatedEntity.getTableName())
+               .append(relatedEntity.getQualifiedTableName())
                .append(' ')
                .append(relatedAlias)
                .append(" ON ");
@@ -449,7 +449,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          {
             // foreign key mapping style
             sb.append(" LEFT OUTER JOIN ")
-               .append(relatedEntity.getTableName())
+               .append(relatedEntity.getQualifiedTableName())
                .append(' ')
                .append(relatedAlias)
                .append(" ON ");

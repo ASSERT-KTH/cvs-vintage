@@ -26,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityCommandMetaData;
 /**
  * Create command for PostgreSQL that fetches the currval of the sequence
  * associated with a SERIAL column in this table.
- *
+ * 
  * @author <a href="mailto:jeremy@boynes.com">Jeremy Boynes</a>
  */
 public class JDBCPostgreSQLCreateCommand extends JDBCIdentityColumnCreateCommand
@@ -43,19 +43,14 @@ public class JDBCPostgreSQLCreateCommand extends JDBCIdentityColumnCreateCommand
    {
       super.initEntityCommand(entityCommand);
       sequence = entityCommand.getAttribute("sequence");
-      if(sequence == null)
-      {
-         StringBuffer sb = new StringBuffer(50);
-         sb.append(entity.getTableName())
-            .append('_');
-         SQLUtil.getColumnNamesClause(pkField, sb);
-         sb.append("_seq");
-         sequence = sb.toString();
+      if (sequence == null) {
+         sequence = entity.getQualifiedTableName()
+            + '_' + SQLUtil.getColumnNamesClause(pkField, new StringBuffer(20))
+            + "_seq";
       }
-      sequenceSQL = "SELECT currval('" + sequence + "')";
-      if(debug)
-      {
-         log.debug("SEQUENCE SQL is :" + sequenceSQL);
+      sequenceSQL = "SELECT currval('"+sequence+"')";
+      if (debug) {
+         log.debug("SEQUENCE SQL is :"+sequenceSQL);
       }
    }
 
@@ -65,32 +60,23 @@ public class JDBCPostgreSQLCreateCommand extends JDBCIdentityColumnCreateCommand
 
       Statement s = null;
       ResultSet rs = null;
-      try
-      {
-         if(trace)
-         {
-            log.trace("Executing SQL :" + sequenceSQL);
+      try {
+         if (trace) {
+            log.trace("Executing SQL :"+sequenceSQL);
          }
          Connection c = ps.getConnection();
          s = c.createStatement();
          rs = s.executeQuery(sequenceSQL);
-         if(!rs.next())
-         {
+         if (!rs.next()) {
             throw new EJBException("sequence sql returned an empty ResultSet");
          }
          pkField.loadInstanceResults(rs, 1, ctx);
-      }
-      catch(RuntimeException e)
-      {
+      } catch (RuntimeException e) {
          throw e;
-      }
-      catch(Exception e)
-      {
+      } catch (Exception e) {
          // throw EJBException to force a rollback as the row has been inserted
          throw new EJBException("Error extracting generated keys", e);
-      }
-      finally
-      {
+      } finally {
          JDBCUtil.safeClose(rs);
          JDBCUtil.safeClose(s);
       }

@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public interface JDBCAbstractEntityBridge
    extends EntityBridge
@@ -28,6 +28,8 @@ public interface JDBCAbstractEntityBridge
    JDBCEntityPersistenceStore getManager();
 
    String getTableName();
+
+   String getQualifiedTableName();
 
    DataSource getDataSource();
 

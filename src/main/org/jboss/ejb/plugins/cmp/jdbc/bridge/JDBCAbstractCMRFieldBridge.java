@@ -11,7 +11,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public abstract class JDBCAbstractCMRFieldBridge
    implements JDBCFieldBridge, CMRFieldBridge
@@ -28,8 +28,10 @@ public abstract class JDBCAbstractCMRFieldBridge
 
    public abstract JDBCAbstractEntityBridge getEntity();
 
-   public abstract String getTableName();
+   public abstract String getQualifiedTableName();
 
+   public abstract String getTableName();
+   
    public Object getPrimaryKeyValue(Object o)
    {
       throw new UnsupportedOperationException();

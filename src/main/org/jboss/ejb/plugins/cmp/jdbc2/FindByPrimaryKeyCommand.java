@@ -24,7 +24,7 @@ import javax.ejb.ObjectNotFoundException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class FindByPrimaryKeyCommand
    extends AbstractQueryCommand
@@ -60,14 +60,14 @@ public class FindByPrimaryKeyCommand
          }
 
          sql = rowLockingTemplate.getFunctionSql(
-            new Object[]{selectColumns, entity.getTableName(), whereColumns, null}, new StringBuffer()
+            new Object[]{selectColumns, entity.getQualifiedTableName(), whereColumns, null}, new StringBuffer()
          ).toString();
       }
       else
       {
          sql = "select ";
          sql += selectColumns;
-         sql += " from " + entity.getTableName() + " where ";
+         sql += " from " + entity.getQualifiedTableName() + " where ";
          sql += whereColumns;
       }
 

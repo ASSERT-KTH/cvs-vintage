@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -311,9 +311,14 @@ public class JDBCCMRFieldBridge2
       return entity;
    }
 
-   public String getTableName()
+   public String getQualifiedTableName()
    {
       return relationTable.getTableName();
+   }
+
+   public String getTableName()
+   {
+      throw new UnsupportedOperationException();
    }
 
    // JDBCFieldBridge implementation
@@ -1082,7 +1087,7 @@ public class JDBCCMRFieldBridge2
          StringBuffer sql = new StringBuffer();
          sql.append("select ");
 
-         String relatedTable = relatedEntity.getTableName();
+         String relatedTable = relatedEntity.getQualifiedTableName();
          String relationTable = metadata.getRelationMetaData().getDefaultTableName();
 
          relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[]) relatedEntity.getTableFields(),
@@ -1112,7 +1117,7 @@ public class JDBCCMRFieldBridge2
             .append(myTable)
             .append(" on ");
 
-         String myTable = entity.getTableName();
+         String myTable = entity.getQualifiedTableName();
          pkFields = entity.getPrimaryKeyFields();
          for(int i = 0; i < pkFields.length; ++i)
          {
@@ -1225,7 +1230,7 @@ public class JDBCCMRFieldBridge2
          StringBuffer sql = new StringBuffer();
          sql.append("select ");
          relatedEntity.getTable().appendColumnNames((JDBCCMPFieldBridge2[]) relatedEntity.getTableFields(), null, sql);
-         sql.append(" from ").append(relatedEntity.getTableName()).append(" where ");
+         sql.append(" from ").append(relatedEntity.getQualifiedTableName()).append(" where ");
 
          JDBCCMPFieldBridge2[] relatedFkFields = relatedCMRField.foreignKeyFields;
          sql.append(relatedFkFields[0].getColumnName()).append("=?");
@@ -1659,4 +1664,5 @@ public class JDBCCMRFieldBridge2
          return credential;
       }
    }
+
 }

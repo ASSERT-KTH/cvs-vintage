@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCInsertRelationsCommand {
    private final Logger log;
@@ -67,7 +67,7 @@ public final class JDBCInsertRelationsCommand {
          }
       } catch(Exception e) {
          throw new EJBException("Could insert relations into " +
-               cmrField.getTableName(), e);
+               cmrField.getQualifiedTableName(), e);
       } finally {
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
@@ -79,7 +79,7 @@ public final class JDBCInsertRelationsCommand {
       JDBCCMRFieldBridge right = relationData.getRightCMRField();
       
       StringBuffer sql = new StringBuffer(200);
-      sql.append(SQLUtil.INSERT_INTO).append(left.getTableName());
+      sql.append(SQLUtil.INSERT_INTO).append(left.getQualifiedTableName());
 
       sql.append('(');
          SQLUtil.getColumnNamesClause(left.getTableKeyFields(), sql);

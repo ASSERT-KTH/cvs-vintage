@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="mailto:joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
 public final class JDBCStartCommand
 {
@@ -80,7 +80,7 @@ public final class JDBCStartCommand
    {
       Set existedTables = getExistedTables(manager);
 
-      boolean tableExisted = SQLUtil.tableExists(entity.getTableName(), entity.getDataSource());
+      boolean tableExisted = SQLUtil.tableExists(entity.getQualifiedTableName(), entity.getDataSource());
       if(tableExisted)
       {
          existedTables.add(entity.getEntityName());
@@ -90,14 +90,14 @@ public final class JDBCStartCommand
       {
          if(entityMetaData.getAlterTable())
          {
-            SQLUtil.OldColumns oldColumns = SQLUtil.getOldColumns(entity.getTableName(), entity.getDataSource());
+            SQLUtil.OldColumns oldColumns = SQLUtil.getOldColumns(entity.getQualifiedTableName(), entity.getDataSource());
             ArrayList oldNames = oldColumns.getColumnNames();
             ArrayList oldTypes = oldColumns.getTypeNames();
             ArrayList oldSizes = oldColumns.getColumnSizes();
             SQLUtil.OldIndexes oldIndexes = null;
             ArrayList newNames = new ArrayList();
             JDBCFieldBridge fields[] = entity.getTableFields();
-            String tableName = entity.getTableName();
+            String tableName = entity.getQualifiedTableName();
             for(int i = 0; i < fields.length; i++)
             {
                JDBCFieldBridge field = fields[i];
@@ -160,7 +160,7 @@ public final class JDBCStartCommand
                {
                   if(oldIndexes == null)
                   {
-                     oldIndexes = SQLUtil.getOldIndexes(entity.getTableName(), entity.getDataSource());
+                     oldIndexes = SQLUtil.getOldIndexes(entity.getQualifiedTableName(), entity.getDataSource());
                   }
                   if(!hasIndex(oldIndexes, field))
                   {
@@ -192,7 +192,7 @@ public final class JDBCStartCommand
       if(entityMetaData.getCreateTable() && !createdTables.contains(entity.getEntityName()))
       {
          DataSource dataSource = entity.getDataSource();
-         createTable(dataSource, entity.getTableName(), getEntityCreateTableSQL(dataSource));
+         createTable(dataSource, entity.getQualifiedTableName(), getEntityCreateTableSQL(dataSource));
 
          // create indices only if table did not yet exist.
          if(!tableExisted)
@@ -203,7 +203,7 @@ public final class JDBCStartCommand
          {
             if(log.isDebugEnabled())
             {
-               log.debug("Indices for table " + entity.getTableName() + "not created as table existed");
+               log.debug("Indices for table " + entity.getQualifiedTableName() + "not created as table existed");
             }
          }
 
@@ -213,18 +213,14 @@ public final class JDBCStartCommand
          {
             issuePostCreateSQL(dataSource,
                entity.getMetaData().getDefaultTablePostCreateCmd(),
-               entity.getTableName());
-         }
-         else
-         {
-            log.debug("Did not issue user-defined SQL for existing table " + entity.getTableName());
+               entity.getQualifiedTableName());
          }
 
          createdTables.add(entity.getEntityName());
       }
       else
       {
-         log.debug("Table not create as requested: " + entity.getTableName());
+         log.debug("Table not create as requested: " + entity.getQualifiedTableName());
       }
 
       // create relation tables
@@ -240,13 +236,13 @@ public final class JDBCStartCommand
          {
             DataSource dataSource = relationMetaData.getDataSource();
 
-            boolean relTableExisted = SQLUtil.tableExists(cmrField.getTableName(), entity.getDataSource());
+            boolean relTableExisted = SQLUtil.tableExists(cmrField.getQualifiedTableName(), entity.getDataSource());
 
             if(relTableExisted)
             {
                if(relationMetaData.getAlterTable())
                {
-                  ArrayList oldNames = SQLUtil.getOldColumns(cmrField.getTableName(), dataSource).getColumnNames();
+                  ArrayList oldNames = SQLUtil.getOldColumns(cmrField.getQualifiedTableName(), dataSource).getColumnNames();
                   ArrayList newNames = new ArrayList();
                   JDBCFieldBridge[] leftKeys = cmrField.getTableKeyFields();
                   JDBCFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
@@ -287,8 +283,8 @@ public final class JDBCStartCommand
                   if(different)
                   {
                      // only log, don't drop table is this can cause data loss
-                     log.error("CMR table structure is incorrect for " + cmrField.getTableName());
-                     //SQLUtil.dropTable(entity.getDataSource(), cmrField.getTableName());
+                     log.error("CMR table structure is incorrect for " + cmrField.getQualifiedTableName());
+                     //SQLUtil.dropTable(entity.getDataSource(), cmrField.getQualifiedTableName());
                   }
 
                } // if alter-table
@@ -300,12 +296,12 @@ public final class JDBCStartCommand
             {
                if(relationMetaData.getCreateTable())
                {
-                  createTable(dataSource, cmrField.getTableName(),
+                  createTable(dataSource, cmrField.getQualifiedTableName(),
                      getRelationCreateTableSQL(cmrField, dataSource));
                }
                else
                {
-                  log.debug("Relation table not created as requested: " + cmrField.getTableName());
+                  log.debug("Relation table not created as requested: " + cmrField.getQualifiedTableName());
                }
                // create Indices if needed
                createCMRIndex(dataSource, cmrField);
@@ -315,7 +311,7 @@ public final class JDBCStartCommand
                   issuePostCreateSQL(dataSource,
                      ((JDBCAbstractEntityBridge) relatedEntity).getMetaData()
                      .getDefaultTablePostCreateCmd(),
-                     cmrField.getTableName());
+                     cmrField.getQualifiedTableName());
                }
             }
          }
@@ -724,7 +720,7 @@ public final class JDBCStartCommand
       throws DeploymentException
    {
       StringBuffer sql = new StringBuffer();
-      sql.append(SQLUtil.CREATE_TABLE).append(entity.getTableName()).append(" (");
+      sql.append(SQLUtil.CREATE_TABLE).append(entity.getQualifiedTableName()).append(" (");
 
       // add fields
       boolean comma = false;
@@ -825,15 +821,15 @@ public final class JDBCStartCommand
       log.debug("Creating index for field " + field.getFieldName());
       sql = new StringBuffer();
       sql.append(SQLUtil.CREATE_INDEX);
-      sql.append(entity.getTableName() + IDX_POSTFIX + idxCount);// index name
+      sql.append(entity.getQualifiedTableName() + IDX_POSTFIX + idxCount);// index name
       sql.append(SQLUtil.ON);
-      sql.append(entity.getTableName() + " (");
+      sql.append(entity.getQualifiedTableName() + " (");
       SQLUtil.getColumnNamesClause(field, sql);
       sql.append(")");
 
       createIndex(dataSource,
-         entity.getTableName(),
-         entity.getTableName() + IDX_POSTFIX + idxCount,
+         entity.getQualifiedTableName(),
+         entity.getQualifiedTableName() + IDX_POSTFIX + idxCount,
          sql.toString());
       idxCount++;
    }
@@ -852,7 +848,7 @@ public final class JDBCStartCommand
       }
       else
       {
-         tableName = field.getRelatedCMRField().getEntity().getTableName();
+         tableName = field.getRelatedCMRField().getEntity().getQualifiedTableName();
       }
 
       JDBCRelationshipRoleMetaData left, right;
@@ -931,7 +927,7 @@ public final class JDBCStartCommand
       System.arraycopy(rightKeys, 0, fieldsArr, leftKeys.length, rightKeys.length);
 
       StringBuffer sql = new StringBuffer();
-      sql.append(SQLUtil.CREATE_TABLE).append(cmrField.getTableName())
+      sql.append(SQLUtil.CREATE_TABLE).append(cmrField.getQualifiedTableName())
          .append(" (")
          // add field declaration
          .append(SQLUtil.getCreateTableColumnsClause(fieldsArr));
@@ -969,10 +965,10 @@ public final class JDBCStartCommand
          if(metaData.getRelationMetaData().isTableMappingStyle())
          {
             addForeignKeyConstraint(metaData.getRelationMetaData().getDataSource(),
-               cmrField.getTableName(),
+               cmrField.getQualifiedTableName(),
                cmrField.getFieldName(),
                cmrField.getTableKeyFields(),
-               cmrField.getEntity().getTableName(),
+               cmrField.getEntity().getQualifiedTableName(),
                cmrField.getEntity().getPrimaryKeyFields());
 
          }
@@ -980,10 +976,10 @@ public final class JDBCStartCommand
          {
             JDBCAbstractEntityBridge relatedEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
             addForeignKeyConstraint(cmrField.getEntity().getDataSource(),
-               cmrField.getEntity().getTableName(),
+               cmrField.getEntity().getQualifiedTableName(),
                cmrField.getFieldName(),
                cmrField.getForeignKeyFields(),
-               relatedEntity.getTableName(),
+               relatedEntity.getQualifiedTableName(),
                relatedEntity.getPrimaryKeyFields());
          }
       }

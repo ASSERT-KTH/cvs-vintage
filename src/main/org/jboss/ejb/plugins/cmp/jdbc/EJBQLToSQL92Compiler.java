@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -725,7 +725,7 @@ public final class EJBQLToSQL92Compiler
          JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
          SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), localParentAlias, sql);
          sql.append(SQLUtil.FROM)
-            .append(parentEntity.getTableName()).append(' ').append(localParentAlias);
+            .append(parentEntity.getQualifiedTableName()).append(' ').append(localParentAlias);
          innerJoinPath(colPath, sql);
 
          sql.append(SQLUtil.WHERE);
@@ -756,7 +756,7 @@ public final class EJBQLToSQL92Compiler
             JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) memberPath.getEntity(0);
             SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
             sql.append(SQLUtil.FROM)
-               .append(parentEntity.getTableName()).append(' ').append(parentAlias);
+               .append(parentEntity.getQualifiedTableName()).append(' ').append(parentAlias);
             innerJoinPath(memberPath, sql);
             innerJoinPath(colPath, sql);
          }
@@ -766,7 +766,7 @@ public final class EJBQLToSQL92Compiler
             JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
             SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
             sql.append(SQLUtil.FROM)
-               .append(parentEntity.getTableName()).append(' ').append(parentAlias);
+               .append(parentEntity.getQualifiedTableName()).append(' ').append(parentAlias);
             innerJoinPath(colPath, sql);
          }
          else
@@ -828,14 +828,14 @@ public final class EJBQLToSQL92Compiler
          {
             String relTableAlias = aliasManager.getRelationTableAlias(curPath) + "_local";
             sql.append(join)
-               .append(cmrField.getTableName())
+               .append(cmrField.getQualifiedTableName())
                .append(' ')
                .append(relTableAlias)
                .append(" ON ");
             SQLUtil.getRelationTableJoinClause(cmrField, leftAlias, relTableAlias, sql);
 
             sql.append(join)
-               .append(joinEntity.getTableName())
+               .append(joinEntity.getQualifiedTableName())
                .append(' ')
                .append(joinAlias)
                .append(" ON ");
@@ -844,7 +844,7 @@ public final class EJBQLToSQL92Compiler
          else
          {
             sql.append(join)
-               .append(joinEntity.getTableName())
+               .append(joinEntity.getQualifiedTableName())
                .append(' ')
                .append(joinAlias)
                .append(" ON ");
@@ -1277,7 +1277,7 @@ public final class EJBQLToSQL92Compiler
       ASTAbstractSchema schema = (ASTAbstractSchema) node.jjtGetChild(0);
       JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge) schema.entity;
       ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
-      declareTable(id.identifier, entity.getTableName());
+      declareTable(id.identifier, entity.getQualifiedTableName());
       return data;
    }
 
@@ -1367,14 +1367,14 @@ public final class EJBQLToSQL92Compiler
                   {
                      String relTableAlias = aliasManager.getRelationTableAlias(curPath);
                      sql.append(join)
-                        .append(cmrField.getTableName())
+                        .append(cmrField.getQualifiedTableName())
                         .append(' ')
                         .append(relTableAlias)
                         .append(" ON ");
                      SQLUtil.getRelationTableJoinClause(cmrField, leftAlias, relTableAlias, sql);
 
                      sql.append(join)
-                        .append(joinEntity.getTableName())
+                        .append(joinEntity.getQualifiedTableName())
                         .append(' ')
                         .append(joinAlias)
                         .append(" ON ");
@@ -1383,7 +1383,7 @@ public final class EJBQLToSQL92Compiler
                   else
                   {
                      sql.append(join)
-                        .append(joinEntity.getTableName())
+                        .append(joinEntity.getQualifiedTableName())
                         .append(' ')
                         .append(joinAlias)
                         .append(" ON ");

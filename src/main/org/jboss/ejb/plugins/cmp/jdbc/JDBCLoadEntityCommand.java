@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public final class JDBCLoadEntityCommand
 {
@@ -257,7 +257,7 @@ public final class JDBCLoadEntityCommand
       }
       SQLUtil.getColumnNamesClause(loadIter, sql);
       sql.append(SQLUtil.FROM)
-              .append(entity.getTableName())
+              .append(entity.getQualifiedTableName())
               .append(SQLUtil.WHERE);
 
       //
@@ -290,7 +290,7 @@ public final class JDBCLoadEntityCommand
 
       //
       // table name clause
-      String tableName = entity.getTableName();
+      String tableName = entity.getQualifiedTableName();
 
       //
       // where clause
@@ -331,7 +331,7 @@ public final class JDBCLoadEntityCommand
    private ArrayList getDeepSQL(long loadMask, int keyCount, StringBuffer theSql)
    {
       // table name clause
-      String tableName = entity.getTableName();
+      String tableName = entity.getQualifiedTableName();
 
       //
       // column names clause
@@ -409,7 +409,7 @@ public final class JDBCLoadEntityCommand
 
 
                leftJoin.append(SQLUtil.LEFT_OUTER_JOIN)
-                       .append(childEntity.getTableName())
+                       .append(childEntity.getQualifiedTableName())
                        .append(' ')
                        .append(cmrs[i].getFieldName())
                        .append(SQLUtil.ON);

@@ -243,7 +243,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    {
       StringBuffer sql = new StringBuffer(250);
       sql.append(SQLUtil.INSERT_INTO)
-         .append(entity.getTableName())
+         .append(entity.getQualifiedTableName())
          .append(" (");
 
       SQLUtil.getColumnNamesClause(insertFields, sql);

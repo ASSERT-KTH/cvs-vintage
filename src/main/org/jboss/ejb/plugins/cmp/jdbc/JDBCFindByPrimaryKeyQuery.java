@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
 {
@@ -59,7 +59,7 @@ public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
       SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(), alias, select);
 
       StringBuffer from = new StringBuffer();
-      from.append(entity.getTableName())
+      from.append(entity.getQualifiedTableName())
          .append(' ')
          .append(alias);
 
@@ -73,7 +73,7 @@ public final class JDBCFindByPrimaryKeyQuery extends JDBCAbstractQueryCommand
             SQLUtil.appendColumnNamesClause(entity.getTableFields(), getEagerLoadMask(), alias, select);
 
             List onFindCMRList = JDBCAbstractQueryCommand.getLeftJoinCMRNodes(
-               entity, entity.getTableName(), readAhead.getLeftJoins());
+               entity, entity.getQualifiedTableName(), readAhead.getLeftJoins());
 
             if(!onFindCMRList.isEmpty())
             {

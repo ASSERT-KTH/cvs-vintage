@@ -33,7 +33,7 @@ import java.security.Principal;
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public abstract class CascadeDeleteStrategy
 {
@@ -142,7 +142,7 @@ public abstract class CascadeDeleteStrategy
 
          StringBuffer buf = new StringBuffer(100);
          buf.append("DELETE FROM ")
-            .append(cmrField.getRelatedJDBCEntity().getTableName())
+            .append(cmrField.getRelatedJDBCEntity().getQualifiedTableName())
             .append(" WHERE ");
          SQLUtil.getWhereClause(cmrField.getRelatedCMRField().getForeignKeyFields(), buf);
          batchCascadeDeleteSql = buf.toString();

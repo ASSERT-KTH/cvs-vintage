@@ -45,7 +45,7 @@ public abstract class JDBCInsertPKCreateCommand extends JDBCAbstractCreateComman
    {
       StringBuffer sql = new StringBuffer(300);
       sql.append(SQLUtil.SELECT).append("COUNT(*)").append(SQLUtil.FROM)
-         .append(entity.getTableName())
+         .append(entity.getQualifiedTableName())
          .append(SQLUtil.WHERE);
       SQLUtil.getWhereClause(entity.getPrimaryKeyFields(), sql);
       existsSQL = sql.toString();

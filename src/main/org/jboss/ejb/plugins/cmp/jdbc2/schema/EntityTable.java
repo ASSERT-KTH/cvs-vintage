@@ -49,7 +49,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.13 $</tt>
+ * @version <tt>$Revision: 1.14 $</tt>
  */
 public class EntityTable
    implements Table
@@ -1125,7 +1125,7 @@ public class EntityTable
                }
                catch(Exception e)
                {
-                  throw new EJBException("Table " + entity.getTableName() + ": " + e.getMessage());
+                  throw new EJBException("Table " + entity.getQualifiedTableName() + ": " + e.getMessage());
                }
                finally
                {
@@ -1169,7 +1169,7 @@ public class EntityTable
                         break;
                      default:
                         throw new IllegalStateException("Unexpected row state: table=" +
-                           entity.getTableName() +
+                           entity.getQualifiedTableName() +
                            ", pk=" + cursor.pk + ", state=" + cursor.state);
                   }
                }
@@ -1202,7 +1202,7 @@ public class EntityTable
                   }
                   catch(Exception e)
                   {
-                     log.warn("Table " + entity.getTableName() + ": " + e.getMessage());
+                     log.warn("Table " + entity.getQualifiedTableName() + ": " + e.getMessage());
                   }
                   finally
                   {

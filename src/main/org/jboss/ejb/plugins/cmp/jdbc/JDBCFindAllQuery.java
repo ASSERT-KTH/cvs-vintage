@@ -20,7 +20,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCFindAllQuery extends JDBCAbstractQueryCommand
 {
@@ -47,7 +47,7 @@ public final class JDBCFindAllQuery extends JDBCAbstractQueryCommand
       {
          SQLUtil.appendColumnNamesClause(entity, getEagerLoadGroup(), sql);
       }
-      sql.append(SQLUtil.FROM).append(entity.getTableName());
+      sql.append(SQLUtil.FROM).append(entity.getQualifiedTableName());
 
       setSQL(sql.toString());
    }

@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCDeleteRelationsCommand
 {
@@ -74,7 +74,7 @@ public final class JDBCDeleteRelationsCommand
       catch(Exception e)
       {
          throw new EJBException("Could not delete relations from " +
-            cmrField.getTableName(), e);
+            cmrField.getQualifiedTableName(), e);
       }
       finally
       {
@@ -90,7 +90,7 @@ public final class JDBCDeleteRelationsCommand
 
       StringBuffer sql = new StringBuffer(300);
       sql.append(SQLUtil.DELETE_FROM)
-         .append(left.getTableName())
+         .append(left.getQualifiedTableName())
          .append(SQLUtil.WHERE);
 
       int removedRelations = relationData.removedRelations.size();

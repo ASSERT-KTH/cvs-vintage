@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public final class JDBCStopCommand
 {
@@ -66,7 +66,7 @@ public final class JDBCStopCommand
          {
             if(relationMetaData.getRemoveTable())
             {
-               final boolean dropped = dropTable(relationMetaData.getDataSource(), cmrField.getTableName());
+               final boolean dropped = dropTable(relationMetaData.getDataSource(), cmrField.getQualifiedTableName());
                if(!dropped)
                {
                   success = false;
@@ -81,7 +81,7 @@ public final class JDBCStopCommand
 
       if(entityMetaData.getRemoveTable())
       {
-         boolean dropped = dropTable(entity.getDataSource(), entity.getTableName());
+         boolean dropped = dropTable(entity.getDataSource(), entity.getQualifiedTableName());
          if(!dropped)
          {
             success = false;
@@ -91,18 +91,21 @@ public final class JDBCStopCommand
       return success;
    }
 
-   private boolean dropTable(DataSource dataSource, String tableName)
+   private boolean dropTable(DataSource dataSource, String qualifiedTableName)
    {
       boolean success;
       Connection con = null;
       ResultSet rs = null;
+
+      String schema = SQLUtil.getSchema(qualifiedTableName);
+      String tableName = schema != null ? SQLUtil.getTableNameWithoutSchema(qualifiedTableName) : qualifiedTableName;
 
       // was the table already delete?
       try
       {
          con = dataSource.getConnection();
          DatabaseMetaData dmd = con.getMetaData();
-         rs = dmd.getTables(con.getCatalog(), null, tableName, null);
+         rs = dmd.getTables(con.getCatalog(), schema, tableName, null);
          if(!rs.next())
          {
             return true;
@@ -132,7 +135,7 @@ public final class JDBCStopCommand
       catch(Exception e)
       {
          log.error("Could not suspend current transaction before drop table. " +
-            "'" + tableName + "' will not be dropped.", e);
+            "'" + qualifiedTableName + "' will not be dropped.", e);
       }
 
       try
@@ -144,7 +147,7 @@ public final class JDBCStopCommand
             statement = con.createStatement();
 
             // execute sql
-            String sql = SQLUtil.DROP_TABLE + tableName;
+            String sql = SQLUtil.DROP_TABLE + qualifiedTableName;
             log.debug("Executing SQL: " + sql);
             statement.executeUpdate(sql);
             success = true;
@@ -157,7 +160,7 @@ public final class JDBCStopCommand
       }
       catch(Exception e)
       {
-         log.debug("Could not drop table " + tableName + ": " + e.getMessage());
+         log.debug("Could not drop table " + qualifiedTableName + ": " + e.getMessage());
          success = false;
       }
       finally

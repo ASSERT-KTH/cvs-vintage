@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -219,9 +219,9 @@ public final class JDBCLoadRelationCommand
    {
       JDBCCMPFieldBridge[] myKeyFields = getMyKeyFields(cmrField);
       JDBCCMPFieldBridge[] relatedKeyFields = getRelatedKeyFields(cmrField);
-      String relationTable = getRelationTable(cmrField);
+      String relationTable = getQualifiedRelationTable(cmrField);
       JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
-      String relatedTable = relatedEntity.getTableName();
+      String relatedTable = relatedEntity.getQualifiedTableName();
 
       // do we need to join the relation table and the related table
       boolean join = ((preloadMask != null) || cmrField.allFkFieldsMappedToPkFields())
@@ -232,9 +232,9 @@ public final class JDBCLoadRelationCommand
       String relatedTableAlias;
       if(join)
       {
-         relationTableAlias = relationTable;
+         relationTableAlias = getRelationTable(cmrField);
          relatedTableAlias = (
-            relatedTable.equals(relationTable) ? relationTable + '_' + cmrField.getFieldName() : relatedTable
+            relatedTable.equals(relationTable) ? relatedEntity.getTableName() + '_' + cmrField.getFieldName() : ""
          );
       }
       else
@@ -319,6 +319,25 @@ public final class JDBCLoadRelationCommand
          preloadMask = relatedEntity.getLoadGroupMask(eagerLoadGroup);
       }
       return preloadMask;
+   }
+
+   private String getQualifiedRelationTable(JDBCCMRFieldBridge cmrField)
+   {
+      if(cmrField.getRelationMetaData().isTableMappingStyle())
+      {
+         // relation table
+         return cmrField.getQualifiedTableName();
+      }
+      else if(cmrField.getRelatedCMRField().hasForeignKey())
+      {
+         // related has foreign key
+         return cmrField.getRelatedJDBCEntity().getQualifiedTableName();
+      }
+      else
+      {
+         // i have foreign key
+         return entity.getQualifiedTableName();
+      }
    }
 
    private String getRelationTable(JDBCCMRFieldBridge cmrField)

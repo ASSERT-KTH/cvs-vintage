@@ -76,7 +76,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.87 $
+ * @version $Revision: 1.88 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -86,9 +86,10 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
    private final JDBCStoreManager manager;
    /** Metadata of the relationship role that this field represents. */
    private final JDBCRelationshipRoleMetaData metadata;
-   /** That data source used to acess the relation table if relevant. */
+   /** The data source used to acess the relation table if relevant. */
    private DataSource dataSource;
-   /** That the relation table name if relevent. */
+   /** The relation table name if relevent. */
+   private String qualifiedTableName;
    private String tableName;
    /** The key fields that this entity maintains in the relation table. */
    private JDBCCMP2xFieldBridge[] tableKeyFields;
@@ -258,9 +259,10 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
       //
       // This code doesn't work here...  The problem each side will generate
       // the table name and this will only work for simple generation.
-      tableName = SQLUtil.fixTableName(
+      qualifiedTableName = SQLUtil.fixTableName(
          metadata.getRelationMetaData().getDefaultTableName(), dataSource
       );
+      tableName = SQLUtil.getTableNameWithoutSchema(qualifiedTableName);
 
       //
       // Initialize the key fields
@@ -390,11 +392,16 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
    /**
     * Gets the name of the relation table if relevent.
     */
+   public String getQualifiedTableName()
+   {
+      return qualifiedTableName;
+   }
+
    public String getTableName()
    {
       return tableName;
    }
-
+   
    /**
     * Gets the datasource of the relation table if relevent.
     */

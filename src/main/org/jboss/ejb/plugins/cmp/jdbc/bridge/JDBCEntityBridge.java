@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  */
 public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
@@ -81,6 +81,7 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
    private JDBCEntityMetaData metadata;
    private JDBCStoreManager manager;
    private DataSource dataSource;
+   private String qualifiedTableName;
    private String tableName;
 
    /** primary key fields (not added to cmpFields) */
@@ -138,7 +139,9 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
             metadata.getDataSourceName(), e);
       }
 
-      tableName = SQLUtil.fixTableName(metadata.getDefaultTableName(), dataSource);
+      qualifiedTableName = SQLUtil.fixTableName(metadata.getDefaultTableName(), dataSource);
+      int dotIndex = qualifiedTableName.indexOf('.');
+      tableName = dotIndex == -1 ? qualifiedTableName : qualifiedTableName.substring(dotIndex + 1);
 
       // CMP fields
       loadCMPFields(metadata);
@@ -360,6 +363,11 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
    public String getTableName()
    {
       return tableName;
+   }
+
+   public String getQualifiedTableName()
+   {
+      return qualifiedTableName;
    }
 
    public Class getPrimaryKeyClass()
