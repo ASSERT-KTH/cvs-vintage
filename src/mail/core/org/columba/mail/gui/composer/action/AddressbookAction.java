@@ -63,7 +63,7 @@ public class AddressbookAction extends AbstractColumbaAction {
         composerController.getHeaderController().getView()
                           .cleanupHeaderItemList();
 
-        SelectAddressDialog dialog = new SelectAddressDialog(composerController.getView(),
+        SelectAddressDialog dialog = new SelectAddressDialog(composerController.getView().getFrame(),
                 composerController.getHeaderController().getHeaderItemLists());
 
         org.columba.addressbook.folder.Folder folder = (org.columba.addressbook.folder.Folder) AddressbookInterface.addressbookTreeModel.getFolder(101);

@@ -36,6 +36,6 @@ public class ViewAccountInfoPanelAction extends AbstractSelectableAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        ((ComposerView) frameMediator.getBaseView()).showAccountInfoPanel();
+        ((ComposerView) frameMediator.getView()).showAccountInfoPanel();
     }
 }

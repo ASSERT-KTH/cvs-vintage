@@ -67,7 +67,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -125,7 +124,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
  */
     public FolderOptionsDialog(MessageFolder folder, boolean renameFolder,
         MailFrameMediator mediator) {
-        super((JFrame)mediator.getFrame(), true);
+        super(mediator.getView().getFrame(), true);
 
         this.folder = folder;
         this.renameFolder = renameFolder;
@@ -156,7 +155,7 @@ public class FolderOptionsDialog extends JDialog implements ActionListener,
  * @param folder                selected folder
  */
     public FolderOptionsDialog(MessageFolder folder, MailFrameMediator mediator) {
-        super((JFrame)mediator.getFrame(), true);
+        super(mediator.getView().getFrame(), true);
 
         this.folder = folder;
         this.mediator = mediator;

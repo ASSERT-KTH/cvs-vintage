@@ -75,7 +75,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableModelFilter model = tableController.getTableModelFilteredView();
-        FilterToolbar toolbar = ((AbstractMailView) getMediator().getBaseView()).getFilterToolbar();
+        FilterToolbar toolbar = ((AbstractMailView) getMediator().getView()).getFilterToolbar();
 
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));

@@ -50,6 +50,6 @@ public class ViewToolbarAction extends AbstractSelectableAction {
      * @param evt the event
      */
     public void actionPerformed(ActionEvent evt) {
-        ((AbstractMailView) frameMediator.getBaseView()).showToolbar();
+        ((AbstractMailView) frameMediator.getView()).showToolbar();
     }
 }

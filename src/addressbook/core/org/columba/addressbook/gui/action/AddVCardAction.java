@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.FileReader;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 
 
 /**
@@ -65,7 +64,7 @@ public class AddVCardAction extends DefaultTreeAction {
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setMultiSelectionEnabled(true);
 
-        int returnVal = fc.showOpenDialog((JFrame)frameMediator.getFrame());
+        int returnVal = fc.showOpenDialog(frameMediator.getView().getFrame());
 
         //if user pressed OK button
         if (returnVal == JFileChooser.APPROVE_OPTION) {

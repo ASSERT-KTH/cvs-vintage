@@ -339,9 +339,9 @@ public class TableController implements FocusOwner, ListSelectionListener {
 
         // update infopanel (gray panel below the toolbar)
         // showing total/unread/recent messages count
-        if(getFrameController().getBaseView() instanceof AbstractMailView) {
+        if(getFrameController().getView() instanceof AbstractMailView) {
             if (srcFolder != null) {
-                ((AbstractMailView) getFrameController().getBaseView()).getFolderInfoPanel().setFolder(srcFolder);
+                ((AbstractMailView) getFrameController().getView()).getFolderInfoPanel().setFolder(srcFolder);
             }
         }
 

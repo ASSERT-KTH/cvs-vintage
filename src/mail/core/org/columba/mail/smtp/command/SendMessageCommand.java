@@ -92,7 +92,9 @@ public class SendMessageCommand extends FolderCommand {
         composerController = r[0].getComposerController();
 
         // close composer view
-        composerController.getView().setVisible(false);
+        if(composerController.getView().getFrame() != null) {
+            composerController.getView().getFrame().setVisible(false);
+        }
 
         sendMessageDialog = new SendMessageDialog(worker);
 
@@ -207,10 +209,11 @@ public class SendMessageCommand extends FolderCommand {
         // close send message dialog
         sendMessageDialog.setVisible(false);
 
-        if (showComposer == true) {
+        if (showComposer == true &&
+            composerController.getView().getFrame() != null) {
             // re-open composer view
-            composerController.getView().setVisible(true);
-            composerController.getView().requestFocus();
+            composerController.getView().getFrame().setVisible(true);
+            composerController.getView().getFrame().requestFocus();
         }
     }
 }

@@ -33,6 +33,6 @@ public class ViewFolderInfoPanelAction extends AbstractSelectableAction {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        ((AbstractMailView) frameMediator.getBaseView()).showFolderInfoPanel();
+        ((AbstractMailView) frameMediator.getView()).showFolderInfoPanel();
     }
 }

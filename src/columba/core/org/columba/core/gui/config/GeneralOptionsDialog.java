@@ -466,7 +466,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
             // notify frame to update
             FrameMediator[] m = MainInterface.frameModel.getOpenFrames();
             for ( int i=0; i<m.length; i++) {
-                JFrame frame = (JFrame) m[i].getBaseView();
+                JFrame frame = m[i].getView().getFrame();
                 ThemeSwitcher.updateFrame(frame);
             }
             

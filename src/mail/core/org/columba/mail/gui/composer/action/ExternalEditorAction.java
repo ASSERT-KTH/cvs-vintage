@@ -53,7 +53,7 @@ public class ExternalEditorAction extends AbstractColumbaAction {
         final SwingWorker worker = new SwingWorker() {
                 public Object construct() {
                     //composerInterface.composerFrame.setCursor(Cursor.WAIT_CURSOR);
-                    composerController.getView().setEnabled(false);
+                    composerController.getView().getFrame().setEnabled(false);
 
                     //composerController.getEditorController().getView().setEnabled(false);
                     composerController.getEditorController().setViewEnabled(false);
@@ -69,7 +69,7 @@ public class ExternalEditorAction extends AbstractColumbaAction {
 
                 //Runs on the event-dispatching thread.
                 public void finished() {
-                    composerController.getView().setEnabled(true);
+                    composerController.getView().getFrame().setEnabled(true);
 
                     //composerController.getEditorController().getView().setEnabled(true);
                     composerController.getEditorController().setViewEnabled(true);
