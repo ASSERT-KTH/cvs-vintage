@@ -50,8 +50,8 @@ public class TeleTyperFormatAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public TeleTyperFormatAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public TeleTyperFormatAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_teletyper"));

@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -38,24 +39,15 @@ public class MarkAsUnflaggedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MarkAsUnflaggedAction(FrameMediator frameController) {
+	public MarkAsUnflaggedAction(FrameMediator frameMediator) {
 		
 		// TODO: i18n missing here
 		
-		super(frameController, "Not Flagged");
-		/*
-		super(
-			frameMediator,
-			"Not Flagged",
-			"Not Flagged",
-			"MARK_AS_UNFLAGGED",
-			null,
-			null,
-			'0',
-			null);
-		*/
+		super(frameMediator, "Not Flagged");
+	
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

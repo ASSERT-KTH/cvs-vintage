@@ -33,9 +33,9 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowLicenseAction extends FrameAction {
 
-	public ShowLicenseAction(FrameMediator frameController) {
+	public ShowLicenseAction(FrameMediator frameMediator) {
 		super(
-				frameController,
+		frameMediator,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_license"));
 	}

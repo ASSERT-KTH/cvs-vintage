@@ -34,8 +34,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SpellcheckAction extends FrameAction {
 
-	public SpellcheckAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public SpellcheckAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "composer", "menu_message_spellCheck"));
 		
 		// tooltip text

@@ -30,6 +30,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -43,28 +44,34 @@ public class ApplyFilterAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public ApplyFilterAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_folder_applyfilter"));
-		
+	public ApplyFilterAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_applyfilter"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu", 
-                        "mainframe",
-                        "menu_folder_applyfilter").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_folder_applyfilter")
+				.replaceAll("&", ""));
 
 		// icon
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("apply-filters-16.png"));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("apply-filters-16.png"));
 
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_A, ActionEvent.ALT_MASK));
-		
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
-			this);
+
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -72,15 +79,16 @@ public class ApplyFilterAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTreeSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTreeSelection();
 
 		//Folder folder = (Folder) r[0].getFolder();
 		MainInterface.processor.addOp(new ApplyFilterCommand(r));
 	}
 
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

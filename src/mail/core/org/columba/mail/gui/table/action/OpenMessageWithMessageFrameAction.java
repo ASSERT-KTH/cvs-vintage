@@ -25,6 +25,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
@@ -40,8 +41,8 @@ public class OpenMessageWithMessageFrameAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public OpenMessageWithMessageFrameAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public OpenMessageWithMessageFrameAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_opennew"));
 		
 		// tooltip text
@@ -51,7 +52,8 @@ public class OpenMessageWithMessageFrameAction
                         "menu_message_opennew_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

@@ -30,6 +30,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -43,8 +44,8 @@ public class MarkAsReadAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MarkAsReadAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public MarkAsReadAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_markasread"));
 		
 		// tooltip text
@@ -61,7 +62,8 @@ public class MarkAsReadAction
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
 		
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

@@ -35,8 +35,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenWithAction extends FrameAction implements SelectionListener {
 
-	public OpenWithAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public OpenWithAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "attachmentopen_with"));
 					
 		// tooltip text
@@ -45,7 +45,7 @@ public class OpenWithAction extends FrameAction implements SelectionListener {
                         "mainframe",
                         "attachmentopen_with_tooltip").replaceAll("&", ""));
 		
-		frameController.getSelectionManager().registerSelectionListener("mail.attachment", this);
+		frameMediator.getSelectionManager().registerSelectionListener("mail.attachment", this);
 	}
 
 	/* (non-Javadoc)

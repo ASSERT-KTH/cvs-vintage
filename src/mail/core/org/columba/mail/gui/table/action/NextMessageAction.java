@@ -44,8 +44,8 @@ public class NextMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public NextMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public NextMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_view_nextmessage"));
 		
 		// tooltip text

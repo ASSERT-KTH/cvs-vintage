@@ -46,9 +46,9 @@ public class EnableHtmlAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public EnableHtmlAction(FrameMediator frameController) {
+	public EnableHtmlAction(FrameMediator frameMediator) {
 		super(
-			frameController,
+		frameMediator,
 			MailResourceLoader.getString(
 				"menu",
 				"composer",

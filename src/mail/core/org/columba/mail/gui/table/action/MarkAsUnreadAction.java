@@ -32,6 +32,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -47,22 +48,23 @@ public class MarkAsUnreadAction
 	/**
 	 * @param frameMediator
 	 */
-	public MarkAsUnreadAction(FrameMediator frameController) {
+	public MarkAsUnreadAction(FrameMediator frameMediator) {
 
 		// TODO: i18n missing here
-		super(frameController, "As Unread");
+		super(frameMediator, "As Unread");
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("mail-new.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("mail-new.png"));
 
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_K, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-		
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(
+				KeyEvent.VK_K,
+				ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 
@@ -81,7 +83,7 @@ public class MarkAsUnreadAction
 
 		MainInterface.processor.addOp(c);
 	}
-        
+
 	/*
 	 * (non-Javadoc)
 	 * 

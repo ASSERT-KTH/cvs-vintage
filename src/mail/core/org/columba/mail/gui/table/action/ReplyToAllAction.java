@@ -27,6 +27,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyToAllCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -40,8 +41,8 @@ public class ReplyToAllAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public ReplyToAllAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ReplyToAllAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_replytoall"));
 		
 		// tooltip text
@@ -55,7 +56,8 @@ public class ReplyToAllAction
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("reply-to-all.png"));
 
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

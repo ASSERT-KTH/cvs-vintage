@@ -31,7 +31,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.RemoveFolderCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -45,26 +45,30 @@ public class RemoveFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public RemoveFolderAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_folder_removefolder"));
+	public RemoveFolderAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_removefolder"));
 
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_folder_removefolder").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_folder_removefolder")
+				.replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
-					
+
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTreeSelectionListener(
-			this);
+
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -86,28 +90,36 @@ public class RemoveFolderAction
 				"Your can only remove leaf folders!");
 			return;
 		} else {
-		    // warn user in any other cases
-            int n = JOptionPane.showConfirmDialog(
-                    null,
-                    MailResourceLoader.getString("tree", "tree",  "folder_warning"),
-                    MailResourceLoader.getString("tree", "tree",  "folder_warning_title"),
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
+			// warn user in any other cases
+			int n =
+				JOptionPane.showConfirmDialog(
+					null,
+					MailResourceLoader.getString(
+						"tree",
+						"tree",
+						"folder_warning"),
+					MailResourceLoader.getString(
+						"tree",
+						"tree",
+						"folder_warning_title"),
+					JOptionPane.YES_NO_OPTION);
+			if (n == JOptionPane.NO_OPTION) {
+				return;
+			}
+		}
 
 		MainInterface.processor.addOp(new RemoveFolderCommand(r));
 	}
-        
+
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
-			FolderTreeNode folder = ((TreeSelectionChangedEvent) e).getSelected()[0];
+			FolderTreeNode folder =
+				((TreeSelectionChangedEvent) e).getSelected()[0];
 
-			if (folder != null && folder instanceof Folder ) {
+			if (folder != null && folder instanceof Folder) {
 
 				FolderItem item = folder.getFolderItem();
 				if (item.get("property", "accessrights").equals("user"))

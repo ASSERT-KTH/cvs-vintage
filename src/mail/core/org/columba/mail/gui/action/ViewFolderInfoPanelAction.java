@@ -44,9 +44,9 @@ public class ViewFolderInfoPanelAction extends CheckBoxAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ViewFolderInfoPanelAction(FrameMediator frameController) {
+	public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
 		super(
-				frameController,
+		frameMediator,
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_folderinfopanel"));
 	}

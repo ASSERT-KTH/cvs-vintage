@@ -27,6 +27,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.OpenMessageWithComposerCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -40,8 +41,8 @@ public class OpenMessageWithComposerAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public OpenMessageWithComposerAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public OpenMessageWithComposerAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_openwithcomposer"));
 		
 		// tooltip text
@@ -55,7 +56,8 @@ public class OpenMessageWithComposerAction
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("compose-message.png"));
 
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

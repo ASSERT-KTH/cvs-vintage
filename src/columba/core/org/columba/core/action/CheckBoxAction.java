@@ -35,9 +35,9 @@ public abstract class CheckBoxAction extends FrameAction {
 	SelectionStateObservable observable;
 
 	public CheckBoxAction(
-		FrameMediator frameController,
+		FrameMediator frameMediator,
 		String name) {
-		super(frameController, name);
+		super(frameMediator, name);
 
 		observable = new SelectionStateObservable();
 	}

@@ -32,8 +32,8 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class ShowHelpAction extends FrameAction {
 
-	public ShowHelpAction(FrameMediator frameController) {
-		super(frameController, GlobalResourceLoader.getString(
+	public ShowHelpAction(FrameMediator frameMediator) {
+		super(frameMediator, GlobalResourceLoader.getString(
 			null, null, "menu_help_help"));
 				
 		// small icon for menu

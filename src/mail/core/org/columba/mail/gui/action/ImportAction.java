@@ -33,8 +33,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ImportAction extends FrameAction implements ActionListener {
 
-	public ImportAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ImportAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu",
                         "mainframe",
                         "menu_utilities_importmailbox"));

@@ -58,9 +58,9 @@ public class SendAllMessagesCommand extends FolderCommand {
 	 * @param references
 	 */
 	public SendAllMessagesCommand(
-		FrameMediator frameController,
+		FrameMediator frameMediator,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(frameMediator, references);
 	}
 
 	/**

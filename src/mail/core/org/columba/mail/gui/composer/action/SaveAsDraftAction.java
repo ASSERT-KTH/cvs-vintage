@@ -39,8 +39,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SaveAsDraftAction extends FrameAction {
 
-	public SaveAsDraftAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public SaveAsDraftAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "composer", "menu_file_savedraft"));
 		
 		// tooltip text

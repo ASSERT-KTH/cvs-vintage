@@ -33,9 +33,9 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowFAQAction extends FrameAction {
 
-	public ShowFAQAction(FrameMediator frameController) {
+	public ShowFAQAction(FrameMediator frameMediator) {
 		super(
-				frameController,
+		frameMediator,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_faq"));
 	}

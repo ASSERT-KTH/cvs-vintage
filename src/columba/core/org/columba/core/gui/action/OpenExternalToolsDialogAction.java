@@ -33,9 +33,9 @@ public class OpenExternalToolsDialogAction extends FrameAction {
 	 * @param frameMediator
 	 * @param name
 	 */
-	public OpenExternalToolsDialogAction(FrameMediator frameController) {
+	public OpenExternalToolsDialogAction(FrameMediator frameMediator) {
 		super(
-				frameController, 
+		frameMediator, 
 				GlobalResourceLoader.getString(
 					null, null, "menu_utilities_externaltools"));
 	}

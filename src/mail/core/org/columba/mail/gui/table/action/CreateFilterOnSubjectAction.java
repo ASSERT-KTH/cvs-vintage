@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.CreateFilterOnMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,20 +40,28 @@ public class CreateFilterOnSubjectAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public CreateFilterOnSubjectAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_filteronsubject"));
-		
+	public CreateFilterOnSubjectAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_filteronsubject"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_filteronsubject_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_filteronsubject_tooltip")
+				.replaceAll("&", ""));
+
 		setEnabled(false);
 
-		((AbstractMailFrameController) frameController)
-				.registerTableSelectionListener(this);
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -62,17 +71,17 @@ public class CreateFilterOnSubjectAction
 	public void actionPerformed(ActionEvent evt) {
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameMediator()).
-					getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 
 		// add command for execution
 		CreateFilterOnMessageCommand c =
-				new CreateFilterOnMessageCommand(
-						r,
-						CreateFilterOnMessageCommand.FILTER_ON_SUBJECT);
+			new CreateFilterOnMessageCommand(
+				r,
+				CreateFilterOnMessageCommand.FILTER_ON_SUBJECT);
 		MainInterface.processor.addOp(c);
 	}
-	
+
 	/**
 	 * Called when selection changes in message table
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)

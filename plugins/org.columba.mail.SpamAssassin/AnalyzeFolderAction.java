@@ -7,6 +7,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
 /**
@@ -28,17 +29,15 @@ public class AnalyzeFolderAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AnalyzeFolderAction(FrameMediator frameController) {
-		super(frameController, "Analyze Folder");
+	public AnalyzeFolderAction(FrameMediator frameMediator) {
+		super(frameMediator, "Analyze Folder");
 
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, "Analyze all messages of selected Folder");
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTreeSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

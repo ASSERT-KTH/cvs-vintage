@@ -16,6 +16,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -37,9 +38,9 @@ public class BounceAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public BounceAction(FrameMediator frameController) {
+	public BounceAction(FrameMediator frameMediator) {
 		super(
-			frameController,
+			frameMediator,
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
@@ -58,10 +59,7 @@ public class BounceAction extends FrameAction implements SelectionListener {
 
 		setEnabled(false);
 
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 
 	}

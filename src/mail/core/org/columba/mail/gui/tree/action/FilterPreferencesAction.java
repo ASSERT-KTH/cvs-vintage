@@ -26,6 +26,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,19 +40,24 @@ public class FilterPreferencesAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public FilterPreferencesAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_folder_filterconfig"));
-		
+	public FilterPreferencesAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_filterconfig"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_folder_filterconfig").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_folder_filterconfig")
+				.replaceAll("&", ""));
+
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTreeSelectionListener(
-			this);
+
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -72,12 +78,13 @@ public class FilterPreferencesAction
 		if (item == null)
 			return;
 
-		folder.showFilterDialog(((AbstractMailFrameController) getFrameMediator()));
+		folder.showFilterDialog(
+			((AbstractMailFrameController) getFrameMediator()));
 	}
-        
+
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

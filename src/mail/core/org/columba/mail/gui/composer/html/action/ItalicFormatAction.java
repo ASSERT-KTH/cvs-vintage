@@ -51,8 +51,8 @@ public class ItalicFormatAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public ItalicFormatAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ItalicFormatAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_italic"));

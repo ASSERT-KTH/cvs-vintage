@@ -33,8 +33,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ExternalEditorAction extends FrameAction {
 
-	public ExternalEditorAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ExternalEditorAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "composer", "menu_edit_extern_edit"));
 		
 		// tooltip text

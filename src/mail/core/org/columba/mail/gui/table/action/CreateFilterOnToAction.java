@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.CreateFilterOnMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,20 +40,28 @@ public class CreateFilterOnToAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public CreateFilterOnToAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_filteronto"));
-		
+	public CreateFilterOnToAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_filteronto"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_filteronto_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_filteronto_tooltip")
+				.replaceAll("&", ""));
+
 		setEnabled(false);
 
-		((AbstractMailFrameController) frameController)
-				.registerTableSelectionListener(this);
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -62,14 +71,14 @@ public class CreateFilterOnToAction
 	public void actionPerformed(ActionEvent evt) {
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameMediator()).
-					getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 
 		// add command for execution
 		CreateFilterOnMessageCommand c =
-				new CreateFilterOnMessageCommand(
-						r,
-						CreateFilterOnMessageCommand.FILTER_ON_TO);
+			new CreateFilterOnMessageCommand(
+				r,
+				CreateFilterOnMessageCommand.FILTER_ON_TO);
 		MainInterface.processor.addOp(c);
 	}
 

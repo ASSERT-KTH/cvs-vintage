@@ -41,8 +41,8 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 	 * @param frameMediator
 	 * @param name
 	 */
-	public ShowContextSpecificHelpAction(FrameMediator frameController) {
-		super(frameController, GlobalResourceLoader.getString(
+	public ShowContextSpecificHelpAction(FrameMediator frameMediator) {
+		super(frameMediator, GlobalResourceLoader.getString(
 			null, null, "menu_help_context"));
 		
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_extended-help-16.png"));

@@ -28,6 +28,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
@@ -43,8 +44,8 @@ public class MoveMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MoveMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public MoveMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_move"));
 		
 		// toolbar text
@@ -65,7 +66,8 @@ public class MoveMessageAction
 		setShowToolBarText(false);
 
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

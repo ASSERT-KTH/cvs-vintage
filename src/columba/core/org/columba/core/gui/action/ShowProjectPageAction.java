@@ -33,9 +33,9 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowProjectPageAction extends FrameAction {
 
-	public ShowProjectPageAction(FrameMediator frameController) {
+	public ShowProjectPageAction(FrameMediator frameMediator) {
 		super(
-				frameController,
+		frameMediator,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_sourceforge"));
 		

@@ -34,8 +34,8 @@ import org.columba.mail.gui.util.URLController;
  */
 public class ShowHomepageAction extends FrameAction {
 
-	public ShowHomepageAction(FrameMediator frameController) {
-		super(frameController, GlobalResourceLoader.getString(
+	public ShowHomepageAction(FrameMediator frameMediator) {
+		super(frameMediator, GlobalResourceLoader.getString(
 			null, null, "menu_help_homepage"));
 		
 		// small icon for menu

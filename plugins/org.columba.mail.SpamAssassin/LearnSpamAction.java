@@ -7,6 +7,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 
 /**
@@ -34,18 +35,15 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public LearnSpamAction(FrameMediator frameController) {
-		super(frameController, "Learn Spam");
+	public LearnSpamAction(FrameMediator frameMediator) {
+		super(frameMediator, "Learn Spam");
 
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, "Learn Spam based on selected Folder");
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTreeSelectionListener(
-			this);
+
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/*

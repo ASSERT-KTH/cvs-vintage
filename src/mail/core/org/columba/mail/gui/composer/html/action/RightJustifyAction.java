@@ -46,8 +46,8 @@ public class RightJustifyAction extends CheckBoxAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public RightJustifyAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public RightJustifyAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_right_justify"));

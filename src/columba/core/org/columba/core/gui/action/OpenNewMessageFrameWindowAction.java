@@ -32,10 +32,10 @@ import org.columba.mail.gui.messageframe.MessageFrameController;
 public class OpenNewMessageFrameWindowAction extends FrameAction {
 
 	public OpenNewMessageFrameWindowAction(
-			FrameMediator frameController) {
+			FrameMediator frameMediator) {
 			
 		super(
-				frameController,
+		frameMediator,
 				GlobalResourceLoader.getString(
 					null, null, "menu_file_new_message"));
 	}

@@ -53,9 +53,9 @@ public class ViewMessageSourceCommand extends FolderCommand {
 	 * @param references
 	 */
 	public ViewMessageSourceCommand(
-		FrameMediator frameController,
+		FrameMediator frameMediator,
 		DefaultCommandReference[] references) {
-		super(frameController, references);
+		super(frameMediator, references);
 	}
 
 	/**

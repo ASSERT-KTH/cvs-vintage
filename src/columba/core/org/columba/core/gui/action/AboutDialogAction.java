@@ -25,15 +25,14 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
 /**
- * @author frd
+ * Open About Dialog.
  *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author fdietz
  */
 public class AboutDialogAction extends FrameAction {
 
-	public AboutDialogAction(FrameMediator frameController) {
- 		super(frameController, GlobalResourceLoader.getString(
+	public AboutDialogAction(FrameMediator frameMediator) {
+ 		super(frameMediator, GlobalResourceLoader.getString(
  			null, null, "menu_help_about"));
 
 		// small icon for menu

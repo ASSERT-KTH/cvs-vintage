@@ -7,6 +7,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -28,17 +29,15 @@ public class MarkMessageAsHamAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public MarkMessageAsHamAction(FrameMediator frameController) {
-		super(frameController, "Mark Message as Ham");
+	public MarkMessageAsHamAction(FrameMediator frameMediator) {
+		super(frameMediator, "Mark Message as Ham");
 
 		// tooltip text
 		putValue(SHORT_DESCRIPTION, "Mark selected messages as Ham");
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

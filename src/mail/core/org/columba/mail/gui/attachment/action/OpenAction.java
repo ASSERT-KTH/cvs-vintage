@@ -36,8 +36,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenAction extends FrameAction implements SelectionListener {
 
-	public OpenAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public OpenAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "attachmentopen"));
 		
 		// tooltip text
@@ -50,8 +50,8 @@ public class OpenAction extends FrameAction implements SelectionListener {
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
 		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("stock_open.png"));
 		
-		if (frameController.getSelectionManager() != null)
-			frameController.getSelectionManager().
+		if (frameMediator.getSelectionManager() != null)
+		frameMediator.getSelectionManager().
 					registerSelectionListener(
 						"mail.attachment", 
 						this);

@@ -51,8 +51,8 @@ public class UnderlineFormatAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public UnderlineFormatAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public UnderlineFormatAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_underline"));

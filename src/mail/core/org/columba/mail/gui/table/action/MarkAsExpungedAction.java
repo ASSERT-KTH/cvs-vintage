@@ -27,6 +27,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -40,24 +41,35 @@ public class MarkAsExpungedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MarkAsExpungedAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_markasexpunged"));
-		
+	public MarkAsExpungedAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_markasexpunged"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_markasexpunged_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_markasexpunged_tooltip")
+				.replaceAll("&", ""));
+
 		// icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-		
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+
 		// icon for toolbar
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
-		
+
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 
@@ -66,17 +78,18 @@ public class MarkAsExpungedAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
 		MarkMessageCommand c = new MarkMessageCommand(r);
 
 		MainInterface.processor.addOp(c);
 	}
-        
+
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

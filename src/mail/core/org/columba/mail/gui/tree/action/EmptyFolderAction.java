@@ -35,8 +35,8 @@ public class EmptyFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public EmptyFolderAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public EmptyFolderAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_folder_emptyfolder"));
 					
 		// tooltip text

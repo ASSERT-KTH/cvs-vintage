@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyAsAttachmentCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,8 +40,8 @@ public class ReplyAsAttachmentAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public ReplyAsAttachmentAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ReplyAsAttachmentAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_replyasattachment"));
 		
 		// tooltip text
@@ -50,7 +51,8 @@ public class ReplyAsAttachmentAction
                         "menu_message_replyasattachment_tooltip").replaceAll("&", ""));
 					
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

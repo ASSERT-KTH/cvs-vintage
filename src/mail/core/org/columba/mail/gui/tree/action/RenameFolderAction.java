@@ -31,6 +31,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -43,42 +44,42 @@ public class RenameFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public RenameFolderAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_folder_renamefolder"));
+	public RenameFolderAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_renamefolder"));
 
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_folder_renamefolder").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_folder_renamefolder")
+				.replaceAll("&", ""));
 
 		// shortcut key
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController)frameController)
-					.registerTreeSelectionListener(
-			this);
+
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
 			(FolderCommandReference[])
-				((AbstractMailFrameController)frameMediator)
+				((AbstractMailFrameController) frameMediator)
 				.getTreeSelection();
 
-		new FolderOptionsDialog((Folder)r[0].getFolder(), true);
+		new FolderOptionsDialog((Folder) r[0].getFolder(), true);
 	}
 
 	public void selectionChanged(SelectionChangedEvent evt) {
-		if (((TreeSelectionChangedEvent)evt).getSelected().length > 0) {
+		if (((TreeSelectionChangedEvent) evt).getSelected().length > 0) {
 			FolderTreeNode folder =
-				((TreeSelectionChangedEvent)evt).getSelected()[0];
+				((TreeSelectionChangedEvent) evt).getSelected()[0];
 
 			if (folder != null && folder instanceof Folder) {
 				FolderItem item = folder.getFolderItem();
@@ -87,8 +88,7 @@ public class RenameFolderAction
 				else
 					setEnabled(false);
 			}
-		}
-		else
+		} else
 			setEnabled(false);
 	}
 }

@@ -28,6 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageBodyAsCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -41,20 +42,28 @@ public class SaveMessageBodyAsAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public SaveMessageBodyAsAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_save"));
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_save_tooltip").replaceAll("&", ""));
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+	public SaveMessageBodyAsAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_save"));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_save_tooltip")
+				.replaceAll("&", ""));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
 
 		// *20030614, karlpeder* only enabled when message(s) selected
 		setEnabled(false);
-		((AbstractMailFrameController) frameController)
-				.registerTableSelectionListener(this);
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -64,19 +73,20 @@ public class SaveMessageBodyAsAction
 	public void actionPerformed(ActionEvent evt) {
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameMediator()).
-					getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 
 		// get active charset - necessary to decode msg for saving
-		String charset = ((CharsetOwnerInterface) getFrameMediator())
-							.getCharsetManager()
-							.getSelectedCharset();
+		String charset =
+			((CharsetOwnerInterface) getFrameMediator())
+				.getCharsetManager()
+				.getSelectedCharset();
 
 		// add command for execution
 		SaveMessageBodyAsCommand c = new SaveMessageBodyAsCommand(r, charset);
 		MainInterface.processor.addOp(c);
 	}
-	
+
 	/**
 	 * Ensures that the action is only enabled when at least 
 	 * one message is selected in the GUI.

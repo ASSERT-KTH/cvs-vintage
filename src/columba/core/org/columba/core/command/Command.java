@@ -89,10 +89,10 @@ public abstract class Command {
 	}
 
 	public Command(
-		FrameMediator frameController,
+		FrameMediator frameMediator,
 		DefaultCommandReference[] references) {
 		this.references = references;
-		this.frameMediator = frameController;
+		this.frameMediator = frameMediator;
 
 		commandType = NORMAL_OPERATION;
 		priority = NORMAL_PRIORITY;

@@ -50,8 +50,8 @@ public class NextUnreadMessageAction
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public NextUnreadMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public NextUnreadMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_view_nextunreadmessage"));
 					
 		// tooltip text

@@ -28,6 +28,7 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
@@ -43,29 +44,41 @@ public class CopyMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public CopyMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_copy"));
-		
+	public CopyMessageAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_copy"));
+
 		// toolbar text
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_copy_toolbar"));
-		
+		putValue(
+			TOOLBAR_NAME,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_copy_toolbar"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_copy_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_copy_tooltip")
+				.replaceAll("&", ""));
+
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("copymessage_small.png"));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("copymessage_small.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
-		
+
 		// disable toolbar text
 		setShowToolBarText(false);
-		
+
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 
@@ -82,7 +95,8 @@ public class CopyMessageAction
 
 			FolderCommandReference[] result = new FolderCommandReference[2];
 			FolderCommandReference[] r1 =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+				((AbstractMailFrameController) getFrameMediator())
+					.getTableSelection();
 			FolderCommandReference r2 = new FolderCommandReference(destFolder);
 
 			result[0] = r1[0];
@@ -94,8 +108,8 @@ public class CopyMessageAction
 	}
 
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

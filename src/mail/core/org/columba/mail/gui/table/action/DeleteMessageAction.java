@@ -34,6 +34,7 @@ import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -47,35 +48,48 @@ public class DeleteMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public DeleteMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_delete"));
-					
+	public DeleteMessageAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_delete"));
+
 		// toolbar text
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_delete_toolbar"));
-		
+		putValue(
+			TOOLBAR_NAME,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_delete_toolbar"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_delete_tooltip").replaceAll("&", ""));
-		
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_delete_tooltip")
+				.replaceAll("&", ""));
+
 		// icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-		
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+
 		// icon for toolbar
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
-		
+
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_D, ActionEvent.ALT_MASK));
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 
 		// disable toolbar text
 		setShowToolBarText(false);
-		
+
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 
@@ -84,13 +98,15 @@ public class DeleteMessageAction
 	 */
 	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
 		Folder folder = (Folder) r[0].getFolder();
 		int uid = folder.getFolderItem().getInteger("uid");
-		Folder trash = (Folder) ((RootFolder)folder.getRootFolder()).getTrashFolder();
-		
+		Folder trash =
+			(Folder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
+
 		//Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
 
 		// trash folder has uid==105
@@ -113,16 +129,16 @@ public class DeleteMessageAction
 
 			result[0] = r1[0];
 			result[1] = r2;
-			
+
 			MoveMessageCommand c = new MoveMessageCommand(result);
 
 			MainInterface.processor.addOp(c);
 		}
 	}
-        
+
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

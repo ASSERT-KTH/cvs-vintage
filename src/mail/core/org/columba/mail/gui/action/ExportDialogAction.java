@@ -31,9 +31,9 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ExportDialogAction extends FrameAction {
 
-	public ExportDialogAction(FrameMediator frameController) {
+	public ExportDialogAction(FrameMediator frameMediator) {
 
-		super(frameController,
+		super(frameMediator,
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_utilities_exportmail"));
 	}

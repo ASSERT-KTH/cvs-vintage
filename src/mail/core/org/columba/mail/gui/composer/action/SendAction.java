@@ -40,8 +40,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SendAction extends FrameAction {
 
-	public SendAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public SendAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "composer", "menu_file_send"));
 		
 		// tooltip text

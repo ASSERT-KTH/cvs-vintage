@@ -21,8 +21,8 @@ public class AttachmentMenu extends MailContextMenu {
 	 * @param frameMediator
 	 * @param path
 	 */
-	public AttachmentMenu(FrameMediator frameController) {
-		super(frameController, "org/columba/mail/action/attachment_contextmenu.xml");
+	public AttachmentMenu(FrameMediator frameMediator) {
+		super(frameMediator, "org/columba/mail/action/attachment_contextmenu.xml");
 		
 	}
 

@@ -45,8 +45,8 @@ public class StrikeoutFormatAction extends CheckBoxAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public StrikeoutFormatAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public StrikeoutFormatAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_strike"));

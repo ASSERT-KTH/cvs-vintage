@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyToMailingListCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,8 +40,8 @@ public class ReplyToListAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public ReplyToListAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public ReplyToListAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_message_replyto"));
 		
 		// tooltip text
@@ -50,7 +51,8 @@ public class ReplyToListAction
                         "menu_message_replyto_tooltip").replaceAll("&", ""));
 		
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

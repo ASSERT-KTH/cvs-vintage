@@ -47,8 +47,8 @@ public class CenterJustifyAction extends CheckBoxAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public CenterJustifyAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public CenterJustifyAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_center_justify"));

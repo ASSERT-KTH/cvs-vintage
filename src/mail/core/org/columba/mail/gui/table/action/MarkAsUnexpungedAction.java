@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 /**
@@ -38,23 +39,14 @@ public class MarkAsUnexpungedAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MarkAsUnexpungedAction(FrameMediator frameController) {
+	public MarkAsUnexpungedAction(FrameMediator frameMediator) {
 		
 		// TODO: i18n missing here
+		super(frameMediator, "Not Expunged");
 		
-		super(frameController, "Not Expunged");
-		/*		
-		super(
-			frameMediator,
-			"Not Expunged",
-			"Not Expunged",
-			"MARK_AS_UNEXPUNGED",
-			null,null,
-			'0',
-			null);
-		*/
 		setEnabled(false);
-		((AbstractMailFrameController) frameController).registerTableSelectionListener(
+		
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

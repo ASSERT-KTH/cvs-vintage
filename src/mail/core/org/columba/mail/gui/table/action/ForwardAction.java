@@ -35,6 +35,7 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.command.ForwardCommand;
 import org.columba.mail.gui.composer.command.ForwardInlineCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -52,38 +53,43 @@ public class ForwardAction
 	private XmlElement forward;
 	private String forwardStyle;
 
-	public ForwardAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_forward"));
+	public ForwardAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_forward"));
 
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_forward_tooltip").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_forward_tooltip")
+				.replaceAll("&", ""));
 
 		// icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("forward_small.png"));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("forward_small.png"));
 
 		// icon for toolbar
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("forward.png"));
 
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 
 		// toolbar text is usually a bit shorter
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_forward_toolbar"));
+		putValue(
+			TOOLBAR_NAME,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_forward_toolbar"));
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 
 		XmlElement composerOptions =
@@ -115,10 +121,10 @@ public class ForwardAction
 			MainInterface.processor.addOp(new ForwardInlineCommand(r));
 
 	}
-        
+
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

@@ -33,8 +33,8 @@ import org.columba.core.util.GlobalResourceLoader;
  */
 public class CloseAction extends FrameAction {
 
-	public CloseAction(FrameMediator frameController) {
-		super(frameController, GlobalResourceLoader.getString(
+	public CloseAction(FrameMediator frameMediator) {
+		super(frameMediator, GlobalResourceLoader.getString(
 			null, null, "close"));
 
 		// tooltip text

@@ -26,6 +26,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.CreateVFolderOnMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -39,20 +40,28 @@ public class CreateVFolderOnToAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public CreateVFolderOnToAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_vfolderonto"));
+	public CreateVFolderOnToAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_vfolderonto"));
 
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_vfolderonto_tooltip").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_vfolderonto_tooltip")
+				.replaceAll("&", ""));
 
 		setEnabled(false);
 
-		((AbstractMailFrameController) frameController)
-				.registerTableSelectionListener(this);
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
+			this);
 	}
 
 	/**
@@ -62,16 +71,16 @@ public class CreateVFolderOnToAction
 	public void actionPerformed(ActionEvent evt) {
 		// get selected stuff
 		FolderCommandReference[] r =
-				((AbstractMailFrameController) getFrameMediator()).
-					getTableSelection();
+			((AbstractMailFrameController) getFrameMediator())
+				.getTableSelection();
 
 		// add command for execution
 		CreateVFolderOnMessageCommand c =
-				new CreateVFolderOnMessageCommand(
-						getFrameMediator(),
-						r,
-						CreateVFolderOnMessageCommand.VFOLDER_ON_TO);
-						
+			new CreateVFolderOnMessageCommand(
+				getFrameMediator(),
+				r,
+				CreateVFolderOnMessageCommand.VFOLDER_ON_TO);
+
 		MainInterface.processor.addOp(c);
 	}
 

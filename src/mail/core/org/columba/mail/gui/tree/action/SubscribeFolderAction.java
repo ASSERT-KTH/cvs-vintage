@@ -39,8 +39,8 @@ public class SubscribeFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public SubscribeFolderAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public SubscribeFolderAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_folder_subscribe"));
 
 		// tooltip text

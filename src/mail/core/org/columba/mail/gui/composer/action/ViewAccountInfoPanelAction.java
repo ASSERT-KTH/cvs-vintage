@@ -33,8 +33,8 @@ import org.columba.mail.gui.composer.ComposerView;
  */
 public class ViewAccountInfoPanelAction extends CheckBoxAction {
 
-	public ViewAccountInfoPanelAction(FrameMediator frameController) {
-		super(frameController, "AccountInfoPanel");
+	public ViewAccountInfoPanelAction(FrameMediator frameMediator) {
+		super(frameMediator, "AccountInfoPanel");
 	}
 
 	public void actionPerformed(ActionEvent evt) {

@@ -34,8 +34,8 @@ import org.columba.core.gui.util.ImageLoader;
  */
 public class DeleteAction extends FrameAction {
 
-	public DeleteAction(FrameMediator frameController) {
-		super(frameController, AddressbookResourceLoader.getString(
+	public DeleteAction(FrameMediator frameMediator) {
+		super(frameMediator, AddressbookResourceLoader.getString(
 			"menu", "mainframe", "menu_edit_delete"));
 		
 		// tooltip text

@@ -28,6 +28,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.folder.FolderOptionsDialog;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -44,20 +45,22 @@ public class FolderOptionsAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public FolderOptionsAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_folder_folderoptions"));
+	public FolderOptionsAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_folderoptions"));
 
 		// icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_configure_folder.png"));
-		
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("16_configure_folder.png"));
+
 		setEnabled(false);
 
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTreeSelectionListener(
-			this);
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -69,18 +72,18 @@ public class FolderOptionsAction
 			(FolderCommandReference[])
 				((AbstractMailFrameController) frameMediator)
 				.getTreeSelection();
-		
+
 		// only use the first selected folder		
 		FolderTreeNode folder = r[0].getFolder();
-		
+
 		// cast to Folder
-		new FolderOptionsDialog( (Folder) folder);
+		new FolderOptionsDialog((Folder) folder);
 	}
 
 	public void selectionChanged(SelectionChangedEvent e) {
 		FolderTreeNode[] r = ((TreeSelectionChangedEvent) e).getSelected();
 
-		if (r.length > 0 && r[0] instanceof Folder )
+		if (r.length > 0 && r[0] instanceof Folder)
 			setEnabled(true);
 		else
 			setEnabled(false);

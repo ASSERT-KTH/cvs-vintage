@@ -29,6 +29,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyWithTemplateCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -44,25 +45,29 @@ public class ReplyWithTemplateAction
 	/**
 	 *  
 	 */
-	public ReplyWithTemplateAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_replywithtemplate"));
+	public ReplyWithTemplateAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_replywithtemplate"));
 
 		//tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_replywithtemplate_tooltip").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_message_replywithtemplate_tooltip")
+				.replaceAll("&", ""));
 
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

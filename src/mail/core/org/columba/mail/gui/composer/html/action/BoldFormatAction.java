@@ -50,8 +50,8 @@ public class BoldFormatAction
 	/**
 	 * @param frameMediator
 	 */
-	public BoldFormatAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public BoldFormatAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_bold"));

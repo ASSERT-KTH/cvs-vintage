@@ -40,8 +40,8 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class SaveAsTemplateAction extends FrameAction {
 
-	public SaveAsTemplateAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public SaveAsTemplateAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "composer", "menu_file_savetemplate"));
 		
 		// tooltip text

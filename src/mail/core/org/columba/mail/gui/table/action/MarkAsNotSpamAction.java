@@ -28,6 +28,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -40,8 +41,8 @@ public class MarkAsNotSpamAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public MarkAsNotSpamAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public MarkAsNotSpamAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "mainframe",
                         "menu_message_markasnotspam"));
@@ -53,9 +54,8 @@ public class MarkAsNotSpamAction
                         "menu_message_markasnotspam_tooltip").replaceAll("&", ""));
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
+		
+		((MailFrameMediator) frameMediator)
 					.registerTableSelectionListener(
 			this);
 	}

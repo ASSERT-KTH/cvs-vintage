@@ -47,8 +47,8 @@ public class LeftJustifyAction extends CheckBoxAction
 	 * @param frameMediator
 	 * @param name
 	 */
-	public LeftJustifyAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public LeftJustifyAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_left_justify"));

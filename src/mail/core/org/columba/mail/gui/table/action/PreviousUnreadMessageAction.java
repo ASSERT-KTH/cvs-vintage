@@ -38,8 +38,8 @@ public class PreviousUnreadMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public PreviousUnreadMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public PreviousUnreadMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_view_prevunreadmessage"));
 		
 		// tooltip text

@@ -39,8 +39,8 @@ public class InsertBreakAction extends FrameAction
 	/**
 	 * @param frameMediator
 	 */
-	public InsertBreakAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public InsertBreakAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
                         "menu",
                         "composer",
                         "menu_format_break"));

@@ -79,9 +79,9 @@ public abstract class FrameAction extends AbstractAction implements PluginInterf
 	 * @param name					i18n name
 	 * 
 	 */
-	public FrameAction(FrameMediator frameController, String name) {
+	public FrameAction(FrameMediator frameMediator, String name) {
 		super(name);
-		this.frameMediator = frameController;
+		this.frameMediator = frameMediator;
 	}
 
 	/**

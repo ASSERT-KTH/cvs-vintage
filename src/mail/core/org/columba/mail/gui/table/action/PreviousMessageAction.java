@@ -40,8 +40,8 @@ public class PreviousMessageAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public PreviousMessageAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
+	public PreviousMessageAction(FrameMediator frameMediator) {
+		super(frameMediator, MailResourceLoader.getString(
 			"menu", "mainframe", "menu_view_prevmessage"));
 		
 		// tooltip text

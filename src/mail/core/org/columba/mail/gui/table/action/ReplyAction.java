@@ -30,6 +30,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -41,37 +42,40 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class ReplyAction extends FrameAction implements SelectionListener {
 
-	public ReplyAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_reply"));
+	public ReplyAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_reply"));
 
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_reply_tooltip").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_message_reply_tooltip")
+				.replaceAll("&", ""));
 
 		// toolbar text is usually a bit shorter
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_reply_toolbar"));
+		putValue(
+			TOOLBAR_NAME,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_message_reply_toolbar"));
 
 		// icons
 		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("reply_small.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("reply.png"));
 
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 	}
 

@@ -43,9 +43,9 @@ public class ShowBugDatabaseAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public ShowBugDatabaseAction(FrameMediator frameController) {
+	public ShowBugDatabaseAction(FrameMediator frameMediator) {
 		super(
-				frameController,
+		frameMediator,
 				GlobalResourceLoader.getString(
 					null, null, "menu_help_bug"));
 	}

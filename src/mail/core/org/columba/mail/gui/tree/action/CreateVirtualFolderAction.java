@@ -29,6 +29,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.main.MailInterface;
@@ -44,30 +45,35 @@ public class CreateVirtualFolderAction
 	extends FrameAction
 	implements SelectionListener {
 
-	public CreateVirtualFolderAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_folder_newvirtualfolder"));
-		
+	public CreateVirtualFolderAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_folder_newvirtualfolder"));
+
 		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_folder_newvirtualfolder").replaceAll("&", ""));
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString("menu", "mainframe", "menu_folder_newvirtualfolder")
+				.replaceAll("&", ""));
 
 		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
+		putValue(
+			SMALL_ICON,
+			ImageLoader.getSmallImageIcon("virtualfolder.png"));
 		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
-		
+
 		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_V, ActionEvent.ALT_MASK));
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
 
 		setEnabled(false);
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTreeSelectionListener(
-			this);
+		
+		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -89,7 +95,10 @@ public class CreateVirtualFolderAction
 						.getSelectionManager()
 						.getSelection(
 						"mail.tree");
-				FolderFactory.getInstance().createChild( r[0].getFolder(), name, "VirtualFolder");
+				FolderFactory.getInstance().createChild(
+					r[0].getFolder(),
+					name,
+					"VirtualFolder");
 
 				FolderCommandReference[] reference =
 					(FolderCommandReference[])
@@ -109,8 +118,8 @@ public class CreateVirtualFolderAction
 	}
 
 	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
+	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	     */
 	public void selectionChanged(SelectionChangedEvent e) {
 		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
 			setEnabled(true);

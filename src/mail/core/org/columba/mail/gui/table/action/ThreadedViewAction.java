@@ -32,6 +32,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
@@ -52,24 +53,30 @@ public class ThreadedViewAction
 	 * Constructor for ThreadedViewAction.
 	 * @param frameMediator
 	 */
-	public ThreadedViewAction(FrameMediator frameController) {
-		super(frameController, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_view_viewthreaded"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_view_viewthreaded_tooltip").replaceAll("&", ""));
-					
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+	public ThreadedViewAction(FrameMediator frameMediator) {
+		super(
+			frameMediator,
+			MailResourceLoader.getString(
+				"menu",
+				"mainframe",
+				"menu_view_viewthreaded"));
 
-		(
-			(
-				AbstractMailFrameController) frameController)
-					.registerTableSelectionListener(
+		// tooltip text
+		putValue(
+			SHORT_DESCRIPTION,
+			MailResourceLoader
+				.getString(
+					"menu",
+					"mainframe",
+					"menu_view_viewthreaded_tooltip")
+				.replaceAll("&", ""));
+
+		// shortcut key
+		putValue(
+			ACCELERATOR_KEY,
+			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
+
+		((MailFrameMediator) frameMediator).registerTableSelectionListener(
 			this);
 
 		setEnabled(true);
@@ -92,7 +99,7 @@ public class ThreadedViewAction
 					false);
 
 			updateTable(enableThreadedView);
-			
+
 			try {
 				SwingUtilities.invokeAndWait(new Runnable() {
 					public void run() {
