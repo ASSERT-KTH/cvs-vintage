@@ -50,7 +50,8 @@ import org.jboss.util.Sync;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.36 $
+*   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+*   @version $Revision: 1.37 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
