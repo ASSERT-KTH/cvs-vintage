@@ -337,15 +337,14 @@ public class ComposerController
 		updateComponents(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
-	 */
+	/* *20030831, karlpeder* Using method on super class instead
 	public void close() {
                 ColumbaLogger.log.info("closing ComposerController");
 		view.saveWindowPosition();
 		view.setVisible(false);
 	}
-
+	*/
+	
 	/**
 	 * @return CharsetManager
 	 */

@@ -109,22 +109,19 @@ public class MessageFrameController extends AbstractMailFrameController {
 		return view;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#close()
-	 */
+	/* *20030831, karlpeder* Using method on super class instead
 	public void close() {
 		view.saveWindowPosition();
-
 		view.setVisible(false);
 	}
+	*/
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.AbstractFrameController#saveAndClose()
-	 */
+	/* *20030831, karlpeder* Not used, close method is used instead
 	public void saveAndClose() {
 
 		super.saveAndClose();
 	}
+	*/
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.frame.AbstractFrameController#initInternActions()

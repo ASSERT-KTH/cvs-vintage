@@ -126,12 +126,12 @@ public class ThreePaneMailFrameController
 		return view;
 	}
 
+	/**
+	 * Save window properties and close the window.
+	 */
 	public void close() {
-
 		tableController.saveColumnConfig();
-
-		super.close();
-
+		super.close(); // this saves view settings and closes the view
 	}
 
 	protected void init() {
@@ -164,11 +164,12 @@ public class ThreePaneMailFrameController
 
 	}
 
+	/* *20030831, karlpeder* Not used, close method is used instead
 	public void saveAndClose() {
-
 		tableController.saveColumnConfig();
 		super.saveAndClose();
 	}
+	*/
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()

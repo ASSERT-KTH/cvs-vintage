@@ -166,8 +166,9 @@ public abstract class AbstractMailFrameController
 
 		XmlElement child = super.createDefaultConfiguration(id);
 
-		XmlElement toolbars = new XmlElement("toolbars");
-		child.addElement(toolbars);
+		// *20030831, karlpeder* toolbars element already added above
+		//XmlElement toolbars = new XmlElement("toolbars");
+		//child.addElement(toolbars);
 		XmlElement splitpanes = new XmlElement("splitpanes");
 		splitpanes.addAttribute("main", "200");
 		splitpanes.addAttribute("header", "200");

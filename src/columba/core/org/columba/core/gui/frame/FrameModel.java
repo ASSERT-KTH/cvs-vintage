@@ -36,16 +36,16 @@ import org.columba.core.xml.XmlElement;
  */
 public class FrameModel {
 
-	/**
-	 * list of frame controllers
-	 */
+	/** list of frame controllers */
 	protected static List activeFrameCtrls;
-	
-	/**
-	 * viewlist xml treenode
-	 */
+
+	/** viewlist xml treenode */
 	protected static XmlElement viewList =
 		Config.get("options").getElement("/options/gui/viewlist");
+	
+	/** Default view specifications to be used when opening a new view */	
+	protected static XmlElement defaultViews =
+		Config.get("options").getElement("/options/gui/defaultviews");
 	
 	/** Used for bookkeeping related to saveAll and close methods */
 	private static boolean isSavingAll = false;
@@ -133,6 +133,79 @@ public class FrameModel {
 	}
 
 	/**
+	 * Opens a view of a given type, i.e. with a specific id.
+	 * @param id		id specifying view type,
+	 * 					e.g. "ThreePaneMail" or "Addressbook"
+	 * @return			Frame controller for the given view type
+	 */
+	public static AbstractFrameController openView(String id) {
+
+		// look for default view settings (if not found, null is returned)
+		ViewItem view = loadDefaultView(id);
+		
+		// Create a frame controller for this view
+		// view = null => defaults specified by frame controller is used
+		////AbstractFrameController controller = createFrameController(id, null);
+		AbstractFrameController controller = createFrameController(id, view);
+		
+		// Display the view and return reference
+		controller.openView();
+		return controller;
+	}
+
+	/**
+	 * Gets default view settings for a given view type
+	 * 
+	 * @param	id	id specifying view type
+	 * @return	View settings	
+	 */
+	protected static ViewItem loadDefaultView(String id) {
+		// If defaultViews doesn't exist, create it (backward compatibility)
+		if (defaultViews == null) {
+			XmlElement gui = Config.get("options").
+					getElement("/options/gui");
+			defaultViews = new XmlElement("defaultviews");
+			gui.addElement(defaultViews);
+		}			
+		// search through defaultViews to get settings for given id
+		ViewItem view = null;
+		for (int i=0; i<defaultViews.count(); i++) {
+			XmlElement child = defaultViews.getElement(i);
+			String childId = child.getAttribute("id");
+			if ((childId != null) && childId.equals(id)) {
+				view = new ViewItem(child);
+				break;
+			}
+		}
+		return view;
+	}
+	
+	/**
+	 * Saves default view settings for given view type. These
+	 * will be used as startup values next a view of this type is 
+	 * opened. Though, views opened at startup will use settings
+	 * from viewlist instead.
+	 * 
+	 * Only one set of settings are stored for each view id.
+	 * 
+	 * @param	view	view settings to be stored
+	 */
+	protected static void saveDefaultView(ViewItem view) {
+		
+		if (view == null)
+			return;		// nothing to save
+			
+		String id = view.get("id");
+		
+		// removed previous default values
+		ViewItem oldView = loadDefaultView(id);
+		if (oldView != null)
+			defaultViews.removeElement(oldView.getRoot());
+		// store current view settings
+		defaultViews.addElement(view.getRoot());
+	}
+
+	/**
 	 * Stores view settings for all currently open views and then
 	 * closes them.
 	 * Is called when exiting Columba.
@@ -141,14 +214,15 @@ public class FrameModel {
 		// Signal to the close method to react differently
 		isSavingAll = true;
 		
-		// clear view list. Gets filled with currently open views below
 		viewList.removeAllElements();
 
+		// store view settings and close all open views
 		for (Iterator it = activeFrameCtrls.iterator(); it.hasNext();) {
 			AbstractFrameController c = (AbstractFrameController) it.next();
 			ViewItem v = c.getViewItem();
-			// store current view settings (gets saved in view list)
+			// store current view settings
 			viewList.addElement(v.getRoot());
+			saveDefaultView(v);
 			/*
 			 * Close the view. This will also call the close method below
 			 * via the frame controllers close method. Since the isSavingAll
@@ -177,50 +251,26 @@ public class FrameModel {
 		 *    in saveAll messes up.
 		 */
 		if (!isSavingAll) { 
-			if (activeFrameCtrls.size() == 1) {
-				// last frame
-				//  -> exit Columba
-				viewList.removeAllElements();
-				ViewItem v = c.getViewItem();
-				// store view settings
-				viewList.addElement(v.getRoot());
-				// shut down Columba 
-				MainInterface.shutdownManager.shutdown();
-			} else
-				// just remove reference, since the view is no longer shown
-				activeFrameCtrls.remove(c);
+			// Check if the frame controller has been registered, else do nothing
+			if (activeFrameCtrls.contains(c)) {
+				if (activeFrameCtrls.size() == 1) {
+					// last frame
+					//  -> exit Columba
+					viewList.removeAllElements();
+					ViewItem v = c.getViewItem();
+					// store view settings
+					viewList.addElement(v.getRoot());
+					saveDefaultView(v);
+					// shut down Columba 
+					MainInterface.shutdownManager.shutdown();
+				} else {
+					// just remove reference - and save view settings
+					saveDefaultView(c.getViewItem()); 
+					activeFrameCtrls.remove(c);
+					
+				}
+			}
 		}
-	}
-
-	/**
-	 * Opens a view of a given type, i.e. with a specific id.
-	 * @param id		id specifying view type,
-	 * 					e.g. "ThreePaneMail" or "Addressbook"
-	 * @return			Frame controller for the given view type
-	 */
-	public static AbstractFrameController openView(String id) {
-		/*
-		XmlElement view = new XmlElement("view");
-		view.addAttribute("id", id);
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("x", "0");
-		window.addAttribute("y", "0");
-		window.addAttribute("width", "900");
-		window.addAttribute("height", "700");
-		window.addAttribute("maximized", "true");
-		view.addElement(window);
-		viewList.addElement(view);
-		*/
-
-		/*
-		 * Create a frame controller for this view
-		 * (without specifying view settings, defaults will be used) 
-		 */
-		AbstractFrameController controller = createFrameController(id, null);
-		
-		// Display the view and return reference
-		controller.openView();
-		return controller;
 	}
 
 }

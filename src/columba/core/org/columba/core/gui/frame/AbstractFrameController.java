@@ -71,12 +71,6 @@ public abstract class AbstractFrameController {
 	protected String id;
 
 	/**
-	 * 
-	 * default view configuration
-	 */
-	protected XmlElement defaultView;
-
-	/**
 	 * Constructor for FrameController.
 	 * 
 	 * Warning: Never do any inits in the constructor -> use init() instead!
@@ -92,17 +86,7 @@ public abstract class AbstractFrameController {
 		this.id = id;
 		this.viewItem = viewItem;
 
-		// initialize default view options
-		defaultView = new XmlElement("view");
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("width", "640");
-		window.addAttribute("height", "480");
-		window.addAttribute("maximized", "true");
-		defaultView.addElement(window);
-		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("main","true");
-		defaultView.addElement(toolbars);
-
+		// If no view spec. is given, use default
 		if (viewItem == null)
 			this.viewItem = new ViewItem(createDefaultConfiguration(id));
 
@@ -149,10 +133,25 @@ public abstract class AbstractFrameController {
 	 * @return		xml treenode containing the new configuration
 	 */
 	protected XmlElement createDefaultConfiguration(String id) {
+		/* *20030831, karlpeder* Moved code here from constructor
 		XmlElement child = (XmlElement) defaultView.clone();
 		child.addAttribute("id", id);
+		*/
+		
+		// initialize default view options
+		XmlElement defaultView = new XmlElement("view");
+		XmlElement window = new XmlElement("window");
+		window.addAttribute("width", "640");
+		window.addAttribute("height", "480");
+		window.addAttribute("maximized", "true");
+		defaultView.addElement(window);
+		XmlElement toolbars = new XmlElement("toolbars");
+		toolbars.addAttribute("main","true");
+		defaultView.addElement(toolbars);
 
-		return child;
+		defaultView.addAttribute("id", id);
+
+		return defaultView;
 	}
 
 
@@ -180,41 +179,29 @@ public abstract class AbstractFrameController {
 		return mouseTooltipHandler;
 	}
 
-	/**
-	 * 
-	 * Save window properties, don't close it.
-	 * 
-	 * Hmm. Somethings wrong here:
-	 * Note that mail component will overwrite this method
-	 * to save its domain specific configuration.
-	 * 
-	 * So, close() method below should reuse saveAndClose(),
-	 * where saveAndClose() should be renamed to something 
-	 * which makes more sense. 
-	 * 
-	 */
+	/* *20030831, karlpeder* Not used, close method is used instead
 	public void saveAndClose() {
 		view.saveWindowPosition();
-		//model.saveAndUnregister(id);
 	}
+	*/
 
 	/**
-	 * 
-	 * Save window properties and close the window
-	 * 
-	 *
+	 * Save window properties and close the window.
+	 * This includes telling the frame model that
+	 * this window/frame is closing, so it can be
+	 * "unregistered" correctly
 	 */
 	public void close() {
-        ColumbaLogger.log.info("closing FrameController");
-
-		view.saveWindowPosition();
+        ColumbaLogger.log.info("Closing FrameController: " + 
+        		this.getClass().getName());
+		view.saveWindowPosition(); // ask view to store current pos and size
 		view.setVisible(false);
-		FrameModel.close(this);
-
-		//FrameModel.close(this);
-		//model.unregister(id);
-
-		//getView().setVisible(false);	
+		/*
+		 * Tell frame model that frame is closing.
+		 * If this frame hasn't been opened using FrameModel methods,
+		 * FrameModel.close does nothing.
+		 */		
+		FrameModel.close(this); 
 	}
 
 	/**

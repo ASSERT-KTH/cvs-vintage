@@ -18,6 +18,7 @@ package org.columba.core.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -121,8 +122,11 @@ public abstract class AbstractFrameView
 	 */
 	public void loadWindowPosition() {
 		ViewItem viewItem = frameController.getViewItem();
-		int x = viewItem.getInteger("window", "width");
-		int y = viewItem.getInteger("window", "height");
+		// *20030831, karlpeder* Also location is restored
+		int x = viewItem.getInteger("window", "x");
+		int y = viewItem.getInteger("window", "y");
+		int w = viewItem.getInteger("window", "width");
+		int h = viewItem.getInteger("window", "height");
 		boolean maximized = viewItem.getBoolean("window", "maximized", true);
 
 		// if window is maximized -> ignore the window size
@@ -131,8 +135,10 @@ public abstract class AbstractFrameView
 		WindowMaximizer.maximize(this);
 		else {
 			// otherwise, use window size property 
-			Dimension dim = new Dimension(x, y);
+			Dimension dim = new Dimension(w, h);
+			Point     p   = new Point(x, y); 
 			setSize(dim);
+			setLocation(p);
 
 			validate();
 		}
@@ -146,11 +152,15 @@ public abstract class AbstractFrameView
 	public void saveWindowPosition() {
 
 		java.awt.Dimension d = getSize();
+		java.awt.Point   loc = getLocation();
 
 		WindowItem item = frameController.getViewItem().getWindowItem();
 
-		item.set("x", 0);
-		item.set("y", 0);
+		// *20030831, karlpeder* Now also location is stored
+		//item.set("x", 0);
+		//item.set("y", 0);
+		item.set("x", loc.x);
+		item.set("y", loc.y);
 		item.set("width", d.width);
 		item.set("height", d.height);
 
