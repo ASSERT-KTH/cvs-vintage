@@ -55,7 +55,7 @@ public class PrintMessageCommand extends FolderCommand {
 	private cPrintObject mailHeader;
 	private cPrintObject mailFooter;
 	private DateFormat mailDateFormat;
-	private String[] headerKeys = { "from", "to", "date", "subject" };
+	private String[] headerKeys = { "From", "To", "Date", "Subject" };
 
 	/**
 	 * Constructor for PrintMessageCommdn.

@@ -275,7 +275,7 @@ public class Rfc822Parser extends AbstractParser
 		//m.setHost( item.getHost() );
 		h.set("columba.host", new String(""));
 
-		Date date = DateParser.parseString((String) h.get("date"));
+		Date date = DateParser.parseString((String) h.get("Date"));
 		//System.out.println("date1: "+ h.get("date") );
 		//m.setDate( date );
 		h.set("columba.date", date);

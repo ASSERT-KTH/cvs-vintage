@@ -269,8 +269,8 @@ public class TableModelSorter extends TableModelPlugin
 			
 			else if (columnName.equals("Date"))
 			{
-				Date d1 = (Date) item1.get("date");
-				Date d2 = (Date) item2.get("date");
+				Date d1 = (Date) item1.get("Date");
+				Date d2 = (Date) item2.get("Date");
 				if ((d1 == null) || (d2 == null))
 					result = 0;
 				else

@@ -600,12 +600,12 @@ public class Imap4Parser {
 		// Date
 		nextItem = tokenizer.getNextItem();
 		if( nextItem.getType() == Item.STRING )
-			result.set( "date", (String) nextItem.getValue() );
+			result.set( "Date", (String) nextItem.getValue() );
 
 		// Subject
 		nextItem = tokenizer.getNextItem();
 		if( nextItem.getType() == Item.STRING )
-			result.set( "subject", (String) nextItem.getValue() );
+			result.set( "Subject", (String) nextItem.getValue() );
 		
 		// From
 		nextItem = tokenizer.getNextItem();
@@ -634,12 +634,12 @@ public class Imap4Parser {
 		// In-Reply-To
 		nextItem = tokenizer.getNextItem();
 		if( nextItem.getType() == Item.STRING )
-			result.set( "in-reply-to", (String) nextItem.getValue() );
+			result.set( "In-Reply-To", (String) nextItem.getValue() );
 		
 		// Message-ID
 		nextItem = tokenizer.getNextItem();
 		if( nextItem.getType() == Item.STRING )
-			result.set( "message-id", (String) nextItem.getValue() );
+			result.set( "Message-Id", (String) nextItem.getValue() );
 				
 			
 		return result;
