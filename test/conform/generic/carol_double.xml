@@ -275,10 +275,6 @@
   </target>
 
   <target name="launch.test">
-    <condition property="is.jvm.1.4">
-      <equals  arg1="${ant.java.version}" arg2="1.4"/>
-    </condition>
-
     <parallel failonany="true">
       <antcall target="maybe.start.nameserver1"/>
       <antcall target="maybe.start.nameserver2"/>

@@ -21,9 +21,6 @@
   </target>
 
   <target name="test.single"> 
-    <condition property="is.jvm.1.4">
-      <equals  arg1="${ant.java.version}" arg2="1.4"/>
-    </condition>
     <antcall target="single.jeremie"/>
     <antcall target="single.iiop"/>
     <antcall target="single.jrmp1.1"/>
@@ -36,9 +33,6 @@
     </target>
 
   <target name="test.multiple">
-    <condition property="is.jvm.1.4">
-      <equals  arg1="${ant.java.version}" arg2="1.4"/>
-    </condition>    
     <antcall target="multi.suniiop.jeremie"/>
     <antcall target="multi.suniiop.sunjrmp1.1"/>
     <antcall target="multi.suniiop.sunjrmp1.2"/>
@@ -68,7 +62,7 @@
     </ant>
   </target>
 
-  <target name="single.iiop" if="is.jvm.1.4">
+  <target name="single.iiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="iiop_carol.properties"/>
@@ -118,7 +112,7 @@
     </ant>
   </target>
 
-   <target name="single.nons.iiop" if="is.jvm.1.4">
+   <target name="single.nons.iiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="iiop_carol_nons.properties"/>
@@ -148,7 +142,7 @@
   <!-- ************************************-->
   <!-- *********     TEST MULTI     *******-->
   <!-- ************************************-->
-  <target name="multi.suniiop.jeremie" if="is.jvm.1.4">
+  <target name="multi.suniiop.jeremie">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="jeremie_stub.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -167,7 +161,7 @@
     </ant>
   </target>  
 
-  <target name="multi.suniiop.sunjrmp1.1" if="is.jvm.1.4">
+  <target name="multi.suniiop.sunjrmp1.1">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -186,7 +180,7 @@
     </ant>
   </target> 
 
-  <target name="multi.suniiop.sunjrmp1.2" if="is.jvm.1.4">
+  <target name="multi.suniiop.sunjrmp1.2">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -205,7 +199,7 @@
     </ant>
   </target> 
 
-  <target name="multi.sunjrmp1.1.suniiop" if="is.jvm.1.4">
+  <target name="multi.sunjrmp1.1.suniiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -224,7 +218,7 @@
     </ant>
   </target>  
 
-  <target name="multi.sunjrmp1.2.suniiop" if="is.jvm.1.4">
+  <target name="multi.sunjrmp1.2.suniiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -246,7 +240,7 @@
   <!-- ********************************************************-->
   <!-- *********     TEST MULTI WITHOUT NAME SERVERS    *******-->
   <!-- ********************************************************-->
-  <target name="multi.nons.suniiop.jeremie" if="is.jvm.1.4">
+  <target name="multi.nons.suniiop.jeremie">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="jeremie_stub.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -259,7 +253,7 @@
     </ant>
   </target>  
 
-  <target name="multi.nons.suniiop.sunjrmp1.1" if="is.jvm.1.4">
+  <target name="multi.nons.suniiop.sunjrmp1.1">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -272,7 +266,7 @@
     </ant>
   </target> 
 
-  <target name="multi.nons.suniiop.sunjrmp1.2" if="is.jvm.1.4">
+  <target name="multi.nons.suniiop.sunjrmp1.2">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -285,7 +279,7 @@
     </ant>
   </target> 
 
-  <target name="multi.nons.sunjrmp1.1.suniiop" if="is.jvm.1.4">
+  <target name="multi.nons.sunjrmp1.1.suniiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
@@ -298,7 +292,7 @@
     </ant>
   </target>  
 
-  <target name="multi.nons.sunjrmp1.2.suniiop" if="is.jvm.1.4">
+  <target name="multi.nons.sunjrmp1.2.suniiop">
     <ant antfile="conform/generic/carol_double.xml">
       <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
       <property name="stub.jar.name2" value="suniiop.jar"/>
