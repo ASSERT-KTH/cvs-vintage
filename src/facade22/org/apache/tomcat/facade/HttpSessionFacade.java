@@ -153,6 +153,10 @@ final class HttpSessionFacade implements HttpSession {
     public void invalidate() {
 	checkValid();
  	realSession.getTimeStamp().setValid( false );
+	// remove all attributes
+	if( dL > 0 ) d("Invalidate " + realSession.getId());
+	realSession.setState(ServerSession.STATE_EXPIRED);
+	realSession.recycle();
     }
 
     /**
@@ -287,4 +291,10 @@ final class HttpSessionFacade implements HttpSession {
 	}
     }
 
+    private static final int dL=10;
+    private void d(String s ) {
+	System.err.println( "HttpSessionFacade: " + s );
+    }
+
+    
 }
