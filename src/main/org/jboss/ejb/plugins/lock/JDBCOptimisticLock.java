@@ -9,7 +9,6 @@ package org.jboss.ejb.plugins.lock;
 import org.jboss.logging.Logger;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCOptimisticLockingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.TransactionLocal;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMPMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
@@ -20,6 +19,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.Container;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
+import org.jboss.tm.TransactionLocal;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -63,7 +63,7 @@ import java.util.Iterator;
  * new CMP design.
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCOptimisticLock
    extends BeanLockSupport

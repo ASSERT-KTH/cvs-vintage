@@ -27,6 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ConfigurationMetaData;
+import org.jboss.tm.TransactionLocal;
 
 /**
  * PrefetchCache stores all of the data readahead for an entity.
@@ -34,7 +35,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class PrefetchCache 
 {
