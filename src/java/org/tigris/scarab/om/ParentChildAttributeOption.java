@@ -47,7 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.Retrievable;
+import org.apache.fulcrum.intake.Retrievable;
 
 import org.apache.fulcrum.cache.TurbineGlobalCacheService;
 import org.apache.fulcrum.cache.ObjectExpiredException;
@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
   * to create combination of a ROptionOption and a AttributeOption
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: ParentChildAttributeOption.java,v 1.6 2001/10/03 01:03:40 jon Exp $
+  * @version $Id: ParentChildAttributeOption.java,v 1.7 2001/10/28 19:57:27 jmcnally Exp $
   */
 public class ParentChildAttributeOption 
     implements Retrievable

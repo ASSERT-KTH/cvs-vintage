@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.ScarabConstants;
 
@@ -16,7 +16,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
-    implements UnsecurePersistent
+    implements Persistent
 {
     /**
      * FIXME: Should use ModuleManager.  Use this instead of setScarabModule.

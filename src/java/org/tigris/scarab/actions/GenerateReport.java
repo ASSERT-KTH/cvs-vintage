@@ -61,7 +61,7 @@ import org.apache.commons.util.SequencedHashtable;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.Retrievable;
+import org.apache.fulcrum.intake.Retrievable;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.9 2001/10/19 22:11:32 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.10 2001/10/28 19:57:27 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction

@@ -49,7 +49,7 @@ package org.tigris.scarab.om;
 
 
 import java.util.List;
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  */
 public  class AttributeGroup 
     extends org.tigris.scarab.om.BaseAttributeGroup
-    implements UnsecurePersistent
+    implements Persistent
 {
 
     /**

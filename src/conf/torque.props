@@ -66,10 +66,10 @@ database=mysql
 targetPackage=org.tigris.scarab.om
 basePrefix=Base
 addSaveMethod=true
-secureSaveMethod=false
 addGetByNameMethod=true
 complexObjectModel=true
 addTimeStamp=false
+addIntakeRetrievable=true
 
 extend=TurbineMapBuilder
 mapname=TurbineMap

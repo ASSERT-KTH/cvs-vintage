@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -10,6 +10,6 @@ import org.apache.torque.om.UnsecurePersistent;
  */
 public  class Frequency 
     extends org.tigris.scarab.om.BaseFrequency
-    implements UnsecurePersistent
+    implements Persistent
 {
 }

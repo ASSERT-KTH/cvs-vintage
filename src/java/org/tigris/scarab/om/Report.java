@@ -46,7 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.torque.om.UnsecurePersistent;
 
 // JDK classes
 import java.util.List;
@@ -59,7 +58,7 @@ import com.workingdogs.village.Record;
 
 // Turbine classes
 import org.apache.turbine.Log;
-import org.apache.torque.om.Retrievable;
+import org.apache.fulcrum.intake.Retrievable;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -99,7 +98,7 @@ import org.tigris.scarab.util.TableModel;
  */
 public  class Report 
     extends org.tigris.scarab.om.BaseReport
-    implements UnsecurePersistent
+    implements Persistent
 {
     private static final String[] REPORT_TYPES = 
         {"comparative analysis (single date/time)", 

@@ -1,6 +1,6 @@
 package org.tigris.scarab.om;
 
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 //import org.apache.fulcrum.template.TemplateContext;
 import org.apache.torque.util.Criteria;
 
@@ -16,7 +16,7 @@ import org.tigris.scarab.util.ScarabException;
  */
 public  class RAttributeAttributeGroup 
     extends org.tigris.scarab.om.BaseRAttributeAttributeGroup
-    implements UnsecurePersistent
+    implements Persistent
 {
 
     /**

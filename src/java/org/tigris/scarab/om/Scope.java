@@ -1,7 +1,7 @@
 package org.tigris.scarab.om;
 
 import org.apache.torque.om.NumberKey;
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -10,7 +10,7 @@ import org.apache.torque.om.UnsecurePersistent;
  */
 public  class Scope 
     extends org.tigris.scarab.om.BaseScope
-    implements UnsecurePersistent
+    implements Persistent
 {
 
     public static final NumberKey PERSONAL__PK = new NumberKey("1");

@@ -4,7 +4,7 @@ package org.tigris.scarab.om;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.turbine.Turbine;
 
-import org.apache.torque.om.UnsecurePersistent;
+import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.services.module.ModuleEntity;
@@ -20,7 +20,7 @@ import org.tigris.scarab.util.ScarabException;
  */
 public  class IssueTemplateInfo 
     extends org.tigris.scarab.om.BaseIssueTemplateInfo
-    implements UnsecurePersistent
+    implements Persistent
 {
 
     /**
