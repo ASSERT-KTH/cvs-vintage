@@ -59,10 +59,10 @@
 package org.apache.tomcat.startup;
 
 import org.apache.tomcat.util.StringManager;
+import org.apache.tomcat.util.IntrospectionUtils;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 // Depends: StringManager, resources
 
 
@@ -77,6 +77,10 @@ public class StopTomcat {
 	StringManager.getManager("org.apache.tomcat.resources");
 
     String tomcatHome;
+
+    String host=null;
+    int port=-1;
+    String secret;
     
     public StopTomcat() 
     {
@@ -94,6 +98,23 @@ public class StopTomcat {
 	System.getProperties().put("tomcat.home", s);
     }
 
+    public void setHost( String h ) {
+	host=h;
+    }
+
+    public void setPort( int port ) {
+	this.port=port;
+    }
+
+    /** When tomcat is started, a secret ( random ) key will be generated
+	in ajp12.id. If you run StopTomcat from the same host, it'll
+	read the key and use it. If you run from a different host, you'll
+	have to specify it manually
+    */
+    public void setSecret( String s ) {
+	secret=s;
+    }
+    
     // -------------------- Ant execute --------------------
 
     public void execute() throws Exception {
@@ -112,45 +133,54 @@ public class StopTomcat {
     // -------------------- Implementation --------------------
     
     void stopTomcat() throws Exception {
-	String tchome=getTomcatInstall();
-	int port=8007;
-	InetAddress address=null;
-	
-	try {
-	    BufferedReader rd=new BufferedReader
-		( new FileReader( tchome + "/conf/ajp12.id"));
-	    String portLine=rd.readLine();
-	    
+	String tchome=getTomcatHome();
+
+	if( secret==null ) {
 	    try {
-		port=Integer.parseInt( portLine );
-	    } catch(NumberFormatException ex ) {
+		BufferedReader rd=new BufferedReader
+		    ( new FileReader( tchome + "/conf/ajp12.id"));
+		String line=rd.readLine();
+
+		if( port < 0 ) {
+		    try {
+			port=Integer.parseInt( line );
+		    } catch(NumberFormatException ex ) {
+			ex.printStackTrace();
+		    }
+		}
+		
+		line=rd.readLine();
+		if( host==null ) host=line;
+		line=rd.readLine();
+		if( secret==null ) secret=line;
+		if( "".equals( secret ) )
+		    secret=null;
+		
+	    } catch( IOException ex ) {
+		//ex.printStackTrace();
+		System.out.println("Can't read " + tchome + "/conf/ajp12.id");
+		System.out.println(ex.toString());
+		return;
+	    }
+	}
+	
+	System.out.println("Stoping tomcat on " + host + ":" +port +" "
+			   + secret);
+	InetAddress address=null;
+	if( host!=null && !"".equals( host )) {
+	    try {
+		address=InetAddress.getByName( host );
+	    } catch( UnknownHostException ex ) {
 		ex.printStackTrace();
 	    }
-	    String addLine=rd.readLine();
-	    if( addLine!=null && !"".equals( addLine )) {
-		try {
-		    address=InetAddress.getByName( addLine );
-		} catch( UnknownHostException ex ) {
-		    ex.printStackTrace();
-		}
-	    }
-	    String secret=rd.readLine();
-	    if( "".equals( secret ) )
-		secret=null;
-
-	    System.out.println("Stoping tomcat on " + address + ":" +port +" "
-			       + secret);
-	    stopTomcat( address,port, secret );
-	    
-	} catch( IOException ex ) {
-	    ex.printStackTrace();
 	}
-
+	stopTomcat( address,port, secret );
     }
     
-    public String getTomcatInstall() {
+    public String getTomcatHome() {
 	// Use the "tomcat.home" property to resolve the default filename
-	String tchome = System.getProperty("tomcat.home");
+	String tchome=IntrospectionUtils.guessHome("tomcat.home",
+						   "stop-tomcat.jar");
 	if (tchome == null) {
 	    System.out.println(sm.getString("tomcat.nohome"));
 	    tchome = ".";
@@ -179,7 +209,6 @@ public class StopTomcat {
 	} catch(IOException ex ) {
 	    System.out.println("Error stopping Tomcat with Ajp12 on " +
 				      address + ":" + portInt + " " + ex);
-	    throw ex;
 	}
     }
 
@@ -220,6 +249,27 @@ public class StopTomcat {
 		i++;
 		if (i < args.length)
 		    System.getProperties().put("tomcat.home", args[i]);
+		else
+		    return false;
+	    }
+	    if (arg.equals("-host") ) {
+		i++;
+		if (i < args.length)
+		    host=args[i];
+		else
+		    return false;
+	    }
+	    if (arg.equals("-port") ) {
+		i++;
+		if (i < args.length)
+		    port=Integer.parseInt( args[i] );
+		else
+		    return false;
+	    }
+	    if (arg.equals("-pass") ) {
+		i++;
+		if (i < args.length)
+		    secret=args[i];
 		else
 		    return false;
 	    }
