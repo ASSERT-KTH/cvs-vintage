@@ -85,18 +85,17 @@ import org.apache.fulcrum.security.impl.db.entity
     .TurbineRolePeer;
 
 /**
- * The ScarabModule class is the focal point for dealing
- * with Modules. It implements the concept of a ModuleEntity
- * which is a single module and is the base interface for all
- * Modules. In code, one should never reference a ScarabModule
- * directly, instead everything should be cast to a ModuleEntity
- * and only methods in ModuleEntity should be used.
- * This allows us to swap out ModuleEntity implementations by
- * modifying the Scarab.properties file.
+ * The ScarabModule class is the focal point for dealing with
+ * Modules. It implements the concept of a ModuleEntity which is a
+ * single module and is the base interface for all Modules. In code,
+ * one should <strong>never reference ScarabModule directly</strong>
+ * -- use its ModuleEntity interface instead.  This allows us to swap
+ * out ModuleEntity implementations by modifying the Scarab.properties
+ * file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.67 2001/11/09 18:51:28 elicia Exp $
+ * @version $Id: ScarabModule.java,v 1.68 2001/11/09 23:43:36 dlr Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
