@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.49 2002/08/22 21:52:25 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.50 2002/09/04 21:40:23 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1283,12 +1283,12 @@ public abstract class AbstractScarabModule
                 crit.add(RModuleAttributePeer.ACTIVE, true);
             }
             
+            crit.addJoin(AttributePeer.ATTRIBUTE_ID,
+                     RModuleAttributePeer.ATTRIBUTE_ID); 
             if (USER.equals(attributeType))
             {
                 crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
                          AttributeTypePeer.USER_TYPE_KEY);
-                crit.addJoin(AttributePeer.ATTRIBUTE_ID,
-                         RModuleAttributePeer.ATTRIBUTE_ID); 
             }
             else if (NON_USER.equals(attributeType))
             {
