@@ -22,7 +22,7 @@ import org.jboss.system.Registry;
  * @see org.jboss.cache.invalidation.triggers.EntityBeanCacheBatchInvalidatorInterceptor
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class InvalidableEntityInstanceCache
       extends org.jboss.ejb.plugins.EntityInstanceCache
@@ -79,6 +79,11 @@ public class InvalidableEntityInstanceCache
       {
          log.debug(ignored);
       }
+   }
+
+   public void invalidateAll()
+   {
+      flush();
    }
 
    // ServiceMBeanSupport overrides ---------------------------------------------------

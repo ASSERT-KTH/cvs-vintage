@@ -21,7 +21,7 @@ import org.jboss.cache.invalidation.InvalidationManager.BridgeInvalidationSubscr
  * @see org.jboss.cache.invalidation.InvalidationManagerMBean
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  * <p><b>Revisions:</b>
  *
@@ -116,7 +116,20 @@ public class InvalidationManager
       
       this.crossDomainBatchInvalidate (null, invalidations, this.DEFAULT_TO_ASYNCHRONOUS_MODE);      
    }
-   
+
+   public void invalidateAll(String groupName)
+   {
+      invalidateAll(groupName, DEFAULT_TO_ASYNCHRONOUS_MODE);
+   }
+
+   public void invalidateAll(String groupName, boolean async)
+   {
+      if (log.isTraceEnabled ())
+         log.trace ("Invalidate all for group: " + groupName);
+
+      crossDomainInvalidateAll(null, groupName, async);
+   }
+
    // Public --------------------------------------------------------
    
    // Z implementation ----------------------------------------------
@@ -210,7 +223,14 @@ public class InvalidationManager
       if (group != null)
          group.localOnlyInvalidate (keys, asynchronous);      
    }
-   
+
+   protected void doLocalOnlyInvalidateAll (String groupName, boolean asynchronous)
+   {
+      InvalidationGroupImpl group = (InvalidationGroupImpl)this.groups.get (groupName);
+      if (group != null)
+         group.localOnlyInvalidateAll();
+   }
+
    protected void doBridgedOnlyInvalidation (BridgeInvalidationSubscriptionImpl exceptSource, String groupName, Serializable key)
    {
       for (int i=0; i<bridgeSubscribers.size (); i++)
@@ -230,6 +250,17 @@ public class InvalidationManager
             bridge.bridgedInvalidate (groupName, keys, this.DEFAULT_TO_ASYNCHRONOUS_MODE);
       }
    }
+
+   protected void doBridgedOnlyInvalidateAll (BridgeInvalidationSubscriptionImpl exceptSource, String groupName)
+   {
+      for (int i=0; i<bridgeSubscribers.size (); i++)
+      {
+         BridgeInvalidationSubscriptionImpl bridge = (BridgeInvalidationSubscriptionImpl)(bridgeSubscribers.elementAt (i));
+         if (bridge != exceptSource)
+            bridge.bridgedInvalidateAll (groupName, this.DEFAULT_TO_ASYNCHRONOUS_MODE);
+      }
+   }
+
    // this is called when an invalidation occurs in one of the group. Common behaviour
    // can be groupped here. By default, we simply forward the invalidations to the
    // available bridges.
@@ -246,6 +277,11 @@ public class InvalidationManager
          ((BridgeInvalidationSubscriptionImpl)(bridgeSubscribers.elementAt (i))).bridgedInvalidate (groupName, keys, asynchronous);      
    }
 
+   protected void localGroupInvalidateAllEvent (String groupName, boolean asynchronous)
+   {
+      for (int i=0; i<bridgeSubscribers.size (); i++)
+         ((BridgeInvalidationSubscriptionImpl)(bridgeSubscribers.elementAt (i))).bridgedInvalidateAll (groupName, asynchronous);
+   }
 
    // We warn other groups and the local group (if available)
    //
@@ -260,7 +296,13 @@ public class InvalidationManager
       doBridgedOnlyInvalidation (source, groupName, keys);      
       doLocalOnlyInvalidation (groupName, keys, this.DEFAULT_TO_ASYNCHRONOUS_MODE);
    }
-   
+
+   protected void bridgeGroupInvalidateAllEvent (BridgeInvalidationSubscriptionImpl source, String groupName)
+   {
+      doBridgedOnlyInvalidateAll (source, groupName);
+      doLocalOnlyInvalidateAll (groupName, this.DEFAULT_TO_ASYNCHRONOUS_MODE);
+   }
+
    protected void crossDomainBatchInvalidate (BridgeInvalidationSubscriptionImpl source, BatchInvalidation[] invalidations, boolean asynchronous)
    {
       if (invalidations == null)
@@ -285,10 +327,24 @@ public class InvalidationManager
          if (bridge != source)
             bridge.bridgedBatchInvalidations  (invalidations, asynchronous);
       }
-      
-      
    }
-   
+
+   protected void crossDomainInvalidateAll(BridgeInvalidationSubscriptionImpl source, String groupName, boolean asynchronous)
+   {
+      // local invalidation first
+      //
+      doLocalOnlyInvalidateAll(groupName, asynchronous);
+
+      // bridged invalidation next
+      //
+      for (int i=0; i<bridgeSubscribers.size (); i++)
+      {
+         BridgeInvalidationSubscriptionImpl bridge = (BridgeInvalidationSubscriptionImpl)(bridgeSubscribers.elementAt (i));
+         if (bridge != source)
+            bridge.bridgedInvalidateAll(groupName, asynchronous);
+      }
+   }
+
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
@@ -349,7 +405,18 @@ public class InvalidationManager
          
          localGroupInvalidationsEvent (this.groupName, keys, asynchronous);
       }
-      
+
+      public void invalidateAll()
+      {
+         invalidateAll(asynchronous);
+      }
+
+      public void invalidateAll(boolean asynchronous)
+      {
+         localOnlyInvalidateAll();
+         localGroupInvalidateAllEvent(groupName, asynchronous);
+      }
+
       public synchronized void register (Invalidatable newRegistered)
       {
          // we make a temp copy to avoid concurrency issues with the invalidate method
@@ -480,6 +547,26 @@ public class InvalidationManager
                                    void.class.getName(),
                                    MBeanOperationInfo.ACTION),
 
+            new MBeanOperationInfo("invalidateAll",
+                                   "invalidate all keys using default (a)synchronous behaviour",
+                                   new MBeanParameterInfo[] {
+                                      new MBeanParameterInfo(
+                                         "groupName", String.class.getName(), "invalidation group name"
+                                      )
+                                   },
+                                   void.class.getName(),
+                                   MBeanOperationInfo.ACTION),
+
+            new MBeanOperationInfo("invalidateAll",
+                                   "invalidate all keys with specified (a)synchronous behaviour",
+                                   new MBeanParameterInfo[] {
+                                      new MBeanParameterInfo(
+                                         "groupName", String.class.getName(), "invalidation group name"
+                                      ),
+                                      asynchParam
+                                   },
+                                   void.class.getName(),
+                                   MBeanOperationInfo.ACTION)
          };
 
          javax.management.MBeanNotificationInfo[] notifyInfo = null;
@@ -571,6 +658,15 @@ public class InvalidationManager
 
       }
 
+      protected void localOnlyInvalidateAll()
+      {
+         java.util.Iterator iter = this.registered.iterator ();
+         while (iter.hasNext ())
+         {
+            Invalidatable inv = (Invalidatable)iter.next ();
+            inv.invalidateAll();
+         }
+      }
    }
    
    // *******************************************************************************************33
@@ -597,7 +693,12 @@ public class InvalidationManager
       {
          bridgeGroupInvalidationEvent (this, invalidationGroupName, keys);
       }
-      
+
+      public void invalidateAll(String groupName)
+      {
+         bridgeGroupInvalidateAllEvent(this, groupName);
+      }
+
       public void batchInvalidate (BatchInvalidation[] invalidations)
       {
          crossDomainBatchInvalidate (this, invalidations, DEFAULT_TO_ASYNCHRONOUS_MODE);
@@ -620,6 +721,11 @@ public class InvalidationManager
       protected void bridgedInvalidate (String invalidationGroupName, Serializable[] keys, boolean asynchronous)
       {
          this.listener.invalidate (invalidationGroupName, keys, asynchronous);
+      }
+
+      protected void bridgedInvalidateAll (String invalidationGroupName, boolean asynchronous)
+      {
+         this.listener.invalidateAll (invalidationGroupName, asynchronous);
       }
       
       protected void bridgedBatchInvalidations (BatchInvalidation[] invalidations, boolean asynchronous)

@@ -14,7 +14,7 @@ import java.io.Serializable;
  * it can used to invalidate messages on the local IM.
  * @see InvalidationManagerMBean
  * @see InvalidationBridgeListener
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -39,6 +39,12 @@ public interface BridgeInvalidationSubscription
     * @param keys Keys to be invalidated
     */   
    public void invalidate (String invalidationGroupName, Serializable[] keys);
+
+   /**
+    * Invalidate all the entries in the specified group
+    * @param groupName
+    */
+   public void invalidateAll(String groupName);
    
    /**
     * Invalidates a set of keys in a set of InvalidationGroup. It is the responsability

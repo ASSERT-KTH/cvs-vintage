@@ -15,7 +15,7 @@ import org.jboss.cache.invalidation.BatchInvalidation;
  * @see <related>
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -35,7 +35,8 @@ public class JMSCacheInvalidationMessage
    
    protected BatchInvalidation[] bis = null;
    protected java.rmi.dgc.VMID emitter = null;
-   
+   protected String invalidateAllGroupName;
+
    // Static --------------------------------------------------------
    
    // Constructors --------------------------------------------------
@@ -56,6 +57,12 @@ public class JMSCacheInvalidationMessage
    {
       this.emitter = source;
       this.bis = invalidations;
+   }
+
+   public JMSCacheInvalidationMessage(java.rmi.dgc.VMID source, String groupName)
+   {
+      this.emitter = source;
+      this.invalidateAllGroupName = groupName;
    }
    
    // Public --------------------------------------------------------

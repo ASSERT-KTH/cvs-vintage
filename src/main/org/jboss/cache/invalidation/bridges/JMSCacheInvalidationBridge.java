@@ -40,7 +40,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
  * @author  <a href="mailto:bill@jboss.org">Bill Burke</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -191,7 +191,14 @@ public class JMSCacheInvalidationBridge
             //
             if (!content.emitter.equals (this.serviceId))
             {
-               this.invalidationSubscription.batchInvalidate (content.getInvalidations ());
+               if(content.invalidateAllGroupName != null)
+               {
+                  invalidationSubscription.invalidateAll(content.invalidateAllGroupName);
+               }
+               else
+               {
+                  invalidationSubscription.batchInvalidate (content.getInvalidations ());
+               }
             }
          }
          catch (Exception ex)
@@ -242,6 +249,20 @@ public class JMSCacheInvalidationBridge
       }
    }
 
+   public void invalidateAll(String groupName, boolean asynchronous)
+   {
+      if ( (this.propagationMode == JMSCacheInvalidationBridgeMBean.IN_OUT_BRIDGE_PROPAGATION ||
+            this.propagationMode == JMSCacheInvalidationBridgeMBean.OUT_ONLY_BRIDGE_PROPAGATION)
+            && this.publishingAuthorized)
+      {
+         JMSCacheInvalidationMessage msg = new JMSCacheInvalidationMessage(
+                  this.serviceId,
+                  groupName
+         );
+         this.sendJMSInvalidationEvent (msg);
+      }
+   }
+   
    public void newGroupCreated (String groupInvalidationName)
    {
       // we don't manage groups dynamically, so we don't really care...

@@ -39,4 +39,8 @@ public interface Invalidatable
     */   
    public void areInvalid (Serializable[] keys);   
 
+   /**
+    * All entries should be invalidated.
+    */
+   public void invalidateAll();
 }

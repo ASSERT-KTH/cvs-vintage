@@ -12,7 +12,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class PartitionedTableCache
@@ -188,6 +188,23 @@ public class PartitionedTableCache
       partitions[i].releaseLock(tx, pk);
    }
 
+   public void flush()
+   {
+      for(int i = 0; i < partitions.length; ++i)
+      {
+         final TableCache partition = partitions[i];
+         partition.lock();
+         try
+         {
+            partition.flush();
+         }
+         finally
+         {
+            partition.unlock();
+         }
+      }
+   }
+   
    // Private
 
    private int getPartitionIndex(Object key)

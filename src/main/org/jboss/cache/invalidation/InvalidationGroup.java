@@ -19,7 +19,7 @@ import java.io.Serializable;
  * In this case, we say that both EJBs work in the same InvalidationGroup.
  * @see InvalidationManagerMBean
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b>
  *
@@ -64,6 +64,17 @@ public interface InvalidationGroup
     * @param asynchronous if true, the invalidation will be, if possible, performed asynchronously
     */   
    public void invalidate (Serializable[] keys, boolean asynchronous);
+
+   /**
+    * All entries in all the caches associated with this invalidation group should be invalidated.
+    */
+   public void invalidateAll();
+
+   /**
+    * All entries in all the caches associated with this invalidation group should be invalidated
+    * using specified mode.
+    */
+   public void invalidateAll(boolean asynchronous);
    
    /**
     * Used to know when to definitively remove this IG. Every component using this IG

@@ -11,7 +11,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public interface Cache
 {
@@ -59,6 +59,8 @@ public interface Cache
 
    void releaseLock(Transaction tx, Object pk) throws Exception;
 
+   void flush();
+
    Cache NONE = new Cache()
    {
       public void lock()
@@ -105,6 +107,10 @@ public interface Cache
       }
 
       public void releaseLock(Transaction tx, Object pk) throws Exception
+      {
+      }
+
+      public void flush()
       {
       }
    };

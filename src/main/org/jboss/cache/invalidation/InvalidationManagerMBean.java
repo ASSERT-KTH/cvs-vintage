@@ -28,7 +28,7 @@ import java.util.Collection;
  * at the IM level.
  * @see org.jboss.cache.invalidation.InvalidationManager
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
@@ -91,4 +91,17 @@ public interface InvalidationManagerMBean extends ServiceMBean
     * network for example) or if a synchronous behaviour is required.
     */   
    public void batchInvalidate (BatchInvalidation[] invalidations, boolean asynchronous);   
+
+   /**
+    * Invalidate all entries for the specified group name.
+    * @param groupName  invalidation group name
+    */
+   public void invalidateAll(String groupName);
+
+   /**
+    * Invalidate all entries for the specified group name using the specified mode.
+    * @param groupName  invalidate group name
+    * @param async  mode
+    */
+   public void invalidateAll(String groupName, boolean async);
 }

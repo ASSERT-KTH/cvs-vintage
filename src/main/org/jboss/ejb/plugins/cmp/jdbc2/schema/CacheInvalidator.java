@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class CacheInvalidator
    implements Invalidatable
@@ -61,6 +61,7 @@ public class CacheInvalidator
          log.trace("invalidating key=" + key);
       }
 
+      cache.lock(key);
       try
       {
          cache.remove(tx, key);
@@ -68,6 +69,10 @@ public class CacheInvalidator
       catch(Cache.RemoveException e)
       {
          log.warn(e.getMessage());
+      }
+      finally
+      {
+         cache.unlock(key);
       }
    }
 
@@ -92,6 +97,7 @@ public class CacheInvalidator
             log.debug("invalidating key[" + i + "]=" + keys[i]);
          }
 
+         cache.lock();
          try
          {
             cache.remove(tx, keys[i]);
@@ -100,6 +106,23 @@ public class CacheInvalidator
          {
             log.warn(e.getMessage());
          }
+         finally
+         {
+            cache.unlock();
+         }
+      }
+   }
+
+   public void invalidateAll()
+   {
+      cache.lock();
+      try
+      {
+         cache.flush();
+      }
+      finally
+      {
+         cache.unlock();
       }
    }
 }
