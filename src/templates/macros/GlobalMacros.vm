@@ -550,23 +550,8 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #end
 
 #macro (asterisk)
-<p>
-<small>"<strong>*</strong>" $l10n.RequiredFields</small>
-</p>
+<p><small>"<strong>*</strong>" $l10n.RequiredFields</small></p>
 #end
-
-
-#macro (linkIssueIds $text)
-#set ($tokens = $scarabG.linkIssueIds($scarabR.CurrentModule, $text))
-#foreach ($token in $tokens)
- #if ($scarabG.isString($token))
-  $token
- #else
-  $link.addPathInfo("id", $token.get(1)).setLabel($token.get(0)).setAlternateText($token.get(0))
- #end
-#end
-#end
-
 
 #macro (userList $mitList)
 #set ($userAttrs = $mitList.getCommonUserAttributes())
