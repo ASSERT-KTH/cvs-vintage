@@ -32,7 +32,6 @@ import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.RemoveFolderCommand;
 import org.columba.mail.folder.command.RenameFolderCommand;
-import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
 import org.columba.mail.gui.tree.util.EditFolderDialog;

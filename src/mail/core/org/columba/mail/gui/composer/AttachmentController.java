@@ -31,7 +31,6 @@ import org.columba.mail.message.ComposerAttachment;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.util.MailResourceLoader;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author frd

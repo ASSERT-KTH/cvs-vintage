@@ -27,6 +27,9 @@
 //
 //
 // $Log: XmlIO.java,v $
+// Revision 1.6  2003/03/09 13:08:36  fdietz
+// [intern]import cleanups
+//
 // Revision 1.5  2003/01/07 11:44:03  javaprog
 // [bug] XmlIO must use java.net.URL instead of java.io.File in order to load resources within .jar files
 //
@@ -44,7 +47,6 @@
 package org.columba.core.xml;
 
 import java.io.CharArrayWriter;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;

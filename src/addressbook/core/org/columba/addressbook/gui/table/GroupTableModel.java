@@ -21,7 +21,6 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.config.GroupItem;
 import org.columba.core.config.DefaultXmlConfig;
 
 

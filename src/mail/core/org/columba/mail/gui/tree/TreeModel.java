@@ -286,8 +286,8 @@ public class TreeModel extends DefaultTreeModel {
 					continue;
 
 				if (item
-					.get("class")
-					.equals("org.columba.mail.folder.imap.IMAPRootFolder")) {
+					.get("type")
+					.equals("IMAPRootFolder")) {
 					int account = item.getInteger("account_uid");
 
 					if (account == accountUid) {

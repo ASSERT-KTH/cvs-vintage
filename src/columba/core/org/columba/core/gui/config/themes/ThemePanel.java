@@ -37,9 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
-import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
-import org.columba.core.config.ThemeItem;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.io.DiskIO;
 

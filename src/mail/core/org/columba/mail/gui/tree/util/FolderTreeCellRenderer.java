@@ -30,7 +30,6 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.MessageFolderInfo;
-import org.columba.mail.gui.tree.TreeController;
 
 public class FolderTreeCellRenderer
 	extends DefaultTreeCellRenderer //extends JLabel implements TreeCellRenderer

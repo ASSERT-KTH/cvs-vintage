@@ -24,7 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.columba.addressbook.main.AddressbookExitWorker;
-import org.columba.core.config.Config;
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;

@@ -16,7 +16,6 @@
 package org.columba.core.shutdown;
 
 import org.columba.core.config.Config;
-import org.columba.core.shutdown.*;
 
 /**
  * @author freddy

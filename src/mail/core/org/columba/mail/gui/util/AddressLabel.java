@@ -27,8 +27,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.main.MainInterface;
-
 public class AddressLabel extends JPanel implements MouseListener//, ActionListener
 {
     private String address;

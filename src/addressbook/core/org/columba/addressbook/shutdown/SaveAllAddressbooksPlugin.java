@@ -14,13 +14,15 @@
 //
 //All Rights Reserved.
 //$Log: SaveAllAddressbooksPlugin.java,v $
+//Revision 1.4  2003/03/09 13:08:34  fdietz
+//[intern]import cleanups
+//
 //Revision 1.3  2003/02/04 17:13:10  fdietz
 //[bug]fixed saving of header-cache, changed license header
 //
 package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
-import org.columba.addressbook.folder.LocalHeaderCacheFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownPluginInterface;

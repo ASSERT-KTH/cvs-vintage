@@ -16,8 +16,6 @@
 
 package org.columba.mail.imap.parser;
 
-import org.columba.mail.imap.parser.*;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
