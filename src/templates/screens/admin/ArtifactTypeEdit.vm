@@ -24,7 +24,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 
 <div class="functnbar">
 #if (!$issueTypeLock)
-  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
@@ -33,7 +33,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <div class="axial">
     <table border="0" cellspacing="2" cellpadding="3">
     <tr>
-    <th>Name</th>
+    <th>$l10n.Name</th>
     <td>
       #if ($rmitGroup.DisplayName.Value)
           #set ($value ="$rmitGroup.DisplayName.Value")
@@ -110,7 +110,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #if ($groups.isEmpty())
     <p class="alert">$l10n.NoAttributeGroups</p>
     <div class="functnbar3">
-    <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
+    <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />
     </div>
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -180,7 +180,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
   <p class="alert">$l10n.NoUserAttributesForType</p>
 #if (!$issueTypeLock)
 <div class="functnbar3">
-<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />
 </div>
 #end
 
@@ -188,10 +188,10 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">$l10n.Select</th>
-<th>$l10n.UserAttributeName</th>
-<th>Per project name</th>
-<th>Active</th>
-<th>Sequence #</th>
+<th>$l10n.Name</th>
+<th>$l10n.PerProjectName</th>
+<th>$l10n.Active</th>
+<th>$l10n.Sequence</th>
 </tr>
 
 #foreach ($userAttr in $userAttrs)
