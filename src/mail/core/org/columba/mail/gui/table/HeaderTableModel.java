@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.util.Enumeration;
@@ -71,7 +72,6 @@ public class HeaderTableModel extends AbstractTableModel {
 		uidList = new Hashtable();
 
 		//mutex = false;
-
 	}
 
 	public void setTree(Tree tree) {
@@ -101,11 +101,9 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	protected void removeNode(MessageNode messageNode) {
 		getTreeModel().removeNodeFromParent(messageNode);
-
 	}
 
 	public void markHeader(Object[] uids, int subMode) {
-
 		for (int i = 0; i < uids.length; i++) {
 
 			MessageNode node = (MessageNode) uidList.get(uids[i]);
@@ -157,7 +155,6 @@ public class HeaderTableModel extends AbstractTableModel {
 	}
 
 	public void removeHeaderList(Object[] uids) {
-
 		if (uids != null) {
 			if (uids.length > 100) { // recreate whole tablemodel
 				for (int i = 0; i < uids.length; i++) {
@@ -175,20 +172,16 @@ public class HeaderTableModel extends AbstractTableModel {
 				}
 			}
 		}
-
 		fireTableDataChanged();
 	}
 
 	public void addHeaderList(HeaderInterface[] headerList) throws Exception {
-
 		for (int i = 0; i < headerList.length; i++) {
 			addHeader(headerList[i]);
 		}
-
 	}
 
 	public void addHeader(HeaderInterface header) throws Exception {
-
 		int count;
 		if (headerList != null)
 			count = getRootNode().getChildCount();
@@ -220,11 +213,11 @@ public class HeaderTableModel extends AbstractTableModel {
 			boolean result =
 				getTableModelFilteredView().manipulateModel(
 					TableModelPlugin.NODES_INSERTED);
-			if (result == true) {
+			if (result) {
 				boolean result2 =
 					getTableModelThreadedView().manipulateModel(
 						TableModelPlugin.NODES_INSERTED);
-				if (result2 == true) {
+				if (result2) {
 
 				} else {
 					int index =
@@ -237,7 +230,6 @@ public class HeaderTableModel extends AbstractTableModel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 	}
 
 	/*
@@ -265,12 +257,10 @@ public class HeaderTableModel extends AbstractTableModel {
 	}
 
 	public void update() {
-
 		if (root == null)
 			root = new MessageNode(new ColumbaHeader(), "0");
 
 		root.removeAllChildren();
-
 		uidList.clear();
 
 		if (headerList == null || headerList.count() == 0) {
@@ -280,11 +270,10 @@ public class HeaderTableModel extends AbstractTableModel {
 		}
 
 		try {
-
 			boolean result =
 				getTableModelFilteredView().manipulateModel(
 					TableModelPlugin.STRUCTURE_CHANGE);
-			if (result == false) {
+			if (!result) {
 				for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
 					Object uid = e.nextElement();
 					HeaderInterface header = headerList.getHeader(uid);
@@ -292,7 +281,6 @@ public class HeaderTableModel extends AbstractTableModel {
 					uidList.put(uid, child);
 					root.add(child);
 				}
-
 			}
 
 			getTableModelThreadedView().manipulateModel(
@@ -312,7 +300,6 @@ public class HeaderTableModel extends AbstractTableModel {
 
 	public void setHeaderList(HeaderList list) {
 		headerList = list;
-
 	}
 	/***************************** treemodel interface ********************************/ //
 	// The TreeModel interface
@@ -351,25 +338,19 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		for (int i = 0; i < item.count(); i++) {
 			HeaderItem headerItem = item.getHeaderItem(i);
-			boolean enabled = headerItem.getBoolean("enabled");
-
-			if (enabled == true)
+			if (headerItem.getBoolean("enabled"))
 				count++;
 		}
-
 		return count;
 	}
 
 	public String getColumnName(int column) {
-
 		return item.getHeaderItem(column).get("name");
 	}
 
 	public int getColumnNumber(String name) {
-
-		for (int i = 0;
-			i < getColumnCount();
-			i++) { //System.out.println("column name: "+ getColumnName(i) );
+		for (int i = 0; i < getColumnCount(); i++) {
+                        //System.out.println("column name: "+ getColumnName(i) );
 			if (name.indexOf(getColumnName(i)) != -1)
 				return i;
 		}
@@ -382,7 +363,6 @@ public class HeaderTableModel extends AbstractTableModel {
 	}
 
 	public Class getColumnClass(int column) {
-
 		if (enableThreadedView) {
 
 			String name = getColumnName(column);
@@ -394,7 +374,6 @@ public class HeaderTableModel extends AbstractTableModel {
 			return getValueAt(0, column).getClass();
 
 		//return null;
-
 	}
 
 	public int getRowCount() {
@@ -428,8 +407,8 @@ public class HeaderTableModel extends AbstractTableModel {
 
 		return false;
 	}
+        
 	public MessageNode getMessageNode(Object uid) {
 		return (MessageNode) uidList.get(uid);
 	}
-
 }
