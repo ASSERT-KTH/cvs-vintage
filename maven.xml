@@ -31,8 +31,11 @@
     </ant:copy-->    
   </postGoal>
   
-  <postGoal name="clean"> 
-   <ant:delete>
+  <postGoal name="clean:clean"> 
+     <ant:delete>
+	<ant:fileset dir="${basedir}">
+	    <ant:include name="**/report.${torque.project}.*.generation"/>
+        </ant:fileset>
         <ant:fileset dir="${basedir}"
              includes="junit*.properties">
         </ant:fileset>
