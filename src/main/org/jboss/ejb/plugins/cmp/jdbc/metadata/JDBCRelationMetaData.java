@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom </a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp </a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class JDBCRelationMetaData
 {
@@ -247,10 +247,14 @@ public final class JDBCRelationMetaData
 						+ datasourceMappingString + " not found");
 			}
 		}
-		else
+		else if(defaultValues.getTypeMapping() != null)
 		{
 			datasourceMapping = defaultValues.getTypeMapping();
 		}
+      else
+      {
+         datasourceMapping = JDBCEntityMetaData.obtainTypeMappingFromLibrary(dataSourceName);
+      }
 
 		// get table name
 		String tableNameString = MetaData.getOptionalChildContent(mappingElement, "table-name");

@@ -20,7 +20,11 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.QueryMetaData;
+import org.jboss.mx.util.MBeanServerLocator;
 import org.w3c.dom.Element;
+
+import javax.management.ObjectName;
+import javax.management.MalformedObjectNameException;
 
 /**
  * This immutable class contains information about an entity
@@ -30,7 +34,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  */
 public final class JDBCEntityMetaData
 {
@@ -489,9 +493,13 @@ public final class JDBCEntityMetaData
             );
          }
       }
-      else
+      else if(defaultValues.getTypeMapping() != null)
       {
          datasourceMapping = defaultValues.getTypeMapping();
+      }
+      else
+      {
+         datasourceMapping = obtainTypeMappingFromLibrary(dataSourceName);
       }
 
       // get table name
@@ -1432,6 +1440,58 @@ public final class JDBCEntityMetaData
    public boolean isCleanReadAheadOnLoad()
    {
       return cleanReadAheadOnLoad;
+   }
+
+   public static JDBCTypeMappingMetaData obtainTypeMappingFromLibrary(String dataSourceName)
+      throws DeploymentException
+   {
+      final JDBCTypeMappingMetaData typeMapping;
+
+      String datasource;
+      if(dataSourceName.startsWith("java:"))
+      {
+         datasource = dataSourceName.substring("java:".length());
+         if(datasource.startsWith("/"));
+         {
+            datasource = datasource.substring(1);
+         }
+      }
+      else
+      {
+         datasource = dataSourceName;
+      }
+
+      final ObjectName metadataService;
+      final String str = "jboss.jdbc:service=metadata,datasource=" + datasource;
+      try
+      {
+         metadataService = new ObjectName(str);
+      }
+      catch(MalformedObjectNameException e)
+      {
+         throw new DeploymentException("Failed to create ObjectName for datasource metadata MBean: " + str, e);
+      }
+
+      try
+      {
+         typeMapping = (JDBCTypeMappingMetaData)MBeanServerLocator.locateJBoss().
+            getAttribute(metadataService, "TypeMappingMetaData");
+      }
+      catch(Exception e)
+      {
+         throw new DeploymentException("Failed to obtain type-mapping metadata from the metadata library MBean: " +
+            e.getMessage(), e);
+      }
+
+      if(typeMapping == null)
+      {
+         throw new DeploymentException(
+            "type-mapping for datasource " + datasource + " not found in the library. " +
+            "Check the value of metadata/type-mapping in the -ds.xml file."
+         );
+      }
+
+      return typeMapping;
    }
 
    /**
