@@ -1,6 +1,7 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
+#set ($issueTypeLock = $issueType.Locked)
 
 <div class="app" id="div2-1-4-0">
 
@@ -22,7 +23,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 <div class="functnbar">
-<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#if (!$issueTypeLock)
+  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
@@ -31,24 +34,42 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     <table border="0" cellspacing="2" cellpadding="3">
     <tr>
     <th>Name</th>
-    <td><input type="text" size="25" name="$rmitGroup.DisplayName.Key" 
+    <td>
       #if ($rmitGroup.DisplayName.Value)
-          value="$rmitGroup.DisplayName.Value"/>
+          #set ($value ="$rmitGroup.DisplayName.Value")
       #else
-          value="$issueType.Name"/>
+          #set ($value ="$issueType.Name")
+      #end
+      #if ($issueTypeLock)
+         $value
+      #else
+         <input type="text" size="25" name="$rmitGroup.DisplayName.Key" value="$value" />
       #end
     </td>
     </tr>
     <tr>
     <th>$l10n.Description</th>
-    <td><textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">#if($rmitGroup.DisplayDesc.Value)$rmitGroup.DisplayDesc.Value#else$!issueType.Description#end</textarea></td>
+    <td>
+      #if($rmitGroup.DisplayDesc.Value)
+         #set ($value = $rmitGroup.DisplayDesc.Value)
+      #else
+         #set ($value = $!issueType.Description)
+      #end
+      #if ($issueTypeLock)
+        $value
+      #else
+        <textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key"></textarea>
+      #end
+    </td>
     </tr>
     </table>
 </div>
 
+#if (!$issueTypeLock)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveinfo" />
 </div>        
+#end
 
 #* Commenting out for now, later will implement as part of User Prefs
 <h3>l10n.IssueViewDisplayOptions</h3>
@@ -94,7 +115,9 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th nowrap="nowrap">$l10n.Select</th>
+#if (!$issueTypeLock)
+  <th nowrap="nowrap">$l10n.Select</th>
+#end
 <th>$l10n.Name</th>
 <th>$l10n.Active</th>
 <th>$l10n.Sequence</th>
@@ -106,20 +129,33 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 ## Only display dedupe if there are more than one active attribute group
  #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, true).size() > 1)
  <tr>
+#if (!$issueTypeLock)
    <td>&#160;</td>
+#end
    <td>$l10n.DuplicateCheck</td>
-   <td>#booleanCheckbox ($rmitGroup.Dedupe)</td>
-   <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
+   <td>#booleanCheckboxLock ($rmitGroup.Dedupe $issueTypeLock)</td>
+   <td>
+    #if ($issueTypeLock)
+       $issueDedupeSequence
+    #else
+       #numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
+    #end
  </tr>
  #end
 
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
-  <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
+  #if (!$issueTypeLock)
+    <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
+  #end
   <td>$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId).setLabel("$group.Name")</td>
-  <td>#booleanCheckbox ($agGroup.Active)</td>
+  <td>#booleanCheckboxLock ($agGroup.Active $locked)</td>
   <td>
-  #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
+    #if ($issueTypeLock)
+      $group.Order
+    #else
+      #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>
+    #end
 #end
 
 </td>
@@ -127,12 +163,15 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </table>
 
 
+#if (!$issueTypeLock)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSave" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
 <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
+#end
+
 #end
 
 <h3>$l10n.UserAttributes</h3>
@@ -158,33 +197,46 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
    #set ($rma = $module.getRModuleAttribute($userAttr, $issueType))
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
    #set ($maxNum = $userAttrs.size())
+   #set ($ria = "")
+   #set ($ria = $issueType.getRIssueTypeAttribute($userAttr))
+   #set ($locked = ($issueTypeLock) || (!$ria.equals("") && $ria.Locked))
  #indexedRows($velocityCount)
- <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
+ <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" #if ($locked) disabled="disabled" #end /></td>
  <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
- <td><input type="text" size="15" name="$rmaGroup.DisplayValue.Key"
+ <td>
     #if ($rmaGroup.DisplayValue.toString().length() > 0)
-          value="$rmaGroup.DisplayValue" 
+          #set ($value ="$rmaGroup.DisplayValue" )
     #else
-          value="$userAttr.Name"
+          #set ($value="$userAttr.Name")
     #end
- /></td>
-<td>#booleanCheckbox ($rmaGroup.Active)</td>
-<td>#numericSelect( "$rmaGroup.Order.Key" 1 $maxNum $rmaGroup.Order.Value 1 )</td>
+    #if ($locked)
+      $value
+    #else
+      <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value"/>
+    #end
+ </td>
+<td>#booleanCheckboxLock ($rmaGroup.Active $locked)</td>
+<td>#if ($locked) $rma.Order #else #numericSelect( "$rmaGroup.Order.Key" 1 $maxNum $rmaGroup.Order.Value 1 ) #end</td>
 </tr>
 #end
 
 </table>
 
-<div class="functnbar3">
-<input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
-<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
-</div>
+#if (!$issueTypeLock)
+  <div class="functnbar3">
+  <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
+  <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
+  <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
+  <input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
+  </div>
+#end
+
 #end
 
 <div class="functnbar2">
-<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#if (!$issueTypeLock)
+  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>        
 

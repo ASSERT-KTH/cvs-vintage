@@ -1,6 +1,7 @@
 #set ($groupId = $data.Parameters.getString("groupid"))
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
+#set ($issueType = $group.IssueType)
 
 <div class="app" id="div2-1-4-0">
 
@@ -18,7 +19,9 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 
 <div class="functnbar">
-<input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#if (!$issueType.Locked)
+  <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 
@@ -29,24 +32,39 @@
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
  <th>$l10n.Name</th>
- <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
+ <td>
+    #if ($issueType.Locked)
+        $group.Name
+    #else
+        <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
+    #end
+ </td>
  </tr>
  <tr>
  <th>$l10n.Description</th>
- <td>#textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
+ <td>
+    #if ($issueType.Locked)
+        $group.Description
+    #else
+     #textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
+    #end
  </tr>
  </table>
 </div>
 
+#if (!$issueType.Locked)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
 </div>
+#end
 
 <h3>$l10n.AttributesInGroup</h3>
 #if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-<th>$l10n.Select</th>
+#if (!$issueType.Locked)
+  <th>$l10n.Select</th>
+#end
 <th>$l10n.Name</th>
 <th>$l10n.PerProjectName</th>
 <th>$l10n.Active</th>
@@ -60,19 +78,27 @@
    #set ($rmaGroup = $intake.RModuleAttribute.mapTo($rma))
    #set ($raag = $group.getRAttributeAttributeGroup($attribute))
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
+   #set ($ria = "")
+   #set ($ria = $group.IssueType.getRIssueTypeAttribute($attribute))
+   #set ($locked = ($issueType.Locked) || (!$ria.equals("") && $ria.Locked))
  #indexedRows($velocityCount)
- <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
+ #if (!$issueType.Locked) <td> #if (!$locked) <input type="checkbox" name="att_delete_$attribute.AttributeId" /> #end</td>#end
  <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
- <td><input type="text" size="15" name="$rmaGroup.DisplayValue.Key"
+ <td>
     #if ($rmaGroup.DisplayValue.toString().length() > 0)
-          value="$rmaGroup.DisplayValue" 
+          #set ($value="$rmaGroup.DisplayValue" )
     #else
-          value="$attribute.Name"
+          #set ($value="$attribute.Name")
     #end
- /></td>
- <td>#booleanCheckbox ($rmaGroup.Active)</td>
- <td>#booleanCheckbox ($rmaGroup.Required)</td>
- <td>#booleanCheckbox ($rmaGroup.QuickSearch)</td>
+    #if (!$locked) 
+         <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value">
+    #else 
+         $value
+    #end
+    </td>
+ <td>#booleanCheckboxLock ($rmaGroup.Active $locked)</td>
+ <td>#booleanCheckboxLock ($rmaGroup.Required $locked)</td>
+ <td>#booleanCheckboxLock ($rmaGroup.QuickSearch $locked)</td>
  <td>
 #if ($rma.Attribute.isTextAttribute())
     #set ($defaultText = $data.Parameters.getString("default_text",""))
@@ -83,14 +109,13 @@
     #elseif ($rma.IsDefaultText)
         #set ($checked = true)
     #end        
-    <input type="radio"  #if($checked)checked="checked"#end
-        name="default_text" value="$rma.Attribute.QueryKey"/>
+    <input type="radio"  #if($checked)checked="checked"#end #if($locked)disabled="disabled"#end name="default_text" value="$rma.Attribute.QueryKey"/>
     #set ($checked = false)    
 #else
     N/A
 #end
 </td>
- <td>#numericSelect( "$raagGroup.Order.Key" 1 $group.Attributes.size() $raagGroup.Order.Value 1 )</td>
+ <td>#if ($locked) $raag.Order #else #numericSelect( "$raagGroup.Order.Key" 1 $group.Attributes.size() $raagGroup.Order.Value 1 ) #end</td>
  </tr>
  </td>
  </tr>
@@ -101,21 +126,24 @@
   <p class="alert">$l10n.ClickAddButton</p>
 #end
 
-<div class="functnbar3">
-#if (!$group.Attributes.isEmpty())
-<input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
-#end
-<input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
-##<input type="submit" value="$l10n.CopySelected" />&#160;
-#if (!$group.Attributes.isEmpty())
-<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
-<input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
-#end
+#if (!$issueType.Locked)
+  <div class="functnbar3">
+  #if (!$group.Attributes.isEmpty())
+    <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
+  #end
+  <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
+  ##<input type="submit" value="$l10n.CopySelected" />&#160;
+  #if (!$group.Attributes.isEmpty())
+     <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributes" />&#160;
+     <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
+  #end
 </div>
-
+#end
 
 <div class="functnbar2">
+#if (!$issueType.Locked)
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
+#end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
 </div>
 

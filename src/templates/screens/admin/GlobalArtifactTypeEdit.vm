@@ -45,6 +45,13 @@
        #fieldErrorMsg($itGroup.Description "")  
        #textAreaMedium("$itGroup.Description.Key" $itGroup.Description.Value)</td>
     </tr>
+    <tr>
+    <th>$l10n.Locked</th>
+    <td>
+       #fieldErrorMsg($itGroup.Locked "")  
+       #booleanCheckbox ($itGroup.Locked)
+    </td>
+    </tr>
   </table>
 </div>
 
@@ -115,6 +122,7 @@
 <th nowrap="nowrap">$l10n.Select</th>
 <th>$l10n.UserAttributeName</th>
 <th>$l10n.Active</th>
+<th>$l10n.Locked</th>
 <th>$l10n.Sequence</th>
 </tr>
 
@@ -126,6 +134,7 @@
  <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" /></td>
  <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
 <td>#booleanCheckbox ($riaGroup.Active)</td>
+<td>#booleanCheckbox ($riaGroup.Locked)</td>
 <td>#numericSelect( "$riaGroup.Order.Key" 1 $maxNum $riaGroup.Order.Value 1 )</td>
 </tr>
 #end

@@ -50,6 +50,7 @@
 <th>$l10n.Name</th>
 <th>$l10n.Active</th>
 <th>$l10n.Required</th>
+<th>$l10n.Locked</th>
 <th>$l10n.IncludedInCustomQuery</th>
 <th>$l10n.DefaultTxt</th>
 <th>$l10n.Sequence</th>
@@ -64,6 +65,7 @@
  <td>$link.setPage("admin,IssueTypeAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
  <td>#booleanCheckbox ($riaGroup.Active)</td>
  <td>#booleanCheckbox ($riaGroup.Required)</td>
+ <td>#booleanCheckbox ($riaGroup.Locked)</td>
  <td>#booleanCheckbox ($riaGroup.QuickSearch)</td>
  <td>
 #if ($ria.Attribute.isTextAttribute())

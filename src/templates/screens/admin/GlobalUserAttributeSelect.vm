@@ -21,7 +21,7 @@
 <input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
-<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,GlobalUserAttributeEdit.vm" />
+<input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,GlobalArtifactTypeEdit.vm" />
 #AttributeSelectBar("")
 

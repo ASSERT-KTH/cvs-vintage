@@ -1,12 +1,14 @@
 #set ($module = $scarabR.CurrentModule)
+#set ($issueType = $scarabR.IssueType)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
 #set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
 #set ($attTypeName = $attType.AttributeClass.Name)
+#set ($ria = $issueType.getRIssueTypeAttribute($attribute))
 
 #macro (ModuleAttributeEditBar $val)
 <div class="functnbar$val">
-#if ($attTypeName.equals("select-one"))
+#if ($attTypeName.equals("select-one") &&  (!$issueType.Locked && !$ria.Locked))
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
@@ -64,8 +66,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 </table>
 </div>
 
-#set ($editIssueType = $scarabR.IssueType)
-#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $editIssueType, false))
+#set ($rmos = $scarabR.CurrentModule.getRModuleOptions($attribute, $issueType, false))
 #if ($attTypeName.equals("select-one"))
 #set ($maxNum = $rmos.size())
 #datatitle ("Attribute Options")
@@ -78,7 +79,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="2">
 <tr>
- <th>$l10n.Select</th>
+ #if (!$issueType.Locked && !$ria.Locked) <th>$l10n.Select</th>#end
  <th>$l10n.ParentAttributeOptions</th>
  <th>$l10n.DisplayName</th>
  <th>$l10n.Active</th>
@@ -87,8 +88,11 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 </tr>
 #foreach ($rmo in $rmos)
     #set ($rmoGroup = $intake.RModuleOption.mapTo($rmo))
+    #set ($rio = "")
+    #set ($rio = $issueType.getRIssueTypeOption($rmo.AttributeOption))
+    #set ($locked = ($issueType.Locked) || ($ria.Locked) || (!$rio.equals("") && $rio.Locked))
     #indexedRows($velocityCount)
-     <td><input type="checkbox" name="delete_$rmo.OptionId"></td>
+    #if (!$issueType.Locked && !$ria.Locked) <td><input type="checkbox" name="delete_$rmo.OptionId" #if ($locked) disabled="disabled"#end ></td>#end
      <td>
        #set ($comma = "")
        #set ($parents = $rmo.AttributeOption.Parents)
@@ -103,20 +107,34 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
          $parent.Name$comma
        #end
      </td>
-     <td><input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" /></td>
      <td>
-        #booleanCheckbox($rmoGroup.Active)
+        #if ($locked)
+          $rmo.DisplayValue
+        #else
+          <input type="text" size="25" name="$rmoGroup.DisplayValue.Key" value="$rmoGroup.DisplayValue.Value" />
+        #end
+     </td>
+    
+     <td>#booleanCheckboxLock ($rmoGroup.Active $issueTypeLock)</td>
+     <td>
+        #if ($locked)
+          $rmo.Order
+        #else
+          #numericSelect($rmoGroup.Order.Key 1 $maxNum $rmoGroup.Order.Value 1)
+        #end
      </td>
      <td>
-        #numericSelect($rmoGroup.Order.Key 1 $maxNum $rmoGroup.Order.Value 1)
-     </td>
-     <td>
-        #numericSelect($rmoGroup.Weight.Key 1 $maxNum $rmoGroup.Weight.Value 1)
+        #if ($locked)
+          $rmo.Order
+        #else
+          #numericSelect($rmoGroup.Weight.Key 1 $maxNum $rmoGroup.Weight.Value 1)
+        #end
      </td>
     </tr>
 #end
 </table>
 
+#if (!$issueType.Locked && !$ria.Locked)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSave" />&#160;
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
@@ -124,6 +142,8 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteattributeoptions" />&#160;
 <input type="submit" value="$l10n.Resort" name="eventSubmit_doSave" />
 </div>
+#end
+
 #end
 
 #end
