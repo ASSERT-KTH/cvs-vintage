@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.26 2002/09/11 17:35:26 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.27 2002/09/19 07:57:06 hgomez Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -228,6 +228,7 @@ be grouped as follows:</p>
 	  <li><a href="#JservConfig">JservConfig</a></li>
 	  <li><a href="#LoaderInterceptor11">LoaderInterceptor11</a></li>
 	  <li><a href="#LogSetter">LogSetter</a></li>
+	  <li><a href="#MXInterceptor">MXInterceptor</a></li>
 	  <li><a href="#NSConfig">NSConfig</a></li>
 	  <li><a href="#PolicyLoader">PolicyLoader</a></li>
 	  <li><a href="#TrustedLoader">TrustedLoader</a></li>
@@ -2146,6 +2147,66 @@ than 5.</p>
 &lt;LogSetter name=&quot;tc_log&quot; verbosityLevel=&quot;DEBUG&quot; /&gt;
 &lt;LogSetter name=&quot;servlet_log&quot; timestamps=&quot;true&quot;
     verbosityLevel=&quot;INFORMATION&quot; path=&quot;logs/servlet-${yyyyMMdd}.log&quot; /&gt;
+</pre>
+
+<hr size="5">
+
+<!-- ======================================== -->
+
+<h3><a name="MXInterceptor">MXInterceptor</a></h3>
+
+<p><b>Type:</b> Configuration</p>
+
+<h4>Description</h4>
+
+<p>JMX MBeans support has been added to Tomcat 3.3.2, which allow you to manage
+Tomcat from any JMX console or via a simple browser by the build in HTTP Adaptor</p>
+<p>To enable JMX, you should add the &lt;MxInterceptor /&gt; in server.xml</p>
+<p>To also activate the HTTP Adaptor you should at least define the listen port</p>
+
+<h4>Attributes</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr valign="top">
+    <th>Attribute</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr valign="top">
+    <td>port</td>
+    <td>port where the JMX HTTP Adaptor will listen to, HTTP Adaptor will only be loaded if the port is set</td>
+    <td>-1, no http adaptor loaded</td>
+  </tr>
+  <tr valign="top">
+    <td>host</td>
+    <td>host/ip where the JMX HTTP Adaptor will listen to, only available when using <code>MX4J</code> HTTP Adaptor</td>
+    <td>null</td>
+  </tr>
+  <tr valign="top">
+    <td>authentication</td>
+    <td>authentication used by the JMX HTTP Adaptor, only available when using <code>MX4J</code> HTTP Adaptor, 
+    it could be <code>none</code>, <code>basic</code>, <code>digest</code></td>
+    <td>none</td>
+  </tr>
+  <tr valign="top">
+    <td>user</td>
+    <td>the user account which to be used with authentication</td>
+    <td>none, should be set to enable authentication</td>
+  </tr>
+  <tr valign="top">
+    <td>password</td>
+    <td>the password which to be used with authentication</td>
+    <td>none, should be set to enable authentication</td>
+  </tr>
+</table>
+
+
+
+<h4>Example(s)</h4>
+
+<pre>
+&lt;MxInterceptor port=&quot;8999&quot; host=&quot;mysystem&quot; authentication=&quot;basic&quot; user=&quot;admin&quot; password=&quot;changeillico&quot;/&gt;
+&lt;MxInterceptor /&gt;
 </pre>
 
 <hr size="5">
