@@ -51,6 +51,7 @@ import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.Date;
 import java.util.HashMap;
+import org.apache.commons.collections.ExtendedProperties;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -75,6 +76,8 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentPeer;
+import org.tigris.scarab.om.AttachmentType;
+import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
@@ -89,6 +92,11 @@ import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.apache.fulcrum.upload.FileItem;
+import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.upload.TurbineUploadService;
+import org.apache.fulcrum.upload.UploadService;
+
 
 import org.tigris.scarab.attribute.OptionAttribute;
 
@@ -98,7 +106,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.51 2001/12/19 23:04:05 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.52 2002/01/03 23:17:20 jon Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -107,7 +115,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                                 "scroll down to see error messages."; 
 
 
-    public void doSubmitattributes( RunData data, TemplateContext context )
+    public void doSubmitattributes(RunData data, TemplateContext context)
         throws Exception
     {
         String id = data.getParameters().getString("id");
@@ -123,7 +131,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         Field commentField = null;
         commentField = commentGroup.get("DataAsString");
         commentField.setRequired(true);
-        if (commentGroup == null || !commentField.isValid() )
+        if (commentGroup == null || !commentField.isValid())
         {
             commentField.setMessage("An explanatory comment is required " + 
                                     "to modify attributes.");
@@ -137,15 +145,15 @@ public class ModifyIssue extends RequireLoginFirstAction
 
         SequencedHashtable modMap = issue.getModuleAttributeValuesMap();
         Iterator iter = modMap.iterator();
-        while ( iter.hasNext() ) 
+        while (iter.hasNext()) 
         {
             aval = (AttributeValue)modMap.get(iter.next());
             group = intake.get("AttributeValue", aval.getQueryKey(), false);
 
-            if ( group != null ) 
+            if (group != null) 
             {            
                 Field field = null;
-                if ( aval instanceof OptionAttribute ) 
+                if (aval instanceof OptionAttribute) 
                 {
                     field = group.get("OptionId");
                 }
@@ -154,10 +162,10 @@ public class ModifyIssue extends RequireLoginFirstAction
                     field = group.get("Value");
                 }
             
-                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+                for (int j=requiredAttributes.length-1; j>=0; j--) 
                 {
-                    if ( aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey() )) 
+                    if (aval.getAttribute().getPrimaryKey().equals(
+                         requiredAttributes[j].getPrimaryKey())) 
                     {
                         field.setRequired(true);
                         break;
@@ -166,7 +174,7 @@ public class ModifyIssue extends RequireLoginFirstAction
             } 
         } 
 
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             issue.save();
 
@@ -190,18 +198,18 @@ public class ModifyIssue extends RequireLoginFirstAction
                 aval = (AttributeValue)avMap.get(iter2.next());
                 group = intake.get("AttributeValue", aval.getQueryKey(), false);
 
-                if ( group != null ) 
+                if (group != null) 
                 {            
                     NumberKey newOptionId = null;
                     NumberKey oldOptionId = null;
                     String newValue = "";
                     String oldValue = "";
-                    if ( aval instanceof OptionAttribute ) 
+                    if (aval instanceof OptionAttribute) 
                     {
                         newValue = group.get("OptionId").toString();
                         oldValue = aval.getOptionIdAsString();
                     
-                        if ( !newValue.equals("") )
+                        if (!newValue.equals(""))
                         {
                             newOptionId = new NumberKey(newValue);
                             AttributeOption newAttributeOption = 
@@ -209,7 +217,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                               .retrieveByPK(new NumberKey(newValue));
                             newValue = newAttributeOption.getName();
                         }
-                        if ( !oldValue.equals("") )
+                        if (!oldValue.equals(""))
                         {
                             oldOptionId = aval.getOptionId();
                             AttributeOption oldAttributeOption = 
@@ -250,7 +258,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
     *  Adds an attachment of type "url".
     */
-   public void doSubmiturl (RunData data, TemplateContext context ) 
+   public void doSubmiturl (RunData data, TemplateContext context) 
         throws Exception
    {
         submitAttachment (data, context, "url");
@@ -259,15 +267,59 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
     *  Adds an attachment of type "comment".
     */
-   public void doSubmitcomment (RunData data, TemplateContext context ) 
+   public void doSubmitcomment (RunData data, TemplateContext context) 
         throws Exception
    {
         submitAttachment (data, context, "comment");
    } 
     
     
+    /**
+     * Add an attachment of type "file"
+     */
+    public void doSubmitfile (RunData data, TemplateContext context)
+        throws Exception
+    {
+        submitAttachment (data, context, "file");
+    }
+    
     /** View an attachment file */
-    public void doViewattachment(RunData data, TemplateContext context )
+    public void doViewfile(RunData data, TemplateContext context)
+        throws Exception
+    {
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attachmentId;
+        for (int i =0; i<keys.length; i++)
+        {
+            key = keys[i].toString();
+            if (key.startsWith("file"))
+            {
+                attachmentId = key.substring(5);
+                Attachment attachment = (Attachment) AttachmentPeer
+                    .retrieveByPK(new NumberKey(attachmentId));
+                File file = new File(attachment.getFilePath());
+                byte[] fileContent = new byte[(int)file.length()];
+                new FileInputStream(file).read(fileContent);
+                if (attachment.getMimeType().equals("text/plain"))
+                {
+                    attachment.setDataAsString(new String(fileContent));
+                }
+                attachment.setData(fileContent);
+                getScarabRequestTool(context).setAttachment(attachment);
+            }
+        }
+        String template = data.getParameters()
+            .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
+        setTarget(data, template);            
+        
+    }
+    
+
+    
+    /** View an attachment file */
+    public void doViewattachment(RunData data, TemplateContext context)
         throws Exception
     {
         ParameterParser params = data.getParameters();
@@ -287,7 +339,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                 File file = new File(attachment.getFilePath());
                 byte[] fileContent = new byte[(int)file.length()];
                 new FileInputStream(file).read(fileContent);
-                if(attachment.getMimeType().equals("text/plain"))
+                if (attachment.getMimeType().equals("text/plain"))
                 {
                     attachment.setDataAsString(new String(fileContent));
                 }
@@ -303,8 +355,8 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
     *  Adds an attachment.
     */
-   private void submitAttachment (RunData data, TemplateContext context, 
-                                  String type)
+    private void submitAttachment (RunData data, TemplateContext context, 
+                                   String type)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -315,7 +367,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         Group group = null;
         ScarabUser user = (ScarabUser)data.getUser();
         Transaction transaction = new Transaction();
-
+        
         if (type.equals("url"))
         {
             group = intake.get("Attachment", "urlKey", false);
@@ -326,42 +378,88 @@ public class ModifyIssue extends RequireLoginFirstAction
             group = intake.get("Attachment", "commentKey", false);
             typeId = Attachment.COMMENT__PK;
         }
-
-        if ( group != null ) 
+        else if (type.equals("file"))
+        {
+            group = intake.get("Attachment", "fileKey", false);
+            typeId = Attachment.FILE__PK;
+        }
+        
+        if (group != null) 
         {
             Field nameField = group.get("Name"); 
             Field dataField = group.get("DataAsString"); 
             nameField.setRequired(true);
-            dataField.setRequired(true);
-            if (!nameField.isValid() )
+            //dataField.setRequired(true);
+            if (!nameField.isValid())
             {
                 nameField.setMessage("This field requires a value.");
             }
-            if (!dataField.isValid() )
-            {
-                dataField.setMessage("This field requires a value.");
-            }
-
-            if (intake.isAllValid() )
+            //            if (!dataField.isValid())
+            //            {
+            //                dataField.setMessage("This field requires a value.");
+            //            }
+            if (intake.isAllValid())
             {
                 group.setProperties(attachment);
-                attachment.setTextFields(user, issue, typeId);
-                attachment.save();
-
-                if (type.equals("url"))
+                
+                if (type.equals("url") || type.equals("comment"))
                 {
-                    // Save transaction record
-                    transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
-                                       user, attachment);
-
-                    // Save activity record
-                    Activity activity = new Activity();
-
-                    // Generate description of modification
-                    StringBuffer descBuf = new StringBuffer("added URL '");
-                    descBuf.append(nameField.toString()).append("'");
-                    String desc = descBuf.toString();
-                    activity.create(issue, null, desc, transaction, "", "");
+                    attachment.setTextFields(user, issue, typeId);
+                    attachment.save();
+                    if (type.equals("url"))
+                    {
+                        // Save transaction record
+                        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                           user, attachment);
+                        
+                        // Save activity record
+                        Activity activity = new Activity();
+                        
+                        // Generate description of modification
+                        StringBuffer descBuf = new StringBuffer("added URL '");
+                        descBuf.append(nameField.toString()).append("'");
+                        String desc = descBuf.toString();
+                        activity.create(issue, null, desc, transaction, "", "");
+                    }
+                }
+                else if (type.equals("file"))
+                {
+                    //FIXME: the following code is duplicate from ReportIssue.java The common code
+                    //could be factored into another action class for handling attachment
+                    if (attachment.getData() != null 
+                        && attachment.getData().length > 0)
+                    {
+                        ScarabRequestTool scarabR = getScarabRequestTool(context);
+                        FileItem file = attachment.getFile();
+                        String fileNameWithPath =file.getFileName();
+                        String fileName = fileNameWithPath
+                            .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
+                        
+                        ExtendedProperties extProp = TurbineServices.getInstance()
+                            .getService(UploadService.SERVICE_NAME).getConfiguration();
+                        String uploadFileRepo = (String)extProp.getProperty(UploadService.REPOSITORY_KEY);
+                        String moduleCode = scarabR.getIssue().getModule().getCode();
+                        String repoModuleDir = uploadFileRepo + File.separator + moduleCode;
+                        File repoDir = new File(repoModuleDir);
+                        
+                        if (!repoDir.exists())
+                        {
+                            repoDir.mkdir();
+                        }
+                        attachment.setData(null);
+                        attachment.setAttachmentType(AttachmentType
+                                                         .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
+                        attachment.setIssue(issue);
+                        attachment.setTypeId(new NumberKey(1));
+                        attachment.save();    
+                        String uploadFile = repoModuleDir + File.separator + fileName 
+                            + "_" + attachment.getPrimaryKey().toString();
+                        
+                        file.write(uploadFile);
+                        attachment.setFilePath(uploadFile);
+                        attachment.save();
+                    }
+                    
                 }
                 intake.remove(group);
                 issue.save();
@@ -384,7 +482,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
     *  Edits a comment.
     */
-   public void doEditcomment (RunData data, TemplateContext context )
+   public void doEditcomment (RunData data, TemplateContext context)
         throws Exception
     {                          
         ParameterParser params = data.getParameters();
@@ -414,7 +512,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
     *  Deletes an url.
     */
-   public void doDeleteurl (RunData data, TemplateContext context )
+   public void doDeleteurl (RunData data, TemplateContext context)
         throws Exception
     {                          
         ParameterParser params = data.getParameters();
@@ -462,7 +560,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     *  Modifies the dependency type between the current issue
     *  And its child issue.
     */
-    public void doUpdatechild (RunData data, TemplateContext context )
+    public void doUpdatechild (RunData data, TemplateContext context)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -532,7 +630,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     *  Modifies the dependency type between the current issue
     *  And its parent issue.
     */
-    public void doUpdateparent (RunData data, TemplateContext context )
+    public void doUpdateparent (RunData data, TemplateContext context)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -598,7 +696,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     *  Adds a dependency between this issue and another issue.
     *  This issue will be the child issue. 
     */
-    public void doAdddependency (RunData data, TemplateContext context )
+    public void doAdddependency (RunData data, TemplateContext context)
         throws Exception
     {                          
         String id = data.getParameters().getString("id");
@@ -713,7 +811,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
         This manages clicking the Cancel button
     */
-    public void doCancel( RunData data, TemplateContext context ) throws Exception
+    public void doCancel(RunData data, TemplateContext context) throws Exception
     {
         setTarget(data, Turbine
                     .getConfiguration()
@@ -722,7 +820,7 @@ public class ModifyIssue extends RequireLoginFirstAction
     /**
         calls doCancel()
     */
-    public void doPerform( RunData data, TemplateContext context ) throws Exception
+    public void doPerform(RunData data, TemplateContext context) throws Exception
     {
         doCancel(data, context);
     }

@@ -46,7 +46,8 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine classes
+import java.io.File;
+
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.NumberKey;
@@ -61,7 +62,6 @@ import org.apache.fulcrum.upload.FileItem;
   * You should add additional methods to this class to meet the
   * application requirements.  This class will only be generated as
   * long as it does not already exist in the output directory.
-
   */
 public class Attachment 
     extends BaseAttachment
@@ -132,7 +132,17 @@ public class Attachment
         //setCreatedDate(new Date());
         setCreatedBy(user.getUserId());
     }
+    
+    
+    /**
+     * Get the file name without path info
+     * @return String
+     */
+    public String getFileName()
+    {
+        String filePath = getFilePath();
+        return filePath.substring(
+            filePath.lastIndexOf(File.separator) + 1, 
+            filePath.lastIndexOf('_'));
+    }
 }
-
-
-
