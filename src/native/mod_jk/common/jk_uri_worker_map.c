@@ -65,7 +65,7 @@
  * servlet container.                                                      *
  *                                                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -347,11 +347,11 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         unsigned i;
         unsigned best_match = -1;
         unsigned longest_match = 0;
-        char clean_uri[4096];
+        char *clean_uri=NULL;
         char *url_rewrite = strstr(uri, JK_PATH_SESSION_IDENTIFIER);
         
         if(url_rewrite) {
-            strcpy(clean_uri, uri);
+	    clean_uri = strdup(uri);
             url_rewrite = strstr(clean_uri, JK_PATH_SESSION_IDENTIFIER);
             *url_rewrite = '\0';
             uri = clean_uri;
@@ -374,6 +374,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
 			       "jk_uri_worker_map_t::map_uri_to_worker, Found an exact match %s -> %s\n",
 			       uw_map->maps[i].worker_name,
 			       uw_map->maps[i].context );
+			free(clean_uri);
                         return uw_map->maps[i].worker_name;
                     }
                 } else if(MATCH_TYPE_CONTEXT == uw_map->maps[i].match_type) {
@@ -418,6 +419,7 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         }
 
         if(-1 != best_match) {
+	    free(clean_uri);
             return uw_map->maps[best_match].worker_name;
         } else {
             /*
@@ -433,7 +435,8 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
             if(fraud >= 0) {
                 jk_log(l, JK_LOG_EMERG, 
                        "In jk_uri_worker_map_t::map_uri_to_worker, found a security fraud in '%s'\n",
-                       uri);    
+                       uri);
+		free(clean_uri);
                 return uw_map->maps[fraud].worker_name;
             }
        }        
@@ -441,7 +444,6 @@ char *map_uri_to_worker(jk_uri_worker_map_t *uw_map,
         jk_log(l, JK_LOG_ERROR, 
                "In jk_uri_worker_map_t::map_uri_to_worker, wrong parameters\n");    
     }
-
     jk_log(l, JK_LOG_DEBUG, 
            "jk_uri_worker_map_t::map_uri_to_worker, done without a match\n"); 
 
