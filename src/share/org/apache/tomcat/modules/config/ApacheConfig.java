@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.26 2001/08/17 03:53:24 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.27 2001/10/02 02:55:13 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -118,9 +118,12 @@ import java.util.*;
      <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
      <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to emerg.</li>
-     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13" or "inprocess". If not
-                           specified, defaults to "ajp13" if an Ajp13Interceptor
-                           is in use, otherwise it defaults to "ajp12".</li>
+     <li><b>jkWorker</b> The desired worker.  Must be set to one of the workers
+                         defined in the workers.properties file. "ajp12", "ajp13"
+                         or "inprocess" are the workers found in the default
+                         workers.properties file. If not specified, defaults
+                         to "ajp13" if an Ajp13Interceptor is in use, otherwise
+                         it defaults to "ajp12".</li>
      <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
                              insure that all the behavior configured in the web.xml
                              file functions correctly.  If false, let Apache serve
@@ -146,7 +149,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.26 $ $Date: 2001/08/17 03:53:24 $
+	@version $Revision: 1.27 $ $Date: 2001/10/02 02:55:13 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -460,9 +463,9 @@ public class ApacheConfig  extends BaseJkConfig {
         } 
 
         mod_jk.println();
-	mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
+	mod_jk.println(indent + "JkMount " +  nPath + " " + jkWorker );
 	if( "".equals(ctxPath) ) {
-	    mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
+	    mod_jk.println(indent + "JkMount " +  nPath + "* " + jkWorker );
             if ( vhost != null ) {
                 mod_jk.println(indent + "DocumentRoot \"" +
                             getApacheDocBase(context) + "\"");
@@ -474,7 +477,7 @@ public class ApacheConfig  extends BaseJkConfig {
             }
 
 	} else
-	    mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
+	    mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkWorker );
     }    
 
     
@@ -526,7 +529,7 @@ public class ApacheConfig  extends BaseJkConfig {
 	// map ( the real path that is used by form auth ), so no need
 	// for this one
 	//mod_jk.println("JkMount " + path + "/*j_security_check " +
-	//		   jkProto);
+	//		   jkWorker);
 	//mod_jk.println();
 	
 	// XXX ErrorDocument
@@ -542,7 +545,7 @@ public class ApacheConfig  extends BaseJkConfig {
         if( debug > 0 )
             log( "Adding extension map for " + ctxPath + "/*." + ext );
 	mod_jk.println(indent + "JkMount " + ctxPath + "/*." + ext
-		       + " " + jkProto);
+		       + " " + jkWorker);
 	return true;
     }
     
@@ -552,7 +555,7 @@ public class ApacheConfig  extends BaseJkConfig {
     protected boolean addMapping( String fullPath, PrintWriter mod_jk ) {
         if( debug > 0 )
             log( "Adding map for " + fullPath );
-	mod_jk.println(indent + "JkMount " + fullPath + "  " + jkProto );
+	mod_jk.println(indent + "JkMount " + fullPath + "  " + jkWorker );
 	return true;
     }
 

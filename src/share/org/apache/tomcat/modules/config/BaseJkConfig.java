@@ -1,4 +1,4 @@
-/* $Id: BaseJkConfig.java,v 1.4 2001/08/23 15:01:57 costin Exp $
+/* $Id: BaseJkConfig.java,v 1.5 2001/10/02 02:55:13 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -91,9 +91,12 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
      <li><b>jkLog</b> - path to log file to be used by jk connector.</li>
      <li><b>jkDebug</b> - Loglevel setting.  May be debug, info, error, or emerg.
                           If not set, defaults to emerg.</li>
-     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
-                           specified, defaults to "ajp13" if an Ajp13Interceptor
-                           is in use, otherwise it defaults to "ajp12".</li>
+     <li><b>jkWorker</b> The desired worker.  Must be set to one of the workers
+                         defined in the workers.properties file. "ajp12", "ajp13"
+                         or "inprocess" are the workers found in the default
+                         workers.properties file. If not specified, defaults
+                         to "ajp13" if an Ajp13Interceptor is in use, otherwise
+                         it defaults to "ajp12".</li>
      <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
                              insure that all the behavior configured in the web.xml
                              file functions correctly.  If false, let Apache serve
@@ -118,7 +121,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     <p>
     @author Costin Manolache
     @author Larry Isaacs
-	@version $Revision: 1.4 $
+	@version $Revision: 1.5 $
  */
 public class BaseJkConfig  extends BaseInterceptor { 
     protected File configHome = null;
@@ -126,7 +129,7 @@ public class BaseJkConfig  extends BaseInterceptor {
 
     protected File jkLog = null;
     protected String jkDebug="emerg";
-    protected String jkProto = null;
+    protected String jkWorker = null;
 
     protected boolean noRoot=true;
     protected boolean forwardAll=true;
@@ -266,8 +269,8 @@ public class BaseJkConfig  extends BaseInterceptor {
         set the Ajp protocal
         @param <b>protocal</b> String protocol, "ajp12" or "ajp13"
      */
-    public void setJkProtocol(String protocol){
-        jkProto = protocol;
+    public void setJkWorker(String worker){
+        jkWorker = worker;
     }
 
     // -------------------- Initialize/guess defaults --------------------
@@ -289,14 +292,14 @@ public class BaseJkConfig  extends BaseInterceptor {
 	    
 	for( int i=0; i<ci.length; i++ ) {
 	    Object con=ci[i];
-	    // if jkProto not specified and Ajp13 Interceptor found, use Ajp13
-	    if( jkProto == null && (con instanceof Ajp13Interceptor) ) {
-		jkProto = "ajp13";
+	    // if jkWorker not specified and Ajp13 Interceptor found, use Ajp13
+	    if( jkWorker == null && (con instanceof Ajp13Interceptor) ) {
+		jkWorker = "ajp13";
 	    }
 	}
 
 	// default to ajp12
-	if( jkProto==null ) jkProto="ajp12";
+	if( jkWorker==null ) jkWorker="ajp12";
     }
 
     // -------------------- Config Utils  --------------------
