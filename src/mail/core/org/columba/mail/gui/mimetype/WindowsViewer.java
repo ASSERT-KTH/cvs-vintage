@@ -1,16 +1,16 @@
 //The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
 //The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.gui.mimetype;
@@ -48,12 +48,10 @@ public class WindowsViewer extends AbstractViewer {
             Process proc = null;
 
             try {
-                String[] cmd = new String[] {
-                        "cmd.exe", "/C", "start", url.toString()
-                    };
+                String[] cmd = new String[] {"rundll32", "url.dll,FileProtocolHandler", url.toString()};
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
-                    " " + cmd[2] + " " + cmd[3]);
+                    " " + cmd[2]);
                 proc = rt.exec(cmd);
 
                 // any error message?
@@ -91,14 +89,14 @@ public class WindowsViewer extends AbstractViewer {
             Process proc = null;
 
             if (OSInfo.isWinNT()) {
-                String[] cmd = new String[] { "cmd.exe", "/C", filename };
+                String[] cmd = new String[] {"cmd.exe", "/C", filename};
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1] +
                     " " + cmd[2]);
                 proc = rt.exec(cmd);
             } else if (OSInfo.isWin95() || OSInfo.isWin98() ||
                     OSInfo.isWinME()) {
-                String[] cmd = new String[] { "start", filename };
+                String[] cmd = new String[] {"start", filename};
                 Runtime rt = Runtime.getRuntime();
                 ColumbaLogger.log.fine("Executing " + cmd[0] + " " + cmd[1]);
                 proc = rt.exec(cmd);
