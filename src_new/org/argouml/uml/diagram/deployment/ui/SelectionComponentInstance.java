@@ -24,7 +24,7 @@
 // File: SelectionComponentInstance.java
 // Classes: SelectionComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SelectionComponentInstance.java,v 1.6 2002/10/08 20:04:29 kataka Exp $
+// $Id: SelectionComponentInstance.java,v 1.7 2002/10/25 11:43:26 mkl Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -53,7 +53,8 @@ public class SelectionComponentInstance extends SelectionWButtons {
   ////////////////////////////////////////////////////////////////
   // constants
   public static Icon dep = ResourceLoader.lookupIconResource("Dependency");
-
+  public static Icon depRight = 
+      ResourceLoader.lookupIconResource("DependencyRight");
 
 
   ////////////////////////////////////////////////////////////////
@@ -109,8 +110,8 @@ public class SelectionComponentInstance extends SelectionWButtons {
     int ch = _content.getHeight();
     paintButtonAbove(dep, g, cx + cw/2, cy, 10);
     paintButtonBelow(dep, g, cx + cw/2, cy + ch, 11);
-    paintButtonLeft(dep, g, cx + cw, cy + ch/2, 12);
-    paintButtonRight(dep, g, cx, cy + ch/2, 13);
+    paintButtonLeft(depRight, g, cx + cw, cy + ch/2, 12);
+    paintButtonRight(depRight, g, cx, cy + ch/2, 13);
   }
 
 
@@ -132,23 +133,25 @@ public class SelectionComponentInstance extends SelectionWButtons {
     switch (hand.index) {
     case 10: //add dep
       edgeClass = MDependency.class;
-      reverse = true;
+      // reverse = true;
       by = cy;
       bx = cx + cw/2;
       break;
     case 11: //add dep
       edgeClass = MDependency.class;
+      reverse = true;
       by = cy + ch;
       bx = cx + cw/2;
       break;
     case 12: //add dep
       edgeClass = MDependency.class;
-      reverse = true;
+      // reverse = true;
       by = cy + ch/2;
       bx = cx + cw;
       break;
     case 13: // add dep
       edgeClass = MDependency.class;
+      reverse = true;
       by = cy + ch/2;
       bx = cx;
       break;
