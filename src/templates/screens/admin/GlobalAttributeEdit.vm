@@ -19,8 +19,6 @@
 On this screen, one can modify system wide Attribute information.
 </p>
 
-$data.Parameters.getString("groupId")
-
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
 #if ($createNew.equals("false"))
