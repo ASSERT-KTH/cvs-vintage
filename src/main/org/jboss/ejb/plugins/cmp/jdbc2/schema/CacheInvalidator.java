@@ -17,7 +17,7 @@ import java.io.Serializable;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class CacheInvalidator
    implements Invalidatable
@@ -68,7 +68,10 @@ public class CacheInvalidator
       }
       catch(Cache.RemoveException e)
       {
-         log.warn(e.getMessage());
+         if(log.isTraceEnabled())
+         {
+            log.trace(e.getMessage());
+         }
       }
       finally
       {
