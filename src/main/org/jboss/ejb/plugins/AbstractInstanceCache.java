@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.41 $
+ * @version $Revision: 1.42 $
  * @jmx:mbean
  */
 public abstract class AbstractInstanceCache
@@ -104,7 +104,9 @@ public abstract class AbstractInstanceCache
             {
                ctx = acquireContext();
                setKey(id, ctx);
-               activate(ctx);
+               if (doActivate(ctx) == false)
+                  // This is a recursive activation
+                  return ctx;
                logActivation(id);
                // the cache will throw an IllegalStateException if we try to insert
                // something that is in the cache already, so we don't check here
@@ -243,6 +245,17 @@ public abstract class AbstractInstanceCache
       return 0;
    }
 
+   /**
+    * Display the cache policy.
+    * 
+    * @jmx:managed-attribute
+    * @return the cache policy as a string.
+    */
+   public String getCachePolicyString()
+   {
+      return m_cache.toString();
+   }
+   
    // XmlLoadable implementation ----------------------------------------------
    public void importXml(Element element) throws DeploymentException
    {
@@ -359,6 +372,18 @@ public abstract class AbstractInstanceCache
     * Activates the given EnterpriseContext
     */
    protected abstract void activate(EnterpriseContext ctx) throws RemoteException;
+   /**
+    * Activate the given EnterpriseContext
+    * 
+    * @param ctx the context
+    * @return false if we recursively activating
+    * @throws RemoteException for any error
+    */
+   protected boolean doActivate(EnterpriseContext ctx) throws RemoteException
+   {
+      activate(ctx);
+      return true;
+   }
    /**
     * Acquires an EnterpriseContext from the pool
     */
