@@ -38,14 +38,15 @@ import org.columba.mail.ssl.SSLProvider;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author fdietz
- *
+ * 
+ * 
  * This is an implementation of the SMTP protocol as specified by 
- * RFC 821: http://www.ietf.org/rfc/rfc0821.txt
- * 
+ * <a href="http://www.ietf.org/rfc/rfc0821.txt">RFC 821</a>.
+ * <p>
  * Generally you will find one method for every SMTP command.
- * 
  *  
+ * 
+ *  @author fdietz
  */
 public class SMTPProtocol {
 	/**
@@ -108,9 +109,11 @@ public class SMTPProtocol {
 	private boolean useSSL;
 
 	/**
-	 * @param hostName
-	 * @param portNr
-	 * @param useSSL
+	 * Constructor for SMTPProtocol
+	 * 
+	 * @param hostName	hostname of SMTP server
+	 * @param portNr	port number of SMTP server
+	 * @param useSSL	true, if SSL should be used. False, otherwise.
 	 */
 	public SMTPProtocol(String hostName, int portNr, boolean useSSL) {
 		capabilities = new Hashtable();
@@ -122,31 +125,6 @@ public class SMTPProtocol {
 		port = portNr;
 
 		this.useSSL = useSSL;
-	}
-
-	/**
-	 * @param hostName
-	 * @param portNr
-	 */
-	public SMTPProtocol(String hostName, int portNr) {
-		capabilities = new Hashtable();
-
-		decoder = new Base64Decoder();
-		encoder = new Base64Encoder();
-
-		host = hostName;
-		port = portNr;
-
-		this.useSSL = false;
-	}
-
-	
-
-	/**
-	 * @param hostName
-	 */
-	public SMTPProtocol(String hostName) {
-		this(hostName, 25);
 	}
 
 	/**
@@ -172,8 +150,8 @@ public class SMTPProtocol {
 	/**
 	 * SMTP commands are character strings terminated by <CRLF>.  
 	 * The command codes themselves are alphabetic characters terminated 
-		 * by <SP> if parameters follow and <CRLF> otherwise.
-		 * 
+	 * by <SP> if parameters follow and <CRLF> otherwise.
+	 * 
 	 * @param parameter	command parameter
 	 * @throws Exception
 	 */
@@ -190,48 +168,49 @@ public class SMTPProtocol {
 	 * 
 	 * Authentication using the "AUTH" extension mechanism.
 	 * 
+	 * <p>
 	 * Columba supports "AUTH PLAIN" and "AUTH LOGIN". Hopefully
 	 * more to come ;-)
-	 * 
-	 * Possible server responses:
-	 * 
-	 * 432 A password transition is needed:
+	 * <p>
+	 * Possible server responses:<p>
+	 * <p>
+	 * 432 A password transition is needed:<p>
 	 * This response to the AUTH command indicates that the user needs to
 	 * transition to the selected authentication mechanism.  This typically
 	 * done by authenticating once using the PLAIN authentication mechanism.
-	 * 
-	 * 534 Authentication mechanism is too weak:
+	 * <p>
+	 * 534 Authentication mechanism is too weak:<p>
 	 * This response to the AUTH command indicates that the selected
 	 * authentication mechanism is weaker than server policy permits fo
 	 * that user.
-	 * 
-	 * 538 Encryption required for requested authentication mechanism:
+	 * <p>
+	 * 538 Encryption required for requested authentication mechanism:<p>
 	 * This response to the AUTH command indicates that the selected
 	 * authentication mechanism may only be used when the underlying SMTP
 	 * connection is encrypted.
-	 * 
-	 * 454 Temporary authentication failure:
+	 * <p>
+	 * 454 Temporary authentication failure:<p>
 	 * This response to the AUTH command indicates that the authentication
 	 * failed due to a temporary server failure.
-	 * 
-	 * 530 Authentication required:
+	 * <p>
+	 * 530 Authentication required:<p>
 	 * This response may be returned by any command other than AUTH, EHLO,
 	 * HELO, NOOP, RSET, or QUIT.  It indicates that server policy requires
 	 * authentication in order to perform the requested action.
-	 * 
-	 * 501 Invalid base64 data :
+	 * <p>
+	 * 501 Invalid base64 data :<p>
 	 * If the server cannot BASE64 decode the argument, it rejects the
 	 * AUTH command with a 501 reply.
-	 * 
-	 * 535 Incorrect authentication data:
+	 * <p>
+	 * 535 Incorrect authentication data:<p>
 	 * If the client uses an initial-response argument to the AUTH
 	 * command with a mechanism that sends data in the initial
 	 * challenge, the server rejects the AUTH command with a 535 reply.
 	 * 
 	 * 
-	 * @param username
-	 * @param password		
-	 * @param loginMethod	can be a String of "PLAIN" or "LOGIN"
+	 * @param username		username
+	 * @param password		password
+	 * @param loginMethod	can be a string of "PLAIN" or "LOGIN"
 	 * @throws Exception
 	 */
 	public void authenticate(
@@ -263,8 +242,8 @@ public class SMTPProtocol {
 	 * 
 	 * Authenticate using PLAIN
 	 * 
-	 * @param username
-	 * @param password
+	 * @param username		username	
+	 * @param password		password
 	 * @throws Exception
 	 */
 	protected void authenticatePlain(String username, String password)
@@ -292,8 +271,8 @@ public class SMTPProtocol {
 	/**
 	 * Authenticate using LOGIN
 	 * 
-	 * @param username
-	 * @param password
+	 * @param username		username
+	 * @param password		password
 	 * @throws Exception
 	 */
 	protected void authenticateLogin(String username, String password)
@@ -318,14 +297,17 @@ public class SMTPProtocol {
 	}
 
 	/**
+	 * Initiate SSL/TLS encrypted connection
+	 * 
 	 * command syntax: STARTTLS <CLRF>
-	 * 
+	 * <p>
 	 * possible server answers:
-	 * 
+	 * <p>
+	 * <pre>
 	 * 220 Ready to start TLS
 	 * 501 Syntax error (no parameters allowed)
 	 * 454 TLS not available due to temporary reason
-	 * 
+	 * </pre>
 	 * @throws Exception
 	 */
 	protected void initSSL() throws Exception {
@@ -354,11 +336,14 @@ public class SMTPProtocol {
 	 * 
 	 * Open port to server and create the input-/output streams. 
 	 * 
-	 * Possible answers:
+	 * <p>
+	 * Possible answers:<p>
+	 * <pre>
 	 * S: 220	<domain> Service ready
 	 * F: 421	<domain> Service not available, closing transmission channel
 	 *          [This may be a reply to any command if the service knows it
 	 *           must shut down]
+	 * </pre>
 	 * 
 	 * 
 	 * @return	either SMTP or ESMTP, which will be later used
@@ -393,22 +378,24 @@ public class SMTPProtocol {
 	}
 
 	/**
-	 * 
+	 * Send initial greeting to POP3 server.
+	 * <p>
 	 * HELO command syntax: HELO <SP> <domain> <CRLF>
-	 * 
+	 * <p>
 	 * This command is used to identify the sender-SMTP to the 
 	 * receiver-SMTP.  The argument field contains the host name of
-	 * the sender-SMTP.
+	 * the sender-SMTP.<p>
 	 * The receiver-SMTP identifies itself to the sender-SMTP in
 	 * the connection greeting reply, and in the response to this
-	 * command.
+	 * command.<p>
 	 * This command and an OK reply to it confirm that both the
 	 * sender-SMTP and the receiver-SMTP are in the initial state,
 	 * that is, there is no transaction in progress and all state
 	 * tables and buffers are cleared.
-	 * 
-	 * Possible return codes for the HELO command:
-	 * 
+	 * <p>
+	 * Possible return codes for the HELO command:<p>
+	 * <p>
+	 * <pre>
 	 * S: 250 Requested mail action okay, completed
 	 * E: 500 Syntax error, command unrecognized
 			  [This may include errors such as command line too long]
@@ -417,6 +404,7 @@ public class SMTPProtocol {
 	 * E: 421 <domain> Service not available, closing transmission channel
 	 *        [This may be a reply to any command if the service knows it 
 	 *         must shut down]
+	 * </pre>
 	 * 
 	 * @return		either SMTP or ESMTP, which will be later used
 	 *          	when trying to authenticate
@@ -459,12 +447,14 @@ public class SMTPProtocol {
 	 * 
 	 * Get list of capabilites from server.
 	 * 
+	 * <p>
 	 * The HELO command will make the server send its 
 	 * capabilities to the client.
-	 * 
+	 * <p>
 	 * Generally this is a list of keywords.
-	 * 
-	 * example:
+	 * <p>
+	 * example:<p>
+	 * <pre>
 	 * S: <wait for connection on TCP port 25>
 	 * C: <open connection to server>
 	 * S: 220 dbc.mtview.ca.us SMTP service ready
@@ -476,7 +466,7 @@ public class SMTPProtocol {
 	 * S: 250-XONE
 	 * S: 250 XVRB
 	 * ...
-	 * 
+	 * </pre>
 	 * 
 	 * @throws Exception
 	 */
@@ -513,13 +503,16 @@ public class SMTPProtocol {
 	}
 
 	/**
-	 * command syntax: MAIL <SP> FROM:<reverse-path> <CRLF>
-	 *  
+	 * Send from email adress and list of recipients
+	 * <p>
+	 * command syntax: MAIL <SP> FROM:<reverse-path> <CRLF><p>
+	 * <p>
 	 * This command is used to initiate a mail transaction in which
 	 * the mail data is delivered to one or more mailboxes.  The
 	 * argument field contains a reverse-path.
-	 * 
-	 * possible server responses:
+	 * <p>
+	 * possible server responses:<p>
+	 * <pre>
 	 * S: 250	Requested mail action okay, completed 
 	 * F: 552 	Requested mail action aborted: exceeded storage allocation
 	 * F: 451	Requested action aborted: error in processing
@@ -530,14 +523,16 @@ public class SMTPProtocol {
 	 * E: 421	<domain> Service not available, closing transmission channel
 	 *          [This may be a reply to any command if the service knows it
 	 *           must shut down]
-	 * 
-	 * command syntax: RCPT <SP> TO:<forward-path> <CRLF>
-	 * 
+	 * </pre>
+	 * <p>
+	 * command syntax: RCPT <SP> TO:<forward-path> <CRLF><p>
+	 * <p>
 	 * This command is used to identify an individual recipient of
 	 * the mail data; multiple recipients are specified by multiple
 	 * use of this command.
-	 * 
-	 * possible server responses:
+	 * <p>
+	 * possible server responses:<p>
+	 * <pre>
 	 * S: 250	Requested mail action okay, completed
 	 * S: 251	User not local; will forward to <forward-path>
 	 * F: 550	Requested action not taken: mailbox unavailable
@@ -557,9 +552,10 @@ public class SMTPProtocol {
 	 * E: 421	<domain> Service not available, closing transmission channel
 	 *          [This may be a reply to any command if the service knows it
 	 *           must shut down]
+	 * </pre>
 	 * 
-	 * @param from
-	 * @param to
+	 * @param from		from email address
+	 * @param to		list of recipients
 	 * @throws Exception
 	 */
 	public void setupMessage(String from, List to) throws Exception {
@@ -583,20 +579,23 @@ public class SMTPProtocol {
 	}
 
 	/**
-	 * command syntax: DATA <CRLF>
+	 * Send messagesource
 	 * 
+	 * command syntax: DATA <CRLF><p>
+	 * 
+	 * <p>
 	 * The receiver treats the lines following the command as mail
 	 * data from the sender.  This command causes the mail data
 	 * from this command to be appended to the mail data buffer.
 	 * The mail data may contain any of the 128 ASCII character
-	 * codes.
+	 * codes.<p>
 	 * The mail data is terminated by a line containing only a
 	 * period, that is the character sequence "<CRLF>.<CRLF>".  
 	 * This is the end of mail data indication.
 	 * 
 	 * @param message	String containing the message source
 	 * 
-	 * @param workerStatusController
+	 * @param workerStatusController	controller to update the statusbar
 	 * 
 	 * @throws Exception
 	 */
@@ -656,8 +655,11 @@ public class SMTPProtocol {
 	}
 
 	/**
-	 * command syntax: QUIT <CRLF>
+	 * Quit connection with server
 	 * 
+	 * command syntax: QUIT <CRLF><p>
+	 * 
+	 * <p>
 	 * This command specifies that the receiver must send an OK
 	 * reply, and then close the transmission channel.     
 	 * 
