@@ -260,6 +260,12 @@ public class ProfileManager {
 			String selected = profiles.getAttribute("selected");
 			Profile p = getProfileForName(selected);
 
+			if ( p == null) {
+				// fall back to default profile
+			
+				p = new Profile("Default", location);
+			}
+			
 			return p;
 		}
 
