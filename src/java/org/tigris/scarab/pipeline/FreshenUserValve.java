@@ -65,6 +65,7 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
@@ -73,7 +74,7 @@ import org.tigris.scarab.om.MITListManager;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.7 2003/01/30 22:39:15 elicia Exp $
+ * @version $Id: FreshenUserValve.java,v 1.8 2003/02/03 19:12:22 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -183,7 +184,7 @@ public class FreshenUserValve
         {
             try  
             {
-                module = Issue.getIssueById(parameters.getString("id")).getModule();
+                module = IssueManager.getIssueById(parameters.getString("id")).getModule();
                 parameters.setString(ScarabConstants.CURRENT_MODULE, 
                              module.getQueryKey());
             }
@@ -220,7 +221,7 @@ public class FreshenUserValve
             try  
             {
                 issueType = 
-                    Issue.getIssueById(parameters.getString("id")).getIssueType();
+                    IssueManager.getIssueById(parameters.getString("id")).getIssueType();
                 parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
                              issueType.getQueryKey());
             }

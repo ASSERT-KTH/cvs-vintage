@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.21 2003/02/01 06:28:19 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.22 2003/02/03 19:12:22 jmcnally Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -211,7 +211,7 @@ public class ScarabIssues implements java.io.Serializable
                 }
                 try
                 {
-                    @OM@.Issue parentIssueOM = @OM@.Issue.getIssueById(parent);
+                    @OM@.Issue parentIssueOM = @OM@.IssueManager.getIssueById(parent);
                     if (parentIssueOM == null)
                     {
                         throw new Exception();
@@ -223,7 +223,7 @@ public class ScarabIssues implements java.io.Serializable
                 }
                 try
                 {
-                    @OM@.Issue childIssueOM = @OM@.Issue.getIssueById(child);
+                    @OM@.Issue childIssueOM = @OM@.IssueManager.getIssueById(child);
                     if (childIssueOM == null)
                     {
                         throw new Exception();
@@ -268,8 +268,8 @@ public class ScarabIssues implements java.io.Serializable
                 {
                     String type = dependency.getType();
                     @OM@.Depend newDependOM = @OM@.DependManager.getInstance();
-                    @OM@.Issue parentIssueOM = @OM@.Issue.getIssueById(parent);
-                    @OM@.Issue childIssueOM = @OM@.Issue.getIssueById(child);
+                    @OM@.Issue parentIssueOM = @OM@.IssueManager.getIssueById(parent);
+                    @OM@.Issue childIssueOM = @OM@.IssueManager.getIssueById(child);
                     newDependOM.setDefaultModule(parentIssueOM.getModule());
                     newDependOM.setObservedId(parentIssueOM.getIssueId());
                     newDependOM.setObserverId(childIssueOM.getIssueId());
@@ -594,7 +594,7 @@ public class ScarabIssues implements java.io.Serializable
         }
         else
         {
-            issueOM = @OM@.Issue.getIssueById(module.getCode() + issue.getId());
+            issueOM = @OM@.IssueManager.getIssueById(module.getCode() + issue.getId());
             if (issueOM == null)
             {
                 issueOM = createNewIssue(module, issue);

@@ -62,13 +62,14 @@ import org.apache.torque.TorqueException;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.Issue;
 
 /**
  * This class contains logic for finding issue ids in generic text.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueIdParser.java,v 1.5 2003/01/31 19:38:08 jon Exp $
+ * @version $Id: IssueIdParser.java,v 1.6 2003/02/03 19:12:22 jmcnally Exp $
  */
 public class IssueIdParser
 {
@@ -181,7 +182,7 @@ public class IssueIdParser
             {
                 id = module.getCode() + id;
             }
-            Issue issue = Issue.getIssueById(id);
+            Issue issue = IssueManager.getIssueById(id);
             if (issue == null || issue.getDeleted()) 
             {
                 id = null;

@@ -60,7 +60,7 @@ import org.tigris.scarab.util.ScarabException;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Depend.java,v 1.20 2002/12/29 01:29:00 jon Exp $
+ * @version $Id: Depend.java,v 1.21 2003/02/03 19:12:21 jmcnally Exp $
  */
 public class Depend 
     extends BaseDepend
@@ -176,12 +176,12 @@ public class Depend
                 "setDefaultModule() before you can call this method.");
         }
         Issue childIssue = null;
-	    childIssue = Issue.getIssueById(uniqueId);
+	    childIssue = IssueManager.getIssueById(uniqueId);
 	    if (childIssue == null)
         {
            String code = getDefaultModule().getCode();
            uniqueId = code + uniqueId;
-           childIssue = Issue.getIssueById(uniqueId);
+           childIssue = IssueManager.getIssueById(uniqueId);
         }
         super.setObserverId(childIssue.getIssueId());
     }

@@ -1355,7 +1355,7 @@ try{
                 {
                     id = getCurrentModule().getCode() + id;
                 }
-                issue = Issue.getIssueById(id);
+                issue = IssueManager.getIssueById(id);
 
                 if (issue.getDeleted())
                 {

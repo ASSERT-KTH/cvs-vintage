@@ -10,6 +10,8 @@ import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.manager.CacheListener;
+import org.apache.torque.util.Criteria;
+import org.tigris.scarab.util.Log;
 
 /** 
  * This class manages Issue objects.  
@@ -21,6 +23,11 @@ public class IssueManager
     extends BaseIssueManager
     implements CacheListener
 {
+    private static final String ISSUE = 
+        "Issue";
+    protected static final String GET_ISSUE_BY_ID = 
+        "getIssueById";
+
     /**
      * Creates a new <code>IssueManager</code> instance.
      *
@@ -33,10 +40,9 @@ public class IssueManager
         setRegion(getClassName().replace('.', '_'));
     }
 
-    /*
     public static Issue getIssueById(String id)
     {
-        FederatedId fid = new FederatedId(id);
+        Issue.FederatedId fid = new Issue.FederatedId(id);
         return getIssueById(fid);
     }
 
@@ -48,37 +54,57 @@ public class IssueManager
     public static Issue getIssueByIdImpl(Issue.FederatedId fid)
     {
         Issue result = null;
-        Object obj = ScarabCache.get(ISSUE, GET_ISSUE_BY_ID, fid); 
-        if ( obj == null ) 
+        Object obj = getMethodResult().get(ISSUE, GET_ISSUE_BY_ID, fid); 
+        if ( obj != null ) 
+        {        
+            try 
+            {
+                Issue cachedById = (Issue)obj;
+                Issue cachedByPk = getInstance(cachedById.getIssueId());
+                // we need to compare this to the cached by pk, issue, in case
+                // the issue was moved.
+                if (cachedById.getFederatedId().equals(cachedByPk.getFederatedId())) 
+                {
+                    result = cachedByPk;
+                }
+                else 
+                {
+                    getMethodResult().remove(ISSUE, GET_ISSUE_BY_ID, fid);
+                }
+            }
+            catch (TorqueException e)
+            {
+                Log.get().error("", e);
+            }
+        }
+
+        if ( result == null ) 
         {        
             Criteria crit = new Criteria(5)
                 .add(IssuePeer.ID_PREFIX, fid.getPrefix())
                 .add(IssuePeer.ID_COUNT, fid.getCount());
+            crit.setIgnoreCase(true);
             
             if (  fid.getDomain() != null ) 
             {
                 crit.add(IssuePeer.ID_DOMAIN, fid.getDomain());    
             }
             
-            Issue issue = null;
             try
             {
                 result = (Issue)IssuePeer.doSelect(crit).get(0);
                 IssueManager.putInstance(result);
-                ScarabCache.put(result, ISSUE, GET_ISSUE_BY_ID, fid);
+                getMethodResult().put(result, ISSUE, GET_ISSUE_BY_ID, fid);
             }
             catch (Exception e) 
             {
+                Log.get().error("", e);
                 // return null
             }
         }
-        else 
-        {
-            result = (Issue)obj;
-        }
+
         return result;
     }
-    */
 
     /**
      * Notify other managers with relevant CacheEvents.
@@ -156,7 +182,7 @@ public class IssueManager
 
     public void refreshedObject(Persistent om)
     {
-        addedObject(om);
+        addedObject(om);            
     }
 
     /** fields which interest us with respect to cache events */
