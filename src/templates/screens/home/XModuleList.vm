@@ -24,7 +24,7 @@
      value="$!data.Parameters.getString("queryString")" />
  <input type="hidden" name="queryId" 
      value="$!data.Parameters.getString("queryId")" />
-
+#*
 #if (!$mitList || $mitList.isEmpty())
  <p>$l10n.ChoosePredefinedList</p>
  <h3>$l10n.PredefinedLists</h3>
@@ -46,9 +46,8 @@
   <input type="submit" name="eventSubmit_doGotoquerywithinternallist" value="$l10n.DefineQuery" />
  </div>
 #end
+*#
 
-
-		
 <h3>$l10n.BuildListOfIssueTypes</h3>
 
 #if (!$isEdit && $mitList && !$mitList.isEmpty())
@@ -56,7 +55,6 @@
  <input type="submit" name="eventSubmit_doGotoquery" value="$l10n.DefineQuery" />
 </div>
 #end
-
 
 #if (!$isEdit)
 <div class="colbar">
@@ -225,7 +223,7 @@ $l10n.NoMoreIssueTypes
 
 	  <th>#rmitSort("module" "$l10n.CapModule")</th>
 	  <th>#rmitSort("issuetype" "$l10n.IssueType")</th>
-	  <th>Description</th>
+	  <th>$l10n.Description</th>
     </tr>
 
 #foreach ($rmit in $searchableRMITs)
@@ -252,7 +250,7 @@ $l10n.NoMoreIssueTypes
        <th>$l10n.MaxPerPage</th>
        <td>
         #resultsPerPageRadioSelect($resultsPerPage)
-        &#160;<input type="submit" value="$l10n.Refresh" /></p>
+        &#160;<input type="submit" value="$l10n.Refresh" />
        </td>
      </tr>
   </table>
