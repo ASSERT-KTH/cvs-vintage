@@ -166,6 +166,9 @@ public class JSSESocketFactory
 	    String keyPass=(String)attributes.get("keypass");
 	    if( keyPass==null) keyPass=defaultKeyPass;
 
+	    String keystorePass=(String)attributes.get("keystorePass");
+	    if( keystorePass==null) keystorePass=keyPass;
+
 	    //protocol for the SSL ie - TLS, SSL v3 etc.
 	    String protocol = (String)attributes.get("protocol");
 	    if(protocol == null) protocol = defaultProtocol;
@@ -176,7 +179,7 @@ public class JSSESocketFactory
 	    
 	    // You can't use ssl without a server certificate.
 	    // Create a KeyStore ( to get server certs )
-	    KeyStore kstore = initKeyStore( keystoreFile, keyPass );
+	    KeyStore kstore = initKeyStore( keystoreFile, keystorePass );
 	    
 	    // Create a SSLContext ( to create the ssl factory )
 	    // This is the only way to use server sockets with JSSE 1.0.1
