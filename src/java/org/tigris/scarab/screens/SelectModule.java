@@ -63,7 +63,7 @@ import org.apache.torque.om.NumberKey;
  * in SelectModule.vm
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: SelectModule.java,v 1.4 2002/06/19 03:44:25 jmcnally Exp $
+ * @version $Id: SelectModule.java,v 1.5 2002/07/03 17:45:41 jon Exp $
  */
 public class SelectModule extends Default
 {
@@ -90,21 +90,7 @@ public class SelectModule extends Default
          */
         public TemplateLink setPage(String moduleId)
         {
-            String template = null;
-            Module module = null;
-            try
-            {
-                module = ModuleManager.getInstance(new NumberKey(moduleId));
-                if (module.getIssueTypes(true).size() == 0)
-                { 
-                    template = "SelectArtifactType.vm";
-                }
-                else
-                {
-                    template = "home,EnterNew.vm";
-                }
-            }catch(Exception e){e.printStackTrace();}
-            return super.setPage(template, moduleId);
+            return super.setPage("home,EnterNew.vm", moduleId);
         }
     }
 }
