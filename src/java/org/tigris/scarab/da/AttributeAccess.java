@@ -46,7 +46,9 @@ package org.tigris.scarab.da;
  * individuals on behalf of CollabNet.
  */
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.torque.util.Criteria;
 
@@ -92,4 +94,80 @@ public interface AttributeAccess
      */
     void deleteQueryColumnIDs(String userID, String listID,
                               String moduleID, String artifactTypeID);
+
+    /**
+     * Set of attributeIDs which are active and required within the given 
+     * module for the given issue type and whose attribute group's are 
+     * also active.
+     * @param moduleID The associated module (must be
+     * non-<code>null</code>).
+     * @param artifactTypeID The associated artifact type (must be
+     * non-<code>null</code>).
+     * @return an <code>String</code> of String attribute ids
+     */
+    public Set retrieveRequiredAttributeIDs(String moduleID, 
+                                            String artifactTypeID);
+
+    /**
+     * Set of attributeIDs which are active and marked for custom search 
+     * within the given 
+     * module for the given issue type and whose attribute group's are 
+     * also active.
+     * @param moduleID The associated module (must be
+     * non-<code>null</code>).
+     * @param artifactTypeID The associated artifact type (must be
+     * non-<code>null</code>).
+     * @return an <code>Set</code> of String attribute ids
+     */
+    public Set retrieveQuickSearchAttributeIDs(String moduleID, 
+                                               String issueTypeID);
+
+    /**
+     * Torque <code>Attribute</code>s which are active within the 
+     * given module for the given issue type 
+     * <strike>and whose attribute group's are also active</strike>.  
+     *
+     * @param moduleID The associated module (must be
+     * non-<code>null</code>).
+     * @param artifactTypeID The associated artifact type (must be
+     * non-<code>null</code>).
+     * @param isOrdered indication whether an iterator over the Attributes 
+     * should return them in their natural order.
+     * @return an <code>Collection</code> of torque Attribute objects.  The
+     * collection will be a List if isOrdered is true, otherwise a Set is
+     * returned.
+     */
+    public Collection retrieveActiveAttributeOMs(String moduleID,
+                                                 String artifactTypeID, 
+                                                 boolean isOrdered);
+
+
+    /**
+     * Retrieves the attribute ID which is active and marked as the 
+     * default text attribute within the given 
+     * module for the given issue type and whose attribute group is 
+     * also active.
+     * @param moduleID The associated module (must be
+     * non-<code>null</code>).
+     * @param artifactTypeID The associated artifact type (must be
+     * non-<code>null</code>).
+     * @return an <code>String</code> attribute ID
+     */
+    public String retrieveDefaultTextAttributeID(String moduleID, 
+                                                 String artifactTypeID);
+
+    /**
+     * Retrieves the attribute ID which is active and is the first id returned
+     * when results are ordered based on numerical preferred order and/or 
+     * alphabetical by name within the given 
+     * module for the given issue type and whose attribute group is 
+     * also active.
+     * @param moduleID The associated module (must be
+     * non-<code>null</code>).
+     * @param artifactTypeID The associated artifact type (must be
+     * non-<code>null</code>).
+     * @return an <code>String</code> attribute ID
+     */
+    public String retrieveFirstActiveTextAttributeID(String moduleID, 
+                                                     String artifactTypeID);
 }

@@ -46,14 +46,22 @@ package org.tigris.scarab.da;
  * individuals on behalf of CollabNet.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import com.workingdogs.village.Record;
 
+import org.tigris.scarab.om.AttributePeer;
+import org.tigris.scarab.om.AttributeGroupPeer;
+import org.tigris.scarab.om.RAttributeAttributeGroupPeer;
+import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.RModuleUserAttributePeer;
 import org.tigris.scarab.services.cache.ScarabCache;
 
@@ -70,6 +78,18 @@ public class ScarabAttributeAccess
     /** Method name used as part of a cache key. */
     private static final String RETRIEVE_QUERY_COLUMN_IDS =
         "retrieveQueryColumnIDs";
+    private static final String RETRIEVE_QUICK_SEARCH_ATTRIBUTES = 
+        "retrieveQuickSearchAttributeIDs";
+    private static final String RETRIEVE_REQUIRED_ATTRIBUTES = 
+        "retrieveRequiredAttributeIDs";
+    private static final String RETRIEVE_ACTIVE_ATTRIBUTES = 
+        "retrieveActiveAttributes";
+    private static final String RETRIEVE_DEFAULT_TEXT_ATTRIBUTE = 
+        "retrieveDefaultTextAttributeID";
+    private static final String RETRIEVE_FIRST_ACTIVE_TEXT_ATTRIBUTE = 
+        "retrieveFirstActiveTextAttributeID";
+
+    private Serializable thisKey = AttributeAccess.class;
 
     public ScarabAttributeAccess()
     {
@@ -79,7 +99,7 @@ public class ScarabAttributeAccess
                                        String moduleID, String artifactTypeID)
     {
         List result = null;
-        Object obj = ScarabCache.get(AttributeAccess.class,
+        Object obj = ScarabCache.get(thisKey,
                                      RETRIEVE_QUERY_COLUMN_IDS,
                                      userID, moduleID, artifactTypeID);
         if (obj == null)
@@ -152,4 +172,245 @@ public class ScarabAttributeAccess
                                   "attribute identifiers", e);
         }
     }
+
+
+    /**
+     * List of attributeIDs which are active and required within the given 
+     * module for the given artifact type and whose attribute group's are 
+     * also active.
+     * @return an <code>List</code> of String attribute ids
+     */
+    public Set retrieveRequiredAttributeIDs(String moduleID, 
+                                            String artifactTypeID)
+    {
+        Set attributes = null;
+        Object obj = ScarabCache.get(thisKey, RETRIEVE_REQUIRED_ATTRIBUTES, 
+                                     moduleID, artifactTypeID); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(7)
+                .add(RModuleAttributePeer.REQUIRED, true)
+                .add(RModuleAttributePeer.ACTIVE, true);
+            crit.add(RModuleAttributePeer.MODULE_ID, moduleID);
+            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+            addGroupCriteria(crit, moduleID, artifactTypeID);
+            attributes = getRMAAttributeIdSet(crit);
+            ScarabCache.put(attributes, thisKey, RETRIEVE_REQUIRED_ATTRIBUTES, 
+                            moduleID, artifactTypeID);
+        }
+        else 
+        {
+            attributes = (Set)obj;
+        }
+        return attributes;
+    }
+    
+    public Set retrieveQuickSearchAttributeIDs(String moduleID, 
+                                               String artifactTypeID)
+    {
+        Set attributes = null;
+        Object obj = ScarabCache.get(thisKey, RETRIEVE_QUICK_SEARCH_ATTRIBUTES,
+                                     moduleID, artifactTypeID); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(3)
+                .add(RModuleAttributePeer.QUICK_SEARCH, true);
+            crit.add(RModuleAttributePeer.MODULE_ID, moduleID);
+            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+            attributes = getRMAAttributeIdSet(crit);
+            ScarabCache.put(attributes, thisKey, RETRIEVE_QUICK_SEARCH_ATTRIBUTES, 
+                            moduleID, artifactTypeID);
+        }
+        else 
+        {
+            attributes = (Set)obj;
+        }
+        return attributes;
+    }
+
+    private Set getRMAAttributeIdSet(Criteria crit)
+    {
+        crit.addSelectColumn(RModuleAttributePeer.ATTRIBUTE_ID);
+        Set attributes = null;
+        try 
+        {
+            List records = RModuleAttributePeer.doSelectVillageRecords(crit);
+            attributes = new HashSet(records.size());
+            for (Iterator i = records.iterator(); i.hasNext();) 
+            {
+                attributes.add(((Record)i.next()).getValue(1).asString());
+            }
+        }
+        catch (Exception e)
+        {
+            throw new DAException("Failed to retrieve a list of " +
+                                  "attribute identifiers", e);
+        }
+        return attributes;
+    }
+
+    private void addGroupCriteria(Criteria crit, 
+                                  String moduleID, String artifactTypeID)
+    {
+        crit.addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
+                     RModuleAttributePeer.ATTRIBUTE_ID)
+            .addJoin(RAttributeAttributeGroupPeer.GROUP_ID, 
+                     AttributeGroupPeer.ATTRIBUTE_GROUP_ID)
+            .add(AttributeGroupPeer.MODULE_ID, moduleID)
+            .add(AttributeGroupPeer.ISSUE_TYPE_ID, artifactTypeID)
+            .add(AttributeGroupPeer.ACTIVE, true);
+    }
+
+
+    public Collection retrieveActiveAttributeOMs(String moduleID,
+                                                 String artifactTypeID, 
+                                                 boolean isOrdered)
+    {
+        Collection attributes = null;
+        Boolean ordered = isOrdered ? Boolean.TRUE : Boolean.FALSE;
+        Object obj = ScarabCache.get(thisKey, RETRIEVE_ACTIVE_ATTRIBUTES, 
+                                     moduleID, artifactTypeID, ordered);
+        if (obj == null)
+        {
+            Criteria crit = new Criteria(2);
+            crit.add(RModuleAttributePeer.ACTIVE, true);
+            crit.add(RModuleAttributePeer.MODULE_ID, moduleID);
+            crit.add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+            // FIXME! would like to eliminate attributes that exist in
+            // inactive groups, but user attributes are not in groups, so 
+            // this cannot be as simple as the required attributes which
+            // never include user attributes.  Will probably require a left
+            // join.  Leaving as it was for now.  An attribute is active
+            // even if it is in an inactive group.
+            //addGroupCriteria(crit, moduleID, artifactTypeID);
+
+            if (isOrdered) 
+            {
+                crit.addAscendingOrderByColumn(
+                    RModuleAttributePeer.PREFERRED_ORDER);
+                crit.addAscendingOrderByColumn(
+                    RModuleAttributePeer.DISPLAY_VALUE);                
+            }
+
+            crit.addJoin(AttributePeer.ATTRIBUTE_ID, 
+                         RModuleAttributePeer.ATTRIBUTE_ID);
+            List records = null;
+            try 
+            {
+                records = AttributePeer.doSelect(crit);
+            }
+            catch (Exception e)
+            {
+                throw new DAException("Failed to retrieve a list of " +
+                                      "attribute identifiers", e);
+            }
+            if (isOrdered) 
+            {
+                attributes = new ArrayList(records.size());                
+            }
+            else 
+            {
+                attributes = new HashSet(records.size());
+            }
+
+            for (Iterator i = records.iterator(); i.hasNext();) 
+            {
+                attributes.add(i.next());
+            }
+            
+            ScarabCache.put(attributes, thisKey, RETRIEVE_ACTIVE_ATTRIBUTES, 
+                            moduleID, artifactTypeID, ordered);
+        }
+        else
+        {
+            attributes = (Collection)obj;
+        }
+        return attributes;
+    }
+
+    public String retrieveDefaultTextAttributeID(String moduleID, 
+                                                 String artifactTypeID)
+    {
+        String result = null;
+        Object obj = ScarabCache.get(thisKey, RETRIEVE_DEFAULT_TEXT_ATTRIBUTE, 
+                                     moduleID, artifactTypeID); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(7);
+            crit.add(RModuleAttributePeer.DEFAULT_TEXT_FLAG, true)
+                .add(RModuleAttributePeer.ACTIVE, true)
+                .add(RModuleAttributePeer.MODULE_ID, moduleID)
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+            addGroupCriteria(crit, moduleID, artifactTypeID);
+            result = getRMAAttributeId(crit);
+            ScarabCache.put(result, thisKey, RETRIEVE_DEFAULT_TEXT_ATTRIBUTE,
+                            moduleID, artifactTypeID);
+        }
+        else 
+        {
+            result = (String)obj;
+        }
+        
+        return result.length() == 0 ? null : result;
+    }
+
+    private String getRMAAttributeId(Criteria crit)
+    {
+        String result = null;
+        crit.addSelectColumn(RModuleAttributePeer.ATTRIBUTE_ID);
+        try 
+        {
+            List records = RModuleAttributePeer.doSelectVillageRecords(crit);
+            if (records.isEmpty()) 
+            {
+                result = ""; // for caching
+            }
+            else
+            {
+                result = ((Record)records.get(0)).getValue(1).asString();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new DAException("Failed to retrieve a list of " +
+                                  "attribute identifiers", e);
+        }
+        return result;
+    }
+
+
+    public String retrieveFirstActiveTextAttributeID(String moduleID, 
+                                                     String artifactTypeID)
+    {
+        String result = null;
+
+        Object obj = ScarabCache.get(thisKey, 
+                                     RETRIEVE_FIRST_ACTIVE_TEXT_ATTRIBUTE, 
+                                     moduleID, artifactTypeID); 
+        if (obj == null) 
+        {        
+            Criteria crit = new Criteria(7);
+            crit.add(RModuleAttributePeer.ACTIVE, true)
+                .add(RModuleAttributePeer.MODULE_ID, moduleID)
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, artifactTypeID);
+            addGroupCriteria(crit, moduleID, artifactTypeID);
+
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.DISPLAY_VALUE);                
+
+            result = getRMAAttributeId(crit);
+            ScarabCache.put(result, thisKey, 
+                            RETRIEVE_FIRST_ACTIVE_TEXT_ATTRIBUTE,
+                            moduleID, artifactTypeID);
+        }
+        else 
+        {
+            result = (String)obj;
+        }
+        
+        return result.length() == 0 ? null : result;
+    }
 }
+
