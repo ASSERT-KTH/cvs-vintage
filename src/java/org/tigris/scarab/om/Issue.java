@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.253 2003/01/04 03:50:34 jon Exp $
+ * @version $Id: Issue.java,v 1.254 2003/01/18 01:00:06 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -162,6 +162,8 @@ public class Issue
         "getActivitiesWithNullEndDate";
     protected static final String GET_INITIAL_ACTIVITYSET = 
         "getInitialActivitySet";
+    protected static final String GET_HISTORY_LIMIT =
+        "getHistoryLimit";
 
     /** storage for any attachments which have not been saved yet */
     private List unSavedAttachments = null;
@@ -1588,20 +1590,28 @@ public class Issue
      */
     public int getHistoryLimit() throws Exception
     {
-        int limit=0;
-        try
+        Integer result = null;
+        RModuleIssueType rmit = getModule().getRModuleIssueType(getIssueType());
+        Object obj = ScarabCache.get(this, GET_HISTORY_LIMIT, rmit);
+        if (obj == null)
         {
-            limit = getModule().getRModuleIssueType(getIssueType())
-                    .getHistory();
+            try
+            {
+                result = new Integer(rmit.getHistory());
+            }
+            catch (Exception e)
+            {
+                log().error("Issue.getHistoryLimit(): ", e);
+            }
+            ScarabCache.put(result, this, GET_HISTORY_LIMIT, rmit);
         }
-        catch (Exception e)
+        else
         {
-            log().error("Issue.getHistoryLimit(): ", e);
+            result = (Integer)obj;
         }
-        
-        return limit;
+        return result.intValue();
     }
-        
+
     /**
      * Determines whether the history list is longer than
      * The default limit.
@@ -1655,8 +1665,8 @@ public class Issue
         Boolean fullHistoryObj = fullHistory ? Boolean.TRUE : Boolean.FALSE;
         Object obj = getMethodResult().get(this, GET_ACTIVITY, fullHistoryObj,
                                      new Integer(limit)); 
-        if ( obj == null ) 
-        {        
+        if (obj == null)
+        {
             Criteria crit = new Criteria()
                 .add(ActivityPeer.ISSUE_ID, getIssueId())
                 .addAscendingOrderByColumn(ActivityPeer.TRANSACTION_ID);
@@ -1848,22 +1858,18 @@ public class Issue
         throws Exception
     {
         // Check whether the entered issue is already dependent on this
-        // Issue. If so, and it had been marked deleted, mark as undeleted.
-        Depend prevDepend = this.getDependency(childIssue);
-        if (prevDepend != null && prevDepend.getDeleted())
-        {
-            prevDepend.setDefaultModule(depend.getDefaultModule());
-            prevDepend.setDescription(depend.getDescription());
-            prevDepend.setDeleted(false);
-            depend = prevDepend;
-        }
-        else if (prevDepend != null)
+        // Issue. If so, then throw an exception because we don't want
+        // to add it again.
+        Depend prevDepend = this.getDependency(childIssue, true);
+        if (prevDepend != null)
         {
             throw new Exception("This issue already has a dependency" 
                                   + " on the issue id you entered.");
         }
+
         // we definitely want to do an insert here so force it.
         depend.setNew(true);
+        depend.setDeleted(false);
         depend.save();
 
         if (activitySet == null)
@@ -1904,19 +1910,34 @@ public class Issue
      */
     public Depend getDependency(Issue childIssue) throws Exception
     {
+        return getDependency(childIssue, true);
+    }
+    
+    /**
+     * Checks to see if this issue has a dependency on the passed in issue.
+     * or if the passed in issue has a dependency on this issue.
+     */
+    public Depend getDependency(Issue childIssue, boolean hideDeleted) throws Exception
+    {
         Depend result = null;
         Object obj = ScarabCache.get(this, GET_DEPENDENCY, childIssue); 
         if ( obj == null ) 
         {
             Criteria crit = new Criteria(2)
                 .add(DependPeer.OBSERVED_ID, getIssueId())        
-                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId())
-                .add(DependPeer.DELETED, false);
+                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId());
+            if (hideDeleted)
+            {
+                crit.add(DependPeer.DELETED, false);
+            }
             List depends = DependPeer.doSelect(crit);
             Criteria crit2 = new Criteria(2)
                 .add(DependPeer.OBSERVER_ID, getIssueId())
-                .add(DependPeer.OBSERVED_ID, childIssue.getIssueId())
-                .add(DependPeer.DELETED, false);
+                .add(DependPeer.OBSERVED_ID, childIssue.getIssueId());
+            if (hideDeleted)
+            {
+                crit2.add(DependPeer.DELETED, false);
+            }
             List depends2 = DependPeer.doSelect(crit2);
             if (depends.size() > 0 )
             {
@@ -3028,8 +3049,15 @@ public class Issue
             Locale.getDefault(),
             "DependencyDeletedDesc", args);
 
+        // get the original object so that we do an update
+        oldDepend = thisIssue.getDependency(otherIssue);
+        oldDepend.setNew(false);
         oldDepend.setDeleted(true);
         oldDepend.save();
+
+        // need to null out the cache entry so that Issue.getDependency()
+        // does not try to return the item from the cache
+        ScarabCache.put(null, thisIssue, GET_DEPENDENCY, otherIssue);
 
         if (activitySet == null)
         {
@@ -3048,6 +3076,8 @@ public class Issue
         ActivityManager
             .createDeleteDependencyActivity(otherIssue, activitySet, oldDepend,
                                 desc);
+
+
         return activitySet;
     }
 
@@ -3139,13 +3169,11 @@ public class Issue
     public ActivitySet doChangeDependencyType(ActivitySet activitySet,
                                               Depend oldDepend,
                                               Depend newDepend, 
-                                              DependType newDependType,
-                                              DependType oldDependType,
                                               ScarabUser user)
         throws Exception
     {
-        String oldName = oldDependType.getName();
-        String newName = newDependType.getName();
+        String oldName = oldDepend.getDependType().getName();
+        String newName = newDepend.getDependType().getName();
         // check to see if something changed
         // only change dependency type for non-deleted deps
         if (!newName.equals(oldName) && newDepend.getDeleted() == false)
@@ -3170,6 +3198,10 @@ public class Issue
                 ScarabConstants.DEFAULT_BUNDLE_NAME,
                 Locale.getDefault(),
                 "DependencyTypeChangedDesc", args);
+
+            // need to null out the cache entry so that Issue.getDependency()
+            // does not try to return the item from the cache
+            ScarabCache.put(null, this, GET_DEPENDENCY, otherIssue);
 
             if (activitySet == null)
             {
