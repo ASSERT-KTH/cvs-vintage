@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.25 2001/08/16 05:22:41 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.26 2001/08/17 03:53:24 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -146,7 +146,7 @@ import java.util.*;
     @author Costin Manolache
     @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.25 $ $Date: 2001/08/16 05:22:41 $
+	@version $Revision: 1.26 $ $Date: 2001/08/17 03:53:24 $
  */
 public class ApacheConfig  extends BaseJkConfig { 
     
@@ -293,16 +293,43 @@ public class ApacheConfig  extends BaseJkConfig {
 	    // XXX Make those options configurable in server.xml
 	    generateSSLConfig( mod_jk );
 
+            Hashtable vhosts = new Hashtable();
+
     	    // Set up contexts
     	    // XXX deal with Virtual host configuration !!!!
     	    Enumeration  enum = cm.getContexts();
     	    while (enum.hasMoreElements()) {
                 Context context = (Context)enum.nextElement();
-		if( forwardAll )
-		    generateStupidMappings( context, mod_jk );
-		else
-		    generateContextMappings( context, mod_jk );
+                String host = context.getHost();
+                if( host == null ) {
+                    if( forwardAll )
+                        generateStupidMappings( context, mod_jk );
+                    else
+                        generateContextMappings( context, mod_jk );
+                } else {
+                    Vector vhostContexts = (Vector)vhosts.get(host);
+                    if ( vhostContexts == null ) {
+                        vhostContexts = new Vector();
+                        vhosts.put(host,vhostContexts);
+                    }
+                    vhostContexts.addElement(context);
+                }
     	    }
+
+            enum = vhosts.elements();
+            while( enum.hasMoreElements() ) {
+                Vector vhostContexts = (Vector)enum.nextElement();
+                for( int i = 0; i < vhostContexts.size(); i++ ) {
+                    Context context = (Context)vhostContexts.elementAt(i);
+                    if( i == 0 )
+                        generateVhostHead( context, mod_jk );
+                    if( forwardAll )
+                        generateStupidMappings( context, mod_jk );
+                    else
+                        generateContextMappings( context, mod_jk );
+                }
+                generateVhostTail( mod_jk );
+            }
 
     	    mod_jk.close();        
     	} catch( Exception ex ) {
@@ -367,6 +394,32 @@ public class ApacheConfig  extends BaseJkConfig {
 	}
 	return true;
     }
+
+    private void generateVhostHead(Context context, PrintWriter mod_jk) {
+	String ctxPath  = context.getPath();
+	String vhost = context.getHost();
+
+        mod_jk.println();
+        String vhostip = getVirtualHostAddress(vhost,
+                                            context.getHostAddress());
+        generateNameVirtualHost(mod_jk, vhostip);
+        mod_jk.println("<VirtualHost "+ vhostip + ">");
+        mod_jk.println("    ServerName " + vhost );
+        Enumeration aliases=context.getHostAliases();
+        if( aliases.hasMoreElements() ) {
+            mod_jk.print("    ServerAlias " );
+            while( aliases.hasMoreElements() ) {
+                mod_jk.print( (String)aliases.nextElement() + " " );
+            }
+            mod_jk.println();
+        }
+        indent="    ";
+    }
+
+    private void generateVhostTail(PrintWriter mod_jk) {
+        mod_jk.println("</VirtualHost>");
+        indent="";
+    }
     
     private void generateSSLConfig(PrintWriter mod_jk) {
 	if( ! sslExtract ) {
@@ -405,36 +458,23 @@ public class ApacheConfig  extends BaseJkConfig {
             log("Ignoring root context in forward-all mode  ");
             return;
         } 
-	if( vhost != null ) {
-            String vhostip = getVirtualHostAddress(vhost,
-                                            context.getHostAddress());
-	    generateNameVirtualHost(mod_jk, vhostip);
-	    mod_jk.println("<VirtualHost "+ vhostip + ">");
-	    mod_jk.println("    ServerName " + vhost );
-	    Enumeration aliases=context.getHostAliases();
-	    if( aliases.hasMoreElements() ) {
-		mod_jk.print("    ServerAlias " );
-		while( aliases.hasMoreElements() ) {
-		    mod_jk.print( (String)aliases.nextElement() + " " );
-		}
-		mod_jk.println();
-	    }
-	    indent="    ";
-	}
+
+        mod_jk.println();
 	mod_jk.println(indent + "JkMount " +  nPath + " " + jkProto );
 	if( "".equals(ctxPath) ) {
 	    mod_jk.println(indent + "JkMount " +  nPath + "* " + jkProto );
-            mod_jk.println(indent +
-                    "# Note: To correctly serve the Tomcat's root context, DocumentRoot must");
-            mod_jk.println(indent +
-                    "# must be set to: \"" + getApacheDocBase(context) + "\"");
+            if ( vhost != null ) {
+                mod_jk.println(indent + "DocumentRoot \"" +
+                            getApacheDocBase(context) + "\"");
+            } else {
+                mod_jk.println(indent +
+                        "# To avoid Apache serving root welcome files from htdocs, update DocumentRoot");
+                mod_jk.println(indent +
+                        "# to point to: \"" + getApacheDocBase(context) + "\"");
+            }
+
 	} else
 	    mod_jk.println(indent + "JkMount " +  nPath + "/* " + jkProto );
-	if( vhost != null ) {
-	    mod_jk.println("</VirtualHost>");
-            mod_jk.println();
-	    indent="";
-	}
     }    
 
     
@@ -456,31 +496,16 @@ public class ApacheConfig  extends BaseJkConfig {
         if( noRoot &&  "".equals(ctxPath) ) {
             log("Ignoring root context in non-forward-all mode  ");
             return;
-        } 
+        }
+
 	mod_jk.println();
-	mod_jk.println("#################### " +
+	mod_jk.println(indent + "#################### " +
 		       ((vhost!=null ) ? vhost + ":" : "" ) +
 		       (("".equals(ctxPath)) ? "/" : ctxPath ) +
 		       " ####################" );
         mod_jk.println();
-	if( vhost != null ) {
-            String vhostip = getVirtualHostAddress(vhost,
-                                            context.getHostAddress());
-	    generateNameVirtualHost(mod_jk, vhostip);
-	    mod_jk.println("<VirtualHost " + vhostip + ">");
-	    mod_jk.println("    ServerName " + vhost );
-	    Enumeration aliases=context.getHostAliases();
-	    if( aliases.hasMoreElements() ) {
-		mod_jk.print("    ServerAlias " );
-		while( aliases.hasMoreElements() ) {
-		    mod_jk.print( (String)aliases.nextElement() + " " );
-		}
-		mod_jk.println();
-	    }
-	    indent="    ";
-	}
 	// Dynamic /servet pages go to Tomcat
-	
+ 
 	generateStaticMappings( context, mod_jk );
 
 	// InvokerInterceptor - it doesn't have a container,
@@ -507,10 +532,6 @@ public class ApacheConfig  extends BaseJkConfig {
 	// XXX ErrorDocument
 	// Security and filter mappings
 	    
-	if( vhost != null ) {
-	    mod_jk.println("</VirtualHost>");
-	    indent="";
-	}
     }
 
     /** Add an Apache extension mapping.
@@ -562,12 +583,17 @@ public class ApacheConfig  extends BaseJkConfig {
             mod_jk.println(indent + "Alias " + ctxPath + " \"" + docBase + "\"");
             mod_jk.println();
         } else {
-            // For root context, ask user to update DocumentRoot setting.
-            // Using "Alias / " interferes with the Alias for other contexts.
-            mod_jk.println(indent +
-                    "# To correctly serve the Tomcat's root context, DocumentRoot must");
-            mod_jk.println(indent +
-                    "# must be set to: \"" + docBase + "\"");
+            if ( context.getHost() != null ) {
+                mod_jk.println(indent + "DocumentRoot \"" +
+                            getApacheDocBase(context) + "\"");
+            } else {
+                // For root context, ask user to update DocumentRoot setting.
+                // Using "Alias / " interferes with the Alias for other contexts.
+                mod_jk.println(indent +
+                        "# Be sure to update DocumentRoot");
+                mod_jk.println(indent +
+                        "# to point to: \"" + docBase + "\"");
+            }
         }
 	mod_jk.println(indent + "<Directory \"" + docBase + "\">");
 	mod_jk.println(indent + "    Options Indexes FollowSymLinks");
