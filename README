@@ -1,8 +1,6 @@
 -----------------------------------------------------------------------------------------
                                      THE COLUMBA PROJECT
 -----------------------------------------------------------------------------------------
- Frederik Dietz - fdietz@users.sourceforge.net, Timo Stich - tstich@users.sourceforge.net
-
   
  Columba is a full-featured Java EMail-Client. 
  It runs on every platform supporting Java. 
@@ -11,29 +9,97 @@
  please visit http://columba.sourceforge.net
 
 
+ TABLE OF CONTENTS
+ *****************
 
- This is a unstable release (beta stage). That means:
-  - it will embarass you in front of your friends
-  - it will crash
-  - it won't work
- BUT:
-  - it is simply the best mail client on this planet ;-)
-  - it will work most of the time 
-  - it is free
-
-
+1. Disclaimer
+2  Requirements
+3. Compiling Columba
+4. Getting Help
+5. Obtaining Columba
+6. License
+7. Contact Email
  
- WINDOWS:
-  To run Columba with MS Windows doubleclick the "run.bat" file.
+
+1. Disclaimer
+-------------
+We are not liable for any damage caused by the use of this program.
+
+
+2. Requirements
+---------------
+Columba requires a Java 1.3 or later compatible virtual machine for 
+your operating system (Java 1.4.1 is recommended)
+
+The most recent version of Java can be obtained from 
+http://java.sun.com/j2se/.
+
+
+3. Compiling Columba
+---------------------
+The CVS repository has the following directory structure:
+
+/          Development directory that contains project, build and source files
+/src       Source Root
+/res       Resource files like images and translations
+/lib       Libraries which are used by Columba
+/native    native code for a better integration of Columba
+/plugins   a collection of plugins to extend Columba's functionality
+/classes   compiled classes will be put here
+
+The scripts are used to build the binary and source distributions. See next 
+chapter on how to compile from a source distribution. 
+
+o Unix/Linux type operating systems:
+  bash# ant
   
+  Running Columba using JDK1.4:
+  bash# chmod 0775 run.sh
+  bash# run.sh
+  
+  Running Columba using JDK1.3:
+  bash# chmod 0775 run_jdk13.sh
+  bash# run_jdk13.sh
 
- LINUX/ UNIX FLAVORS:
-  Try the run.sh script: "sh run.sh"
+o Windows type operating systems:
+  shell# ant
+  
+  Running Columba using JDK1.4:
+  shell# run.bat
+  
+  Running Columba using JDK1.3:
+  shell# run_jdk13.bat
 
 
- OTHERS:
-  "java -jar columba.jar"
+3. Getting Help
+---------------
+The FAQ is available at 
+http://columba.sourceforge.net/phpwiki/index.php/FAQ%20%28Frequently%20Asked%20Questions%29
+
+The user manual is available at
+http://columba.sourceforge.net/phpwiki/index.php/User%20manual
+
+For the latest information on new releases, website or ressource changes, 
+please visit http://columba.sourceforge.net
+
+
+4. Obtaining Columba
+--------------------
+The website of Columba can be found at http://columba.sourceforge.net.
+
+
+5. License
+----------
+For legal and licensing issues, please read the LICENSE file.
+
+
+6. Contact Email
+----------------
+Frederik Dietz  (developer)     fdietz@users.sourceforge.net
+Timo Stich      (developer)     tstich@users.sourceforge.net
+
+For more information please visit
+http://columba.sourceforge.net/contact.html
 
 
 
- You need the Java Runtime Environment (JRE) Version 1.4/1.3 to run Columba.
