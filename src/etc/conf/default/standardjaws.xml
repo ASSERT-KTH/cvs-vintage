@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjaws.xml,v 1.20 2001/10/15 18:32:23 starksm Exp $ -->
+<!-- $Id: standardjaws.xml,v 1.21 2001/10/15 18:40:24 starksm Exp $ -->
 
 <jaws>
    <datasource>java:/DefaultDS</datasource>
@@ -389,7 +389,7 @@
 	 <name>PostgreSQL</name>
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
-	    <jdbc-type>CHAR(1)</jdbc-type>
+	    <jdbc-type>CHAR</jdbc-type>
 	    <sql-type>BOOLEAN</sql-type>
 	 </mapping>
 	 <mapping>
