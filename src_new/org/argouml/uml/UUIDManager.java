@@ -1,4 +1,4 @@
-// $Id: UUIDManager.java,v 1.11 2004/02/23 08:42:18 linus Exp $
+// $Id: UUIDManager.java,v 1.12 2004/02/28 12:29:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ public class UUIDManager {
      *
      * @return an UUIDManager
      */
-    public UUIDManager getInstance() {
+    public static UUIDManager getInstance() {
 	return SINGLETON;
     }
 

@@ -1,4 +1,4 @@
-// $Id: FigActor.java,v 1.10 2004/01/28 07:17:48 linus Exp $
+// $Id: FigActor.java,v 1.11 2004/02/28 12:29:43 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigActor.java
 // Classes: FigActor
 // Original Author: abonner@ics.uci.edu
-// $Id: FigActor.java,v 1.10 2004/01/28 07:17:48 linus Exp $
+// $Id: FigActor.java,v 1.11 2004/02/28 12:29:43 linus Exp $
 
 package org.argouml.uml.diagram.use_case.ui;
 
@@ -110,7 +110,7 @@ public class FigActor extends FigNodeModelElement {
         figClone._arms = (FigLine) it.next();
         figClone._leftLeg = (FigLine) it.next();
         figClone._rightLeg = (FigLine) it.next();
-        figClone._name = (FigText) it.next();
+        figClone.setNameFig((FigText) it.next());
         return figClone;
     }
 

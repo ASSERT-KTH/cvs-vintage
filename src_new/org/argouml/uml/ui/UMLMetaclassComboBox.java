@@ -1,5 +1,5 @@
-// $Id: UMLMetaclassComboBox.java,v 1.7 2003/09/21 11:07:03 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: UMLMetaclassComboBox.java,v 1.8 2004/02/28 12:29:44 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,14 +34,18 @@ import ru.novosoft.uml.MElementEvent;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003),
- *             replaced by nothing?,
- *             this class is part of the 'old'(pre 0.13.*) implementation of proppanels
- *             that used reflection a lot.
+ * TODO: What is this replaced by?
+ * this class is part of the 'old'(pre 0.13.*) implementation of proppanels
+ * that used reflection a lot.
  */
 public class UMLMetaclassComboBox 
     extends JComboBox 
     implements UMLUserInterfaceComponent, ItemListener 
 {
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
+     * class. This will be removed.
+     */
     protected static Logger cat = Logger.getLogger(UMLMetaclassComboBox.class);
 
     private String[] _metaclasses = {
@@ -86,7 +90,9 @@ public class UMLMetaclassComboBox
     private UMLUserInterfaceContainer _container;
     private Object[] _noArgs = {};
 
-    public UMLMetaclassComboBox(UMLUserInterfaceContainer container, String property, String getMethod, String setMethod) {
+    public UMLMetaclassComboBox(UMLUserInterfaceContainer container,
+				String property,
+				String getMethod, String setMethod) {
 	setModel(new DefaultComboBoxModel(_metaclasses));
 	_container = container;
 	_property = property;
@@ -111,8 +117,12 @@ public class UMLMetaclassComboBox
 
     public void propertySet(MElementEvent e) {
 	String eventName = e.getName();
-	if (eventName == null || _property == null || eventName.equals(_property)) {
+	if (eventName == null
+	    || _property == null
+	    || eventName.equals(_property)) {
+
 	    update();
+
 	}
     }
 

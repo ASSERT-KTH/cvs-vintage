@@ -1,4 +1,4 @@
-// $Id: FigInstance.java,v 1.6 2004/01/28 07:17:48 linus Exp $
+// $Id: FigInstance.java,v 1.7 2004/02/28 12:29:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigInstance.java
 // Classes: FigInstance
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigInstance.java,v 1.6 2004/01/28 07:17:48 linus Exp $
+// $Id: FigInstance.java,v 1.7 2004/02/28 12:29:42 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -92,7 +92,7 @@ public class FigInstance extends FigNodeModelElement {
 	FigInstance figClone = (FigInstance) super.clone();
 	Iterator iter = figClone.getFigs(null).iterator();
 	figClone._bigPort = (FigRect) iter.next();
-	figClone._name = (FigText) iter.next();
+	figClone.setNameFig((FigText) iter.next());
 	figClone._attr = (FigText) iter.next();
 	return figClone;
     }

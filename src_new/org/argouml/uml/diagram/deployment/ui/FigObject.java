@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.19 2004/01/28 07:17:47 linus Exp $
+// $Id: FigObject.java,v 1.20 2004/02/28 12:29:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.19 2004/01/28 07:17:47 linus Exp $
+// $Id: FigObject.java,v 1.20 2004/02/28 12:29:42 linus Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -92,7 +92,7 @@ public class FigObject extends FigNodeModelElement {
 	Iterator it = figClone.getFigs(null).iterator();
 	figClone._bigPort = (FigRect) it.next();
 	figClone._cover = (FigRect) it.next();
-	figClone._name = (FigText) it.next();
+	figClone.setNameFig((FigText) it.next());
 	return figClone;
     }
 
@@ -174,19 +174,23 @@ public class FigObject extends FigNodeModelElement {
 	    Object mcomp = null;
 
 	    if (encloser != null
-		    && (ModelFacade.isAComponentInstance(encloser.getOwner()))) {
+		&& (ModelFacade.isAComponentInstance(encloser.getOwner()))) {
+
 		mcompInst = /*(MComponentInstance)*/ encloser.getOwner();
 		ModelFacade.setComponentInstance(me, mcompInst);
+
 	    }
 	    else if (ModelFacade.getComponentInstance(me) != null) {
                 ModelFacade.setComponentInstance(me, null);
 	    }
-	    if (encloser != null && 
-		(ModelFacade.isAComponent(encloser.getOwner()))) {
+	    if (encloser != null
+		&& (ModelFacade.isAComponent(encloser.getOwner()))) {
+
 		mcomp = /*(MComponent)*/ encloser.getOwner();
 		Object obj = /*(MObject)*/ getOwner();
 		ModelFacade.setImplementationLocation(resident, mcomp);
 		ModelFacade.setResident(resident, obj);
+
 	    }
 	    else {
 		if (ModelFacade.getImplementationLocation(resident) != null) {

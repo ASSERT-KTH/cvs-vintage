@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.26 2004/02/10 21:17:11 sz9 Exp $
+// $Id: ProjectManager.java,v 1.27 2004/02/28 12:29:41 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,8 +67,8 @@ public final class ProjectManager {
 	"currentProject";
     public static final String SAVE_STATE_PROPERTY_NAME = "saveState";
 
-	/** logger */
-	private static Logger cat = Logger.getLogger(ProjectManager.class);
+    /** logger */
+    private static Logger cat = Logger.getLogger(ProjectManager.class);
 
     /**
      * The singleton instance of this class
@@ -296,7 +296,7 @@ public final class ProjectManager {
             ArgoParser.SINGLETON.setURL(url);
             ArgoParser.SINGLETON.readProject(zis, false);
             p = ArgoParser.SINGLETON.getProject();
-            ArgoParser.SINGLETON.setProject(null);// clear up project refs
+            ArgoParser.SINGLETON.setProject(null); // clear up project refs
 
             zis.close();
 
@@ -382,7 +382,7 @@ public final class ProjectManager {
         throws IOException, ParserConfigurationException, SAXException {
         ArgoParser.SINGLETON.readProject(url);
         Project p = ArgoParser.SINGLETON.getProject();
-            ArgoParser.SINGLETON.setProject(null);// clear up project refs
+	ArgoParser.SINGLETON.setProject(null); // clear up project refs
         p.loadAllMembers();
         p.postLoad();
         return p;
@@ -402,9 +402,9 @@ public final class ProjectManager {
     /**
      * prepare project for gc
      */
-    public void removeProject(Project oldProject){
+    public void removeProject(Project oldProject) {
         
-        if(_currentProject == oldProject){
+        if (_currentProject == oldProject) {
             _currentProject = null;
         }
         
@@ -417,7 +417,6 @@ public final class ProjectManager {
  * @deprecated since 0.15.1. TODO: What is this replaced by?
  */
 class ResetStatsLater implements Runnable {
-	public void run() {
-		Project.resetStats();
-	}
+    public void run() {
+    }
 } /* end class ResetStatsLater */

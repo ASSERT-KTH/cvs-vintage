@@ -1,4 +1,4 @@
-// $Id: FigFinalState.java,v 1.16 2004/01/28 07:17:47 linus Exp $
+// $Id: FigFinalState.java,v 1.17 2004/02/28 12:29:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ public class FigFinalState extends FigStateVertex {
 	_outCircle.setLineWidth(1);
 	_inCircle.setLineWidth(0);
 
-	_name = new FigText(x + 10, y + 22, 0, 21, true);
+	setNameFig(new FigText(x + 10, y + 22, 0, 21, true));
 	getNameFig().setFilled(false);
 	getNameFig().setLineWidth(0);
 	getNameFig().setFont(LABEL_FONT);

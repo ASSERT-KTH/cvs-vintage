@@ -1,4 +1,4 @@
-// $Id: FigModel.java,v 1.9 2004/01/28 07:17:48 linus Exp $
+// $Id: FigModel.java,v 1.10 2004/02/28 12:29:42 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: FigModel.java,v 1.9 2004/01/28 07:17:48 linus Exp $
+// $Id: FigModel.java,v 1.10 2004/02/28 12:29:42 linus Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -38,6 +38,10 @@ import org.argouml.model.ModelFacade;
 /** Class to display graphics for a UML model in a class diagram. */
 
 public class FigModel extends FigPackage {
+    /**
+     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
+     * class. This will be removed.
+     */
     protected static Logger cat = Logger.getLogger(FigModel.class);
 
     protected FigPoly _figPoly;
@@ -75,7 +79,7 @@ public class FigModel extends FigPackage {
         // classes, since similar code is used in FigClass.java etc.
         // Andreas Rueckert <a_rueckert@gmx.net>
         if (ModelFacade.isAModel(node) && ModelFacade.getName(node) != null) {
-            _name.setText(ModelFacade.getName(node));
+            getNameFig().setText(ModelFacade.getName(node));
 	}
     }
 
