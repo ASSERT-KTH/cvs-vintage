@@ -38,11 +38,11 @@ import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPHeader;
 import org.columba.ristretto.imap.IMAPResponse;
 import org.columba.ristretto.imap.ListInfo;
+import org.columba.ristretto.imap.MessageSet;
 import org.columba.ristretto.imap.parser.FlagsParser;
 import org.columba.ristretto.imap.parser.IMAPHeaderParser;
 import org.columba.ristretto.imap.parser.ListInfoParser;
 import org.columba.ristretto.imap.parser.MessageFolderInfoParser;
-import org.columba.ristretto.imap.parser.MessageSet;
 import org.columba.ristretto.imap.parser.MessageSourceParser;
 import org.columba.ristretto.imap.parser.MimePartParser;
 import org.columba.ristretto.imap.parser.MimeTreeParser;
@@ -143,7 +143,7 @@ public class IMAPStore {
 	private IMAPRootFolder parent;
 
 	private MimeTree aktMimePartTree;
-	private String aktMessageUid;
+	private Object aktMessageUid;
 
 	private MessageFolderInfo messageFolderInfo;
 
@@ -1012,11 +1012,11 @@ public class IMAPStore {
 		try {
 
 			IMAPResponse[] responses =
-				getProtocol().fetchMimePartTree((String) uid);
+				getProtocol().fetchMimePartTree(uid);
 
 			MimeTree mptree = MimeTreeParser.parse(responses);
 
-			aktMessageUid = (String) uid;
+			aktMessageUid = uid;
 			aktMimePartTree = mptree;
 
 			return mptree;
@@ -1054,7 +1054,7 @@ public class IMAPStore {
 
 		try {
 			IMAPResponse[] responses =
-				getProtocol().fetchMimePart((String) uid, address);
+				getProtocol().fetchMimePart(uid, address);
 
 			part.setBody(
 				new CharSequenceSource(MimePartParser.parse(responses)));
@@ -1084,7 +1084,7 @@ public class IMAPStore {
 
 		try {
 			IMAPResponse[] responses =
-				getProtocol().fetchMessageSource((String) uid);
+				getProtocol().fetchMessageSource( uid);
 
 			String source = MessageSourceParser.parse(responses);
 

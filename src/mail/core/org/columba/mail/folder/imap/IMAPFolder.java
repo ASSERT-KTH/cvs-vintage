@@ -636,7 +636,7 @@ public class IMAPFolder extends RemoteFolder {
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if (headerList == null)
 			getHeaderList();
-		return (ColumbaHeader) headerList.getHeader((String) uid);
+		return (ColumbaHeader) headerList.getHeader(uid);
 	}
 
 	/**
