@@ -15,7 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.CommandCancelledException;
@@ -74,9 +78,10 @@ public class FetchNewMessagesCommand extends Command {
 
 		log("Authenticating...", worker);
 
-		totalMessageCount = server.getMessageCount(worker);
-
 		try {
+			// login and get # of messages on server
+			totalMessageCount = server.getMessageCount(worker);
+
 			// fetch UID list from server
 			List newUIDList = fetchUIDList(totalMessageCount, worker);
 
@@ -96,6 +101,11 @@ public class FetchNewMessagesCommand extends Command {
 			logout(worker);
 
 		} catch (CommandCancelledException e) {
+			server.forceLogout();
+		} catch (UnknownHostException e) {
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "UnkownHostException", JOptionPane.ERROR_MESSAGE);
+		} catch (SocketTimeoutException e) {
+			JOptionPane.showMessageDialog(null, e.getLocalizedMessage(), "TimeoutException", JOptionPane.ERROR_MESSAGE);
 			server.forceLogout();
 		}
 		

@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.pop3.command;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -91,6 +92,8 @@ public class CheckForNewMessagesCommand extends Command {
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
+		} catch (IOException e ) {
+			server.forceLogout();			
 		}
 		
 		r[0].getPOP3ServerController().enableActions(true);
@@ -108,7 +111,7 @@ public class CheckForNewMessagesCommand extends Command {
 			PlaySound.play("newmail.wav");
 		} else {
 			try {
-				PlaySound.play(new URL(file));
+				PlaySound.play(new URL("file:+"+file));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
