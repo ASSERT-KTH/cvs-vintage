@@ -34,26 +34,6 @@
     <load-on-startup>2</load-on-startup>
   </servlet>
 
-  <!-- The JSP page compiler and execution servlet -->
-  <servlet>
-    <servlet-name>jsp</servlet-name>
-      <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
-    <!-- Uncomment the following to use Jikes for JSP compilation -->
-<!--
-    <init-param>
-      <param-name>jspCompilerPlugin</param-name>
-      <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
-    </init-param>
--->
-    <init-param>
-      <!-- Levels: FATAL ERROR WARNING INFORMATION DEBUG -->
-      <param-name>logVerbosityLevel</param-name>
-      <param-value>WARNING</param-value>
-    </init-param>
-    <load-on-startup>4</load-on-startup>
-  </servlet>
-
-
   <!-- The mapping for the default servlet -->
   <servlet-mapping>
     <servlet-name>default</servlet-name>
@@ -65,13 +45,6 @@
   <servlet-mapping>
     <servlet-name>invoker</servlet-name>
     <url-pattern>/servlet/*</url-pattern>
-  </servlet-mapping>
-
-  <!-- The mapping for the JSP servlet -->
-  <!-- Comment this out if you do not want "jsp" service -->
-  <servlet-mapping>
-    <servlet-name>jsp</servlet-name>
-    <url-pattern>*.jsp</url-pattern>
   </servlet-mapping>
 
   <!-- Set the default session timeout (in seconds) -->
