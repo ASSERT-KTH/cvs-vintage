@@ -22,7 +22,7 @@ import org.jboss.logging.Logger;
  * Deletes relations from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCDeleteRelationsCommand {
    private JDBCStoreManager manager;
@@ -53,11 +53,10 @@ public class JDBCDeleteRelationsCommand {
       
       Connection con = null;
       PreparedStatement ps = null;
-      JDBCRelationMetaData relationMetaData = 
-            relationData.getLeftCMRField().getRelationMetaData();
+      JDBCCMRFieldBridge cmrField = relationData.getLeftCMRField();
       try {
          // get the connection
-         DataSource dataSource = relationMetaData.getDataSource();
+         DataSource dataSource = cmrField.getDataSource();
          con = dataSource.getConnection();
          
          // create the statement
@@ -72,7 +71,7 @@ public class JDBCDeleteRelationsCommand {
          log.debug("Create: Rows affected = " + rowsAffected);
       } catch(Exception e) {
          throw new EJBException("Could not delete relations from " + 
-               relationMetaData.getTableName(), e);
+               cmrField.getTableName(), e);
       } finally {
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
@@ -85,7 +84,7 @@ public class JDBCDeleteRelationsCommand {
       
       StringBuffer sql = new StringBuffer();
       sql.append("DELETE FROM ");
-      sql.append(left.getRelationMetaData().getTableName());      
+      sql.append(left.getTableName());      
          
       sql.append(" WHERE ");
       Iterator pairs = relationData.removedRelations.iterator();

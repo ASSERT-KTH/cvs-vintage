@@ -7,11 +7,16 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
@@ -21,9 +26,37 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class SQLUtil {
+   public static String fixTableName(String tableName, DataSource dataSource) 
+         throws DeploymentException {
+
+      Connection con = null;
+      try {
+         con = dataSource.getConnection();
+
+         // TODO: fix length
+
+         // TODO: check for SQL reserved word
+
+         // fix case
+         DatabaseMetaData dmd = con.getMetaData();
+         if(dmd.storesLowerCaseIdentifiers()) {
+            tableName = tableName.toLowerCase();
+         } else if(dmd.storesUpperCaseIdentifiers()) {
+            tableName = tableName.toUpperCase();
+         }
+         return tableName;
+      } catch(SQLException e) {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new DeploymentException("Error while fixing table name", e);
+      } finally {
+         JDBCUtil.safeClose(con);
+      }
+   }
+   
    // =======================================================================
    //  Create Table Columns Clause
    //    columnName0 sqlType0 

@@ -84,7 +84,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -441,7 +441,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                cmrField.getTableKeyFields(), relationTableAlias));
       
          buf.append(" FROM ");
-         buf.append(cmrField.getRelationMetaData().getTableName());
+         buf.append(cmrField.getTableName());
          buf.append(" ");
          buf.append(relationTableAlias);
 
@@ -570,7 +570,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
          String relationTableAlias = getRelationTableAlias(path.getPath(i));
          buf.append(", ");
-         buf.append(cmrField.getRelationMetaData().getTableName());
+         buf.append(cmrField.getTableName());
          buf.append(" ");
          buf.append(relationTableAlias);
       }
@@ -612,7 +612,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
             String relationTableAlias = getRelationTableAlias(path.getPath());
       
             buf.append(" LEFT JOIN ");
-            buf.append(cmrField.getRelationMetaData().getTableName());
+            buf.append(cmrField.getTableName());
             buf.append(" ");
             buf.append(relationTableAlias);
 
@@ -732,7 +732,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
          String relationTableAlias = getRelationTableAlias(path.getPath());
          buf.append(", ");
-         buf.append(cmrField.getRelationMetaData().getTableName());
+         buf.append(cmrField.getTableName());
          buf.append(" ");
          buf.append(relationTableAlias);
       }
@@ -930,7 +930,7 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
                   relationTableAlias));
       
             buf.append(" FROM ");
-            buf.append(toCMRField.getRelationMetaData().getTableName());
+            buf.append(toCMRField.getTableName());
             buf.append(" ");
             buf.append(relationTableAlias);
 

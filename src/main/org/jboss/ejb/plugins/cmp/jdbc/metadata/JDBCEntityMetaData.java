@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -375,7 +375,7 @@ public final class JDBCEntityMetaData {
       if(tableStr != null) {
          tableName = tableStr;
       } else {
-         tableName = defaultValues.getTableName();
+         tableName = defaultValues.getDefaultTableName();
       }
 
       // create table?  If not provided, keep default.
@@ -817,7 +817,7 @@ public final class JDBCEntityMetaData {
     * Gets the name of the table to which this entity is persisted
     * @return the name of the table to which this entity is persisted
     */
-   public String getTableName() {
+   public String getDefaultTableName() {
       return tableName;
    }
    

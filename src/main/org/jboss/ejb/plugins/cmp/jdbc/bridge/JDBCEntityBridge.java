@@ -28,6 +28,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
 
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
@@ -53,13 +54,15 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
    private JDBCStoreManager manager;
 
-   private DataSource dataSource;
+   private final DataSource dataSource;
+
+   private final String tableName;
 
    /** is the table assumed to exist */
    private boolean tableExists;
@@ -96,6 +99,10 @@ public class JDBCEntityBridge implements EntityBridge {
          throw new DeploymentException("Error: can't find data source: " + 
                metadata.getDataSourceName(), e);
       }
+
+      tableName = SQLUtil.fixTableName(
+            metadata.getDefaultTableName(),
+            dataSource);
 
       // CMP fields
       loadCMPFields(metadata);
@@ -336,7 +343,7 @@ public class JDBCEntityBridge implements EntityBridge {
    }
 
    public String getTableName() {
-      return metadata.getTableName();
+      return tableName;
    }
 
    public Class getPrimaryKeyClass() {

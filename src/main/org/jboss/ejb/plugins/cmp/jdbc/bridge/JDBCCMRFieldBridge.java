@@ -7,7 +7,7 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.reflect.Method;
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +36,7 @@ import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
+import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -55,7 +56,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -110,6 +111,16 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
     */
    private JDBCRelationshipRoleMetaData metadata;
    
+   /**
+    * That data source used to acess the relation table if relevent.
+    */
+   private final DataSource dataSource;
+
+   /**
+    * That the relation table name if relevent.
+    */
+   private final String tableName;
+
    /**
     * Does this cmr field have foreign keys.
     */
@@ -199,6 +210,16 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       }
       this.log = Logger.getLogger(categoryName);
 
+      // Get the datasource
+      dataSource = metadata.getRelationMetaData().getDataSource();
+
+      // Fix table name
+      //
+      // This code doesn't work here...  The problem each side will generate
+      // the table name and this will only work for simple generation.
+      tableName = SQLUtil.fixTableName(
+            metadata.getRelationMetaData().getDefaultTableName(),
+            dataSource);
 
       //
       // Set handles to the related entity's container, cache, 
@@ -379,6 +400,20 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       return metadata.getCMRFieldName();
    }
    
+   /**
+    * Gets the name of the relation table if relevent.
+    */
+   public String getTableName() {
+      return tableName;
+   }
+   
+   /**
+    * Gets the datasource of the relation table if relevent.
+    */
+   public DataSource getDataSource() {
+      return dataSource;
+   }
+
    /**
     * Gets the read ahead meta data.
     */

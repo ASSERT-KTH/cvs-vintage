@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
  * Inserts relations into a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class JDBCInsertRelationsCommand {
    protected JDBCStoreManager manager;
@@ -49,11 +49,10 @@ public class JDBCInsertRelationsCommand {
       Connection con = null;
       PreparedStatement ps = null;
       
-      JDBCRelationMetaData relationMetaData = 
-            relationData.getLeftCMRField().getRelationMetaData();
+      JDBCCMRFieldBridge cmrField = relationData.getLeftCMRField();
       try {
          // get the connection
-         DataSource dataSource = relationMetaData.getDataSource();
+         DataSource dataSource = cmrField.getDataSource();
          con = dataSource.getConnection();
          
          // get the sql
@@ -76,7 +75,7 @@ public class JDBCInsertRelationsCommand {
          }
       } catch(Exception e) {
          throw new EJBException("Could insert relations into " +
-               relationMetaData.getTableName(), e);
+               cmrField.getTableName(), e);
       } finally {
          JDBCUtil.safeClose(ps);
          JDBCUtil.safeClose(con);
@@ -89,7 +88,7 @@ public class JDBCInsertRelationsCommand {
       
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO ").append(
-           left.getRelationMetaData().getTableName());      
+           left.getTableName());      
 
       sql.append(" (");
             sql.append(SQLUtil.getColumnNamesClause(left.getTableKeyFields()));

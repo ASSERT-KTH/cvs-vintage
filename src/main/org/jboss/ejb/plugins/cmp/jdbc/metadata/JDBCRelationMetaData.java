@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
  * have set methods.
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCRelationMetaData {
    private final static int TABLE = 1;
@@ -215,7 +215,7 @@ public final class JDBCRelationMetaData {
       String tableNameString = MetaData.getOptionalChildContent(
             mappingElement, "table-name");
       if(tableNameString == null) {
-         tableNameString = defaultValues.getTableName();
+         tableNameString = defaultValues.getDefaultTableName();
          if(tableNameString == null) {
             // use defaultValues to create default, because left/right 
             // have not been assigned yet, and values used to generate
@@ -507,7 +507,7 @@ public final class JDBCRelationMetaData {
     * Gets the name of the relation table.
     * @return the name of the relation table to which is relation is mapped
     */
-   public String getTableName() {
+   public String getDefaultTableName() {
       return tableName;
    }
    

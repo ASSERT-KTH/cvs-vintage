@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCStopCommand {
 
@@ -53,7 +53,7 @@ public class JDBCStopCommand {
    public void execute() {
       if(entityMetaData.getRemoveTable()) {
          log.debug("Dropping table for entity " + entity.getEntityName());
-         dropTable(entity.getDataSource(), entityMetaData.getTableName());
+         dropTable(entity.getDataSource(), entity.getTableName());
       }
 
       // drop relation tables
@@ -69,7 +69,7 @@ public class JDBCStopCommand {
             if(relationMetaData.getRemoveTable()) {
                dropTable(
                      relationMetaData.getDataSource(),
-                     relationMetaData.getTableName());
+                     cmrField.getTableName());
             }
             relationMetaData.setTableExists(false);
          }

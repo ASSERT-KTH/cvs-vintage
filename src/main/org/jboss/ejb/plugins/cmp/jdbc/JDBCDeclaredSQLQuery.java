@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -135,7 +135,7 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
       if(getSelectField() == null) {
 
          // we are selecting a full entity
-         String table = getSelectEntity().getMetaData().getTableName();
+         String table = getSelectEntity().getTableName();
 
          // get a list of all fields to be loaded
          List loadFields = new ArrayList();
@@ -158,7 +158,8 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
 
          // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
-         String table = selectField.getMetaData().getEntity().getTableName();
+         String table = 
+               getSelectField().getManager().getEntityBridge().getTableName();
          if(alias != null && alias.trim().length()>0) {
             sql.append(SQLUtil.getColumnNamesClause(selectField, alias));
             sql.append(" FROM ");

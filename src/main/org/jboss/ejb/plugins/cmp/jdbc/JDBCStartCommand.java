@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCStartCommand {
 
@@ -105,11 +105,11 @@ public class JDBCStartCommand {
                if(relationMetaData.getCreateTable()) {
                   createTable(
                         relationMetaData.getDataSource(),
-                        relationMetaData.getTableName(),
+                        cmrField.getTableName(),
                         getRelationCreateTableSQL(cmrField));
                } else {
                   log.debug("Relation table not create as requested: " +
-                        relationMetaData.getTableName());
+                        cmrField.getTableName());
                }
             }
             relationMetaData.setTableExists(true);
@@ -208,7 +208,7 @@ public class JDBCStartCommand {
    private String getEntityCreateTableSQL() {
 
       StringBuffer sql = new StringBuffer();
-      sql.append("CREATE TABLE ").append(entityMetaData.getTableName());
+      sql.append("CREATE TABLE ").append(entity.getTableName());
       
       sql.append(" (");
          // add fields
@@ -223,7 +223,7 @@ public class JDBCStartCommand {
                      "not allowed for this type of datastore");
             }
             String[] args = new String[] {
-               "pk_"+entityMetaData.getTableName(),
+               "pk_"+entity.getTableName(),
                SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields())};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }
@@ -240,7 +240,7 @@ public class JDBCStartCommand {
 
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE TABLE ").append(
-            cmrField.getRelationMetaData().getTableName());
+            cmrField.getTableName());
       
       sql.append(" (");
          // add field declaration
@@ -255,7 +255,7 @@ public class JDBCStartCommand {
                      "not allowed for this type of datastore");
             }
             String[] args = new String[] {
-               "pk_"+cmrField.getRelationMetaData().getTableName(),
+               "pk_"+cmrField.getTableName(),
                SQLUtil.getColumnNamesClause(fields)};
             sql.append(", ").append(pkConstraint.getFunctionSql(args));
          }   
@@ -271,7 +271,7 @@ public class JDBCStartCommand {
          if(cmrField.getRelationMetaData().isTableMappingStyle()) {
             addForeignKeyConstraint(
                   cmrField.getRelationMetaData().getDataSource(),
-                  cmrField.getRelationMetaData().getTableName(),
+                  cmrField.getTableName(),
                   cmrField.getFieldName(),
                   cmrField.getTableKeyFields(),
                   cmrField.getEntity().getTableName(),

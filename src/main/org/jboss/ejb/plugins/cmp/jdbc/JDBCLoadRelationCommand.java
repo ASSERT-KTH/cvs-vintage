@@ -33,7 +33,7 @@ import org.jboss.ejb.FinderResults;
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class JDBCLoadRelationCommand {
    private final JDBCStoreManager manager;
@@ -71,7 +71,7 @@ public class JDBCLoadRelationCommand {
       PreparedStatement ps = null;
       try {
          // get the connection
-         con = cmrField.getRelationMetaData().getDataSource().getConnection();
+         con = cmrField.getDataSource().getConnection();
          
          // create the statement
          log.debug("Executing SQL: " + sql);
@@ -334,7 +334,7 @@ public class JDBCLoadRelationCommand {
    private String getRelationTable(JDBCCMRFieldBridge cmrField) {
       if(cmrField.getRelationMetaData().isTableMappingStyle()) {
          // relation table
-         return cmrField.getRelationMetaData().getTableName();
+         return cmrField.getTableName();
       } else if(cmrField.getRelatedCMRField().hasForeignKey()) {
          // related has foreign key
          return cmrField.getRelatedJDBCEntity().getTableName();
