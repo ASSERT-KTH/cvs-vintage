@@ -62,7 +62,6 @@ import java.io.PrintWriter;
 
 import java.util.Date;
 
-import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.collections.Queue;
 
 /**
