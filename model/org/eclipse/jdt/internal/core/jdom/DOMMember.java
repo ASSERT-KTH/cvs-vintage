@@ -11,11 +11,10 @@
 package org.eclipse.jdt.internal.core.jdom;
 
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.core.jdom.IDOMMember;
 import org.eclipse.jdt.internal.compiler.env.IConstants;
 import org.eclipse.jdt.internal.core.util.CharArrayBuffer;
-import org.eclipse.jdt.internal.core.util.CharArrayOps;
-
 /**
  * DOMMember provides an implementation of IDOMMember.
  *
@@ -94,7 +93,7 @@ DOMMember() {
  *		is the first character of the first modifier for this member, and
  *		the second integer is the last whitespace character preceeding the
  *		next part of this member declaration. If there are no modifiers present
- *		in this node's source code (i.e. default protection), this array
+ *		in this node's source code (that is, package default visibility), this array
  *		contains two -1's.
  */
 DOMMember(char[] document, int[] sourceRange, String name, int[] nameRange, int[] commentRange, int flags, int[] modifierRange) {
@@ -207,7 +206,7 @@ protected char[] generateFlags() {
 	if (flags.length == 0) {
 		return flags;
 	} else {
-		return CharArrayOps.concat(flags, new char[] {' '});
+		return CharOperation.concat(flags, new char[] {' '});
 	}
 }
 /**
@@ -219,7 +218,7 @@ public String getComment() {
 		if (fComment != null) {
 			return fComment;
 		} else {
-			return CharArrayOps.substring(fDocument, fCommentRange[0], fCommentRange[1] + 1 - fCommentRange[0]);
+			return new String(CharOperation.subarray(fDocument, fCommentRange[0], fCommentRange[1] + 1));
 		}
 	} else {
 		return null;
@@ -249,7 +248,7 @@ protected char[] getModifiersText() {
 		if (fModifierRange[0] < 0) {
 			return null;
 		} else {
-			return CharArrayOps.subarray(fDocument, fModifierRange[0], fModifierRange[1] + 1 - fModifierRange[0]);
+			return CharOperation.subarray(fDocument, fModifierRange[0], fModifierRange[1] + 1);
 		}
 	} else {
 		return fModifiers;
