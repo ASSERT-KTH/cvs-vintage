@@ -53,6 +53,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.IssueType;
@@ -64,7 +65,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.8 2002/01/18 22:26:04 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.9 2002/01/23 20:01:05 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -85,8 +86,19 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             {
                 IssueType issueType = (IssueType)issueTypes.get(i);
                 Group group = intake.get("IssueType", issueType.getQueryKey());
-                group.setProperties(issueType);
-                issueType.save();
+                // make sure name is unique
+                Field field = group.get("Name");
+                String name = field.toString();
+                if ( IssueTypePeer.isUnique(name, issueType.getPrimaryKey()) ) 
+                {
+                    group.setProperties(issueType);
+                    issueType.save();
+                }
+                else 
+                {
+                    data.setMessage("Changes would result in duplicate names");
+                    field.setMessage("Duplicate");
+                }
             }
          }
      }

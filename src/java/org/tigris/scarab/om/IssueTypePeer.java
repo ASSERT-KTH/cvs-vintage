@@ -5,6 +5,7 @@ import com.workingdogs.village.*;
 import org.apache.torque.map.*;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.util.Criteria;
+import org.apache.torque.om.ObjectKey;
 
 // Local classes
 import org.tigris.scarab.om.map.*;
@@ -32,5 +33,37 @@ public class IssueTypePeer
             c.add(IssueTypePeer.DELETED, 0);
         }
         return doSelect(c);
+    }
+
+    /**
+     * Checks to see if the name already exists an issue type.  if one
+     * does unique will be false unless the given id matches the issue type
+     * that already has the given name.
+     *
+     * @param name a <code>String</code> value
+     * @param id an <code>ObjectKey</code> value
+     * @return a <code>boolean</code> value
+     * @exception Exception if an error occurs
+     */
+    public static boolean isUnique(String name, ObjectKey id)
+        throws Exception
+    {
+        boolean unique = false;
+        Criteria crit = new Criteria().add(IssueTypePeer.NAME, name);
+        crit.setIgnoreCase(true);
+        List types = IssueTypePeer.doSelect(crit);
+        if ( types.size() == 0 ) 
+        {
+            unique = true;
+        }
+        else 
+        {
+            IssueType it = (IssueType)types.get(0);
+            if ( id != null && it.getPrimaryKey().equals(id) ) 
+            {
+                unique = true;
+            }
+        }
+        return unique;
     }
 }

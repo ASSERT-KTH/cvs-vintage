@@ -28,7 +28,10 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 #set ($group = $intake.IssueType.mapTo($issueType))
 #indexedRows($velocityCount)
 <td>#booleanCheckbox ($group.Deleted)</td>
-<td><input type="text" name="$group.Name.Key" value="$group.Name.Value"></td>
+<td>
+    <input type="text" name="$group.Name.Key" value="$group.Name.Value">
+    #fieldErrorMsg($group.Name "")
+</td>
 <td>#textAreaMedium("$group.Description.Key" $group.Description)</td>
 </tr>
 #end
