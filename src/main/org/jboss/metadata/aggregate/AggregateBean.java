@@ -153,7 +153,7 @@ public class AggregateBean extends AggregateMetaData implements BeanMetaData {
         for(int i=0; i<homeMethods.length; i++)
             if(homeMethods[i].getName().equals(name) &&
                paramsMatch(homeMethods[i].getParameterTypes(), args))
-                return methods[i];
+                return homeMethods[i];
         throw new IllegalArgumentException("Method not found");
     }
 
