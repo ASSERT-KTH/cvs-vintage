@@ -133,9 +133,10 @@ public class OutboxFolder extends MHFolder {
 		return uids;
 	}
 	
-	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
+	public void expungeFolder(WorkerStatusController worker) throws Exception {
 	
-
+		Object[] uids = getUids(worker);
+		
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 

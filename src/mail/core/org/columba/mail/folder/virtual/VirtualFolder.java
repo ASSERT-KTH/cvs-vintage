@@ -357,9 +357,11 @@ public class VirtualFolder extends Folder {
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
 	 */
-	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+	public void expungeFolder(WorkerStatusController worker)
 		throws Exception {
 
+		Object[] uids = getUids(worker);
+			
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 

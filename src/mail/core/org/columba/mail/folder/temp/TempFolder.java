@@ -69,7 +69,9 @@ public class TempFolder extends Folder {
 		messageList.clear();
 	}
 	
-	public void expungeFolder(Object[] uids, WorkerStatusController worker) throws Exception {
+	public void expungeFolder(WorkerStatusController worker) throws Exception {
+		Object[] uids = getUids(worker);
+		
 		for (int i = 0; i < uids.length; i++) {
 			Object uid = uids[i];
 
@@ -103,11 +105,7 @@ public class TempFolder extends Folder {
 		nextUid = next;
 	}
 
-	/**
-	 * @see org.columba.modules.mail.folder.Folder#expungeFolder(WorkerStatusController)
-	 */
-	public void expungeFolder(WorkerStatusController worker) throws Exception {
-	}
+	
 
 	/**
 	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)

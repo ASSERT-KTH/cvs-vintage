@@ -113,7 +113,7 @@ public class MoveMessageCommand extends CopyMessageCommand {
 				MarkMessageCommand.MARK_AS_EXPUNGED,
 				worker);
 
-			srcFolder.expungeFolder(uids, worker);
+			srcFolder.expungeFolder(worker);
 
 		}
 

@@ -328,7 +328,6 @@ public abstract class Folder extends FolderTreeNode {
 	 * @throws Exception
 	 */
 	public abstract void expungeFolder(
-		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception;
 

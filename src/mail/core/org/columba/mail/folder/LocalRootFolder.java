@@ -80,7 +80,7 @@ public class LocalRootFolder extends Folder {
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+	public void expungeFolder(WorkerStatusController worker)
 		throws Exception {
 	}
 

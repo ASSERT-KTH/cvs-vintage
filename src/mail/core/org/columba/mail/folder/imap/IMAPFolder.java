@@ -576,18 +576,18 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
-	public void expungeFolder(Object[] uids, WorkerStatusController worker)
+	public void expungeFolder(WorkerStatusController worker)
 		throws Exception {
 
 		boolean result = getStore().expunge(worker, getImapPath());
 		if (result == false)
 			return;
 
-		Object[] uids2 = getUids(worker);
+		Object[] uids = getUids(worker);
 
-		if (uids2 != null) {
-			for (int i = 0; i < uids2.length; i++) {
-				Object uid = uids2[i];
+		if (uids != null) {
+			for (int i = 0; i < uids.length; i++) {
+				Object uid = uids[i];
 
 				ColumbaHeader h = (ColumbaHeader) headerList.getHeader(uid);
 

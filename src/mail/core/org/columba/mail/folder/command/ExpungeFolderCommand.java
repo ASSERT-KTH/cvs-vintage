@@ -55,12 +55,15 @@ public class ExpungeFolderCommand extends FolderCommand {
 		TableChangedEvent ev;
 		for (int i = 0; i < r.length; i++) {
 
+			ev = new TableChangedEvent( TableChangedEvent.UPDATE );
+			/*
 			ev =
 				new TableChangedEvent(
 					TableChangedEvent.REMOVE,
 					r[i].getFolder(),
 					r[i].getUids());
-
+			*/
+			
 			MailFrameController.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(r[i].getFolder());
@@ -68,13 +71,14 @@ public class ExpungeFolderCommand extends FolderCommand {
 
 		FolderCommandReference u = adapter.getUpdateReferences();
 		if (u != null) {
-
+			ev = new TableChangedEvent( TableChangedEvent.UPDATE );
+			/*
 			ev =
 				new TableChangedEvent(
 					TableChangedEvent.REMOVE,
 					u.getFolder(),
 					u.getUids());
-
+			*/
 			MailFrameController.tableChanged(ev);
 
 			MainInterface.treeModel.nodeChanged(u.getFolder());
@@ -94,12 +98,11 @@ public class ExpungeFolderCommand extends FolderCommand {
 
 		for (int i = 0; i < r.length; i++) {
 
-			Object[] uids = r[i].getUids();
-
 			Folder srcFolder = (Folder) r[i].getFolder();
-			uids = r[i].getUids();
 
-			srcFolder.expungeFolder(uids, worker);
+			worker.setDisplayText("Expunging "+srcFolder.getName()+"..");
+			
+			srcFolder.expungeFolder(worker);
 
 		}
 
