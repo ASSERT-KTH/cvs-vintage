@@ -23,8 +23,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Iterator;
@@ -237,9 +235,7 @@ public class ComposerController extends DefaultFrameController implements
 
 			containerListenerBuffer = null; // done, the buffer has been emptied
 		}
-
 		
-
 		
 	}
 
@@ -779,48 +775,42 @@ public class ComposerController extends DefaultFrameController implements
 	}
 
 	/**
-	 * Window listener prompts the user to save his work when closing the
-	 * dialog.
-	 * <p>
-	 * TODO (@author fdietz):: For some reason the window is closed before this
-	 * dialog is opened (Linux). Currently, the composer is just made visible
-	 * again.
-	 * 
-	 * @author fdietz
+	 * @see org.columba.core.gui.frame.FrameMediator#close()
 	 */
-	class ComposerWindowAdapter extends WindowAdapter {
-
-		public void windowClosing(WindowEvent e) {
-			// only prompt user, if composer contains some text
-			if (editorController.getViewText().length() == 0)
-				return;
-
-			Object[] options = { "Close", "Cancel", "Save" };
-			int n = JOptionPane
-					.showOptionDialog(
-							getContainer().getFrame(),
-							"Message wasn't sent. Would you like to save your changes?",
-							"Warning: Message was modified",
-							JOptionPane.YES_NO_CANCEL_OPTION,
-							JOptionPane.QUESTION_MESSAGE, null, options,
-							options[2]); //default button title
-
-			if (n == 2) {
-				// save changes
-				new SaveAsDraftAction(ComposerController.this)
-						.actionPerformed(null);
-
-				// close composer
-				getContainer().getFrame().setVisible(false);
-			} else if (n == 1) {
-				// cancel question dialog and don't close composer
-				getContainer().getFrame().setVisible(true);
-			} else {
-				// close composer
-				getContainer().getFrame().setVisible(false);
-			}
+	public void close() {
+//		 only prompt user, if composer contains some text
+		if (editorController.getViewText().length() == 0)
+		{
+			getContainer().getFrame().setVisible(false);
+		
+			return;
 		}
-	};
+
+		Object[] options = { "Close", "Cancel", "Save" };
+		int n = JOptionPane
+				.showOptionDialog(
+						getContainer().getFrame(),
+						"Message wasn't sent. Would you like to save your changes?",
+						"Warning: Message was modified",
+						JOptionPane.YES_NO_CANCEL_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options,
+						options[2]); //default button title
+
+		if (n == 2) {
+			// save changes
+			new SaveAsDraftAction(ComposerController.this)
+					.actionPerformed(null);
+
+			// close composer
+			getContainer().getFrame().setVisible(false);
+		} else if (n == 1) {
+			// cancel question dialog and don't close composer
+		} else {
+			// close composer
+			getContainer().getFrame().setVisible(false);
+		}
+	
+	}
 
 	public class ComposerFocusTraversalPolicy extends FocusTraversalPolicy {
 
@@ -906,10 +896,10 @@ public class ComposerController extends DefaultFrameController implements
 		
 		getContainer().getFrame().setFocusTraversalPolicy(
 				new ComposerFocusTraversalPolicy());
-
-		//getContainer().setContentPane(this);
-		
-		getContainer().getFrame().addWindowListener(new ComposerWindowAdapter());
+	
+		// make sure that JFrame is not closed automatically
+		// -> we want to prompt the user to save his work
+		getContainer().setCloseOperation(false);
 		
 		return panel;
 	}

@@ -169,4 +169,11 @@ public class DefaultFrameController implements FrameMediator {
 		}
 
 	}
+	
+	/**
+	 * @see org.columba.core.gui.frame.FrameMediator#close()
+	 */
+	public void close() {
+
+	}
 }

@@ -265,4 +265,11 @@ public interface Container {
 	 * @param name
 	 */
 	void setWindowName(String name);
+	
+	/**
+	 * Window closing action
+	 * 
+	 * @param close		if true, close window. Otherwise, don't close window automatically. 
+	 */
+	void setCloseOperation(boolean close);
 }

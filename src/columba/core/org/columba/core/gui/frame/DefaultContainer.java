@@ -30,6 +30,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.text.View;
 
 import org.columba.core.command.CommandProcessor;
@@ -85,6 +86,8 @@ public class DefaultContainer extends JFrame implements Container,
 	protected boolean switchedFrameMediator = false;
 	
 	private String windowname;
+	
+	private boolean defaultCloseOperation;
 
 	
 	public DefaultContainer(FrameMediator mediator) {
@@ -94,6 +97,10 @@ public class DefaultContainer extends JFrame implements Container,
 		this.mediator = mediator;
 		
 		mediator.setContainer(this);
+		
+		defaultCloseOperation = true;
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		initComponents();
 		
@@ -108,6 +115,10 @@ public class DefaultContainer extends JFrame implements Container,
 		super();
 
 		this.viewItem = viewItem;
+		
+		defaultCloseOperation = true;
+		
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		// create new default frame controller
 		mediator = new DefaultFrameController(viewItem);
@@ -410,7 +421,7 @@ public class DefaultContainer extends JFrame implements Container,
 	 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
 	 */
 	public void windowClosing(WindowEvent arg0) {
-		close();
+			close();
 	}
 
 	/**
@@ -522,6 +533,11 @@ public class DefaultContainer extends JFrame implements Container,
 	 * "unregistered" correctly
 	 */
 	public void close() {
+		
+		getFrameMediator().close();
+		
+		if ( defaultCloseOperation == false) return;
+		
 		if (LOG.isLoggable(Level.FINE)) {
 			LOG.fine("Closing DefaultContainer: " + this.getClass().getName());
 		}
@@ -636,5 +652,12 @@ public class DefaultContainer extends JFrame implements Container,
 	public void setWindowName(String name) {
 		this.windowname = name;
 		setTitle("");
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.Container#setCloseOperation(boolean)
+	 */
+	public void setCloseOperation(boolean close) {
+		this.defaultCloseOperation = close;
 	}
 }
