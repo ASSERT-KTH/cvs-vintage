@@ -24,7 +24,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.7 2002/12/29 21:18:25 kataka Exp $
+// $Id: FigObject.java,v 1.8 2003/01/30 18:06:41 kataka Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -170,7 +170,7 @@ public class FigObject extends FigNodeModelElement {
 
 
   public void setEnclosingFig(Fig encloser) {
-    super.setEnclosingFig(encloser);
+    // super.setEnclosingFig(encloser);
     if (!(getOwner() instanceof MModelElement)) return;
     if (getOwner() instanceof MObject) {
       MObject me = (MObject) getOwner();
