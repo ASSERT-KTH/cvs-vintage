@@ -387,7 +387,7 @@
       <include name="org/apache/tomcat/startup/**"/>
     </jar>
 
-    <jar jarfile="${tomcat.build}/lib/etomcat.jar"
+    <jar jarfile="${tomcat.build}/lib/common/etomcat.jar"
          basedir="${tomcat.build}/classes"
          manifest="src/build/manifests/manifest.embedded">
       <include name="org/apache/tomcat/startup/**"/>
