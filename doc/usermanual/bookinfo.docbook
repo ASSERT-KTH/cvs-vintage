@@ -15,16 +15,8 @@
 	  </imageobject>
 	</mediaobject>
   		
-  <authorgroup>	
-    <author>
-      <firstname>Guillaume</firstname>
-      <surname>Riviere</surname>
-      <affiliation><address><email>Guilllaume.Riviere@inrialpes.fr</email></address></affiliation>
-    </author>
-  </authorgroup>
-  
-  <date>2003-03-20</date>
-  <releaseinfo>1.5.1</releaseinfo>
+ 
+  <date>2005-02-18</date>
   
   <abstract>
     <para>
@@ -33,8 +25,8 @@
   </abstract>
   
   <copyright>
-    <year>1997-2005</year>
-    <holder>INRIA</holder>
+    <year>1999-2005</year>
+    <holder>ObjectWeb Consortium</holder>
   </copyright>
 
   <legalnotice>
