@@ -198,7 +198,9 @@ public class JNIEndpoint {
     }
 
     public void shutdown(){
-        handler.shutdown();
+        if ( handler != null && running ) {
+            handler.shutdown();
+        }
     }
 
     public static interface JniHandler {
