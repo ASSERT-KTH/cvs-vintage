@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.25 2001/10/22 23:58:14 elicia Exp $
+ * @version $Id: Default.java,v 1.26 2001/10/23 01:28:02 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -102,11 +102,9 @@ public class Default extends TemplateSecureScreen
         if (template != null)
         {
             template = template.replace('/','.');
-System.out.println(template);
 
             String perm = Turbine.getConfiguration()
                 .getString("scarab.security." + template);
-System.out.println(perm);
 
             ScarabSecurityPull security = 
                 (ScarabSecurityPull)getTemplateContext(data)
