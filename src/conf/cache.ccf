@@ -10,7 +10,7 @@ jcs.default.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRU
 # should be defined for the storage of group attribute list
 jcs.system.groupIdCache=
 jcs.system.groupIdCache.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.system.groupIdCache.cacheattributes.MaxObjects=10000
+jcs.system.groupIdCache.cacheattributes.MaxObjects=1000
 jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 # CACHE REGIONS AVAILABLE 
@@ -18,30 +18,30 @@ jcs.system.groupIdCache.cacheattributes.MemoryCacheName=org.apache.jcs.engine.me
 
 jcs.region.org_tigris_scarab_om_ScarabUser=
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=10000
+jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MaxObjects=1000
 jcs.region.org_tigris_scarab_om_ScarabUser.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_Module=
 jcs.region.org_tigris_scarab_om_Module.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_Module.cacheattributes.MaxObjects=10000
+jcs.region.org_tigris_scarab_om_Module.cacheattributes.MaxObjects=1000
 jcs.region.org_tigris_scarab_om_Module.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_Attribute=
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=10000
+jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MaxObjects=1000
 jcs.region.org_tigris_scarab_om_Attribute.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_AttributeValue=
 jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes.MaxObjects=50000
+jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes.MaxObjects=5000
 jcs.region.org_tigris_scarab_om_AttributeValue.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_Issue=
 jcs.region.org_tigris_scarab_om_Issue.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MaxObjects=50000
+jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MaxObjects=500
 jcs.region.org_tigris_scarab_om_Issue.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
 
 jcs.region.org_tigris_scarab_om_RModuleIssueType=
 jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes=org.apache.jcs.engine.CompositeCacheAttributes
-jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MaxObjects=10000
+jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MaxObjects=1000
 jcs.region.org_tigris_scarab_om_RModuleIssueType.cacheattributes.MemoryCacheName=org.apache.jcs.engine.memory.lru.LRUMemoryCache
