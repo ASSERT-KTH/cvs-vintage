@@ -437,7 +437,29 @@ public  class ReportBridge
 
     public boolean isReadyForCalculation()
     {
-        return true;
+        List mits = reportDefn.getModuleIssueTypes();
+        boolean result = mits != null && !mits.isEmpty();
+        List axes = reportDefn.getReportAxisList();
+        result &= axes != null && axes.size() > 1;
+        if (result) 
+        {
+            for (Iterator i = axes.iterator(); i.hasNext() && result;) 
+            {
+                ReportAxis axis = (ReportAxis)i.next();
+                List headings = axis.getReportHeadings();
+                result &= headings != null && !headings.isEmpty();
+                if (result) 
+                {
+                    for (Iterator j = headings.iterator(); j.hasNext() && result;) 
+                    {
+                        ReportHeading heading = (ReportHeading)j.next();
+                        result &= heading.size() > 0;
+                    }
+                }
+            }
+        }
+        
+        return result;
     }
 
     public ReportTableModel getModel()
