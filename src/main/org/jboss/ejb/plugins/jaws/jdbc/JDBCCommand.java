@@ -52,7 +52,7 @@ import org.jboss.logging.Logger;
  * utility methods that database commands may need to call.
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public abstract class JDBCCommand
 {
@@ -609,17 +609,13 @@ public abstract class JDBCCommand
    // Private -------------------------------------------------------
 
    /** Get a database connection */
-   private Connection getConnection() throws SQLException
+   protected Connection getConnection() throws SQLException
    {
       DataSource ds = metaInfo.getDataSource();
       if (ds != null)
       {
          return ds.getConnection();
-      } else
-      {
-         String url = metaInfo.getDbURL();
-         return DriverManager.getConnection(url,"sa","");
-      }
+      } else throw new RuntimeException("Unable to locate data source!");
    }
 
    private final void setUpJDBCTypeNames()
