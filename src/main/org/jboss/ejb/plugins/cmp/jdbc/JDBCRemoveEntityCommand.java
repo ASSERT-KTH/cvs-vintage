@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class JDBCRemoveEntityCommand
    extends JDBCUpdateCommand
@@ -78,6 +78,7 @@ public class JDBCRemoveEntityCommand
          throw new RemoveException("Could not remove " + context.getId());
       }
       
+      HashSet deletedEntities = new HashSet();
       for(int i=0; i<cmrFields.length; i++) {
          if(cmrFields[i].getMetaData().getRelatedRole().isCascadeDelete()) {
             Object oldRelation = oldRelationMap.get(cmrFields[i]);
@@ -85,12 +86,18 @@ public class JDBCRemoveEntityCommand
                Iterator oldValues = ((Collection)oldRelation).iterator();
                while(oldValues.hasNext()) {
                   EJBLocalObject oldValue = (EJBLocalObject)oldValues.next(); 
-                  oldValue.remove();
+                  if(!deletedEntities.contains(oldValue)) {
+                     deletedEntities.add(oldValue);
+                     oldValue.remove();
+                  }
                }
             } else {
                EJBLocalObject oldValue = (EJBLocalObject)oldRelation;
                if(oldValue != null) {
-                  oldValue.remove();
+                  if(!deletedEntities.contains(oldValue)) {
+                     deletedEntities.add(oldValue);
+                     oldValue.remove();
+                  }
                }
             }
          }
