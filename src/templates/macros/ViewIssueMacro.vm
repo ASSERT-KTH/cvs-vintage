@@ -273,7 +273,7 @@
      <th>Link</th>
      #end
      #if ($canEdit)
-     <th>URI</th>
+     <th>URL</th>
      #end
      <th>Description</th>
    </tr>
@@ -334,9 +334,9 @@
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
    <tr>
      <th>&#160;</th>
-     <th>Attachment name</th>
-     <th>Attachment description</th>
-     <th>Attachment type</th>
+     <th>Name</th>
+     <th>Description</th>
+     <th>Type</th>
    </tr>
    #foreach ($file in $attachments)
      #indexedRows($velocityCount)
@@ -369,7 +369,7 @@
 #end
 
 #if ($canEdit)
-<h4>Add Attachment</h4>
+<h4>Add attachment</h4>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">
@@ -465,7 +465,7 @@
   #indexedRows($velocityCount)
 <td>#booleanCheckbox($dependGroup.Deleted)</td>
 <td> $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
-<td> Child </td>
+<td>Child</td>
 <td> 
 #if ($canEdit)
 <select name="$dependGroup.TypeId.Key" class="select">
