@@ -15,7 +15,7 @@ import org.jboss.system.Service;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @see org.jboss.system.Service
 *
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 *   <p><b>20010830 marc fleury:</b>
 *   <ul>
@@ -29,6 +29,6 @@ extends Service, DeployerMBean
    // Public --------------------------------------------------------
    
    /** The default object name. */
-   public static final String OBJECT_NAME = "JBOSS-SYSTEM:service=ServiceDeployer";
+   public static final String OBJECT_NAME = "jboss.system:service=ServiceDeployer";
    
 }

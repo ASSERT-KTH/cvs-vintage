@@ -19,7 +19,7 @@ import org.jboss.system.ServiceMBean;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *      <p><b>20011223 marc fleury:</b>
 *      <ul> 
 *      <li>add/RemoveURL, added the capacity to dynamically add a URL to watch
@@ -32,7 +32,7 @@ public interface MainDeployerMBean
 extends ServiceMBean
 {
    /** The default object name. */
-   String OBJECT_NAME = "JBOSS-SYSTEM:service=MainDeployer";
+   String OBJECT_NAME = "jboss.system:service=MainDeployer";
    
    
    /** individual URLs for dynamically deploying **/

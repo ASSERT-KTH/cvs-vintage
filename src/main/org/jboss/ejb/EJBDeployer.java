@@ -74,14 +74,14 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.1 $ 
+* @version $Revision: 1.2 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
 implements EJBDeployerMBean
 {
    // Constants -----------------------------------------------------
-   private static final String SERVICE_CONTROLLER_NAME = "JBOSS-SYSTEM:spine=ServiceController";
+   private static final String SERVICE_CONTROLLER_NAME = "jboss.system:spine=ServiceController";
    
    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";

@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:juha.lindfors@jboss.org">Juha Lindfors</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *      <p><b>20011227 marc fleury:</b>
 *      <ul>
 *      <li>Deployer and ClassLoader unification extends DeployerMBean
@@ -32,7 +32,7 @@ public interface EJBDeployerMBean
 extends DeployerMBean
 {
    /** The default object name. */
-   String OBJECT_NAME = "EJB:service=EJBDeployer";
+   String OBJECT_NAME = "jboss.ejb:service=EJBDeployer";
    
    /**
    * Returns the applications deployed by the container factory

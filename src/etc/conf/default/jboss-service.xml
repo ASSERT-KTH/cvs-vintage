@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.24 2002/01/20 15:15:16 mnf999 Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.25 2002/01/29 21:12:23 d_jencks Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -17,6 +17,7 @@
      | then there is no need to list the files and it should commented
    -->
   <classpath codebase="lib/ext" archives="*"/>
+  <classpath codebase="lib/jini" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
@@ -102,7 +103,7 @@
   <!-- Main Deployer and SARDeployer are provided by main -->
 
   <!-- EJB deployer, remove to disable EJB behavior-->
-  <mbean code="org.jboss.ejb.EJBDeployer" name="EJB:service=EJBDeployer">
+  <mbean code="org.jboss.ejb.EJBDeployer" name="jboss.ejb:service=EJBDeployer">
     <attribute name="VerifyDeployments">true</attribute>
     <attribute name="ValidateDTDs">false</attribute>
     <attribute name="MetricsEnabled">false</attribute>
@@ -111,7 +112,7 @@
   </mbean>
   
   <!-- EAR deployer, remove if you are not using Web layers -->
-  <mbean code="org.jboss.deployment.EARDeployer" name="J2EE:service=EARDeployer">
+  <mbean code="org.jboss.deployment.EARDeployer" name="jboss.j2ee:service=EARDeployer">
   </mbean>
   
   <!-- WAR Deployer is provided by tomcat or jetty -->
