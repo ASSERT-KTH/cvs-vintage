@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.system;
 
 import java.util.Date;
@@ -19,39 +20,45 @@ import org.jboss.logging.Logger;
 import org.apache.log4j.NDC;
 
 /**
-* An abstract base class JBoss services can subclass to implement a
-* service that conforms to the ServiceMBean interface. Subclasses must
-* override {@link #getName} method and should override 
-* {@link #startService}, and {@link #stopService} as approriate.
-*
-* @see ServiceMBean
-* 
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
-* @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.10 $
-*   
-* <p><b>Revisions:</b>
-*
-* <p><b>20010619 scott.stark:</b>
-* <ul>
-* <li> use the full service class name as the log4j log name
-* </ul>
-* <p><b>20011202 Andreas Schaefer:</b>
-* <ul>
-* <li> Add the own MBean Service Name to be remembered in an attribute
-* </ul>
-*/
+ * An abstract base class JBoss services can subclass to implement a
+ * service that conforms to the ServiceMBean interface. Subclasses must
+ * override {@link #getName} method and should override 
+ * {@link #startService}, and {@link #stopService} as approriate.
+ *
+ * @see ServiceMBean
+ * 
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
+ * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
+ * @version $Revision: 1.11 $
+ *   
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010619 scott.stark:</b>
+ * <ul>
+ *    <li> use the full service class name as the log4j log name
+ * </ul>
+ * 
+ * <p><b>20011202 Andreas Schaefer:</b>
+ * <ul>
+ *    <li> Add the own MBean Service Name to be remembered in an attribute
+ * </ul>
+ */
 public abstract class ServiceMBeanSupport
-extends NotificationBroadcasterSupport
-implements ServiceMBean, MBeanRegistration
+   extends NotificationBroadcasterSupport
+   implements ServiceMBean, MBeanRegistration
 {
    // Attributes ----------------------------------------------------
    
    protected int state;
    protected MBeanServer server;
-   /** Own Object Name this MBean is registered with, see {@link #preRegister preRegister()}. **/
+
+   /**
+    * Own Object Name this MBean is registered with,
+    * see {@link #preRegister preRegister()}.
+    */
    protected ObjectName mServiceName;
+   
    private int id = 0;
    
    protected Logger log;
@@ -66,8 +73,15 @@ implements ServiceMBean, MBeanRegistration
    }
    
    // Public --------------------------------------------------------
-   
-   public abstract String getName();
+
+   /**
+    * Use the short class name as the default for the service name.
+    */
+   public String getName() {
+      String classname = this.getClass().getName();
+      return classname.substring(classname.lastIndexOf(".") + 1,
+                                 classname.length());
+   }
    
    public ObjectName getServiceName() {
       return mServiceName;
