@@ -60,24 +60,20 @@
 
 package org.apache.tomcat.core;
 
-import org.apache.tomcat.util.http.MimeHeaders;
-import org.apache.tomcat.util.http.Parameters;
-import org.apache.tomcat.util.http.ContentType;
-import org.apache.tomcat.util.http.Cookies;
-
-import org.apache.tomcat.util.buf.*;
-
-
-//import org.apache.tomcat.util.http.*;
-
-import java.security.Principal;
 import java.io.IOException;
-import java.io.CharConversionException;
+import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Locale;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
+import org.apache.tomcat.util.buf.DateTool;
+import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.UDecoder;
+import org.apache.tomcat.util.http.Cookies;
+import org.apache.tomcat.util.http.MimeHeaders;
+import org.apache.tomcat.util.http.Parameters;
 
 /**
  * This is a low-level, efficient representation of a server request. Most fields

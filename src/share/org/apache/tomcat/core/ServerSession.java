@@ -58,12 +58,8 @@
  */ 
 package org.apache.tomcat.core;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.buf.TimeStamp;

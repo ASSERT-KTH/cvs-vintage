@@ -58,15 +58,13 @@
  */ 
 package org.apache.tomcat.core;
 
-import java.io.Writer;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import java.io.Writer;
 import java.util.Hashtable;
 
-import org.apache.tomcat.util.buf.*;
+import org.apache.tomcat.util.buf.ByteChunk;
+import org.apache.tomcat.util.buf.C2BConverter;
+import org.apache.tomcat.util.buf.CharChunk;
 
 /**
  * The buffer used by tomcat response. It allows writting chars and
