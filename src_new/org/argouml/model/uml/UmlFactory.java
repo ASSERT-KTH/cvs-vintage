@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.27 2003/06/30 18:00:19 linus Exp $
+// $Id: UmlFactory.java,v 1.28 2003/08/22 17:37:30 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -219,7 +219,7 @@ public class UmlFactory extends AbstractUmlModelFactory {
     {ModelFacade.LINK,             ModelFacade.NODE_INSTANCE},
     {ModelFacade.LINK,             ModelFacade.OBJECT}
     };
-    
+
     /** Singleton instance.
      */
     private static final UmlFactory SINGLETON = new UmlFactory();

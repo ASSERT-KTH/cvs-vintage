@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.76 2003/08/21 21:47:04 alexb Exp $
+// $Id: Project.java,v 1.77 2003/08/22 17:37:30 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1288,7 +1288,8 @@ public class Project implements java.io.Serializable, TargetListener {
     }
 
     /**
-     * @return
+     * Get the current viewed diagram
+     * @return the current viewed diagram
      */
     public ArgoDiagram getActiveDiagram() {
         return _activeDiagram;

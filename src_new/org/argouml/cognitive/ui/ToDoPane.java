@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.22 2003/06/30 18:00:18 linus Exp $
+// $Id: ToDoPane.java,v 1.23 2003/08/22 17:37:30 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -61,8 +62,8 @@ import org.argouml.ui.Actions;
 import org.argouml.ui.DisplayTextTree;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
-
 import org.tigris.gef.ui.ToolBar;
+
 import org.tigris.gef.util.VectorSet;
 
 /**
@@ -89,7 +90,7 @@ import org.tigris.gef.util.VectorSet;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.22 2003/06/30 18:00:18 linus Exp $
+ * $Id: ToDoPane.java,v 1.23 2003/08/22 17:37:30 bobtarling Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,
@@ -176,7 +177,9 @@ public class ToDoPane extends JPanel
         // This is the only reason GEF toolbar is used here.
         // Must find a way to implement the same.
         _flatButton = _toolbar.addToggle(_flatView,
-					 "Flat", "Hierarchical", "Flat");
+                                   "Flat",
+                                   "Hierarchical", 
+                                   "Flat");
         _toolbar.add(_countLabel);
         
         JPanel toolbarPanel = new JPanel(new BorderLayout());
