@@ -38,7 +38,7 @@ public class ColorComboBox extends JComboBox implements ItemListener {
         super();
 
         // Add the default colors items.
-        addItem(new ColorItem(Color.black, "Black"));
+        addItem(new ColorItem(Color.black, "None"));
         addItem(new ColorItem(Color.blue, "Blue"));
         addItem(new ColorItem(Color.gray, "Gray"));
         addItem(new ColorItem(Color.green, "Green"));

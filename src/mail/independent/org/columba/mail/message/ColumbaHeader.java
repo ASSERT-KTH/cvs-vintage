@@ -15,14 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
+import org.columba.core.gui.util.ColorFactory;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.parser.HeaderParser;
-
-import java.awt.Color;
 
 
 /**
@@ -93,7 +92,7 @@ public class ColumbaHeader {
         attributes.put("columba.size", new Integer(0));
 
         // message colour should be black as default
-        attributes.put("columba.color", new Color(0, 0, 0));
+        attributes.put("columba.color", ColorFactory.getColor(0));
 
         // use default account 
         attributes.put("columba.accountuid", new Integer(0));
