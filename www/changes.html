@@ -1,4 +1,4 @@
-<!-- $Id: changes.html,v 1.55 2002/02/20 22:59:16 maartenc Exp $ -->
+<!-- $Id: changes.html,v 1.56 2002/02/20 23:13:15 jmcnally Exp $ -->
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 
@@ -29,6 +29,15 @@
                 <li>Fixed a NPE that could occur when checking the permission of
                     a hyperlink if no module had been selected yet by the current
                     user. (MC)</li>
+                <li>changes to user attributes such as adding and deleting
+                    now show up immediately.  Caching was causing the results
+                    to not show up until the list was shown a second time.
+                    (JDM)</li>
+                <li>adding an attribute to an attribute group
+                    now shows up immediately.  Caching was causing the results
+                    to not show up until the list was shown a second time.
+                    (JDM)</li>
+                <li></li>
             </ul>
         </td>
     </tr>    
@@ -66,6 +75,9 @@
                     of the select page. (EWD)</li>
                 <li>Removed location column from EditQuery.vm because BrianO
                     says it isn't needed. (JSS)</li>
+                <li>Adding caching to expensive business object methods, so 
+                    that multiple calls within a single request return the
+                    same result.</li>
             </ul>
         </td>
     </tr>
