@@ -8,7 +8,7 @@
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11"/>
 	<property name="dest" value="../columba-${version}"/>
-	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/jython.jar:${src}/lib/junit.jar"/>
+	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/jython.jar:${src}/lib/junit.jar:${src}/lib/jakarta-oro-2.0.6.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -65,7 +65,30 @@
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
+				<exclude name="classes/**"/>
 			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy-resources">
+		<copy todir="${dest}">
+ 			<fileset dir="${dest}/src/core/core/"> 
+			 <include name="**"/>
+			</fileset>
+			<fileset dir="${dest}/src/mail/core/"> 
+			 <include name="**"/>
+			</fileset>
+			<fileset dir="${dest}/src/mail/independent/"> 
+			 <include name="**"/>
+			</fileset>
+			<fileset dir="${dest}/src/addressbook/core/"> 
+			 <include name="**"/>
+			</fileset>
+			<!-- need to uncomment this when adding resource files 
+			<fileset dir="${dest}/src/addressbook/independent/"> 
+			 <include name="**"/>
+			</fileset>
+			-->
 		</copy>
 	</target>
 
@@ -76,12 +99,12 @@
 	</target>
 
 	<!-- pack the files into one jar file with automatic manifest file -->
-	<target name="jar" depends="compile">
+	<target name="jar" depends="compile, copy-resources">
 		<delete file="${dest}/columba.jar"/>
 		<echo message="the jar file is going to ${dest}/columba.jar "/> 
 		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
 			<include name="**"/>
-			<exclude name="**/*.jar"/>
+			<exclude name="columba.jar"/>
 			<exclude name="README"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
@@ -96,7 +119,7 @@
 			<exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar"/>
+				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar lib/jakarta-oro-2.0.6.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
@@ -116,7 +139,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
 	<target name="zip-bin" depends="jar,run-script">
-		<echo message="the zipfile is going to ${dest}/columba-${version}-bin.zip "/> 
+		<echo message="the zipfile are going to ${dest}/columba-${version}-bin.zip "/> 
 		<zip zipfile="${dest}/columba-${version}-bin.zip" update="true">
 			<zipfileset dir="${dest}" prefix="columba-${version}-bin">
 				<include name="README"/>
@@ -136,7 +159,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an source zip file, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
 	<target name="zip-source" depends="init,run-script">
-		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/> 
+		<echo message="the zipfile are going to ${dest}/columba-${version}-src.zip "/> 
 		<zip zipfile="${dest}/columba-${version}-src.zip" update="true">
 			<zipfileset dir="${src}" prefix="columba-${version}-src">
 				<include name="**/*.java"/>
@@ -177,7 +200,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- to build an javadoc documentation -->
 	<target name="doc" depends="init">
 		<echo message="the documentation will go to ${dest}/javadoc"/>
-		<echo message="sourcepath: ${src}/org/columba"/>
+		<echo message="sopurcepath: ${src}/org/columba"/>
 		<javadoc sourcepath="${src}" 
 						 destdir="${dest}/javadoc" 
 						 packagenames="org.columba.*"
