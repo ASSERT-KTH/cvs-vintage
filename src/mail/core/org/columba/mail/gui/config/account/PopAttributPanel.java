@@ -101,7 +101,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 				item.getBoolean("leave_messages_on_server"));
 
 			excludeCheckBox.setSelected(
-				item.getBoolean("exlude_from_checkall"));
+				item.getBoolean("exclude_from_checkall",false));
 
 			limitMessageDownloadCheckBox.setSelected(
 				item.getBoolean("enable_download_limit"));
@@ -111,7 +111,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		} else {
 			item.set("leave_messages_on_server", leaveOnServerCheckBox.isSelected()); //$NON-NLS-1$
 
-			item.set("exlude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
+			item.set("exclude_from_checkall", excludeCheckBox.isSelected()); //$NON-NLS-1$
 
 			item.set("download_limit", limitMessageDownloadTextField.getText());
 			

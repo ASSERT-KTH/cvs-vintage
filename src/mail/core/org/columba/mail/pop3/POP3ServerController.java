@@ -159,7 +159,8 @@ public class POP3ServerController implements ActionListener {
 
 	public void fetch() {
 		POP3ServerController controller = (POP3ServerController) this;
-
+		
+		
 		POP3CommandReference[] r = new POP3CommandReference[1];
 		r[0] = new POP3CommandReference(controller.getServer());
 

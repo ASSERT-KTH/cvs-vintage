@@ -66,6 +66,10 @@ public class ReceiveMessagesAction extends FrameAction {
 			POP3ServerController controller =
 				(POP3ServerController) iterator.next();
 
+			boolean excludeFromCheckAll = controller.getAccountItem().getPopItem().getBoolean("exclude_from_checkall",false);
+			
+			if ( excludeFromCheckAll == true ) continue;
+			  
 			POP3CommandReference[] r = new POP3CommandReference[1];
 			r[0] = new POP3CommandReference(controller.getServer());
 
