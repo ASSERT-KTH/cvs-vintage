@@ -435,7 +435,7 @@
                type="String" multiValued="true"/>
 </group>
 
-<group name="OptionGroup" key="repog" mapToObject="util.ReportGenerator$OptionGroup">
+<group name="OptionGroup" key="repog" mapToObject="om.Report$OptionGroup">
     <field name="DisplayValue" key="dv" type="String">
         <rule name="maxLength" 
               value="40">Name must be less than 40 characters long</rule>
@@ -443,7 +443,7 @@
     <field name="Selected" key="sel" type="boolean"/>
 </group>
 
-<group name="ReportDate" key="repdt" mapToObject="util.ReportGenerator$ReportDate">
+<group name="ReportDate" key="repdt" mapToObject="om.Report$ReportDate">
     <field name="Date" key="d" type="DateString">
         <rule name="format1" value="MM/dd/yy HH:mm"/>
         <rule name="format2" value="MM/dd/yy"/>
