@@ -149,6 +149,7 @@
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
     <mkdir dir="${tomcat.build}/conf"/>
+    <mkdir dir="${tomcat.build}/conf/auto"/>
     <mkdir dir="${tomcat.build}/src"/>
     <mkdir dir="${tomcat.build}/classes"/>
     <mkdir dir="${tomcat.build}/lib"/>
