@@ -5,16 +5,12 @@ $page.setTitle("Stored Query List")
 <div class="app" id="stored query list">
 
 <h3>$page.Title</h3>
-
 #set ($noQueries = "false")
-## FIXME: the logic needs to be fleshed out better here.
-#if ($module)
-   #if ($module.GlobalQueries.isEmpty())
-     #set ($noQueries = "true")
-   #end
-#else
+#if (!$module)
+    <div class="alert">Please choose a module.</div>
     #set ($noQueries = "true")
 #end
+
 #if (($module.getPrivateQueries($user).isEmpty()) && ($module.GlobalQueries.isEmpty())) 
    #set ($noQueries = "true")
 #end
