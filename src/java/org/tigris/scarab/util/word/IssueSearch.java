@@ -114,7 +114,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.118 2003/11/06 15:37:49 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.119 2003/11/16 18:55:13 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1476,8 +1476,30 @@ public class IssueSearch
 
 
     /**
-     * This method builds a Criterion for a single attribute value.
-     * It is used in the addOptionAttributes method
+     * <p>This method builds a Criterion for a single attribute value.
+     * It is used in the addOptionAttributes method.</p>
+     * <p>The attribute value is basically the attribute name/id
+     * + its value. Since some option (picklist) attributes are
+     * hierachical, we need to add any child values of the given
+     * attribute value. For example, assume we have an attribute named
+     * "Operating System". This might have values in a hierarchy like
+     * so:</p>
+     * <pre>
+     *   All
+     *     Windows
+     *       NT
+     *       2000
+     *       XP
+     *     Unix
+     *       Linux
+     *       Solaris
+     *       Tru64
+     * </pre>
+     * <p>If the user selects the "Windows" value in a query, we want
+     * to include any issues that have "Windows" as this attribute's
+     * value, and also "NT", "2000", and "XP".</p>
+     * <p>All the appropriate attribute values are added to the 'options'
+     * list as RModuleOption objects.</p>
      *
      * @param aval an <code>AttributeValue</code> value
      * @return a <code>Criteria.Criterion</code> value
@@ -1500,6 +1522,12 @@ public class IssueSearch
         else 
         {
             IssueType issueType = getIssueType();
+            
+            //
+            // This call checks whether the attribute value is available
+            // to the current module. If not, then no attribute options
+            // are added to the list.
+            //
             RModuleOption rmo = getModule()
                 .getRModuleOption(aval.getAttributeOption(), issueType);
             if (rmo != null) 
@@ -1508,13 +1536,18 @@ public class IssueSearch
             }
         }
         
-        if (descendants == null || descendants.isEmpty()) 
+        //
+        // Include the selected attribute value as one of the options
+        // to search for.
+        //
+        options.add(aval.getOptionId());
+        
+        if (descendants != null && !descendants.isEmpty())
         {
-            options.add(aval.getOptionId());
-        }
-        else
-        { 
-            for (Iterator i=descendants.iterator(); i.hasNext();) 
+            //
+            // Add all applicable child attribute options to the list as well.
+            //
+            for (Iterator i = descendants.iterator(); i.hasNext();) 
             {
                 options.add(((RModuleOption)i.next())
                     .getOptionId());
