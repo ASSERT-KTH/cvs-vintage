@@ -27,7 +27,7 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -208,7 +208,8 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       public EJBObject getEJBObject()
       {
-         if(((EntityContainer)container).getProxyFactory() == null)
+         EJBProxyFactory proxyFactory = container.getProxyFactory();
+         if(proxyFactory == null)
          {
             throw new IllegalStateException("No remote interface defined");
          }
@@ -219,8 +220,8 @@ public class EntityEnterpriseContext extends EnterpriseContext
          }
 
          if(ejbObject == null)
-         {   
-            ejbObject = (EJBObject) ((EntityContainer)container).getProxyFactory().getEntityEJBObject(id);  
+         {
+            ejbObject = (EJBObject) proxyFactory.getEntityEJBObject(id);
          }
 
          return ejbObject;
@@ -240,7 +241,7 @@ public class EntityEnterpriseContext extends EnterpriseContext
 
          if(ejbLocalObject == null)
          {
-            ejbLocalObject = ((EntityContainer)container).getLocalProxyFactory().getEntityEJBLocalObject(id);
+            ejbLocalObject = container.getLocalProxyFactory().getEntityEJBLocalObject(id);
          }
          return ejbLocalObject;
       }

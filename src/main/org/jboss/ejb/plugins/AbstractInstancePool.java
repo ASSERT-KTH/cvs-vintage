@@ -19,7 +19,6 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
-import org.jboss.logging.Logger;
 import org.jboss.system.ServiceMBeanSupport;
 
 import org.w3c.dom.Element;
@@ -34,7 +33,7 @@ import EDU.oswego.cs.dl.util.concurrent.FIFOSemaphore;
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  */
 public abstract class AbstractInstancePool
    extends ServiceMBeanSupport

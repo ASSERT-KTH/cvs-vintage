@@ -14,14 +14,13 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.util.Sync;
 
 /**
  * Cache subclass for entity beans.
  * 
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class EntityInstanceCache extends AbstractInstanceCache implements EntityCache
 {
@@ -98,7 +97,7 @@ public class EntityInstanceCache extends AbstractInstanceCache implements Entity
       {
          return false;
       }
-      else if (container.getLockManager().canPassivate(((EntityEnterpriseContext)ctx).getId()))
+      else if (container.getLockManager().canPassivate(ctx.getId()))
       {
          return false;
       }
