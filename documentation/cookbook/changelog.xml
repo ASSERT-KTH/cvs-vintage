@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.6 2004/09/16 05:58:13 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.7 2004/09/17 11:51:33 linus Exp $ -->
 
 <preface id="changelog">
   <title>Change Log</title>
@@ -30,6 +30,20 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+
+      <tbody valign="top">
+        <row>
+          <entry>2004-09-17</entry>
+          <entry>
+Change to the description on how to extend ArgoUML.
+Now module loader described.
+(See <xref linkend="extending"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
+
 
       <tbody valign="top">
         <row>
