@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.1 2004/08/02 21:35:39 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.2 2004/08/03 16:43:20 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.uml.diagram.ui.FigNodeModelElement;
 public class FigObjectFlowState extends FigNodeModelElement {
    
     private FigRect cover;
-    private FigRect bigPort;
 
     ////////////////////////////////////////////////////////////////
     // constructors
@@ -53,7 +52,7 @@ public class FigObjectFlowState extends FigNodeModelElement {
      * Main Constructor FigObjectFlowState (called from file loading)
      */
     public FigObjectFlowState() {
-        bigPort = new FigRect(10, 10, 90, 50, Color.cyan, Color.cyan);
+        setBigPort(new FigRect(10, 10, 90, 50, Color.cyan, Color.cyan));
         cover = new FigRect(10, 10, 90, 50, Color.black, Color.white);
         getNameFig().setLineWidth(0);
         getNameFig().setFilled(false);
@@ -62,13 +61,12 @@ public class FigObjectFlowState extends FigNodeModelElement {
         getNameFig().setBounds(10, 10, nameMin.width + 20, nameMin.height);
         
         // add Figs to the FigNode in back-to-front order
-        addFig(bigPort);
+        addFig(getBigPort());
         addFig(cover);
         addFig(getNameFig());
         
         Rectangle r = getBounds();
         setBounds(r.x, r.y, nameMin.width, nameMin.height);
-        
     }
     
     /**
@@ -95,7 +93,7 @@ public class FigObjectFlowState extends FigNodeModelElement {
     public Object clone() {
         FigObjectFlowState figClone = (FigObjectFlowState) super.clone();
         Iterator it = figClone.getFigs(null).iterator();
-        figClone.bigPort = (FigRect) it.next();
+        figClone.setBigPort((FigRect) it.next());
         figClone.cover = (FigRect) it.next();
         figClone.setNameFig((FigText) it.next());
         return figClone;
@@ -103,6 +101,14 @@ public class FigObjectFlowState extends FigNodeModelElement {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
+
+    /**
+     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
+     */
+    public void setOwner(Object node) {
+        super.setOwner(node);
+        bindPort(node, getBigPort());
+    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#setLineColor(java.awt.Color)
