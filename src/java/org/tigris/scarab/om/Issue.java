@@ -378,6 +378,7 @@ public class Issue
     /**
      * Returns a list of Attachment objects with type "Comment"
      * That are associated with this issue.
+     * TODO: get attachment type by name instead of by id
      */
     public Vector getComments() throws Exception
     {
@@ -385,14 +386,14 @@ public class Issue
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
             .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
                      AttachmentPeer.ATTACHMENT_TYPE_ID)
-            .add(AttachmentTypePeer.ATTACHMENT_TYPE_NAME,
-                 AttachmentTypePeer.URL_TYPE_NAME);
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 2);
         return  AttachmentPeer.doSelect(crit);
     }
 
     /**
      * Returns a list of Attachment objects with type "URL"
      * That are associated with this issue.
+     * TODO: get attachment type by name instead of by id
      */
     public Vector getUrls() throws Exception
     {
@@ -400,8 +401,7 @@ public class Issue
             .add(AttachmentPeer.ISSUE_ID, getIssueId())
             .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
                      AttachmentPeer.ATTACHMENT_TYPE_ID)
-            .add(AttachmentTypePeer.ATTACHMENT_TYPE_NAME, 
-                 AttachmentTypePeer.COMMENT_TYPE_NAME);
+            .add(AttachmentTypePeer.ATTACHMENT_TYPE_ID, 3);
         return  AttachmentPeer.doSelect(crit);
     }
 
