@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.60 2005/01/09 21:10:42 linus Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.61 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -138,7 +138,8 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
     private String associationLabel;
 
-    private PropPanelButton2 oppositeEndButton = new PropPanelButton2(new ActionNavigateOppositeAssocEnd(),
+    private PropPanelButton2 oppositeEndButton = 
+        new PropPanelButton2(new ActionNavigateOppositeAssocEnd(),
             lookupIcon("AssociationEnd"));
 
     /**

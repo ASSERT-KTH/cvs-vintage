@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.246 2005/01/11 13:03:42 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.247 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -7,6 +7,7 @@
 // documentation are copyrighted by The Regents of the University of
 // California. The software program and documentation are supplied "AS
 // IS", without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
 // uninterrupted or error-free. The end-user understands that the program
 // was developed for research purposes and is advised not to rely
 // exclusively on the program for any reason.  IN NO EVENT SHALL THE

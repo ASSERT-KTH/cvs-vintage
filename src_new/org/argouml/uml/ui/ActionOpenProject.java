@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.55 2005/01/09 21:10:37 linus Exp $
+// $Id: ActionOpenProject.java,v 1.56 2005/01/11 21:03:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -97,7 +97,8 @@ public class ActionOpenProject extends ActionFileOperations
             if (p != null && p.getURL() != null) {
                 File file = new File(p.getURL().getFile());
                 if (file.getParentFile() != null) {
-                    chooser = FileChooserFactory.getFileChooser(file.getParent());
+                    chooser = 
+                        FileChooserFactory.getFileChooser(file.getParent());
                 }
             } else {
                 chooser = FileChooserFactory.getFileChooser();

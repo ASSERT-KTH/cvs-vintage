@@ -1,4 +1,4 @@
-// $Id: UMLExtendBaseComboBoxModel.java,v 1.22 2005/01/09 20:24:21 bobtarling Exp $
+// $Id: UMLExtendBaseComboBoxModel.java,v 1.23 2005/01/11 21:03:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -60,7 +60,8 @@ public class UMLExtendBaseComboBoxModel extends UMLComboBoxModel2 {
         Project p = ProjectManager.getManager().getCurrentProject();
         Object model = p.getRoot();
         setElements(Model.getModelManagementHelper()
-                .getAllModelElementsOfKindWithModel(model, ModelFacade.USE_CASE));
+                .getAllModelElementsOfKindWithModel(model, 
+                        ModelFacade.USE_CASE));
         if (ModelFacade.getExtension(extend) != null) {
             removeElement(ModelFacade.getExtension(extend));
         }

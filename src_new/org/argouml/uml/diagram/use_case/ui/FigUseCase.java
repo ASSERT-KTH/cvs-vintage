@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.55 2005/01/10 16:24:19 mvw Exp $
+// $Id: FigUseCase.java,v 1.56 2005/01/11 21:03:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1272,7 +1272,7 @@ public class FigUseCase extends FigNodeModelElement {
         super.modelChanged(mee);
         if (mee == null
 	    || mee.getPropertyName().equals("extensionPoint")
-	    || org.argouml.model.ModelFacade.isAExtensionPoint(mee.getSource())) {
+	    || ModelFacade.isAExtensionPoint(mee.getSource())) {
             updateExtensionPoint();
             return;
         }

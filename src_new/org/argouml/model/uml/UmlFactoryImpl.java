@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.15 2005/01/09 21:10:41 linus Exp $
+// $Id: UmlFactoryImpl.java,v 1.16 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -580,8 +580,12 @@ public class UmlFactoryImpl
      * elements of another type then it is the responsibility
      * of the diagram manage those items and not call this
      * method. It also only works for UML model elements that
-     * are represented in diagrams by a node.
-     * @param elementType the type of model element to build
+     * are represented in diagrams by a node. <p>
+     * 
+     * The parameter "elementType" stands for the type of 
+     * model element to build.
+     *
+     * @see org.argouml.model.UmlFactory#buildNode(java.lang.Object)
      */
     public Object buildNode(Object elementType) {
         

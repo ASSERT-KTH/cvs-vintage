@@ -1,4 +1,4 @@
-// $Id: SelectionActionState.java,v 1.21 2005/01/08 20:46:39 linus Exp $
+// $Id: SelectionActionState.java,v 1.22 2005/01/11 21:03:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,7 +161,8 @@ public class SelectionActionState extends SelectionWButtons {
 	} else if (showIncomingLeft && hitRight(cx, cy + ch / 2, iw, ih, r)) {
 	    h.index = 13;
 	    h.instructions = "Add an incoming transition";
-	} else if (showOutgoingBelow && hitAbove(cx + cw / 2, cy, iwd, ihd, r)) {
+	} else if (showOutgoingBelow 
+            && hitAbove(cx + cw / 2, cy, iwd, ihd, r)) {
 	    h.index = 10;
 	    h.instructions = "Add an incoming transaction";
 	} else if (showIncomingAbove

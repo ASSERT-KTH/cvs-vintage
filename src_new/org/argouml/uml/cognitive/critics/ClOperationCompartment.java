@@ -1,4 +1,4 @@
-// $Id: ClOperationCompartment.java,v 1.12 2005/01/11 15:12:35 bobtarling Exp $
+// $Id: ClOperationCompartment.java,v 1.13 2005/01/11 21:03:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.ui.Clarifier;
 import org.argouml.uml.diagram.ui.OperationsCompartmentContainer;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.gef.presentation.FigGroup;
 
 
 

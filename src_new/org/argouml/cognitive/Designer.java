@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.36 2005/01/09 14:58:04 linus Exp $
+// $Id: Designer.java,v 1.37 2005/01/11 21:03:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -807,8 +807,14 @@ public class Designer
      */
     public void setExpertEmail(String addr) { emailAddr = addr; }
 
+    /**
+     * @see org.argouml.cognitive.Poster#snooze()
+     */
     public void snooze() { /* do nothing */ }
 
+    /**
+     * @see org.argouml.cognitive.Poster#unsnooze()
+     */
     public void unsnooze() { /* do nothing */ }
 
     /**

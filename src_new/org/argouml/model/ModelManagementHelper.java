@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelper.java,v 1.4 2005/01/09 19:09:57 bobtarling Exp $
+// $Id: ModelManagementHelper.java,v 1.5 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,8 +56,8 @@ public interface ModelManagementHelper {
     /**
      * Returns all modelelements of the given kind.
      *
-     * @param model
-     * @param type is the class kind
+     * @param model the model that is searched
+     * @param type is the class kind that is sought
      * 
      * @return Collection
      */

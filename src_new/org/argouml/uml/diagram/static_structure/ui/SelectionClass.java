@@ -1,4 +1,4 @@
-// $Id: SelectionClass.java,v 1.21 2005/01/08 23:27:32 linus Exp $
+// $Id: SelectionClass.java,v 1.22 2005/01/11 21:03:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,8 +232,8 @@ public class SelectionClass extends SelectionWButtons {
         }
         if (edgeClass != null && nodeClass != null) {
             Editor ce = Globals.curEditor();
-            ModeCreateEdgeAndNode m =
-                new ModeCreateEdgeAndNode(ce, edgeClass, nodeClass, useComposite);
+            ModeCreateEdgeAndNode m = new ModeCreateEdgeAndNode(ce, 
+                    edgeClass, nodeClass, useComposite);
             m.setup((FigNode) _content, _content.getOwner(), bx, by, reverse);
             ce.pushMode(m);
         }

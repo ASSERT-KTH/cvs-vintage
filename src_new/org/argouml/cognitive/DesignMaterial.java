@@ -1,4 +1,4 @@
-// $Id: DesignMaterial.java,v 1.7 2005/01/09 14:58:04 linus Exp $
+// $Id: DesignMaterial.java,v 1.8 2005/01/11 21:03:33 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -525,8 +525,8 @@ public abstract class DesignMaterial extends Observable
     /**
      * @see org.tigris.gef.ui.Highlightable#addPropertyChangeListener(java.beans.PropertyChangeListener)
      */
-    public synchronized
-	void addPropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void addPropertyChangeListener(
+            PropertyChangeListener listener) {
 	if (propertyListeners == null) {
 	    propertyListeners = new Vector();
 	}
@@ -537,8 +537,8 @@ public abstract class DesignMaterial extends Observable
     /**
      * @see org.tigris.gef.ui.Highlightable#removePropertyChangeListener(java.beans.PropertyChangeListener)
      */
-    public synchronized
-	void removePropertyChangeListener(PropertyChangeListener listener) {
+    public synchronized void removePropertyChangeListener(
+            PropertyChangeListener listener) {
 	if (propertyListeners == null) {
 	    return;
 	}

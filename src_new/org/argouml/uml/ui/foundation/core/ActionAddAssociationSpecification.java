@@ -1,4 +1,4 @@
-// $Id: ActionAddAssociationSpecification.java,v 1.15 2005/01/09 21:10:42 linus Exp $
+// $Id: ActionAddAssociationSpecification.java,v 1.16 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,8 @@ public class ActionAddAssociationSpecification
             Project p = ProjectManager.getManager().getCurrentProject();
             Object model = p.getRoot();
             ret.addAll(Model.getModelManagementHelper()
-                .getAllModelElementsOfKindWithModel(model, ModelFacade.CLASSIFIER));
+                .getAllModelElementsOfKindWithModel(model, 
+                        ModelFacade.CLASSIFIER));
         }
         return ret;
     }

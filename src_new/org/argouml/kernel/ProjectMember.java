@@ -1,4 +1,4 @@
-// $Id: ProjectMember.java,v 1.31 2005/01/09 21:10:44 linus Exp $
+// $Id: ProjectMember.java,v 1.32 2005/01/11 21:03:32 mvw Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,13 @@
 
 package org.argouml.kernel;
 
+/**
+ * A member of the project is a part of the datastructure that 
+ * makes up the project. A saved project data file contains all members.<p>
+ * 
+ * Examples: The UML model, the ToDo list.
+ *
+ */
 public interface ProjectMember {
 
     /**

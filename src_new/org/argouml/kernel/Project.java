@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.141 2005/01/08 23:27:31 linus Exp $
+// $Id: Project.java,v 1.142 2005/01/11 21:03:32 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -896,7 +896,7 @@ public class Project implements java.io.Serializable, TargetListener {
      * else-if. Rather than make a big change, I've just explicitly dealt with
      * the case where we have a use case that is not classifier.<p>
      *
-     * @param obj
+     * @param obj the object to be thrown away
      */
     protected void trashInternal(Object obj) {
         boolean needSave = false;

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.5 2005/01/09 19:09:56 bobtarling Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.6 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -157,7 +157,8 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
      * @param type is the class kind
      * @return Collection
      */
-    public Collection getAllModelElementsOfKindWithModel(Object model, Object type) {
+    public Collection getAllModelElementsOfKindWithModel(Object model, 
+            Object type) {
         Class kind = (Class) type;
         Collection ret = getAllModelElementsOfKind(model, kind);
         if (kind.isAssignableFrom(model.getClass())) {

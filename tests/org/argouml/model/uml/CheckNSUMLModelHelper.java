@@ -1,4 +1,4 @@
-// $Id: CheckNSUMLModelHelper.java,v 1.2 2005/01/07 22:43:39 linus Exp $
+// $Id: CheckNSUMLModelHelper.java,v 1.3 2005/01/11 21:03:30 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -300,10 +300,9 @@ public final class CheckNSUMLModelHelper {
                         } else {
                             Object inter =
                                 Model.getCoreFactory().createInterface();
-                            MStereotype stereo3 =
-                                (MStereotype)
-                                	Model.getExtensionMechanismsFactory()
-                                		.buildStereotype(inter, "test3", ns);
+                            MStereotype stereo3 = (MStereotype)
+                                Model.getExtensionMechanismsFactory()
+                                    .buildStereotype(inter, "test3", ns);
                             TestCase.assertTrue(
                                 "Unexpected invalid stereotype",
                                 !Model.getExtensionMechanismsHelper()

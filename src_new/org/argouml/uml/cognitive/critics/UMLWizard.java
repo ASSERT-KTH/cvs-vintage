@@ -1,4 +1,4 @@
-// $Id: UMLWizard.java,v 1.4 2005/01/09 14:58:36 linus Exp $
+// $Id: UMLWizard.java,v 1.5 2005/01/11 21:03:30 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,6 +39,9 @@ import org.tigris.gef.util.VectorSet;
  */
 public abstract class UMLWizard extends Wizard {
 
+    /**
+     * The suggestion string.
+     */
     protected String suggestion;
 
     /**

@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.2 2005/01/09 18:11:32 bobtarling Exp $
+// $Id: StateMachinesHelper.java,v 1.3 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,7 +104,8 @@ public interface StateMachinesHelper {
      * statemachines for.
      * @return Collection The collection with found statemachines.
      */
-    Collection getAllPossibleStatemachines(Object model, Object oSubmachineState);
+    Collection getAllPossibleStatemachines(Object model, 
+            Object oSubmachineState);
 
     /**
      * Connects a given statemachine to a submachinestate as being the

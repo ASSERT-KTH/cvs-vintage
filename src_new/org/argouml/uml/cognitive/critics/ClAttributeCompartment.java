@@ -1,4 +1,4 @@
-// $Id: ClAttributeCompartment.java,v 1.14 2005/01/11 15:12:35 bobtarling Exp $
+// $Id: ClAttributeCompartment.java,v 1.15 2005/01/11 21:03:30 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.ui.Clarifier;
 import org.argouml.uml.diagram.ui.AttributesCompartmentContainer;
 import org.tigris.gef.presentation.Fig;
-import org.tigris.gef.presentation.FigGroup;
 
 /**
  * Class that represents the clarifier (red wavy line)

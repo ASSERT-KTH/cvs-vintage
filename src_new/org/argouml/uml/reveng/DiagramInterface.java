@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.31 2005/01/09 14:58:59 linus Exp $
+// $Id: DiagramInterface.java,v 1.32 2005/01/11 21:03:31 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,7 +174,8 @@ public class DiagramInterface {
      */
     public boolean isDiagramInProject(String name) {
         Project project = ProjectManager.getManager().getCurrentProject();
-	return (findDiagramMemberByUniqueName(project, getDiagramName(name) + ".pgml")) != null;
+	return (findDiagramMemberByUniqueName(project, 
+            getDiagramName(name) + ".pgml")) != null;
     }
 
     /**
@@ -199,7 +200,8 @@ public class DiagramInterface {
 	ProjectMember m;
 	if (isDiagramInProject(name)) {
             Project project = ProjectManager.getManager().getCurrentProject();
-	    m = findDiagramMemberByUniqueName(project, getDiagramName(name) + ".pgml");
+	    m = findDiagramMemberByUniqueName(project, 
+                getDiagramName(name) + ".pgml");
 
 	    // The diagram already exists in this project. Select it
 	    // as the current target.
@@ -339,10 +341,9 @@ public class DiagramInterface {
 	    p.addMember(d);
 	    setCurrentDiagram(d);
 	} else {
-	    ArgoDiagram ddi =
-		((ProjectMemberDiagram) findDiagramMemberByUniqueName(p, diagramName
-							   + ".pgml"))
-		.getDiagram();
+	    ArgoDiagram ddi = 
+	        ((ProjectMemberDiagram) findDiagramMemberByUniqueName(p, 
+	                diagramName + ".pgml")).getDiagram();
 	    setCurrentDiagram(ddi);
 	}
     }
@@ -376,10 +377,13 @@ public class DiagramInterface {
 
     /**
      * @param name the name of the member to be found
+     * @param project the project
      * @return the member
      */
-    public ProjectMember findDiagramMemberByUniqueName(Project project, String name) {
-        ArrayList diagramMembers =  project.getMembers().getMembers(ProjectMemberDiagram.class);
+    public ProjectMember findDiagramMemberByUniqueName(Project project, 
+            String name) {
+        ArrayList diagramMembers = 
+            project.getMembers().getMembers(ProjectMemberDiagram.class);
         for (int i = 0; i < diagramMembers.size(); i++) {
             ProjectMember pm = (ProjectMember) diagramMembers.get(i);
             if (name.equals(pm.getUniqueDiagramName())) {
