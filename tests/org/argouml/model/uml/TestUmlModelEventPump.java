@@ -1,4 +1,4 @@
-// $Id: TestUmlModelEventPump.java,v 1.8 2003/04/28 08:31:22 kataka Exp $
+// $Id: TestUmlModelEventPump.java,v 1.9 2003/04/29 19:03:31 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -122,6 +122,7 @@ public class TestUmlModelEventPump extends TestCase {
         super.setUp(); 
         ArgoSecurityManager.getInstance().setAllowExit(true);
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
+        UmlFactory.getFactory().setGuiEnabled(false);
         elem = CoreFactory.getFactory().createClass();
         ProjectManager.getManager().getCurrentProject().getRoot().addOwnedElement(elem);
         listener = new MockModelEventListener();

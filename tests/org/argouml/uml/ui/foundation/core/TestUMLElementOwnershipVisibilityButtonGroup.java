@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.4 2003/04/28 08:31:24 kataka Exp $
+// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.5 2003/04/29 19:03:33 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,6 +29,7 @@ import javax.swing.JRadioButton;
 import junit.framework.TestCase;
 
 import org.argouml.application.security.ArgoSecurityManager;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -101,6 +102,7 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ArgoSecurityManager.getInstance().setAllowExit(true);
+        UmlFactory.getFactory().setGuiEnabled(false);
         elem = new MClassImpl();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         MockUMLUserInterfaceContainer cont = new MockUMLUserInterfaceContainer();

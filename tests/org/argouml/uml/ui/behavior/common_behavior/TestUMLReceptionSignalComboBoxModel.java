@@ -1,4 +1,4 @@
-// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.5 2003/01/06 20:03:56 kataka Exp $
+// $Id: TestUMLReceptionSignalComboBoxModel.java,v 1.6 2003/04/29 19:03:33 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,7 @@ public class TestUMLReceptionSignalComboBoxModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ArgoSecurityManager.getInstance().setAllowExit(true);
+        UmlFactory.getFactory().setGuiEnabled(false);
         Project p = ProjectManager.getManager().getCurrentProject();
         elem = CommonBehaviorFactory.getFactory().createReception();
         oldEventPolicy = MFactoryImpl.getEventPolicy();

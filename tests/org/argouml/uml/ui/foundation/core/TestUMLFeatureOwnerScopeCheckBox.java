@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.6 2003/04/28 08:31:24 kataka Exp $
+// $Id: TestUMLFeatureOwnerScopeCheckBox.java,v 1.7 2003/04/29 19:03:33 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.foundation.core;
 import junit.framework.TestCase;
 
 import org.argouml.application.security.ArgoSecurityManager;
+import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -56,6 +57,7 @@ public class TestUMLFeatureOwnerScopeCheckBox extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ArgoSecurityManager.getInstance().setAllowExit(true);
+        UmlFactory.getFactory().setGuiEnabled(false);
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         elem = CoreFactory.getFactory().createAttribute();       
 	

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestCopyHelper.java,v 1.2 2003/04/28 08:31:22 kataka Exp $
+// $Id: TestCopyHelper.java,v 1.3 2003/04/29 19:03:31 kataka Exp $
 
 package org.argouml.model.uml;
 
@@ -426,5 +426,6 @@ public class TestCopyHelper extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ArgoSecurityManager.getInstance().setAllowExit(true);
+        UmlFactory.getFactory().setGuiEnabled(false);
 	}
 }

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TestActionStateDiagram.java,v 1.1 2003/01/09 19:53:20 kataka Exp $
+// $Id: TestActionStateDiagram.java,v 1.2 2003/04/29 19:03:32 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class TestActionStateDiagram extends AbstractTestActionAddDiagram {
      */
     protected void setUp() {
         super.setUp();
-        ProjectBrowser.TheInstance.setTarget(new MClassifierImpl());
+        ProjectBrowser.getInstance().setTarget(new MClassifierImpl());
     }
 
 }
