@@ -73,7 +73,7 @@ public abstract class BaseRule extends Rule
 
     protected BaseRule(ImportBean ib)
     {
-        super(ib.getDigester());
+        super();
         this.ib = ib;
     }
 
