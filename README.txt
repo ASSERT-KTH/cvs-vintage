@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.3 2000/12/20 03:42:53 jon Exp $
+$Id: README.txt,v 1.4 2000/12/21 22:16:28 jon Exp $
 
 Welcome to Scarab!
 
@@ -55,6 +55,16 @@ of the files in the /lib or /src directory, then you should simply re-run the
 build.sh compile script and it will deal with copying and compiling the changed 
 files.
 
+If you already have an existing Tomcat installation and prefer to run
+scarab from there, create a file called .ant.properties in the build
+directory. The contents of this file should be a single line equating
+the variable build.dir to the path to tomcat. For example:
+
+build.dir=/usr/local/jakarta-tomcat
+
+NOTE: There are problems running scarab with Tomcat 3.2.1. If your
+current Tomcat installation is not 4.0, you can either compile to the
+default target/ directory or wait until 4.0 is formally released. 
 
 -------------------------------------------------------------------------
 | I N S T A L L I N G  T H E  D A T A B A S E
