@@ -19,6 +19,8 @@ package org.columba.mail.imap.parser;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.columba.core.main.MainInterface;
+
 /**
  * @author frd
  *
@@ -30,6 +32,9 @@ import junit.framework.TestSuite;
 public class AllTests {
 
 	public static Test suite() {
+
+		MainInterface.DEBUG = true;
+
 		TestSuite suite =
 			new TestSuite("Test for org.columba.modules.mail.parser");
 		//$JUnit-BEGIN$
