@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/ServerSocketFactory.java,v 1.3 2000/06/03 06:35:22 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/06/03 06:35:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/net/Attic/ServerSocketFactory.java,v 1.4 2000/06/14 19:07:19 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/06/14 19:07:19 $
  *
  * ====================================================================
  *
@@ -201,5 +201,8 @@ public abstract class ServerSocketFactory implements Cloneable {
     public abstract ServerSocket createSocket (int port,
         int backlog, InetAddress ifAddress)
     throws IOException, InstantiationException;
+
+    public void initSocket( Socket s ) {
+    }
 }
 

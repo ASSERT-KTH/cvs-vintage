@@ -8,6 +8,7 @@
     <property name="servlet.jar" value="../jakarta-servletapi/lib/servlet.jar"/>
     <property name="tomcat.build" value="../build/tomcat"/>
     <property name="tomcat.home" value="../dist/tomcat"/>
+    <property name="j2ee.home" value="../../j2ee/build/unix"/>
   </target>
 
   <!-- ==================== Copy static files ==================== -->
@@ -54,11 +55,36 @@
 
   <!-- ==================== Build tomcat ==================== -->
   <target name="tomcat" depends="prepare">
+    <available property="jsse.present" 
+               classname="com.sun.net.ssl.internal.ssl.Provider" />
+    <available property="jdk12.present"
+               classname="java.security.PrivilegedAction" />
+
     <javac srcdir="src/share" destdir="${tomcat.build}/classes"
-           classpath="${servlet.jar}" debug="on" excludes="javax/**"/>
+           classpath="${servlet.jar}" 
+           debug="on" 
+           deprecation="off" >
+           <exclude name="**/Jdk12Interceptor.java" 
+                    unless="jdk12.present"/>
+           <exclude name="**/SSLSocketFactory.java"
+                    unless="jsse.present" />
+     </javac>
     <copydir src="src/share" dest="${tomcat.build}/classes"
              excludes="javax/**">
       <include name="**/*.properties" />
+    </copydir>
+  </target>
+
+
+  <!-- Build J2EE integration code -->
+  <target name="j2ee" depends="tomcat">
+      <javac srcdir="src/j2ee" 
+          destdir="${tomcat.build}/classes"
+          classpath="${servlet.jar};${j2ee.home}/lib/classes;${j2ee.home}/lib/j2ee.jar" 
+          debug="on" />
+   <copydir src="src/j2ee" 
+            dest="${tomcat.build}/classes">
+        <include name="**/*.properties" />
     </copydir>
   </target>
 

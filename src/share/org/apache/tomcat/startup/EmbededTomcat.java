@@ -40,7 +40,11 @@ public class EmbededTomcat { // extends WebService
     // null == not set up
     Vector requestInt=null;
     Vector contextInt=null;
-
+    /** Right now we assume all web apps use the same
+	servlet API version. This will change after we
+	finish the FacadeManager implementation
+    */
+    FacadeManager facadeM=null;
     Vector connectors=new Vector();
 
     String workDir;
@@ -151,7 +155,7 @@ public class EmbededTomcat { // extends WebService
 	    // XXX if virtual host set it.
 	    ctx.setDocBase( docRoot.getFile());
 	    contextM.addContext( ctx );
-	    contextM.initContext( ctx );
+	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
 	    return ctx.getFacade();
 	} catch( Exception ex ) {
 	    ex.printStackTrace();
@@ -161,9 +165,18 @@ public class EmbededTomcat { // extends WebService
 
     /** Remove a context
      */
-    public void removeContext( ServletContext ctx ) {
-	if(debug>-1) log( "remove context " + ctx );
-
+    public void removeContext( ServletContext sctx ) {
+	if(debug>-1) log( "remove context " + sctx );
+	try {
+	    if( facadeM==null ) {
+		System.out.println("XXX ERROR: no facade manager");
+		return;
+	    }
+	    Context ctx=facadeM.getRealContext( sctx );
+	    contextM.initContext( ctx );
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	}
 	// XXX todo
 	// XXX Make sure we remove the HttpSecurityHandler:
 	// 	HttpSecurityHandler.removeInstance(ctx);	
@@ -174,21 +187,41 @@ public class EmbededTomcat { // extends WebService
 	to the context.
     */
     public void addClassPath( ServletContext ctx, String cpath ) {
-	if(debug>-1) log( "addClassPath " + ctx.getRealPath("") + " " + cpath );
-	// XXX todo
-	//  	Context ctx=contextM.getContext(ctxPath);
-	//  	ServletLoader loader=ctx.getServletLoader();
-	// 	loader.addRepository( new File( cpath ),
-	//              ctx.getProtectionDomain() );
+	if(debug>-1) log( "addClassPath " + ctx.getRealPath("") + " " +
+			  cpath );
+	// XXX This functionality can be achieved by setting it in the parent
+	// class loader ( i.e. the loader that is used to load tomcat ).
+
+	// It shouldn't be needed if the web app is self-contained,
     }
 
+    /** Find the context mounted at /cpath.
+	Right now virtual hosts are not supported in
+	embeded tomcat.
+    */
     public ServletContext getServletContext( String host,
 					     String cpath )
     {
-	return null;
+	// We don't support virtual hosts in embeded tomcat
+	// ( it's not difficult, but can be done later )
+	Context ctx=contextM.getContext( cpath );
+	if( ctx==null ) return null;
+	return ctx.getFacade();
     }
-    public void initContext( ServletContext ctx ) {
-	
+
+    /** This will make the context available.
+     */
+    public void initContext( ServletContext sctx ) {
+	try {
+	    if( facadeM==null ) {
+		System.out.println("XXX ERROR: no facade manager");
+		return;
+	    }
+	    Context ctx=facadeM.getRealContext( sctx );
+	    contextM.initContext( ctx );
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	}
     }
 
     public void destroyContext( ServletContext ctx ) {
@@ -307,8 +340,13 @@ public class EmbededTomcat { // extends WebService
 	try {
 	    EmbededTomcat tc=new EmbededTomcat();
 	    tc.setWorkDir( "/home/costin/src/jakarta/build/tomcat/work");
-	    tc.addContext("", new URL( "file:/home/costin/src/jakarta/build/tomcat/webapps/ROOT"));
-	    tc.addContext("/examples", new URL( "file:/home/costin/src/jakarta/build/tomcat/webapps/examples"));
+	    ServletContext sctx;
+	    sctx=tc.addContext("", new URL
+		( "file:/home/costin/src/jakarta/build/tomcat/webapps/ROOT"));
+	    tc.initContext( sctx );
+	    sctx=tc.addContext("/examples", new URL
+		("file:/home/costin/src/jakarta/build/tomcat/webapps/examples"));
+	    tc.initContext( sctx );
 	    tc.addEndpoint( 8080, null, null);
 	    tc.start();
 	} catch (Throwable t ) {

@@ -17,12 +17,12 @@
 	    WARNING 
             INFORMATION
             DEBUG
-         -->
+    -->
 
+    <!-- if you don't want messages on screen, add
+         path="logs/tomcat.log" -->
     <Logger name="tc_log" 
             customOutput="yes" />
-     <!-- add this back if you don't want messages on screen 
-         path="logs/tomcat.log" -->
 
     <Logger name="servlet_log" 
             path="logs/servlet.log"
@@ -32,97 +32,170 @@
 	    path="logs/jasper.log"
             verbosityLevel = "INFORMATION" />
 
-    <!-- Add "home" attribute if you want tomcat to be based on a different directory
-         "home" is used to create work and to read webapps, but not for libs or CLASSPATH.
-         Note that TOMCAT_HOME is where tomcat is installed, while ContextManager home is the
-         base directory for contexts, webapps/ and work/
+    <!-- You can add a "home" attribute to represent the "base" for 
+         all relative paths. If none is set, the TOMCAT_HOME property
+         will be used, and if not set "." will be used.
+         webapps/, work/ and log/ will be relative to this ( unless 
+         set explicitely to absolute paths )
       -->
     <ContextManager debug="0" workDir="work" >
-        <!-- ContextInterceptor className="org.apache.tomcat.context.LogEvents" / -->
+        <!-- 
+         ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
+         -->
+        
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
-        <ContextInterceptor className="org.apache.tomcat.context.PolicyInterceptor" />
-        <ContextInterceptor className="org.apache.tomcat.context.LoaderInterceptor" />
-        <ContextInterceptor className="org.apache.tomcat.context.DefaultCMSetter" />
-        <ContextInterceptor className="org.apache.tomcat.context.WorkDirInterceptor" />
-        <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
-        <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.PolicyInterceptor" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.LoaderInterceptor" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.DefaultCMSetter" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.WorkDirInterceptor" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.WebXmlReader" />
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+
         <!-- Request processing -->
         <!-- Session interceptor will extract the session id from cookies and 
-             deal with URL rewriting. It has to be first to support rewriting ( otherwise
-             the mapper will have to know about sessions 
+             deal with URL rewriting ( by fixing the URL )
           -->
-        <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.SessionInterceptor" />
 
-        <!-- Find the container ( context and prefix/extension map ) for a request.
-             For "integrated" mode it can be avoided, assuming we get all the info from
-             the server.
+        <!-- Find the container ( context and prefix/extension map ) 
+             for a request.
           -->
-        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper1" debug="0" />
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.SimpleMapper1" 
+            debug="0" />
 
-        <!-- Plug a session manager. This should be per-context ( easy to do, but nobody asked
-             for it yet )
+        <!-- Plug a session manager. You can plug in more advanced session
+             modules.
           -->
-        <RequestInterceptor className="org.apache.tomcat.session.StandardSessionInterceptor" />
+        <RequestInterceptor 
+            className="org.apache.tomcat.session.StandardSessionInterceptor" />
 
-        <!-- Check if the request requires an authenticated role  -->
-        <RequestInterceptor className="org.apache.tomcat.request.AccessInterceptor" debug="0" />
+        <!-- Check if the request requires an authenticated role.
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.AccessInterceptor" 
+            debug="0" />
 
-        <!-- Check permissions using a simple xml file  -->
-        <RequestInterceptor className="org.apache.tomcat.request.SimpleRealm" debug="0" />
+        <!-- Check permissions using the simple xml file. You can 
+             plug more advanced authentication modules.
+          -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.SimpleRealm" 
+            debug="0" />
 
-		<!-- UnComment one of the following and comment out the above to get a JDBC realm -->
+       <!-- UnComment the following and comment out the
+            above to get a JDBC realm.
+            Other options for driverName: 
+              driverName="oracle.jdbc.driver.OracleDriver"
+              connectionURL="jdbc:oracle:thin:@ntserver:1521:ORCL"
+                              "?user=scott;password=tiger"  
 
-		<!--
-		     <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99" 
-		        driverName="sun.jdbc.odbc.JdbcOdbcDriver" 
-		        connectionURL="jdbc:odbc:TOMCAT" 
-		        userTable="users" userNameCol="user_name" userCredCol="user_pass" 
-		        userRoleTable="user_roles" roleNameCol="role_name"/>
-
-        
-             <RequestInterceptor className="org.apache.tomcat.request.JDBCRealm" debug="99"
-                driverName="oracle.jdbc.driver.OracleDriver"
-                connectionURL="jdbc:oracle:thin:@ntserver:1521:ORCL?user=scott;password=tiger"
-                userTable="users" userNameCol="user_name" userCredCol="user_pass"
-                userRoleTable="user_roles" roleNameCol="role_name" />
-        
-             <RequestInterceptor className="org.apache.tomcat.realm.JDBCRealm" debug="99"
               driverName="org.gjt.mm.mysql.Driver"
-              connectionURL="jdbc:mysql://localhost/authority?user=test;password=test"
-              userTable="users" userNameCol="user_name" userCredCol="user_pass"
-              userRoleTable="user_roles" roleNameCol="role_name" />
+              connectionURL="jdbc:mysql://localhost/authority"
+                            "?user=test;password=test"
 
         -->
+        <!--
+        <RequestInterceptor 
+            className="org.apache.tomcat.request.JDBCRealm" 
+            debug="99" 
+	    driverName="sun.jdbc.odbc.JdbcOdbcDriver" 
+	    connectionURL="jdbc:odbc:TOMCAT" 
+	    userTable="users" 
+            userNameCol="user_name" 
+            userCredCol="user_pass" 
+	    userRoleTable="user_roles" 
+            roleNameCol="role_name" />
+        -->
 
+      <!-- ==================== Connectors ==================== -->
+
+        <!-- Normal HTTP -->
         <Connector className="org.apache.tomcat.service.PoolTcpConnector">
-            <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
-            <Parameter name="port" value="8080"/>
+            <Parameter name="handler" 
+                value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
+            <Parameter name="port" 
+                value="8080"/>
         </Connector>
 
+        <!--
+            Uncomment this for SSL support. 
+            You _need_ to set up a server certificate if you want this
+            to work, and you need JSSE.
+            1. Add JSSE jars to CLASSPATH 
+            2. Edit java.home/jre/lib/security/java.security
+               Add:
+               security.provider.2=com.sun.net.ssl.internal.ssl.Provider
+            3. Do: keytool -genkey -alias tomcat -keyalg RSA
+               RSA is essential to work with Netscape and IIS.
+               Use "changeit" as password. ( or add keypass attribute )
+               You don't need to sign the certificate.
+ 
+            You can set parameter keystore and keypass if you want 
+            to change the default ( user.home/.keystore with changeit )
+         -->
+        
         <Connector className="org.apache.tomcat.service.PoolTcpConnector">
-            <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+            <Parameter name="handler" 
+                value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
+            <Parameter name="port" 
+                value="8443"/>
+            <Parameter name="socketFactory" 
+                value="org.apache.tomcat.net.SSLSocketFactory" />
+        </Connector>
+
+        <!-- Apache AJP12 support. This is also used to shut down tomcat.
+          -->
+        <Connector className="org.apache.tomcat.service.PoolTcpConnector">
+            <Parameter name="handler" 
+       value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>
 
-        <!-- example - how to override AutoSetup actions -->
-        <Context path="/examples" docBase="webapps/examples" debug="0" reloadable="true" > 
-        </Context>
-        <!-- example - how to override AutoSetup actions -->
-        <Context path="" docBase="webapps/ROOT" debug="0" reloadable="true" > 
+        <!-- ==================== Special webapps ==================== -->
+        <!-- You don't need this if you place your app in webapps/
+             and use defaults. 
+             For security you'll also need to edit tomcat.policy
+
+             Defaults are: debug=0, reloadable=true, trusted=false
+             (trusted allows you to access tomcat internal objects 
+              with FacadeManager )
+ 
+             If security manager is enabled, you'll have read perms.
+             in the webapps dir and read/write in the workdir.
+         -->
+
+        <Context path="/examples" 
+                 docBase="webapps/examples" 
+                 debug="0" 
+                 reloadable="true" > 
         </Context>
 
-        <Context path="/test" docBase="webapps/test" debug="0" reloadable="true" > 
+        <Context path="/admin" 
+                 docBase="webapps/admin" 
+                 debug="0" 
+                 reloadable="true" 
+                 trusted="true" > 
         </Context>
 
-        <Context path="/admin" docBase="webapps/admin" debug="0" reloadable="true" trusted="true" > 
-        </Context>
-
-        <!-- Virtual host example - just use numeric IP instead of localhost
-             and you should see /examples as the root context and root as examples.
-             Same docBase is used, just different mappings :-)        -->
+        <!-- Virtual host example - 
+             In "127.0.0.1" virtual host we'll reverse "/" and 
+             "/examples"
+             (XXX need a better example )
+             (use  "http://127.0.0.1/examples" )
+         -->
         <Host name="127.0.0.1" >
-           <Context path="" docBase="webapps/examples" />
-           <Context path="/examples" docBase="webapps/ROOT" />
+           <Context path="" 
+                    docBase="webapps/examples" />
+           <Context path="/examples" 
+                    docBase="webapps/ROOT" />
         </Host>
 
     </ContextManager>

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.6 2000/05/31 20:58:37 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/05/31 20:58:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpEndpoint.java,v 1.7 2000/06/14 19:07:21 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/06/14 19:07:21 $
  *
  * ====================================================================
  *
@@ -279,8 +279,11 @@ public class PoolTcpEndpoint  { // implements Endpoint {
         		            accepted = null;
         		        }
     		        }
+			if( factory != null && accepted != null)
+			    factory.initSocket( accepted );
     	        }
     	    }
+	    
     	} catch(InterruptedIOException iioe) {
     	    // normal part -- should happen regularly so
     	    // that the endpoint can release if the server
@@ -365,10 +368,8 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 	// Create per-thread cache
 	while(endpoint.running) {
 	    Socket s = endpoint.acceptSocket();
-
 	    if(null != s) {
 		// Continue accepting on another thread...
-		
 		endpoint.tp.runIt(this);
 		
 		try {
