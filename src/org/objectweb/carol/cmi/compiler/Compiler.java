@@ -95,15 +95,15 @@ public class Compiler {
             } else {
                 classes.add(arg);
             }
-            if (srcDir == null) {
-                srcDir = destDir;
-            }
-            if (noc) {
-                keep = true;
-            }
-            if (classPath != null) {
-                classLoader = buildClassLoader(classPath);
-            }
+        }
+        if (srcDir == null) {
+            srcDir = destDir;
+        }
+        if (noc) {
+            keep = true;
+        }
+        if (classPath != null) {
+            classLoader = buildClassLoader(classPath);
         }
     }
 

@@ -61,11 +61,11 @@ public final class DistributedEquiv {
         d.exportObject(key, obj);
     }
 
-    static void unexportObject(Serializable key) throws ConfigException {
+    static boolean unexportObject(Serializable key) throws ConfigException {
         DistributedEquivSystem d = des;
         if (d == null)
             throw new ConfigException("DistributedEquiv not started");
-        d.unexportObject(key);
+        return d.unexportObject(key);
     }
 
     /**

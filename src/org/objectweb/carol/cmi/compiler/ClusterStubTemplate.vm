@@ -90,7 +90,7 @@ public class ${className}_Cluster implements ClusterStub, Externalizable, $class
 					Trace.out("cluster invocation of " + "$mc.getMthName()()");
 				}
 #if ($mc.returnsVoid())
-				$stub.$mc.getMthName()($mc.getParamNamesString());
+				stub.$mc.getMthName()($mc.getParamNamesString());
 				return;
 #else
 				$mc.getReturnTypeName() result = stub.$mc.getMthName()($mc.getParamNamesString());

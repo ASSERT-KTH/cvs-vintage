@@ -24,7 +24,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
-// XXX RMIClientSocketFactory & RMIServerSocketFactory ?
 public final class ClusterRegistryImpl implements ClusterRegistry {
     /**
      * The registry. Maps names to regular stubs or to <code>clusterobj</code>
@@ -125,8 +124,11 @@ public final class ClusterRegistryImpl implements ClusterRegistry {
                 } catch (ConfigException e) {
                     throw new RemoteException(e.getMessage());
                 }
-            } else if (Trace.CREG)
-                Trace.out("CREG: Local unbind of " + n);
+            } else {
+                if (Trace.CREG) {
+                    Trace.out("CREG: Local unbind of " + n);
+                }
+            }
         }
     }
 

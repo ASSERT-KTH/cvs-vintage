@@ -101,7 +101,7 @@ public class RoundRobin extends StubLB {
     private static StubLBFilter emptyFilter = new StubLBFilter();
 
     public synchronized Remote get() throws NoMoreStubException {
-        return get(null);
+        return get(emptyFilter);
     }
 
     public synchronized Remote get(StubLBFilter f) throws NoMoreStubException {

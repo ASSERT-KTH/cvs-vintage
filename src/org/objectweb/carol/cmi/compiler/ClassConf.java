@@ -120,7 +120,6 @@ public class ClassConf {
         }
         for (int i=0; i<m.length; i++) {
             MethodProto mp = new MethodProto(m[i]);
-            System.out.println(mp);
             MethodConf mc = (MethodConf) mthInfos.get(mp);
             if (mc == null) {
                 throw new CompilerException("no configuration given for method " + mp);

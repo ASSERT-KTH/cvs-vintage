@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-//TODO reecrire les commentaires
+//TODO Rewrite comments, they are completely wrong
 /**
  * Stubs to clustered objects extend this class. They may contain several
  * stubs to regular objects.
@@ -276,7 +276,7 @@ public class ClusterStubData {
         synchronized (this) {
             sd = (StubData) idMap.remove(serverId);
             if (sd == null) {
-                return false;
+                return true;
             }
             if (idMap.size() == 0) {
                 idMap.put(serverId, sd);
@@ -296,7 +296,7 @@ public class ClusterStubData {
         synchronized (this) {
             sd = (StubData) stubMap.remove(stub);
             if (sd == null) {
-                return false;
+                return true;
             }
             if (stubMap.size() == 0) {
                 stubMap.put(stub, sd);
