@@ -66,16 +66,33 @@ import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.ScarabException;
 
 /**
  * Base class for actions which modify issues. Has a method to check
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.2 2002/07/30 22:48:14 jmcnally Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.3 2002/08/15 20:14:22 jon Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
+    protected Issue getIssueFromRequest(ParameterParser pp)
+        throws ScarabException
+    {
+        String id = pp.getString("id");
+        if (id == null || id.length() == 0)
+        {
+            throw new ScarabException("Could not locate issue.");
+        }
+        Issue issue = Issue.getIssueById(id);
+        if (issue == null)
+        {
+            throw new ScarabException("Could not locate issue: " + id);
+        }
+        return issue;
+    }
+
     protected boolean isCollision(RunData data, TemplateContext context)
         throws Exception
     {
