@@ -62,6 +62,8 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.Logger.Helper;
+import org.apache.tomcat.logging.Logger;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -73,6 +75,9 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
     protected String methods[]=new String[0];
     protected int debug=0;
     protected String name=null;
+
+    //  loghelper will use name of actual impl subclass
+    protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
     
     public BaseInterceptor() {
     }
@@ -83,18 +88,23 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
+	loghelper.setLogger(cm.getLogger());
     }
 
     protected void log( String s ) {
-	if( name == null ) {
-	    String cname=this.getClass().getName();
-	    name=cname.substring( cname.lastIndexOf(".") +1);
-	    name=name + ": ";
-	}
-	if( cm!= null )
-	    cm.log( name + s );
-	else 
-	    System.out.println(name + s ); 
+	loghelper.log(s);
+    }
+    
+    protected void log( String s, Throwable t ) {
+	loghelper.log(s, t);
+    }
+    
+    protected void log( String s, int level ) {
+	loghelper.log(s, level);
+    }
+    
+    protected void log( String s, Throwable t, int level ) {
+	loghelper.log(s, t, level);
     }
     
     // -------------------- Request notifications --------------------
