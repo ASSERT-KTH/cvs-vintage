@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE options SYSTEM "account.dtd">
+<!DOCTYPE template SYSTEM "account.dtd">
 
 <template>
 <pop3>
-<account>
+<account name="" uid="">
  <identity name="" organisation="" address="" reply_address="" attach_signature="false" signature_file=".signature"/>
- <popserver user="" password="" host="" port="110" leave_message_on_server="true" save_password="false" exlude_from_checkall="false" destination_folder_uid="101" enable_mailcheck="false" mailcheck_interval="10" enable_download_limit="false" download_limit="100" login_method="USER" enable_sound="false" sound_file="default" automatically_download_new_messages="true" use_default_account="false" />
+ <popserver user="" password="" host="" port="110" leave_message_on_server="true" save_password="false" exclude_from_checkall="false" destination_folder_uid="101" enable_mailcheck="false" mailcheck_interval="10" enable_download_limit="false" download_limit="100" login_method="USER" enable_sound="false" sound_file="default" automatically_download_new_messages="true" use_default_account="false" />
  <smtpserver user="" password="" host="" port="25" save_password="false" login_method="LOGIN" use_default_account="false"/>
  <pgp id="" type="0" path="/usr/bin/gpg" always_sign="false" always_encrypt="false" enabled="false" />
  <specialfolders inbox="101" drafts="102" templates="107" sent="104"/>
@@ -13,7 +13,7 @@
 </pop3>
 
 <imap>
-<account>
+<account name="" uid="">
  <identity name="" organisation="" address="" reply_address="" attach_signature="false" signature_file=".signature"/>
  <imapserver user="" password="" host="" port="143" save_password="false" automatically_apply_filter="false" enable_mailcheck="false" mailcheck_interval="10" login_method="LOGIN" enable_sound="false" sound_file="default" use_default_account="false" />
  <smtpserver user="" password="" host="" port="25" save_password="false" login_method="LOGIN" use_default_account="false"/>

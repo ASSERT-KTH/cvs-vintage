@@ -1,143 +1,96 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!-- DTD for account". -->
+<?xml version="1.0" encoding="UTF-8"?>
 
+<!ELEMENT template (pop3,imap)>
 
-<!ELEMENT template ( pop3, imap )>
+<!ELEMENT pop3 (account)>
+<!ELEMENT imap (account)>
 
-<!ELEMENT pop3 ( account)>
-<!ELEMENT imap ( account)>
+<!ELEMENT accountlist (account*)>
 
-<!ELEMENT accountlist ( account* )>
-
-<!ELEMENT account ( identity, (popserver | imapserver), smtpserver, pgp, specialfolders)>
-   <!-- name of account -->
- <!ATTLIST account name CDATA #REQUIRED>
-   <!-- UID of account -->
- <!ATTLIST account uid CDATA #REQUIRED>
+<!ELEMENT account (identity,(popserver|imapserver),smtpserver,pgp,specialfolders)>
+<!ATTLIST account
+ name CDATA #REQUIRED
+ uid CDATA #REQUIRED
+>
  
-<!ELEMENT identity >
-   <!-- name -->
- <!ATTLIST identity name CDATA #REQUIRED>
-   <!-- email address -->
- <!ATTLIST identity address CDATA #REQUIRED>
-   <!-- organisation -->
- <!ATTLIST identity organisation CDATA #IMPLIED>
-   <!-- reply-to address -->
- <!ATTLIST identity reply_address CDATA #IMPLIED>
-   <!-- do you want to attach a signature -->
- <!ATTLIST identity attach_signature (true|false) "false">
-   <!-- filename of signature -->
- <!ATTLIST identity signature_file CDATA "~/.signature">
+<!ELEMENT identity EMPTY>
+<!ATTLIST identity
+ name CDATA #REQUIRED
+ address CDATA #REQUIRED
+ organisation CDATA #IMPLIED
+ reply_address CDATA #IMPLIED
+ attach_signature (true|false) "false"
+ signature_file CDATA "~/.signature"
+>
  
-<!ELEMENT popserver >
-  <!-- username -->
- <!ATTLIST popserver user CDATA #REQUIRED>
-  <!-- password -->
- <!ATTLIST popserver password CDATA #REQUIRED>
-  <!-- username -->
- <!ATTLIST popserver user CDATA #REQUIRED>
-  <!-- host (POP3 server) -->
- <!ATTLIST popserver host CDATA #REQUIRED>
-  <!-- POP3 server port -->
- <!ATTLIST popserver port CDATA "110">
-  <!-- leave messag on server or delete it -->
- <!ATTLIST popserver leave_message_on_server (true|false) "true">
-  <!-- save password in config file -->
- <!ATTLIST popserver save_password (true|false) "false">
-  <!-- exclude from "check all" mailcheck  -->
- <!ATTLIST popserver exclude_from_checkall (true|false) "false">
-  <!-- UID of destination folder (INBOX)  -->
- <!ATTLIST popserver destination_folder_uid CDATA #REQUIRED>
-  <!-- enable mailcheck  -->
- <!ATTLIST popserver enable_mailcheck (true|false) "false">
-  <!-- mailcheck interval in minutes (default is every 10 minutes) -->
- <!ATTLIST popserver mailcheck_interval CDATA "10">
-  <!-- permit message download of specific size -->
- <!ATTLIST popserver enable_download_limit (true|false) "false">
-  <!-- message size to download (default is 100 KB)-->
- <!ATTLIST popserver download_limit CDATA "100">
-  <!-- login-method  -->
- <!ATTLIST popserver login-method (USER|APOP) "USER">
-  <!-- enable sound notification  -->
- <!ATTLIST popserver enable_sound (true|false) "false">
-  <!-- soundfile to play -->
- <!ATTLIST popserver sound_file CDATA "default">
-  <!-- when checking for new mail, automatically download new messages -->
- <!ATTLIST popserver automatically_download_new_messages (true|false) "true">
-  <!-- use POP3 settings from default account instead  -->
- <!ATTLIST popserver use_default_account (true|false) "false">
+<!ELEMENT popserver EMPTY>
+<!ATTLIST popserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ leave_message_on_server (true|false) "true"
+ save_password (true|false) "false"
+ exclude_from_checkall (true|false) "false"
+ destination_folder_uid CDATA #REQUIRED
+ enable_mailcheck (true|false) "false"
+ mailcheck_interval CDATA "10"
+ enable_download_limit (true|false) "false"
+ download_limit CDATA "100"
+ login_method (USER|APOP) "USER"
+ enable_sound (true|false) "false"
+ sound_file CDATA "default"
+ automatically_download_new_messages (true|false) "true"
+ use_default_account (true|false) "false"
+>
 
-<!ELEMENT imapserver>
-  <!-- username -->
- <!ATTLIST imapserver user CDATA #REQUIRED>
-  <!-- password -->
- <!ATTLIST imapserver password CDATA #REQUIRED>
-  <!-- username -->
- <!ATTLIST imapserver user CDATA #REQUIRED>
-  <!-- host (POP3 server) -->
- <!ATTLIST imapserver host CDATA #REQUIRED>
-  <!-- POP3 server port -->
- <!ATTLIST imapserver port CDATA "110">
-  <!-- save password in config file -->
- <!ATTLIST imapserver save_password (true|false) "false">
-  <!-- enable mailcheck  -->
- <!ATTLIST imapserver enable_mailcheck (true|false) "false">
-  <!-- mailcheck interval in minutes (default is every 10 minutes) -->
- <!ATTLIST imapserver mailcheck_interval CDATA "10">
-  <!-- login-method  -->
- <!ATTLIST imapserver login-method (LOGIN) "LOGIN">
-  <!-- enable sound notification  -->
- <!ATTLIST imapserver enable_sound (true|false) "false">
-  <!-- soundfile to play -->
- <!ATTLIST imapserver sound_file CDATA "default">
-  <!-- use IMAP settings from default account instead  -->
- <!ATTLIST imapserver use_default_account (true|false) "false">
-  <!-- automatically apply filter when opening INBOX folder -->
- <!ATTLIST imapserver automatically_apply_filter (true|false) "false">
+<!ELEMENT imapserver EMPTY>
+<!ATTLIST imapserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ save_password (true|false) "false"
+ enable_mailcheck (true|false) "false"
+ mailcheck_interval CDATA "10"
+ login_method (LOGIN) "LOGIN"
+ enable_sound (true|false) "false"
+ sound_file CDATA "default"
+ use_default_account (true|false) "false"
+ automatically_apply_filter (true|false) "false"
+>
 
-<!ELEMENT smtpserver >
-  <!-- username -->
- <!ATTLIST smtpserver user CDATA #REQUIRED>
-  <!-- password -->
- <!ATTLIST smtpserver password CDATA #REQUIRED>
-  <!-- username -->
- <!ATTLIST smtpserver user CDATA #REQUIRED>
-  <!-- host (POP3 server) -->
- <!ATTLIST smtpserver host CDATA #REQUIRED>
-  <!-- POP3 server port -->
- <!ATTLIST smtpserver port CDATA "110">
-  <!-- save password in config file -->
- <!ATTLIST smtpserver save_password (true|false) "false">
-  <!-- login-method  -->
- <!ATTLIST smtpserver login-method (LOGIN) "LOGIN">
-  <!-- use SMTP settings from default account instead  -->
- <!ATTLIST smtpserver use_default_account (true|false) "false">
-  <!-- automatically apply filter when opening INBOX folder -->
- <!ATTLIST smtpserver automatically_apply_filter (true|false) "false">
+<!ELEMENT smtpserver EMPTY>
+<!ATTLIST smtpserver
+ user CDATA #REQUIRED
+ password CDATA #REQUIRED
+ user CDATA #REQUIRED
+ host CDATA #REQUIRED
+ port CDATA "110"
+ save_password (true|false) "false"
+ login_method (LOGIN) "LOGIN"
+ use_default_account (true|false) "false"
+ automatically_apply_filter (true|false) "false"
+>
 
-<!ELEMENT pgp >
-   <!-- pgp user id -->
- <!ATTLIST pgp id CDATA #REQUIRED>
-    <!-- type of pgp software (0=GnuPG,1=PGP,etc.) -->
- <!ATTLIST pgp type CDATA (0|1) "0">
-   <!-- path to commandline pgp tool -->
- <!ATTLIST pgp path CDATA "/usr/bin/gpg">
-    <!-- always sign when sending message -->
- <!ATTLIST pgp always_sign (true|false) "false">
-    <!-- always encrypt when sending message -->
- <!ATTLIST pgp always_encrypt (true|false) "false">    
-    <!-- enable pgp for this account -->
- <!ATTLIST pgp enable (true|false) "false">
+<!ELEMENT pgp EMPTY> 
+<!ATTLIST pgp
+ id CDATA #REQUIRED
+ type (0|1) "0"
+ path CDATA "/usr/bin/gpg"
+ always_sign (true|false) "false"
+ always_encrypt (true|false) "false"  
+ enabled (true|false) "false"
+>
  
-<!ELEMENT specialfolders >
-    <!-- inbox -->
- <!ATTLIST specialfolders inbox CDATA "101">
-    <!-- drafts -->
- <!ATTLIST specialfolders drafts CDATA "102">
-    <!-- templates-->
- <!ATTLIST specialfolders templates CDATA "107">
-    <!-- sent -->
- <!ATTLIST specialfolders sent CDATA "104">
-    <!-- trash -->
- <!ATTLIST specialfolders trash CDATA "105">
+<!ELEMENT specialfolders EMPTY>
+<!ATTLIST specialfolders
+ inbox CDATA "101"
+ drafts CDATA "102"
+ templates CDATA "107"
+ sent CDATA "104"
+ trash CDATA "105"
+>
  
