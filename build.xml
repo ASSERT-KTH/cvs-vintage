@@ -8,12 +8,12 @@
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11"/>
 	<property name="dest" value="../columba-${version}"/>
-	<property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar:${src}/ext/junit.jar"/>
+	<property name="ownclasspath" value="${classpath}:${src}/lib/log4j.jar:${src}/lib/jython.jar:${src}/lib/junit.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
 		<classpath>
-			<pathelement location="${src}/ext/checkstyle-all-2.1.jar"/>
+			<pathelement location="${src}/lib/checkstyle-all-2.1.jar"/>
 		</classpath>
 	</taskdef>
 
@@ -61,10 +61,10 @@
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
-				<include name="ext/Lib/**"/>
+				<include name="lib/Lib/**"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
-				<exclude name="ext/checkstyle-all-2.1.jar"/>
+				<exclude name="lib/checkstyle-all-2.1.jar"/>
 			</fileset>
 		</copy>
 	</target>
@@ -96,7 +96,7 @@
 			<exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar ext/jython.jar ext/junit.jar"/>
+				<attribute name="Class-Path" value="lib/xalan.jar lib/jaxp.jar lib/crimson.jar lib/log4j.jar lib/jython.jar lib/junit.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
@@ -128,7 +128,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run.sh"/>
 				<include name="columba.jar"/>
 				<include name="**/*.jar"/>
-				<include name="ext/Lib/**"/>
+				<include name="lib/Lib/**"/>
 				<!-- include name="ext/csWillySpell.jar" -->
 			</zipfileset>
 		</zip>
@@ -156,7 +156,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
-				<include name="ext/Lib/**"/>
+				<include name="lib/Lib/**"/>
 			</zipfileset>
 			<!--zipfileset dir="${dest}" prefix="columba-${version}-src" -->
 				<!-- include name="run.sh"/-->
