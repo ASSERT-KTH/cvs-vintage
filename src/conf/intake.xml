@@ -23,6 +23,21 @@
         <field name="Name" key="name" type="String" />
         <field name="Deleted" key="del" type="boolean" />
 </group>
+<group class="AttributeOption" key="atto" mapToObject="om.AttributeOption">
+        <field name="OptionId" key="optionid" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+           <required-message>This module requires that you select an option for this attribute.</required-message>
+        </field>
+        <field name="AttributeId" key="attributeid" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+        <field name="DisplayValue" key="displayvalue" type="String">
+            <rule maxLength="255"/>
+        </field>
+        <field name="NumericValue" key="numbericvalue" type="NumberKey">
+           <rule mask="^$|[0-9]+">Please select a valid choice</rule>
+        </field>
+</group>
 <group class="AttributeValue" key="attv" 
             mapToObject="om.AttributeValue">
         <field name="Id" key="id" type="ComboKey" mapToProperty="PrimaryKey">
