@@ -21,7 +21,7 @@ import java.io.InputStream;
 
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.MailboxInfo;
@@ -29,7 +29,7 @@ import org.columba.ristretto.message.MailboxInfo;
 /**
  * @author fdietz
  */
-public class MoveMessageTest extends AbstractFolderTest {
+public class MoveMessageTest extends AbstractFolderTst {
 
     public MoveMessageTest(String arg0) {
         super(arg0);

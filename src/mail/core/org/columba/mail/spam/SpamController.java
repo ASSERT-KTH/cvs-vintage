@@ -100,7 +100,7 @@ public class SpamController {
 	/**
 	 * private constructor
 	 */
-	private SpamController() {
+	private SpamController() throws Exception {
 
 		// create directory <config-folder>/mail/spamdb
 		File configDirectory = MainInterface.config.getConfigDirectory();
@@ -124,7 +124,13 @@ public class SpamController {
 	 */
 	public static SpamController getInstance() {
 		if (instance == null) {
-			instance = new SpamController();
+			try {
+				instance = new SpamController();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			File configDirectory = MainInterface.config.getConfigDirectory();
 			File mailDirectory = new File(configDirectory, "mail");
 			instance.file = new File(mailDirectory, "spam.db");

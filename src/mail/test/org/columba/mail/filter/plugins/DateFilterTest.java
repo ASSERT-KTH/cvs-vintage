@@ -29,8 +29,16 @@ import org.columba.mail.folder.MailboxTstFactory;
  * @author fdietz
  *
  */
-public class DateFilterTest extends AbstractFilterTestCase {
+public class DateFilterTest extends AbstractFilterTst {
 
+	/**
+     * @param arg0
+     */
+    public DateFilterTest(String arg0) {
+        super(arg0);
+        
+    }
+    
     /**
      * @param arg0
      */

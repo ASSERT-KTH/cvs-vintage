@@ -26,7 +26,7 @@ import org.columba.ristretto.message.MailboxInfo;
  * @author fdietz
  *  
  */
-public class ExpungeFolderTest extends AbstractFolderTest {
+public class ExpungeFolderTest extends AbstractFolderTst {
 
     public ExpungeFolderTest(String arg0) {
         super(arg0);

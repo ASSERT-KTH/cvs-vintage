@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.FolderTstHelper;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.ristretto.message.Flags;
@@ -30,7 +30,7 @@ import org.columba.ristretto.message.MailboxInfo;
  * @author fdietz
  *  
  */
-public class CopyMessageCommandTest extends AbstractFolderTest {
+public class CopyMessageCommandTest extends AbstractFolderTst {
 
 	public CopyMessageCommandTest(String arg0) {
 		super(arg0);

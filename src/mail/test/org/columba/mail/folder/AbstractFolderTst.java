@@ -46,7 +46,7 @@ import org.columba.mail.main.MailMain;
  * @author fdietz
  * @author redsolo
  */
-public class AbstractFolderTest extends TestCase {
+public class AbstractFolderTst extends TestCase {
 
     /** A source folder. */
     protected MessageFolder sourceFolder;
@@ -68,7 +68,7 @@ public class AbstractFolderTest extends TestCase {
      * by the ant task.
      * <p>
      */
-    public AbstractFolderTest(String test) {
+    public AbstractFolderTst(String test) {
         super(test);
 
         this.factory = new MHFolderFactory();
@@ -79,7 +79,7 @@ public class AbstractFolderTest extends TestCase {
      * <p>
      * Used by {@link AllTests}.
      */
-    public AbstractFolderTest(MailboxTstFactory factory, String test) {
+    public AbstractFolderTst(MailboxTstFactory factory, String test) {
         super(test);
 
         this.factory = factory;
@@ -171,12 +171,5 @@ public class AbstractFolderTest extends TestCase {
     public MessageFolder getDestFolder() {
         return destFolder;
     }
-    
-    /**
-     * Empty test, so that the automatic ant task doesn't fail.
-     *
-     */
-    public void testForAntTask() {
-        
-    }
+  
 }

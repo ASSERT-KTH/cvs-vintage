@@ -27,7 +27,7 @@ import org.columba.ristretto.message.Flags;
 /**
  * @author fdietz
  */
-public class CopyMessageFolderTest extends AbstractFolderTest {
+public class CopyMessageFolderTest extends AbstractFolderTst {
     
     public CopyMessageFolderTest(String arg0) {
         super(arg0);

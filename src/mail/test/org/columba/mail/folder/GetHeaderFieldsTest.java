@@ -25,7 +25,7 @@ import org.columba.ristretto.message.Header;
  * @author fdietz
  *  
  */
-public class GetHeaderFieldsTest extends AbstractFolderTest {
+public class GetHeaderFieldsTest extends AbstractFolderTst {
 
     public GetHeaderFieldsTest(String arg0) {
         super(arg0);

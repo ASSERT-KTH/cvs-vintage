@@ -26,7 +26,7 @@ import org.columba.ristretto.message.MailboxInfo;
  *
  * @author fdietz
  */
-public class AddMessageFolderTest extends AbstractFolderTest {
+public class AddMessageFolderTest extends AbstractFolderTst {
 
   
     public AddMessageFolderTest(String arg0) {

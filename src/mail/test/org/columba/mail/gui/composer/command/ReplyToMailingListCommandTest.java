@@ -29,7 +29,7 @@ import org.columba.mail.gui.composer.ComposerModel;
  * @author fdietz
  *  
  */
-public class ReplyToMailingListCommandTest extends AbstractComposerTestCase {
+public class ReplyToMailingListCommandTest extends AbstractComposerTst {
 
     public ReplyToMailingListCommandTest(String arg0) {
         super(arg0);

@@ -24,7 +24,7 @@ import java.io.InputStream;
  * @author fdietz
  *  
  */
-public class GetMimePartSourceStreamTest extends AbstractFolderTest {
+public class GetMimePartSourceStreamTest extends AbstractFolderTst {
 
     public GetMimePartSourceStreamTest(String arg0) {
         super(arg0);

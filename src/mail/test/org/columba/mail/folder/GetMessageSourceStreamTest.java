@@ -23,7 +23,7 @@ import java.io.InputStream;
  * @author fdietz
  *
  */
-public class GetMessageSourceStreamTest extends AbstractFolderTest {
+public class GetMessageSourceStreamTest extends AbstractFolderTst {
 
     
     public GetMessageSourceStreamTest(String arg0) {

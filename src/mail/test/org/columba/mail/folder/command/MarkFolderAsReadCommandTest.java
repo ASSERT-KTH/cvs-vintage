@@ -23,14 +23,14 @@ import java.io.OutputStreamWriter;
 
 import org.columba.core.command.NullWorkerStatusController;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
 
 /**
  * @author redsolo
  */
-public class MarkFolderAsReadCommandTest extends AbstractFolderTest {
+public class MarkFolderAsReadCommandTest extends AbstractFolderTst {
 
     public MarkFolderAsReadCommandTest(String arg0) {
         super(arg0);

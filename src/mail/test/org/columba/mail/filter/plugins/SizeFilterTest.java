@@ -27,12 +27,12 @@ import org.columba.mail.folder.MailboxTstFactory;
  * @author fdietz
  *  
  */
-public class SizeFilterTest extends AbstractFilterTestCase {
+public class SizeFilterTest extends AbstractFilterTst {
     /**
  * @param arg0
  */
-    public SizeFilterTest(MailboxTstFactory factory, String arg0) {
-        super(factory, arg0);
+    public SizeFilterTest(String arg0) {
+        super(arg0);
         
     }
 

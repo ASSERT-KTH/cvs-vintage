@@ -26,7 +26,7 @@ import java.io.ByteArrayInputStream;
  * @author fdietz
  *
  */
-public class AttributeTest extends AbstractFolderTest {
+public class AttributeTest extends AbstractFolderTst {
 
     public AttributeTest(String arg0) {
         super(arg0);

@@ -27,7 +27,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.AbstractFolderTest;
+import org.columba.mail.folder.AbstractFolderTst;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.main.MailInterface;
 
@@ -35,18 +35,18 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  *  
  */
-public class AbstractComposerTestCase extends AbstractFolderTest {
+public class AbstractComposerTst extends AbstractFolderTst {
 
     private File file;
 
-    public AbstractComposerTestCase(String arg0) {
+    public AbstractComposerTst(String arg0) {
         super(arg0);
         
     }
     /**
      * @param arg0
      */
-    public AbstractComposerTestCase(MailboxTstFactory factory, String arg0) {
+    public AbstractComposerTst(MailboxTstFactory factory, String arg0) {
         super(factory, arg0);
     }
 

@@ -25,8 +25,16 @@ import org.columba.mail.folder.MailboxTstFactory;
  * @author fdietz
  *  
  */
-public class PriorityFilterTest extends AbstractFilterTestCase {
+public class PriorityFilterTest extends AbstractFilterTst {
 
+	 /**
+     *  
+     */
+    public PriorityFilterTest(String arg0) {
+        super(arg0);
+        
+    }
+    
     /**
      *  
      */

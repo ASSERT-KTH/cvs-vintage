@@ -27,8 +27,16 @@ import org.columba.ristretto.message.Flags;
  * @author fdietz
  *
  */
-public class FlagsFilterTest extends AbstractFilterTestCase {
-
+public class FlagsFilterTest extends AbstractFilterTst {
+	
+	/**
+     * @param arg0
+     */
+    public FlagsFilterTest(String arg0) {
+        super(arg0);
+        
+    }
+    
     /**
      * @param arg0
      */

@@ -31,7 +31,7 @@ import org.columba.ristretto.message.InputStreamMimePart;
  * @author fdietz
  *  
  */
-public class ForwardInlineCommandTest extends AbstractComposerTestCase {
+public class ForwardInlineCommandTest extends AbstractComposerTst {
 
     public ForwardInlineCommandTest(String arg0) {
         super(arg0);

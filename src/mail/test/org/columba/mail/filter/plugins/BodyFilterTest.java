@@ -26,8 +26,16 @@ import org.columba.mail.folder.MailboxTstFactory;
  * @author fdietz
  *
  */
-public class BodyFilterTest extends AbstractFilterTestCase {
+public class BodyFilterTest extends AbstractFilterTst {
 
+	/**
+     * @param arg0
+     */
+    public BodyFilterTest(String arg0) {
+        super(arg0);
+        
+    }
+    
     /**
      * @param arg0
      */

@@ -23,6 +23,7 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.columba.mail.folder.FolderTstHelper;
+import org.columba.mail.folder.MHFolderFactory;
 import org.columba.mail.folder.MailboxTstFactory;
 import org.columba.mail.folder.MessageFolder;
 
@@ -34,17 +35,30 @@ import org.columba.mail.folder.MessageFolder;
  * @author fdietz
  *  
  */
-public class AbstractFilterTestCase extends TestCase {
+public class AbstractFilterTst extends TestCase {
 
     protected MessageFolder sourceFolder;
     protected MailboxTstFactory factory;
 
     /**
+     * Constructor for test.
+     * <p>
+     * This is used when executing this individual test only or
+     * by the ant task.
+     * <p>
+     */
+    public AbstractFilterTst(String test) {
+        super(test);
+
+        this.factory = new MHFolderFactory();
+    }
+    
+    /**
      * Constructor for AbstractFilterTest.
      * @param arg0
      * @param factory 
      */
-    public AbstractFilterTestCase(MailboxTstFactory factory, String arg0 ) {
+    public AbstractFilterTst(MailboxTstFactory factory, String arg0 ) {
         super(arg0);
         this.factory = factory;
     }
@@ -111,12 +125,5 @@ public class AbstractFilterTestCase extends TestCase {
 
         return uid;
     }
-    
-    /**
-     * Empty test, so that the automatic ant task doesn't fail.
-     *
-     */
-    public void testForAntTask() {
-        
-    }
+ 
 }
