@@ -21,11 +21,14 @@ This page will show the result of executing the sanity test suite.
    if( request.getParameter("target") == null ) return;
 
    String port = request.getParameter("port");
-   String colonPort;
+   String colonPort=null;
+   String notStandAlone=null;
    try {
        colonPort = ":" + port;
-       if ( Integer.parseInt(port) == 80 )
+       if ( Integer.parseInt(port) == 80 ) {
            colonPort = "";
+           notStandAlone="Not standalone";
+       }
    } catch (Exception e) {
       out.println("ERROR: Invalid port number!");
       return;
@@ -49,6 +52,7 @@ This page will show the result of executing the sanity test suite.
   <ant:property name="colonPort" value="<%= colonPort %>" />
   <ant:property name="http.protocol" param="server.proto" />
   <ant:property name="host" param="host" />
+  <ant:property name="not.standalone" value="<%= notStandAlone %>" />
 </ant:ant>
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
