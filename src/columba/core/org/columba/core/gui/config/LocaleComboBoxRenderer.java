@@ -35,7 +35,7 @@ public class LocaleComboBoxRenderer extends DefaultListCellRenderer {
         
         JLabel label = (JLabel) super.getListCellRendererComponent(list,
                 value, index, isSelected, hasFocus);
-        label.setText(((Locale) value).getDisplayName());
+        label.setText(((Locale) value).getDisplayName((Locale)value));
         return label;
     }
 }
