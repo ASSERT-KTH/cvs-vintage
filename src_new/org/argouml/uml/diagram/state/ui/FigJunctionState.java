@@ -1,4 +1,4 @@
-// $Id: FigJunctionState.java,v 1.5 2004/07/18 07:01:26 mvw Exp $
+// $Id: FigJunctionState.java,v 1.6 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -104,14 +104,6 @@ public class FigJunctionState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // Fig accesors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-	super.setOwner(node);
-	bindPort(node, bigPort);
-    }
 
     /** Initial states are fixed size. 
      * @see org.tigris.gef.presentation.Fig#isResizable()

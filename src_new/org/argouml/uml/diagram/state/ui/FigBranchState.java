@@ -1,4 +1,4 @@
-// $Id: FigBranchState.java,v 1.15 2004/07/18 07:01:26 mvw Exp $
+// $Id: FigBranchState.java,v 1.16 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -105,14 +105,6 @@ public class FigBranchState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, bigPort);
-    }
 
     /** Choice states are fixed size. 
      * @see org.tigris.gef.presentation.Fig#isResizable()

@@ -1,4 +1,4 @@
-// $Id: FigJoinState.java,v 1.11 2004/08/04 17:01:22 mvw Exp $
+// $Id: FigJoinState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigJoinState.java
 // Classes: FigJoinState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigJoinState.java,v 1.11 2004/08/04 17:01:22 mvw Exp $
+// $Id: FigJoinState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -100,14 +100,6 @@ public class FigJoinState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, getBigPort());
-    }
 
     /** 
      * Override setBounds to keep shapes looking right 

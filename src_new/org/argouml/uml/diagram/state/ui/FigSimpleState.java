@@ -1,4 +1,4 @@
-// $Id: FigSimpleState.java,v 1.13 2004/07/26 22:43:05 mvw Exp $
+// $Id: FigSimpleState.java,v 1.14 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -131,15 +131,6 @@ public class FigSimpleState extends FigState {
 
     ////////////////////////////////////////////////////////////////
     // accessors
-
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-	super.setOwner(node);
-	bindPort(node, bigPort);
-    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#getMinimumSize()

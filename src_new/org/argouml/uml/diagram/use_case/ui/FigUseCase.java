@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.40 2004/08/04 20:07:43 mvw Exp $
+// $Id: FigUseCase.java,v 1.41 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -526,22 +526,6 @@ public class FigUseCase extends FigNodeModelElement {
 
     public Selection makeSelection() {
         return new SelectionUseCase(this);
-    }
-
-    /**
-     * Associate this fig with a particular NSUML object.<p>
-     *
-     * Associates the node with the "bigPort" that is the whole of this
-     *   object.<p>
-     *
-     * Must be public, since called directly, e.g. by the load routines.<p>
-     *
-     * @param node  The NSUML object to associate with this fig.
-     */
-
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, bigPort);
     }
 
     /**

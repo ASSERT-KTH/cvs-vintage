@@ -1,4 +1,4 @@
-// $Id: FigActionState.java,v 1.19 2004/08/01 08:01:13 mvw Exp $
+// $Id: FigActionState.java,v 1.20 2004/08/04 20:53:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -127,14 +127,6 @@ public class FigActionState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, bigPort);
-    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#getMinimumSize()

@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.2 2004/08/03 16:43:20 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.3 2004/08/04 20:53:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,14 +101,6 @@ public class FigObjectFlowState extends FigNodeModelElement {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, getBigPort());
-    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#setLineColor(java.awt.Color)

@@ -1,4 +1,4 @@
-// $Id: FigSubactivityState.java,v 1.2 2004/08/04 18:22:37 mvw Exp $
+// $Id: FigSubactivityState.java,v 1.3 2004/08/04 20:53:42 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,14 +160,6 @@ public class FigSubactivityState extends FigStateVertex {
     ////////////////////////////////////////////////////////////////
     // Fig accessors
 
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, getBigPort());
-    }
-    
     /**
      * @see org.tigris.gef.presentation.Fig#getMinimumSize()
      */

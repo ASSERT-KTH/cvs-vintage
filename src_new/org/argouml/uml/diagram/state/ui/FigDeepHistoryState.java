@@ -1,4 +1,4 @@
-// $Id: FigDeepHistoryState.java,v 1.11 2004/07/26 19:01:33 mvw Exp $
+// $Id: FigDeepHistoryState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigHistoryState.java
 // Classes: FigHistoryState
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigDeepHistoryState.java,v 1.11 2004/07/26 19:01:33 mvw Exp $
+// $Id: FigDeepHistoryState.java,v 1.12 2004/08/04 20:51:08 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -125,14 +125,6 @@ public class FigDeepHistoryState extends FigStateVertex {
 
     ////////////////////////////////////////////////////////////////
     // Fig accessors
-
-    /**
-     * @see org.tigris.gef.presentation.Fig#setOwner(java.lang.Object)
-     */
-    public void setOwner(Object node) {
-        super.setOwner(node);
-        bindPort(node, bigPort);
-    }
 
     /** History states are fixed size. 
      * @see org.tigris.gef.presentation.Fig#isResizable()
