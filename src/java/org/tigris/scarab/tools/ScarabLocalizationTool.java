@@ -49,6 +49,7 @@ package org.tigris.scarab.tools;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.stratum.configuration.Configuration;
 import org.apache.turbine.Log;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
@@ -96,7 +97,7 @@ public class ScarabLocalizationTool
      * Initialized by <code>init()</code>, cleared by
      * <code>refresh()</code>.
      */
-    private Map properties;
+    private Configuration properties;
 
     /**
      * Creates a new instance.
@@ -156,7 +157,7 @@ public class ScarabLocalizationTool
             setPrefix(templateName + '.');
 
             String propName = "template." + getPrefix(null) + property;
-            String l10nKey = (String) properties.get(propName);
+            String l10nKey = (String) properties.getString(propName);
             Log.debug("ScarabLocalizationTool: Property name '" + propName +
                       "' -> localization key '" + l10nKey + '\'');
 

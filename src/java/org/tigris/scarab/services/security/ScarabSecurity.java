@@ -49,6 +49,7 @@ package org.tigris.scarab.services.security;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.stratum.configuration.Configuration;
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.fulcrum.Service;
 import org.apache.fulcrum.BaseService;
@@ -60,7 +61,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class provides access to security properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSecurity.java,v 1.10 2002/01/10 01:30:47 jmcnally Exp $
+ * @version $Id: ScarabSecurity.java,v 1.11 2002/02/17 17:54:06 jmcnally Exp $
  */
 public class ScarabSecurity 
     extends BaseService
@@ -161,7 +162,7 @@ public class ScarabSecurity
         getService().getPermissionImpl("Vote__Manage");
 
 
-    private ExtendedProperties props;
+    private Configuration props;
     private List allPermissions;
 
     public ScarabSecurity()
@@ -243,7 +244,7 @@ public class ScarabSecurity
     }
     */
 
-    public static ExtendedProperties getProps()
+    public static Configuration getProps()
     {
         return getService().getConfiguration();
     }
