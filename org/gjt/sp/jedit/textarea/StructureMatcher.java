@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * for matching XML tags.
  *
  * @author Slava Pestov
- * @version $Id: StructureMatcher.java,v 1.1 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: StructureMatcher.java,v 1.2 2003/06/22 02:25:10 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public interface StructureMatcher
@@ -90,6 +90,10 @@ public interface StructureMatcher
 		public int start;
 		public int endLine;
 		public int end;
+
+		public Match()
+		{
+		}
 
 		public Match(int startLine, int start, int endLine, int end)
 		{

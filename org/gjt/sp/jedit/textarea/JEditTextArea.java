@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.271 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.272 2003/06/22 02:25:10 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2026,7 +2026,7 @@ forward_scan:		do
 	 * Adds a structure matcher.
 	 * @since jEdit 4.2pre3
 	 */
-	public void addStructureMatcher(StructureMatcher.Match matcher)
+	public void addStructureMatcher(StructureMatcher matcher)
 	{
 		structureMatchers.add(matcher);
 	} //}}}
@@ -2036,7 +2036,7 @@ forward_scan:		do
 	 * Removes a structure matcher.
 	 * @since jEdit 4.2pre3
 	 */
-	public void removeStructureMatcher(StructureMatcher.Match matcher)
+	public void removeStructureMatcher(StructureMatcher matcher)
 	{
 		structureMatchers.remove(matcher);
 	} //}}}
