@@ -24,7 +24,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.22 2002/11/26 19:52:22 kataka Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.23 2002/11/26 20:06:13 kataka Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -501,7 +501,9 @@ implements VetoableChangeListener  {
               return link;
           }
       }
-      throw new UnsupportedOperationException("should not enter here!");
+      // fail silently
+      // throw new UnsupportedOperationException("should not enter here!");
+      return null;
   }
 
 
