@@ -14,6 +14,17 @@
     
               &gt;&gt;&gt;&gt; CAUTION: DO NOT MODIFY THIS FILE. &lt;&lt;&lt;&lt;
     
+     Note for developers:
+     NEVER change this file by hand! If you want to introduce a new property,
+     please update
+     
+         xdocs/scarab_properties.xml 
+     
+     instead and afterwards call
+     
+         maven scarab:update-properties
+         
+     Now your project.properties and minimal.properties have been regenerated.
     
      This file contains Scarab initial property settings.
      Please refer to the file
@@ -56,7 +67,7 @@
        in your customized custom.properties
        The file custom.properties will never be overridden during an upgrade.
     
-     $Id: scarab_properties.xml,v 1.5 2004/12/30 22:03:15 jorgeuriarte Exp $
+     $Id: scarab_properties.xml,v 1.6 2005/01/02 00:16:18 dabbous Exp $
     
      Structure of this file
      ----------------------
@@ -87,6 +98,18 @@
              ----------------------------------------------
     
               &gt;&gt;&gt;&gt; CAUTION: DO NOT MODIFY THIS FILE. &lt;&lt;&lt;&lt;
+
+     Note for developers:
+     NEVER change this file by hand! If you want to introduce a new property,
+     please update
+     
+         xdocs/scarab_properties.xml 
+     
+     instead and afterwards call
+     
+         maven scarab:update-properties
+         
+     Now your project.properties and minimal.properties have been regenerated.
 
 
      This file contains the minimal set of properties which MUST
@@ -844,6 +867,7 @@
     </group>
 
     <group name="user-administration">
+
       <property>
         <name>scarab.admin.password.reset.allowed</name>
         <default>true</default>
@@ -857,6 +881,7 @@
           this property is set to false.
         </details>
       </property>
+
       <property>
         <name>scarab.anonymous.enable</name>
         <default>true</default>
@@ -866,14 +891,17 @@
          <customization modification="optional">advanced</customization>
         <file/>
         <details>
-          If you set this property to true, the anonymous login will be enabled,
-	using the user stated in scarab.anonymous.username (which should exist!)
-          If you do not want an anonymous user, please set this property to false:
+          If this property is set to true, anonymous login will be enabled,
+          using the user stated in scarab.anonymous.username 
+          Note: the anonymous user account must exisst in the database.
+          If you do not want an anonymous user, please set this property 
+          to false:
 
               scarab.anonymous.enable=false
 
         </details>
       </property>
+
       <property>
         <name>scarab.anonymous.username</name>
         <default>anonymous</default>
@@ -882,11 +910,15 @@
          <customization modification="optional">advanced</customization>
         <file/>
         <details>
-          Choose which user will act as Anonymous user.  This property will only
-	be used if scarab.anonymous.enable=true
-          The user you choose should already exist in the database.
+          Choose which user will act as Anonymous user.  
+          This property will only be used if
+          
+              scarab.anonymous.enable=true
+
+          Note: The specified user must already exist in the database.
       </details>
       </property>
+
     </group>
   </section>
 

@@ -24,9 +24,9 @@ import org.tigris.scarab.util.Log;
 public class AnonymousLoginValve extends AbstractValve
 {
     private final static Set nonAnonymousTargets = new HashSet();
-    private String username = null;
-    private String password = null;
-
+    private String username                = null;
+    private boolean anonymousAccessAllowed = false;
+    
     /**
      * Initilizes the templates that will not make an automatical
      * anonymous login.
@@ -34,15 +34,20 @@ public class AnonymousLoginValve extends AbstractValve
     public void initialize() throws Exception
     {
         Configuration conf = Turbine.getConfiguration();
-        username = (String)conf.getProperty("scarab.anonymous.username");
-        if (username != null) {
-	        password = (String)conf.getProperty("scarab.anonymous.password");
+        anonymousAccessAllowed = conf.getBoolean("scarab.anonymous.enable",false);
+        if (anonymousAccessAllowed) {
+            Log.get().info("anonymous Login enabled.");
+            username = (String)conf.getProperty("scarab.anonymous.username");
 	        nonAnonymousTargets.add("Index.vm");
 	        nonAnonymousTargets.add("Logout.vm");
 	        nonAnonymousTargets.add(conf.getProperty("template.login"));
 	        nonAnonymousTargets.add(conf.getProperty("template.homepage"));
 	        nonAnonymousTargets.add("Register.vm");
 	        nonAnonymousTargets.add("ForgotPassword.vm");
+        }
+        else
+        {
+            Log.get().info("anonymous Login disabled.");
         }
     }
     
@@ -53,7 +58,7 @@ public class AnonymousLoginValve extends AbstractValve
     public void invoke(RunData data, ValveContext context) throws IOException, TurbineException
     {
         String target = data.getTarget();
-        if (null != username && !nonAnonymousTargets.contains(target) && target.indexOf("help,") == -1)
+        if (anonymousAccessAllowed && !nonAnonymousTargets.contains(target) && target.indexOf("help,") == -1)
         {
 	        // If there's no user, we will login as Anonymous.
 	        ScarabUser user = (ScarabUser)data.getUserFromSession();
