@@ -452,7 +452,7 @@ insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
  * root module
  */
 insert into SCARAB_MODULE(MODULE_ID, MODULE_NAME, MODULE_DESCRIPTION, MODULE_URL)
-        values(0, "global", "Built-in root module, parent for all top-level modules(projects)", "/");
+        values(0, "Global", "Built-in root module, parent for all top-level modules(projects)", "/");
 
 /*
  * populate the root module with all attributes.
