@@ -363,7 +363,7 @@ Descriptive text.
 The query element contains the configuration of a query.
 -->
 <!ELEMENT query (description?, query-method,
-      (jboss-ql | dynamic-ql | declared-sql)?, read-ahead?, ql-compiler?)>
+      (jboss-ql | dynamic-ql | declared-sql)?, read-ahead?, ql-compiler?, lazy-resultset-loading?)>
 
 
 <!--
@@ -594,7 +594,9 @@ The type-mapping element contains a named java to sql mapping.
 This includes both type mapping and function mapping.
 -->
 <!ELEMENT type-mapping (name, row-locking-template, pk-constraint-template,
-      fk-constraint-template, auto-increment-template?, alias-header-prefix,
+      fk-constraint-template, auto-increment-template?,
+      add-column-template?, alter-column-template?, drop-column-template?,
+      alias-header-prefix,
       alias-header-suffix, alias-max-length, subquery-supported,
       true-mapping, false-mapping,
       function-mapping*, mapping+)>
@@ -658,6 +660,47 @@ This element is used to define auto-increment template for a column
 <!ELEMENT auto-increment-template (#PCDATA)>
 
 <!--
+Template to add a column to the database.
+Arguments are as follows :
+
+1. Table name
+2. Column new
+3. Column type
+
+Default value is
+
+ALTER TABLE ?1 ADD ?2 ?3
+-->
+<!ELEMENT add-column-template (#PCDATA)>
+
+<!--
+Template to alter a column to the database.
+Arguments are as follows :
+
+1. Table name
+2. Column new
+3. Column type
+
+Default value is
+
+ALTER TABLE ?1 ALTER ?2 TYPE ?3
+-->
+<!ELEMENT alter-column-template (#PCDATA)>
+
+<!--
+Template to drop a column to the database.
+Arguments are as follows :
+
+1. Table name
+2. Column new
+
+Default value is
+
+ALTER TABLE ?1 DROP ?2
+-->
+<!ELEMENT drop-column-template (#PCDATA)>
+
+<!--
 An alias header is prepended to a generated table alias by the EJB-QL compiler
 to prevent name collisions. An alias header is constructed as folows:
 
@@ -688,12 +731,22 @@ queries.
 <!--
 Specifies the mapping from a java type to a jdbc and a sql type.
 -->
-<!ELEMENT mapping (java-type, jdbc-type, sql-type)>
+<!ELEMENT mapping (java-type, jdbc-type, sql-type, param-setter?, result-reader?)>
 
 <!--
 Specifies the java class type to be mapped.
 -->
 <!ELEMENT java-type (#PCDATA)>
+
+<!--
+Fully qualified name of the JDBCParameterSetter implementation.
+-->
+<!ELEMENT param-setter (#PCDATA)>
+
+<!--
+Fully qualified name of the JDBCResultSetReader implementation.
+-->
+<!ELEMENT result-reader (#PCDATA)>
 
 <!--
 Specifies the mapping from an EJB-QL function to a sql function.
@@ -882,3 +935,11 @@ Updated time, default is audit_updated_time
 -->
 <!ELEMENT reserved-words (word+)>
 <!ELEMENT word (#PCDATA)>
+
+<!--
+Is relevant only for multi-object queries. Allowed values are true and false.
+If true, ResultSet will be read on demand, i.e. when user iterates through the collection.
+If false, user is given completely initialized result, i.e. when user got the result
+ResultSet is read till the end and closed.
+-->
+<!ELEMENT lazy-resultset-loading (#PCDATA)>
