@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.1 2005/01/02 10:08:16 linus Exp $
+// $Id: StateMachinesHelper.java,v 1.2 2005/01/09 18:11:32 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -99,11 +99,12 @@ public interface StateMachinesHelper {
      * Returns all statemachines that can be the statemachine the given
      * submachinestate represents. To decouple ArgoUML as much as possible from
      * the NSUML model, the parameter of the method is of type Object.
+     * @param model the model
      * @param oSubmachineState The submachinestate we are searching the
      * statemachines for.
      * @return Collection The collection with found statemachines.
      */
-    Collection getAllPossibleStatemachines(Object oSubmachineState);
+    Collection getAllPossibleStatemachines(Object model, Object oSubmachineState);
 
     /**
      * Connects a given statemachine to a submachinestate as being the
