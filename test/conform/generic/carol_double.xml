@@ -138,13 +138,13 @@
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.double">
     <parallel>
-      <java classname="${name.server.class.name1}" fork="true" timeout="10000">
+      <java classname="${name.server.class.name1}" fork="true" timeout="60000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
 	<arg line="${name.server.option1}"/>	
 	<classpath refid="test.name.server.classpath1"/>
       </java>
 
-      <java classname="${name.server.class.name2}" fork="true" timeout="10000">
+      <java classname="${name.server.class.name2}" fork="true" timeout="60000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
 	<arg line="${name.server.option2}"/>	
 	<classpath refid="test.name.server.classpath2"/>
@@ -152,7 +152,7 @@
 
       <sequential>
 	<sleep seconds="3"/>
-	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="10000">
+	<java classname="org.objectweb.carol.jtests.conform.basic.server.BasicServer" fork="true" timeout="50000">
 	  <jvmarg line="${test.multi.jvmargs}"/>
 	  <classpath refid="test.server.classpath"/>
 	</java>
@@ -168,19 +168,13 @@
 	  haltonerror="no"
 	  fork="yes" >
 	  <classpath refid="test.client.classpath1" />
-	  <formatter type="xml" />
+	  <formatter type="xml"/>
 	  <batchtest fork="yes" todir="${report.dir}">
 	    <fileset dir="${test.src}">
 	      <include name="${test.client.pkg1}/*Test.java" />
 	    </fileset>
 	  </batchtest>
 	</junit>
-	<junitreport todir="${report.dir}">
-	  <fileset dir="${report.dir}">
-	    <include name="TEST-*.xml"/>
-	  </fileset>
-	  <report format="frames" todir="${report.dir}/html"/>
-	</junitreport>
       </sequential>
 
       <sequential>
@@ -192,21 +186,23 @@
 	  haltonerror="no"
 	  fork="yes" >
 	  <classpath refid="test.client.classpath2" />
-	  <formatter type="xml" />
+	  <formatter type="xml"/>
 	  <batchtest fork="yes" todir="${report.dir}">
 	    <fileset dir="${test.src}">
 	      <include name="${test.client.pkg2}/*Test.java" />
 	    </fileset>
 	  </batchtest>
 	</junit>
-	<junitreport todir="${report.dir}">
-	  <fileset dir="${report.dir}">
-	    <include name="TEST-*.xml"/>
-	  </fileset>
-	  <report format="frames" todir="${report.dir}/html"/>
-	</junitreport>
       </sequential>
 
     </parallel>
+
+    <junitreport todir="${report.dir}">
+      <fileset dir="${report.dir}">
+	<include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${report.dir}/html"/>
+    </junitreport>
+
   </target> 
 </project>
