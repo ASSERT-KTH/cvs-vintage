@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmGroup.java,v 1.1 1999/10/18 03:34:05 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/18 03:34:05 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmGroup.java,v 1.2 1999/11/10 05:04:37 craigmcc Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/11/10 05:04:37 $
  *
  * ====================================================================
  *
@@ -81,7 +81,7 @@ import java.util.Hashtable;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 1999/10/18 03:34:05 $
+ * @version $Revision: 1.2 $ $Date: 1999/11/10 05:04:37 $
  */
 
 final class FileRealmGroup {
@@ -125,7 +125,7 @@ final class FileRealmGroup {
 	super();
 	this.database = database;
 	this.name = name;
-	database.add(this);
+	database.addGroup(this);
 
     }
 
@@ -135,9 +135,9 @@ final class FileRealmGroup {
      *
      * @param role The role being assigned to this group
      */
-    public void add(String role) {
+    public void addRole(String role) {
 
-	database.add(role);
+	database.addRole(role);
 	roles.put(role, role);
 
     }
@@ -149,7 +149,7 @@ final class FileRealmGroup {
      *
      * @param user User to be added
      */
-    void add(FileRealmUser user) {
+    void addUser(FileRealmUser user) {
 
 	users.put(user.getName(), user);
 

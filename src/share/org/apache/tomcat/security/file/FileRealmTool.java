@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmTool.java,v 1.2 1999/10/24 00:08:02 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/24 00:08:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmTool.java,v 1.3 1999/11/10 05:04:37 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/10 05:04:37 $
  *
  * ====================================================================
  *
@@ -115,7 +115,7 @@ import org.xml.sax.SAXParseException;
  * </pre>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 1999/10/24 00:08:02 $
+ * @version $Revision: 1.3 $ $Date: 1999/11/10 05:04:37 $
  */
 
 public final class FileRealmTool {
@@ -219,7 +219,7 @@ public final class FileRealmTool {
 	}
 
 	if (!user.hasGroup(group)) {
-	    user.add(group);
+	    user.addGroup(group);
 	    modified = true;
 	}
 
@@ -252,14 +252,14 @@ public final class FileRealmTool {
 
 	if (group != null) {
 	    if (!group.hasRole(role)) {
-		group.add(role);
+		group.addRole(role);
 		modified = true;
 	    }
 	}
 
 	if (user != null) {
 	    if (!user.hasRole(role)) {
-		user.add(role);
+		user.addRole(role);
 		modified = true;
 	    }
 	}

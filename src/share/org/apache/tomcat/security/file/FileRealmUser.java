@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmUser.java,v 1.2 1999/10/23 22:30:19 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/23 22:30:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/security/file/Attic/FileRealmUser.java,v 1.3 1999/11/10 05:04:37 craigmcc Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/11/10 05:04:37 $
  *
  * ====================================================================
  *
@@ -87,7 +87,7 @@ import java.util.Hashtable;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 1999/10/23 22:30:19 $
+ * @version $Revision: 1.3 $ $Date: 1999/11/10 05:04:37 $
  */
 
 final class FileRealmUser
@@ -141,7 +141,7 @@ final class FileRealmUser
 	this.database = database;
 	this.name = name;
 	setPassword(password);
-	database.add(this);
+	database.addUser(this);
 
     }
 
@@ -161,7 +161,7 @@ final class FileRealmUser
 	this.database = database;
 	this.name = name;
 	setPassword(password);
-	database.add(this);
+	database.addUser(this);
 
     }
 
@@ -171,9 +171,9 @@ final class FileRealmUser
      *
      * @param group Group this user is now a member of
      */
-    public void add(FileRealmGroup group) {
+    public void addGroup(FileRealmGroup group) {
 
-	group.add(this);
+	group.addUser(this);
 	groups.put(group.getName(), group);
 
     }
@@ -184,9 +184,9 @@ final class FileRealmUser
      *
      * @param role The role being assigned to this group
      */
-    public void add(String role) {
+    public void addRole(String role) {
 
-	database.add(role);
+	database.addRole(role);
 	roles.put(role, role);
 
     }
