@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -57,11 +59,11 @@ import org.columba.ristretto.message.io.SourceInputStream;
 public class IMAPFolder extends RemoteFolder {
 
 	/**
-	 *
+	 *  
 	 */
 	private ImapItem item;
 	/**
-	 *
+	 *  
 	 */
 	//private boolean select=false;
 	//private boolean fetch=false;
@@ -70,26 +72,26 @@ public class IMAPFolder extends RemoteFolder {
 
 	private Object aktMessageUid;
 	/**
-	 *
+	 *  
 	 */
 	private ColumbaMessage aktMessage;
 
 	/**
-	 *
+	 *  
 	 */
 	private boolean mailcheck = false;
 
 	/**
-	 *
+	 *  
 	 */
 	private IMAPStore store;
 
 	/**
-	 *
+	 *  
 	 */
 	protected HeaderList headerList;
 	/**
-	 *
+	 *  
 	 */
 	//Vector uids;
 
@@ -98,7 +100,7 @@ public class IMAPFolder extends RemoteFolder {
 	protected boolean existsOnServer;
 
 	/**
-	 *
+	 *  
 	 */
 	//protected RemoteSearchEngine searchEngine;
 
@@ -116,10 +118,11 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * This message is never called. Only local folders make use of this method, with
-	 * the uid array argument.
+	 * This message is never called. Only local folders make use of this
+	 * method, with the uid array argument.
 	 * 
-	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
+	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
@@ -130,7 +133,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#searchMessages(org.columba.mail.filter.Filter,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter) throws Exception {
 
@@ -198,6 +202,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method getStore.
+	 * 
 	 * @return IMAPStore
 	 */
 	public IMAPStore getStore() {
@@ -256,12 +261,13 @@ public class IMAPFolder extends RemoteFolder {
 
 		// clear statusbar message
 		getObservable().clearMessage();
-		
+
 		return headerList;
 	}
 
 	/**
 	 * Method updateFlags.
+	 * 
 	 * @param flagsList
 	 */
 	protected void updateFlags(Flags[] flagsList) {
@@ -312,7 +318,7 @@ public class IMAPFolder extends RemoteFolder {
 		//  make sure that messagefolderinfo(total/unread/recent count)
 		// is saved in tree.xml file
 		saveMessageFolderInfo();
-		
+
 		// only save header-cache if folder data changed
 		if (hasChanged()) {
 			cache.save();
@@ -322,6 +328,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method synchronize.
+	 * 
 	 * @param headerList
 	 * @param newList
 	 * @return Vector
@@ -346,39 +353,29 @@ public class IMAPFolder extends RemoteFolder {
 		}
 		return newUids;
 		/*
-		List result = new Vector();
-		
-		// delete old headers
-		
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			String str = (String) e.nextElement();
-		
-			if (existsRemotely(str, 0, newList)) {
-				// mail exists on server
-				//  -> keep it
-			} else {
-				// mail doesn't exist on server
-				//  -> remove it from local cache
-				headerList.remove(str);
-			}
-		}
-		for (Iterator it = newList.iterator(); it.hasNext();) {
-			String str = (String) it.next();
-			// for (int i = 0; i < newList.size(); i++) {
-			// String str = (String) newList.get(i);
-		
-			if (existsLocally(str, headerList) == false) {
-				// new message on server
-				result.add(str);
-			}
-		}
-		
-		return result;
-		*/
+		 * List result = new Vector();
+		 *  // delete old headers
+		 * 
+		 * for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+		 * String str = (String) e.nextElement();
+		 * 
+		 * if (existsRemotely(str, 0, newList)) { // mail exists on server // ->
+		 * keep it } else { // mail doesn't exist on server // -> remove it
+		 * from local cache headerList.remove(str); } } for (Iterator it =
+		 * newList.iterator(); it.hasNext();) { String str = (String)
+		 * it.next(); // for (int i = 0; i < newList.size(); i++) { // String
+		 * str = (String) newList.get(i);
+		 * 
+		 * if (existsLocally(str, headerList) == false) { // new message on
+		 * server result.add(str); } }
+		 * 
+		 * return result;
+		 */
 	}
 
 	/**
 	 * Method existsRemotely.
+	 * 
 	 * @param uid
 	 * @param startIndex
 	 * @param uidList
@@ -404,6 +401,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method existsLocally.
+	 * 
 	 * @param uid
 	 * @param list
 	 * @return boolean
@@ -426,7 +424,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 
@@ -436,7 +435,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object, java.lang.Integer, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getMimePart(java.lang.Object,
+	 *      java.lang.Integer, org.columba.core.command.WorkerStatusController)
 	 */
 	public MimePart getMimePart(Object uid, Integer[] address)
 		throws Exception {
@@ -452,7 +452,8 @@ public class IMAPFolder extends RemoteFolder {
 	 * The IMAP copy command also keeps the flags intact. So, there's no need
 	 * to change these manually.
 	 * 
-	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface, java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#innerCopy(org.columba.mail.folder.MailboxInterface,
+	 *      java.lang.Object, org.columba.core.command.WorkerStatusController)
 	 */
 	public void innerCopy(MailboxInterface destFolder, Object[] uids)
 		throws Exception {
@@ -466,12 +467,13 @@ public class IMAPFolder extends RemoteFolder {
 		// -> this is necessary to reflect the changes visually
 		for (int i = 0; i < uids.length; i++) {
 			Flags flag = (Flags) getFlags(uids[i]);
-			
+
 			// skip non existing messages
 			// -> this can happen when we have multiple filteraction
 			// -> on the same set of messages
-			if ( flag == null ) continue;
-			
+			if (flag == null)
+				continue;
+
 			// increment recent count of messages if appropriate
 			if (flag.getRecent())
 				destFolder.getMessageFolderInfo().incRecent();
@@ -485,14 +487,16 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(ColumbaMessage message) throws Exception {
 		return null;
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#addMessage(java.lang.String,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(String source) throws Exception {
 
@@ -505,7 +509,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public boolean exists(Object uid) throws Exception {
 		return cache.getHeaderList().containsKey(uid);
@@ -513,6 +518,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method markMessage.
+	 * 
 	 * @param uid
 	 * @param variant
 	 * @param worker
@@ -577,7 +583,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object, int,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
 
@@ -592,7 +599,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 	}
@@ -613,7 +621,8 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#expungeFolder(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public void expungeFolder() throws Exception {
 
@@ -650,14 +659,16 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getMessageSource(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public String getMessageSource(Object uid) throws Exception {
 		return getStore().getMessageSource(uid, getImapPath()).toString();
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		if (headerList == null)
@@ -667,6 +678,7 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method getMessage.
+	 * 
 	 * @param uid
 	 * @param worker
 	 * @return AbstractMessage
@@ -679,9 +691,10 @@ public class IMAPFolder extends RemoteFolder {
 
 	/**
 	 * Method getImapPath.
+	 * 
 	 * @return String
 	 */
-	protected String getImapPath() throws Exception{
+	protected String getImapPath() throws Exception {
 		StringBuffer path = new StringBuffer();
 		path.append(getName());
 		FolderTreeNode child = this;
@@ -718,7 +731,7 @@ public class IMAPFolder extends RemoteFolder {
 		// IMAP Folders have no own lock ,but share the lock from the Root
 		// to ensure that only one operation can be processed simultanous
 		FolderTreeNode root = getRootFolder();
-		if( root != null ) 
+		if (root != null)
 			return root.tryToGetLock(locker);
 		else
 			return false;
@@ -729,7 +742,7 @@ public class IMAPFolder extends RemoteFolder {
 	 */
 	public void releaseLock(Object locker) {
 		FolderTreeNode root = getRootFolder();
-		if( root != null ) 
+		if (root != null)
 			root.releaseLock(locker);
 	}
 	/**
@@ -747,7 +760,9 @@ public class IMAPFolder extends RemoteFolder {
 		item.set("property", "subfolder", "true");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#addSubfolder(org.columba.mail.folder.FolderTreeNode)
 	 */
 	public void addSubfolder(FolderTreeNode child) throws Exception {
@@ -760,14 +775,18 @@ public class IMAPFolder extends RemoteFolder {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.Folder#getObservable()
 	 */
 	public StatusObservable getObservable() {
 		return ((IMAPRootFolder) getRootFolder()).getObservable();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
@@ -778,8 +797,11 @@ public class IMAPFolder extends RemoteFolder {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object,
+	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
@@ -787,24 +809,32 @@ public class IMAPFolder extends RemoteFolder {
 		return header.getAttributes();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList().get(uid);
-		if ( header == null ) return null;
-		
+		if (header == null)
+			return null;
+
 		return header.getFlags();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
-		return getStore().getHeaders(uid, keys, getImapPath() );
+		return getStore().getHeaders(uid, keys, getImapPath());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
@@ -813,21 +843,28 @@ public class IMAPFolder extends RemoteFolder {
 		return new SourceInputStream(source);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
+	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 		throws Exception {
 		//TODO Implement this with the IMAP protocol
-		return ((StreamableMimePart) getStore().getMimePartSource(
-			uid,
-			address,
-			getImapPath()))
-		.getInputStream();
+		return (
+			(StreamableMimePart) getStore().getMimePartSource(
+				uid,
+				address,
+				getImapPath()))
+			.getInputStream();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
+	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 		throws Exception {
@@ -840,26 +877,38 @@ public class IMAPFolder extends RemoteFolder {
 		//;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.Folder#isInboxFolder()
 	 */
 	public boolean isInboxFolder() {
-		RootFolder root = (RootFolder)getRootFolder();
-		if( root != null)
+		RootFolder root = (RootFolder) getRootFolder();
+		if (root != null)
 			return root.getInboxFolder() == this;
 		else
 			return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.Folder#isTrashFolder()
 	 */
 	public boolean isTrashFolder() {
-		RootFolder root = (RootFolder)getRootFolder();
-		if( root != null)
+		RootFolder root = (RootFolder) getRootFolder();
+		if (root != null)
 			return root.getTrashFolder() == this;
 		else
 			return false;
+	}
+
+	public void setAttribute(Object uid, String key, Object value)
+		throws Exception {
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+
+		header.getAttributes().put(key, value);
 	}
 
 }

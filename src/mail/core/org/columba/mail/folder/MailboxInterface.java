@@ -195,6 +195,13 @@ public interface MailboxInterface {
 	/**
 	 * Gets all specified headerfields. An example headerfield might be
 	 * "Subject" or "From" (take care of lower/uppercaseletters). 
+	 * <p>
+	 * Note, that you should use getAttributes() for fetching the internal
+	 * headerfields (for example: columba.subject, columba.flags.seen, etc.).
+	 * <p>
+	 * This method first tries to find the requested header in the header
+	 * cache (@see CachedFolder). If the headerfield is not cached, the
+	 * message source is parsed.
 	 * 
 	 * @param uid The uid of the desired message
 	 * @param keys The keys like defined in e.g. RFC2822 
@@ -251,4 +258,13 @@ public interface MailboxInterface {
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception;
 	
+	/**
+	 * Set attribute for message with UID.
+	 * 
+	 * @param uid			UID of message
+	 * @param key			name of attribute (e.g."columba.subject");
+	 * @param value			value of attribute
+	 * @throws Exception
+	 */
+	public void setAttribute(Object uid, String key, Object value) throws Exception;
 }

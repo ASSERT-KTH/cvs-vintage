@@ -16,6 +16,9 @@
 
 package org.columba.mail.message;
 
+import java.awt.Color;
+
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.BasicHeader;
@@ -66,20 +69,15 @@ public class ColumbaHeader implements HeaderInterface {
 
 		BasicHeader basicHeader = new BasicHeader( header );
 
-		attributes.put("columba.fetchstate", Boolean.FALSE);
+		attributes.put("columba.alreadyfetched", Boolean.FALSE);
+		attributes.put("columba.spam", Boolean.FALSE);
+		
 		attributes.put("columba.priority", new Integer(basicHeader.getPriority()));
 		Address from = basicHeader.getFrom();
 		if (from != null)
 			attributes.put("columba.from", from);
 		else 
 		attributes.put("columba.from", new Address(""));
-		/*
-		if( from != null ) {			
-			attributes.put("columba.from", from.toString());
-		} else {
-			attributes.put("columba.from", "");
-		}
-		*/
 		
 		attributes.put("columba.host", new String());
 		attributes.put("columba.date", basicHeader.getDate());
@@ -91,6 +89,12 @@ public class ColumbaHeader implements HeaderInterface {
 		}
 		attributes.put("columba.attachment", Boolean.FALSE);
 		attributes.put("columba.size", new Integer(0));
+		
+		// message colour should be black as default
+		attributes.put("columba.color", new Color(0,0,0));
+		
+		// use default account 
+		attributes.put("columba.accountuid", new Integer(0));
 	}
 
 
@@ -123,8 +127,10 @@ public class ColumbaHeader implements HeaderInterface {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.message.HeaderInterface#get(java.lang.String)
+	/**
+	 * Note: Don't use this method anymore when accessing
+	 * attributes like "columba.size", use getAttrite() instead
+	 *  
 	 */
 	public Object get(String s) {
 		if (s.startsWith("columba.flags.")) {
@@ -186,6 +192,8 @@ public class ColumbaHeader implements HeaderInterface {
 		if( s.startsWith("columba.")) {
 			attributes.put(s, o);
 		} else {
+			ColumbaLogger.log.debug("o="+o);
+			
 			header.set(HeaderParser.normalizeKey(s), (String) o);
 		}
 	}

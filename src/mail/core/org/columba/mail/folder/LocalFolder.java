@@ -388,15 +388,6 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 	public void expungeFolder() throws Exception {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
-	 */
-	public Object getAttribute(Object uid, String key) throws Exception {
-		// get message with UID
-		ColumbaMessage message = getMessage(uid);
-
-		return message.getAttribute(key);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
@@ -489,6 +480,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
 			((LocalFolder) destFolder).setFlags(
 				destuid,
 				(Flags) getFlags(uids[i]).clone());
+			
 			if (getObservable() != null)
 				getObservable().setCurrent(i);
 		}

@@ -32,7 +32,7 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
 import org.columba.mail.message.ColumbaHeader;
@@ -937,7 +937,7 @@ public class IMAPStore {
 
 		//	get list of user-defined headerfields
 		String[] headercacheList =
-			CachedHeaderfieldOwner.getCachedHeaderfieldArray();
+			CachedHeaderfields.getCachedHeaderfieldArray();
 
 		// create string representation
 		StringBuffer headerFields = new StringBuffer();

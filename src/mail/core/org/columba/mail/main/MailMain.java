@@ -12,7 +12,7 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
+import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.MultipartEncryptedRenderer;
 import org.columba.mail.pgp.MultipartSignedRenderer;
@@ -116,7 +116,7 @@ public class MailMain extends DefaultMain {
 		MainInterface.backgroundTaskManager.register(new SaveAllFoldersPlugin());
 		MainInterface.backgroundTaskManager.register(new SavePOP3CachePlugin());
 		
-		new CachedHeaderfieldOwner();
+		new CachedHeaderfields();
 	}
 
 }

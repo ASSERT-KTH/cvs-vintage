@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
@@ -26,42 +28,65 @@ import org.columba.mail.message.ColumbaHeader;
 
 /**
  * 
- *
- * These class holds a collection of all cached headerfields, 
- * which Columba needs to be able to quickly show the message
- * summary, etc. to the user
+ * 
+ * Holds a collection of all cached headerfields, which Columba needs to be
+ * able to quickly show the message summary, etc. to the user.
  * 
  * @author fdietz
  */
-public class CachedHeaderfieldOwner {
+public class CachedHeaderfields {
 
 	protected static XmlElement headercache;
-	// these are for internal optimization
-	// -> most of these are parsed in a special way 
-	// -> for example: 
-	// ->  "columba.from" contains only the name of the
-	// ->  person without address, which can be
-	// ->  found in the official "From" headerfield
-	public static String[] INTERNAL_HEADERFIELDS =
-		{
-			"columba.flags.seen",
+
+	// internally used headerfields
+
+	// these are all boolean values, which are saved using
+	// a single int value
+	public static String[] INTERNAL_COMPRESSED_HEADERFIELDS = {
+		// message flags
+		"columba.flags.seen",
 			"columba.flags.recent",
 			"columba.flags.answered",
 			"columba.flags.flagged",
 			"columba.flags.expunged",
 			"columba.flags.draft",
-			"columba.priority",
-			"columba.from",
-			"columba.host",
-			"columba.date",
-			"columba.attachment",
-			"columba.size",
-			"columba.subject"};
+
+		//	true, if message has attachments, false otherwise
+		"columba.attachment",
+		//	true/false
+		"columba.spam" };
+
+	// this internally used headerfields can be of every basic
+	// type, including String, Integer, Boolean, Date, etc.
+	public static String[] INTERNAL_HEADERFIELDS = {
+		// priority as integer value
+		"columba.priority",
+
+		// short from, containing only name of person
+		"columba.from",
+
+		// host from which this message was downloaded
+		"columba.host",
+
+		// date
+		"columba.date",
+
+		// size of message
+		"columba.size",
+
+		// properly decoded subject
+		"columba.subject",
+	
+	    // message color
+		"columba.color",
+	    
+	    // account ID
+		"account.uid"};
 
 	// these are cached by default
 	// -> options.xml: /options/headercache
 	// -> attribute: additional
-	// -> whitespace separated list of additional
+	// -> whitespace separated list of additionally
 	// -> to be cached headerfields
 	// -----> only for power-users who want to tweak their search speed
 	public static String[] DEFAULT_HEADERFIELDS =
@@ -71,13 +96,25 @@ public class CachedHeaderfieldOwner {
 			"To",
 			"Cc",
 			"Date",
-			"Size",
 			"Message-Id",
 			"In-Reply-To",
 			"References",
 			"Content-Type" };
 
-	public CachedHeaderfieldOwner() {
+	public static String[] POP3_HEADERFIELDS =
+		{
+			"Subject",
+			"From",
+			"columba.date",
+			"columba.size",
+			
+			// POP3 message UID
+			"columba.pop3uid",
+					
+			// was this message already fetched from the server?
+			"columba.alreadyfetched" };
+
+	public CachedHeaderfields() {
 		//		see if we have to cache additional headerfields
 		// which are added by the user
 		XmlElement options = MailConfig.get("options").getElement("/options");
@@ -91,16 +128,16 @@ public class CachedHeaderfieldOwner {
 
 	/**
 	 * 
-	 * create new header which only contains headerfields
-	 * needed by Columba (meaning they also get cached)
+	 * create new header which only contains headerfields needed by Columba
+	 * (meaning they also get cached)
 	 * 
 	 * @param h
 	 * @return
 	 */
 	public static ColumbaHeader stripHeaders(ColumbaHeader h) {
-		
-		return h;
-		/*
+
+		//return h;
+
 		ColumbaHeader strippedHeader = new ColumbaHeader();
 
 		//		copy all internally used headerfields
@@ -117,6 +154,12 @@ public class CachedHeaderfieldOwner {
 				h.get(INTERNAL_HEADERFIELDS[i]));
 		}
 
+		for (int i = 0; i < INTERNAL_COMPRESSED_HEADERFIELDS.length; i++) {
+			strippedHeader.set(
+				INTERNAL_COMPRESSED_HEADERFIELDS[i],
+				h.get(INTERNAL_COMPRESSED_HEADERFIELDS[i]));
+		}
+
 		// copy all user defined headerfields
 
 		String[] userList = (String[]) getUserDefinedHeaderfieldArray();
@@ -130,18 +173,16 @@ public class CachedHeaderfieldOwner {
 			}
 		}
 
-		return strippedHeader;*/
+		return strippedHeader;
 	}
 
 	/**
-	 * 
-	 * 
-	 * @return	array containing all user defined headerfields
+	 * @return array containing all user defined headerfields
 	 */
 	public static String[] getUserDefinedHeaderfieldArray() {
 
 		String additionalHeaderfields =
-			headercache.getAttribute("additional_headerfields");
+			headercache.getAttribute("headerfields");
 
 		if ((additionalHeaderfields != null)
 			&& (additionalHeaderfields.length() > 0)) {
@@ -168,9 +209,7 @@ public class CachedHeaderfieldOwner {
 	}
 
 	/**
-	 * 
-	 * 
-	 * @return	array containing default + user-defined headerfields
+	 * @return array containing default + user-defined headerfields
 	 */
 	public static String[] getCachedHeaderfieldArray() {
 		List list = new Vector(Arrays.asList(DEFAULT_HEADERFIELDS));
@@ -185,5 +224,9 @@ public class CachedHeaderfieldOwner {
 		}
 
 		return stringList;
+	}
+
+	public static String[] getDefaultHeaderfields() {
+		return DEFAULT_HEADERFIELDS;
 	}
 }

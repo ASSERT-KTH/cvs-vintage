@@ -255,8 +255,8 @@ public class POP3Store {
 		ColumbaHeader h = (ColumbaHeader) m.getHeaderInterface();
 
 		m.setStringSource(rawString);
-		m.setAttribute("columba.host", popItem.get("host"));
-		m.setAttribute("columba.fetchstate", Boolean.TRUE);
+		h.getAttributes().put("columba.host", popItem.get("host"));
+		h.getAttributes().put("columba.fetchstate", Boolean.TRUE);
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
 

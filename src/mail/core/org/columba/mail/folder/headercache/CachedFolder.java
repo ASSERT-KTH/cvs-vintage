@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
@@ -39,9 +41,8 @@ import org.columba.ristretto.parser.MessageParser;
 
 /**
  * 
- * CachedFolderadds a header-cache
- * facility to {@link LocalFolder} to be 
- * able to quickly show a message summary, etc.
+ * CachedFolder adds a header-cache facility to {@link LocalFolder}to be able
+ * to quickly show a message summary, etc.
  * 
  * @author fdietz
  */
@@ -52,7 +53,9 @@ public abstract class CachedFolder extends LocalFolder {
 	protected Mutex mutex;
 
 	/**
-	 * @param item	<class>FolderItem</class> contains xml configuration of this folder
+	 * @param item
+	 *            <class>FolderItem</class> contains xml configuration of
+	 *            this folder
 	 */
 	public CachedFolder(FolderItem item) {
 		super(item);
@@ -61,7 +64,8 @@ public abstract class CachedFolder extends LocalFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#addMessage(org.columba.mail.message.AbstractMessage,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public Object addMessage(ColumbaMessage message) throws Exception {
 
@@ -88,7 +92,7 @@ public abstract class CachedFolder extends LocalFolder {
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
-		ColumbaHeader strippedHeader = CachedHeaderfieldOwner.stripHeaders(h);
+		ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
 
 		// free memory
 		h = null;
@@ -111,7 +115,8 @@ public abstract class CachedFolder extends LocalFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#exists(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public boolean exists(Object uid) throws Exception {
 
@@ -124,7 +129,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public void expungeFolder() throws Exception {
 
-		// get list of all uids 
+		// get list of all uids
 		Object[] uids = getUids();
 
 		for (int i = 0; i < uids.length; i++) {
@@ -163,26 +168,24 @@ public abstract class CachedFolder extends LocalFolder {
 	 * 
 	 * Return headerlist from cache
 	 * 
-	 * This method is just another layer for getHeaderList() which
-	 * adds a mutex to it.
+	 * This method is just another layer for getHeaderList() which adds a mutex
+	 * to it.
 	 * 
-	 * We lock folders to be sure that only one <code>Command</code>
-	 * at a time can modify the folder.
+	 * We lock folders to be sure that only one <code>Command</code> at a
+	 * time can modify the folder.
 	 * 
-	 * But we also allow to add messages at any time, because that 
-	 * doesn't interfere or causes problems ;-)
+	 * But we also allow to add messages at any time, because that doesn't
+	 * interfere or causes problems ;-)
 	 * 
-	 * Adding the headercache here, makes it necessary to load
-	 * the headercache, for the first time before we do any 
-	 * operation.
+	 * Adding the headercache here, makes it necessary to load the headercache,
+	 * for the first time before we do any operation.
 	 * 
-	 * This is a speciality of the headercache implementation which
-	 * has nothing to do with our Folder locking system and is
-	 * put here for this reason.
+	 * This is a speciality of the headercache implementation which has nothing
+	 * to do with our Folder locking system and is put here for this reason.
 	 * 
-	 * 
-	 * @return				<class>HeaderList</class>
-	 * @throws Exception	<class>Exception</class>
+	 * @return <class>HeaderList</class>
+	 * @throws Exception
+	 *             <class>Exception</class>
 	 */
 	protected HeaderList getCachedHeaderList() throws Exception {
 		HeaderList result;
@@ -205,7 +208,8 @@ public abstract class CachedFolder extends LocalFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.LocalFolder#getMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.LocalFolder#getMessage(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public ColumbaMessage getMessage(Object uid) throws Exception {
 
@@ -250,7 +254,8 @@ public abstract class CachedFolder extends LocalFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	 * @see org.columba.mail.folder.Folder#getMessageHeader(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 
@@ -373,8 +378,11 @@ public abstract class CachedFolder extends LocalFolder {
 		changed = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object[], int, org.columba.core.command.WorkerStatusController)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.Folder#markMessage(java.lang.Object[], int,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
 
@@ -385,8 +393,11 @@ public abstract class CachedFolder extends LocalFolder {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object, org.columba.core.command.WorkerStatusController)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.Folder#removeMessage(java.lang.Object,
+	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public void removeMessage(Object uid) throws Exception {
 		ColumbaHeader header = (ColumbaHeader) getMessageHeader(uid);
@@ -402,7 +413,9 @@ public abstract class CachedFolder extends LocalFolder {
 		super.removeMessage(uid);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.Folder#save(org.columba.core.command.WorkerStatusController)
 	 */
 	public void save() throws Exception {
@@ -437,13 +450,17 @@ public abstract class CachedFolder extends LocalFolder {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
 		// get headerlist before adding a message
 		getHeaderList();
 
+		int size = in.available();
+		
 		// call addMessage of superclass LocalFolder
 		// to do the dirty work
 		Object newUid = super.addMessage(in);
@@ -454,14 +471,15 @@ public abstract class CachedFolder extends LocalFolder {
 
 		Header header = HeaderParser.parse(source);
 		ColumbaHeader h = new ColumbaHeader(header);
-
+        h.getAttributes().put("columba.size", new Integer(size / 1024));
+        
 		// decode all headerfields:
 
 		// remove all unnecessary headerfields which doesn't
 		// need to be cached
 		// -> saves much memory
-		ColumbaHeader strippedHeader = CachedHeaderfieldOwner.stripHeaders(h);
-
+		ColumbaHeader strippedHeader = CachedHeaderfields.stripHeaders(h);
+		
 		// free memory
 		h = null;
 
@@ -482,8 +500,11 @@ public abstract class CachedFolder extends LocalFolder {
 		return newUid;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#setFlags(java.lang.Object, org.columba.ristretto.message.Flags)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#setFlags(java.lang.Object,
+	 *      org.columba.ristretto.message.Flags)
 	 */
 	public void setFlags(Object uid, Flags flags) throws Exception {
 		ColumbaHeader h = (ColumbaHeader) getCachedHeaderList().get(uid);
@@ -506,6 +527,53 @@ public abstract class CachedFolder extends LocalFolder {
 			getMessageFolderInfo().decUnseen();
 		}
 
+	}
+
+	public Object getAttribute(Object uid, String key) throws Exception {
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+
+		return header.getAttributes().get(key);
+	}
+
+	public void setAttribute(Object uid, String key, Object value)
+		throws Exception {
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+
+		header.getAttributes().put(key, value);
+	}
+
+	/**
+	 * This method first tries to find the requested header in the header
+	 * cache. If the headerfield is not cached, the message source is parsed
+	 * (@see LocalFolder).
+	 * 
+	 */
+	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
+		// get header with UID
+		Header header = (Header) getHeaderList().get(uid);
+		
+		Header result = new Header();
+		
+		// if only one headerfield wasn't found in cache
+		// -> call LocalFolder.getHeaderFields() to parse the
+		// -> complete message source
+		boolean parsingNeeded = false;
+		for ( int i=0; i<keys.length; i++)
+		{
+			if ( header.get(keys[i]) != null )
+			{
+				// headerfield found
+				result.set(keys[i], header.get(keys[i]));
+			}else
+				parsingNeeded = true;
+		}
+		
+		if ( parsingNeeded ) 
+			return super.getHeaderFields(uid, keys);
+		else
+			return result;
 	}
 
 }

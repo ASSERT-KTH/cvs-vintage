@@ -18,12 +18,14 @@ package org.columba.mail.gui.table.model;
 import org.columba.mail.message.HeaderList;
 
 /**
- * @author fdietz
+ * 
  *
  * This is the Controller for the <class>HeaderTableModel</class>. 
  * 
  * Dont' update the <class>HeaderTableModel</class> directly, always
  * use <class>TableModelUpdateManager</class>.
+ * 
+ * @author fdietz
  */
 public class TableModelUpdateManager  {
 

@@ -20,10 +20,12 @@ import javax.swing.JPanel;
 import org.columba.core.plugin.PluginInterface;
 
 /**
- * @author fdietz
+ *
  *
  * <class>AbstractConfigPlugin</class> is the abstract class
  * for the org.columba.core.config plugin extension point
+ * 
+ *  @author fdietz
  * 
  */
 public abstract class AbstractConfigPlugin implements PluginInterface {

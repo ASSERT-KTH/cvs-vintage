@@ -1,16 +1,18 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 
@@ -27,9 +29,7 @@ import javax.swing.JDialog;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -44,7 +44,6 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.HeaderInterface;
@@ -62,8 +61,8 @@ public class VirtualFolder extends Folder {
 	protected int nextUid;
 	protected HeaderList headerList;
 
-        // FIXME: Reduce redundancy in both constructors, eventually create
-        // private method that cares for the missing XmlElement.
+	// FIXME: Reduce redundancy in both constructors, eventually create
+	// private method that cares for the missing XmlElement.
 	public VirtualFolder(FolderItem item) {
 		super(item);
 
@@ -72,8 +71,8 @@ public class VirtualFolder extends Folder {
 		XmlElement filterElement = node.getElement("filter");
 		if (filterElement == null) {
 			/*
-			filterElement = new XmlElement("filter");
-			*/
+			 * filterElement = new XmlElement("filter");
+			 */
 			XmlElement filter = new XmlElement("filter");
 			filter.addAttribute("description", "new filter");
 			filter.addAttribute("enabled", "true");
@@ -109,8 +108,8 @@ public class VirtualFolder extends Folder {
 		XmlElement filterElement = node.getElement("filter");
 		if (filterElement == null) {
 			/*
-			filterElement = new XmlElement("filter");
-			*/
+			 * filterElement = new XmlElement("filter");
+			 */
 			XmlElement filter = new XmlElement("filter");
 			filter.addAttribute("description", "new filter");
 			filter.addAttribute("enabled", "true");
@@ -218,22 +217,15 @@ public class VirtualFolder extends Folder {
 				0);
 
 		/*
-		FilterCriteria c =
-			new Filter(getFolderItem().getElement("filter"))
-				.getFilterRule()
-				.get(
-				0);
-		
-		FilterCriteria newc =
-			new Filter(getFolderItem().getElement("filter"))
-				.getFilterRule()
-				.get(
-				0);
-		newc.setCriteria(c.getCriteriaString());
-		newc.setHeaderItem(c.getHeaderItemString());
-		newc.setPattern(c.getPattern());
-		newc.setType(c.getType());
-		*/
+		 * FilterCriteria c = new Filter(getFolderItem().getElement("filter"))
+		 * .getFilterRule() .get( 0);
+		 * 
+		 * FilterCriteria newc = new
+		 * Filter(getFolderItem().getElement("filter")) .getFilterRule() .get(
+		 * 0); newc.setCriteria(c.getCriteriaString());
+		 * newc.setHeaderItem(c.getHeaderItemString());
+		 * newc.setPattern(c.getPattern()); newc.setType(c.getType());
+		 */
 
 		// lets find a good name for our new vfolder
 
@@ -323,8 +315,9 @@ public class VirtualFolder extends Folder {
 				}
 			}
 		}
-		boolean isInclude = Boolean.valueOf(
-                        getFolderItem().get("property", "include_subfolders"))
+		boolean isInclude =
+			Boolean
+				.valueOf(getFolderItem().get("property", "include_subfolders"))
 				.booleanValue();
 
 		if (isInclude) {
@@ -403,7 +396,8 @@ public class VirtualFolder extends Folder {
 			if (expunged.equals(Boolean.TRUE)) {
 				// move message to trash
 
-				//ColumbaLogger.log.info("moving message with UID " + uid + " to trash");
+				//ColumbaLogger.log.info("moving message with UID " + uid + "
+				// to trash");
 
 				// remove message
 				removeMessage(uid);
@@ -412,14 +406,16 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#addMessage(AbstractMessage,
+	 *      WorkerStatusController)
 	 */
 	public Object addMessage(ColumbaMessage message) throws Exception {
 		return null;
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#addMessage(String, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#addMessage(String,
+	 *      WorkerStatusController)
 	 */
 
 	public Object addMessage(String source) throws Exception {
@@ -427,7 +423,8 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#markMessage(Object[], int,
+	 *      WorkerStatusController)
 	 */
 	public void markMessage(Object[] uids, int variant) throws Exception {
 	}
@@ -447,7 +444,8 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMimePart(Object, Integer[], WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#getMimePart(Object,
+	 *      Integer[], WorkerStatusController)
 	 */
 	public MimePart getMimePart(Object uid, Integer[] address)
 		throws Exception {
@@ -456,28 +454,32 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#getMessageSource(Object,
+	 *      WorkerStatusController)
 	 */
 	public String getMessageSource(Object uid) throws Exception {
 		return null;
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object,
+	 *      WorkerStatusController)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
 		return null;
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#getMessageHeader(Object,
+	 *      WorkerStatusController)
 	 */
 	public ColumbaHeader getMessageHeader(Object uid) throws Exception {
 		return (ColumbaHeader) headerList.get(uid);
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#getMessage(Object, WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#getMessage(Object,
+	 *      WorkerStatusController)
 	 */
 	public ColumbaMessage getMessage(Object uid, WorkerStatusController worker)
 		throws Exception {
@@ -486,7 +488,8 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter, Object[], WorkerStatusController)
+	 * @see org.columba.modules.mail.folder.Folder#searchMessages(Filter,
+	 *      Object[], WorkerStatusController)
 	 */
 	public Object[] searchMessages(Filter filter, Object[] uids)
 		throws Exception {
@@ -498,7 +501,8 @@ public class VirtualFolder extends Folder {
 	}
 
 	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
+	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode,
+	 *      FolderItem)
 	 */
 	public String getDefaultChild() {
 		return null;
@@ -519,7 +523,8 @@ public class VirtualFolder extends Folder {
 
 		Object[] uids = r[0].getUids();
 
-		// if we didn't pass uid array here, use all message in this virtual folder
+		// if we didn't pass uid array here, use all message in this virtual
+		// folder
 		try {
 			if (uids == null)
 				uids = getUids();
@@ -556,12 +561,10 @@ public class VirtualFolder extends Folder {
 			List v = (Vector) list.get(srcFolder);
 
 			/*
-			// check if we need a destination folder 
-			if (r.length > 1)
-				newReference = new FolderCommandReference[2];
-			else
-				newReference = new FolderCommandReference[1];
-			*/
+			 * // check if we need a destination folder if (r.length > 1)
+			 * newReference = new FolderCommandReference[2]; else newReference =
+			 * new FolderCommandReference[1];
+			 */
 
 			newReference[i] = new FolderCommandReference(srcFolder);
 			Object[] uidArray = new Object[v.size()];
@@ -592,7 +595,9 @@ public class VirtualFolder extends Folder {
 		return super.tryToGetLock(locker);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.Folder#getUids(org.columba.core.command.WorkerStatusController)
 	 */
 	public Object[] getUids() throws Exception {
@@ -606,51 +611,69 @@ public class VirtualFolder extends Folder {
 		return uids;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
 	 */
 	public Object addMessage(InputStream in) throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getAttribute(java.lang.Object,
+	 *      java.lang.String)
 	 */
 	public Object getAttribute(Object uid, String key) throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#getFlags(java.lang.Object)
 	 */
 	public Flags getFlags(Object uid) throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object, java.lang.String[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getHeaderFields(java.lang.Object,
+	 *      java.lang.String[])
 	 */
 	public Header getHeaderFields(Object uid, String[] keys) throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.columba.mail.folder.MailboxInterface#getMessageSourceStream(java.lang.Object)
 	 */
 	public InputStream getMessageSourceStream(Object uid) throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object, java.lang.Integer[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartBodyStream(java.lang.Object,
+	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartBodyStream(Object uid, Integer[] address)
 		throws Exception {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object, java.lang.Integer[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.columba.mail.folder.MailboxInterface#getMimePartSourceStream(java.lang.Object,
+	 *      java.lang.Integer[])
 	 */
 	public InputStream getMimePartSourceStream(Object uid, Integer[] address)
 		throws Exception {
@@ -659,18 +682,26 @@ public class VirtualFolder extends Folder {
 
 	/**
 	 * 
-	 * VirtualFolder doesn't allow adding messages, in comparison to 
-	 * other regular mailbox folders.
-	 * 
+	 * VirtualFolder doesn't allow adding messages, in comparison to other
+	 * regular mailbox folders.
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
 	 */
 	public boolean supportsAddMessage() {
 		return false;
 	}
-        
-        /**
-         * Not implemented.
-         */
-        public void innerCopy(MailboxInterface destFolder, Object[] uids) {}
+
+	/**
+	 * Not implemented.
+	 */
+	public void innerCopy(MailboxInterface destFolder, Object[] uids) {
+	}
+
+	public void setAttribute(Object uid, String key, Object value)
+		throws Exception {
+		// get header with UID
+		ColumbaHeader header = (ColumbaHeader) getHeaderList().get(uid);
+
+		header.getAttributes().put(key, value);
+	}
 }

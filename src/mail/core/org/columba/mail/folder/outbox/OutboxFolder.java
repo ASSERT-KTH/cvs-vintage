@@ -1,22 +1,22 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Vector;
 
@@ -34,13 +34,11 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
 
 /**
- * Additionally to {@CachedMHFolder} is capable of saving {@link SendableMessage} 
- * objects. 
+ * Additionally to {@CachedMHFolder}is capable of saving
+ * {@link SendableMessage}objects.
  * <p>
  * It is used to store messages to send them later all at once.
  * 
- * 
- *
  * @author fdietz
  */
 public class OutboxFolder extends CachedMHFolder {
@@ -68,12 +66,6 @@ public class OutboxFolder extends CachedMHFolder {
 		}
 		return headerCache;
 	}
-
-	/*
-	public Object addMessage(SendableMessage message) throws Exception {
-		return super.addMessage(message);
-	}
-	*/
 
 	public ColumbaMessage getMessage(Object uid) throws Exception {
 		if (aktMessage != null) {
@@ -153,33 +145,30 @@ public class OutboxFolder extends CachedMHFolder {
 			return new SendableHeader();
 		}
 
-		protected void loadHeader(ObjectInputStream p, HeaderInterface h)
-			throws Exception {
-			super.loadHeader(p, h);
+		protected void loadHeader(HeaderInterface h) throws Exception {
+			super.loadHeader(h);
 
-			int accountUid = p.readInt();
+			int accountUid = ((Integer) reader.readObject()).intValue();
 			((SendableHeader) h).setAccountUid(accountUid);
 
-			List recipients = (Vector) p.readObject();
+			List recipients = (Vector) reader.readObject();
 			((SendableHeader) h).setRecipients(recipients);
 
 		}
 
-		protected void saveHeader(ObjectOutputStream p, HeaderInterface h)
-			throws Exception {
-			super.saveHeader(p, h);
+		protected void saveHeader(HeaderInterface h) throws Exception {
+			super.saveHeader(h);
 
-			p.writeInt(((SendableHeader) h).getAccountUid());
+			writer.writeObject(new Integer(((SendableHeader) h).getAccountUid()));
 
-			p.writeObject(((SendableHeader) h).getRecipients());
+			writer.writeObject(((SendableHeader) h).getRecipients());
 
 		}
 	}
 	/**
 	 * 
-	 * OutboxFolder doesn't allow adding messages, in comparison to 
-	 * other regular mailbox folders.
-	 * 
+	 * OutboxFolder doesn't allow adding messages, in comparison to other
+	 * regular mailbox folders.
 	 * 
 	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
 	 */
