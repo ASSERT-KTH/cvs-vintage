@@ -61,6 +61,7 @@ import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
@@ -72,7 +73,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.47 2002/06/28 22:00:38 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.48 2002/07/20 01:32:25 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -332,6 +333,37 @@ public class ScarabLink extends TemplateLink
         return tostring;
     }
 
+    /**
+     * Returns a short link for viewing a single issue
+     *
+     * @param issue an <code>Issue</code> value
+     * @return a <code>String</code> value
+     * @exception Exception if an error occurs
+     */
+    public ScarabLink getIssueIdLink(Issue issue)
+        throws Exception
+    {
+        ScarabLink link = this;
+        link.addPathInfo("id", issue.getUniqueId());
+        return link; 
+    }
+
+    /**
+     * Returns a short link for viewing a single issue that will not
+     * include session info and will be absolute.  It is meant to
+     * be suitable for embedding in an email that points to the issue.
+     *
+     * @param issue an <code>Issue</code> value
+     * @return a <code>String</code> value
+     * @exception Exception if an error occurs
+     */
+    public ScarabLink getIssueIdAbsoluteLink(Issue issue)
+        throws Exception
+    {
+        ScarabLink link = getIssueIdLink(issue);
+        link.setRelative(false).setEncodeUrl(false);
+        return link;
+    }
 
     /**
      * Check if the user has the permission to see the link. If the user
@@ -361,6 +393,34 @@ public class ScarabLink extends TemplateLink
      */
     public boolean isAllowed(String t)
     {
+        if (t == null) 
+        {
+            //check pathinfo for "id"
+            final int count = pathInfo.size();
+            for (int i = 0; i < count; i++)
+            {
+                Object[] pair = (Object[]) pathInfo.get(i);
+                if ("id".equals(pair[0])) 
+                {
+                    t = "ViewIssue.vm";
+                    break;
+                }
+            }
+        }
+        if (t == null) 
+        {
+            //check querydata for "id"
+            final int count = queryData.size();
+            for (int i = 0; i < count; i++)
+            {
+                Object[] pair = (Object[]) queryData.get(i);
+                if ("id".equals(pair[0])) 
+                {
+                    t = "ViewIssue.vm";
+                    break;
+                }
+            }
+        }
         if (t == null)
         {
             return false;

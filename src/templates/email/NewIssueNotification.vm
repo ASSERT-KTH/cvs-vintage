@@ -9,7 +9,7 @@ $issue.UniqueId $attVal.RModuleAttribute.DisplayValue:  $attVal.Value
 #end
 
 You can view the report at the following URL:
-<$link.setPage("ViewIssue.vm").addPathInfo("id", $issue.UniqueId).setAbsolute(true).setEncodeURLOff()>
+<$link.getIssueIdAbsoluteLink($issue)>
 
 $issue.UniqueId Report 
 
