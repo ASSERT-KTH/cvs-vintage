@@ -90,10 +90,19 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.158 2003/01/27 01:44:22 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.159 2003/02/03 19:08:44 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
+    /**
+     * Calls do check for duplicates by default.
+     */
+    public void doPerform(RunData data, TemplateContext context)
+        throws Exception
+    {
+        doCheckforduplicates(data, context);
+    }
+    
     public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
     {
