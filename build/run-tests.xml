@@ -38,14 +38,13 @@
 
   <target name="test-all" depends="test-issue,
                                    test-attribute,
-                                   test-query">
-  </target>
+                                   test-query"/>
 
   <target name="test-issue" depends="compile">
     <echo>Running Issue tests...</echo>
 
-    <java     classname="${test.runner}" fork="yes" 
-            failonerror="${testbed.failonerror}">
+    <java classname="${test.runner}" fork="yes" 
+          failonerror="${testbed.failonerror}">
       <jvmarg value="${config.dir}"/>
       <arg value="org.tigris.scarab.om.IssueTest"/>
       <classpath>
