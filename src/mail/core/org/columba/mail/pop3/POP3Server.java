@@ -48,6 +48,12 @@ public class POP3Server {
     private POP3Store store;
     protected POP3HeaderCache headerCache;
     private Lock lock;
+    
+    /**
+     * Dirty flag. If set to true, we have to save the headercache changes.
+     * If set to false, nothing changed. Therefore no need to save the headercache.
+     */
+    private boolean cacheChanged;
 
     public POP3Server(AccountItem accountItem) {
         this.accountItem = accountItem;
@@ -64,10 +70,14 @@ public class POP3Server {
         headerCache = new POP3HeaderCache(this);
 
         lock = new Lock();
+        
+        setCacheChanged(false);
     }
 
     public void save() throws Exception {
-        headerCache.save();
+    	// only save headercache if something changed
+    	if ( isCacheChanged() )
+    		headerCache.save();
     }
 
     public File getConfigFile() {
@@ -163,6 +173,9 @@ public class POP3Server {
 
     public void deleteMessage(Object uid) throws Exception {
         store.deleteMessage(uid);
+        
+        // set dirty flag
+        setCacheChanged(true);
     }
 
     public int getMessageCount() throws Exception {
@@ -187,6 +200,9 @@ public class POP3Server {
             new Integer(accountItem.getInteger("uid")));
 
         headerCache.getHeaderList().add(header, uid);
+        
+        // set headercache dirty flag
+        setCacheChanged(true);
 
         return message;
     }
@@ -219,4 +235,17 @@ public class POP3Server {
     public void releaseLock(Object locker) {
         lock.release(locker);
     }
+    
+	/**
+	 * @return Returns the hasChanged.
+	 */
+	public boolean isCacheChanged() {
+		return cacheChanged;
+	}
+	/**
+	 * @param hasChanged The hasChanged to set.
+	 */
+	public void setCacheChanged(boolean hasChanged) {
+		this.cacheChanged = hasChanged;
+	}
 }
