@@ -182,7 +182,6 @@
 
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveoptions" />&#160;
-<input type="submit" value="$l10n.AddNew"  name="eventSubmit_doSaveoptions" />&#160;
 <input type="submit" value="$l10n.DeleteUndeleteSelected"  name="eventSubmit_doSaveoptions" />&#160;
 </div>
 
