@@ -100,7 +100,7 @@ $page.setTitle("Queue list")
  #set ($userAttribute = $rmua.Attribute)
   <td>
   #set ($value = "")
-  #set ($value = $issue.ModuleAttributeValuesMap.get($userAttribute.Name.toString().toUpperCase()).Value)
+  #set ($value = $issue.getModuleAttributeValuesMap($scarabR.CurrentIssueType).get($userAttribute.Name.toString().toUpperCase()).Value)
   #if (!$value.equals(""))
    $value
   #else
@@ -114,7 +114,7 @@ $page.setTitle("Queue list")
 
 <p class="paginate">
  issues per page:&#160;
- <input type="radio" value="2" name="resultsPerPage" #if( $resultsPerPage == 2 ) checked="checked" #end /> 2
+ <input type="radio" value="25" name="resultsPerPage" #if( $resultsPerPage == 25 ) checked="checked" #end /> 25
  <input type="radio" name="resultsPerPage" value="50" #if( $resultsPerPage == 50 ) checked="checked" #end /> 50
  <input type="radio" name="resultsPerPage" value="75" #if( $resultsPerPage == 75 ) checked="checked" #end /> 75
  <input type="radio" name="resultsPerPage" value="100" #if( $resultsPerPage == 100 ) checked="checked" #end /> 100
