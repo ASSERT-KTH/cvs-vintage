@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -46,9 +46,9 @@ public final class EJBQLToSQL92Compiler
 
    // alias info
    private AliasManager aliasManager;
-   private Map leftJoinPaths = new HashMap();
-   private Map innerJoinPaths = new HashMap();
+   private Map joinPaths = new HashMap();
    private Map identifierToTable = new HashMap();
+   private Set joinedAliases = new HashSet();
 
    // mapping metadata
    private JDBCTypeMappingMetaData typeMapping;
@@ -190,7 +190,7 @@ public final class EJBQLToSQL92Compiler
       boolean result;
       if(selectObject instanceof JDBCFieldBridge)
       {
-         JDBCFieldBridge field = (JDBCFieldBridge)selectObject;
+         JDBCFieldBridge field = (JDBCFieldBridge) selectObject;
          result = field.isCMPField();
       }
       else
@@ -227,10 +227,8 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(SimpleNode node, Object data)
    {
-      throw new RuntimeException(
-         "Internal error: Found unknown node type in " +
-         "EJB-QL abstract syntax tree: node=" + node
-      );
+      throw new RuntimeException("Internal error: Found unknown node type in " +
+         "EJB-QL abstract syntax tree: node=" + node);
    }
 
    public Object visit(ASTEJBQL node, Object data)
@@ -283,7 +281,7 @@ public final class EJBQLToSQL92Compiler
       // assemble sql
       StringBuffer sql = (StringBuffer) data;
       sql.append(SQLUtil.SELECT);
-      if(((ASTSelect)selectNode).distinct || returnType == Set.class || forceDistinct)
+      if(((ASTSelect) selectNode).distinct || returnType == Set.class || forceDistinct)
       {
          sql.append(SQLUtil.DISTINCT);
       }
@@ -310,7 +308,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTOrderBy node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.jjtGetChild(0).jjtAccept(this, data);
       for(int i = 1; i < node.jjtGetNumChildren(); i++)
       {
@@ -322,7 +320,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTOrderByPath node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.jjtGetChild(0).jjtAccept(this, data);
       if(node.ascending)
       {
@@ -343,7 +341,7 @@ public final class EJBQLToSQL92Compiler
          Node offsetNode = node.jjtGetChild(child++);
          if(offsetNode instanceof ASTParameter)
          {
-            ASTParameter param = (ASTParameter)offsetNode;
+            ASTParameter param = (ASTParameter) offsetNode;
             Class parameterType = getParameterType(param.number);
             if(int.class != parameterType && Integer.class != parameterType)
             {
@@ -353,8 +351,8 @@ public final class EJBQLToSQL92Compiler
          }
          else
          {
-            ASTExactNumericLiteral param = (ASTExactNumericLiteral)offsetNode;
-            offsetValue = (int)param.value;
+            ASTExactNumericLiteral param = (ASTExactNumericLiteral) offsetNode;
+            offsetValue = (int) param.value;
          }
       }
 
@@ -363,7 +361,7 @@ public final class EJBQLToSQL92Compiler
          Node limitNode = node.jjtGetChild(child);
          if(limitNode instanceof ASTParameter)
          {
-            ASTParameter param = (ASTParameter)limitNode;
+            ASTParameter param = (ASTParameter) limitNode;
             Class parameterType = getParameterType(param.number);
             if(int.class != parameterType && Integer.class != parameterType)
             {
@@ -373,8 +371,8 @@ public final class EJBQLToSQL92Compiler
          }
          else
          {
-            ASTExactNumericLiteral param = (ASTExactNumericLiteral)limitNode;
-            limitValue = (int)param.value;
+            ASTExactNumericLiteral param = (ASTExactNumericLiteral) limitNode;
+            limitValue = (int) param.value;
          }
       }
       return data;
@@ -393,12 +391,15 @@ public final class EJBQLToSQL92Compiler
          if(path.isCMPField())
          {
             // set the select object
-            JDBCFieldBridge selectField = (JDBCFieldBridge)path.getCMPField();
+            JDBCFieldBridge selectField = (JDBCFieldBridge) path.getCMPField();
             selectManager = selectField.getManager();
             selectObject = selectField;
             setTypeFactory(selectManager.getJDBCTypeFactory());
 
-            addLeftJoinPath(path);
+            // todo inner or left?
+            //addLeftJoinPath(path);
+            addInnerJoinPath(path);
+
             String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
             SQLUtil.getColumnNamesClause(selectField, alias, sql);
          }
@@ -410,11 +411,9 @@ public final class EJBQLToSQL92Compiler
             setTypeFactory(selectEntity.getManager().getJDBCTypeFactory());
 
             final String alias = aliasManager.getAlias(path.getPath());
-            SQLUtil.getColumnNamesClause(
-               selectEntity.getTableFields(),
+            SQLUtil.getColumnNamesClause(selectEntity.getTableFields(),
                alias,
-               sql
-            );
+               sql);
 
             /*
             if(readAhead.isOnFind())
@@ -439,24 +438,26 @@ public final class EJBQLToSQL92Compiler
          path = getPathFromChildren(child0);
 
          if(path == null)
+         {
             throw new IllegalStateException("The function in SELECT clause does not contain a path expression.");
+         }
 
          if(path.isCMPField())
          {
-            JDBCFieldBridge selectField = (JDBCFieldBridge)path.getCMPField();
+            JDBCFieldBridge selectField = (JDBCFieldBridge) path.getCMPField();
             selectManager = selectField.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
          }
          else if(path.isCMRField())
          {
-            JDBCFieldBridge cmrField = (JDBCFieldBridge)path.getCMRField();
+            JDBCFieldBridge cmrField = (JDBCFieldBridge) path.getCMRField();
             selectManager = cmrField.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
             addLeftJoinPath(path);
          }
          else
          {
-            final JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge)path.getEntity();
+            final JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge) path.getEntity();
             selectManager = entity.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
             addLeftJoinPath(path);
@@ -620,13 +621,11 @@ public final class EJBQLToSQL92Compiler
          ASTParameter param = (ASTParameter) child0;
          Class type = getParameterType(param.number);
 
-         QueryParameter queryParam = new QueryParameter(
-            param.number - 1,
+         QueryParameter queryParam = new QueryParameter(param.number - 1,
             false, // isPrimaryKeyParameter
             null, // field
             null, // parameter
-            typeFactory.getJDBCTypeForJavaType(type)
-         );
+            typeFactory.getJDBCTypeForJavaType(type));
          inputParameters.add(queryParam);
 
          sql.append("? IS ");
@@ -656,7 +655,7 @@ public final class EJBQLToSQL92Compiler
 
       StringBuffer sql = (StringBuffer) data;
       JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField();
-      JDBCAbstractEntityBridge relatedEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
+      JDBCAbstractEntityBridge relatedEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
       String alias = aliasManager.getAlias(path.getPath());
       SQLUtil.getIsNullClause(node.not, relatedEntity.getPrimaryKeyFields(), alias, sql);
 
@@ -670,13 +669,14 @@ public final class EJBQLToSQL92Compiler
       String colAlias = aliasManager.getAlias(colPath.getPath());
       JDBCAbstractEntityBridge colEntity = (JDBCAbstractEntityBridge) colPath.getEntity();
 
-      addLeftJoinPath(colPath);
-
       StringBuffer sql = (StringBuffer) data;
+
       if(node.not)
       {
-         sql.append('(').append(SQLUtil.NOT).append('(');
+         sql.append(SQLUtil.NOT);
       }
+
+      sql.append(SQLUtil.EXISTS).append('(').append(SQLUtil.SELECT);
 
       if(member instanceof ASTParameter)
       {
@@ -684,43 +684,132 @@ public final class EJBQLToSQL92Compiler
          verifyParameterEntityType(toParam.number, colEntity);
          inputParameters.addAll(QueryParameter.createParameters(toParam.number - 1, colEntity));
 
-         SQLUtil.getWhereClause(colEntity.getPrimaryKeyFields(), colAlias, sql);
+         String parentAlias = aliasManager.getAlias(colPath.getPath(0));
+         String localParentAlias = parentAlias + "_local";
+         JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
+         SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), localParentAlias, sql);
+         sql.append(SQLUtil.FROM)
+            .append(parentEntity.getTableName()).append(' ').append(localParentAlias);
+         innerJoinPath(colPath, sql);
+
+         sql.append(SQLUtil.WHERE);
+
+         SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), parentAlias, localParentAlias, sql);
+         sql.append(SQLUtil.AND);
+         SQLUtil.getWhereClause(colEntity.getPrimaryKeyFields(), colAlias + "_local", sql);
       }
-      else if(member instanceof ASTPath)
+      else
       {
          ASTPath memberPath = (ASTPath) member;
          JDBCAbstractEntityBridge memberEntity = (JDBCAbstractEntityBridge) memberPath.getEntity();
 
          if(!memberEntity.equals(colEntity))
          {
-            throw new IllegalStateException(
-               "Member must be if the same type as the collection, got: member="
-               + memberEntity.getEntityName()
-               + ", collection=" + colEntity.getEntityName()
-            );
+            throw new IllegalStateException("Member must be if the same type as the collection, got: member="
+               +
+               memberEntity.getEntityName()
+               + ", collection=" + colEntity.getEntityName());
          }
 
          String memberAlias = aliasManager.getAlias(memberPath.getPath());
 
-         addLeftJoinPath(memberPath);
+         if(memberPath.size() > 1)
+         {
+            String parentAlias = aliasManager.getAlias(memberPath.getPath(0)) + "_local";
+            JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) memberPath.getEntity(0);
+            SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
+            sql.append(SQLUtil.FROM)
+               .append(parentEntity.getTableName()).append(' ').append(parentAlias);
+            innerJoinPath(memberPath, sql);
+            innerJoinPath(colPath, sql);
+         }
+         else if(colPath.size() > 1)
+         {
+            String parentAlias = aliasManager.getAlias(colPath.getPath(0)) + "_local";
+            JDBCAbstractEntityBridge parentEntity = (JDBCAbstractEntityBridge) colPath.getEntity(0);
+            SQLUtil.getColumnNamesClause(parentEntity.getPrimaryKeyFields(), parentAlias, sql);
+            sql.append(SQLUtil.FROM)
+               .append(parentEntity.getTableName()).append(' ').append(parentAlias);
+            innerJoinPath(colPath, sql);
+         }
+         else
+         {
+            throw new IllegalStateException("There should be collection valued path expression, not identification variable.");
+         }
 
-         SQLUtil.getSelfCompareWhereClause(memberEntity.getPrimaryKeyFields(), colAlias, memberAlias, sql);
-      }
-      else
-      {
-         throw new IllegalStateException(
-            "Was expecting ASTPath or ASTParameter but got " + member.getClass().getName()
-         );
+         sql.append(SQLUtil.WHERE);
+         if(memberPath.size() > 1)
+         {
+            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), memberAlias + "_local", colAlias + "_local", sql);
+            String memberParent = aliasManager.getAlias(memberPath.getPath(0));
+            sql.append(SQLUtil.AND);
+            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(),
+               memberParent,
+               memberParent + "_local",
+               sql);
+         }
+         else
+         {
+            SQLUtil.getSelfCompareWhereClause(colEntity.getPrimaryKeyFields(), memberAlias, colAlias + "_local", sql);
+         }
       }
 
-      if(node.not)
-      {
-         sql.append(')').append(SQLUtil.OR);
-         SQLUtil.getIsNullClause(false, colEntity.getPrimaryKeyFields(), colAlias, sql);
-         sql.append(')');
-      }
+      sql.append(')');
 
       return data;
+   }
+
+   private void innerJoinPath(ASTPath path, StringBuffer sql)
+   {
+      if(path.size() < 2)
+      {
+         return;
+      }
+
+      String parentAlias = aliasManager.getAlias(path.getPath(0)) + "_local";
+      String leftAlias = parentAlias;
+      for(int i = 1; i < path.size(); ++i)
+      {
+         String curPath = path.getPath(i);
+         final String joinAlias = aliasManager.getAlias(curPath) + "_local";
+
+         final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
+         final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
+
+         JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
+
+         String join = " INNER JOIN ";
+
+         if(relation.isTableMappingStyle())
+         {
+            String relTableAlias = aliasManager.getRelationTableAlias(curPath) + "_local";
+            sql.append(join)
+               .append(cmrField.getTableName())
+               .append(' ')
+               .append(relTableAlias)
+               .append(" ON ");
+            SQLUtil.getRelationTableJoinClause(cmrField, leftAlias, relTableAlias, sql);
+
+            sql.append(join)
+               .append(joinEntity.getTableName())
+               .append(' ')
+               .append(joinAlias)
+               .append(" ON ");
+            SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), joinAlias, relTableAlias, sql);
+         }
+         else
+         {
+            sql.append(join)
+               .append(joinEntity.getTableName())
+               .append(' ')
+               .append(joinAlias)
+               .append(" ON ");
+
+            SQLUtil.getJoinClause(cmrField, leftAlias, joinAlias, sql);
+         }
+
+         leftAlias = joinAlias;
+      }
    }
 
    public Object visit(ASTStringComparison node, Object data)
@@ -835,7 +924,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTConcat node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.CONCAT);
       Object[] args = childrenToStringArr(2, node);
       function.getFunctionSql(args, buf);
@@ -844,7 +933,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTSubstring node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.SUBSTRING);
       Object[] args = childrenToStringArr(3, node);
       function.getFunctionSql(args, buf);
@@ -853,7 +942,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTUCase node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.UCASE);
       Object[] args = childrenToStringArr(1, node);
       function.getFunctionSql(args, buf);
@@ -862,7 +951,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTLCase node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LCASE);
       Object[] args = childrenToStringArr(1, node);
       function.getFunctionSql(args, buf);
@@ -871,7 +960,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTLength node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LENGTH);
       Object[] args = childrenToStringArr(1, node);
       function.getFunctionSql(args, buf);
@@ -880,7 +969,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTLocate node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.LOCATE);
       Object[] args = new Object[3];
       args[0] = node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString();
@@ -899,7 +988,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTAbs node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.ABS);
       Object[] args = childrenToStringArr(1, node);
       function.getFunctionSql(args, buf);
@@ -908,7 +997,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTSqrt node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = typeMapping.getFunctionMapping(JDBCTypeMappingMetaData.SQRT);
       Object[] args = childrenToStringArr(1, node);
       function.getFunctionSql(args, buf);
@@ -917,7 +1006,7 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTMod node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       JDBCFunctionMappingMetaData function = JDBCTypeMappingMetaData.MOD_FUNC;
       Object[] args = childrenToStringArr(2, node);
       function.getFunctionSql(args, buf);
@@ -927,7 +1016,7 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTAvg node, Object data)
    {
       node.setResultType(returnType);
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       Object[] args = new Object[]{
          node.distinct,
          node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
@@ -939,7 +1028,7 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTMax node, Object data)
    {
       node.setResultType(returnType);
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       Object[] args = new Object[]{
          node.distinct,
          node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
@@ -951,7 +1040,7 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTMin node, Object data)
    {
       node.setResultType(returnType);
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       Object[] args = new Object[]{
          node.distinct,
          node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
@@ -963,7 +1052,7 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTSum node, Object data)
    {
       node.setResultType(returnType);
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       Object[] args = new Object[]{
          node.distinct,
          node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString(),
@@ -974,18 +1063,18 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTCount node, Object data)
    {
-      StringBuffer buf = (StringBuffer)data;
+      StringBuffer buf = (StringBuffer) data;
       node.setResultType(returnType);
 
       Object args[];
-      final ASTPath cntPath = (ASTPath)node.jjtGetChild(0);
+      final ASTPath cntPath = (ASTPath) node.jjtGetChild(0);
       if(cntPath.isCMPField())
       {
          args = new Object[]{node.distinct, node.jjtGetChild(0).jjtAccept(this, new StringBuffer()).toString()};
       }
       else
       {
-         JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge)cntPath.getEntity();
+         JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge) cntPath.getEntity();
          final JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          if(pkFields.length > 1)
          {
@@ -995,11 +1084,9 @@ public final class EJBQLToSQL92Compiler
             addLeftJoinPath(cntPath);
 
             String alias = aliasManager.getAlias(cntPath.getPath());
-            SQLUtil.getColumnNamesClause(
-               entity.getPrimaryKeyFields(),
+            SQLUtil.getColumnNamesClause(entity.getPrimaryKeyFields(),
                alias,
-               buf
-            );
+               buf);
 
             return buf;
          }
@@ -1021,10 +1108,8 @@ public final class EJBQLToSQL92Compiler
       StringBuffer buf = (StringBuffer) data;
       if(!node.isCMPField())
       {
-         throw new IllegalStateException(
-            "Can only visit cmp valued path node. "
-            + "Should have been handled at a higher level."
-         );
+         throw new IllegalStateException("Can only visit cmp valued path node. "
+            + "Should have been handled at a higher level.");
       }
 
       // make sure this is mapped to a single column
@@ -1033,10 +1118,8 @@ public final class EJBQLToSQL92Compiler
          case EJBQLTypes.ENTITY_TYPE:
          case EJBQLTypes.VALUE_CLASS_TYPE:
          case EJBQLTypes.UNKNOWN_TYPE:
-            throw new IllegalStateException(
-               "Can not visit multi-column path " +
-               "node. Should have been handled at a higher level."
-            );
+            throw new IllegalStateException("Can not visit multi-column path " +
+               "node. Should have been handled at a higher level.");
       }
 
       addLeftJoinPath(node);
@@ -1048,10 +1131,8 @@ public final class EJBQLToSQL92Compiler
 
    public Object visit(ASTAbstractSchema node, Object data)
    {
-      throw new IllegalStateException(
-         "Can not visit abstract schema node. "
-         + " Should have been handled at a higher level."
-      );
+      throw new IllegalStateException("Can not visit abstract schema node. "
+         + " Should have been handled at a higher level.");
    }
 
    public Object visit(ASTIdentifier node, Object data)
@@ -1071,19 +1152,15 @@ public final class EJBQLToSQL92Compiler
          ejbqlType == EJBQLTypes.VALUE_CLASS_TYPE ||
          ejbqlType == EJBQLTypes.UNKNOWN_TYPE)
       {
-         throw new IllegalStateException(
-            "Can not visit multi-column " +
-            "parameter node. Should have been handled at a higher level."
-         );
+         throw new IllegalStateException("Can not visit multi-column " +
+            "parameter node. Should have been handled at a higher level.");
       }
 
-      QueryParameter param = new QueryParameter(
-         node.number - 1,
+      QueryParameter param = new QueryParameter(node.number - 1,
          false, // isPrimaryKeyParameter
          null, // field
          null, // parameter
-         typeFactory.getJDBCTypeForJavaType(type)
-      );
+         typeFactory.getJDBCTypeForJavaType(type));
       inputParameters.add(param);
       buf.append('?');
 
@@ -1198,12 +1275,12 @@ public final class EJBQLToSQL92Compiler
          // can only compare like kind entities
          if(!fromEntity.equals(toEntity))
          {
-            throw new IllegalStateException(
-               "Only like types can be "
-               + "compared: from entity="
-               + fromEntity.getEntityName()
-               + " to entity=" + toEntity.getEntityName()
-            );
+            throw new IllegalStateException("Only like types can be "
+               +
+               "compared: from entity="
+               +
+               fromEntity.getEntityName()
+               + " to entity=" + toEntity.getEntityName());
          }
 
          SQLUtil.getSelfCompareWhereClause(fromEntity.getPrimaryKeyFields(), fromAlias, toAlias, buf);
@@ -1218,123 +1295,71 @@ public final class EJBQLToSQL92Compiler
 
    private void join(String alias, StringBuffer sql)
    {
-      leftJoin(alias, sql);
-      innerJoin(alias, sql);
-   }
-
-   private void leftJoin(String alias, StringBuffer sql)
-   {
-      Set paths = (Set) leftJoinPaths.get(alias);
+      Map paths = (Map) joinPaths.get(alias);
       if(paths == null || paths.isEmpty())
       {
          return;
       }
 
-      for(Iterator iter = paths.iterator(); iter.hasNext();)
+      for(Iterator iter = paths.values().iterator(); iter.hasNext();)
       {
+         String leftAlias = alias;
          ASTPath path = (ASTPath) iter.next();
          for(int i = 1; i < path.size(); ++i)
          {
             if(path.isCMRField(i))
             {
                final String curPath = path.getPath(i);
-               final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
-               final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
                final String joinAlias = aliasManager.getAlias(curPath);
 
-               JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
-               if(relation.isTableMappingStyle())
+               if(joinedAliases.add(joinAlias))
                {
-                  String relTableAlias = aliasManager.getRelationTableAlias(curPath);
-                  sql.append(" LEFT OUTER JOIN ")
-                     .append(cmrField.getTableName())
-                     .append(' ')
-                     .append(relTableAlias)
-                     .append(" ON ");
-                  SQLUtil.getRelationTableJoinClause(cmrField, alias, relTableAlias, sql);
+                  final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
+                  final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge) cmrField.getRelatedEntity();
 
-                  sql.append(" LEFT OUTER JOIN ")
-                     .append(joinEntity.getTableName())
-                     .append(' ')
-                     .append(joinAlias)
-                     .append(" ON ");
-                  SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), joinAlias, relTableAlias, sql);
+                  JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
+
+                  String join = (path.innerJoin ? " INNER JOIN " : " LEFT OUTER JOIN ");
+
+                  if(relation.isTableMappingStyle())
+                  {
+                     String relTableAlias = aliasManager.getRelationTableAlias(curPath);
+                     sql.append(join)
+                        .append(cmrField.getTableName())
+                        .append(' ')
+                        .append(relTableAlias)
+                        .append(" ON ");
+                     SQLUtil.getRelationTableJoinClause(cmrField, leftAlias, relTableAlias, sql);
+
+                     sql.append(join)
+                        .append(joinEntity.getTableName())
+                        .append(' ')
+                        .append(joinAlias)
+                        .append(" ON ");
+                     SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), joinAlias, relTableAlias, sql);
+                  }
+                  else
+                  {
+                     sql.append(join)
+                        .append(joinEntity.getTableName())
+                        .append(' ')
+                        .append(joinAlias)
+                        .append(" ON ");
+
+                     SQLUtil.getJoinClause(cmrField, leftAlias, joinAlias, sql);
+                  }
+
+                  join(joinAlias, sql);
+                  leftAlias = joinAlias;
                }
-               else
-               {
-                  sql.append(" LEFT OUTER JOIN ")
-                     .append(joinEntity.getTableName())
-                     .append(' ')
-                     .append(joinAlias)
-                     .append(" ON ");
-
-                  SQLUtil.getJoinClause(cmrField, alias, joinAlias, sql);
-               }
-
-               join(joinAlias, sql);
             }
          }
       }
    }
 
-   private void innerJoin(String alias, StringBuffer sql)
+   private void declareTable(String alias, String table)
    {
-      Set paths = (Set) innerJoinPaths.get(alias);
-      if(paths == null || paths.isEmpty())
-      {
-         return;
-      }
-
-      for(Iterator iter = paths.iterator(); iter.hasNext();)
-      {
-         ASTPath path = (ASTPath) iter.next();
-         for(int i = 1; i < path.size(); ++i)
-         {
-            if(path.isCMRField(i))
-            {
-               final String curPath = path.getPath(i);
-               final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
-               final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
-               final String joinAlias = aliasManager.getAlias(curPath);
-
-               JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
-               if(relation.isTableMappingStyle())
-               {
-                  String relTableAlias = aliasManager.getRelationTableAlias(curPath);
-                  sql.append(" INNER JOIN ")
-                     .append(cmrField.getTableName())
-                     .append(' ')
-                     .append(relTableAlias)
-                     .append(" ON ");
-                  SQLUtil.getRelationTableJoinClause(cmrField, alias, relTableAlias, sql);
-
-                  sql.append(" INNER JOIN ")
-                     .append(joinEntity.getTableName())
-                     .append(' ')
-                     .append(joinAlias)
-                     .append(" ON ");
-                  SQLUtil.getRelationTableJoinClause(cmrField.getRelatedCMRField(), joinAlias, relTableAlias, sql);
-               }
-               else
-               {
-                  sql.append(" INNER JOIN ")
-                     .append(joinEntity.getTableName())
-                     .append(' ')
-                     .append(joinAlias)
-                     .append(" ON ");
-
-                  SQLUtil.getJoinClause(cmrField, alias, joinAlias, sql);
-               }
-
-               join(joinAlias, sql);
-            }
-         }
-      }
-   }
-
-   private void declareTable(String identifier, String table)
-   {
-      identifierToTable.put(identifier, table);
+      identifierToTable.put(alias, table);
    }
 
    private void addLeftJoinPath(ASTPath path)
@@ -1343,13 +1368,18 @@ public final class EJBQLToSQL92Compiler
       {
          final String identifier = path.getPath(0);
          final String alias = aliasManager.getAlias(identifier);
-         Set paths = (Set) leftJoinPaths.get(alias);
+         Map paths = (Map) joinPaths.get(alias);
          if(paths == null)
          {
-            paths = new HashSet();
-            leftJoinPaths.put(alias, paths);
+            paths = new HashMap();
+            joinPaths.put(alias, paths);
          }
-         paths.add(path);
+
+         ASTPath oldPath = (ASTPath) paths.put(path, path);
+         if(oldPath != null && oldPath.innerJoin)
+         {
+            path.innerJoin = true;
+         }
       }
    }
 
@@ -1359,13 +1389,15 @@ public final class EJBQLToSQL92Compiler
       {
          final String identifier = path.getPath(0);
          final String alias = aliasManager.getAlias(identifier);
-         Set paths = (Set) innerJoinPaths.get(alias);
+         Map paths = (Map) joinPaths.get(alias);
          if(paths == null)
          {
-            paths = new HashSet();
-            innerJoinPaths.put(alias, paths);
+            paths = new HashMap();
+            joinPaths.put(alias, paths);
          }
-         paths.add(path);
+
+         path.innerJoin = true;
+         paths.put(path, path);
       }
    }
 
@@ -1392,13 +1424,15 @@ public final class EJBQLToSQL92Compiler
          Node child = selectFunction.jjtGetChild(childInd);
          if(child instanceof ASTPath)
          {
-            return (ASTPath)child;
+            return (ASTPath) child;
          }
          else if(child instanceof SelectFunction)
          {
             Node path = getPathFromChildren(child);
             if(path != null)
-               return (ASTPath)path;
+            {
+               return (ASTPath) path;
+            }
          }
       }
       return null;
@@ -1408,11 +1442,9 @@ public final class EJBQLToSQL92Compiler
    {
       this.typeFactory = typeFactory;
       this.typeMapping = typeFactory.getTypeMapping();
-      aliasManager = new AliasManager(
-         typeMapping.getAliasHeaderPrefix(),
+      aliasManager = new AliasManager(typeMapping.getAliasHeaderPrefix(),
          typeMapping.getAliasHeaderSuffix(),
-         typeMapping.getAliasMaxLength()
-      );
+         typeMapping.getAliasMaxLength());
    }
 
    private Class getParameterType(int index)
@@ -1435,10 +1467,8 @@ public final class EJBQLToSQL92Compiler
       if((localClass == null || !localClass.isAssignableFrom(parameterType)) &&
          (remoteClass == null || !remoteClass.isAssignableFrom(parameterType)))
       {
-         throw new IllegalStateException(
-            "Only like types can be compared: from entity=" +
-            entity.getEntityName() + " to parameter type=" + parameterType
-         );
+         throw new IllegalStateException("Only like types can be compared: from entity=" +
+            entity.getEntityName() + " to parameter type=" + parameterType);
       }
    }
 
@@ -1461,8 +1491,8 @@ public final class EJBQLToSQL92Compiler
       leftJoinCMRList.clear();
       onFindCMRJoin = null;
       countCompositePk = false;
-      leftJoinPaths.clear();
-      innerJoinPaths.clear();
+      joinPaths.clear();
       identifierToTable.clear();
+      joinedAliases.clear();
    }
 }
