@@ -7,8 +7,10 @@
 
 package org.jboss.ejb.plugins.lock;
 
-
 import java.rmi.RemoteException;
+
+import javax.ejb.EJBException;
+
 /**
  * This exception class is thrown when application deadlock is detected when trying to lock an entity bean
  * This is probably NOT a result of a jboss bug, but rather that the application is access the same entity
@@ -17,7 +19,7 @@ import java.rmi.RemoteException;
  *
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/02/13: billb</b>
@@ -28,6 +30,33 @@ import java.rmi.RemoteException;
 public class ApplicationDeadlockException extends RemoteException
 {
    protected boolean retry = false;
+
+   /**
+    * Detects exception contains is or a ApplicationDeadlockException.
+    */
+   public static ApplicationDeadlockException isADE(Throwable t)
+   {
+      while (t!=null)
+      {
+         if (t instanceof ApplicationDeadlockException)
+         {
+            return (ApplicationDeadlockException)t;
+         }
+         else if (t instanceof RemoteException)
+         {
+            t = ((RemoteException)t).detail;
+         }
+         else if (t instanceof EJBException)
+         {
+            t = ((EJBException)t).getCausedByException();
+         }
+         else
+         {
+            return null;
+         }
+      }
+      return null;
+   } 
 
    public ApplicationDeadlockException()
    {

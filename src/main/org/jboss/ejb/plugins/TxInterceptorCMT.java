@@ -37,7 +37,7 @@ import org.jboss.ejb.plugins.lock.ApplicationDeadlockException;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.31 $
+ *  @version $Revision: 1.32 $
  */
 public final class TxInterceptorCMT extends AbstractTxInterceptor
 {
@@ -48,33 +48,6 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
     * A cache mapping methods to transaction attributes. 
     */
    private HashMap methodTx = new HashMap();
-   
-   /**
-    * Detects exception contains is or a ApplicationDeadlockException.
-    */
-   public static ApplicationDeadlockException isADE(Throwable t)
-   {
-      while (t!=null)
-      {
-         if (t instanceof ApplicationDeadlockException)
-         {
-            return (ApplicationDeadlockException)t;
-         }
-         else if (t instanceof RemoteException)
-         {
-            t = ((RemoteException)t).detail;
-         }
-         else if (t instanceof TransactionRolledbackLocalException)
-         {
-            t = ((TransactionRolledbackLocalException)t).getCausedByException();
-         }
-         else
-         {
-            return null;
-         }
-      }
-      return null;
-   } 
 
    /**
     *  This method does invocation interpositioning of tx management
@@ -90,7 +63,7 @@ public final class TxInterceptorCMT extends AbstractTxInterceptor
          }
          catch (Exception ex)
          {
-            ApplicationDeadlockException deadlock = isADE(ex);
+            ApplicationDeadlockException deadlock = ApplicationDeadlockException.isADE(ex);
             if (deadlock != null)
             {
                if (!deadlock.retryable() || 
