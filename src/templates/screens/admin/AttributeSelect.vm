@@ -43,6 +43,7 @@ $page.setTitle("Select global attribute")
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" />
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" />
+<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroup.vm" />
 
 #set ($allAttributes = $scarabR.CurrentModule.AvailableAttributes)
