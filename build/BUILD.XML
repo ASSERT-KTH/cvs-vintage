@@ -21,6 +21,8 @@
   <property name="build.classes" value="${dest.dir}"/>
   <property name="build.jar.name" value="jhotdraw.jar"/>
   <property name="build.jar" value="${dest.dir}/${build.jar.name}"/>
+  <property name="deploy.dir" value="${dest.dir}/deploy"/>
+  <property name="zip.file" value="${deploy.dir}/jhotdraw6.zip"/>
 
   <property name="src.dir" value="${dest.dir}/src"/>
   <property name="images.dir" value="org/jhotdraw/images"/>
@@ -72,7 +74,7 @@
   <!-- =================================================================== -->
   <!-- Builds a complete package with all files from scratch               -->
   <!-- =================================================================== -->
-  <target name="all" depends="clean, main, javadoc, junit_test">
+  <target name="all" depends="clean, main, javadoc, junit_test, deploy">
   </target>
 
   <!-- =================================================================== -->
@@ -136,12 +138,14 @@
     <echo>using standard doclet...</echo>
     <mkdir dir="${javadoc.dir}"/>
     <javadoc
-      packagenames = "org.*"
-      sourcepath   = "${src.dir}"
       destdir      = "${javadoc.dir}"
       classpath    = "${dest.dir}"
       author       = "false"
       version      = "true">
+      <fileset dir="${src.dir}" >
+        <include name="${javac.includes}"/>
+        <exclude name="${needs.junit.src}"/>
+      </fileset>
     </javadoc>
   </target>
 
@@ -149,8 +153,6 @@
     <echo>using version doclet...</echo>
     <mkdir dir="${javadoc.dir}"/>
     <javadoc
-      packagenames = "org.*"
-      sourcepath   = "${src.dir}"
       destdir      = "${javadoc.dir}"
       classpath    = "${dest.dir}"
       author       = "false"
@@ -162,6 +164,10 @@
           <pathelement path="${versiondoclet.class.path}"/>
         </path>
       </doclet>
+      <fileset dir="${src.dir}" >
+        <include name="${javac.includes}"/>
+        <exclude name="${needs.junit.src}"/>
+      </fileset>
     </javadoc>
   </target>
 
@@ -274,6 +280,7 @@
     <delete dir="${dest.dir}/org"/>
     <delete dir="${javadoc.dir}"/>
     <delete file="${build.jar}"/>
+    <delete dir="${deploy.dir}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -290,6 +297,26 @@
 	</jar>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Create a zip file with all deployable content                       -->
+  <!-- =================================================================== -->
+  <target name="deploy">
+    <delete dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}"/>
+    <zip zipfile="${zip.file}">
+      <fileset dir="${dest.dir}">
+        <include name="*/**"/>
+        <exclude name="**/CVS/**"/>
+        <exclude name="${deploy.dir}/**"/>
+        <exclude name=".project"/>
+        <exclude name=".classpath"/>
+        <exclude name="**/.cvsignore"/>
+        <exclude name="*/bin/**"/>
+        <exclude name="**/depcache/**"/>
+      </fileset>
+	</zip>
+  </target>
+  
   <!-- =================================================================== -->
   <!-- Run examples (and compile if necessary).                            -->
   <!-- =================================================================== -->
