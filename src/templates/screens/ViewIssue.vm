@@ -37,9 +37,9 @@ You are viewing an issue in a different Module than is currently selected.
 
 #else
 
-<h3>Issue Search Results</h3>
+<h3>Issue search results</h3>
 
-  #if ($currentIssueId)
+  #if ($currentIssueId && $currentIssueId.length() > 0)
     <p><strong class="alert">
     The issue id, $currentIssueId, is not valid. Please enter a new issue id.
     </strong></p>
