@@ -6,7 +6,7 @@
 # modules that Tomcat depends on.  Copy this file to "build.properties"
 # in the top-level source directory, and customize it as needed.
 #
-# $Id: build.properties.sample,v 1.2 2002/06/11 12:13:22 hgomez Exp $
+# $Id: build.properties.sample,v 1.3 2003/10/02 05:42:22 billbarker Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -23,13 +23,13 @@ jakarta-tomcat-connectors=../jakarta-tomcat-connectors
 tomcat-util.jar=${jakarta-tomcat-connectors}/util/build/lib/tomcat-util.jar
 
 
-# ----- (optional) Java Secure Sockets Extension (JSSE), v1.0.2 or later -----
-jsse.home=../jsse1.0.2
+# ----- (optional) Java Secure Sockets Extension (JSSE), v1.0.3 or later -----
+jsse.home=../jsse1.0.3
 jsse.lib=${jsse.home}/lib
 
 
 # ----- (optional) PureTLS Extension -----
-puretls.home=../puretls-0.9b2
+puretls.home=../puretls-0.9b4
 puretls.lib=${puretls.home}/build
 puretls.jar=${puretls.lib}/puretls.jar
 
@@ -43,6 +43,18 @@ jtc.http11.lib=${jtc.http11.home}/build/lib
 commons-logging.home=../commons-logging-1.0
 commons-logging.lib=${commons-logging.home}
 commons-logging.jar=${commons-logging.lib}/commons-logging.jar
+
+# ----- Java Management Extensions (JMX), JMX RI 1.0.1 or later or MX4J 1.1 or later -----
+jmx.home=../mx4j-1.1.1
+jmx.lib=${jmx.home}/lib
+jmx.jar=${jmx.lib}/mx4j-jmx.jar
+jmx-tools.jar=${jmx.lib}/mx4j-tools.jar
+
+# ----- Commons Modeler, version 1.1 or later -----
+commons-modeler.home=../commons-modeler-1.1
+commons-modeler.lib=${commons-modeler.home}
+commons-modeler.lib=${commons-modeler.home}/dist
+commons-modeler.jar=${commons-modeler.lib}/commons-modeler.jar
 
 # ----- (optional) Jakarta Commons DB Pool (required by future PooledJDBCRealm ) -----
 commons-dbcp.home=../commons-dbcp-1.0
