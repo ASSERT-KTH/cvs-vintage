@@ -58,6 +58,7 @@
  </table>
   #if ($canEdit)
 <div class="functnbar3">
+  <input type="submit" value="$l10n.Add" name="eventSubmit_doSubmiturl" />&#160;
   #if (!$currentIssue.Urls.isEmpty())
   <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveurl" />&#160;
   #end
