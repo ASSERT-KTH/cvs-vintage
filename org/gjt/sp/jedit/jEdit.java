@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.101 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: jEdit.java,v 1.102 2003/02/03 02:07:59 spestov Exp $
  */
 public class jEdit
 {
@@ -1402,7 +1402,10 @@ public class jEdit
 		addBufferToList(buffer);
 		buffer.commitTemporary();
 
+		// send full range of events to avoid breaking plugins
 		EditBus.send(new BufferUpdate(buffer,null,BufferUpdate.CREATED));
+		EditBus.send(new BufferUpdate(buffer,null,BufferUpdate.LOAD_STARTED));
+		EditBus.send(new BufferUpdate(buffer,null,BufferUpdate.LOADED));
 	} //}}}
 
 	//{{{ newFile() method

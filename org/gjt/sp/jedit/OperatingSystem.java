@@ -26,7 +26,7 @@ import org.gjt.sp.util.Log;
 /**
  * Operating system detection routines.
  * @author Slava Pestov
- * @version $Id: OperatingSystem.java,v 1.6 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: OperatingSystem.java,v 1.7 2003/02/03 02:07:59 spestov Exp $
  * @since jEdit 4.0pre4
  */
 public class OperatingSystem
@@ -96,7 +96,7 @@ public class OperatingSystem
 
 	//{{{ isMacOSLF() method
         /**
-         * Returns if we're running MacOS X and using the native L&F.
+         * Returns if we're running MacOS X and using the native look and feel.
          */
         public static final boolean isMacOSLF()
         {
