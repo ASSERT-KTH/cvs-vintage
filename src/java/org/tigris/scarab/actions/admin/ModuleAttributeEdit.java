@@ -74,7 +74,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.6 2002/02/02 02:58:41 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.7 2002/03/13 23:16:51 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -92,7 +92,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
         {
             ModuleEntity me = scarabR.getCurrentModule();
             IssueType issueType = scarabR.getIssueType();
-            List rmos = me.getRModuleOptions(attribute, issueType);
+            List rmos = me.getRModuleOptions(attribute, issueType, false);
             for (int i=rmos.size()-1; i>=0; i--) 
             {
                 RModuleOption rmo = (RModuleOption)rmos.get(i);
