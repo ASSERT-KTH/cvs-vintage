@@ -46,223 +46,29 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.io.File;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
-import java.util.Enumeration;
-import java.text.SimpleDateFormat;
 
-import org.apache.log4j.Category;
-
-import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Depend;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Issue.FederatedId;
-import org.tigris.scarab.om.ScarabModule;
-
-import org.tigris.scarab.services.module.ModuleManager;
-import org.tigris.scarab.services.user.UserManager;
-
-import org.tigris.scarab.util.TurbineInitialization;
+import org.apache.commons.util.StringUtils;
 
 /**
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @version $Id: XMLExport.java,v 1.3 2001/12/13 14:13:42 kminshull Exp $
+ * @version $Id: XMLExport.java,v 1.4 2001/12/13 22:06:57 kminshull Exp $
  */
 public class XMLExport
 {
-    private static final String USAGE = "Usage: XMLExport [<federatedidstart1>-<federatedidend1> | <federatedid1>][,<federatedidstart2>-<federatedidend2> | ,<federatedid2>][,<federatedidstart3>-<federatedidend3> | ,<federatedid3>]...";
-    private static final String format = "yyyy-MM-dd HH:mm:ss";
-    
-    private static Category cat = Category.getInstance(org.tigris.scarab.util.xml.DBImport.class);
-    private static boolean initialized = false;
-    
-    public XMLExport()
-    {
-    }
-    
-    public static void main (String[] args) throws Exception
-    {
-        // FIXME: should be a nicer way to accomplish this.
-        // this simply determines the directory where this class resides.
-        // working in the directory, we can relatively place ourselves to
-        // where we need to be to configure turbine for startup.
-        String path = new File(DBImport.class.getResource("XMLExport.class").getFile()).getParent();
-        String configDir;
-        if (path.indexOf("target") == -1)
-        {
-            configDir = path + "/../../../../../../../target/webapps/scarab";
-        }
-        else
-        {
-            configDir = path + "/../../../../../../..";
-        }
-        
-        //args = new String[] {"pacs1,tbns1-TBNS3"};
-        
-        XMLExport exporter = new XMLExport();
-        TurbineInitialization.setUp(configDir, "/WEB-INF/conf/xmlexport.properties");
-        
-        // validate input
-        if (args.length != 1)
-        {
-            cat.error(USAGE);
-            return;
-        }
-        
-        FederatedId[] fids = exporter.parseIssueList(args[0]);
-        String export = exporter.buildXMLExport(fids);
-        
-        System.out.println(export);
-    }
-    
-    public String buildXMLExport(FederatedId[] fids)
-        throws Exception
-    {
-        StringBuffer results = new StringBuffer();
-        ScarabModule currentModule = null;
-        
-        results.append(getXMLScarabHeader());
-        for (int i = 0; i < fids.length; i++)
-        {
-            Issue issue = Issue.getIssueById(fids[i]);
-            if (issue == null)
-            {
-                cat.warn("Issue does not exist: " + fids[i].getPrefix() + fids[i].getCount());
-            }
-            else
-            {
-                ScarabModule module = (ScarabModule)issue.getModule();
-                if (currentModule == null)
-                {
-                    // just starting
-                    results.append(getXMLModuleHeader(module));
-                    currentModule = module;
-                }
-                else if (currentModule.getModuleId() != module.getModuleId())
-                {
-                    results.append(getXMLModuleFooter());
-                    results.append(getXMLModuleHeader(module));
-                    currentModule = module;
-                }
-                results.append(getXMLIssue(issue));
-            }
-        }
-        if (currentModule != null)
-        {
-            results.append(getXMLModuleFooter());
-        }
-        results.append(getXMLScarabFooter());
-        
-        return results.toString();
-    }
-    
-    private static String getXMLScarabHeader()
-    {
-        return "<?xml version=\"1.0\" standalone=\"no\"?>\n" +
-            "<!DOCTYPE scarab SYSTEM \"scarab.dtd\">\n" +
-            "<scarab>\n";
-    }
-    
-    private static String getXMLScarabFooter()
-    {
-        return "</scarab>";
-    }
-    
-    private static String getXMLModuleHeader(ScarabModule module)
-    {
-        return "\t<module id=\"" + module.getModuleId() +
-            "\" parent=\"" + module.getParentId() + "\">\n" +
-            "\t\t<name>" + module.getRealName() + "</name>\n" +
-            "\t\t<code>" + module.getCode() + "</code>\n";
-    }
-    
-    private static String getXMLModuleFooter()
-    {
-        return "\t</module>\n";
-    }
-    
-    private static String getXMLIssue(Issue issue)
-        throws Exception
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        StringBuffer results = new StringBuffer();
-        
-        results.append("\t\t<issue id=\"" + issue.getIdCount() + "\">\n" +
-                           "\t\t\t<artifact-type>" + issue.getIssueType().getName() + "</artifact-type>\n" +
-                           "\t\t\t<committed-by>" + issue.getCreatedBy().getUserName() + "</committed-by>\n");
-        
-        // attributes
-        Vector attributeValues = issue.getAttributeValues();
-        Enumeration enum = attributeValues.elements();
-        while (enum.hasMoreElements())
-        {
-            AttributeValue attributeValue = (AttributeValue)enum.nextElement();
-            results.append("\t\t\t<issue-attribute>\n" +
-                               "\t\t\t\t<name>" + attributeValue.getAttribute().getName() + "</name>\n" +
-                               "\t\t\t\t<value>" + attributeValue.getValue() + "</value>\n" +
-                               "\t\t\t\t<type>" + attributeValue.getAttribute().getAttributeType().getName() + "</type>\n" +
-                               "\t\t\t</issue-attribute>\n");
-        }
-        // child dependencies
-        Vector parents = issue.getDependsRelatedByObserverId();
-        enum = parents.elements();
-        while (enum.hasMoreElements())
-        {
-            Depend depend = (Depend)enum.nextElement();
-            results.append("\t\t\t<dependency>\n" +
-                               "\t\t\t\t<type>" + depend.getDependType().getName() + "</type>\n" +
-                               "\t\t\t\t<parent>" + depend.getIssueRelatedByObservedId().getFederatedId() + "</parent>\n" +
-                               "\t\t\t</dependency>\n");
-        }
-        // parent dependencies
-        Vector children = issue.getDependsRelatedByObservedId();
-        enum = children.elements();
-        while (enum.hasMoreElements())
-        {
-            Depend depend = (Depend)enum.nextElement();
-            results.append("\t\t\t<dependency>\n" +
-                               "\t\t\t\t<type>" + depend.getDependType().getName() + "</type>\n" +
-                               "\t\t\t\t<child>" + depend.getIssueRelatedByObserverId().getFederatedId() + "</child>\n" +
-                               "\t\t\t</dependency>\n");
-        }
-        // attachments
-        Vector attachments = issue.getAttachments();
-        enum = attachments.elements();
-        while (enum.hasMoreElements())
-        {
-            Attachment attachment = (Attachment)enum.nextElement();
-            results.append("\t\t\t<attachment>\n" +
-                               "\t\t\t\t<name>" + attachment.getName() + "</name>\n" +
-                               "\t\t\t\t<type>" + attachment.getAttachmentType().getName() + "</type>\n" +
-                               "\t\t\t\t<path>" + attachment.getFilePath() + "</path>\n" +
-                               "\t\t\t\t<data>" + attachment.getDataAsString() + "</data>\n" +
-                               "\t\t\t\t<mimetype>" + attachment.getMimeType() + "</mimetype>\n" +
-                               "\t\t\t\t<created-date format=\"" + format + "\">" + sdf.format(attachment.getCreatedDate()) + "</created-date>\n" +
-                               "\t\t\t\t<modified-date format=\"" + format + "\">" + sdf.format(attachment.getModifiedDate()) + "</modified-date>\n" +
-                               "\t\t\t\t<created-by>" + UserManager.getInstance(attachment.getCreatedBy()).getUserName() + "</created-by>\n" +
-                               "\t\t\t\t<modified-by>" + UserManager.getInstance(attachment.getModifiedBy()).getUserName() + "</modified-by>\n" +
-                               "\t\t\t</attachment>\n");
-        }
-        
-        results.append("\t\t</issue>\n");
-        
-        return results.toString();
-    }
-    
     /**
      * Parses a list of issues.
      *
      * @param issueList a comma separated list of federated id's and federated id ranges.
      * @return an <code>ArrayList</code> of <code>FederatedId</code>
      */
-    public FederatedId[] parseIssueList(String issueList)
+    public List parseIssueList(String issueList)
         throws Exception
     {
-        String[] issues = split(issueList, ",");
+        String[] issues = StringUtils.split(issueList, ",");
         int resultsSize = issues.length;
         ArrayList results = new ArrayList(resultsSize);
         for (int i = 0; i < issues.length; i++)
@@ -273,7 +79,7 @@ public class XMLExport
             }
             else
             {
-                String[] issue = split(issues[i], "-");
+                String[] issue = StringUtils.split(issues[i], "-");
                 if (issue.length != 2)
                 {
                     throw new Exception("Federated id range not valid: " + issues[i]);
@@ -295,11 +101,15 @@ public class XMLExport
                 {
                     addFederatedId(results, fidStart.getPrefix() + j);
                 }
-                addFederatedId(results, fidStop);
+                if (!fidStop.getPrefix().equals(fidStart.getPrefix()) ||
+                    fidStop.getCount() != fidStart.getCount())
+                {
+                    addFederatedId(results, fidStop);
+                }
             }
         }
         
-        return (FederatedId[])results.toArray(new FederatedId[results.size()]);
+        return results;
     }
     
     /**
@@ -311,7 +121,7 @@ public class XMLExport
         FederatedId fid = null;
         try
         {
-            fid = new FederatedId(id);
+            fid = new FederatedId(id.trim());
         }
         catch (Exception e)
         {
@@ -347,52 +157,5 @@ public class XMLExport
             }
         }
         al.add(fid);
-    }
-    
-    /**
-     * FIXME: Commons-Util.jar StringUtils should have this method in it already
-     */
-    private static String[] split(String source, String searchFor)
-    {
-        ArrayList split = new ArrayList();
-        int idx;
-        int lastIdx = 0;
-        String newStr;
-        
-        if ((source == null) || (searchFor == null))
-        {
-            if (source != null)
-            {
-                split.add(source);
-            }
-            return (String[])split.toArray(new String[split.size()]);
-        }
-        
-        if (searchFor.equals(""))
-        {
-            split.add(source);
-            return (String[])split.toArray(new String[split.size()]);
-        }
-        
-        idx = source.indexOf(searchFor);
-        while (idx != -1)
-        {
-            newStr = source.substring(lastIdx, idx);
-            if (!newStr.trim().equals(""))
-            {
-                split.add(newStr);
-            }
-            
-            lastIdx = idx + searchFor.length();
-            idx = source.indexOf(searchFor, lastIdx);
-        }
-        
-        newStr = source.substring(lastIdx);
-        if (!newStr.trim().equals(""))
-        {
-            split.add(source.substring(lastIdx));
-        }
-        
-        return (String[])split.toArray(new String[split.size()]);
     }
 }
