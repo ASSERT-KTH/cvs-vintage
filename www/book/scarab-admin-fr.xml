@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 3 U (http://www.xmlspy.com) by user user (TRAVELSOFT) -->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book lang="fr">
+	<title>Scarab</title>
+	<subtitle>Guide de l'administrateur</subtitle>
+	<bookinfo>
+		<corpauthor>The Scarab Development Team</corpauthor>
+		<editor>
+			<firstname>Jean-François</firstname>
+			<surname>El Fouly</surname>
+		</editor>
+		<copyright>
+			<year>2003</year>
+			<holder>CollabNet, Inc.</holder>
+		</copyright>
+	</bookinfo>
+	<preface>
+		<title>Préface</title>
+		<para/>
+		<sect1>
+			<title>Audience</title>
+			<para>Ce livre est destiné aux administrateurs de Scarab. Il n'aborde pas les questions d'utilisation, qui sont traitées dans un autre livre électronique, le Guide de l'utilisateur.</para>
+		</sect1>
+		<sect1>
+			<title>Comment ce livre est organisé</title>
+			<para>Ce livre est divisé en deux parties. La première traite de l'installation de Scarab; la seconde, de quelques questions relatives à l'administration de Scarab après l'installation.</para>
+		</sect1>
+	</preface>
+	<part>
+		<title>Installer Scarab</title>
+		<chapter>
+			<title>Généralités</title>
+			<sect1>
+				<title>Comment installer Scarab</title>
+				<para>En l'état actuel du développement -- et peut-être également dans le long terme -- Scarab s'installe pas tout assemblé, avec par exemple un programme d'installation.</para>
+				<para>Au lieu de cela, Scarab est construit dynamiquement pour chaque installation particulière, en fonction des paramètres locaux mais surtout du système de gestion de base de données utilisé pour stocker les fiches et les autres informations dont Scarab a besoin.</para>
+				<para>Cette perspective peut vous inquiéter de prime abord, mais la procédure est simple et éprouvée: vous devriez donc y parvenir sans difficultés, comme bien d'autres avant vous.</para>
+			</sect1>
+			<sect1>
+				<title>Le schéma d'une installation type</title>
+				<para>Une installation type se déroule en quatre étapes:
+				<itemizedlist>
+						<listitem>
+							<para>Préparer l'installation.</para>
+						</listitem>
+						<listitem>
+							<para>Installer et régler le système de gestion de base de données</para>
+						</listitem>
+						<listitem>
+							<para>Construire Scarab</para>
+						</listitem>
+						<listitem>
+							<para>Construire la base de données de Scarab.</para>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Préparer l'installation</title>
+			<sect1>
+				<title>Choisir un système d'exploitation</title>
+				<para>Scarab bénéficie de la portabilité de Java. Il peut donc en théorie être installé sur une grande variété de systèmes.</para>
+				<para>En pratique, Scarab a été fréquemment déployé sur trois sortes de systèmes:</para>
+				<itemizedlist>
+					<listitem>
+						<para>Linux: cas le plus fréquent, sur lequel le plus d'expérience a été accumulé -- et donc logiquement le système sur lequel vous êtes le plus susceptible d'obtenir de l'aide de la part de la communauté des utilisateurs en cas de difficulté.</para>
+					</listitem>
+					<listitem>
+						<para>Windows</para>
+					</listitem>
+					<listitem>
+						<para>MacOS X: Scarab est d'ailleurs partiellement développé dans cet environnement et le premier démonstrateur, la "runbox", a tourné pendant des mois sur cette plate-forme.</para>
+					</listitem>
+				</itemizedlist>
+			</sect1>
+			<sect1>
+				<title>Choisir un système de base de données</title>
+				<para>Scarab requiert un système de gestion de base de données pour y stocker les informations structurées: paramétrage, requêtes, états, modules mais surtout les fiches.
+				Il convient donc à ce stade de choisir (puis d'installer, voir au chapitre suivant) un SGBD.</para>
+				<para>Dans le principe, Scarab est utilisable avec tous les SGBD disposant d'un driver JDBC.</para>
+				<para>En pratique, le fonctionnement correct de Scarab est aussi conditionné par certaines questions de compatibilité SQL et surtout par la qualité du code généré par Torque, le composant de persistence et de mapping objet/relationnel associé au framework Turbine sur lequel est construit Scarab.</para>
+				<sect2>
+					<title>SGBD testés et supportés par Scarab</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>C'est le SGBD sur lequel Scarab est développé et donc entièrement testé. Si vous n'avez pas de contrainte particulière qui influence votre décision, MySQL devrait être logiquement votre premier choix de SGBD pour faire tourner Scarab.</para>
+						<para>Quelle version choisir? Scarab fonctionnera également avec une version 3.x ou 4.x. Il est possible que le support de la version 3 soit un jour supprimé pour tirer profit des possibilités transactionnelles de la version 4. Ici encore, si vous n'avez pas de raison particulière qui guide votre choix, optez pour la sécurité à long terme et partez directement sur la version 4.</para>
+						<para>MySQL est disponible gratuitement et en open-source sur Linux et sur Windows.</para>
+					</sect3>
+					<sect3>
+						<title>PostgreSQL</title>
+						<para>Scarab a été testé avec succès sur les versions 7.2.1 et supérieures de PostgreSQL.</para>
+						<para>PostgreSQL est disponible gratuitement et en open-source sur Linux et sur Windows.</para>
+					</sect3>
+					<sect3>
+						<title>Oracle 9i</title>
+						<para>La compatibilité de Scarab avec Oracle 9i est testée.</para>
+						<para>En raison d'un problème lié à la gestion des BLOBs par Torque, la mise en oeuvre de Scarab sur Oracle 9i est un peu plus délicate que sur d'autres SGBD et nécessite de faire un petit patch du code généré.</para>
+					</sect3>
+					<!-- Il faut écrire quelque chose ici à propos de DB2 -->
+				</sect2>
+				<sect2>
+					<title>SGBD testés et incomplètement supportés par Scarab</title>
+					<sect3>
+						<title>Microsoft SQL Server</title>
+						<para>La configuration de Scarab sur Microsoft SQL Server a été définie et testée avec soin.</para>
+						<para>Les derniers problèmes rencontrés, relatifs au mapping de certains types par Torque et à l'utilisation de la fonction SQL CONCAT n'ont pu être résolus pour l'instant.</para>
+						<para>Ceux qui sont intéressés par les détails techniques se réfèreront utilement à la page ad hoc du site web de Scarab (en anglais).</para>
+					</sect3>
+					<sect3>
+						<title>Hypersonic SQL</title>
+						<para>Scarab a été configuré et testé avec soin sur Hypersonic.</para>
+						<para>Ici non plus, les essais n'ont pu être menés jusqu'à une solution opérationnelle de façon satisfaisante.</para>
+						<para>Ceux qui sont intéressés par les détails techniques se réfèreront utilement à la page ad hoc du site web de Scarab (en anglais).</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>SGBD testés et non supportés par Scarab</title>
+					<sect3>
+						<title>Oracle 8i</title>
+						<para>Oracle 8i a été supporté avec plus ou moins de succès au début du développement de Scarab.</para>
+						<para>Ce support a été interrompu en 2003 pour des raisons de compatibilité dans la syntaxe SQL de certaines jointures, et ne sera pas repris (sauf si quelqu'un trouve et fournit une solution satisfaisante à ce problème).</para>
+						<para>Scarab est par contre maintenant compatible avec Oracle 9i.</para>
+					</sect3>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Choisir un moteur de servlet</title>
+				<para>Scarab est en principe compatible avec tout moteur de servlet compatible avec la norme Servlet 2.3;
+				un patch permet théoriquement de le rendre compatible avec des moteurs de servlet compatibles avec le standard 2.2, notamment WebSphere Application Server 4.0.</para>
+				<para>En pratique, la plupart des utilisateurs de Scarab le mettent en oeuvre avec un serveur Tomcat; d'ailleurs, le processus de construction de Scarab construit également un serveur Tomcat allégé, "the sandbox", que vous pouvez utiliser pour tester ou faire fonctionner Scarab dès qu'il est construit.</para>
+				<para>Vous pouvez également choisir de déployer Scarab derrière une installation existante de Tomcat; par ailleurs, des essais ont été également menés de manière satisfaisante sur Resin.</para>
+			</sect1>
+			<sect1>
+				<title>Récupérer les autres éléments nécessaires à l'installation de Scarab</title>
+				<para>Pour procéder à l'installation de Scarab, vous aurez encore besoin de trois choses: un SDK Java, le système de construction Ant et bien sûr Scarab lui-même.</para>
+				<sect2>
+					<title>Télécharger et installer un JDK Java</title>
+					<para>Si vous ne disposez pas d'un SDK Java (pré-installé sur certains systèmes, par exemple MacOS X), vous devez en installer un. Attention: vous avez besoin d'un SDK Java 2 [notez que l'appellation JDK est périmée] et pas seulement d'un JRE (Java Runtime Environment), car il vous faudra compiler Scarab.</para>
+					<para>La version du SDK doit être au moins 1.3.1.</para>
+					<para>Vous pouvez télécharger un JDK à partir de <ulink url="http://www.java.com">http://www.java.com</ulink> ou <ulink url="http://java.sun.com">http://java.sun.com</ulink>.</para>
+					<para>Assurez-vous que la variable d'environnement JAVA_HOME pointe sur le répertoire dans lequel le SDK est installé.</para>
+				</sect2>
+				<sect2>
+					<title>Télécharger et installer Ant</title>
+					<para>Pour construire Scarab, vous aurez également besoin du logiciel de construction automatisée Ant.</para>
+					<para>Vous pouvez télécharger Ant à partir de <ulink url="http://ant.apache.org">http://ant.apache.org</ulink>.</para>
+					<para>La version peut être 1.4 ou 1.5 (si vous vouliez recompiler la version de Torque embarquée dans Scarab, vous devriez utiliser une version 1.4; cette manoeuvre est de toute façon réservée aux développeurs patentés).</para>
+					<para>Assurez-vous que la variable d'environnement ANT_HOME pointe sur le répertoire dans lequel Ant est installé.</para>
+				</sect2>
+				<sect2>
+					<title>Télécharger Scarab et préparer son installation</title>
+					<para>Il vous faut bien sûr finalement télécharger Scarab lui-même. Vous trouverez la dernière version (1.0-b16) à cette adresse: <ulink url="http://scarab.tigris.org/servlets/ProjectDocumentList">http://scarab.tigris.org/servlets/ProjectDocumentList</ulink>.</para>
+					<para>Décomprimez l'archive de Scarab dans le répertoire que vous choisirez.</para>
+					<para>L'essentiel de votre travail lors de l'installation portera dans un premier temps sur le répertoire ./build.</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Installer le système de gestion de base de données et préparer l'installation de Scarab</title>
+			<sect1>
+				<title>MySQL</title>
+				<sect2>
+					<title>Installer le SGBD</title>
+					<para>Pour l'installation proprement dite, référez-vous aux instructions d'installation fournies avec le logiciel.</para>
+				</sect2>
+				<sect2>
+					<title>Créer un utilisateur pour Scarab</title>
+					<para>Vous ne pourrez (ou vous ne souhaiterez) probablement pas faire tourner Scarab avec la sécurité par défaut de MySQL (utilisateur root sans mot de passe sur la machine locale). </para>
+					<para>Il vous faudra donc créer un utilisateur au sens MySQL et lui donner les droits correspondants. Supposons que vous souhaitiez créer un utilisateur dont le nom sera 'scarab' sur un serveur local et lui donner tous les droits sur une base de données qui s'appellera elle aussi 'scarab'; connectez-vous à l'interface d'administration (commande <computeroutput>mysql</computeroutput>) et exécutez la commande suivante&nbsp;:</para>
+					<para>
+						<computeroutput>grant all privileges on scarab.* to scarab@localhost;</computeroutput>
+					</para>
+					<para>Si vous voulez que l'utilisateur 'scarab' de MySQL doive s'authentifier par un mot de passe 'secret', la syntaxe devient&nbsp;</para>
+					<para>
+						<computeroutput>grant all privileges on scarab.* to scarab@localhost identified by 'secret';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Définir les paramètres du SGBD dans Scarab</title>
+					<para>Utilisez un éditeur pour ouvrir en lecture seule (si possible) le fichier default.properties dans le répertoire build de votre installation de Scarab. Ne modifiez pas ce fichier.</para>
+					<para>Utilisez votre éditeur pour créer dans le même répertoire un fichier build.properties. Tous les paramètres que vous définirez dans ce fichier auront la préséance sur ceux qui sont définis dans default.properties. Ceci vous permet
+					de conserver des valeurs par défaut raisonnables pour la plupart des clés, tout en redéfinissant les paramètres que vous souhaitez (ou devez) personnaliser.</para>
+					<sect3>
+						<title>Définir le type de base de données</title>
+						<para>Vous n'aurez pas besoin de redéfinir le paramètre scarab.database.type, car par défaut (comme vous pouvez le voir dans default.properties):</para>
+						<para>scarab.database.type=mysql</para>
+					</sect3>
+					<sect3>
+						<title>Définir l'utilisateur du SGBD</title>
+						<para>Si vous avez fait une installation par défaut de MySQL, vous n'êtes peut-être pas obligé(e) de définir scarab.database.username</para>
+						<para>Dans la plupart des cas cependant, vous aurez spécifié un utilisateur (au sens user de MySQL). Vous devrez alors définir scarab.database.username, par exemple:</para>
+						<para>scarab.database.username=user</para>
+						<para>Si cet utilisateur a besoin d'un mot de passe pour s'identifier, définissez la clé scarab.database.password, par exemple:</para>
+						<para>scarab.database.password=secret</para>
+					</sect3>
+					<sect3>
+						<title>Définir le serveur de base de données</title>
+						<para>Par défaut</para>
+						<para>scarab.database.host=127.0.0.1</para>
+						<para>Si le serveur de base de données n'est pas sur la même machine que le moteur de servlet qui sert Scarab, redéfinissez la clé scarab.database.host en spécifiant le nom réseau du serveur MySQL ou son adresse IP.</para>
+						<para>Si vous êtes confronté(e) à des erreurs d'accès à la base en local (access denied), vous devriez tenter éventuellement de remplacer 127.0.0.1 par localhost.</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Télécharger un driver optimisé (option)</title>
+					<para>Si vous faites une installation Scarab "de production", vous pouvez choisir d'utiliser un driver MySQL plus récent et plus performant que celui fourni avec Scarab (ce driver ne peut être fourni avec Scarab car sa licence est GPL).</para>
+					<para>Téléchargez ce driver sur le site de MySQL à l'URL suivante: <ulink url="http://www.mysql.com/downloads/api-jdbc-dev.html">http://www.mysql.com/downloads/api-jdbc-dev.html</ulink>
+					et copiez-le dans le répertoire lib de votre installation de Scarab.</para>
+					<para>Vous devez aussi déclarer l'utilisation de ce nouveau driver dans votre fichier build.properties:</para>
+					<para>scarab.jdbc.driver.jar=mysql-connector*.jar</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>PostgreSQL</title>
+				<sect2>
+					<title>Installer le SGBD</title>
+					<para>Référez-vous aux instructions d'installation fournies avec le logiciel.</para>
+				</sect2>
+				<sect2>
+					<title>Définir les paramètres du SGBD dans Scarab</title>
+					<para/>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Oracle 9i</title>
+				<sect2>
+					<title>Installer le SGBD</title>
+					<para>Référez-vous aux instructions d'installation fournies avec le logiciel.</para>
+				</sect2>
+				<sect2>
+					<title>Définir les paramètres du SGBD dans Scarab</title>
+					<para/>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Construire Scarab</title>
+			<sect1>
+				<title>Terminer la configuration de Scarab</title>
+				<para>La configuration par défaut de Scarab fournit des valeurs raisonnables pour la plupart des paramètres d'installation et d'exploitation. Il y en a toutefois quelques-uns que vous devez ou que vous préfèrerez redéfinir vous-mêmes.</para>
+				<sect2>
+					<title>Définir le nom du serveur et le protocole</title>
+					<para>Ces paramètres sont absolument nécessaires au bon fonctionnement.</para>
+					<para>Vous vous contenterez probablement des valeurs par défaut pour les paramètres suivants&nbsp;:</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.context</computeroutput> (par défaut&nbsp;: <computeroutput>scarab</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.scheme</computeroutput> (par défaut&nbsp;: <computeroutput>http</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.scriptname</computeroutput> (par défaut&nbsp;: <computeroutput>/${scarab.context}/issues</computeroutput>)</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.http.redirect</computeroutput> (par défaut&nbsp;: <computeroutput>${scarab.http.scriptname}</computeroutput>)</para>
+						</listitem>
+					</itemizedlist>
+					<para>mais vous devez définir la valeur de la propriété <computeroutput>scarab.http.domain</computeroutput> (qui n'a pas de valeur par défaut) en donnant le nom du serveur et vous voudrez peut-être aussi redéfinir le port sur lequel le serveur répond (<computeroutput>scarab.http.port</computeroutput>, par défaut&nbsp;: 8080).</para>
+					<para>Si vous vous trompez dans la définition de ces paramètres, vos utilisateurs ne pourront pas accéder à Scarab en cliquant des liens dans les emails qui leur seront adressés. La correction d'une erreur dans ces paramètres nécessitera de reconstruire Scarab (une tâche qui demeure raisonnable) mais aussi d'aller modifier des valeurs dans la base de données, ce qui peut être beaucoup plus fastidieux.</para>
+				</sect2>
+				<sect2>
+					<title>Choisir le nom et l'adresse de courrier électronique de l'administrateur de Scarab</title>
+					<para>Par défaut, ce nom d'utilisateur sera turbine@tigris.org.</para>
+					<para>Pour modifier cette valeur par défaut, définissez dans votre fichier build.properties la propriété scarab.user.username:</para>
+					<para>scarab.user.username=scarab-superuser@mondomaine.fr</para>
+					<para>Ce nom sera aussi l'adresse mél par défaut. S'il ne correspond pas à une adresse existante ou si vous désirez lui affecter une autre adresse de courrier électronique, définissez aussi la propriété scarab.user.email; sinon le nom d'utilisateur que vous aurez défini plus haut sera aussi l'adresse.</para>
+					<para>Si vous choisissez de ne pas importer les données exemples à la création de la base, ce sera le premier et seul utilisateur défini dans votre nouvelle installation de Scarab. Son mot de passe est "1" ((le chiffre un, sans les guillemets).</para>
+					<para>Le prénom par défaut associé à cet utilisateur est "Scarab", et le nom "Administrator" (le nom et le prénom de l'utilisateur connecté sont affichés en haut à droite).</para>
+					<para>Pour une installation tout à fait francisée, vous pouvez définir les propriétés:</para>
+					<para>scarab.user.firstname=Administrateur</para>
+					<para>scarab.user.lastname=Scarab</para>
+					<para>(ce qui permute l'ordre des deux mots), ou bien définir dans ces propriétés le prénom et le nom de la personne qui administre réellement Scarab.</para>
+				</sect2>
+				<sect2>
+					<title>Paramétrer le serveur de messagerie</title>
+					<para>Le serveur de messagerie (envoi de courrier électronique) par défaut est la machine sur laquelle s'exécute Scarab (localhost). Scarab s'attend donc à trouver un serveur SMTP s'exécutant localement pour expédier ses messages. Si ce n'est pas le cas, vous pouvez définir le nom réseau de votre serveur SMTP, par exemple celui de votre FAI:</para>
+					<para>scarab.system.mail.host=localhost</para>
+				</sect2>
+				<sect2>
+					<title>Franciser votre installation de Scarab</title>
+					<para>La langue de l'interface utilisateur de Scarab n'est pas définie par les paramètres d'installation ou de configuration mais par les préférences du navigateur de l'utilisateur qui accède à l'application web. Il n'y a donc rien de particulier à configurer ici pour que Scarab "parle" français.</para>
+					<para>Il y a par contre deux réglages que vous voudrez faire à ce stade.</para>
+					<sect3>
+						<title>Paramétrage du jeu de caractères utilisé pour le courrier électronique</title>
+						<para>Vous devez pour cela définir la propriété scarab.email.encoding, par exemple</para>
+						<para>scarab.email.encoding=ISO-8859-1</para>
+						<para>scarab.email.encoding=UTF-8</para>
+						<para>Le courrier électronique fonctionnera probablement sans ce réglage mais vous risquez de voir les noms d'utilisateur précédés de préfixes linguistiques particulièrement inesthétiques.</para>
+					</sect3>
+					<sect3>
+						<title>Définition de la langue par défaut</title>
+						<para>Vous devez pour cela définir les propriétés scarab.locale.default.language et scarab.locale.default.country</para>
+						<para>scarab.locale.default.language=fr</para>
+						<para>scarab.locale.default.country=FR</para>
+						<para>Ce paramétrage agit au moins sur la langue dans laquelle les données par défaut sont installées au moment de la création de la base.</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Préparer le déploiement sur un autre moteur de servlet</title>
+					<para>Si vous envisagez de déployer l'application web Scarab sur un autre serveur que le Tomcat compilé avec Scarab ("the sandbox"), vous devez copier les gabarits Velocity dans l'arborescence de l'application web. Pour cela, définissez la propriété</para>
+					<para>scarab.copy.templates=true</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Construire Scarab</title>
+				<para>&Agrave; ce stade, la construction de Scarab est particulièrement simple&nbsp;: à la racine de votre arborescence Scarab, tapez</para>
+				<para>cd build</para>
+				<para>ant</para>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Construire la base de données de Scarab</title>
+			<sect1>
+				<title>MySQL</title>
+				<sect2>
+					<title>Sur Unix/Linux</title>
+					<para>&Agrave; la racine de votre arborescence Scarab, tapez</para>
+					<para>cd src/sql</para>
+					<para>./create-db.sh</para>
+					<para>Pour une installation de production, il est probable que vous ne voulez pas des données fournies à titre d'exemple dans l'installation de Scarab; vous préfèrerez probablement démarrer avec une base de données vide. Il suffit pour cela d'ajouter l'argument -e à la ligne de commande, comme ceci&nbsp;:</para>
+					<para>./create-db.sh -e</para>
+					<para>Si le serveur MySQL est installé sur une autre machine ou si vous devez vous authentifier pour lancer des commandes d'administration, vous pouvez fournir les arguments correspondants au script en utilisant la syntaxe habituelle de MySQL en ligne de commande, par exemple&nbsp;:</para>
+					<para>./create-db.sh -u jon --password -P 3306 -h mysqlserver.example.com</para>
+				</sect2>
+				<sect2>
+					<title>Sur Windows</title>
+					<para>&Agrave; la racine de votre arborescence Scarab, tapez</para>
+					<para>cd src/sql</para>
+					<para>create-mysql-database.bat</para>
+					<para>Si le serveur MySQL est installé sur une autre machine ou si vous devez vous authentifier pour lancer des commandes d'administration, vous devrez éditer le script create-mysql-database.bat</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Installer et exécuter Scarab</title>
+			<sect1>
+				<title>Lancer Scarab avec un serveur Tomcat minimal</title>
+				<para>C'est le cas le plus simple. Vous pouvez lancer Scarab avec un serveur Tomcat minimal qui a été compilé, installé et configuré en même temps que Scarab.</para>
+			</sect1>
+		</chapter>
+	</part>
+	<part>
+		<title>Administration système de Scarab après l'installation</title>
+		<chapter>
+			<title>Sauvegarde et restauration</title>
+			<para>Pour remettre en état une installation de Scarab, en cas de défaillance du système par exemple, vous devez procéder à des sauvegardes régulières.</para>
+			<para>Pour cela, il vous faut bien sûr sauvegarder les données de la base de données Scarab
+			mais aussi les répertoires qui contiennent les pièces jointes, les index utilisés pour la recherche plein texte avec Lucene et les objets sérialisés par Intake.</para>
+			<sect1>
+				<title>Sauvegarde des informations de Scarab</title>
+				<sect2>
+					<title>Sauvegarde de la base de données</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>En ligne de commande, tapez par exemple:</para>
+						<para>
+							<computeroutput>mysqldump scarab &gt; nom_de_fichier.sql</computeroutput>
+						</para>
+						<para>Si votre serveur MySQL requiert une authentification, il vous faudra passer les arguments correspondants dans la commande, par exemple:</para>
+						<para>
+							<computeroutput>mysqldump scarab --user=nom --password=mot_de_passe &gt; nom_de_fichier.sql</computeroutput>
+						</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Sauvegarde des autres informations (non stockées dans la base)</title>
+					<para>Les répertoires utilisés pour stocker les pièces jointes et les index Lucene ainsi que le fichier qui contient les objets sérialisés par Intake sont définis au moment de la construction de Scarab
+					par les paramètres suivants, respectivement&nbsp;:</para>
+					<itemizedlist>
+						<listitem>
+							<para>
+								<computeroutput>scarab.attachments.path</computeroutput>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.lucene.index.path</computeroutput>
+							</para>
+						</listitem>
+						<listitem>
+							<para>
+								<computeroutput>scarab.intake.serialize.file</computeroutput>
+							</para>
+						</listitem>
+					</itemizedlist>
+					<para>Il vous faut donc sauvegarder ces deux répertoires et ce fichier en même temps que les informations de la base de données.</para>
+					<para>Si vous n'avez pas redéfini les trois paramètres ci-dessus lorsque vous avez construit Scarab, tous ces objets se trouvent dans l'arborescence de fichiers de Scarab sur le serveur
+					sous le répertoire <computeroutput>/WEB-INF</computeroutput> .</para>
+					<para>Sur Windows, le plus simple est probablement d'archiver ces deux répertoires et le fichier intake dans une archive zip.</para>
+					<para>Sur Linux, vous pouvez faire de même avec la commande suivante, par exemple&nbsp;:</para>
+					<para>
+						<computeroutput>tar zcf scarab.tgz attachments index intake-xml.ser</computeroutput>
+					</para>
+					<para>Si l'un ou plusieurs des trois paramètres a/ont été redéfini(s), il vous faudra déterminer la localisation des répertoires et du fichier correspondants pour pouvoir les archiver.</para>
+				</sect2>
+			</sect1>
+			<sect1>
+				<title>Restauration des informations de Scarab à partir d'une sauvegarde</title>
+				<sect2>
+					<title>Restauration de la base de données</title>
+					<sect3>
+						<title>MySQL</title>
+						<para>Il vous faut vous connecter à MySQL, par exemple&nbsp;:</para>
+						<para>
+							<computeroutput>mysql</computeroutput>
+						</para>
+						<para>ou en spécifiant votre nom d'utilisateur et votre mot de passe si votre serveur MySQL requiert une authentification&nbsp;:</para>
+						<para>
+							<computeroutput>mysql --user=nom --password=mot_de_passe</computeroutput>
+						</para>
+						<para>Le cas échéant, détruire si nécessaire la base de données Scarab corrompue&nbsp;:</para>
+						<para>
+							<computeroutput>drop database scarab;</computeroutput>
+						</para>
+						<para>Créer une nouvelle base de données Scarab et la sélectionner&nbsp;:</para>
+						<para>
+							<computeroutput>create database scarab;</computeroutput>
+						</para>
+						<para>
+							<computeroutput>use scarab;</computeroutput>
+						</para>
+						<para>Réimporter les données que vous aviez sauvegardées précédemment avec mysqldump&nbsp;:</para>
+						<para>
+							<computeroutput>source nom_de_fichier.sql;</computeroutput>
+						</para>
+						<para>Et voilà&nbsp;!</para>
+					</sect3>
+				</sect2>
+				<sect2>
+					<title>Sauvegarde des autres informations (non stockées dans la base)</title>
+					<para>Décompactez l'archive que vous avez constituée précédemment avec les pièces jointes, les index Lucene et les objets sérialisés par Intake
+					dans les répertoires définis lors de la construction de Scarab.</para>
+					<para>Votre installation de Scarab est maintenant prête à repartir.</para>
+				</sect2>
+			</sect1>
+		</chapter>
+		<chapter>
+			<title>Déplacer une installation de Scarab vers un autre serveur</title>
+			<para>En cas de défaillance du serveur ou pour toute autre raison d'exploitation, vous pouvez être amené à déplacer une installation existante de Scarab sur un autre serveur.</para>
+			<para>A moins que le paramétrage et le nommage réseau de la machine destination ne soient rigoureusement identique à ceux de la machine source, vous devrez faire une nouvelle installation sur la machine cible en adaptant éventuellement certains paramètres de la configuration.</para>
+			<para>Si le nom réseau de la machine cible n'est pas celui de la machine de départ, c'est-à-dire si la nouvelle installation ne répond pas à la même URL que l'installation d'origine, il vous faudra également faire deux modifications dans les données de la base.</para>
+			<sect1>
+				<title>Modifier les données de la base lors d'une modification de serveur</title>
+				<sect2>
+					<title>Modifier la table SCARAB_GLOBAL_PARAMETER</title>
+					<para>Si vous changez l'un des paramètres scarab.http.domain, scarab.http.scheme, scarab.http.scriptname ou scarab.http.port dans la nouvelle installation, vous devrez mettre à jour les entrées correspondantes de la table SCARAB_GLOBAL_PARAMETER. Par exemple&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_GLOBAL_PARAMETER set VALUE='newserver.example.com' where NAME='scarab.http.domain';</computeroutput>
+					</para>
+					<para>
+						<computeroutput>update SCARAB_GLOBAL_PARAMETER set VALUE='8081' where NAME='scarab.http.port';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Modifier la table SCARAB_MODULE</title>
+					<para>Vous pourrez avoir à modifier le nom de domaine dans la table SCARAB_MODULE&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_MODULE set DOMAIN='newserver.example.com';</computeroutput>
+					</para>
+				</sect2>
+				<sect2>
+					<title>Modifier la table SCARAB_ISSUE</title>
+					<para>Vous pourrez avoir à modifier le nom de domaine dans la table SCARAB_ISSUE&nbsp;:</para>
+					<para>
+						<computeroutput>update SCARAB_ISSUE set ID_DOMAIN='newserver.example.com';</computeroutput>
+					</para>
+				</sect2>
+			</sect1>
+		</chapter>
+	</part>
+</book>
