@@ -123,7 +123,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.94 2003/04/21 19:39:14 jackrepenning Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.95 2003/04/24 23:23:29 dlr Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -199,7 +199,11 @@ public abstract class AbstractScarabModule
     public abstract ScarabUser[] getUsers(List permissions)
         throws Exception;
 
+    /**
+     * Must never return <code>null</code>.
+     */
     public abstract String getRealName();
+
     public abstract Integer getModuleId();
 
     /**
