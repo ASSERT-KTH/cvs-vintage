@@ -18,16 +18,11 @@ package org.columba.core.main;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.Enumeration;
 
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.columba.core.util.SwingWorker;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.imap.IMAPFolder;
-import org.columba.mail.folder.virtual.VirtualFolder;
 
 public class ExitWorker extends SwingWorker {
 	private JProgressBar bar;
@@ -37,47 +32,16 @@ public class ExitWorker extends SwingWorker {
 	public Object construct() {
 		showDialog();
 
-		/*
-		MainInterface.mainFrame.saveWindowPosition();
-		MainInterface.headerTableViewer.saveColumnConfig();
-		*/
+		//MainInterface.shutdownManager.shutdown();
 
-		//MainInterface.frameController.getView().setVisible(false);
-
-		//Config.save();
-
-		initProgressBar();
-
-		// FIXME
-		/*
-		savePop3();
-		*/
-		saveAllFolders();
+		//initProgressBar();
 
 		
-		/*
-		AddressbookExitWorker w =
-			new AddressbookExitWorker(MainInterface.addressbookInterface);
-		w.saveAllAddressbooks();
-		*/
-		
-		System.exit(0);
-
-		//unregister();
 
 		return null;
 	}
 
-	public void savePop3() throws Exception{
-		/*
-		POP3Server server;
-		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
-			server = MainInterface.popServerCollection.get(i);
-			server.save();
-			bar.setValue(value++);
-		}
-		*/
-	}
+	
 
 	public void showDialog() {
 		JFrame dialog = new JFrame("Saving Folders...");
@@ -101,21 +65,10 @@ public class ExitWorker extends SwingWorker {
 
 		dialog.setVisible(true);
 
-		/*
-		dialog.addWindowListener(
-		        new WindowAdapter()
-		            {
-		                public void windowClosing(WindowEvent e)
-		                    {
 		
-		                        System.exit(0);
-		
-		                    }
-		            }
-		        );
-		*/
 	}
 
+	/*
 	protected void initProgressBar() {
 		Folder rootFolder = (Folder) MainInterface.treeModel.getRoot();
 		int c = getFolderCount(rootFolder);
@@ -141,125 +94,14 @@ public class ExitWorker extends SwingWorker {
 
 		return count;
 	}
-
-	public void saveAllFolders() {
-
-		FolderTreeNode rootFolder =
-			(FolderTreeNode) MainInterface.treeModel.getRoot();
-
-		//timer.start();
-		saveFolder(rootFolder);
-
-	}
-
-	public void saveFolder(FolderTreeNode parentFolder) {
-
-		int count = parentFolder.getChildCount();
-		FolderTreeNode child;
-		FolderTreeNode folder;
-
-		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-
-			child = (FolderTreeNode) e.nextElement();
-
-			if (child != null) {
-				if (child instanceof VirtualFolder) {
-				}
-				if (child instanceof IMAPFolder) {
-					/*
-					IMAPFolder imapFolder = (IMAPFolder) child;
-
-					if (imapFolder.getChanged() == true) {
-						bar.setValue(value++);
-						try {
-							//child.expunge();
-							imapFolder.save();
-						} catch (Exception ex) {
-							System.out.println(
-								"Error while saving folder: "
-									+ ex.getMessage());
-							ex.printStackTrace();
-						}
-
-					}
-					*/
-				} else {
-					/*
-					try {
-						child.save();
-					} catch (Exception ex) {
-						System.out.println(
-							"Error while saving folder: " + ex.getMessage());
-						ex.printStackTrace();
-					}
-					*/
-
-					/*
-					if (child.getChanged() == true)
-					{
-						bar.setValue(value++);
-					
-						
-						try
-						{
-							child.unmarkRecent();
-						}
-						catch (Exception ex)
-						{
-							ex.printStackTrace();
-						}
-						
-					
-						Object[] uids = child.getUids();
-					
-						for (int i = 0; i < uids.length; i++)
-						{
-					
-							try
-							{
-								Message message = child.getMessage(uids[i]);
-								Flags flags = message.getFlags();
-								boolean expunged = flags.getDeleted();
-					
-								if (expunged == true)
-								{
-									Object recents[] = new Object[1];
-									recents[0] = uids[i];
-									// FIXME
-									
-									//child.workerViewRemove(recents);
-									//child.workerRemove(uids[i]);
-									
-								}
-							}
-							catch (Exception ex)
-							{
-								//System.out.println("Exception: "+ ex.getMessage() );
-								ex.printStackTrace();
-							}
-					
-						}
-					
-						try
-						{
-							child.save();
-						}
-						catch (Exception ex)
-						{
-							System.out.println("Error while saving folder: " + ex.getMessage());
-							ex.printStackTrace();
-						}
-					
-					}
-					*/
-				}
-
-			}
-
-			saveFolder(child);
-
-		}
-
+	*/
+	
+	
+	/**
+	 * @return
+	 */
+	public JProgressBar getBar() {
+		return bar;
 	}
 
 }
