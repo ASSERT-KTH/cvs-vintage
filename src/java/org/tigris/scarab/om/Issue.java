@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.287 2003/04/08 16:23:54 dlr Exp $
+ * @version $Id: Issue.java,v 1.288 2003/04/09 19:50:37 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3098,6 +3098,7 @@ public class Issue
         attVal.setUserId(assignee.getUserId());
         attVal.setValue(assignee.getUserName());
         attVal.save();
+        // FIXME! invalidate the cache instead
         getUserAttributeValues().add(attVal);
 
         return activitySet;
@@ -3246,6 +3247,7 @@ public class Issue
         // Save assignee value
         attVal.setDeleted(true);
         attVal.save();
+        // FIXME! invalidate the cache instead
         getUserAttributeValues().remove(attVal);
 
         return activitySet;
