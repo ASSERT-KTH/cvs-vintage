@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.5 2005/01/08 23:27:33 linus Exp $
+// $Id: UmlFactory.java,v 1.6 2005/01/09 18:05:07 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,6 +68,17 @@ public interface UmlFactory {
             Object unidirectional, Object namespace)
     	throws IllegalModelElementConnectionException;
 
+    /**
+     * Creates a UML model element of the given type.
+     * This only works for UML elements. If a diagram contains
+     * elements of another type then it is the responsibility
+     * of the diagram manage those items and not call this
+     * method. It also only works for UML model elements that
+     * are represented in diagrams by a node.
+     * @param elementType the type of model element to build
+     */
+    Object buildNode(Object elementType);
+    
     /**
      * Checks if some type of UML model element is valid to
      * connect two other existing UML model elements.
