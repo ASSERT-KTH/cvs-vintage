@@ -97,7 +97,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.319 2003/08/15 23:59:17 dlr Exp $
+ * @version $Id: Issue.java,v 1.320 2003/08/18 19:41:55 dlr Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -291,6 +291,10 @@ public class Issue
             this.count = count;
         }
 
+        /**
+         * @param id The unique identifier for this issue, generally a
+         * combination of code and sequence number (e.g. SCB37).
+         */
         public void setUniqueId(String id)
         {
             // we could start at 1 here, if the spec says one char is 
@@ -307,15 +311,13 @@ public class Issue
             }
             if (code.length() != 0) 
             {
-                prefix = code.toString().toUpperCase();
+                setPrefix(code.toString());
             }
             count = Integer.parseInt(id.substring(code.length()));
         }
-
         
         /**
-         * Get the IdInstance
-         * @return String
+         * @return The domain.
          */
         public String getDomain()
         {
@@ -323,8 +325,7 @@ public class Issue
         }
 
         /**
-         * Get the Prefix
-         * @return String
+         * @return The prefix (upper-cased).
          */
         public String getPrefix()
         {
@@ -332,8 +333,7 @@ public class Issue
         }
                 
         /**
-         * Get the Count
-         * @return int
+         * @return The sequence of this issue within its code.
          */
         public int getCount()
         {
@@ -347,9 +347,9 @@ public class Issue
         {
             this.domainId = domainId;
         }
+
         /**
-         * Set the Prefix
-         * @param prefix
+         * @param prefix The module code.
          */
         public void setPrefix(String prefix)
         {
@@ -360,8 +360,7 @@ public class Issue
         }
         
         /**
-         * Set the Count
-         * @param count
+         * @param count The sequence of this issue within its code.
          */
         public void setCount(int count)
         {
