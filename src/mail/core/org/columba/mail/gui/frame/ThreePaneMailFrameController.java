@@ -31,6 +31,8 @@ import javax.swing.KeyStroke;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContentPane;
+import org.columba.core.gui.selection.SelectionChangedEvent;
+import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.UIFSplitPane;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
@@ -46,6 +48,7 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
+import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
@@ -55,7 +58,7 @@ import org.columba.mail.util.MailResourceLoader;
  *  
  */
 public class ThreePaneMailFrameController extends AbstractMailFrameController
-		implements TreeViewOwner, TableViewOwner, ContentPane {
+		implements TreeViewOwner, TableViewOwner, ContentPane, SelectionListener {
 
 	public TreeController treeController;
 
@@ -101,6 +104,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 		// table registers interest in tree selection events
 		treeHandler.addSelectionListener(tableHandler);
 
+		// also register interest in tree seleciton events
+		// for updating the title
+		treeHandler.addSelectionListener(this);
+		
 		AttachmentSelectionHandler attachmentHandler = new AttachmentSelectionHandler(attachmentController);		
 		getSelectionManager().addSelectionHandler(attachmentHandler);
 		// attachment viewer registers interest in table selection events
@@ -336,5 +343,17 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 	 */
 	public ContentPane getContentPane() {
 		return this;
+	}
+
+	/**
+	 * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent e) {
+		TreeSelectionChangedEvent event = (TreeSelectionChangedEvent) e;
+		
+		AbstractFolder[] selectedFolders = event.getSelected();
+		if( selectedFolders.length == 1) {
+			getContainer().getFrame().setTitle(selectedFolders[0].getName());
+		}
 	}
 }

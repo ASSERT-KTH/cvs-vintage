@@ -156,14 +156,6 @@ public class DefaultFrameController implements FrameMediator {
 		return new EmptyContentPane();
 	}
 	
-	/**
-	 * @see org.columba.core.gui.frame.FrameMediator#setFrameTitle(java.lang.String)
-	 */
-	public void setFrameTitle(String title) {
-		getContainer().setTitle(title);
-
-	}
-
 	class EmptyContentPane implements ContentPane {
 		public EmptyContentPane() {
 			super();

@@ -34,6 +34,7 @@ import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.main.MainInterface;
+import org.columba.core.main.VersionInfo;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.Identity;
@@ -147,8 +148,8 @@ public class MessageComposer {
 			header.set("References", references);
 		}
 
-		header.set("X-Mailer", "Columba v"
-				+ org.columba.core.main.MainInterface.version);
+		header.set("X-Mailer", "Columba ("
+				+ VersionInfo.getVersion() + ")");
 
 		header.set("columba.from", identity.getAddress());
 

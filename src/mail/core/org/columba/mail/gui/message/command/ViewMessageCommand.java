@@ -79,7 +79,7 @@ public class ViewMessageCommand extends FolderCommand {
 			return;
 
 		// if the message it not yet seen
-		if (!(flags.getSeen())) {
+		if (!flags.getSeen() && !srcFolder.isReadOnly()) {
 			// restart timer which marks the message as read
 			// after a user configurable time interval
 			((TableViewOwner) frameMediator).getTableController()

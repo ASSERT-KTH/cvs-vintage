@@ -298,4 +298,11 @@ public interface MailboxInterface {
      * @throws Exception
      */
     public Header getAllHeaderFields(Object uid) throws Exception;
+    
+    /**
+     * Is this mailbox read-only?
+     * @return TODO
+     *
+     */
+    public boolean isReadOnly();
 }

@@ -40,7 +40,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
@@ -72,7 +76,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author frd
  */
 public class ComposerController extends DefaultFrameController implements
-		CharsetOwnerInterface, Observer, ContentPane {
+		CharsetOwnerInterface, Observer, ContentPane, DocumentListener {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -137,6 +141,8 @@ public class ComposerController extends DefaultFrameController implements
 		attachmentController = new AttachmentController(this);
 		headerController = new HeaderController(this);
 		subjectController = new SubjectController(this);
+		getSubjectController().getView().getDocument().addDocumentListener(this);
+		
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
@@ -921,5 +927,44 @@ public class ComposerController extends DefaultFrameController implements
 	 */
 	public ContentPane getContentPane() {
 		return this;
+	}
+
+	/**
+	 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void changedUpdate(DocumentEvent arg0) {
+		Document doc = arg0.getDocument();
+		try {
+			String subject = doc.getText(0, doc.getLength());
+			
+			getContainer().getFrame().setTitle(subject);
+		} catch (BadLocationException e) {
+		}
+	}
+
+	/**
+	 * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void insertUpdate(DocumentEvent arg0) {
+		Document doc = arg0.getDocument();
+		try {
+			String subject = doc.getText(0, doc.getLength());
+			
+			getContainer().getFrame().setTitle(subject);
+		} catch (BadLocationException e) {
+		}
+	}
+
+	/**
+	 * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void removeUpdate(DocumentEvent arg0) {
+		Document doc = arg0.getDocument();
+		try {
+			String subject = doc.getText(0, doc.getLength());
+			
+			getContainer().getFrame().setTitle(subject);
+		} catch (BadLocationException e) {
+		}
 	}
 }

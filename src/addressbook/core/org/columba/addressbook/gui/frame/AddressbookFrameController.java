@@ -26,14 +26,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import org.columba.addressbook.gui.table.FilterToolbar;
 import org.columba.addressbook.gui.table.TableController;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.gui.tree.TreeController;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.config.ViewItem;
+import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContainerInfoPanel;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
@@ -48,7 +51,7 @@ import org.columba.core.pluginhandler.MenuPluginHandler;
  * @author fdietz
  */
 public class AddressbookFrameController extends DefaultFrameController
-		implements ContentPane, AddressbookFrameMediator {
+		implements ContentPane, AddressbookFrameMediator, TreeSelectionListener {
 
 	protected TreeController tree;
 
@@ -68,6 +71,9 @@ public class AddressbookFrameController extends DefaultFrameController
 
 		// table should be updated when tree selection changes
 		tree.getView().addTreeSelectionListener(table);
+
+		// this is needed to update the titlebar
+		tree.getView().addTreeSelectionListener(this);
 
 		//getContainer().setContentPane(this);
 	}
@@ -150,5 +156,16 @@ public class AddressbookFrameController extends DefaultFrameController
 	 */
 	public ContentPane getContentPane() {
 		return this;
+	}
+
+	/**
+	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+	 */
+	public void valueChanged(TreeSelectionEvent arg0) {
+		AddressbookTreeNode selectedFolder = (AddressbookTreeNode) arg0.getPath().getLastPathComponent();
+		
+		if( selectedFolder != null ) {
+			getContainer().getFrame().setTitle(selectedFolder.getName());
+		}
 	}
 }

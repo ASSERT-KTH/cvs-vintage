@@ -82,6 +82,8 @@ public class DefaultContainer extends JFrame implements Container,
 	protected ContainerInfoPanel infoPanel;
 
 	protected boolean switchedFrameMediator = false;
+	
+	private String windowname;
 
 	
 	public DefaultContainer(FrameMediator mediator) {
@@ -105,8 +107,6 @@ public class DefaultContainer extends JFrame implements Container,
 		super();
 
 		this.viewItem = viewItem;
-
-		
 		
 		// create new default frame controller
 		mediator = new DefaultFrameController(viewItem);
@@ -119,16 +119,12 @@ public class DefaultContainer extends JFrame implements Container,
 	 * 
 	 */
 	protected void initComponents() {
-		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
 
-		if (MainInterface.DEBUG) {
-			setTitle("Columba - version: "
-					+ org.columba.core.main.MainInterface.version
-					+ " DEBUG MODE");
-		} else {
-			setTitle("Columba - version: "
-					+ org.columba.core.main.MainInterface.version);
-		}
+		// Set the icon and the title	
+		this.setIconImage(ImageLoader.getImageIcon("icon16.png").getImage());
+		windowname = "Columba";	
+
+		setTitle("");
 
 		//		register statusbar at global taskmanager
 		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
@@ -167,7 +163,9 @@ public class DefaultContainer extends JFrame implements Container,
 
 		// add window listener
 		addWindowListener(this);
+
 	}
+
 	/**
 	 * 
 	 * Create default view configuration
@@ -240,7 +238,6 @@ public class DefaultContainer extends JFrame implements Container,
 //		 awt-event-thread
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-
 
 			}
 		});
@@ -613,5 +610,30 @@ public class DefaultContainer extends JFrame implements Container,
 	 */
 	public boolean isInfoPanelEnabled() {
 		return getViewItem().getBoolean("toolbars", "infopanel", true);
+	}
+
+	/**
+	 * @see java.awt.Frame#setTitle(java.lang.String)
+	 */
+	public void setTitle(String arg0) {
+		String title = windowname; 
+		
+		if(MainInterface.DEBUG) {
+		 	title += " DEBUG MODE";
+		}
+		
+		if( arg0.length() > 0 ) {
+			title = arg0 + " - " + title;
+		}
+		
+		super.setTitle(title);
+	}
+
+	/**
+	 * @see org.columba.core.gui.frame.Container#setWindowName(java.lang.String)
+	 */
+	public void setWindowName(String name) {
+		this.windowname = name;
+		setTitle("");
 	}
 }

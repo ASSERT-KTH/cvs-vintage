@@ -56,7 +56,6 @@ public interface Container {
 	 */
 	void setFrameMediator(FrameMediator m);
 
-	
 	/**
 	 * Switch to new framemediator. This also ensures that the menu,
 	 * toolbar, infobar, etc. get also replaced correctly.
@@ -259,11 +258,11 @@ public interface Container {
 	 *            xml element
 	 */
 	void extendToolbar(FrameMediator mediator, XmlElement element);
-
+	
 	/**
-	 * Set frame title.
+	 * Sets the window name which is displayed in the title.
 	 * 
-	 * @param title
+	 * @param name
 	 */
-	void setTitle(String title);
+	void setWindowName(String name);
 }

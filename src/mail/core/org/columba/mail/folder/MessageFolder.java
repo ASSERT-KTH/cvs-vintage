@@ -882,4 +882,12 @@ public abstract class MessageFolder extends AbstractFolder implements
 
 		return bodyStream;
 	}
+
+	/**
+	 * @see org.columba.mail.folder.MailboxInterface#isReadOnly()
+	 */
+	public boolean isReadOnly() {
+		return false;
+	}
+
 }
