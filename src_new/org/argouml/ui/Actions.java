@@ -1,4 +1,4 @@
-// $Id: Actions.java,v 1.69 2004/08/20 21:06:59 mvw Exp $
+// $Id: Actions.java,v 1.70 2004/08/21 06:48:19 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -687,8 +687,18 @@ class ActionEmailExpert extends ToDoItemAction {
             ToDoItem target = (ToDoItem) getRememberedTarget();
             Poster p = target.getPoster();
             String to = p.getExpertEmail();
-            String subject = target.getHeadline();
-            subject = subject.replaceAll("\\s", "%20");
+            String subject = target.getHeadline().trim();
+            /* The replaceAll function is only supported in Java 1.4 and up.
+             * Once we stop supporting Java 1.3, 
+             * we can reintroduce this clean solution!
+             * subject = subject.replaceAll("\\s", "%20"); 
+             */
+            int i;
+            while ((i = subject.indexOf(" ")) >= 0) {
+                StringBuffer s = new StringBuffer(subject);
+                subject = s.replace(i, i + 1, "%20").toString();
+            }
+            
             Designer dsgr = Designer.TheDesigner;
             try {                
                 //MVW: This works under MSWindows only, I guess.
