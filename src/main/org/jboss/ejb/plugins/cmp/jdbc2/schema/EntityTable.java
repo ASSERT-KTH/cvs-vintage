@@ -53,7 +53,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.17 $</tt>
+ * @version <tt>$Revision: 1.18 $</tt>
  */
 public class EntityTable
    implements Table
@@ -159,7 +159,7 @@ public class EntityTable
          invalidable = false;
       }
 
-      cache = cacheConf == null ? Cache.NONE : new PartitionedTableCache(minCapacity, maxCapacity, partitionsTotal);
+      cache = cachePolicy == null ? Cache.NONE : new PartitionedTableCache(minCapacity, maxCapacity, partitionsTotal);
 
       if(invalidable)
       {
