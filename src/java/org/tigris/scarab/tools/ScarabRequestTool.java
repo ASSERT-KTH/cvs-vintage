@@ -2315,8 +2315,9 @@ e.printStackTrace();
      * Full featured, paginated, sorted version for returning results 
      * of a user search.
      */
-    public ScarabPaginatedList getUserFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
-                                                         String sortColumn, String sortPolarity)
+    public ScarabPaginatedList getUserFilteredSearchResults
+        (MITList mitList, int pageNum, int resultsPerPage, String sortColumn,
+         String sortPolarity)
         throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
@@ -2346,35 +2347,35 @@ e.printStackTrace();
                                                           String searchField)
         throws Exception
     {
-
+        ScarabPaginatedList list = null;
         String name = null;
         String userName = null;
-        Module module = getCurrentModule();  
-        ScarabPaginatedList list = null;
 
-        if (searchField.equals("FullName"))
+        if ("FullName".equalsIgnoreCase(searchField))
         {
             name = searchString;
         }
-        else if (searchField.equals("Username"))
+        else if ("UserName".equalsIgnoreCase(searchField))
         {
             userName = searchString;
         }
 
         try 
         {
-            list =  module.getUsers(name, userName, mitList,
-                                    (pageNum-1)*resultsPerPage, resultsPerPage, 
-                                    sortColumn, sortPolarity);
+            list = getCurrentModule().getUsers(name, userName, mitList,
+                                               (pageNum - 1) * resultsPerPage,
+                                               resultsPerPage, sortColumn,
+                                               sortPolarity);
         } 
         catch (Exception e)
         {
+            Log.get().error("Problem getting user list", e);
             list = new ScarabPaginatedList();
-            Log.get().error("", e);
         }
 
-        // these are object members are used by GlobalMacros.vm via the bean interface.
-        // leave them here until all users of the paginate macro can be updated. 
+        // These are object members are used by GlobalMacros.vm via
+        // the bean interface.  Leave them here until all users of the
+        // paginate macro can be updated.
         this.nbrPages = list.getNumberOfPages();
         this.nextPage = list.getNextPageNumber();
         this.prevPage = list.getPrevPageNumber();
