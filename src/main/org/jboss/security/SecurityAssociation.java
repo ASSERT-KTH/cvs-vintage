@@ -33,7 +33,7 @@ the current VM.
 
 @author Daniel O'Connor (docodan@nycap.rr.com)
 @author Scott.Stark@jboss.org
-@version $Revision: 1.10 $
+@version $Revision: 1.11 $
  */
 public final class SecurityAssociation
 {
@@ -65,6 +65,9 @@ public final class SecurityAssociation
    /** The permission required to access setServer */
    private static final RuntimePermission setServerPermission =
       new RuntimePermission("org.jboss.security.SecurityAssociation.setServer");
+   /** The permission required to access pushRunAsRole/popRunAsRole */
+   private static final RuntimePermission setRunAsRole =
+      new RuntimePermission("org.jboss.security.SecurityAssociation.setRunAsRole");
 
    static
    {
@@ -262,12 +265,18 @@ public final class SecurityAssociation
     */
    public static void pushRunAsRole(Principal runAsRole)
    {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(setRunAsRole);
       threadRunAsStacks.push(runAsRole);
    }
    /** Pop the current thread of control's run-as principal role.
     */
    public static Principal popRunAsRole()
    {
+      SecurityManager sm = System.getSecurityManager();
+      if( sm != null )
+         sm.checkPermission(setRunAsRole);
       Principal runAsRole = threadRunAsStacks.pop();
       return runAsRole;
    }
