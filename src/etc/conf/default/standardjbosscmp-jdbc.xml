@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.43 2002/09/04 06:10:26 loubyansky Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.44 2002/09/13 17:56:39 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -36,6 +36,14 @@
          <jdbc-type>VARCHAR</jdbc-type>
          <sql-type>VARCHAR(32)</sql-type>
       </unknown-pk>
+
+      <create-entity-command>default_create_command</create-entity-command>
+      <entity-commands>
+         <entity-command>
+            <command-name>default_create_command</command-name>
+            <command-class>org.jboss.ejb.plugins.cmp.jdbc.JDBCCreateEntityCommand</command-class>
+         </entity-command>
+      </entity-commands>
    </defaults>
 
    <type-mapping>
@@ -1329,6 +1337,7 @@
          <row-locking-template>SELECT ?1 FROM ?2 WHERE ?3 FOR UPDATE</row-locking-template>
          <pk-constraint-template>CONSTRAINT ?1 PRIMARY KEY (?2)</pk-constraint-template>
          <fk-constraint-template>ALTER TABLE ?1 ADD INDEX ind_?3 (?3), ADD CONSTRAINT ?2 FOREIGN KEY (?3) REFERENCES ?4 (?5)</fk-constraint-template>
+         <auto-increment-template>?1 auto_increment</auto-increment-template>
          <alias-header-prefix>t</alias-header-prefix>
          <alias-header-suffix>_</alias-header-suffix>
          <alias-max-length>32</alias-max-length>
@@ -1443,6 +1452,14 @@
             <jdbc-type>TIME</jdbc-type>
             <sql-type>BIGINT</sql-type>
          </mapping>
+
+         <entity-commands>
+            <entity-command>
+               <command-name>auto_increment</command-name>
+               <command-class>org.jboss.ejb.plugins.cmp.jdbc.mysql.MySQLCreateEntityCommand</command-class>
+            </entity-command>
+         </entity-commands>
+
       </type-mapping>
 
       <type-mapping>
