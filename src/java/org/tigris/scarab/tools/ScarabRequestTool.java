@@ -1146,8 +1146,9 @@ try{
 
     /**
      * Takes unique id, and returns issue.
+     * if the issue is not valid, then it returns null.
      */
-    public Issue getIssue(String id) throws Exception
+    public Issue getIssue(String id)
     {
         Issue issue = null;
         if (id == null)

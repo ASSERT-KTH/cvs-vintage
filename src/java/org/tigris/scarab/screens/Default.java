@@ -75,7 +75,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.53 2002/06/05 22:20:14 elicia Exp $
+ * @version $Id: Default.java,v 1.54 2002/06/10 22:59:55 jon Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -217,5 +217,14 @@ public class Default extends TemplateSecureScreen
         getTemplateContext(data).put( ScarabConstants.NEXT_TEMPLATE, 
             data.getParameters().getString("template") );
         setTarget(data, "Login.vm");        
+    }
+
+    /**
+     * Helper method to retrieve the ScarabRequestTool from the Context
+     */
+    public ScarabRequestTool getScarabRequestTool(TemplateContext context)
+    {
+        return (ScarabRequestTool)context
+            .get(ScarabConstants.SCARAB_REQUEST_TOOL);
     }
 }
