@@ -24,11 +24,12 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.here").</p>
 <form action="$link.setPage("admin,ModuleAttributeEdit.vm")" method="post">
 <input type="hidden" name="action" value="admin.ModuleAttributeEdit" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,AttributeOptionSelect.vm" />
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,AttributeGroupEdit.vm" />
+#set ($cancelTemplate = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "admin,AttributeGroupEdit.vm"))
+<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelTemplate" />
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 <input type="hidden" name="attributeid" value="$attribute.AttributeId" />
 <input type="hidden" name="groupId" value="$data.Parameters.getString("groupId","").trim()" /> 
-<input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId","").trim()" /> 
+<input type="hidden" name="issueTypeId" value="$issueType.IssueTypeId" /> 
 
 #ModuleAttributeEditBar("")
 
