@@ -2,6 +2,7 @@ package org.jboss.web;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.naming.Context;
@@ -14,9 +15,9 @@ import javax.naming.NameNotFoundException;
 import org.w3c.dom.Element;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
+import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.naming.Util;
@@ -51,7 +52,7 @@ steps for authenticating a user is:
     String password = f(request);
     // Get the JBoss security manager from the ENC context
     InitialContext iniCtx = new InitialContext();
-    EJBSecurityManager securityMgr = (EJBSecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
+    SecurityManager securityMgr = (SecurityManager) iniCtx.lookup("java:comp/env/security/securityMgr");
     SimplePrincipal principal = new SimplePrincipal(username);
     if( securityMgr.isValid(principal, password) )
     {
@@ -69,22 +70,22 @@ steps for authenticating a user is:
 
 An outline of the steps for authorizing the user is:
 <code>
-    // Get the username & required roles from the request context...
-    String username = f(request);
-    String[] roles = f(request);
-    // Get the JBoss security manager from the ENC context
-    InitialContext iniCtx = new InitialContext();
-    RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
-    SimplePrincipal principal = new SimplePrincipal(username);
-    Set requiredRoles = new HashSet(Arrays.asList(roles));
-    if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
-    {
-        // Indicate the user has the required roles for the web content...
-    }
-    else
-    {
-        // Deny access...
-    }
+   // Get the username & required roles from the request context...
+   String username = f(request);
+   String[] roles = f(request);
+   // Get the JBoss security manager from the ENC context
+   InitialContext iniCtx = new InitialContext();
+   RealmMapping securityMgr = (RealmMapping) iniCtx.lookup("java:comp/env/security/realmMapping");
+   SimplePrincipal principal = new SimplePrincipal(username);
+   Set requiredRoles = new HashSet(Arrays.asList(roles));
+   if( securityMgr.doesUserHaveRole(principal, requiredRoles) )
+   {
+     // Indicate the user has the required roles for the web content...
+   }
+   else
+   {
+     // Deny access...
+   }
 </code>
 
 The one thing to be aware of is the relationship between the thread context
@@ -106,13 +107,13 @@ in the contrib/tomcat module.
 @see #performUndeploy(String)
 @see #parseWebAppDescriptors(ClassLoader, Element, Element)
 @see #linkSecurityDomain(String, Context)
-@see org.jboss.security.EJBSecurityManager;
+@see org.jboss.security.SecurityManager;
 @see org.jboss.security.RealmMapping;
 @see org.jboss.security.SimplePrincipal;
 @see org.jboss.security.SecurityAssociation;
 
-@author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.8 $
+@author  Scott.Stark@jboss.org
+@version $Revision: 1.9 $
 */
 public abstract class AbstractWebContainer extends ServiceMBeanSupport implements AbstractWebContainerMBean
 {
@@ -142,10 +143,6 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         public void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception;
     }
 
-    /** The "WebContainer" log4j category instance available for logging related
-        to WebContainer events.
-     */
-    protected Logger category = Logger.getLogger(this.getClass());
     /** A mapping of deployed warUrl strings to the WebApplication object */
     protected HashMap deploymentMap = new HashMap();
 
@@ -159,12 +156,16 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
      perform the container specific deployment steps and registers the
      returned WebApplication in the deployment map. The steps performed are:
 
+        ClassLoader appClassLoader = thread.getContextClassLoader();
+        URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
+        thread.setContextClassLoader(warLoader);
         WebDescriptorParser webAppParser = ...;
         WebApplication warInfo = performDeploy(ctxPath, warUrl, webAppParser);
         ClassLoader loader = warInfo.getClassLoader();
         Element webApp = warInfo.getWebApp();
         Element jbossWeb = warInfo.getJbossWeb();
         deploymentMap.put(warUrl, warInfo);
+        thread.setContextClassLoader(appClassLoader);
 
      The subclass performDeploy() implementation needs to invoke
      webAppParser.parseWebAppDescriptors(loader, webApp, jbossWeb) to have the
@@ -178,14 +179,16 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     */
     public synchronized void deploy(String ctxPath, String warUrl) throws DeploymentException
     {
+       Thread thread = Thread.currentThread();
+        ClassLoader appClassLoader = thread.getContextClassLoader();
         try
         {
+           // Create a classloader for the war to ensure a unique ENC
+           URL[] empty = {};
+           URLClassLoader warLoader = URLClassLoader.newInstance(empty, appClassLoader);
+           thread.setContextClassLoader(warLoader);
             WebDescriptorParser webAppParser = new DescriptorParser();
             WebApplication warInfo = performDeploy(ctxPath, warUrl, webAppParser);
-            ClassLoader loader = warInfo.getClassLoader();
-            Element webApp = warInfo.getWebApp();
-            Element jbossWeb = warInfo.getJbossWeb();
-            //parseWebAppDescriptors(loader, webApp, jbossWeb);
             deploymentMap.put(warUrl, warInfo);
         }
         catch(DeploymentException e)
@@ -196,6 +199,10 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         {
             e.printStackTrace();
             throw new DeploymentException("Error during deploy", e);
+        }
+        finally
+        {
+           thread.setContextClassLoader(appClassLoader);
         }
     }
 
@@ -237,6 +244,9 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             throw new DeploymentException("Error during deploy", e);
         }
     }
+    /** Called as part of the undeploy() method template to ask the
+     subclass for perform the web container specific undeployment steps.
+     */
     protected abstract void performUndeploy(String warUrl) throws Exception;
     /** See if a war is deployed.
     */
@@ -264,6 +274,14 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         return deploymentMap.values().iterator();
     }
 
+    /** This method is invoked to import an arbitrary XML configuration tree.
+     Subclasses should override this method if they support such a configuration
+     capability. This implementation does nothing.
+     */
+    public void importXml(Element config)
+    {
+    }
+
     /** This method is invoked from within subclass performDeploy() method
      implementations when they invoke WebDescriptorParser.parseWebAppDescriptors().
 
@@ -274,7 +292,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     */
     protected void parseWebAppDescriptors(ClassLoader loader, Element webApp, Element jbossWeb) throws Exception
     {
-        category.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
+        log.debug("AbstractWebContainer.parseWebAppDescriptors, Begin");
         WebMetaData metaData = new WebMetaData();
         metaData.importXml(webApp);
         if( jbossWeb != null )
@@ -290,7 +308,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             envCtx = (Context) iniCtx.lookup("java:comp");
             // Add a link to the global transaction manager
             envCtx.bind("UserTransaction", new LinkRef("UserTransaction"));
-            // Create the web app ENC
+            log.debug("Linking java:comp/UserTransaction to JNDI name: UserTransaction");
             envCtx = envCtx.createSubcontext("env");
         }
         finally
@@ -299,18 +317,21 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         }
 
         Iterator envEntries = metaData.getEnvironmentEntries();
-        category.debug("addEnvEntries");
+        log.debug("addEnvEntries");
         addEnvEntries(envEntries, envCtx);
+        Iterator resourceEnvRefs = metaData.getResourceEnvReferences();
+        log.debug("linkResourceEnvRefs");
+        linkResourceEnvRefs(resourceEnvRefs, envCtx);
         Iterator resourceRefs = metaData.getResourceReferences();
-        category.debug("linkResourceRefs");
+        log.debug("linkResourceRefs");
         linkResourceRefs(resourceRefs, envCtx);
         Iterator ejbRefs = metaData.getEjbReferences();
-        category.debug("linkEjbRefs");
+        log.debug("linkEjbRefs");
         linkEjbRefs(ejbRefs, envCtx);
         String securityDomain = metaData.getSecurityDomain();
-        category.debug("linkSecurityDomain");
+        log.debug("linkSecurityDomain");
         linkSecurityDomain(securityDomain, envCtx);
-        category.debug("AbstractWebContainer.parseWebAppDescriptors, End");
+        log.debug("AbstractWebContainer.parseWebAppDescriptors, End");
     }
 
     protected void addEnvEntries(Iterator envEntries, Context envCtx)
@@ -319,24 +340,24 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
         while( envEntries.hasNext() )
         {
             EnvEntryMetaData entry = (EnvEntryMetaData) envEntries.next();
-            category.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
+            log.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
             EnvEntryMetaData.bindEnvEntry(envCtx, entry);
         }
     }
 
-    protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
-        throws NamingException
-    {
-        while( resourceRefs.hasNext() )
+   protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
+      throws NamingException
+   {
+        while( resourceEnvRefs.hasNext() )
         {
-            ResourceRefMetaData ref = (ResourceRefMetaData) resourceRefs.next();
-            String resourceName = ref.getResourceName();
+            ResourceEnvRefMetaData ref = (ResourceEnvRefMetaData) resourceEnvRefs.next();
+            String resourceName = ref.getJndiName();
             String refName = ref.getRefName();
             if( ref.getType().equals("java.net.URL") )
             {
                 try
                 {
-                    category.debug("Binding '"+refName+"' to URL: "+resourceName);
+                    log.debug("Binding '"+refName+"' to URL: "+resourceName);
                     URL url = new URL(resourceName);
                     Util.bind(envCtx, refName, url);
                 }
@@ -347,8 +368,37 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             }
             else
             {
-                category.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
+                log.debug("Linking '"+refName+"' to JNDI name: "+resourceName);
                 Util.bind(envCtx, refName, new LinkRef(resourceName));
+            }
+        }
+   }
+
+   protected void linkResourceRefs(Iterator resourceRefs, Context envCtx)
+        throws NamingException
+    {
+        while( resourceRefs.hasNext() )
+        {
+            ResourceRefMetaData ref = (ResourceRefMetaData) resourceRefs.next();
+            String jndiName = ref.getJndiName();
+            String refName = ref.getRefName();
+            if( ref.getType().equals("java.net.URL") )
+            {
+                try
+                {
+                    log.debug("Binding '"+refName+"' to URL: "+jndiName);
+                    URL url = new URL(jndiName);
+                    Util.bind(envCtx, refName, url);
+                }
+                catch(MalformedURLException e)
+                {
+                    throw new NamingException("Malformed URL:"+e.getMessage());
+                }
+            }
+            else
+            {
+                log.debug("Linking '"+refName+"' to JNDI name: "+jndiName);
+                Util.bind(envCtx, refName, new LinkRef(jndiName));
             }
         }
     }
@@ -364,7 +414,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
             String linkName = ejb.getLink();
             if( jndiName == null )
                 jndiName = linkName;
-            category.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
+            log.debug("Linking ejb-ref: "+name+" to JNDI name: "+jndiName);
             if( jndiName == null )
                  throw new NamingException("ejb-ref: "+name+", expected jndi-name in jboss-web.xml");
             Util.bind(envCtx, name, new LinkRef(jndiName));
@@ -372,7 +422,7 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     }
 
     /** This creates a java:comp/env/security context that contains a
-        securityMgr binding pointing to an EJBSecurityMgr implementation
+        securityMgr binding pointing to an AuthenticationManager implementation
         and a realmMapping binding pointing to a RealmMapping implementation.
         If the jboss-web.xml descriptor contained a security-domain element
         then the bindings are LinkRefs to the jndi name specified by the
@@ -385,16 +435,20 @@ public abstract class AbstractWebContainer extends ServiceMBeanSupport implement
     {
         if( securityDomain == null )
         {
-            category.debug("Binding security/securityMgr to NullSecurityManager");
-            Object securityMgr = new NullSecurityManager(securityDomain);
+            log.debug("Binding security/securityMgr to NullSecurityManager");
+            Object securityMgr = new NullSecurityManager("java:/jaas/null");
             Util.bind(envCtx, "security/securityMgr", securityMgr);
             Util.bind(envCtx, "security/realmMapping", securityMgr);
+            Util.bind(envCtx, "security/security-domain", new LinkRef("java:/jaas/null"));
+            Util.bind(envCtx, "security/subject", new LinkRef("java:/jaas/null/subject"));
         }
         else
         {
-            category.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
+            log.debug("Linking security/securityMgr to JNDI name: "+securityDomain);
             Util.bind(envCtx, "security/securityMgr", new LinkRef(securityDomain));
             Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
+            Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
+            Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
         }
     }
 
