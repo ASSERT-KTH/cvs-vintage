@@ -144,6 +144,7 @@ public class DefaultCMSetter extends BaseInterceptor {
 	    errorWrapper.loadServlet();
 	} catch( Exception ex ) {
 	    System.out.println("Error loading default servlet ");
+            ex.printStackTrace();
 	    // XXX remove this context from CM
 	    throw new TomcatException( "Error loading default error servlet ", ex );
 	}

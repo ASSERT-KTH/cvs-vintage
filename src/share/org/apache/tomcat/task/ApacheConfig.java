@@ -181,7 +181,7 @@ public class ApacheConfig  { // implements XXX
 	} catch( Exception ex ) {
 	    //	    ex.printStackTrace();
 	    //throw new TomcatException( "Error generating Apache config", ex );
-	    System.out.println("Failed to generate automactic apache confiugration " + ex.toString());
+	    System.out.println("Failed to generate automatic apache configuration " + ex.toString());
 	}
 	    
     }

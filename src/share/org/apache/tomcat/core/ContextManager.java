@@ -419,18 +419,27 @@ public class ContextManager {
     /** The root directory of tomcat
      */
     public String getHome() {
-	if( home != null ) return home;
-	// XXX check if TOMCAT_HOME env is set 
-
-	// Convert "." to absolute path
-	home=new File("").getAbsolutePath();
+	if( home == null ) setHome(".");
 	return home;
     }
     
-    /** Set instalation directory
+    /** 
+     * Set installation directory.  If path specified is relative, evaluate
+     * it relative to the tomcat.home property if available, otherwise, 
+     * evaluate it relative to the current working directory.
      */
     public void setHome(String home) {
-	this.home=home;
+        File homeFile = new File(home);
+        if (!homeFile.isAbsolute()) {
+            String tomcat_home = System.getProperty("tomcat.home");
+            if (tomcat_home != null) homeFile = new File(tomcat_home, home); 
+        }
+        
+        try {
+            this.home = homeFile.getCanonicalPath();
+        } catch (IOException ioe) {
+            this.home = home; // oh well, we tried...
+        }
     }
     
     /**

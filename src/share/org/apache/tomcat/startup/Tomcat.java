@@ -84,12 +84,13 @@ public class Tomcat {
 	    return;
 	}
 
-	File f=new File(configFile);
-
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setHelper( xh );
+
+	File f=new File(cm.getHome(), configFile);
+
 	try {
 	    xh.readXml(f,cm);
 	} catch( Exception ex ) {
