@@ -369,3 +369,20 @@
 #end
 #end
 
+
+#macro (sort $shortName $longName)
+     #if ($sortColumn.equals($shortName))
+        #if ($sortPolarity.equals("desc"))
+           #set ($arrowLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortPolarity", "asc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
+        #else
+           #set ($arrowLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()))
+           <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_uparrow_on.gif")" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a>&#160;
+        #end $longName
+     #else
+        #set ($sortLink = $link.setPage("$scarabR.CurrentTemplate").setPathInfo("sortColumn", "$shortName").setPathInfo("sortPolarity", "$sortPolarity").setPathInfo("pageNum", $pageNum.toString()))
+        <a href="$sortLink">$longName</a>
+     #end
+#end
+
+
