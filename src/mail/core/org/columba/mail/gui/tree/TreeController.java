@@ -41,9 +41,8 @@ import org.columba.core.main.MainInterface;
  */
 
 public class TreeController
-	implements
-		TreeSelectionListener,
-		TreeWillExpandListener //implements TreeNodeChangeListener
+implements TreeSelectionListener,
+		TreeWillExpandListener //, TreeNodeChangeListener
 {
 	private TreeView folderTree;
 	private boolean b = false;
@@ -71,8 +70,6 @@ public class TreeController
 	private TreeView view;
 
 	private MailFrameController mailFrameController;
-	
-	
 
 	public TreeController(
 		MailFrameController mailFrameController,
@@ -107,7 +104,6 @@ public class TreeController
 		view.setCellRenderer(renderer);
 
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );
-
 	}
 
 	public void treeWillExpand(TreeExpansionEvent e)
@@ -125,18 +121,15 @@ public class TreeController
 		cr[0] = new FolderCommandReference(treeNode);
 
 		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-
 	}
 
-	public void treeWillCollapse(TreeExpansionEvent e) {
-	}
+	public void treeWillCollapse(TreeExpansionEvent e) {}
 
 	public TreeModel getModel() {
 		return model;
 	}
 
 	public TreeView getView() {
-
 		return view;
 	}
 
@@ -167,7 +160,6 @@ public class TreeController
 			new ViewHeaderListCommand(
 				getMailFrameController(),
 				treeSelectionManager.getSelection()));
-
 	}
 
 	// this method is called when the user selects another folder
@@ -209,7 +201,6 @@ public class TreeController
 				treeSelectionManager.getSelection()));
 			oldSelection = getSelected();
 		}
-
 	}
 
 	/**
@@ -227,5 +218,4 @@ public class TreeController
 	public MailFrameController getMailFrameController() {
 		return mailFrameController;
 	}
-
 }
