@@ -12,7 +12,7 @@
 
 <!-- The "init" target is executed when Ant is first started, to initialize
      the values of properties (or perform other setup tasks as needed).
-     In current versions of Ant, this behavior is hard coded -- in future
+     In current versions of Ant, this behavior is hard coded - in future
      versions, the 'init="init"' attribute added to each other target will
      request this behavior with no further changes required.
 
