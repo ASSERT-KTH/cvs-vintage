@@ -3,7 +3,7 @@
 <jboss>
 	<secure>false</secure>
     <container-configurations>
-        
+
 		<container-configuration>
 	 		<container-name>Standard CMP EntityBean</container-name>
 	 		<call-logging>false</call-logging>
@@ -14,6 +14,7 @@
 			<transaction-manager>org.jboss.tm.TxManager</transaction-manager>
 			<container-invoker-conf>
 				<Optimized>True</Optimized>
+                <RMIObjectPort>4444</RMIObjectPort>
 			</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
@@ -24,7 +25,7 @@
 			</container-pool-conf>
 			<commit-option>A</commit-option>
         </container-configuration>
-		
+
 		<container-configuration>
 	 		<container-name>jdk1.2.2 CMP EntityBean</container-name>
 	 		<call-logging>false</call-logging>
@@ -45,7 +46,7 @@
                         </container-pool-conf>
                         <commit-option>A</commit-option>
         </container-configuration>
-		
+
 		<container-configuration>
 			<container-name>Standard Stateless SessionBean</container-name>
 			<call-logging>false</call-logging>
@@ -62,7 +63,7 @@
 			<MinimumSize>10</MinimumSize>
 			</container-pool-conf>
 		</container-configuration>
-		
+
 		<container-configuration>
 			<container-name>jdk1.2.2 Stateless SessionBean</container-name>
 			<call-logging>false</call-logging>
@@ -79,7 +80,7 @@
 			<MinimumSize>10</MinimumSize>
 			</container-pool-conf>
 		</container-configuration>
-		
+
 		<container-configuration>
 			<container-name>Standard Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
@@ -94,7 +95,7 @@
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
 			</container-cache-conf>
 		</container-configuration>
-				
+
 		<container-configuration>
 			<container-name>jdk1.2.2 Stateful SessionBean</container-name>
 			<call-logging>false</call-logging>
@@ -109,7 +110,7 @@
                                 <cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
                         </container-cache-conf>
                 </container-configuration>
-		
+
        	<container-configuration>
 			<container-name>Standard BMP EntityBean</container-name>
 		 	<call-logging>false</call-logging>
@@ -123,14 +124,14 @@
 		 	</container-invoker-conf>
 			<container-cache-conf>
 				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
-			</container-cache-conf>	 	
+			</container-cache-conf>
 			<container-pool-conf>
 		   	<MaximumSize>100</MaximumSize>
 		   	<MinimumSize>10</MinimumSize>
 		 	</container-pool-conf>
 		 	<commit-option>A</commit-option>
 		</container-configuration>
-    
+
        	<container-configuration>
 			<container-name>jdk1.2.2 BMP EntityBean</container-name>
 		 	<call-logging>false</call-logging>
@@ -151,7 +152,7 @@
                         </container-pool-conf>
                         <commit-option>A</commit-option>
                 </container-configuration>
-    
+
 	</container-configurations>
     <resource-managers />
     <enterprise-beans />

@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -39,7 +39,7 @@ public class XmlFileLoader {
 	ClassLoader classLoader;
 
 	ApplicationMetaData metaData;
-	
+
 	// Static --------------------------------------------------------
 
 	// Constructors --------------------------------------------------
@@ -50,7 +50,7 @@ public class XmlFileLoader {
 	public ApplicationMetaData getMetaData() {
 		return metaData;
     }
-	
+
 	public void setClassLoader(ClassLoader cl) {
 		classLoader = cl;
 	}
@@ -62,58 +62,58 @@ public class XmlFileLoader {
 	/**
 	* load()
 	*
-	* This method creates the ApplicationMetaData. 
+	* This method creates the ApplicationMetaData.
 	* The configuration files are found in the classLoader.
-	* The default jboss.xml and jaws.xml files are always read first, then we override 
+	* The default jboss.xml and jaws.xml files are always read first, then we override
 	* the defaults if the user provides them
 	*
 	*/
    	public ApplicationMetaData load() throws Exception {
       	// create the metadata
 		metaData = new ApplicationMetaData();
-		
+
 		// Load ejb-jar.xml
-		
+
 		// we can always find the files in the classloader
 		URL ejbjarUrl = getClassLoader().getResource("META-INF/ejb-jar.xml");
-		
+
 		if (ejbjarUrl == null) {
 			throw new DeploymentException("no ejb-jar.xml found");
 		}
-		
+
 		Logger.debug("Loading ejb-jar.xml : " + ejbjarUrl.toString());
 		Document ejbjarDocument = getDocument(ejbjarUrl);
-		
+
 		// the url may be used to report errors
 		metaData.setUrl(ejbjarUrl);
 		metaData.importEjbJarXml(ejbjarDocument.getDocumentElement());
-		
+
 		// Load jbossdefault.xml from the default classLoader
 		// we always load defaults first
-		URL defaultJbossUrl = getClass().getResource("standardjboss.xml");
-		
+		URL defaultJbossUrl = getClassLoader().getResource("standardjboss.xml");
+
 		if (defaultJbossUrl == null) {
 			throw new DeploymentException("no standardjboss.xml found");
 		}
-		
+
 		Logger.debug("Loading standardjboss.xml : " + defaultJbossUrl.toString());
 		Document defaultJbossDocument = getDocument(defaultJbossUrl);
-		
+
 		metaData.setUrl(defaultJbossUrl);
 		metaData.importJbossXml(defaultJbossDocument.getDocumentElement());
-		
+
 		// Load jboss.xml
 		// if this file is provided, then we override the defaults
 		URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
-		
+
 		if (jbossUrl != null) {
 			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
 			Document jbossDocument = getDocument(jbossUrl);
-			
+
 			metaData.setUrl(jbossUrl);
 			metaData.importJbossXml(jbossDocument.getDocumentElement());
-		}	
-		
+		}
+
 		return metaData;
 	}
 
@@ -124,18 +124,18 @@ public class XmlFileLoader {
 		try {
 			Reader in = new InputStreamReader(url.openStream());
 			com.sun.xml.tree.XmlDocumentBuilder xdb = new com.sun.xml.tree.XmlDocumentBuilder();
-		
+
 			Parser parser = new com.sun.xml.parser.Parser();
-		
+
 			// Use a local entity resolver to get rid of the DTD loading via internet
 			EntityResolver er = new LocalResolver();
 			parser.setEntityResolver(er);
 			xdb.setParser(parser);
-			
+
 			parser.parse(new InputSource(in));
 			return xdb.getDocument();
-		} catch (Exception e) { 
-			throw new DeploymentException(e.getMessage()); 
+		} catch (Exception e) {
+			throw new DeploymentException(e.getMessage());
 		}
 	}
 
@@ -149,18 +149,18 @@ public class XmlFileLoader {
 	 **/
 	private static class LocalResolver implements EntityResolver {
 		private Hashtable dtds = new Hashtable();
-		
+
 		public LocalResolver() {
 			registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
 		}
-		
+
 		public void registerDTD(String publicId, String dtdFileName) {
 			dtds.put(publicId, dtdFileName);
 		}
 
 		public InputSource resolveEntity (String publicId, String systemId) {
 			String dtd = (String)dtds.get(publicId);
-			
+
 			if (dtd != null) {
 				try {
 					InputStream dtdStream = getClass().getResourceAsStream(dtd);
@@ -172,5 +172,5 @@ public class XmlFileLoader {
 			return null;
 		}
 	}
-		
+
 }

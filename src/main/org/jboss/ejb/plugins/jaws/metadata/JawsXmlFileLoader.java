@@ -22,56 +22,56 @@ import org.jboss.metadata.XmlFileLoader;
 
 
 /**
- *	<description> 
- *      
+ *	<description>
+ *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JawsXmlFileLoader {
-	
+
 	// Attributes ----------------------------------------------------
     private ApplicationMetaData application;
 	private ClassLoader classLoader;
     private Log log;
-	
-	
+
+
 	// Constructors --------------------------------------------------
 	public JawsXmlFileLoader(ApplicationMetaData app, ClassLoader cl, Log l) {
 		application = app;
 		classLoader = cl;
-		log = l;		
+		log = l;
 	}
-   
-	
+
+
 	// Public --------------------------------------------------------
     public JawsApplicationMetaData load() throws DeploymentException {
-	    
+
 		// first create the metadata
 		JawsApplicationMetaData jamd = new JawsApplicationMetaData(application, classLoader);
-		
+
 		// Load standardjaws.xml from the default classLoader
 		// we always load defaults first
-		URL stdJawsUrl = getClass().getResource("standardjaws.xml");
-		
+		URL stdJawsUrl = classLoader.getResource("standardjaws.xml");
+
 		if (stdJawsUrl == null) throw new DeploymentException("No standardjaws.xml found");
-				
+
 		log.debug("Loading standardjaws.xml : " + stdJawsUrl.toString());
 		Document stdJawsDocument = XmlFileLoader.getDocument(stdJawsUrl);
 		jamd.importXml(stdJawsDocument.getDocumentElement());
-		
+
 		// Load jaws.xml if provided
 		URL jawsUrl = classLoader.getResource("META-INF/jaws.xml");
-		
+
 		if (jawsUrl != null) {
 			log.debug(jawsUrl.toString() + " found. Overriding defaults");
 			Document jawsDocument = XmlFileLoader.getDocument(jawsUrl);
 			jamd.importXml(jawsDocument.getDocumentElement());
-		}	
-		
+		}
+
 		// this can only be done once all the beans are built
 		jamd.init();
-		
+
 		return jamd;
    }
 }
