@@ -1373,8 +1373,11 @@ try{
                         issues.add(issue);   
                     } 
                 }
-                setAlertMessage( getLocalizationTool()
-                                 .format("SomeIssueIdsNotValid", invalidIds));
+                if (invalidIds != null) 
+                {                
+                    setAlertMessage( getLocalizationTool()
+                        .format("SomeIssueIdsNotValid", invalidIds));
+                }
             }
             else if (issueIds.get(0) instanceof NumberKey)
             {
