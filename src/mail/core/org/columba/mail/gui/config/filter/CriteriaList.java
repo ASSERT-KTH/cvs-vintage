@@ -57,7 +57,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 	public CriteriaList(Filter filter) {
 		super();
-		
+
 		try {
 
 			pluginHandler =
@@ -67,7 +67,7 @@ public class CriteriaList extends JPanel implements ActionListener {
 			NotifyDialog d = new NotifyDialog();
 			d.showDialog(ex);
 		}
-		
+
 		this.config = MainInterface.config;
 		this.filter = filter;
 
@@ -188,6 +188,23 @@ public class CriteriaList extends JPanel implements ActionListener {
 				
 			}
 			*/
+
+			// fall-back if error occurs
+			if (column == null) {
+				try {
+					column =
+						(DefaultCriteriaRow)
+							(
+								(
+									AbstractFilterPluginHandler) pluginHandler)
+										.getGuiPlugin(
+							"Subject",
+							args);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				criteria.setType("Subject");
+			}
 
 			gridbag.setConstraints(column.getContentPane(), c);
 			list.add(column);
