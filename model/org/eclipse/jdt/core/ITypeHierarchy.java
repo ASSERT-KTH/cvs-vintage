@@ -277,8 +277,7 @@ void refresh(IProgressMonitor monitor) throws JavaModelException;
  */
 void removeTypeHierarchyChangedListener(ITypeHierarchyChangedListener listener);
 /**
- * Store the type hierachy in an output stream. This stored hierarchy can be load by
- * IType#loadTypeHierachy(IJavaProject, InputStream, IProgressMonitor).
+ * Store the type hierachy in an output stream.
  * 
  * @param outputStream output stream where the hierarchy will be stored
  * @param monitor the given progress monitor
