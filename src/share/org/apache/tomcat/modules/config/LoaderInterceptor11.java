@@ -121,8 +121,8 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	Defaults to jaxp.jar:crimson.jar:xalan.jar:xerces.jar,
 	it'll match either crimson or xerces.
      */
-    public void setJaxpJars(String dir ) {
-	jaxpDir=dir;
+    public void setJaxpJars(String jars ) {
+	jaxpJarsS=jars;
     }
 
     /** Check if the webapp contains jaxp , and add one if not.
