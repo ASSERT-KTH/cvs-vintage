@@ -81,6 +81,8 @@ public class AttributePeer
         "getDataAttributes";
     private static final String GET_USER_ATTRIBUTES = 
         "getUserAttributes";
+    private static final String USER = "user";
+    private static final String NON_USER = "non-user";
 
     /**
      *  Gets a List of all of the Attribute objects in the database.
@@ -91,7 +93,7 @@ public class AttributePeer
     {
         List result = null;
         String cacheKey = null;
-        if (attributeType.equals("data"))
+        if (attributeType.equals(NON_USER))
         {  
             cacheKey = GET_DATA_ATTRIBUTES;
         }
@@ -105,7 +107,7 @@ public class AttributePeer
             Criteria crit = new Criteria();
             crit.add(AttributePeer.ATTRIBUTE_ID, 0, Criteria.NOT_EQUAL);
             //crit.add(AttributePeer.DELETED, 0);
-            // add user type criteria  - user or data (non-user)
+            // add user type criteria  - user or non-user
             if (attributeType.equals("user"))
             {
                 crit.add(AttributePeer.ATTRIBUTE_TYPE_ID, 
@@ -223,7 +225,7 @@ public class AttributePeer
     public static List getAttributes()
         throws Exception
     {
-        return getAttributes("data", AttributePeer.ATTRIBUTE_NAME, "asc");
+        return getAttributes(NON_USER, AttributePeer.ATTRIBUTE_NAME, "asc");
     }
 
     /**
@@ -244,7 +246,7 @@ public class AttributePeer
                                      String sortPolarity)
         throws Exception
     {
-        return getAttributes("data", sortColumn, sortPolarity);
+        return getAttributes(NON_USER, sortColumn, sortPolarity);
     }
 
     private static List sortAttributesByCreatingUser(List result,

@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.31 2002/10/29 00:44:54 elicia Exp $
+ * @version $Id: IssueType.java,v 1.32 2002/11/07 23:26:43 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -473,6 +473,7 @@ public  class IssueType
         ria.setOrder(getLastAttribute(attributeType) + 1);
         ria.save();
         getRIssueTypeAttributes(false, attributeType).add(ria);
+        getAvailableAttributes(NON_USER).remove(attribute);
         return ria;
     }
 

@@ -344,6 +344,7 @@ public  class AttributeGroup
         RAttributeAttributeGroup raag =
             addRAttributeAttributeGroup(attribute);
         raag.save();          
+        getAttributes().add(attribute);
 
         if (isGlobal())
         {
@@ -395,9 +396,6 @@ public  class AttributeGroup
                 rmo2.save();
             }
         }
-        issueType.getAvailableAttributes("data").remove(attribute);
-        issueType.getAttributes("data").add(attribute);
-        getAttributes().add(attribute);
     }
 
     public void deleteAttribute( Attribute attribute, ScarabUser user,
