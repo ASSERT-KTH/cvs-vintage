@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.21 2003/06/16 05:02:19 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.22 2003/06/18 19:36:17 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -135,10 +135,9 @@ public class KeyEventWorkaround
 					/* they're too troublesome */
 					if((modifiers & InputEvent.ALT_MASK) != 0)
 						return null;
-
-					last = LAST_NOTHING;
 				}
 
+				last = LAST_NOTHING;
 				break;
 			}
 
@@ -165,7 +164,6 @@ public class KeyEventWorkaround
 					if((modifiers & InputEvent.SHIFT_MASK) != 0)
 					{
 						System.err.println("do i know");
-						
 					}
 				}
 

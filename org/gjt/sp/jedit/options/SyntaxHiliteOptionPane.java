@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Style option pane.
  * @author Slava Pestov
- * @version $Id: SyntaxHiliteOptionPane.java,v 1.6 2003/03/16 20:55:46 spestov Exp $
+ * @version $Id: SyntaxHiliteOptionPane.java,v 1.7 2003/06/18 19:36:17 spestov Exp $
  */
 public class SyntaxHiliteOptionPane extends AbstractOptionPane
 {
@@ -304,8 +304,7 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 
 		GridBagConstraints cons = new GridBagConstraints();
 		cons.gridx = cons.gridy = 0;
-		cons.gridwidth = 2;
-		cons.gridheight = 1;
+		cons.gridwidth = cons.gridheight = 1;
 		cons.fill = GridBagConstraints.BOTH;
 		cons.weightx = 0.0f;
 
@@ -321,7 +320,6 @@ class StyleEditor extends EnhancedDialog implements ActionListener
 		panel.add(bold);
 
 		cons.gridy++;
-		cons.gridwidth = 1;
 		Color fg = style.getForegroundColor();
 
 		fgColorCheckBox = new JCheckBox(jEdit.getProperty("style-editor.fgColor"));
