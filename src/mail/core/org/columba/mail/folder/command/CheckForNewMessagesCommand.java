@@ -117,6 +117,9 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 			new TableChangedEvent(TableChangedEvent.UPDATE, inboxFolder);
         MainInterface.treeModel.nodeChanged(inboxFolder);
         MailFrameController.tableChanged(ev);
+        
+		// update tree information
+	 	MainInterface.treeModel.nodeChanged(inboxFolder);
 	}
 
 }
