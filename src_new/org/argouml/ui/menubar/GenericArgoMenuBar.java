@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.56 2004/09/15 19:17:04 mvw Exp $
+// $Id: GenericArgoMenuBar.java,v 1.57 2004/09/16 20:51:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -625,17 +625,17 @@ public class GenericArgoMenuBar extends JMenuBar
 		
         generate = add(new JMenu(menuLocalize("Generation")));
         setMnemonic(generate, "Generation");
-        JMenuItem genOne = generate.add(ActionGenerateOne.SINGLETON);
+        JMenuItem genOne = generate.add(ActionGenerateOne.getSingleton());
         setMnemonic(genOne, "Generate Selected Classes");
         JMenuItem genAllItem = generate.add(new ActionGenerateAll());
         setMnemonic(genAllItem, "Generate all classes");
         setAccelerator(genAllItem, f7);
         generate.addSeparator();
         JMenuItem genProject = 
-            generate.add(ActionGenerateProjectCode.SINGLETON);
+            generate.add(ActionGenerateProjectCode.getSingleton());
         setMnemonic(genProject, "Generate code for project");
         JMenuItem generationSettings = 
-            generate.add(ActionGenerationSettings.SINGLETON);
+            generate.add(ActionGenerationSettings.getSingleton());
         setMnemonic(generationSettings, "Settings for project code generation");
         //generate.add(Actions.GenerateWeb);
         appendPluggableMenus(generate, PluggableMenu.KEY_GENERATE);

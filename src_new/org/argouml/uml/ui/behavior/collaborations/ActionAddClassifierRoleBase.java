@@ -1,4 +1,4 @@
-// $Id: ActionAddClassifierRoleBase.java,v 1.9 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.10 2004/09/16 20:50:52 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionAddClassifierRoleBase.java,v 1.9 2003/11/25 10:58:13 jhraigniac Exp $
+// $Id: ActionAddClassifierRoleBase.java,v 1.10 2004/09/16 20:50:52 mvw Exp $
 package org.argouml.uml.ui.behavior.collaborations;
 
 import java.util.Vector;
@@ -39,7 +39,10 @@ import org.argouml.uml.ui.AbstractActionAddModelElement;
  */
 public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
 
-    public final static ActionAddClassifierRoleBase SINGLETON =
+    /**
+     * The one and only instance of this class.
+     */
+    public static final ActionAddClassifierRoleBase SINGLETON =
 	new ActionAddClassifierRoleBase();
     /**
      * Constructor for ActionAddClassifierRoleBase.
@@ -53,7 +56,8 @@ public class ActionAddClassifierRoleBase extends AbstractActionAddModelElement {
      */
     protected Vector getChoices() {
         Vector vec = new Vector();
-        vec.addAll(CollaborationsHelper.getHelper().getAllPossibleBases(getTarget()));
+        vec.addAll(CollaborationsHelper.getHelper()
+                .getAllPossibleBases(getTarget()));
         return vec;
     }
 
