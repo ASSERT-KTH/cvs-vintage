@@ -32,7 +32,7 @@ import org.jboss.Version;
 *      
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.5 $
+* @version $Revision: 1.6 $
 */
 public class Server
 implements ServerMBean
@@ -456,7 +456,7 @@ System.out.println("Please make sure the following is intended " +
 
 // Create MBeanServer
 final MBeanServer server =
-MBeanServerFactory.createMBeanServer("JBOSS-SYSTEM");
+MBeanServerFactory.createMBeanServer("jboss");
 
 // Initialize the MBean libraries repository
 server.registerMBean(ServiceLibraries.getLibraries(),
