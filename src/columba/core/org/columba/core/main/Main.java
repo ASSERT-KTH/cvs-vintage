@@ -44,7 +44,7 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.config.accountwizard.AccountWizard;
+import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
 
 public class Main {
@@ -153,9 +153,7 @@ public class Main {
 
     if (MailConfig.getAccountList().count() == 0) {
       try {
-
-        new AccountWizard(false);
-
+        new AccountWizardLauncher().launchWizard();
       } catch (Exception ex) {
         ex.printStackTrace();
       }

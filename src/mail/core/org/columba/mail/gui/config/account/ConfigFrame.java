@@ -53,7 +53,7 @@ import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.config.accountwizard.AccountWizard;
+import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -352,8 +352,7 @@ public class ConfigFrame
 		} else if (action.equals("ADD")) //$NON-NLS-1$
 			{
 			try {
-
-				AccountWizard wizard = new AccountWizard(true);
+				new AccountWizardLauncher().launchWizard();
 				listView.update();
 			} catch (Exception ex) {
 				ex.printStackTrace();
