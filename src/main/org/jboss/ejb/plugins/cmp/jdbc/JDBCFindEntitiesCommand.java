@@ -23,6 +23,8 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.FindEntitiesCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCAutomaticQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.bmp.CustomFindByEntitiesCommand;
 import org.jboss.util.FinderResults;
 
@@ -36,17 +38,21 @@ import org.jboss.util.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 	// Attributes ----------------------------------------------------
-	private Map knownFinderCommands;
+	private final Map knownFinderCommands = new HashMap();
+	private final JDBCStoreManager manager;
 	
 	// Constructors --------------------------------------------------
 	
 	public JDBCFindEntitiesCommand(JDBCStoreManager manager) {
+		this.manager = manager;
+	}
+	
+	public void start() {
 		JDBCCommandFactory factory = manager.getCommandFactory();		
-		knownFinderCommands = new HashMap();
 		
 		//
 		// Custom finders - Overrides defined and automatic finders.
@@ -77,7 +83,11 @@ public class JDBCFindEntitiesCommand implements FindEntitiesCommand {
 				JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
 				if(!knownFinderCommands.containsKey(q.getMethod()) ) {
-					knownFinderCommands.put(q.getMethod(), factory.createDefinedFinderCommand(q));
+					if(q instanceof JDBCDeclaredQueryMetaData) {
+						knownFinderCommands.put(q.getMethod(), factory.createDefinedFinderCommand(q));
+					} else if(q instanceof JDBCQlQueryMetaData) {
+						knownFinderCommands.put(q.getMethod(), factory.createEJBQLFinderCommand(q));
+					}
 				}
 			}
 		} catch (Exception e) {

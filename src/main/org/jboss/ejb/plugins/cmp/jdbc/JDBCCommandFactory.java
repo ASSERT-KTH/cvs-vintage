@@ -43,7 +43,7 @@ import org.jboss.logging.Log;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCCommandFactory implements CommandFactory
 {
@@ -92,6 +92,12 @@ public class JDBCCommandFactory implements CommandFactory
 		throws Exception
    {
       return new JDBCDefinedFinderCommand(manager, q);
+   }
+   
+   public FindEntitiesCommand createEJBQLFinderCommand(JDBCQueryMetaData q) 
+		throws Exception
+   {
+      return new JDBCEJBQLFinderCommand(manager, q);
    }
    
    public FindEntitiesCommand createFindByCommand(JDBCQueryMetaData q)

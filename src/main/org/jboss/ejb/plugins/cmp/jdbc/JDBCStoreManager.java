@@ -44,7 +44,7 @@ import org.jboss.proxy.Proxy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class JDBCStoreManager extends CMPStoreManager {
 	protected DataSource dataSource;
@@ -88,6 +88,12 @@ public class JDBCStoreManager extends CMPStoreManager {
 		insertRelationsCommand = getCommandFactory().createInsertRelationsCommand();
 	}
 	
+   public void start() throws Exception {
+      super.start();
+		JDBCFindEntitiesCommand find = (JDBCFindEntitiesCommand)findEntitiesCommand;
+		find.start();
+   }
+
 	public JDBCEntityBridge getEntityBridge() {
 		return entityBridge;
 	}
