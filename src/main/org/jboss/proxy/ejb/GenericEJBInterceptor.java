@@ -47,7 +47,7 @@ import org.jboss.security.SecurityAssociation;
  *      
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -55,8 +55,8 @@ import org.jboss.security.SecurityAssociation;
  * </ol>
  */
 public abstract class GenericEJBInterceptor
-extends Interceptor
-implements Externalizable
+   extends Interceptor
+   implements Externalizable
 {
    
    public static final Integer JNDI_NAME = new Integer(new String("JNDI_NAME").hashCode());
@@ -68,9 +68,10 @@ implements Externalizable
    protected static final Method GET_PRIMARY_KEY, GET_HANDLE, GET_EJB_HOME, IS_IDENTICAL;
    
    /** Initialize the static variables. */
-   static {
-      try {
-         
+   static
+   {
+      try
+      { 
          // Get the methods from Object
          Class[] empty = {};
          Class type = Object.class;
@@ -87,7 +88,8 @@ implements Externalizable
          GET_EJB_HOME = type.getMethod("getEJBHome", empty);
          IS_IDENTICAL = type.getMethod("isIdentical", new Class[] { type });
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          e.printStackTrace();
          throw new ExceptionInInitializerError(e);
       }
@@ -123,8 +125,11 @@ implements Externalizable
    }
 */   
    
-   protected EJBHome getEJBHome(Invocation invocation) throws NamingException {
-      return (EJBHome) new InitialContext().lookup((String) invocation.getInvocationContext().getValue(JNDI_NAME));
+   protected EJBHome getEJBHome(Invocation invocation) throws NamingException
+   {
+      InitialContext iniCtx = new InitialContext();
+      String jndiName = (String) invocation.getInvocationContext().getValue(JNDI_NAME);
+      return (EJBHome) iniCtx.lookup(jndiName);
    }
 }
   
