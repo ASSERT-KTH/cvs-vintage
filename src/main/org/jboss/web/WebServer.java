@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  *   @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  *   @author <a href="mailto:Scott.Stark@org.jboss">Scott Stark</a>.
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  *
  *   Revisions:
  *   
@@ -260,6 +260,7 @@ public class WebServer
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             try 
             {
+                String httpCode = "200 OK";
                 // Get the requested item from the HTTP header
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String rawPath = getPath(in);
@@ -275,15 +276,15 @@ public class WebServer
                  an '@' char. If it does not and downloadServerClasses is true use
                  the thread context class loader and set filePath to the rawPath
                 */
-                if( loader == null && rawPath.indexOf('@') < 0 )
+                if( loader == null && rawPath.indexOf('@') < 0 && downloadServerClasses )
                 {
                    filePath = rawPath;
                    log.trace("No loader, reset filePath = "+filePath);
                    loader = Thread.currentThread().getContextClassLoader();
                 }
                 log.trace("loader = "+loader);
-                byte[] bytes;
-                if( filePath.endsWith(".class") )
+                byte[] bytes = {};
+                if( loader != null && filePath.endsWith(".class") )
                 {
                     // A request for a class file
                     String className = filePath.substring(0, filePath.length()-6).replace('/','.');
@@ -301,23 +302,32 @@ public class WebServer
                     // Retrieve bytecodes
                     bytes = getBytes(clazzUrl);
                 }
-                else // Resource
+                else if( loader != null && filePath.length() > 0 && downloadServerClasses )
                 {
                     // Try getting resource
                     log.trace("loading resource = "+filePath);
-                    URL resourceUrl = loader.getResource(filePath);             
-                    if (resourceUrl == null)
-                        throw new FileNotFoundException("Resource not found:"+filePath);
-
-                    // Retrieve bytes
-                    bytes = getBytes(resourceUrl);
+                    URL resourceURL = loader.getResource(filePath);
+                    if (resourceURL == null)
+                        httpCode = "404 Resource not found:"+filePath;
+                    else
+                    {
+                       // Retrieve bytes
+                       category.trace("resourceURL = "+resourceURL);
+                       bytes = getBytes(resourceURL);
+                    }
                 }
+                else
+                {
+                   httpCode = "404 Not Found";
+                }
+
 
                 // Send bytecodes/resource data in response (assumes HTTP/1.0 or later)
                 try 
                 {
+                    log.trace("HTTP code="+httpCode+", Content-Length: "+ bytes.length);
                     // The HTTP 1.0 header
-                    out.writeBytes("HTTP/1.0 200 OK\r\n");
+                    out.writeBytes("HTTP/1.0 "+httpCode+"\r\n");
                     out.writeBytes("Content-Length: " + bytes.length + "\r\n");
                     out.writeBytes("Content-Type: "+getMimeType(filePath));
                     out.writeBytes("\r\n\r\n");
@@ -334,6 +344,7 @@ public class WebServer
             {
                 try
                 {
+                   log.trace("HTTP code=404 " + e.getMessage());
                    // Write out error response
                    out.writeBytes("HTTP/1.0 400 " + e.getMessage() + "\r\n");
                    out.writeBytes("Content-Type: text/html\r\n\r\n");
