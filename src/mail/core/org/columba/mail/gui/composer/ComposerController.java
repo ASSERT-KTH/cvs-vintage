@@ -225,8 +225,7 @@ public class ComposerController extends AbstractFrameController implements
             ex.printStackTrace();
         }
 
-        view.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        view.getFrame().addWindowListener(new ComposerWindowAdapter());
+        setCloseOperations();
 
         // *20030917, karlpeder* If ContainerListeners are waiting to be
         // added, add them now.
@@ -247,6 +246,13 @@ public class ComposerController extends AbstractFrameController implements
         headerController.view.initFocus(subjectController.view);
 
         return view;
+    }
+
+    public void setCloseOperations() {
+        if(getView().getFrame() != null) {
+            getView().getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            getView().getFrame().addWindowListener(new ComposerWindowAdapter());
+        }
     }
 
     public void openView() {
@@ -621,7 +627,7 @@ public class ComposerController extends AbstractFrameController implements
             int n = JOptionPane
                     .showOptionDialog(
                             getView().getFrame(),
-                            "Message wasn't send. Would you like to save your changes?",
+                            "Message wasn't sent. Would you like to save your changes?",
                             "Warning: Message was modified",
                             JOptionPane.YES_NO_CANCEL_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, options,
