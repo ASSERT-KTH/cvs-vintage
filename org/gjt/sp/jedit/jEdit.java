@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.132 2003/04/16 23:56:21 spestov Exp $
+ * @version $Id: jEdit.java,v 1.133 2003/04/19 03:48:14 spestov Exp $
  */
 public class jEdit
 {
@@ -2580,16 +2580,14 @@ public class jEdit
 			",parent,args);\n");
 		script.append("if(buffer != null && " + wait + ") {\n");
 		script.append("\tbuffer.setWaitSocket(socket);\n");
-		script.append("\tsocket = null;\n");
+		script.append("\tdoNotCloseSocket = true;\n");
 		script.append("}\n");
 		script.append("if(view != jEdit.getLastView()) {\n");
-		script.append("\tview.setWaitSocket(socket);\n");
-		script.append("\tsocket = null;\n");
+		script.append("\tjEdit.getLastView().setWaitSocket(socket);\n");
+		script.append("\tdoNotCloseSocket = true;\n");
 		script.append("}\n");
-		script.append("if(socket != null)\n");
+		script.append("if(doNotCloseSocket == void)\n");
 		script.append("\tsocket.close();\n");
-		/* the script is run in the global namespace */
-		script.append("buffer = null;\n");
 
 		if(scriptFile != null)
 		{

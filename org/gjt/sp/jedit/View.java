@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.74 2003/04/16 23:56:21 spestov Exp $
+ * @version $Id: View.java,v 1.75 2003/04/19 03:48:14 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1078,6 +1078,15 @@ public class View extends JFrame implements EBComponent
 		return new Dimension(0,0);
 	} //}}}
 
+	//{{{ setWaitSocket() method
+	/**
+	 * This socket is closed when the buffer is closed.
+	 */
+	public void setWaitSocket(Socket waitSocket)
+	{
+		this.waitSocket = waitSocket;
+	} //}}}
+
 	//{{{ Package-private members
 	View prev;
 	View next;
@@ -1139,15 +1148,6 @@ public class View extends JFrame implements EBComponent
 		pack();
 
 		EditBus.addToBus(this);
-	} //}}}
-
-	//{{{ setWaitSocket() method
-	/**
-	 * This socket is closed when the buffer is closed.
-	 */
-	public void setWaitSocket(Socket waitSocket)
-	{
-		this.waitSocket = waitSocket;
 	} //}}}
 
 	//{{{ close() method

@@ -23,6 +23,7 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
+import bsh.NameSpace;
 import javax.swing.SwingUtilities;
 import java.io.*;
 import java.net.*;
@@ -53,7 +54,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.17 2003/04/13 01:35:13 spestov Exp $
+ * @version $Id: EditServer.java,v 1.18 2003/04/19 03:48:14 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -160,6 +161,19 @@ public class EditServer extends Thread
 				} */
 			}
 		}
+	} //}}}
+
+	//{{{ handleClient() method
+	/**
+	 * @param restore Ignored unless no views are open
+	 * @param parent The client's parent directory
+	 * @param args A list of files. Null entries are ignored, for convinience
+	 * @since jEdit 3.2pre7
+	 */
+	public static void handleClient(boolean restore, String parent,
+		String[] args)
+	{
+		handleClient(restore,false,false,parent,args);
 	} //}}}
 
 	//{{{ handleClient() method
@@ -304,9 +318,11 @@ public class EditServer extends Thread
 				{
 					try
 					{
-						BeanShell.getNameSpace().setVariable("socket",client);
-						BeanShell.eval(null,BeanShell.getNameSpace(),
-							script);
+						NameSpace ns = new NameSpace(
+							BeanShell.getNameSpace(),
+							"EditServer namespace");
+						ns.setVariable("socket",client);
+						BeanShell.eval(null,ns,script);
 					}
 					catch(bsh.EvalError e)
 					{

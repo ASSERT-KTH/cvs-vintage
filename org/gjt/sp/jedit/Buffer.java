@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.155 2003/04/16 23:56:20 spestov Exp $
+ * @version $Id: Buffer.java,v 1.156 2003/04/19 03:48:13 spestov Exp $
  */
 public class Buffer
 {
@@ -2679,8 +2679,8 @@ loop:		for(int i = 0; i < seg.count; i++)
 
 	//{{{ getOffsetOfVirtualColumn() method
 	/**
-	 * Returns the array offset of a virtual column number (taking tabs
-	 * into account) in the segment.
+	 * Returns the offset of a virtual column number (taking tabs
+	 * into account) relative to the start of the line in question.
 	 *
 	 * @param line The line number
 	 * @param column The virtual column number
