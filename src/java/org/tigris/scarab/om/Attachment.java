@@ -83,7 +83,7 @@ import org.tigris.scarab.util.word.SearchFactory;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.62 2003/10/17 13:55:33 dep4b Exp $
+ * @version $Id: Attachment.java,v 1.63 2004/02/10 23:13:43 pledbrook Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -360,9 +360,9 @@ public class Attachment
         {
             String testPath = Turbine.getConfiguration()
                 .getString(ScarabConstants.ATTACHMENTS_REPO_KEY);
-            if (testPath.startsWith("/")) 
-            {
-                File testDir = new File(testPath);                
+            File testDir = new File(testPath);
+            if (testDir.isAbsolute()) 
+            {                
                 if (!testDir.exists()) 
                 {
                     mkdirs(testDir);
@@ -373,8 +373,8 @@ public class Attachment
             {                
                 // test for existence within the webapp directory.
                 testPath = Turbine.getRealPath(testPath);
-                File testDir = new File(testPath);
-                if (!testDir.exists()) 
+                testDir = new File(testPath);
+                if (!testDir.exists())
                 {
                     mkdirs(testDir);
                 }
