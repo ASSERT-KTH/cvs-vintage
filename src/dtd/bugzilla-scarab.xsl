@@ -57,6 +57,13 @@
                 <type>user</type>
             </issue-attribute>
             </xsl:if>
+            <xsl:if test="resolution">
+            <issue-attribute>
+                <name>Resolution</name>
+                <value><xsl:value-of select="resolution"/></value>
+                <type>combo-box</type>
+            </issue-attribute>
+            </xsl:if>
             
             <xsl:for-each select="attachment">
             <attachment>
