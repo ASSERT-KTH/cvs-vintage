@@ -20,7 +20,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCCommandFactory {
 
@@ -120,13 +120,25 @@ public class JDBCCommandFactory {
    }
    
    public JDBCCreateEntityCommand createCreateEntityCommand()
-      throws InstantiationException, IllegalAccessException {
+      throws DeploymentException {
 
-      JDBCCreateEntityCommand cec = (JDBCCreateEntityCommand)
-         manager.getMetaData().getCreateEntityCommand().newInstance();
-      cec.init(manager);
+      JDBCCreateEntityCommand cec = null;
+      try {
+         cec = (JDBCCreateEntityCommand)manager.getMetaData().
+                  getEntityCommand().getCommandClass().newInstance();
+               //new JDBCCreateEntityCommand();
+         cec.init(manager);
+      }
+      catch( DeploymentException de )
+      {
+         throw de;
+      }
+      catch( Exception e )
+      {
+         throw new DeploymentException( "Couldn't create entity command: ", e );
+      }
 
-      log.debug("create-entity-command: " + cec.getClass().getName());
+      log.debug("entity-command: " + manager.getMetaData().getEntityCommand());
 
       return cec;
    }
