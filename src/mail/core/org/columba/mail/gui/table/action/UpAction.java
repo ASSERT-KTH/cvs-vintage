@@ -16,11 +16,12 @@
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
@@ -45,9 +46,9 @@ public class UpAction extends AbstractColumbaAction {
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.table.action");
 
     TableController tableController;
-    AbstractMailFrameController frameController;
+    FrameMediator frameController;
 
-    public UpAction(AbstractMailFrameController frameController) {
+    public UpAction(FrameMediator frameController) {
         super(frameController, "UpAction");
         this.tableController = ((TableViewOwner) frameController).getTableController();
         this.frameController = frameController;
@@ -60,7 +61,7 @@ public class UpAction extends AbstractColumbaAction {
         LOG.info("action up performed");
 
         // getting last selection
-        FolderCommandReference[] r = this.frameController.getTableSelection();
+        FolderCommandReference[] r = ((MailFrameMediator)frameController).getTableSelection();
         FolderCommandReference ref = r[0];
         LOG.info("folderCommandRef: " + ref);
 

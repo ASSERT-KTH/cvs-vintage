@@ -17,10 +17,11 @@ package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 
@@ -35,9 +36,9 @@ import java.awt.event.ActionEvent;
  */
 public class CutAction extends AbstractColumbaAction {
     TableController tableController;
-    AbstractMailFrameController frameController;
+    FrameMediator frameController;
 
-    public CutAction(AbstractMailFrameController frameController) {
+    public CutAction(FrameMediator frameController) {
         super(frameController, "CutAction");
         this.tableController = ((TableViewOwner) frameController).getTableController();
         this.frameController = frameController;
@@ -51,6 +52,6 @@ public class CutAction extends AbstractColumbaAction {
         // cut action
         MainInterface.clipboardManager.setOperation(ClipboardManager.CUT_ACTION);
 
-        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) frameController.getTableSelection());
+        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) ((MailFrameMediator)frameController).getTableSelection());
     }
 }

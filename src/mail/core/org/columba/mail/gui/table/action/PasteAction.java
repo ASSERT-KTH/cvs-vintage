@@ -16,6 +16,7 @@
 package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommand;
@@ -23,7 +24,7 @@ import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.folder.command.MoveMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 
@@ -38,9 +39,9 @@ import java.awt.event.ActionEvent;
  */
 public class PasteAction extends AbstractColumbaAction {
     TableController tableController;
-    AbstractMailFrameController frameController;
+    FrameMediator frameController;
 
-    public PasteAction(AbstractMailFrameController frameController) {
+    public PasteAction(FrameMediator frameController) {
         super(frameController, "PasteAction");
         this.tableController = ((TableViewOwner) frameController).getTableController();
         this.frameController = frameController;
@@ -60,7 +61,7 @@ public class PasteAction extends AbstractColumbaAction {
 
         ref[0] = source[0];
 
-        FolderCommandReference[] dest = (FolderCommandReference[]) frameController.getTableSelection();
+        FolderCommandReference[] dest = (FolderCommandReference[]) ((MailFrameMediator)frameController).getTableSelection();
 
         FolderCommandAdapter adapter = new FolderCommandAdapter(dest);
 

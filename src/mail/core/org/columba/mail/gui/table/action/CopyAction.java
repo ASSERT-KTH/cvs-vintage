@@ -17,10 +17,11 @@ package org.columba.mail.gui.table.action;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.ClipboardManager;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 
 import java.awt.event.ActionEvent;
 
@@ -32,9 +33,9 @@ import java.awt.event.ActionEvent;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CopyAction extends AbstractColumbaAction {
-    AbstractMailFrameController frameController;
+    FrameMediator frameController;
 
-    public CopyAction(AbstractMailFrameController frameController) {
+    public CopyAction(FrameMediator frameController) {
         super(frameController, "CopyAction");
         this.frameController = frameController;
     }
@@ -47,6 +48,6 @@ public class CopyAction extends AbstractColumbaAction {
         // copy action
         MainInterface.clipboardManager.setOperation(ClipboardManager.COPY_ACTION);
 
-        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) frameController.getTableSelection());
+        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) ((MailFrameMediator)frameController).getTableSelection());
     }
 }
