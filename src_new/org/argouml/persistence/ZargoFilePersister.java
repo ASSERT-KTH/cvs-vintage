@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.20 2005/01/16 02:06:39 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.21 2005/01/17 16:52:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,9 +43,6 @@ import java.util.Hashtable;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.swing.JProgressBar;
-import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
@@ -251,9 +248,11 @@ public class ZargoFilePersister extends UmlFilePersister {
 
     /**
      * @see org.argouml.persistence.ProjectFilePersister#doLoad(java.io.File,
-     * javax.swing.JProgressBar, javax.swing.text.JTextComponent)
+     * org.argouml.persistence.ProgressListener)
      */
-    public Project doLoad(File file, JProgressBar progressBar, JTextComponent progressText) throws OpenException {
+    public Project doLoad(File file)
+        throws OpenException {
+        
         try {
             File combinedFile = File.createTempFile("combinedzargo_", ".uml");
             LOG.info(
@@ -330,7 +329,7 @@ public class ZargoFilePersister extends UmlFilePersister {
             writer.close();
             LOG.info("Complated combining files");
             Project p = 
-                super.doLoad(combinedFile, progressBar, progressText);
+                super.doLoad(combinedFile);
             p.setURL(file.toURL());
             return p;
         } catch (IOException e) {

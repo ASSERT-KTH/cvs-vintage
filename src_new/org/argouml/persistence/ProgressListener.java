@@ -1,4 +1,4 @@
-// $Id: ProjectFilePersister.java,v 1.7 2005/01/17 16:52:10 bobtarling Exp $
+// $Id: ProgressListener.java,v 1.1 2005/01/17 16:52:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,31 +21,19 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
 package org.argouml.persistence;
 
-import java.io.File;
-
-import org.argouml.kernel.Project;
+import java.util.EventListener;
 
 /**
- * To persist a project to and from file storage.
- *
+ * A listener to be implemented by those interested in ProgressEvents.
  * @author Bob Tarling
  */
-public interface ProjectFilePersister {
-
+public interface ProgressListener extends EventListener {
     /**
-     * @param project the project to save
-     * @param file The file to write.
-     * @throws SaveException if anything goes wrong.
+     * Called when a ProgressEvent is fired.
+     * @param event the ProgressEvent
      */
-    public void save(Project project, File file) throws SaveException;
-
-    /**
-     * @param file the file of the project to load.
-     * @return the Project
-     * 
-     * @throws OpenException when we fail to open from this url
-     */
-    public Project doLoad(File file) throws OpenException;
+    void progress(ProgressEvent event);
 }

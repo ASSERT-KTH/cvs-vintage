@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.20 2005/01/16 22:18:45 mvw Exp $
+// $Id: ActionFileOperations.java,v 1.21 2005/01/17 16:52:11 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.argouml.persistence.LastLoadInfo;
 import org.argouml.persistence.OpenException;
 import org.argouml.persistence.PersistenceManager;
 import org.argouml.persistence.ProjectFilePersister;
+import org.argouml.persistence.VersionException;
 import org.argouml.ui.ProjectBrowser;
 
 /**
@@ -155,7 +156,7 @@ public abstract class ActionFileOperations extends AbstractAction {
                             + file.getName()
                             + " is not of a known file type");
                 }
-                p = persister.doLoad(file, null, null);
+                p = persister.doLoad(file);
 
                 ProjectBrowser.getInstance().showStatus(
                     MessageFormat.format(Translator.localize(
@@ -163,6 +164,10 @@ public abstract class ActionFileOperations extends AbstractAction {
                         new Object[] {
                             file.getName(),
                         }));
+            } catch (VersionException ex) {
+                success = false;
+                reportError(ex.getMessage(), showUI);
+                p = oldProject;
             } catch (OpenException ex) {
                 LOG.error("Exception while loading project", ex);
                 success = false;
