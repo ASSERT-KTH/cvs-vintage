@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.111 2002/10/01 00:02:55 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.112 2002/10/12 23:31:00 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1596,6 +1596,17 @@
     <foreign-key foreignTable="SCARAB_MODULE">
       <reference local="GROUP_ID" foreign="MODULE_ID"/>
     </foreign-key>
+</table>
+
+<table name="SCARAB_GLOBAL_PARAMETER" javaName="GlobalParameter">
+    <column name="PARAMETER_ID" required="true" primaryKey="true" 
+        type="INTEGER"/>
+    <column name="NAME" required="true" type="VARCHAR" size="255"/>
+    <column name="VALUE" required="true" type="VARCHAR" size="255"/>
+
+    <unique>
+        <unique-column name="NAME"/>
+    </unique>
 </table>
 
 </database>
