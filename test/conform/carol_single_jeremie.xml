@@ -18,7 +18,7 @@
       <property name="stub.jar.name" value="jeremie.jar"/>
       <property name="client.class.name" value="JeremieBasicTest"/>
       <property name="client.properties.file.name" value="jeremie_jndi.properties"/>
-      <property name="server.properties.file.name" value="jeremie_rmi.properties"/>
+      <property name="server.properties.file.name" value="jeremie_carol.properties"/>
       <property name="name.server.class.name" value="org.objectweb.jeremie.libs.services.registry.JRMIRegistry"/>
       <property name="name.server.option" value="19572"/>
       <property name="test.name"          value="jeremie"/>

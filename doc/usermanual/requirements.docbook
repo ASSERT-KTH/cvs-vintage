@@ -1,0 +1,56 @@
+<chapter id="requirements">
+  <title>CAROL requirements</title>
+  <para>This chapter describe the system requirements for CAROL.</para>
+    <index>
+      <title>Web sites index</title>
+      <indexdiv>
+	<title>General CAROL requirements</title>
+	<indexentry>
+	  <primaryie>Java environment</primaryie>
+	  <secondaryie>Carol need a jdk 1.2 or sup</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://www.objectweb.org/carol">CAROL</ulink></primaryie>
+	  <secondaryie>CAROL ObjectWeb web site</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://www.objectweb.org/jonathan">JONATHAN</ulink></primaryie>
+	  <secondaryie>JONATHAN ObjectWeb web site</secondaryie>
+	</indexentry>
+      </indexdiv>  
+      <indexdiv>
+	<title>SUN web sites</title>
+	<indexentry>
+	  <primaryie><ulink url="http://www.java.sun.com">Java Sun</ulink></primaryie>
+	  <secondaryie>Java Sun main web site</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://www.java.sun.com">JDK 1.4</ulink></primaryie>
+	  <secondaryie>Java JDK 1.4 API</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi/index.html">RMI</ulink></primaryie>
+	  <secondaryie>RMI documentation and tutorial web site</secondaryie>
+      </indexentry>
+      <indexentry>
+	  <primaryie><ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi-iiop/index.html">RMI IIOP</ulink></primaryie>
+	  <secondaryie>RMI IIOP documentation and tutorial web site</secondaryie>
+	</indexentry>
+      </indexdiv>  
+      <indexdiv>
+      <title>OMG web sites</title>
+	<indexentry>
+	  <primaryie><ulink url="http://www.omg.org">OMG</ulink></primaryie>
+	  <secondaryie>OMG main web site</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://www.corba.org/">CORBA web page</ulink></primaryie>
+	  <secondaryie>CORBA web page</secondaryie>
+	</indexentry>
+	<indexentry>
+	  <primaryie><ulink url="http://www.omg.org/cgi-bin/doc?formal/01-02-57">PortableInterceptor</ulink></primaryie>
+	  <secondaryie>PortableInterceptor documentation</secondaryie>
+      </indexentry>
+      </indexdiv>
+    </index>
+</chapter>

@@ -1,0 +1,26 @@
+<![CDATA[
+<?xml version="1.0"?>
+<!DOCTYPE Configuration SYSTEM "configuration.dtd">
+  <CONFIGURATION>
+    <ELEM name="DavidCarolHandler">
+      <ATOM class="org.objectweb.carol.rmi.jonathan.david.DavidCarolHandler"/>
+    </ELEM>
+    <ELEM name="david/orbs/iiop/services_handler_context/1534">
+      <ALIAS name="/DavidCarolHandler" />
+    </ELEM>
+    <ELEM name="JeremieCarolHandler">
+      <ATOM 
+	class="org.objectweb.carol.rmi.jonathan.jeremie.JeremieCarolHandler"/>
+    </ELEM>
+    <ELEM name="jeremie/service_handler_context/1535">
+      <ALIAS name="/JeremieCarolHandler" />
+    </ELEM>
+    <ELEM name="jeremie/stub_factories/std">
+      <CONFIGURATION>
+	<ELEM name="Stub name extension">
+	  <PROPERTY type="String" value="OW"/>
+	</ELEM>
+      </CONFIGURATION>
+    </ELEM>
+  </CONFIGURATION>
+]]>

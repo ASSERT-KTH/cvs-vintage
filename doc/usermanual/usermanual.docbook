@@ -1,0 +1,42 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+
+  <!ENTITY bookinfo SYSTEM "bookinfo.docbook">
+  <!ENTITY introduction SYSTEM "introduction.docbook">
+  <!ENTITY getting-started SYSTEM "getting-started.docbook">
+  <!ENTITY configuration SYSTEM "configuration.docbook">
+  <!ENTITY requirements SYSTEM "requirements.docbook">
+  <!ENTITY links SYSTEM "links.docbook">
+  <!ENTITY licence SYSTEM "licence.docbook">
+  <!ENTITY glossary SYSTEM "glossary.docbook">
+  <!ENTITY fdl-licence SYSTEM "fdl-licence">
+  <!ENTITY Foo.java SYSTEM "example/Foo.java">
+  <!ENTITY FooRemoteInterface.java SYSTEM "example/FooRemoteInterface.java">
+  <!ENTITY FooImplicit.java SYSTEM "example/FooImplicit.java">
+  <!ENTITY FooImplicitServer.java SYSTEM "example/FooImplicitServer.java">
+  <!ENTITY FooExplicit.java SYSTEM "example/FooExplicit.java">
+  <!ENTITY FooExplicitServer.java SYSTEM "example/FooExplicitServer.java">
+  <!ENTITY FooJNDIServer.java SYSTEM "example/FooJNDIServer.java">
+  <!ENTITY jrmpcarol.properties SYSTEM "example/jrmpcarol.properties">
+  <!ENTITY iiopcarol.properties SYSTEM "example/iiopcarol.properties">
+  <!ENTITY jeremiecarol.properties SYSTEM "example/jeremiecarol.properties">
+  <!ENTITY jonathan.xml SYSTEM "example/jonathan.xml">
+  <!ENTITY carol.properties SYSTEM "example/carol.properties">
+  
+  <!ENTITY www "World Wide Web">
+
+]>
+<book id="carol-user-manual" lang="en">
+
+  &bookinfo;
+
+  &introduction;
+  &getting-started;
+  &configuration;
+  &requirements;
+
+  
+  &links;
+  &licence;
+  &glossary;
+
+</book>

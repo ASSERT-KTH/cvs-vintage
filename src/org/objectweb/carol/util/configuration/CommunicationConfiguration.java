@@ -49,7 +49,7 @@ public class CommunicationConfiguration {
     /**
      * boolean true if the protocol context where load from the comunication.xml file
      */
-    private static boolean protocolsLoaded = false;
+    private static boolean configurationLoaded = false;
 
     /** 
      * Protocol environement hashtable, all rmi Configuration 
@@ -65,7 +65,7 @@ public class CommunicationConfiguration {
     /**
      * rmi properties file name 
      */
-    public static String RMI_FILE_NAME="rmi.properties";
+    public static String CAROL_FILE_NAME="carol.properties";
 
     /**
      * jndi properties file name
@@ -78,8 +78,8 @@ public class CommunicationConfiguration {
      * Read the communication context
      */
     public CommunicationConfiguration() throws RMIConfigurationException {
-	if (!protocolsLoaded) {
-	    loadProtocolsConfiguration();
+	if (!configurationLoaded) {
+	    loadCarolConfiguration();
 	}
     }
 
@@ -89,10 +89,10 @@ public class CommunicationConfiguration {
      * @return RMIConfiguration the environment, null if not existe
      */
     public static RMIConfiguration getRMIConfiguration(String name)  throws RMIConfigurationException {
-	if (protocolsLoaded) {
+	if (configurationLoaded) {
 	    return (RMIConfiguration)rmiConfigurationTable.get(name);
 	} else {
-	    loadProtocolsConfiguration();
+	    loadCarolConfiguration();
 	    return (RMIConfiguration)rmiConfigurationTable.get(name);
 	}
     }
@@ -102,10 +102,10 @@ public class CommunicationConfiguration {
      * @return Hashtable the rmi configuration hashtable 
      */
     public static Hashtable getAllRMIConfiguration()  throws RMIConfigurationException {
-	if (protocolsLoaded) {
+	if (configurationLoaded) {
 	    return rmiConfigurationTable;
 	} else {
-	    loadProtocolsConfiguration();
+	    loadCarolConfiguration();
 	    return rmiConfigurationTable;
 	}
     }
@@ -114,10 +114,10 @@ public class CommunicationConfiguration {
      * @return RMIConfiguration default RMI  Configuration
      */
     public static RMIConfiguration getDefaultProtocol()  throws RMIConfigurationException {
-	if (protocolsLoaded) {
+	if (configurationLoaded) {
 	    return (RMIConfiguration)rmiConfigurationTable.get(defaultRMI);
 	} else {
-	    loadProtocolsConfiguration();
+	    loadCarolConfiguration();
 	    return (RMIConfiguration)rmiConfigurationTable.get(defaultRMI);
 	}
     }
@@ -128,17 +128,17 @@ public class CommunicationConfiguration {
      * for protocols configurations
      * @throws RMIConfigurationException if a problem occurs in the configuration loading
      */ 
-    public static void loadProtocolsConfiguration() throws RMIConfigurationException {
+    public static void loadCarolConfiguration() throws RMIConfigurationException {
 	Properties rmiProps = new Properties();
 	Properties jndiProps = new Properties();
 	// load the configuration files	
 	try {
 	    // load the rmi configuration file
-	    InputStream rmiFileInputStream  =  ClassLoader.getSystemResourceAsStream(RMI_FILE_NAME); 
+	    InputStream rmiFileInputStream  =  ClassLoader.getSystemResourceAsStream(CAROL_FILE_NAME); 
 	    if (rmiFileInputStream != null) {
 		rmiProps.load(rmiFileInputStream);
 	    } else {
-		throw new RMIConfigurationException("Missing " + RMI_FILE_NAME + " in the CLASSPATH");
+		throw new RMIConfigurationException("Missing " + CAROL_FILE_NAME + " in the CLASSPATH");
 	    }
 
 	    // load the jndi configuration file
@@ -152,7 +152,7 @@ public class CommunicationConfiguration {
 	    throw new RMIConfigurationException("Exception occur when loading rmi/jndi configuration file: " + e);
         }
 
-	loadProtocolsConfiguration(rmiProps, jndiProps);
+	loadCarolConfiguration(rmiProps, jndiProps);
     }
 
     /**
@@ -161,7 +161,7 @@ public class CommunicationConfiguration {
      * @param jndiProps The jndiX environment
      * @throws RMIConfigurationException if a there is a problem with those environment (field missing for example)
      */ 
-      public static synchronized void loadProtocolsConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
+      public static synchronized void loadCarolConfiguration(Properties rmiProps, Properties jndiProps) throws RMIConfigurationException {
 
 	Properties jvmProps = new Properties();	    
 	jvmProps.putAll(System.getProperties());
@@ -170,19 +170,19 @@ public class CommunicationConfiguration {
 	String jvmPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.JVM_PREFIX;
 	String rmiPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.RMI_PREFIX;
 	String jndiPref = RMIConfiguration.CAROL_PREFIX + "." + RMIConfiguration.JNDI_PREFIX;
+	String activation_prefix = rmiPref + "."  + RMIConfiguration.ACTIVATION_PREFIX;
 
     	//Parse the properties
 	for (Enumeration e =  rmiProps.propertyNames() ; e.hasMoreElements() ;) {
 
 	    String pkey = (String)e.nextElement();
-	    if (pkey.equals(defaultPref)) { // default rmi name
-		if (defaultRMI == null) {
-		    defaultRMI = rmiProps.getProperty(pkey);
-		} else if (!defaultRMI.equals(rmiProps.getProperty(pkey))) {
-		    throw new RMIConfigurationException("Carol can not be configured with 2 default rmi :" + rmiProps.getProperty(pkey) + " and " + defaultRMI);
-
-
-		} 
+	    if  (pkey.startsWith(activation_prefix)) { // get default rmi name : the first activated rmi
+		StringTokenizer pTok = new StringTokenizer(rmiProps.getProperty(pkey), ",");
+		if (pTok.hasMoreTokens()) {
+		    defaultRMI = (pTok.nextToken());
+		} else {
+		   throw new RMIConfigurationException("There is no rmi activated in the file " + CAROL_FILE_NAME); 
+		}
 	    } else if (pkey.startsWith(jvmPref)) { // jvm properties
 		jvmProps.setProperty(pkey.substring(jvmPref.length()+1), rmiProps.getProperty(pkey));	
 	    } else if ((pkey.startsWith(rmiPref)) || (pkey.startsWith(jndiPref))) { // this is a carol properties
@@ -196,13 +196,13 @@ public class CommunicationConfiguration {
 		    rmiConfigurationTable.put(rmiName, rmiConf);
 		}
 	    } else { // this is not a carol properties 
-		throw new RMIConfigurationException("The properties " + pkey + "can not be set in the file " + RMI_FILE_NAME);
+		throw new RMIConfigurationException("The properties " + pkey + "can not be set in the file " + CAROL_FILE_NAME);
 	    }
 	}
  	// add the jvm properties in the jvm 
 	System.setProperties(jvmProps);
 
-	protocolsLoaded = true;
+	configurationLoaded = true;
 
 	// is there a  default protocol activate ? 
 	if (defaultRMI==null) {
@@ -211,6 +211,43 @@ public class CommunicationConfiguration {
 	    throw new RMIConfigurationException("The default protocol : " + defaultRMI + " must be activate");
 	}
       }
+
+    
+    /**
+     * This method activate a rmi architecture with is name. You need to load the CAROL configuration before using thid method.
+     * @param String rmi name 
+     * @throws RMIConfigurationException if a the carol configuration is not loaded (by the loadCarolConfiguration method)
+     * @throws RMIConfigurationException if the rmi name doesn't exist in the carol configuration
+     */
+    public static void activateRMI(String rmiName) throws RMIConfigurationException {
+	if (!configurationLoaded) {
+	    throw new RMIConfigurationException("call for rmi "+rmiName+ " activation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class");
+	}
+	RMIConfiguration rmiC =  getRMIConfiguration(rmiName);
+	if (rmiC == null) {
+	     throw new RMIConfigurationException("try to activate a non existant rmi configuration :" +rmiName); 
+	} else {
+	    rmiC.activate();
+	}
+    }
+
+    /**
+     * This method desactivate a rmi architecture with is name. You need to load the CAROL configuration before using thid method.
+     * @param String rmi name 
+     * @throws RMIConfigurationException if a the carol configuration is not loaded (by the loadCarolConfiguration method)
+     * @throws RMIConfigurationException if the rmi name doesn't exist in the carol configuration
+     */
+    public static void desactivateRMI(String rmiName) throws RMIConfigurationException {
+	if (!configurationLoaded) {
+	    throw new RMIConfigurationException("call for rmi "+rmiName+ " desactivation with no protocols configuration load \n please, call before the loadCarolConfiguration() static method in this class");
+	}
+	RMIConfiguration rmiC =  getRMIConfiguration(rmiName);
+	if (rmiC == null) {
+	     throw new RMIConfigurationException("try to desactivate a non existant rmi configuration :" +rmiName); 
+	} else {
+	    rmiC.desactivate();
+	}
+    }
 
  
 }

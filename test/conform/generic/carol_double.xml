@@ -126,7 +126,7 @@
     <copy file="${test.ext}/${client.properties.file.name1}" tofile="${test.tmp.client1}/jndi.properties" /> 
     <copy file="${test.ext}/${client.properties.file.name2}" tofile="${test.tmp.client2}/jndi.properties" /> 
 
-    <copy file="${test.ext}/${server.properties.file.name1}" tofile="${test.tmp.server}/rmi.properties" />  
+    <copy file="${test.ext}/${server.properties.file.name1}" tofile="${test.tmp.server}/carol.properties" />  
     <copy file="${test.ext}/${server.properties.file.name2}" tofile="${test.tmp.server}/jndi.properties" /> 
 
   </target>

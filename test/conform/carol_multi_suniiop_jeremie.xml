@@ -24,7 +24,7 @@
       <property name="stub.jar.name2" value="suniiop.jar"/>
       <property name="client.properties.file.name1" value="jeremie_jndi.properties"/>
       <property name="client.properties.file.name2" value="iiop_jndi.properties"/>
-      <property name="server.properties.file.name1" value="multisunjeremie_rmi.properties"/>
+      <property name="server.properties.file.name1" value="multisunjeremie_carol.properties"/>
       <property name="server.properties.file.name2" value="jeremie_jndi.properties"/>
       <property name="name.server.class.name1" value="org.objectweb.jeremie.libs.services.registry.JRMIRegistry"/>
       <property name="name.server.option1" value="19572"/>

@@ -17,7 +17,7 @@
       <property name="stub.jar.name" value="sunjrmp1.1.jar"/>
       <property name="client.class.name" value=""/>
       <property name="client.properties.file.name" value="jrmp_jndi.properties"/>
-      <property name="server.properties.file.name" value="jrmp_rmi.properties"/>
+      <property name="server.properties.file.name" value="jrmp_carol.properties"/>
       <property name="name.server.class.name" value="sun.rmi.registry.RegistryImpl"/>
       <property name="name.server.option" value="19570"/>
       <property name="test.name"          value="sunjrmp1.1"/>

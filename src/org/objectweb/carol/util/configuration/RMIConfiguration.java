@@ -30,6 +30,7 @@ package org.objectweb.carol.util.configuration;
 //java import
 import java.util.Properties;
 import java.util.Enumeration;
+import java.util.StringTokenizer;
 
 
 /*
@@ -65,7 +66,7 @@ public class RMIConfiguration {
     /**
      * activation Prefix
      */
-    public static String ACTIVATION_PREFIX="activate";
+    public static String ACTIVATION_PREFIX="activated";
 
     /**
      * default Prefix
@@ -126,14 +127,22 @@ public class RMIConfiguration {
     public RMIConfiguration(String name, Properties rmiProperties, Properties jndiProperties) throws RMIConfigurationException {
 	String rmiPref = CAROL_PREFIX + "." +  RMI_PREFIX + "." + name;
 	String jndiPref = CAROL_PREFIX + "." +  JNDI_PREFIX + "." + name;
+	String activatedPref = CAROL_PREFIX + "." +  RMI_PREFIX + "." + ACTIVATION_PREFIX;
+	
 
 	// RMI Properties
 	rmiName=name;
 	// activation flag
-	if (rmiProperties.getProperty( rmiPref + "." + ACTIVATION_PREFIX ) == null) {
-	    throw new RMIConfigurationException("The flag " + rmiPref + "." + ACTIVATION_PREFIX + " missing in the configuration file");
+	// search if the rmi name existe in the activated prefix
+	if (rmiProperties.getProperty( activatedPref ) == null) {
+	    throw new RMIConfigurationException("The flag " + activatedPref + " missing in the configuration file");
 	} else {
-	    activate = new Boolean(rmiProperties.getProperty( rmiPref + "." + ACTIVATION_PREFIX ).trim()).booleanValue();
+	    // use a String Tokennizer to parse the properties
+	    activate = false;
+	    StringTokenizer st = new StringTokenizer(rmiProperties.getProperty(activatedPref), ",");
+	    while (st.hasMoreTokens()) {
+		if (((st.nextToken()).trim()).equals(name)) activate = true;
+	    }
 	}
 
 	// PortableRemoteObjectClass flag	
@@ -184,6 +193,20 @@ public class RMIConfiguration {
      */
     public String getName() {
 	return rmiName;
+    }
+
+    /**
+     * activate this rmi
+     */
+    public void activate() {
+	activate = true;
+    }
+
+    /**
+     * desactivate this rmi
+     */
+    public void desactivate() {
+	activate = false;
     }
 
     /**

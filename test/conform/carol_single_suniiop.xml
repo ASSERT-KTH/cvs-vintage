@@ -23,7 +23,7 @@
     <ant antfile="conform/generic/carol_single.xml">
       <property name="stub.jar.name" value="suniiop.jar"/>
       <property name="client.properties.file.name" value="iiop_jndi.properties"/>
-      <property name="server.properties.file.name" value="iiop_rmi.properties"/>
+      <property name="server.properties.file.name" value="iiop_carol.properties"/>
       <property name="name.server.class.name" value="com.sun.corba.se.internal.CosNaming.TransientNameServer"/>
       <property name="name.server.option" value="-ORBInitialPort 19571"/>
       <property name="test.name"          value="suniiop"/>

@@ -1,0 +1,185 @@
+<chapter id="configuration">
+  <title>CAROL Configuration</title>
+  <sect1 id="carol-conf">
+    <title>Presentation of the CAROL library configuration</title>
+    <para>
+      This section describes the configuration rules for different RMI and name services managed by CAROL. Currently, CAROL is distributed with tools and classes for using:
+	<itemizedlist>
+	<listitem>
+	  <para>ObjectWeb/Jonathan <ulink url="http://objectweb.org/jonathan">JEREMIE</ulink> RMI JRMP like</para>
+	</listitem>
+	<listitem>
+	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/rmi/index.html">RMI JRMP</ulink> (version 1.1 and 1.2)</para>
+	</listitem>
+	<listitem>
+	  <para>Sun <ulink url="http://java.sun.com/j2se/1.4/docs/guide/idl/index.html">jdk 1.4 RMI IIOP</ulink></para>
+	</listitem>
+      </itemizedlist>
+      CAROL allow to configure a remote Java server to accessible by one,two or three of those RMI architecture, in the same time, by configuration.
+    </para>
+  </sect1>
+  <sect1>
+    <title>CAROL configuration</title>
+    <sect2>
+      <title>General configuration files</title>
+      <para>CAROL configuration is based on two properties files. The carol.properties file and the jndi.properties file. Only the carol.properties file is mandatory to configure CAROL. If there is no JNDI configuration in the carol.properties file, CAROL will automatically search for those configuration informations in the jndi.properties file. In this case, if there is no jndi.properties file, an Exception will be raise.</para>
+      <note>
+	<para>CAROL use the jndi.properties file for JNDI conformance with only one RMI architecture activate. For multi RMI architectures with multi name services (registry and CosNaming for example) CAROL need a jndi configuration inside the carol.properties. In case of multi-RMI configuration, if, for one (and only one) of those activate RMI, the jndi configuration missing, the jndi.properties file will be used by CAROL.</para>
+      </note>
+      <para>All the configuration below use only the carol.properties file. You can put one of the JNDI configuration in a jndi.properties file, this will work with CAROL.</para>
+    </sect2>
+    <sect2>
+      <title>General configuration rules for all RMI and JNDI architectures</title>
+      <para>The carol.properties file is a standard Java properties file. All properties in this file follow the rules below. We suppose that XXX is the rmi name like 'jrmp', 'iiop' or 'jeremie'.For RMI IIOP the 'iiop' name is required (only for RMI IIOP, you can call the RMI JRMP by the configuration name 'foo' for example).	
+      </para>
+      <para>
+	<table>
+	  <title>Carol general properties</title>
+	  <tgroup cols="4">
+	    <thead>
+	      <row>
+		<entry>Property name</entry>
+		<entry>Property value</entry>
+		<entry>Description</entry
+		<entry>Required</entry>		
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>carol.rmi.activated</entry>
+		<entry>'XXX protocol-name', 'YYY potocol-name'</entry>
+		<entry>All rmi activated architecture name. The first (XXX) is the default rmi protocol for CAROL. This default protocol is used by the server when there is no entrant protocol.</entry>
+		<entry>Yes</entry>
+	      </row>
+	      <row>
+		<entry>carol.jvm.'property-name'</entry>
+		<entry>'property-value'</entry>
+		<entry>All extra JVM property for all RMI (directly pass to the JVM with 'name' name and 'value' value without any verifications). This is equivalent to put -D'property-name'='property-value' in the Java JVM option.</entry>
+		<entry>no</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>
+      </para>
+      <para>
+	<table>
+	  <title>Carol RMI XXX specifics properties</title>
+	  <tgroup cols="4">
+	    <thead>
+	      <row>
+		<entry>Property name</entry>
+		<entry>Property value</entry>
+		<entry>Description</entry
+		  <entry>Required</entry>		
+	      </row>
+	    </thead>
+	    <tbody>
+	      <row>
+		<entry>carol.rmi.XXX .PortableRemoteObjectClass</entry>
+		<entry>'XXX portable remote object class name'</entry>
+		<entry>The portable remote object delegate class name for this RMI (CAROL provide those classes for RMI JRMP and JEREMIE, see below).</entry>
+		<entry>Yes, for all activated rmi.</entry>
+	      </row>
+	      <row>
+		<entry>carol.jndi.XXX.'property-name'</entry>
+		<entry>'property-value'</entry>
+		<entry>All jndi properties needed for XXX name service configuration. This is equivalent to put 'property-name'='property-value' in the jndi.properties file</entry>
+		<entry>Yes, for 'java.naming.factory.initial' and 'java.naming.provider.url' jndi property (in the carol.properties or in the jndi.properties file)</entry>
+	      </row>
+	    </tbody>
+	  </tgroup>
+	</table>  
+      </para>
+    </sect2>
+    <sect2>
+      <title>RMI JRMP personality configuration</title>
+      <para>One of the SPI personality available/provided in CAROL is the standard Sun RMI JRMP. This personality can be used with all standard RMI JRMP features. CAROL also allow this RMI JRMP to propagate implicitly a context (like transactional or security context) via a RMI IIOP Interceptor like mechanism. The example below explain the general way for CAROL RMI JRMP configuration:</para> 
+      <example>
+	<title>RMI JRMP carol.properties file</title>
+	<screen> 
+&jrmpcarol.properties;
+	</screen>
+	<para>In this file we see the standard configuration:
+	  <itemizedlist>
+	    <listitem>  
+	      <para>carol.rmi.activated property is set to jrmp for default and activated protocol.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The carol.rmi.jrmp.PortableRemoteObjectClass property is set to <classname>org.objectweb.carol.rmi.multi.JrmpPRODelegate</classname>. This class is provide by CAROL to simulate a RMI IIOP portable remote object delegate in JRMP.</para>
+	    </listitem>
+	      <listitem>
+	      <para>JNDI is configured with classical property values</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+	<para>There is also non standard values (passed directly to the JVM). Those values are for JRMP remote call interception with a CORBA 'portable interceptor like' mechanism through CAROL interfaces. Here there is two interception instantiation classes (org.objectweb.PortableInterceptor.JRMPInitializerClass.*): org.objectweb.carol.rmi.jrmp.interceptor.ProtocolInterceptorInitializer (provided by CAROL and mandatory for multi protocol management) and org.objectweb.carol.jtests.conform.interceptor.jrmp.Initializer (provided by CAROL tests and not mandatory, only for this example).
+	</para>
+      </example>
+    </sect2>
+    <sect2>
+      <title>RMI IIOP personality configuration</title>
+      <para>One of the SPI personality available/provided in CAROL is the Sun jdk1.4 RMI IIOP. This personality can be used with all standard RMI IIOP (CORBA 2.3) features. CAROL also allow this RMI IIOP to propagate implicitly a context (like transactional or security context) via a standard RMI IIOP Interceptor mechanism. This section explain the general way for CAROL RMI IIOP configuration:</para>
+      <example>
+	<title>RMI IIOP carol.properties file</title>
+	<screen> 
+&iiopcarol.properties;
+	</screen>
+	<para>In this file we see the standard configuration:
+	  <itemizedlist>
+	    <listitem>
+	      <para>The carol.rmi.activated property is set to iiop for default and activated protocol.</para>
+	    </listitem>
+	    <listitem>
+	      <para>The carol.rmi.iiop.PortableRemoteObjectClass property is set to <classname>com.sun.corba.se.internal.javax.rmi.PortableRemoteObject</classname>. This class is the standard Sun RMI IIOP portable remote object delegate.</para>
+	      </listitem>
+	    <listitem>
+	      <para>JNDI is configured with classical property values</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+	<para>There is also non standard values (passed directly to the JVM). Those values are for standard IIOP CORBA configuration and remote call interception with a CORBA portable interceptor mechanism. Here there is two interception instantiation classes (org.objectweb.PortableInterceptor.ORBInitializerClass.*): org.objectweb.carol.rmi.iiop.interceptor.ProtocolInitializer (provided by CAROL and mandatory for multi protocol) and org.objectweb.carol.jtests.conform.interceptor.iiop.IIOPInitializer (provided by CAROL tests and not mandatory, only for this example).
+	</para>
+      </example>	
+    </sect2>
+    <sect2>
+      <title>RMI JEREMIE personality configuration</title>
+      <para>One of the SPI personality available/provided in CAROL is the ObjectWeb Jonathan JEREMIE personality. This personality can be used with all standard JEREMIE features. CAROL also allow this JEREMIE to propagate implicitly a context (like transactionnal or security context) via a JEREMIE handler mechanism. This section explain the general way for CAROL JEREMIE configuration in the two file jonathan.xml and carol.properties:</para>
+      <example>
+	<title>JEREMIE jonathan.xml file</title>
+	<screen>
+&jonathan.xml;
+	</screen>
+	<para>In this file, JEREMIE is configured to use the OW extension for stub/skeleton and to use the CAROL protocol handler.</para>
+      </example>
+      <example>
+	<title>JEREMIE carol.properties file</title>
+	<screen>
+&jeremiecarol.properties;
+	</screen>
+	<para>In this file we see the standard configuration:
+	  <itemizedlist>
+	    <listitem>
+	      <para>The carol.rmi.activated property is set for default and activated protocols</para>
+	    </listitem>
+	    <listitem>
+	      <para>The carol.rmi.jeremie.PortableRemoteObjectClass property is set to <classname>org.objectweb.carol.rmi.multi.JeremiePRODelegate</classname>. This class is provided by CAROL to simulate a RMI IIOP portable remote object delegate in JEREMIE.</para>
+	    </listitem>
+	    <listitem>
+	      <para>JNDI is configured with classical property values for JEREMIE</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </example>
+    </sect2>
+    <sect2>
+      <title>MULTI RMI configuration</title>
+      <para>The example below show a general RMI configuration with 3 RMI architectures configured and 2 activated (RMI IIOP and JEREMIE) and with RMI IIOP default:</para> 
+      <example>
+	<title>MULTI RMI carol.properties file</title>
+      	<screen> 
+&carol.properties;
+	</screen>
+      </example>
+    </sect2>
+  </sect1>
+</chapter>

@@ -86,7 +86,7 @@
     <mkdir dir="${test.tmp.server}"/>    
     <mkdir dir="${test.tmp.registry}"/>
     <copy file="${test.ext}/${client.properties.file.name}" tofile="${test.tmp.client}/jndi.properties" />  
-    <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/rmi.properties" /> 
+    <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" /> 
   </target>
 
   <!-- test launching --> 
