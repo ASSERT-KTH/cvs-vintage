@@ -92,7 +92,7 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     protected Hashtable attributes = new Hashtable();
     protected boolean enabled=true;
     protected boolean secure=false;
-    
+
     public PoolTcpConnector() {
     	ep = new PoolTcpEndpoint();
     }
@@ -188,6 +188,24 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 	}
     }
 
+    // -------------------- Socket options --------------------
+
+    public void setTcpNoDelay( boolean b ) {
+	ep.setTcpNoDelay( b );
+    }
+
+    public void setSoLinger( int i ) {
+	ep.setSoLinger( i );
+    }
+
+    public void setSoTimeout( int i ) {
+	ep.setSoTimeout(i);
+    }
+    
+    public void setServerSoTimeout( int i ) {
+	ep.setServerSoTimeout( i );
+    }
+    
     // -------------------- Getters --------------------
     
     public PoolTcpEndpoint getEndpoint() {

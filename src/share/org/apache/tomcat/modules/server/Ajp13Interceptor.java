@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.9 2001/06/24 22:43:10 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2001/06/24 22:43:10 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/Ajp13Interceptor.java,v 1.10 2001/08/12 03:57:52 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2001/08/12 03:57:52 $
  *
  * ====================================================================
  *
@@ -82,6 +82,8 @@ public class Ajp13Interceptor extends PoolTcpConnector
     public Ajp13Interceptor()
     {
         super();
+	super.setSoLinger( 100 );
+	super.setTcpNoDelay( true );
     }
 
     // -------------------- PoolTcpConnector --------------------
@@ -120,8 +122,6 @@ public class Ajp13Interceptor extends PoolTcpConnector
             if(socket == null) {
                 return;
             }
-
-            socket.setSoLinger( true, 100);
 
             Ajp13 con=null;
             Ajp13Request req=null;

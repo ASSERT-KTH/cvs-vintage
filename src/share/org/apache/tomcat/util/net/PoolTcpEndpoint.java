@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.12 2001/06/24 22:44:16 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2001/06/24 22:44:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.13 2001/08/12 03:57:52 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2001/08/12 03:57:52 $
  *
  * ====================================================================
  *
@@ -104,7 +104,7 @@ public class PoolTcpEndpoint { // implements Endpoint {
     private boolean isPool = true;
 
     private int backlog = BACKLOG;
-    private int timeout = TIMEOUT;
+    private int serverTimeout = TIMEOUT;
 
     TcpConnectionHandler handler;
 
@@ -120,6 +120,10 @@ public class PoolTcpEndpoint { // implements Endpoint {
 
     ThreadPool tp;
     protected Log _log=Log.getLog("tc/PoolTcpEndpoint", "PoolTcpEndpoint");
+
+    protected boolean tcpNoDelay=false;
+    protected int linger=100;
+    protected int socketTimeout=-1;
     
     public PoolTcpEndpoint() {
 	//	super("tc_log");	// initialize default logger
@@ -221,8 +225,24 @@ public class PoolTcpEndpoint { // implements Endpoint {
      *
      * <p>By default this value is 1000ms.
      */
-    public void setTimeout(int timeout) {
-	    this.timeout = timeout;
+    public void setServerTimeout(int timeout) {
+	this.serverTimeout = timeout;
+    }
+
+    public void setTcpNoDelay( boolean b ) {
+	tcpNoDelay=b;
+    }
+
+    public void setSoLinger( int i ) {
+	linger=i;
+    }
+
+    public void setSoTimeout( int i ) {
+	socketTimeout=i;
+    }
+    
+    public void setServerSoTimeout( int i ) {
+	serverTimeout=i;
     }
 
     // -------------------- Public methods --------------------
@@ -239,6 +259,8 @@ public class PoolTcpEndpoint { // implements Endpoint {
 		    serverSocket = factory.createSocket(port, backlog, inet);
 		}
 	    }
+	    if( serverTimeout >= 0 )
+		serverSocket.setSoTimeout( serverTimeout );
 	} catch( IOException ex ) {
 	    //	    log("couldn't start endpoint", ex, Logger.DEBUG);
             throw ex;
@@ -361,6 +383,20 @@ public class PoolTcpEndpoint { // implements Endpoint {
 	_log.log( msg, t, level );
     }
 
+    void setSocketOptions(Socket socket)
+    {
+	try {
+	    if(linger >= 0 ) 
+		socket.setSoLinger( true, linger);
+	    if( tcpNoDelay )
+		socket.setTcpNoDelay(tcpNoDelay);
+	    if( socketTimeout > 0 )
+		socket.setSoTimeout( socketTimeout );
+	} catch(  SocketException se ) {
+	    se.printStackTrace();
+	}
+    }
+
 }
 
 // -------------------- Threads --------------------
@@ -435,6 +471,7 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 		    
 		    con.setEndpoint(endpoint);
 		    con.setSocket(s);
+		    endpoint.setSocketOptions( s );
 		    endpoint.getConnectionHandler().processConnection(con, perThrData);
                 } finally {
                     con.recycle();
@@ -445,5 +482,4 @@ class TcpWorkerThread implements ThreadPoolRunnable {
 	}
     }
 
-    
 }
