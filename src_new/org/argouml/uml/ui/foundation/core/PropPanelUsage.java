@@ -1,4 +1,4 @@
-// $Id: PropPanelUsage.java,v 1.5 2003/01/26 16:51:12 kataka Exp $
+// $Id: PropPanelUsage.java,v 1.6 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,9 +45,7 @@ public class PropPanelUsage extends PropPanelDependency {
         addField(Argo.localize("UMLMenu", "label.clients"), _clientScroll);
 
         // TODO: add Mapping
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);       
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-association"), "removeElement", null);
     }
 

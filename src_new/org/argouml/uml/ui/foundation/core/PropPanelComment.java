@@ -1,4 +1,4 @@
-// $Id: PropPanelComment.java,v 1.8 2003/01/29 22:21:57 kataka Exp $
+// $Id: PropPanelComment.java,v 1.9 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,9 +52,7 @@ public class PropPanelComment extends PropPanelModelElement {
         JScrollPane pane = new JScrollPane(text);
         addField("Text: ", pane);
         
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
-        new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-        new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled"); 
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);   
         new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-class"),"removeElement",null);      
     }
 

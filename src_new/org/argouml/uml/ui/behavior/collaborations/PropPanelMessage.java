@@ -1,4 +1,4 @@
-// $Id: PropPanelMessage.java,v 1.26 2003/05/01 08:49:40 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.27 2003/05/04 08:44:29 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelMessage.java
 // Classes: PropPanelMessage
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelMessage.java,v 1.26 2003/05/01 08:49:40 kataka Exp $
+// $Id: PropPanelMessage.java,v 1.27 2003/05/04 08:44:29 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -96,9 +96,7 @@ public class PropPanelMessage extends PropPanelModelElement {
     JScrollPane predecessorScroll = new JScrollPane(new UMLMutableLinkedList(new UMLMessagePredecessorListModel(), ActionAddMessagePredecessor.SINGLETON, null));
     addField(Argo.localize("UMLMenu", "label.predecessor"), predecessorScroll);
 
-    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateInteraction",null);
-    new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu" ,"button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-    new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateInteraction",null);   
     new PropPanelButton(this,buttonPanel,_actionIcon, Argo.localize("UMLMenu", "button.add-action"),"addAction","isAddActionEnabled");
     // ActionNewAction.SINGLETON.setTarget((MModelElement)getTarget());
     // buttonPanel.add(new PropPanelButton2(this, ActionNewAction.SINGLETON));

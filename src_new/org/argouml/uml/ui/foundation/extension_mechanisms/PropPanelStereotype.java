@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.17 2003/02/06 19:09:07 thn Exp $
+// $Id: PropPanelStereotype.java,v 1.18 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -86,9 +86,7 @@ public class PropPanelStereotype extends PropPanelModelElement {
         derivedList.setVisibleRowCount(1);
         addField(new JScrollPane(derivedList),1,1,1);
 
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
-        new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-        new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);      
         new PropPanelButton(this,buttonPanel,_stereotypeIcon, Argo.localize("UMLMenu", "button.add-new-stereotype"),"newStereotype",null);
         new PropPanelButton(this,buttonPanel,_deleteIcon, Argo.localize("UMLMenu", "button.delete-package"),"removeElement",null);
     }

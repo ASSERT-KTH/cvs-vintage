@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: PropPanelStateMachine.java,v 1.8 2003/04/28 07:48:16 jhraigniac Exp $
+// $Id: PropPanelStateMachine.java,v 1.9 2003/05/04 08:44:29 kataka Exp $
 package org.argouml.uml.ui.behavior.state_machines;
 
 import javax.swing.JList;
@@ -72,13 +72,7 @@ public class PropPanelStateMachine extends PropPanelModelElement {
         
         new PropPanelButton(this, buttonPanel, _navUpIcon,
                             Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace",
-                            null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon,
-                            Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction",
-                            "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon,
-                            Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction",
-                            "isNavigateForwardEnabled");
+                            null);       
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement",
                             null);                    

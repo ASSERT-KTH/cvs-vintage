@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.30 2003/04/29 19:40:55 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.31 2003/05/04 08:44:30 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -118,12 +118,6 @@ public class PropPanelUseCase extends PropPanelClassifier {
         new PropPanelButton(this, buttonPanel, _navUpIcon,
                             Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace",
                             null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon,
-                            Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction",
-                            "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon,
-                            Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction",
-                            "isNavigateForwardEnabled");
         new PropPanelButton(this, buttonPanel, _useCaseIcon,
                             Argo.localize("UMLMenu", "button.add-usecase"), "newUseCase",
                             null);

@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.20 2003/04/29 19:25:10 kataka Exp $
+// $Id: PropPanelGeneralization.java,v 1.21 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,12 +24,9 @@
 
 package org.argouml.uml.ui.foundation.core;
 
-import javax.swing.BorderFactory;
-import javax.swing.border.BevelBorder;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Category;
-
 import org.argouml.application.api.Argo;
 import org.argouml.swingext.LabelledLayout;
 import org.argouml.ui.ProjectBrowser;
@@ -90,9 +87,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
 
         addField("Powertype:", new UMLComboBox2(new UMLGeneralizationPowertypeComboBoxModel(), ActionSetGeneralizationPowertype.SINGLETON));
 
-        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
-        new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-        new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu" ,"button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+        new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);       
         new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete generalization"),"removeElement",null);
     }
 

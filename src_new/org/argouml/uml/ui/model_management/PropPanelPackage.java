@@ -1,4 +1,4 @@
-// $Id: PropPanelPackage.java,v 1.32 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelPackage.java,v 1.33 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,9 +96,7 @@ public class PropPanelPackage extends PropPanelNamespace implements PluggablePro
 
         addField(Argo.localize("UMLMenu", "label.owned-elements"), getOwnedElementsScroll());
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateNamespace", null);       
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-package"), "removeElement", "isRemovableElement");
     }
 

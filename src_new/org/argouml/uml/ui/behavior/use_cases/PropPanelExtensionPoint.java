@@ -1,4 +1,4 @@
-// $Id: PropPanelExtensionPoint.java,v 1.16 2003/04/29 19:25:09 kataka Exp $
+// $Id: PropPanelExtensionPoint.java,v 1.17 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -100,13 +100,7 @@ public class PropPanelExtensionPoint extends PropPanelModelElement {
         // selects the owning use case.
 
         new PropPanelButton(this, buttonPanel, _navUpIcon,
-                            Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon,
-                            Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction",
-                            "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon,
-                            Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction",
-                            "isNavigateForwardEnabled");
+                            Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);       
         new PropPanelButton(this, buttonPanel, _deleteIcon,
                             localize("Delete"), "removeElement", null); 
     }

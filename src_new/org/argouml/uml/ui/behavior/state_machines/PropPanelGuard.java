@@ -26,7 +26,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelGuard.java,v 1.12 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelGuard.java,v 1.13 2003/05/04 08:44:29 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -74,9 +74,7 @@ public class PropPanelGuard extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.expression"), new JScrollPane(new UMLExpressionBodyField(expressionModel,true),JScrollPane.VERTICAL_SCROLLBAR_NEVER,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
         addField(Argo.localize("UMLMenu", "label.language"), new UMLExpressionLanguageField(expressionModel,true));        	
 
-	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
-	new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu" ,"button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-	new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);	
 	new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
 
   }

@@ -25,7 +25,7 @@
 // Classes: PropPanelAttribute
 // Original Author: jrobbins@ics.uci.edu
 // Refactored by: jaap.branderhorst@xs4all.nl
-// $Id: PropPanelAttribute.java,v 1.32 2003/05/02 08:33:42 kataka Exp $
+// $Id: PropPanelAttribute.java,v 1.33 2003/05/04 08:44:30 kataka Exp $
 
 package org.argouml.uml.ui.foundation.core;
 
@@ -78,21 +78,7 @@ public class PropPanelAttribute extends PropPanelStructuralFeature {
 			_navUpIcon,
 			Argo.localize("UMLMenu", "button.go-up"),
 			"navigateUp",
-			null);
-		new PropPanelButton(
-			this,
-			buttonPanel,
-			_navBackIcon,
-			Argo.localize("UMLMenu", "button.go-back"),
-			"navigateBackAction",
-			"isNavigateBackEnabled");
-		new PropPanelButton(
-			this,
-			buttonPanel,
-			_navForwardIcon,
-			Argo.localize("UMLMenu", "button.go-forward"),
-			"navigateForwardAction",
-			"isNavigateForwardEnabled");
+			null);		
 		new PropPanelButton(
 			this,
 			buttonPanel,

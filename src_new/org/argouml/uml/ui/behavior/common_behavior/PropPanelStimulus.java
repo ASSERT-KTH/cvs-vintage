@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.19 2003/05/04 08:44:29 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: PropPanelStimulus.java
 // Classes: PropPanelStimulus
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelStimulus.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelStimulus.java,v 1.19 2003/05/04 08:44:29 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -106,9 +106,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
     
 
   
-     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
-     new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu" ,"button.go-back"),"navigateBackAction","isNavigateBackEnabled");
-     new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
+     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);    
      new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete object"),"removeElement",null);
 
     

@@ -24,7 +24,7 @@
 // File: PropPanelTransition.java
 // Classes: PropPanelTransition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelTransition.java,v 1.18 2003/01/26 16:51:11 kataka Exp $
+// $Id: PropPanelTransition.java,v 1.19 2003/05/04 08:44:29 kataka Exp $
 
 package org.argouml.uml.ui.behavior.state_machines;
 
@@ -76,9 +76,7 @@ public class PropPanelTransition extends PropPanelModelElement {
         effectList.setVisibleRowCount(1);
         addField(Argo.localize("UMLMenu", "label.effect"), new JScrollPane(effectList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);     
         new PropPanelButton(this, buttonPanel, _deleteIcon, localize("Delete"), "removeElement", null);
     }
 

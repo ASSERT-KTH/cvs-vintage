@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.29 2003/05/02 14:01:51 kataka Exp $
+// $Id: PropPanelOperation.java,v 1.30 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.uml.ui.foundation.core;
 
 
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -125,9 +124,7 @@ public class PropPanelOperation extends PropPanelModelElement {
 	exceptList.setFont(smallFont);
         addField(Argo.localize("UMLMenu", "label.raisedsignals"), new JScrollPane(exceptList));
 
-        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu" ,"button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
+        new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);     
         new PropPanelButton(this, buttonPanel, _operationIcon, Argo.localize("UMLMenu", "button.add-new-operation"), "buttonAddOperation", null);
         // I uncommented this next line. I don't know why it was commented out, it seems to work just fine...--pjs--
         new PropPanelButton(this, buttonPanel, _parameterIcon, Argo.localize("UMLMenu", "button.add-parameter"), "buttonAddParameter", null);       

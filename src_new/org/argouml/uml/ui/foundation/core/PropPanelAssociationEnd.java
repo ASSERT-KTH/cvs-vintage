@@ -1,4 +1,4 @@
-// $Id: PropPanelAssociationEnd.java,v 1.29 2003/04/29 19:25:09 kataka Exp $
+// $Id: PropPanelAssociationEnd.java,v 1.30 2003/05/04 08:44:30 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,8 +186,6 @@ public class PropPanelAssociationEnd extends PropPanelModelElement {
 
         new PropPanelButton(this, buttonPanel, _navUpIcon, Argo.localize("UMLMenu", "button.go-up"), "navigateUp", null);
         //does this make sense?? new PropPanelButton(this,buttonPanel,_interfaceIcon, Argo.localize("UMLMenu", "button.add-new-interface"),"newInterface",null);
-        new PropPanelButton(this, buttonPanel, _navBackIcon, Argo.localize("UMLMenu", "button.go-back"), "navigateBackAction", "isNavigateBackEnabled");
-        new PropPanelButton(this, buttonPanel, _navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"), "navigateForwardAction", "isNavigateForwardEnabled");
         new PropPanelButton(this, buttonPanel, _assocEndIcon, localize("Go to other end"), "gotoOther", null);
         new PropPanelButton(this, buttonPanel, _deleteIcon, Argo.localize("UMLMenu", "button.delete-association-end"), "removeElement", "isDeleteEnabled");
     }
