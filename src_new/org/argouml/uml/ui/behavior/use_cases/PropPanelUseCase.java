@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.15 2002/09/09 08:02:57 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.16 2002/09/09 22:16:12 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -132,6 +132,10 @@ public class PropPanelUseCase extends PropPanelClassifier {
 		
 		add(LabelledLayout.getSeperator());
 		
+		JList connectList = new UMLList(new UMLUseCaseAssociationListModel(this,null,true),true);
+      	connectList.setForeground(Color.blue);
+      	connectList.setVisibleRowCount(3);
+      	connectScroll= new JScrollPane(connectList,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		addField(Argo.localize("UMLMenu", "label.associations"), connectScroll);
     	addField(Argo.localize("UMLMenu", "label.operations"), opsScroll);
    	 	addField(Argo.localize("UMLMenu", "label.attributes"), attrScroll);	
