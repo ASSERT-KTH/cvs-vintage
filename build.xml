@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.79 2002/03/11 04:31:34 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.80 2002/03/23 21:11:02 ejort Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -73,18 +73,15 @@
     <property name="sun.javacc.root" value="${project.thirdparty}/sun/javacc"/>
     <property name="sun.javacc.lib" value="${sun.javacc.root}/lib"/>
 
+    <!-- Java Management Extensions (JMX) -->
+    <property name="sun.jmx.root" value="${project.thirdparty}/sun/jmx"/>
+    <property name="sun.jmx.lib" value="${sun.jmx.root}/lib"/>
+
     <!-- Java Naming and Directory Interface (JNDI) -->
     <property name="sun.jndi.root" value="${project.thirdparty}/sun/jndi"/>
     <property name="sun.jndi.lib" value="${sun.jndi.root}/lib"/>
     <path id="sun.jndi.classpath">
       <pathelement path="${sun.jndi.lib}/jndi.jar"/>
-    </path>
-
-    <!-- Java Management Extensions (JMX) -->
-    <property name="sun.jmx.root" value="${project.thirdparty}/sun/jmx"/>
-    <property name="sun.jmx.lib" value="${sun.jmx.root}/lib"/>
-    <path id="sun.jmx.classpath">
-      <pathelement path="${sun.jmx.lib}/jmxri.jar"/>
     </path>
 
     <!-- Java API for XML Processing (JAXP) -->
@@ -175,7 +172,6 @@
     <!-- The combined library classpath -->
     <path id="library.classpath">
       <path refid="sun.jndi.classpath"/>
-      <path refid="sun.jmx.classpath"/>
       <path refid="sun.jaxp.classpath"/>
       <path refid="sun.jaas.classpath"/>
       <path refid="sun.jsse.classpath"/>
@@ -213,6 +209,13 @@
       <pathelement path="${jboss.system.lib}/jboss-system.jar"/>
     </path>
 
+    <!-- JMX -->
+    <property name="jboss.jmx.root" value="${project.root}/jmx/output"/>
+    <property name="jboss.jmx.lib" value="${jboss.jmx.root}/lib"/>
+    <path id="jboss.jmx.classpath">
+      <pathelement path="${jboss.jmx.lib}/jboss-jmx.jar"/>
+    </path>
+
     <!-- Naming -->
     <property name="jboss.naming.root" value="${project.root}/naming/output"/>
     <property name="jboss.naming.lib" value="${jboss.naming.root}/lib"/>
@@ -233,6 +236,7 @@
       <path refid="jboss.j2ee.classpath"/>
       <path refid="jboss.common.classpath"/>
       <path refid="jboss.system.classpath"/>
+      <path refid="jboss.jmx.classpath"/>
       <path refid="jboss.naming.classpath"/>
       <path refid="jboss.management.classpath"/>
     </path>

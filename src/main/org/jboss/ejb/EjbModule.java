@@ -9,16 +9,20 @@ package org.jboss.ejb;
 
 
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.WeakHashMap;
 import javax.ejb.EJBLocalHome;
+import javax.naming.InitialContext;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.Container;
@@ -44,10 +48,6 @@ import org.jboss.system.ServiceControllerMBean;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.system.UnifiedClassLoader;
 import org.jboss.util.jmx.MBeanProxy;
-import java.util.ArrayList;
-import javax.naming.InitialContext;
-import java.net.URLClassLoader;
-import org.jboss.deployment.DeploymentException;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
@@ -78,7 +78,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -135,7 +135,7 @@ public class EjbModule
    // Static --------------------------------------------------------
    
    /** Stores a map of DeploymentInfos to EjbModules. */
-   private static WeakHashMap ejbModulesByDeploymentInfo = new WeakHashMap();
+   private static HashMap ejbModulesByDeploymentInfo = new HashMap();
 
    // Public --------------------------------------------------------
 
@@ -145,9 +145,6 @@ public class EjbModule
    {
       this.deploymentInfo = di;
       this.name = deploymentInfo.url.toString();
-
-      // Keep track of which deployments are ejbModules
-      ejbModulesByDeploymentInfo.put(di, this);
    }
 
    /**
@@ -286,6 +283,12 @@ public class EjbModule
    // Service implementation ----------------------------------------
    public void createService() throws Exception 
    {
+      // Keep track of which deployments are ejbModules
+      synchronized(ejbModulesByDeploymentInfo)
+      {
+         ejbModulesByDeploymentInfo.put(deploymentInfo, this);
+      }
+
       serviceController = (ServiceControllerMBean)
 	 MBeanProxy.create(ServiceControllerMBean.class,
 			   ServiceControllerMBean.OBJECT_NAME,
@@ -441,6 +444,12 @@ public class EjbModule
       if (getModuleName() != null) 
       {  
          EJBModule.destroy(server, getModuleName().toString() );
+      }
+
+      // Keep track of which deployments are ejbModules
+      synchronized(ejbModulesByDeploymentInfo)
+      {
+         ejbModulesByDeploymentInfo.remove(deploymentInfo);
       }
    }
 	
@@ -930,6 +939,10 @@ public class EjbModule
     */
    private Container locateContainer(String name)
    {
+      // Check for a relative path
+      if (name.startsWith(".."))
+         return locateContainerRelative(name);
+
       // Get the top level deployment
       DeploymentInfo info = deploymentInfo;
       while (info.parent != null)
@@ -974,6 +987,23 @@ public class EjbModule
       }
 
       // Nothing found
+      return null;
+   }
+
+   /**
+    * Find a container from this deployment package, used to process ejb-link
+    * that is a relative path<p>
+    * 
+    * Determines the path based on the url.
+    *
+    * @param   name  ejb-name name defined in ejb-jar.xml in some jar in
+    *          the same deployment package
+    * @return  container for the named bean, or null if the container was
+    *          not found   
+    */
+   private Container locateContainerRelative(String name)
+   {
+      log.warn("Not implemented: " + name);
       return null;
    }
 }

@@ -1,5 +1,5 @@
 Main-Class: org.jboss.jmx.connector.rmi.TestServer
-Class-Path: ./ ./jmxri.jar ../lib/jmxri.jar ./jnpserver.jar ../lib/ext/jnpserver.jar ./log4j.jar
+Class-Path: ./ ./jboss-jmx.jar ../lib/jboss-jmx.jar ./jnpserver.jar ../lib/ext/jnpserver.jar ./log4j.jar
 Specification-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@
 Specification-Version: @version.major@.@version.minor@.@version.revision@@version.tag@
 Specification-Vendor: JBoss Group, LLC

@@ -1,5 +1,5 @@
 Main-Class: org.jboss.jmx.client.Stop
-Class-Path: ./ jnp-client.jar jmxri.jar ../conf/ ../lib/jmxri.jar
+Class-Path: ./ jnp-client.jar jboss-jmx.jar ../conf/ ../lib/jboss-jmx.jar
 Specification-Title: JBoss-@version.major@.@version.minor@.@version.revision@@version.tag@
 Specification-Version: @version.major@.@version.minor@.@version.revision@@version.tag@
 Specification-Vendor: JBoss Group, LLC

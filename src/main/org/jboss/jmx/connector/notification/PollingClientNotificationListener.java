@@ -60,11 +60,9 @@ public class PollingClientNotificationListener
       while( true ) {
          try {
             try {
-               List lNotifications = (List) mConnector.invoke(
+               List lNotifications = (List) mConnector.getAttribute(
                   getRemoteListenerName(),
-                  "getNotifications",
-                  new Object[] {},
-                  new String[] {}
+                  "Notifications"
                );
                Iterator i = lNotifications.iterator();
                while( i.hasNext() ) {

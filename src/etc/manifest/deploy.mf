@@ -1,2 +1,2 @@
 Main-Class: org.jboss.jmx.service.Deployer
-Class-Path: ./ jnp-client.jar jmxri.jar ../conf/ ../lib/jmxri.jar
+Class-Path: ./ jnp-client.jar jboss-jmx.jar ../conf/ ../lib/jboss-jmx.jar
