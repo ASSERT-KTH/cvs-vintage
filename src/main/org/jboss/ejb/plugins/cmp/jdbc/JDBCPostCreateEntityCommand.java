@@ -11,8 +11,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.ejb.EJBLocalObject;
-
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -24,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public final class JDBCPostCreateEntityCommand
 {
@@ -70,8 +68,7 @@ public final class JDBCPostCreateEntityCommand
             {
                try
                {
-                  EJBLocalObject relatedEntity = cmrField.getRelatedEntityByFK(relatedId);
-                  if(relatedEntity != null)
+                  if(cmrField.isForeignKeyValid(relatedId))
                   {
                      cmrField.createRelationLinks(ctx, relatedId);
                   }

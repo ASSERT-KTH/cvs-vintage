@@ -72,7 +72,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.75 $
+ * @version $Revision: 1.76 $
  */
 public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 {
@@ -232,18 +232,16 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       this.relatedContainerRef = new WeakReference(relatedContainer);
 
       // related findByPrimaryKey
+      Class homeClass = (relatedContainer.getLocalHomeClass() != null ?
+         relatedContainer.getLocalHomeClass() : relatedContainer.getHomeClass());
       try
       {
-         relatedFindByPrimaryKey = relatedContainer.getLocalHomeClass().
-            getMethod("findByPrimaryKey", new Class[]{relatedEntity.getPrimaryKeyClass()});
+         relatedFindByPrimaryKey = homeClass.getMethod("findByPrimaryKey", new Class[]{relatedEntity.getPrimaryKeyClass()});
       }
       catch(Exception e)
       {
-         final Class relatedLocalHomeClass = relatedContainer.getLocalHomeClass();
-         if(relatedLocalHomeClass == null)
-            throw new DeploymentException(relatedEntity.getEntityName() + " has no local home interface.");
          throw new DeploymentException("findByPrimaryKey(" + relatedEntity.getPrimaryKeyClass().getName()
-            + " pk) not found in " + relatedLocalHomeClass.getName());
+            + " pk) was not found in " + homeClass.getName());
       }
 
       // Data Source
@@ -534,15 +532,9 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
             {
                Object waitingPK = waitingPKsIter.next();
                waitingPKsIter.remove();
-               try
+               if(isForeignKeyValid(waitingPK))
                {
-                  EJBLocalHome relatedHome = getRelatedContainer().getLocalProxyFactory().getEJBLocalHome();
-                  relatedFindByPrimaryKey.invoke(relatedHome, new Object[]{waitingPK});
                   createRelationLinks(ctx, waitingPK);
-               }
-               catch(Exception e)
-               {
-                  // no such object
                }
             }
          }
@@ -700,6 +692,37 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       }
 
       return relatedLocalObject;
+   }
+
+   /**
+    * This method is called only for CMR fields with foreign key fields mapped to CMP fields
+    * to check the validity of the foreign key value.
+    *
+    * @param fk the foreign key to check
+    * @return true if there is related entity with the equal primary key
+    */
+   public boolean isForeignKeyValid(Object fk)
+   {
+      boolean valid;
+      if(relatedManager.getReadAheadCache().getPreloadDataMap(fk, false) != null)
+      {
+         valid = true;
+      }
+      else
+      {
+         EJBLocalHome relatedHome = getRelatedContainer().getLocalProxyFactory().getEJBLocalHome();
+         try
+         {
+            relatedFindByPrimaryKey.invoke(relatedHome, new Object[]{fk});
+            valid = true;
+         }
+         catch(Exception ignore)
+         {
+            // no such entity. it is ok to ignore
+            valid = false;
+         }
+      }
+      return valid;
    }
 
    /**

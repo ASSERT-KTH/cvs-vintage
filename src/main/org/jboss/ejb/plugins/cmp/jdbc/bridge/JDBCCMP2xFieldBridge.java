@@ -10,7 +10,6 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 import java.lang.reflect.Field;
 
 import javax.ejb.EJBException;
-import javax.ejb.EJBLocalObject;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -35,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -549,8 +548,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       {
          try
          {
-            EJBLocalObject relatedEntity = cmrField.getRelatedEntityByFK(newRelatedId);
-            if(relatedEntity != null)
+            if(cmrField.isForeignKeyValid(newRelatedId))
             {
                cmrField.createRelationLinks(ctx, newRelatedId, false);
             }
@@ -576,8 +574,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
          cmrField.getRelatedCMRField().removeRelatedPKWaitingForMyPK(oldRelatedId, ctx.getId());
          try
          {
-            EJBLocalObject relatedEntity = cmrField.getRelatedEntityByFK(oldRelatedId);
-            if(relatedEntity != null)
+            if(cmrField.isForeignKeyValid(oldRelatedId))
             {
                cmrField.destroyRelationLinks(ctx, oldRelatedId, true, false);
             }
