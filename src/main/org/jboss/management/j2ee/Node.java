@@ -11,24 +11,20 @@ import java.security.InvalidParameterException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.IpAddress;
-import javax.management.j2ee.JVM;
-
 /**
 * @author Marc Fleury
 **/
 public class Node
    extends J2EEManagedObject
-   implements javax.management.j2ee.Node
+   implements NodeMBean
 {
    // -------------------------------------------------------------------------
    // Members
    // -------------------------------------------------------------------------  
 
-   private String hardwareType;
-   private IpAddress[] ipAddresses;
-   private JVM[] javaVMs;
-   private String osType;
+   private String mHardwareType;
+   private ObjectName[] mIPAddressList;
+   private String mOSType;
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -38,23 +34,24 @@ public class Node
    * @param pName Name of the Node
    * @param pHardwareType Type of Hardware
    * @param pOsType Type of the OS
-   * @param pJavaVMs List of Java VMs
    * @param pIpAddresses List of IP Addresses
    *
    * @throws InvalidParameterException If list of IPAddresses or Java VMs is null or empty
    **/
-   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType, JVM[] pJavaVMs, IpAddress[] pIpAddresses )
+   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType, ObjectName[] pIpAddresses )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
       super( "Node", pName, pServer );
-      hardwareType = pHardwareType;
+      mHardwareType = pHardwareType;
+/*
       if( pIpAddresses == null || pIpAddresses.length == 0 ) {
          throw new InvalidParameterException( "There must always be at least one IpAddress defined" );
       }
-      ipAddresses = pIpAddresses;
-       osType = pOsType;
+*/
+      mIPAddressList = pIpAddresses;
+      mOSType = pOsType;
    }
 
    // -------------------------------------------------------------------------
@@ -62,23 +59,42 @@ public class Node
    // -------------------------------------------------------------------------  
 
    public String getHardwareType() {
-      return hardwareType;
+      return mHardwareType;
    }
 
-   public IpAddress[] getIpAddresses() {
-      return ipAddresses;
+   public String getOsType() {
+      return mOSType;
    }
 
-   public IpAddress getIpAddress( int pIndex ) {
-      if( pIndex >= 0 && pIndex < ipAddresses.length ) {
-         return ipAddresses[ pIndex ];
+   public ObjectName[] getIpAddresses() {
+      return mIPAddressList;
+   }
+
+   public ObjectName getIpAddress( int pIndex ) {
+      if( pIndex >= 0 && pIndex < mIPAddressList.length ) {
+         return mIPAddressList[ pIndex ];
       } else {
          return null;
       }
    }
 
-   public String getOsType() {
-      return osType;
+   public void addChild( ObjectName pChild ) {
+/*
+      Hashtable lProperties = pChild.getKeyPropertyList();
+      String lType = lProperties.get( "type" ) + "";
+      if( "J2EEApplication".equals( lType ) ) {
+         m
+         mApplications.add( pChild );
+      } else if( "J2EEDeployments".equals( lType ) ) {
+         mDeployments.add( pChild );
+      } else if( "J2EEServer".equals( lType ) ) {
+         mServers.add( pChild );
+      }
+*/
+   }
+   
+   public void removeChild( ObjectName pChild ) {
+      //AS ToDo
    }
 
    public String toString() {
@@ -86,8 +102,6 @@ public class Node
          "name: " + getName() +
          ", hardware type: " + getHardwareType() +
          ", os type: " + getOsType() +
-         // Do not change to java.util.Arrays.asList() because this
-         // would create an endless loop !!
          ", IP addresses: " + getIpAddresses() +
          " ]";
    }

@@ -40,7 +40,7 @@ public class IpAddress
    {
       super( "IpAddress", pName, pNode );
       if( pAddress == null || pAddress.length() == 0 ) {
-         throw new InvalidParameterException( "There driver must always be defined" );
+         throw new InvalidParameterException( "There IP-Address must always be defined" );
       }
       mAddress = pAddress;
    }

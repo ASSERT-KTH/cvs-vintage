@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.14 2001/11/19 06:58:56 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.15 2001/11/21 04:50:53 schaefera Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -69,6 +69,14 @@
     <attribute name="Port">8083</attribute>
     <!-- Should resources and non-EJB classes be downloadable -->
     <attribute name="DownloadServerClasses">true</attribute>
+  </mbean>
+
+  <!-- ==================================================================== -->
+  <!-- JSR-77 Single JBoss Server Management Domain                         -->
+  <!-- ==================================================================== -->
+
+  <mbean code="org.jboss.management.j2ee.SingleJBossServerManagement"
+	 name="SingleJBoss:type=J2EEManagement,name=Manager" >
   </mbean>
 
   <!-- ==================================================================== -->

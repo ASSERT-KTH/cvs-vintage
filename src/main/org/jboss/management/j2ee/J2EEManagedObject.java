@@ -162,7 +162,6 @@ public abstract class J2EEManagedObject
    }
    
    public void postRegister( java.lang.Boolean pRegistrationDone ) {
-      super.postRegister( pRegistrationDone );
       System.out.println( "J2EEManagedObject.postRegister(), parent: " + mParent );
       if( pRegistrationDone.booleanValue() && mParent != null ) {
          try {
@@ -173,15 +172,12 @@ public abstract class J2EEManagedObject
                new Object[] { mName },
                new String [] { ObjectName.class.getName() }
             );
+            super.postRegister( pRegistrationDone );
          }
          catch( JMException jme ) {
             jme.printStackTrace();
-/*
-            throw new InvalidParentException(
-               "Problem to notify the parent about its new child",
-               jme
-            );
-*/
+            // Stop it because of the error
+            super.postRegister( new Boolean( false ) );
          }
       }
    }

@@ -42,20 +42,40 @@ public class SingleJBossServerManagement
          System.out.println( "SingleJBossServerManagement.getObjectName(), name: " + getObjectName() );
          try {
             System.out.println( "SingleJBossServerManagement.getObjectName(), create J2EEServer instance" );
+            // Create single JBoss server
             ObjectName lServer = getServer().createMBean(
                "org.jboss.management.j2ee.J2EEServer",
                null,
-               new Object[] { "Single", getObjectName() },
-               new String[] { String.class.getName(), ObjectName.class.getName() }
+               new Object[] {
+                  "Single",
+                  getObjectName(),
+                  "jboss.org"
+               },
+               new String[] {
+                  String.class.getName(),
+                  ObjectName.class.getName(),
+                  String.class.getName()
+               }
             ).getObjectName();
-   /*
-            pServer.invoke(
-               lServer,
-               "start",
-               new Object[] {},
-               new String[] {}
-            );
-   */
+            // Create its node
+            ObjectName lNode = getServer().createMBean(
+               "org.jboss.management.j2ee.Node",
+               null,
+               new Object[] {
+                  "Localhost",
+                  lServer,
+                  "PC Pentium 4",
+                  "Windows 2000",
+                  new ObjectName[ 0 ]
+               },
+               new String[] {
+                  String.class.getName(),
+                  ObjectName.class.getName(),
+                  String.class.getName(),
+                  String.class.getName(),
+                  ObjectName[].class.getName()
+               }
+            ).getObjectName();
          }
          catch( JMException jme ) {
             jme.printStackTrace();
