@@ -435,10 +435,10 @@ try{
                 NumberKey attId = (NumberKey)getIntakeTool()
                     .get("Attribute", IntakeTool.DEFAULT_KEY)
                     .get("Id").getValue();
-                if ( attId != null && getUser().getCurrentModule() != null )
+                if ( attId != null && ((ScarabUser)data.getUser()).getCurrentModule() != null )
                 {
                     NumberKey[] nka = {attId, 
-                        getUser().getCurrentModule().getModuleId()};
+                        ((ScarabUser)data.getUser()).getCurrentModule().getModuleId()};
                     rma = RModuleAttributePeer.retrieveByPK(new ComboKey(nka));
                 }
                 else 
@@ -534,7 +534,7 @@ try{
         throws Exception
     {
         IssueSearch search = new IssueSearch();
-        search.setModuleCast(((ScarabUser)getUser()).getCurrentModule());
+        search.setModuleCast(((ScarabUser)data.getUser()).getCurrentModule());
         return search;
     }
 
