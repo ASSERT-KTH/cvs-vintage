@@ -19,121 +19,103 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 /**
  * ideas taken from www.jext.org (author Roman Guy)
  */
-public class ColumbaLoader implements Runnable
-{
-	public final static int COLUMBA_PORT = 50000;
-	private int File;
-	private String key;
-	private Thread thread;
-	private ServerSocket serverSocket;
+public class ColumbaLoader implements Runnable {
+  public final static int COLUMBA_PORT = 50000;
+  private int File;
+  private String key;
+  private Thread thread;
+  private ServerSocket serverSocket;
 
-	public ColumbaLoader()
-	{
-		try
-		{
-			serverSocket = new ServerSocket(COLUMBA_PORT);
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
+  public ColumbaLoader() {
+    try {
+      serverSocket = new ServerSocket(COLUMBA_PORT);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
 
-		thread = new Thread(this);
-		thread.start();
-	}
+    thread = new Thread(this);
+    thread.start();
+  }
 
-	public synchronized void stop()
-	{
-		thread.interrupt();
-		thread = null;
+  public synchronized void stop() {
+    thread.interrupt();
+    thread = null;
 
-		try
-		{
-			if (serverSocket != null)
-				serverSocket.close();
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
+    try {
+      if (serverSocket != null)
+        serverSocket.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 
-	public synchronized boolean isRunning(){
-		return thread != null;
-	}
+  public synchronized boolean isRunning() {
+    return thread != null;
+  }
 
-	public void run()
-	{
-		while (isRunning())
-		{
-			try
-			{
-				// does a client trying to connect to server ?
-				Socket client = serverSocket.accept();
-				if (client == null)
-					continue;
+  public void run() {
+    while (isRunning()) {
+      try {
+        // does a client trying to connect to server ?
+        Socket client = serverSocket.accept();
+        if (client == null)
+          continue;
 
-				// only accept client from local machine
-				String host = client.getLocalAddress().getHostAddress();
-				if (!(host.equals("127.0.0.1")))
-				{
-					// client isn't from local machine
-					client.close();
-				}
+        // only accept client from local machine
+        String host = client.getLocalAddress().getHostAddress();
+        if (!(host.equals("127.0.0.1"))) {
+          // client isn't from local machine
+          client.close();
+        }
 
-				// try to read possible arguments
-				BufferedReader reader =
-					new BufferedReader(new InputStreamReader(client.getInputStream()));
+        // try to read possible arguments
+        BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-				StringBuffer arguments = new StringBuffer();
-				arguments.append(reader.readLine());
+        StringBuffer arguments = new StringBuffer();
+        arguments.append(reader.readLine());
 
-				if (!(arguments.toString().startsWith("columba:")))
-				{
-					// client isn't a Columba client
-					client.close();
-				}
+        if (!(arguments.toString().startsWith("columba:"))) {
+          // client isn't a Columba client
+          client.close();
+        }
 
-				// do something with the arguments..
-				System.out.println("arguments received...");
+        // do something with the arguments..
+        System.out.println("arguments received...");
 
-				handleArgs(arguments.toString());
+        handleArgs(arguments.toString());
 
-				client.close();
+        client.close();
 
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-	}
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+  }
 
-	protected void handleArgs(String argumentString)
-	{
-		System.out.println("argument string=" + argumentString);
+  protected void handleArgs(String argumentString) {
+    System.out.println("argument string=" + argumentString);
 
-		Vector v = new Vector();
+    List v = new Vector();
 
-		StringTokenizer st =
-			new StringTokenizer(argumentString.substring(8, argumentString.length()), "%");
-		while (st.hasMoreTokens())
-		{
-			String tok = (String) st.nextToken();
-			v.addElement(tok);
-		}
+    StringTokenizer st = new StringTokenizer(argumentString, "%");
+    while (st.hasMoreTokens()) {
+      String tok = (String) st.nextToken();
+      v.add(tok);
+    }
 
-		String[] args = new String[v.size()];
-		v.copyInto(args);
+    String[] args = new String[v.size()];
+    args = (String[])v.toArray();
 
-		new CmdLineArgumentHandler( args );
+    new CmdLineArgumentHandler(args);
 
-	}
+  }
 
 }
