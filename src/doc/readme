@@ -1,4 +1,4 @@
-$Id: readme,v 1.5 2000/04/06 17:54:33 craigmcc Exp $
+$Id: readme,v 1.6 2000/04/07 23:03:56 craigmcc Exp $
         
                            Release Notes for
                            =================
@@ -122,13 +122,11 @@ note the following information about this implementation:
   usernames and passwords are sent encoded, but not encrypted, with
   every single request.
 
-- FORM based authentication is partially supported, although there are
-  known bugs and specification compliance issues.  This implementation
-  is *not* suitable for general application use.
-
-  If you wish to participate in debugging and enhancing this portion of
-  Tomcat, please subscribe to the TOMCAT-DEV mailing list, and assist in
-  locating and fixing all of the outstanding problems.
+- Form based login is partially supported, but only lightly tested.  To
+  assist in debugging this feature, you can enable the partial support
+  by using a nonstandard <auth-method>EXPERIMENTAL_FORM</auth-method>
+  element in your application deployment descriptor (web.xml) file.  It
+  should not be enabled for any reason other than debugging Tomcat.
 
 - DIGEST authentication and HTTPS client authentication (i.e. SSL)
   are not supported in this release.
