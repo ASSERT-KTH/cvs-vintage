@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.31 2004/11/04 17:23:17 bobtarling Exp $
+// $Id: TabDocumentation.java,v 1.32 2004/12/20 09:28:34 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,7 +116,7 @@ public class TabDocumentation extends PropPanel {
     }
 
     /**
-     * Checks if the tabprops should be enabled. Returns true if the target
+     * Checks if the tab should be enabled. Returns true if the target
      * returned by getTarget is a modelelement or if that target shows up as Fig
      * on the active diagram and has a modelelement as owner.
      * 

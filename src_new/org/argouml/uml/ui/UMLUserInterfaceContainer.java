@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceContainer.java,v 1.10 2004/09/11 19:14:19 mvw Exp $
+// $Id: UMLUserInterfaceContainer.java,v 1.11 2004/12/20 09:28:34 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,13 +28,13 @@ import org.argouml.uml.*;
 import java.util.*;
 
 /**
- *    Interface supported by any container of UML user interface components.
- *    This interface allows UML user interface components to determine
- *    the currently selected target and profile and allows the control
- *    to request a navigation.  Implemented by PropPanel
+ * Interface supported by any container of UML user interface components.
+ * This interface allows UML user interface components to determine
+ * the currently selected target and profile and allows the control
+ * to request a navigation.  Implemented by PropPanel.
  *
- *    @author Curt Arnold
- *    @see PropPanel
+ * @author Curt Arnold
+ * @see PropPanel
  */
 public interface UMLUserInterfaceContainer {
 

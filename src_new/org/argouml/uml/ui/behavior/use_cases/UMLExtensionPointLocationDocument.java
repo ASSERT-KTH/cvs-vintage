@@ -1,4 +1,4 @@
-// $Id: UMLExtensionPointLocationDocument.java,v 1.8 2004/02/08 12:45:27 mvw Exp $
+// $Id: UMLExtensionPointLocationDocument.java,v 1.9 2004/12/20 09:28:32 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,13 +22,15 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
+
 package org.argouml.uml.ui.behavior.use_cases;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
 /**
+ * The model for the location field of an extension point of a usecase.
+ * 
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
  */

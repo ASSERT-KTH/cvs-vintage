@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.97 2004/12/18 14:36:59 mvw Exp $
+// $Id: PropPanel.java,v 1.98 2004/12/20 09:28:33 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ import ru.novosoft.uml.MElementListener;
  * This abstract class provides the basic layout and event dispatching
  * support for all Property Panels.<p>
  *
- * The property panel is {@link org.argouml.swingext.LabelledLayout layed out}
+ * The property panel is {@link org.argouml.swingext.LabelledLayout} layed out
  * as a number (specified in the constructor) of equally sized panels
  * that split the available space.  Each panel has a column of
  * "captions" and matching column of "fields" which are laid out

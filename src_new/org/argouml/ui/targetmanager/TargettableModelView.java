@@ -1,4 +1,4 @@
-// $Id: TargettableModelView.java,v 1.1 2003/05/03 11:59:24 kataka Exp $
+// $Id: TargettableModelView.java,v 1.2 2004/12/20 09:28:35 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,17 +25,20 @@ package org.argouml.ui.targetmanager;
 
 /**
  * Marker interface to indicate that some Swing view element (such as a 
- * JTable or a JTree has a model that implements TargetListener. 
- * UMLModelElementListModel2 is such an implementor. Via this interface it's 
+ * JList or a JComboBox) has a Model that implements TargetListener. <p>
+ * 
+ * UMLLinkedList is such an implementor. Via this interface it is 
  * easy to collect all targetlisteners on a property panel as is done in the 
- * settarget method of PropPanel.
+ * setTarget() method of the class PropPanel 
+ * (see registrateTargetListeners method).<p>
+ * 
  * @author jaap.branderhorst@xs4all.nl
  */
 public interface TargettableModelView {
 
     /**
      * Returns the Swing model that implements targetlistener.
-     * @return The Swing model
+     * @return the Swing model
      */
     public TargetListener getTargettableModel();
     

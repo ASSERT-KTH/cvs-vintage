@@ -1,4 +1,4 @@
-// $Id: UMLTextField2.java,v 1.12 2004/11/28 20:48:51 mvw Exp $
+// $Id: UMLTextField2.java,v 1.13 2004/12/20 09:28:34 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,6 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLTextField2.java,v 1.12 2004/11/28 20:48:51 mvw Exp $
 package org.argouml.uml.ui;
 
 import java.beans.PropertyChangeEvent;

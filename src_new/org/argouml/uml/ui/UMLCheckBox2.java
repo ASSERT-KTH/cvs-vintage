@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.20 2004/10/23 11:05:44 mvw Exp $
+// $Id: UMLCheckBox2.java,v 1.21 2004/12/20 09:28:34 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,8 @@ package org.argouml.uml.ui;
 
 import javax.swing.Action;
 import javax.swing.JCheckBox;
-import org.argouml.model.ModelFacade;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.LookAndFeelMgr;
 import org.argouml.ui.targetmanager.TargetEvent;
@@ -156,26 +156,6 @@ public abstract class UMLCheckBox2
      */
     public abstract void buildModel();
        
-
-    /**
-     * TODO: Is this used? I cannot find the reference to
-     * org.argouml.uml.ui.TargetChangedListener#targetChanged(Object)
-     *
-     * @param newTarget the new target
-     *
-    public void targetChanged(Object newTarget) {
-        if (checkBoxTarget != newTarget)
-            setTarget(newTarget);
-    }*/
-
-    /**
-     * TODO: Is this used? I cannot find the reference to
-     * org.argouml.uml.ui.TargetChangedListener#targetReasserted(Object)
-     *
-    public void targetReasserted(Object newTarget) {
-        if (newTarget != checkBoxTarget)
-            setTarget(newTarget);
-    }*/
 
     /**
      * @see TargetListener#targetAdded(TargetEvent)
