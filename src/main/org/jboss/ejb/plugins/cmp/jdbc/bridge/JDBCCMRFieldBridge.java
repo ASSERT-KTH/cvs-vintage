@@ -44,7 +44,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -231,6 +231,12 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       // if the other side has been created intitialize the related data
       if(relatedManager.getEntityBridge() != null) {
          initRelatedData(relatedManager.getEntityBridge());
+         relatedCMRField.initRelatedData(entity);
+      } else if(manager == relatedManager) {
+         // self relation: must be handled special because
+         // the entity is not added to the manager until after
+         // all of the fields have been initialized.
+         initRelatedData(entity);
          relatedCMRField.initRelatedData(entity);
       }
    }
