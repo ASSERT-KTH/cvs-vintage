@@ -59,7 +59,7 @@ import org.jboss.ejb.plugins.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ContainerFactory
    implements ContainerFactoryMBean, MBeanRegistration
@@ -153,6 +153,8 @@ public class ContainerFactory
                   con.addInterceptor(new StatelessSessionInstanceInterceptor());
                   con.addInterceptor(new SecurityInterceptor());
                   
+                  con.addInterceptor(con.createContainerInterceptor());
+                  
                   con.setClassLoader(new BeanClassLoader(cl));
                   con.setMetaData(bean);
                   
@@ -191,6 +193,8 @@ public class ContainerFactory
                   con.addInterceptor(new EntityInstanceInterceptor());
                   con.addInterceptor(new SecurityInterceptor());
                   con.addInterceptor(new EntitySynchronizationInterceptor());
+                 
+                  con.addInterceptor(con.createContainerInterceptor());
                   
                   ContainerConfiguration conf = jar.getContainerConfigurations().getContainerConfiguration(bean.getConfigurationName());
                   

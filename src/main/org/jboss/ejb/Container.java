@@ -47,7 +47,7 @@ import org.jnp.server.NamingServer;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public abstract class Container
 {
@@ -144,6 +144,16 @@ public abstract class Container
    public TransactionManager getTransactionManager() { return transactionManager; }
    public void setTransactionManager(TransactionManager tm) { transactionManager = tm; }
    
+   /*
+   * init()
+   *
+   * The ContainerFactory calls this method.  The ContainerFactory has set all the 
+   * plugins and interceptors that this bean requires and now proceeds to initialize
+   * the chain.  The method looks for the standard classes in the URL, sets up
+   * the naming environment of the bean.
+   *
+   */
+   
    public void init()
       throws Exception
    {
@@ -160,7 +170,10 @@ public abstract class Container
       
       containerInvoker.init();
       
-      addInterceptor(createContainerInterceptor());
+      // MF why addInterceptor here and not ContainerFactory? due to the protected?
+      // dude this is hard, no comments, no hints, please throw the dog a bone man!
+      
+      //addInterceptor(createContainerInterceptor());
       Interceptor in = interceptor;
       while (in != null)
       {
@@ -280,9 +293,28 @@ public abstract class Container
       throws Exception;
       
    // Protected -----------------------------------------------------
+   
+   // MF WHY: why the protected here, it gives a rather strange structure to the init
    protected abstract Interceptor createContainerInterceptor();
    
    // Private -------------------------------------------------------
+   
+   /*
+   * setupEnvironment
+   *
+   * This method sets up the naming environment of the bean.
+   * it sets the root it creates for the naming in the "BeanClassLoader"
+   * that loader shares the root for all instances of the bean and 
+   * is part of the "static" metaData of the bean.
+   * We create the java: namespace with properties, EJB-References, and 
+   * DataSource ressources.
+   *
+   */
+   
+   // MF WHY: part of the issue is that some meta data information is 
+   // kept in many classes. There 2 repositories of metaData in this case.
+   // One is the BeanClassLoader the other the "bean" in Container.
+   
    private void setupEnvironment()
       throws DeploymentException
    {
