@@ -1,18 +1,24 @@
-Version CVS
+Version 0.9.11
 
  - mail-component
     * protocol:
        - imap flags are now synchronized, correctly
        - imap mark as read/flagged/expunged works again
        - bodystructure parser fixes (respects stuff
-         like alternative)
+         like multipart/alternative)
        - smtp sending From and recipient addresses are
          normalized correctly
+       - added imap automatic mail-check support
     * support for specifying a default account 
       (other accounts can inherit customization from
        default account)
     * overall dialog-polishing, new account-,
       login- and filter-dialog
+    * changed MimePartCollection to a tree-like structure
+      (things like content-type alternative in combination
+       with the "enable/disable prefer html"-option work now
+       as expected)
+    * new menu to choose character coding 
     * composer:
        - many fixes to the address-completion
        - address-table-widget bugfixes
@@ -20,22 +26,30 @@ Version CVS
          double-click (former single-click)
        - remove entries with DEL-shortcut
        - external editor support (Tony)
+       - new menu to choose character coding
+    * configuration-file changes:
+       - all mail-component stuff moved to new folder "mail"
+    * folder format is now really mh-style 
     
- 
- - addressbook-component:
- 
- 
  - core-component
     * dialogs are now all centered
     * Mainframe window is maximized correctly 
  	* translations can be added dynamically
  	  (packaged as jar-files) (Hrk)
  	* improved windows-launcher
- 	* added log4j logging (Thomas)
+ 	   - now written in plain c
+ 	   - nicely layouted "make to default email-client" dialog
+ 	* added log4j logging support(Thomas)
+ 	* added some unit test for the imap-parser
+ 	  (using JUnit)
+ 	* added program-icon
+ 	* added basic python-scription support 
+ 	  (using jython)
  	  
  - translation
-    * mnemonics are externalized
+    * more mnemonics externalized
     * new finnish fi_FI translation (Jari)
+    * more german translation stuff
     
  
 Version 0.9.10

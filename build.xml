@@ -7,7 +7,7 @@
 	<property name="build" value="build"/>
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
-	<property name="version" value="cvs"/>
+	<property name="version" value="0.9.11"/>
 	<property name="dest" value="../columba-${version}"/>
   <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar:${src}/ext/junit.jar"/>
 
