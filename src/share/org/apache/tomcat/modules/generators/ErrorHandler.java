@@ -19,7 +19,6 @@ package org.apache.tomcat.modules.generators;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Locale;
 
 import org.apache.tomcat.core.BaseInterceptor;
@@ -29,6 +28,7 @@ import org.apache.tomcat.core.Handler;
 import org.apache.tomcat.core.Request;
 import org.apache.tomcat.core.Response;
 import org.apache.tomcat.core.TomcatException;
+import org.apache.tomcat.util.net.URL;
 import org.apache.tomcat.util.http.HttpMessages;
 import org.apache.tomcat.util.http.LocaleToCharsetMap;
 import org.apache.tomcat.util.log.Log;
@@ -846,7 +846,7 @@ class RedirectHandler extends Handler {
 	        return location;
 	    }
 	}
-        return url.toString();
+        return url.toExternalForm();
     }
 
     static String getRequestURL( Request req )  {
