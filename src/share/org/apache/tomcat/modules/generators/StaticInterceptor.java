@@ -316,7 +316,7 @@ final class FileHandler extends Handler  {
 	if(pathInfo == null) {
 	    // If the attribute isn't there, then we aren't included.
 	    // In that case, we must use the real request.
-	    subReq = req;
+	    //*** DEBUG *** subReq = req;
 	    pathInfo=subReq.servletPath().toString();
 	}
 	String absPath = (String)subReq.getNote( realFileNote );

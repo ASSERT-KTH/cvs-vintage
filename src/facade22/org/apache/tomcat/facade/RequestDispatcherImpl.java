@@ -231,6 +231,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	//realRequest.query().recycle();
 	realRequest.servletPath().recycle();
 	realRequest.pathInfo().recycle();
+    realRequest.setChild(null);
 
 	// merge query string as specified in specs - before, it may affect
 	// the way the request is handled by special interceptors
@@ -263,7 +264,6 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	// in which case the attribute will create problems
 	realRequest.removeAttribute( A_REQUEST_URI);
 	realRequest.removeAttribute( A_SERVLET_PATH);
-
 
 	// CM should have set the wrapper - call it
 	Handler wr=realRequest.getHandler();
