@@ -327,7 +327,7 @@ static int init_ws_service(apache_private_data_t *private_data,
 
     s->protocol     = r->protocol;
     s->remote_host  = (char *)ap_get_remote_host(r->connection,
-                                                 r->per_dir_config,
+                                                 r->per_dir_config, REMOTE_NAME,
 										         REMOTE_HOST);
 
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
@@ -448,7 +448,7 @@ static const char *jk_mount_context(cmd_parms *cmd,
     return NULL;
 }
 
-static const char *jk_set_wroker_file(cmd_parms *cmd, 
+static const char *jk_set_worker_file(cmd_parms *cmd, 
                                       void *dummy, 
                                       char *worker_file)
 {
@@ -487,9 +487,17 @@ static const char *jk_set_log_level(cmd_parms *cmd,
     return NULL;
 }
 
+static const char * jk_set_log_fmt(cmd_parms *cmd,
+				      void *dummy,
+				      char * log_format)
+{
+	jk_set_log_format(log_format);
+	return NULL;
+}
+	
 static const command_rec jk_cmds[] =
 {
-    {"JkWorkersFile", jk_set_wroker_file, NULL, RSRC_CONF, TAKE1,
+    {"JkWorkersFile", jk_set_worker_file, NULL, RSRC_CONF, TAKE1,
      "the name of a worker file for the Jakarta servlet containers"},
     {"JkMount", jk_mount_context, NULL, RSRC_CONF, TAKE23,
      "A mount point from a context to a Tomcat worker"},
@@ -499,6 +507,8 @@ static const command_rec jk_cmds[] =
      "Full path to the Jakarta Tomcat module log file"},
     {"JkLogLevel", jk_set_log_level, NULL, RSRC_CONF, TAKE1,
      "The Jakarta Tomcat module log level, can be debug, info, error or emerg"},
+    {"JkLogStampFormat", jk_set_log_fmt, NULL, RSRC_CONF, TAKE1,
+     "The Jakarta Tomcat module log format, follow strftime synthax"},
     {NULL}
 };
 
@@ -725,7 +735,7 @@ static void jk_post_config(apr_pool_t *pconf,
 
             if(map_alloc(&init_map)) {
                 if(map_read_properties(init_map, conf->worker_file)) {
-						ap_add_version_component(pconf, "mod_jk");
+			ap_add_version_component(pconf, "mod_jk");
                         if(wc_open(init_map, conf->log)) {
                             return;
                         }            
