@@ -7,6 +7,9 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 2.4//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_2_4.dtd">
 
+$Id: jboss_2_4.dtd,v 1.7 2001/09/12 17:38:55 starksm Exp $
+$Revision: 1.7 $
+
 Overview of the architecture of jboss.xml
 
 <jboss>
@@ -61,6 +64,7 @@ Overview of the architecture of jboss.xml
       <instance-cache />
       <persistence-manager />
       <transaction-manager />
+      <locking-policy />
       <container-invoker-conf />
       <container-cache-conf />
       <container-pool-conf />
@@ -331,12 +335,6 @@ any other beans.
 <!ELEMENT resource-manager (res-name , (res-jndi-name | res-url))>
 
 <!--
-    The res-class attribute is used to indicate which implementation
-    class should be used for the specified resource manager.
-    -->
-<!ATTLIST resource-manager res-class CDATA  #REQUIRED>
-
-<!--
       The res-name element gives the "xml name" of a resource, it is provided 
       by the Application Assembler. See resource-managers.
       
@@ -386,7 +384,7 @@ any other beans.
     
     Used in: container-configurations
     -->
-<!ELEMENT container-configuration (container-name , call-logging? , container-invoker? , container-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (security-domain | (role-mapping-manager , authentication-module))?)>
+<!ELEMENT container-configuration (container-name , call-logging? , container-invoker? , container-interceptors? , instance-pool? , instance-cache? , persistence-manager? , transaction-manager? , locking-policy? , container-invoker-conf? , container-cache-conf? , container-pool-conf? , commit-option? , optiond-refresh-rate? , (security-domain | (role-mapping-manager , authentication-module))?)>
 
 <!--
     The configuration-class attribute is used to indicate the
@@ -502,6 +500,16 @@ default if metricsEnabled is not explicitly given.
 <!ELEMENT persistence-manager (#PCDATA)>
 
 <!--
+      The locking-policy element gives the class name of the EJB lock  
+     implementation JBoss must use for in this configuration. This class must
+     implement  the org.jboss.ejb.BeanLock interface. The default is 
+      org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock.
+
+      Used in: container-configuration
+      -->
+<!ELEMENT transaction-manager (#PCDATA)>
+
+<!--
       The transaction-manager element gives the class name of the transaction 
       manager jboss must use for in this configuration. This class must implement 
       the javax.transaction.TransactionManager interface. The default is 
@@ -509,7 +517,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT transaction-manager (#PCDATA)>
+<!ELEMENT locking-policy (#PCDATA)>
 
 <!-- 
       The container-invoker-conf element holds configuration data for the 
@@ -523,7 +531,7 @@ default if metricsEnabled is not explicitly given.
       
       Used in: container-configuration
       -->
-<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory?, RMIServerSocketAddr?)>
+<!ELEMENT container-invoker-conf (JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MaximumSize? , MaxMessages? , RMIObjectPort? , Optimized , RMIClientSocketFactory? , RMIServerSocketFactory? , RMIServerSocketAddr?)>
 
 <!-- 
         This element is only valid if the container invoker is 
