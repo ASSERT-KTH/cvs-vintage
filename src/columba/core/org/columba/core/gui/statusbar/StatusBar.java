@@ -16,24 +16,36 @@
 
 package org.columba.core.gui.statusbar;
 
-import org.columba.core.command.*;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.toolbar.ToolbarButton;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.columba.core.command.TaskManager;
+import org.columba.core.command.TaskManagerEvent;
+import org.columba.core.command.TaskManagerListener;
+import org.columba.core.command.Worker;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
+import org.columba.core.gui.toolbar.ToolbarButton;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.ConnectionStateImpl;
 
 /**
  * A status bar intended to be displayed at the bottom of each window.
@@ -61,7 +73,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     public StatusBar(TaskManager tm) {
         taskManager = tm;
         tm.addTaskManagerListener(this);
-        MainInterface.connectionState.addChangeListener(this);
+        ConnectionStateImpl.getInstance().addChangeListener(this);
 
         imageSequenceTimer = new ImageSequenceTimer(tm);
 
@@ -300,8 +312,8 @@ public class StatusBar extends JComponent implements TaskManagerListener,
         String command = e.getActionCommand();
 
         if (command.equals("ONLINE")) {
-            MainInterface.connectionState.setOnline(
-                    !MainInterface.connectionState.isOnline());
+        	ConnectionStateImpl.getInstance().setOnline(
+                    !ConnectionStateImpl.getInstance().isOnline());
         } else if (command.equals("TASKMANAGER")) {
             TaskManagerDialog.createInstance();
         } else if (command.equals("CANCEL_ACTION")) {
@@ -351,7 +363,7 @@ public class StatusBar extends JComponent implements TaskManagerListener,
     }
     
     public void stateChanged(ChangeEvent e) {
-        if (MainInterface.connectionState.isOnline()) {
+        if (ConnectionStateImpl.getInstance().isOnline()) {
             onlineButton.setIcon(onlineIcon);
             //TODO: i18n
             onlineButton.setToolTipText("You are in ONLINE state");

@@ -18,6 +18,7 @@ package org.columba.mail.mailchecking;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.config.DefaultItem;
+import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.AccountItem;
@@ -29,92 +30,98 @@ import javax.swing.Timer;
 /**
  * For each account there exists one check action.
  * <p>
- * It keeps a reference to the check action, which is used
- * by the <b>File->Receive New Messages</b> menu.
- *
+ * It keeps a reference to the check action, which is used by the
+ * <b>File->Receive New Messages </b> menu.
+ * 
  * @author fdietz
  */
 public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
-    private final static int ONE_SECOND = 1000;
+	private final static int ONE_SECOND = 1000;
 
-    /**
- * account item
- */
-    private AccountItem accountItem;
-    private Timer timer;
+	/**
+	 * account item
+	 */
+	private AccountItem accountItem;
+	private Timer timer;
 
-    public AbstractMailCheckingAction(AccountItem accountItem) {
-        super(null, null);
+	public AbstractMailCheckingAction(AccountItem accountItem) {
+		super(null, null);
 
-        this.accountItem = accountItem;
+		this.accountItem = accountItem;
 
-        createName();
+		createName();
 
-        restartTimer();
-    }
+		restartTimer();
+	}
 
-    private void createName() {
-        //	generate label for menuitem
-        String name = accountItem.getName();
-        String address = accountItem.getIdentity().getAddress().getMailAddress();
-        String menuItemName = name + " (" + address + ")";
+	private void createName() {
+		//	generate label for menuitem
+		String name = accountItem.getName();
+		String address = accountItem.getIdentity().getAddress()
+				.getMailAddress();
+		String menuItemName = name + " (" + address + ")";
 
-        putValue(AbstractColumbaAction.NAME, menuItemName);
-    }
+		putValue(AbstractColumbaAction.NAME, menuItemName);
+	}
 
-    public void restartTimer() {
-        // recreate name of menuitem 
-        createName();
+	public void restartTimer() {
+		// recreate name of menuitem
+		createName();
 
-        DefaultItem item = null;
+		DefaultItem item = null;
 
-        if (accountItem.isPopAccount()) {
-            XmlElement e = accountItem.getRoot().getElement("popserver");
-            item = new DefaultItem(e);
-        } else {
-            XmlElement e = accountItem.getRoot().getElement("imapserver");
-            item = new DefaultItem(e);
-        }
+		if (accountItem.isPopAccount()) {
+			XmlElement e = accountItem.getRoot().getElement("popserver");
+			item = new DefaultItem(e);
+		} else {
+			XmlElement e = accountItem.getRoot().getElement("imapserver");
+			item = new DefaultItem(e);
+		}
 
-        if (item.getBoolean("enable_mailcheck")) {
-            int interval = item.getInteger("mailcheck_interval");
+		if (item.getBoolean("enable_mailcheck")) {
+			int interval = item.getInteger("mailcheck_interval");
 
-            timer = new Timer(ONE_SECOND * interval * 60, this);
-            timer.restart();
-        } else {
-            if (timer != null) {
-                timer.stop();
-                timer = null;
-            }
-        }
-    }
+			timer = new Timer(ONE_SECOND * interval * 60, this);
+			timer.restart();
+		} else {
+			if (timer != null) {
+				timer.stop();
+				timer = null;
+			}
+		}
+	}
 
-    /**
- * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
- */
-    public void actionPerformed(ActionEvent arg0) {
-        Object source = arg0.getSource();
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	public void actionPerformed(ActionEvent arg0) {
+		Object source = arg0.getSource();
 
-        if (source.equals(timer)) {
-            // timer action
-            check();
-        } else {
-            check();
-        }
-    }
+		if (source.equals(timer)) {
+			// timer action
 
-    /**
- * Check for new messages.
- * <p>
- * Subclasses should implement this method.
- *
- */
-    public abstract void check();
+			// only do checking if we are in online state
+			if (ConnectionStateImpl.getInstance().isOnline())
+				check();
+			
+		} else {
+			// menuitem/toolbar button action
+			check();
+		}
+	}
 
-    /**
- * @return
- */
-    public AccountItem getAccountItem() {
-        return accountItem;
-    }
+	/**
+	 * Check for new messages.
+	 * <p>
+	 * Subclasses should implement this method.
+	 *  
+	 */
+	public abstract void check();
+
+	/**
+	 * @return
+	 */
+	public AccountItem getAccountItem() {
+		return accountItem;
+	}
 }

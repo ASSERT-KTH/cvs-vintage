@@ -15,21 +15,21 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.action;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.ConnectionStateImpl;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.command.SendAllMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 
 /**
@@ -61,10 +61,17 @@ public class SendAllMessagesAction extends AbstractColumbaAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
     }
 
-    /* (non-Javadoc)
+    /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
+   
+    	// check if we are online
+    	if ( ConnectionStateImpl.getInstance().isOnline() == false ) {
+    		// offline -> go online
+    		ConnectionStateImpl.getInstance().setOnline(true);
+    	}
+    	
         FolderCommandReference[] r = new FolderCommandReference[1];
 
         // get outbox folder

@@ -16,19 +16,16 @@
 
 package org.columba.core.url.http;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.net.ProtocolException;
 import java.net.URL;
-
 import java.security.Permission;
-
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.columba.core.main.MainInterface;
+import org.columba.core.main.ConnectionStateImpl;
 
 /**
  * This class acts as a proxy between clients using HTTP URLs and the underlying
@@ -53,7 +50,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
      * Checks whether a connection is available and throws a IOConnection if not.
      */
     protected void ensureConnectionAllowed() throws IOException {
-        if (!MainInterface.connectionState.isOnline()) {
+        if (!ConnectionStateImpl.getInstance().isOnline()) {
             LOG.fine("Blocking HTTP connection to " + getURL().toString());
             throw new IOException("Error while connecting.");
         }
@@ -71,7 +68,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
     }
     
     public String getResponseMessage() throws IOException {
-        if (!MainInterface.connectionState.isOnline()) {
+        if (!ConnectionStateImpl.getInstance().isOnline()) {
             return "Not Found";
         } else {
             return connection.getResponseMessage();
@@ -117,7 +114,7 @@ public class HttpURLConnection extends java.net.HttpURLConnection {
     }
     
     public int getResponseCode() throws IOException {
-        if (!MainInterface.connectionState.isOnline()) {
+        if (!ConnectionStateImpl.getInstance().isOnline()) {
             return HTTP_NOT_FOUND;
         } else {
             return connection.getResponseCode();

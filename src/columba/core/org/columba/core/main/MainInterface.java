@@ -59,9 +59,6 @@ public class MainInterface {
 
     /** Focus manager needed for cut/copy/paste/etc. */
     public static FocusManager focusManager;
-    
-    /** Encapsulates the system's connection state */
-    public static ConnectionState connectionState;
 
     /** Wrapper for native code */
     public static NativeWrapperHandler nativeWrapper;

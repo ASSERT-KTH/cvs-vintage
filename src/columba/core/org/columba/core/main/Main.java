@@ -16,10 +16,6 @@
 
 package org.columba.core.main;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
-
 import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultCommandProcessor;
@@ -78,8 +74,6 @@ public class Main {
 			frame = new StartUpFrame();
 			frame.setVisible(true);
 		}
-
-		MainInterface.connectionState = new ConnectionStateImpl();
 
 		System.setProperty("java.protocol.handler.pkgs", System.getProperty(
 				"java.protocol.handler.pkgs", "")
@@ -146,44 +140,5 @@ public class Main {
 
 	public static void setShowStartUpFrame(boolean show) {
 		showStartUpFrame = show;
-	}
-
-	/**
-	 * Default implementation for ConnectionState.
-	 */
-	protected static class ConnectionStateImpl implements ConnectionState {
-		protected boolean online = false;
-		protected EventListenerList listenerList = new EventListenerList();
-		protected ChangeEvent e;
-
-		protected ConnectionStateImpl() {
-			e = new ChangeEvent(this);
-		}
-
-		public void addChangeListener(ChangeListener l) {
-			listenerList.add(ChangeListener.class, l);
-		}
-
-		public synchronized boolean isOnline() {
-			return online;
-		}
-
-		public void removeChangeListener(ChangeListener l) {
-			listenerList.remove(ChangeListener.class, l);
-		}
-
-		public synchronized void setOnline(boolean b) {
-			if (online != b) {
-				online = b;
-				Object[] listeners = listenerList.getListenerList();
-				// Process the listeners last to first, notifying
-				// those that are interested in this event
-				for (int i = listeners.length - 2; i >= 0; i -= 2) {
-					if (listeners[i] == ChangeListener.class) {
-						((ChangeListener) listeners[i + 1]).stateChanged(e);
-					}
-				}
-			}
-		}
 	}
 }

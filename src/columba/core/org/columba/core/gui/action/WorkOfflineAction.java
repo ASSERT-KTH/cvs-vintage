@@ -16,14 +16,15 @@
 
 package org.columba.core.gui.action;
 
-import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-
 import java.awt.event.ActionEvent;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.columba.core.action.AbstractSelectableAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.main.ConnectionStateImpl;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Toggles the system's connection state.
@@ -34,16 +35,16 @@ public class WorkOfflineAction extends AbstractSelectableAction
     public WorkOfflineAction(FrameMediator controller) {
         super(controller, GlobalResourceLoader.getString(
             null, null, "menu_file_workoffline"));
-        MainInterface.connectionState.addChangeListener(this);
+        ConnectionStateImpl.getInstance().addChangeListener(this);
         stateChanged(null);
     }
     
     public void actionPerformed(ActionEvent e) {
-        MainInterface.connectionState.setOnline(
-                !MainInterface.connectionState.isOnline());
+    	ConnectionStateImpl.getInstance().setOnline(
+                !ConnectionStateImpl.getInstance().isOnline());
     }
     
     public void stateChanged(ChangeEvent e) {
-        setState(!MainInterface.connectionState.isOnline());
+        setState(!ConnectionStateImpl.getInstance().isOnline());
     }
 }
