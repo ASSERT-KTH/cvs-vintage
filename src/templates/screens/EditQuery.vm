@@ -33,7 +33,7 @@ $page.setTitle("Edit Query")
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
-  <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
  </tr>
 </table>
 </div>
@@ -84,7 +84,7 @@ $page.setTitle("Edit Query")
 <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><input type="submit" name="eventSubmit_doSavequery" value="Save" />&#160;</td>
-  <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
  </tr>
 </table>
 </div>

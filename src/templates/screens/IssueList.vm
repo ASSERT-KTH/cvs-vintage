@@ -47,8 +47,8 @@ $page.setTitle("Queue List")
   <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
 #end
   <td>
-   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
-  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
+   <input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
+  <td><input type="submit" value="Selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
 #if ($searchType.equals("advanced"))
   <td><input type="submit" value="go" name="eventSubmit_doRefinequery" /></td>
 #end
@@ -61,8 +61,8 @@ $page.setTitle("Queue List")
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
   <th>
-   <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
-   <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+   <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+   <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
   <th>Issue ID</th>
 #set ($rmuas = $user.getRModuleUserAttributes($module))
@@ -120,8 +120,8 @@ $page.setTitle("Queue List")
   <td><input type="submit" value="query" name="eventSubmit_doRedirecttosavequery" /></td>
 #end
   <td>
-   <input type="submit" value="selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
-  <td><input type="submit" value="selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
+   <input type="submit" value="Selected"  name="eventSubmit_doViewselected" name="eventSubmit_doViewselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doViewall" /></td>
+  <td><input type="submit" value="Selected" name="eventSubmit_doReassignselected" />&nbsp;<input type="submit" value="all" name="eventSubmit_doReassignall" /></td>
 #if ($searchType.equals("advanced"))
   <td><input type="submit" value="go" name="eventSubmit_doRefinequery" /></td>
 #end

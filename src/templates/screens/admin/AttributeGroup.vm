@@ -2,15 +2,15 @@
         <h2>Add/Edit attribute group  (2.1.4.1)</h2>
 #set ($groupId = $data.Parameters.getString("groupId"))
 <form method="get" action="$link.setPage("admin,attributegroup.vm")">
-      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-      <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm"/>
-      <input type="hidden" name="groupId" value="$groupId">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+      <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm" />
+      <input type="hidden" name="groupId" value="$groupId" />
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><div>
 Screen options
 </div>
-<input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" />
+<input type="submit" value="submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="Cancel" />
 </td>
 <td><div>
 Attribute options
@@ -27,7 +27,7 @@ Attribute options
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
  <th>Group name</th>
- <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" ></td>
+ <td><input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" /></td>
  </tr>
  <tr>
  <th>Group descr</th>
@@ -59,7 +59,7 @@ Attribute options
    #set ( $raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag) )
    #set ( $maxNum = $group.Attributes.size() )
  #rows()
- <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId"/></td>
+ <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  <td><a href="#">$attribute.Name</a></td>
  <td><input type="text" size="15" value="$rmaGroup.DisplayValue" /></td>
  <td>#booleanCheckbox ($rmaGroup.Active)</td>
@@ -79,7 +79,7 @@ Attribute options
   <td class="firstchild">
   <div>
 Screen options
-</div> <input type="submit" value="Submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="cancel" /></td>
+</div> <input type="submit" value="Submit changes" name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="Cancel" /></td>
   <td>
   <div>
 Attribute options

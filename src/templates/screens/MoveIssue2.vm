@@ -122,7 +122,7 @@ $page.setTitle("Copy / Move Issue")
   </tr>
   #foreach( $attr in $orphanAttributes )
    #indexedRows($velocityCount)
-   <td><input type="checkbox" name="x" value="x" checked /></td>
+   <td><input type="checkbox" name="x" value="x" checked="checked" /></td>
    <td><input type="text" name="x" value="$attr.Attribute.Name" /></td>
    <td><input type="text" name="x" value="$attr.Value" /></td>
   </tr>

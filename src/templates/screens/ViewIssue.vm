@@ -19,8 +19,8 @@ You are viewing an issue in a different Module than is currently selected.
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 #set ($module = $scarabR.CurrentModule)
 <form name="IssueForm" method="post" action="$action" >
-#if ($fullHistory) <input type="hidden" name="fullHistory" value="$fullHistory"> #end
-<input type="hidden" name="id" value="$currentIssue.IssueId">
+#if ($fullHistory) <input type="hidden" name="fullHistory" value="$fullHistory" /> #end
+<input type="hidden" name="id" value="$currentIssue.IssueId" />
  #viewIssue( $currentIssue )
 $intake.declareGroups()
 </form>

@@ -9,22 +9,22 @@ $page.setTitle("Template List")
 <form method="post" action="$action" >
 <p class="functnbar">
    <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
-   <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
-      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+   <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
+      &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
 <h3>$page.Title</h3>
 #if ($noTemplates.equals("true"))
-    <div class="alert">
+    <p><strong class="alert">
     There are no stored templates, click <a
     href="$link.setPage("SaveTemplate.vm")">here</a> to create a new
     one.
-    </div>
+    </strong></p>
 #else
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
         <th nowrap="nowrap">
-        <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
-        <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+        <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+        <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
         </th>
         <th>Template name</th>
         <th>Template desc</th>
@@ -33,7 +33,7 @@ $page.setTitle("Template List")
         </tr>
 #foreach ( $template in $module.getPrivateTemplates($user) )
          #indexedRows($velocityCount)
-        <td><input type="checkbox" name="delete_$template.IssueId"/></td>
+        <td><input type="checkbox" name="delete_$template.IssueId" /></td>
         #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm").toString())
         <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
         <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
@@ -54,7 +54,7 @@ $page.setTitle("Template List")
 #foreach ( $template in $module.GlobalTemplates )
          #indexedRows($velocityCount)
       #if ($security.hasPermission("Item | Delete", $module))
-        <td><input type="checkbox" name="delete_$template.IssueId"/></td>
+        <td><input type="checkbox" name="delete_$template.IssueId" /></td>
       #else
         <td>&nbsp;</td>
       #end
@@ -86,8 +86,8 @@ $page.setTitle("Template List")
    <p class="functnbar">
    #if ($user.UserId)
         <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
-        <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
+        <input type="submit" value="Delete selected" name="eventSubmit_doDeletetemplates" />
    #end
-      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+      &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
 #end
 </div>

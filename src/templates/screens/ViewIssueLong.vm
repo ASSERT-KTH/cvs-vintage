@@ -28,5 +28,5 @@
   $intake.declareGroups()
   </form>
 #else
-   <div class="alert">You have not selected any issues to view.</div>
+   <p><strong class="alert">You have not selected any issues to view.</strong></p>
 #end

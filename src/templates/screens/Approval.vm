@@ -1,33 +1,31 @@
 <div id="approval" class="app">
-$page.setTitle("Approve/Reject User Submitted Items")
+$page.setTitle("Approve/reject user submitted items")
 <h2>$page.Title</h2>
 #set ( $module = $scarabR.CurrentModule )
 <form action="$link.setPage("Approval.vm")" method="get">
-<input type="hidden" name="action" value="admin.Approval"/>
-<input type="hidden" name="nextTemplate" value="Approval.vm"/>
+<input type="hidden" name="action" value="admin.Approval" />
+<input type="hidden" name="nextTemplate" value="Approval.vm" />
 #if( ($module.UnapprovedQueries.isEmpty()) && ($module.UnapprovedTemplates.isEmpty()) )
-  <div class="alert">There are no items to approve.</div>
+  <p><strong class="alert">There are no items to approve.</strong></p>
 #else
  <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="submit" name="eventSubmit_doSubmit" />&#160;</td>
-   <td><input type="submit" value="cancel" name="eventSubmit_doCancel" />&#160;</td>
-   <td><input type="submit" value="clear form" /></td>
+  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160; <input type="submit" value="Clear form" /></td>
   </tr>
  </table>
  </div>
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
    <th nowrap="nowrap">&nbsp;</th>
-   <th><a href="#" title="sort">date</a></th>
-   <th><a href="#" title="sort">type</a></th>
-   <th><a href="#" title="sort">submitted by</a></th>
-  ## <th><a href="#" title="sort">project</a></th>
-  ## <th><a href="#" title="sort">user role</a></th>
-   <th><a href="#" title="sort">name</a></th>
-   <th><a href="#" title="sort">description</a></th>
-   <th>comments</th>
-   <th>action</th>
+   <th><a href="#" title="sort">Date</a></th>
+   <th><a href="#" title="sort">Type</a></th>
+   <th><a href="#" title="sort">Submitted by</a></th>
+  ## <th><a href="#" title="sort">Project</a></th>
+  ## <th><a href="#" title="sort">User role</a></th>
+   <th><a href="#" title="sort">Name</a></th>
+   <th><a href="#" title="sort">Description</a></th>
+   <th>Comments</th>
+   <th>Action</th>
   </tr>
  #foreach( $query in $module.UnapprovedQueries )
   #if( $velocityCount % 2 > 0 )
@@ -37,9 +35,9 @@ $page.setTitle("Approve/Reject User Submitted Items")
   #end
   <td><input type="checkbox" name="query_id_$query.QueryId" /></td>
   <td>$format.getDate($scarabG.DateFormat, $query.CreatedDate)</td>
-  <td>query</td>
+  <td>Query</td>
   #set ($createdUser = $scarabR.getUser($query.UserId))
-  <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId">
+  <input type = "hidden" name="query_user_$query.QueryId" value = "$createdUser.UserId" />
   <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
   <td>$module.Name</td>
   <td>#set ($comma = "")
@@ -52,10 +50,10 @@ $page.setTitle("Approve/Reject User Submitted Items")
   <td>#if ($query.Description) $query.Description #else &nbsp; #end</td>
   <td> <textarea rows="2" cols="20" name="query_comment_$query.QueryId"></textarea></td>
   <td><select name="query_action_$query.QueryId">
-   <option value="none">no action</option>
-   <option value="comment">comment only</option>
-   <option value="approve">approve</option>
-   <option value="reject" >reject</option>
+   <option value="none">No action</option>
+   <option value="comment">Comment only</option>
+   <option value="approve">Approve</option>
+   <option value="reject" >Reject</option>
    </select>
   </td>
  </tr>
@@ -70,7 +68,7 @@ $page.setTitle("Approve/Reject User Submitted Items")
   <td>$format.getDate($scarabG.DateFormat, $template.CreatedDate)</td>
   <td>enter issue template</td>
   #set ($createdUser = $template.CreatedBy)
-  <input type = "hidden" name="template_user_$template.IssueId" value = "$createdUser.UserId">
+  <input type = "hidden" name="template_user_$template.IssueId" value="$createdUser.UserId" />
   <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
    ##<td>$template.Module.Name</td>
    ##<td>role X</td>
@@ -79,10 +77,10 @@ $page.setTitle("Approve/Reject User Submitted Items")
    <td>#if ($template.TemplateInfo.Description) $template.TemplateInfo.Description #else &nbsp; #end</td>
    <td> <textarea rows="2" cols="20" name="template_comment_$template.IssueId"></textarea></td>
    <td><select name="template_action_$template.IssueId">
-    <option>no action</option>
-    <option>comment only</option>
-    <option>approve</option>
-    <option>reject</option>
+    <option>No action</option>
+    <option>Comment only</option>
+    <option>Approve</option>
+    <option>Reject</option>
     </select>
    </td>
   </tr>
@@ -91,17 +89,17 @@ $page.setTitle("Approve/Reject User Submitted Items")
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>
-   <th width="120"><small>comments<br />
-   (sent to selected submittees)</small></th>
+   <th width="120">Comments
+   (sent to selected submittees)</th>
    <td><textarea rows="4" cols="40" name="global_comment"></textarea></td>
   </tr>
  </table>
 </div>
  <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="submit" name="eventSubmit_doSubmit" />&#160;</td>
-   <td><input type="submit" value="cancel" name="eventSubmit_doCancel" />&#160;</td>
-   <td><input type="submit" value="clear form" /></td>
+  <td class="firstchild"><input type="submit" value="Submit" name="eventSubmit_doSubmit" />&#160;</td>
+   <td><input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;</td>
+   <td><input type="submit" value="Clear form" /></td>
   </tr>
  </table>
  </div>

@@ -7,7 +7,7 @@
 <form method="post" action="$action" >
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 #if ($queryString)
-<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel"  /></p>
+<p class="functnbar"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel"  /></p>
 <h3>Save Your Query</h3>
       <div class="axial">
        <table cellpadding="3" cellspacing="2" border="0">
@@ -27,11 +27,11 @@
         <tr>
          <th width="120">location</th>
          <td>current project '$module.Name'</td>
-         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId">
+         <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
         </tr>
        </table>
       </div>
-<p class="functnbar"><input type="submit" value="save/submit" name="eventSubmit_doSavequery"/>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar"><input type="submit" value="Save/submit" name="eventSubmit_doSavequery" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>
      </div></td>
     </tr>
    </table>

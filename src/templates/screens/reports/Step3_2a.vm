@@ -21,7 +21,7 @@
 <div class="axial">
  <table cellpadding="3" cellspacing="2" border="0">
      <tr>
-   <th width="120">rows: criteria</th>
+   <th width="120">Rows: criteria</th>
    <td>
        <select name="$intakeReport.Axis1Category.Key">
            <option value="">select criteria</option>
@@ -33,13 +33,13 @@
    </td>
   </tr>
   <tr>
-   <th width="120">columns: date(s)</th>
+   <th width="120">Columns: date(s)</th>
    <td>Added during next step</td>
   </tr>
  </table>
 </div>
 <p class="functnbar">
-    <input type="submit" value="continue" name="eventSubmit_doStep3_2a" />
+    <input type="submit" value="Continue" name="eventSubmit_doStep3_2a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
 </p>

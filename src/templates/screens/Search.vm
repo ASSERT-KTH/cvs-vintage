@@ -9,7 +9,7 @@
         <input type="submit" name="eventSubmit_doSearch"
             value="Search" />&#160;
         <input type="submit" name="eventSubmit_doCancel"
-            value="cancel" />
+            value="Cancel" />
        </p>
 #set ( $search = $scarabR.Search )
 #set ( $searchGroup = $intake.SearchIssue.mapTo($search) )
@@ -91,7 +91,7 @@ issues per page:
         <input type="submit" name="eventSubmit_doSearch"
             value="Search" />&#160;
         <input type="submit" name="eventSubmit_doCancel"
-            value="cancel" />
+            value="Cancel" />
        </p>
         $intake.declareGroups()
         </form>

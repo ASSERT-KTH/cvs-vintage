@@ -1,67 +1,67 @@
-
-$page.setTitle("Global Attribute Select")
+$page.setTitle("Select global attribute")
 <form action="$link.setPage("admin,GlobalAttributeSelect.vm")" method="get">
-    <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-    <input type="hidden" name="groupId" value = "$data.Parameters.getString("groupId")")
-        <div class="tabs">
-            <table cellpadding="3" cellspacing="0" border="0">
-            <tr>
-            <th>global attributes</th>
-            <td><a href="#" title="Customize 'enter issue'">Customize "enter issue"</a></td>
-            </tr>
-            </table>
-        </div>
-        <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+<input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
+<input type="hidden" name="groupId" value = "$data.Parameters.getString("groupId")")
+<div class="tabs" />
+ <table cellpadding="3" cellspacing="0" border="0">
  <tr>
-  <td class="firstchild"><strong>select items to:</strong></td>
-            <td><strong>general functions</strong></td>
-            </tr>
-            <tr>
-            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />&nbsp;</td>
-            <td>
-            #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-               <input type="submit" value="create new" />
-            #end
-            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
-            </tr>
-            </table>
-        </div>
-        <h3>Global attributes</h3>
-        <table width="100%" border="1" cellspacing="2" cellpadding="3">
-        <tr>
-        <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
-        <th><a href="#" title="sort">input type</a></th>
-        <th><a href="#" title="sort">attribute name</a></th>
-        <th><a href="#" title="sort">description</a></th>
-        <th><a href="#" title="sort">author</a></th>
-        <th><a href="#" title="sort">creation date</a></th>
-        </tr>
+ <th>Global attributes</th>
+ <td><a href="#" title="Customize 'enter issue'">Customize "enter issue"</a></td>
+ </tr>
+ </table>
+</div>
+<div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild"><div>
+Select items to
+</div><input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />
+</td>
+<td><div>
+General functions
+</div>
+#if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+<input type="submit" value="Create new" />
+ #end
+ &nbsp;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+</td></table></div>
+<h3>Global attributes</h3>
+<table width="100%" border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></th>
+<th><a href="#" title="sort">Input type</a></th>
+<th><a href="#" title="sort">Attribute name</a></th>
+<th><a href="#" title="sort">Description</a></th>
+<th><a href="#" title="sort">Author</a></th>
+<th><a href="#" title="sort">Creation date</a></th>
+</tr>
 #set ($allAttributes = $scarabR.CurrentModule.AvailableAttributes)
 #foreach( $attribute in $allAttributes )
-        #rows()
-        <td><input type="radio" name="attributeId" value="$attribute.AttributeId" /></td>
-        <td>$attribute.AttributeType.Name</td>
-        <td><a href="#">$attribute.Name</a></td>
-        <td>$attribute.Description</td>
-        #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-        <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
-        <td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
-        </tr>
+#rows()
+<td><input type="radio" name="attributeId" value="$attribute.AttributeId" /></td>
+<td>$attribute.AttributeType.Name</td>
+<td><a href="#">$attribute.Name</a></td>
+<td>$attribute.Description</td>
+#set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
+<td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>
+<td>$format.getDate($scarabG.DateFormat, $attribute.CreatedDate)</td>
+</tr>
 #end
-        </table>
-        <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><strong>select items to:</strong></td>
-            <td><strong>general functions</strong></td>
-            </tr>
-            <tr>
-            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />&nbsp;</td>
-            <td>
-            #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-               <input type="submit" value="create new" />
-            #end
-            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
-            </tr>
-            </table>
-        </div>
-    </div>
+</table>
+<div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
+<tr>
+<td class="firstchild"><div>
+Select items to
+</div>
+<input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectattribute" />
+</td>
+ <td><div>
+General functions
+</div>#if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+    <input type="submit" value="create new" />
+  &nbsp; 
+  #end
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></td>
+ </tr>
+ </table>
+</div>
+</div>

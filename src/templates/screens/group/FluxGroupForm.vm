@@ -50,11 +50,11 @@ $page.setBgColor($ui.bgcolor)
           *#
           <input type="submit" name="eventSubmit_doCancel" value="Cancel">
           #if ($flux.Mode && $flux.Mode == "modify")
-            <input type="submit" name="eventSubmit_doUpdate" value="Update Group"/>
+            <input type="submit" name="eventSubmit_doUpdate" value="Update Group" />
           #elseif ($flux.Mode && $flux.Mode == "delete")
-            <input type="submit" name="eventSubmit_doDelete" value="Confirm Deletion"/>
+            <input type="submit" name="eventSubmit_doDelete" value="Confirm Deletion" />
           #else
-            <input type="submit" name="eventSubmit_doInsert" value="Add Group"/>
+            <input type="submit" name="eventSubmit_doInsert" value="Add Group" />
           #end
        <td>
      </tr>

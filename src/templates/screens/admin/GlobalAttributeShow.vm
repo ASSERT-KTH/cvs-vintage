@@ -1,19 +1,22 @@
 <div id="globalattributeshow" class="app">
-$page.setTitle("Global Attribute Editor")
+$page.setTitle("Global attribute editor")
 <h2>$page.Title</h2>
 <p>
 This page is for editing the Global Attributes.
 </p>
 <form action="$link.setPage("admin,GlobalAttributeShow.vm")" method="get">
-    <input type="hidden" name="action" value="admin.GlobalAttributes">
-    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm">
-<p class="functnbar">
-<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
-<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
-</p>
-<div class="grouper">
+    <input type="hidden" name="action" value="admin.GlobalAttributes" />
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+	<tr>
+		<td class="firstchild">
+<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
+<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" />
+</td></tr></table></div>
+
 #datatitle("Attributes")
-<div>
+
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Deleted</th>
@@ -48,11 +51,15 @@ This page is for editing the Global Attributes.
 </tr>
 #end
 </table>
-</div>
+
 $intake.declareGroups()
-<p class="functnbar">
-<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" class="buttonfunc"/>
-<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" class="buttonfunc"/>
-</p>
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+	<tr>
+		<td class="firstchild">
+<input type="submit" value="Create New Attribute" name="eventSubmit_doCreatenew" />
+<input type="submit" value="Delete Selected Attributes" name="eventSubmit_doDeleteaelectedattributes" /></td>
+	</tr>
+</table>
 </form>
 </div>

@@ -56,7 +56,7 @@
  </table>
 </div>
 <p class="functnbar">
-    <input type="submit" value="continue" name="eventSubmit_doStep3_1a" />
+    <input type="submit" value="Continue" name="eventSubmit_doStep3_1a" />
     &nbsp;
     <!-- <input type="submit" value="back" /> -->
 </p>

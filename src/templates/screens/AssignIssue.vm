@@ -28,9 +28,9 @@ $page.setTitle("Assign Users to Issue")
 <form action="$actionLink" method="get">
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="submit" /></td>
- <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
- <td><input type="reset" value="reset" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /></td>
+ <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
+ <td><input type="reset" value="Reset" /></td>
  </tr>
  </table>
 </div>
@@ -46,8 +46,7 @@ $page.setTitle("Assign Users to Issue")
   #end
  #else
   #foreach ($issue in $scarabR.IssueList)
-   <input type="hidden" name="$issueGroup.Ids.Key"
- value="$issue.IssueId" />
+   <input type="hidden" name="$issueGroup.Ids.Key" value="$issue.IssueId" />
   #end
  #end
 #else
@@ -109,9 +108,9 @@ $page.setTitle("Assign Users to Issue")
 </p>
 <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="submit" /></td>
- <td><input type="submit" name="eventSubmit_doCancel" value="cancel" /></td>
- <td><input type="reset" value="reset" /></td>
+  <td class="firstchild"><input type="submit" name="eventSubmit_doSubmit" value="Submit" /></td>
+ <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" /></td>
+ <td><input type="reset" value="Reset" /></td>
  </tr>
  </table>
 </div>

@@ -1,5 +1,5 @@
 <div class="app" id="configureissuelist">
-$page.setTitle("Add/Remove Attributes From View")
+$page.setTitle("Add/remove attributes from view")
 <h2>$page.Title</h2>
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList").addPathInfo("nextTemplate", "ConfigureIssueList.vm"))
 #set ($user = $data.User)
@@ -9,14 +9,11 @@ $page.setTitle("Add/Remove Attributes From View")
 #set ($usedefaults = $moduleAttributes.size())
 #set ($usedefaults = $data.Parameters.getString("usedefaults"))
 <form action="$action" method="post">
-<input type="hidden" name="user_id" value="$user.UserId">
-<input type="hidden" name="module_id" value="$module.ModuleId">
+<input type="hidden" name="user_id" value="$user.UserId" />
+<input type="hidden" name="module_id" value="$module.ModuleId" />
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;</td>
-  <td><input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;</td>
-  <td><input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></td>
-  <td><input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/></td>
+  <td class="firstchild"><input type="submit" value="Save" name="eventSubmit_doSelectattributes" />&nbsp; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&nbsp; <input type="submit" value="Reset to default"  name="eventSubmit_doCancel" /> <input type="submit" value="Go to issue list"  name="eventSubmit_doGoissuelist" /></td>
  </tr>
 </table>
 </div>
@@ -24,8 +21,8 @@ $page.setTitle("Add/Remove Attributes From View")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th>Select</th>
-  <th>Attribute Name</th>
-  <th>Columnar Sequence</th>
+  <th>Attribute name</th>
+  <th>Columnar sequence</th>
  </tr>
  #foreach ($moduleAttribute in $moduleAttributes)
   #set ($checked = "")
@@ -41,7 +38,7 @@ $page.setTitle("Add/Remove Attributes From View")
   #set ($order = 1)
   #foreach ($moduleUserAttribute in $rmuas)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
-    #set ($checked = "checked")
+    #set ($checked = "checked\=\"checked\"")
     #set ($order = $moduleUserAttribute.Order)
    #end
   #end
@@ -56,10 +53,7 @@ $page.setTitle("Add/Remove Attributes From View")
 </table>
 <div class="functnbar2"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
-  <td class="firstchild"><input type="submit" value="save" name="eventSubmit_doSelectattributes" />&nbsp;</td>
-  <td><input type="submit" value="cancel" name="eventSubmit_doCancel"/>&nbsp;</td>
-  <td><input type="submit" value="reset to default"  name="eventSubmit_doCancel" /></td>
-  <td><input type="submit" value="go to issue list"  name="eventSubmit_doGoissuelist"/></td>
+  <td class="firstchild"><input type="submit" value="Save" name="eventSubmit_doSelectattributes" />&nbsp; <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&nbsp; <input type="submit" value="Reset to default"  name="eventSubmit_doCancel" /> <input type="submit" value="Go to issue list"  name="eventSubmit_doGoissuelist" /></td>
  </tr>
 </table>
 </div>

@@ -1,5 +1,5 @@
 <div class="app" id="querylist">
-$page.setTitle("Stored Query List")
+$page.setTitle("Stored query list")
 <h2>$page.Title</h2>
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
@@ -8,9 +8,9 @@ $page.setTitle("Stored Query List")
  #set ($noQueries = "true")
 #end
 #if ($noQueries.equals("true"))
- <div class="alert">There are no stored queries.
- Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a>
- to create a new stored query.</div>
+ <p><strong class="alert">There are no stored queries.
+ Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced query</a>
+ to create a new stored query.</strong></p>
 #else
 #set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
 <form method="post" action="$action">
@@ -22,12 +22,12 @@ $page.setTitle("Stored Query List")
   <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
  </tr>
  <tr>
-  <td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;
-   <input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;
+  <td><input type="submit" value="Save" name="eventSubmit_doSavefrequencies" />&nbsp;
+   <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&nbsp;
    <input type="submit" value="new" name="eventSubmit_doNewquery" /></td>
   <td><input type="submit" value="copy" name="eventSubmit_doCopyquery" />&nbsp;
   #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
-   <input type="submit" value="delete" name="eventSubmit_doDeletequeries" />
+   <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />
   #end
   &nbsp;<input type="submit" value="subscribe" name="eventSubmit_doSubscribe" />&nbsp;
   <input type="submit" value="unsubscribe" name="eventSubmit_doUnsubscribe" /></td>
@@ -40,8 +40,8 @@ $page.setTitle("Stored Query List")
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">
-  <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
-  <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+  <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort ascending" title="sort ascending" border="0" />
+  <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort descending" title="sort descending" border="0" />
   </th>
   <th>Subscr</th>
   <th>Subscr Frequency</th>
@@ -52,7 +52,7 @@ $page.setTitle("Stored Query List")
  </tr>
  #foreach ( $query in $module.getPrivateQueries($user) )
   #indexedRows($velocityCount)
-  <td><input type="checkbox" name="action_$query.QueryId"/></td>
+  <td><input type="checkbox" name="action_$query.QueryId" /></td>
   <td>&nbsp;</td>
   <td>&nbsp;</td>
   <td><a href="$query.getEditLink($link.setPage("EditQuery.vm").toString())">$query.Name</a></td>
@@ -70,7 +70,7 @@ $page.setTitle("Stored Query List")
   #indexedRows($velocityCount)
   <td>
    #if ($user.UserId)
-    <input type="checkbox" name="action_$query.QueryId"/></td>
+    <input type="checkbox" name="action_$query.QueryId" /></td>
    #else
     &nbsp;
    #end
@@ -122,10 +122,10 @@ $page.setTitle("Stored Query List")
    <td rowspan="2"><img src="/scarab/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
   </tr>
   <tr>
-   <td><input type="submit" value="save" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>
+   <td><input type="submit" value="Save" name="eventSubmit_doSavefrequencies" />&nbsp;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&nbsp;<input type="submit" value="new" name="eventSubmit_doNewquery" /></td>
    <td><input type="submit" value="copy" name="eventSubmit_doCopyquery" />&nbsp;
    #if ($security.hasPermission("Item | Delete") || !$module.getPrivateQueries($user).isEmpty())
-    <input type="submit" value="delete" name="eventSubmit_doDeletequeries" />
+    <input type="submit" value="Delete" name="eventSubmit_doDeletequeries" />
    #end
    &nbsp;<input type="submit" value="subscribe" name="eventSubmit_doSubscribe" />&nbsp;<input type="submit" value="unsubscribe" name="eventSubmit_doUnsubscribe" /></td>
   </tr>

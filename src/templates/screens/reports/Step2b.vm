@@ -16,7 +16,7 @@
     2b: PFA display options</strong>
 </p>
 <h3>Define PFA Groups</h3>
-<div><strong>Grouping PFA options</strong></div>
+<h4>Grouping PFA options</h4>
 <p>In cases where primary filter attribute options represent similar traits
 (e.g. for X attribute "state" the options "open unassigned", "open assigned",
 and "reopened unassigned" are all "open") it may be useful to calculate and
@@ -27,16 +27,16 @@ output.</p>
 column.</p>
 <form method="get" action="$action">
 <p class="functnbar">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
+    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
     &nbsp;
     <input type="submit" name="eventSubmit_doStep2bdeletegroup"
-        value="delete group" />
+        value="Delete group" />
 </p>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
   <th nowrap="nowrap">&nbsp;</th>
-  <th>group number</th>
-  <th>group name</th>
+  <th>Group number</th>
+  <th>Group name</th>
  </tr>
 #set ($finalCount = 1)
 #foreach ( $optionGroup in $report.OptionGroups )
@@ -67,18 +67,18 @@ column.</p>
  </tr>
 </table>
 <p class="functnbar">
-    <input type="submit" name="eventSubmit_doStep2baddgroup" value="add group" />
+    <input type="submit" name="eventSubmit_doStep2baddgroup" value="Add group" />
     &nbsp;
     <input type="submit" name="eventSubmit_doStep2bdeletegroup"
-        value="delete group" />
+        value="Delete group" />
 </p>
 #if ($report.OptionGroups && $report.OptionGroups.size() > 0)
 <h3>Grouping PFA/Options</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
  <tr>
-  <th>group name</th>
-  <th>attribute</th>
-  <th>option</th>
+  <th>Group name</th>
+  <th>Attribute</th>
+  <th>Option</th>
  </tr>
     #foreach ( $attOption in $report.SelectedOptionsForGrouping )
         #set ($intakeOptionForGrouping = $intake.OptionForGrouping.mapTo($attOption))
@@ -98,9 +98,9 @@ column.</p>
 </table>
 #end
 <p class="functnbar">
-    <input type="submit" value="continue"  name="eventSubmit_doStep2b" />
+    <input type="submit" value="Continue"  name="eventSubmit_doStep2b" />
     &nbsp;
-    <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
+    <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </p>
 #addReportHiddenInputs($report "reports,Step2b.vm")
 $intake.declareGroups()

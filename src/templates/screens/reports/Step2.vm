@@ -42,11 +42,11 @@ seperate column (i.e. side-by-side comparison).</p>
  </table>
 </div>
 <p class="functnbar">
-    <input type="submit" value="continue"  name="eventSubmit_doStep2agoto3" />
+    <input type="submit" value="Continue"  name="eventSubmit_doStep2agoto3" />
     &nbsp;
     <input type="submit" value="Define PFA/Option(s) group(s)"
         name="eventSubmit_doStep2agoto2b" />&nbsp;
-    <input type="submit" value="cancel"  name="eventSubmit_doCancel" />
+    <input type="submit" value="Cancel"  name="eventSubmit_doCancel" />
 </p>
 #addReportHiddenInputs($report "reports,Step2.vm")
 $intake.declareGroups()

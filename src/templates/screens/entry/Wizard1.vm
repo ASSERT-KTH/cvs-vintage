@@ -1,5 +1,5 @@
 <div id="wizard1" class="app">
-$page.setTitle("Enter Issue")
+$page.setTitle("Enter issue")
 #set ($issue = $scarabR.ReportingIssue)
 #set ($action = $link.setPage("entry,Wizard1.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry,Wizard3.vm"))
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
@@ -17,8 +17,8 @@ $page.setTitle("Enter Issue")
 </div>
 <form name="ReportForm" method="get" action="$action">
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates"/>&#160;
-<input type="reset" value="reset"/>
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check for duplicates" />&#160;
+<input type="reset" value="Reset" />
 </p>
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
@@ -37,7 +37,7 @@ $page.setTitle("Enter Issue")
 <option value="">$template.TemplateInfo.Name
 #end
 </select>
-   <input type="submit" value="select"/> &#160;<a href="$link.setPage("TemplateList.vm")">Template List</a>
+   <input type="submit" value="Select" /> &#160;<a href="$link.setPage("TemplateList.vm")">Template List</a>
  </td>
  </tr>
  </table>
@@ -76,8 +76,8 @@ $page.setTitle("Enter Issue")
     </table>
 </div>
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check For Duplicates"/>&#160;
-<input type="reset" value="reset"/>
+<input type="submit" name="eventSubmit_doCheckforduplicates" value="Check For Duplicates" />&#160;
+<input type="reset" value="Reset" />
 </p>
 $intake.declareGroups()
 </form>

@@ -5,7 +5,7 @@ $page.setTitle("Attribute Editor")
  <h2>Customize/create artifact type (2.1.4.0)</h2>
 <form method="get" action="$link.setPage("admin,artifacttypeedit.vm")">
       <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm"/>
+      <input type="hidden" name="nextTemplate" value="admin,ArtifactTypeEdit.vm" />
 <div class="functnbar">
 <table cellpadding="4" cellspacing="0" border="1">
 <tr>
@@ -108,7 +108,7 @@ Screen options
 <td><div>
 Attribute group options
 </div>
-<input type="submit" value="add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" />
+<input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="resort" />
 </td>
 </tr>
 </table>

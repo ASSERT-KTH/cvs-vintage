@@ -38,12 +38,12 @@
    </td>
   </tr>
   <tr>
-   <th>column: date(s)</th>
+   <th>Column: date(s)</th>
    <td>
                 <table border="1" cellspacing="2" cellpadding="3">
                     <tr>
-                        <th nowrap="nowrap">date #</th>
-                        <th>date setting</th>
+                        <th nowrap="nowrap">Date #</th>
+                        <th>Date setting</th>
                     </tr>
 #set ($finalCount = 1)
 #set ($finalKey = "0" )
@@ -86,9 +86,9 @@
  </tr>
                 </table>
                 <p>
-                    <input type="submit" value="add date fields"
+                    <input type="submit" value="Add date fields"
                         name="eventSubmit_doStep3_2badddate" />&nbsp;
-                    <input type="submit" value="remove date fields"
+                    <input type="submit" value="Remove date fields"
                         name="eventSubmit_doStep3_2bdeletedate" />
                 </p>
    </td>
@@ -99,7 +99,7 @@
     <input type="submit" value="Generate report"
         name="eventSubmit_doStep3_2b" />
     &nbsp;
-    <input type="submit" value="cancel" name="eventSubmit_doCancel" />
+    <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 #addReportHiddenInputs($report "reports,Step3_2b")
 $intake.declareGroups()

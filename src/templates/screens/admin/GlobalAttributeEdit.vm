@@ -1,4 +1,4 @@
-$page.setTitle("Attribute / Options Editor")
+$page.setTitle("Attribute / options editor")
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($attType = $attribute.AttributeType)
@@ -13,14 +13,14 @@ On this screen, one can modify system wide Attribute information.
 Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute Show</a>
 </p>
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
-    <input type="hidden" name="action" value="admin.GlobalAttributes"/>
-    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
-    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
+    <input type="hidden" name="action" value="admin.GlobalAttributes" />
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
 #datatitle ( "Attribute Info" )
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
-  <th width="120">input type</th>
+  <th width="120">Input type</th>
   <td>
     <select name="$atttgroup.AttributeTypeId.Key" size="1">
     #foreach ( $atype in $attribute.AllAttributeTypes )
@@ -29,14 +29,14 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
     </select>
   </td>
  <tr>
-  <th width="120">attribute name</th>
+  <th width="120">Attribute name</th>
   <td>
-    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name"/>
+    <input type="text" name="$attgroup.Name.Key" value="$!attribute.Name" />
     #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
  <tr>
-  <th width="120">attribute description</th>
+  <th width="120">Attribute description</th>
   <td>
     <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
     #fieldErrorMsg($attgroup.Description "")
@@ -44,7 +44,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
  </tr>
   #if ($attribute.CreatedDate)
  <tr>
-  <th width="120">created by</th>
+  <th width="120">Created by</th>
   <td>
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
   <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
@@ -53,7 +53,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
   #end
   #if ($attribute.CreatedDate)
  <tr>
-  <th width="120">creation date</th>
+  <th width="120">Creation date</th>
   <td>
     $attribute.CreatedDate
   </td>
@@ -62,22 +62,26 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attribute
 </tr>
 </table>
 </div>
-<p class="functnbar">
-  <input type="submit" name="eventSubmit_doModifyattributedata"
-        value="Save"/> General Info
-</p>
+<div class="functnbar">
+<table cellpadding="4" cellspacing="0" border="1">
+	<tr>
+		<td class="firstchild"><div>
+General info
+</div><input type="submit" name="eventSubmit_doModifyattributedata" value="Save" /> </td></tr>
+</table>
+</div>
+
 $intake.declareGroups()
 </form>
 #if ($attType.AttributeClass.Name.equals("select-one"))
 <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="get">
-    <input type="hidden" name="action" value="admin.GlobalAttributes"/>
-    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm"/>
-    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id"/>
+    <input type="hidden" name="action" value="admin.GlobalAttributes" />
+    <input type="hidden" name="nextTemplate" value="admin,GlobalAttributeEdit.vm" />
+    <input type="hidden" name="$attgroup.Id.Key" value="$!attgroup.Id" />
 #datatitle ("Attribute Options")
 #set ($pcaos = $attribute.ParentChildAttributeOptions)
 #set ($maxNum = $pcaos.size())
-<div class="grouper">
-<div>
+
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
 <tr>
 #if ($maxNum > 0)
@@ -85,9 +89,9 @@ $intake.declareGroups()
 #else
  <th>&nbsp;</th>
 #end
- <th>Parent Attribute Option</th>
- <th>Attribute Option</th>
- <th>Preferred Order</th>
+ <th>Parent attribute option</th>
+ <th>Attribute option</th>
+ <th>Preferred order</th>
  <th>Weight</th>
 </tr>
 #foreach ($pcao in $pcaos)
@@ -115,7 +119,7 @@ $intake.declareGroups()
      #end
      </select>
      </td>
-     <td><input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name"/></td>
+     <td><input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" /></td>
      <td>
         #numericSelect( $pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1 )
      </td>
@@ -137,7 +141,7 @@ $intake.declareGroups()
      #end
      </select>
      </td>
-     <td><input type="text" size="25" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName"/></td>
+     <td><input type="text" size="25" name="$newPCAOGroup.NewName.Key" value="$newPCAOGroup.NewName" /></td>
      <td>
 #set ( $maxNum = $maxNum + 1 )
 #if ($newPCAOGroup.PreferredOrder.Value != 0)
@@ -157,18 +161,23 @@ $intake.declareGroups()
      </td>
 </tr>
 </table>
-<strong>Please note: Once created, Attribute Options cannot be deleted
+<p><strong>Please note: Once created, Attribute Options cannot be deleted
 from the database. They can only be marked as deleted and will always
 show up in the list above (but will not show up in the application
 itself). Therefore, please use caution when creating new Attribute
-Options because you can quickly end up with a mess.</strong>
-<p class="functnbar">
-  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions"
-        value="Save"/> Attribute Options
-</p>
+Options because you can quickly end up with a mess.</strong></p>
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+	<tr>
+		<td class="firstchild"><div>
+Attribute Options
+</div>
+  <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" value="Save" /> 
+</td>
+</tr>
+</table>
+</div>
 #end #* if select-one *#
-</div>
-</div>
 $intake.declareGroups()
 </form>
 </div>

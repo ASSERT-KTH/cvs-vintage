@@ -24,24 +24,15 @@ $page.setTitle("Identified as duplicate")
 #end
 </tr>
 </table>
-</div>
-</div>
-<div class="grouper">
-<div class="datatitle">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<td>Possible Duplicates</td>
-</tr>
-</table>
-</div>
-<div>
+
+<h3>Possible duplicates</h3>
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th><a href="#"><img src="/scarab/images/icon_uparrow.gif"
-   width="13" height="8" alt="sort" border="0" /></a><a href="#"><img
+   width="13" height="8" alt="sort ascending" title="sort ascending" border="0" /></a><a href="#"><img
    src="/scarab/images/icon_downarrow.gif" width="13" height="8"
-   alt="sort" border="0" /></a></th>
-<th><a href="#">issue ID #</a></th>
+   alt="sort descending" title="sort descending" border="0" /></a></th>
+<th><a href="#">Issue ID #</a></th>
 #set( $attrValues = $currentIssue.ModuleAttributeValuesMap )
 #foreach ( $attKey in $keys )
 #set ( $attVal = $attrValues.get($attKey) )
@@ -49,8 +40,8 @@ $page.setTitle("Identified as duplicate")
 <th>$attVal.Attribute.Name</th>
 #end
 #end
-<th>creation date</th>
-<th>date closed</th>
+<th>Creation date</th>
+<th>Date closed</th>
 </tr>
 #foreach ($issue in $scarabR.IssueList)
 #set ( $issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString() )
@@ -82,17 +73,17 @@ $page.setTitle("Identified as duplicate")
 </tr>
 #end
 </table>
-</div>
-</div>
+
 <p><input type="submit"  name="eventSubmit_doAddvote"
-value="add vote to selected" /></p>
+value="Add vote to selected" /></p>
 #set ( $atch = $scarabR.Attachment )
 #set( $intakeAttachment = $intake.Attachment.mapTo($atch) )
-<div class="listtable">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
 <tr>
-<td width="120" class="a"><strong>append with note:</strong></td>
-<td class="b">
+<th width="120" class="a">Append with note</th>
+<td>
 <textarea name="$intakeAttachment.DataAsString.Key" rows="4"
  cols="40">$!intakeAttachment.DataAsString</textarea>
 <p><input type="submit" name="eventSubmit_doAddnote"
@@ -101,23 +92,23 @@ value="add vote to selected" /></p>
 </tr>
 </table>
 </div>
-<div class="grouper">
+
 <p>
 The issues above do not match my issue:<br />
 <input type="submit" name="eventSubmit_doGotowizard3"
-value="continue issue entry" />
+value="Continue issue entry" />
 &#160;
 <input type="submit" name="eventSubmit_doCancel"
- value="cancel" />
+ value="Cancel" />
 </p>
-</div>
 #*
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 <tr>
-<td width="50%" valign="top">
+<td width="50%">
+
 <table border="0" cellpadding="2" cellspacing="0" width="100%">
 <tr>
-<td  bgcolor="#999999" colspan="2">POSSIBLE ISSUE MATCHES</td>
+<td colspan="2">POSSIBLE ISSUE MATCHES</td>
 </tr>
 <tr>
 <td>Issue ID#</td>
@@ -184,7 +175,7 @@ Does this issue match yours?<a href="$link.setPage("links.vm")">Yes</a>(Vote)
 <input type="submit" name="eventSubmit_doAddvote" value="Yes">(Vote)
 <input type="submit" name="eventSubmit_doNo" value="No">(Next issue)
 <p>
-<input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine">(New Search)
+<input type="submit" name="eventSubmit_doNoneOfThese" value="None of These Issues Match Mine" />(New Search)
 <input type="submit" name="eventSubmit_doJustReport" value="Just Report My Issue">(Report issue now)
 *#
 </p>

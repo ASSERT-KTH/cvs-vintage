@@ -18,7 +18,7 @@ $page.setTitle("Enter Issue")
                         </tr>
                         </table>
                 </div>
-                <p class="functnbar"><input type="submit" value="check for dupes" />&#160;<input type="reset" value="reset form" /></p>
+                <p class="functnbar"><input type="submit" value="check for dupes" />&#160;<input type="reset" value="Reset form" /></p>
 <form method="get" action="$action">
 #set ($privateTemplateList = $module.getPrivateTemplates($user))
 #set ($globalTemplateList = $module.GlobalTemplates)
@@ -35,14 +35,14 @@ $page.setTitle("Enter Issue")
                 #foreach ($template in $globalTemplateList)
                 <option value="$template.IssueId">$template.TemplateInfo.Name
                 #end
-                        </select> &#160;<input type="submit" value="select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
+                        </select> &#160;<input type="submit" value="Select" name="eventSubmit_doGotowizard3" /> &#160;<a href="#">template list</a></td>
                         </tr>
                         </table>
                 </div>
 #end
 </form>
 <form method="get" action="$link.setPage("entry,Wizard3.vm")">
-<input type="hidden" name="action" value="ReportIssue");
+<input type="hidden" name="action" value="ReportIssue"); />
 <div class="axial">
 <h3>Input your issue</h3>
     <table cellpadding="3" cellspacing="2" border="0">
@@ -115,7 +115,7 @@ $page.setTitle("Enter Issue")
       <th>File path</th>
       <td>
        <input type="file" name="$intakeAttachment.File.Key" size="45"
-            value="$!intakeAttachment.File.Value.FileName"/>
+            value="$!intakeAttachment.File.Value.FileName" />
        <p>Click Browse and select a file. If you do not see a Browse
        button, your browser does not support file uploads. Windows
        users, set Files of Type: to be All Files (*.*) to get a
@@ -134,19 +134,19 @@ $page.setTitle("Enter Issue")
      <td>
     return to&#160;
    <input type="radio" name="nextTemplate"
-      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")"/>
+      value="$data.Parameters.getString($scarabG.Constant.HISTORY_SCREEN, "entry,Wizard3.vm")" />
       Enter New Issue
   <input type="radio" name="nextTemplate" value="Index.vm" />
       Start Page
-  <input type="radio" name="nextTemplate" value="AssignIssue.vm"/>
+  <input type="radio" name="nextTemplate" value="AssignIssue.vm" />
       Assign Issue
       </td>
       </tr>
     </table>
 </div>
 <p class="functnbar">
-<input type="submit" name="eventSubmit_doEnterissue" value="Save Issue"/>&#160;
-<input type="reset" value="Reset"/>
+<input type="submit" name="eventSubmit_doEnterissue" value="Save Issue" />&#160;
+<input type="reset" value="Reset" />
 </p>
 $intake.declareGroups()
 </form>
