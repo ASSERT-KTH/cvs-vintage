@@ -59,8 +59,13 @@ Example:
         <res-ref-name>jdbc/TheDataSource</res-ref-name>
         <jndi-name>java:/DefaultDS</jndi-name>
     </resource-ref>
+
+    <resource-ref>
+        <res-ref-name>jdbc/TheDataSource</res-ref-name>
+        <res-url>http://x.y.z</res-url>
+    </resource-ref>
 -->
-<!ELEMENT resource-ref (res-ref-name , jndi-name)>
+<!ELEMENT resource-ref (res-ref-name , (jndi-name | res-url))>
 
 <!-- The res-ref-name specifies the name of the web.xml res-ref-name element
 which this mapping applies.
