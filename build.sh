@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# $Id: build.sh,v 1.4 1999/12/03 17:01:15 harishp Exp $
+# $Id: build.sh,v 1.5 1999/12/17 00:18:01 akv Exp $
 
 if [ -z "$JAVA_HOME" ]
 then
@@ -16,7 +16,7 @@ fi
 
 JAVACMD=$JAVA_HOME/bin/java
 
-cp=../jakarta-tools/ant.jar:../jakarta-tools/projectx-tr2.jar:../build/tomcat/classes:$JAVA_HOME/lib/tools.jar
+cp=../jakarta-tools/ant.jar:../jakarta-tools/moo.jar;../jakarta-tools/projectx-tr2.jar:../build/tomcat/classes:$JAVA_HOME/lib/tools.jar
 
 $JAVACMD -classpath $cp:$CLASSPATH org.apache.tools.ant.Main "$@"
 
