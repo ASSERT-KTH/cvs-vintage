@@ -85,7 +85,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.27 2002/08/23 19:21:14 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.28 2002/08/23 22:54:56 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -152,7 +152,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 {
                     if (!rma.getRequired())
                     {
-                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to unrequire this attribute, please choose another text attribute to be the default.";
+                        msg = "Your changes have been saved, but the default text attribute must be required. If you wish to set this attribute to not be required, please choose another text attribute to be the default.";
                     }
                     rma.setIsDefaultText(true);
                     rma.setRequired(true);
