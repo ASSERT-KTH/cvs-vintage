@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
@@ -26,6 +27,8 @@ import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.TableChangeListener;
@@ -85,7 +88,9 @@ public class ThreadedViewAction
 	}
 
 	public void tableChanged(TableChangedEvent e) {
-		ColumbaLogger.log.info("event=" + e);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("event=" + e);
+                }
 
 		if (e.getEventType() == TableChangedEvent.UPDATE) {
 			Folder folder =
@@ -149,5 +154,4 @@ public class ThreadedViewAction
 		else
 			setEnabled(false);
 	}
-
 }

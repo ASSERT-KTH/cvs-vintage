@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.frame;
 
 import java.awt.event.MouseAdapter;
@@ -24,6 +25,7 @@ import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 /**
@@ -130,7 +132,9 @@ public abstract class AbstractFrameController {
 	}
 
 	public void close() {
-		ColumbaLogger.log.info("closing FrameController");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("closing FrameController");
+                }
 
 		view.saveWindowPosition();
 
@@ -203,11 +207,7 @@ public abstract class AbstractFrameController {
 		this.selectionManager = selectionManager;
 	}
 
-	public void executeCutAction() {
-	};
-	public void executeCopyAction() {
-	};
-	public void executePasteAction() {
-	};
-
+	public void executeCutAction() {}
+	public void executeCopyAction() {}
+	public void executePasteAction() {}
 }

@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.util.Vector;
@@ -28,7 +29,9 @@ import org.columba.core.config.HeaderItem;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.CScrollPane;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.core.util.SwingWorker;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
@@ -293,7 +296,9 @@ public class TableController
 		tableItem.set("ascending", ascending);
 		tableItem.set("selected", sortingColumn);
 
-		ColumbaLogger.log.info("save table column config");
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("save table column config");
+                }
 						
 				//.clone();
 		//v.removeEnabledItem();
@@ -309,7 +314,9 @@ public class TableController
 			TableColumn tc = getView().getColumn(c);
 
 			v.set("size", tc.getWidth());
-			ColumbaLogger.log.debug("size"+tc.getWidth());
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("size"+tc.getWidth());
+                        }
 			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
 				v.set("position", index);
@@ -502,7 +509,9 @@ public class TableController
 	// the method updates the model
 
 	public void tableChanged(TableChangedEvent event) throws Exception {
-		ColumbaLogger.log.info("event="+event);
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("event="+event);
+                }
 		
 		FolderTreeNode folder = event.getSrcFolder();
 
@@ -584,5 +593,4 @@ public class TableController
 	public MarkAsReadTimer getMarkAsReadTimer() {
 		return markAsReadTimer;
 	}
-
 }
