@@ -29,28 +29,51 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCValuePropertyMetaData;
  * this class is to flatten the JDBCValueClassMetaData into columns.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCTypeFactory {
    // the type mapping to use with the specified database
    private JDBCTypeMappingMetaData typeMapping;
    
-   // all the available dependent value classes (by javaType)
-   private HashMap valueClasses = new HashMap();
+   // all known complex types by java class type
+   private HashMap complexTypes = new HashMap();
 
-   public JDBCTypeFactory(JDBCTypeMappingMetaData typeMapping, Collection dependentValueClasses) {
+   public JDBCTypeFactory(JDBCTypeMappingMetaData typeMapping,
+         Collection valueClasses) {
+
       this.typeMapping = typeMapping;
-      for(Iterator i = dependentValueClasses.iterator(); i.hasNext(); ) {
+
+      HashMap valueClassesByType = new HashMap();
+      for(Iterator i = valueClasses.iterator(); i.hasNext(); ) {
          JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
-         valueClasses.put(valueClass.getJavaType(), valueClass);
+         valueClassesByType.put(valueClass.getJavaType(), valueClass);
+      }
+         
+      
+      // convert the value class meta data to a jdbc complex type
+      for(Iterator i = valueClasses.iterator(); i.hasNext(); ) {
+         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)i.next();
+         JDBCTypeComplex type = 
+               createTypeComplex(valueClass, valueClassesByType);
+         complexTypes.put(valueClass.getJavaType(), type);
       }
    }
    
-   public JDBCType getFieldJDBCType(JDBCCMPFieldMetaData cmpField) {
-      if(valueClasses.containsKey(cmpField.getFieldType())) {
-         return createComplexType(cmpField);
+   public JDBCType getJDBCType(Class javaType) {
+      if(complexTypes.containsKey(javaType)) {
+         return (JDBCTypeComplex)complexTypes.get(javaType);
       } else {
-         return createSimpleType(cmpField);
+         String sqlType = typeMapping.getSqlTypeForJavaType(javaType);
+         int jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
+         return new JDBCTypeSimple(null, javaType, jdbcType, sqlType);
+      }
+   }
+
+   public JDBCType getJDBCType(JDBCCMPFieldMetaData cmpField) {
+      if(complexTypes.containsKey(cmpField.getFieldType())) {
+         return createTypeComplex(cmpField);
+      } else {
+         return createTypeSimple(cmpField);
       }
    }
 
@@ -58,7 +81,23 @@ public class JDBCTypeFactory {
       return typeMapping.getJdbcTypeForJavaType(clazz);
    }
 
-   private JDBCType createSimpleType(JDBCCMPFieldMetaData cmpField) {
+   private JDBCTypeComplex createTypeComplex(
+         JDBCValueClassMetaData valueClass,
+         HashMap valueClassesByType) {
+
+      // get the properties
+      ArrayList propertyList = createComplexProperties(valueClass,
+            valueClassesByType, new PropertyStack());
+      
+      // transform properties into an array
+      JDBCTypeComplexProperty[] properties = 
+            new JDBCTypeComplexProperty[propertyList.size()];
+      properties = (JDBCTypeComplexProperty[])propertyList.toArray(properties); 
+      
+      return new JDBCTypeComplex(properties, valueClass.getJavaType());      
+   }
+
+   private JDBCTypeSimple createTypeSimple(JDBCCMPFieldMetaData cmpField) {
       String columnName = cmpField.getColumnName();
       Class javaType = cmpField.getFieldType();
       
@@ -74,106 +113,144 @@ public class JDBCTypeFactory {
       return new JDBCTypeSimple(columnName, javaType, jdbcType, sqlType);
    }      
 
-   private JDBCType createComplexType(JDBCCMPFieldMetaData cmpField) {
-      JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)valueClasses.get(cmpField.getFieldType());
+   private JDBCTypeComplex createTypeComplex(JDBCCMPFieldMetaData cmpField) {
+      // get the default properties for a field of its type
+      JDBCTypeComplex type = 
+            (JDBCTypeComplex)complexTypes.get(cmpField.getFieldType());
+      JDBCTypeComplexProperty[] defaultProperties = type.getProperties();
 
-      // get the properties
-      ArrayList propertyList = createComplexProperties(valueClass, new PropertyStack(cmpField));
-      
-      // transform properties into an array
-      JDBCTypeComplexProperty[] properties = new JDBCTypeComplexProperty[propertyList.size()];
-      properties = (JDBCTypeComplexProperty[])propertyList.toArray(properties); 
-      
-
-      // create a map between propertyNames and the override
+      // create a map of the overrides based on flat property name
       HashMap overrides = new HashMap();
       Iterator iterator = cmpField.getPropertyOverrides().iterator();
       while(iterator.hasNext()) {
-         JDBCCMPFieldPropertyMetaData p = (JDBCCMPFieldPropertyMetaData)iterator.next();
+         JDBCCMPFieldPropertyMetaData p = 
+               (JDBCCMPFieldPropertyMetaData)iterator.next();
          overrides.put(p.getPropertyName(), p);
       }
-            
+
+      // array that will hold the final properites after overrides
+      JDBCTypeComplexProperty[] finalProperties = 
+            new JDBCTypeComplexProperty[defaultProperties.length];
+
       // override property default values
-      JDBCCMPFieldPropertyMetaData override;
-      for(int i=0; i<properties.length; i++) {
+      for(int i=0; i<defaultProperties.length; i++) {
          
          // pop off the override, if present
-         override = (JDBCCMPFieldPropertyMetaData)overrides.remove(properties[i].getPropertyName());
+         JDBCCMPFieldPropertyMetaData override;
+         override = (JDBCCMPFieldPropertyMetaData)overrides.remove(
+               defaultProperties[i].getPropertyName());
          
-         if(override != null) {   
+         if(override == null) { 
+            finalProperties[i] = defaultProperties[i];
+         } else {
             // columnName
-            if(override.getColumnName() != null) {
-               properties[i].setColumnName(override.getColumnName());
+            String columnName = override.getColumnName();
+            if(columnName == null) {
+               columnName = cmpField.getColumnName() + "_" + 
+                     defaultProperties[i].getColumnName();
             }
             
             // sql and jdbc type
-            if(override.getSQLType() != null) {
-               properties[i].setSQLType(override.getSQLType());
-               properties[i].setJDBCType(override.getJDBCType());
+            String sqlType = override.getSQLType();
+            int jdbcType;
+            if(sqlType != null) {
+               jdbcType = override.getJDBCType();
+            } else {
+               sqlType = defaultProperties[i].getSQLType();
+               jdbcType = defaultProperties[i].getJDBCType();
             }
+
+            finalProperties[i] = new JDBCTypeComplexProperty(
+                  defaultProperties[i],
+                  columnName,
+                  jdbcType,
+                  sqlType);
          }   
       }
       
       // did we find all overriden properties
       if(overrides.size() > 0) {
          String propertyName = (String)overrides.keySet().iterator().next();
-         throw new EJBException("Property " + propertyName + " in field " + cmpField.getFieldName() +
-               " is not a property of value object " + cmpField.getFieldType().getName());
+         throw new EJBException("Property " + propertyName + " in field " +
+               cmpField.getFieldName() + " is not a property of value object " +
+               cmpField.getFieldType().getName());
       }
       
       // return the new complex type
-      return new JDBCTypeComplex(properties, cmpField.getFieldType());      
+      return new JDBCTypeComplex(finalProperties, cmpField.getFieldType());      
    }
 
-   protected ArrayList createComplexProperties(JDBCValueClassMetaData valueClass, PropertyStack propertyStack) {
+   private ArrayList createComplexProperties(
+         JDBCValueClassMetaData valueClass,
+         HashMap valueClassesByType,
+         PropertyStack propertyStack) {
+
       ArrayList properties = new ArrayList();
       
-      JDBCValuePropertyMetaData propertyMetaData;
+      // add the properties each property to the list
       Iterator iterator = valueClass.getProperties().iterator();
       while(iterator.hasNext()) {
-         propertyMetaData = (JDBCValuePropertyMetaData) iterator.next();
-         properties.addAll(createComplexProperties(propertyMetaData, propertyStack));
+         JDBCValuePropertyMetaData propertyMetaData = 
+               (JDBCValuePropertyMetaData) iterator.next();
+         properties.addAll(createComplexProperties(propertyMetaData,
+               valueClassesByType, propertyStack));
       }
       return properties;
    }
 
-   protected ArrayList createComplexProperties(JDBCValuePropertyMetaData propertyMetaData, PropertyStack propertyStack) {
-      // push my data 
+   private ArrayList createComplexProperties(
+         JDBCValuePropertyMetaData propertyMetaData,
+         HashMap valueClassesByType,
+         PropertyStack propertyStack) {
+      
+      // push my data onto the stack
       propertyStack.pushPropertyMetaData(propertyMetaData);
 
       ArrayList properties = new ArrayList();
       
       Class javaType = propertyMetaData.getPropertyType();      
-      if(!valueClasses.containsKey(javaType)) {
+      if(!complexTypes.containsKey(javaType)) {
          
-         // this is a simple property         
-         JDBCTypeComplexProperty property = new JDBCTypeComplexProperty();
-         property.setJavaType(javaType);
-         property.setPropertyName(propertyStack.getPropertyName());
-         property.setColumnName(propertyStack.getColumnName());
-         property.setGetters(propertyStack.getGetters());
-         property.setSetters(propertyStack.getSetters());
+         // this property is a simple type
+         // which makes this the end of the line for recursion
+         String propertyName  = propertyStack.getPropertyName();
+         String columnName = propertyStack.getColumnName();
 
-         if(propertyMetaData.getSqlType() != null) {
-            property.setSQLType(propertyMetaData.getSqlType());
-            property.setJDBCType(propertyMetaData.getJDBCType());
+         String sqlType = propertyMetaData.getSqlType();
+         int jdbcType;
+         if(sqlType != null) {
+            jdbcType = propertyMetaData.getJDBCType();
          } else {
             // get jdbcType and sqlType from typeMapping
-            property.setSQLType(typeMapping.getSqlTypeForJavaType(javaType));
-            property.setJDBCType(typeMapping.getJdbcTypeForJavaType(javaType));
+            sqlType = typeMapping.getSqlTypeForJavaType(javaType);
+            jdbcType = typeMapping.getJdbcTypeForJavaType(javaType);
          }
       
-         properties.add(property);
+         Method[] getters = propertyStack.getGetters();
+         Method[] setters = propertyStack.getSetters();
+
+         properties.add(new JDBCTypeComplexProperty(
+                  propertyName,
+                  columnName,
+                  javaType,
+                  jdbcType,
+                  sqlType,
+                  getters,
+                  setters));
          
       } else {
          
-         // this property is a value object recures
-         JDBCValueClassMetaData valueClass = (JDBCValueClassMetaData)valueClasses.get(javaType);
-         properties.addAll(createComplexProperties(valueClass, propertyStack));
+         // this property is a value object, recurse
+         JDBCValueClassMetaData valueClass = 
+               (JDBCValueClassMetaData)valueClassesByType.get(javaType);
+         properties.addAll(createComplexProperties(
+                  valueClass,
+                  valueClassesByType,
+                  propertyStack));
          
       }
       
-      // pop my data 
+      // pop my data, back off 
       propertyStack.popPropertyMetaData();
       
       return properties;
@@ -186,18 +263,24 @@ public class JDBCTypeFactory {
       ArrayList getters = new ArrayList();
       ArrayList setters = new ArrayList();
       
+      public PropertyStack() {
+      }
+      
       public PropertyStack(JDBCCMPFieldMetaData cmpField) {
          columnNames.add(cmpField.getColumnName());
       }
    
-      public void pushPropertyMetaData(JDBCValuePropertyMetaData propertyMetaData) {
+      public void pushPropertyMetaData(
+            JDBCValuePropertyMetaData propertyMetaData) {
+
          propertyNames.add(propertyMetaData.getPropertyName());
          columnNames.add(propertyMetaData.getColumnName());
          getters.add(propertyMetaData.getGetter());
          setters.add(propertyMetaData.getSetter());
 
          if(properties.contains(propertyMetaData)) {
-            throw new EJBException("Circular reference discoverd at property: " + getPropertyName());
+            throw new EJBException("Circular reference discoverd at " +
+                  "property: " + getPropertyName());
          }
          properties.add(propertyMetaData);
       }
