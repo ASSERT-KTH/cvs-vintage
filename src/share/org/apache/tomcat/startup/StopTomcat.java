@@ -86,6 +86,7 @@ public class StopTomcat {
     String secretFile=null;
     String args[];
     boolean help=false;
+    boolean isAjp13=false;
     
     public StopTomcat() 
     {
@@ -154,6 +155,10 @@ public class StopTomcat {
             help = true;
     }
 
+    public void setAjp13( boolean b ) {
+        isAjp13=b;
+    }
+
     public void setArgs( String args[] ) {
 	this.args=args;
     }
@@ -187,24 +192,52 @@ public class StopTomcat {
 	// read TOMCAT_HOME/conf/ajp12.id unless command line params
 	// specify a port/host/secret
 	try {
-	    if( secretFile==null )
-		secretFile=tchome + "/conf/ajp12.id";
-	    BufferedReader rd=new BufferedReader
-		( new FileReader(secretFile));
-	    String line=rd.readLine();
-	    
-	    if( port < 0 ) {
-		try {
-		    port=Integer.parseInt( line );
-		} catch(NumberFormatException ex ) {
-		    ex.printStackTrace();
-		}
-	    }
-	    
-	    line=rd.readLine();
-	    if( host==null ) host=line;
-	    line=rd.readLine();
-	    if( secret==null ) secret=line;
+	    if( secretFile==null ) {
+		secretFile=tchome + "/conf/ajp13.id";
+                File f=new File( secretFile );
+                // if ajp13.id exists, use it
+                if( f.exists() ) {
+                    isAjp13=true;
+                } else {
+                    secretFile=tchome + "/conf/ajp12.id";
+                }
+            }
+            
+	    if( isAjp13 ) {
+                Properties props=new Properties();
+                props.load( new FileInputStream( secretFile ));
+
+                String line=props.getProperty( "port" );
+                if( port < 0 ) {
+                    try {
+                        port=Integer.parseInt( line );
+                    } catch(NumberFormatException ex ) {
+                        ex.printStackTrace();
+                    }
+                }
+                
+                line=props.getProperty( "address" );
+                if( host==null ) host=line;
+                line=props.getProperty( "secret" );
+                if( secret==null ) secret=line;
+            } else {
+                BufferedReader rd=new BufferedReader
+                    ( new FileReader(secretFile));
+                String line=rd.readLine();
+                
+                if( port < 0 ) {
+                    try {
+                        port=Integer.parseInt( line );
+                    } catch(NumberFormatException ex ) {
+                        ex.printStackTrace();
+                    }
+                }
+                
+                line=rd.readLine();
+                if( host==null ) host=line;
+                line=rd.readLine();
+                if( secret==null ) secret=line;
+            }
 	} catch( IOException ex ) {
 	    //ex.printStackTrace();
 	    System.out.println("Can't read " + secretFile);
@@ -258,7 +291,10 @@ public class StopTomcat {
 		address = InetAddress.getLocalHost();
 	    Socket socket = new Socket(address, portInt);
 	    OutputStream os=socket.getOutputStream();
-	    sendAjp12Stop( os, secret );
+            if( isAjp13 ) 
+                sendAjp13Stop( os, secret );
+            else
+                sendAjp12Stop( os, secret );
 
             // Setting soLinger to 0 will help make sure the connection is
             // closed on NetWare.  If the other side closes the connection
@@ -299,6 +335,32 @@ public class StopTomcat {
         }
     }
 
+    /** Small AJP13 client util
+     */
+    public void sendAjp13Stop( OutputStream os, String secret )
+	throws IOException
+    {
+	byte stopMessage[]=new byte[5];
+	stopMessage[0]=(byte)0x12;
+	stopMessage[1]=(byte)0x34;
+        int len=secret.length() + 4; // 1==shutdown cmd, 2==string len, 1=\0
+        stopMessage[2]= (byte) ( len/256 );
+        stopMessage[3]= (byte) (len % 256 );
+        stopMessage[4]= 7; // JK_AJP13_SHUTDOWN
+        
+	os.write( stopMessage );
+        sendAjp13String( os, secret );
+
+        // flush the stream and give the backend a chance to read the request
+        // and shut down before we close the socket
+        os.flush();
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException ignore) {
+        }
+    }
+
     /** Small AJP12 client util
      */
     public void sendAjp12String( OutputStream os, String s )
@@ -308,6 +370,18 @@ public class StopTomcat {
 	os.write( len/256 );
 	os.write( len%256 );
 	os.write( s.getBytes() );// works only for ascii
+    }
+    
+    /** Small AJP12 client util
+     */
+    public void sendAjp13String( OutputStream os, String s )
+	throws IOException
+    {
+	int len=s.length();
+	os.write( len/256 );
+	os.write( len%256 );
+	os.write( s.getBytes() );// works only for ascii
+        os.write( (byte)0 );
     }
     
     /** Process arguments - set object properties from the list of args.
