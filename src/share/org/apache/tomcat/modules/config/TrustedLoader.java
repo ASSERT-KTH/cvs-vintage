@@ -88,12 +88,112 @@ public class TrustedLoader extends BaseInterceptor {
     // -------------------- Properties --------------------
     
     // -------------------- Hooks --------------------
+    /** Called when the server is configured - all base modules are added,
+	some contexts are added ( explicitely or by AutoDeploy/AutoAdd ).
+	No addContext callback has been called.
 
-    public void contextInit(  Context ctx )
+	We assume all modules are loaded from config or AutoDeploy ( so
+	they are trusted ). We check for trusted contexts, and load
+	any eventual module.
+
+	Note that the loader used to load the module will be different
+	from the "real" one, used on reloading or init ( XXX all
+	modules must be prepared to handle reloading !!! )
+    */
+    public void engineState( ContextManager cm , int state )
 	throws TomcatException
     {
-	if( ! ctx.isTrusted() ) return;
+	if( state!=ContextManager.STATE_CONFIG ) return;
+	Vector modV=new Vector();
 
+	Enumeration ctxsE= cm.getContexts();
+	while( ctxsE.hasMoreElements() ) {
+	    Context context=(Context)ctxsE.nextElement();
+	    if( ! context.isTrusted() ) continue;
+
+	    File modules=getModuleFile( context );
+	    if( modules==null ) continue;
+	    
+	    /*  We'll create a temporary loader for this context, and use it
+	     *  to create a module. The module will be notified for all
+	     *  contexts that were added so far, as with any normal module.
+	     * 
+	     *  What's special is that at init stage, the module will be
+	     *  removed and loaded again, with the real class loader.
+	     *  Same thing will happen when the application is reloaded.
+	     *
+	     *  BTW, modules are supposed to be reloadable, but there is
+	     *  a lot of work still needed ( mostly in modules, to make them
+	     *  aware )
+	     */
+	    LoaderInterceptor11 loaderHelper=new LoaderInterceptor11();
+	    loaderHelper.setContextManager( cm );
+	    loaderHelper.addContext( cm, context );
+	    loaderHelper.contextInit( context );
+
+	    modV=new Vector();
+	    loadInterceptors( context, modules, modV );
+	    cm.setNote( "trustedLoader.currentContext", context );
+	    // Now add all modules to cm
+	    for( int i=0; i< modV.size(); i++ ) {
+		BaseInterceptor bi=(BaseInterceptor)modV.elementAt( i );
+		cm.addInterceptor( bi );
+	    }	
+	    cm.setNote(  "trustedLoader.currentContext", null );
+	}
+
+    }
+
+    public void loadInterceptors( Context ctx, File modulesF, Vector modulesV )
+	throws TomcatException
+    {
+	
+	XmlMapper xh=new XmlMapper();
+	xh.setClassLoader( ctx.getClassLoader());
+	xh.setDebug( debug );
+
+	// no backward compat rules. The file must be self-contained,
+	// with <module> definition and the module itself
+	setTagRules( xh );
+
+	// then load the actual config 
+	ServerXmlReader.loadConfigFile(xh,modulesF,modulesV);
+
+    }
+
+    public static void addTagRule( XmlMapper xh, String tag, String classN ) {
+	xh.addRule( tag ,
+		    xh.objectCreate( classN, null ));
+	xh.addRule( tag ,
+		    xh.setProperties());
+	xh.addRule( tag,
+		    new XmlAction() {
+			public void end( SaxContext ctx) throws Exception {
+			    Vector modules=(Vector)ctx.getRoot();
+			    Object obj=ctx.currentObject();
+			    modules.addElement( obj );
+			}
+		    });
+    }
+
+    
+    public static void setTagRules( XmlMapper xh ) {
+	xh.addRule( "module",  new XmlAction() {
+		public void start(SaxContext ctx ) throws Exception {
+		    Object elem=ctx.currentObject();
+		    AttributeList attributes = ctx.getCurrentAttributes();
+		    String name=attributes.getValue("name");
+		    String classN=attributes.getValue("javaClass");
+		    if( name==null || classN==null ) return;
+		    addTagRule( ctx.getMapper(), name, classN );
+		    if( ctx.getDebug() > 0 ) ctx.log("Adding " + name + " " + classN );
+		}
+	    });
+    }
+
+    
+    
+    private File getModuleFile(Context ctx ) {
 	// PathSetter is the first module in the chain, we shuld have
 	// a valid path by now 
 	String dir=ctx.getAbsolutePath();
@@ -103,31 +203,14 @@ public class TrustedLoader extends BaseInterceptor {
 			       "interceptors.xml" );
 	if( modules.exists() ) {
 	    ctx.log( "Loading modules from webapp " + modules );
+	    return modules;
 	} else {
 	    if( debug > 0 )
 		ctx.log( "Can't find " + modules );
-	    return;
+	    return null;
 	}
-
-	cm.setNote( "trustedLoader.currentContext", ctx );
-	
-	XmlMapper xh=new XmlMapper();
-	xh.setClassLoader( ctx.getClassLoader());
-	xh.setDebug( debug );
-
-	ServerXmlReader.setTagRules( xh );
-	// first, load <module> definitions
-	ServerXmlReader.loadConfigFile(xh,modules,cm);
-	
-	ServerXmlReader.setPropertiesRules( cm, xh );
-	ServerXmlReader.addTagRules( cm, xh );
-	// no backward compat rules. Use Module ( taskdef :-) and the tag
-
-	// then load the actual config 
-	ServerXmlReader.loadConfigFile(xh,modules,cm);
-
-	cm.setNote( "trustedLoader.currentContext", null );
     }
+    
 
 }
 
