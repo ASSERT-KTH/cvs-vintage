@@ -54,7 +54,7 @@ import org.jboss.system.Registry;
  * from RMI/JRMP into the JMX base.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -75,14 +75,19 @@ public class JRMPInvoker
    
    /** The port the container will be exported on */
    protected int rmiPort = ANONYMOUS_PORT;
+
    /** An optional custom client socket factory */
    protected RMIClientSocketFactory clientSocketFactory;
+
    /** An optional custom server socket factory */
    protected RMIServerSocketFactory serverSocketFactory;
+
    /** The class name of the optional custom client socket factory */
    protected String clientSocketFactoryName;
+
    /** The class name of the optional custom server socket factory */
    protected String serverSocketFactoryName;
+
    /** The address to bind the rmi port on */
    protected String serverAddress;
    
@@ -93,7 +98,7 @@ public class JRMPInvoker
    protected int state;
    protected int id = 0;
    
-   protected RemoteStub invokerStub = null;
+   protected RemoteStub invokerStub;
    
    // Static --------------------------------------------------------
    
@@ -354,7 +359,12 @@ public class JRMPInvoker
          ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getContainer());
          
          // The cl on the thread should be set in another interceptor
-         return new MarshalledObject(server.invoke(mbean, "",  new Object[] {invocation}, new String[] {"java.lang.Object"})); 
+         Object obj = server.invoke(mbean,
+                                    "",
+                                    new Object[] {invocation},
+                                    Invocation.INVOKE_SIGNATURE);
+         
+         return new MarshalledObject(obj);
       }
       catch (Exception e) {
 	 e = org.jboss.util.ThrowableTranslator.translate(e);
