@@ -34,7 +34,7 @@ package org.gjt.sp.jedit;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EBMessage.java,v 1.5 2003/04/02 03:32:50 spestov Exp $
+ * @version $Id: EBMessage.java,v 1.6 2003/04/26 20:05:12 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */
@@ -66,7 +66,10 @@ public abstract class EBMessage
 	 */
 	public String toString()
 	{
-		return getClass().getName() + "[" + paramString() + "]";
+		String className = getClass().getName();
+		int index = className.lastIndexOf('.');
+		return className.substring(index + 1)
+			+ "[" + paramString() + "]";
 	} //}}}
 
 	//{{{ paramString() method

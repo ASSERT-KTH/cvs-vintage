@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.42 2003/04/23 18:52:06 spestov Exp $
+ * @version $Id: EditPane.java,v 1.43 2003/04/26 20:05:12 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -319,6 +319,15 @@ public class EditPane extends JPanel implements EBComponent
 	public final Dimension getMinimumSize()
 	{
 		return new Dimension(0,0);
+	} //}}}
+
+	//{{{ toString() method
+	public String toString()
+	{
+		return getClass().getName() + "["
+			+ (view.getEditPane() == this
+			? "active" : "inactive")
+			+ "]";
 	} //}}}
 
 	//{{{ Package-private members

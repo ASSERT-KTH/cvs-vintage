@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.77 2003/04/23 18:52:08 spestov Exp $
+ * @version $Id: View.java,v 1.78 2003/04/26 20:05:13 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -1092,6 +1092,15 @@ public class View extends JFrame implements EBComponent
 	public void setWaitSocket(Socket waitSocket)
 	{
 		this.waitSocket = waitSocket;
+	} //}}}
+
+	//{{{ toString() method
+	public String toString()
+	{
+		return getClass().getName() + "["
+			+ (jEdit.getActiveView() == this
+			? "active" : "inactive")
+			+ "]";
 	} //}}}
 
 	//{{{ Package-private members

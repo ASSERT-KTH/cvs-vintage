@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.47 2003/04/25 06:09:47 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.48 2003/04/26 20:05:12 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -1253,25 +1253,12 @@ loop:		for(int i = 0; i < str.length(); i++)
 		} //}}}
 
 		//{{{ Load it, if not yet done:
-		EditPlugin.JAR jar = jEdit.getPluginJAR(toolsPath);
+		PluginJAR jar = jEdit.getPluginJAR(toolsPath);
 		if(jar == null)
 		{
 			Log.log(Log.DEBUG, MiscUtilities.class,
 				"- adding " + toolsPath + " to jEdit plugins.");
-			try
-			{
-				//XXX
-				JARClassLoader classLoader = new JARClassLoader(toolsPath);
-				jEdit.addPluginJAR(new EditPlugin.JAR(toolsPath,
-					classLoader));
-			}
-			catch(IOException ioex)
-			{
-				Log.log(Log.ERROR, MiscUtilities.class,
-					"- I/O error loading " + toolsPath);
-				Log.log(Log.ERROR, MiscUtilities.class, ioex);
-				return false;
-			}
+			jEdit.addPluginJAR(toolsPath);
 		}
 		else
 			Log.log(Log.DEBUG, MiscUtilities.class,

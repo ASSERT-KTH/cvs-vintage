@@ -31,12 +31,12 @@ import org.gjt.sp.util.Log;
 /**
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: ServiceListHandler.java,v 1.1 2003/04/24 01:32:28 spestov Exp $
+ * @version $Id: ServiceListHandler.java,v 1.2 2003/04/26 20:05:13 spestov Exp $
  */
 class ServiceListHandler extends HandlerBase
 {
 	//{{{ ServiceListHandler constructor
-	ServiceListHandler(URL uri, EditPlugin.JAR plugin)
+	ServiceListHandler(URL uri, PluginJAR plugin)
 	{
 		this.uri = uri;
 		this.plugin = plugin;
@@ -149,7 +149,7 @@ class ServiceListHandler extends HandlerBase
 
 	//{{{ Instance variables
 	private URL uri;
-	private EditPlugin.JAR plugin;
+	private PluginJAR plugin;
 
 	private String serviceName;
 	private String serviceClass;

@@ -96,7 +96,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: ActionSet.java,v 1.13 2003/04/25 06:09:46 spestov Exp $
+ * @version $Id: ActionSet.java,v 1.14 2003/04/26 20:05:12 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class ActionSet
@@ -109,7 +109,7 @@ public class ActionSet
 	 * @param cachedActionNames The list of cached action names
 	 * @since jEdit 4.2pre1
 	 */
-	public ActionSet(EditPlugin.JAR plugin, String[] cachedActionNames)
+	public ActionSet(PluginJAR plugin, String[] cachedActionNames)
 	{
 		this();
 		this.plugin = plugin;
@@ -433,7 +433,7 @@ public class ActionSet
 	//{{{ Private members
 	private String label;
 	private Hashtable actions;
-	private EditPlugin.JAR plugin;
+	private PluginJAR plugin;
 	private boolean loaded;
 
 	private static final Object placeholder = new Object();
