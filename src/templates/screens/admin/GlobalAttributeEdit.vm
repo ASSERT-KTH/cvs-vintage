@@ -40,13 +40,19 @@
  <tr>
   <th>$l10n.InputType</th>
   <td>
+    #set ($types = $attribute.CompatibleAttributeTypes)
+    #if ($types.isEmpty())
+      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.AttributeTypeId" />
+      $attribute.AttributeType.Name <p class="info">$l10n.TypeCannotChange</p>
+    #else
     <select name="$attgroup.TypeId.Key" size="1">
-    #foreach ( $atype in $attribute.AllAttributeTypes )
+    #foreach ($atype in $types)
       #if (!$atype.Name.equals("user"))
       <option value="$atype.AttributeTypeId" #if($attribute.TypeId && $attribute.TypeId == $atype.AttributeTypeId)selected#end>$atype.Name</option>
       #end
     #end
     </select>
+    #end
   </td>
  <tr>
   <th>* $l10n.Name</th>

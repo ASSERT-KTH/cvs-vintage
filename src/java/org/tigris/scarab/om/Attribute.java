@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 // JDK classes
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.58 2003/02/11 00:18:35 dlr Exp $
+  * @version $Id: Attribute.java,v 1.59 2003/02/12 01:29:38 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -90,6 +91,9 @@ public class Attribute
     /** Method name used as part of a cache key */
     private static final String GET_ALL_ATTRIBUTE_TYPES = 
         "getAllAttributeTypes";
+    /** Method name used as part of a cache key */
+    private static final String GET_COMPATIBLE_ATTRIBUTE_TYPES = 
+        "getCompatibleAttributeTypes";
     /** Method name used as part of a cache key */
     private static final String GET_ATTRIBUTE_TYPE = 
         "getAttributeType";
@@ -245,6 +249,55 @@ public class Attribute
         {        
             result = AttributeTypePeer.doSelect(new Criteria());
             ScarabCache.put(result, ATTRIBUTE, GET_ALL_ATTRIBUTE_TYPES);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
+    }
+
+    /**
+     * Method to return compatible Attribute Type's.
+     * if the attribute has not been used at all, all types are 
+     * compatible.  if issues have been entered which use the
+     * attribute only text types are compatible with each other
+     * It is here for convenience with regards to needing this
+     * functionality from within a Template.
+     */
+    public List getCompatibleAttributeTypes()
+        throws Exception
+    {
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_COMPATIBLE_ATTRIBUTE_TYPES); 
+        if (obj == null) 
+        {
+            boolean inUse = !isNew();
+            if (inUse) 
+            {
+                // check to see if attribute really has been used
+                Criteria crit = new Criteria();
+                crit.add(AttributeValuePeer.ATTRIBUTE_ID, getAttributeId());
+                inUse = AttributeValuePeer.count(crit) > 0; 
+            }
+            if (inUse) 
+            {
+                if (isTextAttribute()) 
+                {
+                    Criteria crit = new Criteria();
+                    crit.addIn(AttributeTypePeer.ATTRIBUTE_TYPE_ID, AttributeTypePeer.TEXT_PKS);
+                    result = AttributeTypePeer.doSelect(crit);                
+                }
+                else 
+                {
+                    result = Collections.EMPTY_LIST;
+                }
+            }
+            else 
+            {
+                result = getAllAttributeTypes();
+            }
+            ScarabCache.put(result, this, GET_COMPATIBLE_ATTRIBUTE_TYPES);
         }
         else 
         {
