@@ -98,7 +98,7 @@ module that you can edit.
    </td>
   </tr>
   <tr>
-   <th>Archive Email</th>
+   <th>Archive email</th>
    <td>
     <input name="$moduleGroup.ArchiveEmail.Key" value="$moduleGroup.ArchiveEmail" type="text" size="25" />
     #fieldErrorMsg($moduleGroup.ArchiveEmail "")
