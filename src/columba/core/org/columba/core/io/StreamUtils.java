@@ -32,23 +32,21 @@ public class StreamUtils {
     private static final Charset _8BitCharset = Charset.forName("ISO-8859-1");
 
     /**
-     * Copies all bytes from an InputStream to an OutputStream. The buffer size
-     * should be 8000 bytes or 16000 bytes. This is platform dependend. A higher
-     * number of bytes blocks the operation for a greater time.
+     * Copies length bytes from an InputStream to an OutputStream.
      *
      * @param in InputStream from wihch the bytes are to copied.
      * @param out OutputStream in which the bytes are copied.
-     * @param size The buffer size indicating how many bytes should be copied at once.
+     * @param length The number of bytes to copy
      * @return Number of bytes which are copied.
      * @throws IOException If the streams are unavailable.
      */
-    public static long streamCopy(InputStream in, OutputStream out,
-        int size) throws IOException {
-        byte[] buffer = new byte[size];
+    public static int streamCopy(InputStream in, OutputStream out,
+        int length) throws IOException {
+        byte[] buffer = new byte[BUFFERSIZE];
         int read;
-        long copied = 0;
+        int copied = 0;
 
-        while ((read = in.read(buffer)) > 0) {
+        while ((read = in.read(buffer,0,Math.min(BUFFERSIZE, length-copied))) > 0) {
             out.write(buffer, 0, read);
             copied += read;
         }
@@ -65,9 +63,18 @@ public class StreamUtils {
      * @return Number of bytes which are copied.
      * @throws IOException If the Streams are unavailable.
      */
-    public static long streamCopy(InputStream _isInput, OutputStream _osOutput)
+    public static long streamCopy(InputStream in, OutputStream out)
         throws IOException {
-        return streamCopy(_isInput, _osOutput, BUFFERSIZE);
+        byte[] buffer = new byte[BUFFERSIZE];
+        int read;
+        long copied = 0;
+
+        while ((read = in.read(buffer)) > 0) {
+            out.write(buffer, 0, read);
+            copied += read;
+        }
+
+        return copied;
     }
 
     /**
