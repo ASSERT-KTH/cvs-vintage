@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.51 2002/02/19 06:51:11 spestov Exp $
+ * @version $Id: jEdit.java,v 1.52 2002/02/19 07:21:15 spestov Exp $
  */
 public class jEdit
 {
@@ -1512,12 +1512,20 @@ public class jEdit
 	 */
 	public static Buffer newFile(View view)
 	{
-		String path = MiscUtilities.getParentOfPath(view.getBuffer().getPath());
-		VFS vfs = VFSManager.getVFSForPath(path);
-		// don't want 'New File' to create a read only buffer if current
-		// file is on SQL VFS or something
-		if((vfs.getCapabilities() & VFS.WRITE_CAP) == 0)
-			path = System.getProperty("user.home");
+		String path;
+
+		if(view != null && view.getBuffer() != null)
+		{
+			path = MiscUtilities.getParentOfPath(view.getBuffer()
+				.getPath());
+			VFS vfs = VFSManager.getVFSForPath(path);
+			// don't want 'New File' to create a read only buffer
+			// if current file is on SQL VFS or something
+			if((vfs.getCapabilities() & VFS.WRITE_CAP) == 0)
+				path = System.getProperty("user.home");
+		}
+		else
+			path = null;
 
 		return newFile(view,path);
 	} //}}}
