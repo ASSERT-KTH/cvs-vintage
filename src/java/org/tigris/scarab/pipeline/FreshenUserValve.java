@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.20 2003/04/01 17:09:58 jmcnally Exp $
+ * @version $Id: FreshenUserValve.java,v 1.21 2003/04/01 23:58:05 jmcnally Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -98,6 +98,8 @@ public class FreshenUserValve
         XMIT_SCREENS.put("reports,XModuleList.vm", null);
         XMIT_SCREENS.put("reports,AxisConfiguration.vm", null);
         XMIT_SCREENS.put("reports,Report_1.vm", null);
+        // this is not a real .vm file, but a pointer to a java screen class
+        XMIT_SCREENS.put("IssueListExport.vm", null);
     }
 
     /**
