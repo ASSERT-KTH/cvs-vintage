@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.39 2005/02/04 19:28:57 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.40 2005/02/05 21:36:54 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,6 +178,16 @@ public class GeneratorCpp extends Generator2
      */
     public static String cppGenerate(Object o) {
         return SINGLETON.generate(o);
+    }
+
+    /**
+     * Generate the header code for the given object
+     * @param o the object to be generated
+     * @return the generated header as a string
+     */
+    public String generateH(Object o) {
+        generatorPass = HEADER_PASS;
+        return generate(o);
     }
 
     /** 2002-11-28 Achim Spangler
@@ -2325,11 +2335,14 @@ public class GeneratorCpp extends Generator2
             Object generalization = genEnum.next();
             Object ge = Model.getFacade().getParent(generalization);
             if (ge != null) {
-                String visibilityTag =
+                String visTag =
                     Model.getFacade().getTaggedValueValue(generalization,
-                                            "visibility");
-                if (visibilityTag != null && visibilityTag != "")
-                    sb.append(visibilityTag).append(" ");
+                                            "visibility").trim();
+                if (visTag != null && !visTag.equals("")) {
+                    sb.append(visTag).append(" ");
+                } else {
+                    sb.append("public ");
+                }
                 sb.append(generateNameWithPkgSelection(ge));
                 if (genEnum.hasNext()) sb.append(", ");
             }
@@ -2365,10 +2378,14 @@ public class GeneratorCpp extends Generator2
                     && Model.getFacade().isRealize(dependency)) {
                 Object iFace = Model.getFacade().getSuppliers(dependency)
                     .iterator().next();
-                String visibilityTag = Model.getFacade()
-                    .getTaggedValueValue(dependency, "visibility");
-                if (visibilityTag != null && visibilityTag != "")
-                    sb.append(visibilityTag).append(" ");
+                String visTag =
+                    Model.getFacade().getTaggedValueValue(dependency,
+                                            "visibility").trim();
+                if (visTag != null && !visTag.equals("")) {
+                    sb.append(visTag).append(" ");
+                } else {
+                    sb.append("virtual public ");
+                }
                 sb.append(generateNameWithPkgSelection(iFace));
                 if (depIterator.hasNext()) sb.append(", ");
             }
