@@ -248,7 +248,7 @@
             <mapping>
                 <java-type>java.lang.Long</java-type>
                 <jdbc-type>BIGINT</jdbc-type>
-                <sql-type>BIGINT</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.String</java-type>
@@ -263,7 +263,7 @@
             <mapping>
                 <java-type>java.lang.Short</java-type>
                 <jdbc-type>INTEGER</jdbc-type>
-                <sql-type>INTEGER</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.sql.TimeStamp</java-type>
@@ -273,22 +273,22 @@
             <mapping>
                 <java-type>java.lang.Double</java-type>
                 <jdbc-type>DOUBLE</jdbc-type>
-                <sql-type>DOUBLE</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Byte</java-type>
                 <jdbc-type>TINYINT</jdbc-type>
-                <sql-type>TINYINT</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Boolean</java-type>
-                <jdbc-type></jdbc-type>
-                <sql-type>BIT</sql-type>
+                <jdbc-type>BIT</jdbc-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Float</java-type>
                 <jdbc-type>FLOAT</jdbc-type>
-                <sql-type>FLOAT</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
             <mapping>
                 <java-type>java.lang.Object</java-type>
@@ -303,7 +303,7 @@
             <mapping>
                 <java-type>java.lang.Integer</java-type>
                 <jdbc-type>INTEGER</jdbc-type>
-                <sql-type>INTEGER</sql-type>
+                <sql-type>NUMBER</sql-type>
             </mapping>
         </type-mapping>
         <type-mapping>
