@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.70 2003/05/08 20:37:41 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.71 2003/05/13 23:50:21 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -1198,11 +1198,10 @@ public class GUIUtilities
 			if(y + offsetY + size.height + win.getY() > screenSize.height
 				&& y + offsetY + win.getY() >= size.height)
 			{
-				//System.err.println("y overflow");
 				if(point)
 					y = (win.getHeight() - size.height - offsetY + extraOffset);
 				else
-					y = comp.getY() - size.height - 1;
+					y = -size.height - 1;
 			}
 			else
 			{
