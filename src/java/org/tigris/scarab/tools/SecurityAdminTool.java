@@ -83,11 +83,14 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.11 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.12 2003/03/28 00:01:46 jon Exp $
  */
 public class SecurityAdminTool 
     implements SecurityAdminScope, Serializable
 {
+    private static final String HAS_REQUESTED_ROLE = "hasRequestedRole";
+
+    private static final String GET_PENDING = "getPendingGroupUserRoles";
 
     public void init(Object data)
     {
@@ -96,8 +99,6 @@ public class SecurityAdminTool
     public void refresh()
     {
     }
-    
-    
     
     /** Returns a User object retrieved by specifying the username.
      *
@@ -157,7 +158,6 @@ public class SecurityAdminTool
     {
         return TurbineSecurity.getAllGroups().getGroupsArray();
     }
-    
 
     /** 
      * Gets a list of active Groups in which the user does not have a current
@@ -198,7 +198,6 @@ public class SecurityAdminTool
         return nonmemberGroups;
     }
     
-    private static String HAS_REQUESTED_ROLE = "hasRequestedRole";
     public boolean hasRequestedRole(ScarabUser user, Role role, Group group)
         throws TorqueException
     {
@@ -278,8 +277,6 @@ public class SecurityAdminTool
         return nonRootRoles;
     }
    
-    
-    private static String GET_PENDING = "getPendingGroupUserRoles";
     public List getPendingGroupUserRoles(Module module)
         throws TorqueException
     {

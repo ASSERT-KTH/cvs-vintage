@@ -64,7 +64,6 @@ import java.util.Arrays;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
 import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.NumberKey;
@@ -442,7 +441,8 @@ public class ScarabRequestTool
     public AttributeOption getAttributeOption()
         throws Exception
     {
-try{
+try
+{
         if (attributeOption == null)
         {
             String optId = getIntakeTool()
@@ -458,7 +458,11 @@ try{
                     .getInstance(new Integer(optId));
             }
         }
-}catch(Exception e){e.printStackTrace();}
+}
+catch(Exception e)
+{
+e.printStackTrace();
+}
         return attributeOption;
     }
 
@@ -717,7 +721,7 @@ try{
      * A Query object for use within the Scarab API.
      */
     public Query getQuery()
-     throws Exception
+        throws Exception
     {
         try
         {
@@ -747,7 +751,7 @@ try{
      * A IssueTemplateInfo object for use within the Scarab API.
      */
     public IssueTemplateInfo getIssueTemplateInfo()
-     throws Exception
+        throws Exception
     {
         try
         {
@@ -807,7 +811,7 @@ try{
      * An Enter issue template.
      */
     public Issue getIssueTemplate(String templateId)
-     throws Exception
+        throws Exception
     {
         Issue template = null;
         try
@@ -899,9 +903,10 @@ try{
      * A Attachment object for use within the Scarab API.
      */
     public Attachment getAttachment()
-     throws Exception
+        throws Exception
     {
-try{
+try
+{
         if (attachment == null)
         {
             Group att = getIntakeTool()
@@ -924,7 +929,11 @@ try{
                 attachment = new Attachment();
             }
         }        
-}catch(Exception e){e.printStackTrace(); throw e;}
+}
+catch(Exception e)
+{
+e.printStackTrace(); throw e;
+}
         return attachment;
     }
 
@@ -932,10 +941,11 @@ try{
      * A AttributeGroup object for use within the Scarab API.
      */
     public AttributeGroup getAttributeGroup()
-     throws Exception
+        throws Exception
     {
            AttributeGroup group = null;
-try{
+try
+{
             String attGroupId = getIntakeTool()
                 .get("AttributeGroup", IntakeTool.DEFAULT_KEY)
                 .get("AttributeGroupId").toString();
@@ -948,7 +958,11 @@ try{
                 group = AttributeGroupManager
                     .getInstance(new NumberKey(attGroupId), false);
             }
-}catch(Exception e){e.printStackTrace();}
+}
+catch(Exception e)
+{
+e.printStackTrace();
+}
         return group;
  
    }
@@ -987,6 +1001,7 @@ try{
         }
         catch (Exception e)
         {
+            // Swallow me!
         }
         return issueType;
     }
@@ -1042,7 +1057,8 @@ try{
         throws Exception
     {
         RModuleAttribute rma = null;
-      try{
+try
+{
             ComboKey rModAttId = (ComboKey)getIntakeTool()
                 .get("RModuleAttribute", IntakeTool.DEFAULT_KEY)
                 .get("Id").getValue();
@@ -1070,7 +1086,11 @@ try{
             {
                 rma = RModuleAttributeManager.getInstance(rModAttId, false);
             }
-      }catch(Exception e){e.printStackTrace();}
+}
+catch(Exception e)
+{
+e.printStackTrace();
+}
         return rma;
     }
 
@@ -1098,7 +1118,8 @@ try{
     public Module getModule()
         throws Exception
     {
-      try{
+try
+{
         String modId = getIntakeTool()
             .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
         if (modId == null || modId.length() == 0)
@@ -1109,7 +1130,11 @@ try{
         {
             module = ModuleManager.getInstance(new Integer(modId));
         }
-      }catch(Exception e){e.printStackTrace();}
+}
+catch(Exception e)
+{
+e.printStackTrace();
+}
        return module;
     }
 
@@ -1252,6 +1277,7 @@ try{
         {
             String key = data.getParameters()
                 .getString(ScarabConstants.REPORTING_ISSUE);
+
             if (key == null) 
             {
                 getNewReportingIssue();
@@ -1428,10 +1454,10 @@ try{
         }
         else 
         {
-            String[] issue_ids = data.getParameters().getStrings("issue_ids");
-            if (issue_ids != null)
+            String[] paramIssueIds = data.getParameters().getStrings("issue_ids");
+            if (paramIssueIds != null)
             {
-                issues = getIssues(Arrays.asList(issue_ids));
+                issues = getIssues(Arrays.asList(paramIssueIds));
             }
         }
         if (issues == null)
@@ -2273,7 +2299,7 @@ try{
      *  Full featured, paginated, sorted method for returning the results 
      *  of user search.  Returns all users (no search criteria). 
      */
-    public ScarabPaginatedList UserSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
+    public ScarabPaginatedList getUserSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
                                                  String sortColumn, String sortPolarity)
         throws Exception
     {
@@ -2286,7 +2312,7 @@ try{
      * Full featured, paginated, sorted version for returning results 
      * of a user search.
      */
-    public ScarabPaginatedList UserFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
+    public ScarabPaginatedList getUserFilteredSearchResults(MITList mitList, int pageNum, int resultsPerPage, 
                                                          String sortColumn, String sortPolarity)
         throws Exception
     {
@@ -2353,7 +2379,7 @@ try{
     /**
      * Return results of user search.
      */
-    public List getUserSearchResults()  throws Exception
+    public List getUserSearchResults() throws Exception
     {
         ScarabLocalizationTool l10n = getLocalizationTool();
         String searchString = data.getParameters()
