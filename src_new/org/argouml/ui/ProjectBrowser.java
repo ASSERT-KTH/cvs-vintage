@@ -1,4 +1,4 @@
-// $Id: ProjectBrowser.java,v 1.118 2003/10/05 16:24:53 linus Exp $
+// $Id: ProjectBrowser.java,v 1.119 2003/10/05 16:28:06 linus Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,8 +73,10 @@ import org.tigris.gef.base.Diagram;
 import org.tigris.gef.ui.IStatusBar;
 import org.tigris.gef.util.VectorSet;
 
-/** The main window of the ArgoUML application. */
-
+/** The main window of the ArgoUML application.
+ *
+ * @stereotype singleton
+ */
 public class ProjectBrowser
     extends JFrame
     implements IStatusBar, PropertyChangeListener, TargetListener {
@@ -93,10 +95,7 @@ public class ProjectBrowser
     // class variables
 
     /**
-     * ArgoUML will not support this method of invocation of the projectbrowser
-     * very soon.
-     * @deprecated As of ArgoUml version 0.13.5, replaced by
-     *             {@link org.argouml.ui.ProjectBrowser#getInstance()}
+     * Member attribute to contain the singleton.
      */
     private static ProjectBrowser TheInstance;
 
