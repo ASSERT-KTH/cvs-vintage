@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.7 2002/03/18 23:53:15 jon Exp $
+# $Id: create-db.sh,v 1.8 2002/03/19 00:00:15 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -51,19 +51,18 @@ do
         exit 1
         ;;
     *)
-        dbtype="$1"
         ;;
     esac
     shift
 done
 
-####### Sanity checks
-if [ "${dbtype}" != 'mysql' -a "${dbtype}" != 'postgresql' ] ; then
-    echo
-    echo "Please specify either 'mysql' or 'postgresql'"
-    usage=t
+if [ -e "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
+    dbtype="mysql"
+elif [ -e "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
+    dbtype="postgresql"
 fi
 
+####### Sanity checks
 if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo
     echo "The population script directory:"
@@ -72,26 +71,7 @@ if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo "Ant build system as described in the scarab/README.txt file."
     usage=t
 fi
-
-if [ -e "${POPULATION_SCRIPT_DIR}/mysql" -a "${dbtype}" = 'postgresql' ] ; then
-    foundtype="mysql"
-    foundurl="http://scarab.tigris.org/postgresql.html"
-elif [ -e "${POPULATION_SCRIPT_DIR}/postgresql" -a "${dbtype}" = 'mysql' ] ; then
-    foundtype="postgresql"
-    foundurl="http://scarab.tigris.org/source/browse/~checkout~/scarab/README.txt"
-fi
 ####### Sanity checks
-
-if [ "${foundtype}" ] ; then
-    echo ""
-    echo "Database type is '${dbtype}' yet the .sql files have been"
-    echo "generated for '${foundtype}'."
-    echo "Please re-build Scarab with the correct settings for ${dbtype}."
-    echo "More information is available at:"
-    echo "${foundurl}"
-    echo
-    exit 1
-fi
 
 if [ "${usage}" ] ; then
     echo
@@ -99,10 +79,10 @@ if [ "${usage}" ] ; then
     echo "             Currently only works with MySQL and Postgresql."
     echo
     echo "Usage:"
-        echo "  $CMDNAME [options] (mysql | postgresql)"
+        echo "  $CMDNAME [options]"
         echo
     echo "Example:"
-        echo "  $CMDNAME -h localhost -u scarab mysql"
+        echo "  $CMDNAME -h localhost -u scarab"
         echo        
     echo "Options:"
     echo "  -n, --name=DBNAME          Database name          (${name})"
