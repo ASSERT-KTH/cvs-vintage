@@ -164,7 +164,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( System.getSecurityManager() != null ) {
 	    try {
 		forwardAction.prepare( request, response );
-		jdk11Compat.doPrivileged( forwardAction );
+		jdk11Compat.doPrivileged( forwardAction, jdk11Compat.getAccessControlContext() );
 	    } catch( Exception e) {
 		wrapException( e, null );
 	    }
@@ -179,7 +179,7 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	if( System.getSecurityManager() != null ) {
 	    try {
 		includeAction.prepare( request, response );
-		jdk11Compat.doPrivileged( includeAction );
+		jdk11Compat.doPrivileged( includeAction, jdk11Compat.getAccessControlContext() );
 	    } catch( Exception e) {
 		wrapException( e, null );
 	    }
