@@ -143,7 +143,7 @@
 #macro (attrValueErrorMsg $attrValue $fieldName)
 #set ($attrInput = $intake.AttributeValue.mapTo($attrValue))
 #if (!$attrInput.get($fieldName).isValid())
-<p class="warningmessage"><strong>$l10n.get($attrInput.get($fieldName).Message)</strong></p>
+<p class="warningmark"><strong>$l10n.get($attrInput.get($fieldName).Message)</strong></p>
 #end
 #end
 
