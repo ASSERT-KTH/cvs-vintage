@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -96,6 +96,8 @@ import org.jboss.util.Sync;
  * <ol>
  *   <li>Moved storeEntity to EntityContainer.
  *   <li>invokeHome is now scheduled
+ *   <li>made InstanceSynchronization protected so that I could inherit from it
+ *   <li>made a protected method createSynchronization for inheritance purposes.
  * </ol>
  */
 public class EntitySynchronizationInterceptor
@@ -167,17 +169,21 @@ public class EntitySynchronizationInterceptor
       return container;
    }
  
+   protected Synchronization createSynchronization(Transaction tx, EntityEnterpriseContext ctx)
+   {
+      return new InstanceSynchronization(tx, ctx);
+   } 
    /**
     *  Register a transaction synchronization callback with a context.
     */
-   private void register(EntityEnterpriseContext ctx, Transaction tx)
+   protected void register(EntityEnterpriseContext ctx, Transaction tx)
    {
       boolean trace = log.isTraceEnabled();
       if( trace )
          log.trace("register, ctx="+ctx+", tx="+tx);
   
       // Create a new synchronization
-      InstanceSynchronization synch = new InstanceSynchronization(tx, ctx);
+      Synchronization synch = createSynchronization(tx, ctx);
   
       EntityContainer ctxContainer = null;
       try
@@ -339,23 +345,23 @@ public class EntitySynchronizationInterceptor
  
    // Inner classes -------------------------------------------------
  
-   private class InstanceSynchronization
+   protected class InstanceSynchronization
       implements Synchronization
    {
       /**
        *  The transaction we follow.
        */
-      private Transaction tx;
+      protected Transaction tx;
   
       /**
        *  The context we manage.
        */
-      private EntityEnterpriseContext ctx;
+      protected EntityEnterpriseContext ctx;
   
       /**
        * The context lock
        */
-      private BeanLock lock;
+      protected BeanLock lock;
   
       /**
        *  Create a new instance synchronization instance.
@@ -391,11 +397,8 @@ public class EntitySynchronizationInterceptor
                      log.trace("Checking ctx="+ctx+", for status of tx="+tx);
                   if (tx.getStatus() != Status.STATUS_MARKED_ROLLBACK)
                   {
-                     try
-                     {
-                        container.storeEntity(ctx);
-                     }
-                     catch (Exception ignored) {}
+                     container.storeEntity(ctx);
+
                      if( trace )
                         log.trace("sync calling store on ctx "+ctx);
                   }
@@ -512,7 +515,7 @@ public class EntitySynchronizationInterceptor
  
    }
  
-   private void clearContextTx(String msg, EntityEnterpriseContext ctx, Transaction tx, boolean trace)
+   protected void clearContextTx(String msg, EntityEnterpriseContext ctx, Transaction tx, boolean trace)
    {
       BeanLock lock = container.getLockManager().getLock(ctx.getCacheKey());
       lock.sync();
