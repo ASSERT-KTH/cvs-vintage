@@ -102,6 +102,7 @@ public class MailFrameView extends AbstractFrameView {
         //this.statusBar = statusBar;
         mainSplitPane = new JSplitPane();
         mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        
 
         //mainSplitPane.setDividerSize(5);
         //mainSplitPane.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
@@ -110,7 +111,8 @@ public class MailFrameView extends AbstractFrameView {
         mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
 		JScrollPane treeScrollPane = new JScrollPane(tree);
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
         mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
         JPanel messagePanel = new JPanel();
@@ -128,7 +130,8 @@ public class MailFrameView extends AbstractFrameView {
         tablePanel.add(filterToolbar, BorderLayout.NORTH);
 
         JScrollPane tableScrollPane = new JScrollPane(table);
-        tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        //tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
         tableScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		
         tableScrollPane.getViewport().setBackground(Color.white);

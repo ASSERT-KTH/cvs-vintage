@@ -69,9 +69,12 @@ public class ComposerView extends AbstractFrameView {
         }
 
         JScrollPane attachmentScrollPane = new JScrollPane(controller.getAttachmentController().view);
-
+		//attachmentScrollPane.setBorder(null);
+		attachmentScrollPane.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+		
         rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        rightSplitPane.setBorder(null);
+        //rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        
         rightSplitPane.add(controller.getHeaderController().view,
             JSplitPane.LEFT);
         rightSplitPane.add(attachmentScrollPane, JSplitPane.RIGHT);

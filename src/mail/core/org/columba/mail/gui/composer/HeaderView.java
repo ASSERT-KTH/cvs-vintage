@@ -15,15 +15,15 @@
 //All Rights Reserved.ndation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.table.AddressbookTableModel;
-
-import org.columba.mail.gui.composer.util.AddressbookTableView;
-
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
+import org.columba.mail.gui.composer.util.AddressbookTableView;
 
 
 /**
@@ -46,9 +46,11 @@ public class HeaderView extends JScrollPane {
         this.controller = controller;
 
         table = new AddressbookTableView();
-
+		//table.setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+		
         getViewport().setBackground(Color.white);
-
+		setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+		
         setViewportView(table);
 
         setPreferredSize(new Dimension(200, 100));

@@ -15,226 +15,210 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree.util;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeModel;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
 import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+public class SelectAddressbookFolderDialog
+	extends JDialog
+	implements ActionListener, TreeSelectionListener {
+	private String name;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeModel;
+	//private MainInterface mainInterface;
+	private boolean bool= false;
 
+	//public SelectFolderTree tree;
+	private JTree tree;
+	private JButton[] buttons;
 
-public class SelectAddressbookFolderDialog implements ActionListener,
-    TreeSelectionListener {
-    private String name;
+	//private TreeView treeViewer;
+	private Folder selectedFolder;
+	private TreeModel model;
 
-    //private MainInterface mainInterface;
-    private boolean bool = false;
+	public SelectAddressbookFolderDialog(TreeModel model) {
+		super(new JFrame(), true);
 
-    //public SelectFolderTree tree;
-    private JTree tree;
-    private JButton[] buttons;
+		setTitle(
+			AddressbookResourceLoader.getString(
+				"tree",
+				"folderdialog",
+				"select_folder"));
 
-    //private TreeView treeViewer;
-    private Folder selectedFolder;
-    private TreeModel model;
-    private JDialog dialog;
+		this.model= model;
 
-    public SelectAddressbookFolderDialog(TreeModel model) {
-        dialog = DialogStore.getDialog(AddressbookResourceLoader.getString(
-                    "tree", "folderdialog", "select_folder"));
+		name= new String("name");
 
-        //super(AddressbookResourceLoader.getString("tree", "folderdialog", "select_folder"), true);
-        this.model = model;
+		initComponents();
 
-        //this.mainInterface = mainInterface;
-        //this.treeViewer = treeViewer;
-        name = new String("name");
+		layoutComponents();
 
-        init();
-    }
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
 
-    public void init() {
-        buttons = new JButton[3];
+	private void layoutComponents() {
+		getContentPane().setLayout(new BorderLayout());
+		JPanel mainPanel= new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		mainPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
+		
+		getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        JLabel label2 = new JLabel(AddressbookResourceLoader.getString("tree",
-                    "folderdialog", "select_folder"));
+		JPanel bottomPanel= new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        buttons[0] = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "cancel"));
-        buttons[0].setActionCommand("CANCEL");
-        buttons[0].setDefaultCapable(true);
-        buttons[1] = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
-                    "global", "ok"));
-        buttons[1].setEnabled(true);
-        buttons[1].setActionCommand("OK");
-        buttons[2] = new JButton(AddressbookResourceLoader.getString("tree",
-                    "folderdialog", "new_subFolder"));
-        buttons[2].setActionCommand("NEW");
-        buttons[2].setEnabled(false);
+		JPanel buttonPanel= new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        dialog.getRootPane().setDefaultButton(buttons[1]);
+		buttonPanel.add(buttons[0]);
+		buttonPanel.add(buttons[1]);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-        //tree = new SelectFolderTree( mainInterface, mainInterface.config.getFolderConfig().getRootNode()  );
-        //tree.getTree().addTreeSelectionListener( this );
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.setLayout(new BorderLayout());
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+	}
 
-        dialog.getContentPane().setLayout(new BorderLayout());
+	private void initComponents() {
+		buttons= new JButton[3];
 
-        //getContentPane().setLayout( new BoxLayout( getContentPane() , BoxLayout.Y_AXIS ) );
-        //getContentPane().add(  Box.createRigidArea( new java.awt.Dimension(0,10) )  );
-        JPanel centerPanel = new JPanel();
-        centerPanel.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createEtchedBorder(),
-                AddressbookResourceLoader.getString("tree", "folderdialog",
-                    "choose_folder")));
-        centerPanel.setLayout(new BorderLayout());
+		JLabel label2=
+			new JLabel(
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"select_folder"));
 
-        tree = new JTree(model);
-        tree.expandRow(0);
-        tree.expandRow(1);
-        tree.putClientProperty("JTree.lineStyle", "Angled");
-        tree.setShowsRootHandles(true);
-        tree.setRootVisible(false);
-        tree.addTreeSelectionListener(this);
-        tree.setCellRenderer(new AddressbookTreeCellRenderer(true));
+		buttons[0]=
+			new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "cancel"));
+		buttons[0].setActionCommand("CANCEL");
+		buttons[0].setDefaultCapable(true);
+		buttons[1]=
+			new ButtonWithMnemonic(
+				AddressbookResourceLoader.getString("global", "ok"));
+		buttons[1].setEnabled(true);
+		buttons[1].setActionCommand("OK");
+		buttons[2]=
+			new JButton(
+				AddressbookResourceLoader.getString(
+					"tree",
+					"folderdialog",
+					"new_subFolder"));
+		buttons[2].setActionCommand("NEW");
+		buttons[2].setEnabled(false);
 
-        //FolderTreeCellRenderer renderer = new FolderTreeCellRenderer( true );
-        //tree.setCellRenderer(renderer);
-        JPanel treePanel = new JPanel();
-        treePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        treePanel.setLayout(new BorderLayout());
+		getRootPane().setDefaultButton(buttons[1]);
 
-        JScrollPane treePane = new JScrollPane(tree);
-        treePanel.add(treePane, BorderLayout.CENTER);
-        centerPanel.add(treePanel, BorderLayout.CENTER);
+		tree= new JTree(model);
+		tree.expandRow(0);
+		tree.expandRow(1);
+		tree.putClientProperty("JTree.lineStyle", "Angled");
+		tree.setShowsRootHandles(true);
+		tree.setRootVisible(false);
+		tree.addTreeSelectionListener(this);
+		tree.setCellRenderer(new AddressbookTreeCellRenderer(true));
 
-        panel.add(centerPanel, BorderLayout.CENTER);
+		for (int i= 0; i < 3; i++) {
+			buttons[i].addActionListener(this);
+		}
 
-        //getContentPane().add(  Box.createRigidArea( new java.awt.Dimension(0,10) )  );
-        JPanel lowerpanel = new JPanel();
-        lowerpanel.setLayout(new BoxLayout(lowerpanel, BoxLayout.X_AXIS));
-        lowerpanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+	}
 
-        lowerpanel.add(Box.createHorizontalGlue());
+	public boolean success() {
+		return bool;
+	}
 
-        //lowerpanel.add(  Box.createRigidArea( new java.awt.Dimension(20,0) )  );
-        lowerpanel.add(buttons[0]);
-        lowerpanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-        lowerpanel.add(Box.createHorizontalGlue());
-        lowerpanel.add(buttons[2]);
-        lowerpanel.add(Box.createHorizontalGlue());
-        lowerpanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-        lowerpanel.add(buttons[1]);
+	public Folder getSelectedFolder() {
+		return selectedFolder;
+	}
 
-        //lowerpanel.add(  Box.createRigidArea( new java.awt.Dimension(20,0) )  );
-        lowerpanel.add(Box.createHorizontalGlue());
+	public int getUid() {
+		/*
+		  FolderTreeNode node = tree.getSelectedNode();
+		
+		  FolderItem item = node.getFolderItem();
+		*/
+		return 101;
 
-        panel.add(lowerpanel, BorderLayout.SOUTH);
+		//return item.getUid();
+	}
 
-        dialog.getContentPane().add(panel, BorderLayout.CENTER);
+	public void actionPerformed(ActionEvent e) {
+		String action= e.getActionCommand();
 
-        //getContentPane().add(  Box.createRigidArea( new java.awt.Dimension(0,10) )  );
-        for (int i = 0; i < 3; i++) {
-            buttons[i].addActionListener(this);
-        }
+		if (action.equals("OK")) {
 
-        dialog.pack();
-        dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true);
-    }
+			bool= true;
+			setVisible(false);
+		} else if (action.equals("CANCEL")) {
+			bool= false;
+			setVisible(false);
+		} else if (action.equals("NEW")) {
+			/*
+			EditFolderDialog dialog = treeViewer.getEditFolderDialog( "New Folder" );
+			dialog.showDialog();
+			
+			String name;
+			
+			if ( dialog.success() == true )
+			{
+			      // ok pressed
+			    name = dialog.getName();
+			}
+			else
+			{
+			      // cancel pressed
+			    return;
+			}
+			
+			treeViewer.getFolderTree().addUserFolder( getSelectedFolder(), name );
+			
+			//TreeNodeEvent updateEvent2 = new TreeNodeEvent( getSelectedFolder(), TreeNodeEvent.STRUCTURE_CHANGED );
+			//treeViewer.mainInterface.crossbar.fireTreeNodeChanged(updateEvent2);
+			
+			*/
+		}
+	}
 
-    public boolean success() {
-        return bool;
-    }
+	/******************************* tree selection listener ********************************/
+	public void valueChanged(TreeSelectionEvent e) {
+		AddressbookTreeNode node=
+			(AddressbookTreeNode) tree.getLastSelectedPathComponent();
 
-    public Folder getSelectedFolder() {
-        return selectedFolder;
-    }
+		if (node == null) {
+			return;
+		}
 
-    public int getUid() {
-        /*
-          FolderTreeNode node = tree.getSelectedNode();
+		FolderItem item= node.getFolderItem();
 
-          FolderItem item = node.getFolderItem();
-        */
-        return 101;
-
-        //return item.getUid();
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
-
-        if (action.equals("OK")) {
-            //name = textField.getText();
-            bool = true;
-            dialog.dispose();
-        } else if (action.equals("CANCEL")) {
-            bool = false;
-            dialog.dispose();
-        } else if (action.equals("NEW")) {
-            /*
-            EditFolderDialog dialog = treeViewer.getEditFolderDialog( "New Folder" );
-            dialog.showDialog();
-
-            String name;
-
-            if ( dialog.success() == true )
-            {
-                  // ok pressed
-                name = dialog.getName();
-            }
-            else
-            {
-                  // cancel pressed
-                return;
-            }
-
-            treeViewer.getFolderTree().addUserFolder( getSelectedFolder(), name );
-
-            //TreeNodeEvent updateEvent2 = new TreeNodeEvent( getSelectedFolder(), TreeNodeEvent.STRUCTURE_CHANGED );
-            //treeViewer.mainInterface.crossbar.fireTreeNodeChanged(updateEvent2);
-
-            */
-        }
-    }
-
-    /******************************* tree selection listener ********************************/
-    public void valueChanged(TreeSelectionEvent e) {
-        AddressbookTreeNode node = (AddressbookTreeNode) tree.getLastSelectedPathComponent();
-
-        if (node == null) {
-            return;
-        }
-
-        FolderItem item = node.getFolderItem();
-
-        if (item.get("type").equals("AddressbookFolder")) {
-            buttons[1].setEnabled(true);
-            selectedFolder = (AddressbookFolder) node;
-        } else {
-            buttons[1].setEnabled(false);
-        }
-    }
+		if (item.get("type").equals("AddressbookFolder")) {
+			buttons[1].setEnabled(true);
+			selectedFolder= (AddressbookFolder) node;
+		} else {
+			buttons[1].setEnabled(false);
+		}
+	}
 }

@@ -15,15 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
-
 import java.awt.Component;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 
 
 /**
@@ -48,6 +49,10 @@ public class ComboBoxHeaderColumn extends JComboBox
         setOpaque(true);
 
         isBordered = true;
+        
+        setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        
+        
     }
 
     public ComboBoxHeaderColumn(String name, String value) {

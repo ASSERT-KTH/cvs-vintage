@@ -53,7 +53,7 @@ public class MessageView extends JScrollPane {
         this.messageController = controller;
 
         getViewport().setBackground(Color.white);
-		setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
         panel = new MessagePanel();
         //panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         panel.setLayout(new BorderLayout());
