@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.37 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.38 2004/07/25 16:08:56 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.37 2004/07/17 13:10:31 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.38 2004/07/25 16:08:56 mkl Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -34,12 +34,12 @@ import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
-
 import org.argouml.uml.ui.PropPanelButton;
-import org.argouml.uml.ui.UMLComboBoxNavigator;
+import org.argouml.uml.ui.UMLComboBox2;
 import org.argouml.uml.ui.UMLLinkedList;
 import org.argouml.uml.ui.UMLList;
-import org.argouml.uml.ui.UMLMultiplicityComboBox;
+import org.argouml.uml.ui.UMLMultiplicityComboBox2;
+import org.argouml.uml.ui.UMLMultiplicityComboBoxModel;
 import org.argouml.uml.ui.UMLMutableLinkedList;
 import org.argouml.uml.ui.foundation.core.PropPanelClassifier;
 import org.argouml.util.ConfigLoader;
@@ -50,7 +50,15 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelClassifierRole extends PropPanelClassifier {
 
-
+    /**
+     * The combobox for the multiplicity of this type.
+     */
+    protected UMLComboBox2 multiplicityComboBox;
+    /** 
+     * Model for the MultiplicityComboBox 
+     */
+    private static UMLMultiplicityComboBoxModel multiplicityComboBoxModel;
+    
     ////////////////////////////////////////////////////////////////
     // contructors
     public PropPanelClassifierRole() {
@@ -60,19 +68,11 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 
 	addField(Translator.localize("UMLMenu", "label.name"),
 		 getNameTextField());
-//	addField(Translator.localize("UMLMenu", "label.stereotype"),
-//		 new UMLComboBoxNavigator(this,
-//					  Translator.localize("UMLMenu",
-//							"tooltip.nav-stereo"),
-//					  getStereotypeBox()));
 	addField(Translator.localize("UMLMenu", "label.stereotype"), getStereotypeBox());
 	addField(Translator.localize("UMLMenu", "label.namespace"),
 		 getNamespaceScroll());
 
-	addField(Translator.localize("UMLMenu", "label.multiplicity"),
-
-		 new UMLMultiplicityComboBox(this, mclass));
-
+	addField(Translator.localize("UMLMenu", "label.multiplicity"),getMultiplicityComboBox()); 
 	JList baseList =
 	    new UMLMutableLinkedList(new UMLClassifierRoleBaseListModel(),
 				     ActionAddClassifierRoleBase.SINGLETON,
@@ -124,7 +124,24 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
 			    null);
     }
 
-
+    /**
+     * Returns the multiplicityComboBox.
+     * @return UMLMultiplicityComboBox2
+     */
+    protected UMLComboBox2 getMultiplicityComboBox() {
+	if (multiplicityComboBox == null) {
+	    if (multiplicityComboBoxModel == null) {
+		multiplicityComboBoxModel =
+		    new UMLClassifierRoleMultiplicityComboBoxModel();
+	    }
+	    multiplicityComboBox =
+		new UMLMultiplicityComboBox2(
+				 multiplicityComboBoxModel,
+				 ActionSetClassifierRoleMultiplicity.SINGLETON);
+	    multiplicityComboBox.setEditable(true);
+	}
+	return multiplicityComboBox;
+    }
 
 
 } /* end class PropPanelClassifierRole */
