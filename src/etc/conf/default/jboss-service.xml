@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.47 2002/04/24 21:46:32 lsanders Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.48 2002/04/25 06:11:59 lsanders Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -228,7 +228,11 @@
     <!-- The Filter specifies a java.io.FileFilter for scanned
          directories.  Any file not accepted by this filter will not be
          deployed.  The org.jboss.deployment.scanner.DeploymentFilter 
-         accepts only files that do not start with a ".", or end with a "~"
+         rejects the following patterns:
+             "#*", "%*", ",*", ".*", "_$*", "*#", "*$", "*%", "*.BAK", 
+             "*.old", "*.orig", "*.rej", "*.bak", "*,v", "*~", ".make.state", 
+             ".nse_depinfo", "CVS", "CVS.admin", "RCS", "RCSLOG", "SCCS", 
+             "TAGS", "core", "tags"
     -->
     <attribute name="Filter">org.jboss.deployment.scanner.DeploymentFilter</attribute>
 
