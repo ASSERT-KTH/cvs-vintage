@@ -183,6 +183,13 @@ class Ajp12 {
 			any.printStackTrace();
 		    }
 		    req.setServerPort( serverPort );
+
+                    /* Quick and dirty patch to set https scheme in ajp12
+                     * but I recommand using ajp13 instead 
+                     */
+                    if (serverPort == 443)
+                       req.scheme().setString("https");
+
 		    // System.out.println("XXX port: " + req.getServerPort());
 
 		    //server protocol
