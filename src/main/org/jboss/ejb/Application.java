@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.ejb.EJBLocalHome;
+
 import org.jboss.util.Service;
 
 /**
@@ -20,7 +22,7 @@ import org.jboss.util.Service;
  *   @see Container
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class Application
 	implements Service
@@ -31,6 +33,7 @@ public class Application
    
    // stores the containers for this application unit
    HashMap containers = new HashMap();
+   HashMap localHomes = new HashMap();
    
    // class loader of this application
    ClassLoader classLoader = null;
@@ -66,6 +69,16 @@ public class Application
    public void removeContainer(Container con)
    {
       containers.remove(con.getBeanMetaData().getEjbName());
+   }
+   
+   public void addLocalHome( Container con, EJBLocalHome localHome )
+   {
+      localHomes.put( con.getBeanMetaData().getEjbName(), localHome );
+   }
+   
+   public void removeLocalHome( Container con )
+   {
+      localHomes.remove( con.getBeanMetaData().getEjbName() );
    }
    
 

@@ -60,7 +60,7 @@ import org.jboss.metadata.SessionMetaData;
  *
  *      @author Daniel OConnor (docodan@mvcsoft.com)
  */
-public abstract class BaseLocalContainerInvoker implements LocalContainerInvoker
+public class BaseLocalContainerInvoker implements LocalContainerInvoker
 {
    // Attributes ----------------------------------------------------
    protected Container container;

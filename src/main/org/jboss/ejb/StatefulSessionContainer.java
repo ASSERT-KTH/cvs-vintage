@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
- *   @version $Revision: 1.22 $
+ *   @version $Revision: 1.23 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -47,10 +47,6 @@ public class StatefulSessionContainer
 
    // This is the Remote interface class
    protected Class remoteInterface;
-
-   protected Class localHomeInterface;
-   
-   protected Class localInterface;
 
    // These are the mappings between the home interface methods and the container methods
    protected Map homeMapping;
@@ -160,17 +156,7 @@ public class StatefulSessionContainer
       return remoteInterface;
    }
    
-   public Class getLocalClass() 
-   {
-      return localInterface;
-   }
    
-   public Class getLocalHomeClass() 
-   {
-      return localHomeInterface;
-   }
-   
-    
    // Container implementation --------------------------------------
    public void init()
       throws Exception

@@ -30,7 +30,7 @@ import org.jboss.logging.Logger;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class StatelessSessionContainer
     extends Container
@@ -45,10 +45,6 @@ public class StatelessSessionContainer
     // This is the Remote interface class
     protected Class remoteInterface;
     
-    protected Class localHomeInterface;
-   
-    protected Class localInterface;
-
    // These are the mappings between the home interface methods and the container methods
     protected Map homeMapping;
     
@@ -129,16 +125,6 @@ public class StatelessSessionContainer
     {
        return remoteInterface;
     }
-    
-   public Class getLocalClass() 
-   {
-      return localInterface;
-   }
-   
-   public Class getLocalHomeClass() 
-   {
-      return localHomeInterface;
-   }
     
     
     // Container implementation --------------------------------------

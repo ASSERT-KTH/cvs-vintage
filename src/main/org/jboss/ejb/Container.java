@@ -53,6 +53,8 @@ import org.jnp.interfaces.Naming;
 import org.jnp.interfaces.java.javaURLContextFactory;
 import org.jnp.server.NamingServer;
 
+import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
+
 /**
  *    This is the base class for all EJB-containers in JBoss. A Container
  *    functions as the central hub of all metadata and plugins. Through this
@@ -67,7 +69,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.39 $
+ *   @version $Revision: 1.40 $
  */
 public abstract class Container
 {
@@ -104,12 +106,31 @@ public abstract class Container
 
    /** The custom security proxy used by the SecurityInterceptor */
    protected Object securityProxy;
+   
+   protected LocalContainerInvoker localContainerInvoker = 
+      new BaseLocalContainerInvoker();
 
    // This is a cache for method permissions
    private HashMap methodPermissionsCache = new HashMap();
 
+   protected Class localHomeInterface;
+   
+   protected Class localInterface;
+
+   
    // Public --------------------------------------------------------
 
+   public Class getLocalClass() 
+   {
+      return localInterface;
+   }
+   
+   public Class getLocalHomeClass() 
+   {
+      return localHomeInterface;
+   }
+   
+   
    /**
    * Sets a transaction manager for this container.
    *
@@ -294,6 +315,14 @@ public abstract class Container
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
 
+      if (metaData.getHome() != null)
+         localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
+      if (metaData.getRemote() != null)
+         localInterface = classLoader.loadClass(metaData.getLocal());
+      
+      localContainerInvoker.setContainer( this );
+      localContainerInvoker.init();
+      application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
       // Setup "java:" namespace
       setupEnvironment();
    }
@@ -308,6 +337,7 @@ public abstract class Container
    public void start()
    throws Exception
    {
+      localContainerInvoker.start();
    }
 
    /**
@@ -317,6 +347,7 @@ public abstract class Container
    */
    public void stop()
    {
+      localContainerInvoker.stop();
    }
 
    /**
@@ -326,6 +357,8 @@ public abstract class Container
    */
    public void destroy()
    {
+      localContainerInvoker.destroy();
+      application.removeLocalHome( this );
    }
 
    /**

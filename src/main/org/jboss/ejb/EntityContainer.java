@@ -37,7 +37,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 *   @author Daniel OConnor (docodan@mvcsoft.com)
-*   @version $Revision: 1.36 $
+*   @version $Revision: 1.37 $
 */
 public class EntityContainer
 extends Container
@@ -53,10 +53,6 @@ implements ContainerInvokerContainer, InstancePoolContainer
    // This is the Remote interface class
    protected Class remoteInterface;
    
-   protected Class localHomeInterface;
-   
-   protected Class localInterface;
-
    // These are the mappings between the home interface methods and the container methods
    protected Map homeMapping;
 
@@ -169,18 +165,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
    {
       return remoteInterface;
    }
-   
-   public Class getLocalClass() 
-   {
-      return localInterface;
-   }
-   
-   public Class getLocalHomeClass() 
-   {
-      return localHomeInterface;
-   }
-   
-
+ 
    // Container implementation --------------------------------------
    public void init()
    throws Exception
@@ -194,10 +179,6 @@ implements ContainerInvokerContainer, InstancePoolContainer
          homeInterface = classLoader.loadClass(metaData.getHome());
       if (metaData.getRemote() != null)
          remoteInterface = classLoader.loadClass(metaData.getRemote());
-      /*if (metaData.getHome() != null)
-         localHomeInterface = classLoader.loadClass(metaData.getLocalHome());
-      if (metaData.getRemote() != null)
-         localInterface = classLoader.loadClass(metaData.getLocal());*/
 
       // Call default init
       super.init();
