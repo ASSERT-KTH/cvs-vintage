@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.Name;
 import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameNotFoundException;
@@ -64,8 +65,8 @@ To unbind the object, use the following code snippet:
 @see javax.naming.spi.ObjectFactory
 @see #rebind(Context, String, Object)
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.7 $
+@author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+@version $Revision: 1.8 $
 */
 public class NonSerializableFactory implements ObjectFactory
 {
@@ -104,12 +105,24 @@ public class NonSerializableFactory implements ObjectFactory
     /** Remove a binding from the NonSerializableFactory map.
 
     @param key, the key into the NonSerializableFactory map to remove.
-    @param target, the non-Serializable object to bind.
     @throws NameNotFoundException, thrown if key does not exist in the
      NonSerializableFactory map
     */
     public static void unbind(String key) throws NameNotFoundException
     {
+        if( wrapperMap.remove(key) == null )
+            throw new NameNotFoundException(key+" was not found in the NonSerializableFactory map");
+    }
+    /** Remove a binding from the NonSerializableFactory map.
+
+    @param name, the name for the key into NonSerializableFactory map to remove.
+     The key is obtained as name.toString().
+    @throws NameNotFoundException, thrown if key does not exist in the
+     NonSerializableFactory map
+    */
+    public static void unbind(Name name) throws NameNotFoundException
+    {
+        String key = name.toString();
         if( wrapperMap.remove(key) == null )
             throw new NameNotFoundException(key+" was not found in the NonSerializableFactory map");
     }
@@ -119,6 +132,15 @@ public class NonSerializableFactory implements ObjectFactory
     */
     public static Object lookup(String key)
     {
+        Object value = wrapperMap.get(key);
+        return value;
+    }
+    /** Lookup a value from the NonSerializableFactory map.
+    @return the object bound to key is one exists, null otherwise.
+    */
+    public static Object lookup(Name name)
+    {
+        String key = name.toString();
         Object value = wrapperMap.get(key);
         return value;
     }
@@ -142,6 +164,24 @@ public class NonSerializableFactory implements ObjectFactory
         Reference memoryRef = new Reference(className, addr, factory, null);
         ctx.rebind(key, memoryRef);
     }
+
+   /** A convience method that simplifies the process of rebinding a
+    non-zerializable object into a JNDI context. This version binds the
+    target object into the default IntitialContext using name path.
+
+   @param name, the name to use as JNDI path name. The key into the
+    NonSerializableFactory map is obtained from the toString() value of name.
+    The name parameter cannot be a 0 length name.
+    Any subcontexts between the root and the name.
+   @param target, the non-Serializable object to bind.
+   @throws NamingException, thrown on failure to rebind key into ctx.
+   */
+   public static synchronized void rebind(Name name, Object target) throws NamingException
+   {
+       String key = name.toString();
+       InitialContext ctx = new InitialContext();
+       rebind(ctx, key, target);
+   }
 
 // --- Begin ObjectFactory interface methods
     /** Transform the obj Reference bound into the JNDI namespace into the
