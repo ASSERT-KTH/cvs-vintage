@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.91 2002/02/15 10:07:38 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.92 2002/02/16 07:22:25 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5219,11 +5219,11 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		{
 			public void run()
 			{
-				queuedScrollTo = queuedScrollToElectric = false;
 				scrollToCaret(queuedScrollToElectric);
 				updateBracketHighlight();
 				if(fireCaretEvent)
 					fireCaretEvent();
+				queuedScrollTo = queuedScrollToElectric = false;
 			}
 		};
 

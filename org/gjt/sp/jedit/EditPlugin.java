@@ -26,7 +26,7 @@ import org.gjt.sp.jedit.gui.OptionsDialog;
  * The interface between jEdit and a plugin.
  *
  * @author Slava Pestov
- * @version $Id: EditPlugin.java,v 1.5 2002/02/07 08:17:06 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.6 2002/02/16 07:22:25 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -135,12 +135,15 @@ public abstract class EditPlugin
 		{
 			plugin.jar = JAR.this;
 
+			// must be before the below two so that if an error
+			// occurs during start, the plugin is not listed as
+			// being active
+			plugin.start();
+
 			if(plugin instanceof EBPlugin)
 				EditBus.addToBus((EBPlugin)plugin);
 
 			plugins.addElement(plugin);
-
-			plugin.start();
 		}
 
 		public EditPlugin[] getPlugins()
