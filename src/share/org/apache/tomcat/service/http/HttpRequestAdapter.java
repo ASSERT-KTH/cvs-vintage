@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.18 2000/07/17 23:37:24 craigmcc Exp $
- * $Revision: 1.18 $
- * $Date: 2000/07/17 23:37:24 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.19 2000/07/18 01:34:00 craigmcc Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/07/18 01:34:00 $
  *
  * ====================================================================
  *
@@ -286,12 +286,14 @@ public class HttpRequestAdapter extends RequestImpl {
 	return socket.getInetAddress().getHostName();
     }    
 
-    /** Advance to first non-space
+    /** Advance to first non-whitespace
      */
     private  final int skipSpaces() {
 	while (off < count) {
 	    if ((buf[off] != (byte) ' ') 
-		&& (buf[off] != (byte) '\t')) {
+		&& (buf[off] != (byte) '\t')
+		&& (buf[off] != (byte) '\r')
+		&& (buf[off] != (byte) '\n')) {
 		return off;
 	    }
 	    off++;
@@ -299,12 +301,14 @@ public class HttpRequestAdapter extends RequestImpl {
 	return -1;
     }
 
-    /** Advance to the first space
+    /** Advance to the first whitespace character
      */
     private  int findSpace() {
 	while (off < count) {
 	    if ((buf[off] == (byte) ' ') 
-		|| (buf[off] == (byte) '\t')) {
+		|| (buf[off] == (byte) '\t')
+		|| (buf[off] == (byte) '\r')
+		|| (buf[off] == (byte) '\n')) {
 		return off;
 	    }
 	    off++;
