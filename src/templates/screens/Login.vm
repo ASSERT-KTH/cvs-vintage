@@ -48,7 +48,7 @@
 
 $intake.declareGroups()
 
-<script lang="JavaScript">
+<script>
 <!--
 document.login.${loginGroup.Username.Key}.focus();
 // -->

@@ -76,7 +76,7 @@
 
 $intake.declareGroups()
 
-<script lang="JavaScript">
+<script>
 <!--
 document.register.${regGroup.FirstName.Key}.focus();
 // -->
