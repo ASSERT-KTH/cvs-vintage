@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.9 2001/01/21 22:47:37 jon Exp $
+$Id: README.txt,v 1.10 2001/01/23 01:40:29 jon Exp $
 
 Welcome to Scarab!
 
@@ -107,6 +107,12 @@ NOTE: This will attempt to first drop a database called "scarab" and
       then re-create it. If you execute this script, all of your previous data 
       will be lost without warning!
 
+If you would like to specify which database host/username/password to connect
+to, simply edit the src/conf/TurbineResources.properties file and modify the
+database.default.url, database.default.username and database.default.password
+properties. Once you have done this, you will need to build the sandbox again
+in order to copy the TR.props file to the right location.
+
 
 -------------------------------------------------------------------------
 | R U N N I N G  T H E  S A N D B O X                                   |
@@ -125,6 +131,7 @@ Then, in your web browser, go to:
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are using 
       the Tomcat that comes with Scarab, you can safely undefine it and follow 
       the directions below for running the sandbox.
+
 
 -------------------------------------------------------------------------
 | Q U E S T I O N S  /  P R O B L E M S                                 |
