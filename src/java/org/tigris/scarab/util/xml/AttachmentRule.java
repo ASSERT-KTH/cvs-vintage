@@ -124,13 +124,19 @@ public class AttachmentRule extends BaseRule
             // copy the file into its new location
             FileReader in = new FileReader(path);
             FileWriter out = new FileWriter(newFile);
-            int c;
-            while ((c = in.read()) != -1)
+            try
             {
-                out.write(c);
+                int c;
+                while ((c = in.read()) != -1)
+                {
+                    out.write(c);
+                }
             }
-            in.close();
-            out.close();
+            finally
+            {
+                in.close();
+                out.close();
+            }
             
             attachment.setFilePath(newFile);
         }
