@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.92 2003/12/23 20:43:54 jjones Exp $
+// $Id: FigNodeModelElement.java,v 1.93 2003/12/30 20:33:31 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.Icon;
+import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -131,6 +132,12 @@ public abstract class FigNodeModelElement
     protected static final int STEREOHEIGHT = 18;
     protected boolean checkSize = true;
     // Needed for loading. Warning: if false, a too small size might look bad!
+    
+    /**
+     * Offset from the end of the set of popup actions at which new items
+     * should be inserted by concrete figures.
+    **/
+    protected static final int POPUP_ADD_OFFSET = 3;
     
     // Fields used in paint() for painting shadows
     private BufferedImage           _shadowImage = null;
@@ -283,8 +290,11 @@ public abstract class FigNodeModelElement
                     continue;
                 critiques.add(new ActionGoToCritique(item));
             }
+            popUpActions.insertElementAt(new JSeparator(), 0);
             popUpActions.insertElementAt(critiques, 0);
         }
+        // POPUP_ADD_OFFSET should be equal to the number of items added here:
+        popUpActions.addElement(new JSeparator());
         popUpActions.addElement(ActionProperties.SINGLETON);
         popUpActions.addElement(ActionDeleteFromDiagram.SINGLETON);
         return popUpActions;

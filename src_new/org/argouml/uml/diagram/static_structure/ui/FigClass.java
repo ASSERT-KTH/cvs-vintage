@@ -1,4 +1,4 @@
-// $Id: FigClass.java,v 1.85 2003/12/27 13:31:43 alexb Exp $
+// $Id: FigClass.java,v 1.86 2003/12/30 20:33:32 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -320,7 +320,8 @@ public class FigClass extends FigNodeModelElement {
         addMenu.add(ActionAddAttribute.SINGLETON);
         addMenu.add(ActionAddOperation.SINGLETON);
         addMenu.add(ActionAddNote.SINGLETON);
-        popUpActions.insertElementAt(addMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(addMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
         
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
         if (_attrVec.isDisplayed() && _operVec.isDisplayed())
@@ -341,7 +342,8 @@ public class FigClass extends FigNodeModelElement {
         showMenu.add(ActionEdgesDisplay.ShowEdges);
         showMenu.add(ActionEdgesDisplay.HideEdges);
 
-        popUpActions.insertElementAt(showMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(showMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         Object mclass = /*(MClass)*/ getOwner();
         ArgoJMenu modifierMenu = new ArgoJMenu(BUNDLE, "menu.popup.modifiers");
@@ -369,7 +371,8 @@ public class FigClass extends FigNodeModelElement {
 				   "isActive", "isActive", "setActive",
 				   mclass));
 
-        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(modifierMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
         // end of block
 
         return popUpActions;

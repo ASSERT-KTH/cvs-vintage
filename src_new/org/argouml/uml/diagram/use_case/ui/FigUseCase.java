@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.27 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigUseCase.java,v 1.28 2003/12/30 20:33:32 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.27 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: FigUseCase.java,v 1.28 2003/12/30 20:33:32 jjones Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -394,7 +394,8 @@ public class FigUseCase extends FigNodeModelElement {
         addMenu.add(ActionAddExtensionPoint.singleton());
         addMenu.add(ActionAddNote.SINGLETON);
 
-        popUpActions.insertElementAt(addMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(addMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         // Show menu to display/hide the extension point compartment. Placed
         // one before last, so the "Properties" entry is always last.
@@ -407,7 +408,8 @@ public class FigUseCase extends FigNodeModelElement {
             showMenu.add(ActionCompartmentDisplay.ShowExtPointCompartment);
         }
 
-        popUpActions.insertElementAt(showMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(showMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         // Modifier menu. Placed one before last, so the "Properties" entry is
         // always last.
@@ -434,7 +436,8 @@ public class FigUseCase extends FigNodeModelElement {
 						     "setRoot",
 						     useCase));
 
-        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(modifierMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         return popUpActions;
     }

@@ -1,4 +1,4 @@
-// $Id: FigInterface.java,v 1.56 2003/11/10 12:35:01 jhraigniac Exp $
+// $Id: FigInterface.java,v 1.57 2003/12/30 20:33:32 jjones Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -255,14 +255,16 @@ public class FigInterface extends FigNodeModelElement {
         ArgoJMenu addMenu = new ArgoJMenu(BUNDLE, "menu.popup.add");
         addMenu.add(ActionAddOperation.SINGLETON);
         addMenu.add(ActionAddNote.SINGLETON);
-        popUpActions.insertElementAt(addMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(addMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
         if (_operVec.isDisplayed())
             showMenu.add(ActionCompartmentDisplay.HideOperCompartment);
         else
             showMenu.add(ActionCompartmentDisplay.ShowOperCompartment);
 
-        popUpActions.insertElementAt(showMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(showMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         // Block added by BobTarling 7-Jan-2001
         Object minterface = /*(MInterface)*/ getOwner();
@@ -284,7 +286,8 @@ public class FigInterface extends FigNodeModelElement {
         modifierMenu.addCheckItem(
 		new ActionModifier("Root", "isRoot", "isRoot", "setRoot", minterface));
 
-        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(modifierMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
         // end of block
 
         return popUpActions;

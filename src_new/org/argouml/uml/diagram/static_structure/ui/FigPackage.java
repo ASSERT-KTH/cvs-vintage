@@ -1,4 +1,4 @@
-// $Id: FigPackage.java,v 1.40 2003/12/06 18:12:56 alexb Exp $
+// $Id: FigPackage.java,v 1.41 2003/12/30 20:33:32 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigPackage.java
 // Classes: FigPackage
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigPackage.java,v 1.40 2003/12/06 18:12:56 alexb Exp $
+// $Id: FigPackage.java,v 1.41 2003/12/30 20:33:32 jjones Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -554,7 +554,8 @@ public class FigPackage extends FigNodeModelElement {
         modifierMenu.addCheckItem(new ActionModifier("Leaf", "isLeaf", "isLeaf", "setLeaf", mpackage));
         modifierMenu.addCheckItem(new ActionModifier("Root", "isRoot", "isRoot", "setRoot", mpackage));
 
-        popUpActions.insertElementAt(modifierMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(modifierMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         ArgoJMenu showMenu = new ArgoJMenu(BUNDLE, "menu.popup.show");
 
@@ -578,7 +579,8 @@ public class FigPackage extends FigNodeModelElement {
 		});
         }
 
-        popUpActions.insertElementAt(showMenu, popUpActions.size() - 2);
+        popUpActions.insertElementAt(showMenu, 
+            popUpActions.size() - POPUP_ADD_OFFSET);
 
         return popUpActions;
     }
