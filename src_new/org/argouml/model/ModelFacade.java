@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.168 2003/12/17 14:40:09 mkl Exp $
+// $Id: ModelFacade.java,v 1.169 2004/01/14 20:35:04 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4423,6 +4423,17 @@ public class ModelFacade {
 	    getClassNull(reception));
     }
 
+    public static void removeSubvertex(Object handle, Object subvertex) {
+        if (handle instanceof MCompositeState
+            && subvertex instanceof MStateVertex) {
+            ((MCompositeState)handle).removeSubvertex((MStateVertex)subvertex);
+            return;
+        }
+        throw new IllegalArgumentException("Unrecognized object " +
+                       getClassNull(handle) + " or " +
+                       getClassNull(subvertex));
+    }
+    
     /**
      * Set the base of some model element
      * @param target 
@@ -6060,6 +6071,16 @@ public class ModelFacade {
             getClassNull(m) + " or " + getClassNull(stereo));
     }
 
+    public static void setSubvertices(Object handle, Collection subvertices) {
+        if (handle instanceof MCompositeState) {
+            ((MCompositeState)handle).setSubvertices(subvertices);
+            return;
+        }
+        throw new IllegalArgumentException("Unrecognized object " +
+                       getClassNull(handle) + " or " +
+                       getClassNull(subvertices));
+    }
+    
     public static void addConnection(Object handle, Object connection) {
         if (handle instanceof MAssociation
             && connection instanceof MAssociationEnd) {
