@@ -52,6 +52,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 // Turbine Stuff
+import org.apache.turbine.Log;   
 import org.apache.log4j.Category;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
@@ -71,7 +72,7 @@ import org.tigris.scarab.om.ScarabUser;
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.26 2002/02/19 22:18:39 elicia Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.27 2002/02/20 20:45:32 elicia Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -250,6 +251,15 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+        if (cancelTargets.size() < 2)
+        {
+            if (cancelTargets.size() == 1)
+            {
+                cancelTargets.pop();
+            }
+            data.setTarget("ArtifactTypeSelect.vm");
+            return;
+        }
 
         // Remove current and next page from cancel stack.
         String currentPage = (String)cancelTargets.pop();

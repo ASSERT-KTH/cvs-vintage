@@ -68,7 +68,7 @@ import org.tigris.scarab.om.ScarabUser;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.15 2002/02/19 22:18:39 elicia Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.16 2002/02/20 20:45:32 elicia Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -227,6 +227,16 @@ public abstract class ScarabTemplateAction extends TemplateAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         Stack cancelTargets = (Stack)user.getTemp("cancelTargets");
+
+        if (cancelTargets.size() < 2)
+        {
+            if (cancelTargets.size() == 1)
+            {
+                cancelTargets.pop();
+            }
+            data.setTarget("ArtifactTypeSelect.vm");
+            return;
+        }
 
         // Remove current and next page from cancel stack.
         String currentPage = (String)cancelTargets.pop();
