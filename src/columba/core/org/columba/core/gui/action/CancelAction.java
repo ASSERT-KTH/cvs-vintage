@@ -38,10 +38,16 @@ public class CancelAction
 			controller,
 			GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
 
+		// small icon for JMenuItem
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_stop-16.png"));
+		
+		// big icon for JToolBar
 		setLargeIcon(ImageLoader.getImageIcon("stock_stop.png"));
+		
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
-	
+		
+		// set JavaHelp topic ID
+		setTopicID("cancel");
 
 		setEnabled(false);
 		MainInterface.processor.getTaskManager().addWorkerListChangeListener(

@@ -28,6 +28,7 @@ import javax.swing.KeyStroke;
  * - i18n long description
  * - toolbar name (this is shorter to save visual space in the toolbar)
  * - an additional large icon used in the toolbar
+ * - JavaHelp topic ID
  * <p>
  * Note: Most constructors of this class are depreceated.
  * 
@@ -72,6 +73,12 @@ public class BasicAction extends JAbstractAction {
 	 */
 	boolean showToolbarText = true;
 
+
+	/**
+	 * JavaHelp topic ID
+	 */
+	public String topicID=null;
+	
 	/**
 	 * default constructor
 	 */
@@ -304,4 +311,23 @@ public class BasicAction extends JAbstractAction {
 			keyStroke);
 		this.showToolbarText = showToolbarText;
 	}
+	
+	/**
+	 * Return JavaHelp topic ID
+	 * 
+	 * @return		topic ID
+	 */
+	public String getTopicID() {
+		return topicID;
+	}
+
+	/**
+	 * Set JavaHelp topic ID
+	 * 
+	 * @param string	new topic ID
+	 */
+	public void setTopicID(String string) {
+		topicID = string;
+	}
+
 }

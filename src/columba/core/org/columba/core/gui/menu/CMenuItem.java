@@ -37,6 +37,9 @@ public class CMenuItem extends JMenuItem {
 	{
 		super(action);
 		
-		HelpManager.enableHelpOnButton(this, ((BasicAction) action).getName());
+		BasicAction basicAction = (BasicAction) action;
+		
+		if ( basicAction.getTopicID() != null )
+			HelpManager.enableHelpOnButton(this, basicAction.getTopicID());
 	}
 }
