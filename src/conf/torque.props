@@ -86,7 +86,7 @@ suffix=MapBuilder
 # Turbine system with the generated SQL.
 # -------------------------------------------------------------------
 
-databaseUrl = jdbc:mysql://localhost/@DATABASE@
+databaseUrl = jdbc:mysql://localhost/@DATABASE_NAME@
 databaseDriver = org.gjt.mm.mysql.Driver
 databaseUser =
 databasePassword =
