@@ -40,42 +40,47 @@ Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additi
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
 Source: native\win32\launcher\columba.exe; DestDir: {app}
+Source: native\win32\launcher\columbaw.exe; DestDir: {app}
 Source: native\win32\launcher\columba.lap; DestDir: {app}; AfterInstall: updateLAPfile
+Source: {app}\columba.lap; DestDir: {app}; DestName: columbaw.lap; Flags: external
 Source: columba.jar; DestDir: {app}
 Source: LICENSE; DestDir: {app}
 Source: README; DestDir: {app}
 Source: run.bat; DestDir: {app}
-Source: {#RISTRETTO}; DestDir: {app}\lib\
-Source: {#JHALL}; DestDir: {app}\lib\
-Source: {#USERMANUAL}; DestDir: {app}\lib\
-Source: {#FORMS}; DestDir: {app}\lib\
-Source: {#MACCHIATO}; DestDir: {app}\lib\
-Source: {#WINPACK}; DestDir: {app}\lib\
-Source: {#JNIWRAP}; DestDir: {app}\lib\
-Source: {#FRAPPUCINO}; DestDir: {app}\lib\
-Source: {#JSCF}; DestDir: {app}\lib\
-Source: {#JARGS}; DestDir: {app}\lib\
-Source: {#LUCENE}; DestDir: {app}\lib\
-Source: {#JWIZZ}; DestDir: {app}\lib\
-Source: {#PLASTIC}; DestDir: {app}\lib\
-Source: {#JE}; DestDir: {app}\lib\
-Source: {#JDOM}; DestDir: {app}\lib\
-Source: {#JPIM}; DestDir: {app}\lib\
+Source: {#RISTRETTO}; DestDir: {app}
+Source: {#JHALL}; DestDir: {app}
+Source: {#USERMANUAL}; DestDir: {app}
+Source: {#FORMS}; DestDir: {app}
+Source: {#MACCHIATO}; DestDir: {app}
+Source: {#WINPACK}; DestDir: {app}
+Source: {#JNIWRAP}; DestDir: {app}
+Source: {#FRAPPUCINO}; DestDir: {app}
+Source: {#JSCF}; DestDir: {app}
+Source: {#JARGS}; DestDir: {app}
+Source: {#LUCENE}; DestDir: {app}
+Source: {#JWIZZ}; DestDir: {app}
+Source: {#PLASTIC}; DestDir: {app}
+Source: {#JE}; DestDir: {app}
+Source: {#JDOM}; DestDir: {app}
+Source: {#JPIM}; DestDir: {app}
 Source: native\win32\JNI-wrapper\jniwrap.dll; DestDir: {app}\native\win32\JNI-wrapper\
 #ifdef BUNDLE_JRE
 Source: {#JRE_SRC_PATH}{#JRE_FILE}; DestDir: {tmp}; Flags: deleteafterinstall dontcopy
 #endif
 
+[UninstallDelete]
+Name: columbaw.lap; Type: files
+
 [Icons]
-Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
-Name: {userdesktop}\Columba; Filename: {app}\columba.exe; MinVersion: 4,4; Tasks: desktopicon; WorkingDir: {app}; IconIndex: 0
+Name: {group}\Columba; Filename: {app}\columbaw.exe; IconIndex: 0; WorkingDir: {app}
+Name: {userdesktop}\Columba; Filename: {app}\columbaw.exe; MinVersion: 4,4; Tasks: desktopicon; WorkingDir: {app}; IconIndex: 0
 Name: {group}\AUTHORS; Filename: notepad.exe; Parameters: AUTHORS; WorkingDir: {app}; IconIndex: 0
 Name: {group}\CHANGES; Filename: notepad.exe; Parameters: CHANGES; WorkingDir: {app}; IconIndex: 0
 Name: {group}\LICENSE; Filename: notepad.exe; Parameters: LICENSE; WorkingDir: {app}; IconIndex: 0
 Name: {group}\README; Filename: notepad.exe; Parameters: README; WorkingDir: {app}; IconIndex: 0
 
 [Run]
-Filename: {app}\columba.exe; Description: Launch Columba; Flags: nowait postinstall skipifsilent; WorkingDir: {app}
+Filename: {app}\columbaw.exe; Description: Launch Columba; Flags: nowait postinstall skipifsilent; WorkingDir: {app}
 
 [_ISTool]
 EnableISX=true
