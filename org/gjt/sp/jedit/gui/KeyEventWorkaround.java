@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.29 2003/07/21 19:49:29 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.30 2003/07/28 21:08:04 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -99,6 +99,7 @@ public class KeyEventWorkaround
 			case KeyEvent.VK_SUBTRACT:
 			case KeyEvent.VK_DECIMAL:
 			case KeyEvent.VK_DIVIDE:
+			System.err.println(evt);
 				System.err.println("foo");
 				last = LAST_NUMKEYPAD;
 				return evt;

@@ -56,7 +56,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.272 2003/06/22 02:25:10 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.273 2003/07/28 21:08:04 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -749,6 +749,7 @@ public class JEditTextArea extends JComponent
 		if(point == null)
 			Log.log(Log.ERROR,this,"BUG: screenLine=" + screenLine
 				+ ",visibleLines=" + visibleLines
+				+ ",physicalLine=" + line
 				+ ",firstPhysicalLine=" + getFirstPhysicalLine()
 				+ ",lastPhysicalLine=" + getLastPhysicalLine());
 		point.x += extraEndVirt;
