@@ -26,7 +26,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.2 2002/02/25 08:37:50 linus Exp $
+// $Id: CrMultipleAgg.java,v 1.3 2002/03/01 12:58:15 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -62,9 +62,9 @@ public class CrMultipleAgg extends CrUML {
     while (enum.hasNext()) {
       MAssociationEnd ae = (MAssociationEnd) enum.next();
       MAggregationKind ak = ae.getAggregation();
-      if (//!MAggregationKind.UNSPEC.equals(ak)  &&
-	  !MAggregationKind.NONE.equals(ak))
-	aggCount++;
+      
+      if (ak != null && !MAggregationKind.NONE.equals(ak))
+          aggCount++;
     }
     if (aggCount > 1) return PROBLEM_FOUND;
     else return NO_PROBLEM;
