@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -33,7 +33,7 @@ public class ConfigurationMetaData extends MetaData {
 	public static final byte A_COMMIT_OPTION = 0;
 	public static final byte B_COMMIT_OPTION = 1;
 	public static final byte C_COMMIT_OPTION = 2;
-	
+	public static final String[] commitOptionStrings = { "A", "B", "C" };
 	
     // Attributes ----------------------------------------------------
 	private String name;
@@ -93,41 +93,33 @@ public class ConfigurationMetaData extends MetaData {
 		// defined in standardjboss.xml
 		
 		// set call logging
-		callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"))).booleanValue();
+		callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"), String.valueOf(callLogging))).booleanValue();
 		
 		// set the container invoker
-		containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"));
+		containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"), containerInvoker);
 		
 		// set the instance pool
-		instancePool = getElementContent(getOptionalChild(element, "instance-pool"));
+		instancePool = getElementContent(getOptionalChild(element, "instance-pool"), instancePool);
 		
 		// set the instance cache
-		instanceCache = getElementContent(getOptionalChild(element, "instance-cache"));
+		instanceCache = getElementContent(getOptionalChild(element, "instance-cache"), instanceCache);
 		
 		// set the persistence manager
-		persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"));
+		persistenceManager = getElementContent(getOptionalChild(element, "persistence-manager"), persistenceManager);
 		
 		// set the transaction manager
-		transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"));
+		transactionManager = getElementContent(getOptionalChild(element, "transaction-manager"), transactionManager);
 
 		// set the authentication module
-		authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"));
+		authenticationModule = getElementContent(getOptionalChild(element, "authentication-module"), authenticationModule);
 
 		// set the role mapping manager
-		roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"));
+		roleMappingManager = getElementContent(getOptionalChild(element, "role-mapping-manager"), roleMappingManager);
 
     // set the commit option
-		String commit = getElementContent(getOptionalChild(element, "commit-option"));
+		String commit = getElementContent(getOptionalChild(element, "commit-option"), commitOptionToString(commitOption));
     
-		if (commit != null) {
-			if (commit.equals("A")) {
-				commitOption = A_COMMIT_OPTION;
-			} else if (commit.equals("B")) {
-				commitOption = B_COMMIT_OPTION;
-			} else if (commit.equals("C")) {
-				commitOption = C_COMMIT_OPTION;
-			} else throw new DeploymentException("Invalid commit option");
-		}
+		commitOption = stringToCommitOption(commit);
 		
 		// the classes which can understand the following are dynamically loaded during deployment : 
 		// We save the Elements for them to use later
@@ -148,6 +140,25 @@ public class ConfigurationMetaData extends MetaData {
     // Protected -----------------------------------------------------
     
     // Private -------------------------------------------------------
-    
+	private static String commitOptionToString(byte commitOption)
+		throws DeploymentException {
+		
+		try {
+			return commitOptionStrings[commitOption];
+		} catch( ArrayIndexOutOfBoundsException e ) {
+			throw new DeploymentException("Invalid commit option: " + commitOption);
+		}
+	}
+	
+	private static byte stringToCommitOption(String commitOption)
+		throws DeploymentException {
+		
+         for( byte i=0; i<commitOptionStrings.length; ++i )
+             if( commitOptionStrings[i].equals(commitOption) ) 
+                 return i;
+		 
+         throw new DeploymentException("Invalid commit option: '" + commitOption + "'");
+	}
+	
     // Inner classes -------------------------------------------------
 }

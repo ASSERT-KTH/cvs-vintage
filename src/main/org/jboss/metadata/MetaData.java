@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public abstract class MetaData implements XmlLoadable {
     // Constants -----------------------------------------------------
@@ -88,16 +88,22 @@ public abstract class MetaData implements XmlLoadable {
 	}
 	
 	public static String getElementContent(Element element) throws DeploymentException {
-		if (element == null) return null;
+		
+		return getElementContent(element, null);
+	}
+	
+	public static String getElementContent(Element element, String defaultStr) throws DeploymentException {
+		if (element == null) return defaultStr;
 		
 		NodeList children = element.getChildNodes();
 		if ((children.getLength() == 1) && (children.item(0).getNodeType() == Node.TEXT_NODE)) {
-		    return children.item(0).getNodeValue();
+			String result = children.item(0).getNodeValue();
+			return result == null ? null : result.trim();
 		} else {
 			return null;
 		}
 	}
-		
+	
     
     // Constructors --------------------------------------------------
     
