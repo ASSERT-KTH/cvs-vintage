@@ -55,8 +55,11 @@ import java.util.Enumeration;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.entity.User;
+import org.apache.fulcrum.velocity.TurbineVelocityService;
+import org.apache.fulcrum.velocity.VelocityService;
 
 import org.apache.velocity.app.FieldMethodizer;
 
@@ -97,7 +100,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.59 2003/05/05 21:58:10 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.60 2003/07/18 21:27:11 dlr Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -707,5 +710,15 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     { 
         date.setTime(date.getTime() + 3599999);
         return date;
+    }
+
+    /**
+     * Delegates to Velocity's <code>templateExists()</code> method.
+     */
+    public boolean templateExists(String template)
+    {
+        return ((TurbineVelocityService) TurbineServices
+                .getInstance().getService(VelocityService.SERVICE_NAME))
+            .templateExists(template);
     }
 }

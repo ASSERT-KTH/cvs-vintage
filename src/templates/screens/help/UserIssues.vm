@@ -13,7 +13,9 @@
                   <li><a href="#entry">$l10n.IssueEntryScreen</a></li>
                 </ul>
               </li>
+#if ($scarabG.templateExists("help/UserIssueImportExport.vm"))
               <li><a href="$link.setPage("help,UserIssueImportExport.vm")">$l10n.XMLImportExport</a></li>
+#end
               <li><a href="$link.setPage("help,UserIssueEntry.vm")">$l10n.EnteringIssues </a> </li>
               <li><a href="$link.setPage("help,UserIssueTemplates.vm")">$l10n.UsingTemplates</a></li>
               <li><a href="$link.setPage("help,UserIssueModify.vm")">$l10n.ModifyingIssues</a></li>
