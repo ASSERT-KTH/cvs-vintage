@@ -30,15 +30,15 @@
   #end
   <div><input type="radio" name="querytype" value="custom" 
        #if ($checked)checked="checked"#end />&nbsp;
-    <strong>$l10n.QuerySelected</strong> $l10n.QuerySelectedDesc
+    <strong>$l10n.QuerySelected$l10n.Colon</strong> $l10n.QuerySelectedDesc
   </div>
   <div><input type="radio" name="querytype" value="all"
        #if ($queryType == "all")checked="checked"#end />&nbsp;
-    <strong>$l10n.AllIssues</strong> $l10n.AllIssuesDesc
+    <strong>$l10n.AllIssues$l10n.Colon</strong> $l10n.AllIssuesDesc
   </div>
   <div><input type="radio" name="querytype" value="my"
        #if ($queryType == "my")checked="checked"#end />&nbsp;
-    <strong>$l10n.MyIssues</strong> $l10n.MyIssuesDesc
+    <strong>$l10n.MyIssues$l10n.Colon</strong> $l10n.MyIssuesDesc
   </div>
 </div>
 
