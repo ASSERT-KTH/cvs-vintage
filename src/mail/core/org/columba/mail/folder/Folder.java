@@ -1,17 +1,21 @@
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Library General Public License for more details.
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+//
+//$Log: Folder.java,v $
+//
 package org.columba.mail.folder;
 
 import java.io.File;
@@ -45,16 +49,34 @@ import org.columba.mail.message.MimePartTree;
  */
 public abstract class Folder extends FolderTreeNode {
 
+	/**
+	 *
+	 */
 	protected MessageFolderInfo messageFolderInfo;
 
+	/**
+	 *
+	 */
 	protected FilterList filterList;
 
+	/**
+	 *
+	 */
 	protected boolean changed;
 
+	/**
+	 *
+	 */
 	protected Vector folderListeners;
 
+	/**
+	 *
+	 */
 	protected File directoryFile; // directory
 
+	/**
+	 *
+	 */
 	/**
 	 *    Description of the Field
 	 *
@@ -62,6 +84,9 @@ public abstract class Folder extends FolderTreeNode {
 	 */
 	protected Vector treeNodeListeners;
 
+	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#FolderTreeNode(org.columba.mail.config.FolderItem)
+	 */
 	/**
 	 * Standard constructor. 
 	 * 
@@ -84,10 +109,22 @@ public abstract class Folder extends FolderTreeNode {
 			directoryFile = new File(dir);
 	}
 
+	/**
+	 * Method showFilterDialog.
+	 * @param frameController
+	 * @return JDialog
+	 */
 	public JDialog showFilterDialog(MailFrameController frameController) {
 		return new ConfigFrame(this);
 	}
 
+	/**
+	 * Method innerCopy.
+	 * @param destFolder
+	 * @param uids
+	 * @param worker
+	 * @throws Exception
+	 */
 	public void innerCopy(
 		Folder destFolder,
 		Object[] uids,
@@ -95,6 +132,10 @@ public abstract class Folder extends FolderTreeNode {
 		throws Exception {
 	}
 
+	/**
+	 * Method getRootFolder.
+	 * @return FolderTreeNode
+	 */
 	public FolderTreeNode getRootFolder() {
 		FolderTreeNode folderTreeNode = (FolderTreeNode) getParent();
 		while (folderTreeNode != null) {
@@ -111,6 +152,10 @@ public abstract class Folder extends FolderTreeNode {
 		return null;
 	}
 
+	/**
+	 * Method Folder.
+	 * @param name
+	 */
 	/**
 	 * Constructor for creating temporary-folders or other types
 	 * which work only in memory and aren't visible in the <class>
@@ -133,6 +178,9 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
+	 * Method init.
+	 */
+	/**
 	 * Do some initialization work both constructors share
 	 * 
 	 */
@@ -149,6 +197,10 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
+	 * Method getDirectoryFile.
+	 * @return File
+	 */
+	/**
 	 * Method getDirectoryFile returns the the folder where messages
 	 * are saved
 	 * 
@@ -159,11 +211,18 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#createChildren(org.columba.core.command.WorkerStatusController)
+	 */
+	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#createChildren(WorkerStatusController)
 	 */
 	public void createChildren(WorkerStatusController worker) {
 	}
 
+	/**
+	 * Method setChanged.
+	 * @param b
+	 */
 	/**
 	 * Method applyFilter.
 	 * @param uids
@@ -191,10 +250,18 @@ public abstract class Folder extends FolderTreeNode {
 	 * Method setMessageFolderInfo.
 	 * @param i
 	 */
+	/**
+	 * Method setMessageFolderInfo.
+	 * @param i
+	 */
 	public void setMessageFolderInfo(MessageFolderInfo i) {
 		messageFolderInfo = i;
 	}
 
+	/**
+	 * Method setFilterList.
+	 * @param list
+	 */
 	/**
 	 * Method setFilterList.
 	 * @param list
@@ -207,10 +274,18 @@ public abstract class Folder extends FolderTreeNode {
 	 * Method getChanged.
 	 * @return boolean
 	 */
+	/**
+	 * Method getChanged.
+	 * @return boolean
+	 */
 	public boolean getChanged() {
 		return changed;
 	}
 
+	/**
+	 * Method getMessageFolderInfo.
+	 * @return MessageFolderInfo
+	 */
 	/**
 	 * Method getMessageFolderInfo.
 	 * @return MessageFolderInfo
@@ -223,10 +298,18 @@ public abstract class Folder extends FolderTreeNode {
 	 * Method getFilterList.
 	 * @return FilterList
 	 */
+	/**
+	 * Method getFilterList.
+	 * @return FilterList
+	 */
 	public FilterList getFilterList() {
 		return filterList;
 	}
 
+	/**
+	 * Method hasFilters.
+	 * @return boolean
+	 */
 	/**
 	 * Method hasFilters.
 	 * @return boolean
@@ -242,11 +325,24 @@ public abstract class Folder extends FolderTreeNode {
 		}
 	}
 
+	/**
+	 * Method expungeFolder.
+	 * @param uids
+	 * @param worker
+	 * @throws Exception
+	 */
 	public abstract void expungeFolder(
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method addMessage.
+	 * @param message
+	 * @param worker
+	 * @return Object
+	 * @throws Exception
+	 */
 	/**
 	 * Method addMessage.
 	 * 
@@ -260,10 +356,24 @@ public abstract class Folder extends FolderTreeNode {
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method addMessage.
+	 * @param source
+	 * @param worker
+	 * @return Object
+	 * @throws Exception
+	 */
 	public abstract Object addMessage(
 		String source,
 		WorkerStatusController worker)
 		throws Exception;
+	/**
+	 * Method exists.
+	 * @param uid
+	 * @param worker
+	 * @return boolean
+	 * @throws Exception
+	 */
 	/**
 	 * Method exists.
 	 * 
@@ -276,6 +386,12 @@ public abstract class Folder extends FolderTreeNode {
 
 	/**
 	 * Method getHeaderList.
+	 * @param worker
+	 * @return HeaderList
+	 * @throws Exception
+	 */
+	/**
+	 * Method getHeaderList.
 	 * 
 	 * @param worker for accessing the <class>StatusBar</class>
 	 * @return HeaderList 
@@ -284,6 +400,13 @@ public abstract class Folder extends FolderTreeNode {
 	public abstract HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method markMessage.
+	 * @param uids
+	 * @param variant
+	 * @param worker
+	 * @throws Exception
+	 */
 	/**
 	 * Method mark.
 	 * @param uid
@@ -300,6 +423,12 @@ public abstract class Folder extends FolderTreeNode {
 	/**
 	 * Method removeMessage.
 	 * @param uid
+	 * @param worker
+	 * @throws Exception
+	 */
+	/**
+	 * Method removeMessage.
+	 * @param uid
 	 * @throws Exception
 	 */
 	public abstract void removeMessage(
@@ -307,6 +436,14 @@ public abstract class Folder extends FolderTreeNode {
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method getMimePart.
+	 * @param uid
+	 * @param address
+	 * @param worker
+	 * @return MimePart
+	 * @throws Exception
+	 */
 	/**
 	 * Method getMimePart.
 	 * @param uid
@@ -328,11 +465,25 @@ public abstract class Folder extends FolderTreeNode {
 	 * @return String
 	 * @throws Exception
 	 */
+	/**
+	 * Method getMessageSource.
+	 * @param uid
+	 * @param worker
+	 * @return String
+	 * @throws Exception
+	 */
 	public abstract String getMessageSource(
 		Object uid,
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method getMimePartTree.
+	 * @param uid
+	 * @param worker
+	 * @return MimePartTree
+	 * @throws Exception
+	 */
 	/**
 	 * Method getMimePartTree.
 	 * @param uid
@@ -346,6 +497,13 @@ public abstract class Folder extends FolderTreeNode {
 		throws Exception;
 
 	/**
+	 * Method getMessageHeader.
+	 * @param uid
+	 * @param worker
+	 * @return ColumbaHeader
+	 * @throws Exception
+	 */
+	/**
 	 * Method getHeader.
 	 * @param uid
 	 * @param worker
@@ -357,6 +515,10 @@ public abstract class Folder extends FolderTreeNode {
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method addFolderListener.
+	 * @param listener
+	 */
 	/**
 	 * Method getMessage.
 	 * @param uid
@@ -379,10 +541,17 @@ public abstract class Folder extends FolderTreeNode {
 	 * Method removeFolderListener.
 	 * @param listener
 	 */
+	/**
+	 * Method removeFolderListener.
+	 * @param listener
+	 */
 	public void removeFolderListener(FolderChangeListener listener) {
 		folderListeners.remove(listener);
 	}
 
+	/**
+	 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(javax.swing.tree.TreeNode, int)
+	 */
 	/**
 	 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
 	 */
@@ -406,6 +575,10 @@ public abstract class Folder extends FolderTreeNode {
 	 * Method getTreePath.
 	 * @return String
 	 */
+	/**
+	 * Method getTreePath.
+	 * @return String
+	 */
 	public String getTreePath() {
 		TreeNode[] treeNode = getPathToRoot(this, 0);
 
@@ -421,6 +594,11 @@ public abstract class Folder extends FolderTreeNode {
 
 	
 
+	/**
+	 * Method isParent.
+	 * @param folder
+	 * @return boolean
+	 */
 	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#getChild(String)
 	 */
@@ -467,6 +645,9 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#getName()
+	 */
+	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
 	 */
 	public String getName() {
@@ -479,6 +660,9 @@ public abstract class Folder extends FolderTreeNode {
 	}
 
 	/**
+	 * @see org.columba.mail.folder.FolderTreeNode#setName(java.lang.String)
+	 */
+	/**
 	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
 	 */
 	public void setName(String newName) {
@@ -488,10 +672,19 @@ public abstract class Folder extends FolderTreeNode {
 
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	public String toString() {
 		return getName();
 	}
 
+	/**
+	 * Method renameFolder.
+	 * @param name
+	 * @return boolean
+	 * @throws Exception
+	 */
 	/**
 	 * Method renameFolder.
 	 * @param name
@@ -507,9 +700,18 @@ public abstract class Folder extends FolderTreeNode {
 	/**
 	 * Method removeAll.
 	 */
+	/**
+	 * Method removeAll.
+	 */
 	public void removeAll() {
 	}
 
+	/**
+	 * Method getUids.
+	 * @param worker
+	 * @return Object[]
+	 * @throws Exception
+	 */
 	/**
 	 * Method getUids.
 	 * @return Object[]
@@ -518,21 +720,45 @@ public abstract class Folder extends FolderTreeNode {
 		return null;
 	}
 	
+	/**
+	 * Method size.
+	 * @return int
+	 */
 	public int size() {
 		return 0;
 	}
 
+	/**
+	 * Method searchMessages.
+	 * @param filter
+	 * @param uids
+	 * @param worker
+	 * @return Object[]
+	 * @throws Exception
+	 */
 	public abstract Object[] searchMessages(
 		Filter filter,
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method searchMessages.
+	 * @param filter
+	 * @param worker
+	 * @return Object[]
+	 * @throws Exception
+	 */
 	public abstract Object[] searchMessages(
 		Filter filter,
 		WorkerStatusController worker)
 		throws Exception;
 
+	/**
+	 * Method getCommandReference.
+	 * @param r
+	 * @return FolderCommandReference[]
+	 */
 	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
 		return r;
 	}

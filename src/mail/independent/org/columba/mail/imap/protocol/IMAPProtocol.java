@@ -1,17 +1,21 @@
-// This program is free software; you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
-// (at your option) any later version.
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Library General Public License for more details.
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+//
+//$Log: IMAPProtocol.java,v $
+//
 package org.columba.mail.imap.protocol;
 
 import java.io.BufferedOutputStream;
@@ -26,33 +30,113 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
 
+/**
+ * 
+ * @author frd
+ *
+ * This is the implementation of the IMAP protocol as defined in
+ * RFC2060 (http://www.rfc-editor.org). Every IMAP command has
+ * its corresponding function. So, you *really* need to read the 
+ * RFC to understand it.
+ * 
+ * You should also take a look at the following classes:
+ * - <code>IMAPInputStream</code> is a special inputstream which
+ *   handles all IMAP related specialities
+ * - <code>ArgumentWriter</code> takes all arguments you pass 
+ *   to          the server and makes sure they are escaped (etc.) correctly 
+ * - <code>Arguments</code> is a lightweight class to encapsulate the
+ *   different  arguments
+ * - exception classes:
+ *    - <code>BadCommandException</code> 
+ *    - <code>CommandFailedException</code>
+ *    - <code>DisconnectedException</code>
+ *    - <code>IMAPProtocolException</code>
+ * 
+ */
 public class IMAPProtocol {
+	/**
+	 *	default IMAP port 
+	 */
 	public static final int DEFAULT_PORT = 143;
 
+	/**
+	 * line endings
+	 */
 	private static final byte[] CRLF = {(byte) '\r', (byte) '\n' };
 
+	/**
+	 *
+	 * client operation socket
+	 */
 	private Socket socket;
+	
+	/**
+	 * inputstream
+	 */
 	private IMAPInputStream in;
+	/**
+	 * outputstream
+	 */
 	private DataOutputStream out;
 
+	/**
+	 * abstraction layer on top of outputstream
+	 */
 	private ArgumentWriter argumentWriter;
 
+	/**
+	 * IMAP server answer 
+	 */
 	public String answer;
 
+	/**
+	 * starting character of our client TAG
+	 */
 	private String userId = new String("A");
+	/**
+	 * id complements the "userId" and
+	 * is increased everytime we send a command
+	 */
 	private int id = 0;
+	/**
+	 * idString combines the userId and the id
+	 */
 	private String idString;
 
+	/**
+	 * 
+	 */
 	private String result;
 
+	/**
+	 * default constructor
+	 * @see java.lang.Object#Object()
+	 */
 	public IMAPProtocol() {
 
 	}
 
+	/**
+	 * Method openPort with default port
+	 * 
+	 * 
+	 * @param host
+	 * @return boolean
+	 * @throws IOException
+	 */
 	public boolean openPort(String host) throws IOException {
 		return openPort(host, DEFAULT_PORT);
 	}
 
+	/**
+	 * Method openPort
+	 * 
+	 * 
+	 * @param host		name of IMAP server
+	 * @param port	    port of IMAP server
+	 * @return boolean  true if connection was established correctly
+	 * @throws IOException
+	 */
 	public boolean openPort(String host, int port) throws IOException {
 
 		socket = new Socket(host, port);
@@ -73,16 +157,35 @@ public class IMAPProtocol {
 			return false;
 	}
 
+	/**
+	 * Method generateIdentifier.
+	 * 
+	 * generate client request ID
+	 * 
+	 * 
+	 * @return String
+	 */
 	protected String generateIdentifier() {
 		id++;
 		idString = new String(userId + new Integer(id).toString());
 		return idString;
 	}
 
+	/**
+	 * Method getOutputStream.
+	 * @return DataOutputStream
+	 */
 	public DataOutputStream getOutputStream() {
 		return out;
 	}
 
+	/**
+	 * Method sendString.
+	 * @param s
+	 * @param args
+	 * @return String
+	 * @throws Exception
+	 */
 	public String sendString(String s, Arguments args) throws Exception {
 		StringBuffer buf = new StringBuffer();
 
@@ -103,6 +206,12 @@ public class IMAPProtocol {
 		return id;
 	}
 
+	/**
+	 * Method getResponse.
+	 * @param worker
+	 * @return IMAPResponse
+	 * @throws Exception
+	 */
 	public IMAPResponse getResponse(WorkerStatusController worker) throws Exception {
 		String answer = in.readResponse(worker);
 
@@ -111,6 +220,13 @@ public class IMAPProtocol {
 		return new IMAPResponse(answer);
 	}
 
+	/**
+	 * Method sendCommand.
+	 * @param command
+	 * @param args
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	protected synchronized IMAPResponse[] sendCommand(
 		String command,
 		Arguments args)
@@ -158,6 +274,14 @@ public class IMAPProtocol {
 
 	}
 
+	/**
+	 * Method sendCommand.
+	 * @param command
+	 * @param args
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	protected synchronized IMAPResponse[] sendCommand(
 		String command,
 		Arguments args,
@@ -204,6 +328,15 @@ public class IMAPProtocol {
 
 	}
 	
+	/**
+	 * Method sendCommand.
+	 * @param command
+	 * @param args
+	 * @param count
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	protected synchronized IMAPResponse[] sendCommand(
 			String command,
 			Arguments args,
@@ -258,6 +391,12 @@ public class IMAPProtocol {
 
 		}
 
+	/**
+	 * Method sendSimpleCommand.
+	 * @param command
+	 * @param args
+	 * @throws Exception
+	 */
 	protected synchronized void sendSimpleCommand(
 		String command,
 		Arguments args)
@@ -270,6 +409,11 @@ public class IMAPProtocol {
 		handleResult(r[r.length - 1]);
 	}
 
+	/**
+	 * Method handleResult.
+	 * @param response
+	 * @throws Exception
+	 */
 	public void handleResult(IMAPResponse response) throws Exception {
 		if (response.isOK())
 			return;
@@ -283,6 +427,10 @@ public class IMAPProtocol {
 		}
 	}
 
+	/**
+	 * Method notifyResponseHandler.
+	 * @param responses
+	 */
 	/******************* response handler **********************/
 
 	protected void notifyResponseHandler(IMAPResponse[] responses) {
@@ -302,6 +450,10 @@ public class IMAPProtocol {
 		}
 	}
 
+	/**
+	 * Method handleResponse.
+	 * @param r
+	 */
 	protected void handleResponse(IMAPResponse r) {
 		//System.out.println("handleResponse");
 
@@ -319,6 +471,12 @@ public class IMAPProtocol {
 
 	}
 
+	/**
+	 * Method login.
+	 * @param user
+	 * @param password
+	 * @throws Exception
+	 */
 	/**************** any state commands ***********************/
 
 	public void login(String user, String password) throws Exception {
@@ -331,6 +489,12 @@ public class IMAPProtocol {
 
 	}
 
+	/**
+	 * Method select.
+	 * @param mailbox
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	/************************ authenticate state commands **************************/
 
 	public IMAPResponse[] select(String mailbox) throws Exception {
@@ -351,6 +515,14 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchList.
+	 * @param cmd
+	 * @param reference
+	 * @param pattern
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchList(
 		String cmd,
 		String reference,
@@ -371,16 +543,35 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method lsub.
+	 * @param reference
+	 * @param pattern
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] lsub(String reference, String pattern)
 		throws Exception {
 		return fetchList("LSUB", reference, pattern);
 	}
 
+	/**
+	 * Method list.
+	 * @param reference
+	 * @param pattern
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] list(String reference, String pattern)
 		throws Exception {
 		return fetchList("LIST", reference, pattern);
 	}
 
+	/**
+	 * Method create.
+	 * @param mailbox
+	 * @throws Exception
+	 */
 	public void create(String mailbox) throws Exception {
 
 		Arguments args = new Arguments();
@@ -389,6 +580,11 @@ public class IMAPProtocol {
 		sendSimpleCommand("CREATE", args);
 	}
 
+	/**
+	 * Method delete.
+	 * @param mailbox
+	 * @throws Exception
+	 */
 	public void delete(String mailbox) throws Exception {
 
 		Arguments args = new Arguments();
@@ -397,6 +593,12 @@ public class IMAPProtocol {
 		sendSimpleCommand("DELETE", args);
 	}
 
+	/**
+	 * Method rename.
+	 * @param oldMailbox
+	 * @param newMailbox
+	 * @throws Exception
+	 */
 	public void rename(String oldMailbox, String newMailbox) throws Exception {
 
 		Arguments args = new Arguments();
@@ -406,6 +608,11 @@ public class IMAPProtocol {
 		sendSimpleCommand("RENAME", args);
 	}
 
+	/**
+	 * Method subscribe.
+	 * @param oldMailbox
+	 * @throws Exception
+	 */
 	public void subscribe(String oldMailbox) throws Exception {
 
 		Arguments args = new Arguments();
@@ -414,6 +621,11 @@ public class IMAPProtocol {
 		sendSimpleCommand("SUBSCRIBE", args);
 	}
 
+	/**
+	 * Method unsubscribe.
+	 * @param oldMailbox
+	 * @throws Exception
+	 */
 	public void unsubscribe(String oldMailbox) throws Exception {
 
 		Arguments args = new Arguments();
@@ -422,6 +634,12 @@ public class IMAPProtocol {
 		sendSimpleCommand("UNSUBSCRIBE", args);
 	}
 
+	/**
+	 * Method append.
+	 * @param mailBox
+	 * @param messageSource
+	 * @throws Exception
+	 */
 	public void append(String mailBox, String messageSource) throws Exception {
 
 		Arguments args = new Arguments();
@@ -432,6 +650,14 @@ public class IMAPProtocol {
 
 	}
 
+	/**
+	 * Method fetch.
+	 * @param item
+	 * @param messageSet
+	 * @param uid
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	/******************************** selected state commands *************************/
 
 	public IMAPResponse[] fetch(String item, String messageSet, boolean uid)
@@ -444,6 +670,15 @@ public class IMAPProtocol {
 			return sendCommand("FETCH " + messageSet + " (" + item + ")", null);
 	}
 	
+	/**
+	 * Method fetch.
+	 * @param item
+	 * @param messageSet
+	 * @param uid
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetch(String item, String messageSet, boolean uid, WorkerStatusController worker)
 			throws Exception {
 			if (uid)
@@ -453,6 +688,16 @@ public class IMAPProtocol {
 			else
 				return sendCommand("FETCH " + messageSet + " (" + item + ")", null, worker);
 		}
+	/**
+	 * Method fetch.
+	 * @param item
+	 * @param messageSet
+	 * @param uid
+	 * @param count
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetch(String item, String messageSet, boolean uid, int count, WorkerStatusController worker)
 				throws Exception {
 				if (uid)
@@ -463,6 +708,14 @@ public class IMAPProtocol {
 					return sendCommand("FETCH " + messageSet + " (" + item + ")", null, count, worker);
 			}
 
+	/**
+	 * Method fetchUIDList.
+	 * @param messageSet
+	 * @param count
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchUIDList(String messageSet, int count, WorkerStatusController worker) throws Exception {
 
 		IMAPResponse[] responses = fetch("UID", messageSet, false, count, worker);
@@ -476,6 +729,14 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchFlagsList.
+	 * @param messageSet
+	 * @param count
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchFlagsList(String messageSet, int count, WorkerStatusController worker) throws Exception {
 
 		IMAPResponse[] responses = fetch("FLAGS", messageSet, true, count, worker);
@@ -489,6 +750,13 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchHeaderList.
+	 * @param messageSet
+	 * @param headerFields
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchHeaderList(
 		String messageSet,
 		String headerFields)
@@ -510,6 +778,12 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchMimePartTree.
+	 * @param messageSet
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchMimePartTree(String messageSet)
 		throws Exception {
 
@@ -524,6 +798,14 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchMimePart.
+	 * @param messageSet
+	 * @param address
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchMimePart(String messageSet, Integer[] address, WorkerStatusController worker)
 		throws Exception {
 
@@ -546,6 +828,13 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method fetchMessageSource.
+	 * @param messageSet
+	 * @param worker
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] fetchMessageSource(String messageSet, WorkerStatusController worker)
 		throws Exception {
 
@@ -560,6 +849,14 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method storeFlags.
+	 * @param messageSet
+	 * @param flags
+	 * @param enable
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] storeFlags(
 		String messageSet,
 		String flags,
@@ -587,6 +884,11 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method expunge.
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] expunge() throws Exception {
 
 		IMAPResponse[] responses = sendCommand("EXPUNGE", null);
@@ -600,6 +902,12 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method search.
+	 * @param searchString
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] search(String searchString) throws Exception {
 
 		IMAPResponse[] responses =
@@ -614,6 +922,13 @@ public class IMAPProtocol {
 		return responses;
 	}
 
+	/**
+	 * Method copy.
+	 * @param messageSet
+	 * @param mailbox
+	 * @return IMAPResponse[]
+	 * @throws Exception
+	 */
 	public IMAPResponse[] copy(String messageSet, String mailbox)
 		throws Exception {
 
