@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# $Id: shutdown.sh,v 1.1 1999/10/09 00:20:56 duncan Exp $
+# $Id: shutdown.sh,v 1.2 1999/12/05 17:02:42 harishp Exp $
 
 # Shell script to shutdown the server
 
@@ -12,40 +12,6 @@
 #jre -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Shutdown $*
 #java -cp runner.jar:servlet.jar:classes org.apache.tomcat.shell.Shutdown $*
 
-baseDir=`dirname $0`
+BASEDIR=`dirname $0`
 
-jsdkJars=${baseDir}/webserver.jar:${baseDir}/lib/servlet.jar
-jspJars=${baseDir}/lib/jasper.jar
-beanJars=${baseDir}/webpages/WEB-INF/classes/jsp/beans:${baseDir}/examples/WEB-INF/classes/jsp/beans
-miscJars=${baseDir}/lib/xml.jar
-appJars=${jsdkJars}:${jspJars}:${beanJars}:${miscJars}
-sysJars=${JAVA_HOME}/lib/tools.jar
-
-appClassPath=${appJars}
-cp=$CLASSPATH
-
-# Backdoor classpath setting for development purposes when all classes
-# are compiled into a /classes dir and are not yet jarred.
-
-if [ -d ${baseDir}/classes ]; then
-    appClassPath=${baseDir}/classes:${appClassPath}
-fi
-
-CLASSPATH=${appClassPath}:${sysJars}
-export CLASSPATH
-
-if [ "$cp" != "" ]; then
-    CLASSPATH=${CLASSPATH}:${cp}
-    export CLASSPATH
-fi
-
-echo Using classpath: ${CLASSPATH}
-
-java org.apache.tomcat.shell.Shutdown $*
-
-if [ "$cp" != "" ]; then
-    CLASSPATH=${cp}
-    export CLASSPATH
-else
-    unset CLASSPATH
-fi
+$BASEDIR/tomcat.sh stop "$@"

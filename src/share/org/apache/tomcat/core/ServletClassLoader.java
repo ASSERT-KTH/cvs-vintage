@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.2 1999/11/28 23:52:30 harishp Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/28 23:52:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletClassLoader.java,v 1.3 1999/12/05 17:02:37 harishp Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/12/05 17:02:37 $
  *
  * ====================================================================
  *
@@ -70,7 +70,7 @@ import java.util.*;
 
 /**
  * This class now extends NetworkClassLoader. Previous
- * implementation of ServletClassLoader is called ServletLoader.
+ * implementation of ServletClassLoader was called ServletLoader.
  * This implementation is a complete rewrite of the earlier
  * class loader. This should speed up performance compared
  * to the earlier class loader.
