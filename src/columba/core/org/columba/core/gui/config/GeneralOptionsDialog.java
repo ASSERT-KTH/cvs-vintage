@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.config;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -22,12 +23,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 import org.columba.core.config.GuiItem;
 import org.columba.core.gui.plugin.ConfigurationDialog;
 import org.columba.core.gui.themes.ThemeSwitcher;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CheckBoxWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.gui.util.FontSelectionDialog;
-import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.*;
 import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -36,7 +32,6 @@ import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -45,22 +40,11 @@ import java.awt.event.KeyEvent;
 
 import java.util.Locale;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
-
+/**
+ * Shows a dialog for managing general options such as font settings.
+ */
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
@@ -122,9 +106,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         }
 
         initComponents();
-
         layoutComponents();
-
         updateComponents(true);
 
         pack();
@@ -347,9 +329,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         buttonPanel.add(okButton);
-
         buttonPanel.add(cancelButton);
-
         buttonPanel.add(helpButton);
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
@@ -409,17 +389,7 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
                     RESOURCE_PATH, "general", "locale"));
         languageComboBox = new JComboBox();
         languageLabel.setLabelFor(languageComboBox);
-        languageComboBox.setRenderer(new DefaultListCellRenderer() {
-                public Component getListCellRendererComponent(JList list,
-                    Object value, int index, boolean isSelected,
-                    boolean hasFocus) {
-                    JLabel label = (JLabel) super.getListCellRendererComponent(list,
-                            value, index, isSelected, hasFocus);
-                    label.setText(((Locale) value).getDisplayName());
-
-                    return label;
-                }
-            });
+        languageComboBox.setRenderer(new LocaleComboBoxRenderer());
 
         // button panel
         okButton = new ButtonWithMnemonic(GlobalResourceLoader.getString("",
@@ -444,12 +414,6 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent event) {
         String action = event.getActionCommand();
-
-        if (action == null) {
-            return;
-        }
-
-        Object source = event.getSource();
 
         if (action.equals("OK")) {
             setVisible(false);
@@ -480,16 +444,13 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
 
             configID = handler.getAttribute(theme, "config");
 
-            if (configID == null) {
-                lfButton.setEnabled(false);
-            } else {
-                lfButton.setEnabled(true);
-            }
+            lfButton.setEnabled(configID != null);
         } else if (action.equals("THEME_OPTIONS")) {
             String theme = (String) lfComboBox.getSelectedItem();
             new ConfigurationDialog(configID);
         }
 
+        Object source = event.getSource();
         if (source == mainFontButton) {
             FontSelectionDialog fontDialog = new FontSelectionDialog(null);
 

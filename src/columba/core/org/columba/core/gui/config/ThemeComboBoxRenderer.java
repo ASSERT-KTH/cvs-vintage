@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.config;
 
 import org.columba.core.gui.util.NotifyDialog;
@@ -24,21 +25,13 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-
+import javax.swing.DefaultListCellRenderer;
 
 /**
- * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * Renders UI themes.
  */
-public class ThemeComboBoxRenderer extends JLabel implements ListCellRenderer {
-    protected static Border noFocusBorder;
-    ThemePluginHandler pluginHandler;
+public class ThemeComboBoxRenderer extends DefaultListCellRenderer {
+    protected ThemePluginHandler pluginHandler;
 
     public ThemeComboBoxRenderer() {
         super();
@@ -50,13 +43,6 @@ public class ThemeComboBoxRenderer extends JLabel implements ListCellRenderer {
             NotifyDialog d = new NotifyDialog();
             d.showDialog(ex);
         }
-
-        if (noFocusBorder == null) {
-            noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-        }
-
-        setOpaque(true);
-        setBorder(noFocusBorder);
     }
 
     /* (non-Javadoc)
@@ -64,24 +50,13 @@ public class ThemeComboBoxRenderer extends JLabel implements ListCellRenderer {
  */
     public Component getListCellRendererComponent(JList list, Object value,
         int index, boolean isSelected, boolean cellHasFocus) {
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(list.getSelectionForeground());
-        } else {
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-        }
 
-        setBorder((cellHasFocus)
-            ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
-
+        JLabel label = (JLabel) super.getListCellRendererComponent(list,
+                value, index, isSelected, cellHasFocus);
         // id = org.columba.example.HelloWorld$HelloWorldPlugin
         String id = (String) value;
-
         String userVisibleName = pluginHandler.getUserVisibleName(id);
-
-        setText(userVisibleName);
-
-        return this;
+        label.setText(userVisibleName);
+        return label;
     }
 }
