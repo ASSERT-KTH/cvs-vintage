@@ -19,7 +19,7 @@ import javax.management.*;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.2 $
+ *   @version $Revision: 1.3 $
  */
 public class ConsoleLogging
    implements ConsoleLoggingMBean, MBeanRegistration, NotificationListener
@@ -29,8 +29,7 @@ public class ConsoleLogging
     
    // Attributes ----------------------------------------------------
    PrintStream out, err;
-   DateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd hh.mm");
-   String format = "<{0}><{2}> {4}";
+   String format = "<{0,date,yyyy-MM-dd} {0,time,hh.mm}><{2}> {4}";
    MessageFormat msgFmt = new MessageFormat(format);
    
    boolean verbose = false;
@@ -64,8 +63,7 @@ public class ConsoleLogging
    public synchronized void handleNotification(Notification n,
                                   java.lang.Object handback)
    {
-      //AS FIXME this change is just a hack (dateFmt.format(...))
-      Object[] args = new Object[] { dateFmt.format(new Date(n.getTimeStamp())), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
+            Object[] args = new Object[] { new Date(n.getTimeStamp()), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
       if (n.getType().equals("Error") || n.getType().equals("Warning"))
          err.println(msgFmt.format(args));
       else         
