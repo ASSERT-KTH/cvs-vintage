@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------
-$Id: README.txt,v 1.4 2002/02/27 01:40:00 jmcnally Exp $
+$Id: README.txt,v 1.5 2002/03/08 00:14:06 jmcnally Exp $
 --------------------------------------------------------------------------
 
 The files in this directory are here for your convenience in building
@@ -58,6 +58,24 @@ considered 'standard' and well supported in our community circles.
 * commons-util*.jar
 
   Re-usable utility code.
+
+  http://cvs.apache.org/viewcvs.cgi/jakarta-commons-sandbox/util/
+
+* commons-http*.jar
+
+  Re-usable http utility code. (Used in turbine.)
+
+  http://cvs.apache.org/viewcvs.cgi/jakarta-commons-sandbox/http/
+
+* commons-io*.jar
+
+  Re-usable io utility code. (Used in stratum.)
+
+  http://cvs.apache.org/viewcvs.cgi/jakarta-commons-sandbox/io/
+
+* commons-codec*.jar
+
+  Re-usable codec utility code. (Used in fulcrum.)
 
   http://cvs.apache.org/viewcvs.cgi/jakarta-commons-sandbox/util/
 
