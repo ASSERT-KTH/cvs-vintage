@@ -24,7 +24,7 @@
 // File: DisplayTextTree.java
 // Classes: DisplayTextTree
 // Original Author:
-// $Id: DisplayTextTree.java,v 1.4 2002/07/08 20:22:45 linus Exp $
+// $Id: DisplayTextTree.java,v 1.5 2002/08/12 14:13:31 thierrylach Exp $
 
 // 26 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Patch to give a better
 // naming for extension points in convertValueToText.
@@ -44,9 +44,12 @@ import ru.novosoft.uml.*;
 import ru.novosoft.uml.behavior.state_machines.*;
 import ru.novosoft.uml.behavior.use_cases.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.MTaggedValue;
+import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
 import org.tigris.gef.base.*;
 
+import org.argouml.application.api.Configuration;
+import org.argouml.application.api.Notation;
 import org.argouml.kernel.*;
 import org.argouml.cognitive.*;
 import org.argouml.uml.generator.*;
@@ -78,7 +81,7 @@ implements MElementListener, VetoableChangeListener {
     if (value instanceof MTaggedValue) {
         String tagName = ((MTaggedValue)value).getTag();
         if (tagName == null || tagName.equals("")) tagName = "(anon)";
-        return(tagName);
+        return("1-" + tagName);
     }
     if ((value instanceof MElement)&&(!(value instanceof MTaggedValue))) {
       // original
@@ -94,6 +97,16 @@ implements MElementListener, VetoableChangeListener {
           name = GeneratorDisplay.Generate((MExtensionPoint) e);
       }
       if (name == null || name.equals("")) name = "(anon " + ocl + ")";
+
+      // Look for stereotype
+      if (Configuration.getBoolean(Notation.KEY_SHOW_STEREOTYPES, false)) {
+          if (e instanceof MModelElement) {
+              MStereotype st = ((MModelElement)e).getStereotype();
+	      if (st != null) {
+		  name += " " + GeneratorDisplay.Generate(st);
+	      }
+          }
+      }
       return name;
     }
     if (value instanceof Diagram) {
