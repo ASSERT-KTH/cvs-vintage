@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.externaltools;
 
 import net.javaprog.ui.wizard.DataLookup;
@@ -34,6 +33,7 @@ import org.columba.core.plugin.ExternalToolsPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
 import javax.help.CSH;
+
 
 /**
  * Launches external tools wizard.
@@ -80,14 +80,16 @@ public class ExternalToolsWizardLauncher {
             });
 
         WizardModel model;
+
         if (firstTime) {
             model = new DefaultWizardModel(new Step[] {
-                    new DescriptionStep(data), new LocationStep(data)
-            });
+                        new DescriptionStep(data), new LocationStep(data)
+                    });
         } else {
             model = new DefaultWizardModel(new Step[] {
-                    new InfoStep(), new DescriptionStep(data), new LocationStep(data)
-            });
+                        new InfoStep(), new DescriptionStep(data),
+                        new LocationStep(data)
+                    });
         }
 
         listener = new ExternalToolsWizardModelListener(data);
@@ -98,7 +100,8 @@ public class ExternalToolsWizardLauncher {
                 ImageLoader.getSmallImageIcon("stock_preferences.png"));
 
         CSH.setHelpIDString(wizard, "extending_columba_2");
-        JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpManager().getHelpBroker());
+        JavaHelpSupport.enableHelp(wizard,
+            HelpManager.getHelpManager().getHelpBroker());
 
         wizard.pack();
         wizard.setLocationRelativeTo(null);
@@ -110,8 +113,8 @@ public class ExternalToolsWizardLauncher {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public DataModel getData() {
         return data;
     }

@@ -13,8 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
+
+import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
+
+import org.columba.mail.gui.util.AddressLabel;
+import org.columba.mail.gui.util.URLLabel;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -26,8 +31,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -47,10 +54,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.AddressLabel;
-import org.columba.mail.gui.util.URLLabel;
 
 public class AboutDialog extends JDialog implements ActionListener {
     public static final String CMD_CLOSE = "CLOSE";
@@ -58,9 +61,9 @@ public class AboutDialog extends JDialog implements ActionListener {
     protected static AboutDialog instance;
 
     protected AboutDialog() {
-        super((JFrame)null, GlobalResourceLoader.getString(
-                    RESOURCE_BUNDLE_PATH, "about", "title") +
-                MainInterface.version);
+        super((JFrame) null,
+            GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "about",
+                "title") + MainInterface.version);
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFocusable(false);
@@ -69,14 +72,14 @@ public class AboutDialog extends JDialog implements ActionListener {
         authorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
         GridBagConstraints c = new GridBagConstraints();
-        
+
         JLabel imageLabel = new JLabel(ImageLoader.getImageIcon("startup.png"));
         c.gridx = 0;
         c.gridy = 0;
         c.anchor = GridBagConstraints.WEST;
         c.gridwidth = GridBagConstraints.REMAINDER;
         authorPanel.add(imageLabel, c);
-        
+
         JLabel authorLabel = new JLabel(GlobalResourceLoader.getString(
                     RESOURCE_BUNDLE_PATH, "about", "authors"));
 
@@ -90,9 +93,10 @@ public class AboutDialog extends JDialog implements ActionListener {
 
         c.gridy = 1;
         c.gridwidth = 1;
+
         Component box = Box.createRigidArea(new Dimension(10, 10));
         authorPanel.add(box, c);
-        
+
         c.gridy = 2;
         authorPanel.add(authorLabel, c);
 
@@ -113,6 +117,7 @@ public class AboutDialog extends JDialog implements ActionListener {
 
         JLabel websiteLabel = new JLabel(GlobalResourceLoader.getString(
                     RESOURCE_BUNDLE_PATH, "about", "website"));
+
         if (font != null) {
             websiteLabel.setFont(font);
         }
@@ -123,66 +128,60 @@ public class AboutDialog extends JDialog implements ActionListener {
         authorPanel.add(websiteLabel, c);
 
         URLLabel websiteUrl = null;
+
         try {
             websiteUrl = new URLLabel(new URL("http://columba.sourceforge.net"));
-        } catch (MalformedURLException mue) {} //does not occur
+        } catch (MalformedURLException mue) {
+        }
+         //does not occur
 
         c.gridx = 2;
         c.gridwidth = GridBagConstraints.REMAINDER;
         authorPanel.add(websiteUrl, c);
 
         //TODO: i18n
-        tabbedPane.addTab(GlobalResourceLoader.getString(
-                RESOURCE_BUNDLE_PATH, "about", "authorsPane"), authorPanel);
-        
+        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+                "about", "authorsPane"), authorPanel);
+
         JPanel contributorPanel = new JPanel(new BorderLayout(0, 5));
-        contributorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+        contributorPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11,
+                11));
+
         JLabel contributorLabel = new JLabel(GlobalResourceLoader.getString(
-                RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
+                    RESOURCE_BUNDLE_PATH, "about", "contributorLabel"));
         contributorPanel.add(contributorLabel, BorderLayout.NORTH);
-        JList contributorList = new JList(new String[]{
-                "Thomas Wabner",
-                "Karl Peder Olesen",
-                "Eric Mattsson",
-                "Riyad Kalla",
-                "Michael Rudolf",
-                "Luca Santarelli",
-                "Eduardo P\u00E8rez",
-                "John Murga",
-                "Anthony Parent",
-                "Jari Vuoksenranta",
-                "Nicolas B\u00E9theuil",
-                "Romain Guy",
-                "Thomas Singer",
-                "David Jeske",
-                "Christopher Burkey",
-                "Paul A. Golder",
-                "David Brusowanking",
-                "Paul Nicholls",
-                "Paul E. Baclace"
-        });
+
+        JList contributorList = new JList(new String[] {
+                    "Thomas Wabner", "Karl Peder Olesen", "Eric Mattsson",
+                    "Riyad Kalla", "Michael Rudolf", "Luca Santarelli",
+                    "Eduardo P\u00E8rez", "John Murga", "Anthony Parent",
+                    "Jari Vuoksenranta", "Nicolas B\u00E9theuil", "Romain Guy",
+                    "Thomas Singer", "David Jeske", "Christopher Burkey",
+                    "Paul A. Golder", "David Brusowanking", "Paul Nicholls",
+                    "Paul E. Baclace"
+                });
         contributorLabel.setLabelFor(contributorList);
         contributorPanel.add(new JScrollPane(contributorList));
-        
-        tabbedPane.addTab(GlobalResourceLoader.getString(
-                RESOURCE_BUNDLE_PATH, "about", "contributorPane"), contributorPanel);
+
+        tabbedPane.addTab(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH,
+                "about", "contributorPane"), contributorPanel);
+
         if (MainInterface.DEBUG) {
-                tabbedPane.addTab("Memory", new MemoryPanel());
+            tabbedPane.addTab("Memory", new MemoryPanel());
         }
-		
+
         JPanel center = new JPanel();
-        center.setLayout( new BorderLayout());
-        center.setBorder( BorderFactory.createEmptyBorder(12,12,12,12));
+        center.setLayout(new BorderLayout());
+        center.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         center.add(tabbedPane, BorderLayout.CENTER);
 
-        getContentPane().add(center,BorderLayout.CENTER);
-		
+        getContentPane().add(center, BorderLayout.CENTER);
+
         JPanel buttonPanel = new JPanel(new BorderLayout(0, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 12, 11, 11));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-                GlobalResourceLoader.getString(
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
                     "global", "global", "close"));
         closeButton.setActionCommand(CMD_CLOSE);
         closeButton.addActionListener(this);
@@ -201,11 +200,12 @@ public class AboutDialog extends JDialog implements ActionListener {
             setVisible(false);
         }
     }
-    
+
     public synchronized static AboutDialog getInstance() {
         if (instance == null) {
             instance = new AboutDialog();
         }
+
         return instance;
     }
 
@@ -255,6 +255,7 @@ public class AboutDialog extends JDialog implements ActionListener {
             currentMemoryTextField = new JFormattedTextField(NumberFormat.getInstance());
             totalMemoryTextField = new JFormattedTextField(NumberFormat.getInstance());
             maxMemoryTextField = new JFormattedTextField();
+
             JButton gcButton = new JButton(ImageLoader.getImageIcon(
                         "stock_delete-16.png"));
 
@@ -309,7 +310,7 @@ public class AboutDialog extends JDialog implements ActionListener {
             c.gridx = 2;
             c.insets = new Insets(0, 0, 0, 0);
             add(maxMemoryKBLabel, c);
-            
+
             progressBar = new JProgressBar();
             progressBar.setPreferredSize(gcButton.getPreferredSize());
             progressBar.setStringPainted(true);
@@ -325,7 +326,7 @@ public class AboutDialog extends JDialog implements ActionListener {
                     public void actionPerformed(ActionEvent evt) {
                         System.gc();
                     }
-            });
+                });
             c.gridx = 5;
             c.gridwidth = 1;
             c.insets = new Insets(10, 6, 0, 0);
@@ -338,7 +339,7 @@ public class AboutDialog extends JDialog implements ActionListener {
         protected static final int MEMORY_UPDATE_THRESHOLD = 50; // 50k
         protected MemoryPanel memoryPanel;
         protected Runtime runtime = Runtime.getRuntime();
-        
+
         public MemoryMonitorThread(MemoryPanel memoryPanel) {
             this.memoryPanel = memoryPanel;
             setPriority(Thread.MIN_PRIORITY);
@@ -348,10 +349,11 @@ public class AboutDialog extends JDialog implements ActionListener {
         public void run() {
             while (!isInterrupted()) {
                 SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        updateDisplay();
-                    }
-                });
+                        public void run() {
+                            updateDisplay();
+                        }
+                    });
+
                 try {
                     Thread.sleep(750);
                 } catch (InterruptedException ie) {
@@ -359,7 +361,7 @@ public class AboutDialog extends JDialog implements ActionListener {
                 }
             }
         }
-        
+
         protected void updateDisplay() {
             int totalMem = (int) (runtime.totalMemory() / 1000);
             int currMem = (int) (totalMem - (runtime.freeMemory() / 1000));

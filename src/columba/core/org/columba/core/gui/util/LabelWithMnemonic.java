@@ -28,15 +28,15 @@ import javax.swing.JLabel;
  */
 public class LabelWithMnemonic extends JLabel {
     /**
-     * default constructor
-     */
+ * default constructor
+ */
     public LabelWithMnemonic() {
         super();
     }
 
     /**
-     * @param str        text including a mnemonic
-     */
+ * @param str        text including a mnemonic
+ */
     public LabelWithMnemonic(String textWithMnemonic) {
         super();
 

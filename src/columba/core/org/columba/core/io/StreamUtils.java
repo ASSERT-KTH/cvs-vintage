@@ -30,14 +30,14 @@ public class StreamUtils {
     private static final Charset _8BitCharset = Charset.forName("ISO-8859-1");
 
     /**
-     * Copied all bytes from an InputStream to an OutputStream. The Bufsize should be 8000 bytes or 16000 bytes. This
-     * is platform dependend. A higher number of bytes to read on block, blocks the operation for a greater time.
-     * @param _isInput InputStream from wihch the bytes are to copied.
-     * @param _osOutput OutputStream in which the bytes are copied.
-     * @param _iBufSize The Buffer size. How many bytes on block are should be copied.
-     * @return Number of bytes which are copied.
-     * @throws Exception If the Streams are unavailable.
-     */
+ * Copied all bytes from an InputStream to an OutputStream. The Bufsize should be 8000 bytes or 16000 bytes. This
+ * is platform dependend. A higher number of bytes to read on block, blocks the operation for a greater time.
+ * @param _isInput InputStream from wihch the bytes are to copied.
+ * @param _osOutput OutputStream in which the bytes are copied.
+ * @param _iBufSize The Buffer size. How many bytes on block are should be copied.
+ * @return Number of bytes which are copied.
+ * @throws Exception If the Streams are unavailable.
+ */
     public static long streamCopy(InputStream _isInput, OutputStream _osOutput,
         int _iBufSize) throws IOException {
         byte[] _aBuffer = new byte[_iBufSize];
@@ -53,25 +53,25 @@ public class StreamUtils {
     }
 
     /**
-     * Copied all bytes from an InputStream to an OutputStream. The Bufsize is set to 8000 bytes.
-     * @param _isInput InputStream from wihch the bytes are to copied.
-     * @param _osOutput OutputStream in which the bytes are copied.
-     * @return Number of bytes which are copied.
-     * @throws Exception If the Streams are unavailable.
-     */
+ * Copied all bytes from an InputStream to an OutputStream. The Bufsize is set to 8000 bytes.
+ * @param _isInput InputStream from wihch the bytes are to copied.
+ * @param _osOutput OutputStream in which the bytes are copied.
+ * @return Number of bytes which are copied.
+ * @throws Exception If the Streams are unavailable.
+ */
     public static long streamCopy(InputStream _isInput, OutputStream _osOutput)
         throws IOException {
         return streamCopy(_isInput, _osOutput, BUFFERSIZE);
     }
 
     /**
-     * Reads a InputStream into a StringBuffer.
-     * This method is 8bit safe.
-     *
-     * @param in the InputStream to read from
-     * @return the interpreted InputStream
-     * @throws IOException
-     */
+ * Reads a InputStream into a StringBuffer.
+ * This method is 8bit safe.
+ *
+ * @param in the InputStream to read from
+ * @return the interpreted InputStream
+ * @throws IOException
+ */
     public static StringBuffer readInString(InputStream in)
         throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(BUFFERSIZE);
@@ -90,12 +90,12 @@ public class StreamUtils {
     }
 
     /** Copies all bytes from the given InputStream in a intern ByteArrayOutputStream and returnes a new InputStream
-     * with all bytes from the ByteArrayOutputStream. The data are real copied so this methods "clones" the given
-     * Inputstream and gives back a new InputStream with same Data.
-     * @param from InputStream from which all datas are to copy
-     * @return a new InputStream with all data from the given InputStream
-     * @throws IOException
-     */
+ * with all bytes from the ByteArrayOutputStream. The data are real copied so this methods "clones" the given
+ * Inputstream and gives back a new InputStream with same Data.
+ * @param from InputStream from which all datas are to copy
+ * @return a new InputStream with all data from the given InputStream
+ * @throws IOException
+ */
     public static InputStream streamClone(InputStream from)
         throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

@@ -20,12 +20,12 @@ public class ColorFactory {
     private static Map colors = new Hashtable();
 
     /**
-     * Returns a <code>Color</code> object for the specified rgb value.
-     * The method returns the same object if it is accessed with the same
-     * rgb value.
-     * @param rgb the rgb value.
-     * @return a <code>Color</code> object.
-     */
+ * Returns a <code>Color</code> object for the specified rgb value.
+ * The method returns the same object if it is accessed with the same
+ * rgb value.
+ * @param rgb the rgb value.
+ * @return a <code>Color</code> object.
+ */
     public static Color getColor(int rgb) {
         Integer key = new Integer(rgb);
         Color color = (Color) colors.get(key);
@@ -39,8 +39,8 @@ public class ColorFactory {
     }
 
     /**
-     * Clears all Colors from this factory.
-     */
+ * Clears all Colors from this factory.
+ */
     public static void clear() {
         colors.clear();
     }

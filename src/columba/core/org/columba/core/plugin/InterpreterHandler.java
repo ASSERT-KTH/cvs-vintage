@@ -33,18 +33,18 @@ public class InterpreterHandler extends AbstractPluginHandler {
     private Hashtable interpreterTable;
 
     /**
-     * Constructor for InterpreterHandler.
-     * @param id
-     * @param config
-     */
+ * Constructor for InterpreterHandler.
+ * @param id
+ * @param config
+ */
     public InterpreterHandler() {
         super("org.columba.core.interpreter", null);
         interpreterTable = new Hashtable();
     }
 
     /**
-     * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
-     */
+ * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
+ */
     public String[] getPluginIdList() {
         return null;
     }
@@ -54,8 +54,8 @@ public class InterpreterHandler extends AbstractPluginHandler {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-     */
+ * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+ */
     public void addExtension(String id, XmlElement extension) {
         XmlElement interpreter = extension.getElement("interpreter");
 

@@ -28,15 +28,15 @@ import javax.swing.JCheckBox;
  */
 public class CheckBoxWithMnemonic extends JCheckBox {
     /**
-     * default constructor
-     */
+ * default constructor
+ */
     public CheckBoxWithMnemonic() {
         super();
     }
 
     /**
-     * @param str        text including a mnemonic
-     */
+ * @param str        text including a mnemonic
+ */
     public CheckBoxWithMnemonic(String textWithMnemonic) {
         super();
 

@@ -31,8 +31,8 @@ public class cFileFilter extends FileFilter {
     }
 
     /**
-     * @see FileFilter#accept(File)
-     */
+ * @see FileFilter#accept(File)
+ */
     public boolean accept(File f) {
         boolean result = true;
 
@@ -64,8 +64,8 @@ public class cFileFilter extends FileFilter {
     }
 
     /**
-     * @see FileFilter#getDescription()
-     */
+ * @see FileFilter#getDescription()
+ */
     public String getDescription() {
         return new String("Columba File Filter");
     }

@@ -13,19 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.config;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.OSInfo;
 import org.columba.core.shutdown.ShutdownManager;
+import org.columba.core.util.OSInfo;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
 import java.io.IOException;
 
 import java.util.*;
+
 
 /**
  * Main entrypoint for configuration management.
@@ -57,7 +57,6 @@ public class Config {
     protected OptionsXmlConfig optionsConfig;
     protected Map pluginList = new Hashtable();
     protected Map templatePluginList = new Hashtable();
-    
     protected File path;
     protected File optionsFile;
     protected File toolsFile;
@@ -68,7 +67,7 @@ public class Config {
     public Config() {
         this(null);
     }
-    
+
     /**
      * Creates a new configuration from the given directory.
      */
@@ -76,12 +75,13 @@ public class Config {
         if (path == null) {
             path = getDefaultConfigPath();
         }
+
         this.path = path;
         path.mkdir();
         optionsFile = new File(path, "options.xml");
         toolsFile = new File(path, "external_tools.xml");
     }
-    
+
     /**
      * Returns the directory the configuration is located in.
      */
@@ -94,17 +94,17 @@ public class Config {
      */
     public void init() {
         ShutdownManager.getShutdownManager().register(new Runnable() {
-            public void run() {
-                try {
-                    save();
-                } catch (Exception e) {
-                    ColumbaLogger.log.severe(e.getMessage());
+                public void run() {
+                    try {
+                        save();
+                    } catch (Exception e) {
+                        ColumbaLogger.log.severe(e.getMessage());
+                    }
                 }
-            }
-        });
-        
+            });
+
         ColumbaLogger.log.info("Loading configuration from " + path.toString());
-        
+
         registerPlugin("core", optionsFile.getName(),
             new OptionsXmlConfig(optionsFile));
 
@@ -113,7 +113,7 @@ public class Config {
 
         load();
     }
-    
+
     /**
      * Method registerPlugin.
      * @param moduleName
@@ -122,23 +122,25 @@ public class Config {
      */
     public void registerPlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
-
         File directory;
+
         if (moduleName.equals("core")) {
             directory = getConfigDirectory();
         } else {
             directory = new File(getConfigDirectory(), moduleName);
         }
-        
+
         File destination = new File(directory, id);
 
         if (!destination.exists()) {
             String hstr = "org/columba/" + moduleName + "/config/" + id;
+
             try {
                 DiskIO.copyResource(hstr, destination);
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
-        
+
         if (!pluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
             pluginList.put(moduleName, map);
@@ -149,10 +151,9 @@ public class Config {
 
     public void registerTemplatePlugin(String moduleName, String id,
         DefaultXmlConfig configPlugin) {
-        
         String hstr = "org/columba/" + moduleName + "/config/" + id;
         configPlugin.setURL(DiskIO.getResourceURL(hstr));
-        
+
         if (!templatePluginList.containsKey(moduleName)) {
             Map map = new Hashtable();
             templatePluginList.put(moduleName, map);
@@ -181,8 +182,7 @@ public class Config {
         return null;
     }
 
-    public DefaultXmlConfig getTemplatePlugin(String moduleName,
-        String id) {
+    public DefaultXmlConfig getTemplatePlugin(String moduleName, String id) {
         if (templatePluginList.containsKey(moduleName)) {
             Map map = (Map) templatePluginList.get(moduleName);
 
@@ -247,7 +247,8 @@ public class Config {
     public List getTemplatePluginList() {
         List list = new LinkedList();
 
-        for (Iterator keys = templatePluginList.keySet().iterator(); keys.hasNext();) {
+        for (Iterator keys = templatePluginList.keySet().iterator();
+                keys.hasNext();) {
             String key = (String) keys.next();
             Map map = (Map) templatePluginList.get(key);
 
@@ -310,10 +311,9 @@ public class Config {
      * @return OptionsXmlConfig
      */
     public OptionsXmlConfig getOptionsConfig() {
-        return (OptionsXmlConfig) getPlugin("core",
-            optionsFile.getName());
+        return (OptionsXmlConfig) getPlugin("core", optionsFile.getName());
     }
-    
+
     /**
      * Returns the default configuration path. This value depends on the
      * underlying operating system. This method must never return null.

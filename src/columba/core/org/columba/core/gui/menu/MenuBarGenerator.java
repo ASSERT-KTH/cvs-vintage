@@ -31,8 +31,8 @@ import javax.swing.JMenuBar;
  */
 public class MenuBarGenerator extends AbstractMenuGenerator {
     /**
-     * @param path
-     */
+ * @param path
+ */
     public MenuBarGenerator(FrameMediator frameController, String path) {
         super(frameController, path);
     }
@@ -48,15 +48,15 @@ public class MenuBarGenerator extends AbstractMenuGenerator {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.AbstractMenuGenerator#getMenuRoot()
-     */
+ * @see org.columba.core.gui.AbstractMenuGenerator#getMenuRoot()
+ */
     public XmlElement getMenuRoot() {
         return xmlFile.getRoot().getElement("menubar");
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.AbstractMenuGenerator#getRootElementName()
-     */
+ * @see org.columba.core.gui.AbstractMenuGenerator#getRootElementName()
+ */
     public String getRootElementName() {
         return "menubar";
     }

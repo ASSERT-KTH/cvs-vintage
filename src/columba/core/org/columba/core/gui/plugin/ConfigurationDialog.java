@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -41,6 +40,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
+
 /**
  * @author frd
  *
@@ -56,8 +56,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
     JPanel pluginPanel;
 
     /**
-     * @throws java.awt.HeadlessException
-     */
+ * @throws java.awt.HeadlessException
+ */
     public ConfigurationDialog(String pluginId) {
         // modal dialog
         super(new JFrame(), true);
@@ -139,10 +139,12 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
         getRootPane().registerKeyboardAction(this, "CANCEL",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "extending_columba_1");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "extending_columba_1");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "extending_columba_1");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "extending_columba_1");
     }
 
     public void actionPerformed(ActionEvent e) {

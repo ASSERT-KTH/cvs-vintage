@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.AbstractSelectableAction;
@@ -29,6 +28,7 @@ import java.lang.reflect.Proxy;
 
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
+
 
 /**
  * Adds an Observer to JCheckBoxMenuItem in order to make it possible
@@ -60,23 +60,26 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
         MnemonicSetter.setTextWithMnemonic(this,
             (String) action.getValue(Action.NAME));
         getModel().addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                AbstractSelectableAction a = (AbstractSelectableAction)getAction();
-                if (a != null) {
-                    a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                public void itemStateChanged(ItemEvent e) {
+                    AbstractSelectableAction a = (AbstractSelectableAction) getAction();
+
+                    if (a != null) {
+                        a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                    }
                 }
-            }
-        });
+            });
     }
-    
+
     /**
      * Overridden to react to state changes of the underlying action.
      */
-    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
-        return (PropertyChangeListener)Proxy.newProxyInstance(
-                getClass().getClassLoader(),
-                new Class[]{PropertyChangeListener.class},
-                new ButtonStateAdapter(this, super.createActionPropertyChangeListener(a)));
+    protected PropertyChangeListener createActionPropertyChangeListener(
+        Action a) {
+        return (PropertyChangeListener) Proxy.newProxyInstance(getClass()
+                                                                   .getClassLoader(),
+            new Class[] { PropertyChangeListener.class },
+            new ButtonStateAdapter(this,
+                super.createActionPropertyChangeListener(a)));
     }
 
     /**
@@ -84,6 +87,6 @@ public class CCheckBoxMenuItem extends JCheckBoxMenuItem {
      */
     protected void configurePropertiesFromAction(Action a) {
         super.configurePropertiesFromAction(a);
-        setSelected(((AbstractSelectableAction)a).getState());
+        setSelected(((AbstractSelectableAction) a).getState());
     }
 }

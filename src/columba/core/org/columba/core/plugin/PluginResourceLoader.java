@@ -41,8 +41,8 @@ public class PluginResourceLoader {
     Map map;
 
     /**
-     *
-     */
+ *
+ */
     public PluginResourceLoader(String pluginId) {
         this.pluginId = pluginId;
 

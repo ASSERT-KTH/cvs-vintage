@@ -42,10 +42,10 @@ public class AscendingIcon extends ImageIcon {
         yp[2] = y + (c.getHeight() / 4);
 
         /*
-        yp[0]=y - (c.getHeight()/6);
-        yp[1]=y - (c.getHeight()/6);
-        yp[2]=y + (c.getHeight()/6);
-        */
+yp[0]=y - (c.getHeight()/6);
+yp[1]=y - (c.getHeight()/6);
+yp[2]=y + (c.getHeight()/6);
+*/
         g2.setColor(Color.white);
         g2.drawLine(xp[0], yp[0], xp[1], yp[1]);
         g2.drawLine(xp[1], yp[1], xp[2], yp[2]);

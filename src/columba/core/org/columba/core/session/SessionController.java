@@ -13,63 +13,70 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.session;
+
+import org.columba.core.main.MainInterface;
 
 import java.io.*;
 
-import org.columba.core.main.MainInterface;
 
 /**
  * Contains the logic necessary to search for running Columba sessions and
  * pass command line arguments to it or to start a new session.
  */
 public class SessionController {
-    
     /**
-     * Tries to connect to a running ColumbaServer using a new ColumbaClient.
-     * If this works, the given command line arguments are passed to the
-     * running server and the startup process is terminated.
-     * If this doesn't work, a new ColumbaServer instance is created and
-     * the startup process isn't terminated.
-     */
+ * Tries to connect to a running ColumbaServer using a new ColumbaClient.
+ * If this works, the given command line arguments are passed to the
+ * running server and the startup process is terminated.
+ * If this doesn't work, a new ColumbaServer instance is created and
+ * the startup process isn't terminated.
+ */
     public static void passToRunningSessionAndExit(String[] args) {
         //create new client and try to connect to server
         ColumbaClient client = new ColumbaClient();
+
         if (client.connect()) {
             try {
                 client.sendCommandLine(args);
             } catch (IOException ioe) {
                 ioe.printStackTrace();
+
                 //display error message
             } finally {
                 client.close();
             }
+
             System.exit(5);
         }
+
         //no server running, start our own
         try {
             ColumbaServer.getColumbaServer().start();
         } catch (IOException ioe) {
             ioe.printStackTrace();
+
             //display error message
             System.exit(1);
         }
     }
-    
+
     /**
-     * Reads a stored port number from the file ".auth" in the config directory.
-     */
+ * Reads a stored port number from the file ".auth" in the config directory.
+ */
     protected static int deserializePortNumber() throws IOException {
         File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
         BufferedReader reader = null;
+
         try {
             reader = new BufferedReader(new FileReader(file));
+
             String line = reader.readLine();
+
             return Integer.parseInt(line);
-	}catch (NumberFormatException nfe) {
+        } catch (NumberFormatException nfe) {
             IOException ioe = new IOException();
-	    ioe.initCause(nfe);
+            ioe.initCause(nfe);
             throw ioe;
         } finally {
             if (reader != null) {
@@ -77,17 +84,20 @@ public class SessionController {
             }
         }
     }
-    
+
     /**
-     * Stores the given port number in the file ".auth" in the config directory.
-     * If the passed port number is -1, the existing file is deleted.
-     */
-    protected static void serializePortNumber(int port) throws IOException {
+ * Stores the given port number in the file ".auth" in the config directory.
+ * If the passed port number is -1, the existing file is deleted.
+ */
+    protected static void serializePortNumber(int port)
+        throws IOException {
         File file = new File(MainInterface.config.getConfigDirectory(), ".auth");
+
         if (port == -1) {
             file.delete();
         } else {
             BufferedWriter writer = null;
+
             try {
                 writer = new BufferedWriter(new FileWriter(file));
                 writer.write(Integer.toString(port));

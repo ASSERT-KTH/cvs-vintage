@@ -33,21 +33,21 @@ package org.columba.core.command;
  */
 public interface StatusObservable {
     /**
-     * Sets the current value of the progress bar.
-     * @param i                New current value of progress bar
-     */
+ * Sets the current value of the progress bar.
+ * @param i                New current value of progress bar
+ */
     public void setCurrent(int i);
 
     /**
-     * Sets the maximum value for the progress bar.
-     * @param i                New max. value for progress bar
-     */
+ * Sets the maximum value for the progress bar.
+ * @param i                New max. value for progress bar
+ */
     public void setMax(int i);
 
     /**
-     * Sets the progress bar value to zero, i.e. clears the progress bar.
-     * This is the same as calling setCurrent(0)
-     */
+ * Sets the progress bar value to zero, i.e. clears the progress bar.
+ * This is the same as calling setCurrent(0)
+ */
     public void resetCurrent();
 
     public boolean isCancelled();
@@ -55,21 +55,21 @@ public interface StatusObservable {
     public void cancel(boolean b);
 
     /**
-     * Set the text to be displayed in the status bar
-     * @param string        Text to display in status bar
-     */
+ * Set the text to be displayed in the status bar
+ * @param string        Text to display in status bar
+ */
     public void setMessage(String string);
 
     /**
-     * Clears the text displayed in the status bar.
-     */
+ * Clears the text displayed in the status bar.
+ */
     public void clearMessage();
 
     /**
-     * Clears the text displayed in the status bar - with a given delay.
-     * The delay used is 500 ms.
-     * <br>
-     * If a new text is set within this delay, the text is not cleared.
-     */
+ * Clears the text displayed in the status bar - with a given delay.
+ * The delay used is 500 ms.
+ * <br>
+ * If a new text is set within this delay, the text is not cleared.
+ */
     public void clearMessageWithDelay();
 }

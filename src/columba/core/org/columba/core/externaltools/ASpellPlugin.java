@@ -40,12 +40,13 @@ public class ASpellPlugin extends AbstractExternalToolsPlugin {
             websiteURL = new URL("http://aspell.sourceforge.net/");
         } catch (MalformedURLException mue) {
         }
-         //does not happen
+
+        //does not happen
     }
 
     /**
-     * Construct the default ASpell plugin.
-     */
+ * Construct the default ASpell plugin.
+ */
     public ASpellPlugin() {
         super();
     }
@@ -61,8 +62,8 @@ public class ASpellPlugin extends AbstractExternalToolsPlugin {
 
     public File locate() {
         /* If this is a unix-based system, check the 2 best-known areas for the
-         * aspell binary.
-         */
+ * aspell binary.
+ */
         if (OSInfo.isLinux() || OSInfo.isSolaris()) {
             if (defaultLinux.exists()) {
                 return defaultLinux;
@@ -72,21 +73,21 @@ public class ASpellPlugin extends AbstractExternalToolsPlugin {
         }
 
         /* RIYAD: The Prefs API cannot be used to read the Window's registry,
-         * it is coded to use the registry (if available) as a backing store
-         * on in the SOFTWARE/JavaSoft/Prefs registry keys for HKEY_CURRENT_USER
-         * and HKEY_LOCAL_MACHINE paths. I have seen a few java apps that use
-         * the Windows registry and they all required a native lib to do it.
-         */
+ * it is coded to use the registry (if available) as a backing store
+ * on in the SOFTWARE/JavaSoft/Prefs registry keys for HKEY_CURRENT_USER
+ * and HKEY_LOCAL_MACHINE paths. I have seen a few java apps that use
+ * the Windows registry and they all required a native lib to do it.
+ */
         /* If this is windows, check the default installation location for the
-         * aspell.exe binary.
-         */
+ * aspell.exe binary.
+ */
         if (OSInfo.isWin32Platform() && defaultWin.exists()) {
             return defaultWin;
         }
 
         /* Couldn't find anything, so return null and let the wizard ask the
-         * user.
-         */
+ * user.
+ */
         return null;
     }
 }

@@ -6,10 +6,11 @@
  */
 package org.columba.core.gui.plugin;
 
-import org.columba.core.gui.util.treetable.Tree;
-import org.columba.core.gui.util.treetable.TreeTable;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
+import org.frappucino.treetable.Tree;
+import org.frappucino.treetable.TreeTable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,8 @@ public class PluginTree extends TreeTable {
     private JCheckBox enabledCheckBox;
 
     /**
-     *
-     */
+ *
+ */
     public PluginTree() {
         super();
 

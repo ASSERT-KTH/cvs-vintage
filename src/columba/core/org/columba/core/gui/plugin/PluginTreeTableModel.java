@@ -6,8 +6,9 @@
  */
 package org.columba.core.gui.plugin;
 
-import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
 import org.columba.core.main.MainInterface;
+
+import org.frappucino.treetable.AbstractTreeTableModel;
 
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -23,9 +24,9 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
     PluginNode root;
 
     /**
-     * @param tree
-     * @param columns
-     */
+ * @param tree
+ * @param columns
+ */
     public PluginTreeTableModel(String[] columns) {
         super(columns);
 
@@ -41,8 +42,7 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
 
         if (c == 1) {
             return String.class;
-        }
-        else {
+        } else {
             // third column is a JCheckBox column
             return Boolean.class;
         }
@@ -64,8 +64,8 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
-     */
+ * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
+ */
     public void setValueAt(Object value, int row, int col) {
         if (col == 2) {
             // checkbox pressed
@@ -88,8 +88,8 @@ public class PluginTreeTableModel extends AbstractTreeTableModel {
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.table.TableModel#isCellEditable(int, int)
-     */
+ * @see javax.swing.table.TableModel#isCellEditable(int, int)
+ */
     public boolean isCellEditable(int row, int col) {
         // enabled/disabled checkbox must be editable
         if (col == 2) {

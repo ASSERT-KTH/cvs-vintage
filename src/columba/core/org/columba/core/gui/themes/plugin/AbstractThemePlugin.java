@@ -30,12 +30,12 @@ public abstract class AbstractThemePlugin extends DefaultPlugin {
     }
 
     /**
-     *
-     * load your theme here:
-     *
-     * UIManager.setLookAndFeel(
-                                                             "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
-     *
-     */
+ *
+ * load your theme here:
+ *
+ * UIManager.setLookAndFeel(
+                                                         "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" );
+ *
+ */
     public abstract void setLookAndFeel() throws Exception;
 }

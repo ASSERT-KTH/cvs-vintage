@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.toolbar;
 
 import org.columba.core.action.AbstractSelectableAction;
@@ -32,6 +31,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
+
 
 /**
  * Customized JToogleButton for a Toolbar.
@@ -81,35 +81,39 @@ public class ToggleToolbarButton extends JToggleButton {
             // apply transparent icon
             setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon) icon));
         }
+
         getModel().addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                AbstractSelectableAction a = (AbstractSelectableAction)getAction();
-                if (a != null) {
-                    a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                public void itemStateChanged(ItemEvent e) {
+                    AbstractSelectableAction a = (AbstractSelectableAction) getAction();
+
+                    if (a != null) {
+                        a.setState(e.getStateChange() == ItemEvent.SELECTED);
+                    }
                 }
-            }
-        });
+            });
     }
 
     public boolean isFocusTraversable() {
         return isRequestFocusEnabled();
     }
-    
+
     /**
      * Overridden to react to state changes of the underlying action.
      */
-    protected PropertyChangeListener createActionPropertyChangeListener(Action a) {
-        return (PropertyChangeListener)Proxy.newProxyInstance(
-                getClass().getClassLoader(),
-                new Class[]{PropertyChangeListener.class},
-                new ButtonStateAdapter(this, super.createActionPropertyChangeListener(a)));
+    protected PropertyChangeListener createActionPropertyChangeListener(
+        Action a) {
+        return (PropertyChangeListener) Proxy.newProxyInstance(getClass()
+                                                                   .getClassLoader(),
+            new Class[] { PropertyChangeListener.class },
+            new ButtonStateAdapter(this,
+                super.createActionPropertyChangeListener(a)));
     }
-    
+
     /**
      * Overridden to initialize selection state according to action
      */
     protected void configurePropertiesFromAction(Action a) {
         super.configurePropertiesFromAction(a);
-        setSelected(((AbstractSelectableAction)a).getState());
+        setSelected(((AbstractSelectableAction) a).getState());
     }
 }

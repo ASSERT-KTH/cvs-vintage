@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.config;
 
 import org.columba.core.xml.XmlElement;
+
 
 /**
  * Gui components should implement this interface, to save
@@ -29,37 +29,36 @@ import org.columba.core.xml.XmlElement;
  * @author fdietz
  */
 public interface OptionsSerializer {
+    /**
+ * Get xml configuration of this component.
+ * <p>
+ * 
+ * Following a simple example of a toolbar configuration:<br>
+ * 
+ * <pre>
+ * <toolbar enabled="true" show_icon="true" show_text="false">
+ *  <button name="Cut"/>
+ *  <button name="Copy"/>
+ *  <button name="Paste"/>
+ *  <button name="Delete"/>
+ * </toolbar>
+ * </pre>
+ * 
+ * <p>
+ * So, this method will return the the top-level xml element
+ * <b>toolbar</b>.
+ * 
+ * @return      top-level xml treenode
+ */
+    XmlElement saveOptionsToXml();
 
     /**
-     * Get xml configuration of this component.
-     * <p>
-     * 
-     * Following a simple example of a toolbar configuration:<br>
-     * 
-     * <pre>
-     * <toolbar enabled="true" show_icon="true" show_text="false">
-     *  <button name="Cut"/>
-     *  <button name="Copy"/>
-     *  <button name="Paste"/>
-     *  <button name="Delete"/>
-     * </toolbar>
-     * </pre>
-     * 
-     * <p>
-     * So, this method will return the the top-level xml element
-     * <b>toolbar</b>.
-     * 
-     * @return      top-level xml treenode
-     */
-    XmlElement saveOptionsToXml();
-    
-    /**
-     * Load options of this component from xml element.
-     * <p>
-     * Following the example used above, this element should
-     * have the name <b>toolbar</b>.
-     * <p>
-     * @param element       configuration options node
-     */
+ * Load options of this component from xml element.
+ * <p>
+ * Following the example used above, this element should
+ * have the name <b>toolbar</b>.
+ * <p>
+ * @param element       configuration options node
+ */
     void loadOptionsFromXml(XmlElement element);
 }

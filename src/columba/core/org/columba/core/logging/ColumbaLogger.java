@@ -13,11 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.logging;
+
+import org.columba.core.main.MainInterface;
+
+import org.columba.ristretto.log.RistrettoLogger;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -25,8 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.columba.core.main.MainInterface;
-import org.columba.ristretto.log.RistrettoLogger;
 
 /**
  * Depending on the debug flag (--debug command line option reflected
@@ -40,38 +42,45 @@ import org.columba.ristretto.log.RistrettoLogger;
  * @see org.columba.core.main.Main 
  */
 public class ColumbaLogger {
-    
     /**
-     * A static reference to the actual logger. This reference is final so
-     * that it cannot be reassigned. However, you are free to add further
-     * handlers to the logger.
-     */
+ * A static reference to the actual logger. This reference is final so
+ * that it cannot be reassigned. However, you are free to add further
+ * handlers to the logger.
+ */
     public static final Logger log;
 
     static {
         log = Logger.getLogger("org.columba");
         log.setUseParentHandlers(false);
-        
+
         // TODO: only add console handler if command line option is given
         // init console handler
         Handler handler = new ConsoleHandler();
         log.addHandler(handler);
     }
-    
+
     /**
-     * Default logger configuration used by Columba.
-     * <p>
-     * This is called by org.columba.core.main.Main if user didn't overwrite
-     * logger properties using commandline arguments
-     *
-     */
+ * Don't instanciate this class.
+ */
+    private ColumbaLogger() {
+    }
+
+    /**
+ * Default logger configuration used by Columba.
+ * <p>
+ * This is called by org.columba.core.main.Main if user didn't overwrite
+ * logger properties using commandline arguments
+ *
+ */
     public static void addDefaultFileHandler() {
         // create logging file in users config-folder
-        File loggingFile = new File(MainInterface.config.getConfigDirectory(), "columba.log");
+        File loggingFile = new File(MainInterface.config.getConfigDirectory(),
+                "columba.log");
         Handler handler;
+
         try {
             handler = new FileHandler(loggingFile.getPath(), false);
-            
+
             // don't use standard XML formatting
             handler.setFormatter(new SimpleFormatter());
             log.addHandler(handler);
@@ -79,31 +88,24 @@ public class ColumbaLogger {
             // TODO: how to handle this?
         }
 
-        
-
         if (MainInterface.DEBUG) {
             log.setLevel(Level.ALL);
 
             // init java.net.ssl debugging
-            System.setProperty(
-                "javax.net.debug",
+            System.setProperty("javax.net.debug",
                 "ssl,handshake,data,trustmanager");
         } else {
             log.setLevel(Level.SEVERE);
         }
 
         /*
-         Ristretto is a singleton library and doesn't know about Columba.
-         We need to connect ristretto's logger with Columba's logger therefore.
-         */
+ Ristretto is a singleton library and doesn't know about Columba.
+ We need to connect ristretto's logger with Columba's logger therefore.
+ */
         RistrettoLogger.setParentLogger(log);
-        if( MainInterface.DEBUG ) {
+
+        if (MainInterface.DEBUG) {
             RistrettoLogger.setLogStream(System.out);
         }
     }
-    
-    /**
-     * Don't instanciate this class.
-     */
-    private ColumbaLogger() {}
 }

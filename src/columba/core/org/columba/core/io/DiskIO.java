@@ -13,8 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.io;
+
+import org.columba.core.logging.ColumbaLogger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,10 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
 import java.net.URL;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * The startup default for installation directory is the system propertry "user.dir".
@@ -65,12 +65,9 @@ public class DiskIO {
             dir = new File(MainInterface.config.getConfigDirectory(), dir.getPath());
         }
         */
-        
-
         if (!dir.isDirectory()) {
             success = !dir.isFile() && dir.mkdirs();
 
-            
             if (success) {
                 ColumbaLogger.log.info("created directory: " + dir.toString());
             } else {
@@ -78,15 +75,12 @@ public class DiskIO {
                     "failed while trying to create directory: " +
                     dir.toString());
             }
-            
-            
-            
         }
 
         return success;
     }
-     // ensureDirectory
 
+    // ensureDirectory
     public static boolean ensureDirectory(String path) {
         return ensureDirectory(new File(path));
     }
@@ -102,8 +96,8 @@ public class DiskIO {
         out.flush();
         out.close();
     }
-     // saveStringInFile
 
+    // saveStringInFile
     public static String readFileInString(File fromFile)
         throws IOException {
         StringBuffer strbuf = new StringBuffer((int) fromFile.length());
@@ -140,7 +134,8 @@ public class DiskIO {
         return out.toString();
         */
     }
-     // saveStringInFile
+
+    // saveStringInFile
 
     /** Deletes the directory specified by the parameter and all of its contents.
      *  This does recurse into subdirectories. Function reports errors. If the
@@ -184,7 +179,8 @@ public class DiskIO {
 
         return success;
     }
-     // deleteDirectory
+
+    // deleteDirectory
 
     /** Deletes the contents of an existing directory. (May be applied to
      *  non-existing files without causing error.)
@@ -204,7 +200,8 @@ public class DiskIO {
 
         return success && dir.exists();
     }
-     // emptyDirectory
+
+    // emptyDirectory
 
     /** Delete a single disk file. Function reports errors. */
     public static boolean deleteFile(String path) {
@@ -217,7 +214,8 @@ public class DiskIO {
 
         return success;
     }
-     // deleteFile
+
+    // deleteFile
 
     /** General use columba resource InputStream getter.
      * @param path the full path and filename of the resource requested. If
@@ -237,7 +235,8 @@ public class DiskIO {
             return url.openStream();
         }
     }
-     // getResourceStream
+
+    // getResourceStream
 
     /** General use columba resource URL getter.
      * @param path the full path and filename of the resource requested. If
@@ -269,13 +268,12 @@ public class DiskIO {
 
         return url;
     }
-     // getResourceURL
 
+    // getResourceURL
     public static void setResourceRoot(String path) {
         if (path == null) {
             resourceFolder = "";
-        }
-        else {
+        } else {
             if (!path.endsWith("/")) {
                 path += "/";
             }
@@ -283,8 +281,8 @@ public class DiskIO {
             resourceFolder = path;
         }
     }
-     // setResourceRoot
 
+    // setResourceRoot
     public static String getResourceRoot() {
         return resourceFolder;
     }
@@ -320,7 +318,8 @@ public class DiskIO {
             throw e;
         }
     }
-     // copyFile
+
+    // copyFile
 
     /** Copies a system resource to the specified output file. The output file will
      *  be overridden if it exist, so the calling routine has to take care about
@@ -362,8 +361,8 @@ public class DiskIO {
 
         return true;
     }
-     // copyResource
 
+    // copyResource
     public static String readStringFromResource(String resource)
         throws java.io.IOException {
         InputStream in;

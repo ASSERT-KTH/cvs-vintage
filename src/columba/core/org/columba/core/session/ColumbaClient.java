@@ -13,15 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.session;
 
-import java.io.*;
+import org.columba.core.main.MainInterface;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import java.net.Socket;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * Client connecting to the {@link ColumbaServer} to check if
@@ -34,15 +35,15 @@ import org.columba.core.main.MainInterface;
  */
 public class ColumbaClient {
     protected static final String NEWLINE = "\r\n";
-    
     protected Socket socket;
     protected Writer writer;
-    
-    public ColumbaClient() {}
-    
+
+    public ColumbaClient() {
+    }
+
     /**
-     * Tries to connect to a running server.
-     */
+ * Tries to connect to a running server.
+ */
     public boolean connect() {
         try {
             socket = new Socket("127.0.0.1",
@@ -51,22 +52,25 @@ public class ColumbaClient {
             writer.write("Columba " + MainInterface.version);
             writer.write(NEWLINE);
             writer.flush();
-            
-            writer.write("User " + System.getProperty("user.name",
-                    ColumbaServer.ANONYMOUS_USER));
+
+            writer.write("User " +
+                System.getProperty("user.name", ColumbaServer.ANONYMOUS_USER));
             writer.write(NEWLINE);
             writer.flush();
+
             return true;
         } catch (IOException ex) {
         }
+
         return false;
     }
-    
+
     /**
-     * Submits the given command line options to the server.
-     */
+ * Submits the given command line options to the server.
+ */
     public void sendCommandLine(String[] args) throws IOException {
         StringBuffer buf = new StringBuffer();
+
         for (int i = 0; i < args.length; i++) {
             buf.append(args[i]);
             buf.append('%');
@@ -76,14 +80,15 @@ public class ColumbaClient {
         writer.write(NEWLINE);
         writer.flush();
     }
-    
+
     /**
-     * Closes this client.
-     */
+ * Closes this client.
+ */
     public void close() {
         try {
             writer.close();
             socket.close();
-        } catch (IOException ioe) {}
+        } catch (IOException ioe) {
+        }
     }
 }

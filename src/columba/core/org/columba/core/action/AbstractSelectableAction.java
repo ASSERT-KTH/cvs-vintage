@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.action;
 
 import org.columba.core.gui.frame.FrameMediator;
+
 
 /**
  * This class subclasses AbstractColumbaAction to encapsulate a selection
@@ -25,21 +25,21 @@ import org.columba.core.gui.frame.FrameMediator;
  */
 public abstract class AbstractSelectableAction extends AbstractColumbaAction {
     protected boolean state = false;
-    
+
     /**
      * Creates a new action instance with a default selection state of false.
      */
     public AbstractSelectableAction(FrameMediator controller, String name) {
         super(controller, name);
     }
-    
+
     /**
      * Returns the action's selection state.
      */
     public boolean getState() {
         return state;
     }
-    
+
     /**
      * Sets the action's selection state and notifies registered listeners.
      */
@@ -47,7 +47,8 @@ public abstract class AbstractSelectableAction extends AbstractColumbaAction {
         if (this.state != state) {
             Boolean oldValue = this.state ? Boolean.TRUE : Boolean.FALSE;
             this.state = state;
-            firePropertyChange("selected", oldValue, state ? Boolean.TRUE : Boolean.FALSE);
+            firePropertyChange("selected", oldValue,
+                state ? Boolean.TRUE : Boolean.FALSE);
         }
     }
 }

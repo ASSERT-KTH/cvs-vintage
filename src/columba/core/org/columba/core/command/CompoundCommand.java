@@ -37,11 +37,11 @@ public class CompoundCommand extends Command {
     protected List referenceList;
 
     /**
-     * Constructor for CompoundCommand.
-     * Caution : Never use this command with Virtual Folders!
-     * @param frameMediator
-     * @param references
-     */
+ * Constructor for CompoundCommand.
+ * Caution : Never use this command with Virtual Folders!
+ * @param frameMediator
+ * @param references
+ */
     public CompoundCommand() {
         super(null, null);
         commandList = new Vector();
@@ -76,9 +76,10 @@ public class CompoundCommand extends Command {
     }
 
     /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
+ * @see org.columba.core.command.Command#execute(Worker)
+ */
+    public void execute(WorkerStatusController worker)
+        throws Exception {
         Command c;
 
         for (Iterator it = commandList.iterator(); it.hasNext();) {
@@ -122,8 +123,8 @@ public class CompoundCommand extends Command {
     //	}
 
     /**
-     * @see org.columba.core.command.Command#getReferences()
-     */
+ * @see org.columba.core.command.Command#getReferences()
+ */
     public DefaultCommandReference[] getReferences() {
         FolderCommandReference[] refs = new FolderCommandReference[referenceList.size()];
 

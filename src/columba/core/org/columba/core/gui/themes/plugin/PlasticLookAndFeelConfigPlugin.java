@@ -18,8 +18,8 @@ package org.columba.core.gui.themes.plugin;
 import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
 import com.jgoodies.plaf.plastic.PlasticTheme;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.gui.plugin.AbstractConfigPlugin;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import java.awt.BorderLayout;

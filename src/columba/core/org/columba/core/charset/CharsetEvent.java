@@ -13,12 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.charset;
 
 import java.nio.charset.Charset;
 
 import java.util.EventObject;
+
 
 /**
  * Encapsulates information about charset changes.
@@ -27,16 +27,16 @@ public class CharsetEvent extends EventObject {
     protected Charset value;
 
     /**
-     * Creates a new event for the given charset.
-     */
+ * Creates a new event for the given charset.
+ */
     public CharsetEvent(Object source, Charset charset) {
         super(source);
         value = charset;
     }
 
     /**
-     * Returns the newly chosen charset.
-     */
+ * Returns the newly chosen charset.
+ */
     public Charset getCharset() {
         return value;
     }

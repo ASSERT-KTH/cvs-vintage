@@ -31,8 +31,8 @@ public class ContextMenu extends JPopupMenu {
     protected PopupMenuGenerator menuGenerator;
 
     /**
-     *
-     */
+ *
+ */
     public ContextMenu(FrameMediator frameController, String path) {
         super();
 

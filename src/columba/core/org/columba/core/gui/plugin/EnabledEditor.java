@@ -35,8 +35,8 @@ public class EnabledEditor extends AbstractCellEditor implements TableCellEditor
     protected PluginNode currentNode;
 
     /**
-     *
-     */
+ *
+ */
     public EnabledEditor() {
         component.setHorizontalAlignment(SwingConstants.CENTER);
     }
@@ -72,11 +72,11 @@ public class EnabledEditor extends AbstractCellEditor implements TableCellEditor
         currentNode.setEnabled(b.booleanValue());
 
         /*
-        // enable/disable plugin
-        String id = currentNode.getId();
+// enable/disable plugin
+String id = currentNode.getId();
 
-        MainInterface.pluginManager.setEnabled(id, b.booleanValue());
-        */
+MainInterface.pluginManager.setEnabled(id, b.booleanValue());
+*/
         return b;
     }
 

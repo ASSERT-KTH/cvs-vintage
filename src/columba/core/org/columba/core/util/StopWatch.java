@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+
 /**
  * Simple StopWatch class for timing stuff.
  * <p>
@@ -48,18 +49,18 @@ public class StopWatch {
     private long stopTime = -1;
 
     /**
-     * Creates a new instance of StopWatch
-     * Starts the timing from the time the object was created
-     */
+ * Creates a new instance of StopWatch
+ * Starts the timing from the time the object was created
+ */
     public StopWatch() {
         start();
     }
 
     /**
-     * Returns a StopWatch instance. This can be used to measure the time between different methods/classes.
-     *
-     * @return a static StopWatch instance
-     */
+ * Returns a StopWatch instance. This can be used to measure the time between different methods/classes.
+ *
+ * @return a static StopWatch instance
+ */
     public static StopWatch instance() {
         if (instance == null) {
             instance = new StopWatch();
@@ -69,18 +70,18 @@ public class StopWatch {
     }
 
     /**
-     * Starts the watch.
-     * Resets the start time and resets the stop time as well.
-     */
+ * Starts the watch.
+ * Resets the start time and resets the stop time as well.
+ */
     public final void start() {
         startTime = System.currentTimeMillis();
         stopTime = -1;
     }
 
     /**
-     * Stops the watch.
-     * @return the time passed since the StopWatch was started.
-     */
+ * Stops the watch.
+ * @return the time passed since the StopWatch was started.
+ */
     public final long stop() {
         stopTime = System.currentTimeMillis();
 
@@ -88,11 +89,11 @@ public class StopWatch {
     }
 
     /**
-     * Gets the time (ms) elapsed from the start() method was run until now OR the stop() method was run.
-     * If stop() is executed then this method will return the same all the time, BUT if the stop() hasnt
-     * been executed this method returns the time (ms) elapsed from the latest start()
-     * @return the time since the StopWatch was started; or if it has been stopped, the time between start() and stop()
-     */
+ * Gets the time (ms) elapsed from the start() method was run until now OR the stop() method was run.
+ * If stop() is executed then this method will return the same all the time, BUT if the stop() hasnt
+ * been executed this method returns the time (ms) elapsed from the latest start()
+ * @return the time since the StopWatch was started; or if it has been stopped, the time between start() and stop()
+ */
     public long getTiming() {
         long time;
 
@@ -106,9 +107,9 @@ public class StopWatch {
     }
 
     /**
-     * Returns the time elapsed from the start() until now, OR until stop() was executed
-     * @return the time (ms) as a string
-     */
+ * Returns the time elapsed from the start() until now, OR until stop() was executed
+ * @return the time (ms) as a string
+ */
     public String toString() {
         return String.valueOf(getTiming()) + " ms";
     }

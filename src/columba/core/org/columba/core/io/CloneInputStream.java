@@ -30,11 +30,11 @@ public class CloneInputStream extends InputStream {
     private int id;
 
     /**
-     * Constructs a new CloneInputStream.
-     * @see CloneStreamMaster#getClone()
-     *
-     * @param master
-     */
+ * Constructs a new CloneInputStream.
+ * @see CloneStreamMaster#getClone()
+ *
+ * @param master
+ */
     protected CloneInputStream(CloneStreamMaster model, int id) {
         super();
         this.model = model;
@@ -42,31 +42,31 @@ public class CloneInputStream extends InputStream {
     }
 
     /* (non-Javadoc)
-     * @see java.io.InputStream#read()
-     */
+ * @see java.io.InputStream#read()
+ */
     public int read() throws IOException {
         return model.read(id);
     }
 
     /* (non-Javadoc)
-     * @see java.io.InputStream#read(byte[], int, int)
-     */
+ * @see java.io.InputStream#read(byte[], int, int)
+ */
     public int read(byte[] arg0, int arg1, int arg2) throws IOException {
         return model.read(id, arg0, arg1, arg2);
     }
 
     /* (non-Javadoc)
-     * @see java.io.InputStream#available()
-     */
+ * @see java.io.InputStream#available()
+ */
     public int available() throws IOException {
         return model.available();
     }
 
     /* (non-Javadoc)
-     * @see java.io.InputStream#close()
-     */
+ * @see java.io.InputStream#close()
+ */
     public void close() throws IOException {
-        if( model != null ) {
+        if (model != null) {
             model.close(id);
             model = null;
         }

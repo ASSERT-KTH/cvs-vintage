@@ -40,34 +40,34 @@ import java.util.Hashtable;
  */
 public class SelectionManager {
     /**
-     * Map for storing all selection handlers
-     *
-     */
+ * Map for storing all selection handlers
+ *
+ */
     private Hashtable selectionHandler;
 
     /**
-     * default constructor
-     */
+ * default constructor
+ */
     public SelectionManager() {
         // init Map
         selectionHandler = new Hashtable();
     }
 
     /**
-     * Add selection handler
-     *
-     * @param handler
-     */
+ * Add selection handler
+ *
+ * @param handler
+ */
     public void addSelectionHandler(SelectionHandler handler) {
         selectionHandler.put(handler.getId(), handler);
     }
 
     /**
-     * Register selection listener at selecton handler with id.
-     *
-     * @param id                ID of selection handler
-     * @param l                        listener interested in selection changes
-     */
+ * Register selection listener at selecton handler with id.
+ *
+ * @param id                ID of selection handler
+ * @param l                        listener interested in selection changes
+ */
     public void registerSelectionListener(String id, SelectionListener l) {
         SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
 
@@ -75,31 +75,31 @@ public class SelectionManager {
     }
 
     /**
-     * Set current selection.
-     *
-     * @param id                        ID of selection handler
-     * @param selection                new selection for this handler
-     */
+ * Set current selection.
+ *
+ * @param id                        ID of selection handler
+ * @param selection                new selection for this handler
+ */
     public void setSelection(String id, DefaultCommandReference[] selection) {
         ((SelectionHandler) selectionHandler.get(id)).setSelection(selection);
     }
 
     /**
-     * Get current selection of specific selection handler.
-     *
-     * @param id                ID of selection handler
-     * @return                        reference of current selection of this handler
-     */
+ * Get current selection of specific selection handler.
+ *
+ * @param id                ID of selection handler
+ * @return                        reference of current selection of this handler
+ */
     public DefaultCommandReference[] getSelection(String id) {
         return ((SelectionHandler) selectionHandler.get(id)).getSelection();
     }
 
     /**
-     * Get selection handler.
-     *
-     * @param id                ID of selection handler
-     * @return                        SelectionHandler
-     */
+ * Get selection handler.
+ *
+ * @param id                ID of selection handler
+ * @return                        SelectionHandler
+ */
     public SelectionHandler getHandler(String id) {
         return (SelectionHandler) selectionHandler.get(id);
     }

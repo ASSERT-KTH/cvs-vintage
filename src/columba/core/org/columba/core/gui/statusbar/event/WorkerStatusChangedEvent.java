@@ -56,8 +56,8 @@ public class WorkerStatusChangedEvent {
     }
 
     /**
-     * @return Returns the timeStamp.
-     */
+ * @return Returns the timeStamp.
+ */
     public int getTimeStamp() {
         return timeStamp;
     }

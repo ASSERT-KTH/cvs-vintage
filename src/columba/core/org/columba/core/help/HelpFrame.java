@@ -87,10 +87,9 @@ public class HelpFrame {
             frame.setSize(WIDTH, HEIGHT);
 
             /*
-            frame.setForeground(Color.black);
-            frame.setBackground(Color.lightGray);
-            */
-
+frame.setForeground(Color.black);
+frame.setBackground(Color.lightGray);
+*/
             //frame.addWindowListener(closer);
             frame.getContentPane().add(jh); // the JH panel
 
@@ -112,8 +111,8 @@ public class HelpFrame {
     }
 
     /**
-             * MenuBar
-             */
+         * MenuBar
+         */
     private static JMenuBar createMenuBar() {
         // MenuBar
         JMenuBar menuBar = new JMenuBar();

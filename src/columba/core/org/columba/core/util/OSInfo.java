@@ -81,8 +81,8 @@ public class OSInfo {
     //User home
 
     /*
-            public static String userHome() {
-                    return "TO DO!!";
-            }
-    */
+        public static String userHome() {
+                return "TO DO!!";
+        }
+*/
 }

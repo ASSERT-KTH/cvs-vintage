@@ -68,9 +68,9 @@ public class MultiLineLabel extends JTextArea {
         StringTokenizer st;
 
         /*
-         * StringTokenizer will split a\n\nb in only 2 parts. String replace
-         * all provides a workaround by generating a\n \nb,
-         */
+ * StringTokenizer will split a\n\nb in only 2 parts. String replace
+ * all provides a workaround by generating a\n \nb,
+ */
         StringTokenizer stn = new StringTokenizer(message.replaceAll("\n\n",
                     "\n \n"), "\n");
 
@@ -98,28 +98,28 @@ public class MultiLineLabel extends JTextArea {
     }
 
     /*
-     * public MultiLineLabel( String s ) { super( s );
-     *
-     * //setBorder( UIManager.getBorder( "Label.border" ) ); //setBorder(
-     * BorderFactory.createEmptyBorder( 5,5,5,5 ) );
-     *
-     * setEditable( false ); setBackground( UIManager.getColor(
-     * "Label.background" ) ); setFont( UIManager.getFont( "Label.font") );
-     * setWrapStyleWord( true );
-     *  }
-     *
-     *
-     *
-     * public MultiLineLabel( String[] s ) { StringBuffer buf = new
-     * StringBuffer();
-     *
-     * for ( int i=0; i <s.length; i++ ) { buf.append( s[i] ); }
-     *
-     * setText( buf.toString() ); setBorder( BorderFactory.createEmptyBorder(
-     * 10,10,10,10 ) ); setEditable( false ); setBackground(
-     * UIManager.getColor( "Label.background" ) ); setFont( UIManager.getFont(
-     * "Label.font") ); setWrapStyleWord( true ); }
-     */
+ * public MultiLineLabel( String s ) { super( s );
+ *
+ * //setBorder( UIManager.getBorder( "Label.border" ) ); //setBorder(
+ * BorderFactory.createEmptyBorder( 5,5,5,5 ) );
+ *
+ * setEditable( false ); setBackground( UIManager.getColor(
+ * "Label.background" ) ); setFont( UIManager.getFont( "Label.font") );
+ * setWrapStyleWord( true );
+ *  }
+ *
+ *
+ *
+ * public MultiLineLabel( String[] s ) { StringBuffer buf = new
+ * StringBuffer();
+ *
+ * for ( int i=0; i <s.length; i++ ) { buf.append( s[i] ); }
+ *
+ * setText( buf.toString() ); setBorder( BorderFactory.createEmptyBorder(
+ * 10,10,10,10 ) ); setEditable( false ); setBackground(
+ * UIManager.getColor( "Label.background" ) ); setFont( UIManager.getFont(
+ * "Label.font") ); setWrapStyleWord( true ); }
+ */
     public void updateUI() {
         super.updateUI();
 

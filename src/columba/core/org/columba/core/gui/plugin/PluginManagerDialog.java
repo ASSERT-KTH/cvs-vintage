@@ -13,12 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.InfoViewerDialog;
 import org.columba.core.gui.util.NotifyDialog;
@@ -30,23 +28,40 @@ import org.columba.core.plugin.ConfigPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import java.io.File;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
+
 
 /**
  * @author fdietz
@@ -201,13 +216,13 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
         /*
-        listView = new FilterListTable(filterList, this);
-        listView.getSelectionModel().addListSelectionListener(this);
-        JScrollPane scrollPane = new JScrollPane(listView);
-        scrollPane.setPreferredSize(new Dimension(300, 250));
-        scrollPane.getViewport().setBackground(Color.white);
-        centerPanel.add(scrollPane);
-        */
+listView = new FilterListTable(filterList, this);
+listView.getSelectionModel().addListSelectionListener(this);
+JScrollPane scrollPane = new JScrollPane(listView);
+scrollPane.setPreferredSize(new Dimension(300, 250));
+scrollPane.getViewport().setBackground(Color.white);
+centerPanel.add(scrollPane);
+*/
         table = new PluginTree();
         table.getTree().addTreeSelectionListener(this);
 
@@ -239,15 +254,17 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
         getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "extending_columba_1");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "extending_columba_1");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "extending_columba_1");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "extending_columba_1");
     }
 
     /* (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
@@ -266,8 +283,8 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
             }
         } else if (action.equals("OPTIONS")) {
             String id = selectedNode.getId();
-            id = id.substring(id.lastIndexOf(".")+1, id.length());
-            
+            id = id.substring(id.lastIndexOf(".") + 1, id.length());
+
             new ConfigurationDialog(id);
         } else if (action.equals("REMOVE")) {
             // get plugin directory
@@ -281,19 +298,20 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
         } else if (action.equals("INSTALL")) {
             JFileChooser chooser = new JFileChooser();
             chooser.addChoosableFileFilter(new FileFilter() {
-                public boolean accept(File file) {
-                    return file.isDirectory() || file.getName().toLowerCase().endsWith(".zip");
-                }
-                
-                public String getDescription() {
-                    return GlobalResourceLoader.getString(
-                            RESOURCE_PATH, "pluginmanager", "filefilter");
-                    
-                }
-            });
+                    public boolean accept(File file) {
+                        return file.isDirectory() ||
+                        file.getName().toLowerCase().endsWith(".zip");
+                    }
+
+                    public String getDescription() {
+                        return GlobalResourceLoader.getString(RESOURCE_PATH,
+                            "pluginmanager", "filefilter");
+                    }
+                });
             chooser.setAcceptAllFileFilterUsed(false);
 
             int result = chooser.showOpenDialog(this);
+
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
 
@@ -303,8 +321,8 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
     }
 
     /* (non-Javadoc)
-     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-     */
+ * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+ */
     public void valueChanged(TreeSelectionEvent arg0) {
         selectedNode = (PluginNode) arg0.getPath().getLastPathComponent();
 
@@ -339,15 +357,16 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public PluginNode getSelectedNode() {
         return selectedNode;
     }
 
     protected void installPlugin(File file) {
         // use user's config folder in his/her home-folder
-        File destination = new File(MainInterface.config.getConfigDirectory(), "plugins");
+        File destination = new File(MainInterface.config.getConfigDirectory(),
+                "plugins");
 
         // extract plugin
         ZipFileIO.extract(file, destination);

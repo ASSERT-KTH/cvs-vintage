@@ -43,8 +43,8 @@ class InfoStep extends AbstractStep {
     }
 
     /* (non-Javadoc)
-             * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-             */
+         * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+         */
     protected JComponent createComponent() {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -57,8 +57,8 @@ class InfoStep extends AbstractStep {
     }
 
     /* (non-Javadoc)
-     * @see net.javaprog.ui.wizard.Step#prepareRendering()
-     */
+ * @see net.javaprog.ui.wizard.Step#prepareRendering()
+ */
     public void prepareRendering() {
     }
 }

@@ -18,11 +18,11 @@ import java.io.File;
  */
 public class DirectoryIO {
     /**
-     *
-     * recursivly delete directory
-     *
-     * @param directory
-     */
+ *
+ * recursivly delete directory
+ *
+ * @param directory
+ */
     public static boolean delete(File directory) {
         boolean result = false;
 

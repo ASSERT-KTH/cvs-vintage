@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
@@ -28,6 +27,7 @@ import org.columba.core.xml.XmlElement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 
 /**
  * FrameModel manages all frames. It keeps a list of every
@@ -47,12 +47,12 @@ public class FrameModel {
     protected List activeFrameCtrls;
 
     /** viewlist xml treenode */
-    protected XmlElement viewList = 
-        MainInterface.config.get("options").getElement("/options/gui/viewlist");
+    protected XmlElement viewList = MainInterface.config.get("options")
+                                                        .getElement("/options/gui/viewlist");
 
     /** Default view specifications to be used when opening a new view */
-    protected XmlElement defaultViews = 
-        MainInterface.config.get("options").getElement("/options/gui/defaultviews");
+    protected XmlElement defaultViews = MainInterface.config.get("options")
+                                                            .getElement("/options/gui/defaultviews");
 
     /**
      * Constructor which initializes fields for view lists and
@@ -86,48 +86,51 @@ public class FrameModel {
                 "No views specified, opening mail view as default");
             openView("ThreePaneMail");
         }
-        
+
         //this is executed on shutdown: store all open frames so that they
         //can be restored on the next start
         ShutdownManager.getShutdownManager().register(new Runnable() {
-            public void run() {
-                //used to temporarily store the values while the original
-                //viewList gets modified by the close method
-                List newViewList = new LinkedList();
-                
-                ViewItem v;
-                //we cannot use an iterator here because the close method
-                //manipulates the list
-                while (activeFrameCtrls.size() > 0) {
-                    FrameMediator c = (FrameMediator) activeFrameCtrls.get(0);
-                    v = c.getViewItem();
+                public void run() {
+                    //used to temporarily store the values while the original
+                    //viewList gets modified by the close method
+                    List newViewList = new LinkedList();
 
-                    //store every open frame in our temporary list
-                    newViewList.add(v.getRoot());
+                    ViewItem v;
 
-                    //close every open frame
-                    c.close();
-                }
-                
-                //if not we haven't actually closed a frame, leave viewList as is
-                if (newViewList.size() > 0) {
-                    //the close method manipulates the viewList so we have to
-                    //remove the existing element and fill in our temporarily
-                    //stored ones
-                    viewList.removeAllElements();
-                    for (Iterator it = newViewList.iterator(); it.hasNext();) {
-                        viewList.addElement((XmlElement)it.next());
+                    //we cannot use an iterator here because the close method
+                    //manipulates the list
+                    while (activeFrameCtrls.size() > 0) {
+                        FrameMediator c = (FrameMediator) activeFrameCtrls.get(0);
+                        v = c.getViewItem();
+
+                        //store every open frame in our temporary list
+                        newViewList.add(v.getRoot());
+
+                        //close every open frame
+                        c.close();
+                    }
+
+                    //if not we haven't actually closed a frame, leave viewList as is
+                    if (newViewList.size() > 0) {
+                        //the close method manipulates the viewList so we have to
+                        //remove the existing element and fill in our temporarily
+                        //stored ones
+                        viewList.removeAllElements();
+
+                        for (Iterator it = newViewList.iterator();
+                                it.hasNext();) {
+                            viewList.addElement((XmlElement) it.next());
+                        }
                     }
                 }
-            }
-        });
+            });
     }
-    
+
     /**
      * Returns an array of all open frames.
      */
     public FrameMediator[] getOpenFrames() {
-        return (FrameMediator[])activeFrameCtrls.toArray(new FrameMediator[0]);
+        return (FrameMediator[]) activeFrameCtrls.toArray(new FrameMediator[0]);
     }
 
     /**
@@ -143,8 +146,7 @@ public class FrameModel {
      *
      * @return                                frame controller
      */
-    public FrameMediator createFrameController(String id,
-        ViewItem viewItem) {
+    public FrameMediator createFrameController(String id, ViewItem viewItem) {
         // get plugin handler for handling frames
         FramePluginHandler handler = null;
 
@@ -265,6 +267,7 @@ public class FrameModel {
             ViewItem v = c.getViewItem();
             saveDefaultView(v);
             activeFrameCtrls.remove(c);
+
             if (activeFrameCtrls.size() == 0) {
                 //this is the last frame so store its data in the viewList
                 viewList.removeAllElements();

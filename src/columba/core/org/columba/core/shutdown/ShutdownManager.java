@@ -13,10 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.shutdown;
 
+import org.columba.core.command.Command;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.core.session.ColumbaServer;
+import org.columba.core.util.GlobalResourceLoader;
+
 import java.awt.Component;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,9 +30,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Manages all tasks which are responsible for doing clean-up work
@@ -63,161 +66,162 @@ import org.columba.core.util.GlobalResourceLoader;
  * @author fdietz
  */
 public class ShutdownManager {
-    
     protected static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-    
+
     /**
-     * The singleton instance of this class.
-     */
+ * The singleton instance of this class.
+ */
     private static ShutdownManager instance;
-    
+
     /**
-     * Indicates whether this ShutdownManager instance is registered as a
-     * system shutdown hook.
-     */
+ * Indicates whether this ShutdownManager instance is registered as a
+ * system shutdown hook.
+ */
     private boolean shutdownHook = false;
-    
+
     /**
-     * The thread performing the actual shutdown procedure.
-     */
+ * The thread performing the actual shutdown procedure.
+ */
     protected final Thread shutdownThread;
-    
+
     /**
-     * The list of runnable plugins that should be executed on shutdown.
-     */
+ * The list of runnable plugins that should be executed on shutdown.
+ */
     protected List list = new LinkedList();
 
     /**
-     * This constructor is only to be accessed by getShutdownManager() and
-     * by subclasses.
-     */
+ * This constructor is only to be accessed by getShutdownManager() and
+ * by subclasses.
+ */
     protected ShutdownManager() {
         shutdownThread = new Thread(new Runnable() {
-            public void run() {
-                // stop background-manager so it doesn't interfere with
-                // shutdown manager
-                MainInterface.backgroundTaskManager.stop();
+                    public void run() {
+                        // stop background-manager so it doesn't interfere with
+                        // shutdown manager
+                        MainInterface.backgroundTaskManager.stop();
 
-                while (!isShutdownHook() && 
-                        MainInterface.processor.getTaskManager().count() > 0) {
-                    // ask user to kill pending running commands or wait
-                    Object[] options = { 
-                        GlobalResourceLoader.getString(
-                            RESOURCE_PATH,
-                            "session",
-                            "tasks_wait"),
-                        GlobalResourceLoader.getString(
-                            RESOURCE_PATH,
-                            "session",
-                            "tasks_exit") };
-                    int n = JOptionPane.showOptionDialog(null,
-                            GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "session",
-                                "tasks_msg"),
-                            GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "session",
-                                "tasks_title"), JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    if (n == 0) {
-                        //wait 10 seconds and check for pending commands again
-                        //this is useful if a command causes a deadlock
-                        for (int i = 0; i < 10; i++) {
-                            try {
-                                Thread.currentThread().sleep(1000);
-                            } catch (InterruptedException ie) {}
+                        while (!isShutdownHook() &&
+                                (MainInterface.processor.getTaskManager().count() > 0)) {
+                            // ask user to kill pending running commands or wait
+                            Object[] options = {
+                                GlobalResourceLoader.getString(RESOURCE_PATH,
+                                    "session", "tasks_wait"),
+                                GlobalResourceLoader.getString(RESOURCE_PATH,
+                                    "session", "tasks_exit")
+                            };
+                            int n = JOptionPane.showOptionDialog(null,
+                                    GlobalResourceLoader.getString(
+                                        RESOURCE_PATH, "session", "tasks_msg"),
+                                    GlobalResourceLoader.getString(
+                                        RESOURCE_PATH, "session", "tasks_title"),
+                                    JOptionPane.YES_NO_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE, null,
+                                    options, options[0]);
+
+                            if (n == 0) {
+                                //wait 10 seconds and check for pending commands again
+                                //this is useful if a command causes a deadlock
+                                for (int i = 0; i < 10; i++) {
+                                    try {
+                                        Thread.currentThread().sleep(1000);
+                                    } catch (InterruptedException ie) {
+                                    }
+                                }
+                            } else {
+                                //don't wait, just continue shutdown procedure, commands will
+                                //be killed
+                                break;
+                            }
                         }
-                    } else {
-                        //don't wait, just continue shutdown procedure, commands will
-                        //be killed
-                        break;
+
+                        ShutdownDialog dialog = (ShutdownDialog) openShutdownDialog();
+
+                        Iterator iterator = list.iterator();
+                        Runnable plugin;
+
+                        while (iterator.hasNext()) {
+                            plugin = (Runnable) iterator.next();
+
+                            try {
+                                plugin.run();
+                            } catch (Exception e) {
+                                ColumbaLogger.log.severe(e.getMessage());
+
+                                //TODO: better exception handling
+                            }
+                        }
+
+                        //we don't need to check for running commands here because there aren't
+                        //any, shutdown plugins only use this thread
+                        dialog.close();
                     }
-                }
-
-                ShutdownDialog dialog = (ShutdownDialog) openShutdownDialog();
-
-                Iterator iterator = list.iterator();
-                Runnable plugin;
-                while (iterator.hasNext()) {
-                    plugin = (Runnable) iterator.next();
-                    try {
-                        plugin.run();
-                    } catch(Exception e) {
-                        ColumbaLogger.log.severe(e.getMessage());
-                        //TODO: better exception handling
-                    }
-                }
-
-                //we don't need to check for running commands here because there aren't
-                //any, shutdown plugins only use this thread
-
-                dialog.close();
-            }
-        }, "ShutdownManager");
+                }, "ShutdownManager");
         setShutdownHook(true);
     }
 
     /**
-     * Registers a runnable plugin that should be executed on shutdown.
-     */
+ * Registers a runnable plugin that should be executed on shutdown.
+ */
     public void register(Runnable plugin) {
         list.add(0, plugin);
     }
-    
+
     /**
-     * Returns whether this ShutdownManager instance runs inside a system
-     * shutdown hook.
-     */
+ * Returns whether this ShutdownManager instance runs inside a system
+ * shutdown hook.
+ */
     public synchronized boolean isShutdownHook() {
         return shutdownHook;
     }
-    
+
     /**
-     * Registers or unregisters this ShutdownManager instance as a system
-     * shutdown hook.
-     */
+ * Registers or unregisters this ShutdownManager instance as a system
+ * shutdown hook.
+ */
     protected synchronized void setShutdownHook(boolean b) {
         if (shutdownHook == b) {
             return;
         }
+
         if (b) {
             Runtime.getRuntime().addShutdownHook(shutdownThread);
         } else {
             Runtime.getRuntime().removeShutdownHook(shutdownThread);
         }
+
         shutdownHook = b;
     }
-    
+
     /**
-     * Starts the shutdown procedure.
-     */
+ * Starts the shutdown procedure.
+ */
     public synchronized void shutdown(final int status) {
         setShutdownHook(false);
         new Thread(new Runnable() {
-            public void run() {
-                shutdownThread.run();
-                System.exit(status);
-            }
-        }, "ShutdownManager").start();
+                public void run() {
+                    shutdownThread.run();
+                    System.exit(status);
+                }
+            }, "ShutdownManager").start();
     }
-    
+
     /**
-     * Returns a component notifying the user of the shutdown procedure.
-     */
+ * Returns a component notifying the user of the shutdown procedure.
+ */
     protected Component openShutdownDialog() {
         JFrame dialog = new ShutdownDialog();
-        
+
         return dialog;
     }
-    
+
     /**
-     * Returns the singleton instance of this class.
-     */
+ * Returns the singleton instance of this class.
+ */
     public synchronized static ShutdownManager getShutdownManager() {
         if (instance == null) {
             instance = new ShutdownManager();
         }
+
         return instance;
     }
 }

@@ -63,8 +63,8 @@ public class ExitWorker extends SwingWorker {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public JProgressBar getBar() {
         return bar;
     }

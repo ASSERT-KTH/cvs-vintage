@@ -58,9 +58,9 @@ class LocationStep extends AbstractStep implements ActionListener {
     protected File sourceFile;
 
     /**
-     * @param arg0
-     * @param arg1
-     */
+ * @param arg0
+ * @param arg1
+ */
     public LocationStep(DataModel data) {
         super(GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
                 "LocationStep.title"),
@@ -80,8 +80,8 @@ class LocationStep extends AbstractStep implements ActionListener {
     }
 
     /* (non-Javadoc)
-     * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-     */
+ * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+ */
     protected JComponent createComponent() {
         JPanel panel = new JPanel(new BorderLayout());
 
@@ -134,8 +134,8 @@ class LocationStep extends AbstractStep implements ActionListener {
     }
 
     /* (non-Javadoc)
-     * @see net.javaprog.ui.wizard.Step#prepareRendering()
-     */
+ * @see net.javaprog.ui.wizard.Step#prepareRendering()
+ */
     public void prepareRendering() {
         // init component before querying for sourceFile
         getComponent();

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.help;
 
 import java.awt.Component;
@@ -31,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+
 /**
  * @author fdietz
  *
@@ -40,7 +40,7 @@ import javax.swing.UIManager;
  */
 public class HelpManager {
     private static HelpManager instance;
-    
+
     // name of helpset resource
     final static String helpsetName = "jhelpset";
     private JHelp jh = null;
@@ -52,15 +52,17 @@ public class HelpManager {
     private JFrame frame;
 
     /**
-     * Creates a new instance. This method is private because it should
-     * only get called from the static getHelpManager() method.
-     */
+ * Creates a new instance. This method is private because it should
+ * only get called from the static getHelpManager() method.
+ */
     private HelpManager() {
         ClassLoader loader = getClass().getClassLoader();
-        URL url = HelpSet.findHelpSet(loader, helpsetName, "", Locale.getDefault());
+        URL url = HelpSet.findHelpSet(loader, helpsetName, "",
+                Locale.getDefault());
 
         if (url == null) {
-            url = HelpSet.findHelpSet(loader, helpsetName, ".hs", Locale.getDefault());
+            url = HelpSet.findHelpSet(loader, helpsetName, ".hs",
+                    Locale.getDefault());
 
             if (url == null) {
                 // could not find it!
@@ -110,38 +112,39 @@ public class HelpManager {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public HelpBroker getHelpBroker() {
         return hb;
     }
 
     /**
-     * Associate button with topic ID.
-     *
-     * Topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
-     *
-     * @param c                        component
-     * @param helpID        helpID
-     */
+ * Associate button with topic ID.
+ *
+ * Topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
+ *
+ * @param c                        component
+ * @param helpID        helpID
+ */
     public void enableHelpOnButton(Component c, String helpID) {
         getHelpBroker().enableHelpOnButton(c, helpID, hs);
     }
-    
+
     /**
-     * Enables the F1 help key on components.
-     */
+ * Enables the F1 help key on components.
+ */
     public void enableHelpKey(Component c, String helpID) {
         getHelpBroker().enableHelpKey(c, helpID, hs);
     }
-    
+
     /**
-     * Returns the singleton help manager instance.
-     */
+ * Returns the singleton help manager instance.
+ */
     public static HelpManager getHelpManager() {
         if (instance == null) {
             instance = new HelpManager();
         }
+
         return instance;
     }
 }

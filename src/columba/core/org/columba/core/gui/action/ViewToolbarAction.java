@@ -13,16 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractSelectableAction;
-import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
+
 import org.columba.mail.gui.frame.MailFrameView;
 
 import java.awt.event.ActionEvent;
+
 
 /**
  * Columba action for hiding/showing the toolbar action.
@@ -40,7 +40,7 @@ public class ViewToolbarAction extends AbstractSelectableAction {
         putValue(SHORT_DESCRIPTION,
             GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar")
                                 .replaceAll("&", ""));
-        
+
         setState(frameMediator.isToolbarEnabled(MailFrameView.MAIN_TOOLBAR));
     }
 

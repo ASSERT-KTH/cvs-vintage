@@ -35,19 +35,19 @@ import java.util.zip.ZipInputStream;
  */
 public class ZipFileIO {
     /**
-     * default constructor
-     */
+ * default constructor
+ */
     public ZipFileIO() {
         super();
     }
 
     /**
-     *
-     * extract zip file to destination folder
-     *
-     * @param file                        zip file to extract
-     * @param destination        destinatin folder
-     */
+ *
+ * extract zip file to destination folder
+ *
+ * @param file                        zip file to extract
+ * @param destination        destinatin folder
+ */
     public static void extract(File file, File destination) {
         try {
             // Open the ZIP file
@@ -90,15 +90,15 @@ public class ZipFileIO {
     }
 
     /**
-     *
-     * Return the first directory of this archive
-     *
-     * This is needed to determine the plugin directory.
-     *
-     *
-     * @param zipFile
-     * @return        <class>File</class> containing the first entry of this archive
-     */
+ *
+ * Return the first directory of this archive
+ *
+ * This is needed to determine the plugin directory.
+ *
+ *
+ * @param zipFile
+ * @return        <class>File</class> containing the first entry of this archive
+ */
     public static File getFirstFile(File zipFile) {
         try {
             // Open the ZIP file

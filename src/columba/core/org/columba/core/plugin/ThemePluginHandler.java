@@ -34,9 +34,9 @@ public class ThemePluginHandler extends AbstractPluginHandler {
     };
 
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public ThemePluginHandler() {
         super("org.columba.core.theme", "org/columba/core/plugin/theme.xml");
 
@@ -73,13 +73,13 @@ public class ThemePluginHandler extends AbstractPluginHandler {
     }
 
     /**
-     *
-     * is this a installed system look and feel ?
-     *
-     * @param name
-     *
-     * @return
-     */
+ *
+ * is this a installed system look and feel ?
+ *
+ * @param name
+ *
+ * @return
+ */
     protected boolean isSystemTheme(String name) {
         for (int i = 0; i < SYSTEM_DEFAULT_THEMES.length; i++) {
             if (name.equals(SYSTEM_DEFAULT_THEMES[i])) {

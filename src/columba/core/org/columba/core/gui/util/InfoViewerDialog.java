@@ -82,8 +82,8 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
     }
 
     /**
-     * @throws java.awt.HeadlessException
-     */
+ * @throws java.awt.HeadlessException
+ */
     public InfoViewerDialog(URL url) {
         this();
 
@@ -133,6 +133,7 @@ public class InfoViewerDialog extends JDialog implements ActionListener {
 
         ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
                     "global", "help"));
+
         //TODO: associate help with button and root pane
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);

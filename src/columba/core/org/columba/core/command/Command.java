@@ -29,59 +29,57 @@ import java.lang.reflect.Array;
  */
 public abstract class Command {
     /**
-     * Command Types
-    * Commands that can be undone, e.g. move message
-    * line for constructor:
-    * commandType = Command.UNDOABLE_OPERATION;
-    */
+ * Command Types
+* Commands that can be undone, e.g. move message
+* line for constructor:
+* commandType = Command.UNDOABLE_OPERATION;
+*/
     public static final int UNDOABLE_OPERATION = 0;
 
     /**
-     * Commands that can not be undone but previous commands
-    * can be undone, e.g. view message (default)
-    * line for constructor:
-    * commandType = Command.NORMAL_OPERATION;
-    */
+ * Commands that can not be undone but previous commands
+* can be undone, e.g. view message (default)
+* line for constructor:
+* commandType = Command.NORMAL_OPERATION;
+*/
     public static final int NORMAL_OPERATION = 1;
 
     /**
-     * Commands that can not be undone and previous commands
-    * cannot be undone anymore, e.g. delete message from trash
-    * line for constructor:
-    * commandType = Command.NO_UNDO_OPERATION;
-    */
+ * Commands that can not be undone and previous commands
+* cannot be undone anymore, e.g. delete message from trash
+* line for constructor:
+* commandType = Command.NO_UNDO_OPERATION;
+*/
     public static final int NO_UNDO_OPERATION = 2;
 
     /**
-     * Priorities:
-    * Commands that are started by an automated process, e.g. auto-check
-    * for new messages
-    */
+ * Priorities:
+* Commands that are started by an automated process, e.g. auto-check
+* for new messages
+*/
     public static final int DAEMON_PRIORITY = -10;
 
     /**
-     * Normal priority for e.g. copying (default)
-     */
+ * Normal priority for e.g. copying (default)
+ */
     public static final int NORMAL_PRIORITY = 0;
 
     /** 
-     * Commands that the user waits for to finish, e.g. view message
-     */
+ * Commands that the user waits for to finish, e.g. view message
+ */
     public static final int REALTIME_PRIORITY = 10;
 
     /**
-     * Never Use this!! - internally highest priority
-     */ 
+ * Never Use this!! - internally highest priority
+ */
     public static final int DEFINETLY_NEXT_OPERATION_PRIORITY = 20;
 
     /**
-     * Never use these!!! - for internal state control only
-     */
-    
+ * Never use these!!! - for internal state control only
+ */
     public static final int FIRST_EXECUTION = 0;
     public static final int UNDO = 1;
     public static final int REDO = 2;
-    
     protected int priority;
     protected int commandType;
     protected boolean synchronize;
@@ -133,31 +131,32 @@ public abstract class Command {
     }
 
     /**
-     * Command must implement this method
-     * Executes the Command when run the first time
-     *
-     * @param worker
-     * @throws Exception
-     */
-    public abstract void execute(WorkerStatusController worker) throws Exception;
+ * Command must implement this method
+ * Executes the Command when run the first time
+ *
+ * @param worker
+ * @throws Exception
+ */
+    public abstract void execute(WorkerStatusController worker)
+        throws Exception;
 
     /**
-     * Command must implement this method
-     * Undos the command after command was executed or redone.
-     *
-     * @param worker
-     * @throws Exception
-     */
+ * Command must implement this method
+ * Undos the command after command was executed or redone.
+ *
+ * @param worker
+ * @throws Exception
+ */
     public void undo(Worker worker) throws Exception {
     }
 
     /**
-     * Command must implement this method
-     * Redos the command after command was undone.
-     *
-     * @param worker
-     * @throws Exception
-     */
+ * Command must implement this method
+ * Redos the command after command was undone.
+ *
+ * @param worker
+ * @throws Exception
+ */
     public void redo(Worker worker) throws Exception {
     }
 
@@ -225,41 +224,41 @@ public abstract class Command {
     }
 
     /**
-     * Sets the undoReferences.
-     * @param undoReferences The undoReferences to set
-     */
+ * Sets the undoReferences.
+ * @param undoReferences The undoReferences to set
+ */
     public void setUndoReferences(DefaultCommandReference[] undoReferences) {
         this.undoReferences = undoReferences;
     }
 
     /**
-     * Returns the timeStamp.
-     * @return int
-     */
+ * Returns the timeStamp.
+ * @return int
+ */
     public int getTimeStamp() {
         return timeStamp;
     }
 
     /**
-     * Sets the timeStamp.This method is for testing only!
-     * @param timeStamp The timeStamp to set
-     */
+ * Sets the timeStamp.This method is for testing only!
+ * @param timeStamp The timeStamp to set
+ */
     public void setTimeStamp(int timeStamp) {
         this.timeStamp = timeStamp;
     }
 
     /**
-     * Returns the references.
-     * @return DefaultCommandReference[]
-     */
+ * Returns the references.
+ * @return DefaultCommandReference[]
+ */
     public DefaultCommandReference[] getReferences() {
         return references;
     }
 
     /**
-     * Returns the undoReferences.
-     * @return DefaultCommandReference[]
-     */
+ * Returns the undoReferences.
+ * @return DefaultCommandReference[]
+ */
     public DefaultCommandReference[] getUndoReferences() {
         return undoReferences;
     }
@@ -269,9 +268,9 @@ public abstract class Command {
     }
 
     /**
-     * Returns the frameMediator.
-     * @return FrameController
-     */
+ * Returns the frameMediator.
+ * @return FrameController
+ */
     public FrameMediator getFrameMediator() {
         return frameMediator;
     }

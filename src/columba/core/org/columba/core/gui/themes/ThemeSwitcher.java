@@ -15,7 +15,6 @@
 //All Rights Reserved.Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.core.gui.themes;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ThemePluginHandler;

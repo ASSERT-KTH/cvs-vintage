@@ -33,9 +33,9 @@ public class DomToTreeModelAdapter implements TreeModel {
     Document document;
 
     /*
-     * Use these methods to add and remove event listeners.
-     * (Needed to satisfy TreeModel interface, but not used.)
-     */
+ * Use these methods to add and remove event listeners.
+ * (Needed to satisfy TreeModel interface, but not used.)
+ */
     private List listenerList = new Vector();
 
     public DomToTreeModelAdapter(Document document) {

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -22,6 +21,7 @@ import org.columba.core.help.HelpManager;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
+
 
 /**
  * Default Button which automatically sets a JavaHelp topic ID

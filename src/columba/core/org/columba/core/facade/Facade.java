@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.facade;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginResourceLoader;

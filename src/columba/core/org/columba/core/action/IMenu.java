@@ -28,16 +28,16 @@ public class IMenu extends CMenu {
     }
 
     /**
-     * @return FrameController
-     */
+ * @return FrameController
+ */
     public FrameMediator getController() {
         return controller;
     }
 
     /**
-     * Sets the controller.
-     * @param controller The controller to set
-     */
+ * Sets the controller.
+ * @param controller The controller to set
+ */
     public void setController(FrameMediator controller) {
         this.controller = controller;
     }

@@ -46,11 +46,11 @@ public class CloneStreamMaster {
     private int size;
 
     /**
-     * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
-     * the construction!
-     *
-     * @param master
-     */
+ * Constructs a CloneStreamMaster. Note that the master must NOT be read from after
+ * the construction!
+ *
+ * @param master
+ */
     public CloneStreamMaster(InputStream master) throws IOException {
         super();
         this.master = master;
@@ -81,15 +81,15 @@ public class CloneStreamMaster {
             buffer = tempOut.toByteArray();
             usesFile = false;
         }
-        
+
         master.close();
     }
 
     /**
-     * Gets a new clone of the master.
-     *
-     * @return Clone of the master
-     */
+ * Gets a new clone of the master.
+ *
+ * @return Clone of the master
+ */
     public CloneInputStream getClone() {
         if (usesFile) {
             try {
@@ -119,15 +119,15 @@ public class CloneStreamMaster {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public int available() throws IOException {
         return size;
     }
 
     /* (non-Javadoc)
-     * @see java.lang.Object#finalize()
-     */
+ * @see java.lang.Object#finalize()
+ */
     protected void finalize() throws Throwable {
         super.finalize();
 
@@ -138,8 +138,8 @@ public class CloneStreamMaster {
     }
 
     /**
-     * @param id
-     */
+ * @param id
+ */
     public void close(int id) throws IOException {
         ((InputStream) streamList.get(id)).close();
     }

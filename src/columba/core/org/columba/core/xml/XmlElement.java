@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.xml;
 
+
 /////////////////////////////////////////////////////////////////////////////
 //                          IMPORT STATEMENTS                              //
 /////////////////////////////////////////////////////////////////////////////
@@ -75,23 +76,23 @@ public class XmlElement extends Observable implements Cloneable {
     XmlElement parent;
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * Constructor
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * Constructor
+ *
+ */
     public XmlElement() {
         subElements = new Vector();
         this.attributes = new Hashtable(10);
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * Constructor
-     * @param String Name
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * Constructor
+ * @param String Name
+ *
+ */
     public XmlElement(String name) {
         this.name = name;
         this.attributes = new Hashtable(10);
@@ -100,13 +101,13 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * Constructor
-     * @param String Name
-     * @param Hashtable Attributes
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * Constructor
+ * @param String Name
+ * @param Hashtable Attributes
+ *
+ */
     public XmlElement(String name, Hashtable attributes) {
         this.name = name;
         this.attributes = attributes;
@@ -114,13 +115,13 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * Constructor
-     * @param Name String
-     * @param Data String
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * Constructor
+ * @param Name String
+ * @param Data String
+ *
+ */
     public XmlElement(String name, String data) {
         this.name = name;
         this.data = data;
@@ -129,13 +130,13 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Add attribute to this xml element.
-     *
-     * @param name                name of key
-     * @param value                new attribute value
-     * @return                        old attribute value
-     *
-     */
+ * Add attribute to this xml element.
+ *
+ * @param name                name of key
+ * @param value                new attribute value
+ * @return                        old attribute value
+ *
+ */
     public Object addAttribute(String name, String value) {
         if ((value != null) && (name != null)) {
             Object returnValue = (attributes.put(name, value));
@@ -147,12 +148,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  String
-     * @param String Name
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  String
+ * @param String Name
+ *
+ */
     public String getAttribute(String name) {
         return ((String) attributes.get(name));
     }
@@ -166,44 +167,44 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  String
-     * @param String Name
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  String
+ * @param String Name
+ *
+ */
     public Hashtable getAttributes() {
         return attributes;
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     *
-     * @param Attrs Hashtable to use as the attributes
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ *
+ * @param Attrs Hashtable to use as the attributes
+ *
+ */
     public void setAttributes(Hashtable attrs) {
         attributes = attrs;
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  Enumeration
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  Enumeration
+ *
+ */
     public Enumeration getAttributeNames() {
         return (attributes.keys());
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  boolean
-     * @param XmlElement E
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  boolean
+ * @param XmlElement E
+ *
+ */
     public boolean addElement(XmlElement e) {
         e.setParent(this);
 
@@ -236,13 +237,13 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * convienience method for the TreeView
-     *
-     * this method is modeled after the DefaultMutableTreeNode-class
-     *
-     * DefaultMutableTreeNode wraps XmlElement for this purpose
-     *
-     */
+ * convienience method for the TreeView
+ *
+ * this method is modeled after the DefaultMutableTreeNode-class
+ *
+ * DefaultMutableTreeNode wraps XmlElement for this purpose
+ *
+ */
     public void removeFromParent() {
         XmlElement parent = getParent();
 
@@ -260,12 +261,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     *
-     * convienience method for the TreeView
-     *
-     * @param e
-     * @param index
-     */
+ *
+ * convienience method for the TreeView
+ *
+ * @param e
+ * @param index
+ */
     public void insertElement(XmlElement e, int index) {
         e.removeFromParent();
 
@@ -274,11 +275,11 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  Vector
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  Vector
+ *
+ */
     public List getElements() {
         return subElements;
     }
@@ -288,12 +289,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @return  XmlElement
-     * @param String Path
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @return  XmlElement
+ * @param String Path
+ *
+ */
     public XmlElement getElement(String path) {
         int i = path.indexOf('/');
         String topName;
@@ -332,12 +333,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Adds a sub element to this one
-     *
-     * @return  XmlElement
-     * @param Name The name of the sub element to add
-     *
-     */
+ * Adds a sub element to this one
+ *
+ * @return  XmlElement
+ * @param Name The name of the sub element to add
+ *
+ */
     public XmlElement addSubElement(String name) {
         XmlElement e = new XmlElement(name);
         e.setParent(this);
@@ -347,12 +348,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Adds a sub element to this one
-     *
-     * @return  XmlElement
-     * @param   element The XmlElement to add
-     *
-     */
+ * Adds a sub element to this one
+ *
+ * @return  XmlElement
+ * @param   element The XmlElement to add
+ *
+ */
     public XmlElement addSubElement(XmlElement e) {
         e.setParent(this);
         subElements.add(e);
@@ -361,12 +362,12 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Adds a sub element to this one
-     *
-     * @return  XmlElement
-     * @param Name The name of the sub element to add
-     * @param Data String Data for this element
-     */
+ * Adds a sub element to this one
+ *
+ * @return  XmlElement
+ * @param Name The name of the sub element to add
+ * @param Data String Data for this element
+ */
     public XmlElement addSubElement(String name, String data) {
         XmlElement e = new XmlElement(name);
         e.setData(data);
@@ -377,148 +378,148 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Sets the parent element
-     *
-     * @param Parent The XmlElement that contains this one
-     *
-     */
+ * Sets the parent element
+ *
+ * @param Parent The XmlElement that contains this one
+ *
+ */
     public void setParent(XmlElement parent) {
         this.parent = parent;
     }
 
     /**
-     * Gives the XmlElement containing the current element
-     *
-     * @return  XmlElement
-     *
-     */
+ * Gives the XmlElement containing the current element
+ *
+ * @return  XmlElement
+ *
+ */
     public XmlElement getParent() {
         return parent;
     }
 
     /**
-     * Sets the data for this element
-     *
-     * @param D The String representation of the data
-     *
-     */
+ * Sets the data for this element
+ *
+ * @param D The String representation of the data
+ *
+ */
     public void setData(String d) {
         data = d;
     }
 
     /**
-     * Returns the data associated with the current Xml element
-     *
-     * @return  String
-     *
-     */
+ * Returns the data associated with the current Xml element
+ *
+ * @return  String
+ *
+ */
     public String getData() {
         return data;
     }
 
     /**
-     * Returns the name of the current Xml element
-     *
-     * @return  String
-     *
-     */
+ * Returns the name of the current Xml element
+ *
+ * @return  String
+ *
+ */
     public String getName() {
         return name;
     }
 
     /**
-     * **FIXME** This function needs documentation
-     *
-     * @param out OutputStream to print the data to
-     *
-     */
+ * **FIXME** This function needs documentation
+ *
+ * @param out OutputStream to print the data to
+ *
+ */
 
     /*
-    public void write(OutputStream out) throws IOException {
-            PrintWriter PW = new PrintWriter(out);
-            PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            if (SubElements.size() > 0) {
-                    for (int i = 0; i < SubElements.size(); i++) {
-                            ((XmlElement) SubElements.get(i))._writeSubNode(PW, 4);
-                    }
-            }
-            PW.flush();
-    }
-    */
+public void write(OutputStream out) throws IOException {
+        PrintWriter PW = new PrintWriter(out);
+        PW.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        if (SubElements.size() > 0) {
+                for (int i = 0; i < SubElements.size(); i++) {
+                        ((XmlElement) SubElements.get(i))._writeSubNode(PW, 4);
+                }
+        }
+        PW.flush();
+}
+*/
 
     /**
-     * Prints sub nodes to the given data stream
-     *
-     * @param out    PrintWriter to use for printing
-     * @param indent Number of spaces to indent things
-     *
-     */
+ * Prints sub nodes to the given data stream
+ *
+ * @param out    PrintWriter to use for printing
+ * @param indent Number of spaces to indent things
+ *
+ */
 
     /*
-    private void _writeSubNode(PrintWriter out, int indent)
-            throws IOException {
-            _writeSpace(out, indent);
-            out.print("<" + Name);
-            //if ( Attributes.size()>1) out.print(" ");
+private void _writeSubNode(PrintWriter out, int indent)
+        throws IOException {
+        _writeSpace(out, indent);
+        out.print("<" + Name);
+        //if ( Attributes.size()>1) out.print(" ");
 
-            for (Enumeration e = Attributes.keys(); e.hasMoreElements();) {
-                    String K = (String) e.nextElement();
-                    out.print(K + "=\"" + Attributes.get(K) + "\" b");
+        for (Enumeration e = Attributes.keys(); e.hasMoreElements();) {
+                String K = (String) e.nextElement();
+                out.print(K + "=\"" + Attributes.get(K) + "\" b");
 
-            }
-            out.print(">");
+        }
+        out.print(">");
 
-            if (Data != null && !Data.equals("")) {
-                    if (Data.length() > 20) {
-                            out.println("");
-                            _writeSpace(out, indent + 2);
-                    }
-                    out.print(Data);
-            }
-            if (SubElements.size() > 0) {
-                    out.println("");
-                    for (int i = 0; i < SubElements.size(); i++) {
-                            ((XmlElement) SubElements.get(i))._writeSubNode(
-                                    out,
-                                    indent + 4);
-                    }
-                    _writeSpace(out, indent);
-            }
-            out.println("</" + Name + ">");
+        if (Data != null && !Data.equals("")) {
+                if (Data.length() > 20) {
+                        out.println("");
+                        _writeSpace(out, indent + 2);
+                }
+                out.print(Data);
+        }
+        if (SubElements.size() > 0) {
+                out.println("");
+                for (int i = 0; i < SubElements.size(); i++) {
+                        ((XmlElement) SubElements.get(i))._writeSubNode(
+                                out,
+                                indent + 4);
+                }
+                _writeSpace(out, indent);
+        }
+        out.println("</" + Name + ">");
 
-    }
-    */
+}
+*/
 
     /**
-     * Prints out a given number of spaces
-     *
-     * @param out       PrintWriter to use for printing
-     * @param numSpaces Number of spaces to print
-     *
-     */
+ * Prints out a given number of spaces
+ *
+ * @param out       PrintWriter to use for printing
+ * @param numSpaces Number of spaces to print
+ *
+ */
 
     /*
-    private void _writeSpace(PrintWriter out, int numSpaces)
-            throws IOException {
+private void _writeSpace(PrintWriter out, int numSpaces)
+        throws IOException {
 
-            for (int i = 0; i < numSpaces; i++)
-                    out.print(" ");
-    }
+        for (int i = 0; i < numSpaces; i++)
+                out.print(" ");
+}
 
-    public static void printNode(XmlElement Node, String indent) {
-            String Data = Node.getData();
-            if (Data == null || Data.equals("")) {
-                    System.out.println(indent + Node.getName());
-            } else {
-                    System.out.println(indent + Node.getName() + " = '" + Data + "'");
-            }
-            Vector Subs = Node.getElements();
-            int i, j;
-            for (i = 0; i < Subs.size(); i++) {
-                    printNode((XmlElement) Subs.get(i), indent + "    ");
-            }
-    }
-    */
+public static void printNode(XmlElement Node, String indent) {
+        String Data = Node.getData();
+        if (Data == null || Data.equals("")) {
+                System.out.println(indent + Node.getName());
+        } else {
+                System.out.println(indent + Node.getName() + " = '" + Data + "'");
+        }
+        Vector Subs = Node.getElements();
+        int i, j;
+        for (i = 0; i < Subs.size(); i++) {
+                printNode((XmlElement) Subs.get(i), indent + "    ");
+        }
+}
+*/
     public static void printNode(XmlElement node, String indent) {
         String data = node.getData();
 
@@ -579,32 +580,32 @@ public class XmlElement extends Observable implements Cloneable {
     }
 
     /**
-     * Sets the name.
-     * @param name The name to set
-     */
+ * Sets the name.
+ * @param name The name to set
+ */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Notify all Observers.
-     *
-     * @see java.util.Observable#notifyObservers()
-     */
+ * Notify all Observers.
+ *
+ * @see java.util.Observable#notifyObservers()
+ */
     public void notifyObservers() {
         setChanged();
         super.notifyObservers();
     }
 
     /**
-     * Returns true if the specified objects are equal.
-     * They are equal if they are both null OR if the <code>equals()</code> method
-     * return true. (<code>obj1.equals(obj2)</code>).
-     * @param obj1 first object to compare with.
-     * @param obj2 second object to compare with.
-     * @return true if they represent the same object; false if one of them is null or the
-     * <code>equals()</code> method returns false.
-     */
+ * Returns true if the specified objects are equal.
+ * They are equal if they are both null OR if the <code>equals()</code> method
+ * return true. (<code>obj1.equals(obj2)</code>).
+ * @param obj1 first object to compare with.
+ * @param obj2 second object to compare with.
+ * @return true if they represent the same object; false if one of them is null or the
+ * <code>equals()</code> method returns false.
+ */
     private boolean equals(Object obj1, Object obj2) {
         boolean equal = false;
 
@@ -658,4 +659,6 @@ public class XmlElement extends Observable implements Cloneable {
         return hashCode;
     }
 }
- // END public class XmlElement
+
+
+// END public class XmlElement

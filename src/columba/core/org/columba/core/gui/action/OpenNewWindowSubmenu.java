@@ -29,9 +29,9 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public class OpenNewWindowSubmenu extends IMenu {
     /**
-     * @param controller
-     * @param caption
-     */
+ * @param controller
+ * @param caption
+ */
     public OpenNewWindowSubmenu(FrameMediator controller, String caption) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",

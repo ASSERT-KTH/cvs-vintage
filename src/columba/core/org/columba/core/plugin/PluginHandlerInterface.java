@@ -33,26 +33,26 @@ import java.util.ListIterator;
  */
 public interface PluginHandlerInterface {
     /**
-     * return ID identification string of handler
-     *
-     * @return        <class>String</class> containing ID
-     */
+ * return ID identification string of handler
+ *
+ * @return        <class>String</class> containing ID
+ */
     public String getId();
 
     /**
-     * return top level xml tree node
-     * <p>
-     * all plugins are child nodes of this parent node
-     *
-     * @return        <class>XmlElement</class> parent node
-     */
+ * return top level xml tree node
+ * <p>
+ * all plugins are child nodes of this parent node
+ *
+ * @return        <class>XmlElement</class> parent node
+ */
     public XmlElement getParent();
 
     /**
-     *
-     * return list of external plugins
-     *
-     * @return        <interface>List</interface> containing all external plugins
-     */
+ *
+ * return list of external plugins
+ *
+ * @return        <interface>List</interface> containing all external plugins
+ */
     public ListIterator getExternalPlugins();
 }

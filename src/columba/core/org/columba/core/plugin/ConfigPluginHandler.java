@@ -27,9 +27,9 @@ package org.columba.core.plugin;
  */
 public class ConfigPluginHandler extends AbstractPluginHandler {
     /**
-     * @param id
-     * @param config
-     */
+ * @param id
+ * @param config
+ */
     public ConfigPluginHandler() {
         super("org.columba.core.config", "org/columba/core/plugin/config.xml");
 

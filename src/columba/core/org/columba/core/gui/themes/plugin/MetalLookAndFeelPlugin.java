@@ -28,15 +28,15 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
  */
 public class MetalLookAndFeelPlugin extends AbstractThemePlugin {
     /**
-     *
-     */
+ *
+ */
     public MetalLookAndFeelPlugin() {
         super();
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-     */
+ * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+ */
     public void setLookAndFeel() throws Exception {
         MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
 

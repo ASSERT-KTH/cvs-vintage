@@ -52,10 +52,10 @@ public interface FrameMediator {
     public void openView();
 
     /**
-     * Save window properties and close the window. This includes telling the
-     * frame model that this window/frame is closing, so it can be
-     * "unregistered" correctly
-     */
+ * Save window properties and close the window. This includes telling the
+ * frame model that this window/frame is closing, so it can be
+ * "unregistered" correctly
+ */
     public void close();
 
     public ViewItem getViewItem();

@@ -21,24 +21,24 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 /**
  * Factory provides simple layout helpers.
  *
  * @author fdietz
  */
 public class LabelBoxGroupFactory {
+    public static JPanel createPanel(JLabel label, JComponent c) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-	public static JPanel createPanel(JLabel label, JComponent c) {
-		JPanel panel= new JPanel();
-		panel.setLayout(new BorderLayout());
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+        topPanel.add(label, BorderLayout.WEST);
 
-		JPanel topPanel= new JPanel();
-		topPanel.setLayout(new BorderLayout());
-		topPanel.add(label, BorderLayout.WEST);
+        panel.add(topPanel, BorderLayout.NORTH);
+        panel.add(c, BorderLayout.CENTER);
 
-		panel.add(topPanel, BorderLayout.NORTH);
-		panel.add(c, BorderLayout.CENTER);
-
-		return panel;
-	}
+        return panel;
+    }
 }

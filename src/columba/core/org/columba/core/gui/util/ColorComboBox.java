@@ -23,17 +23,17 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 
+
 /**
  * A JComboBox that displays Colors.
  * @author redsolo
  */
 public class ColorComboBox extends JComboBox implements ItemListener {
-
     private boolean codeSelectionUpdate = false;
 
     /**
-     * Constructs a color combobo.x
-     */
+ * Constructs a color combobo.x
+ */
     public ColorComboBox() {
         super();
 
@@ -52,12 +52,14 @@ public class ColorComboBox extends JComboBox implements ItemListener {
     }
 
     /**
-     * Selects the combobox item with the specified color name.
-     * @param name the name of the color to select.
-     */
+ * Selects the combobox item with the specified color name.
+ * @param name the name of the color to select.
+ */
     public void setSelectedColor(String name) {
         codeSelectionUpdate = true;
+
         ComboBoxModel model = getModel();
+
         if (name == null) {
             setSelectedIndex(0);
         } else {
@@ -71,39 +73,41 @@ public class ColorComboBox extends JComboBox implements ItemListener {
                 }
             }
         }
+
         codeSelectionUpdate = false;
     }
 
     /**
-     * Sets the color for the Custom color item.
-     * @param color the new color for the Custom color.
-     */
+ * Sets the color for the Custom color item.
+ * @param color the new color for the Custom color.
+ */
     public void setCustomColor(Color color) {
-        ColorItem item = (ColorItem) getModel().getElementAt(getModel().getSize() - 1);
+        ColorItem item = (ColorItem) getModel().getElementAt(getModel().getSize() -
+                1);
         item.setColor(color);
         repaint();
     }
 
     /**
-     * Sets the color for the Custom color item.
-     * @param rgb the new color, in rgb value, for the Custom color.
-     */
+ * Sets the color for the Custom color item.
+ * @param rgb the new color, in rgb value, for the Custom color.
+ */
     public void setCustomColor(int rgb) {
         setCustomColor(ColorFactory.getColor(rgb));
     }
 
     /**
-     * Returns the selected coloritem.
-     * @return the selected coloritem.
-     */
+ * Returns the selected coloritem.
+ * @return the selected coloritem.
+ */
     public ColorItem getSelectedColorItem() {
         return (ColorItem) getSelectedItem();
     }
 
     /** {@inheritDoc} */
     public void itemStateChanged(ItemEvent e) {
-
-        if ((!codeSelectionUpdate) && (e.getStateChange() == ItemEvent.SELECTED)) {
+        if ((!codeSelectionUpdate) &&
+                (e.getStateChange() == ItemEvent.SELECTED)) {
             ColorItem item = (ColorItem) getSelectedItem();
 
             if (item.getName().equalsIgnoreCase("custom")) {

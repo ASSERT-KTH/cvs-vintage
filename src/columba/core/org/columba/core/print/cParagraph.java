@@ -72,12 +72,12 @@ public class cParagraph extends cPrintObject {
     }
 
     /**
-     * Inserts space between newlines if necessary to avoid
-     * empty lines. Also inserts a space at the beginning if
-     * the text starts with a newline.
-     * @param t                Text to validate
-     * @return                Validated text
-     */
+ * Inserts space between newlines if necessary to avoid
+ * empty lines. Also inserts a space at the beginning if
+ * the text starts with a newline.
+ * @param t                Text to validate
+ * @return                Validated text
+ */
     private String validate(String t) {
         if ((t.indexOf("\n\n") == -1) && (!t.startsWith("\n"))) {
             return t;

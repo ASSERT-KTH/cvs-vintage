@@ -34,51 +34,51 @@ public class ColorItem {
     private Icon itemIcon;
 
     /**
-     * Creates a color item with the specified color and name.
-     * @param color the color to represent.
-     * @param name the name of the color.
-     */
+ * Creates a color item with the specified color and name.
+ * @param color the color to represent.
+ * @param name the name of the color.
+ */
     public ColorItem(Color color, String name) {
         setColor(color);
         itemName = name;
     }
 
     /**
-     * @return the color.
-     */
+ * @return the color.
+ */
     public Color getColor() {
         return itemColor;
     }
 
     /**
-     * Set a new color.
-     * This method recreates a new icon to represent the color.
-     * @param color the new color.
-     */
+ * Set a new color.
+ * This method recreates a new icon to represent the color.
+ * @param color the new color.
+ */
     public final void setColor(Color color) {
         itemColor = color;
         itemIcon = createIcon(color);
     }
 
     /**
-     * @return the name of the Color
-     */
+ * @return the name of the Color
+ */
     public String getName() {
         return itemName;
     }
 
     /**
-     * @return the icon for this ComboBox item.
-     */
+ * @return the icon for this ComboBox item.
+ */
     public Icon getIcon() {
         return itemIcon;
     }
 
     /**
-     * Creates and returns an icon that represents the specified color.
-     * @param color create an icon for this color.
-     * @return an Icon.
-     */
+ * Creates and returns an icon that represents the specified color.
+ * @param color create an icon for this color.
+ * @return an Icon.
+ */
     private Icon createIcon(Color color) {
         int width = 45;
         int height = 14;

@@ -41,13 +41,13 @@ public class ListTools {
     }
 
     /**
-     * Intersect two Lists that contain Objects that implement
-     * the Comparable Interface. The Result is in List a and sorted.
-     * Be aware that List b gets also sorted!
-     *
-     * @param a
-     * @param b
-     */
+ * Intersect two Lists that contain Objects that implement
+ * the Comparable Interface. The Result is in List a and sorted.
+ * Be aware that List b gets also sorted!
+ *
+ * @param a
+ * @param b
+ */
     public static void intersect(List a, List b) {
         ListIterator aIt;
         ListIterator bIt;
@@ -122,13 +122,13 @@ public class ListTools {
     }
 
     /**
-     * Subtracts two Lists in O(n * log n) that contain Objects that implement
-     * the Comparable Interface. The Result is in List a and sorted.
-     * Be aware that List b gets also sorted!
-     *
-     * @param a
-     * @param b
-     */
+ * Subtracts two Lists in O(n * log n) that contain Objects that implement
+ * the Comparable Interface. The Result is in List a and sorted.
+ * Be aware that List b gets also sorted!
+ *
+ * @param a
+ * @param b
+ */
     public static void substract(List a, List b) {
         ListIterator aIt;
         ListIterator bIt;
@@ -186,45 +186,46 @@ public class ListTools {
             }
         }
     }
-    
+
     /**
-     * Intersects to list in O(length(List a) * length(List b)).
-     * This is the a stable version (elements keep their oder).
-     * The elements in b will be removed from the list.
-     * 
-     * @param a
-     * @param b
-     */
+ * Intersects to list in O(length(List a) * length(List b)).
+ * This is the a stable version (elements keep their oder).
+ * The elements in b will be removed from the list.
+ * 
+ * @param a
+ * @param b
+ */
     public static void intersect_astable(List a, List b) {
-		if (a.size() == 0) {
-			return;
-		}
+        if (a.size() == 0) {
+            return;
+        }
 
-		if (b.size() == 0) {
-			a.clear();
+        if (b.size() == 0) {
+            a.clear();
 
-			return;
-		}
-		
-		Iterator ita = a.iterator();
-		Iterator itb;
-		Object acta;
-		
-		boolean found;
-		
-		
-		while( ita.hasNext() ) {
-			acta = ita.next();
-			itb = b.iterator();
-			found = false;
-			while( itb.hasNext() && !found ) {
-				found = acta.equals(itb.next());				
-			}
-			if( !found ) {
-				ita.remove();
-			} else {
-				itb.remove();
-			}
-		}
+            return;
+        }
+
+        Iterator ita = a.iterator();
+        Iterator itb;
+        Object acta;
+
+        boolean found;
+
+        while (ita.hasNext()) {
+            acta = ita.next();
+            itb = b.iterator();
+            found = false;
+
+            while (itb.hasNext() && !found) {
+                found = acta.equals(itb.next());
+            }
+
+            if (!found) {
+                ita.remove();
+            } else {
+                itb.remove();
+            }
+        }
     }
 }

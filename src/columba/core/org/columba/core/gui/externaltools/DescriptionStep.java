@@ -51,9 +51,9 @@ class DescriptionStep extends AbstractStep {
     protected DataModel data;
 
     /**
-     * @param arg0
-     * @param arg1
-     */
+ * @param arg0
+ * @param arg1
+ */
     public DescriptionStep(DataModel data) {
         super(GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
                 "DescriptionStep.title"),
@@ -64,8 +64,8 @@ class DescriptionStep extends AbstractStep {
     }
 
     /* (non-Javadoc)
-     * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-     */
+ * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+ */
     protected JComponent createComponent() {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -105,8 +105,8 @@ class DescriptionStep extends AbstractStep {
     }
 
     /* (non-Javadoc)
-     * @see net.javaprog.ui.wizard.Step#prepareRendering()
-     */
+ * @see net.javaprog.ui.wizard.Step#prepareRendering()
+ */
     public void prepareRendering() {
     }
 }

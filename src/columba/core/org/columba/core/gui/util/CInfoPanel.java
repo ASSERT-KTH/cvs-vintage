@@ -37,12 +37,12 @@ public class CInfoPanel extends JPanel {
         font = UIManager.getFont("Label.font");
 
         /*
-        font = font.deriveFont(Font.BOLD);
+font = font.deriveFont(Font.BOLD);
 
 
-        int size = font.getSize();
-        font = font.deriveFont( Font.BOLD, size+2 );
-        */
+int size = font.getSize();
+font = font.deriveFont( Font.BOLD, size+2 );
+*/
         setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         setLayout(new BorderLayout());

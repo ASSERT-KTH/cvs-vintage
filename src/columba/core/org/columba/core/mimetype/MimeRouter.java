@@ -17,8 +17,8 @@
 //All Rights Reserved.
 package org.columba.core.mimetype;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.config.OptionsXmlConfig;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.ristretto.message.MimeHeader;

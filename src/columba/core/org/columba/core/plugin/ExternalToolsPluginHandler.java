@@ -13,15 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.plugin;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.gui.externaltools.ExternalToolsWizardLauncher;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
+
 
 /**
  * Provides an easy way to integrate external apps in Columba.
@@ -83,7 +83,8 @@ public class ExternalToolsPluginHandler extends AbstractPluginHandler {
 
         if (root == null) {
             // create xml node
-            XmlElement parent = MainInterface.config.get("external_tools").getElement("tools");
+            XmlElement parent = MainInterface.config.get("external_tools")
+                                                    .getElement("tools");
             XmlElement child = new XmlElement("tool");
             child.addAttribute("first_time", "true");
             child.addAttribute("name", toolID);

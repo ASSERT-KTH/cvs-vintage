@@ -26,15 +26,15 @@ import javax.swing.UIManager;
  */
 public class GtkLookAndFeelPlugin extends AbstractThemePlugin {
     /**
-     *
-     */
+ *
+ */
     public GtkLookAndFeelPlugin() {
         super();
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-     */
+ * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+ */
     public void setLookAndFeel() throws Exception {
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
     }

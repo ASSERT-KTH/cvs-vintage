@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.action;
 
 import org.columba.core.gui.frame.FrameMediator;
@@ -114,7 +113,8 @@ public abstract class AbstractColumbaAction extends AbstractAction
         if (this.showToolbarText != showToolbarText) {
             Boolean oldValue = this.showToolbarText ? Boolean.TRUE : Boolean.FALSE;
             this.showToolbarText = showToolbarText;
-            firePropertyChange("showToolBarText", oldValue, showToolbarText ? Boolean.TRUE : Boolean.FALSE);
+            firePropertyChange("showToolBarText", oldValue,
+                showToolbarText ? Boolean.TRUE : Boolean.FALSE);
         }
     }
 }

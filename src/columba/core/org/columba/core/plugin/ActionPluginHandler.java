@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.plugin;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -27,6 +26,7 @@ import org.columba.core.xml.XmlIO;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * Every action in Columba is handled by this class.
  * <p>
@@ -38,20 +38,20 @@ import java.util.Map;
  */
 public class ActionPluginHandler extends AbstractPluginHandler {
     /**
-     * collects all singleton objects
-     * <p>
-     * this includes:
-     *  - cut
-     *  - copy
-     *  - paste
-     *  - delete
-     *  - select all
-     *  - undo
-     *  - redo
-     *
-     *  @see isSingleton(String name)
-     *
-     */
+ * collects all singleton objects
+ * <p>
+ * this includes:
+ *  - cut
+ *  - copy
+ *  - paste
+ *  - delete
+ *  - select all
+ *  - undo
+ *  - redo
+ *
+ *  @see isSingleton(String name)
+ *
+ */
     Map map;
 
     public ActionPluginHandler() {
@@ -63,29 +63,27 @@ public class ActionPluginHandler extends AbstractPluginHandler {
     }
 
     /**
-     * Returns true, if this is a single instance object which is
-     * shared among all frames.
-     *
-     * Note that the most promiment actions overwriting this will be:
-     *  - Cut/Copy/Paste/Delete
-     *  - Select All
-     *  - Undo/Redo
-     *
-     * Specified by a property called "singletion" which can be of the value
-     * true/false. Found in the action node of the plugin.xml file respective
-     * the action.xml file.
-     *
-     * @return        true, if action follows the singleton pattern, which
-     *          means its instanciated only once, and reused by every
-     *          MenuItem, Button, etc.
-     *
-     *          false, is the default (which is the correct value for
-     *          almost all actions)
-     *
-     */
+ * Returns true, if this is a single instance object which is
+ * shared among all frames.
+ *
+ * Note that the most promiment actions overwriting this will be:
+ *  - Cut/Copy/Paste/Delete
+ *  - Select All
+ *  - Undo/Redo
+ *
+ * Specified by a property called "singletion" which can be of the value
+ * true/false. Found in the action node of the plugin.xml file respective
+ * the action.xml file.
+ *
+ * @return        true, if action follows the singleton pattern, which
+ *          means its instanciated only once, and reused by every
+ *          MenuItem, Button, etc.
+ *
+ *          false, is the default (which is the correct value for
+ *          almost all actions)
+ *
+ */
     public boolean isSingleton(String name) {
-        
-
         return Boolean.valueOf(getAttribute(name, "singleton")).booleanValue();
     }
 
@@ -93,8 +91,6 @@ public class ActionPluginHandler extends AbstractPluginHandler {
         throws Exception {
         if (isSingleton(name)) {
             // their should be only one shared instance
-         
-
             if (map.containsKey(name)) {
                 // already loaded 
                 // -> return existing instance from hashmap
@@ -110,7 +106,8 @@ public class ActionPluginHandler extends AbstractPluginHandler {
             }
         }
 
-        return (AbstractColumbaAction) getPlugin(name, new Object[] { controller });
+        return (AbstractColumbaAction) getPlugin(name,
+            new Object[] { controller });
     }
 
     public IMenu getIMenu(String name, FrameMediator controller)
@@ -131,30 +128,30 @@ public class ActionPluginHandler extends AbstractPluginHandler {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.plugin.AbstractPluginHandler#addPlugin(java.lang.String, java.io.File, org.columba.core.xml.XmlElement)
-     */
+ * @see org.columba.core.plugin.AbstractPluginHandler#addPlugin(java.lang.String, java.io.File, org.columba.core.xml.XmlElement)
+ */
     /*
-    public void addPlugin(String name, File pluginFolder, XmlElement element) {
-            XmlElement extension;
+public void addPlugin(String name, File pluginFolder, XmlElement element) {
+        XmlElement extension;
 
-            for( int i=0; i<element.count(); i++) {
-                    extension = element.getElement(i);
-                    extension.addAttribute("name",name+"$"+extension.getAttribute("name"));
+        for( int i=0; i<element.count(); i++) {
+                extension = element.getElement(i);
+                extension.addAttribute("name",name+"$"+extension.getAttribute("name"));
 
-                    super.addPlugin(extension.getAttribute("name"), pluginFolder, element);
-                    parentNode.addElement(extension);
-            }
-    }
-    */
+                super.addPlugin(extension.getAttribute("name"), pluginFolder, element);
+                parentNode.addElement(extension);
+        }
+}
+*/
     /*
-    public void addExtension(String id, XmlElement extension) {
-            ListIterator iterator = extension.getElements().listIterator();
-            XmlElement action;
-            while( iterator.hasNext() ) {
-                    action = (XmlElement) iterator.next();
-                    action.addAttribute("name", id + '$' + action.getAttribute("name"));
-                    parentNode.addElement(action);
-            }
-    }
-    */
+public void addExtension(String id, XmlElement extension) {
+        ListIterator iterator = extension.getElements().listIterator();
+        XmlElement action;
+        while( iterator.hasNext() ) {
+                action = (XmlElement) iterator.next();
+                action.addAttribute("name", id + '$' + action.getAttribute("name"));
+                parentNode.addElement(action);
+        }
+}
+*/
 }

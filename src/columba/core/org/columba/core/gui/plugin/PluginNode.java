@@ -41,8 +41,8 @@ public class PluginNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * @param arg0
-     */
+ * @param arg0
+ */
     public PluginNode(Object arg0) {
         super(arg0);
 
@@ -50,81 +50,81 @@ public class PluginNode extends DefaultMutableTreeNode {
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getId() {
         return id;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public boolean isEnabled() {
         return enabled;
     }
 
     /**
-     * @param string
-     */
+ * @param string
+ */
     public void setId(String string) {
         id = string;
     }
 
     /**
-     * @param b
-     */
+ * @param b
+ */
     public void setEnabled(boolean b) {
         enabled = b;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getTooltip() {
         return tooltip;
     }
 
     /**
-     * @param string
-     */
+ * @param string
+ */
     public void setTooltip(String string) {
         tooltip = string;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public String getVersion() {
         return version;
     }
 
     /**
-     * @param string
-     */
+ * @param string
+ */
     public void setVersion(String string) {
         version = string;
     }
 
     /**
-     * @return
-     */
+ * @return
+ */
     public boolean isCategory() {
         return category;
     }
 
     /**
-     * @param b
-     */
+ * @param b
+ */
     public void setCategory(boolean b) {
         category = b;
     }
 
     /**
-     * Returns true if the plugin has information about the plugin.
-     * This attribute is created lazily, and may take a while since it
-     * has to check for files on the file system. (Using the <code>PluginManager</code>.)
-     * @return true if the plugin has info files; false if it doesnt have an info file.
-     */
+ * Returns true if the plugin has information about the plugin.
+ * This attribute is created lazily, and may take a while since it
+ * has to check for files on the file system. (Using the <code>PluginManager</code>.)
+ * @return true if the plugin has info files; false if it doesnt have an info file.
+ */
     public boolean hasInfo() {
         if (hasInfo == null) {
             hasInfo = Boolean.valueOf(MainInterface.pluginManager.getInfoURL(id) != null);

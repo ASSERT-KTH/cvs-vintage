@@ -39,8 +39,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  */
 public class DescriptionTreeRenderer extends DefaultTreeCellRenderer {
     /* (non-Javadoc)
-             * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-             */
+         * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+         */
     public Component getTreeCellRendererComponent(JTree tree, Object value,
         boolean selected, boolean expanded, boolean leaf, int row,
         boolean hasFocus) {

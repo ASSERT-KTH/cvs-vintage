@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.backgroundtask;
 
 import org.columba.core.logging.ColumbaLogger;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Timer;
+
 
 /**
  * This manager runs in background.

@@ -78,9 +78,9 @@ public abstract class cPrintObject {
     }
 
     /**
-     * Returns the page, that this print object belongs to.
-     * *20030604, karlpeder* Added
-     */
+ * Returns the page, that this print object belongs to.
+ * *20030604, karlpeder* Added
+ */
     public cPage getPage() {
         return page;
     }

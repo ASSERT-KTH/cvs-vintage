@@ -34,20 +34,20 @@ import java.util.Vector;
  */
 public abstract class SelectionHandler {
     /**
-     * id of component for later identification
-     */
+ * id of component for later identification
+ */
     protected String id;
 
     /**
-     * list of selection listeners
-     */
+ * list of selection listeners
+ */
     protected List selectionListener;
 
     /**
-     * Default constructor
-     *
-     * @param id                id of component
-     */
+ * Default constructor
+ *
+ * @param id                id of component
+ */
     public SelectionHandler(String id) {
         this.id = id;
 
@@ -55,30 +55,30 @@ public abstract class SelectionHandler {
     }
 
     /**
-     * Get id of component.
-     *
-     * @return String                id of component
-     */
+ * Get id of component.
+ *
+ * @return String                id of component
+ */
     public String getId() {
         return id;
     }
 
     /**
-     * Add selection listener.
-     *
-     * @param l                selectionlistener
-     */
+ * Add selection listener.
+ *
+ * @param l                selectionlistener
+ */
     public void addSelectionListener(SelectionListener l) {
         selectionListener.add(l);
     }
 
     /**
-     * Fire a selection has changed event.
-     * <p>
-     * Notify all listeners for a change.
-     *
-     * @param e                change event
-     */
+ * Fire a selection has changed event.
+ * <p>
+ * Notify all listeners for a change.
+ *
+ * @param e                change event
+ */
     protected void fireSelectionChanged(SelectionChangedEvent e) {
         for (Iterator it = selectionListener.iterator(); it.hasNext();) {
             ((SelectionListener) it.next()).selectionChanged(e);
@@ -86,16 +86,16 @@ public abstract class SelectionHandler {
     }
 
     /**
-     * Get current selection.
-     *
-     * @return                current selection
-     */
+ * Get current selection.
+ *
+ * @return                current selection
+ */
     public abstract DefaultCommandReference[] getSelection();
 
     /**
-     * Set new selection.
-     *
-     * @param selection                new selection
-     */
+ * Set new selection.
+ *
+ * @param selection                new selection
+ */
     public abstract void setSelection(DefaultCommandReference[] selection);
 }

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
 
 import java.beans.PropertyChangeEvent;
@@ -25,6 +24,7 @@ import java.lang.reflect.Proxy;
 
 import javax.swing.AbstractButton;
 
+
 /**
  * This class implements a proxy behavior for a PropertyChangeListener registered
  * on an action by an AbstractButton instance. Every selectable action peer should
@@ -35,19 +35,23 @@ import javax.swing.AbstractButton;
 public class ButtonStateAdapter implements InvocationHandler {
     protected AbstractButton button;
     protected PropertyChangeListener listener;
-    
-    public ButtonStateAdapter(AbstractButton button, PropertyChangeListener listener) {
+
+    public ButtonStateAdapter(AbstractButton button,
+        PropertyChangeListener listener) {
         this.button = button;
         this.listener = listener;
     }
-    
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("propertyChange") && args.length > 0) {
-            PropertyChangeEvent e = (PropertyChangeEvent)args[0];
+
+    public Object invoke(Object proxy, Method method, Object[] args)
+        throws Throwable {
+        if (method.getName().equals("propertyChange") && (args.length > 0)) {
+            PropertyChangeEvent e = (PropertyChangeEvent) args[0];
+
             if ("selected".equals(e.getPropertyName())) {
-                button.setSelected(((Boolean)e.getNewValue()).booleanValue());
+                button.setSelected(((Boolean) e.getNewValue()).booleanValue());
             }
         }
+
         return method.invoke(listener, args);
     }
 }

@@ -29,11 +29,11 @@ import javax.swing.ListCellRenderer;
  */
 public class ColorItemRenderer extends JLabel implements ListCellRenderer {
     /**
-     * Creates a <code>ColorItemRenderer</code>.
-     */
+ * Creates a <code>ColorItemRenderer</code>.
+ */
     public ColorItemRenderer() {
         /*setIconTextGap(5);
-        setVerticalAlignment(JLabel.CENTER);*/
+setVerticalAlignment(JLabel.CENTER);*/
     }
 
     /** {@inheritDoc} */

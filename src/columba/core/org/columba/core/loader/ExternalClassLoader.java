@@ -126,8 +126,7 @@ public class ExternalClassLoader extends URLClassLoader {
 
                     if (args[j] == null) {
                         success = true;
-                    }
-                    else if (!parameter.isAssignableFrom(args[j].getClass())) {
+                    } else if (!parameter.isAssignableFrom(args[j].getClass())) {
                         success = false;
                     }
                 }

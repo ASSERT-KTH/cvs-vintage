@@ -114,11 +114,11 @@ public class Menu extends JMenuBar {
             }
         }
     }
-	/**
-	 * @return
-	 */
-	public FrameMediator getFrameController() {
-		return frameController;
-	}
 
+    /**
+ * @return
+ */
+    public FrameMediator getFrameController() {
+        return frameController;
+    }
 }

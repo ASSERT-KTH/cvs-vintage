@@ -46,46 +46,46 @@ public class ImageLoader {
     private static Hashtable hashtable = new Hashtable();
 
     /*
-    public ImageLoader()
-    {
+public ImageLoader()
+{
 
-            iconset = MainInterface.themeItem.getIconset();
+        iconset = MainInterface.themeItem.getIconset();
 
-            if (iconset.toLowerCase().equals("default"))
-                    ICON_SET = false;
-            else
-                    ICON_SET = true;
+        if (iconset.toLowerCase().equals("default"))
+                ICON_SET = false;
+        else
+                ICON_SET = true;
 
-            if (ICON_SET == true)
-            {
-                    File zipFile =
-                            new File(
-                                    MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
-                    System.out.println("zipfile:"+zipFile );
+        if (ICON_SET == true)
+        {
+                File zipFile =
+                        new File(
+                                MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
+                System.out.println("zipfile:"+zipFile );
 
-                    String zipFileEntry = iconset + "/icons.properties";
+                String zipFileEntry = iconset + "/icons.properties";
 
-                    try
-                    {
-                            properties = loadProperties(zipFile, zipFileEntry);
-                    }
-                    catch ( Exception ex )
-                    {
-                            ex.printStackTrace();
+                try
+                {
+                        properties = loadProperties(zipFile, zipFileEntry);
+                }
+                catch ( Exception ex )
+                {
+                        ex.printStackTrace();
 
-                            StringBuffer buf = new StringBuffer();
-                            buf.append("Error while loading iconset!");
-                            JOptionPane.showMessageDialog(MainInterface.mainFrame, buf.toString() );
+                        StringBuffer buf = new StringBuffer();
+                        buf.append("Error while loading iconset!");
+                        JOptionPane.showMessageDialog(MainInterface.mainFrame, buf.toString() );
 
-                            ICON_SET = false;
-                            MainInterface.themeItem.setIconset("default");
-                    }
-            }
+                        ICON_SET = false;
+                        MainInterface.themeItem.setIconset("default");
+                }
+        }
 
-            ICON_SET = false;
+        ICON_SET = false;
 
-    }  // constructor
-    */
+}  // constructor
+*/
 
     // ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol) ***************
     public static ImageIcon getUnsafeImageIcon(String name) {
@@ -152,49 +152,49 @@ public class ImageLoader {
     }
 
     /*
-    public static ImageIcon getDefaultImageIcon( String id, String failCase )
-    {
-            ImageIcon icon = (ImageIcon) UIManager.getIcon(id);
-    URL url;
+public static ImageIcon getDefaultImageIcon( String id, String failCase )
+{
+        ImageIcon icon = (ImageIcon) UIManager.getIcon(id);
+URL url;
 
-            if (icon == null)
-            {
+        if (icon == null)
+        {
 
-                    url =
-                            ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".gif");
-                    if (url == null)
-                    {
-                            url =
-                                    ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".jpeg");
-                            if (url == null)
-                            {
-                                    url =
-                                            ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".png");
-                                    if (url == null)
-                                    {
-                                            if (id.indexOf("small") != -1)
-                                            {
-                                                    url =
-                                                            ClassLoader.getSystemResource("org/columba/core/images/brokenimage_small.png");
-                                            }
-                                            else
-                                            {
-                                                    url = ClassLoader.getSystemResource("org/columba/core/images/brokenimage.png");
+                url =
+                        ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".gif");
+                if (url == null)
+                {
+                        url =
+                                ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".jpeg");
+                        if (url == null)
+                        {
+                                url =
+                                        ClassLoader.getSystemResource("org/columba/core/images/" + failCase + ".png");
+                                if (url == null)
+                                {
+                                        if (id.indexOf("small") != -1)
+                                        {
+                                                url =
+                                                        ClassLoader.getSystemResource("org/columba/core/images/brokenimage_small.png");
+                                        }
+                                        else
+                                        {
+                                                url = ClassLoader.getSystemResource("org/columba/core/images/brokenimage.png");
 
-                                            }
-                                    }
-                            }
-                    }
+                                        }
+                                }
+                        }
+                }
 
-                    if (url == null)
-                            return null;
+                if (url == null)
+                        return null;
 
-                    icon = new ImageIcon( url );
-            }
+                icon = new ImageIcon( url );
+        }
 
-            return icon;
-    }
-    */
+        return icon;
+}
+*/
 
     // ******** FOLLOWS SPECIALIZED ZIP-FILE EXTRACTION *************************
     // load image out of jar/zip file
@@ -257,43 +257,43 @@ public class ImageLoader {
     }
 
     /*
-    public synchronized static ImageIcon getImageIcon ( String id, String failCase )
-    {
-            if (ICON_SET == true)
-            {
-                    String str = (String) properties.getProperty(id);
-                    if (str == null)
-                            return getDefaultImageIcon(id, failCase);
+public synchronized static ImageIcon getImageIcon ( String id, String failCase )
+{
+        if (ICON_SET == true)
+        {
+                String str = (String) properties.getProperty(id);
+                if (str == null)
+                        return getDefaultImageIcon(id, failCase);
 
-                    //System.out.println("str="+str);
+                //System.out.println("str="+str);
 
-                    ImageIcon icon = null;
-                    try
-                    {
-                            File zipFile =
-                                    new File(
-                                            MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
-                            //System.out.println("zipfile:"+zipFile );
+                ImageIcon icon = null;
+                try
+                {
+                        File zipFile =
+                                new File(
+                                        MainInterface.config.configDirectory + "/iconsets/" + iconset + ".jar");
+                        //System.out.println("zipfile:"+zipFile );
 
-                            String zipFileEntry = iconset + "/" + str;
+                        String zipFileEntry = iconset + "/" + str;
 
-                            icon = new ImageIcon( loadImage(zipFile, zipFileEntry) );
-                    }
-                    catch (Exception ex)
-                    {
-                            //ex.printStackTrace();
-                            return getDefaultImageIcon(id, failCase);
-                    }
+                        icon = new ImageIcon( loadImage(zipFile, zipFileEntry) );
+                }
+                catch (Exception ex)
+                {
+                        //ex.printStackTrace();
+                        return getDefaultImageIcon(id, failCase);
+                }
 
-                    if (icon == null)
-                            return getDefaultImageIcon(id, failCase);
+                if (icon == null)
+                        return getDefaultImageIcon(id, failCase);
 
-                    return icon;
-            }
-            else
-            {
-                    return getDefaultImageIcon(id, failCase);
-            }
-    }
-    */
+                return icon;
+        }
+        else
+        {
+                return getDefaultImageIcon(id, failCase);
+        }
+}
+*/
 }

@@ -26,15 +26,15 @@ import javax.swing.UIManager;
  */
 public class MacLookAndFeelPlugin extends AbstractThemePlugin {
     /**
-     *
-     */
+ *
+ */
     public MacLookAndFeelPlugin() {
         super();
     }
 
     /* (non-Javadoc)
-     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-     */
+ * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+ */
     public void setLookAndFeel() throws Exception {
         UIManager.setLookAndFeel("javax.swing.plaf.mac.MacLookAndFeel");
     }

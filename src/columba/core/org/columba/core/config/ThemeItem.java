@@ -22,18 +22,18 @@ import java.awt.Color;
 
 public class ThemeItem extends DefaultItem {
     /*
-    private AdapterNode mainFontName, mainFontSize, textFontName, textFontSize;
+private AdapterNode mainFontName, mainFontSize, textFontName, textFontSize;
 
-    private AdapterNode theme;
+private AdapterNode theme;
 
-    private AdapterNode foreground;
-    private AdapterNode background;
+private AdapterNode foreground;
+private AdapterNode background;
 
-    private AdapterNode iconset;
-    private AdapterNode pulsator;
+private AdapterNode iconset;
+private AdapterNode pulsator;
 
-    private AdapterNode rootNode;
-    */
+private AdapterNode rootNode;
+*/
     public ThemeItem(XmlElement root) {
         super(root);
     }
@@ -59,272 +59,272 @@ public class ThemeItem extends DefaultItem {
     }
 
     /*
-    protected void parse()
+protected void parse()
+{
+
+
+    for ( int i=0; i<rootNode.getChildCount(); i++ )
     {
+        AdapterNode child = rootNode.getChildAt(i);
 
-
-        for ( int i=0; i<rootNode.getChildCount(); i++ )
+        if ( child.getName().equals("mainfont") )
         {
-            AdapterNode child = rootNode.getChildAt(i);
+        AdapterNode subChild = child.getChild("name");
+        mainFontName = subChild;
+        subChild = child.getChild("size");
+        mainFontSize = subChild;
+        }
+        else if ( child.getName().equals("textfont") )
+        {
+        AdapterNode subChild = child.getChild("name");
+        textFontName = subChild;
+        subChild = child.getChild("size");
+        textFontSize = subChild;
+        }
+    else if ( child.getName().equals("theme") )
+        {
+            theme = child;
+        }
+    else if ( child.getName().equals("iconset") )
+        {
+            iconset = child;
+        }
+    else if ( child.getName().equals("pulsator") )
+        {
+            pulsator = child;
+        }
+    else if ( child.getName().equals("foreground") )
+        {
+            foreground = child;
+        }
+    else if ( child.getName().equals("background") )
+        {
+            background = child;
+        }
+}
+}
 
-            if ( child.getName().equals("mainfont") )
-            {
-            AdapterNode subChild = child.getChild("name");
-            mainFontName = subChild;
-            subChild = child.getChild("size");
-            mainFontSize = subChild;
-            }
-            else if ( child.getName().equals("textfont") )
-            {
-            AdapterNode subChild = child.getChild("name");
-            textFontName = subChild;
-            subChild = child.getChild("size");
-            textFontSize = subChild;
-            }
-        else if ( child.getName().equals("theme") )
-            {
-                theme = child;
-            }
-        else if ( child.getName().equals("iconset") )
-            {
-                iconset = child;
-            }
-        else if ( child.getName().equals("pulsator") )
-            {
-                pulsator = child;
-            }
-        else if ( child.getName().equals("foreground") )
-            {
-                foreground = child;
-            }
-        else if ( child.getName().equals("background") )
-            {
-                background = child;
-            }
-    }
-    }
-
-    protected void createMissingElements()
-    {
+protected void createMissingElements()
+{
 
 
-    if ( theme == null ) theme = addKey( rootNode, "theme", "2");
-    if ( iconset == null ) iconset = addKey( rootNode, "iconset", "default");
-    if ( pulsator == null ) pulsator = addKey( rootNode, "pulsator", "default");
-    if ( foreground == null ) foreground = addKey( rootNode, "foreground", "16777215");
-    if ( background == null ) background = addKey( rootNode, "background", "13948");
+if ( theme == null ) theme = addKey( rootNode, "theme", "2");
+if ( iconset == null ) iconset = addKey( rootNode, "iconset", "default");
+if ( pulsator == null ) pulsator = addKey( rootNode, "pulsator", "default");
+if ( foreground == null ) foreground = addKey( rootNode, "foreground", "16777215");
+if ( background == null ) background = addKey( rootNode, "background", "13948");
 
-    }
-    */
+}
+*/
     /*
-    public void setThemeNode( AdapterNode node )
-    {
-        theme = node;
-    }
+public void setThemeNode( AdapterNode node )
+{
+    theme = node;
+}
 
 
-    public void setMainFontNameNode( AdapterNode node )
-    {
-        mainFontName = node;
-    }
+public void setMainFontNameNode( AdapterNode node )
+{
+    mainFontName = node;
+}
 
-    public void setMainFontSizeNode( AdapterNode node )
-    {
-        mainFontSize = node;
-    }
+public void setMainFontSizeNode( AdapterNode node )
+{
+    mainFontSize = node;
+}
 
-    public void setTextFontNameNode( AdapterNode node )
-    {
-        textFontName = node;
-    }
+public void setTextFontNameNode( AdapterNode node )
+{
+    textFontName = node;
+}
 
-    public void setTextFontSizeNode( AdapterNode node )
-    {
-        textFontSize = node;
-    }
-    */
+public void setTextFontSizeNode( AdapterNode node )
+{
+    textFontSize = node;
+}
+*/
 
     /******************************************** set ***************************************/
 
     /*
-    public void setMainFontName( String str )
-    {
-        setTextValue( mainFontName, str );
-    }
+public void setMainFontName( String str )
+{
+    setTextValue( mainFontName, str );
+}
 
-    public void setMainFontSize( String str )
-    {
-        setTextValue( mainFontSize, str );
-    }
+public void setMainFontSize( String str )
+{
+    setTextValue( mainFontSize, str );
+}
 
-    public void setTextFontSize( int i )
-    {
-        Integer size = new Integer( i );
+public void setTextFontSize( int i )
+{
+    Integer size = new Integer( i );
 
-        setTextFontSize( size.toString() );
-    }
+    setTextFontSize( size.toString() );
+}
 
-    public void setMainFontSize( int i )
-    {
-        Integer size = new Integer( i );
+public void setMainFontSize( int i )
+{
+    Integer size = new Integer( i );
 
-        setMainFontSize( size.toString() );
-    }
+    setMainFontSize( size.toString() );
+}
 
-    public void setTextFontName( String str )
-    {
-        setTextValue( textFontName, str );
-    }
+public void setTextFontName( String str )
+{
+    setTextValue( textFontName, str );
+}
 
-    public void setTextFontSize( String str )
-    {
-        setTextValue( textFontSize, str );
-    }
-
-
-
-    public void setTheme( int i )
-    {
-        String str = ( new Integer(i) ).toString();
-        setTextValue( theme, str );
-    }
+public void setTextFontSize( String str )
+{
+    setTextValue( textFontSize, str );
+}
 
 
-    public void setIconset( String s )
-    {
-    setTextValue( iconset, s );
-    }
 
-    public void setPulsator( String s )
-    {
-    setTextValue( pulsator, s );
-    }
+public void setTheme( int i )
+{
+    String str = ( new Integer(i) ).toString();
+    setTextValue( theme, str );
+}
 
-    public void setForeground( Color c )
-    {
-    Integer in = new Integer( c.getRGB() );
 
-    setTextValue( foreground, in.toString() );
-    }
+public void setIconset( String s )
+{
+setTextValue( iconset, s );
+}
 
-    public void setBackground( Color c )
-    {
-    Integer in = new Integer( c.getRGB() );
+public void setPulsator( String s )
+{
+setTextValue( pulsator, s );
+}
 
-    setTextValue( background, in.toString() );
-    }
-    */
+public void setForeground( Color c )
+{
+Integer in = new Integer( c.getRGB() );
+
+setTextValue( foreground, in.toString() );
+}
+
+public void setBackground( Color c )
+{
+Integer in = new Integer( c.getRGB() );
+
+setTextValue( background, in.toString() );
+}
+*/
 
     /**************************************************** get *********************************/
 
     /*
-    public int getTheme()
-    {
-        String str = getTextValue( theme );
-        int i = Integer.parseInt( str );
+public int getTheme()
+{
+    String str = getTextValue( theme );
+    int i = Integer.parseInt( str );
 
-        return i;
-    }
+    return i;
+}
 
-    public String getMainFontName()
-    {
-        return getTextValue( mainFontName );
-    }
-    */
+public String getMainFontName()
+{
+    return getTextValue( mainFontName );
+}
+*/
     /*
-      public String getMainFontSize()
-      {
-      return getTextValue( mainFontSize );
-      }
-    */
+  public String getMainFontSize()
+  {
+  return getTextValue( mainFontSize );
+  }
+*/
     /*
-    public int getMainFontSize()
-    {
-        Integer i = new Integer(  getTextValue( mainFontSize ) );
+public int getMainFontSize()
+{
+    Integer i = new Integer(  getTextValue( mainFontSize ) );
 
-        return i.intValue();
-    }
+    return i.intValue();
+}
 
-    public String getTextFontName()
-    {
-        return getTextValue( textFontName );
-    }
-    */
+public String getTextFontName()
+{
+    return getTextValue( textFontName );
+}
+*/
     /*
-      public String getTextFontSize()
-      {
-      return getTextValue( textFontSize );
-      }
-    */
+  public String getTextFontSize()
+  {
+  return getTextValue( textFontSize );
+  }
+*/
     /*
-    public int getTextFontSize()
-    {
-        Integer i = new Integer(  getTextValue( textFontSize ) );
+public int getTextFontSize()
+{
+    Integer i = new Integer(  getTextValue( textFontSize ) );
 
-        return i.intValue();
-    }
-
-
-    public String getIconset()
-    {
-    String str = getTextValue(iconset);
-    return str;
-    }
-
-    public String getPulsator()
-    {
-    String str = getTextValue(pulsator);
-    return str;
-    }
-
-    public Color getForeground()
-    {
-    String str = getTextValue(foreground);
-
-    Color color = new Color( Integer.parseInt(str) );
-
-    return color;
-    }
-
-    public Color getBackground()
-    {
-    String str = getTextValue(background);
-    Color color = new Color( Integer.parseInt(str) );
-
-    return color;
-    }
+    return i.intValue();
+}
 
 
-    public Font getMainFont()
-    {
-    String mainName = getMainFontName();
-    int mainSize = getMainFontSize();
+public String getIconset()
+{
+String str = getTextValue(iconset);
+return str;
+}
 
-    Font mainFont = new Font( mainName, Font.PLAIN, mainSize );
+public String getPulsator()
+{
+String str = getTextValue(pulsator);
+return str;
+}
 
-    return mainFont;
-    }
+public Color getForeground()
+{
+String str = getTextValue(foreground);
 
-    public Font getTextFont()
-    {
-    String textName = getTextFontName();
-    int textSize = getTextFontSize();
+Color color = new Color( Integer.parseInt(str) );
 
-    Font textFont = new Font( textName, Font.PLAIN, textSize );
+return color;
+}
 
-    return textFont;
-    }
+public Color getBackground()
+{
+String str = getTextValue(background);
+Color color = new Color( Integer.parseInt(str) );
 
-    public void setMainFont( Font f )
-    {
-    setMainFontName( f.getName() );
-    setMainFontSize( f.getSize() );
-    }
+return color;
+}
 
-    public void setTextFont( Font f )
-    {
-    setTextFontName( f.getName() );
-    setTextFontSize( f.getSize() );
-    }
-    */
+
+public Font getMainFont()
+{
+String mainName = getMainFontName();
+int mainSize = getMainFontSize();
+
+Font mainFont = new Font( mainName, Font.PLAIN, mainSize );
+
+return mainFont;
+}
+
+public Font getTextFont()
+{
+String textName = getTextFontName();
+int textSize = getTextFontSize();
+
+Font textFont = new Font( textName, Font.PLAIN, textSize );
+
+return textFont;
+}
+
+public void setMainFont( Font f )
+{
+setMainFontName( f.getName() );
+setMainFontSize( f.getSize() );
+}
+
+public void setTextFont( Font f )
+{
+setTextFontName( f.getName() );
+setTextFontSize( f.getSize() );
+}
+*/
 }

@@ -30,13 +30,13 @@ import javax.swing.JMenu;
  */
 public class CMenu extends JMenu {
     /**
-     * Creates a menu item with the specified text.
-     * <br>
-     * If the textcontains &, the next character is used as
-     * mnemonic. If not, no mnemonic is set.
-     *
-     * @param        str                Menu text
-     */
+ * Creates a menu item with the specified text.
+ * <br>
+ * If the textcontains &, the next character is used as
+ * mnemonic. If not, no mnemonic is set.
+ *
+ * @param        str                Menu text
+ */
     public CMenu(String str) {
         super();
 

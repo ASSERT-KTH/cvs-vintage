@@ -13,11 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
 
-import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.logging.ColumbaLogger;
@@ -30,6 +29,7 @@ import java.util.ListIterator;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
+
 
 /**
  * @author frd

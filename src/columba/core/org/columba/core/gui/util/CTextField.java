@@ -32,8 +32,8 @@ import javax.swing.JTextField;
  */
 public class CTextField extends JTextField implements FocusOwner {
     /**
-     *
-     */
+ *
+ */
     public CTextField() {
         super();
 
@@ -41,8 +41,8 @@ public class CTextField extends JTextField implements FocusOwner {
     }
 
     /**
-     * @param arg0
-     */
+ * @param arg0
+ */
     public CTextField(String arg0) {
         this();
 

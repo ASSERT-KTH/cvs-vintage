@@ -27,8 +27,8 @@ import org.columba.core.xml.XmlIO;
  */
 public class PluginListConfig extends XmlIO {
     /**
-     * Constructor for PluginListConfig.
-     */
+ * Constructor for PluginListConfig.
+ */
     public PluginListConfig(String fileName) {
         super();
 

@@ -40,9 +40,9 @@ public abstract class SwingWorker {
     protected ThreadVar threadVar;
 
     /**
-     * Start a thread that will call the <code>construct</code> method
-     * and then exit.
-     */
+ * Start a thread that will call the <code>construct</code> method
+ * and then exit.
+ */
     public SwingWorker() {
         cancel = false;
 
@@ -76,16 +76,16 @@ public abstract class SwingWorker {
     }
 
     /**
-     * Get the value produced by the worker thread, or null if it
-     * hasn't been constructed yet.
-     */
+ * Get the value produced by the worker thread, or null if it
+ * hasn't been constructed yet.
+ */
     protected synchronized Object getValue() {
         return value;
     }
 
     /**
-     * Set the value produced by worker thread
-     */
+ * Set the value produced by worker thread
+ */
     private synchronized void setValue(Object x) {
         value = x;
     }
@@ -111,21 +111,21 @@ public abstract class SwingWorker {
     }
 
     /**
-     * Compute the value to be returned by the <code>get</code> method.
-     */
+ * Compute the value to be returned by the <code>get</code> method.
+ */
     public abstract Object construct();
 
     /**
-     * Called on the event dispatching thread (not on the worker thread)
-     * after the <code>construct</code> method has returned.
-     */
+ * Called on the event dispatching thread (not on the worker thread)
+ * after the <code>construct</code> method has returned.
+ */
     public void finished() {
     }
 
     /**
-     * A new method that interrupts the worker thread.  Call this method
-     * to force the worker to stop what it's doing.
-     */
+ * A new method that interrupts the worker thread.  Call this method
+ * to force the worker to stop what it's doing.
+ */
     public void interrupt() {
         Thread t = threadVar.get();
 
@@ -137,12 +137,12 @@ public abstract class SwingWorker {
     }
 
     /**
-     * Return the value created by the <code>construct</code> method.
-     * Returns null if either the constructing thread or the current
-     * thread was interrupted before a value was produced.
-     *
-     * @return the value created by the <code>construct</code> method
-     */
+ * Return the value created by the <code>construct</code> method.
+ * Returns null if either the constructing thread or the current
+ * thread was interrupted before a value was produced.
+ *
+ * @return the value created by the <code>construct</code> method
+ */
     public Object get() {
         while (true) {
             Thread t = threadVar.get();
@@ -162,8 +162,8 @@ public abstract class SwingWorker {
     }
 
     /**
-     * Start the worker thread.
-     */
+ * Start the worker thread.
+ */
     public Thread start() {
         thread = threadVar.get();
 
@@ -177,9 +177,9 @@ public abstract class SwingWorker {
     }
 
     /**
-     * Class to maintain reference to current worker thread
-     * under separate synchronization control.
-     */
+ * Class to maintain reference to current worker thread
+ * under separate synchronization control.
+ */
     public static class ThreadVar {
         private Thread thread;
 

@@ -13,19 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.charset;
 
 import java.util.EventListener;
+
 
 /**
  * Register an implementation of this interface with an object implementing
  * CharsetOwnerInterface to get notified on charset changes.
  */
 public abstract interface CharsetListener extends EventListener {
-    
     /**
-     * Called whenever the currently chosen charset changes.
-     */
+ * Called whenever the currently chosen charset changes.
+ */
     public abstract void charsetChanged(CharsetEvent e);
 }

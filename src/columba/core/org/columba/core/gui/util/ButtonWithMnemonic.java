@@ -28,16 +28,16 @@ import javax.swing.JButton;
  */
 public class ButtonWithMnemonic extends JButton {
     /**
-     * default constructor
-     *
-     */
+ * default constructor
+ *
+ */
     public ButtonWithMnemonic() {
         super();
     }
 
     /**
-     * @param str        text including a mnemonic
-     */
+ * @param str        text including a mnemonic
+ */
     public ButtonWithMnemonic(String textWithMnemonic) {
         super();
 

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -22,6 +21,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
+
 
 /**
  * Opens a new mail window.

@@ -13,13 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
+
 import java.awt.Component;
 import java.awt.Font;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+
 
 /**
  * 
@@ -27,38 +28,30 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author fdietz
  */
 public class DefaultStringRenderer extends DefaultTableCellRenderer {
+    private Font font;
 
-	private Font font;
+    public DefaultStringRenderer() {
+    }
 
-	public DefaultStringRenderer() {
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isSelected) {
+            setForeground(table.getSelectionForeground());
+            setBackground(table.getSelectionBackground());
+        } else {
+            setForeground(table.getForeground());
+            setBackground(table.getBackground());
+        }
 
-	}
+        if (font == null) {
+            font = getFont();
+            font = font.deriveFont(Font.PLAIN);
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        setFont(font);
 
-		if (isSelected) {
-			setForeground(table.getSelectionForeground());
-			setBackground(table.getSelectionBackground());
-		} else {
-			setForeground(table.getForeground());
-			setBackground(table.getBackground());
-		}
+        setText((String) value);
 
-		if (font == null) {
-			font= getFont();
-			font= font.deriveFont(Font.PLAIN);
-		}
-	
-		setFont(font);
-		
-		setText((String) value);
-
-		return this;
-	}
+        return this;
+    }
 }

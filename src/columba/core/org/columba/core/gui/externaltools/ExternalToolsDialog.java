@@ -15,7 +15,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.externaltools;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -58,6 +57,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 /**
  * Shows a list of external tools used in Columba.
  * <p>
@@ -76,8 +76,8 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
     protected String selection;
 
     /**
-     * @throws java.awt.HeadlessException
-     */
+ * @throws java.awt.HeadlessException
+ */
     public ExternalToolsDialog() throws HeadlessException {
         super(new JFrame(), true);
 
@@ -208,10 +208,12 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         getRootPane().registerKeyboardAction(this, "CLOSE",
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
             JComponent.WHEN_IN_FOCUSED_WINDOW);
-        
+
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "extending_columba_2");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "extending_columba_2");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "extending_columba_2");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "extending_columba_2");
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -237,10 +239,10 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
     }
 
     /*
-     * (non-Javadoc)
-     *
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-     */
+ * (non-Javadoc)
+ *
+ * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+ */
     public void valueChanged(ListSelectionEvent e) {
         boolean enabled = !list.isSelectionEmpty();
         configButton.setEnabled(enabled);

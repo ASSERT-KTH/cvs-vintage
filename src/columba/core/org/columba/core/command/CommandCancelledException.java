@@ -29,34 +29,34 @@ import java.lang.reflect.Method;
  */
 public class CommandCancelledException extends Exception {
     /**
-     * Constructor for CommandCancelledException.
-     */
+ * Constructor for CommandCancelledException.
+ */
     public CommandCancelledException() {
         super();
     }
 
     /**
-     * Constructor for CommandCancelledException.
-     * @param message
-     */
+ * Constructor for CommandCancelledException.
+ * @param message
+ */
     public CommandCancelledException(String message) {
         super(message);
     }
 
     /**
-     * Constructor for CommandCancelledException.
-     * @param message
-     * @param cause
-     */
+ * Constructor for CommandCancelledException.
+ * @param message
+ * @param cause
+ */
     public CommandCancelledException(String message, Throwable cause) {
         this(message);
         compatibleInitCause(cause);
     }
 
     /**
-     * Constructor for CommandCancelledException.
-     * @param cause
-     */
+ * Constructor for CommandCancelledException.
+ * @param cause
+ */
     public CommandCancelledException(Throwable cause) {
         this();
         compatibleInitCause(cause);

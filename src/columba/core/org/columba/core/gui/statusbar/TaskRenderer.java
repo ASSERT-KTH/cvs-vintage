@@ -15,47 +15,39 @@
 //All Rights Reserved.
 package org.columba.core.gui.statusbar;
 
+import org.columba.core.command.TaskManager;
+import org.columba.core.command.Worker;
+import org.columba.core.main.MainInterface;
+
 import java.awt.Component;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-import org.columba.core.command.TaskManager;
-import org.columba.core.command.Worker;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
  */
 public class TaskRenderer extends DefaultListCellRenderer {
-    
     private TaskManager tm;
-    
-    public TaskRenderer()
-    {
+
+    public TaskRenderer() {
         super();
-        
+
         tm = MainInterface.processor.getTaskManager();
     }
-    
-    
+
     /* (non-Javadoc)
-     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-     */
-    public Component getListCellRendererComponent(
-        JList arg0,
-        Object arg1,
-        int arg2,
-        boolean arg3,
-        boolean arg4) {
-        
+ * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+ */
+    public Component getListCellRendererComponent(JList arg0, Object arg1,
+        int arg2, boolean arg3, boolean arg4) {
         super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
-            
+
         Worker worker = (Worker) arg1;
-        setText( worker.getDisplayText() );
-        
+        setText(worker.getDisplayText());
+
         //return super.getListCellRendererComponent(arg0, arg1, arg2, arg3, arg4);
         return this;
     }
-
 }

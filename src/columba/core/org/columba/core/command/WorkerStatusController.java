@@ -17,64 +17,65 @@ package org.columba.core.command;
 
 import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
 
+
 public interface WorkerStatusController {
     /**
-     * Set the text to be displayed in the status bar
-     * @param text        Text to display in status bar
-     */
+ * Set the text to be displayed in the status bar
+ * @param text        Text to display in status bar
+ */
     public void setDisplayText(String text);
 
     /**
-     * Returns the text currently displayed in the status bar
-     */
+ * Returns the text currently displayed in the status bar
+ */
     public String getDisplayText();
 
     /**
-     * Clears the text displayed in the status bar - without any delay
-     */
+ * Clears the text displayed in the status bar - without any delay
+ */
     public void clearDisplayText();
 
     /**
-     * Clears the text displayed in the status bar - with a given delay.
-     * The delay used is 500 ms.
-     * <br>
-     * If a new text is set within this delay, the text is not cleared.
-     */
+ * Clears the text displayed in the status bar - with a given delay.
+ * The delay used is 500 ms.
+ * <br>
+ * If a new text is set within this delay, the text is not cleared.
+ */
     public void clearDisplayTextWithDelay();
 
     /**
-     * Sets the maximum value for the progress bar.
-     * @param max                New max. value for progress bar
-     */
+ * Sets the maximum value for the progress bar.
+ * @param max                New max. value for progress bar
+ */
     public void setProgressBarMaximum(int max);
 
     /**
-     * Sets the current value of the progress bar.
-     * @param value                New current value of progress bar
-     */
+ * Sets the current value of the progress bar.
+ * @param value                New current value of progress bar
+ */
     public void setProgressBarValue(int value);
 
     /**
-     * Sets the progress bar value to zero, i.e. clears the progress bar.
-     * This is the same as calling setProgressBarValue(0)
-     */
+ * Sets the progress bar value to zero, i.e. clears the progress bar.
+ * This is the same as calling setProgressBarValue(0)
+ */
     public void resetProgressBar();
 
     /**
-     * Returns the max. value for the progress bar
-     */
+ * Returns the max. value for the progress bar
+ */
     public int getProgessBarMaximum();
 
     /**
-     * Returns the current value for the progress bar
-     */
+ * Returns the current value for the progress bar
+ */
     public int getProgressBarValue();
 
     public void cancel();
 
     public boolean cancelled();
-    
+
     public void addWorkerStatusChangeListener(WorkerStatusChangeListener l);
-    
+
     public int getTimeStamp();
 }

@@ -23,9 +23,9 @@ package org.columba.core.gui.selection;
  */
 public interface SelectionListener {
     /**
-     * Called when the selection has changed.
-     *
-     * @param e        changed event
-     */
+ * Called when the selection has changed.
+ *
+ * @param e        changed event
+ */
     public void selectionChanged(SelectionChangedEvent e);
 }

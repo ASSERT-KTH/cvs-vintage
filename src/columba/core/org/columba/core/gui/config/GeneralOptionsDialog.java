@@ -13,32 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.config;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.util.Locale;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import com.jgoodies.forms.layout.FormLayout;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
@@ -58,7 +35,31 @@ import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 
-import com.jgoodies.forms.layout.FormLayout;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import java.util.Locale;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+
 
 public class GeneralOptionsDialog extends JDialog implements ActionListener {
     private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
@@ -361,8 +362,8 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
     }
 
     protected void initComponents() {
-        lfLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(RESOURCE_PATH,
-                    "general", "look_feel"));
+        lfLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "general", "look_feel"));
 
         String[] plugins = handler.getPluginIdList();
         lfComboBox = new JComboBox(plugins);
@@ -371,21 +372,21 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
         lfComboBox.addActionListener(this);
         lfLabel.setLabelFor(lfComboBox);
 
-        lfButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(RESOURCE_PATH,
-                    "general", "look_feel_options"));
+        lfButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "general", "look_feel_options"));
         lfButton.setActionCommand("THEME_OPTIONS");
         lfButton.addActionListener(this);
 
         overwriteCheckBox = new CheckBoxWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "override_fonts"));
         overwriteCheckBox.addActionListener(this);
-        
+
         mainFontLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "main_font"));
         mainFontButton = new JButton("main font");
         mainFontButton.addActionListener(this);
         mainFontLabel.setLabelFor(mainFontButton);
-        
+
         textFontLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
                     RESOURCE_PATH, "general", "text_font"));
         textFontButton = new JButton("text font");
@@ -435,8 +436,10 @@ public class GeneralOptionsDialog extends JDialog implements ActionListener {
                     "global", "help"));
 
         // associate with JavaHelp
-        HelpManager.getHelpManager().enableHelpOnButton(helpButton, "configuring_columba_8");
-        HelpManager.getHelpManager().enableHelpKey(getRootPane(), "configuring_columba_8");
+        HelpManager.getHelpManager().enableHelpOnButton(helpButton,
+            "configuring_columba_8");
+        HelpManager.getHelpManager().enableHelpKey(getRootPane(),
+            "configuring_columba_8");
     }
 
     public void actionPerformed(ActionEvent event) {

@@ -95,8 +95,7 @@ public class DefaultClassLoader {
 
                     if (args[j] == null) {
                         success = true;
-                    }
-                    else if (!parameter.isAssignableFrom(args[j].getClass())) {
+                    } else if (!parameter.isAssignableFrom(args[j].getClass())) {
                         success = false;
                     }
                 }

@@ -15,44 +15,39 @@
 //All Rights Reserved.
 package org.columba.core.externaltools;
 
+
 /**
  * 
  *
  * @author fdietz
  */
 public class ExternalToolsNotFoundException extends Exception {
+    /**
+ * 
+ */
+    public ExternalToolsNotFoundException() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public ExternalToolsNotFoundException() {
-		super();
+    /**
+ * @param arg0
+ */
+    public ExternalToolsNotFoundException(String arg0) {
+        super(arg0);
+    }
 
-	}
+    /**
+ * @param arg0
+ */
+    public ExternalToolsNotFoundException(Throwable arg0) {
+        super(arg0);
+    }
 
-	/**
-	 * @param arg0
-	 */
-	public ExternalToolsNotFoundException(String arg0) {
-		super(arg0);
-
-	}
-
-	/**
-	 * @param arg0
-	 */
-	public ExternalToolsNotFoundException(Throwable arg0) {
-		super(arg0);
-
-	}
-
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public ExternalToolsNotFoundException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-
-	}
-
+    /**
+ * @param arg0
+ * @param arg1
+ */
+    public ExternalToolsNotFoundException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
+    }
 }

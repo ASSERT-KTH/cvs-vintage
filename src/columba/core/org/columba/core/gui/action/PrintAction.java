@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
 
 import org.columba.core.action.AbstractColumbaAction;
@@ -37,7 +36,9 @@ import java.nio.charset.Charset;
 
 import javax.swing.KeyStroke;
 
-public class PrintAction extends AbstractColumbaAction implements SelectionListener {
+
+public class PrintAction extends AbstractColumbaAction
+    implements SelectionListener {
     public PrintAction(FrameMediator controller) {
         super(controller,
             MailResourceLoader.getString("menu", "mainframe",

@@ -15,15 +15,15 @@ package org.columba.core.plugin;
  */
 public class PluginHandlerNotFoundException extends Exception {
     /**
-     *
-     */
+ *
+ */
     public PluginHandlerNotFoundException() {
         super();
     }
 
     /**
-     * @param arg0
-     */
+ * @param arg0
+ */
     public PluginHandlerNotFoundException(String arg0) {
         super(arg0);
     }
@@ -35,15 +35,15 @@ public class PluginHandlerNotFoundException extends Exception {
     //
 
     /*
-    public PluginHandlerNotFoundException(String arg0, Throwable arg1) {
-            super(arg0, arg1);
+public PluginHandlerNotFoundException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
 
-    }
+}
 
 
-    public PluginHandlerNotFoundException(Throwable arg0) {
-            super(arg0);
+public PluginHandlerNotFoundException(Throwable arg0) {
+        super(arg0);
 
-    }
-    */
+}
+*/
 }

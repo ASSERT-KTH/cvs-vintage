@@ -13,15 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.config.WindowItem;
-import org.columba.core.main.MainInterface;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
 import org.columba.core.shutdown.ShutdownManager;
 
 import java.awt.BorderLayout;
@@ -34,6 +33,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+
 /**
  *
  * The view is responsible for creating the initial frame, menu and
@@ -44,23 +44,23 @@ import javax.swing.JPanel;
  */
 public abstract class AbstractFrameView extends JFrame implements WindowListener {
     /**
-     * internally used toolbar ID
-     */
+ * internally used toolbar ID
+ */
     public static final String MAIN_TOOLBAR = "main";
 
     /**
-     *
-     * every view contains a reference to its creator
-     *
-     */
+ *
+ * every view contains a reference to its creator
+ *
+ */
     protected FrameMediator frameController;
     protected Menu menu;
     protected ToolBar toolbar;
 
     /**
-     * in order to support multiple toolbars we use a panel as
-     * parent container
-     */
+ * in order to support multiple toolbars we use a panel as
+ * parent container
+ */
     protected JPanel toolbarPane;
 
     public AbstractFrameView(FrameMediator frameController) {
@@ -101,18 +101,18 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
     }
 
     /**
-     *
-     * @return        true, if toolbar is enabled, false otherwise
-     *
-     */
+ *
+ * @return        true, if toolbar is enabled, false otherwise
+ *
+ */
     public boolean isToolbarVisible() {
         return ((AbstractFrameController) frameController).isToolbarEnabled(MAIN_TOOLBAR);
     }
 
     /**
-     * Load the window position, size and maximization state
-     *
-     */
+ * Load the window position, size and maximization state
+ *
+ */
     public void loadWindowPosition() {
         ViewItem viewItem = frameController.getViewItem();
 
@@ -139,10 +139,10 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
     }
 
     /**
-     *
-     * Save current window position, size and maximization state
-     *
-     */
+ *
+ * Save current window position, size and maximization state
+ *
+ */
     public void saveWindowPosition() {
         java.awt.Dimension d = getSize();
         java.awt.Point loc = getLocation();
@@ -163,9 +163,9 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
     }
 
     /**
-     * Show toolbar
-     *
-     */
+ * Show toolbar
+ *
+ */
     public void showToolbar() {
         boolean b = isToolbarVisible();
 
@@ -188,85 +188,86 @@ public abstract class AbstractFrameView extends JFrame implements WindowListener
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+ */
     public void windowActivated(WindowEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+ */
     public void windowClosed(WindowEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+ */
     public void windowClosing(WindowEvent arg0) {
         frameController.close();
+
         if (MainInterface.frameModel.getOpenFrames().length == 0) {
             ShutdownManager.getShutdownManager().shutdown(0);
         }
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+ */
     public void windowDeactivated(WindowEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+ */
     public void windowDeiconified(WindowEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+ */
     public void windowIconified(WindowEvent arg0) {
     }
 
     /**
-     * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-     */
+ * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+ */
     public void windowOpened(WindowEvent arg0) {
     }
 
     /**
-     * @return Menu
-     */
+ * @return Menu
+ */
     public Menu getMenu() {
         return menu;
     }
 
     /**
-     * Overwrite method to add custom menu.
-     *
-     * Use core menu and plug all the mail/addressbook specific actions
-     * in the menu.
-     *
-     * @param controller        controller of view
-     * @return                                complete menu
-     */
+ * Overwrite method to add custom menu.
+ *
+ * Use core menu and plug all the mail/addressbook specific actions
+ * in the menu.
+ *
+ * @param controller        controller of view
+ * @return                                complete menu
+ */
     protected abstract Menu createMenu(FrameMediator controller);
 
     /**
-     * Overwrite method to add custom toolbar.
-     *
-     * Use core toolbar and plug all the mail/addressbook specific actions
-     * in the toolbar.
-     *
-     * @param controller        controller of view
-     * @return                                complete toolbar
-     */
+ * Overwrite method to add custom toolbar.
+ *
+ * Use core toolbar and plug all the mail/addressbook specific actions
+ * in the toolbar.
+ *
+ * @param controller        controller of view
+ * @return                                complete toolbar
+ */
     protected abstract ToolBar createToolbar(FrameMediator controller);
 
     /**
-     * Return controller of this view
-     *
-     * @return FrameController
-     */
+ * Return controller of this view
+ *
+ * @return FrameController
+ */
     public FrameMediator getFrameController() {
         return frameController;
     }

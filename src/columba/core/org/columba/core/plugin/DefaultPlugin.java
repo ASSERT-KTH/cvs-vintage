@@ -26,8 +26,8 @@ package org.columba.core.plugin;
  */
 public abstract class DefaultPlugin {
     /**
-     * Constructor for DefaultPlugin.
-     */
+ * Constructor for DefaultPlugin.
+ */
     public DefaultPlugin() {
         super();
     }

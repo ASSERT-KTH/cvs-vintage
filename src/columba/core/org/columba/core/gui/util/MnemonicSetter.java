@@ -33,15 +33,15 @@ import javax.swing.JLabel;
  */
 public class MnemonicSetter {
     /**
-     * Sets the text of a menu, menuitem, button or checkbox. If
-     * a & character is found, it is used to define the mnemonic.
-     * Else the text is set just as if the setText method of the component
-     * was called.
-     *
-     * @param        component        Menu, menuitem, button or checkbox to handle
-     * @param        text                Displaytext, possibly including & for mnemonic
-     *                                                 specification
-     */
+ * Sets the text of a menu, menuitem, button or checkbox. If
+ * a & character is found, it is used to define the mnemonic.
+ * Else the text is set just as if the setText method of the component
+ * was called.
+ *
+ * @param        component        Menu, menuitem, button or checkbox to handle
+ * @param        text                Displaytext, possibly including & for mnemonic
+ *                                                 specification
+ */
     public static void setTextWithMnemonic(AbstractButton component, String text) {
         // search for mnemonic
         int index = text.indexOf("&");
@@ -74,14 +74,14 @@ public class MnemonicSetter {
     }
 
     /**
-     * Sets the text of a label including mnemonic.
-     * <br>
-     * Same functionality as @see setTextWithMnemonic
-     *
-     * @param        label                Label to handle
-     * @param        text                Displaytext, possibly including & for mnemonic
-     *                                                 specification
-     */
+ * Sets the text of a label including mnemonic.
+ * <br>
+ * Same functionality as @see setTextWithMnemonic
+ *
+ * @param        label                Label to handle
+ * @param        text                Displaytext, possibly including & for mnemonic
+ *                                                 specification
+ */
     public static void setTextWithMnemonicOnLabel(JLabel label, String text) {
         // search for mnemonic
         int index = text.indexOf("&");

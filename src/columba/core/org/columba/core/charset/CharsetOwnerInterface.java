@@ -16,37 +16,36 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
-
 package org.columba.core.charset;
 
 import java.nio.charset.Charset;
+
 
 /**
  * Should be implemented by objects encapsulating a charset. Enables
  * interested objects to register listeners.
  */
 public interface CharsetOwnerInterface {
-    
     /**
-     * Returns the currently chosen charset. This method may return null
-     * if Columba should try to autodetect the charset.
-     */
+ * Returns the currently chosen charset. This method may return null
+ * if Columba should try to autodetect the charset.
+ */
     public abstract Charset getCharset();
 
     /**
-     * Sets the currently active charset. This method must notify all
-     * registered CharacterListener instances. If null is passed, the
-     * charset will be determined automatically.
-     */
+ * Sets the currently active charset. This method must notify all
+ * registered CharacterListener instances. If null is passed, the
+ * charset will be determined automatically.
+ */
     public abstract void setCharset(Charset charset);
-    
+
     /**
-     * Registers a listener to get notified whenever the charset changes.
-     */
+ * Registers a listener to get notified whenever the charset changes.
+ */
     public abstract void addCharsetListener(CharsetListener l);
-    
+
     /**
-     * Unregisters a previously registered CharacterListener instance.
-     */
+ * Unregisters a previously registered CharacterListener instance.
+ */
     public abstract void removeCharsetListener(CharsetListener l);
 }
