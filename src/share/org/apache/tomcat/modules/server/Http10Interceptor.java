@@ -242,8 +242,6 @@ class HttpRequest extends Request {
 	    return;
 	}
 
-    this.remoteAddr().setString(socket.getInetAddress().getHostAddress());
-
 	// for 0.9, we don't have headers!
 	if (! protoMB.equals("")) {
 	    // all HTTP versions with protocol also have headers
@@ -262,13 +260,20 @@ class HttpRequest extends Request {
 
     // -------------------- override special methods
 
-
-    public String getRemoteAddr() {
-        return socket.getInetAddress().getHostAddress();
+    public MessageBytes remoteAddr() {
+	// WARNING: On some linux configurations, this call may get you in
+	// trubles... Big trubles...
+	if( remoteAddrMB.isNull() ) {
+	    remoteAddrMB.setString(socket.getInetAddress().getHostAddress());
+	}
+	return remoteAddrMB;
     }
 
-    public String getRemoteHost() {
-	return socket.getInetAddress().getHostName();
+    public MessageBytes remoteHost() {
+	if( remoteHostMB.isNull() ) {
+	    remoteHostMB.setString( socket.getInetAddress().getHostName() );
+	}
+	return remoteHostMB;
     }
 
     public String getLocalHost() {
