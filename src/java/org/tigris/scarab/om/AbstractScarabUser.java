@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.96 2003/12/04 19:26:16 mpoeschl Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.97 2003/12/09 16:41:16 mpoeschl Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1602,8 +1602,6 @@ public abstract class AbstractScarabUser
         throws Exception
     {
         MITList mitList = getCurrentMITList();
-        Module module = null;
-        IssueType issueType = null;
 
         // Delete current attribute selections for user
         for (Iterator currentAttributes = mitList.getSavedRMUAs().iterator();
