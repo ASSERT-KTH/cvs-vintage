@@ -21,7 +21,7 @@ import java.util.Hashtable;
  * Routines for converting between strongly-typed interfaces and
  * generic InvocationHandler objects.
  *
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  * @author Unknown
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
@@ -511,6 +511,29 @@ public final class Proxies
       }
 
       /**
+       * Are the 2 methods equal in terms of conflicting with each other.
+       * i.e. String toString() and Map toString() are equal since only one
+       * toString() can be defined in a class.
+       */
+      static boolean areEqual(Method m1, Method m2) {
+         
+         // Check method names.
+         if( ! m1.getName().equals(m2.getName()) )
+            return false;
+            
+         // Check parameters
+         Class a1[] = m1.getParameterTypes();
+         Class a2[] = m2.getParameterTypes();
+         if( a1.length != a2.length )
+            return false;
+         for( int i=0; i < a1.length; i++)
+            if( !a1[i].equals(a1[i]) )
+               return false;
+               
+         return true;
+      }
+      
+      /**
        * Combine the given list of method[]'s into one method[],
        * removing any methods duplicates.
        */
@@ -518,44 +541,35 @@ public final class Proxies
       {
          int nm = 0;
          for (int i = 0; i < methodLists.length; i++)
-         {
             nm += methodLists[i].length;
-         }
          Method methods[] = new Method[nm];
-         
-         nm = 0;
-         for (int i = 0; i < methodLists.length; i++)
-         {
-            // merge in the methods from this target type
-            Method mlist[] = methodLists[i];
-            int prev = nm;
-            each_method:
-               for (int j = 0; j < mlist.length; j++)
-               {
-                  Method m = mlist[j];
-                  if (m == null)
-                  {
-                     continue;
-                  }
 
-                  // make sure the same method hasn't already appeared
-                  for (int k = 0; k < prev; k++)
-                  {
-                     if (m.equals(methods[k]))
-                     {
-                        continue each_method;
-                     }
-                  }
-                  methods[nm++] = m;
+         // Merge the methods into a single array.
+         nm=0;
+         for (int i = 0; i < methodLists.length; i++)
+            for (int j = 0; j < methodLists[i].length; j++) 
+               methods[nm++]=methodLists[i][j];
+         
+         // Remove duplicate methods. (set them to null)
+         for( int i=0; i < methods.length; i++ ) {
+            if( methods[i] == null )
+               continue;
+            for( int j=i+1; j < methods.length; j++ ) {
+               if( methods[j] == null )
+                  continue;
+               if( areEqual(methods[i], methods[j]) ) {
+                  methods[j]=null;
+                  nm--;
                }
+            }         
          }
          
          // shorten and copy the array
          Method methodsCopy[] = new Method[nm];
-         for (int i = 0; i < nm; i++)
-         {
-            methodsCopy[i] = methods[i];
-         }
+         nm=0;
+         for (int i = 0; i < methods.length; i++)
+            if( methods[i] != null )
+               methodsCopy[nm++] = methods[i];
          
          return methodsCopy;
       }
