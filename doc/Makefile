@@ -1,5 +1,5 @@
 # Author:  Vadim Nasardinov (vadimn@redhat.com)
-# Version: $Id: Makefile,v 1.3 2005/02/15 21:11:25 el-vadimo Exp $
+# Version: $Id: Makefile,v 1.4 2005/02/15 21:16:54 el-vadimo Exp $
 # Since:   2005-02-07
 
 build:=../output
@@ -17,11 +17,10 @@ all: docbook-html docbook-pdf
 clean:
 	rm -rf $(out_dir)
 
-style:
-	cp $(in_dir)/carol.css $(out_dir)/
+$(out_dir)/carol.css: $(in_dir)/carol.css
+	cp $(in_dir)/carol.css $(out_dir)/carol.css
 
-
-docbook-html: images style $(out_dir)/index.html
+docbook-html: images $(out_dir)/carol.css $(out_dir)/index.html
 
 docbook-pdf: $(out_dir)/usermanual.pdf
 
