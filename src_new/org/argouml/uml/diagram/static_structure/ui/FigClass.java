@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.39 2002/10/10 23:11:12 kataka Exp $
+// $Id: FigClass.java,v 1.40 2002/10/22 05:26:30 mkl Exp $
 
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
@@ -466,6 +466,9 @@ public class FigClass extends FigNodeModelElement {
 
       aSize.height += ROWHEIGHT * Math.max(1, _operVec.getFigs().size() - 1) + 1;
     }
+
+    // we want to maintain a minimum width for the class
+    aSize.width = Math.max(60, aSize.width);
 
     // And now aSize has the answer
 
