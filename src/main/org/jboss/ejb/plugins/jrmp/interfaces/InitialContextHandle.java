@@ -6,35 +6,81 @@
  */
 package org.jboss.ejb.plugins.jrmp.interfaces;
 
-import java.util.Hashtable;
-import java.util.Properties;
 import java.io.Serializable;
-import java.io.InputStream;
-import java.net.URL;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- * A simple handle to facilitate serialization of an initial context.
+ * Provides the interface for creating new handles instances and
+ * for getting a reference to the initial context.
  *      
  * @author  Jason Dillon <a href="mailto:jason@planet57.com">&lt;jason@planet57.com&gt;</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class InitialContextHandle
+public abstract class InitialContextHandle
     implements Serializable
 {
     /** Serial Version Identifier. */
-    private static final long serialVersionUID = 5716858030389936723L;
+    private static final long serialVersionUID = 8271304971930101243L;
+
+    /** The factory for producing handles. */
+    private static InitialContextHandleFactory factory = null;
     
     /**
-     * The property name, which is a URL spec of a properties file to read
+     * Lookup the class of the factory that will be used to construct
+     * new handle instances.
      */
-    public static final String ENV_PROPERTIES =
-        InitialContextHandle.class.getName() + ".environment";
+    private static Class getFactoryType() {
+        String propname = InitialContextHandle.class.getName() + ".factory";
+        String classname = System.getProperty(propname, null);
 
-    /** The single instance. */
-    private static InitialContextHandle instance = null;
+        Class type;
+        if (classname != null) {
+            try {
+                type = Class.forName(classname);
+            }
+            catch (ClassNotFoundException e) {
+                throw new RuntimeException
+                    ("invalid factory class name: " + classname);
+            }
+
+            // check if the given class is the correct type before
+            // attempting to construct a new object
+            if (! InitialContextHandleFactory.class.isAssignableFrom(type)) {
+                throw new RuntimeException("does not implement: " +
+                                           InitialContextHandleFactory.class);
+            }
+        }
+        else {
+            type = DefaultInitialContextHandle.Factory.class;
+        }
+        
+        return type;
+    }
+    
+    /**
+     * Construct a new factory if one has not been created yet.
+     */
+    private static synchronized void createFactory() {
+        if (factory != null) return;
+
+        // get the type of factory that will be used
+        Class type = getFactoryType();
+
+        // create a new instance
+        try {
+            factory = (InitialContextHandleFactory)type.newInstance();
+        }
+        catch (Exception e) {
+            if (e instanceof RuntimeException)
+                throw (RuntimeException)e;
+            
+            // should really use a nesting exception here to preserve
+            // the target throwables detail.
+            throw new RuntimeException("failed to construct factory: " + e);
+        }
+    }
     
     /**
      * Factory method for producting state objects.
@@ -42,62 +88,12 @@ public class InitialContextHandle
      * @return  A state object.
      */
     public static InitialContextHandle create() {
-        //
-        // This should do the right thing *most* of the time with respect
-        // to multi-threadded access.  If there is a concurrency problem
-        // then more than one object will be created, but they should be
-        // the same, so rather than sync lets just let that happen.
-        //
-        if (instance == null) {
-            instance = new InitialContextHandle();
+        // lazy initialize the factory
+        if (factory == null) {
+            createFactory();
         }
 
-        return instance;
-    }
-    
-    /** The InitialContext enviroment (or null if unable to determine) */
-    private Hashtable env;
-
-    /**
-     * Construct a <tt>InitialContextHandle</tt>.
-     */
-    public InitialContextHandle() {
-        // save the current enviroment
-        env = getEnvironment();
-    }
-
-    /**
-     * Get the environment table suitable for passing to an initial context
-     * or null if we should use a vanilla one.
-     *
-     * <p>Checks for a non-null value for the system property
-     *    {@link #ENV_PROPERTIES}.  If it finds one, it assumes that
-     *    it is a url specification which can be used to populate a
-     *    properties table.
-     */
-    private Hashtable getEnvironment() {
-        String spec = System.getProperty(ENV_PROPERTIES);
-        
-        try {
-            if (spec != null) {
-                URL url = new URL(spec);
-                InputStream input = url.openStream();
-                Properties props;
-                
-                try {
-                    props = new Properties();
-                    props.load(input);
-                }
-                finally {
-                    input.close();
-                }
-                
-                return props;
-            }
-        }
-        catch (Exception ignore) {}
-
-        return null;
+        return factory.create();
     }
 
     /**
@@ -107,18 +103,5 @@ public class InitialContextHandle
      *
      * @throws NamingException    Failed to create <tt>InitialContext</tt>.
      */
-    public InitialContext getInitialContext() throws NamingException {
-        InitialContext ctx;
-
-        // if the environment is not null, then use it else
-        // assume there is a system property set.
-        if (env != null) {
-            ctx = new InitialContext(env);
-        }
-        else {
-            ctx = new InitialContext();
-        }
-
-        return ctx;
-    }
+    public abstract InitialContext getInitialContext() throws NamingException;
 }
