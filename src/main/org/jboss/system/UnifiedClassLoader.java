@@ -20,7 +20,7 @@ import java.io.InputStream;
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="christoph.jung@jboss.org">Christoph G. Jung</a>
  * @author <a href="scott.stark@jboss.org">Scott Stark/a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * 
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -75,14 +75,14 @@ public class UnifiedClassLoader
       }
       catch(Exception e)
       {
-	 //
-	 // FIXME: Should not mask exceptionsd like this, if it is an error, then
-	 //        propagate it to caller tyo handle
-	 //
-	 log.warn("URL "+url+" could not be opened", e);
+         //
+         // FIXME: Should not mask exceptionsd like this, if it is an error, then
+         //        propagate it to caller tyo handle
+         //
+         log.warn("URL "+url+" could not be opened", e);
       }
    }
-   
+
    /**
     * We intercept the load class to know exactly the dependencies
     * of the underlying jar
@@ -149,6 +149,16 @@ public class UnifiedClassLoader
       return url.hashCode();
    }
 
+   /** Return an empty URL array to force the RMI marshalling subsystem to
+    *use the java.server.codebase property as the annotated codebase. Do not
+    *remove this method without discussing it on the dev list.
+    */
+   private static final URL[] empty = {};
+   public URL[] getURLs()
+   {
+      return empty;
+   }
+
    /**
     * This method simply invokes the super.getURLs() method to access the
     * list of URLs that make up the UnifiedClassLoader classpath.
@@ -170,8 +180,7 @@ public class UnifiedClassLoader
    public String toString()
    {
       StringBuffer tmp = new StringBuffer("JBoss UnifiedClassloader: keyURL : ");
-      tmp.append(getURL());
-      
+      tmp.append(getURL());      
       tmp.append(']');
       return tmp.toString();
    }
