@@ -95,7 +95,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     HttpSessionFacade sessionFacade;
     ServletInputStreamFacade isFacade=new ServletInputStreamFacade();
     boolean isFacadeInitialized=false;
-    BufferedReader reader;
+    BufferedReader reader=null;
     DateFormat []dateFormats;
     UEncoder uencoder;
 
@@ -139,6 +139,7 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	sessionFacade=null;
 	if( isFacade != null ) isFacade.recycle();
 	isFacadeInitialized=false;
+        reader=null;
     }
 
     /** Not public - is called only from FacadeManager
