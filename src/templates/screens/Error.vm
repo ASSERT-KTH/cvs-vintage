@@ -6,31 +6,13 @@
  #if ($data.StackTrace)
   <h3>Stack Trace</h3>
 
-<pre>
-If the stack trace below has at the top a mention of
-"ResourceNotFoundException", that means that a template could not be
-found (404) and is probably the result of a broken link.
-
-If the stack trace has something else, please enter a copy of the stack
-trace <strong>and an explanation of what you did to cause it</strong> to the 
-<a href="http://scarab.tigris.org/issues.html">Issue Tracking System</a> for analysis. If you are a developer and think you 
-know what the problem is, feel free to send in a patch to fix the
-problem.
-</pre>
+$l10n.StackTraceError 
 
   <pre>
   $data.StackTrace
   </pre>
  #else
-  <p>
-Sorry, there was no error message. :-( If there was one, it would have been
-shown here. Please believe me!
- </p>
- <p>
-  Although, one common source of the error could be a result of not being able
-  to find the requested template. Please try going back to the
-  $link.setPage("Start.vm").setLabel("Start") screen and starting over.
- </p>
+  <p>$l10n.format("NoErrorMessage", $link.setPage($data.User.HomePage).setLabel("Home"))
  #end
 #end
 </div>
