@@ -1,7 +1,6 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($lastTemplate = $data.Parameters.getString("lastTemplate", ""))
-hi $lastTemplate
 
 #if ($attribute.AttributeId)
    #set ($attgroup = $intake.Attribute.mapTo($attribute))
