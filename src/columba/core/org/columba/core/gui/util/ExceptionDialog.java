@@ -26,7 +26,6 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,24 +38,36 @@ import org.columba.core.util.GlobalResourceLoader;
 import org.columba.mail.gui.util.URLController;
 
 public class ExceptionDialog implements ActionListener {
-    
-        public static final String CMD_CLOSE = "CLOSE";
-        public static final String CMD_REPORT_BUG = "REPORT_BUG";
-        private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+
+	public static final String CMD_CLOSE = "CLOSE";
+	public static final String CMD_REPORT_BUG = "REPORT_BUG";
+	private static final String RESOURCE_BUNDLE_PATH =
+		"org.columba.core.i18n.dialog";
 
 	private JDialog dialog;
 	private boolean bool = false;
 	private JTextField textField;
 	private String stackTrace;
 
-	public ExceptionDialog() {}
+	public ExceptionDialog() {
+	}
 
 	public void showDialog(final Exception ex) {
-		JLabel topLabel = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "hint"),
+		JLabel topLabel =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"hint"),
 				ImageLoader.getImageIcon("stock_dialog_error_48.png"),
 				SwingConstants.LEFT);
 
-		JLabel label = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "message"));
+		JLabel label =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"message"));
 		/*
 		MultiLineLabel mlLabel = new MultiLineLabel( ex.getMessage() );
 		mlLabel.setLineWrap( true );
@@ -68,35 +79,48 @@ public class ExceptionDialog implements ActionListener {
 		JTextArea textArea = new JTextArea(ex.getMessage(), 3, 50);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true);
-                textArea.setEditable(false);
+		textArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(textArea);
 
-		JLabel label2 = new JLabel(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "stack_trace"));
+		JLabel label2 =
+			new JLabel(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"stack_trace"));
 		JTextArea textArea2 = new JTextArea(10, 50);
 		StringWriter stringWriter = new StringWriter();
 		ex.printStackTrace(new PrintWriter(stringWriter));
 		stackTrace = stringWriter.toString();
 		textArea2.append(stringWriter.toString());
-                textArea2.setEditable(false);
+		textArea2.setEditable(false);
 		JScrollPane scrollPane2 = new JScrollPane(textArea2);
-                
-		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-				GlobalResourceLoader.getString(
-					"global", "global", "close"));
-		closeButton.setActionCommand(CMD_CLOSE);
-                closeButton.addActionListener(this);
 
-		ButtonWithMnemonic reportBugButton = new ButtonWithMnemonic(
+		ButtonWithMnemonic closeButton =
+			new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "close"));
+		closeButton.setActionCommand(CMD_CLOSE);
+		closeButton.addActionListener(this);
+
+		ButtonWithMnemonic reportBugButton =
+			new ButtonWithMnemonic(
 				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
-		
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"report_bug"));
+
 		reportBugButton.setActionCommand(CMD_REPORT_BUG);
-                reportBugButton.addActionListener(this);
+		reportBugButton.addActionListener(this);
 
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints c = new GridBagConstraints();
 
-		dialog = DialogStore.getDialog(GlobalResourceLoader.getString(RESOURCE_BUNDLE_PATH, "exception", "title"));
+		dialog =
+			DialogStore.getDialog(
+				GlobalResourceLoader.getString(
+					RESOURCE_BUNDLE_PATH,
+					"exception",
+					"title"));
 		dialog.getContentPane().setLayout(layout);
 		dialog.getRootPane().setDefaultButton(closeButton);
 
@@ -180,53 +204,55 @@ public class ExceptionDialog implements ActionListener {
 	public boolean success() {
 		return bool;
 	}
-        
-        public void actionPerformed(ActionEvent e) {
-			String command = e.getActionCommand();
 
-			if (CMD_CLOSE.equals(command)) {
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
 
-                                bool = true;
+		if (CMD_CLOSE.equals(command)) {
 
-				dialog.dispose();
-			} else if (CMD_REPORT_BUG.equals(command)) {
-				bool = false;
+			bool = true;
 
-				URLController c = new URLController();
-				try{
-					c.open(new URL("http://www.sourceforge.net/projects/columba/bugs"));
-				}catch(MalformedURLException mue){}
-				/*
-				dialog.dispose();
-						
-				ComposerFrame composer = new ComposerFrame();
-						
-				composer.setSubject("bug report:");
-						
-				composer.setTo("columba-bugs@lists.sourceforge.net");
-						
-				StringBuffer buf = new StringBuffer();
-				StringWriter stringWriter2 = new StringWriter();
-				exception.printStackTrace(
-					new PrintWriter(stringWriter2));
-				String str = new String(stringWriter2.toString());
-				buf.append("\nTrace:\n");
-				buf.append(str);
-				buf.append("\n\n");
-				buf.append("Columba version: "
-					+ org.columba.core.main.MainInterface.version);
-				buf.append("\n");
-				buf.append("JDK version: "
-        				+ System.getProperty("java.version"));
-				buf.append("\n");
-				buf.append("JDK vendor: " + System.getProperty("java.vendor"));
-				buf.append("\n");
-				buf.append("OS version: " + System.getProperty("os.name"));
-						
-				composer.setBodyText(buf.toString());
-						
-				//dialog.dispose();
-				*/
-                }
-        }
+			dialog.dispose();
+		} else if (CMD_REPORT_BUG.equals(command)) {
+			bool = false;
+
+			URLController c = new URLController();
+			try {
+				c.open(
+					new URL("http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
+			} catch (MalformedURLException mue) {
+			}
+			/*
+			dialog.dispose();
+					
+			ComposerFrame composer = new ComposerFrame();
+					
+			composer.setSubject("bug report:");
+					
+			composer.setTo("columba-bugs@lists.sourceforge.net");
+					
+			StringBuffer buf = new StringBuffer();
+			StringWriter stringWriter2 = new StringWriter();
+			exception.printStackTrace(
+				new PrintWriter(stringWriter2));
+			String str = new String(stringWriter2.toString());
+			buf.append("\nTrace:\n");
+			buf.append(str);
+			buf.append("\n\n");
+			buf.append("Columba version: "
+				+ org.columba.core.main.MainInterface.version);
+			buf.append("\n");
+			buf.append("JDK version: "
+					+ System.getProperty("java.version"));
+			buf.append("\n");
+			buf.append("JDK vendor: " + System.getProperty("java.vendor"));
+			buf.append("\n");
+			buf.append("OS version: " + System.getProperty("os.name"));
+					
+			composer.setBodyText(buf.toString());
+					
+			//dialog.dispose();
+			*/
+		}
+	}
 }
