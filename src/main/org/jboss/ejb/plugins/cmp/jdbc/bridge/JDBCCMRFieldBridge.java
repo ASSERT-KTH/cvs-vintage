@@ -6,6 +6,7 @@
  */ 
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -56,7 +57,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  */                            
 public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    // ------ Invocation messages ------
@@ -145,7 +146,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
    /**
     * The related entity's container.
     */
-   private EntityContainer relatedContainer;
+   private WeakReference relatedContainer;
    
    /**
     * The related entity's entity cache.
@@ -235,14 +236,15 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       if( !(c instanceof EntityContainer)) {
          throw new DeploymentException("Relationships are not allowed " +
                "between entity beans and other types of beans");
-      }      
-      relatedContainer = (EntityContainer) c;
-      
+      }
+      EntityContainer theContainer = (EntityContainer) c;
+      relatedContainer = new WeakReference(c);
+
       // get the related instance cache
-      relatedCache = (EntityCache)relatedContainer.getInstanceCache();
+      relatedCache = (EntityCache)theContainer.getInstanceCache();
    
       // is the realted persistence manager a cmp persistence manager?
-      if( !(relatedContainer.getPersistenceManager() instanceof 
+      if( !(theContainer.getPersistenceManager() instanceof 
                CMPPersistenceManager)) {
          throw new DeploymentException("Relationships are not allowed " +
                "between bmp and cmp entity beans");
@@ -250,7 +252,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
 
       // get the related persistence manager
       CMPPersistenceManager cmpPM = 
-            (CMPPersistenceManager)relatedContainer.getPersistenceManager();
+            (CMPPersistenceManager)theContainer.getPersistenceManager();
 
       // is the realted persistence store manager a jdbc store manager?
       if( !(cmpPM.getPersistenceStore() instanceof JDBCStoreManager)) {
@@ -262,7 +264,7 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       relatedManager = (JDBCStoreManager)cmpPM.getPersistenceStore();
       
       // get the related container invoker      
-      relatedInvoker = relatedContainer.getLocalContainerInvoker();
+      relatedInvoker = theContainer.getLocalContainerInvoker();
 
       // 
       // Initialize the key fields
@@ -331,8 +333,9 @@ public class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge {
       this.relatedEntity = relatedEntity;
       
       // get the related local interface
-      relatedLocalInterface = relatedContainer.getLocalClass();
-      
+      EntityContainer theContainer = (EntityContainer) relatedContainer.get();
+      relatedLocalInterface = theContainer.getLocalClass();
+
       // find the cmrField for the other half of this relationship
       List cmrFields = relatedEntity.getCMRFields();
       for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 

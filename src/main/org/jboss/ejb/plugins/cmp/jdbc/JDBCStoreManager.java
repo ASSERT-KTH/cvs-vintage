@@ -60,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -407,8 +407,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
       
       readAheadCache.destroy();
       readAheadCache = null;
+      queryManager.clear();
+      queryManager = null;
    }
-   
+
    //
    // EJB Life Cycle Commands
    //

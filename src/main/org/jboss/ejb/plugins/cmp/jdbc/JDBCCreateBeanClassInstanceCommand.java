@@ -7,6 +7,7 @@
  
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 
 import org.jboss.ejb.EntityContainer;
@@ -23,25 +24,26 @@ import org.jboss.proxy.compiler.InvocationHandler;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
  
 public class JDBCCreateBeanClassInstanceCommand {
-   private EntityContainer container;
+   private WeakReference container;
    private JDBCEntityBridge entityBridge;
    private Class beanClass;
    private Constructor beanProxyConstructor;
    
    public JDBCCreateBeanClassInstanceCommand(JDBCStoreManager manager) 
-         throws Exception {
-
-      container = manager.getContainer();
+         throws Exception
+   {
+      EntityContainer theContainer = manager.getContainer();
+      container = new WeakReference(theContainer);
       entityBridge = manager.getEntityBridge();
-      beanClass = container.getBeanClass();
+      beanClass = theContainer.getBeanClass();
 
       // use proxy generator to create one implementation
       EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-            container,
+            theContainer,
             entityBridge,
             beanClass);
       Class[] classes = new Class[] { beanClass };
@@ -57,13 +59,14 @@ public class JDBCCreateBeanClassInstanceCommand {
       execute();
    }
    
-   public Object execute() throws Exception {
+   public Object execute() throws Exception
+   {
+      EntityContainer theContainer = (EntityContainer) container.get();
       EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-            container,
+            theContainer,
             entityBridge,
             beanClass);
 
       return beanProxyConstructor.newInstance(new Object[]{handler});
    }
 }
-
