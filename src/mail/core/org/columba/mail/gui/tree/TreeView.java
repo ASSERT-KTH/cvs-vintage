@@ -67,7 +67,7 @@ public class TreeView extends JTree {
         setShowsRootHandles(true);
         setRootVisible(false);
 
-        setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+        //setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 
         FolderTreeNode root = (FolderTreeNode) treeModel.getRoot();
 

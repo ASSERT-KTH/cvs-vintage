@@ -32,8 +32,8 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.gui.toolbar.ToolBar;
+import org.columba.core.gui.util.UIFSplitPane;
 import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.composer.HeaderView;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -42,6 +42,7 @@ import org.columba.mail.gui.message.MessageView;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
+import org.columba.mail.main.MailInterface;
 
 /**
  *
@@ -101,26 +102,20 @@ public class MailFrameView extends AbstractFrameView {
 		MessageView message,
 		StatusBar statusBar) {
 		this.filterToolbar= filterToolbar;
-
-		//this.statusBar = statusBar;
-		mainSplitPane= new JSplitPane();
-		mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-		//mainSplitPane.setDividerSize(5);
-		//mainSplitPane.setBorder(BorderFactory.createEmptyBorder(1, 0, 0, 0));
+		
+		//mainSplitPane= new JSplitPane();
+		mainSplitPane= new UIFSplitPane();
+		//mainSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		this.getContentPane().add(mainSplitPane, BorderLayout.CENTER);
 
 		mainSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 
 		JScrollPane treeScrollPane= new JScrollPane(tree);
-		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		//treeScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
 		JPanel messagePanel= new JPanel();
 		messagePanel.setLayout(new BorderLayout());
-
-		//messagePanel.add( header, BorderLayout.NORTH );
 		messagePanel.add(message, BorderLayout.CENTER);
 
 		tablePanel= new JPanel();
@@ -134,15 +129,15 @@ public class MailFrameView extends AbstractFrameView {
 		JScrollPane tableScrollPane= new JScrollPane(table);
 		tableScrollPane.setHorizontalScrollBarPolicy(
 			JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//tableScrollPane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
-		tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		//tableScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		tableScrollPane.getViewport().setScrollMode(
 			JViewport.BACKINGSTORE_SCROLL_MODE);
 
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
-		rightSplitPane= new JSplitPane();
-		rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		//rightSplitPane= new JSplitPane();
+		rightSplitPane= new UIFSplitPane();
+		//rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		rightSplitPane.add(tablePanel, JSplitPane.LEFT);
 		rightSplitPane.add(messagePanel, JSplitPane.RIGHT);

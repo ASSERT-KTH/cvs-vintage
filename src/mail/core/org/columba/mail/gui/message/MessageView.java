@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 
-import org.columba.core.gui.ClipboardManager;
 import org.columba.mail.gui.attachment.AttachmentView;
 import org.columba.mail.message.ColumbaHeader;
 
@@ -54,9 +53,12 @@ public class MessageView extends JScrollPane {
         this.messageController = controller;
 
         getViewport().setBackground(Color.white);
-		setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
+		//setBorder(BorderFactory.createEmptyBorder(1,1,1,1));
         panel = new MessagePanel();
-        //panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        //panel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        
+        
+        
         panel.setLayout(new BorderLayout());
 
         setViewportView(panel);
