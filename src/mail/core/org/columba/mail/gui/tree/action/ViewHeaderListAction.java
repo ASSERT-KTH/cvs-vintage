@@ -16,29 +16,27 @@
 
 package org.columba.mail.gui.tree.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.InternAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 
-public class ViewHeaderListAction extends InternAction implements SelectionListener {
+public class ViewHeaderListAction extends InternAction {
 
 	/**
 	 * @param controller
 	 */
 	public ViewHeaderListAction(AbstractFrameController controller) {
 		super(controller);
-		
-		controller.getSelectionManager().registerSelectionListener("mail.tree",this);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	public void selectionChanged(SelectionChangedEvent e) {
+	public void actionPerformed(ActionEvent evt) {
 		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");
 		if( references.length == 1) {
 			MainInterface.processor.addOp(

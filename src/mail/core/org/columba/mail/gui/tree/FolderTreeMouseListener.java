@@ -16,6 +16,7 @@
 package org.columba.mail.gui.tree;
 
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -23,14 +24,19 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+
 
 public class FolderTreeMouseListener extends MouseAdapter
 {
     private TreeController treeController;
 
+	private ViewHeaderListAction viewHeaderListAction;
+
     public FolderTreeMouseListener( TreeController t )
     {
         this.treeController = t;
+        viewHeaderListAction = new ViewHeaderListAction( t.getMailFrameController() );
     }
 
     protected JPopupMenu getPopupMenu()
@@ -51,9 +57,14 @@ public class FolderTreeMouseListener extends MouseAdapter
         maybeShowPopup(e);
     }
 
-    public void mouseClicked(MouseEvent e)
+    public void mouseClicked(MouseEvent event)
     {
-    	if ( SwingUtilities.isLeftMouseButton(e) ) treeController.selectFolder();
+    	if ( SwingUtilities.isLeftMouseButton(event) ) treeController.selectFolder();
+
+		if( event.getModifiers() == InputEvent.BUTTON1_MASK ) {
+			viewHeaderListAction.actionPerformed(null);
+		}
+
     	/*
         if ( e.getClickCount() == 1 )
         {

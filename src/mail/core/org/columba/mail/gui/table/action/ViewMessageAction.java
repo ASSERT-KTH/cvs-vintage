@@ -16,20 +16,19 @@
 
 package org.columba.mail.gui.table.action;
 
+import java.awt.event.ActionEvent;
+
 import org.columba.core.action.InternAction;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.selection.SelectionChangedEvent;
-import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
-import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 
 public class ViewMessageAction
-	extends InternAction
-	implements SelectionListener {
+	extends InternAction {
 
-	protected Object[] oldUids;
+	protected Object oldUid;
 	
 
 	/**
@@ -37,35 +36,29 @@ public class ViewMessageAction
 	 */
 	public ViewMessageAction(AbstractFrameController controller) {
 		super(controller);
-		controller.getSelectionManager().registerSelectionListener(
-			"mail.table",
-			this);
-		
-		oldUids = new Object[1];
-		oldUids[0] = "-1";
 	}
 
 	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		Object[] uids = ((TableSelectionChangedEvent) e).getUids();
-		if (uids.length == 1) {
-
-			if (oldUids[0] == uids[0]) {
+	public void actionPerformed(ActionEvent evt) {
+		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.table");
+		Object[] uids = references[0].getUids(); 
+		
+		if( uids.length == 1) {
+		
+			if (oldUid == uids[0]) {
 				ColumbaLogger.log.debug(
 					"this message was already selected, don't fire any event");
 				return;
 			}
 
-			oldUids = uids;
+			oldUid = uids[0];
 
-			MainInterface.processor.addOp(
-				new ViewMessageCommand(
-					getFrameController(),
-					getFrameController().getSelectionManager().getSelection(
-						"mail.table")));
-
+		MainInterface.processor.addOp(
+			new ViewMessageCommand(
+				getFrameController(), references
+				));
 		}
 	}
 

@@ -43,10 +43,8 @@ import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableChangedEvent;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
-import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.TreeView;
-import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 
 /**
  * @author freddy
@@ -200,8 +198,8 @@ public class MailFrameController extends AbstractFrameController {
 	 * @see org.columba.core.gui.FrameController#initInternActions()
 	 */
 	protected void initInternActions() {
-		new ViewHeaderListAction(this);
-		new ViewMessageAction(this);
+		//new ViewHeaderListAction(this);
+		//new ViewMessageAction(this);
 	}
 
 	/* (non-Javadoc)

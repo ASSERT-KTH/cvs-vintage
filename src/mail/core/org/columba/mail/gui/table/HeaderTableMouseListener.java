@@ -15,9 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.util.MessageNode;
 
 /**
@@ -31,11 +33,13 @@ import org.columba.mail.gui.table.util.MessageNode;
 
 public class HeaderTableMouseListener extends MouseAdapter {
 	private TableController headerTableViewer;
+	private ViewMessageAction viewMessageAction;
 
 	public HeaderTableMouseListener(TableController headerTableViewer) {
 		super();
 
 		this.headerTableViewer = headerTableViewer;
+		viewMessageAction = new ViewMessageAction(headerTableViewer.getMailFrameController());
 	}
 
 	protected void processPopup(MouseEvent event) {
@@ -87,8 +91,11 @@ public class HeaderTableMouseListener extends MouseAdapter {
 	}
 
 	public void mouseClicked(MouseEvent event) {
-		//headerTableViewer.getActionListener().changeMessageActions();
-		headerTableViewer.showMessage();
+		//headerTableViewer.getActionListener().changeMessageActions();		
+		//headerTableViewer.showMessage();
+		if( event.getModifiers() == InputEvent.BUTTON1_MASK ) {
+			viewMessageAction.actionPerformed(null);
+		}
 
 	}
 

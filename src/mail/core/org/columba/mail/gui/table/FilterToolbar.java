@@ -207,7 +207,7 @@ public class FilterToolbar extends JPanel implements ActionListener {
 		JLabel label = new JLabel(MailResourceLoader.getString(
                                 "menu",
                                 "mainframe",
-                                "filtertoolbar_label"));
+                                "filtertoolbar_header"));
 		c.insets = new Insets(0, 10, 0, 0);
 		layout.setConstraints(label, c);
 		add(label);
