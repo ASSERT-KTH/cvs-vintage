@@ -5,6 +5,7 @@ $page.setTitle("Attribute Editor")
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 #set ($issueTypeGroup = $intake.IssueType.mapTo($issueType))
+#set ($groups = $issueType.getAttributeGroups($module))
 
 <div class="app" id="div2-1-4-0">
 
@@ -30,7 +31,7 @@ $page.setTitle("Attribute Editor")
 #end
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
     </td>
-#if ($issueTypeId && $issueTypeId.length() > 0)
+#if ($issueTypeId && $issueTypeId.length() > 0 && !$groups.isEmpty())
     <td nowrap="nowrap">
     <div>Attribute group options:</div>
       <input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;
@@ -81,7 +82,6 @@ most recent artifact instance comments (otherwise, a link will appear to
 a seperate page).
 </p>
 
-#set ($groups = $issueType.getAttributeGroups($module))
 #if ($groups.isEmpty())
    #if ($issueType.IssueTypeId)
    ## NO GROUPS YET - user must push button to create default groups
@@ -141,7 +141,7 @@ a seperate page).
 #end
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
     </td>
-#if ($issueTypeId && $issueTypeId.length() > 0)
+#if ($issueTypeId && $issueTypeId.length() > 0 && !$groups.isEmpty())
     <td nowrap="nowrap">
     <div>Attribute group options:</div>
       <input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;
