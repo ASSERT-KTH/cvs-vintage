@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class Schema
 {
@@ -34,6 +34,12 @@ public class Schema
       protected Object initialValue()
       {
          Transaction tx = getTransaction();
+
+         if(tx == null)
+         {
+            throw new IllegalStateException("An operation requires an active transaction!");
+         }
+
          Views views = new Views(tx);
          Synchronization sync = new SchemaSynchronization(views);
 
