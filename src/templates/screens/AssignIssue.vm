@@ -30,12 +30,15 @@
 </div>
 </form>
 
-#set ($mylink = $link.setPage("AssignIssue.vm"))
-
-#foreach ($issueId in $issueList)
-   #set ($mylink = $mylink.addPathInfo("issue_ids", $issueId))
+#if ($issueList.size() > 0)
+    #set($thisIssue = "this issue")
+#else
+    #set($thisIssue = "these issues")
 #end
-<p><a href="${mylink}#add">Click here</a> to select users to associate with this issue</p>
+
+<p>
+<a href="#add">Click here</a> to select users to associate with $thisIssue
+</p>
 		
 
 ##ASSIGNEE LIST
