@@ -58,7 +58,7 @@ import org.tigris.scarab.om.Module;
  * This is the QueryPeer class
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: QueryPeer.java,v 1.21 2003/04/07 18:38:12 jmcnally Exp $
+ * @version $Id: QueryPeer.java,v 1.22 2003/04/08 04:26:56 jmcnally Exp $
  */
 public class QueryPeer 
     extends org.tigris.scarab.om.BaseQueryPeer
@@ -101,7 +101,7 @@ public class QueryPeer
         else 
         {
             // FIXME: 4th element is ignored due to bug in torque
-            // Does this work with Torque 3.0 release? (JSS)
+            // not yet fixed in torque-3.0
             Serializable[] key = {QUERY_PEER, GET_QUERIES, module, null, 
                 issueType, user, sortColumn, sortPolarity, type};
             Object obj = QueryManager.getMethodResult().get(key);
