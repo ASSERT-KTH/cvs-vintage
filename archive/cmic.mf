@@ -3,7 +3,7 @@ Specification-Title: "culster method invocation compiler"
 Specification-Version: "1.5.2"
 Specification-Vendor: "ObjectWeb"
 Implementation-Title: "org.objectweb.carol.cmi.compilere.Compiler"
-Implementation-Version: "1.5.2"
+Implementation-Version: "1.8.0"
 Implementation-Vendor: "INRIA"
 Main-Class: org.objectweb.carol.cmi.compiler.Compiler
-Class-Path: carol.jar
+Class-Path: ow_carol.jar

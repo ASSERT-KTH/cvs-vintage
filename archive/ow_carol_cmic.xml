@@ -1,0 +1,24 @@
+<project name="ow_carol_cmic.archive" default="dist.jar">
+  <target name="dist.jar">
+    <!-- CAROL CMIC JAR -->
+    <jar destfile="${dist.lib}/ow_carol_cmic.jar">
+      <fileset dir="${build}/classes">
+        <include name="org/objectweb/carol/cmi/compiler/*.class"/>
+      </fileset>
+      <fileset dir="${src}">
+        <include name="org/objectweb/carol/cmi/compiler/dtd/*.dtd"/>
+        <include name="org/objectweb/carol/cmi/compiler/*.vm"/>
+      </fileset>
+      <manifest>
+        <attribute name="Specification-Title" value="${carol.cmi.name}" />
+        <attribute name="Specification-Version" value="${carol.version}" />
+        <attribute name="Specification-Vendor" value="ObjectWeb" />
+        <attribute name="Implementation-Title" value="${carol.cmi.package}" />
+        <attribute name="Implementation-Version" value="${carol.version}" />
+        <attribute name="Implementation-Vendor" value="INRIA" />
+        <attribute name="Main-Class" value="${carol.cmi.compiler}" />
+        <attribute name="Class-Path" value="ow_carol_core.jar" />
+      </manifest>
+    </jar>
+  </target>
+</project>
