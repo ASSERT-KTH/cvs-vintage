@@ -24,6 +24,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -369,10 +370,17 @@ public class IncomingServerPanel extends DefaultPanel implements
 		typeComboBox.addItem("POP3");
 		typeComboBox.addItem("IMAP4");
 
-		if (accountItem.isPopAccount()) {
-			typeComboBox.setSelectedIndex(0);
-		} else {
-			typeComboBox.setSelectedIndex(1);
+		switch(accountItem.getAccountType())
+		{
+			case AccountItem.POP3_ACCOUNT:
+			  typeComboBox.setSelectedIndex(0);
+				break;
+			case AccountItem.IMAP_ACCOUNT:
+			  typeComboBox.setSelectedIndex(1);
+				break;
+			default:
+			  //do nothing
+			  
 		}
 
 		typeLabel.setLabelFor(typeComboBox);
@@ -634,7 +642,38 @@ public class IncomingServerPanel extends DefaultPanel implements
 
 			//$NON-NLS-1$
 			return false;
+		} 
+		else if (defaultAccountCheckBox.isSelected())
+		{
+		  AccountItem defaultAccount = 
+		    MailInterface.config.getAccountList().getDefaultAccount();
+		  
+			if (defaultAccount.getAccountType() !=
+					accountItem.getAccountType())
+			{
+
+			  String errorMessage = 
+			    MailResourceLoader.getString(	"dialog", 
+			                                	"account", 
+			                                  "cannot_use_default_account");
+
+			  Object[] accountType = new Object[]
+				                     			{defaultAccount.getAccountTypeDescription()};
+			  
+				errorMessage = MessageFormat.format(errorMessage,accountType);
+				
+				JOptionPane.showMessageDialog(null, errorMessage);
+				
+				return false;
+			}
 		}
+		else if (!AccountItem.validHostname(host))
+		{
+			JOptionPane.showMessageDialog(null, MailResourceLoader.getString(
+					"dialog", "account", "invalid_inhostname"));
+			return false;		  
+		}
+	
 
 		return true;
 	}

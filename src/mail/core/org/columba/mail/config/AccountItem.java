@@ -16,6 +16,8 @@
 
 package org.columba.mail.config;
 
+import java.util.regex.Pattern;
+
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
@@ -24,8 +26,26 @@ import org.columba.mail.main.MailInterface;
 import org.columba.ristretto.parser.ParserException;
 
 public class AccountItem extends DefaultItem {
+  
+  	private static final String 
+  		HOSTNAME_REGEXP = "^[a-zA-Z0-9]+\\.[a-zA-Z0-9\\.]+\\.[a-zA-Z]{2,4}+$",
+  		DOTTED_IPV4_REGEXP = 
+  		  "^[1-9]{1,3}+\\.[0-9]{1,3}+\\.[0-9]{1,3}+\\.[1-9]{1,3}+$";
+  	
+  	private static final Pattern 	
+  		hostnamePattern = Pattern.compile(HOSTNAME_REGEXP),
+  		dottedIpv4Pattern = Pattern.compile(DOTTED_IPV4_REGEXP);														
+  	
+  	
+  	/*
+  	 * Add supported account formats here
+  	 * */
+  	public static final int POP3_ACCOUNT = 0,
+  													IMAP_ACCOUNT = 1,
+  													UNKNOWN_TYPE = -1;
+  	
     private AccountItem defaultAccount;
-    private boolean pop3;
+    //private boolean pop3;
     private Identity identity;
     private PopItem pop;
     private ImapItem imap;
@@ -33,15 +53,58 @@ public class AccountItem extends DefaultItem {
     private PGPItem pgp;
     private SpecialFoldersItem folder;
     private SpamItem spam;
-
+    
+		private int accountType = UNKNOWN_TYPE;
+		
     public AccountItem(XmlElement e) {
         super(e);
 
-        pop3 = (e.getElement("/popserver") != null);
+        if (e.getElement("/popserver") != null)
+        {
+	        accountType = POP3_ACCOUNT;
+        }
+        else if (e.getElement("/imapserver") != null)
+        {
+        	accountType = IMAP_ACCOUNT;  
+        }
+        else
+          accountType = UNKNOWN_TYPE;
+        
     }
 
-    public boolean isPopAccount() {
-        return pop3;
+    /*
+     * validates a hostname, i.e.:
+     * mail.myhost.com
+     * mail.us.myhost.com
+     * 127.0.0.1
+     * */
+		public static boolean validHostname(String hostname)
+		{
+		  return (dottedIpv4Pattern.matcher(hostname).matches() ||
+		      		hostnamePattern.matcher(hostname).matches());
+		}
+    
+    public final String getAccountTypeDescription()
+    {
+    	switch(accountType)
+    	{
+    		case POP3_ACCOUNT:
+    		  return "POP3";
+    		case IMAP_ACCOUNT:
+    		  return "IMAP";
+    		default:
+    		  return "UNKNOWN";
+    	}
+    }
+    
+    public final int getAccountType()
+    {
+    	return accountType;  
+    }
+    
+    public boolean isPopAccount()
+    {
+      return (accountType == POP3_ACCOUNT);
     }
 
     public SpecialFoldersItem getSpecialFoldersItem() {
