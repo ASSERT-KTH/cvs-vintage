@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.1 2004/11/01 19:55:06 mvw Exp $
+// $Id: CoreFactory.java,v 1.2 2004/11/13 21:27:09 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1867,11 +1867,19 @@ public class CoreFactory extends AbstractUmlModelFactory {
 		UmlFactory.getFactory().delete(dep);
 	    }
 	}
-        it = elem.getComments().iterator();
+        
+	it = elem.getComments().iterator();
         while (it.hasNext()) {
             MComment comment = (MComment) it.next();
             if (comment.getAnnotatedElements().size() == 1)
                 UmlFactory.getFactory().delete(comment);
+        }
+        
+        List ownedBehaviors = new ArrayList();
+        ownedBehaviors.addAll(elem.getBehaviors());
+        it = ownedBehaviors.iterator();
+        while (it.hasNext()) {
+            UmlFactory.getFactory().delete(it.next());
         }
     }
 
