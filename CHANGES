@@ -50,6 +50,7 @@ Fixed bugs:
 - fixed bug when hit Alt+D to delete a message (waffel)
 - made AboutDialog non-modal and singleton to be able to use email links (javaprog)
 - fixed copy/move of encrypted messages (tstich)
+- fixed race condition in mail checking on POP3 (tstich)
 
   
 Columba v1.0 M1.1
