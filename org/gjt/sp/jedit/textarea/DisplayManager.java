@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.93 2004/08/28 08:12:47 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.94 2004/09/04 01:34:34 spestov Exp $
  */
 public class DisplayManager
 {
@@ -663,6 +663,84 @@ public class DisplayManager
 				scrollLineCount.callReset = scrollLineCount.callChanged = false;
 			}
 		}
+	} //}}}
+
+	//{{{ setFirstLine() method
+	void setFirstLine(int oldFirstLine, int firstLine)
+	{
+		int visibleLines = textArea.getVisibleLines();
+
+		if(firstLine >= oldFirstLine + visibleLines)
+		{
+			this.firstLine.scrollDown(firstLine - oldFirstLine);
+			textArea.chunkCache.invalidateAll();
+		}
+		else if(firstLine <= oldFirstLine - visibleLines)
+		{
+			this.firstLine.scrollUp(oldFirstLine - firstLine);
+			textArea.chunkCache.invalidateAll();
+		}
+		else if(firstLine > oldFirstLine)
+		{
+			this.firstLine.scrollDown(firstLine - oldFirstLine);
+			textArea.chunkCache.scrollDown(firstLine - oldFirstLine);
+		}
+		else if(firstLine < oldFirstLine)
+		{
+			this.firstLine.scrollUp(oldFirstLine - firstLine);
+			textArea.chunkCache.scrollUp(oldFirstLine - firstLine);
+		}
+
+		_notifyScreenLineChanges();
+	} //}}}
+	
+	//{{{ setFirstPhysicalLine() method
+	void setFirstPhysicalLine(int amount, int skew)
+	{
+		int oldFirstLine = textArea.getFirstLine();
+
+		if(amount == 0)
+		{
+			skew -= this.firstLine.skew;
+
+			// JEditTextArea.scrollTo() needs this to simplify
+			// its code
+			if(skew < 0)
+				this.firstLine.scrollUp(-skew);
+			else if(skew > 0)
+				this.firstLine.scrollDown(skew);
+			else
+			{
+				// nothing to do
+				return;
+			}
+		}
+		else if(amount > 0)
+			this.firstLine.physDown(amount,skew);
+		else if(amount < 0)
+			this.firstLine.physUp(-amount,skew);
+
+		int firstLine = textArea.getFirstLine();
+		int visibleLines = textArea.getVisibleLines();
+
+		if(firstLine == oldFirstLine)
+			/* do nothing */;
+		else if(firstLine >= oldFirstLine + visibleLines
+			|| firstLine <= oldFirstLine - visibleLines)
+		{
+			textArea.chunkCache.invalidateAll();
+		}
+		else if(firstLine > oldFirstLine)
+		{
+			textArea.chunkCache.scrollDown(firstLine - oldFirstLine);
+		}
+		else if(firstLine < oldFirstLine)
+		{
+			textArea.chunkCache.scrollUp(oldFirstLine - firstLine);
+		}
+
+		// we have to be careful
+		_notifyScreenLineChanges();
 	} //}}}
 
 	//}}}

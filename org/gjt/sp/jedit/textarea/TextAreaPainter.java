@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.100 2004/07/22 00:55:26 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.101 2004/09/04 01:34:37 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -348,13 +348,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		Color structureHighlightColor)
 	{
 		this.structureHighlightColor = structureHighlightColor;
-		StructureMatcher.Match match = textArea.getStructureMatch();
-		if(match != null)
-		{
-			textArea.invalidateLineRange(
-				match.startLine,match.endLine
-			);
-		}
+		textArea.invalidateStructureMatch();
 	} //}}}
 
 	//{{{ isStructureHighlightEnabled() method
@@ -377,14 +371,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	public final void setStructureHighlightEnabled(boolean structureHighlight)
 	{
 		this.structureHighlight = structureHighlight;
-		StructureMatcher.Match match = textArea.getStructureMatch();
-		if(match != null)
-		{
-			textArea.invalidateLineRange(
-				match.startLine,
-				match.endLine
-			);
-		}
+		textArea.invalidateStructureMatch();
 	} //}}}
 
 	//{{{ isBlockCaretEnabled() method
