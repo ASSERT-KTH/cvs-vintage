@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.5 2000/03/01 00:31:19 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/03/01 00:31:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.6 2000/03/01 20:55:06 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/03/01 20:55:06 $
  *
  * ====================================================================
  *
@@ -93,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.5 $ $Date: 2000/03/01 00:31:19 $
+ * @version $Revision: 1.6 $ $Date: 2000/03/01 20:55:06 $
  */
 
 final class StandardSession
@@ -167,7 +167,7 @@ final class StandardSession
     /**
      * Flag indicating whether this session is new or not.
      */
-    private boolean isNew = false;
+    private boolean isNew = true;
 
 
     /**
@@ -345,7 +345,7 @@ final class StandardSession
 
 	this.lastAccessedTime = this.thisAccessedTime;
 	this.thisAccessedTime = System.currentTimeMillis();
-
+	this.isNew=false;
     }
 
 
@@ -391,7 +391,7 @@ final class StandardSession
 	lastAccessedTime = 0L;
 	manager = null;
 	maxInactiveInterval = -1;
-	isNew = false;
+	isNew = true;
 	isValid = false;
 
 	// Tell our Manager that this Session has been recycled

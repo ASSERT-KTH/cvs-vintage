@@ -100,6 +100,11 @@ public class DefaultCMSetter extends BaseInterceptor {
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException
     {
+    }
+
+    public void contextInit( Context ctx)
+	throws TomcatException
+    {
 	setEngineHeader( ctx );
 
 	if( ctx.getWorkDir() == null)
@@ -133,15 +138,10 @@ public class DefaultCMSetter extends BaseInterceptor {
 	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
 	ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());
 	initURLs( ctx );
-    }
-
-    public void contextInit( Context ctx)
-	throws TomcatException
-    {
 	// Validation for error  servlet
 	try {
-	    ServletWrapper errorWrapper=ctx.getServletByName( "tomcat.errorPage");
-	    errorWrapper.loadServlet();
+	    ServletWrapper errorWrapper1=ctx.getServletByName( "tomcat.errorPage");
+	    errorWrapper1.loadServlet();
 	} catch( Exception ex ) {
 	    System.out.println("Error loading default servlet ");
             ex.printStackTrace();

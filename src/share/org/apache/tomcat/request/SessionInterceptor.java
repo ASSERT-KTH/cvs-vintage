@@ -96,29 +96,29 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	        if (cookie.getName().equals(
 					org.apache.tomcat.core.Constants.SESSION_COOKIE_NAME)) {
 		        sessionId = cookie.getValue();
-                // GS, We piggyback the JVM id on top of the session cookie
-                // Separate them ...
-                if(null != sessionId) {
-                    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
-                    if(idex > 0) {
-                        sessionId = sessionId.substring(0, idex);
-                    }
-                }
+			// GS, We piggyback the JVM id on top of the session cookie
+			// Separate them ...
+			if(null != sessionId) {
+			    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
+			    if(idex > 0) {
+				sessionId = sessionId.substring(0, idex);
+			    }
+			}
 
 		        if (sessionId != null) {
-                    // GS, We are in a problem here, we may actually get
-                    // multiple Session cookies (one for the root
-                    // context and one for the real context... or old session
-                    // cookie. We must check for validity in the current context.
-                    Context ctx = request.getContext();
-                    SessionManager sM = ctx.getSessionManager();
-
-                    if(null != sM.findSession(ctx, sessionId)) {
-                        sM.accessed(ctx, request, sessionId );
-
-                        request.setRequestedSessionId(sessionId);
-                    }
-                }
+			    // GS, We are in a problem here, we may actually get
+			    // multiple Session cookies (one for the root
+			    // context and one for the real context... or old session
+			    // cookie. We must check for validity in the current context.
+			    Context ctx = request.getContext();
+			    SessionManager sM = ctx.getSessionManager();
+			    
+			    if(null != sM.findSession(ctx, sessionId)) {
+				sM.accessed(ctx, request, sessionId );
+				
+				request.setRequestedSessionId(sessionId);
+			    }
+			}
 		    }
 	    }
 
