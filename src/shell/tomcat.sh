@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.4 1999/12/15 00:30:23 costin Exp $
+# $Id: tomcat.sh,v 1.5 1999/12/15 22:53:25 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -44,75 +44,89 @@ if [ "$TOMCAT_HOME" = "" ] ; then
 
 fi
 
-baseDir=`dirname $0`
-
-if [ -z "$JAVA_HOME" ]
-then
-JAVACMD=`which java`
-if [ -z "$JAVACMD" ]
-then
-echo "Cannot find JAVA. Please set your PATH."
-exit 1
-fi
-JAVA_BINDIR=`dirname $JAVACMD`
-JAVA_HOME=$JAVA_BINDIR/..
+if [ -z "$JAVA_HOME" ] ;  then
+  JAVACMD=`which java`
+  if [ -z "$JAVACMD" ] ; then
+    echo "Cannot find JAVA. Please set your PATH."
+    exit 1
+  fi
+  JAVA_BINDIR=`dirname $JAVACMD`
+  JAVA_HOME=$JAVA_BINDIR/..
 fi
 
-JAVACMD=$JAVA_HOME/bin/java
+if [ "$JAVACMD" = "" ] ; then 
+   # it may be defined in env - including flags!!
+   JAVACMD=$JAVA_HOME/bin/java
+fi
 
-jsdkJars=${baseDir}/webserver.jar:${baseDir}/lib/servlet.jar
-jspJars=${baseDir}/lib/jasper.jar
-beanJars=${baseDir}/webpages/WEB-INF/classes/jsp/beans
-miscJars=${baseDir}/lib/xml.jar
-appJars=${jsdkJars}:${jspJars}:${beanJars}:${miscJars}
-sysJars=${JAVA_HOME}/lib/tools.jar
 
-appClassPath=${appJars}
-cp=$CLASSPATH
+oldCP=$CLASSPATH
+ 
+CLASSPATH=${TOMCAT_HOME}/webserver.jar
+CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/servlet.jar
+CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/jasper.jar
+CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/lib/xml.jar
+## CLASSPATH=${CLASSPATH}:${TOMCAT_HOME}/webpages/WEB-INF/classes/jsp/beans
+
+CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+
 
 # Backdoor classpath setting for development purposes when all classes
 # are compiled into a /classes dir and are not yet jarred.
-
-if [ -d ${baseDir}/classes ]; then
-    appClassPath=${baseDir}/classes:${appClassPath}
+if [ -d ${TOMCAT_HOME}/classes ]; then
+    CLASSPATH=${TOMCAT_HOME}/classes:${CLASSPATH}
 fi
 
-CLASSPATH=${appClassPath}:${sysJars}
+if [ "$oldCP" != "" ]; then
+    CLASSPATH=${CLASSPATH}:${oldCP}
+fi
+
 export CLASSPATH
 
-if [ "$cp" != "" ]; then
-    CLASSPATH=${CLASSPATH}:${cp}
-    export CLASSPATH
-fi
-
 if [ ! -f server.xml ] ; then 
-   # Probably we are in a wrong directory, use tomcat_home
-   cd ${TOMCAT_HOME}
+   if [ "$2" = "" ] ; then
+     # Probably we are in a wrong directory, use tomcat_home
+     # If arguments are passed besides start/stop, probably a -f was used,
+     # or the user knows what he's doing
+     echo cd ${TOMCAT_HOME} 
+     cd ${TOMCAT_HOME}
+   fi
 fi
 
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
 #   2) You should use `stop` option instead of ^C to bring down the server
+if [ "$1" = "start" ] ; then 
+  shift 
+  echo Using classpath: ${CLASSPATH}
+  $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
-if test "$1" = "start" 
-then 
-shift 
-echo Using classpath: ${CLASSPATH}
-$JAVACMD org.apache.tomcat.shell.Startup "$@" &
-elif test "$1" = "stop"
-then 
-shift 
-echo Using classpath: ${CLASSPATH}
-$JAVACMD org.apache.tomcat.shell.Shutdown "$@"
+elif [ "$1" = "stop" ] ; then 
+  shift 
+  echo Using classpath: ${CLASSPATH}
+  $JAVACMD org.apache.tomcat.shell.Shutdown "$@"
+
+elif [ "$1" = "run" ] ; then 
+  shift 
+  echo Using classpath: ${CLASSPATH}
+  $JAVACMD org.apache.tomcat.shell.Startup "$@" 
+  # no &
+
+## Call it with source tomcat.sh to set the env for tomcat
+elif [ "$1" = "env" ] ; then 
+  shift 
+  echo Setting classpath to: ${CLASSPATH}
+  oldCP=$CLASSPATH
+
 else
-echo "Usage:"
-echo "tomcat [start|stop]"
-exit 0
+  echo "Usage:"
+  echo "tomcat [start|stop]"
+  exit 0
 fi
 
 
-if [ "$cp" != "" ]; then
-    CLASSPATH=${cp}
+if [ "$oldCP" != "" ]; then
+    CLASSPATH=${oldCP}
     export CLASSPATH
 else
     unset CLASSPATH
