@@ -81,7 +81,7 @@ import org.tigris.scarab.security.ScarabSecurityPull;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.35 2001/09/30 18:31:38 jon Exp $
+    @version $Id: Search.java,v 1.36 2001/10/15 18:47:55 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -175,7 +175,7 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         Query query = scarabR.getQuery();
         Group queryGroup = intake.get("Query", 
-                                      scarabR.getQuery().getQueryKey() );
+                                      query.getQueryKey() );
 
         Field name = queryGroup.get("Name");
         name.setRequired(true);
@@ -217,6 +217,19 @@ public class Search extends RequireLoginFirstAction
         query.saveAndSendEmail((ScarabUser)data.getUser(), 
                         scarabR.getCurrentModule(), 
                         new ContextAdapter(context));
+    }
+
+    /**
+        Runs the stored story.
+    */
+    public void doRunstoredquery( RunData data, TemplateContext context )
+         throws Exception
+    {        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        Query query = scarabR.getQuery();
+        data.getParameters().add("queryString", query.getValue());
+        context.put("queryString", query.getValue());
+        setTarget(data, "IssueList.vm");
     }
 
     /**
