@@ -71,10 +71,13 @@ import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserImplPeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.MITListManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.workflow.Workflow;
 import org.tigris.scarab.workflow.WorkflowFactory;
+import org.tigris.scarab.util.IssueIdParser;
+import org.tigris.scarab.util.Log;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
@@ -93,7 +96,7 @@ import org.apache.turbine.Turbine;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.35 2002/08/30 17:03:40 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.36 2002/09/05 00:03:02 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -471,6 +474,10 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         return (obj == null) ? -1 : obj.length;
     }
 
+    public boolean isString(Object obj)
+    {
+        return obj instanceof String;
+    }
 
     /**
      * Breaks text into a list of Strings.  Text is separated into tokens
@@ -490,6 +497,23 @@ public class ScarabGlobalTool implements ScarabGlobalScope
         
         StringTokenizer st = new StringTokenizer(text, delimiters);
         return st;
+    }
+
+    public List linkIssueIds(Module module, String text)
+    {
+        List result = null;
+        try
+        {
+            result = IssueIdParser.tokenizeText(module, text);
+        }
+        catch (Exception e)
+        {
+            // return the text as is and log the error
+            result = new ArrayList(1);
+            result.add(text);
+            Log.get().warn("Could not linkify text: " + text, e);
+        }
+        return result;
     }
 
     /**

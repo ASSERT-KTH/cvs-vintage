@@ -49,6 +49,8 @@ package org.tigris.scarab.om;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.regexp.REProgram;
+
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.om.Issue;
@@ -69,7 +71,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.51 2002/07/31 23:58:19 jon Exp $
+ * @version $Id: Module.java,v 1.52 2002/09/05 00:03:02 jmcnally Exp $
  */
 public interface Module
     extends Serializable
@@ -476,6 +478,13 @@ public interface Module
      * @return a <code>boolean</code> value
      */
     public boolean isGlobalModule();
+
+    /**
+     * returns a compiled regex that can used to create a new RE
+     * for matching some given text.
+     */
+    public REProgram getIssueRegex()
+        throws TorqueException;
 
     public String toString();
  

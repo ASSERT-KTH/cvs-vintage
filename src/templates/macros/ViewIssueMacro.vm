@@ -228,7 +228,7 @@ $l10n.NoComments
     #else
       <p>
       #foreach($lineoftext in $scarabG.tokenize($comment.DataAsString, ""))
-        $lineoftext<br />
+        #linkIssueIds($lineoftext)<br />
       #end
       </p>
     #end

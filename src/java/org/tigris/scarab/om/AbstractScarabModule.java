@@ -55,6 +55,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.apache.log4j.Category;
+import org.apache.regexp.RECompiler;
+import org.apache.regexp.REProgram;
+import org.apache.regexp.RESyntaxException;
 
 // Turbine classes
 import org.apache.torque.TorqueException;
@@ -127,7 +130,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.50 2002/09/04 21:40:23 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.51 2002/09/05 00:03:01 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -2009,6 +2012,62 @@ try{
         return Module.ROOT_ID.equals(getModuleId());
     }
 
+    // FIXME! should localize
+    private static final String REGEX_PREFIX = 
+        "([:alpha:]+\\d+)|(issue|bug|artifact";
+    private static final String REGEX_SUFFIX = 
+        ")\\s*#?([:alpha:]*\\d+)";
+
+    /**
+     * @see org.tigris.scarab.om.Module#getIssueRegex()
+     */
+    public REProgram getIssueRegex()
+        throws TorqueException
+    {
+        // regex =  /(issue|bug)\s+#?\d+/i
+        List rmitsList = getRModuleIssueTypes();
+        StringBuffer regex = new StringBuffer(30 + 10 * rmitsList.size());
+        regex.append(REGEX_PREFIX);
+        Iterator rmits = rmitsList.iterator();
+        while (rmits.hasNext()) 
+        {
+            regex.append('|')
+                .append( ((RModuleIssueType)rmits.next()).getDisplayName() );
+        }
+        regex.append(REGEX_SUFFIX);
+        RECompiler rec = new RECompiler();
+        REProgram rep = null;
+        try
+        {
+            rep = rec.compile(regex.toString());
+        }
+        catch (RESyntaxException e)
+        {
+            log().error("Could not compile regex: " + regex.toString(), e);
+            try
+            {
+                rep = rec.compile(REGEX_PREFIX + REGEX_SUFFIX);
+            }
+            catch (RESyntaxException ee)
+            {
+                // this should not happen, but it might when we localize
+                log().error("Could not compile standard regex", ee);
+                try
+                {
+                    rep = rec.compile("[:alpha:]+\\d+");
+                }
+                catch (RESyntaxException eee)
+                {
+                    // this will never happen, but log it, just in case 
+                    log().error("Could not compile simple id regex", eee);
+                }
+            }
+        }
+        // we should cache the above result
+        return rep;
+    }
+
+    
     /**
      * Used for ordering Groups.
      *
