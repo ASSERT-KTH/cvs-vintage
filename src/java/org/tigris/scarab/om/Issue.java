@@ -96,7 +96,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.294 2003/04/28 16:54:58 jmcnally Exp $
+ * @version $Id: Issue.java,v 1.295 2003/05/01 22:34:04 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -3554,7 +3554,11 @@ public class Issue
         this.save();
 
         // create initial issue creation activity
-        ActivityManager.createReportIssueActivity(this, activitySet);
+        ActivityManager.createReportIssueActivity(this, activitySet,  
+                Localization.getString(
+                    ScarabConstants.DEFAULT_BUNDLE_NAME,
+                    getLocale(),
+                    "IssueCreated"));
 
         // this needs to be done after the issue is created.
         // check to make sure the attachment has data before submitting it.

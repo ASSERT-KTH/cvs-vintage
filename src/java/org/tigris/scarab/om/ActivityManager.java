@@ -59,7 +59,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ActivityManager.java,v 1.16 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: ActivityManager.java,v 1.17 2003/05/01 22:34:04 jon Exp $
  */
 public class ActivityManager
     extends BaseActivityManager
@@ -264,11 +264,13 @@ public class ActivityManager
     /**
      * Populates a new Activity object for initial issue creation.
      */
-    public static Activity createReportIssueActivity(Issue issue, ActivitySet activitySet)
+    public static Activity createReportIssueActivity(Issue issue, 
+                                                     ActivitySet activitySet,
+                                                     String message)
         throws TorqueException
     {
         return create(issue, AttributeManager.getInstance(ScarabConstants.INTEGER_0), 
-                      activitySet, "issue created", null,
+                      activitySet, message, null,
                       ZERO, ZERO, null, null, null, null, null, null);
     }
 
