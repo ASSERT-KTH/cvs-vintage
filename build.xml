@@ -731,11 +731,6 @@
   <target name="tomcat-jars-new" depends="tomcat-jars">
   </target>
 
-  <!-- ==================== J2EE integration ========== -->
-  <target name="j2ee">
-    <ant antfile="src/j2ee/build.xml" target="tomcat-j2ee.jar"/>
-  </target>
-
   
   <!-- ==================== Ant utilities ========== -->
   <target name="tomcat-ant" depends="detect" if="ant15-present" >
