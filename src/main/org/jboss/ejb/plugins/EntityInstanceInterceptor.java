@@ -42,7 +42,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.56 $
+ * @version $Revision: 1.57 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
@@ -92,24 +92,24 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          ctx.setTransaction(invocation.getTransaction());
       }
 
-      boolean exceptionThrown = false;
+      Throwable exceptionThrown = null;
       try
       {
          return getNext().invoke(invocation);
       }
       catch(RemoteException e)
       {
-         exceptionThrown = true;
+         exceptionThrown = e;
          throw e;
       }
       catch(RuntimeException e)
       {
-         exceptionThrown = true;
+         exceptionThrown = e;
          throw e;
       }
       catch(Error e)
       {
-         exceptionThrown = true;
+         exceptionThrown = e;
          throw e;
       }
       finally
@@ -153,14 +153,14 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
          // in a transaction InstanceSynchronization, the synchronization will
          // remove the context, so we shouldn't.  Otherwise, we need to 
          // remove the context from the cache here.
-         else if(exceptionThrown && !ctx.hasTxSynchronization())
+         else if(exceptionThrown != null && !ctx.hasTxSynchronization())
          {
             // Discard instance [EJB 1.1 spec 12.3.1]
             container.getInstanceCache().remove(key);
 
             if(trace)
             {
-               log.trace("Ending invoke, exceptionThrown, ctx=" + ctx);
+               log.trace("Ending invoke, exceptionThrown, ctx=" + ctx, exceptionThrown);
             }
          }
          // The current code signals that an instance should be deleted by 
