@@ -355,8 +355,19 @@
             <rule name="mask" value="^[:alpha:]+$">intake_CodeMustBeAlpha</rule>
             <rule name="maxLength" value="4"/>
         </field>
+        <!--
         <field name="Url" key="url" type="String">
             <rule name="maxLength" value="255"/>
+        </field>
+        -->
+        <field name="Domain" key="domain" type="String">
+            <rule name="maxLength" value="255"/>
+        </field>
+        <field name="Port" key="port" type="String">
+            <rule name="maxLength" value="10"/>
+        </field>
+        <field name="Scheme" key="scheme" type="String">
+            <rule name="maxLength" value="10"/>
         </field>
         <field name="ArchiveEmail" key="email" type="String">
             <rule name="maxLength" value="99"/>
