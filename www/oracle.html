@@ -6,7 +6,7 @@
 <body bgcolor="#ffffff">
 
 <h2>Scarab - Oracle</h2>
-<h4>$Id: oracle.html,v 1.10 2002/09/27 19:29:50 thierrylach Exp $</h4>
+<h4>$Id: oracle.html,v 1.11 2002/11/12 15:20:52 thierrylach Exp $</h4>
 
 <p>
 Scarab has been developed with database independence in mind, however
@@ -20,6 +20,7 @@ document will help improve things for others.
 </p>
 
 <p>
+<h4>Basic instructions</h4>
 In order to get Torque to generate the right Scarab .sql files for
 Oracle, try the following:
 </p>
@@ -63,6 +64,7 @@ issue</a>.
 </p>
 
 <p>
+<h4>Problem loading default data</h4>
 <strike>
 Recently another user has <a
 href="http://scarab.tigris.org/issues/show_bug.cgi?id=259">reported</a>
@@ -72,17 +74,59 @@ The scarab-default-data.sql must be entered manually (in Oracle SQLPlus)
 after changing the default date format:
 <pre>
 SQL&gt;alter session set NLS_DATE_FORMAT='YYYY-MM-DD HH24:MI:SS';
-SQL&gt;scarab-default-data.sql
+SQL&gt;@scarab-default-data.sql
 </pre>
 </strike>
 </p>
 <small>Note: Effective with version 1.0 beta 12, it is no longer necessary
-to manually modify <code>scarab-default-data.sql</code>
+to manually execute <code>scarab-default-data.sql</code>
 for it to load properly on Oracle.
 The above <code>alter session</code>
 is automatically run as part of the standard configuration.
 </small>
 
+
+<h4>Inconsistent Datatypes</h4>
+There is an inconsistency with Turbine's handling
+of <code>BLOB</code> datatypes under Oracle.
+This usually manifests itself with an error similar to the following:
+
+<pre>
+  java.lang.RuntimeException: Please check turbine.log for more info: Failed to retrieve users: ORA-00932: inconsistent datatypes
+	at org.tigris.scarab.om.ScarabModule.getUsers(ScarabModule.java:164)
+	at org.tigris.scarab.tools.ScarabRequestTool.getUsers(ScarabRequestTool.java:1856)
+
+        (remainder of stack trace omitted)
+
+</pre>
+
+There is currently no resolution to this problem.
+<p>
+A workaround is to edit the <code>webapps/scarab/WEB-INF/sql/turbine.sql</code> and
+<code>webapps/scarab/WEB-INF/sql/scheduler.sql</code> files,
+and change the columns defined as <code>BLOB</code>
+to <code>VARCHAR2(4000)</code>. 
+
+<p>
+
+An alternate workaround would be to edit
+<code>webapps/scarab/WEB-INF/src/torque/templates/sql/base/oracle/db.props</code>
+and change the line which reads
+<pre>
+
+VARBINARY = BLOB
+
+</pre>
+to be
+<pre>
+
+VARBINARY = VARCHAR2(4000)
+
+</pre>
+This has the slight advantage of being slightly more persistent -
+the only time that this file changes
+is when a new version of Torque is added into Scarab,
+or when "ant clean" or "ant clean-all" is run.
 
 
 </body>
