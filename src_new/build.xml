@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: build.xml,v 1.123 2003/09/03 23:12:37 linus Exp $
+<!-- $Id: build.xml,v 1.124 2003/09/03 23:17:28 linus Exp $
 This requires ANT 1.4.1
 
 if you get a message like:
@@ -706,7 +706,8 @@ Most useful targets are:
   <!-- =================================================================== -->
   <!-- Run the junit tests.                                                -->
   <!-- =================================================================== -->
-  <target depends="compile,junit-setup,junit-report-clean" name="tests">
+  <target name="tests"
+          depends="compile,junit-setup,junit-report-clean,ant.optional.init">
     <!-- ant 1.4 uses printsummary="true"                          -->
     <!-- ant 1.5 allows printsummary="withOutAndErr"               -->
     <!-- This should never be committed as "withOutAndErr", but    -->
@@ -746,7 +747,8 @@ Most useful targets are:
   <!-- =================================================================== -->
   <!-- Run the junit tests, the ones that include GUI stuff.               -->
   <!-- =================================================================== -->
-  <target depends="compile,junit-setup,junit-report-clean" name="guitests">
+  <target name="guitests"
+          depends="compile,junit-setup,junit-report-clean,ant.optional.init">
     <!-- ant 1.4 uses printsummary="true"                          -->
     <!-- ant 1.5 allows printsummary="withOutAndErr"               -->
     <!-- This should never be committed as "withOutAndErr", but    -->
