@@ -190,6 +190,9 @@ public class Request {
     protected Principal principal;
     // active roles for the current user
     protected String userRoles[];
+    
+    // Security properties required by the config ( web.xml constraints )
+    protected Container security;
     protected String reqRoles[];
 
     // Association with other tomcat comp.
@@ -597,10 +600,28 @@ public class Request {
 	reqRoles=roles;
     }
 
+    /** Return the associated security properties for
+     *	the request. This is set up during mapping using the configured
+     *  constraints. The container holds various security properties that
+     *	are checked using authorize() hook. If no security context is set
+     *  the authorize hook will not be called.
+     */
+    public Container getSecurityContext() {
+	return security;
+    }
+
+    public void setSecurityContext( Container ct ) {
+	security=ct;
+    }
+
+    /** @deprecated use getSecurityContext
+     */
     public String[] getRequiredRoles( ) {
 	return reqRoles;
     }
 
+    /** @deprecated use setSecurityContext
+     */
     public void setUserRoles( String roles[] ) {
 	userRoles=roles;
     }
@@ -1048,6 +1069,7 @@ public class Request {
         notAuthenticated=true;
 	userRoles=null;
 	reqRoles=null;
+	security=null;
 
 	uriMB.recycle();
 	unparsedURIMB.recycle();

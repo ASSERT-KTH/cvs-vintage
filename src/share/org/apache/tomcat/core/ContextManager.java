@@ -887,20 +887,17 @@ public class ContextManager {
 		return;
 	    }
 
-	    String roles[]=req.getRequiredRoles();
-	    if(roles != null ) {
+	    Container sct=req.getSecurityContext();
+	    if(sct != null ) {
 		status=0;
 		BaseInterceptor reqI[];
-		if( req.getContext()==null )
-		    reqI=getContainer().
-			getInterceptors( Container.H_handleError );
-		else
-		    reqI = req.getContext().getContainer().
-			getInterceptors(Container.H_authorize);
+		// assert( req.getContext()!=null ) - checked in processRequest
+		reqI = req.getContext().getContainer().
+		    getInterceptors(Container.H_authorize);
 
 		// Call all authorization callbacks. 
 		for( int i=0; i< reqI.length; i++ ) {
-		    status = reqI[i].authorize( req, res, roles );
+		    status = reqI[i].authorize( req, res, sct.getRoles() );
 		    if ( status != BaseInterceptor.DECLINED ) {
 			break;
 		    }

@@ -283,6 +283,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];
 	    if( match( ct, path, method ) ) {
+		req.setSecurityContext( ct );
+		
+		// Backward compat 
 		String roles[]=ct.getRoles();
 		String methods[]=ct.getMethods();
 		String transport=ct.getTransport();
@@ -317,10 +320,39 @@ public class AccessInterceptor extends  BaseInterceptor  {
      */
     public int authorize( Request req, Response response, String roles[] )
     {
-        if( roles==null || roles.length==0 ) {
+        if( req.getSecurityContext() == null && roles==null) {
             // request doesn't need authentication
             return OK;
         }
+
+	if( roles==null )
+	    roles=req.getSecurityContext().getRoles();
+
+	String transp=null;
+	if( req.getSecurityContext() != null ) {
+	    transp=(String)req.getNote( reqTransportNote );
+	}
+	    
+	// Check transport. We only verify "CONFIDENTIAL", other auth modules
+	// could do other tests
+	if( debug > 0 ) log( "Transport " + transp );
+	if( "CONFIDENTIAL".equalsIgnoreCase(transp) ) {
+	    if( ! req.scheme().equals("https")) {
+		// We could redirect or do something advanced - but the spec
+		// only requires us to deny access. A nice error handler
+		// would also be nice
+		response.setContentType("text/html");
+		response.setStatus( 403 );
+		req.setAttribute("javax.servlet.error.message",
+				 "Invalid transport, CONFIDENTIAL required");
+		return 403;// FORBIDEN
+	    }
+	}
+	
+	// no roles - the request may have only transport constraints
+	if( roles == null || roles.length==0 ) {
+	    return OK;
+	}
 
 	// will call authenticate() hooks to get the user
         String user=req.getRemoteUser();
@@ -606,3 +638,4 @@ class FormSecurityCheckHandler extends Handler {
 	contextM.handleStatus( req, res, 302 ); // redirect
     }
 }
+
