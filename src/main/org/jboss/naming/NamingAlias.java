@@ -13,14 +13,14 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.NameNotFoundException;
 
-import org.jboss.util.ServiceMBean;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBean;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** A simple utility mbean that allows one to create an alias in
 the form of a LinkRef from one JNDI name to another.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
 public class NamingAlias extends ServiceMBeanSupport implements NamingAliasMBean
 {

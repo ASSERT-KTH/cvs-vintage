@@ -36,7 +36,7 @@ import javax.naming.spi.ObjectFactory;
 import org.jnp.server.Main;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** A MBean that binds an arbitrary InitialContext into the JBoss default
 InitialContext as a Reference. If RemoteAccess is enabled, the reference
@@ -47,7 +47,7 @@ that can only be used from within this VM.
 @see org.jboss.naming.NonSerializableFactory
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class ExternalContext extends ServiceMBeanSupport implements ExternalContextMBean
 {

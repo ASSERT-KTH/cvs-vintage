@@ -26,18 +26,18 @@ import org.jboss.ejb.Application;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.ContainerFactoryMBean;
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** A simple utlity mbean that allows one to recursively list the default
 JBoss InitialContext.
 
 Deploy by adding:
-<mbean code="org.jboss.naming.JNDIView" name="DefaultDomain:service=JNDIView" />
+<mbean code="org.jboss.naming.JNDIView" name="JBOSS-SYSTEM:service=JNDIView" />
 to the jboss.jcml file.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.8 $
+@version $Revision: 1.9 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {

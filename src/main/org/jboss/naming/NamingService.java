@@ -23,13 +23,13 @@ import javax.naming.StringRefAddr;
 import org.jnp.server.Main;
 
 import org.jboss.logging.Log;
-import org.jboss.util.ServiceMBeanSupport;
+import org.jboss.system.ServiceMBeanSupport;
 
 /** A JBoss service that starts the jnp JNDI server.
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.15 $
+ *   @version $Revision: 1.16 $
  *
  * Revisions:
  * 20010622 scott.stark: Report IntialContext env for problem tracing

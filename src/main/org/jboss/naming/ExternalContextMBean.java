@@ -12,9 +12,9 @@ import javax.naming.NamingException;
 /** The ExternalContext mbean interface.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
-public interface ExternalContextMBean extends org.jboss.util.ServiceMBean
+public interface ExternalContextMBean extends org.jboss.system.ServiceMBean
 {
     /** Get the jndi name under which the external context is bound.
     */

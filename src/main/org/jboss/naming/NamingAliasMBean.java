@@ -12,9 +12,9 @@ import javax.naming.NamingException;
 the form of a LinkRef from one JNDI name to another.
 
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.3 $
+@version $Revision: 1.4 $
 */
-public interface NamingAliasMBean extends org.jboss.util.ServiceMBean
+public interface NamingAliasMBean extends org.jboss.system.ServiceMBean
 {
     /** Get the from name of the alias. This is the location where the
         LinkRef is bound under JNDI.

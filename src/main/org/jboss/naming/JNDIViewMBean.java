@@ -13,9 +13,9 @@ import javax.naming.NamingException;
  *   
  *      
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
-public interface JNDIViewMBean extends org.jboss.util.ServiceMBean
+public interface JNDIViewMBean extends org.jboss.system.ServiceMBean
 {
     // Constants -----------------------------------------------------
     public static final String OBJECT_NAME = ":service=JNDIView";

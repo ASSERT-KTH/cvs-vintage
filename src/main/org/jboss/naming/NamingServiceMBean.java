@@ -11,10 +11,10 @@ package org.jboss.naming;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public interface NamingServiceMBean
-   extends org.jboss.util.ServiceMBean, org.jnp.server.MainMBean
+   extends org.jboss.system.ServiceMBean, org.jnp.server.MainMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=Naming";
