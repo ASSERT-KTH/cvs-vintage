@@ -39,7 +39,7 @@ public class NewMessageAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_message_new"));
-		setToolBarText(
+		setToolBarName(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
@@ -49,7 +49,6 @@ public class NewMessageAction extends FrameAction {
 				"menu",
 				"mainframe",
 				"menu_message_new_tooltip"));
-		setActionCommand("NEW_MESSAGE");
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
 		setAcceleratorKey(
@@ -71,5 +70,4 @@ public class NewMessageAction extends FrameAction {
 			new ComposerController();
 
 	}
-
 }

@@ -40,9 +40,6 @@ public class CutAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_cut_tooltip"));
 					
-		// action command
-		setActionCommand("CUT");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_cut-16.png"));
 		
@@ -50,7 +47,7 @@ public class CutAction extends FrameAction {
 		setLargeIcon(ImageLoader.getImageIcon("stock_cut.png"));
 
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		// short cut key
 		setAcceleratorKey(
@@ -59,7 +56,6 @@ public class CutAction extends FrameAction {
 
 		setEnabled(false);	
 		MainInterface.focusManager.setCutAction(this);
-		
 	}
 
 	/* (non-Javadoc)
@@ -75,5 +71,4 @@ public class CutAction extends FrameAction {
 	public boolean isSingleton() {
 		return true;
 	}
-
 }

@@ -50,7 +50,7 @@ public class MoveMessageAction
 					"menu", "mainframe", "menu_message_move"));
 		
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_move_toolbar"));
 		
@@ -59,15 +59,12 @@ public class MoveMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_move_tooltip"));
 		
-		// action command
-		setActionCommand("MOVE_MESSAGE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("movemessage_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("move-message.png"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(

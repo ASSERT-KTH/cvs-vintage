@@ -46,13 +46,10 @@ public class ReceiveSendAction extends FrameAction {
 					"menu", "mainframe", "menu_file_receivesend_tooltip"));
 					
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_file_receivesend_toolbar"));
 		
-		// action command
-		setActionCommand("RECEIVESEND");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("send-receive.png"));
 		

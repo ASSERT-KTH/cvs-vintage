@@ -57,7 +57,7 @@ public class ShowContextSpecificHelpAction extends FrameAction {
 		
 		setTooltipText("Context-specific help");
 		
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		target = new CSH.DisplayHelpAfterTracking(HelpManager.getHelpBroker());
 	}

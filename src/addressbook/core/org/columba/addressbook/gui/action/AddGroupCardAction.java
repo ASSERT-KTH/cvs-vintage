@@ -46,18 +46,14 @@ public class AddGroupCardAction extends FrameAction {
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_file_addgroup_tooltip"));
 					
-		setToolBarText(
+		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_addgroup_toolbar"));
-		enableToolBarText(true);
-		
-		// action command
-		setActionCommand("ADDGROUP");
+		setShowToolBarText(true);
 		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("group_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("group.png"));
-
 	}
 
 	/* (non-Javadoc)
@@ -93,5 +89,4 @@ public class AddGroupCardAction extends FrameAction {
 			addressbookFrameController.getTable().getView().setFolder(folder);
 		}
 	}
-
 }

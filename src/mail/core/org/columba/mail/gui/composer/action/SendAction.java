@@ -52,13 +52,10 @@ public class SendAction extends FrameAction {
 					"menu", "composer", "menu_file_send_tooltip"));
 
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_file_send_toolbar"));
-		enableToolBarText(true);
-		
-		// action command
-		setActionCommand("SEND");
+		setShowToolBarText(true);
 		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("send-24.png"));
@@ -70,7 +67,6 @@ public class SendAction extends FrameAction {
 		setAcceleratorKey(
 				KeyStroke.getKeyStroke(
 					KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
-	
 	}
 
 	/* (non-Javadoc)

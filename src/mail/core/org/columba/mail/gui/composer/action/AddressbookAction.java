@@ -44,9 +44,6 @@ public class AddressbookAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_message_addressbook_tooltip"));
 		
-		// action command
-		setActionCommand("ADDRESSBOOK");
-		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("contact.png"));
 		
@@ -54,15 +51,13 @@ public class AddressbookAction extends FrameAction {
 		setSmallIcon(ImageLoader.getImageIcon("contact_small.png"));
 		
 		// disable text in toolbar
-		enableToolBarText(false);
-
+		setShowToolBarText(false);
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
 		ComposerController composerController =
 			((ComposerController) getFrameMediator());
 
@@ -85,5 +80,4 @@ public class AddressbookAction extends FrameAction {
 			dialog.getHeaderItemLists());
 
 	}
-
 }

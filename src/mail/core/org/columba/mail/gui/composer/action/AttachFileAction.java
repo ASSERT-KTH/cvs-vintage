@@ -35,13 +35,10 @@ public class AttachFileAction extends FrameAction {
 					"menu", "composer", "menu_message_attachFile_tooltip"));
 		
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "composer", "menu_message_attachFile_toolbar"));
-		enableToolBarText(true);
-		
-		// action command
-		setActionCommand("ATTACH");
+		setShowToolBarText(true);
 		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("stock_attach.png"));
@@ -49,9 +46,8 @@ public class AttachFileAction extends FrameAction {
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_attach-16.png"));
 		
-//		shortcut key
+                //shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
-
 	}
 
 	
@@ -64,5 +60,4 @@ public class AttachFileAction extends FrameAction {
 		composerController.getAttachmentController().addFileAttachment();
 		
 	}
-
 }

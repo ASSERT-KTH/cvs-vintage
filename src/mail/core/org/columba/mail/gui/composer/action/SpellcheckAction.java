@@ -35,9 +35,6 @@ public class SpellcheckAction extends FrameAction {
 				MailResourceLoader.getString(
 					"menu", "composer",	"menu_message_spellCheck_tooltip"));
 		
-		// action command
-		setActionCommand("SPELLCHECK");
-		
 		// large icon for toolbar
 		setLargeIcon(ImageLoader.getImageIcon("stock_spellcheck_24.png"));
 		
@@ -45,11 +42,10 @@ public class SpellcheckAction extends FrameAction {
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
 		
 		// disable text in toolbar
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
-//		shortcut key
+                //shortcut key
 		setAcceleratorKey(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-		
 	}
 
 	/* (non-Javadoc)
@@ -70,5 +66,4 @@ public class SpellcheckAction extends FrameAction {
 		//composerController.getEditorController().getView().setText(checked);
 		composerController.getEditorController().setViewText(checked);
 	}
-
 }

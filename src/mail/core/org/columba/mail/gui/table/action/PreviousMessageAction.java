@@ -51,9 +51,6 @@ public class PreviousMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_prevmessage_tooltip"));
 
-		// action command
-		setActionCommand("PREV_MESSAGE");
-		
 		// icons
 		setLargeIcon(ImageLoader.getSmallImageIcon("previous-message.png"));
 		
@@ -61,7 +58,7 @@ public class PreviousMessageAction
 		setAcceleratorKey(KeyStroke.getKeyStroke("B"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 			
 		setEnabled(false);
 		// uncomment to enable action

@@ -40,9 +40,6 @@ public class CopyAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_copy_tooltip"));
 		
-		// action command
-		setActionCommand("COPY");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_copy-16.png"));
 		
@@ -55,7 +52,7 @@ public class CopyAction extends FrameAction {
 					KeyEvent.VK_C, ActionEvent.CTRL_MASK));
 
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		setEnabled(false);
 		MainInterface.focusManager.setCopyAction(this);

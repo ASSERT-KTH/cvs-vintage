@@ -75,32 +75,29 @@ public abstract class BasicAction extends AbstractAction {
 	 * Example: Reply to Sender -> Reply
 	 * 
 	 */
-	public String TOOLBAR_NAME;
+	public static final String TOOLBAR_NAME = "ToolbarName";
 
 	/**
 	 * The toolbar uses the large icon, whereas menuitems 
 	 * use the small one.
 	 * 
 	 */
-	public ImageIcon LARGE_ICON;
-
-	/**
-	 * show button text in toolbar
-	 */
-	boolean showToolbarText = true;
-
+	public static final String LARGE_ICON = "LargeIcon";
 
 	/**
 	 * JavaHelp topic ID
 	 */
-	public String topicID=null;
+	public static final String TOPIC_ID = "TopicID";
 	
+	/**
+	 * show button text in toolbar
+	 */
+	protected boolean showToolbarText = true;
+
 	/**
 	 * default constructor
 	 */
-	public BasicAction() {
-
-	}
+	public BasicAction() {}
 
 	/**
 	 * default constructor
@@ -166,16 +163,9 @@ public abstract class BasicAction extends AbstractAction {
 	}
 
 	/**
-	 * Enable/Disable text in toolbar button.
-	 * 
-	 * @param b	true/false
-	 */
-	public void enableToolBarText(boolean b) {
-		showToolbarText = b;
-	}
-
-	/**
-	 * Return accelerator key.
+	 * Return accelerator key. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return		accelerator key of action
 	 */
@@ -184,7 +174,9 @@ public abstract class BasicAction extends AbstractAction {
 	}
 	
 	/**
-	 * Set accelerator key.
+	 * Set accelerator key. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param k		new shortcut
 	 */
@@ -219,47 +211,57 @@ public abstract class BasicAction extends AbstractAction {
 	}
 
 	/**
-	 * Return large icon, used in toolbar
+	 * Return large icon, used in toolbar. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return		large icon
 	 */
 	public ImageIcon getLargeIcon() {
-		return LARGE_ICON;
+		return (ImageIcon)getValue(LARGE_ICON);
 	}
 	
 	/**
-	 * Set large image icon, used in toolbars
+	 * Set large image icon, used in toolbars. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param i		image icon
 	 */
-	public void setLargeIcon( ImageIcon i )
+	public void setLargeIcon(ImageIcon i)
 	{
-		LARGE_ICON = i;
+		putValue(LARGE_ICON, i);
 	}
 
 	/**
 	 * Return toolbar button name, which is usually shorter
-	 * than the regular action label.
+	 * than the regular action label. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return		toolbar name
 	 */
 	public String getToolBarName() {
-		return TOOLBAR_NAME;
+		return (String)getValue(TOOLBAR_NAME);
 	}
 	
 	/**
 	 * Set toolbar name, which is usually shorter than the regular
-	 * action label.
+	 * action label. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param s		new toolbar name
 	 */
-	public void setToolBarText( String s) 
+	public void setToolBarName(String s) 
 	{
-		TOOLBAR_NAME = s;
+		putValue(TOOLBAR_NAME, s);
 	}
 
 	/**
-	 * Return small icon, used by menuitems.
+	 * Return small icon, used by menuitems. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return		small icon
 	 */
@@ -268,7 +270,9 @@ public abstract class BasicAction extends AbstractAction {
 	}
 	
 	/**
-	 * Set small icon, used by the menuitems
+	 * Set small icon, used by the menuitems. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param i		new small icon
 	 */
@@ -278,7 +282,9 @@ public abstract class BasicAction extends AbstractAction {
 	}
 	
 	/**
-	 * Set new mnemonic for this action.
+	 * Set new mnemonic for this action. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param mnemonic	new mnemonic
 	 */
@@ -289,7 +295,9 @@ public abstract class BasicAction extends AbstractAction {
 	
 	/**
 	 * Return mnemonic. Used in the menuitem to underline a 
-	 * specific character as a shortcut.
+	 * specific character as a shortcut. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return	mnemonic
 	 */
@@ -325,7 +333,7 @@ public abstract class BasicAction extends AbstractAction {
 		putValue(NAME, name);
 		putValue(LONG_DESCRIPTION, longDescription);
 		putValue(SMALL_ICON, small_icon);
-		LARGE_ICON = big_icon;
+		putValue(LARGE_ICON, big_icon);
 
 		//putValue(Action.SHORT_DESCRIPTION, longDescription);
 		setTooltipText(tooltip);
@@ -333,7 +341,7 @@ public abstract class BasicAction extends AbstractAction {
 		putValue(ACCELERATOR_KEY, keyStroke);
 		putValue(MNEMONIC_KEY, new Integer(mnemonic));
 
-		TOOLBAR_NAME = name;
+		putValue(TOOLBAR_NAME, name);
 	}
 
 	/**
@@ -373,21 +381,25 @@ public abstract class BasicAction extends AbstractAction {
 	}
 	
 	/**
-	 * Return JavaHelp topic ID
+	 * Return JavaHelp topic ID. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @return		topic ID
 	 */
 	public String getTopicID() {
-		return topicID;
+		return (String)getValue(TOPIC_ID);
 	}
 
 	/**
-	 * Set JavaHelp topic ID
+	 * Set JavaHelp topic ID. NOTE: This method will soon be removed.
+         * BasicAction subclasses should directly communicate with the underlying
+         * Hashtable instead of using there accessor methods.
 	 * 
 	 * @param string	new topic ID
 	 */
 	public void setTopicID(String string) {
-		topicID = string;
+		putValue(TOPIC_ID, string);
 	}
 
 	/**

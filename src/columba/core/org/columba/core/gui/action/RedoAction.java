@@ -42,9 +42,6 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_redo_tooltip"));
 		
-		// action command
-		setActionCommand("REDO");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_redo-16.png"));
 		
@@ -52,7 +49,7 @@ public class RedoAction extends FrameAction implements WorkerListChangeListener 
 		setLargeIcon(ImageLoader.getImageIcon("stock_redo.png"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		// shortcut key
 		setAcceleratorKey(

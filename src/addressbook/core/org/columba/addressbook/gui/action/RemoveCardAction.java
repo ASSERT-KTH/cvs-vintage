@@ -44,18 +44,14 @@ public class RemoveCardAction extends FrameAction {
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_file_remove_tooltip"));
 					
-		setToolBarText(
+		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_remove_toolbar"));
-		enableToolBarText(true);
-		
-		// action command
-		setActionCommand("REMOVE");
+		setShowToolBarText(true);
 		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
-
 	}
 
 	/* (non-Javadoc)
@@ -78,5 +74,4 @@ public class RemoveCardAction extends FrameAction {
 		}
 		addressbookFrameController.getTable().getView().setFolder(folder);
 	}
-
 }

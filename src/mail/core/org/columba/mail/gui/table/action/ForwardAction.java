@@ -67,9 +67,6 @@ public class ForwardAction
 				"mainframe",
 				"menu_message_forward_tooltip"));
 
-		// action command
-		setActionCommand("FORWARD");
-
 		// icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("forward_small.png"));
 
@@ -81,12 +78,12 @@ public class ForwardAction
 			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 
 		// toolbar text is usually a bit shorter
-		setToolBarText(
+		setToolBarName(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
 				"menu_message_forward_toolbar"));
-		enableToolBarText(true);
+		setShowToolBarText(true);
 
 		setEnabled(false);
 		(
@@ -143,5 +140,4 @@ public class ForwardAction
 		forwardStyle = forward.getAttribute("style", "attachment");
 
 	}
-
 }

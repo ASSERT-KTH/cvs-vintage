@@ -40,9 +40,6 @@ public class PasteAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null,	"menu_edit_paste_tooltip"));
 		
-		// action command
-		setActionCommand("PASTE");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_paste-16.png"));
 		
@@ -55,7 +52,7 @@ public class PasteAction extends FrameAction {
 					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		// shortcut key
 		setAcceleratorKey(
@@ -74,9 +71,9 @@ public class PasteAction extends FrameAction {
 	}
 	
 	/* (non-Javadoc)
-		 * @see org.columba.core.action.FrameAction#isSingleton()
-		 */
-		public boolean isSingleton() {
-			return true;
-		}
+         * @see org.columba.core.action.FrameAction#isSingleton()
+         */
+        public boolean isSingleton() {
+                return true;
+        }
 }

@@ -42,9 +42,6 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_undo_tooltip"));
 		
-		// action command
-		setActionCommand("UNDO");
-
 		// small icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_undo-16.png"));
 		
@@ -57,7 +54,7 @@ public class UndoAction extends FrameAction implements WorkerListChangeListener 
 					KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
 
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		setEnabled(false);
 			

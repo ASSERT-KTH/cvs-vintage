@@ -57,16 +57,13 @@ public class ReplyAction extends FrameAction implements SelectionListener {
 				"menu_message_reply_tooltip"));
 
 		// toolbar text is usually a bit shorter
-		setToolBarText(
+		setToolBarName(
 			MailResourceLoader.getString(
 				"menu",
 				"mainframe",
 				"menu_message_reply_toolbar"));
 
-		enableToolBarText(true);
-
-		// action command
-		setActionCommand("REPLY");
+		setShowToolBarText(true);
 
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("reply_small.png"));

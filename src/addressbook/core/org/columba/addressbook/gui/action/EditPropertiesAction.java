@@ -50,18 +50,14 @@ public class EditPropertiesAction extends FrameAction {
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_file_properties_tooltip"));
 					
-		setToolBarText(
+		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_properties_toolbar"));
-		enableToolBarText(true);
+		setShowToolBarText(true);
 					
-		// action command
-		setActionCommand("PROPERTIES");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_edit-16.png"));
 		setLargeIcon(ImageLoader.getImageIcon("stock_edit.png"));
-
 	}
 
 	/* (non-Javadoc)
@@ -90,8 +86,6 @@ public class EditPropertiesAction extends FrameAction {
 
 		if (item.isContact()) {
 			ContactCard card = (ContactCard) folder.get(uid);
-			System.out.println("card:" + card);
-
 			ContactDialog dialog =
 				new ContactDialog(addressbookFrameController.getView());
 
@@ -99,10 +93,6 @@ public class EditPropertiesAction extends FrameAction {
 			dialog.setVisible(true);
 
 			if (dialog.getResult()) {
-				System.out.println("saving contact");
-
-				// Ok
-
 				dialog.updateComponents(card, false);
 				folder.modify(card, uid);
 
@@ -133,5 +123,4 @@ public class EditPropertiesAction extends FrameAction {
 			}
 		}
 	}
-
 }

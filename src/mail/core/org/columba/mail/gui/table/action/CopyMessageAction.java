@@ -50,7 +50,7 @@ public class CopyMessageAction
 					"menu", "mainframe", "menu_message_copy"));
 		
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_copy_toolbar"));
 		
@@ -59,15 +59,12 @@ public class CopyMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_copy_tooltip"));
 		
-		// action command
-		setActionCommand("COPY_MESSAGE");
-		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("copymessage_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("copy-message.png"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
@@ -99,8 +96,8 @@ public class CopyMessageAction
 	}
 
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}

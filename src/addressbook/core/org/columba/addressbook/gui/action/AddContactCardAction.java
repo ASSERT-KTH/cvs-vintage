@@ -46,18 +46,14 @@ public class AddContactCardAction extends FrameAction {
 				AddressbookResourceLoader.getString(
 					"menu", "mainframe", "menu_file_addcontact_tooltip"));
 					
-		setToolBarText(
+		setToolBarName(
 						AddressbookResourceLoader.getString(
 							"menu", "mainframe", "menu_file_addcontact_toolbar"));
-		enableToolBarText(true);
-		
-		// action command
-		setActionCommand("ADDCONTACT");
+		setShowToolBarText(true);
 		
 		// icons
 		setSmallIcon(ImageLoader.getSmallImageIcon("contact_small.png"));
 		setLargeIcon(ImageLoader.getImageIcon("contact.png"));
-
 	}
 
 	/* (non-Javadoc)
@@ -69,22 +65,17 @@ public class AddContactCardAction extends FrameAction {
 		ContactDialog dialog =
 				new ContactDialog(addressbookFrameController.getView());
 
-			dialog.setVisible(true);
-			if (dialog.getResult()) {
-				System.out.println("saving contact");
+                dialog.setVisible(true);
+                if (dialog.getResult()) {
+                        ContactCard card = new ContactCard();
 
-				// Ok
+                        dialog.updateComponents(card, false);
 
-				ContactCard card = new ContactCard();
+                        Folder folder = addressbookFrameController.getTree().getView().getSelectedFolder();
 
-				dialog.updateComponents(card, false);
+                        folder.add(card);
 
-				Folder folder = addressbookFrameController.getTree().getView().getSelectedFolder();
-
-				folder.add(card);
-
-				addressbookFrameController.getTable().getView().setFolder(folder);
-			}
+                        addressbookFrameController.getTable().getView().setFolder(folder);
+                }
 	}
-
 }

@@ -40,9 +40,6 @@ public class DeleteAction extends FrameAction {
 				GlobalResourceLoader.getString(
 					null, null, "menu_edit_delete_tooltip"));
 					
-		// action command
-		setActionCommand("DELETE");
-		
 		// small icon for menu
 		setSmallIcon(ImageLoader.getImageIcon("stock_delete-16.png"));
 		
@@ -50,7 +47,7 @@ public class DeleteAction extends FrameAction {
 		setLargeIcon(ImageLoader.getImageIcon("stock_delete.png"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		// short cut key
 		setAcceleratorKey(
@@ -65,5 +62,4 @@ public class DeleteAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		MainInterface.focusManager.delete();
 	}
-
 }

@@ -54,9 +54,6 @@ public class NextMessageAction
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_view_nextmessage_tooltip"));
 
-		// action command
-		setActionCommand("NEXT_MESSAGE");
-		
 		// icons
 		setLargeIcon(ImageLoader.getSmallImageIcon("next-message.png"));
 
@@ -64,7 +61,7 @@ public class NextMessageAction
 		setAcceleratorKey(KeyStroke.getKeyStroke("F"));
 		
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 
 		setEnabled(false);
 		

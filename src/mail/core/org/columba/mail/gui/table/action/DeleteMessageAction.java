@@ -54,7 +54,7 @@ public class DeleteMessageAction
 					"menu", "mainframe", "menu_message_delete"));
 					
 		// toolbar text
-		setToolBarText(
+		setToolBarName(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_delete_toolbar"));
 		
@@ -62,9 +62,6 @@ public class DeleteMessageAction
 		setTooltipText(
 				MailResourceLoader.getString(
 					"menu", "mainframe", "menu_message_delete_tooltip"));
-		
-		// action command
-		setActionCommand("DELETE_MESSAGE");
 		
 		// icon for menu
 		setSmallIcon(ImageLoader.getSmallImageIcon("stock_delete-16.png"));
@@ -77,7 +74,7 @@ public class DeleteMessageAction
 				KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 
 		// disable toolbar text
-		enableToolBarText(false);
+		setShowToolBarText(false);
 		
 		setEnabled(false);
 		((AbstractMailFrameController) frameController).registerTableSelectionListener(
@@ -99,7 +96,7 @@ public class DeleteMessageAction
 		//Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
 
 		// trash folder has uid==105
-		if (uid == trash.getUid() ) {
+		if (uid == trash.getUid()) {
 			// trash folder is selected
 			//  -> delete message
 
@@ -125,8 +122,8 @@ public class DeleteMessageAction
 		}
 	}
 	/* (non-Javadoc)
-			 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-			 */
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
 	public void selectionChanged(SelectionChangedEvent e) {
 		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
 	}
