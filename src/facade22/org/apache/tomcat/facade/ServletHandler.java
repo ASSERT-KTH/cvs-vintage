@@ -420,13 +420,7 @@ public final class ServletHandler extends Handler {
 		Exception ex=getErrorException();
 		// save error state on request and response
 		saveError( req, res, ex );
-		// if in included, defer handling to higher level
-		if (res.isIncluded()) return;
-		// handle init error since at top level
-		if( ex instanceof ClassNotFoundException )
-		    contextM.handleStatus( req, res, 404 );
-		else
-		    contextM.handleError( req, res, ex );
+		handleInitError( req, res, ex );
 		return;
 	    } 
 	}
@@ -453,11 +447,7 @@ public final class ServletHandler extends Handler {
 
 	// if unavailable
 	if( ! checkAvailable( req, res ) ) {
-	    // if in included, defer handling to higher level
-	    if ( res.isIncluded() )
-		return;
-	    // otherwise handle error
-	    contextM.handleError( req, res, req.getErrorException());
+	    handleServiceError( req, res, req.getErrorException());
 	    return; // we can't handle it
 	}
 
@@ -494,9 +484,9 @@ public final class ServletHandler extends Handler {
 		setState( STATE_DISABLED );
 		// XXX spec says we must destroy the servlet
 	    }
-	    if ( null != getErrorException() ) {
+	    if ( null == getErrorException() ) {
 		synchronized(this) {
-		    if ( null!= getErrorException() ) {
+		    if ( null == getErrorException() ) {
 			if ( state == STATE_DISABLED )
 			    // servlet exception state
 			    setErrorException( ex );
@@ -506,8 +496,26 @@ public final class ServletHandler extends Handler {
 		    }
 		}
 	    }
+	    throw ex;
 	}
 	// other exceptions will be thrown
+    }
+
+    protected void handleInitError( Request req, Response res, Throwable t )
+    {
+	// if in included, defer handling to higher level
+	if (res.isIncluded()) return;
+	if( t instanceof ClassNotFoundException )
+	    contextM.handleStatus( req, res, 404 );
+	else
+	    contextM.handleError( req, res, t );
+    }
+
+    protected void handleServiceError( Request req, Response res, Throwable t )
+    {
+	// if in included, defer handling to higher level
+	if (res.isIncluded()) return;
+	contextM.handleError( req, res, t );
     }
 
     // -------------------- Unavailable --------------------

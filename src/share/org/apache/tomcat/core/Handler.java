@@ -235,21 +235,16 @@ public class Handler {
 	    reqI[i].postService( req, res );
 	}
 
-	// if no error
-	if( serviceException == null ) return;
-
-	// if in included, defer handling to higher level
-	if (res.isIncluded()) return;
-	
-	// handle original error since at top level
-	contextM.handleError( req, res, res.getErrorException() );
+	// if error, handle
+	if( serviceException != null )
+	    handleServiceError( req, res, serviceException );
     }
 
     // -------------------- methods you can override --------------------
     
     protected void handleServiceError( Request req, Response res, Throwable t )
     {
-	// XXX TODO
+	contextM.handleError( req, res, t );
     }
     
     /** Reload notification. This hook is called whenever the
