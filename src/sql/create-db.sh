@@ -1,20 +1,20 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.16 2002/11/06 23:20:47 jon Exp $
+# $Id: create-db.sh,v 1.17 2003/02/01 02:15:33 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
 PATHNAME=`echo $0 | sed "s,$CMDNAME\$,,"`
 
+# defaults
 DB_SETTINGS="dbsettings.props"
-POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
-LOAD_ORDER="LoadOrder.lst"
-
 DB_USER="${USER}"
 DB_NAME='scarab'
 DB_HOST='localhost'
 DB_PORT='3306'
+LOAD_ORDER="LoadOrder.lst"
+POPULATION_SCRIPT_DIR='../../target/webapps/scarab/WEB-INF/sql'
 
 # execute the settings file
 if [ -f "${POPULATION_SCRIPT_DIR}/${DB_SETTINGS}" ] ; then
@@ -69,12 +69,6 @@ do
     shift
 done
 
-if [ -f "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
-    dbtype="mysql"
-elif [ -f "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
-    dbtype="postgresql"
-fi
-
 ####### Sanity checks
 if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo
@@ -82,8 +76,12 @@ if [ ! -d "${POPULATION_SCRIPT_DIR}" ] ; then
     echo "${POPULATION_SCRIPT_DIR}"
     echo "does not exist. Please build Scarab first using the"
     echo "Ant build system as described in the scarab/README.txt file."
+    echo "If Scarab is already built and you have defined a different"
+    echo "context, then you must specifiy the -s option to this script"
+    echo "to define the path to the directory."
     usage=t
 fi
+
 ####### Sanity checks
 
 if [ "${usage}" ] ; then
@@ -111,6 +109,12 @@ if [ "${usage}" ] ; then
     echo "  -?, --help                 Usage"
     echo
     exit 0
+fi
+
+if [ -f "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
+    dbtype="mysql"
+elif [ -f "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
+    dbtype="postgresql"
 fi
 
 if [ -z "${quiet}" ] ; then

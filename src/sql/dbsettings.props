@@ -6,7 +6,7 @@
 # define the database properties in your build.properties as
 # outlined in the scarab/README.txt file.
 #
-# $Id: dbsettings.props,v 1.3 2002/07/09 23:02:05 jon Exp $
+# $Id: dbsettings.props,v 1.4 2003/02/01 02:15:33 jon Exp $
 #
 # Username to connect with
 DB_USER='@DATABASE_USERNAME@'
@@ -20,3 +20,6 @@ DB_HOST='@DATABASE_HOST@'
 # The file which specifies the load order for 
 # creating the database
 LOAD_ORDER='@DATABASE_LOADORDER@'
+
+# The directory where the sql scripts are created
+POPULATION_SCRIPT_DIR='../../target/webapps/@SCARAB_CONTEXT@/WEB-INF/sql'
