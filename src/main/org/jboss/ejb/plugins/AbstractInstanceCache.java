@@ -63,7 +63,7 @@ import org.jboss.monitor.MetricsConstants;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  *
  *   <p><b>Revisions:</b>
  *
@@ -81,6 +81,10 @@ import org.jboss.monitor.MetricsConstants;
  *   <li>Locking is now separate from EntityEnterpriseContext objects and is now
  *   encapsulated in BeanLock and BeanLockManager.  Did this because the lifetime
  *   of an EntityLock is sometimes longer than the lifetime of the ctx.
+ * </ol>
+ * <p><b>2001/08/07: billb</b>
+ * <ol>
+ *   <li>releaseLockRef should be enclosed in peek in remove()
  * </ol>
  */
 public abstract class AbstractInstanceCache
@@ -280,11 +284,11 @@ public abstract class AbstractInstanceCache
          if (getCache().peek(id) != null)
          {
             getCache().remove(id);
+            // When we introduced the bean in the cache we used the get to increase the lock count
+            // now we decrease it and if the count is zero the manager will release the object from memory
+            getContainer().getLockManager().removeLockRef(id);
          }
       }
-      // When we introduced the bean in the cache we used the get to increase the lock count
-      // now we decrease it and if the count is zero the manager will release the object from memory
-      getContainer().getLockManager().removeLockRef(id);
    }
  
    public boolean isActive(Object id)
