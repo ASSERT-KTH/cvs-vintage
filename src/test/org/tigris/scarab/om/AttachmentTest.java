@@ -58,7 +58,7 @@ import org.apache.commons.fileupload.FileItem;
  * A Testing Suite for the om.Attachment class.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttachmentTest.java,v 1.10 2003/09/11 15:56:51 thierrylach Exp $
+ * @version $Id: AttachmentTest.java,v 1.11 2003/09/11 17:07:32 dlr Exp $
  */
 public class AttachmentTest extends BaseTestCase
 {
@@ -152,8 +152,8 @@ public class AttachmentTest extends BaseTestCase
     {
         System.out.println("\ngetFullPath()");
         File control = new File(fileAttachment.getFullPath());
-		File testPath = new File(fileAttachment.getRepositoryDirectory() 
-		    + "/" + fileAttachment.getRelativePath());
+        File testPath = new File(fileAttachment.getRepositoryDirectory(),
+                                 fileAttachment.getRelativePath());
         assertEquals(control.getPath(), testPath.getPath());
     }
 
