@@ -17,7 +17,7 @@ import org.jboss.ejb.MethodInvocation;
 import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.SecurityIdentityMetaData;
 import org.jboss.security.AnybodyPrincipal;
-import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SecurityAssociation;
 import org.jboss.security.SimplePrincipal;
@@ -27,7 +27,7 @@ is enforced. This is where the caller identity propagation is controlled as well
 
 @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
 @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
-@version $Revision: 1.26 $
+@version $Revision: 1.27 $
 */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -42,7 +42,7 @@ public class SecurityInterceptor extends AbstractInterceptor
      * @supplierQualifier authentication
      * @clientCardinality 1..*
      */
-    protected EJBSecurityManager securityManager;
+    protected AuthenticationManager securityManager;
 
     /**
      * @supplierCardinality 0..1

@@ -18,7 +18,7 @@ import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 
-import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.AuthenticationManager;
 import org.jboss.security.SecurityProxy;
 import org.jboss.security.SecurityProxyFactory;
 
@@ -30,7 +30,7 @@ import org.jboss.security.SecurityProxyFactory;
  * interceptor has access to the EJB instance and context.
  * 
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -51,7 +51,7 @@ public class SecurityProxyInterceptor
     */
    protected Container container;
 
-   protected EJBSecurityManager securityManager;
+   protected AuthenticationManager securityManager;
 
    /**
     * @supplierCardinality 0..1

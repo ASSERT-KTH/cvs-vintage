@@ -50,7 +50,7 @@ import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 
 import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.62 $
+ * @version $Revision: 1.63 $
  *
  * <p><b>Revisions:</b>
  *
@@ -126,7 +126,7 @@ public abstract class Container implements DynamicMBean
    protected TransactionManager tm;
 
    /** This is the SecurityManager */
-   protected EJBSecurityManager sm;
+   protected AuthenticationManager sm;
 
    /** This is the realm mapping */
    protected RealmMapping rm;
@@ -192,12 +192,12 @@ public abstract class Container implements DynamicMBean
       return tm;
    }
 
-   public void setSecurityManager(EJBSecurityManager sm)
+   public void setSecurityManager(AuthenticationManager sm)
    {
       this.sm = sm;
    }
 
-   public EJBSecurityManager getSecurityManager()
+   public AuthenticationManager getSecurityManager()
    {
       return sm;
    }

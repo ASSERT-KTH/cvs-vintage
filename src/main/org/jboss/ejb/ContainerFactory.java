@@ -41,7 +41,7 @@ import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlFileLoader;
 import org.jboss.metadata.XmlLoadable;
-import org.jboss.security.EJBSecurityManager;
+import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
 import org.jboss.system.ServiceMBeanSupport;
 import org.jboss.util.MBeanProxy;
@@ -70,7 +70,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.102 $
+* @version $Revision: 1.103 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
@@ -714,7 +714,7 @@ public class ContainerFactory
                confSecurityDomain = securityDomain;
             //System.out.println("lookup securityDomain manager name: "+confSecurityDomain);
             Object securityMgr = iniCtx.lookup(confSecurityDomain);
-            EJBSecurityManager ejbS = (EJBSecurityManager) securityMgr;
+            AuthenticationManager ejbS = (AuthenticationManager) securityMgr;
             RealmMapping rM = (RealmMapping) securityMgr;
             container.setSecurityManager( ejbS );
             container.setRealmMapping( rM );
