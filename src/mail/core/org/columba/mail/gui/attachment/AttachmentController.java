@@ -98,6 +98,7 @@ public class AttachmentController {
     }
 
     private JPopupMenu getPopupMenu() {
+    	// bug #999990 (fdietz): make sure popup menu is created correctly
     	if ( menu == null) createPopupMenu();
     	
         return menu;

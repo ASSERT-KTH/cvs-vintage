@@ -61,6 +61,7 @@ public class OpenAction extends AbstractColumbaAction implements
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
+		// bug #999990 (fdietz) check if attachment is really selected
 		FolderCommandReference[] ref = (FolderCommandReference[]) getFrameMediator()
 				.getSelectionManager().getHandler("mail.attachment")
 				.getSelection();
