@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.command;
 
-import java.awt.Container;
-
-import javax.swing.JScrollPane;
-import javax.swing.tree.TreePath;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
@@ -98,23 +93,6 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 
 		MainInterface.treeModel.nodeChanged(folder);
 
-		Container c =
-			((MailFrameController) frameController)
-				.tableController
-				.getView()
-				.getParent()
-				.getParent();
-
-		JScrollPane scrollPane = (JScrollPane) c;
-		scrollPane.revalidate();
-
-		if (!ascending)
-			scrollPane.getVerticalScrollBar().setValue(0);
-		else {
-			int max = scrollPane.getVerticalScrollBar().getMaximum();
-
-			scrollPane.getVerticalScrollBar().setValue(max);
-		}
 	}
 
 	/**
