@@ -54,8 +54,6 @@ import java.util.Iterator;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria; 
 import org.apache.torque.om.NumberKey;
-import org.apache.commons.util.ObjectUtils;
-import org.apache.commons.util.StringUtils;
 
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.DefaultTemplateContext;

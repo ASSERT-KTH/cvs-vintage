@@ -49,7 +49,7 @@ package org.tigris.scarab.actions;
 import java.util.List;
 import java.util.Iterator;
 
-import org.apache.commons.util.SequencedHashtable;
+import org.apache.commons.collections.SequencedHashMap;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report managing enter issue templates.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: TemplateList.java,v 1.25 2002/03/07 22:24:06 elicia Exp $
+    @version $Id: TemplateList.java,v 1.26 2002/03/09 02:16:31 jmcnally Exp $
 */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -97,7 +97,7 @@ public class TemplateList extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getIssueTemplate();
 
-        SequencedHashtable avMap = issue.getModuleAttributeValuesMap();
+        SequencedHashMap avMap = issue.getModuleAttributeValuesMap();
         AttributeValue aval = null;
         Group group = null;
         

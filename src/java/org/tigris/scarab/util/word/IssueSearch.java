@@ -59,8 +59,8 @@ import java.text.SimpleDateFormat;
 // Turbine classes
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
-import org.apache.commons.util.SequencedHashtable;
-import org.apache.commons.util.StringUtils;
+import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.lang.Strings;
 
 // Scarab classes
 import org.tigris.scarab.om.Attribute;
@@ -576,7 +576,7 @@ public class IssueSearch
     private List getTextAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        SequencedHashMap searchValues = getModuleAttributeValuesMap();
         List searchAttributes = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
@@ -627,7 +627,7 @@ public class IssueSearch
     private List getOptionAttributeValues(boolean quickSearchOnly)
         throws Exception
     {
-        SequencedHashtable searchValues = getModuleAttributeValuesMap();
+        SequencedHashMap searchValues = getModuleAttributeValuesMap();
         List searchAttributeValues = new ArrayList(searchValues.size());
 
         for ( int i=0; i<searchValues.size(); i++ ) 
@@ -716,7 +716,7 @@ public class IssueSearch
                 // matches
                 if ( minFid.getCount() <= maxFid.getCount() 
                      && minFid.getPrefix().equals(maxFid.getPrefix())
-                     && StringUtils
+                     && Strings
                      .equals( minFid.getDomain(), maxFid.getDomain() ))
                 {
                     Criteria.Criterion c1 = crit.getNewCriterion(

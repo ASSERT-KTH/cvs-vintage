@@ -54,7 +54,6 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.commons.util.StringUtils;
 import org.apache.turbine.RunData;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
@@ -63,7 +62,7 @@ import org.apache.torque.util.Criteria;
  * This class has static methods for working with a ScarabUser object
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: UserManager.java,v 1.5 2002/03/02 02:33:01 jmcnally Exp $
+ * @version $Id: UserManager.java,v 1.6 2002/03/09 02:16:32 jmcnally Exp $
  */
 public abstract class UserManager
 {

@@ -57,8 +57,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
-import org.apache.commons.util.SequencedHashtable;
-import org.apache.commons.util.StringUtils;
+import org.apache.commons.lang.Strings;
 
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey; 
@@ -89,7 +88,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.62 2002/03/07 02:12:39 elicia Exp $
+    @version $Id: Search.java,v 1.63 2002/03/09 02:16:31 jmcnally Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -217,7 +216,7 @@ public class Search extends RequireLoginFirstAction
         {
             // if the string is a number, then execute
             // doRunstoredquery()
-            if (StringUtils.isNumeric(go))
+            if (Strings.isNumeric(go))
             {
                 data.getParameters().add("queryId", go);
                 doRunstoredquery(data, context);

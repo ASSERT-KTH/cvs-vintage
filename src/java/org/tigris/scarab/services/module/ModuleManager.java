@@ -51,7 +51,6 @@ import org.tigris.scarab.om.ScarabModulePeer;
 import org.apache.torque.om.ObjectKey;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.security.TurbineSecurity;
-import org.apache.commons.util.StringUtils;
 import org.apache.turbine.RunData;
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
@@ -62,7 +61,7 @@ import org.apache.torque.util.Criteria;
  * duplicate methods.  One should be deprecated.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleManager.java,v 1.20 2002/03/02 02:33:00 jmcnally Exp $
+ * @version $Id: ModuleManager.java,v 1.21 2002/03/09 02:16:32 jmcnally Exp $
  */
 public abstract class ModuleManager
 {

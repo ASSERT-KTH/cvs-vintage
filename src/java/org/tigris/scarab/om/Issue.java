@@ -61,7 +61,7 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
-import org.apache.commons.util.SequencedHashtable;
+import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
@@ -465,10 +465,10 @@ public class Issue
      * not been set for the issue are included.  The values are ordered
      * according to the module's preference
      */
-    public SequencedHashtable getModuleAttributeValuesMap() 
+    public SequencedHashMap getModuleAttributeValuesMap() 
         throws Exception
     {
-        SequencedHashtable result = null;
+        SequencedHashMap result = null;
         Object obj = ScarabCache.get(this, GET_MODULE_ATTRVALUES_MAP); 
         if ( obj == null ) 
         {        
@@ -478,7 +478,7 @@ public class Issue
             attributes = getModule().getActiveAttributes(getIssueType());
             siaValuesMap = getAttributeValuesMap();
 
-            result = new SequencedHashtable((int)(1.25*attributes.length + 1));
+            result = new SequencedHashMap((int)(1.25*attributes.length + 1));
             for ( int i=0; i<attributes.length; i++ ) 
             {
                 String key = attributes[i].getName().toUpperCase();
@@ -498,7 +498,7 @@ public class Issue
         }
         else 
         {
-            result = (SequencedHashtable)obj;
+            result = (SequencedHashMap)obj;
         }
         return result;
     }
@@ -700,7 +700,7 @@ public class Issue
             .getRequiredAttributes(getIssueType());
 
         boolean result = true;
-        SequencedHashtable avMap = getModuleAttributeValuesMap();
+        SequencedHashMap avMap = getModuleAttributeValuesMap();
         Iterator i = avMap.iterator();
         while (i.hasNext()) 
         {

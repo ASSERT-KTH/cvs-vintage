@@ -46,7 +46,7 @@ package org.tigris.scarab.services.cache;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.commons.util.ObjectUtils;
+import org.apache.commons.lang.Objects;
 import org.apache.log4j.Category;
 import org.apache.fulcrum.pool.RecyclableSupport;
 
@@ -107,23 +107,23 @@ public class ScarabCacheKey
         if ( obj instanceof ScarabCacheKey ) 
         {
             ScarabCacheKey sck = (ScarabCacheKey)obj;
-            equal = ObjectUtils.equals(sck.obj1, obj1);
-            equal &= ObjectUtils.equals(sck.obj2, obj2);
+            equal = Objects.equals(sck.obj1, obj1);
+            equal &= Objects.equals(sck.obj2, obj2);
             if (n > 0) 
             {
-                equal &= ObjectUtils.equals(sck.obj3, obj3);
+                equal &= Objects.equals(sck.obj3, obj3);
                 if (n > 1) 
                 {
-                    equal &= ObjectUtils.equals(sck.obj4, obj4);
+                    equal &= Objects.equals(sck.obj4, obj4);
                     if (n > 2) 
                     {
-                        equal &= ObjectUtils.equals(sck.obj5, obj5);
+                        equal &= Objects.equals(sck.obj5, obj5);
                         if (n > 3) 
                         {
-                            equal &= ObjectUtils.equals(sck.obj6, obj6);
+                            equal &= Objects.equals(sck.obj6, obj6);
                             if (n > 4) 
                             {
-                                equal &= ObjectUtils.equals(sck.obj7, obj7);
+                                equal &= Objects.equals(sck.obj7, obj7);
                             }
                         }
                     }

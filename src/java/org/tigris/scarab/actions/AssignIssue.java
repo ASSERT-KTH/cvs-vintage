@@ -62,8 +62,6 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.ParameterParser;
 
-import org.apache.commons.util.SequencedHashtable;
-
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 import org.apache.fulcrum.intake.model.Group;
@@ -101,7 +99,7 @@ import org.tigris.scarab.tools.Email;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.39 2002/02/20 22:07:23 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.40 2002/03/09 02:16:31 jmcnally Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {

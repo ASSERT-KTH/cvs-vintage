@@ -61,7 +61,7 @@ import org.apache.turbine.Log;
 import org.apache.torque.om.NumberKey;
 
 // import org.apache.fulcrum.servlet.TurbineServlet;
-import org.apache.commons.util.StringStack;
+import org.apache.commons.collections.StringStack;
 
 // Scarab classes
 import org.tigris.scarab.om.AttributeValue;
@@ -83,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.7 2002/02/07 22:14:41 jon Exp $
+ * @version $Id: LuceneAdapter.java,v 1.8 2002/03/09 02:16:32 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
