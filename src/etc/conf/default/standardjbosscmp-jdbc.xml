@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.42 2002/09/03 14:52:20 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.43 2002/09/04 06:10:26 loubyansky Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -29,6 +29,13 @@
       <eager-load-group>*</eager-load-group>
       </read-ahead>
       <list-cache-max>1000</list-cache-max>
+
+      <unknown-pk>
+         <key-generator-factory>UUIDKeyGeneratorFactory</key-generator-factory>
+         <unknown-pk-class>java.lang.String</unknown-pk-class>
+         <jdbc-type>VARCHAR</jdbc-type>
+         <sql-type>VARCHAR(32)</sql-type>
+      </unknown-pk>
    </defaults>
 
    <type-mapping>
