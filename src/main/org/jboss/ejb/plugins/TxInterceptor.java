@@ -36,7 +36,7 @@ import org.jboss.metadata.ejbjar.EJBMethod;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.8 $
+*   @version $Revision: 1.9 $
 */
 public class TxInterceptor
 extends AbstractInterceptor
@@ -156,37 +156,6 @@ extends AbstractInterceptor
 				// We don't have to do anything since we don't deal with transactions
 			}
 		
-					/*
-				
-	// MF FIXME: it happens that the way suspend() and resume() are implemented in the TxMan
-	// work.  However the resume and suspend don't mean "suspend and resume association of the 
-	// thread and Tx" it means "suspend transaction" which is a different thing.
-	// In other words this won't really work with another TxMan 
-	// I have introduced the associate transaction on the TxMan
-				
-					//if (current.getStatus() != Status.STATUS_NO_TRANSACTION)
-					if (current != null);
-					{
-						
-					// ("suspend()/resume()" are not the right calls)
-				
-					// Suspend tx                                                              
-					getContainer().getTransactionManager().suspend();
-					
-					try
-					{
-					return runner.run();
-					} finally
-					{
-					// Resume tx
-					getContainer().getTransactionManager().resume(current);
-					}
-					} else
-					{
-					return runner.run();
-					}
-					*/
-				
 				
 			case EJBMethod.TX_REQUIRED:      {
 					
@@ -299,15 +268,6 @@ extends AbstractInterceptor
 				
 				// Even on error we don't do anything with the tx, we didn't start it
 				
-			        /*
-					
-					// This mode doesn't really do anything
-					// If tx started -> do nothing
-					// If tx not started -> do nothing
-					
-					// Continue invocation
-					return runner.run();
-					*/
 			}
 				
 			case EJBMethod.TX_REQUIRES_NEW: {
@@ -367,43 +327,6 @@ extends AbstractInterceptor
 					// set the old transaction back on the method invocation
 					mi.setTransaction(oldTransaction);
 				}	
-				
-					/*
-					// Always begin new tx
-					//            Logger.debug("Begin tx");
-					getContainer().getTransactionManager().begin();
-					mi.setTransaction(getContainer().getTransactionManager().getTransaction());
-					
-					// Continue invocation
-					try {
-						return runner.run();
-					} 
-					catch (RemoteException e) {
-						getContainer().getTransactionManager().rollback();
-						throw e;
-					} 
-					catch (RuntimeException e) {
-						getContainer().getTransactionManager().rollback();
-						throw new ServerException("Exception occurred", e);
-					} 
-					catch (Error e) {
-						getContainer().getTransactionManager().rollback();
-						throw new ServerException("Exception occurred:"+e.getMessage());
-					} 
-					finally {
-						if (tm.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
-							tm.rollback();
-						}
-						else {
-							// Commit tx
-							// This will happen if
-							// a) everything goes well
-							// b) app. exception was thrown
-							tm.commit();
-						}
-					}
-			
-					*/
 			}
 				
 			case EJBMethod.TX_MANDATORY: {
@@ -447,7 +370,7 @@ extends AbstractInterceptor
 			
 		try {
 			BeanMetaData bmd = container.getBeanMetaData();
-			//System.out.println("Found metadata for bean '"+bmd.getName()+"'");
+			System.out.println("Found metadata for bean '"+bmd.getName()+"'"+" method is "+m);
 			try {
 				MethodMetaData mmd;
 				if(d == invoker)
@@ -487,7 +410,7 @@ extends AbstractInterceptor
 	class RunInvoke implements Doable {
 		MethodInvocation mi;
 		public Object run() throws Exception {
-			System.out.println("Calling the next invoker in runInvoke");
+//DEBUG			System.out.println("Calling the next invoker in runInvoke");
 			return getNext().invoke(mi);
 		}
 	}
@@ -496,7 +419,7 @@ extends AbstractInterceptor
 		MethodInvocation mi;
 		public Object  run() throws Exception {
 			
-			System.out.println("Calling the next invoker in runInvokeHome");
+//DEBUG		System.out.println("Calling the next invoker in runInvokeHome");
 			return getNext().invokeHome(mi);
 		}
 	}
