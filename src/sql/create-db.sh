@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.17 2003/02/01 02:15:33 jon Exp $
+# $Id: create-db.sh,v 1.18 2003/02/14 16:55:27 tenersen Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -115,6 +115,8 @@ if [ -f "${POPULATION_SCRIPT_DIR}/mysql" ] ; then
     dbtype="mysql"
 elif [ -f "${POPULATION_SCRIPT_DIR}/postgresql" ] ; then
     dbtype="postgresql"
+elif [ -f "${POPULATION_SCRIPT_DIR}/oracle" ] ; then 
+    dbtype="oracle"
 fi
 
 if [ -z "${quiet}" ] ; then
@@ -129,27 +131,29 @@ echo ""
 fi
 
 # If user wants password, then...
-if [ ! -z "$password" -a "${dbtype}" = 'mysql' ] ; then
-    # Don't want to leave the user blind if he breaks
-    # during password entry.
-    trap 'stty echo >/dev/null 2>&1' 1 2 3 15
+if [ ! -z "$password"  ] ; then
+    if [ "${dbtype}" = 'mysql' -o "${dbtype}" = 'oracle' ] ; then 
+        # Don't want to leave the user blind if he breaks
+        # during password entry.
+        trap 'stty echo >/dev/null 2>&1' 1 2 3 15
     
-    # Check for echo -n vs echo \c
-    if echo '\c' | grep -s c >/dev/null 2>&1
-    then
-        ECHO_N="echo -n"
-        ECHO_C=""
-    else
-        ECHO_N="echo"
-        ECHO_C='\c'
-    fi
+        # Check for echo -n vs echo \c
+        if echo '\c' | grep -s c >/dev/null 2>&1
+        then
+            ECHO_N="echo -n"
+            ECHO_C=""
+        else
+            ECHO_N="echo"
+            ECHO_C='\c'
+        fi
 
-    $ECHO_N "Enter password for \"${DB_USER}\": "$ECHO_C
-    stty -echo >/dev/null 2>&1
-    read FirstPw
-    stty echo >/dev/null 2>&1
-    password="$FirstPw"
-    echo
+        $ECHO_N "Enter password for \"${DB_USER}\": "$ECHO_C
+        stty -echo >/dev/null 2>&1
+        read FirstPw
+        stty echo >/dev/null 2>&1
+        password="$FirstPw"
+        echo
+    fi
 fi
 
 if [ ! -z "${EMPTY}" ] ; then
@@ -285,7 +289,61 @@ for i in ${FILES} ; do
     fi
 done
 
+elif [ "$dbtype" = "oracle" ] ; then 
 
+echo "Loading SQL into Oracle"
+
+# make sure some things are setup for oracle 
+if [ -z "$ORACLE_HOME" ] ; then
+    echo 
+    echo "ORACLE_HOME must be defined before executing this script."
+    echo "This is usually done by sourcing 'oraenv' into your environment."
+    echo 
+    exit 1
 fi
+
+if [ -z "$ORACLE_SID" ] ; then 
+    echo 
+    echo "ORACLE_SID must be defined before executing this script."
+    echo "This is usually done by sourcing 'oraenv' into your environment."
+    echo 
+fi
+
+SQLPLUS=$ORACLE_HOME/bin/sqlplus 
+if [ ! -x $SQLPLUS ] ; then 
+    echo 
+    echo "sqlplus could not be found off $ORACLE_HOME."
+    echo "Please check your Oracle installation."
+    echo 
+fi 
+
+if [ -z "$LD_LIBRARY_PATH" ] ; then 
+    LD_LIBRARY_PATH=$ORACLE_HOME/lib32:$ORACLE_HOME/lib  
+else
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib32:$ORACLE_HOME/lib  
+fi 
+export LD_LIBRARY_PATH 
+
+if [ -f /tmp/${PPID}exit.sql ] ; then 
+    rm -f /tmp/${PPID}exit.sql 
+fi 
+echo "exit" > /tmp/${PPID}exit.sql 
+
+FILES=`cat ${LOAD_ORDER}`
+for i in ${FILES} ; do 
+    
+    cat $i /tmp/${PPID}exit.sql > /tmp/${PPID}sql.sql 
+
+    if [ -z "${quiet}" ] ; then 
+        ${SQLPLUS} ${DB_USER}/${password} @/tmp/${PPID}sql.sql 
+    else 
+        ${SQLPLUS} ${DB_USER}/${password} @/tmp/${PPID}sql.sql  2> /dev/null 
+    fi 
+
+    rm -f /tmp/${PPID}sql.sql 
+done
+rm -f /tmp/${PPID}exit.sql 
+
+fi #end if db = 'foo'
 
 exit 0
