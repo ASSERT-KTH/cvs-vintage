@@ -57,7 +57,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public abstract class JDBCCommand
 {
@@ -290,7 +290,7 @@ public abstract class JDBCCommand
           }
           if (isBinaryType(jdbcType)) {
               byte[] bytes = null;
-              if (isByteArray(jdbcType)) {
+              if (value instanceof byte[]) {
                   bytes = (byte[])value;
               } else {
                   // ejb-reference: store the handle
@@ -557,18 +557,6 @@ public abstract class JDBCCommand
                Types.LONGVARBINARY == jdbcType ||
                Types.OTHER == jdbcType ||
                Types.STRUCT == jdbcType ||
-               Types.VARBINARY == jdbcType);
-   }
-
-   /**
-    * Returns true if the JDBC type represents a byte array.
-    *
-    * @param jdbcType the JDBC type
-    * @return true if the JDBC type represents a byte array
-    */
-   protected final boolean isByteArray(int jdbcType) {
-       return (Types.BINARY == jdbcType ||
-               Types.LONGVARBINARY == jdbcType ||
                Types.VARBINARY == jdbcType);
    }
 
