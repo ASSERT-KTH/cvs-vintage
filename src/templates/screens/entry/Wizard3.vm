@@ -50,7 +50,7 @@ $page.setTitle("Enter issue")
 <p class="functnbar">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
-<input type="reset" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
     
 <div class="axial">
@@ -241,7 +241,7 @@ $page.setTitle("Enter issue")
 <p class="functnbar2">
 <input type="submit" value="Submit issue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="Reset" name="eventSubmit_doRefresh" />&#160;
-<input type="reset" value="Cancel" name="eventSubmit_doCancel" />
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </p>
 
 $intake.declareGroups()
