@@ -50,7 +50,7 @@ INSERT INTO TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
 
 /* create a temporary table. */
 
-drop table if exists xxxx_populate_RolePermission;
+drop table xxxx_populate_RolePermission;
 create table xxxx_populate_RolePermission  (
     ROLE_ID		integer NOT NULL,
     PERMISSION_ID	        integer NOT NULL
@@ -190,7 +190,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
 ;
 
 
-drop table if exists xxxx_populate_RolePermission;
+drop table xxxx_populate_RolePermission;
 
 
 /* Assign the user 'turbine@collab.net' a system-wide role 'turbine_root' */
