@@ -80,7 +80,7 @@ public  class AttributeGroup
                                                   AttributePeer.ATTRIBUTE_ID)
             .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
                                        .PREFERRED_ORDER);
-        return (List) AttributePeer.doSelect(crit);
+        return AttributePeer.doSelect(crit);
     }
 
     /**
