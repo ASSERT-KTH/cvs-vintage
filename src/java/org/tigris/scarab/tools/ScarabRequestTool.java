@@ -1577,6 +1577,124 @@ try{
     }
 
     /**
+     * Get an IssueSearch object based on a query string.
+     *
+     * @return a <code>Issue</code> value
+     */
+    public IssueSearch getPopulatedSearch(String query)
+        throws Exception
+    {
+        IssueSearch search = getSearch();
+        ScarabLocalizationTool l10n = getLocalizationTool();
+        search.setIssueListAttributeColumns(getRModuleUserAttributes());
+
+        List queryResults = new ArrayList();
+        boolean searchSuccess = true;
+        Intake intake = null;
+
+        if (query == null)
+        {
+            setInfoMessage(l10n.get("EnterQuery"));
+            searchSuccess = false;
+        }
+        else
+        {
+           intake = parseQuery(query);
+           searchSuccess = intake.isAllValid();
+        }
+
+        if (searchSuccess)
+        {
+            // If they have entered users to search on, add them to the search
+            StringValueParser parser = new StringValueParser();
+            parser.parse(query, '&', '=', true);
+            String[] userList = parser.getStrings("user_list");
+            if ( userList != null && userList.length > 0)
+            {
+                for (int i =0; i<userList.length; i++)
+                {
+                    String userId = userList[i];
+                    String attrId = parser.getString("user_attr_" + userId);
+                    search.addUserCriteria(userId, attrId);
+                }
+            }
+
+            // Set intake properties
+            Group searchGroup = intake.get("SearchIssue", 
+                                           getSearch().getQueryKey() );
+
+            Field minDate = searchGroup.get("MinDate");
+            if (minDate != null && minDate.toString().length() > 0)
+            { 
+               searchSuccess =  checkDate(search, minDate.toString());
+            }
+            Field maxDate = searchGroup.get("MaxDate");
+            if (maxDate != null && minDate.toString().length() > 0)
+            { 
+                searchSuccess = checkDate(search, minDate.toString());
+            }
+            Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
+            if (stateChangeFromDate != null 
+                && stateChangeFromDate.toString().length() > 0)
+            { 
+                searchSuccess = checkDate(search, stateChangeFromDate.toString());
+            }
+            Field stateChangeToDate = searchGroup.get("StateChangeToDate");
+            if (stateChangeToDate != null 
+                && stateChangeToDate.toString().length() > 0)
+            { 
+                searchSuccess = checkDate(search, stateChangeToDate.toString());
+            }
+            if (!searchSuccess)
+            {
+                setAlertMessage(l10n.get("DateFormatPrompt"));
+             }
+            searchGroup.setProperties(search);
+
+            // Set attribute values to search on
+            SequencedHashMap avMap = search.getCommonAttributeValuesMap();
+            Iterator i = avMap.iterator();
+            while (i.hasNext()) 
+            {
+                AttributeValue aval = (AttributeValue)avMap.get(i.next());
+                Group group = intake.get("AttributeValue", aval.getQueryKey());
+                if ( group != null ) 
+                {
+                    group.setProperties(aval);
+                }                
+            }
+            
+            // If user is sorting on an attribute, set sort criteria
+            // Do not use intake, since intake parsed from query is not the same
+            // As intake passed from the form
+            String sortColumn = data.getParameters().getString("sortColumn");
+            if (sortColumn != null && sortColumn.length() > 0 
+                && StringUtils.isNumeric(sortColumn))
+            {
+                search.setSortAttributeId(new NumberKey(sortColumn));
+            }
+            String sortPolarity = data.getParameters().getString("sortPolarity");
+            if (sortPolarity != null && sortPolarity.length() > 0)
+            {
+                search.setSortPolarity(sortPolarity);
+            }
+        }
+        return search;
+    }
+
+    /**
+     * Get an IssueSearch object based on current query string.
+     *
+     * @return a <code>Issue</code> value
+     */
+    public IssueSearch getPopulatedSearch()
+        throws Exception
+    {
+        String currentQueryString = ((ScarabUser)data.getUser()).getMostRecentQuery();
+        return getPopulatedSearch(currentQueryString);
+    }
+
+    /**
      * Parses query into intake values.
     */
     public Intake parseQuery(String query)
@@ -1589,71 +1707,6 @@ try{
         return intake;
     }
 
-    /**
-     * Returns all issue templates that are global, 
-     * Plus those that are personal and created by logged-in user.
-    */
-    public List getIssueTemplates()
-        throws Exception
-    {
-        String sortColumn = data.getParameters().getString("sortColumn");
-        String sortPolarity = data.getParameters().getString("sortPolarity");
-        if (sortColumn == null)
-        {
-            sortColumn = "name";
-        }
-        if (sortPolarity == null)
-        {
-            sortPolarity = "asc";
-        }
-        return IssueTemplateInfoPeer.getAllTemplates(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               sortColumn, sortPolarity);
-    }
-
-    /**
-     * Returns queries that are personal and created by logged-in user.
-    */
-    public List getPrivateQueries()
-        throws Exception
-    {
-        return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "avail", "desc", "private");
-    }
-
-    /**
-     * Returns all queries that are global.
-    */
-    public List getGlobalQueries()
-        throws Exception
-    {
-        return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "avail", "desc", "global");
-    }
-
-    /**
-     * Returns all queries that are global, 
-     * Plus those that are personal and created by logged-in user.
-    */
-    public List getQueries()
-        throws Exception
-    {
-        String sortColumn = data.getParameters().getString("sortColumn");
-        String sortPolarity = data.getParameters().getString("sortPolarity");
-        if (sortColumn == null)
-        {
-            sortColumn = "avail";
-        }
-        if (sortPolarity == null)
-        {
-            sortPolarity = "desc";
-        }
-        return QueryPeer.getQueries(getCurrentModule(),
-               getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               sortColumn, sortPolarity, "all");
-    }
 
     /**
      * Performs search on current query (which is stored in user session).
@@ -1713,124 +1766,31 @@ try{
         ScarabLocalizationTool l10n = getLocalizationTool();
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = user.getMostRecentQuery();
-        IssueSearch search = getSearch();
-        search.setIssueListAttributeColumns(getRModuleUserAttributes());
+        IssueSearch search = getPopulatedSearch(currentQueryString);
+        List queryResults = null;
 
-        List queryResults = new ArrayList();
-        boolean searchSuccess = true;
-        Intake intake = null;
-
-        if (currentQueryString == null)
+        // Do search
+        try
         {
-            setInfoMessage(l10n.get("EnterQuery"));
-            searchSuccess = false;
+            queryResults = search.getQueryResults();
+            if (queryResults == null || queryResults.size() <= 0)
+            {
+                setInfoMessage(l10n.get("NoMatchingIssues"));
+            }            
         }
-        else
+        catch (ScarabException e)
         {
-           intake = parseQuery(currentQueryString);
-           searchSuccess = intake.isAllValid();
-        }
-
-        if (searchSuccess)
-        {
-            // If they have entered users to search on, add them to the search
-            StringValueParser parser = new StringValueParser();
-            parser.parse(currentQueryString, '&', '=', true);
-            String[] userList = parser.getStrings("user_list");
-            if ( userList != null && userList.length > 0)
+            String queryError = e.getMessage();
+            if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
             {
-                for (int i =0; i<userList.length; i++)
-                {
-                    String userId = userList[i];
-                    String attrId = parser.getString("user_attr_" + userId);
-                    search.addUserCriteria(userId, attrId);
-                }
+                Log.get().info(queryError);
+                setAlertMessage( new SimpleSkipFiltering(
+                    l10n.format("QueryParserError", 
+                        new SnippetRenderer(data, "TextQueryHelp.vm")) ) );
             }
-
-            // Set intake properties
-            Group searchGroup = intake.get("SearchIssue", 
-                                           getSearch().getQueryKey() );
-
-            Field minDate = searchGroup.get("MinDate");
-            if (minDate != null && minDate.toString().length() > 0)
-            { 
-               searchSuccess =  checkDate(search, minDate.toString());
-            }
-            Field maxDate = searchGroup.get("MaxDate");
-            if (maxDate != null && minDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, minDate.toString());
-            }
-            Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
-            if (stateChangeFromDate != null 
-                && stateChangeFromDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, stateChangeFromDate.toString());
-            }
-            Field stateChangeToDate = searchGroup.get("StateChangeToDate");
-            if (stateChangeToDate != null 
-                && stateChangeToDate.toString().length() > 0)
-            { 
-                searchSuccess = checkDate(search, stateChangeToDate.toString());
-            }
-            if (!searchSuccess)
+            else 
             {
-                setAlertMessage(l10n.get("DateFormatPrompt"));
-                return queryResults;
-             }
-            searchGroup.setProperties(search);
-
-            // Set attribute values to search on
-            SequencedHashMap avMap = search.getCommonAttributeValuesMap();
-            Iterator i = avMap.iterator();
-            while (i.hasNext()) 
-            {
-                AttributeValue aval = (AttributeValue)avMap.get(i.next());
-                Group group = intake.get("AttributeValue", aval.getQueryKey());
-                if ( group != null ) 
-                {
-                    group.setProperties(aval);
-                }                
-            }
-            
-            // If user is sorting on an attribute, set sort criteria
-            // Do not use intake, since intake parsed from query is not the same
-            // As intake passed from the form
-            String sortColumn = data.getParameters().getString("sortColumn");
-            if (sortColumn != null && sortColumn.length() > 0 
-                && StringUtils.isNumeric(sortColumn))
-            {
-                search.setSortAttributeId(new NumberKey(sortColumn));
-            }
-            String sortPolarity = data.getParameters().getString("sortPolarity");
-            if (sortPolarity != null && sortPolarity.length() > 0)
-            {
-                search.setSortPolarity(sortPolarity);
-            }
-
-            // Do search
-            try
-            {
-                queryResults = search.getQueryResults();
-                if (queryResults == null || queryResults.size() <= 0)
-                {
-                    setInfoMessage(l10n.get("NoMatchingIssues"));
-                }            
-            }
-            catch (ScarabException e)
-            {
-                String queryError = e.getMessage();
-                if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
-                {
-                    Log.get().info(queryError);
-                    setAlertMessage( new SimpleSkipFiltering(
-                        l10n.format("QueryParserError", 
-                            new SnippetRenderer(data, "TextQueryHelp.vm")) ) );
-                }
-                else 
-                {
-                    throw e;
-                }
+                throw e;
             }
         }
         return queryResults;
@@ -2000,6 +1960,71 @@ try{
             return path.replace('/',',');
     }
 
+    /**
+     * Returns all issue templates that are global, 
+     * Plus those that are personal and created by logged-in user.
+    */
+    public List getIssueTemplates()
+        throws Exception
+    {
+        String sortColumn = data.getParameters().getString("sortColumn");
+        String sortPolarity = data.getParameters().getString("sortPolarity");
+        if (sortColumn == null)
+        {
+            sortColumn = "name";
+        }
+        if (sortPolarity == null)
+        {
+            sortPolarity = "asc";
+        }
+        return IssueTemplateInfoPeer.getAllTemplates(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               sortColumn, sortPolarity);
+    }
+
+    /**
+     * Returns queries that are personal and created by logged-in user.
+    */
+    public List getPrivateQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "avail", "desc", "private");
+    }
+
+    /**
+     * Returns all queries that are global.
+    */
+    public List getGlobalQueries()
+        throws Exception
+    {
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               "avail", "desc", "global");
+    }
+
+    /**
+     * Returns all queries that are global, 
+     * Plus those that are personal and created by logged-in user.
+    */
+    public List getQueries()
+        throws Exception
+    {
+        String sortColumn = data.getParameters().getString("sortColumn");
+        String sortPolarity = data.getParameters().getString("sortPolarity");
+        if (sortColumn == null)
+        {
+            sortColumn = "avail";
+        }
+        if (sortPolarity == null)
+        {
+            sortPolarity = "desc";
+        }
+        return QueryPeer.getQueries(getCurrentModule(),
+               getCurrentIssueType(), (ScarabUser)data.getUser(), 
+               sortColumn, sortPolarity, "all");
+    }
 
     /**
      * a report helper class

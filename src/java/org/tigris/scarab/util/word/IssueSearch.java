@@ -307,6 +307,11 @@ public class IssueSearch
         return issueListAttributeColumns;
     }
 
+    public List getUserIdList()
+    {
+        return userIdList;
+    }
+
     public SequencedHashMap getCommonAttributeValuesMap()
         throws Exception
     {

@@ -78,6 +78,9 @@ from:&#160;<input type="text" size="20"
 <tr>
 #set ($userAttrs = $search.UserAttributes) 
 #set ($userList = $data.Parameters.getStrings("user_list"))
+#if (!$userList)
+    #set ($userList = $search.UserIdList)
+#end
 
 #if ($userList && !$userList.isEmpty())
 <th nowrap="nowrap">$l10n.Select</th>
