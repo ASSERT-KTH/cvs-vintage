@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.86 2002/05/09 07:54:36 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.87 2002/05/10 01:06:09 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -382,10 +382,10 @@
 	     excludedtags="@version,@author">
       <fileset dir="${source.java}">
         <include name="org/jboss/invocation/**/*.java"/>
+        <include name="org/jboss/naming/**/*.java"/>
         <include name="org/jboss/ejb/EjbModule.java"/>
       </fileset>
-      <mbeaninterface/>
-
+      <mbeaninterface mergedir="${project.tools}/etc/xdoclet/templates"/>
     </xdoclet>
   </target>
 
