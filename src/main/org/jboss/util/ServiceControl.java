@@ -22,7 +22,7 @@ import org.jboss.logging.Log;
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Hugo Pinto (mailto:hugo@hugopinto.com)
- *   @version $Revision: 1.6 $
+ *   @version $Revision: 1.7 $
  */
 public class ServiceControl
 
@@ -226,7 +226,7 @@ public class ServiceControl
       {
          AttributeChangeNotification attrChg = (AttributeChangeNotification)notification;
 //         log.log(handback+":"+attrChg.getAttributeName()+":"+attrChg.getNewValue());
-      } else
+      } else if (notification instanceof MBeanServerNotification)
       {
          MBeanServerNotification reg = (MBeanServerNotification)notification;
       
