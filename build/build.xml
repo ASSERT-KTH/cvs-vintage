@@ -155,6 +155,10 @@
         </copy>
         
         <!--
+          Make sure the file exists even if it is only empty.
+        -->
+        <touch file="${src.dir}/conf/conf/CustomSettings.properties"/>
+        <!--
           Copy the miscellaneous runtime configuration files into the webapp
         -->
         <copy todir="${build.project.webinf}/conf" filtering="no">
