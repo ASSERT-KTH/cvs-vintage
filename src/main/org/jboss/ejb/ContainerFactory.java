@@ -58,66 +58,67 @@ import org.jboss.web.WebServiceMBean;
  * containers and make them available for invocation.
 *
 * <p>Now also works with message driven beans.
-* 
+*
 * @see Container
-* 
+*
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
-* @version $Revision: 1.88 $
+* @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+* @version $Revision: 1.89 $
 */
 public class ContainerFactory
    extends ServiceMBeanSupport
    implements ContainerFactoryMBean
 {
    // Constants -----------------------------------------------------
-	
+
    public static String DEFAULT_STATELESS_CONFIGURATION = "Default Stateless SessionBean";
    public static String DEFAULT_STATEFUL_CONFIGURATION = "Default Stateful SessionBean";
    public static String DEFAULT_ENTITY_BMP_CONFIGURATION = "Default BMP EntityBean";
    public static String DEFAULT_ENTITY_CMP_CONFIGURATION = "Default CMP EntityBean";
    public static String DEFAULT_MESSAGEDRIVEN_CONFIGURATION = "Default MesageDriven Bean";
-	
+
    // Constants uses with container interceptor configurations
    public static final int BMT = 1;
    public static final int CMT = 2;
    public static final int ANY = 3;
-	
+
    static final String BMT_VALUE = "Bean";
    static final String CMT_VALUE = "Container";
    static final String ANY_VALUE = "Both";
-	
+
    // Attributes ----------------------------------------------------
-	
+
    /** The logger of this service */
    Log log = Log.createLog(this.getClass().getName());
-	
+
    /**
     * A map of current deployments. If a deployment is made and it is
     * already in this map, then undeploy it first (i.e. make it a re-deploy).
     */
    HashMap deployments = new HashMap();
-	
+
    /** Verify EJB-jar contents on deployments */
    boolean verifyDeployments = false;
-	
+
    /** Enable verbose verification. */
    boolean verifierVerbose = false;
-	
+
    /** Enable metrics interceptor */
    boolean metricsEnabled = false;
-	
+
    /** Enable JMS monitoring of the bean cache */
    private boolean m_beanCacheJMSMonitoring;
-	
+
    /** A flag indicating if deployment descriptors should be validated */
    private boolean validateDTDs;
-	
+
    // Public --------------------------------------------------------
-	
+
    /**
     * Returns the deployed applications.
     */
@@ -125,7 +126,7 @@ public class ContainerFactory
    {
       return deployments.values().iterator();
    }
-	
+
    /**
     * Implements the abstract <code>getObjectName()</code> method in superclass
     * to return this service's name.
@@ -141,7 +142,7 @@ public class ContainerFactory
    {
       return new ObjectName( OBJECT_NAME );
    }
-	
+
    /**
     * Implements the abstract <code>getName()</code> method in superclass to
     * return the name of this object.
@@ -152,7 +153,7 @@ public class ContainerFactory
    {
       return "Container factory";
    }
-	
+
    /**
     * Implements the template method in superclass. This method stops all the
     * applications in this server.
@@ -160,15 +161,15 @@ public class ContainerFactory
    public void stopService()
    {
       Iterator apps = deployments.values().iterator();
-		
+
       while( apps.hasNext() )
       {
          Application app = (Application) apps.next();
-			
+
          app.stop();
       }
    }
-	
+
    /**
     * Implements the template method in superclass. This method destroys all
     * the applications in this server and clears the deployments list.
@@ -176,17 +177,17 @@ public class ContainerFactory
    public void destroyService()
    {
       Iterator apps = deployments.values().iterator();
-		
+
       while( apps.hasNext() )
       {
          Application app = (Application) apps.next();
-			
+
          app.destroy();
       }
-		
+
       deployments.clear();
    }
-	
+
    /**
     * Enables/disables the application bean verification upon deployment.
     *
@@ -196,7 +197,7 @@ public class ContainerFactory
    {
       verifyDeployments = verify;
    }
-	
+
    /**
     * Returns the state of bean verifier (on/off)
     *
@@ -206,7 +207,7 @@ public class ContainerFactory
    {
       return verifyDeployments;
    }
-	
+
    /**
     * Enables/disables the verbose mode on the verifier.
     *
@@ -216,7 +217,7 @@ public class ContainerFactory
    {
       verifierVerbose = verbose;
    }
-	
+
    /**
     * Returns the state of the bean verifier (verbose/non-verbose mode)
     *
@@ -226,7 +227,7 @@ public class ContainerFactory
    {
       return verifierVerbose;
    }
-	
+
    /**
     * Enables/disables the metrics interceptor for containers.
     *
@@ -236,7 +237,7 @@ public class ContainerFactory
    {
       metricsEnabled = enable;
    }
-	
+
    /**
     * Checks if this container factory initializes the metrics interceptor.
     *
@@ -246,7 +247,7 @@ public class ContainerFactory
    {
       return metricsEnabled;
    }
-	
+
    /**
     * Set JMS monitoring of the bean cache.
     */
@@ -254,7 +255,7 @@ public class ContainerFactory
    {
       m_beanCacheJMSMonitoring = enable;
    }
-	
+
    /**
     * Get the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated
@@ -264,7 +265,7 @@ public class ContainerFactory
    {
       return validateDTDs;
    }
-	
+
    /**
     * Set the flag indicating that ejb-jar.dtd, jboss.dtd &
     * jboss-web.dtd conforming documents should be validated
@@ -274,14 +275,14 @@ public class ContainerFactory
    {
       this.validateDTDs = validate;
    }
-	
+
    /**
     * Deploy the file at this URL. This method is typically called from
     * remote administration tools that cannot handle java.net.URL's as
     * parameters to methods
     *
     * @param url
-    * 
+    *
     * @throws MalformedURLException
     * @throws DeploymentException
     */
@@ -291,7 +292,7 @@ public class ContainerFactory
       // Delegate to "real" deployment
       deploy( new URL( url ), appId );
    }
-	
+
    //
    // Richard Gyger
    //
@@ -300,20 +301,20 @@ public class ContainerFactory
    {
       // Delegate to "real" deployment
       URL[] tmp = new URL[ jarUrls.length ];
-		
+
       for( int i = 0; i < tmp.length; i++ )
          tmp[ i ] = new URL( jarUrls[ i ] );
-		
+
       deploy( new URL( appUrl ), tmp, appId );
    }
-	
+
    /**
     * Undeploy the file at this URL. This method is typically called from
     * remote administration tools that cannot handle java.net.URL's as
     * parameters to methods
     *
     * @param url
-    * 
+    *
     * @throws MalformedURLException
     * @throws DeploymentException
     */
@@ -323,7 +324,7 @@ public class ContainerFactory
       // Delegate to "real" undeployment
       undeploy( new URL( url ) );
    }
-	
+
    /**
     * Deploy EJBs pointed to by an URL.
     * The URL may point to an EJB-JAR, an EAR-JAR, or an codebase
@@ -340,7 +341,7 @@ public class ContainerFactory
    {
       deploy( url, new URL[]{ url }, appId );
    }
-	
+
    //
    // Richard Gyger
    //
@@ -349,27 +350,34 @@ public class ContainerFactory
    {
       // Create application
       Application app = new Application();
-		
+
       try
       {
          Log.setLog( log );
-			
+
          // Check if already deployed -> undeploy first, this is re-deploy
          if( deployments.containsKey( appUrl ) )
             undeploy( appUrl );
-			
+
          app.setURL( appUrl );
          log.log( "Deploying:" + appUrl );
-			
+
          /* Create a subclass of URLClassLoader that allows for dynamic class
             loading via the WebServiceMBean
          */
          WebClassLoader cl = new WebClassLoader( jarUrls, Thread.currentThread().getContextClassLoader() );
          app.setClassLoader( cl );
-			
+
+         // Add to webserver so client can access classes through dynamic class downloading
+         // This needs to be done before we deploy our app, as the RMI subsystem will use, as a codebase, the URL we
+         // set here to our WebClassLoader (when creating home proxies for example)
+         WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
+         URL[] codebase = { webServer.addClassLoader(cl) };
+         cl.setWebURLs(codebase);
+
          for( int i = 0; i < jarUrls.length; i++ )
             deploy( app, jarUrls[ i ], cl );
-			
+
          // Init application
          app.init();
          // Start application
@@ -379,12 +387,7 @@ public class ContainerFactory
          while( i.hasNext() ) {
             handleContainerManagement( (Container) i.next(), true );
          }
-			
-         // Add to webserver so client can access classes through dynamic class downloading
-         WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
-         URL[] codebase = { webServer.addClassLoader(cl) };
-         cl.setWebURLs(codebase);
-			
+
          // Done
          log.log( "Deployed application: " + app.getName() );
          // Register deployment. Use the application name in the hashtable
@@ -399,12 +402,12 @@ public class ContainerFactory
             // NPE should be considered an internal server error anyways.
             Logger.exception( e );
          }
-			
+
          Logger.exception( e );
          //Logger.debug(e.getMessage());
          app.stop();
          app.destroy();
-			
+
          throw new DeploymentException( "Could not deploy " + appUrl.toString(), e );
       }
       finally
@@ -427,13 +430,13 @@ public class ContainerFactory
       }
 */
    }
-	
+
    private void deploy( Application app, URL url, ClassLoader cl )
       throws NamingException, Exception
    {
       // Create a file loader with which to load the files
       XmlFileLoader efm = new XmlFileLoader(validateDTDs);
-		
+
       // the file manager gets its file from the classloader
       // create a classloader that to access the metadata
       // this one dont has the contextclassloader as parent
@@ -441,13 +444,13 @@ public class ContainerFactory
       // classpath the metadata of this package would be used.
       ClassLoader localCl = new URLClassLoader( new URL[]{ url } );
       efm.setClassLoader( localCl );
-		
+
       // Load XML
       ApplicationMetaData metaData = efm.load();
-		
+
       // Check validity
       Log.setLog( Log.createLog( "Verifier" ) );
-		
+
       // wrapping this into a try - catch block to prevent errors in
       // verifier from stopping the deployment
       try
@@ -455,14 +458,14 @@ public class ContainerFactory
          if( verifyDeployments )
          {
             BeanVerifier verifier = new BeanVerifier();
-				
+
             verifier.addVerificationListener( new VerificationListener()
                {
                   public void beanChecked( VerificationEvent event )
                   {
                      Logger.debug( event.getMessage() );
                   }
-						
+
                   public void specViolation( VerificationEvent event )
                   {
                      if( verifierVerbose )
@@ -479,29 +482,29 @@ public class ContainerFactory
       {
          Logger.exception( t );
       }
-		
+
       // unset verifier log
       Log.unsetLog();
-		
+
       // Get list of beans for which we will create containers
       Iterator beans = metaData.getEnterpriseBeans();
       // Deploy beans
       Context ctx = new InitialContext();
-		
+
       while( beans.hasNext() )
       {
          BeanMetaData bean = (BeanMetaData) beans.next();
-			
+
          log.log( "Deploying " + bean.getEjbName() );
          app.addContainer( createContainer( bean, cl, localCl ) );
       }
    }
-	
+
    /**
     * Remove previously deployed EJBs.
     *
     * @param url
-    * 
+    *
     * @throws DeploymentException
     */
    public void undeploy( URL url )
@@ -509,13 +512,13 @@ public class ContainerFactory
    {
       // Get application from table
       Application app = (Application) deployments.get( url );
-		
+
       // Check if deployed
       if( app == null )
       {
          throw new DeploymentException( "URL not deployed" );
       }
-		
+
       // Undeploy application
       Log.setLog( log );
       log.log( "Undeploying:" + url );
@@ -528,7 +531,7 @@ public class ContainerFactory
       app.destroy();
       try {
          if ( app.getClassLoader() != null ) {
-            // Remove from webserver 
+            // Remove from webserver
             WebServiceMBean webServer = (WebServiceMBean) MBeanProxy.create( WebServiceMBean.class, WebServiceMBean.OBJECT_NAME );
             webServer.removeClassLoader( app.getClassLoader() );
          }
@@ -542,12 +545,12 @@ public class ContainerFactory
          Log.unsetLog();
       }
    }
-	
+
    /**
     * Is the aplication with this url deployed.
     *
     * @param url
-    * 
+    *
     * @throws MalformedURLException
     */
    public boolean isDeployed( String url )
@@ -555,22 +558,22 @@ public class ContainerFactory
    {
       return isDeployed( new URL( url ) );
    }
-	
+
    /**
     * Check if the application with this url is deployed.
     *
-    * @param url    
+    * @param url
     * @return       true if deployed
     */
    public boolean isDeployed( URL url )
    {
       return ( deployments.get( url ) != null );
    }
-	
+
    // ******************
    // Container Creation
    // ******************
-	
+
    private Container createContainer( BeanMetaData bean,
                                       ClassLoader cl,
                                       ClassLoader localCl )
@@ -597,7 +600,7 @@ public class ContainerFactory
          return createEntityContainer( bean, cl, localCl );
       }
    }
-	
+
    private MessageDrivenContainer createMessageDrivenContainer( BeanMetaData bean,
                                                                 ClassLoader cl,
                                                                 ClassLoader localCl )
@@ -610,14 +613,14 @@ public class ContainerFactory
       // Create container
       MessageDrivenContainer container = new MessageDrivenContainer();
       int transType = bean.isContainerManagedTx() ? CMT : BMT;
-		
+
       initializeContainer( container, conf, bean, transType, cl, localCl );
       container.setContainerInvoker( createContainerInvoker( conf, cl ) );
       container.setInstancePool( createInstancePool( conf, cl ) );
-		
+
       return container;
    }
-	
+
    private StatelessSessionContainer createStatelessSessionContainer( BeanMetaData bean,
                                                                       ClassLoader cl,
                                                                       ClassLoader localCl )
@@ -633,10 +636,10 @@ public class ContainerFactory
       if (bean.getHome() != null)
          container.setContainerInvoker( createContainerInvoker( conf, cl ) );
       container.setInstancePool( createInstancePool( conf, cl ) );
-		
+
       return container;
    }
-	
+
    private StatefulSessionContainer createStatefulSessionContainer( BeanMetaData bean,
                                                                     ClassLoader cl,
                                                                     ClassLoader localCl )
@@ -658,10 +661,10 @@ public class ContainerFactory
       container.setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
       //Set the bean Lock Manager
       container.setLockManager(createBeanLockManager(false,conf.getLockClass(), cl));
-		
+
       return container;
    }
-	
+
    private EntityContainer createEntityContainer( BeanMetaData bean,
                                                   ClassLoader cl,
                                                   ClassLoader localCl )
@@ -680,7 +683,7 @@ public class ContainerFactory
       container.setInstancePool( createInstancePool( conf, cl ) );
       //Set the bean Lock Manager
       container.setLockManager(createBeanLockManager(((EntityMetaData) bean).isReentrant(),conf.getLockClass(), cl));
-		
+
       // Set persistence manager
       if( ( (EntityMetaData) bean ).isBMP() )
       {
@@ -692,20 +695,20 @@ public class ContainerFactory
          // CMP takes a manager and a store
          org.jboss.ejb.plugins.CMPPersistenceManager persistenceManager =
             new org.jboss.ejb.plugins.CMPPersistenceManager();
-			
+
          //Load the store from configuration
          persistenceManager.setPersistenceStore( (EntityPersistenceStore) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
          // Set the manager on the container
          container.setPersistenceManager( persistenceManager );
       }
-		
+
       return container;
    }
-	
+
    // **************
    // Helper Methods
    // **************
-	
+
    /**
     * Either creates the Management MBean wrapper for a container and start
     * it or it destroy it.
@@ -745,7 +748,7 @@ public class ContainerFactory
          }
       }
    }
-	
+
    /**
     * Perform the common steps to initializing a container.
     */
@@ -768,7 +771,7 @@ public class ContainerFactory
       // Set transaction manager
       InitialContext iniCtx = new InitialContext();
       container.setTransactionManager( (TransactionManager) iniCtx.lookup( "java:/TransactionManager" ) );
-		
+
       // Set security domain manager
       String securityDomain = bean.getApplicationMetaData().getSecurityDomain();
       String confSecurityDomain = conf.getSecurityDomain();
@@ -776,7 +779,7 @@ public class ContainerFactory
          String securityManagerJNDIName = conf.getAuthenticationModule();
          String roleMappingManagerJNDIName = conf.getRoleMappingManager();
       */
-		
+
       if( securityDomain != null || confSecurityDomain != null )
       {   // Either the application has a security domain or the container has security setup
          try
@@ -795,7 +798,7 @@ public class ContainerFactory
             throw new DeploymentException( "Could not find the Security Manager specified for this container, name="+confSecurityDomain, ne);
          }
       }
-		
+
       // Load the security proxy instance if one was configured
       String securityProxyClassName = bean.getSecurityProxy();
       if( securityProxyClassName != null )
@@ -812,11 +815,11 @@ public class ContainerFactory
             throw new DeploymentException("Failed to create SecurityProxy of type: " + securityProxyClassName + ", "+ conf.getContainerInvoker() +" - " + e);
          }
       }
-		
+
       // Install the container interceptors based on the configuration
       addInterceptors(container, transType, conf.getContainerInterceptorsConf());
    }
-	
+
    /**
     * Given a container-interceptors element of a container-configuration,
     * add the indicated interceptors to the container depending on the container
@@ -855,7 +858,7 @@ public class ContainerFactory
             boolean metricsInterceptor = metricsAttr.equalsIgnoreCase("true");
             if( metricsEnabled == false && metricsInterceptor == true )
                continue;
-				
+
             String className = null;
             try
             {
@@ -871,27 +874,27 @@ public class ContainerFactory
             }
          }
       }
-		
+
       if( istack.size() == 0 )
          Logger.warning("There are no interceptors configured. Check the standardjboss.xml file");
-		
+
       // Now add the interceptors to the container
       for(int i = 0; i < istack.size(); i ++)
       {
          Interceptor interceptor = (Interceptor) istack.get(i);
          container.addInterceptor(interceptor);
       }
-		
+
       /* If there is a security proxy associated with the container add its
          interceptor just before the container interceptor
       */
       if( container.getSecurityProxy() != null )
          container.addInterceptor(new SecurityProxyInterceptor());
-		
+
       // Finally we add the last interceptor from the container
       container.addInterceptor(container.createContainerInterceptor());
    }
-	
+
    private static String stringTransactionValue(int transType)
    {
       String transaction = ANY_VALUE;
@@ -906,14 +909,14 @@ public class ContainerFactory
       }
       return transaction;
    }
-	
+
    private static ContainerInvoker createContainerInvoker( ConfigurationMetaData conf,
                                                            ClassLoader cl )
       throws Exception
    {
       // Set container invoker
       ContainerInvoker ci = null;
-		
+
       try
       {
          ci = (ContainerInvoker) cl.loadClass( conf.getContainerInvoker() ).newInstance();
@@ -922,22 +925,22 @@ public class ContainerFactory
       {
          throw new DeploymentException( "Missing or invalid Container Invoker (in jboss.xml or standardjboss.xml): " + conf.getContainerInvoker() + " - " + e );
       }
-		
+
       if( ci instanceof XmlLoadable )
          // the container invoker can load its configuration from the jboss.xml element
          ( (XmlLoadable) ci ).importXml( conf.getContainerInvokerConf() );
-		
+
       return ci;
    }
-	
-	
+
+
    private static BeanLockManager createBeanLockManager( boolean reentrant, String beanLock,
                                                          ClassLoader cl )
       throws Exception
    {
       // The bean lock manager
       BeanLockManager lockManager = new BeanLockManager();
-		
+
       Class lockClass = null;
       try
       {
@@ -947,20 +950,20 @@ public class ContainerFactory
       {
          throw new DeploymentException( "Missing or invalid lock class (in jboss.xml or standardjboss.xml): " + beanLock+ " - " + e );
       }
-		
+
       lockManager.setLockCLass(lockClass);
       lockManager.setReentrant(reentrant);
-		
+
       return lockManager;
    }
-	
+
    private static InstancePool createInstancePool( ConfigurationMetaData conf,
                                                    ClassLoader cl )
       throws Exception
    {
       // Set instance pool
       InstancePool ip = null;
-		
+
       try
       {
          ip = (InstancePool) cl.loadClass( conf.getInstancePool() ).newInstance();
@@ -969,13 +972,13 @@ public class ContainerFactory
       {
          throw new DeploymentException( "Missing or invalid Instance Pool (in jboss.xml or standardjboss.xml)" );
       }
-		
+
       if( ip instanceof XmlLoadable )
          ( (XmlLoadable) ip ).importXml( conf.getContainerPoolConf() );
-		
+
       return ip;
    }
-	
+
    private static InstanceCache createInstanceCache( ConfigurationMetaData conf,
                                                      boolean jmsMonitoring,
                                                      ClassLoader cl )
@@ -983,11 +986,11 @@ public class ContainerFactory
    {
       // Set instance cache
       InstanceCache ic = null;
-		
+
       try
       {
          ic = (InstanceCache) cl.loadClass( conf.getInstanceCache() ).newInstance();
-			
+
          if( ic instanceof AbstractInstanceCache )
             ( (AbstractInstanceCache) ic ).setJMSMonitoringEnabled( jmsMonitoring );
       }
@@ -995,10 +998,10 @@ public class ContainerFactory
       {
          throw new DeploymentException( "Missing or invalid Instance Cache (in jboss.xml or standardjboss.xml)" );
       }
-		
+
       if( ic instanceof XmlLoadable )
          ( (XmlLoadable) ic ).importXml( conf.getContainerCacheConf() );
-		
+
       return ic;
    }
 }
