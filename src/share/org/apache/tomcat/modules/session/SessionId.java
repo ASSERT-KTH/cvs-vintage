@@ -182,6 +182,7 @@ public class SessionId extends  BaseInterceptor
 	    sessionId= request.getRequestedSessionId();
 	    sess=processSession( request, sessionId,
 			      request.getSessionIdSource() );
+	    if( debug>0 ) log("CookiesFirst==false, use url rewriting " + sess );
 	    if( sess!=null )
 		return 0;
 	}
@@ -210,6 +211,7 @@ public class SessionId extends  BaseInterceptor
 	    sessionId= request.getRequestedSessionId();
 	    sess=processSession( request, sessionId,
 			      request.getSessionIdSource() );
+	    if( debug>0 ) log("Url rewriting, found " + sess );
 	    if( sess!=null )
 		return 0;
 	}
@@ -307,6 +309,7 @@ public class SessionId extends  BaseInterceptor
 	buf.append( ";Path=" ).append(  sessionPath  );
 	response.addHeader( "Set-Cookie",
 			    buf.toString());
+	if( debug>0) log( "Setting cookie " + buf );
 	
     	return 0;
     }
