@@ -14,7 +14,7 @@ import java.util.Date;
  * The JMX MBean interface for the <tt>Server</tt> component.
  *      
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public interface ServerMBean
 {
@@ -68,6 +68,14 @@ public interface ServerMBean
    Long getMaxMemory();
    
    String getVersion();
+
+   String getVersionName();
+
+   String getBuildNumber();
+
+   String getBuildID();
+
+   String getBuildDate();
    
    String getHomeDir();
    

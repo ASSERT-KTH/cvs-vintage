@@ -32,7 +32,7 @@ import org.jboss.Version;
  *      
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class Server
    implements ServerMBean
@@ -49,7 +49,7 @@ public class Server
    /** The JMX MBeanServer which will serve as our communication bus. */
    private final MBeanServer server;
 
-   /** Wen the server was started. */
+   /** When the server was started. */
    private final Date started;
    
    /** 
@@ -64,8 +64,10 @@ public class Server
          throw new IllegalArgumentException("config is null");
 
       this.config = config;
-
-      log.info("JBoss (MX MicroKernel) " + version);
+      log.debug("Using config: " + config);
+      
+      log.info("JBoss (MX MicroKernel) " + 
+         version + " [" + version.getName() + "]");
       
       // remeber when we we started
       started = new Date();
@@ -73,14 +75,17 @@ public class Server
             
       // Create the MBeanServer
       server = MBeanServerFactory.createMBeanServer(config.getDomain());
+      log.debug("Created MBeanServer: " + server);
+      
       String systemDomain = server.getDefaultDomain() + ".system";
+      log.debug("Using system domain: " + systemDomain);
       
       // Register ourselves first
       server.registerMBean(this,
                            new ObjectName(systemDomain,
                                           "service",
                                           "Server"));
-      
+
       // Initialize the MBean libraries repository
       server.registerMBean(ServiceLibraries.getLibraries(),
                            new ObjectName(systemDomain,
@@ -96,6 +101,7 @@ public class Server
                                              "ServiceClassLoader");
       MBeanClassLoader mcl = new MBeanClassLoader(loaderName);
       server.registerMBean(mcl, loaderName);
+      log.debug("Registered service classloader: " + loaderName);
             
       // Set ServiceClassLoader as classloader for the construction of
       // the basic system
@@ -107,6 +113,7 @@ public class Server
                                         "service", 
                                         "Logging"),
                          loaderName);
+      log.debug("Logging has been initialized");
       
       // Log the basic configuration elements
       log.info("Home Dir: " + config.getHomeDir());
@@ -130,11 +137,12 @@ public class Server
                                            "service", 
                                            "ServiceController"),
                             loaderName).getObjectName();
-            
+      log.debug("Registered service controller: " + controllerName);
+      
       // Install the shutdown hook
       ShutdownHook hook = new ShutdownHook(controllerName);
       Runtime.getRuntime().addShutdownHook(hook);
-      log.info("Shutdown hook added");
+      log.debug("Shutdown hook added");
 
       // Service Deployer
       ObjectName deployerName = 
@@ -143,9 +151,11 @@ public class Server
                                            "service", 
                                            "ServiceDeployer"),
                             loaderName).getObjectName();
+      log.debug("Registered service deployer: " + deployerName);
 
       // Ok, now deploy jboss-service.xml
       URL serviceURL = new URL(config.getConfigURL(), "jboss-service.xml");
+      log.info("Deploying basic components from: " + serviceURL);
       server.invoke(deployerName, 
                     "deploy", 
                     new Object[] { serviceURL.toString() },
@@ -159,8 +169,7 @@ public class Server
 
       // Tell the world how fast it was =)
       log.info("Started in " + minutes  + "m:" + 
-               seconds  + "s:" +
-               milliseconds +"ms");
+               seconds  + "s:" + milliseconds +"ms");
    }
 
    /**
@@ -211,6 +220,7 @@ public class Server
       Iterator iter = list.iterator();
       while (iter.hasNext()) {
          URL url = (URL)iter.next();
+         log.debug("Creating loader for URL: " + url);
          
          // Construction of URLClassLoader also registers with ServiceLibraries
          // Should probably remove this "side-effect" and make this more explicit
@@ -314,7 +324,23 @@ public class Server
    public String getVersion() {
       return version.toString();
    }
-   
+
+   public String getVersionName() {
+      return version.getName();
+   }
+
+   public String getBuildNumber() {
+      return version.getBuildNumber();
+   }
+
+   public String getBuildID() {
+      return version.getBuildID();
+   }
+
+   public String getBuildDate() {
+      return version.getBuildDate();
+   }
+
    public String getHomeDir() {
       return config.getHomeDir().toString();
    }
