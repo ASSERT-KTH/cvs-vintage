@@ -137,7 +137,14 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
     
     static Vector pool=new Vector();
     static boolean reuse=true;
+    
     /** Called from the web server for each request
+     *  You can extend JNIConnectionHandler and implement a different
+     *  JNIRequest/JNIResponse. Set the new handler on the JNIEndpoint,
+     *  the processConnection will be called.
+     *
+     *  This is temporary, a new, better and cleaner JNI interface
+     *  should be added in j-t-c.
      */
     public void processConnection(long s, long l) {
 	JNIRequestAdapter reqA=null;
@@ -282,169 +289,5 @@ public class JNIConnectionHandler extends BaseInterceptor implements JNIEndpoint
                      byte []buf,
                      int from,
                      int cnt);
-}
-
-// ==================== Request/Response adapters ====================
-
-class JNIRequestAdapter extends Request {
-    JNIConnectionHandler h;
-    long s;
-    long l;
-
-    public JNIRequestAdapter(ContextManager cm,
-                             JNIConnectionHandler h) {
-    	this.contextM = cm;
-    	this.h = h;
-    }
-
-    public  int doRead(byte b[], int off, int len) throws IOException {
-	if( available <= 0 )
-	    return 0;
-        int rc = 0;
-
-        while(0 == rc) {
-	        rc = h.read(s, l, b, off, len);
-	        if(0 == rc) {
-	            Thread.currentThread().yield();
-	        }
-	    }
-	available -= rc;
-	return rc;
-    }
-
-    protected void readNextRequest(long s, long l) throws IOException {
-        String []env = new String[15];
-        int i = 0;
-
-    	this.s = s;
-    	this.l = l;
-
-        for(i = 0 ; i < 12 ; i++) {
-            env[i] = null;
-        }
-
-        /*
-         * Read the environment
-         */
-        if(h.readEnvironment(s, l, env) > 0) {
-    		methodMB.setString( env[0] );
-    		uriMB.setString( env[1] );
-    		queryMB.setString( env[2] );
-    		remoteAddrMB.setString( env[3] );
-    		remoteHostMB.setString( env[4] );
-    		serverNameMB.setString( env[5] );
-            serverPort  = Integer.parseInt(env[6]);
-            authType    = env[7];
-            remoteUser  = env[8];
-            schemeMB.setString(env[9]);
-            protoMB.setString( env[10]);
-            // response.setServerHeader(env[11]);
-            
-            if(schemeMB.equalsIgnoreCase("https")) {
-                if(null != env[12]) {
-		            attributes.put("javax.servlet.request.X509Certificate",
-	                               env[12]);
-	            }
-	            
-                if(null != env[13]) {
-		            attributes.put("javax.servlet.request.cipher_suite",
-	                               env[13]);
-	            }
-	            
-                if(null != env[14]) {
-		            attributes.put("javax.servlet.request.ssl_session",
-	                               env[14]);
-	            }
-            }
-            
-            
-        } else {
-            throw new IOException("Error: JNI implementation error");
-        }
-
-        /*
-         * Read the headers
-         */
-        int nheaders = h.getNumberOfHeaders(s, l);
-        if(nheaders > 0) {
-            String []names = new String[nheaders];
-            String []values = new String[nheaders];
-            if(h.readHeaders(s, l, names, values) > 0) {
-                for(i = 0 ; i < nheaders ; i++) {
-                    headers.addValue(names[i]).setString(values[i]);
-                }
-            } else {
-                throw new IOException("Error: JNI implementation error");
-            }
-        }
-
-	// REQUEST_URI may include a query string
-	String requestURI=uriMB.toString();
-	int indexQ=requestURI.indexOf("?");
-	int rLen=requestURI.length();
-	if ( (indexQ >-1) && ( indexQ  < rLen) ) {
-	    queryMB.setString( requestURI.substring(indexQ + 1, requestURI.length()));
-	    uriMB.setString( requestURI.substring(0, indexQ));
-	} 
-    }
-}
-
-
-// Ajp use Status: instead of Status
-class JNIResponseAdapter extends Response {
-
-    JNIConnectionHandler h;
-    long s;
-    long l;
-
-    public JNIResponseAdapter(JNIConnectionHandler h) {
-    	this.h = h;
-    }
-
-    protected void setRequestAttr(long s, long l) throws IOException {
-    	this.s = s;
-    	this.l = l;
-    }
-
-    public void endHeaders() throws IOException {
-
-    	if(request.protocol().isNull()) // HTTP/0.9 
-	        return;
-
-        super.endHeaders();
-        
-	// Servlet Engine header will be set per/adapter - smarter adapters
-	// will not send it every time ( have it in C side ), and we may also
-	// want to add informations about the adapter used 
-	// 	if( request.getContext() != null)
-	// 	    setHeader("Servlet-Engine",
-	// 		      request.getContext().getEngineHeader());
-
-        int    hcnt = 0;
-        String []headerNames = null;
-        String []headerValues = null;
-	// Shouldn't be set - it's a bug if it is
-        // headers.removeHeader("Status");
-        hcnt = headers.size();
-        headerNames = new String[hcnt];
-        headerValues = new String[hcnt];
-
-        for(int i = 0; i < hcnt; i++) {
-            headerNames[i] = headers.getName(i).toString();
-            headerValues[i] = headers.getValue(i).toString();
-        }
-
-        if(h.startReasponse(s, l, status,
-			    HttpMessages.getMessage(status),
-			    headerNames, headerValues, hcnt) <= 0) {
-            throw new IOException("JNI startReasponse implementation error");
-        }
-    }
-
-    public void doWrite(byte buf[], int pos, int count) throws IOException {
-        if(h.write(s, l, buf, pos, count) <= 0) {
-            throw new IOException("JNI implementation error");
-        }
-    }
 }
 

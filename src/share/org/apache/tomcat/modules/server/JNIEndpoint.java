@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.5 2001/08/25 18:15:17 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2001/08/25 18:15:17 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
