@@ -197,12 +197,10 @@ public class ServletWrapper extends Handler {
      */
     public void addSecurityMapping( String name, String role,
 				    String description ) {
-// 	System.out.println("Adding role:  " + name + " " + role + " " + securityRoleRefs + " " + this);
 	securityRoleRefs.put( name, role );
     }
 
     public String getSecurityRole( String name ) {
-// 	System.out.println("Role: " + name + " "  +securityRoleRefs.get(name) + " " + securityRoleRefs + " " + this);
 	return (String)securityRoleRefs.get( name );
     }
 
@@ -343,13 +341,6 @@ public class ServletWrapper extends Handler {
     */
     public void service(Request req, Response res) 
     {
-// 	try {
-// 	    handleReload(req);
-// 	} catch( TomcatException ex ) {
-// 	    // what to do ?
-// 	    log("in handleReload request=" + req, ex);
-// 	}
-
 	// <servlet><jsp-file> case
 	if( path!=null ) {
 	    if( path.startsWith("/"))
@@ -389,58 +380,8 @@ public class ServletWrapper extends Handler {
 	}
     }
 
-    // -------------------- Reloading --------------------
-
-    // XXX Move it to interceptor - so it can be customized
-    // Reloading
-    // XXX ugly - should find a better way to deal with invoker
-    // The problem is that we are just clearing up invoker, not
-    // the class loaded by invoker.
-    void handleReload(Request req) throws TomcatException {
-	// That will be reolved after we reset the context - and many
-	// other conflicts.
-	if( isReloadable ) {// && ! "invoker".equals( getServletName())) {
-// 	    ServletLoader loader=context.getServletLoader();
-// 	    if( loader!=null) {
-		// XXX no need to check after we remove the old loader
-		if( context.shouldReload() ) {
-		    // workaround for destroy 
-		    try {
-			destroy();
-		    } catch(Exception ex ) {
-			log( "Error in destroy ", ex );
-		    }
-		    initialized=false;
-		    context.reload();
-		    
-		    ContextManager cm=context.getContextManager();
-		    cm.doReload( req, context );
-		    
-		    servlet=null;
-		    servletClass=null;
-		    /* Initial attempt to shut down the context and sessions.
-		       
-		       String path=context.getPath();
-		       String docBase=context.getDocBase();
-		       // XXX all other properties need to be saved
-		       // or something else
-		       ContextManager cm=context.getContextManager();
-		       cm.removeContext(path);
-		       Context ctx=new Context();
-		       ctx.setPath( path );
-		       ctx.setDocBase( docBase );
-		       cm.addContext( ctx );
-		       context=ctx;
-		       // XXX shut down context, remove sessions, etc
-		    */
-		}
-		//	}
-	}
-    }
-
-
     // -------------------- Jsp hooks
-        // <servlet><jsp-file> case - we know it's a jsp
+    // <servlet><jsp-file> case - we know it's a jsp
     void handleJspInit() {
 	// XXX Jsp Servlet is initialized, the servlet is not generated -
 	// we can't hook in! It's jspServet that has to pass the config -
@@ -496,15 +437,5 @@ public class ServletWrapper extends Handler {
 			       HttpServletResponse.SC_SERVICE_UNAVAILABLE );
 	return;
     }
-
-
-    // -------------------- Not found
-    private void handleNotFound( Request req, Response res) {
-	log( "Can't find servet " + getServletName() + " " +
-		     getServletClass() );
-	res.setStatus( 404 );
-	contextM.handleStatus( req, res,  404 );
-    }
-
 
 }

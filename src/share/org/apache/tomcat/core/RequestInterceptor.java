@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.11 2000/06/22 19:49:36 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/06/22 19:49:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestInterceptor.java,v 1.12 2000/07/29 01:35:11 costin Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/07/29 01:35:11 $
  *
  * ====================================================================
  *
@@ -63,7 +63,6 @@
 
 
 package org.apache.tomcat.core;
-import javax.servlet.Servlet;
 import java.util.*;
 
 /**

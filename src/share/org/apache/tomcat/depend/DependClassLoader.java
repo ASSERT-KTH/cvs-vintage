@@ -83,7 +83,7 @@ import java.security.*;
  */
 public class DependClassLoader extends ClassLoader {
     protected ClassLoader parent;
-    final static int debug=10;
+    final static int debug=0;
     DependManager dependM;
 
     public DependClassLoader( DependManager depM, ClassLoader parent ) {

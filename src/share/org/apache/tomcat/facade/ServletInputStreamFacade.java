@@ -86,6 +86,11 @@ public class ServletInputStreamFacade extends ServletInputStream {
     void recycle() {
 	
     }
+
+    void init() {
+	limit=req.getContentLength();
+	bytesRead=0;
+    }
     
     // -------------------- ServletInputStream methods 
     

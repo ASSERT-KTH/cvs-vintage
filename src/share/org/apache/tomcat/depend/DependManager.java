@@ -152,7 +152,7 @@ public class DependManager {
     
     // -------------------- Private 
 
-    private static final int debug=10;
+    private static final int debug=0;
     
     void log( String s ) {
 	System.out.println("DependManager: " + s );
