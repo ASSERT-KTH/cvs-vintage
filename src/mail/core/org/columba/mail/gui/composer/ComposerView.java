@@ -162,6 +162,15 @@ public class ComposerView extends AbstractFrameView {
 	}
 
 	/**
+	 * Returns a reference to the panel, that holds the editor view.
+	 * This is used by the ComposerController when adding a listener
+	 * to that panel.
+	 */
+	protected JPanel getEditorPanel() {
+		return editorPanel;
+	}
+
+	/**
 	 * Used to update the panel, that holds the editor viewer. This is 
 	 * necessary e.g. if the ComposerModel is changed to hold another 
 	 * message type (text / html), which the previous editor can not

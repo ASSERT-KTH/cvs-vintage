@@ -8,6 +8,8 @@ package org.columba.mail.gui.composer.html;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -41,7 +43,8 @@ import com.jgoodies.forms.layout.FormLayout;
  * @author fdietz
  * 
  */
-public class HtmlToolbar implements ActionListener, Observer {
+public class HtmlToolbar
+		implements ActionListener, Observer, ContainerListener {
 
 	ComposerController controller;
 
@@ -70,6 +73,9 @@ public class HtmlToolbar implements ActionListener, Observer {
 
 		// register for text selection changes
 		controller.getEditorController().addObserver(this);
+
+		// register for changes to the editor
+		controller.addContainerListenerForEditor(this);
 
 		// register for changes to editor type (text / html)
 		XmlElement optionsElement =
@@ -301,5 +307,23 @@ public class HtmlToolbar implements ActionListener, Observer {
 		}
 
 	}
+
+	/**
+	 * This event could mean that a the editor controller has changed.
+	 * Therefore this object is re-registered as observer to keep 
+	 * getting information about format changes.
+	 * 
+	 * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
+	 */
+	public void componentAdded(ContainerEvent e) {
+		ColumbaLogger.log.debug(
+				"Re-registering as observer on editor controller");
+		controller.getEditorController().addObserver(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
+	 */
+	public void componentRemoved(ContainerEvent e) {}
 
 }

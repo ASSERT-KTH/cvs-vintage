@@ -28,6 +28,7 @@ public class ComposerFacade {
 	 * open up composer window
 	 */
 	public static void openComposer() {
+		// Choice btw. text and html will be based on stored option
 		new ComposerController();
 	}
 
@@ -39,6 +40,7 @@ public class ComposerFacade {
 	 * @return	ComposerController
 	 */
 	public static ComposerController createComposer() {
+		// Choice btw. text and html will be based on stored option
 		return new ComposerController();
 	}
 }

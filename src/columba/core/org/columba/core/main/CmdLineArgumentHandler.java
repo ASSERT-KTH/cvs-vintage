@@ -6,9 +6,12 @@
 package org.columba.core.main;
 
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.parser.MailUrlParser;
+import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * This class handles given arguments (in style of commandline arguments. If for example the 
@@ -54,6 +57,7 @@ public class CmdLineArgumentHandler {
     
     if (cmdLineParser.getComposerOption()) {
       ComposerModel model = new ComposerModel();
+      
       if (cmdLineParser.getRcptOption() != null) {
         model.setTo(cmdLineParser.getRcptOption());
       }
@@ -67,7 +71,24 @@ public class CmdLineArgumentHandler {
 		model.setHeaderField("Bcc", cmdLineParser.getBccOption());
       }
       if (cmdLineParser.getBodyOption() != null) {
-		model.setBodyText(cmdLineParser.getBodyOption());
+      	String body = cmdLineParser.getBodyOption();
+
+		/*
+		 * *20030917, karlpeder* Set the model to html or text
+		 * based on the body specified on the command line. This
+		 * is done using a simple check: Does the body contains
+		 * <html> and </html>
+		 */
+		boolean html = false;
+		String lcase = body.toLowerCase();
+		if ((lcase.indexOf("<html>") != -1) &&
+				(lcase.indexOf("</html>") != -1)) {
+			html = true;
+		}
+		model.setHtml(html);
+
+		// set the body text
+        model.setBodyText(body);
       }
       
       ComposerController c = new ComposerController();

@@ -27,6 +27,7 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.parser.AddressParser;
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerModel;
@@ -354,23 +355,40 @@ public class MessageBuilder {
 	 * @param message A <code>Message</code> which contains
 	 *                the bodytext of the message we want
 	 * 	              reply/forward.
+	 * @param html    True for html messages (a different quoting is necessary)
 	 * 
 	 * FIXME: we should make this configureable
 	 * 
 	 */
-	private static String createQuotedBodyText(ColumbaMessage message) throws IOException {
+	private static String createQuotedBodyText(
+						ColumbaMessage message,
+						boolean html) throws IOException {
 		String bodyText = createBodyText(message);
 
-		/*
-		 * *20030621, karlpeder* tags are stripped
-		 * if the message body part is html
-		 */
-		MimeHeader header = message.getBodyPart().getHeader();
-		if (header.getContentSubtype().equals("html")) {
-			bodyText = HtmlParser.htmlToText(bodyText);
-		}
+		// The model type is set according to original message type. 
+		// Therefore tagstripping is no longer necessary
+		///*
+		// * *20030621, karlpeder* tags are stripped
+		// * if the message body part is html
+		// */
+		//MimeHeader header = message.getBodyPart().getHeader();
+		//if (header.getContentSubtype().equals("html")) {
+		//	bodyText = HtmlParser.htmlToText(bodyText);
+		//}
 
-		String quotedBodyText = BodyTextParser.quote(bodyText);
+		// Quote according model type (text/html)
+		String quotedBodyText;
+		if (html) {
+			// html
+			
+			// TODO: Implement quoting for html messages
+			
+			quotedBodyText = bodyText;
+			
+		} else {
+			// plain text
+			quotedBodyText = BodyTextParser.quote(bodyText);
+		}
 
 		return quotedBodyText;
 
@@ -436,6 +454,35 @@ public class MessageBuilder {
 			model.setAccountItem(accountItem);
 		}
 
+		// Initialisation of model to html or text
+		if ((operation == REPLY_AS_ATTACHMENT) || (operation == FORWARD)) {
+			/* original message is sent as attachment - model is setup
+			 * according to the stored option for html / text
+			 */
+			XmlElement optionsElement =
+				MailConfig.get("composer_options").getElement("/options");
+			XmlElement htmlElement = optionsElement.getElement("html");
+			if (htmlElement == null)
+				htmlElement = optionsElement.addSubElement("html");
+			String enableHtml = htmlElement.getAttribute("enable", "false");
+			model.setHtml((new Boolean(enableHtml)).booleanValue());
+		} else {
+			/* 
+			 * original message is sent "inline" - model is setup according
+			 * to the type of the original message.
+			 * NB: If the original message was plain text, the message type
+			 *     seen here is always text. If the original message
+			 *     contained html, the message type seen here will depend
+			 *     on the "prefer html" option.
+			 */
+			MimeHeader bodyHeader = message.getBodyPart().getHeader();
+			if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+				model.setHtml(true);
+			} else {
+				model.setHtml(false);
+			}
+		}
+
 		if ((operation == REPLY_AS_ATTACHMENT) || (operation == FORWARD)) {
 			// append message as mimepart
 			if (message.getSource() != null) {
@@ -448,9 +495,11 @@ public class MessageBuilder {
 			}
 		} else {
 			// prepend "> " to every line of the bodytext
-			String bodyText = createQuotedBodyText(message);
+			String bodyText = createQuotedBodyText(
+									message,
+									model.isHtml());
 			if (bodyText == null) {
-				bodyText = "<Error parsing bodytext>";
+				bodyText = "[Error parsing bodytext]";
 			}
 			model.setBodyText(bodyText);
 		}
@@ -504,9 +553,9 @@ public class MessageBuilder {
 		model.setAccountItem(accountItem);
 
 		// prepend "> " to every line of the bodytext
-		String bodyText = createQuotedBodyText(message);
+		String bodyText = createQuotedBodyText(message, false);
 		if (bodyText == null) {
-			bodyText = "<Error parsing bodytext>";
+			bodyText = "[Error parsing bodytext]";
 		}
 		StringBuffer buf = new StringBuffer(bodyText);
 		buf.append(templateBody);
@@ -549,13 +598,22 @@ public class MessageBuilder {
 		LocalMimePart bodyPart =
 			(LocalMimePart) message.getMimePartTree().getFirstTextPart("html");
 
+		// No conversion needed - the composer now supports both html and text
+		//
+		//if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+		//	model.setBodyText(
+		//		HtmlParser.htmlToText(bodyPart.getBody().toString()));
+		//} else {
+		//	model.setBodyText(bodyPart.getBody().toString());
+		//}
 		if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-			model.setBodyText(
-				HtmlParser.htmlToText(bodyPart.getBody().toString()));
+			// html
+			model.setHtml(true);
 		} else {
-			model.setBodyText(bodyPart.getBody().toString());
+			model.setHtml(false);
 		}
-
+		model.setBodyText(bodyPart.getBody().toString());
+		
 	}
 
 	/********************** addressbook stuff ***********************/

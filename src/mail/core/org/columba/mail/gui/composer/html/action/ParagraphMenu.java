@@ -17,6 +17,8 @@ package org.columba.mail.gui.composer.html.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,6 +29,7 @@ import javax.swing.text.html.HTML;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
@@ -53,7 +56,7 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz, Karl Peder Olesen (karlpeder)
  */
 public class ParagraphMenu extends IMenu
-		implements Observer, ActionListener {
+		implements Observer, ActionListener, ContainerListener {
 
 	ButtonGroup group;
 
@@ -103,6 +106,9 @@ public class ParagraphMenu extends IMenu
 			.getEditorController()
 			.addObserver(
 			this);
+
+		// register for changes to the editor
+		((ComposerController) controller).addContainerListenerForEditor(this);
 
 		// register for changes to editor type (text / html)
 		XmlElement optionsElement =
@@ -233,5 +239,24 @@ public class ParagraphMenu extends IMenu
 		ctrl.setParagraphFormat(tag);
 
 	}
+
+	/**
+	 * This event could mean that a the editor controller has changed.
+	 * Therefore this object is re-registered as observer to keep 
+	 * getting information about format changes.
+	 * 
+	 * @see java.awt.event.ContainerListener#componentAdded(java.awt.event.ContainerEvent)
+	 */
+	public void componentAdded(ContainerEvent e) {
+		ColumbaLogger.log.debug(
+				"Re-registering as observer on editor controller");
+		((ComposerController) getController()).
+				getEditorController().addObserver(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ContainerListener#componentRemoved(java.awt.event.ContainerEvent)
+	 */
+	public void componentRemoved(ContainerEvent e) {}
 
 }

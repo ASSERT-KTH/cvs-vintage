@@ -25,6 +25,8 @@ import javax.swing.JPopupMenu;
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
@@ -86,16 +88,19 @@ public class URLController implements ActionListener {
 	public void compose(String address) {
 		ComposerModel model = new ComposerModel();
 		model.setTo(address);
+
+		// init model to html or text according to stored option		
+		XmlElement optionsElement =
+			MailConfig.get("composer_options").getElement("/options");
+		XmlElement htmlElement = optionsElement.getElement("html");
+		if (htmlElement == null)
+			htmlElement = optionsElement.addSubElement("html");
+		String enableHtml = htmlElement.getAttribute("enable", "false");
+		model.setHtml((new Boolean(enableHtml)).booleanValue());
 		
 		ComposerController controller = new ComposerController();
 		controller.setComposerModel(model);
 		
-	/*
-		((ComposerModel) controller.getModel()).setTo(address);
-
-		//controller.setComposerModel(model);
-		 */ 
-		 
 	}
 
 	public void contact(String address) {

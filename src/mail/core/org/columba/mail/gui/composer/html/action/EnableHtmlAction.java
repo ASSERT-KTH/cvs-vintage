@@ -33,14 +33,11 @@ import org.columba.mail.util.MailResourceLoader;
 
 /**
  * CheckBox menu item for switching between HTML and text messages.
- * 
- * TODO: set ComposerModel html state (note that AbstractFrameController is
- *       really an instance of ComposerController). This will change the 
- * 		 composer type immediately - now it changes when the composer is
- *       reopened. To implement this, we need to find a way to convert
- * 		 properly from text to html and back.
+ * <br>
+ * This will change the stored option, which in turn are told to 
+ * notify observers => editor changes btw. HTML and text etc. 
  *
- * @author fdietz
+ * @author fdietz, Karl Peder Olesen
  */
 public class EnableHtmlAction
 	extends CheckBoxAction
