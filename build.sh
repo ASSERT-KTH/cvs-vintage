@@ -8,12 +8,15 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-# $Id: build.sh,v 1.6 2001/08/28 04:53:11 user57 Exp $
+# $Id: build.sh,v 1.7 2001/09/04 05:08:08 user57 Exp $
 
 PROGNAME=`basename $0`
 DIRNAME=`dirname $0`
 GREP="grep"
 ROOT="/"
+
+# Ignore user's ANT_HOME if it is set
+ANT_HOME=""
 
 # the default search path for ant
 ANT_SEARCH_PATH="\

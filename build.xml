@@ -10,9 +10,9 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.22 2001/09/02 19:29:38 kimptoc Exp $ -->
+<!-- $Id: build.xml,v 1.23 2001/09/04 05:08:09 user57 Exp $ -->
 
-<project name="JBoss" default="main">
+<project default="main" name="JBoss/Server">
 
   <!-- ================================================================== -->
   <!-- Initialization                                                     -->
@@ -285,25 +285,7 @@
   <!-- Where release generated files will go -->
   <property name="release.id" value="${module.name}-${module.version}-${build.id}"/>
   <property name="release.root" value="${module.release}/${release.id}"/>
-
-  <property name="release.bin" value="${release.root}/bin"/>
-  <property name="release.client" value="${release.root}/client"/>
-  <property name="release.conf" value="${release.root}/conf"/>
-  <property name="release.conf.default" value="${release.conf}/default"/>
-  <property name="release.db" value="${release.root}/db"/>
-  <property name="release.deploy" value="${release.root}/deploy"/>
-  <property name="release.deploy.lib" value="${release.deploy}/lib"/>
-  <property name="release.lib" value="${release.root}/lib"/>
-  <property name="release.lib.ext" value="${release.lib}/ext"/>
-  <property name="release.log" value="${release.root}/log"/>
-  <property name="release.tmp" value="${release.root}/tmp"/>
-
-  <!-- Documentation and examples -->
-  <property name="release.docs" value="${release.root}/docs"/>
-  <property name="release.examples" value="${release.docs}/examples"/>
-  <property name="release.api" value="${release.docs}/api"/>
-  <property name="release.module.docs" value="${release.docs}/${module.name}"/>
-  <property name="release.module.api" value="${release.api}/${module.name}"/>
+  <property name="release.archive.basename" value="${module.release}/${release.id}"/>
 
 
   <!-- ================================================================== -->
@@ -748,200 +730,20 @@
   <!-- Builds a release distribution.                                     -->
   <!-- ================================================================== -->
 
-  <target name="release" depends="all, release-dependencies"
+  <target name="release" depends="all"
 	  description="Builds a release distribution.">
-    <!-- Copy the generated libraries (lib/ext) -->
-    <mkdir dir="${release.lib.ext}"/>
-    <copy todir="${release.lib.ext}" filtering="no">
-      <fileset dir="${build.jars}">
-         <include name="jboss.jar"/>
-			<include name="jboss-spine.jar"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the generated libraries (client) -->
-    <mkdir dir="${release.client}"/>
-    <copy todir="${release.client}" filtering="no">
-      <fileset dir="${build.jars}">
-         <include name="*-client.jar"/>
-         <include name="connector.jar"/>
-
-         <!-- Shouldn't these go into bin ? -->
-         <include name="stop.jar"/>
-         <include name="deploy.jar"/>
-      </fileset>
-    </copy>
-
-    <!-- Setup the deployment directory (deploy) -->
-    <mkdir dir="${release.deploy}"/>
-    <copy todir="${release.deploy}" filtering="no">
-      <fileset dir="${build.etc}">
-         <include name="deploy.txt"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the generated deployment libraries (deploy/lib) -->
-    <mkdir dir="${release.deploy.lib}"/>
-    <copy todir="${release.deploy.lib}" filtering="no">
-      <fileset dir="${build.jars}">
-         <include name="jms-ra.rar"/>
-      </fileset>
-    </copy>
-	 
-    <!-- Copy the mail service xml snippet  (deploy/lib) -->	 
-    <copy todir="${release.deploy.lib}" filtering="no">
-      <fileset dir="${build.etc}/conf/default">
-         <include name="mail-service.xml"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the mail service xml snippet  (deploy/lib) -->	 
-    <copy todir="${release.deploy.lib}" filtering="no">
-      <fileset dir="${build.jars}">
-         <include name="jmx-connector.jsr"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the generated scripts & runnable jars (bin) -->
-    <mkdir dir="${release.bin}"/>
-    <copy todir="${release.bin}" filtering="no">
-      <fileset dir="${build.bin}">
+    <!-- Copy the output directory to the release directory -->
+    <mkdir dir="${release.root}"/>
+    <copy todir="${release.root}" filtering="no">
+      <fileset dir="${module.build}">
          <include name="**/*"/>
-      </fileset>
-      <fileset dir="${build.jars}">
-         <include name="run.jar"/>
-      </fileset>
-    </copy>
-    <!-- since copy does not preserve permissions, do this here (again) -->
-    <chmod perm="+x">
-      <fileset dir="${release.bin}">
-         <include name="**/*.sh"/>
-      </fileset>
-    </chmod>
-
-    <!-- Copy the static documents (docs) -->
-    <mkdir dir="${release.docs}"/>
-    <copy todir="${release.docs}" filtering="no">
-      <fileset dir="${build.docs}">
-         <include name="**/*"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the generated javadocs (docs/api/<module>) -->
-    <mkdir dir="${release.module.api}"/>
-    <copy todir="${release.module.api}" filtering="no">
-      <fileset dir="${build.api}">
-         <include name="**/*"/>
-      </fileset>
-    </copy>
-
-    <!-- Copy the default configuration files (conf) -->
-    <mkdir dir="${release.conf}"/>
-    <copy todir="${release.conf}" filtering="no">
-      <fileset dir="${build.etc}/conf">
-         <include name="**/*"/>
-			<exclude name="mail-service.xml"/>
-      </fileset>
-    </copy>
-
-    <!-- Setup the database directory (db) -->
-    <mkdir dir="${release.db}"/>
-    <copy todir="${release.db}" filtering="no">
-      <fileset dir="${build.etc}">
-         <include name="db.properties"/>
-      </fileset>
-    </copy>
-
-    <!-- Setup the log file directory (log) -->
-    <mkdir dir="${release.log}"/>
-    <copy todir="${release.log}" filtering="no">
-      <fileset dir="${build.etc}">
-         <include name="log.properties"/>
-      </fileset>
-    </copy>
-
-    <!-- Setup the temporary file directory (tmp) -->
-    <mkdir dir="${release.tmp}"/>
-    <copy todir="${release.tmp}" filtering="no">
-      <fileset dir="${build.etc}">
-         <include name="tmp.properties"/>
-      </fileset>
-    </copy>
-  </target>
-	  
-  <target name="release-dependencies" depends="init">
-    
-	 <mkdir dir="${release.lib}"/>
-    <copy todir="${release.lib}" filtering="no">
-      <fileset dir="${sun.jmx.lib}">
-        <include name="jmxri.jar"/>
-      </fileset>
-		<fileset dir="${build.jars}">
-        <include name="jboss-boot.jar"/>
-      </fileset>
-      <fileset dir="${sun.jaxp.lib}">
-        <include name="*.jar"/>
-		  <exclude name="xalan.jar"/>
-      </fileset>
-		
-    </copy>
-
-    <mkdir dir="${release.lib.ext}"/>
-    <copy todir="${release.lib.ext}" filtering="no">
-      <fileset dir="${sun.jndi.lib}">
-        <include name="jndi.jar"/>
-      </fileset>
-		
-      <fileset dir="${sun.jaxp.lib}">
-        <include name="xalan.jar"/>
-	   </fileset>
-      <fileset dir="${sun.jmx.lib}">
-        <include name="jmxtools.jar"/>
-      </fileset>
-      <fileset dir="${sun.jaf.lib}">
-        <include name="activation.jar"/>
-      </fileset>
-      <fileset dir="${sun.javamail.lib}">
-        <include name="mail.jar"/>
-      </fileset>
-      <fileset dir="${sun.jts.lib}">
-        <include name="jts.jar"/>
-      </fileset>
-      <fileset dir="${oswego.concurrent.lib}">
-        <include name="concurrent.jar"/>
-      </fileset>
-      <fileset dir="${gjt.jpl-util.lib}">
-        <include name="*.jar"/>
-      </fileset>
-      <fileset dir="${javagroups.javagroups.lib}">
-        <include name="JavaGroups.jar"/>
-      </fileset>
-	   <fileset dir="${apache.log4j.lib}">
-        <include name="log4j.jar"/>
-      </fileset>
-      <fileset dir="${sun.jsr77.lib}">
-        <include name="jsr77.jar"/>
-      </fileset>
-    </copy>
-
-    <mkdir dir="${release.client}"/>
-    <copy todir="${release.client}" filtering="no">
-      <fileset dir="${sun.jndi.lib}">
-        <include name="jndi.jar"/>
-      </fileset>
-      <fileset dir="${apache.log4j.lib}">
-        <include name="log4j.jar"/>
-      </fileset>
-      <fileset dir="${oswego.concurrent.lib}">
-        <include name="concurrent.jar"/>
+         <exclude name="${release.id}/**"/>
       </fileset>
     </copy>
   </target>
 
   <target name="release-archive-prepare" depends="release">
     <mkdir dir="${module.release}"/>
-    <property name="release.archive.basename"
-	      value="${module.release}/${release.id}"/>
   </target>
 
   <target name="release-zip" depends="release-archive-prepare"
@@ -1058,8 +860,5 @@
 
   <target name="most" depends="jars"
 	  description="Builds almost everything."/>
-
-  <target name="min" depends="compile"
-	  description="Builds a minimal subset."/>
 
 </project>
