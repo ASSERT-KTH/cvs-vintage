@@ -326,7 +326,7 @@ on the fly.
 <!--
 Explicitly declared sql fragments.
 -->
-<!ELEMENT declared-sql (select?, from?, where?, order?)>
+<!ELEMENT declared-sql (select?, from?, where?, order?, other?)>
 
 
 <!--
@@ -365,6 +365,13 @@ Example: <order>TITLE</order>
 -->
 <!ELEMENT order (#PCDATA)>
 
+
+<!--
+Declares the other sql that is appended to the end of a query.
+
+Example: <other>LIMIT 100 OFFSET 200</other>
+-->
+<!ELEMENT other (#PCDATA)>
 
 <!--
 Declare the alias to use for the main select table.
