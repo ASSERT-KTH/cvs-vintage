@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: JacORBPRODelegate.java,v 1.3 2005/02/02 17:43:06 benoitf Exp $
+ * $Id: JacORBPRODelegate.java,v 1.4 2005/02/04 13:55:35 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.rmi.multi;
@@ -58,6 +58,12 @@ public class JacORBPRODelegate implements PortableRemoteObjectDelegate {
      * Default JacORB class is the other classes cannot be loaded
      */
     private static final String DEFAULT_JACORB_CLASS = "org.jacorb.orb.rmi.PortableRemoteObjectDelegateImpl";
+
+
+    /**
+     * List of classes by order (try first, if not present, try next and etc.)
+     */
+    private static final String[] DELEGATE_CLASSES = new String[] {SUN_JDK14_CLASS, IBM_JDK14_CLASS, SUN_JDK50_CLASS };
 
 
     /**
@@ -148,50 +154,47 @@ public class JacORBPRODelegate implements PortableRemoteObjectDelegate {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
 
         // Need to find one class present in current JVM
-        try {
-            // first try with sun
+
+        boolean classFound = false;
+        int i = 0;
+        while (!classFound && i < DELEGATE_CLASSES.length) {
+            // get the classname
+            String cls = DELEGATE_CLASSES[i];
+
+            // debug trace
             if (TraceCarol.isDebugCarol()) {
-                TraceCarol.debugCarol("Trying with class '" + SUN_JDK14_CLASS + "'.");
+                TraceCarol.debugCarol("Trying with class '" + cls + "'.");
             }
-            clazz = cl.loadClass(SUN_JDK14_CLASS);
-            if (TraceCarol.isDebugCarol()) {
-                TraceCarol.debugCarol("Class found, Use as prodelegate class : '" + SUN_JDK14_CLASS + "'.");
-            }
-        } catch (ClassNotFoundException cnfesun) {
-            // then with IBM
+
             try {
+                // Try to load the class
+                clazz = cl.loadClass(cls);
                 if (TraceCarol.isDebugCarol()) {
-                    TraceCarol.debugCarol("Trying with class '" + IBM_JDK14_CLASS + "'.");
+                    TraceCarol.debugCarol("Class found, Use as prodelegate class : '" + cls + "'.");
                 }
-                clazz = cl.loadClass(IBM_JDK14_CLASS);
+                // class is available, the class is found
+                classFound = true;
+            } catch (ClassNotFoundException cnfesun) {
+                // class not available, try with next one if available
                 if (TraceCarol.isDebugCarol()) {
-                    TraceCarol.debugCarol("Class found, Use as prodelegate class : '" + IBM_JDK14_CLASS + "'.");
-                }
-            } catch (ClassNotFoundException cnfeibm) {
-                // then with Sun 5.0
-                try {
-                    if (TraceCarol.isDebugCarol()) {
-                        TraceCarol.debugCarol("Trying with class '" + SUN_JDK50_CLASS + "'.");
-                    }
-                    clazz = cl.loadClass(SUN_JDK50_CLASS);
-                    if (TraceCarol.isDebugCarol()) {
-                        TraceCarol.debugCarol("Class found, Use as prodelegate class : '" + SUN_JDK50_CLASS + "'.");
-                    }
-                } catch (ClassNotFoundException cnfesun5) {
-                    // else use jacorb
-                    try {
-                        if (TraceCarol.isDebugCarol()) {
-                            TraceCarol.debugCarol("Trying with class '" + SUN_JDK50_CLASS + "'.");
-                        }
-                        clazz = cl.loadClass(DEFAULT_JACORB_CLASS);
-                        TraceCarol.infoCarol("Using default Jacorb delegate class and not the JVM class. It may fail in some cases.");
-                    } catch (ClassNotFoundException cnfejacorb) {
-                        throw new IllegalArgumentException("Could not load default class '" + DEFAULT_JACORB_CLASS + "' :" + cnfejacorb.getMessage());
-                    }
+                    TraceCarol.debugCarol("Class '" + cls + "' not available.");
                 }
             }
 
+            // increment item
+            i++;
         }
+
+        // No class was found, use default one
+        if (!classFound) {
+            try {
+                clazz = cl.loadClass(DEFAULT_JACORB_CLASS);
+            } catch (ClassNotFoundException cnfejacorb) {
+                throw new IllegalArgumentException("Could not load default class '" + DEFAULT_JACORB_CLASS + "' :" + cnfejacorb.getMessage());
+            }
+            TraceCarol.infoCarol("Using default Jacorb delegate class and not the JVM class as JVM class was not found. It may fail in some cases.");
+        }
+
 
         // new instance of the object
         Object o = null;
