@@ -11,25 +11,23 @@ INSERT INTO TURBINE_ROLE (ROLE_ID, ROLE_NAME) VALUES (7, 'Root');
 # Add some default permissions
 
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (1, 'admin_users');
+    VALUES (1, 'Issue | Edit');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (2, 'Issue | Edit');
+    VALUES (2, 'Issue | Enter');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (3, 'Issue | Enter');
+    VALUES (3, 'Module | Edit');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (4, 'Module | Edit');
+    VALUES (4, 'Domain | Edit');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (5, 'Domain | Edit');
+    VALUES (5, 'Item | Approve');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (6, 'Item | Approve');
+    VALUES (6, 'Issue | Assign');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (7, 'Issue | Assign');
+    VALUES (7, 'Vote | Manage');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (8, 'Vote | Manage');
+    VALUES (8, 'Issue | Attach');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (9, 'Issue | Attachment');
-INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (10, 'User | Edit Preferences');
+    VALUES (9, 'User | Edit Preferences');
 
 
 # Create an account 'turbine@collab.net' for system administartor
@@ -47,46 +45,145 @@ insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
     values (5, 'elicia@collab.net', 'NWoZK3kTsExUV00Ywo1G5jlUKKs=', 'Elicia', 'David', 'elicia@collab.net', 'CONFIRMED' );
 
-# Add some permissions for the root role
+# create a temporary table.
 
-INSERT INTO TURBINE_ROLE_PERMISSION (ROLE_ID,PERMISSION_ID) 
-SELECT TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID FROM 
-TURBINE_ROLE, TURBINE_PERMISSION
-WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'admin_users' AND 
-TURBINE_ROLE.ROLE_NAME = 'turbine_root';
-
-INSERT INTO TURBINE_ROLE_PERMISSION (ROLE_ID,PERMISSION_ID) 
-SELECT TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID FROM 
-TURBINE_ROLE, TURBINE_PERMISSION
-WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'Item | Approve' AND 
-TURBINE_ROLE.ROLE_NAME = 'turbine_root';
+drop table if exists xxxx_populate_RolePermission;
+create table xxxx_populate_RolePermission  (
+    ROLE_ID		integer NOT NULL,
+    PERMISSION_ID	        integer NOT NULL
+);
 
 
-# Permissions for the Developer Role
+#
+#  PARTNER ROLE
+#
+insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
+       select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
+         from  TURBINE_ROLE, TURBINE_PERMISSION
+         where TURBINE_ROLE.ROLE_NAME = "Partner"
+           and TURBINE_PERMISSION.PERMISSION_NAME in (
+                  "User | Edit Preferences",
+                  "Issue | Attach")
+;
 
-INSERT INTO TURBINE_ROLE_PERMISSION (ROLE_ID,PERMISSION_ID) 
-SELECT TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID FROM 
-TURBINE_ROLE, TURBINE_PERMISSION
-WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'Issue | Edit' AND 
-TURBINE_ROLE.ROLE_NAME = 'Developer';
 
-INSERT INTO TURBINE_ROLE_PERMISSION (ROLE_ID,PERMISSION_ID) 
-SELECT TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID FROM 
-TURBINE_ROLE, TURBINE_PERMISSION
-WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'Issue | Enter' AND 
-TURBINE_ROLE.ROLE_NAME = 'Developer';
 
-INSERT INTO TURBINE_ROLE_PERMISSION (ROLE_ID,PERMISSION_ID) 
-SELECT TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID FROM 
-TURBINE_ROLE, TURBINE_PERMISSION
-WHERE TURBINE_PERMISSION.PERMISSION_NAME = 'User | Edit Preferences' AND 
-TURBINE_ROLE.ROLE_NAME = 'Developer';
+#
+#  OBSERVER ROLE
+#
+#  Observer has all project permissions of partner.
+insert into xxxx_populate_RolePermission
+	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
+         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
+               TURBINE_ROLE_PERMISSION as ToCopy
+         where ToCopy.ROLE_ID = FromRole.ROLE_ID
+	   and FromRole.ROLE_NAME = "Partner"
+	   and ToRole.ROLE_NAME = "Observer"
+;
 
-# Notes: need to add role/permission mappings for:
-# partner - issue|attach
-# project owner - module|edit,vote|manage,query|approve,template|approve
-# root - domain|edit
-# observer - issue|enter
+insert into TURBINE_ROLE_PERMISSION 
+	select * from xxxx_populate_RolePermission;
+delete from xxxx_populate_RolePermission;
+
+insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
+       select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
+         from  TURBINE_ROLE, TURBINE_PERMISSION
+         where TURBINE_ROLE.ROLE_NAME = "Observer"
+           and TURBINE_PERMISSION.PERMISSION_NAME = "Issue | Enter"
+;
+
+#
+#  DEVELOPER ROLE
+#
+#  Developer has all project permissions of observer.
+insert into xxxx_populate_RolePermission
+	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
+         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
+               TURBINE_ROLE_PERMISSION as ToCopy
+         where ToCopy.ROLE_ID = FromRole.ROLE_ID
+	   and FromRole.ROLE_NAME = "Observer"
+	   and ToRole.ROLE_NAME = "Developer"
+;
+insert into TURBINE_ROLE_PERMISSION 
+	select * from xxxx_populate_RolePermission;
+delete from xxxx_populate_RolePermission;
+
+insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
+       select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
+         from  TURBINE_ROLE, TURBINE_PERMISSION
+         where TURBINE_ROLE.ROLE_NAME = "Developer"
+           and TURBINE_PERMISSION.PERMISSION_NAME in (
+                "Issue | Edit",
+                "Issue | Assign")
+;
+
+#
+#  QA ROLE
+#
+#  Developer has all project permissions of observer.
+insert into xxxx_populate_RolePermission
+	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
+         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
+               TURBINE_ROLE_PERMISSION as ToCopy
+         where ToCopy.ROLE_ID = FromRole.ROLE_ID
+	   and FromRole.ROLE_NAME = "Developer"
+	   and ToRole.ROLE_NAME = "QA"
+;
+insert into TURBINE_ROLE_PERMISSION 
+	select * from xxxx_populate_RolePermission;
+delete from xxxx_populate_RolePermission;
+
+#
+#  PROJECT OWNER ROLE
+#
+#  Project Owner has all project permissions of developer.
+insert into xxxx_populate_RolePermission
+	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
+         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
+               TURBINE_ROLE_PERMISSION as ToCopy
+         where ToCopy.ROLE_ID = FromRole.ROLE_ID
+	   and FromRole.ROLE_NAME = "Developer"
+	   and ToRole.ROLE_NAME = "Project Owner"
+;
+insert into TURBINE_ROLE_PERMISSION 
+	select * from xxxx_populate_RolePermission;
+delete from xxxx_populate_RolePermission;
+
+insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
+       select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
+         from  TURBINE_ROLE, TURBINE_PERMISSION
+         where TURBINE_ROLE.ROLE_NAME = "Project Owner"
+           and TURBINE_PERMISSION.PERMISSION_NAME in (
+                "Module | Edit",
+                "Item | Approve",
+                "Vote | Manage")
+;
+
+#
+#  ROOT ROLE
+#
+#  Root has all project permissions of project owner.
+insert into xxxx_populate_RolePermission
+	       select  ToRole.ROLE_ID, ToCopy.PERMISSION_ID
+         from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
+               TURBINE_ROLE_PERMISSION as ToCopy
+         where ToCopy.ROLE_ID = FromRole.ROLE_ID
+	   and FromRole.ROLE_NAME = "Project Owner"
+	   and ToRole.ROLE_NAME = "Root"
+;
+insert into TURBINE_ROLE_PERMISSION 
+	select * from xxxx_populate_RolePermission;
+delete from xxxx_populate_RolePermission;
+
+insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
+       select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
+         from  TURBINE_ROLE, TURBINE_PERMISSION
+         where TURBINE_ROLE.ROLE_NAME = "Root"
+           and TURBINE_PERMISSION.PERMISSION_NAME = "Domain | Edit"
+;
+
+
+
 
 # Assign the user 'turbine@collab.net' a system-wide role 'turbine_root'
 
@@ -95,7 +192,7 @@ SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from
 TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
 WHERE TURBINE_USER.LOGIN_NAME = 'turbine@collab.net' AND 
 SCARAB_MODULE.MODULE_NAME = 0
-AND TURBINE_ROLE.ROLE_NAME = 'turbine_root';
+AND TURBINE_ROLE.ROLE_NAME in ('turbine_root', 'Root');
 
 # Insert a relationship between user_ids 2,4,5 and module_ids 5,6
 
