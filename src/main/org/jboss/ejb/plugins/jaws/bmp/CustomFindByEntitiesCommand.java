@@ -19,7 +19,6 @@ import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
 
 import org.jboss.ejb.plugins.jaws.JPMFindEntitiesCommand;
-import org.jboss.ejb.FinderResults;
 
 /**
  * JAWSPersistenceManager CustomFindByEntitiesCommand.
@@ -30,7 +29,7 @@ import org.jboss.ejb.FinderResults;
  *
  * @see org.jboss.ejb.plugins.jaws.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class CustomFindByEntitiesCommand
    implements JPMFindEntitiesCommand
@@ -64,7 +63,7 @@ public class CustomFindByEntitiesCommand
 
    // JPMFindEntitiesCommand implementation -------------------------
 
-   public FinderResults execute(Method finderMethod,
+   public Collection execute(Method finderMethod,
                                 Object[] args,
                                 EntityEnterpriseContext ctx)
       throws Exception
@@ -75,12 +74,11 @@ public class CustomFindByEntitiesCommand
          // if expected return type is Collection, return as is
          // if expected return type is not Collection, wrap result in Collection
          if (finderMethod.getReturnType().equals(Collection.class))  {
-            Collection coll = (Collection)finderImplMethod.invoke(ctx.getInstance(),args);
-            return new FinderResults(coll, null, null, null);
+            return (Collection)finderImplMethod.invoke(ctx.getInstance(),args);
          } else {
             Collection coll = new ArrayList(1);
             coll.add(finderImplMethod.invoke(ctx.getInstance(),args));
-            return new FinderResults(coll, null, null, null);
+            return coll;
          }
       } catch (IllegalAccessException e1) {
          throw new FinderException("Unable to access finder implementation:"+finderImplMethod.getName());

@@ -12,11 +12,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
-import org.jboss.ejb.FinderResults;
 
 /**
  * EntityPersistenceStore implementation storing values in-memory
@@ -26,13 +27,17 @@ import org.jboss.ejb.FinderResults;
  * @see org.jboss.ejb.plugins.CMPFilePersistenceManager
  *
  * @author  <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>.
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b>
  *
  * <p><b>28.12.2001 - Sacha Labourey:</b>
  * <ul>
  * <li> First implementation highly based on CMPFilePersistenceManager</li>
+ * </ul>
+ * <p><b>25.05.2002 - Dain Sundstrom:</b>
+ * <ul>
+ * <li> Replaced FinderResults with Collection</li>
  * </ul>
  */
 
@@ -291,16 +296,15 @@ public class CMPInMemoryPersistenceManager implements org.jboss.ejb.EntityPersis
     * @throws RemoteException    thrown if some system exception occurs
     * @throws FinderException    thrown if some heuristic problem occurs
     */
-   public FinderResults findEntities (Method finderMethod, Object[] args, EntityEnterpriseContext instance) throws Exception
+   public Collection findEntities (Method finderMethod, Object[] args, EntityEnterpriseContext instance) throws Exception
    {
       if (finderMethod.getName ().equals ("findAll"))
       {
-         ArrayList result = new ArrayList (this.beans.keySet ());
-         
-         return new FinderResults (result,null,null,null);
+         return new ArrayList(this.beans.keySet());
       } else
       {
-         return new FinderResults (new ArrayList (),null,null,null);
+         // we only support find all
+         return Collections.EMPTY_LIST;
       }
    }
    

@@ -43,7 +43,6 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.util.CachePolicy;
-import org.jboss.ejb.FinderResults;
 import org.jboss.util.LRUCachePolicy;
 
 /**
@@ -61,7 +60,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -465,10 +464,10 @@ public class JDBCStoreManager implements EntityPersistenceStore
       return findEntityCommand.execute(finderMethod, args, ctx);
    }
    
-   public FinderResults findEntities(
-   Method finderMethod,
-   Object[] args,
-   EntityEnterpriseContext ctx) throws FinderException
+   public Collection findEntities(
+         Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws FinderException
    {
       return findEntitiesCommand.execute(finderMethod, args, ctx);
    }

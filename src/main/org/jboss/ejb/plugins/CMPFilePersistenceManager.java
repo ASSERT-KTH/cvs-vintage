@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import javax.ejb.EJBObject;
@@ -33,12 +35,11 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.metadata.EntityMetaData;
-import org.jboss.ejb.FinderResults;
 
 /**
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * <p><b>20010801 marc fleury:</b>
  * <ul>
  * <li>- insertion in cache upon create in now done in the instance interceptor
@@ -46,6 +47,11 @@ import org.jboss.ejb.FinderResults;
  * <p><b>20011201 Dain Sundstrom:</b>
  * <ul>
  * <li>- added createBeanInstance and initiEntity methods
+ * </ul>
+ * <p><b>20020525 Dain Sundstrom:</b>
+ * <ul>
+ * <li>- Replaced FinderResults with Collection
+ * <li>- Removed unused method loadEntities
  * </ul>
  */
 public class CMPFilePersistenceManager
@@ -225,7 +231,7 @@ public class CMPFilePersistenceManager
          return null;
    }
      
-   public FinderResults findEntities(
+   public Collection findEntities(
          Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
    {
       if (finderMethod.getName().equals("findAll"))
@@ -238,10 +244,11 @@ public class CMPFilePersistenceManager
                result.add(files[i].substring(0,files[i].length()-4));
             }
             
-         return new FinderResults(result,null,null,null);
+         return result;
       } else
       {
-         return new FinderResults(new java.util.ArrayList(),null,null,null);
+         // we only support find all
+         return Collections.EMPTY_LIST;
       }
    }
 
@@ -274,10 +281,6 @@ public class CMPFilePersistenceManager
       }
    }
       
-   public void loadEntities(FinderResults keys) {
-      //this is a no op for this persistence store.
-   }
-   
    private void storeEntity(Object id, Object obj) 
    {
       try

@@ -8,6 +8,7 @@ package org.jboss.ejb;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.Collection;
 
 import javax.ejb.RemoveException;
 
@@ -25,7 +26,7 @@ import org.jboss.ejb.ContainerPlugin;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public interface EntityPersistenceStore
    extends ContainerPlugin
@@ -105,7 +106,7 @@ public interface EntityPersistenceStore
     * @throws RemoteException    thrown if some system exception occurs
     * @throws FinderException    thrown if some heuristic problem occurs
     */
-   FinderResults findEntities(Method finderMethod,
+   Collection findEntities(Method finderMethod,
                               Object[] args,
                               EntityEnterpriseContext instance)
       throws Exception;

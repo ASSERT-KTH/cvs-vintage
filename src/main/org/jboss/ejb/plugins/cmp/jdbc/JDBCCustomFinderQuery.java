@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.ejb.FinderException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.logging.Logger;
-import org.jboss.ejb.FinderResults;
 
 /**
  * CMPStoreManager CustomFindByEntitiesCommand.
@@ -30,7 +30,7 @@ import org.jboss.ejb.FinderResults;
  *
  * @see org.jboss.ejb.plugins.cmp.jdbc.JDBCFindEntitiesCommand
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCCustomFinderQuery implements JDBCQueryCommand {
    private Logger log;
@@ -64,20 +64,22 @@ public class JDBCCustomFinderQuery implements JDBCQueryCommand {
 
       try {
          // invoke implementation method on ejb instance
-         Object result = finderMethod.invoke(ctx.getInstance(), args);
+         Object value = finderMethod.invoke(ctx.getInstance(), args);
 
          // if expected return type is Collection, return as is
-         // if expected return type is not Collection, wrap result in Collection
-         if(result instanceof Enumeration) {
-            Enumeration e = (Enumeration)result;
-            result = new ArrayList();
-            while(e.hasMoreElements()) {
-               ((Collection)result).add(e.nextElement());
+         // if expected return type is not Collection, wrap value in Collection
+         if(value instanceof Enumeration) {
+            Enumeration enum = (Enumeration)value;
+            List result = new ArrayList();
+            while(enum.hasMoreElements()) {
+               result.add(enum.nextElement());
             }
-         } else if(!(result instanceof Collection)) {
-             result = Collections.singleton(result);
+            return result;
+         } else if(value instanceof Collection) {
+            return (Collection)value;
+         } else {
+            return Collections.singleton(value);
          }
-         return new FinderResults((Collection)result, null, null, null);
       } catch(IllegalAccessException e) {
          log.error("Error invoking custom finder " + finderMethod.getName(), e);
          throw new FinderException("Unable to access finder implementation: " +
