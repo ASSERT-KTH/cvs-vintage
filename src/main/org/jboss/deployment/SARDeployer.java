@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version   $Revision: 1.6 $ <p>
+* @version   $Revision: 1.7 $ <p>
 *
 *      <b>20010830 marc fleury:</b>
 *      <ul>initial import
@@ -262,7 +262,7 @@ public class SARDeployer
       for (int i = 0; i < classpaths.getLength(); i++)
       {
          Element classpathElement = (Element)classpaths.item(i);
-         log.debug("found classpath " + classpath);
+         log.debug("Found classpath element: " + classpathElement);
          
          //String codebase = System.getProperty("jboss.system.libraryDirectory");
          String codebase = "";
@@ -271,9 +271,9 @@ public class SARDeployer
          //Does it specify a codebase?
          if (classpathElement != null)
          {
-            log.debug("setting up classpath " + classpath);
             // Load the codebase
             codebase = classpathElement.getAttribute("codebase").trim();
+            log.debug("Setting up classpath from raw codebase: " + codebase);
             
             if ("".equals(codebase) || ".".equals(codebase))
             {  
@@ -289,9 +289,9 @@ public class SARDeployer
             }
             
             // Let's make sure the formatting of the codebase ends with the /
-            if (codebase.startsWith("file:") && !codebase.endsWith(File.separator))
+            if (codebase.startsWith("file:") && !codebase.endsWith("/"))
             {
-               codebase += File.separator;
+               codebase += "/";
             }
             else if (codebase.startsWith("http:") && !codebase.endsWith("/"))
             {
@@ -307,7 +307,8 @@ public class SARDeployer
          {
             try
             {
-               File dir = new File(codebase.substring(5));
+               URL fileURL = new URL(codebase);
+               File dir = new File(fileURL.getFile());
                // The patchDir can only be a File one, local
                File[] jars = dir.listFiles(
                   new java.io.FileFilter()
@@ -354,7 +355,8 @@ public class SARDeployer
                   
                try
                {
-                  File dir = new File(codebase.substring(5));
+                  URL fileURL = new URL(codebase);
+                  File dir = new File(fileURL.getFile());
                   // The patchDir can only be a File one, local
                   File[] jars = dir.listFiles(
                      new java.io.FileFilter()
