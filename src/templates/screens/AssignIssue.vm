@@ -115,11 +115,6 @@
 #set ($allAttributes = $scarabG.getAllAttributes($sortColumn, $sortPolarity))
 
 
-## PAGINATION
-## if results exceed limit, get subset list
-#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
-#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
-
 ## USER SEARCH
 
 <a name="add"><h3>$l10n.Users</h3></a> 
@@ -147,7 +142,12 @@
       #set ($searchResults = $scarabR.Users)
 #end
 
+## PAGINATION
+## if results exceed limit, get subset list
+#set ($resultsPerPage = $data.Parameters.getInt("resultsPerPage", 25))
+#set ($pageNum = $data.Parameters.getInt("pageNum", 1))
 #set ($paginated = ($resultsPerPage > 0 && $searchResults.size() > $resultsPerPage))
+
 #if ($paginated)
   #set ($searchResults = $scarabR.getPaginatedList($searchResults, $pageNum, $resultsPerPage))
   #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
