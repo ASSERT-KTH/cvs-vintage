@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.182 2004/04/13 21:10:29 mvw Exp $
+// $Id: ModelFacade.java,v 1.183 2004/04/15 19:02:37 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -6014,15 +6014,20 @@ public class ModelFacade {
     }
 
     /**
-     * Sets a state machine of some state.
+     * Sets a state machine of some state or transition.
      *
-     * @param handle is the state
+     * @param handle is the state or transition
      * @param stm is the state machine
      */
     public static void setStateMachine(Object handle, Object stm) {
         if (handle instanceof MState
             && (stm == null || stm instanceof MStateMachine)) {
             ((MState) handle).setStateMachine((MStateMachine) stm);
+            return;
+        }
+        if (handle instanceof MTransition
+            && (stm == null || stm instanceof MStateMachine)) {
+            ((MTransition) handle).setStateMachine((MStateMachine) stm);
             return;
         }
 	illegalArgument(handle, stm);
