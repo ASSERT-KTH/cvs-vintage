@@ -20,7 +20,7 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class ClassPathExtension
    extends ServiceMBeanSupport
@@ -62,6 +62,9 @@ public class ClassPathExtension
    public void initService()
       throws java.lang.Exception
    {
+      String separator = System.getProperty("path.separator");
+      String classPath = System.getProperty("java.class.path");
+   
       MLet mlet = (MLet)Thread.currentThread().getContextClassLoader();
       
       if (url.endsWith("/"))
@@ -89,6 +92,9 @@ public class ClassPathExtension
                   Logger.debug("Added library:"+file);
                   mlet.addURL(file);
                   
+                  // Add to java.class.path
+                  classPath += separator + file.getFile();
+                  
                   found++;
                }
             }
@@ -100,10 +106,19 @@ public class ClassPathExtension
                {
                   URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
                   mlet.addURL(u);
+                  
+                  // Add to java.class.path
+                  classPath += separator + u.getFile();
+                  
                   Logger.debug("Added directory:"+u);
                } catch (MalformedURLException e)
                {
-                  mlet.addURL(new File(url).toURL());
+                  URL u = new File(url).toURL();
+                  mlet.addURL(u);
+                  
+                  // Add to java.class.path
+                  classPath += separator + u.getFile();
+                  
                   Logger.debug("Added directory:"+url);
                }
             }
@@ -117,13 +132,27 @@ public class ClassPathExtension
          {
             URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             mlet.addURL(u);
+            
+            // Add to java.class.path
+            classPath += separator + u.getFile();
+            
             Logger.debug("Added library:"+u);
          } catch (MalformedURLException e)
          {
-            mlet.addURL(new File(url).toURL());
+            URL u = new File(url).toURL();
+            mlet.addURL(u);
+            
+            // Add to java.class.path
+            classPath += separator + u.getFile();
+            
             Logger.debug("Added library:"+url);
          }
       }
+      
+      // Set java.class.path
+      System.setProperty("java.class.path", classPath);
+      Logger.debug("Classpath is now:"+classPath);
+      
    }
    // Protected -----------------------------------------------------
 }
