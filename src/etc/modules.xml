@@ -67,6 +67,8 @@
 
 <module name="AccessInterceptor" javaClass="org.apache.tomcat.modules.aaa.AccessInterceptor"/>
 
+<module name="AccessLogInterceptor" javaClass="org.apache.tomcat.modules.loggers.AccessLogInterceptor"/>
+
 <module name="InvokerInterceptor" javaClass="org.apache.tomcat.modules.generators.InvokerInterceptor"/>
 
 <module name="ErrorHandler" javaClass="org.apache.tomcat.modules.generators.ErrorHandler"/>
