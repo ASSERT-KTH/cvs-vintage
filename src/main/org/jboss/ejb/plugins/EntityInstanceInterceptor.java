@@ -45,7 +45,7 @@ import org.jboss.util.Sync;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.26 $
+*   @version $Revision: 1.27 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -209,40 +209,46 @@ extends AbstractInterceptor
             throw e;
         } finally
         {
-            //         Logger.debug("Release instance for "+id);
-			try
+            // Logger.debug("Release instance for "+id);
+
+			// ctx can be null if cache.get throws an Exception, for
+			// example when activating a bean.
+			if (ctx != null)
 			{
-				mutex.acquire();
-
-				// unlock the context
-				ctx.unlock();
-
-				if (ctx.getId() == null)
+				try
 				{
+					mutex.acquire();
 
-				    // Work only if no transaction was encapsulating this remove()
-					if (ctx.getTransaction() == null)
+					// unlock the context
+					ctx.unlock();
+
+					if (ctx.getId() == null)
 					{
-						// Here we arrive if the bean has been removed and no
-						// transaction was associated with the remove, or if
-						// the bean has been passivated
 
-						// Remove from cache
-						cache.remove(key);
+						// Work only if no transaction was encapsulating this remove()
+						if (ctx.getTransaction() == null)
+						{
+							// Here we arrive if the bean has been removed and no
+							// transaction was associated with the remove, or if
+							// the bean has been passivated
 
-						// It has been removed -> send to the pool
-						container.getInstancePool().free(ctx);
-				    }
+							// Remove from cache
+							cache.remove(key);
+
+							// It has been removed -> send to the pool
+							container.getInstancePool().free(ctx);
+						}
+					}
+					else
+					{
+						// Yeah, do nothing
+					}
 				}
-				else
+				catch (InterruptedException ignored) {}
+				finally
 				{
-					// Yeah, do nothing
+					mutex.release();
 				}
-            }
-			catch (InterruptedException ignored) {}
-			finally
-			{
-				mutex.release();
 			}
         }
     }
