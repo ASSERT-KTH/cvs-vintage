@@ -74,7 +74,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.41 2002/01/19 01:07:51 elicia Exp $
+ * @version $Id: Default.java,v 1.42 2002/01/28 20:19:35 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -133,7 +133,7 @@ public class Default extends TemplateSecureScreen
             String key = (String)e.nextElement();
             if (key.indexOf("id") > -1)
             {
-               params.put(key, data.getParameters().get(key));
+               params.put(key, data.getParameters().getStrings(key));
                contextMap.put(currentTemplate, params); 
             }
         }
