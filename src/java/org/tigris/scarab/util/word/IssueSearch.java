@@ -115,7 +115,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.93 2003/04/10 02:00:22 jon Exp $
+ * @version $Id: IssueSearch.java,v 1.94 2003/04/10 02:03:47 jon Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -1633,7 +1633,7 @@ public class IssueSearch
                             createdBySqlFragment + ')';
                         if (dateRangeSql != null) 
                         {
-                            System.out.println("Date range: " + dateRangeSql);
+//                            System.out.println("Date range: " + dateRangeSql);
                             whereClause += AND + dateRangeSql;
                         }
                     }
