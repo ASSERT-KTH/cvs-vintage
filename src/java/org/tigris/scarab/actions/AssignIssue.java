@@ -97,7 +97,7 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.28 2002/01/15 21:18:34 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.29 2002/01/17 06:52:25 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
@@ -225,7 +225,7 @@ public class AssignIssue extends RequireLoginFirstAction
         throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List issues = scarabR.getIssueList();
+        List issues = scarabR.getIssues();
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
