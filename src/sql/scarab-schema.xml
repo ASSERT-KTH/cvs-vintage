@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.39 2001/09/07 00:35:38 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.40 2001/09/07 01:13:41 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -1048,14 +1048,12 @@
     <column name="MODULE_ID" required="false" type="INTEGER"></column>
     <column name="DELETED" required="false" type="BOOLEANINT" 
             default="0" size="1"></column>
-    <column name="APPROVED" required="false" type="INTEGER" />
+    <column name="APPROVED" required="false" type="BOOLEANINT"
+            default="0" size="1"></column>
     <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
 
     <foreign-key foreignTable="SCARAB_USER">
         <reference local="USER_ID" foreign="USER_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_USER">
-        <reference local="APPROVED" foreign="USER_ID"/>
     </foreign-key>
     <foreign-key foreignTable="SCARAB_QUERY_TYPE">
         <reference local="QUERY_TYPE_ID" foreign="QUERY_TYPE_ID"/>
