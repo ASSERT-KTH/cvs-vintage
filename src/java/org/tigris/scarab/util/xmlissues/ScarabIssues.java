@@ -65,7 +65,7 @@ import org.apache.commons.logging.LogFactory;
  * This class manages the validation and importing of issues.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabIssues.java,v 1.20 2003/02/01 03:35:39 jon Exp $
+ * @version $Id: ScarabIssues.java,v 1.21 2003/02/01 06:28:19 jon Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -493,9 +493,11 @@ public class ScarabIssues implements java.io.Serializable
                 }
                 else if (activity.getNewOption() != null)
                 {
+                    // check for global options
+                    @OM@.AttributeOption attributeOptionOM = null;
                     try
                     {
-                        @OM@.AttributeOption attributeOptionOM = @OM@.AttributeOption
+                        attributeOptionOM = @OM@.AttributeOption
                             .getInstance(attributeOM, activity.getNewOption());
                         if (attributeOptionOM == null)
                         {
@@ -508,12 +510,29 @@ public class ScarabIssues implements java.io.Serializable
                             activity.getNewOption() + 
                             ", in Attribute: " + attributeOM.getName());
                     }
+                    // check for module options
+                    try
+                    {
+                        @OM@.RModuleOption rmo = @OM@.RModuleOptionManager
+                            .getInstance(moduleOM, issueTypeOM, attributeOptionOM);
+                        if (rmo == null)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        importErrors.add("Could not find Module Attribute Option: " + 
+                            activity.getNewOption() + 
+                            ", in Attribute: " + attributeOM.getName());
+                    }
                 }
                 else if (activity.getOldOption() != null)
                 {
+                    @OM@.AttributeOption attributeOptionOM = null;
                     try
                     {
-                        @OM@.AttributeOption attributeOptionOM = @OM@.AttributeOption
+                        attributeOptionOM = @OM@.AttributeOption
                             .getInstance(attributeOM, activity.getOldOption());
                         if (attributeOptionOM == null)
                         {
@@ -523,6 +542,22 @@ public class ScarabIssues implements java.io.Serializable
                     catch (Exception e)
                     {
                         importErrors.add("Could not find Attribute Option: " + activity.getOldOption());
+                    }
+                    // check for module options
+                    try
+                    {
+                        @OM@.RModuleOption rmo = @OM@.RModuleOptionManager
+                            .getInstance(moduleOM, issueTypeOM, attributeOptionOM);
+                        if (rmo == null)
+                        {
+                            throw new Exception();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        importErrors.add("Could not find Module Attribute Option: " + 
+                            activity.getOldOption() + 
+                            ", in Attribute: " + attributeOM.getName());
                     }
                 }
             }
@@ -620,7 +655,8 @@ public class ScarabIssues implements java.io.Serializable
                 try
                 {
                     activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
-                    log.debug("Found ActivitySet in db: " + activitySetOM.getActivitySetId());
+                    log.debug("Found ActivitySet: " + activitySet.getId() + 
+                              " in db: " + activitySetOM.getActivitySetId());
                 }
                 catch (Exception e)
                 {
@@ -636,13 +672,15 @@ public class ScarabIssues implements java.io.Serializable
                     {
                         activitySetOM = (@OM@.ActivitySet) activitySetIdMap.get(activitySet.getId());
                         alreadyCreated = true;
-                        log.debug("Found ActivitySet in map: " + activitySetOM.getActivitySetId());
+                        log.debug("Found ActivitySet: " + activitySet.getId() + 
+                                  " in map: " + activitySetOM.getActivitySetId());
                     }
                     else // if it doesn't exist, then try to get it from the DB
                     {
                         activitySetOM = @OM@.ActivitySetManager.getInstance(activitySet.getId());
                         alreadyCreated = true;
-                        log.debug("Found ActivitySet in db: " + activitySetOM.getActivitySetId());
+                        log.debug("Found ActivitySet: " + activitySet.getId() + 
+                                  " in db: " + activitySetOM.getActivitySetId());
                     }
                 }
                 catch (Exception e)
