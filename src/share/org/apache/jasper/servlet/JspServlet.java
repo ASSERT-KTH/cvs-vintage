@@ -97,6 +97,8 @@ public class JspServlet extends HttpServlet {
         Servlet theServlet;
 	String jspUri;
 	boolean isErrorPage;
+	// ServletWrapper will set this 
+	Class servletClass;
 	
 	JspServletWrapper(String jspUri, boolean isErrorPage) {
 	    this.jspUri = jspUri;
@@ -105,9 +107,8 @@ public class JspServlet extends HttpServlet {
 	}
 	
 	private void load() throws JasperException, ServletException {
-	    try {  
-		Class servletClass = (Class) loadedJSPs.get(jspUri);
-
+	    try {
+		// Class servletClass = (Class) loadedJSPs.get(jspUri);
 		// This is to maintain the original protocol.
 		destroy();
 
@@ -204,7 +205,7 @@ public class JspServlet extends HttpServlet {
 	
     protected ServletContext context = null;
     protected Hashtable jsps = new Hashtable();
-    protected Hashtable loadedJSPs = new Hashtable();
+    //    protected Hashtable loadedJSPs = new Hashtable();
     protected ServletConfig config;
     protected JasperLoader loader;
     protected Options options;
@@ -294,52 +295,6 @@ public class JspServlet extends HttpServlet {
 	wrapper.service(request, response, precompile);
     }
 
-
-//     final void unknownException(HttpServletResponse response, 
-//     						Throwable t) 
-//     {
-//     	PrintWriter writer = new PrintWriter(System.err, true);
-// 	if (options.getSendErrorToClient()) {
-// 	    try {
-// 	        response.setContentType ("text/html");
-// 	    	writer = response.getWriter ();
-// 	    } catch (IOException ioex) {
-// 	        writer = new PrintWriter(System.err, true);
-// 	    }
-// 	}
-//         writer.println(Constants.getString("jsp.error.unknownException"));
-
-//         if (options.getSendErrorToClient()) {
-//             writer.println("<pre>");
-//         }
-
-// 	if (t instanceof JasperException) {
-//             Throwable x = ((JasperException) t).getRootCause();
-// 	    (x != null ? x : t).printStackTrace (writer);
-// 	} else {
-// 	    t.printStackTrace (writer);
-// 	}
-
-//         if (options.getSendErrorToClient()) {
-//             writer.println("</pre>");
-//         }
-        
-// 	if (!options.getSendErrorToClient()) {
-//             try {
-// 	        String message = t.getMessage ();
-// 		if (message == null)
-// 		    message = "No detailed message";
-// 		try {
-// 		    response.sendError(HttpServletResponse.
-// 				       SC_INTERNAL_SERVER_ERROR,
-// 				       message);
-// 		} catch (IllegalStateException ise) {
-// 		    Constants.jasperLog.log(message, t, Logger.ERROR);
-// 		}
-//             } catch (IOException ex) {
-//             }
-// 	}
-//     }
 
     boolean preCompile(HttpServletRequest request) 
         throws ServletException 
@@ -446,13 +401,13 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    boolean loadJSP(String name, String classpath, 
+    boolean loadJSP(String jspUri, String classpath, 
 	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
 	// Loader knows how to set the right priviledges, and call
 	// doLoadeJsp
-	return loader.loadJSP( this, name, classpath, isErrorPage, req, res );
+	return loader.loadJSP( this,jspUri, classpath, isErrorPage, req, res );
     }
 
     /*  Check if we need to reload a JSP page.
@@ -462,14 +417,18 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    protected boolean doLoadJSP(String name, String classpath, 
+    protected boolean doLoadJSP(String jspUri, String classpath, 
 	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {
-	Class jspClass = (Class) loadedJSPs.get(name);
-	boolean firstTime = jspClass == null;
+	JspServletWrapper jsw=(JspServletWrapper) jsps.get(jspUri);
+	if( jsw==null ) {
+	    throw new JasperException("Can't happen - JspServletWrapper=null");
+	}
+	//	Class jspClass = (Class) loadedJSPs.get(jspUri);
+	boolean firstTime = jsw.servletClass == null;
         JspCompilationContext ctxt = new JspEngineContext(loader, classpath,
-                                                     context, name, 
+                                                     context, jspUri, 
                                                      isErrorPage, options,
                                                      req, res);
 	boolean outDated = false; 
@@ -478,9 +437,10 @@ public class JspServlet extends HttpServlet {
         
         try {
             outDated = compiler.compile();
-            if ( (jspClass == null) || (compiler.isOutDated()) ) {
+            if ( (jsw.servletClass == null) || (compiler.isOutDated()) ) {
                 synchronized ( this ) {
-                    if ((jspClass == null) || (compiler.isOutDated() ))  {
+                    if ((jsw.servletClass == null) ||
+			(compiler.isOutDated() ))  {
                         outDated = compiler.compile();
                     }
 		}
@@ -495,21 +455,43 @@ public class JspServlet extends HttpServlet {
 	}
 
 	// Reload only if it's outdated
-	if((jspClass == null) || outDated) {
+	if((jsw.servletClass == null) || outDated) {
 	    try {
 		if( null ==ctxt.getServletClassName() ) {
 		    compiler.computeServletClassName();
 		}
-		jspClass = loader.loadClass(ctxt.getFullClassName());
+		jsw.servletClass = loader.loadClass(ctxt.getFullClassName());
                         //loadClass(ctxt.getFullClassName(), true);
 	    } catch (ClassNotFoundException cex) {
 		throw new JasperException(Constants.getString("jsp.error.unable.load"), 
 					  cex);
 	    }
-	    loadedJSPs.put(name, jspClass);
+	    
+	    //	    loadedJSPs.put(jspUri, jspClass);
 	}
 	
 	return outDated;
+    }
+
+        /**
+     * Determines whether the current JSP class is older than the JSP file
+     * from whence it came
+     */
+    public boolean isOutDated(File jsp, JspCompilationContext ctxt,
+			      JspMangler mangler ) {
+        File jspReal = null;
+	boolean outDated;
+	
+        jspReal = new File(ctxt.getRealPath(jsp.getPath()));
+
+        File classFile = new File(mangler.getClassFileName());
+        if (classFile.exists()) {
+            outDated = classFile.lastModified() < jspReal.lastModified();
+        } else {
+            outDated = true;
+        }
+
+        return outDated;
     }
 
 }

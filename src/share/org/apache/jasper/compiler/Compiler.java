@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.17 2000/06/15 00:26:43 costin Exp $
- * $Revision: 1.17 $
- * $Date: 2000/06/15 00:26:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.18 2000/06/27 17:16:22 costin Exp $
+ * $Revision: 1.18 $
+ * $Date: 2000/06/27 17:16:22 $
  *
  * ====================================================================
  * 
@@ -85,7 +85,7 @@ import org.apache.tomcat.logging.Logger;
  * @author Anil K. Vijendran
  * @author Mandar Raje
  */
-public abstract class Compiler {
+public class Compiler {
     protected JavaCompiler javac;
     protected Mangler mangler;
     protected JspCompilationContext ctxt;
@@ -286,7 +286,9 @@ public abstract class Compiler {
      * subclasses of Compiler. This is used by the compile method
      * to do all the compilation. 
      */
-    public abstract boolean isOutDated();
+    public boolean isOutDated() {
+	return true;
+    }
     
     /**
      * Set java compiler info
