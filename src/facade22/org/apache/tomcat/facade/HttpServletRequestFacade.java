@@ -81,6 +81,8 @@ import javax.servlet.http.*;
  * @author James Todd [gonzo@eng.sun.com]
  * @author Harish Prabandham
  * @author Costin Manolache
+ * @author Ignacio J. Ortega
+ *
  */
 final class HttpServletRequestFacade implements HttpServletRequest {
     private static StringManager sm =
@@ -331,7 +333,6 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	String encoding = request.getCharacterEncoding();
         if (encoding == null) {
             encoding = "8859_1"; // that's the default in HTTP and servlet spec
-;
         }
 	
 	InputStreamReader r =
@@ -417,7 +418,18 @@ final class HttpServletRequestFacade implements HttpServletRequest {
     }
 
     public boolean isUserInRole(String role) {
-	return request.isUserInRole(role);
+        // get the servletWrapper...
+        ServletHandler handler=(ServletHandler)request.getHandler();
+        String realRole=role;
+        if ( handler!= null ) {
+            // lookup the alias
+            String mappedRole = handler.getServletInfo().getSecurityRole(role);
+            if ( mappedRole != null ) {
+                // use translated role
+                realRole = mappedRole;
+            }
+        }
+        return request.isUserInRole(realRole);
     }
 
     public Principal getUserPrincipal() {
