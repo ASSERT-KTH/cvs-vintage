@@ -6,23 +6,19 @@ $page.setTitle("Artifact Type Select")
 
 <form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
-        
+
 #set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
 #if ($issueTypes.isEmpty())
 
 <div class="functnbar">
-    <table cellpadding="0" cellspacing="0" border="0">
+    <table cellpadding="4" cellspacing="0" border="1">
     <tr>
-    <td><strong>General functions</strong></td>
-    </tr>
-    <tr>
-    <td>
+    <td class="firstchild">
+       <div>General functions</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
-       <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />
+      <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />&#160;
     #end
-    &#160;
     <input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-    </td>
     </tr>
     </table>
 </div>
@@ -37,20 +33,20 @@ $page.setTitle("Artifact Type Select")
 #else
 
 <div class="functnbar">
-    <table cellpadding="0" cellspacing="0" border="0">
+    <table cellpadding="4" cellspacing="0" border="1">
     <tr>
-    <td><strong>Select items to:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>General functions</strong></td>
-    </tr>
-    <tr>
-    <td><input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />&#160;</td>
+    <td class="firstchild">
+    <div>Select items to:</div>
+    <input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />
+    </td>
+    
     <td>
+    <div>General functions:</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
        <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />
     #end
-    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></td>
-
+    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    </td>
     </tr>
     </table>
 </div>
@@ -77,25 +73,25 @@ $page.setTitle("Artifact Type Select")
 </table>
 
 <div class="functnbar2">
-    <table cellpadding="0" cellspacing="0" border="0">
+    <table cellpadding="4" cellspacing="0" border="1">
     <tr>
-    <td><strong>Select items to:</strong></td>
-    <td rowspan="2"><img src="$data.Request.ContextPath/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
-    <td><strong>General functions</strong></td>
-    </tr>
-    <tr>
-    <td><input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />&#160;</td>
+    <td class="firstchild">
+    <div>Select items to:</div>
+    <input type="submit" value="Add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />
+    </td>
+    
     <td>
+    <div>General functions:</div>
     #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
        <input type="submit" value="Create new" name="eventSubmit_doGotoartifactpage" />
     #end
-    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></td>
-
+    &#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
+    </td>
     </tr>
     </table>
 </div>
         
 #end
-    </div>
+
 </form>
 </div>
