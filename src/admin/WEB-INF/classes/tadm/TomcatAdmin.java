@@ -9,6 +9,7 @@ import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.qlog.*;
 
 /**
  * A context administration class. Contexts can be
@@ -135,10 +136,12 @@ public class TomcatAdmin extends TagSupport {
 	try {
 	    QueueLogger logger=new QueueLogger();
 	    System.out.println("Setting logger " + dest );
-	    logger.setName( "temp.log");
 	    logger.setPath( dest );
 	    logger.open();
-	    Logger.putLogger( logger );
+	    LogManager logManager=(LogManager)ctx.getContextManager().
+		getNote("tc.LogManager");
+	    
+	    logManager.addChannel("temp.log", logger );
 	    Log log=Log.getLog( "temp.log", ctx );
 	    ctx.setLog( log );
 	    ctx.setServletLog( log );
