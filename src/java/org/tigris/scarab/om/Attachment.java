@@ -48,6 +48,7 @@ package org.tigris.scarab.om;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.Date;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
@@ -76,7 +77,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Attachment.java,v 1.39 2002/08/02 01:48:51 jon Exp $
+ * @version $Id: Attachment.java,v 1.40 2002/09/05 18:27:43 jmcnally Exp $
  */
 public class Attachment 
     extends BaseAttachment
@@ -327,6 +328,18 @@ public class Attachment
                 setDataAsString(sb.toString());
             }
         }
+
+        if (isNew()) 
+        {
+            Date now = new Date();
+            setCreatedDate(now);
+            setModifiedDate(now);
+        }
+        else if (isModified()) 
+        {
+            setModifiedDate(new Date());
+        }
+        
         super.save(dbCon);
         
         try
