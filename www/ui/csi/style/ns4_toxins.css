@@ -116,7 +116,7 @@ ul, ol, dd	{
 #banner {
 	border-top: 1px solid #6699CC;
 	border-bottom: 1px solid #003366;
-	background: #369 url(../images/logo.gif) no-repeat left;
+	background: #369;
 	}
 #crumbbar {
 	border-top: 1px solid white;
