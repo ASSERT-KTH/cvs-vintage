@@ -52,9 +52,6 @@ public class RemoveAddressFromWhiteListAction
 		// tooltip text
 		setTooltipText("Remove Address from Whitelist");
 
-		// action command
-		setActionCommand("REMOVE_ADDRESS_FROM_WHITELIST");
-
 		setEnabled(false);
 		(
 			(

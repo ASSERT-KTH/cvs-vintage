@@ -34,8 +34,6 @@ public class AnalyzeFolderAction
 		// tooltip text
 		setTooltipText("Analyze all messages of selected Folder");
 
-		//action command
-		setActionCommand("ANALYZE_FOLDER");
 
 		setEnabled(false);
 		(

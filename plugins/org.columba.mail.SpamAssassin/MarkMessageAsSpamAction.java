@@ -34,9 +34,6 @@ public class MarkMessageAsSpamAction
 		// tooltip text
 		setTooltipText("Mark selected messages as Spam");
 
-		// action command
-		setActionCommand("MARK_AS_SPAM");
-
 		setEnabled(false);
 		(
 			(

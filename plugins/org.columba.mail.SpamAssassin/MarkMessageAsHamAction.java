@@ -34,9 +34,6 @@ public class MarkMessageAsHamAction
 		// tooltip text
 		setTooltipText("Mark selected messages as Ham");
 
-		// action command
-		setActionCommand("MARK_AS_HAM");
-
 		setEnabled(false);
 		(
 			(

@@ -45,7 +45,6 @@ public class BounceAction extends FrameAction implements SelectionListener {
 				"mainframe",
 				"menu_message_bounce"));
 
-		setActionCommand("BOUNCE");
 
 		setTooltipText(
 			MailResourceLoader.getString(

@@ -53,9 +53,6 @@ public class AddAddressToBlackListAction
 		// tooltip text
 		setTooltipText("Add Address to Blacklist");
 		
-		//	action command
-		setActionCommand("ADD_ADDRESS_TO_BLACKLIST");
-
 		setEnabled(false);
 		(
 			(

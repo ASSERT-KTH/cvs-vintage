@@ -34,8 +34,6 @@ public class AnalyzeMessageAction
 		// tooltip text
 		setTooltipText("Analyze selected messages");
 
-		// action command
-		setActionCommand("ANALYZE_MESSAGES");
 
 		setEnabled(false);
 		(

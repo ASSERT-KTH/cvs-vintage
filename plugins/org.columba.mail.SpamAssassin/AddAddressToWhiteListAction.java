@@ -52,8 +52,6 @@ public class AddAddressToWhiteListAction
 		//	tooltip text
 		setTooltipText("Add Address to Whitelist");
 
-		//	action command
-		setActionCommand("ADD_ADDRESS_TO_WHITELIST");
 		
 		setEnabled(false);
 		(

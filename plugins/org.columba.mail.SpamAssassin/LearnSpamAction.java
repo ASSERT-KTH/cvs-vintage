@@ -40,9 +40,6 @@ public class LearnSpamAction extends FrameAction implements SelectionListener {
 		// tooltip text
 		setTooltipText("Learn Spam based on selected Folder");
 
-		// action command
-		setActionCommand("LEARN_SPAM");
-
 		setEnabled(false);
 		(
 			(

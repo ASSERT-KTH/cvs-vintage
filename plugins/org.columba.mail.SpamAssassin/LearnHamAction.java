@@ -40,8 +40,6 @@ public class LearnHamAction extends FrameAction implements SelectionListener {
 		// tooltip text
 		setTooltipText("Learn Ham based on selected Folder");
 
-		// action command
-		setActionCommand("LEARN_HAM");
 
 		setEnabled(false);
 		(

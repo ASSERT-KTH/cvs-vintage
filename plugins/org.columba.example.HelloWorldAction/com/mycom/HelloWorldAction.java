@@ -28,7 +28,6 @@ public class HelloWorldAction extends FrameAction {
 
 		setTooltipText("Show me this tooltip, please");
 
-		setActionCommand("HELLO_WORLD");
 	}
 
 	/* (non-Javadoc)
