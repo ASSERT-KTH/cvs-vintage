@@ -97,7 +97,6 @@ public class IMAPFolder extends RemoteFolder {
 
 		cache = new RemoteHeaderCache(this);
 
-		
 		//setChanged(true);
 	}
 
@@ -143,13 +142,16 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#addFolder(java.lang.String)
 	 */
-	public void addFolder(String name) throws Exception {
+	public FolderTreeNode addFolder(String name) throws Exception {
 
 		String path = getImapPath() + getStore().getDelimiter() + name;
 
 		boolean result = getStore().createFolder(path);
 
-		super.addFolder(name);
+		if (result)
+			return super.addFolder(name);
+
+		return null;
 	}
 
 	/**
@@ -244,7 +246,7 @@ public class IMAPFolder extends RemoteFolder {
 
 		// if available -> fetch new headers
 		if (result.size() > 0) {
-			
+
 			getStore().fetchHeaderList(
 				headerList,
 				result,
@@ -666,7 +668,7 @@ public class IMAPFolder extends RemoteFolder {
 	/**
 	 * @see org.columba.mail.folder.FolderTreeNode#getDefaultProperties()
 	 */
-	public static  XmlElement getDefaultProperties() {
+	public static XmlElement getDefaultProperties() {
 		XmlElement props = new XmlElement("property");
 		props.addAttribute("accessrights", "user");
 		props.addAttribute("subfolder", "true");
@@ -694,7 +696,8 @@ public class IMAPFolder extends RemoteFolder {
 	 * @see org.columba.mail.folder.FolderTreeNode#releaseLock()
 	 */
 	public void releaseLock() {
-		getRootFolder().releaseLock();
+		if ( getRootFolder() != null )
+			getRootFolder().releaseLock();
 	}
 
 }

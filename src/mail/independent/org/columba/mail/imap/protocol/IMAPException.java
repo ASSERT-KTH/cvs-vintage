@@ -35,11 +35,11 @@ public class IMAPException extends Exception {
 
     public IMAPException( String s )
     {
-        super( "IMAP Server communication problem:\n"+s );
+        super( "\n\nIMAP Server response:\n"+s );
     }
     
     public IMAPException( IMAPResponse response )
     {
-    	super("IMAP Server communication problem:"+response.getSource());
+    	super("\n\nIMAP Server response:\n"+response.getSource());
     }
 }

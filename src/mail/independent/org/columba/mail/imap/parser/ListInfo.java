@@ -65,6 +65,8 @@ public class ListInfo {
 			
 			// (\NoInferiors \hasChildren)
 			nextItem = tok.getNextItem();
+			if ( ((String)nextItem.getValue()).indexOf("Noselect") != -1) isSelectable = false;
+			else isSelectable = true;
 			
 			// delimiter "." or "/"
 			nextItem = tok.getNextItem();
@@ -91,6 +93,13 @@ public class ListInfo {
 	public String getName() {
 		return mailboxName;
 	}
+	
+	public String getLastName()
+	{
+		String sub = mailboxName.substring( mailboxName.lastIndexOf(delimiter)+1, mailboxName.length() );
+		
+		return sub;
+	}
 
 	public boolean hasChildren() {
 		return hasInferiors;
@@ -99,6 +108,13 @@ public class ListInfo {
 	public String getDelimiter()
 	{
 		return delimiter;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public boolean isSelectable() {
+		return isSelectable;
 	}
 
 }

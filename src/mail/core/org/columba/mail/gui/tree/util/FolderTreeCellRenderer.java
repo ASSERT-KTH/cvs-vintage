@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree.util;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 
@@ -175,6 +176,14 @@ public class FolderTreeCellRenderer
 			} else {
 				setIcon(folder.getCollapsedIcon());
 			}
+			
+			if ( item.getBoolean("selectable",true) == false )
+			{
+				setFont( italicFont );
+				setForeground(Color.darkGray);
+			}
+			
+			
 			// FIXME
 
 			/*

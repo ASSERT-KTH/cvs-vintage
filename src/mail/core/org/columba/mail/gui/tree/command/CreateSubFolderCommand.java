@@ -74,7 +74,12 @@ public class CreateSubFolderCommand extends Command {
 		attributes.put("name", name);
 		*/
 		try {
-			parentFolder.addFolder(name);
+			FolderTreeNode folder = parentFolder.addFolder(name);
+			
+			// if folder creation failed
+			//  -> don't update tree ui
+			if (folder==null) success = false;
+			
 		} catch (Exception ex) {
 			success = false;
 			throw ex;

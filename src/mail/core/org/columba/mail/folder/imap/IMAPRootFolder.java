@@ -122,60 +122,111 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 		return "IMAPFolder";
 	}
 
-	protected void addIMAPSubFolder(FolderTreeNode folder, String name)
+	/**
+		 * @see org.columba.mail.folder.FolderTreeNode#addFolder(java.lang.String)
+		 */
+	public FolderTreeNode addFolder(String name) throws Exception {
+
+		String path = name;
+
+		boolean result = getStore().createFolder(path);
+
+		if (result)
+			return super.addFolder(name);
+
+		return null;
+	}
+
+	// we can't use 
+	//   "folder.addFolder(subchild)"
+	// here
+	//
+	// -> this would tell the IMAP server to create a new
+	// -> folder, too
+	//
+	// -> but we only want to create it in Columba without 
+	// -> touching the server
+	protected FolderTreeNode addIMAPChildFolder(
+		FolderTreeNode folder,
+		ListInfo info,
+		String subchild)
 		throws Exception {
-		ColumbaLogger.log.debug("addSubFolder=<" + name + ">");
+		ColumbaLogger.log.debug("creating folder=" + subchild);
+
+		ColumbaLogger.log.debug("info.getName()=" + info.getName());
+		ColumbaLogger.log.debug("info.getLastName()=" + info.getLastName());
+
+		if (subchild.equals(info.getLastName())) {
+
+			// this is just a parent-folder we need to
+			// create in order to create a child-folder
+			ColumbaLogger.log.debug("creating immediate folder=" + subchild);
+
+			return folder.addFolder(subchild, "IMAPFolder");
+
+		} else {
+
+			// this folder is associated with ListInfo
+			// pass parameters to folderinfo 			
+			ColumbaLogger.log.debug("create final folder" + subchild);
+
+			IMAPFolder imapFolder =
+				(IMAPFolder) folder.addFolder(subchild, "IMAPFolder");
+			FolderItem folderItem = imapFolder.getFolderItem();
+
+			folderItem.set("selectable", false);
+
+			return imapFolder;
+		}
+
+	}
+
+	protected void addIMAPSubFolder(
+		FolderTreeNode folder,
+		String name,
+		ListInfo info)
+		throws Exception {
+
+		ColumbaLogger.log.debug("creating folder=" + name);
 
 		if (name.indexOf(store.getDelimiter()) != -1) {
 
+			// delimiter found
+			//  -> recursively create all necessary folders to create
+			//  -> the final folder 
 			String subchild =
 				name.substring(0, name.indexOf(store.getDelimiter()));
 			FolderTreeNode subFolder =
 				(FolderTreeNode) folder.getChild(subchild);
 
+			// if folder doesn't exist already
 			if (subFolder == null) {
-				ColumbaLogger.log.debug("creating folder=" + subchild);
-
-
-				// we can't use 
-				// folder.addFolder(subchild) 
-				// here
-				//
-				// -> this would tell the IMAP server to create a new
-				//    folder, too
-				//
-				//    but we only want Columba to create it
-				folder.addFolder(subchild, "IMAPFolder");
+				// this is the final folder
+				subFolder = addIMAPChildFolder(folder, info, subchild);
 			}
 
+			// recursively go on
 			addIMAPSubFolder(
 				subFolder,
-				name.substring(name.indexOf(store.getDelimiter()) + 1));
+				name.substring(name.indexOf(store.getDelimiter()) + 1),
+				info);
 
 		} else {
-			ColumbaLogger.log.debug("no delimiters in mailbox-name found");
 
-			if (folder != null) {
-				if (folder.getChild(name) == null) {
-					
+			// no delimiter found
+			//  -> this is already the final folder
 
-					// we can't use 
-					// folder.addFolder(name) 
-					// here
-					//
-					// -> this would tell the IMAP server to create a new
-					//    folder, too
-					//
-					//    but we only want Columba to create it
-					folder.addFolder(name, "IMAPFolder");
-				}
+			// if folder doesn't exist already
+			if (folder.getChild(name) == null) {
+
+				addIMAPChildFolder(folder, info, name);
 			}
+
 		}
 	}
 
 	public void createChildren(WorkerStatusController worker) {
 		try {
-			//			getLock().tryToGetLock();
 
 			ListInfo[] listInfo = getStore().lsub("", "*", worker);
 
@@ -185,14 +236,14 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 				ColumbaLogger.log.debug(
 					"delimiter=" + getStore().getDelimiter());
 
-				addIMAPSubFolder(this, info.getName().trim());
+				addIMAPSubFolder(this, info.getName().trim(), info);
 
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			//			getLock().release();
+
 		} finally {
-			//			getLock().release();
+
 		}
 	}
 
