@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.14 2004/09/21 19:03:31 mvw Exp $
+// $Id: StartCritics.java,v 1.15 2004/10/20 14:27:14 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,8 @@
 package org.argouml.application;
 
 import org.apache.log4j.Logger;
-
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.cognitive.Designer;
 import org.argouml.kernel.Project;
@@ -36,7 +37,8 @@ import org.argouml.uml.cognitive.critics.CrUML;
 
 /** StartCritics is a thread which helps to start the critiquing thread
  */
-public class StartCritics implements Runnable {
+public class StartCritics
+ implements Runnable {
     /** logger */
     private static final Logger LOG = Logger.getLogger(StartCritics.class);
 
@@ -51,6 +53,7 @@ public class StartCritics implements Runnable {
         // set the icon for this poster
         dsgr.setClarifier(ResourceLoaderWrapper.
             lookupIconResource("PostItD0"));
+        dsgr.setDesignerName(Configuration.getString(Argo.KEY_USER_FULLNAME));
         dsgr.spawnCritiquer(p);
         dsgr.setChildGenerator(new ChildGenUML());
         java.util.Enumeration models = (p.getUserDefinedModels()).elements();

@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.30 2004/10/18 20:37:52 mvw Exp $
+// $Id: Designer.java,v 1.31 2004/10/20 14:27:13 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,6 @@ import java.util.Vector;
 import javax.swing.Icon;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
-import org.argouml.application.api.Configuration;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.i18n.Translator;
@@ -100,6 +98,8 @@ public class Designer
     /** The email address where other designers can send this designer
      * email. This is not used yet. */
     private String emailAddr;
+    
+    private String designerName;
     
     /** The decisions currently being considered by the designer.
      *
@@ -837,6 +837,22 @@ public class Designer
     }
     
     /**
+     * set the name of this designer.
+     * @param name the designer name
+     */
+    public void setDesignerName(String name) {
+        designerName = name;
+    }
+    
+    /**
+     * query the name of the designer.
+     * @return the designer name
+     */
+    public String getDesignerName() {
+        return designerName;
+    }
+    
+    /**
      * This is used in the todo panel, when "By Poster" is chosen for a 
      * manually created todo item.
      * 
@@ -845,7 +861,7 @@ public class Designer
     public String toString() {
         //TODO: This should be the name of the designer that created 
         //      the todoitem, not the current username!
-        Object[] msgArgs = {Configuration.getString(Argo.KEY_USER_FULLNAME) };
+        Object[] msgArgs = { getDesignerName() };
         return Translator.messageFormat("misc.designer.name", msgArgs);
     }
     
