@@ -120,10 +120,9 @@
         </init-param>
     </servlet>          
 
-
     <security-constraint>
       <web-resource-collection>
-         <web-resource-name>a<web-resource-name>
+         <web-resource-name>a</web-resource-name>
          <url-pattern>/foo/*</url-pattern>
          <url-pattern>/bar/*</url-pattern>
          <http-method>GET</http-method>
@@ -131,7 +130,7 @@
       </web-resource-collection>
 
       <web-resource-collection>
-         <web-resource-name>a<web-resource-name>
+         <web-resource-name>a</web-resource-name>
          <url-pattern>/foo1/*</url-pattern>
          <url-pattern>/bar1/*</url-pattern>
       </web-resource-collection>
@@ -142,7 +141,7 @@
       </auth-constraint>
 
       <user-data-constraint>
-         <transport-guarantee>CONFIDENTIAL<transport-guarantee>
+         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </user-data-constraint>
     </security-constraint>
 </web-app>
