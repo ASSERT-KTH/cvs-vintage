@@ -3,6 +3,7 @@
    <target name="init">
      <property name="host" value="localhost" />
      <property name="port"     value="8080" />
+     <property name="tomcat.home" value="." />
      <property name="gdir" value="${tomcat.home}/lib/test/Golden" />
 
      <taskdef name="gtest" class="org.apache.tomcat.task.GTest" />
