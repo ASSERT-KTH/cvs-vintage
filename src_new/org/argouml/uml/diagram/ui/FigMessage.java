@@ -23,12 +23,13 @@
 
 // File: FigMessage.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigMessage.java,v 1.5 2002/08/23 13:34:09 kataka Exp $
+// $Id: FigMessage.java,v 1.6 2002/08/31 21:41:43 d00mst Exp $
 
 package org.argouml.uml.diagram.ui;
 
 import java.awt.*;
 import java.util.*;
+import java.text.ParseException;
 import java.beans.*;
 import javax.swing.*;
 
@@ -206,12 +207,18 @@ public class FigMessage extends FigNodeModelElement {
   }
 
   protected void textEdited(FigText ft) throws PropertyVetoException {
-    super.textEdited(ft);
     MMessage mes = (MMessage) getOwner();
-    if (ft == _name) {
+    if (mes != null && ft == _name) {
        String s = ft.getText();
-       ParserDisplay.SINGLETON.parseMessage(mes, s);
+       try {
+	  ParserDisplay.SINGLETON.parseMessage(mes, s);
+	  ProjectBrowser.TheInstance.getStatusBar().showStatus("");
+       } catch (ParseException pe) {
+	  ProjectBrowser.TheInstance.getStatusBar().showStatus("Error: " + pe + " at " + pe.getErrorOffset());
+       }
     }
+    else
+	super.textEdited(ft);
   }
 
   protected void modelChanged() {
