@@ -82,7 +82,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.69 $
+*   @version $Revision: 1.70 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -611,6 +611,9 @@ public class ContainerFactory
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
 
+    //AS Test the exposure of the Container through a MBean
+    registerContainer( container );
+
     return container;
     }
 
@@ -627,6 +630,9 @@ public class ContainerFactory
     container.setContainerInvoker( createContainerInvoker( conf, cl ) );
     container.setInstancePool( createInstancePool( conf, cl ) );
     
+    //AS Test the exposure of the Container through a MBean
+    registerContainer( container );
+
     return container;
     }
 
@@ -646,6 +652,9 @@ public class ContainerFactory
     container.setInstancePool( new StatefulSessionInstancePool() );
     // Set persistence manager
     container.setPersistenceManager( (StatefulSessionPersistenceManager) cl.loadClass( conf.getPersistenceManager() ).newInstance() );
+
+    //AS Test the exposure of the Container through a MBean
+    registerContainer( container );
 
     return container;
     }
@@ -680,14 +689,33 @@ public class ContainerFactory
       // Set the manager on the container
       container.setPersistenceManager( persistenceManager );
       }
-
+    //AS Test the exposure of the Container through a MBean
+    registerContainer( container );
+      
     return container;
     }
 
   // **************
   // Helper Methods
   // **************
-
+  /**
+   * Register the created container at the JMX server to make the container
+   * available for outside management
+   **/
+  private void registerContainer( Container container ) {
+     try {
+        // Create and register the ContainerMBean
+        ObjectName name = new ObjectName( "Management", "container", container.getBeanMetaData().getEjbName() );
+        getServer().createMBean( "org.jboss.mgt.ContainerMgt", name );
+        getServer().invoke( name, "init", new Object[] {}, new String[] {} );
+        getServer().invoke( name, "start", new Object[] {}, new String[] {} );
+        getServer().setAttribute( name, new javax.management.Attribute( "Container", container ) );
+     }
+     catch( Exception e ) {
+        e.printStackTrace();
+     }
+  }
+  
   private void initializeContainer( Container container, ConfigurationMetaData conf, BeanMetaData bean, int transType, ClassLoader cl, ClassLoader localCl )
     throws NamingException, DeploymentException
     {
