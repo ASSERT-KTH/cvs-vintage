@@ -34,7 +34,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.config.PopItem;
@@ -360,17 +362,18 @@ public class ReceiveOptionsPanel
 	protected void initComponents() {
 
 		intervalCheckingLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"check_for_new_messages_every"));
-		intervalCheckingLabel.setDisplayedMnemonic(
+		/*intervalCheckingLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"check_for_new_messages_every"));
-
+		*/
+		
 		intervalCheckingTextField = new JTextField();
 		intervalCheckingLabel.setLabelFor(intervalCheckingTextField);
 
@@ -379,44 +382,46 @@ public class ReceiveOptionsPanel
 				MailResourceLoader.getString("dialog", "account", "minutes"));
 
 		intervalCheckingCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"enable_interval_message_checking"));
-		intervalCheckingCheckBox.setMnemonic(
+		/*intervalCheckingCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"enable_interval_message_checking"));
-
+		*/
+		
 		intervalCheckingCheckBox.setActionCommand("ENABLE");
 		intervalCheckingCheckBox.addActionListener(this);
 
 		autodownloadCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"automatically_download_new_messages"));
-		autodownloadCheckBox.setMnemonic(
+		/*autodownloadCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"automatically_download_new_messages"));
-
+		*/
+		
 		playsoundCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"play_sound_when_new_messages_arrive"));
-		playsoundCheckBox.setMnemonic(
+		/*playsoundCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"play_sound_when_new_messages_arrive"));
-
+		*/
 		playsoundCheckBox.setActionCommand("PLAYSOUND");
 		playsoundCheckBox.addActionListener(this);
 

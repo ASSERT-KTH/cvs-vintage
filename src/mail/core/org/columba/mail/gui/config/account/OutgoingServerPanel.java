@@ -38,7 +38,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.config.SmtpItem;
@@ -456,62 +458,69 @@ public class OutgoingServerPanel
 	protected void initComponents() {
 
 		defaultAccountCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"use_default_account_settings"));
+		/*
 		defaultAccountCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"use_default_account_settings"));
+				*/
+				
 		//defaultAccountCheckBox.setEnabled(false);
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
 
-		hostLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
-		hostLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "account", "host"));
+		hostLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "host")); //$NON-NLS-1$
+		/*hostLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "account", "host"));*/
 		hostTextField = new JTextField();
 		hostLabel.setLabelFor(hostTextField);
-		portLabel = new JLabel(MailResourceLoader.getString("dialog", "account", "port")); //$NON-NLS-1$
-		portLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "account", "port"));
+		portLabel = new LabelWithMnemonic(MailResourceLoader.getString("dialog", "account", "port")); //$NON-NLS-1$
+		/*portLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "account", "port"));*/
+			
 		portTextField = new JTextField();
 		portLabel.setLabelFor(portTextField);
 
-		needAuthCheckBox = new JCheckBox(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
-		needAuthCheckBox.setMnemonic(
+		needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "server_needs_authentification")); //$NON-NLS-1$
+		/*needAuthCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"server_needs_authentification"));
+				*/
 		needAuthCheckBox.setActionCommand("AUTH"); //$NON-NLS-1$
 		needAuthCheckBox.addActionListener(this);
 
-		storePasswordCheckBox = new JCheckBox();
-		storePasswordCheckBox.setText(MailResourceLoader.getString("dialog", "account", "store_password_in_configuration_file")); //$NON-NLS-1$
-		storePasswordCheckBox.setMnemonic(
+		storePasswordCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "store_password_in_configuration_file"));
+		
+		/*storePasswordCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
-				"store_password_in_configuration_file"));
-		secureCheckBox = new JCheckBox();
-		secureCheckBox.setText(MailResourceLoader.getString("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
+				"store_password_in_configuration_file"));*/
+		secureCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString("dialog", "account", "use_SSL_for_secure_connection"));
+		/*
 		secureCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
-
+		*/
 		authenticationLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"authentication_type"));
+	/*
 		authenticationLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"authentication_type"));
+				*/
 		authenticationComboBox = new JComboBox();
 		authenticationComboBox.addItem("PLAIN");
 		authenticationComboBox.addItem("LOGIN");
@@ -521,10 +530,10 @@ public class OutgoingServerPanel
 		authenticationLabel.setLabelFor(authenticationComboBox);
 
 		loginLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString("dialog", "account", "login"));
-		loginLabel.setDisplayedMnemonic(
-			MailResourceLoader.getMnemonic("dialog", "account", "login"));
+		/*loginLabel.setDisplayedMnemonic(
+			MailResourceLoader.getMnemonic("dialog", "account", "login"));*/
 		loginTextField = new JTextField();
 		loginLabel.setLabelFor(loginTextField);
 

@@ -32,7 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.columba.core.config.DefaultItem;
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
@@ -221,7 +223,8 @@ public class IncomingServerPanel
 
 		//		Create a FormLayout instance. 
 		FormLayout layout =
-			new FormLayout("10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
+			new FormLayout(
+				"10dlu, max(100;default), 3dlu, fill:max(150dlu;default):grow",
 			// 2 columns
 	""); // rows are added dynamically (no need to define them here)
 
@@ -229,20 +232,18 @@ public class IncomingServerPanel
 
 		// create a form builder
 		DefaultFormBuilder builder = new DefaultFormBuilder(this, layout);
-		
 
 		// create EmptyBorder between components and dialog-frame 
 		builder.setDefaultDialogBorder();
 
-//		skip the first column
-			 builder.setLeadingColumnOffset(1);
+		//		skip the first column
+		builder.setLeadingColumnOffset(1);
 
 		// Add components to the panel:
-		
+
 		builder.append(defaultAccountCheckBox, 4);
 		builder.nextLine();
-		
-			 
+
 		builder.appendSeparator(
 			MailResourceLoader.getString("dialog", "account", "configuration"));
 		builder.nextLine();
@@ -265,12 +266,12 @@ public class IncomingServerPanel
 
 		JPanel panel = new JPanel();
 		FormLayout l =
-					new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
-					// 2 columns
-			""); // rows are added dynamically (no need to define them here)
+			new FormLayout("max(100;default), 3dlu, left:max(50dlu;default)",
+			// 2 columns
+	""); // rows are added dynamically (no need to define them here)
 
-				// create a form builder
-				DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
+		// create a form builder
+		DefaultFormBuilder b = new DefaultFormBuilder(panel, l);
 		b.append(authenticationLabel, authenticationComboBox);
 		builder.append(panel, 3);
 		builder.nextLine();
@@ -451,28 +452,35 @@ public class IncomingServerPanel
 	protected void initComponents() {
 
 		defaultAccountCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"use_default_account_settings"));
+		/*
 		defaultAccountCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"use_default_account_settings"));
+				*/
+
 		defaultAccountCheckBox.setActionCommand("DEFAULT_ACCOUNT");
 		defaultAccountCheckBox.addActionListener(this);
 
 		//defaultAccountCheckBox.setEnabled(false);
 		typeLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"server_type"));
+
+		/*
 		typeLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "server_type"));
+			*/
+
 		typeComboBox = new JComboBox();
 		typeComboBox.addItem("POP3");
 		typeComboBox.addItem("IMAP4");
@@ -488,73 +496,91 @@ public class IncomingServerPanel
 			new JLabel("Description: To connect to and fetch new messages from a POP3-server.");
 		typeDescriptionLabel.setEnabled(false);
 
-		loginLabel = new JLabel();
-		loginLabel.setText(
-			MailResourceLoader.getString("dialog", "account", "login"));
+		loginLabel =
+			new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "account", "login"));
+
+		/*
 		loginLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "login"));
+		*/
+
 		//$NON-NLS-1$
 		loginTextField = new JTextField();
 		loginLabel.setLabelFor(loginTextField);
-		passwordLabel = new JLabel();
-		passwordLabel.setText(
-			MailResourceLoader.getString("dialog", "account", "password"));
+		passwordLabel =
+			new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "account", "password"));
+
 		//$NON-NLS-1$
 		passwordTextField = new JTextField();
 
-		hostLabel = new JLabel();
-		hostLabel.setText(
-			MailResourceLoader.getString("dialog", "account", "host"));
+		hostLabel =
+			new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "account", "host"));
+		/*
 		hostLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "host"));
+		*/
+
 		//$NON-NLS-1$
 
 		hostTextField = new JTextField();
 		hostLabel.setLabelFor(hostTextField);
 
-		portLabel = new JLabel();
-		portLabel.setText(
-			MailResourceLoader.getString("dialog", "account", "port"));
+		portLabel =
+			new LabelWithMnemonic(
+				MailResourceLoader.getString("dialog", "account", "port"));
+		/*
 		portLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "account", "port"));
+			*/
+
 		//$NON-NLS-1$
 		portTextField = new JTextField();
 		portLabel.setLabelFor(portTextField);
 
-		storePasswordCheckBox = new JCheckBox();
-		storePasswordCheckBox.setText(
-			MailResourceLoader.getString(
-				"dialog",
-				"account",
-				"store_password_in_configuration_file"));
+		storePasswordCheckBox =
+			new CheckBoxWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"store_password_in_configuration_file"));
+
+		/*
 		storePasswordCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"store_password_in_configuration_file"));
+		*/
 
-		secureCheckBox = new JCheckBox();
-		secureCheckBox.setText(
-			MailResourceLoader.getString(
-				"dialog",
-				"account",
-				"use_SSL_for_secure_connection"));
+		secureCheckBox =
+			new CheckBoxWithMnemonic(
+				MailResourceLoader.getString(
+					"dialog",
+					"account",
+					"use_SSL_for_secure_connection"));
+		/*
 		secureCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"use_SSL_for_secure_connection"));
+				*/
+
 		authenticationLabel =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"authentication_type"));
-		authenticationLabel.setDisplayedMnemonic(
+		/*authenticationLabel.setDisplayedMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"authentication_type"));
+		*/
 
 		authenticationComboBox = new JComboBox();
 		authenticationLabel.setLabelFor(authenticationComboBox);

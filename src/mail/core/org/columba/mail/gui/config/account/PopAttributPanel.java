@@ -26,7 +26,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.util.MailResourceLoader;
@@ -172,32 +174,33 @@ public class PopAttributPanel implements ActionListener {
 
 	protected void initComponents() {
 		leaveOnServerCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"leave_messages_on_server"));
-		leaveOnServerCheckBox.setMnemonic(
+		/*leaveOnServerCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
-				"leave_messages_on_server"));
+				"leave_messages_on_server"));*/
 		limitMessageDownloadCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"limit_message_download_to"));
-		limitMessageDownloadCheckBox.setMnemonic(
+		/*limitMessageDownloadCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
-				"limit_message_download_to"));
+				"limit_message_download_to"));*/
+				
 		limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
 		limitMessageDownloadCheckBox.addActionListener(this);
 
 		limitMessageDownloadLabel2 =
-			new JLabel(
+			new LabelWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
@@ -206,19 +209,20 @@ public class PopAttributPanel implements ActionListener {
 		limitMessageDownloadTextField = new JTextField();
 
 		excludeCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
 					"exclude_from_fetch_all"));
-		excludeCheckBox.setMnemonic(
+		/*excludeCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
 				"account",
 				"exclude_from_fetch_all"));
-
+		*/
+		
 		enablePreProcessingFilterCheckBox =
-			new JCheckBox(
+			new CheckBoxWithMnemonic(
 				MailResourceLoader.getString(
 					"dialog",
 					"account",
