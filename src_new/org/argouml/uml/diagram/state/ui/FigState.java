@@ -1,4 +1,4 @@
-// $Id: FigState.java,v 1.23 2005/03/17 18:25:23 mvw Exp $
+// $Id: FigState.java,v 1.24 2005/03/17 19:05:55 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -108,8 +108,8 @@ public abstract class FigState extends FigStateVertex {
             }
             // we don't have to act on incoming and outgoing
             // transitions since that doesn't change the fig.
-        } else if (Model.getFacade().getInternalTransitions(getOwner()).contains(
-                mee.getSource())
+        } else if (Model.getFacade().getInternalTransitions(getOwner())
+                .contains(mee.getSource())
                 || // the internal transitions
                 (mee.getSource() == Model.getFacade().getEntry(getOwner()))
                 || // the entry
@@ -133,28 +133,6 @@ public abstract class FigState extends FigStateVertex {
     protected void updateListeners(Object newOwner) {
         super.updateListeners(newOwner);
         Object oldOwner = getOwner();
-        if (newOwner != null) {
-            // register for events from all internal transitions
-            Object state = newOwner;
-            Iterator it = Model.getFacade().getInternalTransitions(state).iterator();
-            while (it.hasNext()) {
-                Model.getPump().addModelEventListener(this,
-                        it.next());
-            }
-            // register for the doactivity etc.
-            if (Model.getFacade().getDoActivity(state) != null) {
-                Model.getPump().addModelEventListener(this,
-                        Model.getFacade().getDoActivity(state));
-            }
-            if (Model.getFacade().getEntry(state) != null) {
-                Model.getPump().addModelEventListener(this,
-                        Model.getFacade().getEntry(state));
-            }
-            if (Model.getFacade().getExit(state) != null) {
-                Model.getPump().addModelEventListener(this,
-                        Model.getFacade().getExit(state));
-            }
-        } 
         if (oldOwner != null) {
             // lets remove all registrations since this is called
             // BEFORE the owner is changed (I hope nobody is going to
@@ -180,8 +158,30 @@ public abstract class FigState extends FigStateVertex {
                             Model.getFacade().getExit(state));
                 }
             }
-
         }
+        if (newOwner != null) {
+            // register for events from all internal transitions
+            Object state = newOwner;
+            Iterator it = 
+                Model.getFacade().getInternalTransitions(state).iterator();
+            while (it.hasNext()) {
+                Model.getPump().addModelEventListener(this,
+                        it.next());
+            }
+            // register for the doactivity etc.
+            if (Model.getFacade().getDoActivity(state) != null) {
+                Model.getPump().addModelEventListener(this,
+                        Model.getFacade().getDoActivity(state));
+            }
+            if (Model.getFacade().getEntry(state) != null) {
+                Model.getPump().addModelEventListener(this,
+                        Model.getFacade().getEntry(state));
+            }
+            if (Model.getFacade().getExit(state) != null) {
+                Model.getPump().addModelEventListener(this,
+                        Model.getFacade().getExit(state));
+            }
+        } 
     }
 
     /**
