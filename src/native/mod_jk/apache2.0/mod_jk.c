@@ -326,10 +326,7 @@ static int init_ws_service(apache_private_data_t *private_data,
     s->remote_user  = NULL_FOR_EMPTY(r->user);
 
     s->protocol     = r->protocol;
-    s->remote_host  = (char *)ap_get_remote_host(r->connection,
-                                                 r->per_dir_config, REMOTE_NAME,
-										         REMOTE_HOST);
-
+    s->remote_host  = (char *)ap_get_remote_host(r->connection, r->per_dir_config, REMOTE_HOST, NULL);
     s->remote_host  = NULL_FOR_EMPTY(s->remote_host);
     s->remote_addr  = NULL_FOR_EMPTY(r->connection->remote_ip);
 
