@@ -16,8 +16,6 @@ import org.columba.core.xml.XmlElement;
  */
 public class FramePluginHandler extends AbstractPluginHandler {
 
-	protected XmlElement parentNode;
-
 	public FramePluginHandler() {
 		super("org.columba.core.frame", "org/columba/core/frame/frame.xml");
 

@@ -213,5 +213,8 @@ public abstract class AbstractPluginHandler {
 	public void setPluginManager(PluginManager pluginManager) {
 		this.pluginManager = pluginManager;
 	}
+	
+	public void addExtension(String id, XmlElement extension) {
+	}
 
 }
