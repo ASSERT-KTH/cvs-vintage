@@ -24,7 +24,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.64 2003/02/24 06:10:35 thn Exp $
+// $Id: GeneratorJava.java,v 1.65 2003/03/04 13:18:30 lepekhine Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -1755,7 +1755,7 @@ public class GeneratorJava
        @return the Java package name
     */
     public String getPackageName(Object namespace) {
-        if (namespace == null || ModelFacade.isANamespace(namespace) || ModelFacade.getNamespace(namespace) == null)
+        if (namespace == null || !ModelFacade.isANamespace(namespace) || ModelFacade.getNamespace(namespace) == null)
             return "";
         String packagePath = ModelFacade.getName(namespace);
         while ((namespace = ModelFacade.getNamespace(namespace)) != null) {
