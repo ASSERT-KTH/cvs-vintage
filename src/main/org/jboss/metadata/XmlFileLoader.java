@@ -37,7 +37,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  *
  *   Revisions:
  *   20010620 Bill Burke: Print an error message when failing to load standardjboss.xml
@@ -283,6 +283,7 @@ public class XmlFileLoader
             registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN", "ejb-jar.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN", "ejb-jar_2_0.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN", "application_1_2.dtd");
+            registerDTD("-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN", "application_1_3.dtd");
             registerDTD("-//Sun Microsystems, Inc.//DTD Connector 1.0//EN", "connector_1_0.dtd");
             registerDTD("-//JBoss//DTD JAWS//EN", "jaws.dtd");
             registerDTD("-//JBoss//DTD JAWS 2.4//EN", "jaws_2_4.dtd");
