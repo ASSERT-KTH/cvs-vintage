@@ -95,7 +95,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -394,7 +394,7 @@ public class EjbModule
             serviceController.create(jmxName, depends);
             // Create JSR-77 EJB-Wrapper
             log.debug( "Application.create(), create JSR-77 EJB-Component" );
-            //BeanMetaData lMetaData = con.getBeanMetaData();
+
             int lType =
                metaData.isSession() ?
                ( ( (SessionMetaData) metaData ).isStateless() ? 2 : 1 ) :
@@ -435,15 +435,31 @@ public class EjbModule
    protected void startService() throws Exception
    {
       boolean debug = log.isDebugEnabled();
-      
-      for (Iterator i = containers.values().iterator(); i.hasNext();)
+      try 
       {
-         Container con = (Container)i.next();
-         if (debug) {
-            log.debug( "Application.start(), start container: " + con );
+      
+         for (Iterator i = containers.values().iterator(); i.hasNext();)
+         {
+            Container con = (Container)i.next();
+            if (debug) {
+               log.debug( "Application.start(), start container: " + con );
+            }
+            serviceController.start(con.getJmxName());
          }
-         serviceController.start(con.getJmxName());
       }
+      catch (Exception e)
+      {
+         try 
+         {
+            stopService();
+             
+         }
+         catch (Exception e2)
+         {
+            //ignore
+         } // end of try-catch
+         throw e;
+      } // end of try-catch
    }
         
    /**
