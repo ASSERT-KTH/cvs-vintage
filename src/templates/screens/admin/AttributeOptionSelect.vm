@@ -51,12 +51,12 @@
 
 <div class="functnbar2">
 #if ($availOptions.size() > 0)
-<input type="submit" value="Add to attribute" name="eventSubmit_doSelectattributeoption" />&#160;
+<input type="submit" value="$l10n.Add" name="eventSubmit_doSelectattributeoption" />&#160;
 #end
 #if ($canEditDomain)
-<input type="submit" value="Create new" name="eventSubmit_doGotoothertemplate" />&#160;
+<input type="submit" value="$l10n.CreateNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #end
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />&#160;
 </div>
 
 </form>
