@@ -35,6 +35,8 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
 
+import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
+
 /**
  * The EnterpriseContext is used to associate EJB instances with
  * metadata about it.
@@ -48,7 +50,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -94,8 +96,26 @@ public abstract class EnterpriseContext
    /** The instance is used in a transaction, synchronized methods on the tx */
    Object txLock = new Object();
                   
+
+
    // Static --------------------------------------------------------
+   //Registration for CachedConnectionManager so our UserTx can notify
+   //on tx started.
+   private static ServerVMClientUserTransaction.UserTransactionStartedListener tsl;
    
+   /**
+    * The <code>setUserTransactionStartedListener</code> method is called by 
+    * CachedConnectionManager on start and stop.  The tsl is notified on 
+    * UserTransaction.begin so it (the CachedConnectionManager) can enroll
+    * connections that are already checked out.
+    *
+    * @param newTsl a <code>ServerVMClientUserTransaction.UserTransactionStartedListener</code> value
+    */
+   public static void setUserTransactionStartedListener(ServerVMClientUserTransaction.UserTransactionStartedListener newTsl)
+   {
+      tsl = newTsl;
+   }
+
    // Constructors --------------------------------------------------
    
    public EnterpriseContext(Object instance, Container con)
@@ -422,6 +442,13 @@ public abstract class EnterpriseContext
 
          // Start the transaction
          tm.begin();
+
+         //notify checked out connections
+         if (tsl != null) 
+         {
+            tsl.userTransactionStarted();
+         } // end of if ()
+         
 
          // keep track of the transaction in enterprise context for BMT
          setTransaction(tm.getTransaction());        
