@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.116 2005/02/28 23:05:47 bobtarling Exp $
+// $Id: Modeller.java,v 1.117 2005/03/01 15:25:53 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1275,7 +1275,7 @@ public class Modeller {
        @return The stereotype.
     */
     private Object getStereotype(String name) {
-        LOG.info("Trying to find a stereotype of name " + name);
+        LOG.info("Trying to find a stereotype of name <<" + name + ">>");
         // Is this line really safe wouldn't it just return the first
         // model element of the same name whether or not it is a stereotype
         Object stereotype = Model.getFacade().lookupIn(model, name);
@@ -1324,8 +1324,8 @@ public class Modeller {
                 Object stereotype = iter.next();
                 if (Model.getUmlHelper().getExtensionMechanisms()
                         .isStereotypeInh(stereotype, name, baseClass)) {
-                    LOG.info("Returning the existing stereotype of "
-                            + Model.getFacade().getName(stereotype));
+                    LOG.info("Returning the existing stereotype of <<"
+                            + Model.getFacade().getName(stereotype) + ">>");
                     return stereotype;
                 }
             }
