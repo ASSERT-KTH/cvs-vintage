@@ -25,17 +25,24 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.jboss.ejb.DeploymentException;
+import org.jboss.logging.Logger;
 
 /**
  *   XmlFileLoader class is used to read ejb-jar.xml, standardjboss.xml, jboss.xml
  *   files, process them using DTDs and create ApplicationMetaData object for future using
  *
  *   @see <related>
+ *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
+ *
+ *   Revisions:
+ *   20010620 Bill Burke: Print an error message when failing to load standardjboss.xml
+ *                        or jboss.xml.  It was a pain to debug a standardjboss.xml
+ *                        syntax error.
  */
 public class XmlFileLoader {
    	// Constants -----------------------------------------------------
@@ -142,21 +149,38 @@ public class XmlFileLoader {
 			throw new DeploymentException("no standardjboss.xml found");
 		}
 
-		Document defaultJbossDocument = getDocumentFromURL(defaultJbossUrl);
+		Document defaultJbossDocument = null;
 
-		metaData.setUrl(defaultJbossUrl);
-		metaData.importJbossXml(defaultJbossDocument.getDocumentElement());
-
+		try
+		{
+		    defaultJbossDocument = getDocumentFromURL(defaultJbossUrl);
+		    
+		    metaData.setUrl(defaultJbossUrl);
+		    metaData.importJbossXml(defaultJbossDocument.getDocumentElement());
+		}
+		catch (Exception ex)
+		{
+		    Logger.error("failed to load standardjboss.xml.  There could be a syntax error.");
+		    throw ex;
+		}
 		// Load jboss.xml
 		// if this file is provided, then we override the defaults
-		URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
-
-		if (jbossUrl != null) {
-//			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
+		try
+		{
+		    URL jbossUrl = getClassLoader().getResource("META-INF/jboss.xml");
+		    
+		    if (jbossUrl != null) {
+			//			Logger.debug(jbossUrl.toString() + " found. Overriding defaults");
 			Document jbossDocument = getDocumentFromURL(jbossUrl);
-
+			
 			metaData.setUrl(jbossUrl);
 			metaData.importJbossXml(jbossDocument.getDocumentElement());
+		    }
+		}
+		catch (Exception ex)
+		{
+		    Logger.error("failed to load jboss.xml.  There could be a syntax error.");
+		    throw ex;
 		}
 
 		return metaData;
