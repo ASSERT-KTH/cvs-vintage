@@ -33,7 +33,7 @@ from:&#160;<input type="text" size="20"
     name="$searchGroup.MinDate.Key" value="$searchGroup.MinDate.toString()" />
 &#160;&#160;to:&#160;<input type="text" size="20"
     name="$searchGroup.MaxDate.Key" value="$searchGroup.MaxDate.toString()" />
-(e.g. MM/DD/YYYY hh:mm)
+<p><small>(e.g. MM/DD/YYYY hh:mm)</small></p>
 </td>
 </tr>
 </table>
@@ -241,7 +241,7 @@ from:&#160;<input type="text" size="20"
         to
         <input type="text" size=20 name="$searchGroup.StateChangeToDate.Key"
             value="$searchGroup.StateChangeToDate">
-        (e.g. MM/DD/YYYY hh:mm)
+        <p><small>(e.g. MM/DD/YYYY hh:mm)</small></p>
     </td>
  </tr>
 </table>
