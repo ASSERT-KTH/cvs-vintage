@@ -34,7 +34,7 @@ import javax.ejb.EJBObject;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -127,6 +127,9 @@ extends AbstractInterceptor
 			
 			// We want to be notified when the transaction commits
 			tx.registerSynchronization(synch);
+		
+			// EJB 1.1, 6.5.3
+			synch.afterBegin();
 		
 		} catch (RollbackException e) {
 		
@@ -280,10 +283,12 @@ extends AbstractInterceptor
 		private EnterpriseContext ctx;
 		
 		// a utility boolean for session sync
-		boolean notifySession = false;
+		private boolean notifySession = false;
 		
 		// Utility methods for the notifications
-		Method beforeCompletion, afterCompletion;
+		private Method afterBegin;
+		private Method beforeCompletion;
+		private Method afterCompletion;
 		
 		
 		/**
@@ -304,8 +309,8 @@ extends AbstractInterceptor
 					Class sync = Class.forName("javax.ejb.SessionSynchronization");
 					
 					// Lookup the methods on it
+					afterBegin = sync.getMethod("afterBegin", new Class[0]);
 					beforeCompletion = sync.getMethod("beforeCompletion", new Class[0]);
-					
 					afterCompletion =  sync.getMethod("afterCompletion", new Class[] {boolean.class});
 				}
 				catch (Exception e) { Logger.exception(e);}
@@ -313,6 +318,20 @@ extends AbstractInterceptor
 		}
 		
 		// Synchronization implementation -----------------------------
+		public void afterBegin() 
+		{
+			if (notifySession) 
+			{
+				try 
+				{
+					afterBegin.invoke(ctx.getInstance(), new Object[0]);
+				}
+				catch (Exception x) 
+				{
+					Logger.exception(x);
+				}
+			}
+		}
 		
 		public void beforeCompletion()
 		{
