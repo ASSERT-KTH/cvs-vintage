@@ -29,7 +29,7 @@ import org.apache.log4j.NDC;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -117,7 +117,7 @@ public abstract class ServiceMBeanSupport
    public void start()
       throws Exception
    {
-      if (getState() != STOPPED)
+      if (getState() != STOPPED && getState() != FAILED)
          return;
 			
       state = STARTING;
@@ -131,10 +131,10 @@ public abstract class ServiceMBeanSupport
       }
       catch (Exception e)
       {
-         state = STOPPED;
+         state = FAILED;
          //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
-         sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STARTING), new Integer(STOPPED)));
-         log.error("Stopped", e);
+         sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" failed", "State", "java.lang.Integer", new Integer(STARTING), new Integer(FAILED)));
+         log.error("Failed", e);
          throw e;
       }
       finally
@@ -164,14 +164,20 @@ public abstract class ServiceMBeanSupport
       }
       catch (Throwable e)
       {
-         log.error(e);
+         state = FAILED;
+         //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
+         sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" failed", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(FAILED)));
+         log.error("Failed", e);
+         return;
       }
-      
+      finally
+      {
+         NDC.pop();
+      }
       state = STOPPED;
       //AS It seems that the first attribute is not needed anymore and use a long instead of a Date
       sendNotification(new AttributeChangeNotification(this, id++, new Date().getTime(), getName()+" stopped", "State", "java.lang.Integer", new Integer(STOPPING), new Integer(STOPPED)));
       log.info("Stopped");
-      NDC.pop();
    }
 
    public void init() throws Exception

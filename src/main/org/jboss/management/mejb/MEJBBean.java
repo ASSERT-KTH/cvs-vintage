@@ -17,14 +17,33 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.SessionBean;
 import javax.ejb.SessionContext;
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.InvalidAttributeValueException;
+import javax.management.InstanceNotFoundException;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.IntrospectionException;
+import javax.management.ListenerNotFoundException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
+import javax.management.ObjectInstance;
+import javax.management.QueryExp;
+import javax.management.ReflectionException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import javax.management.j2ee.MEJBServer;
-import javax.management.j2ee.Attribute;
-import javax.management.j2ee.AttributeList;
+//import javax.management.j2ee.Attribute;
+//import javax.management.j2ee.AttributeList;
 /*
 import javax.management.j2ee.;
 import javax.management.j2ee.;
@@ -34,20 +53,25 @@ import javax.management.j2ee.;
 import javax.management.j2ee.;
 */
 
+import org.jboss.jmx.connector.RemoteMBeanServer;
+import org.jboss.management.j2ee.J2EEManagedObject;
+
 /**
 * Management Session Bean to enable the client to manage the
 * server its is deployed on.
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 *
 * @ejb:bean name="MEJB"
 *           display-name="JBoss Management EJB (MEJB)"
 *           type="Stateless"
 *           jndi-name="ejb/mgmt/J2EEManagement"
 * @ejb:interface extends="javax.management.j2ee.MEJBServer"
-* @--ejb:ejb-ref ejb-name="jboss/survey/Survey"
+* @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
+*                name="Server-Name"
+*                value="null"
 *
 **/
 public class MEJBBean
@@ -62,6 +86,11 @@ public class MEJBBean
    // -------------------------------------------------------------------------
    
    private SessionContext mContext;
+   /**
+   * Reference to the MBeanServer all the methods of this Connector are
+   * forwarded to
+   **/
+   private RemoteMBeanServer mConnector;
    
    // -------------------------------------------------------------------------
    // Methods
@@ -75,7 +104,12 @@ public class MEJBBean
    public Object getAttribute( ObjectName pName, String pAttribute )
       throws RemoteException
    {
-      return null;
+      try {
+      return mConnector.getAttribute( pName, pAttribute );
+      }
+      catch( Exception e ) {
+         throw new RemoteException( "MEJBBean.getAttribute(), got JMX exception", e );
+      }
    }
    
    /**
@@ -83,10 +117,15 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public AttributeList getAttributes( ObjectName pName, String pAttributes )
+   public AttributeList getAttributes( ObjectName pName, String[] pAttributes )
       throws RemoteException
    {
-      return null;
+      try {
+      return mConnector.getAttributes( pName, pAttributes );
+      }
+      catch( Exception e ) {
+         throw new RemoteException( "MEJBBean.getAttributes(), got JMX exception", e );
+      }
    }
    
    /**
@@ -97,7 +136,7 @@ public class MEJBBean
    public String getDefaultDomain()
       throws RemoteException
    {
-      return null;
+      return J2EEManagedObject.getDomainName();
    }
    
    /**
@@ -108,7 +147,16 @@ public class MEJBBean
    public Integer getManagedObjectCount()
       throws RemoteException
    {
-      return null;
+      try {
+         return new Integer(
+            queryNames(
+               new ObjectName( getDefaultDomain() + ":*" )
+            ).size()
+         );
+      }
+      catch( Exception e ) {
+      }
+      return new Integer( 0 );
    }
    
    /**
@@ -119,7 +167,17 @@ public class MEJBBean
    public Object invoke( ObjectName pName, String pOperationName, Object[] pParams, String[] pSignature )
       throws RemoteException
    {
-      return null;
+      try {
+      return mConnector.invoke(
+         pName,
+         pOperationName,
+         pParams,
+         pSignature
+      );
+      }
+      catch( Exception e ) {
+         throw new RemoteException( "MEJBBean.invoke(), got JMX exception", e );
+      }
    }
    
    /**
@@ -130,7 +188,7 @@ public class MEJBBean
    public boolean isRegistered( ObjectName pName )
       throws RemoteException
    {
-      return false;
+      return mConnector.isRegistered( pName );
    }
    
    /**
@@ -141,7 +199,7 @@ public class MEJBBean
    public Set queryNames( ObjectName pName )
       throws RemoteException
    {
-      return null;
+      return mConnector.queryNames( pName, null );
    }
    
    /**
@@ -149,10 +207,15 @@ public class MEJBBean
    *
    * @ejb:interface-method view-type="remote"
    **/
-   public Attribute setAttribute( ObjectName pName, Attribute pAttribute )
+   public void setAttribute( ObjectName pName, Attribute pAttribute )
       throws RemoteException
    {
-      return null;
+      try {
+      mConnector.setAttribute( pName, pAttribute );
+      }
+      catch( Exception e ) {
+         throw new RemoteException( "MEJBBean.setAttribute(), got JMX exception", e );
+      }
    }
    
    /**
@@ -163,20 +226,66 @@ public class MEJBBean
    public AttributeList setAttributes( ObjectName pName, AttributeList pAttributes )
       throws RemoteException
    {
-      return null;
+      try {
+      return mConnector.setAttributes( pName, pAttributes );
+      }
+      catch( Exception e ) {
+         throw new RemoteException( "MEJBBean.setAttributes(), got JMX exception", e );
+      }
    }
    
    /**
-   * Create the Session Bean
+   * Create the Session Bean which takes the first available
+   * MBeanServer as target server
    *
    * @throws CreateException 
    *
-   * @ejb:create-method view-type="remote"
+   * @ejb:create-method
    **/
    public void ejbCreate()
       throws
          CreateException
    {
+      if( mConnector == null ) {
+         try {
+            Context aJNDIContext = new InitialContext();
+            String lServerName = ( (String) aJNDIContext.lookup( 
+               "java:comp/env/Server-Name" 
+            ) ).trim();
+            if( lServerName == null || lServerName.length() == 0 || lServerName.equals( "null" ) ) {
+               ArrayList lServers = MBeanServerFactory.findMBeanServer( null );
+               if( lServers.size() > 0 ) {
+                  mConnector = new LocalConnector( (MBeanServer) lServers.get( 0 ) );
+               } else {
+                  throw new CreateException(
+                     "No local JMX MBeanServer available"
+                  );
+               }
+            } else {
+               Object lServer = aJNDIContext.lookup( lServerName );
+               if( lServer != null ) {
+                  if( lServer instanceof MBeanServer ) {
+                     mConnector = new LocalConnector( (MBeanServer) lServer );
+                  } else
+                  if( lServer instanceof RemoteMBeanServer ) {
+                     mConnector = (RemoteMBeanServer) lServer;
+                  } else {
+                     throw new CreateException(
+                        "Server: " + lServer + " reference by Server-Name: " + lServerName +
+                        " is not of type MBeanServer or RemoteMBeanServer: "
+                     );
+                  }
+               } else {
+                  throw new CreateException(
+                     "Server-Name " + lServerName + " does not reference an Object in JNDI"
+                  );
+               }
+            }
+         }
+         catch( NamingException ne ) {
+            throw new EJBException( ne );
+         }
+      }
    }
    
    /**
@@ -260,5 +369,242 @@ public class MEJBBean
       throws
          EJBException
    {
+   }
+
+   private class LocalConnector implements RemoteMBeanServer {
+      
+      private MBeanServer mServer = null;
+      
+      public LocalConnector( MBeanServer pServer ) {
+         mServer = pServer;
+      }
+
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException
+      {
+         return mServer.createMBean( pClassName, pName );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         ObjectName pLoaderName
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException,
+         InstanceNotFoundException
+      {
+         return mServer.createMBean( pClassName, pName, pLoaderName );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException
+      {
+         return mServer.createMBean( pClassName, pName, pParams, pSignature );
+      }
+      
+      public ObjectInstance createMBean(
+         String pClassName,
+         ObjectName pName,
+         ObjectName pLoaderName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         ReflectionException,
+         InstanceAlreadyExistsException,
+         MBeanRegistrationException,
+         MBeanException,
+         NotCompliantMBeanException,
+         InstanceNotFoundException
+      {
+         return mServer.createMBean( pClassName, pName, pLoaderName, pParams, pSignature );
+      }
+      
+      public void unregisterMBean(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException,
+         MBeanRegistrationException
+      {
+         mServer.unregisterMBean( pName );
+      }
+      
+      public ObjectInstance getObjectInstance(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException
+      {
+         return mServer.getObjectInstance( pName );
+      }
+      
+      public Set queryMBeans(
+         ObjectName pName,
+         QueryExp pQuery
+      ) {
+         return mServer.queryMBeans( pName, pQuery );
+      }
+      
+      public Set queryNames(
+         ObjectName pName,
+         QueryExp pQuery
+      ) {
+         return mServer.queryNames( pName, pQuery );
+      }
+      
+      public boolean isRegistered(
+         ObjectName pName
+      ) {
+         return mServer.isRegistered( pName );
+      }
+      
+      public boolean isInstanceOf(
+         ObjectName pName,
+         String pClassName
+      ) throws
+         InstanceNotFoundException
+      {
+         return mServer.isInstanceOf( pName, pClassName );
+      }
+      
+      public Integer getMBeanCount(
+      ) {
+         return mServer.getMBeanCount();
+      }
+      
+      public Object getAttribute(
+         ObjectName pName,
+         String pAttribute
+      ) throws
+         MBeanException,
+         AttributeNotFoundException,
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.getAttribute( pName, pAttribute );
+      }
+      
+      public AttributeList getAttributes(
+         ObjectName pName,
+         String[] pAttributes
+      ) throws
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.getAttributes( pName, pAttributes );
+      }
+      
+      public void setAttribute(
+         ObjectName pName,
+         Attribute pAttribute
+      ) throws
+         InstanceNotFoundException,
+         AttributeNotFoundException,
+         InvalidAttributeValueException,
+         MBeanException,
+         ReflectionException
+      {
+         mServer.setAttribute( pName, pAttribute );
+      }
+      
+      public AttributeList setAttributes(
+         ObjectName pName,
+         AttributeList pAttributes
+      ) throws
+         InstanceNotFoundException,
+         ReflectionException
+      {
+         return mServer.setAttributes( pName, pAttributes );
+      }
+      
+      public Object invoke(
+         ObjectName pName,
+         String pActionName,
+         Object[] pParams,
+         String[] pSignature
+      ) throws
+         InstanceNotFoundException,
+         MBeanException,
+         ReflectionException
+      {
+         return mServer.invoke( pName, pActionName, pParams, pSignature );
+      }
+      
+      public String getDefaultDomain(
+      ) {
+         return mServer.getDefaultDomain();
+      }
+      
+      public MBeanInfo getMBeanInfo(
+         ObjectName pName
+      ) throws
+         InstanceNotFoundException,
+         IntrospectionException,
+         ReflectionException
+      {
+         return mServer.getMBeanInfo( pName );
+      }
+      
+      public void addNotificationListener(
+         ObjectName pName,
+         NotificationListener pListener,
+         NotificationFilter pFilter,
+         Object pHandback		
+      ) throws
+         InstanceNotFoundException
+      {
+         mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
+      }
+      
+      public void removeNotificationListener(
+         ObjectName pName,
+         NotificationListener pListener
+      ) throws
+         InstanceNotFoundException,
+         ListenerNotFoundException
+      {
+         mServer.removeNotificationListener( pName, pListener );
+      }
+      
+      public void addNotificationListener(
+         ObjectName pName,
+         ObjectName pListener,
+         NotificationFilter pFilter,
+         Object pHandback		
+      ) throws
+         InstanceNotFoundException
+      {
+         mServer.addNotificationListener( pName, pListener, pFilter, pHandback );
+      }
+      
+      public void removeNotificationListener(
+         ObjectName pName,
+         ObjectName pListener
+      ) throws
+         InstanceNotFoundException,
+         ListenerNotFoundException,
+         UnsupportedOperationException
+      {
+         mServer.removeNotificationListener( pName, pListener );
+      }
+      
    }
 }

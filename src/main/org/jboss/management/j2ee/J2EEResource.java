@@ -14,7 +14,7 @@ import javax.management.ObjectName;
  * {@link javax.management.j2ee.J2EEResource J2EEResource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -50,7 +50,22 @@ public abstract class J2EEResource
 
    // Z implementation ----------------------------------------------
    
-   // Y overrides ---------------------------------------------------
+   // ServiceMBeanSupport overrides ---------------------------------
+   
+   /**
+    * This method is only overwriten because to catch the exception
+    * which is not specified in {@link javax.management.j2ee.StateManageable
+    * StateManageable} interface.
+    **/
+   public void start()
+   {
+      try {
+         super.start();
+      }
+      catch( Exception e ) {
+         getLog().error( "start failed", e );
+      }
+   }
    
    // Package protected ---------------------------------------------
    

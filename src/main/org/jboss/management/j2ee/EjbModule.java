@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.EjbModule EjbModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -74,7 +74,7 @@ public class EjbModule
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.EJB );
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
+//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
       try {
@@ -100,7 +100,7 @@ public class EjbModule
          ).getObjectName();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
+//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
    }
@@ -112,7 +112,7 @@ public class EjbModule
          pServer.unregisterMBean( new ObjectName( pModuleName ) );
       }
       catch( Exception e ) {
-         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
+//AS         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
       }
    }
    

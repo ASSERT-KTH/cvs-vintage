@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -57,7 +57,7 @@ public class J2EEApplication
          ).iterator().next();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
       try {
@@ -78,7 +78,7 @@ public class J2EEApplication
          ).getObjectName();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
    }
@@ -98,7 +98,7 @@ public class J2EEApplication
          pServer.unregisterMBean( lApplication );
       }
       catch( Exception e ) {
-         lLog.error( "Could not destroy JSR-77 J2EEApplication: " + pName, e );
+//AS         lLog.error( "Could not destroy JSR-77 J2EEApplication: " + pName, e );
       }
    }
    

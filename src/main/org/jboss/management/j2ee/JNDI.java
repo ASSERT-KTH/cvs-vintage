@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JNDI JNDI}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -52,10 +52,10 @@ public class JNDI
    private static final String[] sTypes = new String[] {
                                              "j2ee.object.created",
                                              "j2ee.object.deleted",
+                                             "state.stopped",
+                                             "state.stopping",
                                              "state.starting",
                                              "state.running",
-                                             "state.stopping",
-                                             "state.stopped",
                                              "state.failed"
                                           };
    
@@ -69,7 +69,7 @@ public class JNDI
          ).iterator().next();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
          return null;
       }
       try {
@@ -90,7 +90,7 @@ public class JNDI
          ).getObjectName();
       }
       catch( Exception e ) {
-         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not create JSR-77 JNDI: " + pName, e );
          return null;
       }
    }
@@ -110,7 +110,7 @@ public class JNDI
          pServer.unregisterMBean( lJNDI );
       }
       catch( Exception e ) {
-         lLog.error( "Could not destroy JSR-77 JNDI: " + pName, e );
+//AS         lLog.error( "Could not destroy JSR-77 JNDI: " + pName, e );
       }
    }
    
@@ -155,7 +155,7 @@ public class JNDI
       return mState;
    }
 
-   public void start() {
+   public void startService() {
       try {
          getServer().invoke(
             mService,
@@ -175,7 +175,7 @@ public class JNDI
       start();
    }
 
-   public void stop() {
+   public void stopService() {
       try {
          getServer().invoke(
             mService,
@@ -203,8 +203,29 @@ public class JNDI
          //AS ToDo: not found.
          jme.printStackTrace();
       }
+      sendNotification(
+         new J2EEManagementEvent(
+            sTypes[ 0 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "JNDI Resource created"
+         ).getNotification()
+      );
    }
-      
+   
+   public void preDeregister() {
+      sendNotification(
+         new J2EEManagementEvent(
+            sTypes[ 1 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "JNDI Resource deleted"
+         ).getNotification()
+      );
+   }
+   
    // java.lang.Object overrides ------------------------------------
    
    public String toString() {
@@ -235,7 +256,15 @@ public class JNDI
                   mStartTime = -1;
                }
                // Now send the event to the JSR-77 listeners
-               //AS ToDo
+               sendNotification(
+                  new J2EEManagementEvent(
+                     sTypes[ getState() + 2 ],
+                     getName(),
+                     1,
+                     System.currentTimeMillis(),
+                     "State changed"
+                  ).getNotification()
+               );
             }
          }
       }
