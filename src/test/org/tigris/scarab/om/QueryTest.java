@@ -49,6 +49,7 @@ package org.tigris.scarab.om;
 import org.apache.torque.om.NumberKey;
 import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.util.ScarabException;
+import org.tigris.scarab.om.ScopePeer;
 
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +58,7 @@ import java.util.List;
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.6 2002/03/14 01:13:14 jmcnally Exp $
+ * @version $Id: QueryTest.java,v 1.7 2002/03/19 02:02:00 elicia Exp $
  */
 public class QueryTest extends BaseTestCase
 {
@@ -90,20 +91,22 @@ public class QueryTest extends BaseTestCase
         testGetExecuteLink();
         testGetEditLink();
         testApprove();
+        testSubscribe();
+        testCopy();
         testDelete();
     }
 
     private void testSave() throws Exception
     {
         System.out.println("\ntestSave()");
-// FIXME: what should this be now?
-//        query.setTypeId(Query.USER__PK);
-        query.setUserId(new NumberKey(2));
+        query.setUserId(new NumberKey(1));
         query.setName("Test query 1");
         query.setValue("&searchId=1&searchisp=asc");
         query.setDescription("Description for test query 1");
         query.setModuleId(getModule().getModuleId());
+        query.setIssueType(getDefaultIssueType());
         query.setApproved(false);
+        query.setScopeId(new NumberKey(1));
         query.save();
         //
         // Make sure the query was persisted correctly.
@@ -117,13 +120,13 @@ public class QueryTest extends BaseTestCase
     private void testSaveAndSendEmail() throws Exception
     {
         System.out.println("\ntestSaveAndSendEmail()");
-// FIXME: what should this be now?
-//        query1.setTypeId(Query.GLOBAL__PK);
         query1.setUserId(new NumberKey(2));
         query1.setName("Test query 2");
         query1.setValue("&searchId=2&searchisp=asc");
         query1.setDescription("Description for test query 2");
         query1.setModuleId(getModule().getModuleId());
+        query1.setIssueType(getDefaultIssueType());
+        query1.setScopeId(new NumberKey(1));
         query1.saveAndSendEmail(getUser1(), getModule(), null);
         //
         // Make sure the query was persisted correctly.
@@ -150,23 +153,18 @@ public class QueryTest extends BaseTestCase
 
     private void testGetAllQueryTypes() throws Exception
     {
-        String[] typeNames = {"Personal profile", "All users"};
+        String[] scopeNames = {"personal", "global"};
         System.out.println("\ntestGetAllQueryTypes()");
-// FIXME: what should this be now?
-//        List types = query.getAllQueryTypes();
-//        System.out.println("getAllQueryTypes().size(): " + types.size() + " expected: 2");
-//        assertEquals(types.size(), 2);
-//        Iterator it = types.iterator();
-// FIXME: what should this be now?
-/*
-        QueryType qt;
+        List scopes = ScopePeer.getAllScopes();
+        assertEquals(scopes.size(), 2);
+        Iterator it = scopes.iterator();
+        Scope scope;
         for (int i = 0; it.hasNext(); i++)
         {
-            qt = (QueryType) it.next();
-            System.out.println("getAllQueryTypes().getName(): <" + qt.getName() + "> expected: <" + typeNames[i] + ">");
-            assertEquals(qt.getName(), typeNames[i]);
+            scope = (Scope) it.next();
+            System.out.println("getAllScopes().getName(): <" + scope.getName() + "> expected: <" + scopeNames[i] + ">");
+            assertEquals(scope.getName(), scopeNames[i]);
         }
-*/
     }
 
     private void testApprove() throws Exception
@@ -187,10 +185,41 @@ public class QueryTest extends BaseTestCase
         {
             caught = true;
         }
-        assert(caught);
-        caught = false;
+        assert(!caught);
         query.approve(getUser1(), true);
         assert(query.getApproved());
+    }
+
+    private void testSubscribe() throws Exception
+    {
+        System.out.println("\ntestSubscribe()");
+        query.subscribe(getUser2(), "1");
+        RQueryUser rqu = query.getRQueryUser(getUser2());
+        query.subscribe(getUser2(), "1");
+        assert(rqu.getIsSubscribed());
+        // Now if unsubscribed, should fail to return RQueryUser
+        query.unSubscribe(getUser2());
+        boolean caught = false;
+        try
+        {
+            rqu = query.getRQueryUser(getUser2());
+        }
+        catch (ScarabException ex)
+        {
+            caught = true;
+        }
+        assert(!caught);
+    }
+
+    private void testCopy() throws Exception
+    {
+        Query newQuery = query.copy();
+        assertEquals(newQuery.getName(), query.getName());
+        assertEquals(newQuery.getUserId(), query.getUserId());
+        assertEquals(newQuery.getValue(), query.getValue());
+        RQueryUser rqu = query.getRQueryUser(getUser1());
+        RQueryUser rquNew = newQuery.getRQueryUser(getUser1());
+        assertEquals(rqu.getIsSubscribed(), rquNew.getIsSubscribed());
     }
 
     private void testDelete() throws Exception
@@ -199,22 +228,23 @@ public class QueryTest extends BaseTestCase
         System.out.println("\ntestSetDeleted()");
 
         //
-        // We expect user2 to fail in deleting since not the
-        // owner. user1 should be successful in deleting.
+        // We expect user5 to fail in deleting since not the
+        // owner. 
         //
         try
         {
-            query.delete(getUser2());
+            query.delete(getUser5());
         }
-        catch (ScarabException ex)
+        catch (Exception ex)
         {
             caught = true;
         }
         Query retQuery = QueryManager.getInstance(query.getQueryId(), false);
         assert(!retQuery.getDeleted());
         assert(caught);
-        query.delete(getUser1());
-        retQuery = QueryManager.getInstance(query.getQueryId(), false);
+        // user 2 should succeed in deleting, as the owner.
+        query1.delete(getUser2());
+        retQuery = QueryManager.getInstance(query1.getQueryId(), false);
         assert(retQuery.getDeleted());
     }
 }

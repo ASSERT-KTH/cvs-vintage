@@ -75,7 +75,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: BaseTestCase.java,v 1.13 2002/03/16 03:18:44 elicia Exp $
+ * @version $Id: BaseTestCase.java,v 1.14 2002/03/19 02:02:00 elicia Exp $
  */
 public class BaseTestCase extends TestCase
 {
@@ -161,15 +161,6 @@ public class BaseTestCase extends TestCase
         return this.defaultIssueType;
     }
 
-    protected ScarabUser getUser0()
-        throws Exception
-    {
-        if (user0 == null)
-        {
-            user0 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(0), false);
-        }
-        return user0;
-    }
 
     protected ScarabUser getUser1()
         throws Exception
@@ -189,6 +180,16 @@ public class BaseTestCase extends TestCase
             user2 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(2), false);
         }
         return user2;
+    }
+
+    protected ScarabUser getUser5()
+        throws Exception
+    {
+        if (user0 == null)
+        {
+            user0 = (ScarabUser) ScarabUserManager.getInstance(new NumberKey(5), false);
+        }
+        return user0;
     }
 
     protected Issue getIssue0()
