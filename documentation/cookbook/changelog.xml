@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: changelog.xml,v 1.14 2005/01/29 12:37:37 linus Exp $ -->
+<!-- $Id: changelog.xml,v 1.15 2005/01/30 21:06:36 linus Exp $ -->
 <!--
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
@@ -46,7 +46,7 @@
 
       <tbody valign="top">
         <row>
-          <entry>2005-01-01</entry>
+          <entry>2005-02-01</entry>
           <entry>
 Change to XXX.
 (See <xref linkend="xxx"/>).
@@ -55,6 +55,18 @@ Change to XXX.
         </row>
       </tbody>
       -->
+
+      <tbody valign="top">
+        <row>
+          <entry>2005-01-30</entry>
+          <entry>
+Change to the description on how to use the Model subsystem,
+the ModelFacade does not exist anymore.
+(See <xref linkend="working-with-the-model"/>).
+</entry>
+          <entry>Linus Tolke</entry>
+        </row>
+      </tbody>
 
       <tbody valign="top">
         <row>
