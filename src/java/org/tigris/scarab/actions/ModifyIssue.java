@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.88 2002/04/29 18:56:00 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.89 2002/04/30 05:35:16 jmcnally Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -860,5 +860,24 @@ public class ModifyIssue extends BaseModifyIssue
     {
         data.getParameters().add("mv_0rb", "copy");
         setTarget(data, "MoveIssue.vm");            
+    }
+
+    /**
+     * does not actually modify an issue, but sets the preferred view
+     * of an issue for the current session
+     */
+    public void doSetissueview(RunData data, TemplateContext context)
+         throws Exception
+    {
+        if (ScarabConstants.ISSUE_VIEW_ALL
+            .equals(data.getParameters().getString("tab"))) 
+        {
+            data.getUser().setTemp(ScarabConstants.TAB_KEY, 
+                                   ScarabConstants.ISSUE_VIEW_ALL);
+        }
+        else 
+        {
+            data.getUser().removeTemp(ScarabConstants.TAB_KEY);            
+        }
     }
 }

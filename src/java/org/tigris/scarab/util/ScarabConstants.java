@@ -53,7 +53,7 @@ import org.apache.torque.om.NumberKey;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.36 2002/04/24 01:34:55 jmcnally Exp $
+ * @version $Id: ScarabConstants.java,v 1.37 2002/04/30 05:35:16 jmcnally Exp $
  */
 public interface ScarabConstants
 {
@@ -194,4 +194,15 @@ public interface ScarabConstants
      * Scarab.properties key for roles to be automatically approved.
      */
     String AUTO_APPROVED_ROLES = "scarab.automatic.role.approval";
+
+    /**
+     * key used to store session preference for long issue view vs. tabs
+     * used in get/setTemp within ScarabUser.
+     */
+    String TAB_KEY = "scarab.view.issue.details";
+
+    /**
+     * Value of the session parameter to view the issue in long form.
+     */
+    String ISSUE_VIEW_ALL = "all";
 }    
