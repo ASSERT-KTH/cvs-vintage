@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLRadioButtonPanel.java,v 1.1 2003/01/04 16:48:38 kataka Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.2 2003/01/07 19:39:21 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.GridLayout;
@@ -141,7 +141,8 @@ public abstract class UMLRadioButtonPanel extends JPanel implements TargetChange
      * @see org.argouml.uml.ui.TargetChangedListener#targetChanged(java.lang.Object)
      */
     public void targetChanged(Object newTarget) {
-        setTarget(newTarget);
+        if ((_target != null) && (newTarget != null) && (newTarget.getClass().equals(_target.getClass())))
+            setTarget(newTarget);
     }
 
     /**

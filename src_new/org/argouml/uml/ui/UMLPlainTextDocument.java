@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLPlainTextDocument.java,v 1.9 2002/12/28 21:09:58 kataka Exp $
+// $Id: UMLPlainTextDocument.java,v 1.10 2003/01/07 19:39:21 kataka Exp $
 package org.argouml.uml.ui;
 
 import javax.swing.text.AttributeSet;
@@ -231,14 +231,16 @@ public abstract class UMLPlainTextDocument extends PlainDocument
      * @see org.argouml.uml.ui.TargetChangedListener#targetChanged(java.lang.Object)
      */
     public void targetChanged(Object newTarget) {
-        setTarget(newTarget);
+        if ((_target != null) && (newTarget != null) && (newTarget.getClass().equals(_target.getClass())))
+            setTarget(newTarget);
     }
 
     /**
      * @see org.argouml.uml.ui.TargetChangedListener#targetReasserted(java.lang.Object)
      */
     public void targetReasserted(Object newTarget) {
-        setTarget(newTarget);
+        if ((_target != newTarget))
+            setTarget(newTarget);
     }
 
 }

@@ -1,4 +1,4 @@
-// $Id: UMLModelElementListModel2.java,v 1.9 2003/01/01 18:24:36 kataka Exp $
+// $Id: UMLModelElementListModel2.java,v 1.10 2003/01/07 19:39:21 kataka Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -316,14 +316,16 @@ public abstract class UMLModelElementListModel2 extends DefaultListModel impleme
      * @see org.argouml.uml.ui.TargetChangedListener#targetChanged(java.lang.Object)
      */
     public void targetChanged(Object newTarget) {
-        setTarget(newTarget);
+        if ((_target != null) && (newTarget != null) && (newTarget.getClass().equals(_target.getClass())))
+            setTarget(newTarget);
     }
 
     /**
      * @see org.argouml.uml.ui.TargetChangedListener#targetReasserted(java.lang.Object)
      */
     public void targetReasserted(Object newTarget) {
-        setTarget(newTarget);
+        if (_target != newTarget)
+            setTarget(newTarget);
     }
 
 }
