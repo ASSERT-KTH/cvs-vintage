@@ -68,7 +68,7 @@ import org.tigris.scarab.baseom.peer.*;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUser.java,v 1.9 2001/01/22 04:17:21 jon Exp $
+    @version $Id: ScarabUser.java,v 1.10 2001/01/23 07:30:32 jon Exp $
 */
 public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
 {    
@@ -186,17 +186,9 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
     {
         try
         {
-            User user = getOneUser(username);
-            if (user == null)
-                throw new Exception ("Username does not exist!");
-                
-            Criteria criteria = new Criteria();            
-            criteria.add (ScarabUserPeer.getColumnName(ScarabUserPeer.USER_ID),
-                          ((org.apache.turbine.om.security.TurbineUser)user)
-                          .getPrimaryKeyAsLong() );
-            criteria.add (ScarabUserPeer.getColumnName(User.CONFIRM_VALUE), 
-                          ScarabUserPeer.CONFIRM_DATA);
-            ScarabUserPeer.doUpdate(criteria);
+            User user = TurbineSecurity.getUser(username);
+            user.setConfirmed(User.CONFIRM_DATA);
+            TurbineSecurity.saveUser(user);
             return true;
         }
         catch (Exception e)
@@ -205,23 +197,6 @@ public class ScarabUser extends org.apache.turbine.om.security.TurbineUser
         }
     }
     
-    /**
-        get a user based on username
-        returns null if there is an error or if the user doesn't exist
-    */
-    public static User getOneUser(String username)
-    {
-        try
-        {
-            Criteria criteria = new Criteria();
-            criteria.add (ScarabUserPeer.getColumnName(User.USERNAME), username);
-            return (User)(ScarabUserPeer.doSelect(criteria).elementAt(0));
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
-    }
     /**
         This will return the username for a given userid.
         return null if there is an error or if the user doesn't exist
