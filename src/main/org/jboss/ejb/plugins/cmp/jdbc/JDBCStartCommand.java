@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCStartCommand {
 
@@ -128,12 +128,10 @@ public class JDBCStartCommand {
          String tableName,
          String sql) throws DeploymentException {
 
-      boolean infoEnabled = log.isInfoEnabled();
 
       // does this table already exist
       if(tableExists(dataSource, tableName)) {
-         if (infoEnabled)
-            log.info("Table '" + tableName + "' already exists");
+         log.info("Table '" + tableName + "' already exists");
          return;
       }
 
@@ -141,35 +139,31 @@ public class JDBCStartCommand {
       Statement statement = null;
 
       // since we use the pools, we have to do this within a transaction
-      try 
-      {
-         manager.getContainer().getTransactionManager().begin ();         
-      }
-      catch (Exception e)
-      {
-         log.error("Could not get transaction to create table in", e);
-         throw new DeploymentException("Could not get transaction to create table in", e);
-      } // end of try-catch
       try {
-         // get the connection
-         con = dataSource.getConnection();
+         manager.getContainer().getTransactionManager().begin ();         
+      } catch (Exception e) {
+         throw new DeploymentException("Could not get transaction to create " +
+               "table in", e);
+      }
+      try {
          try {        
+            // get the connection
+            con = dataSource.getConnection();
+
             // create the statement
             statement = con.createStatement();
          
-         // execute sql
+            // execute sql
             log.debug("Executing SQL: " + sql);
             statement.executeUpdate(sql);
-         }
-         finally
-         {
+         } finally {
+            // make sure to close the connection and statement before 
+            // comitting the transaction or XA will break
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
-         } // end of finally
+         }
          manager.getContainer().getTransactionManager().commit ();
-      } 
-      catch(Exception e) 
-      {
+      } catch(Exception e) {
          log.debug("Could not create table " + tableName);
          try {
             manager.getContainer().getTransactionManager().rollback ();
@@ -179,8 +173,7 @@ public class JDBCStartCommand {
          throw new DeploymentException("Error while creating table", e);
       }
       // success
-      if (infoEnabled)
-         log.info("Created table '" + tableName + "' successfully.");
+      log.info("Created table '" + tableName + "' successfully.");
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
       createdTables.add(tableName);
    }
@@ -296,7 +289,6 @@ public class JDBCStartCommand {
                "relationshipRolename=" +
                cmrField.getMetaData().getRelationshipRoleName());
       }
-
    }
 
    private void addForeignKeyConstraint(
@@ -329,28 +321,36 @@ public class JDBCStartCommand {
          b};
       String sql = fkConstraint.getFunctionSql(args);
 
+      // since we use the pools, we have to do this within a transaction
+      try {
+         manager.getContainer().getTransactionManager().begin ();         
+      } catch (Exception e) {
+         throw new DeploymentException("Could not get transaction to create " +
+               "table in", e);
+      }
+
       Connection con = null;
       Statement statement = null;
       try {
-         // since we use the pools, we have to do this within a transaction
-         manager.getContainer().getTransactionManager().begin();
-
-         // get the connection
-         con = dataSource.getConnection();
+         try {
+            // get the connection
+            con = dataSource.getConnection();
          
-         // create the statement
-         statement = con.createStatement();
+            // create the statement
+            statement = con.createStatement();
          
-         // execute sql
-         log.debug("Executing SQL: " + sql);
-         statement.executeUpdate(sql);
+            // execute sql
+            log.debug("Executing SQL: " + sql);
+            statement.executeUpdate(sql);
+         } finally {
+            // make sure to close the connection and statement before 
+            // comitting the transaction or XA will break
+            JDBCUtil.safeClose(statement);
+            JDBCUtil.safeClose(con);
+         }
 
          // commit the transaction
          manager.getContainer().getTransactionManager().commit();
-
-         // success
-         if (log.isInfoEnabled())
-            log.info("Added foreign key constriant to table '" + tableName);
       } catch(Exception e) {
          log.debug("Could not add foreign key constriant: table=" + tableName);
          try {
@@ -360,9 +360,9 @@ public class JDBCStartCommand {
          }  
          throw new DeploymentException("Error while adding foreign key " +
                "constraint", e);
-      } finally {
-         JDBCUtil.safeClose(statement);
-         JDBCUtil.safeClose(con);
       }
+
+      // success
+      log.info("Added foreign key constriant to table '" + tableName);
    }
 }
