@@ -53,12 +53,15 @@
     <!-- Prepares the Tomcat directory                                      -->
     <!-- ================================================================== -->
     <target name="prepare-tomcat">
+        <mkdir dir="${build.dir}"/>
+
         <!-- copy over tomcat -->
         <copy todir="${build.dir}" filtering="no">
             <fileset dir="${tomcat.dist.dir}/"/>
         </copy>
 
-        <mkdir dir="${build.dir}"/>
+        <chmod dir="${build.dir}/bin" perm="ug+rx" includes="**/*.sh" />
+
         <mkdir dir="${build.dir}/logs"/>
         <mkdir dir="${build.dir}/work"/>
         <mkdir dir="${build.dir}/webapps"/>
