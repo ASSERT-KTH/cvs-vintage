@@ -1,4 +1,4 @@
-// $Id: PGMLParser.java,v 1.29 2004/07/25 17:59:39 kataka Exp $
+// $Id: PGMLParser.java,v 1.30 2004/07/25 18:19:35 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -498,9 +498,12 @@ public class PGMLParser extends org.tigris.gef.xml.pgml.PGMLParser {
              FigNode fn = (FigNode)f;
              _currentNode = fn;
              _elementState = NODE_STATE;
-             _textBuf = new StringBuffer();
+             _textBuf = new StringBuffer();             
+         } 
+         if (f instanceof FigNode || f instanceof FigEdge) {
              _diagram.add(f);
-         } else {
+         }
+         else {
              // nested group flag is a flag to repair the ^*&(*^*& implementation of GEF's parser
              nestedGroupFlag = true;
              figGroup = f;

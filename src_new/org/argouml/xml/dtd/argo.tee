@@ -11,7 +11,7 @@
 <!-- files.  "tee" = Template with Embedded Expressions. -->
 
 <!-- Original Author: jrobbins@ics.uci.edu -->
-<!-- $Id: argo.tee,v 1.1 2000/09/04 12:50:31 1sturm Exp $ -->
+<!-- $Id: argo.tee,v 1.2 2004/07/25 18:19:35 kataka Exp $ -->
 
 
 <!-- TO DO LIST: -->
@@ -39,9 +39,11 @@
 
   <historyfile name="<ocl>self.historyFile</ocl>" />
 
+<!--
   <stats>
     <ocl>self.stats</ocl>
   </stats>
+ -->
 
 </argo>
 ]]>
