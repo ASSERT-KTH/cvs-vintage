@@ -1,16 +1,16 @@
 <div class="app" id="confirm">
 
 ## attempt to get the user out of the temp hashtable
-#set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
-#if ($user)
- #set ($regGroup = $intake.Register.mapTo($user))
- #set ($userNameValue = $user.UserName)
+#set ($confirmUser = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
+#if ($confirmUser)
+ #set ($regGroup = $intake.Register.mapTo($confirmUser))
+ #set ($username = $confirmUser.UserName)
 #else
  #set ($regGroup = $intake.Register.Default)
- #set ($userNameValue = $data.Parameters.UserName)
- #if (!$userNameValue || $emailValue.length() == 0)
+ #set ($username = $data.Parameters.UserName)
+ #if (!$username || $emailValue.length() == 0)
     ## coming from the Login page for a non-confirmed user
-    #set ($userNameValue = $intake.Login.Default.Username)
+    #set ($username = $intake.Login.Default.Username)
  #end
 #end
 #set ($confirmValue = $data.Parameters.getString("confirm", ""))
