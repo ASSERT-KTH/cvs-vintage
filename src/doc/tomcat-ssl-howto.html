@@ -56,6 +56,10 @@ Tomcat SSL Configuration</h1>
    <td>Christopher Cain&nbsp;&nbsp;</td>
    <td><tt>&lt;<a href="mailto:ccain@apache.org">ccain@apache.org</a>&gt;</tt></td>
 </tr>
+<tr>
+   <td>Eric Rescorla</td>
+   <td><tt>&lt;<a href="mailto:ekr@rtfm.com">ekr@rtfm.com</a>&gt;</tt></td>
+</tr>
 </table>
 <br>
 
@@ -156,7 +160,7 @@ as a digital "driver's license" for an Internet address. It states what
 company a site is associated with, along with some basic contact
 information about the site's owner and/or administrator.
 <p>
-This "driver's license" is cryptographically signed by its owner, and is
+This "driver's license" is cryptographically signed by its issuer, and is
 therefore extremely difficult for anyone else to forge. For sites involved
 in e-commerce, or any other business transaction in which authentication of
 identity is important, a certificate is typically purchased from a well-known
@@ -169,13 +173,31 @@ granted it.
 In many cases, however, authentication is not really a concern. An
 administrator may simply want to ensure that the data being transmitted and
 received by the server is private and cannot be snooped by anyone who may be
-eavesdropping on the connection. Fortunately, Java provides a relatively
-simple command-line tool, called <code>keytool</code>, which can easily create
-a "self-signed" certificate. Self-signed certificates are simply user-generated
-certificates which have not been officially registered with any well-known CA
-and are therefore not really guaranteed to be authentic at all. The owner of
-the certificate is essentially vouching for himself/herself. Again, this may
-or may not even be important, depending on your needs.
+eavesdropping on the connection. In such cases one is often tempted to
+use a "self-signed certificate"--one which has been signed only by the
+owner. Such a certificate obviously doesn't provide any guarantee of
+who the certificate owner is; there's nothing stopping me from making myself a certificate claiming to be George W. Bush.
+<p>
+What's less obvious is that using such certificates weakens the
+secrecy of your data as well. The attack works like this: when the
+client attempts to connect to the server the attacker hijacks the
+connection. He sends the client his own self-signed certificate which
+has the same <B>name</B> as that in the server's self-signed certificate.
+The attacker then connects to the real server himself. When the client
+sends data to the server the attacker reads it and then sends it along
+to the real server. This is called a <B>man-in-the-middle</B> attack.
+<p>
+The take-home message is that if you're worried about attackers who
+can write data to the network (this is called an active attack) then
+self-signed certificates won't protect you. If you're worried about
+attackers who can only read data off the network (this is called
+a passive attack) then self-signed certificates work fine. In general,
+you <EM>should</EM> worry about active attack and so self-signed
+certificates aren't that good.
+<p>
+Nevertheless, self-signed certificates are fantastically useful for testing
+and they are easily created with Java's <code>keytool</code> program or
+using OpenSSL.
 <br>
 <hr>
 <h2>
@@ -186,19 +208,21 @@ order to avoid possible conflicts in jars. A common case of conflict is for XML
 parsers (xerces &amp; jaxp). Tomcat required a recent XML parser, such as
 Apache Group's <A HREF="http://xml.apache.org/xerces-j/index.html">Xerces</A>
 or Sun's <A HREF="http://java.sun.com/xml/jaxp.html">JAXP</A>.
-
-<p>At build time (via Ant), Tomcat will check for some libs and will then
-included more or less options. This is the case with SSL support. If you have
-the JSSE jars in your <CODE>CLASSPATH</CODE>, Tomcat will be built with SSL
-(SSLSocketFactory). Tomcat will use the JSSE jars (<CODE>jcert.jar</CODE>,
-<CODE>jsse.jar</CODE>, <CODE>jnet.jar</CODE>). This software <EM>cannot</EM>
-be included in Tomcat, due in large part to certain legal restrictions on the
-distribution of cryptographic software. You'll have to go to the
-<a href="http://java.sun.com/products/jsse/">JSSE home page</a> and download
-from there the domestic (US/Canada) or global archive. You should then make
-these jars available to Tomcat during the build process by following the
-relevant build instructions for your version of Tomcat (see the build
-instructions in your top-level Tomcat directory for details).
+<p>
+You now have two options for building Tomcat with SSL support: Sun's JSSE
+and Claymore Systems's PureTLS. The functionality that they offer is
+roughly equivalent. The primary relevant difference is in licensing:
+PureTLS is open source (BSD-style license) and JSSE is closed source.
+Therefore, if you want to redistribute compiled versions of Tomcat or
+just look at the source of your SSL/TLS implementation you must
+use PureTLS. 
+<p>
+At build time (via Ant), Tomcat will automatically build as much SSL support
+as it can. If you have both PureTLS and JSSE in your <CODE>CLASSPATH</CODE>,
+Tomcat will automatically build with support for both. At run time, Tomcat
+will automatically select whatever library is present (if both are present,
+PureTLS will be selected). You can control which implementation is used
+via configuration file.
 <br>
 <hr>
 <h2>
@@ -335,6 +359,15 @@ certificates, you might find the following resources helpful:
    <li><a href="http://www.cryptix.org">Cryptix</a> (Open Source Java crypto
 library)
 </ul>
+<P>
+If you have either PureTLS or JSSE installed, you might as well use that
+for your SSL support. If you have neither installed, you will need to
+download and install one of them.
+<p>
+<hr>
+<h2>SSL Support with JSSE</h3>
+<p>
+<h3>Download and Install JSSE</h3>
 
 <h3>1. Download and Install JSSE</h3>
 
@@ -499,6 +532,71 @@ To import the CERT in keystore, you just do next :</li>
 For more information, please read the documentation (in your JDK
 documentation package) about <code>keytool</code>.
 <br>
+<hr>
+<h2>SSL Support with PureTLS</h2>
+<h3>1. Downloading and Installing PureTLS</h3>
+The easiest way to download PureTLS is by simply downloading the 
+prebuilt version from <a href="http://www.rtfm.com/puretls/prebuilt.html">
+http://www.rtfm.com/puretls/prebuilt.html</a>. This version contains
+all the jar files you will need in order to use PureTLS in one package.
+After expanding the package, there are two ways to make it available to
+Tomcat (choose one or the other):<br>
+<ul>
+ <li>You can make PureTLS an <em>installed extension</em> by copying all three JAR
+    files (<code>cryptix32.jar</code>, <code>puretls.jar</code>, and
+    <code>cryptix-asn1.jar</code>) into your <code>$JAVA_HOME/jre/lib/ext</code>
+    directory.</li>
+ <li>Alternatively, you can make these jars available via the classpath that is
+    passed to Tomcat on startup. This will need to be done in the appropriate
+    startup script for your environment (
+    <code>$TOMCAT_HOME/bin/tomcat.sh</code> in Unix, or
+    <code>%TOMCAT_HOME%\bin\tomcat.bat</code> in Windows).</li>
+</ul>
+<b>Note:</b> The system classpath is effectively ignored by Tomcat, so
+including the PureTLS jars there will <i>not</i> make them available for
+use by the Tomcat engine  during runtime (although it will not conflict with
+the two methods described above if they <i>do</i> happen to be in the system
+classpath). Also, do <em>not</em> copy these jars into any of the internal
+Tomcat repositories (the <code>$TOMCAT_HOME/lib/*</code> directories,
+individual webapp directories, etc.). Doing so may cause Tomcat to fail, as
+these libraries should only be loaded by the system classloader.
+<p>
+Alternately, you can download the PureTLS source distribution from
+<a href="http://www.rtfm.com/puretls">http://www.rtfm.com/puretls
+</a> and build it yourself. You will also need to install
+Cryptix 3.2 from <a href="http://www.cryptix.org>http://www.cryptix.org/">
+http://www.cryptix.org/
+</a>. Once you've built Cryptix and PureTLS, install them as described
+above.
+<p>
+<h3>2. Obtaining Keys and Certificates</h3>
+<p>
+PureTLS uses OpenSSL-style keyfiles. If you have an OpenSSL key
+you can simply copy it somewhere and point Tomcat at it.
+Sometimes when people use OpenSSL they store their keys and
+certificates in separate files, such as <code>key.pem</code>
+and <code>cert.pem</code>. PureTLS expects a single file which
+you can create by just concatenating the two files. For instance:
+<code>cat key.pem cert.pem > keyfile.pem</code>.
+<p>
+PureTLS does not currently allow you to make self-signed certificates.
+However, a number of sample certificate files are included in the
+PureTLS distribution. For testing purposes you can use the file
+<code>rsa-server.pem</a> which has the password <code>password</a>.
+<p>
+Finally, PureTLS allows you to create a certificate request using
+the <code>COM.claymoresystems.ptls.cert.CertRequest</code> class.
+With PureTLS in your classpath, execute <code>COM.claymoresystems.cert.CertRequest &lt;keyfile-name&gt; RSA</code>. Then type your keyfile password on the
+console (currently this is echoed which is rather a bug). PureTLS will think for a while and then generate a key in <code>keyfile-name</code>. The certificate request (in Netscape format) will be printed on the screen and can be
+cut and pasted into your CA's web page. When you get your certificate
+attach it to the end of your keyfile.
+<h3>3. Trust Management for Client Authentication</h3>
+If you intend to require your clients to authenticate with certificates
+you will need to decide what CAs you trust. PureTLS gets this information
+from a <i>root file</i> which is just the concatenation of the trusted
+root CA certificates. You specify that file to Tomcat using the
+<code>rootlist</code> attribute in the configuration file.
+<hr>
 
 <h3>3. Edit the Tomcat configuration file</h3>
 
@@ -529,7 +627,24 @@ In the above examples, we indicate that the keystore is file located at
 <code>/var/tomcat/conf/keystore</code>, and the password if "mynewpass". Again,
 these attributes can be skipped if the Tomcat defaults were used. Also, we
 specified that we don't want to enforce client authentication.
-<BR><BR>
+<P>
+By default, Tomcat chooses whatever SSL implementation is available,
+with preference given to PureTLS over JSSE if both are available. You
+can specify the exact implementation you want using the <code>SSLImplementation</code>
+parameter, like so:
+<p><tt><font size=-1>&lt;Http10Connector</font></tt>
+<br><tt><font size=-1>&nbsp; port="8443"</font></tt>
+<br><tt><font size=-1>&nbsp; secure="true"</font></tt>
+<br><tt><font size=-1>&nbsp; keystore="/var/tomcat/conf/keystore"</font></tt>
+<br><tt><font size=-1>&nbsp; keypass="mynewpass"</font></tt>
+<br><tt><font size=-1>&nbsp; clientAuth="false" </font></tt>
+<br><tt><font size=-1>&nbsp; SSLImplementation="org.apache.tomcat.util.net.PureTLSImplementation" </font></tt> /></font></tt>
+<P>
+<code>SSLImplementation</code> can be the name of any class that implements
+<code>org.apache.tomcat.util.net.SSLImplementation</code>. The values built
+into Tomcat are <code>org.apache.tomcat.util.net.PureTLSImplementation</code> for PureTLS
+and <code>org.apache.tomcat.util.net.JSSEImplementation</code> for JSSE.
+
 <hr>
 
 <h2>
@@ -618,8 +733,7 @@ information, at
 
 <h2>
 <a NAME="s7"></a>Credits</h2>
-This document was written by <a href="mailto:hgomez@slib.fr">Henri Gomez</a>
-and <A HREF="mailto:ccain@apache.org">Christopher Cain</A>. Thanks to both Tilo
+This document was written by <a href="mailto:hgomez@slib.fr">Henri Gomez</a>, <A HREF="mailto:ccain@apache.org">Christopher Cain</A> and <A href="mailto:ekr@rtfm.com">Eric Rescorla</a>. Thanks to both Tilo
 Christ &lt;tilo.christ@med.siemens.de&gt; and hgopal@cmcltd.com for additional
 contributions.</P>
 <br>&nbsp;
