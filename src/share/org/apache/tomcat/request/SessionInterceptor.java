@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.request;
@@ -74,60 +74,91 @@ import javax.servlet.http.*;
  *
  * This implementation only handles Cookies sessions, please extend or
  * add new interceptors for other methods.
- * 
+ *
  */
 public class SessionInterceptor extends  BaseInterceptor implements RequestInterceptor {
-    
+
+    // GS, separates the session id from the jvm route
+    static final char SESSIONID_ROUTE_SEP = '.';
+
     public SessionInterceptor() {
     }
-	
+
     public int requestMap(Request request ) {
-	// look for session id -- cookies only right now
-	String sessionId = null;
+	    // look for session id -- cookies only right now
+	    String sessionId = null;
 
-	Cookie cookies[]=request.getCookies(); // assert !=null
-	
-	for( int i=0; i<cookies.length; i++ ) {
-	    Cookie cookie = cookies[i]; 
+	    Cookie cookies[]=request.getCookies(); // assert !=null
 
-	    if (cookie.getName().equals(
+	    for( int i=0; i<cookies.length; i++ ) {
+	        Cookie cookie = cookies[i];
+
+	        if (cookie.getName().equals(
 					org.apache.tomcat.core.Constants.SESSION_COOKIE_NAME)) {
-		sessionId = cookie.getValue();
+		        sessionId = cookie.getValue();
+                // GS, We piggyback the JVM id on top of the session cookie
+                // Separate them ...
+                if(null != sessionId) {
+                    int idex = sessionId.lastIndexOf(SESSIONID_ROUTE_SEP);
+                    if(idex > 0) {
+                        sessionId = sessionId.substring(0, idex);
+                    }
+                }
 
-		if (sessionId != null) {
-		    request.setRequestedSessionId(sessionId);
-		}
+		        if (sessionId != null) {
+                    // GS, We are in a problem here, we may actually get
+                    // multiple Session cookies (one for the root
+                    // context and one for the real context... or old session
+                    // cookie. We must check for validity in the current context.
+                    Context ctx = request.getContext();
+                    SessionManager sM = ctx.getSessionManager();
+
+                    if(null != sM.findSession(ctx, sessionId)) {
+                        sM.accessed(ctx, request, sessionId );
+
+                        request.setRequestedSessionId(sessionId);
+                    }
+                }
+		    }
 	    }
-	}
 
-	if (sessionId != null) {
-	    Context ctx=request.getContext();
-	    SessionManager sM=ctx.getSessionManager();
-
-	    sM.accessed( ctx, request, sessionId );
-	}
-
-	return 0;
+	    return 0;
     }
 
     public int beforeBody( Request rrequest, Response response ) {
-	String reqSessionId = response.getSessionId();
-	if( reqSessionId==null)
-	    return 0;
-	
-	Cookie cookie = new Cookie("JSESSIONID",
-				   reqSessionId);
-	cookie.setMaxAge(-1);
-	cookie.setPath("/");
-	cookie.setVersion(1);
+    	String reqSessionId = response.getSessionId();
+	    if( reqSessionId==null)
+	        return 0;
 
-	response.addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
-	cookie.setVersion(0);
-	response.addHeader( CookieTools.getCookieHeaderName(cookie),
-			    CookieTools.getCookieHeaderValue(cookie));
+        // GS, set the path attribute to the cookie. This way
+        // multiple session cookies can be used, one for each
+        // context.
+        String sessionPath = rrequest.getContext().getPath();
+        if(sessionPath.length() == 0) {
+            sessionPath = "/";
+        }
 
-	return 0;
+        // GS, piggyback the jvm route on the session id.
+        if(!sessionPath.equals("/")) {
+            String jvmRoute = rrequest.getJvmRoute();
+            if(null != jvmRoute) {
+                reqSessionId = reqSessionId + SESSIONID_ROUTE_SEP + jvmRoute;
+            }
+        }
+
+	    Cookie cookie = new Cookie("JSESSIONID",
+				                   reqSessionId);
+    	cookie.setMaxAge(-1);
+        cookie.setPath(sessionPath);
+    	cookie.setVersion(1);
+
+	    response.addHeader( CookieTools.getCookieHeaderName(cookie),
+		            	    CookieTools.getCookieHeaderValue(cookie));
+    	cookie.setVersion(0);
+	    response.addHeader( CookieTools.getCookieHeaderName(cookie),
+		            	    CookieTools.getCookieHeaderValue(cookie));
+
+    	return 0;
     }
 
 
