@@ -24,7 +24,7 @@
 // File: Critic.java
 // Classes: Critic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Critic.java,v 1.4 2001/09/26 16:51:20 thierrylach Exp $
+// $Id: Critic.java,v 1.5 2001/10/30 14:53:18 thierrylach Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -86,7 +86,12 @@ public class Critic implements Poster, Serializable {
    *
    *  @since 0.9.4
    */
-  public final static Category cat = Category.getInstance(Critic.class.getPackage().getName());
+  public final static Category cat = Category.getInstance("org.argouml.cognitive.critics");
+    // needs-more-work:  JDK 1.2 seems to not return the package name if
+    // not running from a jar.
+    //
+  // public final static Category cat = Category.getInstance(Critic.class.getPackage().getName());
+
 
   /** The email address of the author/maintainer of this critic. */
   private String _emailAddr;
