@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.6 2000/01/24 05:54:51 shemnon Exp $
- * $Revision: 1.6 $
- * $Date: 2000/01/24 05:54:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/JspParseEventListener.java,v 1.7 2000/02/13 06:25:24 akv Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/13 06:25:24 $
  *
  * ====================================================================
  * 
@@ -79,6 +79,8 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JspCompilationContext;
+
+import org.apache.tomcat.logging.Logger;
 
 /**
  * JSP code generator "backend". 
@@ -336,7 +338,7 @@ public class JspParseEventListener extends BaseJspListener {
     public void handleComment(Mark start, Mark stop) throws JasperException {
         Constants.message("jsp.message.htmlcomment", 
                           new Object[] { reader.getChars(start, stop) },
-                          Constants.HIGH_VERBOSITY);
+                          Logger.DEBUG);
     }
 
     interface PageDirectiveHandler {
@@ -616,7 +618,7 @@ public class JspParseEventListener extends BaseJspListener {
     {
         Constants.message("jsp.message.handling_directive",
                           new Object[] { directive, attrs },
-                          Constants.HIGH_VERBOSITY);
+                          Logger.DEBUG);
 
 	if (directive.equals("page")) {
 	    Enumeration e = attrs.keys();
@@ -801,7 +803,7 @@ public class JspParseEventListener extends BaseJspListener {
     {
         Constants.message("jsp.message.handling_plugin",
                           new Object[] { attrs },
-                          Constants.HIGH_VERBOSITY);
+                          Logger.DEBUG);
 
 	Generator gen = new GeneratorWrapper (new PluginGenerator (attrs,
 					      param, fallback), start, stop);

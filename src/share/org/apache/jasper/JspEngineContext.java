@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.5 2000/01/24 05:54:50 shemnon Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/24 05:54:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspEngineContext.java,v 1.6 2000/02/13 06:25:23 akv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/13 06:25:23 $
  *
  * ====================================================================
  * 
@@ -78,6 +78,8 @@ import org.apache.jasper.compiler.Compiler;
 import org.apache.jasper.compiler.JspCompiler;
 import org.apache.jasper.compiler.SunJavaCompiler;
 import org.apache.jasper.compiler.JavaCompiler;
+
+import org.apache.tomcat.logging.Logger;
 
 /**
  * A place holder for various things that are used through out the JSP
@@ -297,7 +299,7 @@ public class JspEngineContext implements JspCompilationContext {
             } catch (Exception ex) {
 		Constants.message("jsp.warning.compiler.class.cantcreate",
 				  new Object[] { jspCompilerPlugin, ex }, 
-				  Constants.FATAL_ERRORS);
+				  Logger.FATAL);
                 javac = new SunJavaCompiler();
 	    }
 	} else {

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.11 2000/02/09 06:50:49 shemnon Exp $
- * $Revision: 1.11 $
- * $Date: 2000/02/09 06:50:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.12 2000/02/13 06:25:24 akv Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/02/13 06:25:24 $
  *
  * ====================================================================
  * 
@@ -72,6 +72,8 @@ import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.compiler.ParseException;
 
+import org.apache.tomcat.logging.Logger;
+
 /**
  * If you want to customize JSP compilation aspects, this class is
  * something you should take a look at. 
@@ -113,16 +115,16 @@ public abstract class Compiler {
         Constants.message("jsp.message.package_name_is",
                           new Object[] { (pkgName==null)?
                                           "[default package]":pkgName },
-                          Constants.MED_VERBOSITY);
+                          Logger.DEBUG);
         Constants.message("jsp.message.class_name_is",
                           new Object[] { className },
-                          Constants.MED_VERBOSITY);
+                          Logger.DEBUG);
         Constants.message("jsp.message.java_file_name_is",
                           new Object[] { javaFileName },
-                          Constants.MED_VERBOSITY);
+                          Logger.DEBUG);
         Constants.message("jsp.message.class_file_name_is",
                           new Object[] { classFileName },
-                          Constants.MED_VERBOSITY);
+                          Logger.DEBUG);
 
         if (!isOutDated())
             return false;
@@ -200,7 +202,7 @@ public abstract class Compiler {
 
         Constants.message("jsp.message.compiling_with",
                           new Object[] { b.toString() },
-                          Constants.MED_VERBOSITY);
+                          Logger.DEBUG);
 
         /**
          * 256 chosen randomly. The default is 32 if you don't pass

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.1 2000/01/24 05:54:50 shemnon Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/24 05:54:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/EmbededServletOptions.java,v 1.2 2000/02/13 06:25:23 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/02/13 06:25:23 $
  *
  * ====================================================================
  * 
@@ -66,6 +66,8 @@ import java.io.File;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
+import org.apache.tomcat.logging.Logger;
+
 /**
  * A class to hold all init parameters specific to the JSP engine. 
  *
@@ -92,12 +94,6 @@ public final class EmbededServletOptions implements Options {
      * error or a log file if the standard error is redirected. 
      */
     public boolean sendErrorToClient = false;
-
-    /**
-     * Current verbosity level. FIXME: This stuff is duplicated: see
-     * Constants.jspVerbosityLevel. 
-     */
-    public int jspVerbosityLevel = Constants.MED_VERBOSITY;
 
     /**
      * I want to see my generated servlets. Which directory are they
@@ -157,13 +153,6 @@ public final class EmbededServletOptions implements Options {
     }
     
     /**
-     * What is the current verbosity level?
-     */
-    public int getJspVerbosityLevel() {
-        return jspVerbosityLevel;
-    }
-
-    /**
      * What is my scratch dir?
      */
     public File getScratchDir() {
@@ -204,7 +193,7 @@ public final class EmbededServletOptions implements Options {
                 this.keepGenerated = true;
             else if (keepgen.equalsIgnoreCase("false"))
                 this.keepGenerated = false;
-            else Constants.message ("jsp.warning.keepgen", Constants.FATAL_ERRORS);
+            else Constants.message ("jsp.warning.keepgen", Logger.WARNING);
         }
             
 
@@ -214,7 +203,7 @@ public final class EmbededServletOptions implements Options {
                 this.largeFile = true;
             else if (largeFile.equalsIgnoreCase("false"))
                 this.largeFile = false;
-            else Constants.message ("jsp.warning.largeFile", Constants.FATAL_ERRORS);
+            else Constants.message ("jsp.warning.largeFile", Logger.WARNING);
         }
 
         String senderr = config.getInitParameter("sendErrToClient");
@@ -223,7 +212,7 @@ public final class EmbededServletOptions implements Options {
                 this.sendErrorToClient = true;
             else if (senderr.equalsIgnoreCase("false"))
                 this.sendErrorToClient = false;
-            else Constants.message ("jsp.warning.sendErrToClient", Constants.FATAL_ERRORS);
+            else Constants.message ("jsp.warning.sendErrToClient", Logger.WARNING);
         }
 
         String ieClassId = config.getInitParameter("ieClassId");
@@ -233,16 +222,6 @@ public final class EmbededServletOptions implements Options {
         String classpath = config.getInitParameter("classpath");
         if (classpath != null)
             this.classpath = classpath;
-
-        String verbosityLevel = config.getInitParameter("jspVerbosityLevel");
-            
-        if (verbosityLevel != null)
-            try {
-                int vl = Integer.parseInt(verbosityLevel);
-                jspVerbosityLevel = vl;
-                Constants.jspVerbosityLevel = jspVerbosityLevel;
-            } catch (NumberFormatException nex) {
-            }
 
         String dir = config.getInitParameter("scratchdir"); 
 
@@ -261,7 +240,7 @@ public final class EmbededServletOptions implements Options {
         }
                 
         if (this.scratchDir == null) {
-            Constants.message("jsp.error.no.scratch.dir", Constants.FATAL_ERRORS);
+            Constants.message("jsp.error.no.scratch.dir", Logger.FATAL);
             return;
         }
             
@@ -270,7 +249,7 @@ public final class EmbededServletOptions implements Options {
             Constants.message("jsp.error.bad.scratch.dir",
                               new Object[] {
                                   scratchDir.getAbsolutePath()
-                              }, Constants.FATAL_ERRORS);
+                              }, Logger.FATAL);
                                   
         String jspCompilerPath = config.getInitParameter("jspCompilerPath");
         if (jspCompilerPath != null) {
@@ -279,7 +258,7 @@ public final class EmbededServletOptions implements Options {
             } else { 
                 Constants.message("jsp.warning.compiler.path.notfound",
                                   new Object[] { jspCompilerPath }, 
-                                  Constants.FATAL_ERRORS);
+                                  Logger.FATAL);
             }
         }
 
@@ -290,7 +269,7 @@ public final class EmbededServletOptions implements Options {
             } catch (ClassNotFoundException cnfe) {
                 Constants.message("jsp.warning.compiler.class.notfound",
                                   new Object[] { jspCompilerPlugin },
-                                  Constants.FATAL_ERRORS);
+                                  Logger.FATAL);
             }
         }
   

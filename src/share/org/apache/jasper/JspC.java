@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.2 2000/02/09 06:50:47 shemnon Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/09 06:50:47 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/JspC.java,v 1.3 2000/02/13 06:25:23 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/13 06:25:23 $
  *
  * ====================================================================
  * 
@@ -70,11 +70,15 @@ import org.apache.jasper.compiler.CommandLineCompiler;
 
 import org.apache.jasper.runtime.JspLoader;
 
+import org.apache.tomcat.logging.Logger;
+import org.apache.tomcat.logging.TomcatLogger;
+
 /**
  * Shell for the jspc compiler.  Handles all options associated with the 
  * command line and creates compilation contexts which it then compiles
  * according to the specified options.
- *@author Danno Ferrin
+ *
+ * @author Danno Ferrin
  */
 public class JspC implements Options { //, JspCompilationContext {
 
@@ -98,7 +102,7 @@ public class JspC implements Options { //, JspCompilationContext {
     
     boolean largeFile = false;
 
-    int jspVerbosityLevel = Constants.MED_VERBOSITY;
+    int jspVerbosityLevel = Logger.INFORMATION;
 
     File scratchDir;
 
@@ -195,15 +199,17 @@ public class JspC implements Options { //, JspCompilationContext {
         args = arg;
         String tok;
 
+	int verbosityLevel = Logger.WARNING;
+	
         while ((tok = nextArg()) != null) {
             if (tok.equals(SWITCH_QUIET)) {
-                Constants.jspVerbosityLevel = Constants.WARNING;
+		verbosityLevel = Logger.WARNING;
             } else if (tok.equals(SWITCH_VERBOSE)) {
-                Constants.jspVerbosityLevel = Constants.HIGH_VERBOSITY;
+                verbosityLevel = Logger.INFORMATION;
             } else if (tok.startsWith(SWITCH_VERBOSE)) {
                 try {
-                    Constants.jspVerbosityLevel = Integer.parseInt(
-                            tok.substring(SWITCH_VERBOSE.length()));
+                    verbosityLevel 
+			= Integer.parseInt(tok.substring(SWITCH_VERBOSE.length()));
                 } catch (NumberFormatException nfe) {
                     log.println(
                         "Verbosity level " 
@@ -247,6 +253,10 @@ public class JspC implements Options { //, JspCompilationContext {
                 break;
             }
         }
+
+	Constants.jasperLog = new TomcatLogger();
+	Constants.jasperLog.setVerbosityLevel(verbosityLevel);
+
     };
     
     public void parseFiles(PrintStream log)  throws JasperException {
@@ -271,7 +281,7 @@ public class JspC implements Options { //, JspCompilationContext {
                             uriRoot = f.getCanonicalPath();
                             Constants.message("jspc.implicit.uriRoot",
                                               new Object[] { uriRoot },
-                                              Constants.MED_VERBOSITY);
+                                              Logger.INFORMATION);
                             break;
                         }
                         f = new File(f.getParent());

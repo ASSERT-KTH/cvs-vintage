@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.10 2000/01/24 05:54:51 shemnon Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/24 05:54:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.11 2000/02/13 06:25:24 akv Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/02/13 06:25:24 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -88,6 +88,8 @@ import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.Constants;
 import org.apache.jasper.runtime.JspLoader;
+
+import org.apache.tomcat.logging.Logger;
 
 /**
  * Implementation of the TagLibraryInfo class from the JSP spec. 
@@ -204,7 +206,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    if (in == null)
 		throw new JasperException(Constants.getString("jsp.error.tld_not_found",
 							      new Object[] {TLD}));
-	    //Now parse the tld.
+	    // Now parse the tld.
 	    parseTLD(in);
 	}
 	    
@@ -239,7 +241,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    
 		Constants.message("jsp.message.copyinguri", 
 	                          new Object[] { uri, jarFileName },
-				  Constants.MED_VERBOSITY);
+				  Logger.DEBUG);
 	    
 		if (relativeURL)
 		    copy(ctxt.getResourceAsStream(uri),
@@ -349,7 +351,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
         }
 
@@ -394,7 +396,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
         }
 	TagAttributeInfo[] tagAttributeInfo 
@@ -412,21 +414,21 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       teiclass, cex.getMessage()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
             } catch (IllegalAccessException iae) {
                 Constants.message("jsp.warning.teiclass.is.null",
                                   new Object[] {
                                       teiclass, iae.getMessage()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
             } catch (InstantiationException ie) {
                 Constants.message("jsp.warning.teiclass.is.null",
                                   new Object[] {
                                       teiclass, ie.getMessage()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
             }
         
@@ -467,7 +469,7 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
                                   new Object[] {
                                       e.getTagName()
                                   },
-                                  Constants.WARNING
+                                  Logger.WARNING
                                   );
         }
         

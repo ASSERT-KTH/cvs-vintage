@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.5 2000/02/07 07:51:21 shemnon Exp $
- * $Revision: 1.5 $
- * $Date: 2000/02/07 07:51:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.6 2000/02/13 06:25:25 akv Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/13 06:25:25 $
  *
  * ====================================================================
  * 
@@ -79,6 +79,8 @@ import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.JspEngineContext;
 import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
+
+import org.apache.tomcat.logging.Logger;
 
 /**
  * This is a class loader that loads JSP files as though they were
@@ -255,7 +257,7 @@ public class JspLoader extends ClassLoader {
         if (!jars.contains(jarFileName)) {
             Constants.message("jsp.message.adding_jar",
                               new Object[] { jarFileName },
-                              Constants.MED_VERBOSITY);
+                              Logger.INFORMATION);
             
             jars.addElement(jarFileName);
         }

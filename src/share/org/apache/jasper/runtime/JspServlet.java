@@ -82,6 +82,8 @@ import org.apache.jasper.JspEngineContext;
 
 import org.apache.jasper.compiler.Compiler;
 
+import org.apache.tomcat.logging.Logger;
+
 /**
  * The JSP engine (a.k.a Jasper)! 
  *
@@ -138,7 +140,7 @@ public class JspServlet extends HttpServlet {
             
             Constants.message("jsp.message.cp_is", 
                               new Object[] { accordingto, cp }, 
-                              Constants.MED_VERBOSITY);
+                              Logger.INFORMATION);
 
 	    //if (loader.loadJSP(jspUri, cp, isErrorPage, req, res) || theServlet == null) {
             if (loadJSP(jspUri, cp, isErrorPage, req, res) 
@@ -206,44 +208,37 @@ public class JspServlet extends HttpServlet {
 	this.config = config;
 	this.context = config.getServletContext();
         this.serverInfo = context.getServerInfo();
-        this.engine = ServletEngine.getServletEngine(serverInfo);
         
-        if (engine == null)
-            Constants.message("jsp.error.bad-servlet-engine", Constants.FATAL_ERRORS);
-        else {
-            options = new EmbededServletOptions(config, context);
+	options = new EmbededServletOptions(config, context);
 
-            parentClassLoader = (ClassLoader) context.getAttribute(Constants.SERVLET_CLASS_LOADER);
-            if (parentClassLoader == null)
-                parentClassLoader = this.getClass().getClassLoader();
+	parentClassLoader = (ClassLoader) context.getAttribute(Constants.SERVLET_CLASS_LOADER);
+	if (parentClassLoader == null)
+	    parentClassLoader = this.getClass().getClassLoader();
             
-            // getClass().getClassLoader() returns null in JDK 1.1.6/1.1.8
-            if (parentClassLoader != null) {
+	// getClass().getClassLoader() returns null in JDK 1.1.6/1.1.8
+	if (parentClassLoader != null) {
             Constants.message("jsp.message.parent_class_loader_is", 
                               new Object[] {
                                   parentClassLoader.toString()
-                              }, Constants.MED_VERBOSITY);
+                              }, Logger.DEBUG);
             }
-            else {
+	else {
             Constants.message("jsp.message.parent_class_loader_is", 
                               new Object[] {
                                   "<none>"
-                              }, Constants.MED_VERBOSITY);
-            }
-            this.loader = new JspLoader(parentClassLoader, 
-                                        options);
+                              }, Logger.DEBUG);
+	}
+	this.loader = new JspLoader(parentClassLoader, 
+				    options);
 
-            if (firstTime) {
-                firstTime = false;
-                Constants.message("jsp.message.scratch.dir.is", 
-                                  new Object[] { 
-                                      options.getScratchDir().toString() 
-                                  }, Constants.LOW_VERBOSITY );
-                Constants.message("jsp.message.dont.modify.servlets", Constants.LOW_VERBOSITY);
-            }
-            
-        }
-
+	if (firstTime) {
+	    firstTime = false;
+	    Constants.message("jsp.message.scratch.dir.is", 
+			      new Object[] { 
+				  options.getScratchDir().toString() 
+			      }, Logger.INFORMATION );
+	    Constants.message("jsp.message.dont.modify.servlets", Logger.INFORMATION);
+	}
         JspFactory.setDefaultFactory(new JspFactoryImpl());
     }
 
@@ -350,23 +345,25 @@ public class JspServlet extends HttpServlet {
 
             boolean precompile = preCompile(request);
 
-            if (Constants.matchVerbosity(Constants.MED_VERBOSITY)) {
-		System.err.println("JspEngine --> "+jspUri);
-                System.err.println("\t     ServletPath: "+request.getServletPath());
-                System.err.println("\t        PathInfo: "+request.getPathInfo());
-		System.err.println("\t        RealPath: "
-                                   +getServletConfig().getServletContext().getRealPath(jspUri));
-                System.err.println("\t      RequestURI: "+request.getRequestURI());
-                System.err.println("\t     QueryString: "+request.getQueryString());
-                System.err.println("\t  Request Params: ");
-                Enumeration e = request.getParameterNames();
-                while (e.hasMoreElements()) {
-                    String name = (String) e.nextElement();
-                    System.err.println("\t\t "+name+" = "+request.getParameter(name));
-                }
-            }
-            serviceJspFile(request, response, jspUri, null, precompile);
+	    Logger jasperLog = Constants.jasperLog;
 	    
+            if (jasperLog != null && jasperLog.matchVerbosityLevel(Logger.INFORMATION))
+		{
+		    jasperLog.log("JspEngine --> "+jspUri);
+		    jasperLog.log("\t     ServletPath: "+request.getServletPath());
+		    jasperLog.log("\t        PathInfo: "+request.getPathInfo());
+		    jasperLog.log("\t        RealPath: "
+				  +getServletConfig().getServletContext().getRealPath(jspUri));
+		    jasperLog.log("\t      RequestURI: "+request.getRequestURI());
+		    jasperLog.log("\t     QueryString: "+request.getQueryString());
+		    jasperLog.log("\t  Request Params: ");
+		    Enumeration e = request.getParameterNames();
+		    while (e.hasMoreElements()) {
+			String name = (String) e.nextElement();
+			jasperLog.log("\t\t "+name+" = "+request.getParameter(name));
+		    }
+		}
+            serviceJspFile(request, response, jspUri, null, precompile);
 	} catch (RuntimeException e) {
 	    throw e;
 	} catch (ServletException e) {
@@ -379,8 +376,9 @@ public class JspServlet extends HttpServlet {
     }
 
     public void destroy() {
-	if (Constants.matchVerbosity(2))
-	    System.err.println("JspServlet.destroy()");
+	if (Constants.jasperLog != null)
+	    Constants.jasperLog.log("JspServlet.destroy()", Logger.INFORMATION);
+
 	Enumeration servlets = jsps.elements();
 	while (servlets.hasMoreElements()) 
 	    ((JspServletWrapper) servlets.nextElement()).destroy();

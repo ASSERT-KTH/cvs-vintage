@@ -60,6 +60,8 @@ import java.util.ResourceBundle;
 import java.util.MissingResourceException;
 import java.text.MessageFormat;
 
+import org.apache.tomcat.logging.Logger;
+
 /**
  * Some constants and other global data that are used by the compiler and the runtime.
  *
@@ -114,17 +116,6 @@ public class Constants {
      */
     public static final String SERVLET_CLASS_LOADER = "org.apache.tomcat.classloader";
 
-
-    /**
-     * Codes that indicate how verbose you want the JSP engine to be. 
-     */
-    public static final int FATAL_ERRORS = Integer.MIN_VALUE;
-    public static final int WARNING = 0;
-    public static final int LOW_VERBOSITY = 1;
-    public static final int MED_VERBOSITY = 2;
-    public static final int HIGH_VERBOSITY = 3;
-
-    public static int jspVerbosityLevel = 0;
 
     /**
      * Default size of the JSP buffer.
@@ -216,14 +207,6 @@ public class Constants {
         }
     }
 
-    /**
-     * Tells you if the current verbosity level allow output of
-     * messages with a certain verbosity level. 
-     */
-    public static final boolean matchVerbosity(int verbosityLevel) {
-        return verbosityLevel <= jspVerbosityLevel;
-    }
-
     /** 
      * Print a message into standard error with a certain verbosity
      * level. 
@@ -238,6 +221,7 @@ public class Constants {
         message(key, null, verbosityLevel);
     }
 
+
     /**
      * Print a message into standard error with a certain verbosity
      * level after formatting it using "args". 
@@ -249,8 +233,13 @@ public class Constants {
      *                       level. 
      */
     public static final void message(String key, Object[] args, int verbosityLevel) {
-        if (matchVerbosity(verbosityLevel))
-            System.err.println(getString(key, args));
+	if (jasperLog == null)
+	    jasperLog = Logger.getLogger("JASPER_LOG");
+
+	if (jasperLog != null)
+	    jasperLog.log(getString(key, args), verbosityLevel);
     }
+
+    public static Logger jasperLog = null;
 }
 
