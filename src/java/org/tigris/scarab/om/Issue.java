@@ -1046,6 +1046,13 @@ public class Issue
         transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
                            assigner, attachment);
 
+        // we might modify the list and we do not want to affect other
+        // uses of the list
+        List newAssigneesCopy = null;
+        if ( newAssignees != null ) 
+        {
+            newAssigneesCopy = new ArrayList(newAssignees);
+        }
         // take care of users who were removed or already assigned
         List assignees = getAssigneeAttributeValues();
         Iterator iter = assignees.iterator();
@@ -1054,17 +1061,17 @@ public class Issue
             AttributeValue oldAV = (AttributeValue)iter.next();
             oldAV.startTransaction(transaction);
             boolean deleted = true;
-            if ( newAssignees != null ) 
+            if ( newAssigneesCopy != null ) 
             {
-                for ( int i=newAssignees.size()-1; i>=0; i-- ) 
+                for ( int i=newAssigneesCopy.size()-1; i>=0; i-- ) 
                 {
                     if ( oldAV.getValue().equals( 
-                        ((ScarabUser)newAssignees.get(i)).getUserName() ))
+                        ((ScarabUser)newAssigneesCopy.get(i)).getUserName() ))
                     {
                         // a current user was left in the list of assignees
                         // so remove from list of new assignees and mark as
                         // not to be deleted.
-                        newAssignees.remove(i);
+                        newAssigneesCopy.remove(i);
                         deleted = false;
                         break;
                     }
@@ -1074,11 +1081,11 @@ public class Issue
         }
 
         // add new values
-        if ( newAssignees != null ) 
+        if ( newAssigneesCopy != null ) 
         {        
-            for ( int i=0; i<newAssignees.size(); i++ ) 
+            for ( int i=0; i<newAssigneesCopy.size(); i++ ) 
             {
-                ScarabUser user = (ScarabUser)newAssignees.get(i);
+                ScarabUser user = (ScarabUser)newAssigneesCopy.get(i);
                 AttributeValue av = AttributeValue
                     .getNewInstance(AttributePeer.ASSIGNED_TO__PK, this);
                 av.startTransaction(transaction);

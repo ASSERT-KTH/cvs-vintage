@@ -4,12 +4,20 @@ $page.setTitle("Assign Users to Issue")
     #set ( $actionLink = $link.setPage("AssignIssue.vm").setAction("AssignIssue").addPathInfo("nextTemplate", "Index.vm") )
 #end
 #set ($module = $scarabR.CurrentModule)
-#if ( $scarabR.Issues )
-    #set ($issue = $scarabR.Issues.get(0))
-#else
+#if (!$scarabR.Issue.isNew())
     #set ($issue = $scarabR.Issue)
+#elseif ( $scarabR.Issues )
+    #set ($multiple = true)
+    #set ($issue = $scarabR.Issues.get(0))
+#elseif ( $issueIdList )
+    #set ($multiple = true)
+    #set ( $issue = $scarabR.getIssue($issueIdList.get(0)) )
+#else  ## this could grab all the issues
+    #set ($multiple = true)
+    #set ( $issue = $scarabR.IssueList.get(0) )
 #end
-#set ($attrValues = $issue.ModuleAttributeValuesMap)
+
+
 #if ( $data.Parameters.getString("action") && $data.Parameters.getString("action") == "AssignIssue" )
    #set ( $reentry = true )
 #end
@@ -33,7 +41,24 @@ $page.setTitle("Assign Users to Issue")
    <h3>$page.Title</h3>
 
 #set ( $issueGroup = $intake.Issue.Default )
+#if ($multiple)
+    #if ($issueIdList)
+        #foreach ($id in $issueIdList)
+            <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+        #end
+    #elseif ($issueGroup.Ids.Value)
+        #foreach ($id in $issueGroup.Ids.Value)
+            <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
+        #end
+    #else
+        #foreach ($issue in $scarabR.IssueList)
+            <input type="hidden" name="$issueGroup.Ids.Key" 
+                value="$issue.IssueId" />
+        #end
+    #end
+#else
     <input type="hidden" name="$issueGroup.Id.Key" value="$issueGroup.Id" />
+#end
 
 	<div class="sidebyside">
     <table cellpadding="3" cellspacing="2" border="1" width="100%">
@@ -61,8 +86,7 @@ $page.setTitle("Assign Users to Issue")
     #end
 #end
       </select>
-    <input type="submit" name="eventSubmit_doAdd" 
-                     value="Add" />
+    <input type="submit" name="eventSubmit_doAdd" value="Add" />
       </td>
       <td>
 
