@@ -28,7 +28,6 @@ import org.columba.chat.ui.conversation.ConversationController;
 import org.columba.chat.ui.presence.PresenceComboBox;
 import org.columba.chat.ui.roaster.RoasterTree;
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.frame.DefaultFrameController;
 import org.columba.core.io.DiskIO;
@@ -55,8 +54,8 @@ public class AlturaFrameController extends DefaultFrameController implements
 	 * @param c
 	 * @param viewItem
 	 */
-	public AlturaFrameController(Container c, ViewItem viewItem) {
-		super(c, viewItem);
+	public AlturaFrameController(ViewItem viewItem) {
+		super(viewItem);
 
 		tree = new RoasterTree(this);
 		presence = new PresenceComboBox(this);
@@ -71,7 +70,7 @@ public class AlturaFrameController extends DefaultFrameController implements
 
 		new ConnectAction(this).actionPerformed(null);
 
-		c.setContentPane(this);
+		//c.setContentPane(this);
 
 	}
 

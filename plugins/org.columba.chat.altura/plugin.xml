@@ -3,5 +3,5 @@
   <extension name="org.columba.core.frame">
     <frame name="AlturaFrame" class="org.columba.chat.frame.AlturaFrameController"></frame>
   </extension>
-  <runtime type="java" jar="AlturaMessenger.jar"></runtime>
+  <runtime jar="AlturaMessenger.jar" type="java"></runtime>
 </plugin>

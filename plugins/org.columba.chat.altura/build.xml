@@ -8,7 +8,7 @@
  <property name="version" value="1.0"/>
  <property name="dest" value="AlturaMessenger"/>
  <property name="plugin-id" value="org.columba.chat.altura"/>
- <property name="ownclasspath" value="${classpath}:${columba_src}:lib/smack.jar:lib/smackx.jar:${columba_src}/../lib/forms-1.0.4.jar"/>
+ <property name="ownclasspath" value="${classpath}:${columba_src}:lib/smack.jar:lib/smackx.jar:${columba_src}/../lib/forms-1.0.4.jar:${columba_src}/../lib/jwizz-0.1.2.jar"/>
 
  <!-- compile the classes -->
  <target name="compile">
