@@ -482,8 +482,18 @@ public final class Context {
 	throws TomcatException
     {
 	if(this.state==STATE_NEW && state==STATE_ADDED ) {
+	    // we are just beeing added
 	    BaseInterceptor cI[]=getContainer().getInterceptors();
 	    for( int i=0; i< cI.length; i++ ) {
+		if( cI[i].getContext() != this )
+		    continue; // not ours, don't have to initialize it.
+		cI[i].addInterceptor( contextM, this , cI[i] ); 
+		BaseInterceptor existingI[]=defaultContainer.getInterceptors();
+		for( int j=0; j<existingI.length; j++ ) {
+		    if( existingI[j] != cI[i] )
+			existingI[j].addInterceptor( contextM, this, cI[i] );
+		}
+		
 		// set all local interceptors 
 		cI[i].setContextManager( contextM );
 		cI[i].engineInit( contextM );
@@ -1164,6 +1174,20 @@ public final class Context {
 	ri.setContext( this );
 	defaultContainer.addInterceptor(ri);
 
+	if( getState() == STATE_NEW ) return;
+
+	// This shouldn't happen in most cases - the "normal"
+	// case is to construct a Context, add the local modules
+	// and then add it to a server. Later, when the server
+	// is initialized it'll init the contexts and that will
+	// init local modules.
+
+	// The following code is not tested - it deals with the
+	// case that a module is added at runtime. Even if this
+	// is not a 'normal' case we should handle it. 
+	
+	// we are at least ADDED - that means the CM is initialized
+	// if we can find the global modules and announce our presence
 	ri.addInterceptor( contextM, this , ri ); 
 	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
 	for( int i=0; i<existingI.length; i++ ) {
@@ -1172,8 +1196,6 @@ public final class Context {
 	    // contextM  can be null
 	}
 	
-	if( getState() == STATE_NEW ) return;
-	// we are at least ADDED - that means the CM is initialized
 	ri.setContextManager( contextM );
 
 	ri.engineInit( contextM );

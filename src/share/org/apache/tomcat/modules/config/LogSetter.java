@@ -199,7 +199,8 @@ public class LogSetter extends  BaseInterceptor {
 	    name=name +  "/"  + ctx.getId();
 	}
 
-	log( "Constructing logger " + name + " " + path + " " + ctx );
+	if( debug>0) 
+	    log( "Constructing logger " + name + " " + path + " " + ctx );
 	
 	// construct a queue logger
 	QueueLogger ql=new QueueLogger();
@@ -218,7 +219,7 @@ public class LogSetter extends  BaseInterceptor {
 	    // this will be the Log interface to the log we just created
 	    // ( the way logs and channels are created is a bit
 	    // complicated - work for later )
-	    cm.setLog( Log.getLog( name, "ContextManager");
+	    cm.setLog( Log.getLog( name, "ContextManager"));
 	}
 
 	if( ctx!=null ) {
