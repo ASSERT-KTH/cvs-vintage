@@ -17,6 +17,7 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 <input type="hidden" name="queryId" value="$queryId" />
 <input type="hidden" name="$queryGroup.Value.Key" value="$currentQuery.Value" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="UserList.vm" />   
+<input type="hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
 
 <div class="functnbar">
   <input type="submit" name="eventSubmit_doEditstoredquery" value="Save" />&#160; 
@@ -42,11 +43,6 @@ Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
   <tr>
    <th width="120">availability</th>
    <td>#queryTypeSelectBox ($currentQuery)</td>
-  </tr>
-  <tr>
-   <th width="120">location</th>
-   <td>$module.Name</td>
-   <input type = "hidden" name="$queryGroup.ModuleId.Key" value = "$module.ModuleId" />
   </tr>
  </table>
 </div>
