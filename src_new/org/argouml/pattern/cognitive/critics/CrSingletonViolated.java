@@ -27,7 +27,7 @@
 // File: CrSingletonViolated.java
 // Classes: CrSingletonViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSingletonViolated.java,v 1.5 2002/03/15 10:31:57 jeremybennett Exp $
+// $Id: CrSingletonViolated.java,v 1.6 2002/09/12 21:35:45 kataka Exp $
 
 // 28 Jan 2002: Bug in triggering fixed by Jeremy Bennett
 // (mail@jeremybennett.com)
@@ -152,6 +152,14 @@ public class CrSingletonViolated extends CrUML {
         // Now we know it is a class, handle the object as a class
 
         MClass cls = (MClass) dm;
+        
+        // shouldn't fire if it is a type
+        MStereotype stereo = cls.getStereotype();
+        if (stereo != null) {
+        	if (stereo.getName().toLowerCase().equals("type")) {
+        		return NO_PROBLEM;
+        	}
+        }
 
         // Check for the correct stereotype, a suitable static attribute and
         // one or more constructors, all private as per JavaDoc above.
