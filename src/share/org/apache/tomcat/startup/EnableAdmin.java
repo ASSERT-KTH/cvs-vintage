@@ -156,9 +156,8 @@ public class EnableAdmin {
         if ( "args".equals(s) ) {
 	    String args[]=(String[])o;
 	}
-
-
-	attributes.put(s,o);
+        if( o != null )
+            attributes.put(s,o);
     }
 
     // -------------------- Main --------------------
