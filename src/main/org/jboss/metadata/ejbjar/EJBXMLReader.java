@@ -10,10 +10,12 @@ import org.jboss.metadata.io.XMLReader;
 import org.jboss.metadata.*;
 
 public class EJBXMLReader extends HandlerBase implements XMLReader {
-    private EJBServer server = null;
+    private EJBServer server       = null;
     private EJBContainer container = null;
-    private EJBBean bean = null;
-    private MethodHolder method = null;
+    private EJBBean bean           = null;
+    private MethodHolder method    = null;
+    private Object ref             = null;
+    
     private String currentElement;
     private String contents;
     private Vector methods = new Vector();
@@ -53,15 +55,24 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
     public void startElement(String name, AttributeList atts) throws SAXException {
         currentElement = name;
         contents = null;
+
+        
         if(name.equals("ejb-jar"))
             server = new EJBServer();
-        else if(name.equals("entity") || name.equals("session")) {
+        
+        else if (name.equals("entity") || name.equals("session")) {
             bean = new EJBBean();
             container = new EJBContainer();
-        } else if(name.equals("method"))
+        }
+        
+        else if (name.equals("method"))
             method = new MethodHolder();
-        else if(name.equals("container-transaction"))
+        
+        else if (name.equals("container-transaction"))
             methods.clear();
+            
+        else if (name.equals("ejb-ref"))
+            ref = "TODO";
 
     }
 
@@ -73,18 +84,26 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
     }
 
     public void endElement(String name) throws SAXException {
-        if(name.equals("entity") || name.equals("session")) {
+        
+        if (name.equals("entity") || name.equals("session")) {
             bean.setContainerMetaData(container);
             container = null;
             server.addBean(bean);
             bean = null;
-        } else if(name.equals("ejb-name")) {
+        }
+
+        else if (name.equals("ejb-ref")) 
+            ref = null;
+            
+        else if (name.equals("ejb-name")) {
             if(bean != null)
                 bean.setName(contents);
             else if(method != null)
                 method.ejbName = contents;
             // otherwise, a container transaction bean reference
-        } else if(name.equals("method")) {
+        }
+        
+        else if (name.equals("method")) {
             methods.add(method.method);
             if(method.isHome) {
                 try {
@@ -102,36 +121,67 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
                 } catch(IllegalArgumentException e) {// a Home?
                     System.out.println("Couldn't find bean '"+method.ejbName+"' to add method '"+method.method.getName()+"' to!");
                 }
-            }
-        } else if(name.equals("description")) {
+            }  
+        } 
+        
+        else if (name.equals("description")) {
             if(bean != null)
                 bean.description = contents;
             // otherwise, a container transaction description
-        } else if(name.equals("display-name")) {
+        } 
+        
+        else if (name.equals("display-name")) {
             if (bean != null) {
                 bean.displayName = contents;
             } else {
              // TODO:
              // set the display name in the ejb-jar file
             }
-        } else if(name.equals("home"))
-            try {
-                bean.homeClass = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to locate class '"+contents+"'");
+        }
+        
+        else if (name.equals("home")) {
+            
+            if (ref != null) {
+                
+                // TODO :
+                // handle <home> in ejb-refs
             }
-        else if(name.equals("remote"))
-            try {
-                bean.remoteClass = loadClass(contents);
-            } catch(ClassNotFoundException e) {
-                throw new SAXException("Unable to locate class '"+contents+"'");
+            
+            else {
+                try {
+                    bean.homeClass = loadClass(contents);
+                }
+                catch(ClassNotFoundException e) {
+                    throw new SAXException("Unable to locate class '"+contents+"'");
+                }
             }
+        }
+            
+        else if(name.equals("remote")) {
+            
+            if (ref != null) {
+                
+                // TODO :
+                // handle <remote> in ejb-refs
+            }
+            
+            else {
+                try {
+                    bean.remoteClass = loadClass(contents);
+                }
+                catch(ClassNotFoundException e) {
+                    throw new SAXException("Unable to locate class '"+contents+"'");
+                }
+            }
+        }
+        
         else if(name.equals("ejb-class"))
             try {
                 bean.implementationClass = loadClass(contents);
             } catch(ClassNotFoundException e) {
                 throw new SAXException("Unable to locate class '"+contents+"'");
             }
+        
         else if(name.equals("prim-key-class"))
             try {
                 if(MetaDataFactory.primitives.containsKey(contents))
@@ -141,17 +191,23 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
             } catch(ClassNotFoundException e) {
                 throw new SAXException("Unable to locate class '"+contents+"'");
             }
+        
         else if(name.equals("persistence-type"))
             bean.persistanceType = contents;
+        
         else if(name.equals("reentrant"))
             bean.reentrant = new Boolean(contents).booleanValue();
+        
         else if(name.equals("field-name")) {
             EJBField field = new EJBField();
             field.setName(contents);
             field.isCMP = true;
             bean.addField(field);
-        } else if(name.equals("method-name"))
+        }
+        
+        else if(name.equals("method-name"))
             method.method.setName(contents);
+        
         else if(name.equals("method-param")) {
             LinkedList list = new LinkedList(Arrays.asList(method.method.getParameterTypes()));
             try {
@@ -163,8 +219,11 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
             } catch(ClassNotFoundException e) {
                 throw new SAXException("Unable to locate class '"+contents+"'");
             }
-        } else if(name.equals("method-intf"))
+        }
+        
+        else if(name.equals("method-intf"))
             method.isHome = contents.equalsIgnoreCase("Home");
+        
         else if(name.equals("trans-attribute")) {
             byte value;
             if(contents.equals("Required"))
