@@ -52,8 +52,11 @@ $l10n.GlobalAttributes
 </table>
 </div>
 
+#set ($parameters = [])
+#set ($param = ["$scarabG.Constant.CANCEL_TEMPLATE", "GlobalAttributeShow.vm"])
+#set($booldummy = $parameters.add($param))
 #if ($paginated)
-  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField)
+  #paginateWithSearch ($resultsPerPage $pageNum $sortColumn $sortPolarity $searchString $searchField $parameters)
 #end
 
 <h3>$l10n.GlobalAttributes</h3>

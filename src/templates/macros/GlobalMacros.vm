@@ -566,8 +566,8 @@ selected the radio button.
 ## of getCreatedBy()).  Post Beta milestone,
 ## SCARAB_ATTRIBUTE.CREATED_BY needs to have its FK reference to
 ## TURBINE_USER.USER_ID defined.
-
-#set ($creatorID = "$attribute.CreatedBy")
+#set ($creatorID = "0")
+#set ($creatorID = $attribute.CreatedBy)
 #if ($creatorID == "0")
     Default
 #else
