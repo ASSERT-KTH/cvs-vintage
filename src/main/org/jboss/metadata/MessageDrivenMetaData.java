@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -367,7 +367,7 @@ public class MessageDrivenMetaData
       super.importJbossXml(element);
       
       // set the jndi name, (optional)
-      destinationJndiName = getUniqueChildContent(element, "destination-jndi-name");
+      destinationJndiName = getOptionalChildContent(element, "destination-jndi-name");
       user = getOptionalChildContent(element, "mdb-user");
       passwd = getOptionalChildContent(element,"mdb-passwd");
       clientId = getOptionalChildContent(element,"mdb-client-id");
