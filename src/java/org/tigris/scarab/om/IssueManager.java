@@ -2,10 +2,16 @@
 
 package org.tigris.scarab.om;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.LinkedList;
 
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
+import org.apache.torque.om.ObjectKey;
+import org.apache.torque.manager.CacheListener;
+import org.apache.torque.manager.MethodResultCache;
 
 /** 
  * This class manages Issue objects.  
@@ -15,7 +21,10 @@ import org.apache.torque.om.Persistent;
  */
 public class IssueManager
     extends BaseIssueManager
+    implements CacheListener
 {
+    private boolean isNew;
+
     /**
      * Creates a new <code>IssueManager</code> instance.
      *
@@ -25,8 +34,151 @@ public class IssueManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
+        isNew = true;
     }
 
+    /*
+    public static Issue getIssueById(String id)
+    {
+        FederatedId fid = new FederatedId(id);
+        return getIssueById(fid);
+    }
+
+    public static Issue getIssueById(Issue.FederatedId fid)
+    {
+        return getManager().getIssueByIdImpl(fid);
+    }
+
+    public static Issue getIssueByIdImpl(Issue.FederatedId fid)
+    {
+        Issue result = null;
+        Object obj = ScarabCache.get(ISSUE, GET_ISSUE_BY_ID, fid); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria(5)
+                .add(IssuePeer.ID_PREFIX, fid.getPrefix())
+                .add(IssuePeer.ID_COUNT, fid.getCount());
+            
+            if (  fid.getDomain() != null ) 
+            {
+                crit.add(IssuePeer.ID_DOMAIN, fid.getDomain());    
+            }
+            
+            Issue issue = null;
+            try
+            {
+                result = (Issue)IssuePeer.doSelect(crit).get(0);
+                IssueManager.putInstance(result);
+                ScarabCache.put(result, ISSUE, GET_ISSUE_BY_ID, fid);
+            }
+            catch (Exception e) 
+            {
+                // return null
+            }
+        }
+        else 
+        {
+            result = (Issue)obj;
+        }
+        return result;
+    }
+    */
+
+    public MethodResultCache getMethodResultCache()
+    {
+        if (isNew) 
+        {
+            registerAsListener();
+        }
+        return super.getMethodResultCache();
+    }
+
+    synchronized protected void registerAsListener()
+    {
+        if (isNew) 
+        {
+            AttributeValueManager.addCacheListener(this);
+            AttachmentManager.addCacheListener(this);
+            DependManager.addCacheListener(this);
+            ActivityManager.addCacheListener(this);
+            isNew = false;   
+        }        
+    }
+
+
+    // -------------------------------------------------------------------
+    // CacheListener implementation
+
+    public void addedObject(Persistent om)
+    {
+        if (om instanceof AttributeValue) 
+        {
+            AttributeValue castom = (AttributeValue)om;
+            ObjectKey key = castom.getIssueId();
+            Serializable obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().remove(obj, Issue.GET_MODULE_ATTRVALUES_MAP);
+                getMethodResult().remove(obj, Issue.GET_USER_ATTRIBUTEVALUES);
+            }
+        }
+        else if (om instanceof Attachment) 
+        {
+            Attachment castom = (Attachment)om;
+            ObjectKey key = castom.getIssueId();
+            Serializable obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().remove(obj, Issue.GET_URLS);
+                getMethodResult().removeAll(obj, Issue.GET_COMMENTS);
+                getMethodResult().removeAll(obj, 
+                    Issue.GET_EXISTING_ATTACHMENTS);
+            }
+        }
+        else if (om instanceof Depend) 
+        {
+            Depend castom = (Depend)om;
+            ObjectKey key = castom.getObserverId();
+            Serializable obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().remove(obj, Issue.GET_PARENTS);
+            }
+            key = castom.getObservedId();
+            obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().remove(obj, Issue.GET_CHILDREN);
+            }
+        }
+        else if (om instanceof Activity) 
+        {
+            Activity castom = (Activity)om;
+            ObjectKey key = castom.getIssueId();
+            Serializable obj = (Serializable)cacheGet(key);
+            if (obj != null) 
+            {
+                getMethodResult().removeAll(obj, Issue.GET_ACTIVITY);
+            }
+        }
+    }
+
+    public void refreshedObject(Persistent om)
+    {
+        addedObject(om);
+    }
+
+    /** fields which interest us with respect to cache events */
+    public List getInterestedFields()
+    {
+        List interestedCacheFields = new LinkedList();
+        interestedCacheFields.add(AttributeValuePeer.ISSUE_ID);
+        interestedCacheFields.add(AttachmentPeer.ISSUE_ID);
+        interestedCacheFields.add(DependPeer.OBSERVER_ID);
+        interestedCacheFields.add(DependPeer.OBSERVED_ID);
+        return interestedCacheFields;
+    }
 }
 
 

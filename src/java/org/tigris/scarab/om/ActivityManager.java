@@ -37,21 +37,8 @@ public class ActivityManager
         throws TorqueException
     {
         Persistent oldOm = super.putInstanceImpl(om);
-        // super method checks for correct class, so just cast it
-        Activity a = (Activity)om;
-
-        Map subsetMap = (Map)listenersMap.get(ActivityPeer.ISSUE_ID);
-        if (subsetMap != null) 
-        {
-            ObjectKey issue_id = a.getIssueId();
-            List listeners = (List)subsetMap.get(issue_id);
-            notifyListeners(listeners, oldOm, om);
-        }
+        List listeners = (List)listenersMap.get(ActivityPeer.ISSUE_ID);
+        notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
 }
-
-
-
-
-

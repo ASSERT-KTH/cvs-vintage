@@ -1090,7 +1090,7 @@ try{
         Issue issue = null;
         try
         {
-            issue = IssueManager.getInstance(new NumberKey(key), false);
+            issue = IssueManager.getInstance(new NumberKey(key));
         }
         catch (Exception e)
         {

@@ -29,6 +29,7 @@ public class RModuleIssueTypeManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
         validFields = new HashMap();
         validFields.put(RModuleIssueTypePeer.MODULE_ID, null);
     }
@@ -37,22 +38,9 @@ public class RModuleIssueTypeManager
         throws TorqueException
     {
         Persistent oldOm = super.putInstanceImpl(om);
-        // super method checks for correct class, so just cast it
-        RModuleIssueType rmit = (RModuleIssueType)om;
-
-        Map subsetMap = (Map)listenersMap.get(RModuleIssueTypePeer.MODULE_ID);
-        if (subsetMap != null) 
-        {
-            ObjectKey module_id = rmit.getModuleId();
-            List listeners = (List)subsetMap.get(module_id);
-            notifyListeners(listeners, oldOm, om);
-        }
+        List listeners = (List)listenersMap
+            .get(RModuleIssueTypePeer.MODULE_ID);
+        notifyListeners(listeners, oldOm, om);
         return oldOm;
-    }                
-
+    }
 }
-
-
-
-
-

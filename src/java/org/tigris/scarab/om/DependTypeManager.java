@@ -31,6 +31,7 @@ public class DependTypeManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
     }
 
     public static List getAll()

@@ -63,14 +63,12 @@ import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
-import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.apache.commons.collections.SequencedHashMap;
 import org.apache.torque.pool.DBConnection;
 import org.apache.torque.map.DatabaseMap;
 import org.apache.torque.oid.IDBroker;
 import org.apache.torque.util.BasePeer;
-import org.apache.fulcrum.upload.FileItem;
 
 // Scarab classes
 import org.tigris.scarab.om.Module;
@@ -96,60 +94,60 @@ import org.tigris.scarab.tools.ScarabRequestTool;
   */
 public class Issue 
     extends BaseIssue
-    implements Persistent, CacheListener
+    implements Persistent
 {
     // the following Strings are method names that are used in caching results
     private static final String ISSUE = 
         "Issue";
-    private static final String GET_ISSUE_BY_ID = 
+    protected static final String GET_ISSUE_BY_ID = 
         "getIssueById";
-    private static final String GET_ATTRIBUTE_VALUES_MAP = 
+    protected static final String GET_ATTRIBUTE_VALUES_MAP = 
         "getAttributeValuesMap";
-    private static final String GET_ASSOCIATED_USERS = 
+    protected static final String GET_ASSOCIATED_USERS = 
         "getAssociatedUsers";
-    private static final String GET_MODULE_ATTRVALUES_MAP = 
+    protected static final String GET_MODULE_ATTRVALUES_MAP = 
         "getModuleAttributeValuesMap";
-    private static final String GET_ATTRVALUE = 
+    protected static final String GET_ATTRVALUE = 
         "getAttributeValue";
-    private static final String GET_ATTRVALUES = 
+    protected static final String GET_ATTRVALUES = 
         "getAttributeValues";
-    private static final String GET_USERS_TO_EMAIL = 
+    protected static final String GET_USERS_TO_EMAIL = 
         "getUsersToEmail";
-    private static final String GET_USER_ATTRIBUTEVALUES = 
+    protected static final String GET_USER_ATTRIBUTEVALUES = 
         "getUserAttributeValues";
-    private static final String GET_CREATED_DATE = 
+    protected static final String GET_CREATED_DATE = 
         "getCreatedDate";
-    private static final String GET_CREATED_BY = 
+    protected static final String GET_CREATED_BY = 
         "getCreatedBy";
-    private static final String GET_MODIFIED_BY = 
+    protected static final String GET_MODIFIED_BY = 
         "getModifiedBy";
-    private static final String GET_COMMENTS = 
+    protected static final String GET_COMMENTS = 
         "getComments";
-    private static final String GET_URLS = 
+    protected static final String GET_URLS = 
         "getUrls";
-    private static final String GET_EXISTING_ATTACHMENTS = 
+    protected static final String GET_EXISTING_ATTACHMENTS = 
         "getExistingAttachments";
-    private static final String GET_ACTIVITY = 
+    protected static final String GET_ACTIVITY = 
         "getActivity";
-    private static final String GET_CHILDREN = 
+    protected static final String GET_CHILDREN = 
         "getChildren";
-    private static final String GET_PARENTS = 
+    protected static final String GET_PARENTS = 
         "getParents";
-    private static final String GET_ALL_DEPENDENCY_TYPES = 
+    protected static final String GET_ALL_DEPENDENCY_TYPES = 
         "getAllDependencyTypes";
-    private static final String GET_DEPENDENCY = 
+    protected static final String GET_DEPENDENCY = 
         "getDependency";
-    private static final String GET_TEMPLATE_TYPES = 
+    protected static final String GET_TEMPLATE_TYPES = 
         "getTemplateTypes";
-    private static final String GET_TEMPLATEINFO = 
+    protected static final String GET_TEMPLATEINFO = 
         "getTemplateInfo";
-    private static final String GET_CLOSED_DATE = 
+    protected static final String GET_CLOSED_DATE = 
         "getClosedDate";
-    private static final String GET_ORPHAN_ATTRIBUTEVALUES_LIST = 
+    protected static final String GET_ORPHAN_ATTRIBUTEVALUES_LIST = 
         "getOrphanAttributeValuesList";
-    private static final String GET_DEFAULT_TEXT_ATTRIBUTEVALUE = 
+    protected static final String GET_DEFAULT_TEXT_ATTRIBUTEVALUE = 
         "getDefaultTextAttributeValue";
-    private static final String GET_DEFAULT_TEXT = 
+    protected static final String GET_DEFAULT_TEXT = 
         "getDefaultText";
 
     /**
@@ -177,14 +175,6 @@ public class Issue
     {
         Issue issue = new Issue(module, issueType);
         return issue;
-    }
-
-    /** overriding to handle caching */
-    public void setIssueId(NumberKey id)
-        throws TorqueException
-    {
-        super.setIssueId(id);
-        registerAsListener();
     }
 
     /**
@@ -455,6 +445,7 @@ public class Issue
             try
             {
                 result = (Issue)IssuePeer.doSelect(crit).get(0);
+                IssueManager.putInstance(result);
                 ScarabCache.put(result, ISSUE, GET_ISSUE_BY_ID, fid);
             }
             catch (Exception e) 
@@ -1092,6 +1083,7 @@ public class Issue
         Object obj = getMethodResult().get(this, GET_COMMENTS, fullBool); 
         if ( obj == null ) 
         {        
+            System.out.println("Issue " +getPrimaryKey()+ " adding getComments to cache for arg=" + full );
             Criteria crit = new Criteria()
                 .add(AttachmentPeer.ISSUE_ID, getIssueId())
                 .addJoin(AttachmentTypePeer.ATTACHMENT_TYPE_ID,
@@ -1973,74 +1965,6 @@ public class Issue
     private MethodResultCache getMethodResult()
     {
         return IssueManager.getMethodResult();
-    }
-
-    private void registerAsListener()
-    {
-        AttributeValueManager.addCacheListener(this);
-        AttachmentManager.addCacheListener(this);
-        DependManager.addCacheListener(this);
-        ActivityManager.addCacheListener(this);
-    }
-
-
-    // -------------------------------------------------------------------
-    // CacheListener implementation
-
-    public void addedObject(Persistent om)
-    {
-        if (om instanceof AttributeValue) 
-        {
-            getMethodResult().remove(this, GET_MODULE_ATTRVALUES_MAP);
-            getMethodResult().remove(this, GET_USER_ATTRIBUTEVALUES);
-        }
-        else if (om instanceof Attachment) 
-        {
-            getMethodResult().remove(this, GET_URLS);
-            getMethodResult().removeAll(this, GET_COMMENTS);
-            getMethodResult().removeAll(this, GET_EXISTING_ATTACHMENTS);
-        }
-        else if (om instanceof Depend) 
-        {
-            getMethodResult().remove(this, GET_PARENTS);
-            getMethodResult().remove(this, GET_CHILDREN);
-        }
-        else if (om instanceof Activity) 
-        {
-            getMethodResult().removeAll(this, GET_ACTIVITY);
-        }
-    }
-
-    public void refreshedObject(Persistent om)
-    {
-        addedObject(om);
-    }
-
-    /** fields which interest us with respect to cache events */
-    public List getInterestedFields()
-    {
-        if (getIssueId() == null) 
-        {
-            throw new IllegalStateException(
-                "Cannot register a new Issue as a cache event listener.");
-        }
-        List interestedCacheFields = new LinkedList();
-        Object[] key = new Object[2];
-        key[0] = AttributeValuePeer.ISSUE_ID;
-        key[1] = getIssueId();
-        interestedCacheFields.add(key);
-        key = new Object[2];
-        key[0] = AttachmentPeer.ISSUE_ID;
-        key[1] = getIssueId();
-        interestedCacheFields.add(key);
-        key = new Object[2];
-        key[0] = DependPeer.OBSERVER_ID;
-        key[1] = getIssueId();
-        key = new Object[2];
-        key[0] = DependPeer.OBSERVED_ID;
-        key[1] = getIssueId();
-        interestedCacheFields.add(key);
-        return interestedCacheFields;
     }
 
     // *******************************************************************

@@ -29,6 +29,7 @@ public class ScarabUserManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
     }
 
     /**

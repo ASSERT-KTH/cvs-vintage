@@ -66,7 +66,6 @@ import org.apache.torque.om.SimpleKey;
 import org.apache.torque.om.BaseObject;
 import org.apache.torque.om.Persistent;
 import org.apache.torque.manager.MethodResultCache;
-import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.fulcrum.security.util.RoleSet;
@@ -132,50 +131,50 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.11 2002/03/19 18:58:49 jmcnally Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.12 2002/03/28 00:27:18 jmcnally Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
-    implements Module, Comparable, CacheListener
+    implements Module, Comparable
 {
 
     private static final Category log = 
         Category.getInstance("org.tigris.scarab.om.AbstractScarabModule");
 
     // the following Strings are method names that are used in caching results
-    private static final String GET_R_MODULE_ATTRIBUTES = 
+    protected static final String GET_R_MODULE_ATTRIBUTES = 
         "getRModuleAttributes";
-    private static final String GET_ATTRIBUTE_GROUPS = 
+    protected static final String GET_ATTRIBUTE_GROUPS = 
         "getAttributeGroups";
-    private static final String GET_ATTRIBUTE_GROUP = 
+    protected static final String GET_ATTRIBUTE_GROUP = 
         "getAttributeGroup";
-    private static final String GET_SAVED_REPORTS = 
+    protected static final String GET_SAVED_REPORTS = 
         "getSavedReports";
-    private static final String GET_DEFAULT_RMODULE_USERATTRIBUTES = 
+    protected static final String GET_DEFAULT_RMODULE_USERATTRIBUTES = 
         "getDefaultRModuleUserAttributes";
-    private static final String GET_ISSUE_TYPES = 
+    protected static final String GET_ISSUE_TYPES = 
         "getIssueTypes";
-    private static final String GET_NAV_ISSUE_TYPES = 
+    protected static final String GET_NAV_ISSUE_TYPES = 
         "getNavIssueTypes";
-    private static final String GET_QUICK_SEARCH_ATTRIBUTES = 
+    protected static final String GET_QUICK_SEARCH_ATTRIBUTES = 
         "getQuickSearchAttributes";
-    private static final String GET_REQUIRED_ATTRIBUTES = 
+    protected static final String GET_REQUIRED_ATTRIBUTES = 
         "getRequiredAttributes";
-    private static final String GET_ALL_R_MODULE_OPTIONS = 
+    protected static final String GET_ALL_R_MODULE_OPTIONS = 
         "getAllRModuleOptions";
-    private static String GET_LEAF_R_MODULE_OPTIONS = 
+    protected static String GET_LEAF_R_MODULE_OPTIONS = 
         "getLeafRModuleOptions";
-    private static final String GET_R_MODULE_ISSUE_TYPES = 
+    protected static final String GET_R_MODULE_ISSUE_TYPES = 
         "getRModuleIssueTypes";
-    private static final String GET_R_MODULE_ISSUE_TYPE = 
+    protected static final String GET_R_MODULE_ISSUE_TYPE = 
         "getRModuleIssueType";
-    private static final String GET_TEMPLATE_TYPES = 
+    protected static final String GET_TEMPLATE_TYPES = 
         "getTemplateTypes";
-    private static final String GET_UNAPPROVED_QUERIES = 
+    protected static final String GET_UNAPPROVED_QUERIES = 
         "getUnapprovedQueries";
-    private static final String GET_UNAPPROVED_TEMPLATES = 
+    protected static final String GET_UNAPPROVED_TEMPLATES = 
         "getUnapprovedTemplates";
-    private static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
+    protected static final String GET_DEFAULT_TEXT_ATTRIBUTE = 
         "getDefaultTextAttribute";
 
     /* removing the internal cache until it can be fixed using artifact_types
@@ -318,7 +317,10 @@ public abstract class AbstractScarabModule
         {
             parentModules = new ArrayList();
             Module parent = getParent();
-            addAncestors(parent);
+            if (parent != null)
+            { 
+                addAncestors(parent);
+            }
         }
         return parentModules;
     }
@@ -1880,69 +1882,5 @@ try{
     private MethodResultCache getMethodResult()
     {
         return ModuleManager.getMethodResult();
-    }
-
-    protected void registerAsListener()
-    {
-        RModuleIssueTypeManager.addCacheListener(this);
-        RModuleAttributeManager.addCacheListener(this);
-        AttributeGroupManager.addCacheListener(this);
-        RModuleOptionManager.addCacheListener(this);
-    }
-
-    // -------------------------------------------------------------------
-    // CacheListener implementation
-
-    public void addedObject(Persistent om)
-    {
-        if (om instanceof RModuleAttribute)
-        {
-            getMethodResult().removeAll(this, GET_R_MODULE_ATTRIBUTES);
-        }
-        else if (om instanceof RModuleOption)
-        {
-            getMethodResult().removeAll(this, GET_LEAF_R_MODULE_OPTIONS);
-        }
-        else if (om instanceof RModuleIssueType) 
-        {
-            getMethodResult().remove(this, GET_NAV_ISSUE_TYPES);
-        }
-        else if (om instanceof AttributeGroup)
-        {
-            getMethodResult().removeAll(this, GET_ATTRIBUTE_GROUPS);
-        }
-    }
-
-    public void refreshedObject(Persistent om)
-    {
-        addedObject(om);
-    }
-
-    /** fields which interest us with respect to cache events */
-    public List getInterestedFields()
-    {
-        if (getModuleId() == null) 
-        {
-            throw new IllegalStateException(
-                "Cannot register a new Module as a cache event listener.");
-        }
-        List interestedCacheFields = new LinkedList();
-        Object[] key = new Object[2];
-        key[0] = RModuleOptionPeer.MODULE_ID;
-        key[1] = getModuleId();
-        interestedCacheFields.add(key);
-        key = new Object[2];
-        key[0] = RModuleAttributePeer.MODULE_ID;
-        key[1] = getModuleId();
-        interestedCacheFields.add(key);
-        key = new Object[2];
-        key[0] = RModuleIssueTypePeer.MODULE_ID;
-        key[1] = getModuleId();
-        interestedCacheFields.add(key);
-        key = new Object[2];
-        key[0] = AttributeGroupPeer.MODULE_ID;
-        key[1] = getModuleId();
-        interestedCacheFields.add(key);
-        return interestedCacheFields;
     }
 }

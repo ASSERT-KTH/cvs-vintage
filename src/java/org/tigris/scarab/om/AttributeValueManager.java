@@ -5,9 +5,6 @@ package org.tigris.scarab.om;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.lang.ref.WeakReference;
 
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
@@ -34,6 +31,7 @@ public class AttributeValueManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
         validFields = new HashMap();
         validFields.put(AttributeValuePeer.ISSUE_ID, null);
     }
@@ -42,21 +40,8 @@ public class AttributeValueManager
         throws TorqueException
     {
         Persistent oldOm = super.putInstanceImpl(om);
-        // super method checks for correct class, so just cast it
-        AttributeValue av = (AttributeValue)om;
-
-        Map subsetMap = (Map)listenersMap.get(AttributeValuePeer.ISSUE_ID);
-        if (subsetMap != null) 
-        {
-            ObjectKey issue_id = av.getIssueId();
-            List listeners = (List)subsetMap.get(issue_id);
-            notifyListeners(listeners, oldOm, om);
-        }
+        List listeners = (List)listenersMap.get(AttributeValuePeer.ISSUE_ID);
+        notifyListeners(listeners, oldOm, om);
         return oldOm;
-    }                
+    }
 }
-
-
-
-
-

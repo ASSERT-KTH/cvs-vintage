@@ -37,16 +37,8 @@ public class RModuleOptionManager
         throws TorqueException
     {
         Persistent oldOm = super.putInstanceImpl(om);
-        // super method checks for correct class, so just cast it
-        RModuleOption rmo = (RModuleOption)om;
-
-        Map subsetMap = (Map)listenersMap.get(RModuleOptionPeer.MODULE_ID);
-        if (subsetMap != null) 
-        {
-            ObjectKey module_id = rmo.getModuleId();
-            List listeners = (List)subsetMap.get(module_id);
-            notifyListeners(listeners, oldOm, om);
-        }
+        List listeners = (List)listenersMap.get(RModuleOptionPeer.MODULE_ID);
+        notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
 }

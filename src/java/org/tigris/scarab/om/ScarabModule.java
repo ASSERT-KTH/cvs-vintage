@@ -105,7 +105,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.100 2002/03/19 17:55:15 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.101 2002/03/28 00:27:18 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -248,14 +248,6 @@ public class ScarabModule
     {
         return new StringBuffer(s.length() + 2)
             .append('%').append(s).append('%').toString(); 
-    }
-
-    /** overriding to handle caching */
-    public void setModuleId(NumberKey id)
-        throws TorqueException
-    {
-        super.setModuleId(id);
-        registerAsListener();
     }
 
     /**

@@ -2,8 +2,11 @@
 
 package org.tigris.scarab.om;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
-import org.apache.torque.Torque;
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
 
@@ -25,8 +28,19 @@ public class AttachmentManager
         throws TorqueException
     {
         super();
+        validFields = new HashMap();
+        validFields.put(AttachmentPeer.ISSUE_ID, null);
     }
 
+    protected Persistent putInstanceImpl(Persistent om)
+        throws TorqueException
+    {
+        Persistent oldOm = super.putInstanceImpl(om);
+        List listeners = (List)listenersMap.get(AttachmentPeer.ISSUE_ID);
+        System.out.println(this + " notifying "+listeners+" listeners ");
+        notifyListeners(listeners, oldOm, om);
+        return oldOm;
+    }
 }
 
 

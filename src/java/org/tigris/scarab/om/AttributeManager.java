@@ -25,6 +25,7 @@ public class AttributeManager
         throws TorqueException
     {
         super();
+        setRegion(getClassName().replace('.', '_'));
     }
 
     public Attribute getInstanceImpl()
