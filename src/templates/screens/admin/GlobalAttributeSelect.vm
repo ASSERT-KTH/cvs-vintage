@@ -4,10 +4,10 @@
 #set ($groupId = $data.Parameters.getString("groupId",""))
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #if ($group.isGlobal())
-   #set ($attributes = $issueType.getAvailableAttributes("data"))
+   #set ($attributes = $issueType.getAvailableAttributes("non-user"))
    #set ($cancelTemplate = "admin,GlobalAttributeGroupEdit.vm")
 #else
-   #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "data"))
+   #set ($attributes = $scarabR.CurrentModule.getAvailableAttributes($issueType, "non-user"))
    #set ($cancelTemplate = "admin,AttributeGroupEdit.vm")
 #end
 
