@@ -147,6 +147,8 @@ public class SortFoldersMenu extends IMenu implements ActionListener {
         DefaultItem item = new DefaultItem(element);
         item.set("ascending", ascendingMenuItem.isSelected());
         item.set("comparator", activeComparator.toLowerCase());
+        item.set("sorted", !activeComparator.equals(UNSORTED_ACTION));
+        element.notifyObservers();
     }
 
     /**
