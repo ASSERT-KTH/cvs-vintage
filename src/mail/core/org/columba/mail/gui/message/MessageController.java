@@ -73,7 +73,8 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
     private URLObservable urlObservable;
 
-    protected AbstractMailFrameController abstractFrameController;
+//    protected AbstractMailFrameController abstractFrameController;
+    protected FrameMediator frameController;
 
     protected AttachmentController attachmentController;
 
@@ -89,12 +90,12 @@ public class MessageController implements HyperlinkListener, MouseListener,
 
     //private MessageSelectionManager messageSelectionManager;
     public MessageController(
-            AbstractMailFrameController abstractFrameController,
+            FrameMediator frameMediator,
             AttachmentController attachmentController) {
-        this.abstractFrameController = abstractFrameController;
+        this.frameController = frameMediator;
         this.attachmentController = attachmentController;
 
-        spamStatusController = new SpamStatusController(abstractFrameController);
+        spamStatusController = new SpamStatusController((MailFrameMediator) frameController);
         bodytextViewer = new MessageBodytextViewer();
         securityInformationController = new SecurityInformationController();
         headerController = new HeaderController();
@@ -105,7 +106,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
         bodytextViewer.addMouseListener(this);
         bodytextViewer.addCaretListener(this);
 
-        pgpFilter = new PGPMessageFilter(abstractFrameController);
+        pgpFilter = new PGPMessageFilter(frameController);
         pgpFilter.addSecurityStatusListener(securityInformationController);
         pgpFilter.addSecurityStatusListener(((HeaderView) headerController
                 .getView()).getStatusPanel());
@@ -129,7 +130,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
     }
 
     public void createPopupMenu() {
-        menu = new MessageMenu(abstractFrameController);
+        menu = new MessageMenu(frameController);
     }
 
     /**
@@ -297,7 +298,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
      * @return MailFrameController
      */
     public FrameMediator getFrameController() {
-        return abstractFrameController;
+        return frameController;
     }
 
     /*
@@ -308,7 +309,7 @@ public class MessageController implements HyperlinkListener, MouseListener,
     public void charsetChanged(CharsetEvent e) {
         MainInterface.processor.addOp(new ViewMessageCommand(
                 getFrameController(),
-                ((AbstractMailFrameController) getFrameController())
+                ((MailFrameMediator) getFrameController())
                         .getTableSelection()));
     }
 
@@ -516,13 +517,13 @@ public class MessageController implements HyperlinkListener, MouseListener,
     public void showMessage(Folder folder, Object uid) throws Exception {
 
         getBodytextViewer().view(folder, uid,
-                (MailFrameMediator) abstractFrameController);
+                (MailFrameMediator) frameController);
         getHeaderController().view(folder, uid,
-                (MailFrameMediator) abstractFrameController);
+                (MailFrameMediator) frameController);
         getSpamStatusViewer().view(folder, uid,
-                (MailFrameMediator) abstractFrameController);
+                (MailFrameMediator) frameController);
         getSecurityInformationViewer().view(folder, uid,
-                (MailFrameMediator) abstractFrameController);
+                (MailFrameMediator) frameController);
 
         getView().layoutComponents(headerController, spamStatusController,
                 bodytextViewer, securityInformationController,

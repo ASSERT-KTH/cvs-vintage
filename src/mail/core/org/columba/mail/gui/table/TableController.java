@@ -18,14 +18,16 @@ package org.columba.mail.gui.table;
 import java.util.logging.Logger;
 
 import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folderoptions.FolderOptionsController;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.table.action.CopyAction;
 import org.columba.mail.gui.table.action.CutAction;
 import org.columba.mail.gui.table.action.DeleteAction;
@@ -39,6 +41,7 @@ import org.columba.mail.gui.table.model.TableModelSorter;
 import org.columba.mail.gui.table.model.TableModelThreadedView;
 import org.columba.mail.gui.table.model.TableModelUpdateManager;
 import org.columba.mail.gui.table.util.MarkAsReadTimer;
+import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -98,7 +101,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
     /**
      * reference to mail framemediator
      */
-    protected AbstractMailFrameController mailFrameController;
+    protected FrameMediator frameController;
 
     /**
      * timer which marks a message as read after a certain amount
@@ -153,8 +156,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
      *
      * @param mailFrameController      mail framemediator
      */
-    public TableController(AbstractMailFrameController mailFrameController) {
-        this.mailFrameController = mailFrameController;
+    public TableController(FrameMediator frameController) {
+        this.frameController = frameController;
 
         // init table model
         headerTableModel = new HeaderTableModel();
@@ -190,7 +193,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         markAsReadTimer = new MarkAsReadTimer(this);
 
         getView().setTransferHandler(new TableViewTransferHandler(
-                getMailFrameController()));
+                getFrameController()));
         getView().setDragEnabled(true);
 
         // MouseListener sorts table when clicking on a column header
@@ -283,7 +286,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
      * create the PopupMenu
      */
     public void createPopupMenu() {
-        menu = new TableMenu(mailFrameController);
+        menu = new TableMenu(frameController);
     }
 
     /**
@@ -317,7 +320,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         LOG.info("source folder=" + folder.getName());
 
         // get current selection
-        FolderCommandReference[] r = (FolderCommandReference[]) mailFrameController.getSelectionManager()
+        FolderCommandReference[] r = (FolderCommandReference[]) frameController.getSelectionManager()
                                                                                    .getSelection("mail.table");
         Folder srcFolder = (Folder) r[0].getFolder();
 
@@ -327,18 +330,18 @@ public class TableController implements FocusOwner, ListSelectionListener {
         }
 
         // make tree visible
-        if (getMailFrameController() instanceof ThreePaneMailFrameController) {
+        if(getFrameController() instanceof TreeViewOwner) {
             if (srcFolder != null) {
-                ((ThreePaneMailFrameController) getMailFrameController()).treeController.getView()
-                                                                                        .makeVisible(srcFolder.getSelectionTreePath());
+                ((TreeViewOwner) getFrameController()).getTreeController().getView()
+                    .makeVisible(srcFolder.getSelectionTreePath());
             }
         }
 
         // update infopanel (gray panel below the toolbar)
         // showing total/unread/recent messages count
-        if (getMailFrameController() instanceof ThreePaneMailFrameController) {
+        if(getFrameController().getBaseView() instanceof AbstractMailView) {
             if (srcFolder != null) {
-                ((ThreePaneMailFrameController) getMailFrameController()).folderInfoPanel.setFolder(srcFolder);
+                ((AbstractMailView) getFrameController().getBaseView()).getFolderInfoPanel().setFolder(srcFolder);
             }
         }
 
@@ -388,8 +391,8 @@ public class TableController implements FocusOwner, ListSelectionListener {
      * Returns the mailFrameController.
      * @return MailFrameController
      */
-    public AbstractMailFrameController getMailFrameController() {
-        return mailFrameController;
+    public FrameMediator getFrameController() {
+        return frameController;
     }
 
     /**
@@ -406,7 +409,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
      */
     public void saveProperties() {
         if (previouslySelectedFolder != null) {
-            getMailFrameController().getFolderOptionsController().save(previouslySelectedFolder);
+            ((MailFrameMediator)getFrameController()).getFolderOptionsController().save(previouslySelectedFolder);
         }
     }
 
@@ -417,11 +420,11 @@ public class TableController implements FocusOwner, ListSelectionListener {
         throws Exception {
         // save previously selected folder options
         if (previouslySelectedFolder != null) {
-            getMailFrameController().getFolderOptionsController().save(previouslySelectedFolder);
+            ((MailFrameMediator)getFrameController()).getFolderOptionsController().save(previouslySelectedFolder);
         }
 
         // load options of newly selected folder
-        getMailFrameController().getFolderOptionsController().load(folder,
+        ((MailFrameMediator)getFrameController()).getFolderOptionsController().load(folder,
             FolderOptionsController.STATE_BEFORE);
 
         // send an update notification to the table model
@@ -430,7 +433,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
         tableChanged(ev);
 
         // load options of newly selected folder
-        getMailFrameController().getFolderOptionsController().load(folder,
+        ((MailFrameMediator)getFrameController()).getFolderOptionsController().load(folder,
             FolderOptionsController.STATE_AFTER);
 
         // remember previously selected folder
@@ -488,21 +491,21 @@ public class TableController implements FocusOwner, ListSelectionListener {
      * @see org.columba.core.gui.focus.FocusOwner#copy()
      */
     public void copy() {
-        new CopyAction(getMailFrameController()).actionPerformed(null);
+        new CopyAction(getFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
      * @see org.columba.core.gui.focus.FocusOwner#cut()
      */
     public void cut() {
-        new CutAction(getMailFrameController()).actionPerformed(null);
+        new CutAction(getFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
      * @see org.columba.core.gui.focus.FocusOwner#delete()
      */
     public void delete() {
-        new DeleteAction(getMailFrameController()).actionPerformed(null);
+        new DeleteAction(getFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)
@@ -591,7 +594,7 @@ public class TableController implements FocusOwner, ListSelectionListener {
      * @see org.columba.core.gui.focus.FocusOwner#paste()
      */
     public void paste() {
-        new PasteAction(getMailFrameController()).actionPerformed(null);
+        new PasteAction(getFrameController()).actionPerformed(null);
     }
 
     /* (non-Javadoc)

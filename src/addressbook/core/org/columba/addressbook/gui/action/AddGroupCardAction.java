@@ -27,6 +27,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 
 
 /**
@@ -68,7 +69,7 @@ public class AddGroupCardAction extends DefaultTreeAction {
             return;
         }
 
-        EditGroupDialog dialog = new EditGroupDialog(mediator.getView(), null);
+        EditGroupDialog dialog = new EditGroupDialog((JFrame)mediator.getFrame(), null);
 
         if (dialog.getResult()) {
             // Ok

@@ -32,8 +32,8 @@ import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.ThreePaneMailFrameController;
+import org.columba.mail.gui.frame.MessageViewOwner;
+import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.message.MessageController;
 import org.columba.mail.gui.message.viewer.SecurityInformationController;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
@@ -85,26 +85,23 @@ public class ViewMessageCommand extends FolderCommand {
         // TODO: use listener pattern instead
         h.setMessage(srcFolder, uid);
         
-        MessageController messageController = ((AbstractMailFrameController) frameMediator).messageController;
+        MessageController messageController = ((MessageViewOwner) frameMediator).getMessageController();
 
         //new PGPMessageFilter(frameMediator).filter(srcFolder, uid);
         messageController.showMessage(srcFolder, uid);
 
         messageController.getAttachmentController().setMimePartTree(mimePartTree);
         
-        // security check, i dont know if we need this (waffel)
-        if (frameMediator instanceof ThreePaneMailFrameController) {
-            // if the message it not yet seen
-            if (!((ColumbaHeader) header).getFlags().getSeen()) {
-                // restart timer which marks the message as read
-                // after a user configurable time interval
-                ((ThreePaneMailFrameController) frameMediator)
-                        .getTableController()
-                        .getMarkAsReadTimer()
-                        .restart(
-                                (FolderCommandReference) getReferences()[0]);
+        // if the message it not yet seen
+        if (!((ColumbaHeader) header).getFlags().getSeen()) {
+            // restart timer which marks the message as read
+            // after a user configurable time interval
+            ((TableViewOwner) frameMediator)
+                    .getTableController()
+                    .getMarkAsReadTimer()
+                    .restart(
+                            (FolderCommandReference) getReferences()[0]);
             }
-        }
         
 
         //}
@@ -144,7 +141,7 @@ public class ViewMessageCommand extends FolderCommand {
             return;
         }
 
-        MessageController messageController = ((AbstractMailFrameController) frameMediator).messageController;
+        MessageController messageController = ((MessageViewOwner) frameMediator).getMessageController();
 
         // if necessary decrypt/verify message
         messageController.getPgpFilter().filter(srcFolder, uid);

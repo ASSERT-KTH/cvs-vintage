@@ -17,6 +17,7 @@ package org.columba.mail.gui.frame;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.view.AbstractView;
 import org.columba.core.gui.util.DialogStore;
 
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
@@ -101,10 +102,10 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
                 KeyEvent.VK_A, KeyEvent.ALT_DOWN_MASK), "ALT_A");
 
         //register the markasread timer as selection listener
-        tableController.getMailFrameController().registerTableSelectionListener(tableController.getMarkAsReadTimer());
+        ((MailFrameMediator)tableController.getFrameController()).registerTableSelectionListener(tableController.getMarkAsReadTimer());
     }
 
-    public AbstractFrameView createView() {
+    public AbstractView createView() {
         MailFrameView view = new MailFrameView(this);
 
         view.setFolderInfoPanel(folderInfoPanel);
@@ -170,4 +171,5 @@ treeController.getTreeSelectionManager().registerSelectionListener(""
     public TreeController getTreeController() {
         return treeController;
     }
+
 }

@@ -31,6 +31,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 
 
 /**
@@ -84,7 +85,7 @@ public class EditPropertiesAction extends DefaultTableAction {
 
         if (item.isContact()) {
             ContactCard card = (ContactCard) folder.get(uids[0]);
-            ContactDialog dialog = new ContactDialog(mediator.getView());
+            ContactDialog dialog = new ContactDialog((JFrame)mediator.getFrame());
 
             // TODO: move this code to dialog
             dialog.updateComponents(card, true);
@@ -104,7 +105,7 @@ public class EditPropertiesAction extends DefaultTableAction {
         } else {
             GroupListCard card = (GroupListCard) folder.get(uids[0]);
 
-            EditGroupDialog dialog = new EditGroupDialog(mediator.getView(),
+            EditGroupDialog dialog = new EditGroupDialog((JFrame)mediator.getFrame(),
                     null);
 
             Object[] groupUids = card.getUids();

@@ -23,6 +23,7 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 
 
 public class GlobalOptionsAction extends AbstractColumbaAction {
@@ -45,7 +46,7 @@ public class GlobalOptionsAction extends AbstractColumbaAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent evt) {
-        GeneralOptionsDialog dialog = new GeneralOptionsDialog(frameMediator.getView());
+        GeneralOptionsDialog dialog = new GeneralOptionsDialog((JFrame)frameMediator.getFrame());
 
         /*
         ThemeSwitcher.updateFrame(frameMediator.getView());

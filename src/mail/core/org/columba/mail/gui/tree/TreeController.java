@@ -17,13 +17,14 @@ package org.columba.mail.gui.tree;
 
 import java.util.logging.Logger;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
@@ -54,13 +55,13 @@ public class TreeController implements TreeWillExpandListener {
     private FolderTreeNode selectedFolder;
     private TreeModel model;
     private TreeView view;
-    private AbstractMailFrameController mailFrameController;
+    private FrameMediator frameController;
     protected TreeMenu menu;
 
-    public TreeController(AbstractMailFrameController mailFrameController,
+    public TreeController(FrameMediator frameController,
         TreeModel model) {
         this.model = model;
-        this.mailFrameController = mailFrameController;
+        this.frameController = frameController;
 
         view = new TreeView(model);
 
@@ -106,12 +107,12 @@ getView().getActionMap().put("RENAME", action);
         this.selectedFolder = folder;
 
         MainInterface.processor.addOp(new ViewHeaderListCommand(
-                getMailFrameController(),
-                getMailFrameController().getTreeSelection()));
+                getFrameController(),
+                ((MailFrameMediator)getFrameController()).getTreeSelection()));
     }
 
     public void createPopupMenu() {
-        menu = new TreeMenu(mailFrameController);
+        menu = new TreeMenu(frameController);
     }
 
     public JPopupMenu getPopupMenu() {
@@ -126,8 +127,8 @@ getView().getActionMap().put("RENAME", action);
  * Returns the mailFrameController.
  * @return MailFrameController
  */
-    public AbstractMailFrameController getMailFrameController() {
-        return mailFrameController;
+    public FrameMediator getFrameController() {
+        return frameController;
     }
 
     /******************** TreeWillExpand Interface *******************************/

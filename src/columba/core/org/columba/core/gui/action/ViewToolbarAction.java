@@ -20,6 +20,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
 import org.columba.mail.gui.frame.MailFrameView;
+import org.columba.mail.gui.view.AbstractMailView;
 
 import java.awt.event.ActionEvent;
 
@@ -41,7 +42,7 @@ public class ViewToolbarAction extends AbstractSelectableAction {
             GlobalResourceLoader.getString(null, null, "menu_view_showtoolbar")
                                 .replaceAll("&", ""));
 
-        setState(frameMediator.isToolbarEnabled(MailFrameView.MAIN_TOOLBAR));
+        setState(frameMediator.isToolbarEnabled(AbstractMailView.MAIN_TOOLBAR));
     }
 
     /**
@@ -49,6 +50,6 @@ public class ViewToolbarAction extends AbstractSelectableAction {
      * @param evt the event
      */
     public void actionPerformed(ActionEvent evt) {
-        frameMediator.getView().showToolbar();
+        ((AbstractMailView) frameMediator.getBaseView()).showToolbar();
     }
 }

@@ -22,7 +22,7 @@ import org.columba.addressbook.gui.tree.TreeController;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
-import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.view.AbstractView;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionListener;
@@ -47,7 +47,7 @@ public class AddressbookFrameController extends AbstractFrameController
     /**
  * @see org.columba.core.gui.FrameController#createView()
  */
-    protected AbstractFrameView createView() {
+    protected AbstractView createView() {
         AddressbookFrameView view = new AddressbookFrameView(this);
         view.init(tree.getView(), table.getView());
 

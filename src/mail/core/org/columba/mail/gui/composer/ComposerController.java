@@ -26,6 +26,7 @@ import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.view.AbstractView;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.html.HtmlEditorController;
@@ -192,7 +193,7 @@ public class ComposerController extends AbstractFrameController
     /* (non-Javadoc)
      * @see org.columba.core.gui.FrameController#createView()
      */
-    protected AbstractFrameView createView() {
+    protected AbstractView createView() {
         ComposerView view = new ComposerView(this);
 
         // *20030917, karlpeder* If ContainerListeners are waiting to be

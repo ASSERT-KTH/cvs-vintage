@@ -17,6 +17,7 @@ package org.columba.mail.gui.table;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.action.OpenMessageWithMessageFrameAction;
 import org.columba.mail.gui.table.action.ViewMessageAction;
 import org.columba.mail.gui.table.model.MessageNode;
@@ -42,7 +43,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
     public HeaderTableMouseListener(TableController headerTableViewer) {
         super();
         this.headerTableViewer = headerTableViewer;
-        viewMessageAction = new ViewMessageAction(headerTableViewer.getMailFrameController());
+        viewMessageAction = new ViewMessageAction(headerTableViewer.getFrameController());
     }
 
     protected void processPopup(final MouseEvent event) {
@@ -80,7 +81,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
                                                                   .getValueAt(row,
                         0);
 
-                FolderCommandReference[] ref = headerTableViewer.getMailFrameController()
+                FolderCommandReference[] ref = ((MailFrameMediator)headerTableViewer.getFrameController())
                                                                 .getTableSelection();
                 ((Folder) ref[0].getFolder()).setLastSelection(node.getUid());
                 viewMessageAction.actionPerformed(null);
@@ -90,7 +91,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
 
     protected void processDoubleClick() {
         // open message in new message-frame
-        new OpenMessageWithMessageFrameAction(headerTableViewer.getMailFrameController()).actionPerformed(null);
+        new OpenMessageWithMessageFrameAction(headerTableViewer.getFrameController()).actionPerformed(null);
     }
 
     public void mouseReleased(MouseEvent event) {

@@ -18,8 +18,8 @@ package org.columba.mail.gui.action;
 import org.columba.core.action.AbstractSelectableAction;
 import org.columba.core.gui.frame.FrameMediator;
 
-import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.mail.gui.view.AbstractMailView;
 
 import java.awt.event.ActionEvent;
 
@@ -29,10 +29,10 @@ public class ViewFolderInfoPanelAction extends AbstractSelectableAction {
         super(frameMediator,
             MailResourceLoader.getString("menu", "mainframe",
                 "menu_view_folderinfopanel"));
-        setState(frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL));
+        setState(frameMediator.isToolbarEnabled(AbstractMailView.FOLDERINFOPANEL));
     }
 
     public void actionPerformed(ActionEvent evt) {
-        ((MailFrameView) frameMediator.getView()).showFolderInfoPanel();
+        ((AbstractMailView) frameMediator.getBaseView()).showFolderInfoPanel();
     }
 }

@@ -17,6 +17,7 @@ package org.columba.mail.gui.config.search;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.gui.util.CheckBoxWithMnemonic;
 import org.columba.core.gui.util.ImageLoader;
@@ -28,7 +29,7 @@ import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -82,9 +83,9 @@ public class SearchFrame extends JDialog implements ActionListener {
 
     //private FolderTreeNode folderTreeNode;
     private JComboBox condList;
-    AbstractMailFrameController frameController;
+    private FrameMediator frameController;
 
-    public SearchFrame(AbstractMailFrameController frameController,
+    public SearchFrame(FrameMediator frameController,
         Folder folder) {
         super();
         this.frameController = frameController;
@@ -345,7 +346,7 @@ public class SearchFrame extends JDialog implements ActionListener {
             FolderCommandReference[] r = new FolderCommandReference[1];
             r[0] = new FolderCommandReference(destFolder);
 
-            ((AbstractMailFrameController) frameController).setTreeSelection(r);
+            ((MailFrameMediator) frameController).setTreeSelection(r);
 
             MainInterface.processor.addOp(new ViewHeaderListCommand(
                     frameController, r));

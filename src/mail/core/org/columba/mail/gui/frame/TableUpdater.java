@@ -48,8 +48,10 @@ public class TableUpdater {
     public static void tableChanged(TableModelChangedEvent ev)
         throws Exception {
         for (Iterator it = list.iterator(); it.hasNext();) {
-            AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
-            ((ThreePaneMailFrameController) frame).tableController.tableChanged(ev);
+            TableViewOwner frame = (TableViewOwner) it.next();
+            ((TableViewOwner) frame).getTableController().tableChanged(ev);
+//            AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
+//            ((ThreePaneMailFrameController) frame).tableController.tableChanged(ev);
         }
     }
 

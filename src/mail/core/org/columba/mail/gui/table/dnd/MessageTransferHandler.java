@@ -20,6 +20,7 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.CopyMessageCommand;
+import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.TableController;
 
 import java.awt.datatransfer.DataFlavor;
@@ -158,7 +159,7 @@ if (source.equals(target))
         if (c instanceof JTable) {
             source = (JTable) c;
 
-            FolderCommandReference[] r = tableController.getMailFrameController()
+            FolderCommandReference[] r = ((MailFrameMediator)tableController.getFrameController())
                                                         .getTableSelection();
 
             return new FolderCommandReferenceTransferable(r);

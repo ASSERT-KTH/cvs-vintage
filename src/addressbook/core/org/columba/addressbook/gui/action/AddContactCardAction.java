@@ -27,6 +27,7 @@ import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.event.ActionEvent;
+import javax.swing.JFrame;
 
 
 /**
@@ -64,7 +65,7 @@ public class AddContactCardAction extends DefaultTreeAction {
         AddressbookFolder folder = (AddressbookFolder) mediator.getTree()
                                                                .getSelectedFolder();
 
-        ContactDialog dialog = new ContactDialog(mediator.getView());
+        ContactDialog dialog = new ContactDialog((JFrame)mediator.getFrame());
 
         // TODO:move this code to dialog
         dialog.setVisible(true);

@@ -33,6 +33,7 @@ import org.columba.mail.gui.message.MessageView;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableView;
 import org.columba.mail.gui.tree.TreeView;
+import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
 
 import java.awt.BorderLayout;
@@ -53,8 +54,7 @@ import javax.swing.JViewport;
  *
  * @author fdietz
  */
-public class MailFrameView extends AbstractFrameView {
-    public static final String FOLDERINFOPANEL = "folderinfopanel";
+public class MailFrameView extends AbstractFrameView implements AbstractMailView {
 
     //private StatusBar statusBar;
     public JSplitPane mainSplitPane;
@@ -121,7 +121,8 @@ public void hideAttachmentViewer() {
         tablePanel = new JPanel();
         tablePanel.setLayout(new BorderLayout());
 
-        ViewItem viewItem = getFrameController().getViewItem();
+//        ViewItem viewItem = getFrameController().getViewItem();
+        ViewItem viewItem = getViewController().getViewItem();
 
         //if (viewItem.getBoolean("toolbars", "filter", true) == true)
         tablePanel.add(filterToolbar, BorderLayout.NORTH);
@@ -226,7 +227,7 @@ public void showFolderInfo(boolean b) {
         viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
         viewItem.set("splitpanes", "header", rightSplitPane.getDividerLocation());
 
-        FolderCommandReference[] r = ((MailFrameMediator) getFrameController()).getTreeSelection();
+        FolderCommandReference[] r = ((MailFrameMediator) getViewController()).getTreeSelection();
 
         if (r.length > 0) {
             FolderTreeNode folder = r[0].getFolder();

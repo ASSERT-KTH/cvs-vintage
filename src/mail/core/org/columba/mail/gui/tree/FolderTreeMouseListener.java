@@ -32,7 +32,7 @@ public class FolderTreeMouseListener extends MouseAdapter {
 
     public FolderTreeMouseListener(TreeController t) {
         this.treeController = t;
-        viewHeaderListAction = new ViewHeaderListAction(t.getMailFrameController());
+        viewHeaderListAction = new ViewHeaderListAction(t.getFrameController());
     }
 
     protected JPopupMenu getPopupMenu() {

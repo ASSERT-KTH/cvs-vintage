@@ -16,12 +16,13 @@
 package org.columba.mail.gui.table;
 
 import org.columba.core.command.CompoundCommand;
+import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.frame.MailFrameMediator;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,14 +40,14 @@ import javax.swing.TransferHandler;
  * @author redsolo
  */
 public class TableViewTransferHandler extends TransferHandler {
-    private AbstractMailFrameController mailFrameController;
+    private FrameMediator frameController;
 
     /**
  * Creates a TransferHandle for a table view.
  * @param cont the fram controller, its used to get the selected messages.
  */
-    public TableViewTransferHandler(AbstractMailFrameController cont) {
-        mailFrameController = cont;
+    public TableViewTransferHandler(FrameMediator cont) {
+        frameController = cont;
     }
 
     /** {@inheritDoc} */
@@ -59,7 +60,7 @@ public class TableViewTransferHandler extends TransferHandler {
         Transferable transferable = null;
 
         if (c instanceof TableView) {
-            transferable = new MessageReferencesTransfer(mailFrameController.getTableSelection());
+            transferable = new MessageReferencesTransfer(((MailFrameMediator)frameController).getTableSelection());
         }
 
         return transferable;

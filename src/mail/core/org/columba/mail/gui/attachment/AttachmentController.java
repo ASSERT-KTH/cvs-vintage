@@ -49,18 +49,18 @@ public class AttachmentController {
     //private AttachmentActionListener actionListener;
     private AttachmentView view;
     private AttachmentModel model;
-    private FrameMediator abstractFrameController;
+    private FrameMediator frameController;
 
     public AttachmentController(FrameMediator superController) {
         super();
 
-        this.abstractFrameController = superController;
+        this.frameController = superController;
 
         model = new AttachmentModel();
 
         view = new AttachmentView(model);
 
-        abstractFrameController.getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
+        frameController.getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
                 view));
 
         getView().setDoubleClickAction(new OpenAction(superController));
@@ -70,7 +70,7 @@ public class AttachmentController {
     }
 
     public FrameMediator getFrameController() {
-        return abstractFrameController;
+        return frameController;
     }
 
     public AttachmentView getView() {

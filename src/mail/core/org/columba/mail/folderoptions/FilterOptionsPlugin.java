@@ -25,6 +25,7 @@ import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.model.TableModelFilter;
+import org.columba.mail.gui.view.AbstractMailView;
 
 
 /**
@@ -74,7 +75,7 @@ public class FilterOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableModelFilter model = tableController.getTableModelFilteredView();
-        FilterToolbar toolbar = ((MailFrameView) getMediator().getView()).getFilterToolbar();
+        FilterToolbar toolbar = ((AbstractMailView) getMediator().getBaseView()).getFilterToolbar();
 
         model.setNewFlag(item.getBoolean("new_state"));
         toolbar.enableNew(item.getBoolean("new_state"));

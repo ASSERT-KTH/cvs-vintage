@@ -8,6 +8,7 @@ package org.columba.mail.gui.messageframe;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
 
 import org.columba.mail.command.FolderCommandReference;
@@ -89,7 +90,7 @@ public class MessageFrameController extends AbstractMailFrameController {
     /* (non-Javadoc)
      * @see org.columba.core.gui.frame.FrameMediator#createView()
      */
-    public AbstractFrameView createView() {
+    public AbstractView createView() {
         MessageFrameView view = new MessageFrameView(this);
 
         /*

@@ -59,7 +59,8 @@ public class MessageFrameView extends AbstractFrameView {
     public void init(MessageView message, StatusBar statusBar) {
         getContentPane().add(message, BorderLayout.CENTER);
 
-        ViewItem viewItem = getFrameController().getViewItem();
+//        ViewItem viewItem = getFrameController().getViewItem();
+        ViewItem viewItem = getViewController().getViewItem();
 
         if (viewItem.getBoolean("toolbars", "show_folderinfo") == true) {
             toolbarPane.add(folderInfoPanel);
