@@ -123,7 +123,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.67 2002/12/10 20:47:31 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.68 2002/12/12 20:35:47 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1983,9 +1983,10 @@ try{
         isInitializing = true;
         // Add defaults for issue types and attributes 
         // from parent module
+        List parentIssueTypes = new ArrayList();
         Module parentModule = ModuleManager.getInstance(getParentId());
         inheritFromParent(parentModule);
-        List parentIssueTypes = parentModule.getIssueTypes(false);
+        parentIssueTypes = parentModule.getIssueTypes(false);
 
         List defaultIssueTypes = IssueTypePeer.getDefaultIssueTypes();
         for (int i=0; i< defaultIssueTypes.size(); i++)
@@ -2138,7 +2139,7 @@ try{
     public boolean isInitializing()
         throws Exception
     {
-        return isInitializing || getIssueTypes(false).size() == 0;
+        return isInitializing;
     }
 
 
