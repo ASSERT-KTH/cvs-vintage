@@ -43,7 +43,7 @@
     <li>$l10n.The <strong>$l10n.IssueId</strong> $l10n.UQP9</li>
     <li><strong>$l10n.AdvancedQueries</strong> $l10n.UQP10</li>
     <li><strong>$l10n.CustomQueries</strong> $l10n.UQP11</li>
-    <li><strong> $l10n.TextQueries</strong> $l10n.UQP20</li>
+    <li><strong>$l10n.TextQueries</strong> $l10n.UQP20</li>
     <li><strong>$l10n.MyIssues</strong> $l10n.UQP21</li>
     <li><strong>$l10n.MostRecent</strong> $l10n.UQP12</li>
   </ul>
