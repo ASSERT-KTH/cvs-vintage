@@ -114,6 +114,10 @@ public class TreeSelectionHandler extends SelectionHandler implements
 
 	public void setSelection(ICommandReference selection) {
 		
+		selectedFolders.clear();
+		
+		// FIXME
+		/*
 		if ( ((MailFolderCommandReference) selection).getSourceFolder()  == null ) {
 			view.clearSelection();
 		} else {
@@ -123,5 +127,6 @@ public class TreeSelectionHandler extends SelectionHandler implements
 		view.setSelectionPath(path);
 		view.expandPath(path);
 		}
+		*/
 	}
 }

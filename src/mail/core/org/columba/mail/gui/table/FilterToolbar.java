@@ -33,6 +33,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.columba.core.command.CommandProcessor;
 import org.columba.core.filter.FilterCriteria;
 import org.columba.core.folder.IFolder;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -45,6 +46,7 @@ import org.columba.mail.folder.AbstractMessageFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -202,6 +204,11 @@ public class FilterToolbar extends JPanel implements ActionListener,
 			((MailFrameMediator) tableController.getFrameController())
 					.setTreeSelection(r);
 
+			((MailFrameMediator) tableController.getFrameController())
+					.setTableSelection(r);
+			CommandProcessor.getInstance().addOp(
+					new ViewHeaderListCommand(tableController
+							.getFrameController(), r));
 		}
 
 	}
@@ -235,12 +242,22 @@ public class FilterToolbar extends JPanel implements ActionListener,
 		}
 
 		// select search folder
+		/*
 		MailFolderCommandReference r = new MailFolderCommandReference(null);
 		((MailFrameMediator) tableController.getFrameController())
 				.setTreeSelection(r);
-		r = new MailFolderCommandReference(searchFolder);
+			*/
+		
+		MailFolderCommandReference r = new MailFolderCommandReference(searchFolder);
 		((MailFrameMediator) tableController.getFrameController())
 				.setTreeSelection(r);
+		((MailFrameMediator) tableController.getFrameController())
+		.setTableSelection(r);
+
+
+		CommandProcessor.getInstance().addOp(
+				new ViewHeaderListCommand(tableController.getFrameController(),
+						r));
 	}
 
 	/**

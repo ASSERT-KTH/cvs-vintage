@@ -67,10 +67,13 @@ public class OpenMessageWithMessageFrameAction extends AbstractColumbaAction
 		IMailFolderCommandReference r = ((MailFrameMediator) getFrameMediator())
 				.getTableSelection();
 
+		
 		c.setTreeSelection(r);
 
+		
 		c.setTableSelection(r);
-
+		
+		
 		CommandProcessor.getInstance().addOp(new ViewMessageCommand(c, r));
 
 	}

@@ -117,6 +117,9 @@ public class MessageFrameController extends AbstractMailFrameController
 	public void setTableSelection(IMailFolderCommandReference references) {
 		tableReference = references;
 
+		// TODO: re-enable feature, the following code violates our
+		// design, accessing folders is only allowed in Command.execute()
+		/*
 		try {
 
 			// Get the subject from the cached Header
@@ -126,18 +129,11 @@ public class MessageFrameController extends AbstractMailFrameController
 					references.getUids()[0]);
 			String subject = (String) header.get("columba.subject");
 
-			/*
-			 * // Trim it to the max length of MAX_SUBJECT_LENGTH subject =
-			 * subject.trim();
-			 * 
-			 * if( subject.length() > MAX_SUBJECT_LENGTH ) { subject =
-			 * subject.substring(0,MAX_SUBJECT_LENGTH-3) + "..."; }
-			 */
-
 			getContainer().getFrame().setTitle(subject);
 		} catch (Exception e) {
 			LOG.warning(e.toString());
 		}
+		*/
 
 		tableSelectionHandler.setSelection(tableReference);
 	}

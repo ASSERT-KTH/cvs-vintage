@@ -55,9 +55,11 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.command.MailFolderCommandReference;
 import org.columba.mail.folder.AbstractMessageFolder;
+import org.columba.mail.folder.IMailFolder;
 import org.columba.mail.folder.virtual.VirtualFolder;
 import org.columba.mail.gui.config.filter.CriteriaList;
 import org.columba.mail.gui.frame.MailFrameMediator;
+import org.columba.mail.gui.frame.TreeViewOwner;
 import org.columba.mail.gui.tree.FolderTreeModel;
 import org.columba.mail.gui.tree.util.SelectSearchFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
@@ -381,6 +383,7 @@ public class SearchFrame extends JDialog implements ActionListener {
 			MailFolderCommandReference r = new MailFolderCommandReference(destFolder);
 			((MailFrameMediator) frameController).setTreeSelection(r);
 
+			((TreeViewOwner)frameController).getTreeController().setSelected((IMailFolder)r.getSourceFolder());
 		}
 	}
 }

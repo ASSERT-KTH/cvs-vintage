@@ -98,8 +98,8 @@ public class TableSelectionHandler extends SelectionHandler implements
 			return local;
 		}
 
-		MailFolderCommandReference reference = new MailFolderCommandReference(folder,
-				getUidArray());
+		MailFolderCommandReference reference = new MailFolderCommandReference(
+				folder, getUidArray());
 
 		return reference;
 	}
@@ -115,7 +115,16 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 		useLocalSelection = false;
 
-		tableController.setSelected(getUidArray());
+		/*
+		if (ref.getUids() != null) {
+			messages.clear();
+			for (int i = 0; i < ref.getUids().length; i++) {
+				Object uid = ref.getUids()[i];
+				messages.add(tableController.getMessageNode(uid));
+			}
+		}
+		*/
+
 	}
 
 	private Object[] getUidArray() {
@@ -136,6 +145,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
 	 */
 	public void valueChanged(ListSelectionEvent e) {
+
 		useLocalSelection = false;
 
 		// user is still manipulating the selection
@@ -162,6 +172,7 @@ public class TableSelectionHandler extends SelectionHandler implements
 
 		fireSelectionChanged(new TableSelectionChangedEvent(folder,
 				getUidArray()));
+
 	}
 
 	public void setLocalReference(MailFolderCommandReference r) {

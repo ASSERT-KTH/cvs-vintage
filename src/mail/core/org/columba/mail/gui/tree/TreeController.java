@@ -116,15 +116,20 @@ public class TreeController implements TreeWillExpandListener,
 		TreePath path = folder.getSelectionTreePath();
 
 		view.requestFocus();
+		/*
 		view.setLeadSelectionPath(path);
 		view.setAnchorSelectionPath(path);
+		*/
+		view.setSelectionPath(path);
 		view.expandPath(path);
 
 		this.selectedFolder = folder;
 
+		/*
 		CommandProcessor.getInstance().addOp(new ViewHeaderListCommand(
 				getFrameController(),
 				((MailFrameMediator) getFrameController()).getTreeSelection()));
+				*/
 	}
 
 	/**
@@ -169,8 +174,6 @@ public class TreeController implements TreeWillExpandListener,
 
 	/** {@inheritDoc} */
 	public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
-		LOG.info("treeWillExpand=" + e.getPath().toString());
-
 		AbstractFolder treeNode = (AbstractFolder) e.getPath()
 				.getLastPathComponent();
 
@@ -178,15 +181,6 @@ public class TreeController implements TreeWillExpandListener,
 			return;
 		}
 
-		/*
-		 * // fetch new sub folder list // -> this is a hack for imap folder: // ->
-		 * when expanding the IMAPRootFolder the // -> list of folders gets
-		 * synchronized MailFolderCommandReference[] cr = new
-		 * MailFolderCommandReference[1]; cr[0] = new
-		 * MailFolderCommandReference(treeNode);
-		 * 
-		 * MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-		 */
 		// save expanded state
 		saveExpandedState(treeNode, e.getPath());
 	}

@@ -85,13 +85,13 @@ public class ViewMessageCommand extends Command {
 
 		// get selected folder
 		srcFolder = (IMailbox) r.getSourceFolder();
-
+		
 		// register for status events
 		((StatusObservableImpl) srcFolder.getObservable()).setWorker(wsc);
 
 		// get selected message UID
 		uid = r.getUids()[0];
-
+	
 		try {
 			// get attachment structure
 			mimePartTree = srcFolder.getMimePartTree(uid);
