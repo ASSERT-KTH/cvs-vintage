@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.3 2001/11/23 09:08:48 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.4 2002/01/15 11:01:32 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -212,7 +212,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 			else if(actionCommand.equals("insert"))
 				view.getBuffer().insertFile(view,file.path);
 			else if(actionCommand.equals("choose"))
-				browser.filesActivated();
+				browser.filesActivated(false);
 			else if(actionCommand.equals("close"))
 			{
 				Buffer buffer = jEdit.getBuffer(file.path);

@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.8 2001/12/02 11:40:51 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.9 2002/01/15 11:01:33 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -275,7 +275,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 	private JButton choose;
 
 	// buttons
-	private JButton findBtn, replaceBtn, replaceAndFindBtn, replaceAllBtn,
+	private JButton findBtn, /* replaceBtn, */ replaceAndFindBtn, replaceAllBtn,
 		closeBtn;
 	//}}}
 
@@ -527,11 +527,11 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 		grid.add(findBtn);
 		findBtn.addActionListener(actionHandler);
 
-		replaceBtn = new JButton(jEdit.getProperty("search.replaceBtn"));
+		/* replaceBtn = new JButton(jEdit.getProperty("search.replaceBtn"));
 		replaceBtn.setMnemonic(jEdit.getProperty("search.replaceBtn.mnemonic")
 			.charAt(0));
 		grid.add(replaceBtn);
-		replaceBtn.addActionListener(actionHandler);
+		replaceBtn.addActionListener(actionHandler); */
 
 		replaceAndFindBtn = new JButton(jEdit.getProperty("search.replaceAndFindBtn"));
 		replaceAndFindBtn.setMnemonic(jEdit.getProperty("search.replaceAndFindBtn.mnemonic")
@@ -768,16 +768,6 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			{
 				ok();
 			}
-			else if(source == replaceBtn
-				|| (source == replaceAllBtn
-				&& searchSelection.isSelected()))
-			{
-				save();
-				if(SearchAndReplace.replace(view))
-					closeOrKeepDialog();
-				else
-					getToolkit().beep();
-			}
 			else if(source == replaceAndFindBtn)
 			{
 				save();
@@ -791,10 +781,21 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 				save();
-				if(SearchAndReplace.replaceAll(view))
-					closeOrKeepDialog();
+
+				if(searchSelection.isSelected())
+				{
+					if(SearchAndReplace.replace(view))
+						closeOrKeepDialog();
+					else
+						getToolkit().beep();
+				}
 				else
-					getToolkit().beep();
+				{
+					if(SearchAndReplace.replaceAll(view))
+						closeOrKeepDialog();
+					else
+						getToolkit().beep();
+				}
 
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}

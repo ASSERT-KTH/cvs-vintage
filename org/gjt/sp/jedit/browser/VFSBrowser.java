@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.24 2002/01/14 04:22:30 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.25 2002/01/15 11:01:33 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -210,7 +210,10 @@ public class VFSBrowser extends JPanel implements EBComponent
 		topBox.add(pathAndFilterPanel);
 		add(BorderLayout.NORTH,topBox);
 
-		add(BorderLayout.CENTER,browserView = new BrowserView(this));
+		boolean splitHorizontally = false;
+		if(jEdit.getBooleanProperty("vfs.browser.splitHorizontally") && mode != BROWSER)
+			splitHorizontally = true;
+		add(BorderLayout.CENTER,browserView = new BrowserView(this,splitHorizontally));
 
 		propertiesChanged();
 

@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.18 2002/01/06 09:32:25 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.19 2002/01/15 11:01:33 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -402,6 +402,7 @@ public class OffsetManager
 		{
 			lineInfo[startLine + i] &= ~(FOLD_LEVEL_VALID_MASK
 				| CONTEXT_VALID_MASK);
+			lineContext[startLine + i] = null;
 		}
 	} //}}}
 

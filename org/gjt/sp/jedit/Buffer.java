@@ -48,7 +48,7 @@ import org.gjt.sp.util.*;
  * <code>getLineStartOffset()</code>, and so on).
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.55 2002/01/12 09:17:41 spestov Exp $
+ * @version $Id: Buffer.java,v 1.56 2002/01/15 11:01:32 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -342,7 +342,7 @@ public class Buffer implements EBComponent
 			{
 				setFlag(IO,false);
 
-				StringBuffer sbuf = (StringBuffer)getProperty(
+				SegmentBuffer sbuf = (SegmentBuffer)getProperty(
 					BufferIORequest.LOAD_DATA);
 				if(sbuf != null)
 				{
@@ -2530,11 +2530,15 @@ public class Buffer implements EBComponent
 				{
 					newFoldLevel = foldHandler.getFoldLevel(this,i,seg);
 					offsetMgr.setFoldLevel(i,newFoldLevel);
-					changed = true;
+					if(newFoldLevel != offsetMgr.getFoldLevel(i))
+						changed = true;
 				}
 
 				if(changed && !getFlag(INSIDE_INSERT))
+				{
+					System.err.println("fold level changed: " + start + ":" + line);
 					fireFoldLevelChanged(start,line);
+				}
 
 				return newFoldLevel;
 			}
@@ -3332,14 +3336,14 @@ public class Buffer implements EBComponent
 	//{{{ Event firing methods
 
 	//{{{ fireFoldLevelChanged() method
-	private void fireFoldLevelChanged(int line, int level)
+	private void fireFoldLevelChanged(int start, int end)
 	{
 		for(int i = 0; i < bufferListeners.size(); i++)
 		{
 			try
 			{
 				((BufferChangeListener)bufferListeners.elementAt(i))
-					.foldLevelChanged(this,line,level);
+					.foldLevelChanged(this,start,end);
 			}
 			catch(Throwable t)
 			{

@@ -32,7 +32,7 @@ import org.gjt.sp.util.Log;
 /**
  * A class used internally by the text area.
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.8 2002/01/13 07:59:29 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.9 2002/01/15 11:01:33 spestov Exp $
  */
 class ChunkCache
 {
@@ -66,7 +66,7 @@ class ChunkCache
 			LineInfo last = lineInfo[lastScreenLine];
 
 			if(offset >= last.offset
-				&& offset < last.offset + last.length)
+				&& offset <= last.offset + last.length)
 			{
 				updateChunksUpTo(lastScreenLine);
 				return lastScreenLine;
@@ -103,7 +103,7 @@ class ChunkCache
 				else if(info.physicalLine == line)
 				{
 					if(offset >= info.offset
-						&& offset < info.offset + info.length)
+						&& offset <= info.offset + info.length)
 					{
 						screenLine = i;
 						break;
@@ -206,11 +206,17 @@ class ChunkCache
 		}
 		else
 		{
-			physicalLine = textArea
-				.getFoldVisibilityManager()
-				.getNextVisibleLine(lineInfo[
+			int prevPhysLine = lineInfo[
 				firstScreenLine - 1]
-				.physicalLine);
+				.physicalLine;
+			if(prevPhysLine == -1)
+				physicalLine = -1;
+			else
+			{
+				physicalLine = textArea
+					.getFoldVisibilityManager()
+					.getNextVisibleLine(prevPhysLine);
+			}
 		}
 
 		// TODO: Assumptions...
