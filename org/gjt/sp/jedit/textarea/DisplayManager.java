@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.78 2003/11/18 21:37:39 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.79 2003/11/18 22:31:48 spestov Exp $
  */
 public class DisplayManager
 {
@@ -1742,9 +1742,13 @@ loop:		for(;;)
 					}
 
 					// update visible lines
-					textArea.chunkCache.getLineInfo(
-						textArea.getVisibleLines()
-						- 1);
+					int visibleLines = textArea
+						.getVisibleLines();
+					if(visibleLines != 0)
+					{
+						textArea.chunkCache.getLineInfo(
+							visibleLines - 1);
+					}
 				}
 
 				textArea._finishCaretUpdate();

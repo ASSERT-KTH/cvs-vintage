@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.201 2003/11/06 03:38:44 spestov Exp $
+ * @version $Id: jEdit.java,v 1.202 2003/11/18 22:31:48 spestov Exp $
  */
 public class jEdit
 {
@@ -2866,7 +2866,8 @@ public class jEdit
 					(Component)evt.getSource());
 
 				boolean actionBarVisible;
-				if(view.getActionBar() == null)
+				if(view.getActionBar() == null
+					|| !view.getActionBar().isShowing())
 					actionBarVisible = false;
 				else
 				{
