@@ -1,115 +1,132 @@
-$page.setTitle("Issue Template")
-        
+<div class="app" id="savetemplate">
+$page.setTitle("Save Template")
+
+<h2>$page.Title</h2>
+     
 #set ($action = $link.setPage("SaveTemplate.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm"))
 #set ($module = $scarabR.CurrentModule)
 #set ( $issueId = $data.Parameters.getString("issue_id"))
 
 #if ($issueId)
-   #set ($issue = $scarabR.Issue)
+ #set ($issue = $scarabR.Issue)
 #else
-   #set ($issue = $module.NewIssue)
+ #set ($issue = $module.NewIssue)
 #end
 
 #set ($templateInfo = $scarabR.IssueTemplateInfo)
 #set ($templateGroup = $intake.IssueTemplateInfo.mapTo($templateInfo)) 
 #set ($issueGroup = $intake.Issue.mapTo($issue)) 
-
-<div class="app" id="saveTemplate">
-
-<form method="post" action="$action" >
+<form method="post" action="$action">
 #if ($issueId) <input type="hidden" name="issue_id" value="$issueId" /> #end
+
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;</td>
+  <td><input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;</td>
+  <td><input type="submit" value="clear form" /></td>
+ </tr>
+</table>
+</div> 
 
 <h3>$page.Title</h3>
 <div class="axial">
-    <table border="0" cellspacing="2" cellpadding="3">
-       <tr>
-            <th>Template Name</th>
-            <td>
-             #fieldErrorMsg($templateGroup.Name "")
-            <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key"/>
-            </td>
-       </tr>
-       <tr>
-            <th>Template Desc</th>
-            <td>
-            <textarea rows="4" cols="40" name="$templateGroup.Description.Key">$!templateGroup.Description</textarea>
-            </td>
-       </tr>
-       <tr>
-         <th width="120">Availability</th>
-         <td>#templateTypeSelectBox ($issue)</td>
-       </tr>
-       <tr>
-         <th width="120">Current Module</th>
-         <td>$module.Name</td>
-         <input type="hidden" name="$issueGroup.ModuleId.Key" value="$module.ModuleId" />
-       </tr>
+<table border="0" cellspacing="2" cellpadding="3">
+ <tr>
+  <th>Template Name</th>
+  <td>
+   #fieldErrorMsg($templateGroup.Name "")
+   <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key" />
+  </td>
+ </tr>
+ <tr>
+  <th>Template Desc</th>
+  <td><textarea rows="4" cols="40" name="$templateGroup.Description.Key">$!templateGroup.Description</textarea></td>
+ </tr>
+ <tr>
+  <th width="120">Availability</th>
+  <td>#templateTypeSelectBox ($issue)</td>
+ </tr>
+ <tr>
+  <th width="120">Current Module</th>
+  <td>$module.Name</td>
+   <input type = "hidden" name="$issueGroup.ModuleId.Key" value = "$module.ModuleId" />
+ </tr>
+
+ #if ($issueId)
+  <tr>
+   <th>template author</th>
+   #set ($createdUser = $issue.CreatedBy)
+   <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+  </tr>
+ #end
+
+<h3>Completed Attributes in "Enter Issue" template</h3>
 
 #if ($issueId)
-       <tr>
-          <th>Template Author</th>
-             #set ($createdUser = $issue.CreatedBy)
-          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
-       </tr>
+ <tr>
+  <th>Template Author</th>
+  #set ($createdUser = $issue.CreatedBy)
+  <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+ </tr>
 #end
-   </table>
+</table>
 </div>
 
 <h3>Template Attributes</h3>
 
 <div class="axial">
-        <table cellspacing="2" cellpadding="3" border="0">
-                                                
+<table cellspacing="2" cellpadding="3" border="0">
+
 #set ($attrValues = $issue.ModuleAttributeValuesMap)
 #set ( $group = $intake.AttributeValue.mapTo($attrValue) ) 
 
 #foreach ( $attKey in $attrValues.sequence() )
-  #set ( $attVal = $attrValues.get($attKey) )
+ #set ( $attVal = $attrValues.get($attKey) )
 
-    <tr>
-        <th>
-     #if ( $attVal.Attribute.AttributeType.ValidationKey )
-        #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
-     #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
-        #set ( $field = "OptionId" )
-     #elseif ($attVal.Attribute.AttributeType.Name == "string" )
-        #set ( $field = "Value" )
-     #end
-#*     #if ( $attVal.isRequired() )
-        *
-     #end
+<tr>
+ <th>
+ #if ( $attVal.Attribute.AttributeType.ValidationKey )
+  #set ( $field = $attVal.Attribute.AttributeType.ValidationKey )
+ #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+  #set ( $field = "OptionId" )
+ #elseif ($attVal.Attribute.AttributeType.Name == "string" )
+  #set ( $field = "Value" )
+ #end
+#*    #if ( $attVal.isRequired() )
+       *
+      #end
 *#
-     $attVal.Attribute.Name</th>
-    <td>
-    #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
-          #userSelectBox ($attVal "")
-    #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" ) 
-         #attrValueLeafSelect ($attVal $field "")
-    #else
-        #attrValueErrorMsg( $attVal "Value" )
-
-        #if ($attVal.Attribute.AttributeType.Name == "long-string" )
-            <textarea name= "$attrInput.Value.Key" class="text" cols="40"
-               rows="4">$!attrInput.Value</textarea>
-        #else
-           <input name= "$attrInput.Value.Key"
-                value="$!attrInput.Value" size="45" type="text" class="text" />
-        #end
-    #end
-    </td>
-   </tr>
+ $attVal.Attribute.Name</th>
+ <td>
+ #if ($attVal.Attribute.AttributeType.AttributeClass.Name == "user")
+  #userSelectBox ($attVal "")
+ #elseif ($attVal.Attribute.AttributeType.Name == "combo-box" )
+  #attrValueLeafSelect ($attVal $field "")
+ #else
+  #attrValueErrorMsg( $attVal "Value" )
+  #if ($attVal.Attribute.AttributeType.Name == "long-string" )
+   <textarea name= "$attrInput.Value.Key" class="text" cols="40" rows="4">$!attrInput.Value</textarea>
+  #else
+   <input name= "$attrInput.Value.Key" value="$!attrInput.Value" size="45" type="text" class="text" />
+  #end
+ #end
+ </td>
+</tr>
 #end
 </table>
-
 </div>
 
-<p class="functnbar">
-<input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;
-<input type="submit" value="cancel" name="eventSubmit_doCancel"  />&#160;
-<input type="submit" value="clear form" />
-</p>
+<div class="functnbar2">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" value="save details" name="eventSubmit_doSubmit" />&#160;</td>
+  <td><input type="submit" value="cancel" name="eventSubmit_doCancel" />&#160;</td>
+  <td><input type="submit" value="clear form" /></td>
+ </tr>
+</table>
+</div> 
 
 $intake.declareGroups()
 </form>
-
 </div>

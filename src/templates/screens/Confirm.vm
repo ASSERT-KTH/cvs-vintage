@@ -27,33 +27,35 @@ be asked to confirm it the next time you try to login.
 </p>
 
 <form method="post" action="$link.setPage("Confirm.vm")">
- <input type="hidden" name="action" value="Confirm">
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm">
- <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm">
+ <input type="hidden" name="action" value="Confirm" />
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
+ <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
+<h3>Confirmation Information</h3>
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
  <tr>
   <th>Email Address</th>
   <td>
-   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue">
+   <input type="text" size="25" name="$regGroup.Email.Key" value="$!emailValue" />
    #fieldErrorMsg($regGroup.Email "")
   </td>
  </tr>
  <tr>
   <th>Confirmation Code</th>
   <td>
-   <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue">
+   <input type="text" size="25" name="$regGroup.Confirm.Key" value="$!confirmValue" />
    #fieldErrorMsg($regGroup.Confirm "")
   </td>
  </tr>
  <tr>
   <td colspan="2">
-   <input type="submit" name="eventSubmit_doCancel" value="Cancel">
-   <input type="submit" name="eventSubmit_doConfirm" value="Confirm">
+   <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+   <input type="submit" name="eventSubmit_doConfirm" value="Confirm" />
   </td>
  </tr>
 </table>
 </div>
 $intake.declareGroups()
 </form>
+</div>

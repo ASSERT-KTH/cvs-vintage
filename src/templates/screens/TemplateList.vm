@@ -1,30 +1,105 @@
+<div class="app" id="templatelist">
 $page.setTitle("Template List")
+
+<h2>$page.Title</h2>
+
 #set ($action = $link.setPage("TemplateList.vm").setAction("TemplateList").addPathInfo("nextTemplate", "TemplateList.vm").toString())
 #set ($module = $scarabR.CurrentModule)
 #set ($user = $data.User)
 
 #if ( ($module.getPrivateTemplates($user).isEmpty()) && ($module.GlobalTemplates.isEmpty())) 
-   #set ($noTemplates = "true")
+ #set ($noTemplates = "true")
 #end
 
-<div class="app" id="templateList">
-
-<form method="post" action="$action" >
-
-<p class="functnbar">
-   <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
-   <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
-      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
-
-<h3>$page.Title</h3>
-
 #if ($noTemplates.equals("true"))
-    <div class="alert">
-    There are no stored templates, click <a
-    href="$link.setPage("SaveTemplate.vm")">here</a> to create a new
-    one.
-    </div>
+ <div class="alert">
+ There are no stored templates, click 
+ <a href="$link.setPage("SaveTemplate.vm")">here</a> to create a new one.
+ </div>
 #else
+<form method="post" action="$action">
+
+ <div class="functnbar">
+ <table cellpadding="0" cellspacing="0" border="0">
+  <tr>
+  #if ($user.UserId)
+   <td><input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;</td>
+   <td><input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates" /></td>
+  #end
+   <td>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
+  </tr>
+ </table>
+ </div>
+
+ <h3>Enter Issue Templates</h3>
+## <p>&#171; previous | 1 of 1 | next &#187;</p>
+ 
+ <table width="100%" border="1" cellspacing="2" cellpadding="3">
+  <tr>
+   <th nowrap="nowrap">
+   <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+   <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+   </th>
+   <th>Template name</th>
+   <th>Template desc</th>
+   <th>Location</th>
+   <th>initiated by</th>
+  </tr>
+ 
+  #foreach ( $template in $module.getPrivateTemplates($user) )
+   #rows ()
+   <td><input type="checkbox" name="delete_$template.IssueId" /></td>
+   #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+   <td><a href="$editLink">$template.TemplateInfo.Name</a></td>
+   <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
+   <td>$template.IssueType.Name
+   #if (!$template.TemplateInfo.Approved)
+    (until approved)
+   #end
+   </td>
+   #set ($createdUser = $template.CreatedBy)
+   <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+   </tr>
+  #end
+
+  #foreach ( $template in $module.GlobalTemplates )
+   #rows ()
+   #if ($security.hasPermission("Item | Delete", $module))
+    <td><input type="checkbox" name="delete_$template.IssueId" /></td>
+   #else
+    <td>&nbsp;</td>
+   #end
+   <td>
+   #if ($security.hasPermission("Item | Delete", $module))
+    #set ( $editLink = $link.setPathInfo("issue_id", $template.IssueId.toString()).setPage("SaveTemplate.vm"))
+    <a href="$editLink">$template.TemplateInfo.Name</a>
+   #else
+    $template.TemplateInfo.Name 
+   #end
+   </td>
+   <td>#if($template.TemplateInfo.Description)  $template.TemplateInfo.Description #else &nbsp; #end</td>
+   <td>$template.IssueType.Name
+   #if (!$template.TemplateInfo.Approved)
+    (until approved)
+   #end
+   </td>
+   #set ($createdUser = $template.CreatedBy)
+   <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+   </tr>
+  #end
+ </table>
+ 
+ ## <p>&#171; previous | 1 of 1 | next &#187;</p>
+
+ <div class="functnbar2">
+ <table cellpadding="0" cellspacing="0" border="0">
+  <tr>
+   <td><input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;</td>
+   <td><input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/></td>
+   <td>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
+  </tr>
+ </table>
+ </div>
 
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
         
@@ -82,17 +157,22 @@ $page.setTitle("Template List")
         #set ($createdUser = $template.CreatedBy)
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
-#end
         </table>
         
 ##  FIXME: add prev/next nav       <p>&#171; previous | 1 of 1 | next &#187;</p>
 
-   <p class="functnbar">
-   #if ($user.UserId)
-        <input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;
-        <input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates"/>
-   #end
-      &#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+ <div class="functnbar2">
+ <table cellpadding="0" cellspacing="0" border="0">
+  <tr>
+  #if ($user.UserId)
+   <td><input type="submit" value="create new" name="eventSubmit_doCreatenew" />&#160;</td>
+   <td><input type="submit" value="delete selected" name="eventSubmit_doDeletetemplates" /></td>
+  #end
+   <td>&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
+  </tr>
+ </table>
+ </div>
+
 #end
 
 </div>
