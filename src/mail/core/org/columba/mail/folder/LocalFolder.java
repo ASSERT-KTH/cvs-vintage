@@ -197,10 +197,12 @@ public abstract class LocalFolder extends Folder {
 		return mptree;
 	}
 
+    /* ************* this method is overridden by all subclasses
 	public HeaderList getHeaderList(WorkerStatusController worker)
-		throws Exception {
-		return getDataStorageInstance().recreateHeaderList(worker);
+		throws Exception { // ToDo: why not re-create only if necessary?
+		return getDataStorageInstance().recreateHeaderList(worker); // ToDo: needs to get mutex
 	}
+    ***************** */
 
 	/********************** searching/filtering ***********************/
 

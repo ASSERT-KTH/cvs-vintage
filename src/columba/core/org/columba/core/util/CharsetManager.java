@@ -42,64 +42,66 @@ public class CharsetManager implements ActionListener{
 		// Auto
 		"auto",
 		// Global # 1
-		"UTF-8", "UTF-16", "ASCII",
+		"UTF-8", "UTF-16", "US-ASCII",
 
 		// West Europe # 4
-		"Cp1252",
+		"windows-1252",
 			"ISO-8859-1",
 			"ISO-8859-15",
-			"Cp850",
+			"IBM850",
 			"MacRoman",
 			"ISO-8859-7",
 			"MacGreek",
-			"Cp1253",
+			"windows-1253",
 			"MacIceland",
 			"ISO-8859-3",
 
 		// East Europe # 14
 		"ISO-8859-4",
 			"ISO-8859-13",
-			"Cp1257",
-			"Cp852",
+			"windows-1257",
+			"IBM852",
 			"ISO-8859-2",
 			"MacCentralEurope",
 			"MacCroatian",
-			"Cp855",
+			"IBM855",
 			"ISO-8859-5",
-			"KOI8_R",
+			"KOI8-R",
 			"MacCyrillic",
-			"Cp1251",
-			"Cp866",
+			"windows-1251",
+			"IBM866",
 			"MacUkraine",
 			"MacRomania",
 
 		// East Asian # 29
-		"EUC_CN",
+		"GB2312",
 		"GBK",
 		"GB18030",
 		"Big5",
-		"Big5_HKSCS",
-		"EUC_TW",
-		"EUC_JP",
-		"SJIS",
-		"EUC_KR",
+		"Big5-HKSCS",
+		"EUC-TW",
+		"EUC-JP",
+		"Shift_JIS",
+		"ISO-2022-JP",
+		"MS932",
+		"EUC-KR",
 		"JOHAB",
-		"ISO2022KR",
+		"ISO-2022-KR",
 		
-		// West Asian # 40
+		// West Asian # 42
 		"TIS620",
-		"Cp857",
+		"IBM857",
 		"ISO-8859-9",
 		"MacTurkish",
-		"Cp1254",
-		"Cp1258"
+		"windows-1254",
+		"windows-1258"
 		
-		// # 46
+		// # 48
 	};
 
 	private static final String[] groups = { "global", "westeurope", "easteurope", "eastasian", "seswasian"};
 
-	private static final int[] groupOffset = { 1, 4, 14, 29, 40, 46 };
+	private static final int[] groupOffset = { 1, 4, 14, 29, 42, 48 };
 
 	private Vector listeners;
 	

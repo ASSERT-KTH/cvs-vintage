@@ -33,7 +33,7 @@ public class TaskManager {
 	public TaskManager() {
 		workerList = new Vector();
 
-		workerListMutex = new Mutex();
+		workerListMutex = new Mutex("workerListMutex");
 
 		workerListChangeListeners = new Vector();
 	}
@@ -60,36 +60,44 @@ public class TaskManager {
 
 	public Worker get(int index) {
 		Worker w;
-
-		workerListMutex.getMutex();
+        boolean needToRelease = false;
+        try {
+		    needToRelease = workerListMutex.getMutex();
 		w = (Worker) workerList.get(index);
+        } finally {
+            if (needToRelease) {
 		workerListMutex.releaseMutex();
-
+            }
+        }
 		return w;
 	}
 
 	public void register(Worker t) {
 		WorkerListChangedEvent changeEvent = new WorkerListChangedEvent();
-
-		workerListMutex.getMutex();
+        boolean needToRelease = false;
+        try {
+		    needToRelease = workerListMutex.getMutex();
 
 		changeEvent.setOldValue(workerList.size());
 
 		addWorker(t);
 
 		changeEvent.setNewValue(workerList.size());
-
+        } finally {
+            if (needToRelease) {
 		workerListMutex.releaseMutex();
-
+            }
+        }
 		fireWorkerListChangedEvent(changeEvent);
 	}
 
 	public void unregister(ThreadVar tvar) {
 		Worker worker;
+        boolean needToRelease = false;
 		WorkerListChangedEvent e = new WorkerListChangedEvent();
 		e.setType(WorkerListChangedEvent.SIZE_CHANGED);
-
-		workerListMutex.getMutex();
+        try {
+            needToRelease = workerListMutex.getMutex();
 		int size = workerList.size();
 		e.setOldValue(size);
 
@@ -102,9 +110,11 @@ public class TaskManager {
 				break;
 			}
 		}
-
+        } finally {
+            if (needToRelease) {
 		workerListMutex.releaseMutex();
-
+            }
+        }
 		fireWorkerListChangedEvent(e);
 	}
 

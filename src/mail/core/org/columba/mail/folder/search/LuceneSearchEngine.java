@@ -153,7 +153,7 @@ public class LuceneSearchEngine
 		//	recreateIndex();
 		//}
 
-		indexMutex = new Mutex();
+		indexMutex = new Mutex("indexMutex");
 	}
 
 	protected void createIndex() throws IOException {
@@ -284,10 +284,10 @@ public class LuceneSearchEngine
 	}
 
 	protected LinkedList search(Query query) throws IOException {
-
+        boolean needToRelease = false;
 		LinkedList result = new LinkedList();
-
-		indexMutex.getMutex();
+        try {
+		    needToRelease = indexMutex.getMutex();
 
 		if (getFileReader().numDocs() > 0) {
 			Hits hitsFile =
@@ -308,9 +308,11 @@ public class LuceneSearchEngine
 					new Integer(hitsRAM.doc(i).getField("uid").stringValue()));
 			}
 		}
-
+        } finally {
+            if (needToRelease) {
 		indexMutex.releaseMutex();
-
+            }
+        }
 		return result;
 	}
 
@@ -355,12 +357,18 @@ public class LuceneSearchEngine
 		if (body != null)
 			messageDoc.add(Field.UnStored("body", body.getBody()));
 
-		indexMutex.getMutex();
+        boolean needToRelease = false;
+        try {
+            needToRelease = indexMutex.getMutex();
 		IndexWriter writer = new IndexWriter(ramIndexDir, analyzer, false);
 		writer.addDocument(messageDoc);
 		writer.close();
 		incOperationCounter();
+        } finally {
+            if (needToRelease) {
 		indexMutex.releaseMutex();
+            }
+        }
 	}
 
 	/**

@@ -60,10 +60,9 @@ public class ApplyFilterCommand extends Command{
 		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
 		Folder srcFolder = (Folder) r[0].getFolder();
-
+        worker.setDisplayText("Applying filter to "+srcFolder.getName()+"...");
 		FilterList list = srcFolder.getFilterList();
 		
-		worker.setDisplayText("Applying filter to "+srcFolder.getName()+"...");
 		worker.setProgressBarMaximum(list.count());
 		
 		for (int i = 0; i < list.count(); i++) {

@@ -39,6 +39,7 @@ public class ColumbaLoader implements Runnable {
     }
 
     thread = new Thread(this);
+    thread.setDaemon(false);
     thread.start();
   }
 

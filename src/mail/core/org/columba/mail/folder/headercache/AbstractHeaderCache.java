@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.headercache;
 
 import java.io.File;
@@ -22,11 +21,12 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-
+import org.columba.core.util.Mutex;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderInterface;
@@ -46,22 +46,47 @@ public abstract class AbstractHeaderCache {
 
 	protected File headerFile;
 
-	protected boolean headerCacheAlreadyLoaded;
+	private boolean headerCacheAlreadyLoaded;
 
 	protected LocalFolder folder;
+	private static HashMap instanceMutexMap = new HashMap(71);
 
 	public AbstractHeaderCache(LocalFolder folder) {
 		this.folder = folder;
 
 		headerFile = new File(folder.getDirectoryFile(), ".header");
 
+		synchronized (instanceMutexMap) {
+			Mutex m = (Mutex) instanceMutexMap.get(headerFile);
+			if (m == null) { // not yet created
+				// create Mutex for 'on disk header cache' corresponding to headerFile path
+				instanceMutexMap.put(
+					headerFile,
+					new Mutex(headerFile.toString()));
+			}
+			instanceMutexMap.notifyAll();
+		}
+
 		headerList = new HeaderList();
 
 		headerCacheAlreadyLoaded = false;
 	}
-	
-	public HeaderInterface createHeaderInstance()
-	{
+
+	/** Take a mutex for the header-cache path associated with this object.
+	 * Used to prevent multiple workers from creating or modifying a header cache and its disk file
+	 * @return true the mutex was indeed taken anew, false if calling thread already had mutex.
+	 */
+	public boolean takeMutex() {
+		Mutex m = (Mutex) instanceMutexMap.get(headerFile);
+		return m.getMutex();
+	}
+
+	public void releaseMutex() {
+		Mutex m = (Mutex) instanceMutexMap.get(headerFile);
+		m.releaseMutex();
+	}
+
+	public HeaderInterface createHeaderInstance() {
 		return new ColumbaHeader();
 	}
 
@@ -79,13 +104,13 @@ public abstract class AbstractHeaderCache {
 
 	public void remove(Object uid) throws Exception {
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.debug("trying to remove message UID=" + uid);
-                }
+			ColumbaLogger.log.debug("trying to remove message UID=" + uid);
+		}
 
 		if (headerList.containsKey(uid)) {
 			if (MainInterface.DEBUG) {
-                                ColumbaLogger.log.debug("remove UID=" + uid);
-                        }
+				ColumbaLogger.log.debug("remove UID=" + uid);
+			}
 
 			headerList.remove(uid);
 		}
@@ -95,12 +120,24 @@ public abstract class AbstractHeaderCache {
 		headerList.add(header, header.get("columba.uid"));
 	}
 
+	/** Get or (re)create the header cache file.
+	 *
+	 * @param worker
+	 * @return the HeaderList
+	 * @throws Exception
+	 */
 	public HeaderList getHeaderList(WorkerStatusController worker)
 		throws Exception {
+		boolean needToRelease = false;
 		// if there exists a ".header" cache-file
 		//  try to load the cache	
 		if (headerCacheAlreadyLoaded == false) {
 			try {
+				// prevent multiple workers from creating or modifying a header cache and its disk file
+				needToRelease = takeMutex();
+				if (headerCacheAlreadyLoaded) { // if another thread already loaded it
+					return headerList;
+				}
 				if (headerFile.exists()) {
 					load(worker);
 					headerCacheAlreadyLoaded = true;
@@ -110,14 +147,24 @@ public abstract class AbstractHeaderCache {
 							worker);
 					headerCacheAlreadyLoaded = true;
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (Exception ex) { // Infinite Loop Danger if we retry
+				System.out.println(
+					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)");
+				//ex.printStackTrace();
+				throw new RuntimeException(
+					"Exception in org.columba.mail.folder.headercache.getHeaderList(WorkerStatusController worker)",
+					ex);
+				//headerList =
+				//	folder.getDataStorageInstance().recreateHeaderList(worker);
 
-				headerList =
-					folder.getDataStorageInstance().recreateHeaderList(worker);
+				//headerCacheAlreadyLoaded = true;
 
-				headerCacheAlreadyLoaded = true;
+			} finally {
+				if (needToRelease) {
+					releaseMutex();
+				}
 			}
+
 		}
 
 		//System.out.println("headerList=" + headerList);
@@ -128,22 +175,37 @@ public abstract class AbstractHeaderCache {
 	public void load(WorkerStatusController worker) throws Exception {
 
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("loading header-cache=" + headerFile);
-                }
+			ColumbaLogger.log.info("loading header-cache=" + headerFile);
+		}
 
 		FileInputStream istream = new FileInputStream(headerFile.getPath());
-		ObjectInputStream p = new ObjectInputStream(istream);
+		ObjectInputStream ois = new ObjectInputStream(istream);
 
-		int capacity = p.readInt();
-		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("capacity=" + capacity);
-                }
-
-		if (capacity != folder.getDataStorageInstance().getMessageCount()) {
+		int capacity = ois.readInt();
+		ColumbaLogger.log.info("capacity=" + capacity);
+		boolean needToRelease = false;
+		int mcount = folder.getDataStorageInstance().getMessageCount();
+		if (capacity != mcount) {
 			// messagebox headercache-file is corrupted
-
-			headerList =
-				folder.getDataStorageInstance().recreateHeaderList(worker);
+			ColumbaLogger.log.info(
+				"need to recreateHeaderList() because capacity="
+					+ capacity
+					+ "  getMessageCount()="
+					+ mcount);
+			try {
+				// prevent multiple workers from creating or modifying a header cache and its disk file
+				needToRelease = takeMutex();
+				// recheck condition in case another thread did the work
+				if (headerCacheAlreadyLoaded == false) {
+					headerList =
+						folder.getDataStorageInstance().recreateHeaderList(
+							worker);
+				}
+			} finally {
+				if (needToRelease) {
+					releaseMutex();
+				}
+			}
 			return;
 		}
 
@@ -151,9 +213,9 @@ public abstract class AbstractHeaderCache {
 
 		//System.out.println("Number of Messages : " + capacity);
 
-		if ( worker != null )
-		worker.setDisplayText("Loading headers from cache...");
-		
+		if (worker != null)
+			worker.setDisplayText("Loading headers from cache...");
+
 		if (worker != null)
 			worker.setProgressBarMaximum(capacity);
 
@@ -168,19 +230,21 @@ public abstract class AbstractHeaderCache {
 
 			/*
 			// read current number of message
-			p.readInt();
+			ois.readInt();
 			*/
 
-			loadHeader(p, h);
+			loadHeader(ois, h);
 
 			//System.out.println("message=" + h.get("subject"));
 
 			headerList.add(h, (Integer) h.get("columba.uid"));
 
-			if ( h.get("columba.flags.recent").equals(Boolean.TRUE) ) folder.getMessageFolderInfo().incRecent();
-			if ( h.get("columba.flags.seen").equals(Boolean.FALSE)  ) folder.getMessageFolderInfo().incUnseen();
+			if (h.get("columba.flags.recent").equals(Boolean.TRUE))
+				folder.getMessageFolderInfo().incRecent();
+			if (h.get("columba.flags.seen").equals(Boolean.FALSE))
+				folder.getMessageFolderInfo().incUnseen();
 			folder.getMessageFolderInfo().incExists();
-		
+
 			int aktUid = ((Integer) h.get("columba.uid")).intValue();
 			if (nextUid < aktUid)
 				nextUid = aktUid;
@@ -189,12 +253,12 @@ public abstract class AbstractHeaderCache {
 
 		nextUid++;
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
-                }
+			ColumbaLogger.log.debug("next UID for new messages =" + nextUid);
+		}
 		folder.setNextMessageUid(nextUid);
 
 		// close stream
-		p.close();
+		ois.close();
 	}
 
 	public void save(WorkerStatusController worker) throws Exception {
@@ -204,8 +268,8 @@ public abstract class AbstractHeaderCache {
 			return;
 
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("saveing header-cache=" + headerFile);
-                }
+			ColumbaLogger.log.info("saveing header-cache=" + headerFile);
+		}
 		// this has to called only if the uid becomes higher than Integer allows
 		//cleanUpIndex();
 
@@ -217,8 +281,8 @@ public abstract class AbstractHeaderCache {
 		//int count = getMessageFileCount();
 		int count = headerList.count();
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("capacity=" + count);
-                }
+			ColumbaLogger.log.info("capacity=" + count);
+		}
 		p.writeInt(count);
 
 		ColumbaHeader h;
