@@ -1,4 +1,4 @@
-// $Id: FigUseCase.java,v 1.48 2004/11/01 16:10:55 mvw Exp $
+// $Id: FigUseCase.java,v 1.49 2004/11/28 21:52:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,13 +42,12 @@ import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.ArgoJMenu;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.ui.ActionAddExtensionPoint;
+import org.argouml.uml.diagram.ui.ActionAddNote;
+import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
 import org.argouml.uml.diagram.ui.CompartmentFigText;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
-import org.argouml.uml.diagram.ui.ActionAddNote;
-import org.argouml.uml.diagram.ui.ActionAddExtensionPoint;
 import org.argouml.uml.generator.ParserDisplay;
-import org.argouml.uml.diagram.ui.ActionCompartmentDisplay;
-import org.argouml.uml.diagram.ui.ActionModifier;
 import org.tigris.gef.base.Editor;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.base.Selection;
