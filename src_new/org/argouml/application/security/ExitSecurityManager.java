@@ -1,4 +1,4 @@
-// $Id: ExitSecurityManager.java,v 1.2 2005/01/04 19:39:50 bobtarling Exp $
+// $Id: ExitSecurityManager.java,v 1.1 2005/01/05 21:18:59 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.model;
+package org.argouml.application.security;
 
 // Import the following classes fully qualified to ensure that
 // no one can short-circuit our intended inheritance.
@@ -30,6 +30,7 @@ import java.util.PropertyPermission;
 import java.security.Permission;
 
 import org.apache.log4j.Logger;
+import org.argouml.util.osdep.OsUtil;
 
 /**
  * The Argo custom security manager.
