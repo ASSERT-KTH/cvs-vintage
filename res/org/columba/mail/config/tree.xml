@@ -36,41 +36,14 @@
    </folder>
    
    <folder type="VirtualFolder" uid="112">
-    <property name="From Bill Gates" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
+    <property name="Change me!" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
  	<filter>
 	 <rules condition="matchall">
-	  <criteria type="From" headerfield="From" criteria="contains" pattern="billgates@microsoft.com" />
+	  <criteria type="Subject" headerfield="Subject" criteria="contains" pattern="Change Me!" />
 	 </rules>
 	</filter>
    </folder>
-   
-   <folder type="VirtualFolder" uid="113">
-    <property name="Messages bigger than 50KB" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
- 	<filter>
-	 <rules condition="matchall">
-	  <criteria type="Size" criteria="bigger" pattern="50" />
-	 </rules>
-	</filter>
-   </folder>
-   
-   <folder type="VirtualFolder" uid="114">
-    <property name="Marked as flagged" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
- 	<filter>
-	 <rules condition="matchall">
-	  <criteria type="Flags" criteria="is" pattern="Flagged" />
-	 </rules>
-	</filter>
-   </folder>
-   
-   <folder type="VirtualFolder" uid="115">
-    <property name="Highest Priority" accessrights="user" subfolder="true" include_subfolders="true" source_uid="101" />
- 	<filter>
-	 <rules condition="matchall">
-	  <criteria type="Priority" criteria="is" pattern="Highest" />
-	 </rules>
-	</filter>
-   </folder>
-   
+    
   </folder> <!-- inbox -->
   
   <folder type="MHFolder" uid="102">
