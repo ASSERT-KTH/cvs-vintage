@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class ApplicationMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -35,7 +35,7 @@ public class ApplicationMetaData extends MetaData {
 
     private ArrayList beans = new ArrayList();
     private ArrayList securityRoles = new ArrayList();
-    private ArrayList configurations = new ArrayList();
+    private HashMap configurations = new HashMap();
     private HashMap resources = new HashMap();
 	private HashMap plugins = new HashMap();
 
@@ -70,17 +70,11 @@ public class ApplicationMetaData extends MetaData {
     }
     
     public Iterator getConfigurations() {
-       return configurations.iterator();
+       return configurations.values().iterator();
     }
     
     public ConfigurationMetaData getConfigurationMetaDataByName(String name) {
-       Iterator iterator = getConfigurations();
-       while (iterator.hasNext()) {
-         ConfigurationMetaData current = (ConfigurationMetaData) iterator.next();
-         if (current.getName().equals(name)) return current;
-       }
-       // not found
-       return null;
+       return (ConfigurationMetaData)configurations.get(name);
     }
     
     public String getResourceByName(String name) {
@@ -237,17 +231,28 @@ public class ApplicationMetaData extends MetaData {
        
        // find the container configurations (we need them first to use them in the beans)
        Element confs = getOptionalChild(element, "container-configurations");
-       if (confs != null) {
+	   if (confs != null) {
          iterator = getChildrenByTagName(confs, "container-configuration");
-         while (iterator.hasNext()) {
+         
+		 while (iterator.hasNext()) {
           Element conf = (Element)iterator.next();
-          ConfigurationMetaData configurationMetaData = new ConfigurationMetaData();
-          try {
+		  String confName = getElementContent(getUniqueChild(conf, "container-name"));
+		  
+		  // find the configuration if it has already been defined
+		  // (allow jboss.xml to modify a standard conf)
+          ConfigurationMetaData configurationMetaData = getConfigurationMetaDataByName(confName);
+          
+		  // create it if necessary
+		  if (configurationMetaData == null) {
+		  	configurationMetaData = new ConfigurationMetaData(confName);
+			configurations.put(confName, configurationMetaData);
+		  }
+		  
+		  try {
               configurationMetaData.importJbossXml(conf);
           } catch (DeploymentException e) {
               throw new DeploymentException("Error in jboss.xml for container-configuration " + configurationMetaData.getName() + ": " + e.getMessage());
           }
-          configurations.add(configurationMetaData);
          }
        }
        

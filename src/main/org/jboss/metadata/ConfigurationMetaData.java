@@ -15,7 +15,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ConfigurationMetaData extends MetaData {
     
@@ -56,7 +56,8 @@ public class ConfigurationMetaData extends MetaData {
     // Static --------------------------------------------------------
     
     // Constructors --------------------------------------------------
-    public ConfigurationMetaData () {
+    public ConfigurationMetaData (String name) {
+		this.name = name;
 	}
 	
     // Public --------------------------------------------------------
@@ -87,15 +88,15 @@ public class ConfigurationMetaData extends MetaData {
 	
 	
 	public void importJbossXml(Element element) throws DeploymentException {
-		
-		// set the configuration name
-		name = getElementContent(getUniqueChild(element, "container-name"));
+
+		// everything is optional to allow jboss.xml to modify part of a configuration
+		// defined in standardjboss.xml
 		
 		// set call logging
-		callLogging = Boolean.valueOf(getElementContent(getUniqueChild(element, "call-logging"))).booleanValue();
+		callLogging = Boolean.valueOf(getElementContent(getOptionalChild(element, "call-logging"))).booleanValue();
 		
 		// set the container invoker
-		containerInvoker = getElementContent(getUniqueChild(element, "container-invoker"));
+		containerInvoker = getElementContent(getOptionalChild(element, "container-invoker"));
 		
 		// set the instance pool
 		instancePool = getElementContent(getOptionalChild(element, "instance-pool"));
