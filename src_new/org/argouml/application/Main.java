@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.58 2002/12/22 00:22:50 linus Exp $
+// $Id: Main.java,v 1.59 2003/01/03 16:44:25 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,9 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 
-import org.apache.log4j.*;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.application.security.ArgoAwtExceptionHandler;
@@ -55,6 +57,7 @@ import org.argouml.uml.cognitive.critics.ChildGenUML;
 import org.argouml.util.Trash;
 import org.argouml.util.logging.SimpleTimer;
 import org.tigris.gef.util.Util;
+
 import ru.novosoft.uml.MFactoryImpl;
 import ru.novosoft.uml.model_management.MModel;
 
@@ -500,13 +503,13 @@ class PostLoad implements Runnable {
         myThread = t;
     }
     public void run() {
-        try { myThread.sleep(1000); }
+        try { Thread.sleep(1000); }
         catch (Exception ex) { Argo.log.error("post load no sleep", ex); }
         int size = postLoadActions.size();
         for (int i = 0; i < size; i++) {
             Runnable r = (Runnable) postLoadActions.elementAt(i);
             r.run();
-            try { myThread.sleep(100); }
+            try { Thread.sleep(100); }
             catch (Exception ex) { Argo.log.error("post load no sleep2", ex); }
         }
     }

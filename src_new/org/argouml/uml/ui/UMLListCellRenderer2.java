@@ -21,16 +21,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.1 2003/01/02 19:46:45 kataka Exp $
+// $Id: UMLListCellRenderer2.java,v 1.2 2003/01/03 16:44:25 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
@@ -38,17 +35,11 @@ import org.apache.log4j.Category;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.behavior.common_behavior.MSignal;
-import ru.novosoft.uml.behavior.state_machines.MPseudostate;
-import ru.novosoft.uml.foundation.core.MAbstraction;
-import ru.novosoft.uml.foundation.core.MComment;
 import ru.novosoft.uml.foundation.core.MModelElement;
-import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
 
 /**
  * The default cell renderer for uml model elements. Used by UMLList2 and its
  * children.
- * TODO: move the lookup for the icons to its own class.
  * @author jaap.branderhorst@xs4all.nl	
  * @since Jan 2, 2003
  */
@@ -62,29 +53,6 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      */
     private boolean _showIcon;
 
-    protected ImageIcon _ActionStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("ActionState");
-    protected ImageIcon _StateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("State");
-    protected ImageIcon _InitialStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Initial");
-    protected ImageIcon _DeepIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("DeepHistory");
-    protected ImageIcon _ShallowIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("ShallowHistory");
-    protected ImageIcon _ForkIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Fork");
-    protected ImageIcon _JoinIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Join");
-    protected ImageIcon _BranchIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Branch");
-    protected ImageIcon _FinalStateIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("FinalState");
-
-    protected ImageIcon _RealizeIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Realization");
-
-    protected ImageIcon _SignalIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("SignalSending");
-
-    protected ImageIcon _CommentIcon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource("Note");
-
-    /**
-     * Cache for the icons to prevent loading each time.
-     * TODO: seperate the loading into a seperate class so other classes can use
-     * it.
-     */
-    private Map _iconCache = new HashMap();
-
     /**
      * Constructor for UMLListCellRenderer2.
      */
@@ -97,84 +65,38 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        JLabel label = (JLabel)super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        
-        if (value instanceof MModelElement) {
-            MModelElement elem = (MModelElement) value;
-            String name = elem.getName();
-            if (name == null || name.equals("")) {
-                name = "(anon " + makeTypeName(elem) + ")";
+        JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+        if (value instanceof MBase) {
+            String name = null;
+            if (value instanceof MModelElement) {
+                MModelElement elem = (MModelElement) value;
+                name = elem.getName();
+                if (name == null || name.equals("")) {
+                    name = "(anon " + makeTypeName(elem) + ")";
+                }
+            } else {
+                name = makeTypeName(value);
             }
-            label.setText(name);            
+
+            label.setText(name);
             if (_showIcon) {
-                Icon icon = getIcon(value);
+                Icon icon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIcon(value);
                 if (icon != null)
                     label.setIcon(icon);
             }
+
         }
-        
+
         return label;
     }
 
-    private String makeTypeName(MBase elem) {
+    private String makeTypeName(Object elem) {
         String fullName = elem.getClass().getName();
         fullName = fullName.substring(fullName.lastIndexOf('.') + 2, fullName.length());
         if (fullName.endsWith("Impl"))
             fullName = fullName.substring(0, fullName.indexOf("Impl"));
         return fullName;
-    }
-
-    private Icon getIcon(Object value) {
-        Icon icon = (Icon) _iconCache.get(value.getClass());
-
-        if (value instanceof MPseudostate) {
-            MPseudostate ps = (MPseudostate) value;
-            MPseudostateKind kind = ps.getKind();
-            if (MPseudostateKind.INITIAL.equals(kind))
-                icon = _InitialStateIcon;
-            if (MPseudostateKind.DEEP_HISTORY.equals(kind))
-                icon = _DeepIcon;
-            if (MPseudostateKind.SHALLOW_HISTORY.equals(kind))
-                icon = _ShallowIcon;
-            if (MPseudostateKind.FORK.equals(kind))
-                icon = _ForkIcon;
-            if (MPseudostateKind.JOIN.equals(kind))
-                icon = _JoinIcon;
-            if (MPseudostateKind.BRANCH.equals(kind))
-                icon = _BranchIcon;
-            //if (MPseudostateKind.FINAL.equals(kind)) icon = _FinalStateIcon;
-        }
-        if (value instanceof MAbstraction) {
-            icon = _RealizeIcon;
-        }
-        // needs more work: sending and receiving icons
-        if (value instanceof MSignal) {
-            icon = _SignalIcon;
-        }
-
-        if (value instanceof MComment) {
-            icon = _CommentIcon;
-        }
-
-        if (icon == null) {
-            String clsPackName = value.getClass().getName();
-            if (clsPackName.startsWith("org") || clsPackName.startsWith("ru")) {
-                String cName = clsPackName.substring(clsPackName.lastIndexOf(".") + 1);
-                // special case "UML*" e.g. UMLClassDiagram
-                if (cName.startsWith("UML"))
-                    cName = cName.substring(3);
-                if (cName.startsWith("M"))
-                    cName = cName.substring(1);
-                if (cName.endsWith("Impl"))
-                    cName = cName.substring(0, cName.length() - 4);
-                icon = ResourceLoaderWrapper.getResourceLoaderWrapper().lookupIconResource(cName);
-                if (icon != null)
-                    _iconCache.put(value.getClass(), icon);
-                if (icon == null)
-                    cat.warn("UMLTreeCellRenderer: using default Icon for " + cName);
-            }
-        }
-        return icon;
     }
 
 }
