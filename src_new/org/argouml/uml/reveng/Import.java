@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-//$Id: Import.java,v 1.26 2003/03/19 13:49:27 lepekhine Exp $
+//$Id: Import.java,v 1.27 2003/03/19 14:48:57 lepekhine Exp $
 
 package org.argouml.uml.reveng;
 
@@ -55,8 +55,8 @@ import org.apache.log4j.Category;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Revision: 1.26 $
- * <p>$Date: 2003/03/19 13:49:27 $
+ * <p>$Revision: 1.27 $
+ * <p>$Date: 2003/03/19 14:48:57 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -161,7 +161,8 @@ public class Import {
 				if (chooser == null) chooser = new JPanel();
 				dialog.getContentPane().add(chooser, 0);
 				JComponent config = module.getConfigPanel();
-				if (config == null) config = new JPanel(); 
+				if (config == null) config = new JPanel();
+				tab.remove(1); 
 				tab.add(config, selected, 1);
 				tab.validate();
 				dialog.validate();
