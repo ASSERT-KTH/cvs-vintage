@@ -1,4 +1,4 @@
-// $Id: Configuration.java,v 1.14 2003/09/17 00:09:41 thierrylach Exp $
+// $Id: Configuration.java,v 1.15 2003/09/17 14:27:58 thierrylach Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ public class Configuration {
     // Instance variables
 
     /** Define a static log4j category variable for ArgoUML configuration.
-     * @deprecated in favor of {@link #getLogger() }
+     * @deprecated  public access - will become private
      */
     public static final Logger cat = 
 	Logger.getLogger("org.argouml.application.configuration");
@@ -407,11 +407,5 @@ public class Configuration {
 	return new ConfigurationKeyImpl(k1, k2, k3, k4, k5);
     }
 
-    /** Returns the logger.
-     * @return the logger.
-     */
-    public final static Logger getLogger() {
-        return cat;
-    }
 }
 
