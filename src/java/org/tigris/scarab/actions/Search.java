@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.127 2003/04/18 02:42:31 dlr Exp $
+ * @version $Id: Search.java,v 1.128 2003/04/23 18:38:12 elicia Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -209,7 +209,7 @@ public class Search extends RequireLoginFirstAction
     public void doRedirecttosavequery(RunData data, TemplateContext context)
          throws Exception
     {
-        data.getParameters().setString("queryString", getQueryString(data));
+        ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         if (scarabR.hasPermission(ScarabSecurity.USER__EDIT_PREFERENCES))
         {
@@ -342,8 +342,7 @@ public class Search extends RequireLoginFirstAction
     public void doGotoeditquery(RunData data, TemplateContext context)
          throws Exception
     {        
-        String queryString = getQueryString(data);
-        ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
+        ((ScarabUser)data.getUser()).setMostRecentQuery(getQueryString(data));
         getScarabRequestTool(context).resetSelectedUsers();
     }
 
