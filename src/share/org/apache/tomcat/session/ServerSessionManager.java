@@ -141,11 +141,11 @@ public final class ServerSessionManager
     }
 
 
-    Hashtable getSessions() {
+    public Hashtable getSessions() {
 	return sessions;
     }
     
-    void setSessions(Hashtable s) {
+    public void setSessions(Hashtable s) {
 	sessions=s;
     }
 

@@ -57,8 +57,7 @@
  *
  */
 
-
-package org.apache.tomcat.request;
+package org.apache.tomcat.modules.session;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -67,12 +66,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-// XXX
-// DEPRECATED
-// REPLACED BY org.apache.tomcat.modules.session.SessionId
-
-
 /**
+ * Extract the session ID from the request using cookies and
+ * session rewriting.
+ * 
  * Will process the request and determine the session Id, and set it
  * in the Request. It doesn't marks the session as accessed.
  *
@@ -86,14 +83,14 @@ import java.util.*;
  *
  *
  */
-public class SessionInterceptor extends  BaseInterceptor
+public class SessionId extends  BaseInterceptor
 {
 
     // GS, separates the session id from the jvm route
     static final char SESSIONID_ROUTE_SEP = '.';
     ContextManager cm;
     
-    public SessionInterceptor() {
+    public SessionId() {
     }
 
     public void setContextManager( ContextManager cm ) {
@@ -164,6 +161,18 @@ public class SessionInterceptor extends  BaseInterceptor
  	return 0;
     }
 
+//     private void findSessionCookie( MimeHeaders headers ) {
+// 	int pos=0;
+// 	while( pos>=0 ) {
+// 	    pos=headers.findHeader( "Cookie", pos );
+// 	    // no more cookie headers headers
+// 	    if( pos<0 ) break;
+
+// 	    MessageBytes cookieValue=getValue( pos );
+	    
+// 	}
+//     }
+    
     /** Fix the session id. If the session is not valid return null.
      *  It will also clean up the session from load-balancing strings.
      * @return sessionId, or null if not valid

@@ -138,7 +138,7 @@
              deal with URL rewriting ( by fixing the URL )
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.request.SessionInterceptor" />
+            className="org.apache.tomcat.modules.session.SessionId" />
 
         <!-- Find the container ( context and prefix/extension map ) 
              for a request.
@@ -181,7 +181,7 @@
              modules.
           -->
         <RequestInterceptor 
-            className="org.apache.tomcat.session.StandardSessionInterceptor" />
+            className="org.apache.tomcat.modules.session.SimpleSessionStore" />
 
         <!-- Check if the request requires an authenticated role.
           -->

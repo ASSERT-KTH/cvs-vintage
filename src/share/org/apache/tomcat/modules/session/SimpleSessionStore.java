@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.session;
+package org.apache.tomcat.modules.session;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -65,10 +65,7 @@ import java.util.Vector;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
-
-// XXX
-// DEPRECATED
-// REPLACED BY org.apache.tomcat.modules.session.SimpleSessionStore
+import org.apache.tomcat.session.*;
 
 
 /**
@@ -88,14 +85,14 @@ import org.apache.tomcat.core.*;
  *
  * @author costin@eng.sun.com
  */
-public final class StandardSessionInterceptor  extends BaseInterceptor {
+public final class SimpleSessionStore  extends BaseInterceptor {
     int manager_note;
 
     int checkInterval = 60;
     int maxActiveSessions = -1;
     String randomClass=null;
     
-    public StandardSessionInterceptor() {
+    public SimpleSessionStore() {
     }
 
     // -------------------- Configuration properties --------------------

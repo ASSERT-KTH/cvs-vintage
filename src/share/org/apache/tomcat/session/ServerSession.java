@@ -74,6 +74,11 @@ import org.apache.tomcat.util.threads.*;
  *  - recyclable
  *  - serializable ( by external components )
  *
+ * Components:
+ *  - timestamp ( expire )
+ *  - id
+ *  - name/value repository
+ *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author Costin Manolache
