@@ -89,7 +89,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 
     private boolean normalize=true;
     private boolean safe=true;
-    
+    private boolean saveOriginal=false;
     public DecodeInterceptor() {
     }
 
@@ -116,6 +116,13 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     */
     public void setNormalize( boolean b ) {
 	normalize=b;
+    }
+
+    /** Save the original uri before decoding. Default is false,
+     *  for consistency among servers.
+     */
+    public void setSaveOriginal( boolean b ) {
+	saveOriginal=b;
     }
 
     /** Decode interceptor can reject unsafe urls. These are
@@ -398,7 +405,7 @@ public class DecodeInterceptor extends  BaseInterceptor  {
     }
 
     private boolean isSafeURI(MessageBytes pathMB) {
-        int start = pathMB.indexOf("%");
+        int start = pathMB.indexOf('%');
         if( start >= 0 ) {
             int end = pathMB.indexOf(";jsessionid=");
             if( end < 0 || start < end ) {
@@ -515,11 +522,14 @@ public class DecodeInterceptor extends  BaseInterceptor  {
 	// Decode request, save the original for the facade
 
 	// Already decoded
-	if( req.getNote( decodedNote ) != null )
+	if( req.getNote( decodedNote ) != null ) {
+	    if( debug> 5 ) log("Already decoded " + req.getNote( decodedNote ));
 	    return 0;
+	}
 	if (pathMB.indexOf('%') >= 0 || pathMB.indexOf( '+' ) >= 0) {
 	    try {
-		req.unparsedURI().duplicate( pathMB );
+		if( saveOriginal )
+		    req.unparsedURI().duplicate( pathMB );
 		if(debug>1 )
 		    log( "Before " + pathMB.toString());
 		req.getURLDecoder().convert( pathMB );
