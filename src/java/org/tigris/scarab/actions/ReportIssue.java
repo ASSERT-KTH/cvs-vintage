@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.92 2002/01/18 20:04:19 dlr Exp $
+ * @version $Id: ReportIssue.java,v 1.93 2002/01/18 20:21:43 dlr Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -438,6 +438,10 @@ public class ReportIssue extends RequireLoginFirstAction
                 cleanup(data, context);
                 data.getParameters().add("id", 
                                          issue.getUniqueId().toString());
+                data.setMessage("Issue " + issue.getUniqueId() +
+                                " added to module " +
+                                getScarabRequestTool(context)
+                                .getCurrentModule().getName());
             }
             else 
             {
