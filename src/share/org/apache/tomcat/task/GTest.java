@@ -8,11 +8,10 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import org.apache.tools.ant.*;
 
 
 // derived from Jsp
-public class GTest  extends Task {
+public class GTest  {
     String prefix="http://localhost:8080/test";
     String host="localhost";
     int port=8080;
@@ -116,7 +115,7 @@ public class GTest  extends Task {
     }
 
     
-    public void execute() throws BuildException {
+    public void execute() throws Exception {
 	
 	try {
 	    boolean result=runTest();
