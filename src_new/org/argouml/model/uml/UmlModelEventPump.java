@@ -1,4 +1,4 @@
-// $Id: UmlModelEventPump.java,v 1.43 2004/11/01 19:55:06 mvw Exp $
+// $Id: UmlModelEventPump.java,v 1.44 2004/11/29 16:11:16 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,7 +121,7 @@ public final class UmlModelEventPump implements MElementListener {
      * eventNames and that occur to instances of a given
      * modelClass.<p>
      *
-     * If you want the listener to be registred for remove events
+     * If you want the listener to be registered for remove events
      * (that is: an instance of the class the listener is listening
      * too is removed), then you have to register for the eventname
      * "remove".<p>
@@ -1415,8 +1415,8 @@ class ClassListenerHashMap {
 /**
  * Class containing the definitions of all events in NSUML. The file
  * eventtree.xml is loaded by this class and converted to a hashmap
- * containing the classes firing events as keys and hashmaps
- * containing eventnames as keys and eventtypes as values as values.
+ * containing the classes firing events as keys and (hashmaps
+ * containing eventnames as keys and eventtypes as values) as values.
  * @author jaap.branderhorst@xs4all.nl
  */
 class EventTreeDefinition {
