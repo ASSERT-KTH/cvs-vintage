@@ -69,6 +69,7 @@ import java.net.*;
 public class SessionMatch extends Matcher {
     String id;
     String cookieName="JSESSIONID";
+    String property;
     
     public SessionMatch() {
     }
@@ -81,6 +82,10 @@ public class SessionMatch extends Matcher {
 
     public void setId( String v ) {
 	id=v;
+    }
+    
+    public void setProperty(String prop) {
+        property = prop;
     }
     
     public String getTestDescription() {
@@ -105,7 +110,24 @@ public class SessionMatch extends Matcher {
     {
 	Hashtable headers=response.getHeaders();
 
-	Header resH=(Header)headers.get("Cookie");
+        Header resH=(Header)headers.get("Set-Cookie");
+        if (null != resH) {
+            String temp = resH.getValue();
+            if (null != temp) {
+                int begin = temp.indexOf("JSESSIONID");
+                if (begin >= 0) {
+                    if (null != property) {
+                        int end = temp.indexOf(";",begin);
+                        if (end >= 0) {
+                            temp = temp.substring(begin,end);
+                        } else {
+                            temp = temp.substring(begin);
+                        }
+                        client.getProject().setUserProperty(property,temp);
+                    }
+                    result = true;
+                }
+            }
+        }
     }
-    
 }

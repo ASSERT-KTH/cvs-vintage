@@ -188,6 +188,9 @@ public class HttpClient {
     public void addResponseMatchFile( ResponseMatchFile m ) {
 	addMatcher( m );
     }
+    public void addSessionMatch( SessionMatch m ) {
+        addMatcher( m );
+    }
     
     
     // -------------------- Access to the actions --------------------
