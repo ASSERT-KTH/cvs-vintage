@@ -3,9 +3,11 @@
  */
 package org.objectweb.carol.cmi.compiler;
 
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -111,12 +113,29 @@ public class XMLTree extends DefaultHandler {
         return str.toString();
     }
 
+    public InputSource resolveEntity(String publicId, String systemId) {
+        try {
+            int limit = systemId.lastIndexOf('/');
+            if (limit < 0) {
+                return null;
+            }
+            String base = systemId.substring(limit + 1);
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            InputStream in =
+                cl.getResourceAsStream("org/objectweb/carol/cmi/compiler/dtd/" + base);
+            return new InputSource(in);
+        } catch (Throwable t) {
+            return null;
+        }
+    }
+
     public static XMLElement read(String uri) throws Exception {
         XMLTree t = new XMLTree();
         XMLReader parser =
             (XMLReader) Class.forName(DEFAULT_PARSER_NAME).newInstance();
         parser.setContentHandler(t);
         parser.setErrorHandler(t);
+        parser.setEntityResolver(t);
         parser.setFeature("http://xml.org/sax/features/validation", true);
         parser.parse(uri);
         return t.root;

@@ -5,5 +5,8 @@
       manifest="${archive}/carol.mf"
       includes="**/*.class,carol-defaults.properties"
       excludes="**/jtests/**/*.class"/>
+    <jar jarfile="${dist.lib}/carol.jar" basedir="${src}"
+      includes="org/objectweb/carol/cmi/compiler/dtd/*.dtd"
+      update="true"/>
   </target>
 </project>

@@ -66,7 +66,7 @@ public class ClusterCompiler {
             java.io.FileWriter f = new java.io.FileWriter(cmpCtx.clusterCfgGen);
             f.write("<!DOCTYPE cluster-config PUBLIC\n");
             f.write("\t\"\"\n");
-            f.write("\t\"cluster-config.dtd\">\n\n");
+            f.write("\t\"cluster-config-0.1.dtd\">\n\n");
             f.write("<cluster-config>\n\n");
             for (int i = 0; i < nbClassArgs; i++) {
                 String className = (String) classes.elementAt(i);

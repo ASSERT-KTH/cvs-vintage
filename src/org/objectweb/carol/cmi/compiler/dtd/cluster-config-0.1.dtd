@@ -1,0 +1,9 @@
+<!ELEMENT cluster-config ((class|method)*)>
+<!ELEMENT class (name, (lookup-choice|(method*)))>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT method (signature, (one-choice|redo-choice|redo-choice-retry)?)>
+<!ELEMENT signature (#PCDATA)>
+<!ELEMENT lookup-choice EMPTY>
+<!ELEMENT one-choice EMPTY>
+<!ELEMENT redo-choice EMPTY>
+<!ELEMENT redo-choice-retry EMPTY>
