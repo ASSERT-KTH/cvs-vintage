@@ -1,4 +1,4 @@
-// $Id: StateDiagramGraphModel.java,v 1.52 2005/01/03 09:30:51 mvw Exp $
+// $Id: StateDiagramGraphModel.java,v 1.53 2005/01/08 21:39:40 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -326,16 +326,15 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
         if (ModelFacade.isAFinalState(fromPort)) {
 	    return null;
 	}
-        if (ModelFacade.isAPseudostate(toPort)) {
-	    if ((ModelFacade.INITIAL_PSEUDOSTATEKIND).equals(
+        
+        if (ModelFacade.isAPseudostate(toPort)
+                && ModelFacade.INITIAL_PSEUDOSTATEKIND.equals(
 			ModelFacade.getKind(toPort))) {
-		return null;
-	    }
+            return null;
 	}
 
         if (edgeClass == (Class) ModelFacade.TRANSITION) {
             Object tr = null;
-            Object comp = ModelFacade.getContainer(fromPort);
             tr = Model.getStateMachinesFactory()
                     .buildTransition(fromPort, toPort);
             if (canAddEdge(tr)) {
@@ -345,27 +344,25 @@ public class StateDiagramGraphModel extends UMLMutableGraphSupport implements
                 tr = null;
             }
             return tr;
-        } else
-            if (edgeClass == CommentEdge.class) {
-                try {
-                    Object connection = Model.getUmlFactory().buildConnection(
-                        edgeClass, fromPort, null, toPort, null, null,
-                        ProjectManager.getManager().getCurrentProject()
-                            .getModel());
-                    addEdge(connection);
-                    return connection;
-                }
-                catch (Exception ex) {
-                    // fail silently                
-                }
-                return null;
+        } else if (edgeClass == CommentEdge.class) {
+            try {
+                Object connection = buildConnection(
+                    edgeClass, fromPort, null, toPort, null, null,
+                    ProjectManager.getManager().getCurrentProject()
+                        .getModel());
+                addEdge(connection);
+                return connection;
+            } catch (Exception ex) {
+                // fail silently                
             }
-            
-            else {
-                LOG.debug("wrong kind of edge in StateDiagram connect3 "
-                        + edgeClass);
-                return null;
-            }
+            return null;
+        }
+        
+        else {
+            LOG.debug("wrong kind of edge in StateDiagram connect3 "
+                    + edgeClass);
+            return null;
+        }
     }
 
     ////////////////////////////////////////////////////////////////
