@@ -1,4 +1,4 @@
-// $Id: UMLList.java,v 1.14 2004/09/13 19:21:23 mvw Exp $
+// $Id: UMLList.java,v 1.15 2004/10/08 10:07:24 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,7 @@ public class UMLList extends JList
         super(listModel);
         umlListModel = listModel;
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
-        setBackground(Color.green.brighter());
-
+        
         if (navigate) {
             addMouseListener(this);
         }

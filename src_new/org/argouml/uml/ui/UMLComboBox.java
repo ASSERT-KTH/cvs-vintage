@@ -1,4 +1,4 @@
-// $Id: UMLComboBox.java,v 1.10 2004/09/15 19:17:05 mvw Exp $
+// $Id: UMLComboBox.java,v 1.11 2004/10/08 10:07:24 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,6 @@ public class UMLComboBox
     public UMLComboBox(UMLComboBoxModel model) {
         super(model);
         setFont(LookAndFeelMgr.getInstance().getSmallFont());
-        setBackground(Color.green.brighter());
         theModel = model;
 	addActionListener(theModel);
     }

@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.34 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.35 2004/10/08 10:07:24 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,7 +67,6 @@ public class UMLInitialValueComboBox extends JComboBox
      */
     public UMLInitialValueComboBox(UMLUserInterfaceContainer container) {
         super();
-        setBackground(Color.green.brighter());
         theContainer = container;
         
         for (int i = 0; i < listItems.length; i++) {
