@@ -2,7 +2,9 @@
  * Sample user
  */
 insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
-    values (2, 'jon@latchkey.com', '1', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
+    values (2, 'jon@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Jon', 'Stevens', 'jon@latchkey.com', 'CONFIRMED' );
+insert into TURBINE_USER (USER_ID, LOGIN_NAME, PASSWORD_VALUE, FIRST_NAME, LAST_NAME, EMAIL, CONFIRM_VALUE ) 
+    values (3, 'jss@latchkey.com', 'NWoZK3kTsExUV00Ywo1G5jlU', 'Jon', 'Stevens', 'jon@latchkey.com', 'abcdef' );
 
 /*
  * Sample Project
