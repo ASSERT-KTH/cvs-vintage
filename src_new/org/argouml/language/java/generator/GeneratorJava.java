@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.84 2003/12/06 18:12:52 alexb Exp $
+// $Id: GeneratorJava.java,v 1.85 2004/04/05 10:12:22 lepekhine Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.84 2003/12/06 18:12:52 alexb Exp $
+// $Id: GeneratorJava.java,v 1.85 2004/04/05 10:12:22 lepekhine Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -37,6 +37,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,6 +89,9 @@ import ru.novosoft.uml.model_management.MPackage;
 import tudresden.ocl.OclTree;
 
 import tudresden.ocl.parser.node.AConstraintBody;
+
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 
 /** Generator subclass to generate text for display in diagrams in in
  * text fields in the Argo/UML user interface.  The generated code
@@ -210,7 +217,11 @@ public class GeneratorJava
         String src = SINGLETON.generate(classifier);
         BufferedWriter fos = null;
         try {
-            fos = new BufferedWriter(new FileWriter(f));
+        	if ( Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING) == null 
+		|| Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING).trim().equals(""))
+            	fos = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), System.getProperty("file.encoding")));
+		else
+            	fos = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING)));
             fos.write(header);
             fos.write(src);
         } catch (IOException exp) {
@@ -1815,9 +1826,15 @@ public class GeneratorJava
     protected static void update(MClassifier mClassifier, File file)
         throws Exception {
         cat.info("Parsing " + file.getPath());
-
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        JavaLexer lexer = new JavaLexer(in);
+	  String encoding = null;
+        if ( Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING) == null 
+	  || Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING).trim().equals(""))
+        	encoding = System.getProperty("file.encoding");
+	  else
+        	encoding = Configuration.getString(Argo.KEY_INPUT_SOURCE_ENCODING);
+        FileInputStream in = new FileInputStream(file);
+	  JavaLexer lexer =
+		new JavaLexer(new BufferedReader(new InputStreamReader(in, encoding)));
         JavaRecognizer parser = new JavaRecognizer(lexer);
         CodePieceCollector cpc = new CodePieceCollector();
         parser.compilationUnit(cpc);
