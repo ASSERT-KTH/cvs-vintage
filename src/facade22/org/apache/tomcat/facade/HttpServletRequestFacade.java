@@ -154,9 +154,12 @@ final class HttpServletRequestFacade implements HttpServletRequest {
 	// we've got it from header or session or some
 	// well-defined mechanism. No source means the default
 	// is used.
-	Object o=request.getNote( "req.encodingSource" );
-	if( o==null ) return null;
-	
+	try {
+	    Object o=request.getNote( "req.encodingSource" );
+	    if( o==null ) return null;
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	}
 	return enc;
     }
 
