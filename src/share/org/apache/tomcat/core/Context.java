@@ -97,7 +97,7 @@ import javax.servlet.*;
  * @author costin@dnt.ro
  * @author Gal Shachor shachor@il.ibm.com
  */
-public class Context {
+public class Context implements LogAware {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.core");
 
     // -------------------- internal properties
@@ -314,7 +314,7 @@ public class Context {
     /** Add a taglib declaration for this context
      */
     public void addTaglib( String uri, String location ) {
-	//	System.out.println("Add taglib " + uri + "  " + location );
+	//	log("Add taglib " + uri + "  " + location );
 	tagLibs.put( uri, location );
     }
 
@@ -329,7 +329,7 @@ public class Context {
     /** Add Env-entry to this context
      */
     public void addEnvEntry( String name,String type, String value, String description ) {
-	System.out.println("Add env-entry " + name + "  " + type + " " + value + " " +description );
+	log("Add env-entry " + name + "  " + type + " " + value + " " +description );
 	if( name==null || type==null) throw new IllegalArgumentException();
 	envEntryTypes.put( name, type );
 	if( value!=null)
@@ -490,7 +490,7 @@ public class Context {
     public void setLoginConfig( String authMethod, String realmName,
 				String formLoginPage, String formErrorPage)
     {
-	// 	System.out.println("Login config: " + authMethod + " " + realmName + " " +
+	// 	log("Login config: " + authMethod + " " + realmName + " " +
 	// 			   formLoginPage + " " + formErrorPage);
 	this.authMethod=authMethod;
 	this.realmName=realmName;
@@ -626,7 +626,7 @@ public class Context {
     {
 	wrapper.setContext( this );
 	String name=wrapper.getServletName();
-	//	System.out.println("Adding servlet " + name  + " " + wrapper);
+	//	log("Adding servlet " + name  + " " + wrapper);
 
         // check for duplicates
         if (servlets.get(name) != null) {
@@ -668,7 +668,8 @@ public class Context {
 
     /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {
-	if(level>0) log( "Set debug to " + level );
+	if (level!=debug)
+	    log( "Setting debug to " + level );
 	debug=level;
     }
 
@@ -686,8 +687,8 @@ public class Context {
 
     // ------------------- Logging ---------------
 
-    LogHelper loghelper = new LogHelper("tc_log", this);
-    LogHelper loghelperServlet = new LogHelper("servlet_log", null);
+    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    Logger.Helper loghelperServlet;
 
     /** Internal log method
      */
@@ -710,12 +711,32 @@ public class Context {
     /** User-level log method ( called from a servlet)
      */
     public void logServlet( String msg , Throwable t ) {
-	msg = ("path=\"" + path  + "\" :" + msg);
-	loghelperServlet.log(msg, t);
+	if (loghelperServlet == null) {
+	    loghelperServlet = new Logger.Helper
+		("servlet_log",
+		 (vhost==null ? "" : vhost + ":" )  +  path);
+	}
+	if (t == null)
+	    loghelperServlet.log(msg);	// uses level INFORMATION
+	else
+	    loghelperServlet.log(msg, t); // uses level ERROR
+	// note: log(msg,t) is deprecated in ServletContext; that
+	// means most servlet messages will arrive with level
+	// INFORMATION.  So the "servlet_log" Logger should be
+	// specified with verbosityLevel="INFORMATION" in server.xml
+	// in order to see servlet log() messages.
     }
 
+    public void setLogger(Logger logger) {
+	loghelper.setLogger(logger);
+    }
+
+    public Logger.Helper getLoggerHelper() {
+	return loghelper;
+    }
+    
     public String toString() {
-	return "Ctx( " + (vhost==null ? "" : vhost + ":" )  +  path +  " )";
+	return "Ctx(" + (vhost==null ? "" : vhost + ":" )  +  path +  ")";
     }
 
     // -------------------- Facade methods --------------------
@@ -760,7 +781,7 @@ public class Context {
 	    if( debug>9) log( "getResourceURL=" + url + " request=" + rpath );
 	    return url;
 	} catch( IOException ex ) {
-	    ex.printStackTrace();
+	    log("getting resource " + rpath, ex);
 	    return null;
 	}
     }
@@ -980,7 +1001,7 @@ public class Context {
 		documentBase = new URL("file", "", absPath);
 
 	    } catch( MalformedURLException ex ) {
-		ex.printStackTrace();
+		log("bad URL " + absPath, ex);
 	    }
 	}
         return documentBase;
