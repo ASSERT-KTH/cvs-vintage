@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class LogInterceptor
    extends AbstractInterceptor
@@ -73,11 +73,8 @@ public class LogInterceptor
       
       String name = getContainer().getBeanMetaData().getEjbName();
 		
-		// Should we log all calls?
-		callLogging = getContainer().getBeanMetaData().getContainerConfiguration().getCallLogging();
-		
-		// DEBUG
-		callLogging = true;
+	  // Should we log all calls?
+	  callLogging = getContainer().getBeanMetaData().getContainerConfiguration().getCallLogging();
 		
       log = new Log(name);
    }

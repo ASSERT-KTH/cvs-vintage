@@ -39,7 +39,7 @@ import org.jboss.ejb.MethodInvocation;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class StatelessSessionInstanceInterceptor
    extends AbstractInterceptor
@@ -87,20 +87,21 @@ public class StatelessSessionInstanceInterceptor
          return getNext().invoke(mi);
       } catch (RuntimeException e) // Instance will be GC'ed at MI return
       {
+	  	mi.setEnterpriseContext(null);
 	  	throw e;
       } catch (RemoteException e) // Instance will be GC'ed at MI return
       {
+    	mi.setEnterpriseContext(null);
     	throw e;
       } catch (Error e) // Instance will be GC'ed at MI return
       {
+	    mi.setEnterpriseContext(null);
 	    throw e;
-      } catch (Exception e)
+      } finally
       {
-	  	// Application exception
 		// Return context
-		container.getInstancePool().free(mi.getEnterpriseContext());
-		
-		throw e;
+		if (mi.getEnterpriseContext() != null)
+			container.getInstancePool().free(mi.getEnterpriseContext());
       }
    }
    

@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -299,7 +299,7 @@ implements EntityPersistenceManager
     public void storeEntity(EntityEnterpriseContext ctx)
     throws RemoteException
     {
-       Logger.debug("Store entity");
+//DEBUG       Logger.debug("Store entity");
        try
        {
          ejbStore.invoke(ctx.getInstance(), new Object[0]);

@@ -42,7 +42,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public class CMPFilePersistenceManager
    implements EntityPersistenceStore
@@ -142,14 +142,14 @@ public class CMPFilePersistenceManager
    {
       if (finderMethod.getName().equals("findAll"))
       {
-      //         Logger.debug("Find all entities");
+//DEBUG         Logger.debug("Find all entities");
          
          String[] files = dir.list();
          ArrayList result = new ArrayList();
          for (int i = 0; i < files.length; i++)
             if (files[i].endsWith(".ser"))
             {
-//               Logger.debug("Found entity");
+//DEBUG               Logger.debug("Found entity");
                result.add(files[i].substring(0,files[i].length()-4));
             }
             

@@ -27,7 +27,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class MethodInvocation
 {
@@ -82,7 +82,7 @@ public class MethodInvocation
 	public void setTransaction(Transaction tx)
 	{
 		
-		Logger.debug("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
+//DEBUG		Logger.debug("Setting a transaction on Method invocation"+hashCode()+" "+m.getName()+" with "+tx);
 		
 		this.tx = tx;
 		

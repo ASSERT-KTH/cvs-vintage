@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
@@ -94,7 +94,7 @@ public abstract class AbstractInstancePool
    public synchronized EnterpriseContext get()
       throws RemoteException
    {
-      Logger.debug("Get instance "+this);
+//DEBUG      Logger.debug("Get instance "+this);
       
       if (!pool.empty())
       {
@@ -126,7 +126,7 @@ public abstract class AbstractInstancePool
    public synchronized void free(EnterpriseContext ctx)
    {
       // Pool it
-      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
+//DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
       
       if (pool.size() < maxSize)
       {

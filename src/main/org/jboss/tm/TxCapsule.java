@@ -43,14 +43,14 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 class TxCapsule implements TimeoutTarget
 {
    // Constants -----------------------------------------------------
 
    // Trace enabled flag
-   static private final boolean trace = true;
+   static private final boolean trace = false;
 
    // Code meaning "no heuristics seen", must not be XAException.XA_HEURxxx
    static private final int HEUR_NONE     = XAException.XA_RETRY;
@@ -838,7 +838,10 @@ class TxCapsule implements TimeoutTarget
          unlock();
          try {
             timeout.cancel();
-         } finally {
+         } catch (Exception e)
+			{
+				Logger.debug(e);
+			} finally {
             lock();
          }
          timeout = null;

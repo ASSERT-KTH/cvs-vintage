@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  *      @author Rickard Öberg (rickard.oberg@telkel.com)
  *		@author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *      @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *      @version $Revision: 1.24 $
+ *      @version $Revision: 1.25 $
  */
 public abstract class JRMPContainerInvoker
    extends RemoteServer
@@ -100,12 +100,12 @@ public abstract class JRMPContainerInvoker
    public void setOptimized(boolean optimize)
    {
       this.optimize = optimize;
-		Logger.debug("Container Invoker optimize set to '"+optimize+"'");
+//DEBUG		Logger.debug("Container Invoker optimize set to '"+optimize+"'");
    }
 
    public boolean isOptimized()
    {
-Logger.debug("Optimize in action: '"+optimize+"'");
+//DEBUG  Logger.debug("Optimize in action: '"+optimize+"'");
       return optimize;
    }
 
@@ -148,8 +148,7 @@ Logger.debug("Optimize in action: '"+optimize+"'");
          // tx = container.getTransactionManager().getTransaction();
 
                                 
-     //DEBUG Logger.debug("JRMPCI:invokeHome "+m.getName());
-	 Logger.debug("JRMPCI:invokeHome "+rmi.getMethod().getName());
+//DEBUG	 Logger.debug("JRMPCI:invokeHome "+rmi.getMethod().getName());
 	 
          return new MarshalledObject(invokeHome(rmi.getMethod(), rmi.getArguments(), tx,
         rmi.getPrincipal(), rmi.getCredential() ));
@@ -184,7 +183,6 @@ Logger.debug("Optimize in action: '"+optimize+"'");
 
 
 	   //DEBUG Logger.debug("JRMPCI:invoke "+m.getName());
-	 	Logger.debug("JRMPCI:invoke "+m.getName());
 	 
          return new MarshalledObject(invoke(id, m, args, tx,
           rmi.getPrincipal(), rmi.getCredential()));
@@ -199,9 +197,11 @@ Logger.debug("Optimize in action: '"+optimize+"'");
       throws Exception
    {
 	   //DEBUG
-       Logger.debug("JRMPCI (local) :invokeHome "+m.getName());
-       if (tx != null) Logger.debug("Tx is "+tx.toString());
-          else Logger.debug("Tx is null");
+//DEBUG       Logger.debug("JRMPCI (local) :invokeHome "+m.getName());
+//DEBUG       if (tx != null) 
+//DEBUG		 	Logger.debug("Tx is "+tx.toString());
+//DEBUG       else 
+//DEBUG		 	Logger.debug("Tx is null");
 		  
 	   //DEBUG
        return container.invokeHome(new MethodInvocation(null , m, args, tx,
@@ -213,9 +213,11 @@ Logger.debug("Optimize in action: '"+optimize+"'");
       throws Exception
    {
 	   // DEBUG
-	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
-       if (tx != null) Logger.debug("Tx is "+tx.toString());
-          else Logger.debug("Tx is null");
+//DEBUG	     Logger.debug("JRMPCI (local) :invoke "+m.getName());
+//DEBUG       if (tx != null) 
+//DEBUG		 	Logger.debug("Tx is "+tx.toString());
+//DEBUG       else 
+//DEBUG		 	Logger.debug("Tx is null");
 		//DEBUG
        return container.invoke(new MethodInvocation(id, m, args, tx, identity, credential));
    }

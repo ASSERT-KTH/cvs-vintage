@@ -48,7 +48,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.18 $
+*   @version $Revision: 1.19 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
@@ -207,7 +207,7 @@ extends AbstractInterceptor
 		}
 		
 		// So we can go on with the invocation
-		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
+//DEBUG		Logger.debug("Tx is "+ ((tx == null)? "null" : tx.toString()));
 		
 		// Invocation with a running Transaction
 		
@@ -318,7 +318,7 @@ extends AbstractInterceptor
 							
 							//DEBUG Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
-							Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
+//DEBUG							Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
 							container.getPersistenceManager().storeEntity(ctx);
 						}
@@ -378,24 +378,14 @@ extends AbstractInterceptor
 					switch (commitOption) {
 						// Keep instance cached after tx commit
 						case A:
-							try {
-								// The state is still valid (only point of access is us)
-								ctx.setValid(true); 
-						
-							} catch (Exception e) {
-								Logger.debug(e);
-							}
+							// The state is still valid (only point of access is us)
+							ctx.setValid(true); 
 						break;
 						
 						// Keep instance active, but invalidate state
 						case B:
-							try {
-								// Invalidate state (there might be other points of entry)
-								ctx.setValid(false); 
-								
-							} catch (Exception e) {
-								Logger.debug(e);
-							}
+							// Invalidate state (there might be other points of entry)
+							ctx.setValid(false); 
 						break;
 						
 						// Invalidate everything AND Passivate instance

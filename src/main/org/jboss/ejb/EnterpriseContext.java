@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.13 $
+ *	@version $Revision: 1.14 $
  */
 public abstract class EnterpriseContext
 {
@@ -92,7 +92,7 @@ public abstract class EnterpriseContext
 
    public void setTransaction(Transaction transaction) {
        
-       Logger.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
+//DEBUG       Logger.debug("EnterpriseContext.setTransaction "+((transaction == null) ? "null" : Integer.toString(transaction.hashCode()))); 
        this.transaction = transaction; 
     }
     
@@ -111,7 +111,7 @@ public abstract class EnterpriseContext
 		
 		//new Exception().printStackTrace();
 		
-		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
+//DEBUG		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
     }
     
     public void unlock() {
@@ -122,13 +122,12 @@ public abstract class EnterpriseContext
 		//new Exception().printStackTrace();
 		if (locked <0) new Exception().printStackTrace();
 		
-		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
+//DEBUG		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
     }
     
     public boolean isLocked() {
             
-       //DEBUG Logger.debug("EnterpriseContext.isLocked() at "+locked);
-       Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
+//DEBUG       Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
        
        return locked != 0;
    }
@@ -211,7 +210,7 @@ public abstract class EnterpriseContext
             return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK; 
          } catch (SystemException e)
          {
-            Logger.debug(e);
+//DEBUG            Logger.debug(e);
             return true;
          }
       }
@@ -269,7 +268,7 @@ public abstract class EnterpriseContext
         
         
         // DEBUG Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+//DEBUG        Logger.debug("UserTransactionImpl.begin " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
         
       }
       
@@ -281,8 +280,7 @@ public abstract class EnterpriseContext
                    java.lang.IllegalStateException,
                    SystemException
       {
-         // DEBUG Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+//DEBUG        Logger.debug("UserTransactionImpl.commit " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
         
         con.getTransactionManager().commit();
       }
@@ -292,8 +290,7 @@ public abstract class EnterpriseContext
                      java.lang.SecurityException,
                      SystemException
       {
-         // DEBUG Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
-        Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
+//DEBUG        Logger.debug("UserTransactionImpl.rollback " + transaction.hashCode() + " in UserTransactionImpl " + this.hashCode());
         
         con.getTransactionManager().rollback();
       }

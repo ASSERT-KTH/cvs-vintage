@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
 *	@author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:andreas.schaefer@madplanet.com">Andy Schaefer</a>
-*	@version $Revision: 1.13 $
+*	@version $Revision: 1.14 $
 */
 public class NoPassivationEntityInstanceCache
 implements EntityInstanceCache
@@ -103,7 +103,7 @@ implements EntityInstanceCache
         // Use the CacheKey for the rest of the method
         CacheKey cacheKey = (CacheKey) id;
 		
-		Logger.debug("Get "+cacheKey+" from cache");
+//DEBUG		Logger.debug("Get "+cacheKey+" from cache");
         
         EntityEnterpriseContext ctx;
       

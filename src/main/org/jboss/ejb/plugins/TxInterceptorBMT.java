@@ -49,7 +49,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.5 $
+*   @version $Revision: 1.6 $
 */
 public class TxInterceptorBMT
 extends AbstractInterceptor
@@ -208,14 +208,12 @@ extends AbstractInterceptor
 		// this is necessary for optimized (inVM) calls: threads come associated with the client transaction
         Transaction t1 = tm.disassociateThread();
 		
-		// DEBUG Logger.debug("TxInterceptorBMT disassociate" + ((t1==null) ? "null": Integer.toString(t1.hashCode())));
-		Logger.debug("TxInterceptorBMT disassociate" + ((t1==null) ? "null": Integer.toString(t1.hashCode())));
+//DEBUG		Logger.debug("TxInterceptorBMT disassociate" + ((t1==null) ? "null": Integer.toString(t1.hashCode())));
 		
         // t2 refers to the instance transaction (spec ejb1.1, 11.6.1, p174) 
         Transaction t2 = mi.getEnterpriseContext().getTransaction();
         
-		// DEBUG Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
-		Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
+//DEBUG Logger.debug("TxInterceptorBMT t2 in context" + ((t2==null) ? "null": Integer.toString(t2.hashCode())));
 		
         try {
 			
@@ -257,7 +255,7 @@ extends AbstractInterceptor
 			if (t1 != null) {
 				
 				// DEBUG Logger.debug("TxInterceptorBMT reassociating client tx " + t1.hashCode());
-				Logger.debug("TxInterceptorBMT reassociating client tx " + t1.hashCode());
+//DEBUG				Logger.debug("TxInterceptorBMT reassociating client tx " + t1.hashCode());
 				
 				// reassociate the previous transaction before returning
 				tm.associateThread(t1);
@@ -269,7 +267,7 @@ extends AbstractInterceptor
 				// t3 is the transaction associated with the context at the end of the call
 				Transaction t3 = mi.getEnterpriseContext().getTransaction();
 				
-				Logger.debug("in TxIntBMT " + t3);
+//DEBUG				Logger.debug("in TxIntBMT " + t3);
 				
 				// for a stateless sessionbean the transaction should be completed at the end of the call
 			    if (t3 != null) switch (t3.getStatus()) {
@@ -284,7 +282,7 @@ extends AbstractInterceptor
 					case Status.STATUS_PREPARED: 
           			
 						// cf ejb1.1 11.6.1
-						Logger.debug("Application error: BMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
+						Logger.error("Application error: BMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");
 					    
 						// the instance interceptor will discard the instance
 						throw new RemoteException("Application error: BMT stateless bean " + container.getBeanMetaData().getEjbName() + " should complete transactions before returning (ejb1.1 spec, 11.6.1)");

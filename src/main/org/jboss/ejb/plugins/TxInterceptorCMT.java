@@ -40,7 +40,7 @@ import org.jboss.metadata.MethodMetaData;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.4 $
+*   @version $Revision: 1.5 $
 */
 public class TxInterceptorCMT
 extends AbstractInterceptor
@@ -123,7 +123,7 @@ extends AbstractInterceptor
             default:
                 name = "TX_UNKNOWN";
         }
-        Logger.debug(name+" for "+m.getName());
+//DEBUG        Logger.debug(name+" for "+m.getName());
     }
     
     private Object invokeNext(boolean remoteInvocation, MethodInvocation mi) throws Exception {
@@ -137,9 +137,9 @@ extends AbstractInterceptor
 		} catch (RuntimeException e)
 		{
 			// EJB 2.0 17.3, table 15
-			if (mi.getEnterpriseContext().getTransaction() != null)
+			if (mi.getTransaction() != null)
 			{
-				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				mi.getTransaction().setRollbackOnly();
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;
@@ -151,9 +151,9 @@ extends AbstractInterceptor
 		} catch (RemoteException e)
 		{
 			// EJB 2.0 17.3, table 15
-			if (mi.getEnterpriseContext().getTransaction() != null)
+			if (mi.getTransaction() != null)
 			{
-				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				mi.getTransaction().setRollbackOnly();
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;
@@ -165,9 +165,9 @@ extends AbstractInterceptor
 		} catch (Error e)
 		{
 			// EJB 2.0 17.3, table 15
-			if (mi.getEnterpriseContext().getTransaction() != null)
+			if (mi.getTransaction() != null)
 			{
-				mi.getEnterpriseContext().getTransaction().setRollbackOnly();
+				mi.getTransaction().setRollbackOnly();
 				RemoteException tre = new TransactionRolledbackException(e.getMessage());
 				tre.detail = e;
 				throw tre;
@@ -286,7 +286,7 @@ extends AbstractInterceptor
                     finally {
                         
                         //DEBUG Logger.debug("TxInterceptorCMT: in finally");
-                        Logger.debug("TxInterceptorCMT: In finally");
+//DEBUG                        Logger.debug("TxInterceptorCMT: In finally");
                         
                         // Only do something if we started the transaction
                         if (newTransaction != null) {
@@ -305,9 +305,9 @@ extends AbstractInterceptor
                                 // This will happen if
                                 // a) everything goes well
                                 // b) app. exception was thrown
-                                Logger.debug("TxInterceptorCMT:before commit");
+//DEBUG                                Logger.debug("TxInterceptorCMT:before commit");
                                 newTransaction.commit();
-                                Logger.debug("TxInterceptorCMT:after commit");
+//DEBUG                                Logger.debug("TxInterceptorCMT:after commit");
                             
                             }
                             
