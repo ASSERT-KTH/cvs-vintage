@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.9 2002/04/22 21:47:51 jon Exp $
+# $Id: create-db.sh,v 1.10 2002/05/10 21:17:39 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -94,6 +94,7 @@ if [ "${usage}" ] ; then
     echo "  -s, --scripts=DIR          SQL file directory"
     echo "                               (${POPULATION_SCRIPT_DIR})"
     echo "  -q, --quiet                Don't write any messages"
+    echo "  -?, --help                 Usage"
     echo
     exit 0
 fi
