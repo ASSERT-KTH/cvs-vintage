@@ -1,38 +1,55 @@
 #!/bin/sh
 
+# Define these values if you need to
+USER=`whoami`
+PASS=
+
+MYSQL=`which mysql`
+MYSQLSHOW=`which mysqlshow`
+MYSQLADMIN=`which mysqladmin`
+
+if [ ! -x "${MYSQL}" ] ; then
+    echo "The MySQL binary needs to be in your PATH!"
+    exit
+fi
+
+if [ "${PASS}" != "" ] ; then
+    PASSCMD="-p ${PASS}"
+fi
+
 # testing if the base already exists and removing it if needed.
 base_exists=1
-mysqlshow scarab > /dev/null 2>&1 || base_exists=0
+${MYSQLSHOW} -u ${USER} ${PASSCMD} scarab > /dev/null 2>&1 || base_exists=0
 if [ $base_exists -eq 1 ] ; then
 	echo "Removing existing database. All data will be lost."
-        echo y | mysqladmin drop scarab > /dev/null
+        echo y | ${MYSQLADMIN} -u ${USER} ${PASSCMD} drop scarab > /dev/null
 fi
 
 # Creating new base and inputting default data
 
 echo "Creating Database..."        
-mysqladmin create scarab
+${MYSQLADMIN} -u ${USER} ${PASSCMD} create scarab
 
 echo "Importing mysql-scarab.sql..."
-mysql scarab < mysql-scarab.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab.sql
 
 echo "Importing mysql-turbine.sql..."
-mysql scarab < mysql-turbine.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine.sql
 
 echo "Importing mysql-id-table-schema.sql..."
-mysql scarab < mysql-id-table-schema.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-id-table-schema.sql
 
 echo "Importing mysql-turbine-id-table-init.sql..."
-mysql scarab < mysql-turbine-id-table-init.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine-id-table-init.sql
 
 echo "Importing mysql-turbine-security.sql..."
-mysql scarab < mysql-turbine-security.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-turbine-security.sql
 
 echo "Importing mysql-scarab-id-table-init.sql..."
-mysql scarab < mysql-scarab-id-table-init.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-id-table-init.sql
 
 echo "Importing mysql-scarab-default-data.sql..."
-mysql scarab < mysql-scarab-default-data.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-default-data.sql
 
 echo "Importing mysql-scarab-sample-data.sql..."
-mysql scarab < mysql-scarab-sample-data.sql
+${MYSQL} -u ${USER} ${PASSCMD} scarab < mysql-scarab-sample-data.sql
