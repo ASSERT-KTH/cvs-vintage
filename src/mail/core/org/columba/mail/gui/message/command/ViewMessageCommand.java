@@ -25,6 +25,7 @@ import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
@@ -61,6 +62,7 @@ public class ViewMessageCommand extends FolderCommand {
 		WorkerStatusController wsc)
 		throws Exception {
 
+		this.folder = srcFolder;
 		this.uid = uid;
 		bodyPart = null;
 
@@ -106,6 +108,8 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
+
+		((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment")).setMessage(folder, uid);
 
 		/*
 		boolean hasAttachments = false;

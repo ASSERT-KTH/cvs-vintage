@@ -102,7 +102,7 @@ public class AttachmentActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
+/*
 		if (e.getActionCommand().equals("SAVE_AS")) //$NON-NLS-1$
 			{
 
@@ -188,7 +188,7 @@ public class AttachmentActionListener implements ActionListener {
 			int[] selection = getSelection();
 
 		}
-
+*/
 	}
 
 }

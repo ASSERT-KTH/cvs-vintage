@@ -19,11 +19,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -34,8 +34,8 @@ import javax.swing.event.MouseInputListener;
 public class IconPanel extends JPanel implements MouseInputListener {
 	int count;
 	Vector selection;
-	String doubleClickActionCommand;
-	Vector actionListeners;
+	ArrayList selectionListener;
+	Action doubleClickAction;
 
 	public IconPanel() {
 		super(new FlowLayout(FlowLayout.LEFT, 20, 5));
@@ -48,7 +48,7 @@ public class IconPanel extends JPanel implements MouseInputListener {
 
 		count = 0;
 		selection = new Vector();
-		actionListeners = new Vector();
+		selectionListener = new ArrayList();		
 	}
 
 	public void updateUI() {
@@ -56,25 +56,8 @@ public class IconPanel extends JPanel implements MouseInputListener {
 		setBackground(UIManager.getColor("List.background"));
 	}
 
-	public void setDoubleClickActionCommand(String a) {
-		doubleClickActionCommand = a;
-	}
-
-	public void addActionListener(ActionListener l) {
-		actionListeners.add(l);
-	}
-
-	public void removeActionListener(ActionListener l) {
-		actionListeners.remove(l);
-	}
-
-	private void fireDoubleClickAction() {
-		ActionEvent da =
-			new ActionEvent(this, ActionEvent.ACTION_FIRST, doubleClickActionCommand);
-
-		for (int i = 0; i < actionListeners.size(); i++) {
-			((ActionListener) actionListeners.get(i)).actionPerformed(da);
-		}
+	public void setDoubleClickAction(Action a) {
+		doubleClickAction = a;
 	}
 
 	protected void addItem(ClickableIcon icon) {
@@ -171,6 +154,8 @@ public class IconPanel extends JPanel implements MouseInputListener {
 				clearSelection();
 		}
 
+		fireSelectionChanged();
+
 		revalidate();
 		repaint();
 	}
@@ -202,7 +187,8 @@ public class IconPanel extends JPanel implements MouseInputListener {
 			select(e.getPoint(), 0);
 
 			if (e.getClickCount() >= 2) {
-				fireDoubleClickAction();
+				if( doubleClickAction != null)
+					doubleClickAction.actionPerformed(null);
 			}
 		}
 
@@ -228,6 +214,19 @@ public class IconPanel extends JPanel implements MouseInputListener {
 	}
 
 	public void mouseMoved(MouseEvent e) {
+	}
+
+	public void addIconPanelSelectionListener( IconPanelSelectionListener listener ) {
+		selectionListener.add(listener);
+	}
+
+	private void fireSelectionChanged() {
+		
+		int[] newSelection = getSelection();
+		
+		for( int i=0; i<selectionListener.size(); i++) {
+			((IconPanelSelectionListener) selectionListener.get(i)).selectionChanged(newSelection);
+		}
 	}
 
 }
@@ -289,5 +288,5 @@ class ClickableIcon extends JComponent {
 	public int getIndex() {
 		return index;
 	}
-
+	
 }
