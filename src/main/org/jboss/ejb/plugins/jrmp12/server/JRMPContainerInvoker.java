@@ -17,17 +17,17 @@ import javax.ejb.EJBObject;
 import org.jboss.proxy.InvocationHandler;
 import org.jboss.proxy.Proxy;
 
-import org.jboss.ejb.plugins.jrmp13.interfaces.HomeProxy;
-import org.jboss.ejb.plugins.jrmp13.interfaces.StatelessSessionProxy;
-import org.jboss.ejb.plugins.jrmp13.interfaces.StatefulSessionProxy;
-import org.jboss.ejb.plugins.jrmp13.interfaces.EntityProxy;
+import org.jboss.ejb.plugins.jrmp12.interfaces.HomeProxy;
+import org.jboss.ejb.plugins.jrmp12.interfaces.StatelessSessionProxy;
+import org.jboss.ejb.plugins.jrmp12.interfaces.StatefulSessionProxy;
+import org.jboss.ejb.plugins.jrmp12.interfaces.EntityProxy;
 
 /**
  *	<description> 
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public final class JRMPContainerInvoker
    extends org.jboss.ejb.plugins.jrmp.server.JRMPContainerInvoker
