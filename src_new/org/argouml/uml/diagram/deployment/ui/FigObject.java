@@ -1,4 +1,4 @@
-// $Id: FigObject.java,v 1.20 2004/02/28 12:29:42 linus Exp $
+// $Id: FigObject.java,v 1.21 2004/06/27 17:33:47 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigObject.java
 // Classes: FigObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: FigObject.java,v 1.20 2004/02/28 12:29:42 linus Exp $
+// $Id: FigObject.java,v 1.21 2004/06/27 17:33:47 d00mst Exp $
 
 package org.argouml.uml.diagram.deployment.ui;
 
@@ -167,7 +167,7 @@ public class FigObject extends FigNodeModelElement {
 
     public void setEnclosingFig(Fig encloser) {
 	// super.setEnclosingFig(encloser);
-	if (!(ModelFacade.isAModelElement(getOwner()))) return;
+
 	if (ModelFacade.isAObject(getOwner())) {
 	    Object me = /*(MObject)*/ getOwner();
 	    Object mcompInst = null;
@@ -199,6 +199,16 @@ public class FigObject extends FigNodeModelElement {
 		}
 	    }
 	}
+
+	if (encloser != _encloser) {
+	    if (_encloser instanceof FigNodeModelElement) {
+		((FigNodeModelElement) _encloser).removeEnclosedFig(this);
+            }
+	    if (encloser instanceof FigNodeModelElement) {
+		((FigNodeModelElement) encloser).addEnclosedFig(this);
+            }
+	}
+        _encloser = encloser;
     }
 
     static final long serialVersionUID = -185736690375678962L;
