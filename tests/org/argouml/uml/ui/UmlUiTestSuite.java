@@ -1,4 +1,4 @@
-// $Id: UmlUiTestSuite.java,v 1.1 2003/09/04 19:07:29 thierrylach Exp $
+// $Id: UmlUiTestSuite.java,v 1.2 2003/11/08 00:43:51 linus Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,7 +41,6 @@ public class UmlUiTestSuite {
         suite.addTestSuite(TestActionClassDiagram.class);
         suite.addTestSuite(TestActionCollaborationDiagram.class);
 		suite.addTestSuite(TestActionDeploymentDiagram.class);
-		suite.addTestSuite(TestActionSequenceDiagram.class);
 		suite.addTestSuite(TestActionStateDiagram.class);
 		suite.addTestSuite(TestActionUseCaseDiagram.class);
         return suite;

@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.6 2003/06/29 23:18:52 linus Exp $
+// $Id: TestItemUID.java,v 1.7 2003/11/08 00:43:51 linus Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,9 +40,6 @@ import org.argouml.uml.diagram.deployment.ui.FigMNode;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
-import org.argouml.uml.diagram.sequence.ui.FigSeqLink;
-import org.argouml.uml.diagram.sequence.ui.FigSeqObject;
-import org.argouml.uml.diagram.sequence.ui.FigSeqStimulus;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 import org.argouml.uml.diagram.state.ui.*;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
@@ -119,10 +116,6 @@ public class TestItemUID extends TestCase {
 	FigMNodeInstance figmnodeinstance = new FigMNodeInstance();
 	FigObject figobject = new FigObject();
 
-	FigSeqLink figseqlink = new FigSeqLink();
-	FigSeqObject figseqobject = new FigSeqObject();
-	FigSeqStimulus figseqstimulus = new FigSeqStimulus();
-
 	FigBranchState figbranchstate = new FigBranchState();
 	FigCompositeState figcompositestate = new FigCompositeState();
 	FigDeepHistoryState figdeephistorystate = new FigDeepHistoryState();
@@ -167,10 +160,6 @@ public class TestItemUID extends TestCase {
 	checkAssignIDToObject(figmnode, true, true);
 	checkAssignIDToObject(figmnodeinstance, true, true);
 	checkAssignIDToObject(figobject, true, true);
-
-	checkAssignIDToObject(figseqlink, true, true);
-	checkAssignIDToObject(figseqobject, true, true);
-	checkAssignIDToObject(figseqstimulus, true, true);
 
 	checkAssignIDToObject(figbranchstate, true, true);
 	checkAssignIDToObject(figcompositestate, true, true);
