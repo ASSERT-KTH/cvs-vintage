@@ -18,7 +18,7 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.7 $
+ *  @version $Revision: 1.8 $
  */
 class XidImpl
    implements Xid, java.io.Serializable
@@ -193,7 +193,7 @@ class XidImpl
 
    public String toString()
    {
-      return "XidImpl:" + getGlobalTransactionId();
+      return toString(this);
    }
 
    // Package protected ---------------------------------------------
