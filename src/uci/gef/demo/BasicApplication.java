@@ -19,7 +19,7 @@
 // File: BasicApplication.java
 // Class: BasicApplication
 // original author: jrobbins@ics.uci.edu
-// $Id: BasicApplication.java,v 1.3 1998/03/25 22:07:28 jrobbins Exp $
+// $Id: BasicApplication.java,v 1.4 1998/03/27 00:33:57 jrobbins Exp $
 
 package uci.gef.demo;
 
@@ -48,7 +48,7 @@ public class BasicApplication {
     _gf = new JGraphFrame();
     _gf.reshape(10, 10, 200, 200);
     _gf.show();
-    //_gf.setToolBar(new PaletteFig());
+    //_gf.setToolBar(new SamplePalette()); //needs-more-work 
   }
 
   ////////////////////////////////////////////////////////////////

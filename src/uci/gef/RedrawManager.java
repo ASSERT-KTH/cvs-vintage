@@ -19,7 +19,7 @@
 // File: RedrawManager.java
 // Classes: RedrawManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RedrawManager.java,v 1.3 1998/03/25 22:07:17 jrobbins Exp $
+// $Id: RedrawManager.java,v 1.4 1998/03/27 00:33:54 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: FigRect.java
 // Classes: FigRect
 // Original Author: ics125b spring 1996
-// $Id: FigRect.java,v 1.1 1998/01/26 22:19:22 jrobbins Exp $
+// $Id: FigRect.java,v 1.2 1998/03/27 00:33:34 jrobbins Exp $
 
 package uci.gef;
 
@@ -51,6 +51,14 @@ public class FigRect extends Fig {
     super(x, y, w, h, lColor, fColor);
   }
 
+  ////////////////////////////////////////////////////////////////
+  // Fig methods
+
+  public Point connectionPoint(Point anotherPt) {
+    return Geometry.ptClosestTo(getBounds(), anotherPt);
+  }
+
+  
   ////////////////////////////////////////////////////////////////
   // painting methods
 

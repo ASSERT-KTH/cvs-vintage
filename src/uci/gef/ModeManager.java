@@ -19,7 +19,7 @@
 // File: ModeManager.java
 // Classes: ModeManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeManager.java,v 1.2 1998/03/25 22:07:05 jrobbins Exp $
+// $Id: ModeManager.java,v 1.3 1998/03/27 00:33:47 jrobbins Exp $
 
 package uci.gef;
 
@@ -237,7 +237,7 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
       int x = me.getX(), y = me.getY();
       Fig underMouse = _editor.hit(x, y);
       if (underMouse instanceof FigNode) {
-	NetPort startPort = ((FigNode) underMouse).hitPort(x, y);
+	Object startPort = ((FigNode) underMouse).hitPort(x, y);
 	if (startPort != null) {
 	  //user clicked on a port, now drag an edge
 	  Mode createArc = new ModeCreateArc(_editor);

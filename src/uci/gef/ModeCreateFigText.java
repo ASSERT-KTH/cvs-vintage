@@ -19,7 +19,7 @@
 // File: ModeCreateFigText.java
 // Classes: ModeCreateFigText
 // Original Author: ics125b spring 1996
-// $Id: ModeCreateFigText.java,v 1.2 1998/03/25 22:07:04 jrobbins Exp $
+// $Id: ModeCreateFigText.java,v 1.3 1998/03/27 00:33:46 jrobbins Exp $
 
 package uci.gef;
 

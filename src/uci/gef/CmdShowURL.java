@@ -19,7 +19,7 @@
 // File: CmdShowURL.java
 // Classes: CmdShowURL
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdShowURL.java,v 1.1 1998/03/25 22:06:42 jrobbins Exp $
+// $Id: CmdShowURL.java,v 1.2 1998/03/27 00:33:25 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: GoalModel.java
 // Classes: GoalModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GoalModel.java,v 1.2 1998/03/25 22:10:14 jrobbins Exp $
+// $Id: GoalModel.java,v 1.3 1998/03/27 00:33:05 jrobbins Exp $
 
 package uci.argo.kernel;
 

@@ -19,7 +19,7 @@
 // File: CmdEditNode.java
 // Classes: CmdEditNode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdEditNode.java,v 1.1 1998/03/25 22:06:30 jrobbins Exp $
+// $Id: CmdEditNode.java,v 1.2 1998/03/27 00:33:13 jrobbins Exp $
 
 package uci.gef;
 

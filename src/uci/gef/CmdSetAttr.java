@@ -19,7 +19,7 @@
 // File: CmdSetAttr.java
 // Classes: CmdSetAttr
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSetAttr.java,v 1.1 1998/03/25 22:06:41 jrobbins Exp $
+// $Id: CmdSetAttr.java,v 1.2 1998/03/27 00:33:24 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: SampleNode2.java
 // Classes: SampleNode2
 // Original Author: ics125b spring 1996
-// $Id: SampleNode2.java,v 1.3 1998/03/25 22:07:34 jrobbins Exp $
+// $Id: SampleNode2.java,v 1.4 1998/03/27 00:34:02 jrobbins Exp $
 
 package uci.gef.demo;
 

@@ -27,7 +27,7 @@
 // File: GraphNodeRenderer.java
 // Interfaces: GraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: GraphNodeRenderer.java,v 1.3 1998/03/25 22:08:29 jrobbins Exp $
+// $Id: GraphNodeRenderer.java,v 1.4 1998/03/27 00:34:07 jrobbins Exp $
 
 package uci.graph;
 

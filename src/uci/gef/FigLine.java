@@ -19,7 +19,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125b spring 1996
-// $Id: FigLine.java,v 1.4 1998/02/08 23:42:12 abonner Exp $
+// $Id: FigLine.java,v 1.5 1998/03/27 00:33:32 jrobbins Exp $
 
 package uci.gef;
 
@@ -148,6 +148,10 @@ public class FigLine extends Fig {
     calcBounds(); //_x = x; _y = y; _w = w; _h = h;
   }
 
+
+  public Point connectionPoint(Point anotherPt) {
+    return Geometry.ptClosestTo(_x1, _y1, _x2, _y2, anotherPt);
+  }
 
   ////////////////////////////////////////////////////////////////
   // Fig API

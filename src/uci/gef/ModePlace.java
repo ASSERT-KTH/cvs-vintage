@@ -19,7 +19,7 @@
 // File: ModePlace.java
 // Classes: ModePlace
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModePlace.java,v 1.2 1998/03/25 22:07:07 jrobbins Exp $
+// $Id: ModePlace.java,v 1.3 1998/03/27 00:33:48 jrobbins Exp $
 
 package uci.gef;
 

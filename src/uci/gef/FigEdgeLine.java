@@ -19,7 +19,7 @@
 // File: FigEdgeLine.java
 // Classes: FigEdgeLine
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdgeLine.java,v 1.1 1998/01/26 22:19:21 jrobbins Exp $
+// $Id: FigEdgeLine.java,v 1.2 1998/03/27 00:33:31 jrobbins Exp $
 
 package uci.gef;
 
@@ -40,6 +40,15 @@ public class FigEdgeLine extends FigEdge {
   protected void computeRoute() {
     Point srcPt = _sourcePortFig.center();
     Point dstPt = _destPortFig.center();
+
+    if (_useNearest) {
+      //? two iterations of refinement, maybe should be a for-loop
+      srcPt = _sourcePortFig.connectionPoint(dstPt);
+      dstPt = _destPortFig.connectionPoint(srcPt);      
+      srcPt = _sourcePortFig.connectionPoint(dstPt);
+      dstPt = _destPortFig.connectionPoint(srcPt);
+    }
+
     ((FigLine) _fig).setShape(srcPt, dstPt);
     calcBounds();
   }

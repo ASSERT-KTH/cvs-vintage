@@ -19,7 +19,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.4 1998/02/08 23:42:12 abonner Exp $
+// $Id: FigPoly.java,v 1.5 1998/03/27 00:33:33 jrobbins Exp $
 
 package uci.gef;
 
@@ -310,11 +310,20 @@ public class FigPoly extends Fig {
     }
   }
 
+  public Point getPoints(int i) { return new Point(_xpoints[i], _ypoints[i]); }
 
+  
   /** When the user drags the handles, move individual points */
   public void setPoints(Handle h, int mX, int mY) {
     moveVertex(h, mX, mY, false);
   }
+
+
+  // needs-more-work: untested
+  public Point connectionPoint(Point anotherPt) {
+    return Geometry.ptClosestTo(_xpoints, _ypoints, _npoints, anotherPt);
+  }
+
 
   ////////////////////////////////////////////////////////////////
   // painting methods

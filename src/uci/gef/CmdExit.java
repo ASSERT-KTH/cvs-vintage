@@ -19,7 +19,7 @@
 // File: CmdExit.java
 // Classes: CmdExit
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdExit.java,v 1.1 1998/03/25 22:06:31 jrobbins Exp $
+// $Id: CmdExit.java,v 1.2 1998/03/27 00:33:13 jrobbins Exp $
 
 package uci.gef;
 

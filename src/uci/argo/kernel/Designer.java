@@ -19,7 +19,7 @@
 // File: Designer.java
 // Classes: Designer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Designer.java,v 1.2 1998/03/25 22:10:13 jrobbins Exp $
+// $Id: Designer.java,v 1.3 1998/03/27 00:33:04 jrobbins Exp $
 
 package uci.argo.kernel;
 

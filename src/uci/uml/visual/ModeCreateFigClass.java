@@ -19,13 +19,13 @@
 // File: ModeCreateFigClass.java
 // Classes: ModeCreateFigClass
 // Original Author: abonner
-// $Id: ModeCreateFigClass.java,v 1.1 1998/03/09 22:14:59 abonner Exp $
+// $Id: ModeCreateFigClass.java,v 1.2 1998/03/27 00:30:49 jrobbins Exp $
 
 package uci.uml.visual;
 
-import java.awt.Event;
+import java.awt.event.*;
+
 import uci.gef.*;
-import uci.uml.*;
 
 /** A Mode to interpert user input while creating a FigRect. All of
  *  the actual event handling is inherited from ModeCreate. This class
@@ -39,7 +39,7 @@ public class ModeCreateFigClass extends ModeCreateFigRect {
   ////////////////////////////////////////////////////////////////
   // Mode API
   
-  public Fig createNewItem(Event e, int snapX, int snapY) {
+  public Fig createNewItem(MouseEvent me, int snapX, int snapY) {
     return new FigClass();
   }
 

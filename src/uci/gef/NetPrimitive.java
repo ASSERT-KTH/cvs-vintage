@@ -19,7 +19,7 @@
 // File: NetPrimitive.java
 // Classes: NetPrimitive
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NetPrimitive.java,v 1.2 1998/03/25 22:07:10 jrobbins Exp $
+// $Id: NetPrimitive.java,v 1.3 1998/03/27 00:33:52 jrobbins Exp $
 
 package uci.gef;
 

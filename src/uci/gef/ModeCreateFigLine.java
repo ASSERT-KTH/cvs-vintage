@@ -19,7 +19,7 @@
 // File: ModeCreateFigLine.java
 // Classes: ModeCreateFigLine
 // Original Author: ics125b spring 1996
-// $Id: ModeCreateFigLine.java,v 1.2 1998/03/25 22:07:01 jrobbins Exp $
+// $Id: ModeCreateFigLine.java,v 1.3 1998/03/27 00:33:44 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: Selection.java
 // Classes: Selection
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Selection.java,v 1.2 1998/03/25 22:07:17 jrobbins Exp $
+// $Id: Selection.java,v 1.3 1998/03/27 00:33:55 jrobbins Exp $
 
 package uci.gef;
 

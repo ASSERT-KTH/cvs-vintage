@@ -27,7 +27,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphModel.java,v 1.3 1998/03/25 22:08:27 jrobbins Exp $
+// $Id: DefaultGraphModel.java,v 1.4 1998/03/27 00:34:05 jrobbins Exp $
 
 package uci.graph;
 
@@ -137,28 +137,28 @@ public class DefaultGraphModel extends MutableGraphSupport {
   public void removeNode(Object node) {
     NetNode n = (NetNode) node;
     _netList.removeNode(n);
-    fireNodeRemovedEvent(n);
+    fireNodeRemoved(n);
   }
 
   /** Add the given node to the graph, if valid. */
   public void addNode(Object node) {
     NetNode n = (NetNode) node;
     _netList.addNode(n);
-    fireNodeAddedEvent(n);
+    fireNodeAdded(n);
   }
 
   /** Add the given edge to the graph, if valid. */
   public void addEdge(Object edge) {
     NetEdge e = (NetEdge) edge;
     _netList.addEdge(e);
-    fireEdgeAddedEvent(e);
+    fireEdgeAdded(e);
   }
 
   /** Remove the given edge from the graph. */
   public void removeEdge(Object edge) {
     NetEdge e = (NetEdge) edge;
     _netList.removeEdge(e);
-    fireEdgeRemovedEvent(e);
+    fireEdgeRemoved(e);
   }
 
   /** Return true if the two given ports can be connected by a 

@@ -19,7 +19,7 @@
 // File: FlexibleApplet.java
 // Classes: FlexibleApplet
 // Original Author: ics125b spring 1996
-// $Id: FlexibleApplet.java,v 1.3 1998/03/25 22:07:31 jrobbins Exp $
+// $Id: FlexibleApplet.java,v 1.4 1998/03/27 00:33:59 jrobbins Exp $
 
 package uci.gef.demo;
 

@@ -19,7 +19,7 @@
 // File: SelectionManager.java
 // Classes: SelectionManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SelectionManager.java,v 1.2 1998/03/25 22:07:18 jrobbins Exp $
+// $Id: SelectionManager.java,v 1.3 1998/03/27 00:33:55 jrobbins Exp $
 
 package uci.gef;
 

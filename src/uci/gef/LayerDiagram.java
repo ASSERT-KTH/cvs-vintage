@@ -19,7 +19,7 @@
 // File: LayerDiagram.java
 // Classes: LayerDiagram
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerDiagram.java,v 1.3 1998/03/25 22:06:53 jrobbins Exp $
+// $Id: LayerDiagram.java,v 1.4 1998/03/27 00:33:38 jrobbins Exp $
 
 package uci.gef;
 

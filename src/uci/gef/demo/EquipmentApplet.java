@@ -19,7 +19,7 @@
 // File: EquipmentApplet.java
 // Classes: EquipmentApplet
 // Original Author: ics125b spring 1996
-// $Id: EquipmentApplet.java,v 1.3 1998/03/25 22:07:29 jrobbins Exp $
+// $Id: EquipmentApplet.java,v 1.4 1998/03/27 00:33:58 jrobbins Exp $
 
 package uci.gef.demo;
 

@@ -19,7 +19,7 @@
 // File: Agency.java
 // Classes: Agency, Trigger
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Agency.java,v 1.2 1998/03/25 22:10:08 jrobbins Exp $
+// $Id: Agency.java,v 1.3 1998/03/27 00:33:00 jrobbins Exp $
 
 package uci.argo.kernel;
 

@@ -20,7 +20,7 @@
 // File: CmdSave.java
 // Classes: CmdSave
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSave.java,v 1.1 1998/03/25 22:06:37 jrobbins Exp $
+// $Id: CmdSave.java,v 1.2 1998/03/27 00:33:20 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: ModeCreateFigImage.java
 // Classes: ModeCreateFigImage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ModeCreateFigImage.java,v 1.2 1998/03/25 22:06:59 jrobbins Exp $
+// $Id: ModeCreateFigImage.java,v 1.3 1998/03/27 00:33:43 jrobbins Exp $
 
 package uci.gef;
 

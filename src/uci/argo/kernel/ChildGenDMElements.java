@@ -19,7 +19,7 @@
 // File: ChildGenDMElements.java
 // Classes: ChildGenDMElements
 // Original Author: jrobbins
-// $Id: ChildGenDMElements.java,v 1.2 1998/03/25 22:10:09 jrobbins Exp $
+// $Id: ChildGenDMElements.java,v 1.3 1998/03/27 00:33:00 jrobbins Exp $
 
 package uci.argo.kernel;
 

@@ -19,7 +19,7 @@
 // File: Layer.java
 // Classes: Layer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Layer.java,v 1.2 1998/03/25 22:06:52 jrobbins Exp $
+// $Id: Layer.java,v 1.3 1998/03/27 00:33:38 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125b spring 1996
-// $Id: Editor.java,v 1.3 1998/03/25 22:06:46 jrobbins Exp $
+// $Id: Editor.java,v 1.4 1998/03/27 00:33:29 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: Action.java
 // Classes: Action
 // Original Author: jrobbins@ics.uci.edu
-// $Id: Cmd.java,v 1.1 1998/03/25 22:06:26 jrobbins Exp $
+// $Id: Cmd.java,v 1.2 1998/03/27 00:33:08 jrobbins Exp $
 
 package uci.gef;
 
@@ -61,6 +61,11 @@ implements java.io.Serializable {
     _args = args;
   }
 
+  public Cmd(Hashtable args, String name, ImageIcon icon) {
+    super(name, icon);
+    _args = args;
+  }
+
   /** Construct a new Cmd with no arguments */
   public Cmd(String name) { this(null, name); }
 
@@ -75,7 +80,7 @@ implements java.io.Serializable {
   }
 
   protected static String imageName(String name) {
-    return "Images/" + stripJunk(name) + ".gif";
+    return "/Images/" + stripJunk(name) + ".gif";
   }
 
   protected static String stripJunk(String s) {

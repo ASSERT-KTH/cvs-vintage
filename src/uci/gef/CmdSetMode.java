@@ -19,11 +19,12 @@
 // File: CmdSetMode.java
 // Classes: CmdSetMode
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdSetMode.java,v 1.1 1998/03/25 22:06:41 jrobbins Exp $
+// $Id: CmdSetMode.java,v 1.2 1998/03/27 00:33:25 jrobbins Exp $
 
 package uci.gef;
 
 import java.util.*;
+import com.sun.java.swing.ImageIcon;
 
 /** Cmd that sets the next global editor mode. The global editor
  *  mode effects the next editor that you move the mouse into. For
@@ -67,6 +68,21 @@ public class CmdSetMode extends Cmd {
 
   public CmdSetMode(Class modeClass, String arg, Object value) {
     super("Set Editor Mode");
+    _modeArgs = new Hashtable(1);
+    _modeArgs.put(arg, value);
+    setArg("desiredModeClass", modeClass);
+  }
+
+  public CmdSetMode(Class modeClass, String arg, Object value, String name) {
+    super(name);
+    _modeArgs = new Hashtable(1);
+    _modeArgs.put(arg, value);
+    setArg("desiredModeClass", modeClass);
+  }
+
+    public CmdSetMode(Class modeClass, String arg, Object value,
+		    String name, ImageIcon icon) {
+    super(null, name, icon);
     _modeArgs = new Hashtable(1);
     _modeArgs.put(arg, value);
     setArg("desiredModeClass", modeClass);

@@ -19,7 +19,7 @@
 // File: LayerPolar.java
 // Classes: LayerPolar
 // Original Author: jrobbins@ics.uci.edu
-// $Id: LayerPolar.java,v 1.2 1998/03/25 22:06:55 jrobbins Exp $
+// $Id: LayerPolar.java,v 1.3 1998/03/27 00:33:40 jrobbins Exp $
 
 package uci.gef;
 

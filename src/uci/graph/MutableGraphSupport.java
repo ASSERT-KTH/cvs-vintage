@@ -28,7 +28,7 @@
 // File: DefaultGraphModel.java
 // Interfaces: DefaultGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphSupport.java,v 1.1 1998/02/18 22:36:06 jrobbins Exp $
+// $Id: MutableGraphSupport.java,v 1.2 1998/03/27 00:34:07 jrobbins Exp $
 
 package uci.graph;
 
@@ -133,8 +133,8 @@ public abstract class MutableGraphSupport implements MutableGraphModel {
   ////////////////////////////////////////////////////////////////
   // event notifications
 
-  public void fireNodeAddedEvent(NetNode n) {
-    GraphEvent ge = new GraphEvent(this, n);
+  public void fireNodeAdded(Object node) {
+    GraphEvent ge = new GraphEvent(this, node);
     Enumeration listeners = _graphListeners.elements();
     while (listeners.hasMoreElements()) {
       GraphListener listen = (GraphListener) listeners.nextElement();
@@ -142,8 +142,8 @@ public abstract class MutableGraphSupport implements MutableGraphModel {
     }
   }
 
-  public void fireNodeRemovedEvent(NetNode n) {
-    GraphEvent ge = new GraphEvent(this, n);
+  public void fireNodeRemoved(Object node) {
+    GraphEvent ge = new GraphEvent(this, node);
     Enumeration listeners = _graphListeners.elements();
     while (listeners.hasMoreElements()) {
       GraphListener listen = (GraphListener) listeners.nextElement();
@@ -151,8 +151,8 @@ public abstract class MutableGraphSupport implements MutableGraphModel {
     }
   }
 
-  public void fireEdgeAddedEvent(NetEdge e) {
-    GraphEvent ge = new GraphEvent(this, e);
+  public void fireEdgeAdded(Object edge) {
+    GraphEvent ge = new GraphEvent(this, edge);
     Enumeration listeners = _graphListeners.elements();
     while (listeners.hasMoreElements()) {
       GraphListener listen = (GraphListener) listeners.nextElement();
@@ -160,8 +160,8 @@ public abstract class MutableGraphSupport implements MutableGraphModel {
     }
   }
 
-  public void fireEdgeRemovedEvent(NetEdge e) {
-    GraphEvent ge = new GraphEvent(this, e);
+  public void fireEdgeRemoved(Object edge) {
+    GraphEvent ge = new GraphEvent(this, edge);
     Enumeration listeners = _graphListeners.elements();
     while (listeners.hasMoreElements()) {
       GraphListener listen = (GraphListener) listeners.nextElement();
@@ -169,7 +169,7 @@ public abstract class MutableGraphSupport implements MutableGraphModel {
     }
   }
 
-  public void fireGraphChangedEvent(NetEdge e) {
+  public void fireGraphChanged() {
     GraphEvent ge = new GraphEvent(this, null);
     Enumeration listeners = _graphListeners.elements();
     while (listeners.hasMoreElements()) {

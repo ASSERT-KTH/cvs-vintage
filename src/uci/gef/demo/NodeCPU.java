@@ -19,7 +19,7 @@
 // File: NodeCPU.java
 // Classes: NodeCPU
 // Original Author: jrobbins@ics.uci.edu
-// $Id: NodeCPU.java,v 1.3 1998/03/25 22:07:31 jrobbins Exp $
+// $Id: NodeCPU.java,v 1.4 1998/03/27 00:34:00 jrobbins Exp $
 
 package uci.gef.demo;
 

@@ -27,7 +27,7 @@
 // File: DefaultGraphNodeRenderer.java
 // Classes: DefaultGraphNodeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphNodeRenderer.java,v 1.3 1998/03/25 22:08:27 jrobbins Exp $
+// $Id: DefaultGraphNodeRenderer.java,v 1.4 1998/03/27 00:34:06 jrobbins Exp $
 
 package uci.graph;
 

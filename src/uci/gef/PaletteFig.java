@@ -19,7 +19,7 @@
 // File: PaletteFig.java
 // Classes: PaletteFig
 // Original Author: ics125b spring 1996
-// $Id: PaletteFig.java,v 1.3 1998/03/25 22:07:14 jrobbins Exp $
+// $Id: PaletteFig.java,v 1.4 1998/03/27 00:33:53 jrobbins Exp $
 
 package uci.gef;
 

@@ -19,7 +19,7 @@
 // File: SamplePort.java
 // Classes: SamplePort
 // Original Author: ics125b spring 1996
-// $Id: SamplePort.java,v 1.2 1998/03/25 22:07:35 jrobbins Exp $
+// $Id: SamplePort.java,v 1.3 1998/03/27 00:34:03 jrobbins Exp $
 
 package uci.gef.demo;
 

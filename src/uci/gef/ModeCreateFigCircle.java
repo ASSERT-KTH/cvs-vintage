@@ -19,7 +19,7 @@
 // File: ModeCreateFigCircle.java
 // Classes: ModeCreateFigCircle
 // Original Author: ics125b spring 1996
-// $Id: ModeCreateFigCircle.java,v 1.2 1998/03/25 22:06:58 jrobbins Exp $
+// $Id: ModeCreateFigCircle.java,v 1.3 1998/03/27 00:33:42 jrobbins Exp $
 
 package uci.gef;
 

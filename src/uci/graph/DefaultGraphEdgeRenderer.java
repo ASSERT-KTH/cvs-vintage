@@ -27,7 +27,7 @@
 // File: DefaultGraphEdgeRenderer.java
 // Classes: DefaultGraphEdgeRenderer
 // Original Author: jrobbins@ics.uci.edu
-// $Id: DefaultGraphEdgeRenderer.java,v 1.3 1998/03/25 22:08:26 jrobbins Exp $
+// $Id: DefaultGraphEdgeRenderer.java,v 1.4 1998/03/27 00:34:05 jrobbins Exp $
 
 package uci.graph;
 

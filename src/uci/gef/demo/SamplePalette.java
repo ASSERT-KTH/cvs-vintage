@@ -19,7 +19,7 @@
 // File: SamplePalette.java
 // Classes: SamplePalette
 // Original Author: jrobbins@ics.uci.edu
-// $Id: SamplePalette.java,v 1.2 1998/03/25 22:07:35 jrobbins Exp $
+// $Id: SamplePalette.java,v 1.3 1998/03/27 00:34:02 jrobbins Exp $
 
 package uci.gef.demo;
 

@@ -19,7 +19,7 @@
 // File: PortPower.java
 // Classes: PortPower
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PortPower.java,v 1.2 1998/03/25 22:07:33 jrobbins Exp $
+// $Id: PortPower.java,v 1.3 1998/03/27 00:34:01 jrobbins Exp $
 
 package uci.gef.demo;
 

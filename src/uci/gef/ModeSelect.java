@@ -19,7 +19,7 @@
 // File: ModeSelect.java
 // Classes: ModeSelect
 // Original Author: ics125b spring 1996
-// $Id: ModeSelect.java,v 1.2 1998/03/25 22:07:07 jrobbins Exp $
+// $Id: ModeSelect.java,v 1.3 1998/03/27 00:33:49 jrobbins Exp $
 
 package uci.gef;
 

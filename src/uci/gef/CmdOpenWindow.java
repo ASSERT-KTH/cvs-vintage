@@ -19,7 +19,7 @@
 // File: CmdOpenWindow.java
 // Classes: CmdOpenWindow
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CmdOpenWindow.java,v 1.1 1998/03/25 22:06:35 jrobbins Exp $
+// $Id: CmdOpenWindow.java,v 1.2 1998/03/27 00:33:17 jrobbins Exp $
 
 package uci.gef;
 
