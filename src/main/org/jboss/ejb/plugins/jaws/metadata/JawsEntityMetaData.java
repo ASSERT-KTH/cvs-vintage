@@ -34,7 +34,7 @@ import org.jboss.logging.Logger;
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -59,6 +59,9 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	
 	// do we use tuned updates?
 	private boolean tunedUpdates;
+
+        // do we use 'SELECT ... FOR UPDATE' syntax?
+        private boolean selectForUpdate;
 
 	// is the bean read-only?
 	private boolean readOnly;
@@ -195,7 +198,7 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 	
 	public String getPrimKeyField() { return entity.getPrimKeyField(); }
 	
-	
+	public boolean hasSelectForUpdate() { return selectForUpdate; }
 		
 	// XmlLoadable implementation ------------------------------------
 	
@@ -227,7 +230,11 @@ public class JawsEntityMetaData extends MetaData implements XmlLoadable {
 		// read only?  If not provided, keep default.
 		String roStr = getElementContent(getOptionalChild(element, "read-only"));
 	    if (roStr != null) readOnly = Boolean.valueOf(roStr).booleanValue();
-		
+
+		String sForUpStr = getElementContent(getOptionalChild(element, "select-for-update"));
+		if (sForUpStr != null) selectForUpdate = (Boolean.valueOf(sForUpStr).booleanValue());
+		selectForUpdate = selectForUpdate && !readOnly;
+
 		// read only timeout?  
 		String toStr = getElementContent(getOptionalChild(element, "time-out"));
 		if (toStr != null) timeOut = Integer.valueOf(toStr).intValue();

@@ -2,6 +2,7 @@
 <jaws>
     <datasource>java:/DefaultDS</datasource>
     <type-mapping>Hypersonic SQL</type-mapping>
+    <debug>false</debug>
 
     <default-entity>
        <create-table>true</create-table>
@@ -9,6 +10,7 @@
        <tuned-updates>false</tuned-updates>
        <read-only>false</read-only>
        <time-out>300</time-out>
+       <select-for-update>false</select-for-update>
     </default-entity>
 
     <type-mappings>

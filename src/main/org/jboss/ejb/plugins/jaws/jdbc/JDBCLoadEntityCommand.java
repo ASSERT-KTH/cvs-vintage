@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.jaws.metadata.JawsEntityMetaData;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCLoadEntityCommand
    extends JDBCQueryCommand
@@ -62,6 +62,10 @@ public class JDBCLoadEntityCommand
       
       sql += " FROM " + jawsEntity.getTableName() +
              " WHERE " + getPkColumnWhereList();
+      if (jawsEntity.hasSelectForUpdate())
+      {
+         sql += " FOR UPDATE";
+      }
 
       setSQL(sql);
    }
