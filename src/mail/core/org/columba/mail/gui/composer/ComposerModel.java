@@ -283,8 +283,6 @@ public class ComposerModel {
 
 	public Vector getRCPTVector() {
 		Vector output = new Vector();
-		Enumeration aktEnum;
-		Object aktAdress;
 
 		Vector v = ListParser.parseVector(getToList());
 		output.addAll(AddressParser.normalizeRCPTVector(v));
