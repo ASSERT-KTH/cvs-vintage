@@ -48,6 +48,7 @@ package org.tigris.scarab.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.File;
 
 // Turbine Stuff 
 import org.apache.turbine.Turbine;
@@ -56,12 +57,17 @@ import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.commons.util.SequencedHashtable;
+import org.apache.commons.collections.ExtendedProperties;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.upload.FileItem;
+import org.apache.fulcrum.TurbineServices;
+import org.apache.fulcrum.upload.TurbineUploadService;
+import org.apache.fulcrum.upload.UploadService;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -75,6 +81,8 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentType;
+import org.tigris.scarab.om.AttachmentTypePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.TransactionTypePeer;
@@ -87,11 +95,11 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.70 2001/11/28 00:06:26 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.71 2001/12/19 23:56:40 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
-    public void doCheckforduplicates( RunData data, TemplateContext context )
+    public void doCheckforduplicates(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -110,7 +118,7 @@ public class ReportIssue extends RequireLoginFirstAction
             setTarget(data, "entry,Wizard1.vm");
             return;
         }
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             // set the values entered so far
             setAttributeValues(issue, intake);
@@ -163,7 +171,7 @@ public class ReportIssue extends RequireLoginFirstAction
         // to final entry screen
         String template = null;
         boolean beatThreshold = false;
-        if ( matchingIssues.size() > threshold )
+        if (matchingIssues.size() > threshold)
         {
             scarabR.setIssueList(matchingIssues);
             template = "entry,Wizard2.vm";
@@ -201,20 +209,20 @@ public class ReportIssue extends RequireLoginFirstAction
             .getRequiredAttributes(issueType);
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
-        while ( iter.hasNext() ) 
+        while (iter.hasNext()) 
         {
             AttributeValue aval = (AttributeValue)avMap.get(iter.next());
             
             Group group = 
                 intake.get("AttributeValue", aval.getQueryKey(), false);
-            if ( group != null ) 
+            if (group != null) 
             {            
                 Field field = null;
-                if ( aval instanceof OptionAttribute ) 
+                if (aval instanceof OptionAttribute) 
                 {
                     field = group.get("OptionId");
                 }
-                else if ( aval instanceof UserAttribute ) 
+                else if (aval instanceof UserAttribute) 
                 {
                     field = group.get("UserId");
                 }
@@ -223,12 +231,11 @@ public class ReportIssue extends RequireLoginFirstAction
                     field = group.get("Value");
                 }
                 
-                for ( int j=requiredAttributes.length-1; j>=0; j-- ) 
+                for (int j=requiredAttributes.length-1; j>=0; j--) 
                 {
-                    if ( aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey() )
-                         && !aval.isSet()
-                       ) 
+                    if (aval.getAttribute().getPrimaryKey().equals(
+                         requiredAttributes[j].getPrimaryKey())
+                         && !aval.isSet())
                     {
                         field.setRequired(true);
                         break;
@@ -256,7 +263,7 @@ public class ReportIssue extends RequireLoginFirstAction
             AttributeValue aval = (AttributeValue)avMap.get(i.next());
             Group group = 
                 intake.get("AttributeValue", aval.getQueryKey(), false);
-            if ( group != null ) 
+            if (group != null) 
             {
                 group.setProperties(aval);
             }                
@@ -266,7 +273,7 @@ public class ReportIssue extends RequireLoginFirstAction
     /**
      * handles entering an issue
      */
-    public void doEnterissue( RunData data, TemplateContext context )
+    public void doEnterissue(RunData data, TemplateContext context)
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
@@ -319,9 +326,49 @@ public class ReportIssue extends RequireLoginFirstAction
                     if (attachment.getData() != null 
                          && attachment.getData().length > 0)
                     {
-                        attachment.setIssue(issue);
-                        attachment.setTypeId(new NumberKey(1));
-                        attachment.save();
+                        FileItem file = attachment.getFile();
+                        String fileNameWithPath =file.getFileName();
+                        String fileName = fileNameWithPath
+                            .substring(fileNameWithPath.lastIndexOf(File.separator)+1);
+                        
+                        ExtendedProperties extProp = TurbineServices.getInstance()
+                            .getService(UploadService.SERVICE_NAME).getConfiguration();
+                        String uploadFileRepo = (String)extProp.getProperty(UploadService.REPOSITORY_KEY);
+                        String moduleCode = scarabR.getIssue().getModule().getCode();
+                        String repoModuleDir = uploadFileRepo + File.separator + moduleCode;
+                        File repoDir = new File(repoModuleDir);
+                        
+                        if (!repoDir.exists())
+                        {
+                            repoDir.mkdir();
+                        }
+                        
+                        String uploadFile = repoModuleDir + File.separator + fileName;
+                        
+                        if (!new File(uploadFile).exists())
+                        {
+                            //issue.save();
+                            
+                            file.write(uploadFile);
+                            
+                            attachment.setFilePath(uploadFile);
+                            attachment.setData(null);
+                            attachment.setAttachmentType(AttachmentType
+                                                .getInstance(AttachmentTypePeer.ATTACHMENT_TYPE_NAME));
+                            attachment.setIssue(issue);
+                            attachment.setTypeId(new NumberKey(1));
+                            attachment.save();
+                        }
+                        else
+                        {
+                            data.setMessage(uploadFile + 
+                                " already exists, please change your file name");
+                            
+                            data.getParameters().add("id", 
+                                                     issue.getUniqueId().toString());
+                            setTarget(data, "entry,Wizard3.vm");
+                            return;
+                        }
                     }
                 }
 
@@ -412,7 +459,7 @@ public class ReportIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        if ( intake.isAllValid() ) 
+        if (intake.isAllValid()) 
         {
             Group group = intake.get("Issue", IntakeTool.DEFAULT_KEY);        
             ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -435,7 +482,7 @@ public class ReportIssue extends RequireLoginFirstAction
             catch (ScarabException e)
             {
                 data.setMessage("Vote could not be added.  Reason given: "
-                                + e.getMessage() );
+                                + e.getMessage());
                 // User attempted to vote when they were not allowed.  This
                 // should probably not be allowed in the ui, but right now
                 // it is and we should protect against url hacking anyway.
@@ -504,7 +551,7 @@ public class ReportIssue extends RequireLoginFirstAction
     {
         String historyScreen = data.getParameters()
             .getString(ScarabConstants.HISTORY_SCREEN);
-        if ( historyScreen == null ) 
+        if (historyScreen == null) 
         {
             historyScreen = "entry,Wizard3.vm";            
         }
