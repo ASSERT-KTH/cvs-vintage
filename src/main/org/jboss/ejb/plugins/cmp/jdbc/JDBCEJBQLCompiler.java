@@ -88,7 +88,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
  * Compiles EJB-QL and JBossQL into SQL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCEJBQLCompiler extends BasicVisitor {
 
@@ -1072,11 +1072,9 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("concat");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
-         node.jjtGetChild(1).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
+         new NodeStringWrapper(node.jjtGetChild(1)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1089,13 +1087,10 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("substring");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
-         node.jjtGetChild(1).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
-         node.jjtGetChild(2).jjtAccept(
-               this, new BlockStringBuffer()).toString()
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
+         new NodeStringWrapper(node.jjtGetChild(1)),
+         new NodeStringWrapper(node.jjtGetChild(2)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1108,9 +1103,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("lcase");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1123,9 +1117,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("ucase");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString(),
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1138,9 +1131,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("length");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString()
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1153,8 +1145,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("locate");
-      Object[] args = new Object[3];
       
+      Object[] args = new Object[3];
       args[0] = new NodeStringWrapper(node.jjtGetChild(0));
       args[1] = new NodeStringWrapper(node.jjtGetChild(1));
       if(node.jjtGetNumChildren()==3) {
@@ -1175,9 +1167,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("abs");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString()
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
       }; 
       buf.append(function.getFunctionSql(args));
 
@@ -1190,9 +1181,8 @@ public class JDBCEJBQLCompiler extends BasicVisitor {
 
       JDBCFunctionMappingMetaData function =
             typeMapping.getFunctionMapping("sqrt");
-      String[] args = new String[] {
-         node.jjtGetChild(0).jjtAccept(
-               this, new BlockStringBuffer()).toString()
+      Object[] args = new Object[] {
+         new NodeStringWrapper(node.jjtGetChild(0)),
       }; 
       buf.append(function.getFunctionSql(args));
 
