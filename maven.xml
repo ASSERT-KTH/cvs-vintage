@@ -189,6 +189,38 @@
             </ant:fileset>
         </ant:copy>
     </goal>
+
+    <!-- ======================================================== -->
+    <!-- P R O P E R T Y  -  M A I N T E N A N C E                -->
+    <!-- ======================================================== -->
+    <!-- This goal creates project.properties and                 -->
+    <!-- minimal.properties out of the source file                -->
+    <!-- scarab_properties.xml                                    -->
+    <!--                                                          -->
+    <!-- This goal should be run everytime when the               -->
+    <!-- scarab_properties.xml has changed                        -->
+    <!--                                                          -->
+    <!-- Manual run command:                                      -->
+    <!--                                                          -->
+    <!--     Maven scarab:update-properties                       -->
+    <!-- ======================================================== -->
+        
+    <goal
+        name="scarab:update-properties"
+        description="update the scarab project.properties">
+  
+        ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')} 
+        <ant:style  
+             in="xdocs/scarab_properties.xml"
+             out="project.properties"
+             style="project.xsl">
+             <outputproperty name="method" value="text"/>
+        </ant:style> 
+    </goal>
+
+    <!-- ===================================================== -->
+    <!-- END  P R O P E R T Y  -  M A I N T E N A N C E        -->    
+    <!-- ===================================================== -->         
     
     <!-- ===================================================== -->
     <!-- R E P O S I T O R Y  -  M A I N T E N A N C E         -->

@@ -1,360 +1,2589 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?><properties>
+  <details>
+    
+               _________ B U I L D   S Y S T E M ___.    
+              /   _____/ ____ _____ ____________ \_ |__  
+              \_____  \_/ ___\\__  \\_  __ \__  \ | __ \ 
+              /        \  \___ / __ \|  | \// __ \| \_\ \
+             /_______  /\___  &gt;____  /__|  (____  /___  /
+                     \/     \/     \/           \/    \/ 
+    
+             --------------------------------------------
+                 P R O J E C T  -  P R O P E R T I E S
+             --------------------------------------------
+    
+              &gt;&gt;&gt;&gt; CAUTION: DO NOT MODIFY THIS FILE. &lt;&lt;&lt;&lt;
+    
+    
+     This file contains Scarab initial property settings.
+     Please refer to the file
+    
+         scarab/README.txt 
+    
+     for instructions on how to override these default settings.
+    
+     Quick info for the impatient
+     ============================
+    
+     * If you build Scarab from a source distribution:
+       Please copy (NOT RENAME!) this file (project.properties)
+       to build.properties in the same directory. 
+       Note: The file build.properties intentionally does not exist 
+       in the distribution and can be created 
+       as follows (under unix):
+    
+         cp project.properties build.properties
+     
+       You can safely change your settings in build.properties.
+       You may remove all properties you do NOT want to change
+       and keep a small remainder of local property settings in
+       your customized build.properties
+       The file build.properties will never be overridden during 
+       a cvs update operation.
+     
+     * If you install Scarab from a binary distribution:
+       Please copy this file (defaultCustom.properties) to 
+       custom.properties in the same directory. 
+       Note: The file custom.properties exists in the distribution
+       but it is intentionally left empty. It can be created 
+       as follows (under unix):
+    
+         cp defaultCustom.properties custom.properties
+       
+       Now you can safely change your settings in custom.properties.
+       You may remove all properties you do NOT want to change
+       and keep a small remainder of local property settings
+       in your customized custom.properties
+       The file custom.properties will never be overridden during an upgrade.
+    
+     $Id: scarab_properties.xml,v 1.2 2004/12/22 22:39:34 dabbous Exp $
+    
+     Structure of this file
+     ----------------------
+    
+     Below you find several sections corresponding to different
+     logical Scarab sections. Each section contains specific 
+     properties together with appropriate default 
+     settings and basic documentation about their purpose.
+    
+     Note: Each property has a default factory setting, hence
+     unpacking, installing Scarab followed by creating a
+     default database will result in an "out of the box" Scarab
+     runtime. The out of the box runtime is currently based on 
+     hypersonic.   
+  </details>
 
-<properties>
-  <property>
-    <name>scarab.site.name</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>Name</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Name of the project ("Scarab" for the standard distribution).
-    </comment>
-  </property>
-  
-  <property>
-    <name>version</name>
-    <type>Build</type>
-    <file></file>
-    <comment>Project version.</comment>
-  </property>
-  
-  <property>
-    <name>project</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Name of the project, used for???.
-    </comment>
-  </property>
-  
-  <property>
-    <name>year</name>
-    <type>Build</type>
-    <file></file>
-    <comment>Year, possibly used for copyright message.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.type</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.name</name>
-    <type>Build/Runtime</type>
-    <file></file>
-    <comment>
-      I don't know whether Torque needs building with the database
-      name or not. If not, this can just be a runtime property.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.host</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.port</name>
-    <type>Build/Runtime</type>
-    <file></file>
-    <comment>The port that the database is running on.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.jdbc.driver</name>
-    <type>Build/Runtime</type>
-    <file></file>
-    <comment>
-      The JDBC driver to use for the database connection. We supply standard
-      ones for several databases, but users should have the option to supply
-      their own.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.url</name>
-    <type>?</type>
-    <file></file>
-    <comment>
-      This property is specific to a database driver and is built up from
-      other user-specified properties. I guess this goes hand-in-hand with
-      'scarab.database.jdbc.driver'.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.admin.url</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      JDBC URL to use when creating and seeding the database.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.username</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.password</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.admin.username</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Database user to use when creating and seeding the database.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.admin.password</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Password to use when creating and seeding the database.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.test.database.name</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      I think this is the name of the test database used for running unit
-      tests against, so it should be a build property. Not sure though.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.test.database.url</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      JDBC URL used to connect to the test database.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.test.database.username</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.test.database.password</name>
-    <type>Build</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.validationQuery</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Not sure this property should be available at all. I would hard-code it
-      per database type.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.jdbc.driver.jar</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      I guess this works in a similar fashion to 'scarab.database.jdbc.driver'. If
-      one is set by the user, so should the other. Normally these should be provided
-      as defaults on a per database type basis.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.database.loadorder</name>
-    <type>Build</type>
-    <file></file>
-    <comment>Drop this? Don't know whether it's still useful.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.context</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      What shall we do with this? Normally the context comes from
-      the name of the deployed WAR file, unless a different context
-      name is configured in server.xml. Maybe just allow the user
-      to configure the context name via server.xml directly?
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.http.domain</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      This also appears in the database, and I'm really not sure
-      what to do about it. It causes a lot of problems with the
-      generated e-mail links.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.http.port</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>See 'scarab.http.domain'.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.http.scheme</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      Drop this? I guess that this is used for generating e-mail
-      links.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.http.scriptname</name>
-    <type>Build</type>
-    <file></file>
-    <comment>
-      Drop this? Most people seem to have problems when this is
-      set to something other than /scarab/issues anyway.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.html.redirect</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      I think this is configured in server.xml as a filter. Maybe
-      the user should just change it there directly.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.user.username</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      Username of the initial (only?) Scarab administrator. Maybe this,
-      along with the other adminstrator user properties, should be build
-      properties which modify the seed data. Otherwise use hard-coded
-      values.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.user.password</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>Password for initial Scarab administrator.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.user.firstname</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.user.lastname</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.user.email</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment></comment>
-  </property>
-  
-  <property>
-    <name>scarab.lucene.index.path</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>Where the Lucene index files are stored on disk.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.attachments.path</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>Where issue attachments are stored on disk.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.intake.serialize.file</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      Scratch/hard-code this one? Seems too obscure to have lying
-      around.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.file.upload.path</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      Temporary location on disk for uploaded files.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.system.mail.host</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>Mail server that Scarab should use to send e-mails.</comment>
-  </property>
-  
-  <property>
-    <name>scarab.email.default.fromName</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      E-mail name that e-mails from Scarab have in their 'from' address.
-    </comment>
-  </property>
-  
-  <property>
-    <name>scarab.email.default.fromAddress</name>
-    <type>Runtime</type>
-    <file></file>
-    <comment>
-      The 'from' address for e-mails that are sent by Scarab. I think this
-      generally needs to be a valid e-mail address, or at least a valid
-      domain. I vaguely remember someone having problems because they were
-      using the default from address which had an invalid domain. Something
-      didn't like it.
-    </comment>
-  </property>
+  <section name="DATABASE">
+    <details>
+      The properties in this section are only needed for database creation.
+      
+      Please see the documentation on the website and README.txt file for 
+      how to configure your specific database setup.
+      
+      The properties in the following section are only needed in the 
+      database creation phase, which is the last thing you do before you 
+      can start Scarab. 
+      
+      Please see the documentation on the website and  README.txt file for 
+      how to configure your specific database setup.
+      
+      uses in Scarab:
+      ---------------
+      
+      ant deploy          (source distribution)
+      ant generate-om     (source distribution)
+      Scarab Setup Wizard (binary distribution)
+      
+      Important for builders (source distribution): 
+
+      This section allows you to define your runtime 
+      environment together with your build time environment
+      in one specific file (this one).
+      But since the runtime properties must be propagated
+      to the final webapp, these properties will eventually
+      be propagated to the file
+      
+          WEB-INF/conf/defaultCustom.properties
+      
+      This copy is done in the deploy phase (ant deploy)
+      where the file default.properties is used as blueprint
+      for the layout, but the property values are taken
+      from the current user settings, i.e. all of your
+      property modifications from build.properties will show 
+      up in the webapp under WEB-INF/conf/defaultCustom.properties
+      
+      Hence if you build your own instance, defaultCustom.properties
+      will allready contain your individual setup and you can
+      start your instance without further property modifications in
+      the webapp.
+      If you build a generic binary distribution, all you need to
+      do after a fresh checkout will be:
+      
+      ant deploy
+      
+      The result will be a generic binary distribution.
+    </details>
+
+    <property>
+      <name>scarab.database.type</name>
+      <default>hypersonic</default>
+      <comment/>
+      <type>Build</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+      <details>
+        This property defines, for which database the
+        Scarab instance shall be built.
+        The following values are currently allowed (the default value
+        is underlined)
+        
+        mysql, postgresql, hypersonic, mssql, oracle, db2
+                           ---------- 
+      </details>
+
+    </property>
+    <group name="user-authentification">
+      <details>
+        This is the username and password that Scarab uses to connect 
+        to the database instance when it's running.
+        Note: The default setting is UNSAFE, because we don't use
+        a password for the connection. Consider changing this in your
+        productive environment.
+      </details>
+
+      <property>
+        <name>scarab.database.username</name>
+        <default>sa</default>
+        <comment/>
+        <type>Build</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.password</name>
+        <default/>
+        <comment/>
+        <type>Build</type>
+         <customization modification="recommended">basic</customization>
+        <file/>
+      </property>
+    </group>
+
+    <group name="admin-authentification">
+      <details>
+        This is the username and password of the database user
+        that should be used to create the Scarab database and
+        tables.
+        Note: The default setting is UNSAFE, because the db admin
+        is set identical to the db user. Consider changing this in your
+        productive environment.
+      </details>
+
+      <property>
+        <name>scarab.database.admin.username</name>
+        <default>${scarab.database.username}</default>
+        <comment>
+          Database user to use when creating and seeding the database.
+        </comment>
+        <type>Build</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.admin.password</name>
+        <default>${scarab.database.password}</default>
+        <comment>
+          Password to use when creating and seeding the database.
+        </comment>
+        <type>Build</type>
+         <customization modification="recommended">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.host</name>
+        <default>localhost</default>
+        <comment/>
+        <type>Build</type>
+         <customization modification="required">basic</customization>
+        <file/>
+        <details>
+          The name of the host that the database is running on.
+          Remind, that the host to be used must be known to the
+          box, where the Scarab webapplication is started. The
+          default setting assumes, that the database runs on the 
+          same host as Scarab.
+        </details>
+
+      </property>
+      <property>
+        <name>scarab.database.port</name>
+        <default>${scarab.database.port.hypersonic}</default>
+        <comment>The port that the database is running on.</comment>
+        <type>Build/Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+        <details>
+          The port on which the database server is listening for
+          connections. The default settings are for hypersonic.
+        </details>
+      </property>
+    </group>
+
+    <group name="database-urls">
+      <details>
+        These urls denote the JDBC connection strings for your database.
+        scarab.database.url.extension defines the optional parameters
+        to be sent along with the URL, i.e. the String after the "?" .
+        
+        Hypersonic (default):
+        scarab.database.url = jdbc:hsqldb:hsql://${scarab.database.host}:\
+                           ${scarab.database.port}/\
+                           ${scarab.database.name}
+        
+        MySQL:
+        The value below is for a standard MySQL database 
+        scarab.database.url = jdbc:mysql://${scarab.database.host}:\
+                           ${scarab.database.port}/\
+                           ${scarab.database.name}?\
+                           ${scarab.database.url.extension}
+        scarab.database.url.extension=
+        
+        The scarab.database.admin.url is used when creating and initially
+        populating a database instance.  
+      </details>
+
+      <property>
+        <name>scarab.database.url</name>
+        <default>${scarab.database.url.hypersonic}</default>
+        <comment>
+          This property is specific to a database driver and is built up from  
+          other user-specified properties. I guess this goes hand-in-hand with
+          'scarab.database.jdbc.driver'.
+        </comment>
+        <type>?</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.admin.url</name>
+        <default>${scarab.database.admin.url.hypersonic}</default>
+        <comment> 
+          JDBC URL to use when creating and seeding the database.
+        </comment>
+        <type>Build</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.url.extension</name>
+        <default>${scarab.database.url.extension.hypersonic}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.name</name>
+        <default>scarab</default>
+        <comment>
+          I don't know whether Torque needs building with the database
+          name or not. If not, this can just be a runtime property.
+        </comment>
+        <type>Build/Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details> 
+          The name of the database that Scarab connects to.
+          You will have to change this property only, if your
+          database name differs from the default "scarab"
+          This usually occurs when you plan to run multiple
+          Scarab instances with different databases on the same host. 
+        </details>
+      </property>
+      
+      <property>
+        <name>scarab.user.username</name>
+        <default>Administrator</default>
+        <comment>
+          Username of the initial (only?) Scarab administrator. Maybe this,
+          along with the other adminstrator user properties, should be build
+          properties which modify the seed data. Otherwise use hard-coded
+          values.
+        </comment>
+        <type>Runtime</type>
+         <customization modification="recommended">basic</customization>
+        <file/>
+        <details>
+          Scarab administration user.
+          This is the account name of the administrator account
+          in Scarab. After installation you can login to Scarab
+          with that user name.
+          Note: The initial password can not be preset here. It 
+                is always set to "1" (one, without the quotes)
+                and can only be changed online from the administrator
+                account.
+    
+          We recommend, that you change the initial password
+          immediately for security reasons.
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.database.adapter</name>
+        <default>${scarab.database.type}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          [FIXME] add documentation, what is this ?
+          How is it related to scarab.database.driver ?
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.database.pool.validationQuery</name>
+        <default>${scarab.database.pool.validationQuery.hypersonic}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          [FIXME] add documentation
+ 
+          hypersonic (default): 
+          scarab.database.pool.validationQuery = SELECT ATTRIBUTE_ID FROM SCARAB_ATTRIBUTE WHERE ATTRIBUTE_ID='0'
+
+          mysql:
+          scarab.database.pool.validationQuery = SELECT 1
+        </details>
+      </property>
+    </group>
+
+    <group name="driver-items">
+      <details>
+        [FIXME] add documentation
+        
+        hypersonic: 
+        scarab.database.jdbc.driver = org.hsqldb.jdbcDriver
+        
+        mysql (default):
+        scarab.database.jdbc.driver = org.gjt.mm.mysql.Driver
+      </details>
+
+      <property>
+        <name>scarab.database.jdbc.driver</name>
+        <default>${scarab.database.jdbc.driver.hypersonic}</default>
+        <comment>
+          The JDBC driver to use for the database connection. We supply standard
+          ones for several databases, but users should have the option to supply
+          their own.
+        </comment>
+        <type>Build/Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.database.jdbc.driver.jar</name>
+        <default>${scarab.database.jdbc.driver.jar.hypersonic}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.jdbc.handler</name>
+        <default>${scarab.jdbc.handler.hypersonic}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.module.code.length</name>
+        <default>4</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          Default length for the Module code. The module code is prepended
+          to each issue id in order to identify the module to which the
+          Issue belongs. There is usually no need to change the default value.
+        </details>
+      </property>
+    </group>
+  </section>
+
+  <section name="RUNTIME">
+    <details>
+      This is the custom settings section for Scarab. These properties
+      affect the runtime behaviour of Scarab. 
+      Alternatively, you may define the value in your web.xml or 
+      server.xml file for Scarab.
+      
+      See http://jakarta.apache.org/commons/configuration/examples.html
+      
+      Note that strings containing "," (comma) characters must backslash 
+      escape the comma (i.e. '\,')
+      
+      For the full set of available properties, see the files
+      
+          src/conf/conf/TurbineResources.properties 
+          src/conf/conf/Scarab.properties
+      
+      Relation to ant build:
+      -------------
+      
+        deploy
+    </details>
+
+    <property>
+      <name>system.mail.host</name>
+      <default>localhost</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="required">basic</customization>
+      <file/>
+      <details>
+        This is the host on which your Email service runs
+        as seen from Scarab. This is usually a named host, e.g.
+        mailserver.mydomain.com. If the mail service runs
+        on the same host as Scarab, you can use the default (localhost)        
+      </details>
+    </property>
+
+    <property>
+      <name>scarab.email.domain</name>
+      <default>example.org</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="required">basic</customization>
+      <file/>
+      <details>
+        This is the domain on which your Email service rund
+        (the part right from the "@" in the email adress  
+      </details>
+    </property>
+
+    <property>
+      <name>scarab.email.default.fromName</name>
+      <default>Administrator</default>
+      <comment>
+        E-mail name that e-mails from Scarab have in their 'from' address.
+      </comment>
+      <type>Runtime</type>
+       <customization modification="required">basic</customization>
+      <file/>
+      <details>
+        This is the username, Scarab inserts into the FROM part of
+        each Email it sends to the world. Please note, that some
+        Email services insist on finding a locally existing mailuser 
+        in this field.        
+      </details>
+    </property>
+
+    <property>
+      <name>scarab.email.forgotpassword.subject</name>
+      <default>Scarab Account Password</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="recommended">basic</customization>
+      <file/>
+      <details>
+        The Email subject for emails containing 
+        information about a password reset:
+        Currently this field is not l10n enabled        
+      </details>
+    </property>
+
+    <group name="email">
+      <details>
+        Following Email related properties are derived properties.
+        Although they can be modified, usually they don't need to be changed.
+      </details>
+
+      <property>
+        <name>scarab.email.register.fromName</name>
+        <default>${scarab.email.default.fromName}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.email.forgotpassword.fromName</name>
+        <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.email.archive.toAddress</name>
+        <default>${scarab.email.default.fromName}@${scarab.email.domain}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.email.default.fromAddress</name>
+        <default>${scarab.email.default.fromName}@${scarab.email.domain}</default>
+        <comment>
+          The 'from' address for e-mails that are sent by Scarab. I think this
+          generally needs to be a valid e-mail address, or at least a valid
+          domain. I vaguely remember someone having problems because they were
+          using the default from address which had an invalid domain. Something
+          didn't like it.
+        </comment>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.email.register.fromAddress</name>
+        <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.email.forgotpassword.fromAddress</name>
+        <default>${scarab.email.register.fromName}@${scarab.email.domain}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>system.mail.smtp.from</name>
+        <default>${scarab.email.default.fromName}@${scarab.email.domain}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="required">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.automatic.role.approval</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          Per default every user request for a role configured in
+          Scarab needs manual approval from a Scarab admnistrator.
+          Sometimes it makes sense to automatically approve for
+          specific roles (e.g. for the Obeserver Role))
+          If you want more, than one role to be automatically
+          approved, write them down as comma separated list,
+
+          example:  
+          
+          scarab.automatic.role.approval=Developer,Observer,QA,Partner
+          
+          This setting will allow the four roles Developer, Observer, QA and 
+          Partner to be automatically approved (without further manual interaction) 
+
+          Since all roles can be freely customized in Scarab, we cant't set any
+          default here.
+        </details>
+      </property>
+    </group>
+
+    <group name="Turbine-properties">
+      <details>
+         Turbine related properties
+        
+         note: Session timeout unit = [sec]:
+      </details>
+
+      <property>
+        <name>session.timeout</name>
+        <default>1800</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+      <property>
+        <name>services.UploadService.repository</name>
+        <default>WEB-INF</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+      <property>
+        <name>searchindex.path</name>
+        <default>WEB-INF/index</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+    </group>
+    <group name="appserver">
+      <details>
+        Application server related properties
+        
+        scarab.http.scheme is the protocol to be used. In most situations 
+        this will be "http" (the default setting). 
+        In rare situations you may want to use "https". In that case 
+        you will also have to setup your appserver to support https.
+        
+        scarab.http.domain is the www adress under which your scarab instance 
+        is served, e.g. www.mydomain.com
+        
+        scarab.http.port is the (optional) port under which your scarab 
+        instance is served, e.g. 8080. If you are running your appserver 
+        through a http-proxy or directly on port 80, please set
+        
+            scarab.http.port=80
+        
+        scarab.context is the webapplication context under which your scarab 
+        instance is adressed on the appserver, e.g. "scarab"
+
+        The default setting resolves to:
+        
+            http://localhost:8080/scarab
+
+      </details>
+
+      <property>
+        <name>scarab.http.scheme</name>
+        <default>http</default>
+        <comment>
+          Drop this? I guess that this is used for generating e-mail
+          links.
+        </comment>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.http.domain</name>
+        <default>localhost</default>
+        <comment>
+          This also appears in the database, and I'm really not sure
+          what to do about it. It causes a lot of problems with the
+          generated e-mail links.
+        </comment>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.http.port</name>
+        <default>8080</default>
+        <comment>See 'scarab.http.domain'.</comment>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.context</name>
+        <default>scarab</default>
+        <comment>
+          What shall we do with this? Normally the context comes from
+          the name of the deployed WAR file, unless a different context
+          name is configured in server.xml. Maybe just allow the user
+          to configure the context name via server.xml directly?
+        </comment>
+        <type>Build</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.http.scriptname</name>
+        <default>/${scarab.context}/issues</default>
+        <comment>
+          Drop this? Most people seem to have problems when this is
+          set to something other than /scarab/issues anyway.
+        </comment>
+        <type>Build</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          This property must NEVER be modified.
+          They will eventually be removed from this file.
+        </details>
+      </property>
+      <property>
+        <name>scarab.attachment.remove.permanent</name>
+        <default>false</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          The default configuration keeps all file attachments on 
+          Disk, when the associations to the attachments are removed 
+          from their issues. If you change this property to "true"
+          the files will also be removed physically.
+        </details>
+
+      </property>
+      <details>
+         DHTML properties
+        
+         These properties control the DTHML features. 
+         Set a property to true in order to enable it.
+      </details>
+
+      <property>
+        <name>scarab.dhtml.hide_bars</name>
+        <default>false</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          scarab.dhtml.hide_bars enables hiding the top blue bar 
+          and the left nav bar by double clicking on it
+        </details>
+      </property>
+
+      <property>
+        <name>scarab.dhtml.autoresize_textarea</name>
+        <default>false</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          scarab.dhtml.autoresize_textarea enables textareas to 
+          automatically adjust the number of rows. 
+        </details>
+      </property>
+    </group>
+
+    <group name="site-decoration">
+      <details>
+         The scarab.site.name is a text snippet, which will be placed into the top
+         bar of every browser page. Here you can place an instance specific name.
+         default is empty.
+         The scarab.site.logo allows to add a custom specifi site logo right to
+         the text snippet ${scarab.site.name}. Default is empty.
+      </details>
+
+      <property>
+        <name>scarab.site.name</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.site.logo</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>scarab.admin.password.reset.allowed</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          This property controls, whether the administrator 
+          may reset the password of other users. Per default
+          this property is set to false.
+        </details>
+      </property>
+    </group>
+  </section>
+
+
+  <section name="DEPLOY (For Source distribution only)">
+    <details>
+      This section defines some properties, which affect, how the
+      webapplication is deployed.
+      
+      Relation to ant build:
+      ----------------------
+      
+          deploy
+
+      NOTE: These properties are only needed in the Source distribution 
+      and have no effect in the Runtime distribution.
+    </details>
+
+    <property>
+      <name>custom.properties.tmpl</name>
+      <default>${root.dir}/project.properties</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+      <details>
+        This property tells the build system, which template it shall
+        use to build the default Runtime properties file.
+        Normally the default setting is what you want.
+      </details>
+    </property>
+    <group name="customization">
+      <details>
+      </details>
+
+      <property>
+        <name>default.custom.properties</name>
+        <default>WEB-INF/conf/defaultCustom.properties</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+      <property>
+        <name>custom.properties</name>
+        <default>WEB-INF/conf/custom.properties</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+    </group>
+
+    <group name="buildtime">
+      <details>
+      </details>
+
+      <property>
+        <name>scarab.database.ant.buildfile</name>
+        <default>WEB-INF/conf/build-database.xml</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.ant.target</name>
+        <default>create-db</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+      </property>
+    </group>
+  </section>
+  <section name="TORQUE">
+    <property>
+      <name>torque.project</name>
+      <default>${project}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database</name>
+      <default>${scarab.database.type}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.type</name>
+      <default>${torque.database}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.user</name>
+      <default>${scarab.database.username}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.password</name>
+      <default>${scarab.database.password}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.createUrl</name>
+      <default>${scarab.database.admin.url}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.buildUrl</name>
+      <default>${scarab.database.url}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.database.driver</name>
+      <default>${scarab.database.jdbc.driver}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.doc.format</name>
+      <default>anakia</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.targetPackage</name>
+      <default>org.tigris.scarab.om</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.om.includes</name>
+      <default>${torque.project}-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.om.excludes</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.retrievableInterface</name>
+      <default>org.apache.fulcrum.intake.Retrievable</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.addGetByNameMethod</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.addTimeStamp</name>
+      <default>false</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.addIntakeRetrievable</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.overloadKeySetters</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.useManagers</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.runOnlyOnSchemaChange</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+      <details>
+         standard torque properties
+      </details>
+
+    </property>
+    <property>
+      <name>torque.generateDeprecated</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.output.dir</name>
+      <default>${root.dir}/target</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.template.path</name>
+      <default>templates</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.doc.dir</name>
+      <default>${maven.gen.docs}/databases</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.java.dir</name>
+      <default>${root.dir}/src/java</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+      <details>
+        torque.java.dir=${torque.output.dir}/java
+      </details>
+
+    </property>
+    <property>
+      <name>torque.schema.dir</name>
+      <default>${root.dir}/src/schema</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.javadoc.dir</name>
+      <default>${torque.output.dir}/javadoc</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.sql.dir</name>
+      <default>${torque.output.dir}/sql</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.basePrefix</name>
+      <default>Base</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.useClasspath</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.initialId</name>
+      <default>1000</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="advanced">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.addSaveMethod</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.addGetByNameMethod</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.complexObjectModel</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.saveException</name>
+      <default>Exception</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.sql.includes</name>
+      <default>*-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.sql.excludes</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.doc.includes</name>
+      <default>*-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.doc.excludes</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.createdb.includes</name>
+      <default>*-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.createdb.excludes</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.initsql.includes</name>
+      <default>*-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.schema.initsql.excludes</name>
+      <default>id-table-schema.xml</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">advanced</customization>
+      <file/>
+    </property>
+  </section>
+
+
+  <section name="MIGRATION">
+    <details>
+      These are some default values that are required for
+      the b18-b19 migration build target. DO NOT MODIFY THEM!
+      
+      Relation to ant build:
+      ----------------------
+      This section directly corresponds to the ant task
+      
+        migrate-b18-b19  
+    </details>
+
+    <property>
+      <name>scarab.tomcat.http.port</name>
+      <default>8080</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.tomcat.shutdown.port</name>
+      <default>8005</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.webapp.reloadable</name>
+      <default>true</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.webapp.checkInterval</name>
+      <default>2</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.welcome.file</name>
+      <default>index.html</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.file.max.size</name>
+      <default>157286400</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.tomcat.proxy.name</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>scarab.tomcat.proxy.port</name>
+      <default/>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+  </section>
+
+
+  <section name="PROPERTY-MAPS">
+    <details>
+      Following mappings are fixed and shall never be changed!
+      [FIXME] [HD]Maybe they should better move to Scarab.properties ?
+    </details>
+
+    <property>
+      <name>torque.database.scarab.adapter</name>
+      <default>${scarab.database.adapter}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.dsfactory.scarab.pool.validationQuery</name>
+      <default>${scarab.database.pool.validationQuery}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.dsfactory.scarab.connection.driver</name>
+      <default>${scarab.database.jdbc.driver}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.dsfactory.scarab.connection.url</name>
+      <default>${scarab.database.url}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.dsfactory.scarab.connection.user</name>
+      <default>${scarab.database.username}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>torque.dsfactory.scarab.connection.password</name>
+      <default>${scarab.database.password}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+  </section>
+
+  <section name="SETUP WIZARD">
+    <details>
+      The properties defined in this section are used
+      to provide the Setup Wizard with default values.
+    </details>
+
+    <property>
+      <name>jdbc</name>
+      <default>jdbc</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+      <details>
+        nasty trick. used for the SetupWizard only
+        quick explanation: The setup Wizzard does not resolve values
+                           starting with "${" .
+                           This is intended so that we can use the
+                           ${} notation also in the wizzard properties.
+                           So if we want to keep the dynamic character 
+                           of the variable, it must start with "${" . 
+                           Otherwise it would be fully resolved.
+                           See the property [scarab.database.url.mysql] 
+                           below to see what i mean [HD].
+      </details>
+    </property>
+
+    <group name="MySQL">
+      <details>
+        Default settings for MySQL
+      </details>
+
+      <property>
+        <name>scarab.jdbc.handler.mysql</name>
+        <default>mysql</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.mysql</name>
+        <default>3306</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.mysql</name>
+        <default>${jdbc}:${scarab.jdbc.handler}://${scarab.database.host}:${scarab.database.port}/?</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.mysql</name>
+        <default>${jdbc}:${scarab.jdbc.handler}://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}?${scarab.database.url.extension}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extension.mysql</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          scarab.database.url.extension.mysql       = useUnicode=true&amp;characterEncoding=utf8
+        </details>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.mysql</name>
+        <default>SELECT 1</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.mysql</name>
+        <default>org.gjt.mm.mysql.Driver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.mysql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.mysql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.mysql</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.mysql</name>
+        <default>${jdbc}:mysql://${scarab.database.host}:${scarab.database.port}/${scarab.test.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.mysql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.mysql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.mysql</name>
+        <default>mm.mysql-*.jar</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    <group name="postgres">
+      <details>
+         Default settings for Postgres
+      </details>
+
+      <property>
+        <name>scarab.jdbc.handler.postgresql</name>
+        <default>postgres</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.postgresql</name>
+        <default>5432</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.postgresql</name>
+        <default>${jdbc}:postgresql://${scarab.database.host}:${scarab.database.port}/template1</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.postgresql</name>
+        <default>${jdbc}:postgresql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extension.postgresql</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.postgresql</name>
+        <default>SELECT 1</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.postgresql</name>
+        <default>org.postgresql.Driver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.postgresql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.postgresql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.postgresql</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.postgresql</name>
+        <default>${jdbc}:postgresql://${scarab.database.host}:${scarab.database.port}/${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.postgresql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.postgresql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.postgres</name>
+        <default>postgresql-*.jar</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    
+    <group name="hypersonic">
+      <details>
+         Default settings for hypersonic
+      </details>
+
+      <property>
+        <name>hsqldb.database</name>
+        <default>./target</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>hsqldb.dbname</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.handler.hypersonic</name>
+        <default>hsqldb</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.hypersonic</name>
+        <default>3306</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.hypersonic</name>
+        <default>${jdbc}:hsqldb:file:${root.dir}/${hsqldb.database}/${hsqldb.dbname}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.hypersonic</name>
+        <default>${jdbc}:hsqldb:file:${root.dir}/${hsqldb.database}/${hsqldb.dbname}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extension.hypersonic</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.hypersonic</name>
+        <default>SELECT ATTRIBUTE_ID FROM SCARAB_ATTRIBUTE WHERE ATTRIBUTE_ID='0'</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.hypersonic</name>
+        <default>org.hsqldb.jdbcDriver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.hypersonic</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.hypersonic</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.hypersonic</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.hypersonic</name>
+        <default>${jdbc}:hsqldb:.</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.hypersonic</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.hypersonic</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.hypersonic</name>
+        <default>hsqldb*.jar</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    <group name="mssql">
+      <details>
+        Default settings for mssql
+      </details>
+
+      <property>
+        <name>scarab.jdbc.handler.mssql</name>
+        <default>mssql</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.mssql</name>
+        <default>1433</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.mssql</name>
+        <default>${jdbc}:microsoft:sqlserver://${scarab.database.host}:${scarab.database.port};DatabaseName=${scarab.database.name};SelectMethod=cursor</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.mssql</name>
+        <default>${jdbc}:microsoft:sqlserver://${scarab.database.host}:${scarab.database.port};DatabaseName=${scarab.database.name};SelectMethod=cursor</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extension.mssql</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.mssql</name>
+        <default>SELECT 1</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.mssql</name>
+        <default>com.microsoft.jdbc.sqlserver.SQLServerDriver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.mssql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.mssql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.mssql</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.mssql</name>
+        <default>${jdbc}:microsoft:sqlserver://${scarab.database.host}:${scarab.database.port};DatabaseName=${scarab.test.database.name};SelectMethod=cursor</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.mssql</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.mssql</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.mssql</name>
+        <default>ms*.jar</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.manual.creation.mssql</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    <group name="oracle">
+      <details>
+         Default settings for oracle
+      </details>
+
+      <property>
+        <name>scarab.jdbc.handler.oracle</name>
+        <default>oracle</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.oracle</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.oracle</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.oracle</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extensionoracle</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.oracle</name>
+        <default>SELECT 1 FROM DUAL</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.oracle</name>
+        <default>oracle.jdbc.driver.OracleDriver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.oracle</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.oracle</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.oracle</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.oracle</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.oracle</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.oracle</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.oracle</name>
+        <default>oracle-*.jar</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    <group name="db2">
+      <details>
+         Default settings for db2
+      </details>
+
+      <property>
+        <name>scarab.jdbc.handler.db2</name>
+        <default>db2</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.port.db2</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.url.db2</name>
+        <default>jdbc:db2:${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.db2</name>
+        <default>jdbc:db2:${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.url.extension.db2</name>
+        <default/>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.pool.validationQuery.db2</name>
+        <default>SELECT 1 FROM SYSIBM.SYSDUMMY1</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.jdbc.driver.db2</name>
+        <default>COM.ibm.db2.jdbc.app.DB2Driver</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.username.db2</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.database.admin.password.db2</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.name.db2</name>
+        <default>${scarab.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.url.db2</name>
+        <default>jdbc:db2:${scarab.test.database.name}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.username.db2</name>
+        <default>${scarab.database.username}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.test.database.password.db2</name>
+        <default>${scarab.database.password}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.jdbc.driver.jar.db2</name>
+        <default>db2java.zip</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+  </section>
+
+  <section name="ANT">
+    <details>
+      This section contains the ant related properties.
+
+      Relation to ant build:
+      ----------------------
+      This section directly corresponds to the ant tasks
+      
+          compile
+
+    </details>
+
+    <property>
+      <name>Name</name>
+      <default>Scarab</default>
+      <comment>
+        Name of the project ("Scarab" for the standard distribution).
+      </comment>
+      <type>Build</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>version</name>
+      <default>1.0-b20-dev</default>
+      <comment>Project version.</comment>
+      <type>Build</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>project</name>
+      <default>scarab</default>
+      <comment>
+        Name of the project, used for???.
+      </comment>
+      <type>Build</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <property>
+      <name>year</name>
+      <default>2000-2004</default>
+      <comment>Year, possibly used for copyright message.</comment>
+      <type>Build</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+    <group name="directory">
+      <details>
+         Directory structure to which Scarab is built.
+         Everything is relative to build.dir
+      </details>
+
+      <property>
+        <name>build.dir</name>
+        <default>${root.dir}/target</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.project</name>
+        <default>${build.dir}/scarab</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.project.webinf</name>
+        <default>${build.project}/WEB-INF</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.project.webinf.lib</name>
+        <default>${build.project}/WEB-INF/lib</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.sql.scarab</name>
+        <default>${build.project.webinf}/sql</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.src.scarab</name>
+        <default>${build.project.webinf}/src</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>build.dest.scarab</name>
+        <default>${build.project.webinf}/classes</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>deploy.dir</name>
+        <default>${build.dir}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>deploy.project</name>
+        <default>${deploy.dir}/scarab</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.torque.schemas</name>
+        <default>scarab-schema.xml</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          The list of Torque-format schemas used by Scarab.  
+          This is useful for performing an up-to-date check 
+          on generated Java code.
+        </details>
+
+      </property>
+      <property>
+        <name>repository.dir</name>
+        <default>${root.dir}/www/repository</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>lib.dir</name>
+        <default>${root.dir}/lib</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>src.dir</name>
+        <default>${root.dir}/src</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>extensions.dir</name>
+        <default>${root.dir}/extensions</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+  </section>
+
+  <section name="MAVEN">
+
+    <property>
+      <name>askAdminstratorUsername</name>
+      <details>
+        This property contains the default value for the administrator's
+        username (the default value is ${scarab.user.username}).
+      </details>
+      <default>${scarab.user.username}</default>
+      <comment/>
+      <type>Runtime</type>
+       <customization modification="optional">basic</customization>
+      <file/>
+    </property>
+
+    <group name="documentation">
+      <details>
+        Scarab Documentation Properties
+      </details>
+
+      <property>
+        <name>scarab.scarabgen.home</name>
+        <default>../scarab-gen</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.docs.head</name>
+        <default>${scarab.scarabgen.home}/www/head</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>scarab.docbook.enable</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+
+    <group name="maven">
+      <details>
+         Maven  Properties
+      </details>
+
+      <property>
+        <name>maven.multiproject.type</name>
+        <default>war</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>maven.repo.remote</name>
+        <default>http://www.ibiblio.org/maven/,http://scarab.tigris.org/repository,http://maven-plugins.sourceforge.net/maven, http://www.apache.org/dist/java-repository/</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>maven.docbook.src</name>
+        <default>www/book</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>statcvs.exclude</name>
+        <default>www/**/*.*</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>statcvs.include</name>
+        <default>src/**/*.*</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>statcvs.verbose</name>
+        <default>false</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>statcvs.history</name>
+        <default>false</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>statcvs.log.options</name>
+        <default>-d 2004-01-01&lt;</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+
+    <group name="eclipse">
+      <details>
+         Maven  Eclipse Properties
+      </details>
+
+      <property>
+        <name>maven.eclipse.output.dir</name>
+        <default>src/webapp/WEB-INF/classes</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>maven.eclipse.classpath.include</name>
+        <default>src/conf/conf,src/conf/classes</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+
+    <group name="unit-tests">
+
+      <details>
+         Maven  Unit Test Properties
+      </details>
+
+      <property>
+        <name>maven.junit.fork</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>maven.junit.usefile</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+      <property>
+        <name>maven.test.failure.ignore</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+    </group>
+    
+    <group name="maven-site">
+
+      <details>
+         Maven  Site Properties
+      </details>
+
+      <property>
+        <name>maven.javadoc.useexternalfile</name>
+        <default>true</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.pmd.excludes</name>
+        <default>**/om/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.pmd.includes</name>
+        <default>**/tigris/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.simian.excludes</name>
+        <default>**/om/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.simian.includes</name>
+        <default>**/tigris/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.findbugs.excludes</name>
+        <default>**/om/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.findbugs.includes</name>
+        <default>**/tigris/**</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.checkstyle.format</name>
+        <default>turbine</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+      </property>
+
+      <property>
+        <name>maven.xdoc.version</name>
+        <default>${pom.currentVersion}</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">basic</customization>
+        <file/>
+        <details>
+          display the date on the site
+           maven.xdoc.date = left
+          Display the version the web site is documenting
+        </details>
+      </property>
+
+      <property>
+        <name>maven.dist.bin.assembly.dir</name>
+        <default>${root.dir}/target/dist</default>
+        <comment/>
+        <type>Runtime</type>
+         <customization modification="optional">advanced</customization>
+        <file/>
+        <details>
+          Maven  NSIS Properties
+        </details>
+      </property>
+
+    </group>
+
+  </section>
+
 </properties>
-
