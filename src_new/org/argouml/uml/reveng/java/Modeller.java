@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.98 2004/11/01 19:55:22 mvw Exp $
+// $Id: Modeller.java,v 1.99 2004/11/09 15:39:12 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1160,7 +1160,7 @@ public class Modeller
 
     /**
        Find an attribute in the currentClassifier. If the attribute is
-       not found, a new is created.
+       not found, a new one is created.
 
        @param name The name of the attribute.
        @param initializer The initializer code.
@@ -1183,7 +1183,7 @@ public class Modeller
 	}
         if (mAttribute == null) {
             mAttribute = 
-                UmlFactory.getFactory().getCore().buildAttribute(mClassifier);
+                UmlFactory.getFactory().getCore().buildAttribute(parseState.getClassifier());
             ModelFacade.setName(mAttribute, name);
         }
         return mAttribute;
@@ -1197,32 +1197,26 @@ public class Modeller
        @param mClassifier Where the association ends.
        @return The attribute found or created.
     */
-    private Object getAssociationEnd(String name,
-                                     Object mClassifier)
-    {
+    private Object getAssociationEnd(String name, Object mClassifier) {
         Object mAssociationEnd = null;
-        for (Iterator i =
-		 ModelFacade.getAssociationEnds(mClassifier).iterator();
-	     i.hasNext(); ) {
+        for (Iterator i = ModelFacade.getAssociationEnds(mClassifier)
+                .iterator(); i.hasNext();) {
             Object ae = i.next();
-            if (name.equals(ModelFacade.getName(ae))) {
+            if (name.equals(ModelFacade.getName(ae))
+                    && ModelFacade.getType(ModelFacade.getOppositeEnd(ae)) == parseState
+                            .getClassifier()) {
                 mAssociationEnd = ae;
             }
         }
         if (mAssociationEnd == null && !noAssociations) {
-	    String newName =
-		ModelFacade.getName(parseState.getClassifier())
-		+ " -> "
-		+ ModelFacade.getName(mClassifier);
+            String newName = ModelFacade.getName(parseState.getClassifier())
+                    + " -> " + ModelFacade.getName(mClassifier);
 
-            Object mAssociation = CoreFactory.getFactory()
-		.buildAssociation(mClassifier,
-				  true,
-				  parseState.getClassifier(),
-				  false,
-				  newName);
-            mAssociationEnd =
-		ModelFacade.getAssociationEnd(mClassifier, mAssociation);
+            Object mAssociation = CoreFactory.getFactory().buildAssociation(
+                    mClassifier, true, parseState.getClassifier(), false,
+                    newName);
+            mAssociationEnd = ModelFacade.getAssociationEnd(mClassifier,
+                    mAssociation);
         }
         return mAssociationEnd;
     }
