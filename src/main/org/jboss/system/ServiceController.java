@@ -42,28 +42,25 @@ import org.w3c.dom.Element;
  * @see org.jboss.system.Service
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.4 $ <p>
+ * @version $Revision: 1.5 $ <p>
  *
- *      <b>Revisions:</b> <p>
+ * <b>Revisions:</b> <p>
  *
- *      <b>20010830 marcf</b>
- *      <ol>
- *        <li> Initial version checked in
- *      </ol>
- *      <b>20010908 david jencks</b>
- *      <ol>
- *        <li> fixed tabs to spaces and log4j logging. Made it report the number
- *        of successes on init etc.  Modified to support undeploy and work with
- *        .sar dependency management and recursive sar deployment.
- *      </ol>
- *
+ * <b>20010830 marcf</b>
+ * <ol>
+ *   <li>Initial version checked in
+ * </ol>
+ * <b>20010908 david jencks</b>
+ * <ol>
+ *   <li>fixed tabs to spaces and log4j logging. Made it report the number
+ *       of successes on init etc.  Modified to support undeploy and work with
+ *       .sar dependency management and recursive sar deployment.
+ * </ol>
  */
-
 public class ServiceController
        extends ServiceMBeanSupport
        implements ServiceControllerMBean, MBeanRegistration
 {
-
    /**
     * A mapping from the Service interface method names to the corresponding
     * index into the ServiceProxy.hasOp array.
@@ -81,15 +78,17 @@ public class ServiceController
 
    // Attributes ----------------------------------------------------
 
-   // A callback to the JMX MBeanServer
+   /** A callback to the JMX MBeanServer */
    MBeanServer server;
 
-   // The array list keeps the order of deployment
+   /** The array list keeps the order of deployment. */
    List services = new ArrayList();
-   // The map keeps the list of objectNames to services
+   
+   /** The map keeps the list of objectNames to services. */
    Map nameToServiceMap = new HashMap();
 
-   JBossCategory category = (JBossCategory)JBossCategory.getInstance(getClass().getName());
+   JBossCategory category = (JBossCategory)
+      JBossCategory.getInstance(getClass().getName());
 
    // Static --------------------------------------------------------
 
@@ -115,7 +114,6 @@ public class ServiceController
     */
    public ObjectName[] getDeployed()
    {
-
       ObjectName[] deployed = new ObjectName[services.size()];
       services.toArray(deployed);
 
@@ -170,31 +168,30 @@ public class ServiceController
          ree.getTargetError().printStackTrace();
          throw ree.getTargetError();
       }
-      /*
-       * catch (MalformedObjectNameException mone) {}
-       * catch (ReflectionException re) {}
-       * catch (InstanceNotFoundException re) {}
-       */
-      catch (Throwable ex)
+      //
+      // catch (MalformedObjectNameException mone) {}
+      // catch (ReflectionException re) {}
+      // catch (InstanceNotFoundException re) {}
+      //
+      catch (Throwable e)
       {
-         category.error("Could not create MBean " + objectName);
-         category.debug("Error creating MBean " + objectName, ex);
-         //pffff...
-         throw (Exception)ex;
+         category.error("Could not create MBean: " + objectName, e);
+         if (e instanceof Exception)
+            throw (Exception)e;
+         if (e instanceof Error)
+            throw (Error)e;
+         throw new Error("unexpected throwable: " + e);
       }
-
+      
       // Configure the MBean
       try
       {
          configurator.configure(mbeanElement);
       }
-
-      catch (ConfigurationException ce)
+      catch (ConfigurationException e)
       {
-
-         category.error("Could not configure MBean " + objectName);
-         category.debug("Error configuring MBean " + objectName, ce);
-         throw ce;
+         category.error("Could not configure MBean: " + objectName, e);
+         throw e;
       }
 
       String serviceFactory = mbeanElement.getAttribute("serviceFactory");
@@ -237,11 +234,17 @@ public class ServiceController
     */
    public void undeploy(ObjectName objectName) throws Exception
    {
-      category.debug("undeploying " + objectName + "from server");
+      if (category.isDebugEnabled()) {
+         category.debug("undeploying " + objectName + "from server");
+      }
+      
       // Do we have a deployed MBean?
       if (server.isRegistered(objectName))
       {
-         category.debug("undeploying " + objectName + "from server");
+         if (category.isDebugEnabled()) {
+            category.debug("undeploying " + objectName + "from server");
+         }
+         
          //Remove from local maps
          services.remove(objectName);
          Service service = (Service)nameToServiceMap.remove(objectName);
@@ -250,9 +253,9 @@ public class ServiceController
          server.unregisterMBean(objectName);
 
          // Remove the MBeanClassLoader used by the MBean
-         ObjectName loader = new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
+         ObjectName loader =
+            new ObjectName("ZClassLoaders:id=" + objectName.hashCode());
          server.unregisterMBean(loader);
-
       }
    }
 
@@ -264,12 +267,11 @@ public class ServiceController
     * @param server Description of Parameter
     * @param name Description of Parameter
     * @return Description of the Returned Value
-    * @exception java.lang.Exception Description of Exception
+    * @exception Exception Description of Exception
     */
    public ObjectName preRegister(MBeanServer server, ObjectName name)
-          throws java.lang.Exception
+          throws Exception
    {
-
       this.server = server;
 
       creator = new ServiceCreator(server);
@@ -280,6 +282,7 @@ public class ServiceController
    }
 
    // Service implementation ----------------------------------------
+
    /**
     * #Description of the Method
     *
@@ -309,6 +312,7 @@ public class ServiceController
             category.error("Could not initialize " + name, e);
          }
       }
+      
       category.info("Initialized " + serviceCounter + " services");
    }
 
@@ -409,6 +413,7 @@ public class ServiceController
             category.error("Could not destroy" + name, e);
          }
       }
+      
       category.info("Destroyed " + serviceCounter + " services");
    }
 
@@ -427,7 +432,8 @@ public class ServiceController
       }
       else
       {
-         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
+         throw new InstanceNotFoundException
+            ("Could not find " + serviceName.toString());
       }
    }
 
@@ -446,7 +452,8 @@ public class ServiceController
       }
       else
       {
-         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
+         throw new InstanceNotFoundException
+            ("Could not find " + serviceName.toString());
       }
    }
 
@@ -465,7 +472,8 @@ public class ServiceController
       }
       else
       {
-         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
+         throw new InstanceNotFoundException
+            ("Could not find " + serviceName.toString());
       }
    }
 
@@ -484,25 +492,27 @@ public class ServiceController
       }
       else
       {
-         throw new InstanceNotFoundException("Could not find " + serviceName.toString());
+         throw new InstanceNotFoundException
+            ("Could not find " + serviceName.toString());
       }
    }
 
    /**
-    * Get the Service interface through which the mbean given by objectName will
-    * be managed.
+    * Get the Service interface through which the mbean given by objectName
+    * will be managed.
     *
     * @param objectName
     * @param info
     * @param serviceFactory
     * @return The ServiceInstance value
+    * 
     * @throws ClassNotFoundException
     * @throws InstantiationException
     * @throws IllegalAccessException
     */
    private Service getServiceInstance(ObjectName objectName,
-         MBeanInfo info,
-         String serviceFactory)
+                                      MBeanInfo info,
+                                      String serviceFactory)
           throws ClassNotFoundException, InstantiationException, IllegalAccessException
    {
       Service service = null;
@@ -529,10 +539,11 @@ public class ServiceController
    /**
     * Parse an object name from the given element attribute 'name'.
     *
-    * @param element Element to parse name from.
-    * @return Object name.
-    * @throws ConfigurationException Missing attribute 'name' (thrown if 'name'
-    *      is null or "").
+    * @param element   Element to parse name from.
+    * @return          Object name.
+    * 
+    * @throws ConfigurationException   Missing attribute 'name' (thrown if 
+    *                                  'name' is null or "").
     * @throws MalformedObjectNameException
     */
    private ObjectName parseObjectName(final Element element)
@@ -589,9 +600,10 @@ public class ServiceController
     * matching operation is forwarded to the mbean by invoking the method
     * through the MBeanServer object.
     */
-   private class ServiceProxy implements InvocationHandler
+   private class ServiceProxy
+      implements InvocationHandler
    {
-      private boolean[] hasOp = {false, false, false, false};
+      private boolean[] hasOp = { false, false, false, false };
       private ObjectName objectName;
 
       /**
@@ -603,7 +615,7 @@ public class ServiceController
        * @param opInfo
        */
       public ServiceProxy(ObjectName objectName,
-            MBeanOperationInfo[] opInfo)
+                          MBeanOperationInfo[] opInfo)
       {
          this.objectName = objectName;
          int opCount = 0;
@@ -649,10 +661,9 @@ public class ServiceController
        * @param proxy
        * @param method
        * @param args
-       * @return Always null.
+       * @return             Always null.
        * @throws Throwable
        */
-
       public Object invoke(Object proxy, Method method, Object[] args)
              throws Throwable
       {
