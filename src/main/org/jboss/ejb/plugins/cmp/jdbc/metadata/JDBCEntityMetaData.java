@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public final class JDBCEntityMetaData {
 	/**
@@ -55,6 +55,11 @@ public final class JDBCEntityMetaData {
 	 */
 	private final String entityName;
 	
+	/**
+    * the abstract schema name of this entity
+	 */
+	private final String abstractSchemaName;
+
 	/**
 	 * the implementation class of this entity
 	 */
@@ -157,6 +162,7 @@ public final class JDBCEntityMetaData {
 	public JDBCEntityMetaData(JDBCApplicationMetaData jdbcApplication, EntityMetaData entity) throws DeploymentException {
 		this.jdbcApplication = jdbcApplication;
 		entityName = entity.getEjbName();
+		abstractSchemaName = entity.getAbstractSchemaName();
 		
 		try {
 			entityClass = getClassLoader().loadClass(entity.getEjbClass());
@@ -260,7 +266,8 @@ public final class JDBCEntityMetaData {
 		this.jdbcApplication = jdbcApplication;
 
 		// set default values 
-		entityName = defaultValues.getName(); 
+		entityName = defaultValues.getName();
+		abstractSchemaName = defaultValues.getAbstractSchemaName();	   
 		entityClass = defaultValues.getEntityClass();
 		primaryKeyClass = defaultValues.getPrimaryKeyClass();
 		isCMP1x = defaultValues.isCMP1x;
@@ -516,6 +523,14 @@ public final class JDBCEntityMetaData {
 	 */
 	public String getName() {
 		return entityName;
+	}
+
+	/**
+	 * Gets the abstract shcema name of this entity. The name come from the ejb-jar.xml file.
+	 * @return the abstract schema name of this entity
+	 */
+	public String getAbstractSchemaName() {
+		return abstractSchemaName;
 	}
 
 	/**
