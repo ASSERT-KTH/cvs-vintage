@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
  * Hacked version of message endpoint factory for backwards compatibility
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.1 $</tt>
+ * @version <tt>$Revision: 1.2 $</tt>
  */
 public class JBossJMSMessageEndpointFactory
    extends JBossMessageEndpointFactory
@@ -67,7 +67,7 @@ public class JBossJMSMessageEndpointFactory
          if (Session.DUPS_OK_ACKNOWLEDGE == metaData.getAcknowledgeMode())
             checkActivationConfig("acknowledgeMode", "DUPS_OK_ACKNOWLEDGE");
          else
-            checkActivationConfig("acknowledgeMode", "AUTO_ACKNOWELDGE");
+            checkActivationConfig("acknowledgeMode", "AUTO_ACKNOWLEDGE");
          if (MessageDrivenMetaData.DURABLE_SUBSCRIPTION == metaData.getSubscriptionDurability())
             checkActivationConfig("subscriptionDurability", "Durable");
          else
