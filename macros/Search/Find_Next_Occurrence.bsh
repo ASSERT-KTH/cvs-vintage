@@ -20,7 +20,7 @@
  * along with the jEdit program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: Find_Next_Occurrence.bsh,v 1.2 2001/11/06 17:01:15 jgellene Exp $
+ * $Id: Find_Next_Occurrence.bsh,v 1.3 2001/11/09 15:41:19 jgellene Exp $
  *
  * Checked for jEdit 4.0 API
  *
@@ -30,7 +30,7 @@ void findNextOccurrence()
 {
 	jEdit.setTemporaryProperty("temp.findXXX.type", "next");
 
-	searchMacro = Macros.getMacro("Search/Find_occurrence");
+	searchMacro = Macros.getMacro("Search/Find_Occurrence");
 
 	if(searchMacro == null)
 		Macros.message(view, "Cannot find search macro.");
