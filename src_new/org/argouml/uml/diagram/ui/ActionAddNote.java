@@ -1,4 +1,4 @@
-// $Id: ActionAddNote.java,v 1.6 2004/08/14 15:26:11 mvw Exp $
+// $Id: ActionAddNote.java,v 1.7 2004/11/01 09:25:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,19 +78,17 @@ public class ActionAddNote extends UMLChangeAction {
         if (target == null || !(ModelFacade.isAModelElement(target))) {
             return;
 	}
-        Object/*MModelElement*/ elem = target;
         Object/*MComment*/ comment =
-	    CoreFactory.getFactory().buildComment(elem);
+	    CoreFactory.getFactory().buildComment(target);
 
         // calculate the position of the comment
         ArgoDiagram diagram =
             ProjectManager.getManager().getCurrentProject().getActiveDiagram();
-        Fig elemFig = diagram.presentationFor(elem);
+        Fig elemFig = diagram.presentationFor(target);
         if (elemFig == null)
             return;
         int x = 0;
         int y = 0;
-        Layer lay = diagram.getLayer();
         Rectangle drawingArea =
             ProjectBrowser.getInstance().getEditorPane().getBounds();
         FigComment fig = new FigComment(diagram.getGraphModel(), comment);
@@ -112,19 +110,20 @@ public class ActionAddNote extends UMLChangeAction {
                 }
             }
         } else if (elemFig instanceof FigEdge) {
-            // we cannot do this yet since we have to modify all our
-            // edges probably
+            /* We cannot attach a Comment to an Edge yet since we have to 
+             * modify all our edges probably */
             /*
 	      Point startPoint = new Point(elemFig.getX(), elemFig.getY());
 	      Point endPoint = new Point(elemFig.getX() + elemFig.getWidth(), 
-	      elemFig.getY() + elemFig.getHeight());
+	          elemFig.getY() + elemFig.getHeight());
             */
             UmlFactory.getFactory().delete(comment);
             return;
         }
         fig.setLocation(x, y);
+        Layer lay = diagram.getLayer();
         lay.add(fig);
-        FigEdgeNote edge = new FigEdgeNote(elem, comment);
+        FigEdgeNote edge = new FigEdgeNote(target, comment);
         lay.add(edge);
         lay.sendToBack(edge);
         edge.damage();
@@ -133,7 +132,6 @@ public class ActionAddNote extends UMLChangeAction {
 
         super.actionPerformed(ae);
         TargetManager.getInstance().setTarget(fig.getOwner());
-
     }
 
     /**
