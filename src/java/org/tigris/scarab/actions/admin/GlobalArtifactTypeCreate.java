@@ -75,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.39 2003/09/15 23:45:49 jmcnally Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.40 2003/09/19 10:31:40 parun Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -210,6 +210,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 
         if (intake.isAllValid())
         {
+            boolean areThereDedupeAttrs = false;
             // Set properties for attribute groups
             for (int i = nbrAttGroups - 1; i >= 0; i--)
             {
@@ -223,12 +224,20 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 // which are currently empty of attributes should be
                 // marked as such, as attributes may later be added to
                 // them.
-                attGroup.setDedupe(attGroup.getOrder() < dupeOrder);
-
+                areThereDedupeAttrs = attGroup.getOrder() < dupeOrder;
+                attGroup.setDedupe(areThereDedupeAttrs);
                 attGroup.save();
-                ScarabCache.clear();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
             }
+            if (areThereDedupeAttrs)
+            {
+                Group itGroup = intake.get("IssueType",
+                                        issueType.getQueryKey(), false);
+                Field dedupe = itGroup.get("Dedupe");
+                dedupe.setProperty(issueType);
+            }
+            issueType.save();
+            ScarabCache.clear();
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
         else
         {
