@@ -1,4 +1,4 @@
-// $Id: WizStep.java,v 1.27 2004/11/01 10:55:20 mkl Exp $
+// $Id: WizStep.java,v 1.28 2004/11/04 22:25:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -115,6 +115,9 @@ public class WizStep extends JPanel
     }   
 
     
+    /**
+     * The constructor.
+     */
     public WizStep() {
         this(new ActionOpenBrowser());
     }
@@ -122,7 +125,8 @@ public class WizStep extends JPanel
      * The constructor.
      * @param helpAction 
      *      an action which does the needful, 
-     *      e.g. open a browser, display help, when the according button had been pressed.
+     *      e.g. open a browser, display help, 
+     *      when the according button had been pressed.
      * 
      */
     public WizStep(Action helpAction) {

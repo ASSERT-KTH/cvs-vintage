@@ -1,4 +1,4 @@
-// $Id: WizardItem.java,v 1.2 2004/11/01 10:55:20 mkl Exp $
+// $Id: WizardItem.java,v 1.3 2004/11/04 22:25:41 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,8 @@ package org.argouml.cognitive.ui;
 
 
 /**
- * A WizardItem is a type wizards know how to deal with. It only requires that it
+ * A WizardItem is a type wizards know how to deal with. 
+ * It only requires that it
  * is notified to have been changed.
  * @author mkl
  * @see org.argouml.cognitive.ui.Wizard

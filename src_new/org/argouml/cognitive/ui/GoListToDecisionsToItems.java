@@ -1,4 +1,4 @@
-// $Id: GoListToDecisionsToItems.java,v 1.12 2004/11/01 10:55:20 mkl Exp $
+// $Id: GoListToDecisionsToItems.java,v 1.13 2004/11/04 22:25:42 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.cognitive.ui;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;

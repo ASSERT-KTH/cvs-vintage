@@ -1,4 +1,4 @@
-// $Id: Goal.java,v 1.11 2004/11/01 10:55:19 mkl Exp $
+// $Id: Goal.java,v 1.12 2004/11/04 22:25:27 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.cognitive;
 
-import org.argouml.cognitive.Translator;
 
 /**
  * This class models a goal of a designer.

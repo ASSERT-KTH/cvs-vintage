@@ -1,4 +1,4 @@
-// $Id: DismissToDoItemDialog.java,v 1.21 2004/11/01 10:55:20 mkl Exp $
+// $Id: DismissToDoItemDialog.java,v 1.22 2004/11/04 22:25:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -73,6 +73,7 @@ public class DismissToDoItemDialog extends ArgoDialog {
     /**
      * The constructor.
      * 
+     * @param owner the parent frame
      */
     public DismissToDoItemDialog(Frame owner) {
         super(
@@ -236,7 +237,8 @@ public class DismissToDoItemDialog extends ArgoDialog {
         ToDoList list = Designer.theDesigner().getToDoList();
         try {
             list.explicitlyResolve(target, explanation.getText());
-            Designer.firePropertyChange(Designer.MODEL_TODOITEM_DISMISSED, null, null);
+            Designer.firePropertyChange(
+                    Designer.MODEL_TODOITEM_DISMISSED, null, null);
         }
         catch (UnresolvableException ure) {
             LOG.error("Resolve failed (ure): " + ure);

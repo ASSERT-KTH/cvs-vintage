@@ -1,4 +1,4 @@
-// $Id: CriticBrowserDialog.java,v 1.24 2004/11/01 10:55:20 mkl Exp $
+// $Id: CriticBrowserDialog.java,v 1.25 2004/11/04 22:25:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -65,7 +65,6 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.Translator;
 import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.kernel.DelayedChangeNotify;
 import org.argouml.ui.ArgoDialog;
 import org.argouml.ui.ProjectBrowser;
 
@@ -559,9 +558,9 @@ class TableModelCritics extends AbstractTableModel
      */
     public void vetoableChange(PropertyChangeEvent pce) {
         SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-            fireTableStructureChanged();
-        }
-	    });
+            public void run() {
+                fireTableStructureChanged();
+            }
+        });
     }
 } /* end class TableModelCritics */
