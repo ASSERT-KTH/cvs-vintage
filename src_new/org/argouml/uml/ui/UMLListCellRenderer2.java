@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.5 2003/01/05 19:45:52 kataka Exp $
+// $Id: UMLListCellRenderer2.java,v 1.6 2003/01/25 07:49:42 kataka Exp $
 package org.argouml.uml.ui;
 
 import java.awt.Component;
@@ -66,6 +66,9 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        if (value == null || value.equals("")) {
+            return new JLabel(" ");
+        }
         JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         if (value instanceof MBase) {
@@ -81,6 +84,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
             }
 
         }
+        
 
         return label;
     }
