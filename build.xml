@@ -40,6 +40,7 @@
     <copyfile src="LICENSE" dest="${tomcat.build}/LICENSE"/>
     <copyfile src="src/etc/readme" dest="${tomcat.build}/README"/>
     <copyfile src="src/etc/faq" dest="${tomcat.build}/FAQ"/>
+    <copyfile src="src/etc/tomcat.conf" dest="${tomcat.build}/etc/tomcat.conf"/>
 
     <copyfile src="src/etc/SimpleStartup.java"
               dest="${tomcat.build}/etc/SimpleStartup.java"/>
