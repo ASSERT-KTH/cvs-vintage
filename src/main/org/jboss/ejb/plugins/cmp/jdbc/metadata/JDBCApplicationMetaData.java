@@ -28,7 +28,7 @@ import org.jboss.metadata.RelationMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public final class JDBCApplicationMetaData
 {
@@ -80,6 +80,11 @@ public final class JDBCApplicationMetaData
     * Map from entity interface(s) java type to entity name
     */
    private final Map entitiesByInterface = new HashMap();
+
+   /**
+    * Map of the entity commands by name.
+    */
+   private final Map entityCommands = new HashMap();
 
     /**
     * Constructs jdbc application meta data with the data from the 
@@ -218,6 +223,22 @@ public final class JDBCApplicationMetaData
             JDBCValueClassMetaData valueClass = 
                   new JDBCValueClassMetaData(valueClassElement, classLoader);
             valueClasses.put(valueClass.getJavaType(), valueClass);
+         }
+      }
+
+      // entity-commands: (optional, always set in standardjbosscmp-jdbc.xml)
+      entityCommands.putAll(defaultValues.entityCommands);
+      Element entityCommandMaps = MetaData.getOptionalChild(
+                                     element, "entity-commands");
+      if(entityCommandMaps != null) {
+         for(Iterator i = 
+            MetaData.getChildrenByTagName(entityCommandMaps, "entity-command");
+               i.hasNext(); ) {
+
+            Element entityCommandElement = (Element)i.next();
+            JDBCEntityCommandMetaData entityCommand = 
+                  new JDBCEntityCommandMetaData(entityCommandElement);
+            entityCommands.put(entityCommand.getCommandName(), entityCommand);
          }
       }
 
@@ -479,5 +500,14 @@ public final class JDBCApplicationMetaData
     */
    public JDBCEntityMetaData getBeanByInterface(Class intf) {
       return (JDBCEntityMetaData)entitiesByInterface.get(intf);
+   }
+
+   /**
+    * Gets the entity command with the specified name
+    * @param name the name for the entity-command
+    * @return the matching entity command or null if not found
+    */
+   public JDBCEntityCommandMetaData getEntityCommandByName(String name) {
+      return (JDBCEntityCommandMetaData)entityCommands.get(name);
    }
 }
