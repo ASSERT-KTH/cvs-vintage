@@ -67,7 +67,7 @@ import org.jnp.server.NamingServer;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.25 $
+ *   @version $Revision: 1.26 $
  */
 public abstract class Container
 {
@@ -486,6 +486,10 @@ public abstract class Container
                    {
                       throw new NamingException("Malformed URL:"+e.getMessage());
                    }
+                } else {
+                   // Resource Manager bindings
+                   Logger.log("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
+                   bind(ctx, ref.getRefName(), new LinkRef(finalName));
                 }
              }
           }
