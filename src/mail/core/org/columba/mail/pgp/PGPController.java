@@ -22,320 +22,334 @@ import org.columba.mail.config.PGPItem;
 import org.columba.mail.gui.util.PGPPassphraseDialog;
 
 public class PGPController {
-	public final static int GPG = 0;
-	public final static int PGP2 = 1;
-	public final static int PGP5 = 2;
-	public final static int PGP6 = 3;
+  public final static int GPG = 0;
+  public final static int PGP2 = 1;
+  public final static int PGP5 = 2;
+  public final static int PGP6 = 3;
 
-	public final static int DECRYPT_ACTION = 0;
-	public final static int ENCRYPT_ACTION = 1;
-	public final static int SIGN_ACTION = 2;
-	public final static int VERIFY_ACTION = 3;
-	public final static int ENCRYPTSIGN_ACTION = 4;
+  public final static int DECRYPT_ACTION = 0;
+  public final static int ENCRYPT_ACTION = 1;
+  public final static int SIGN_ACTION = 2;
+  public final static int VERIFY_ACTION = 3;
+  public final static int ENCRYPTSIGN_ACTION = 4;
 
-	private int type;
-	private String path;
-	private String id;
-	private int exitVal;
+  private int type;
+  private String path;
+  private String id;
+  private int exitVal;
 
-	private static PGPController myInstance;
+  private static PGPController myInstance;
 
-/**
- * here are the utils, which you can sign, verify, encrypt and decrypt messages
- * at the moment there are only one tool - gpg, the gnu pgp programm which
- * comes with an commandline tool to do things with your pgp key
- * @see DefaultUtil
- */
-	private DefaultUtil[] utils = { new GnuPGUtil(),
-		// Enter new DefaultUtils here
-	};
-/**
- * The default constructor for this class. The exit value is default 0
- */
-	protected PGPController() {
-		exitVal = 0;
-	}
-/**
- * Gives back an Instance of PGPController. This function controls, that only
- * one Instance is created in on columba session. If never before an Instance
- * is created, an Instance of Type PGPController is created and returned. Is
- * there is alrady an Instance, this instance is returned.
- * @return PGPController a new PGPController if there is no one created in one
- * columba session, or an alrady existing PGPConstroller, so only one Controller
- * is used in one columba session.
- */
-	public static PGPController getInstance() {
-		if (myInstance == null)
-			myInstance = new PGPController();
-		ColumbaLogger.log.debug(myInstance.toString());
-		return myInstance;
-	}
+  /**
+   * here are the utils, which you can sign, verify, encrypt and decrypt messages
+   * at the moment there are only one tool - gpg, the gnu pgp programm which
+   * comes with an commandline tool to do things with your pgp key
+   * @see DefaultUtil
+   */
+  private DefaultUtil[] utils = { new GnuPGUtil(),
+    // Enter new DefaultUtils here
+  };
+  /**
+   * The default constructor for this class. The exit value is default 0
+   */
+  protected PGPController() {
+    exitVal = 0;
+  }
+  /**
+   * Gives back an Instance of PGPController. This function controls, that only
+   * one Instance is created in on columba session. If never before an Instance
+   * is created, an Instance of Type PGPController is created and returned. Is
+   * there is alrady an Instance, this instance is returned.
+   * @return PGPController a new PGPController if there is no one created in one
+   * columba session, or an alrady existing PGPConstroller, so only one Controller
+   * is used in one columba session.
+   */
+  public static PGPController getInstance() {
+    if (myInstance == null)
+      myInstance = new PGPController();
+    ColumbaLogger.log.debug(myInstance.toString());
+    return myInstance;
+  }
 
-/**
- * gives the return value from the pgp-program back. This can used for
- * controlling errors when signing ... messages
- * @return int exitValue, 0 means all ok, all other exit vlaues identifys errors
- */
-	public int getReturnValue() {
-		return exitVal;
-	}
+  /**
+   * gives the return value from the pgp-program back. This can used for
+   * controlling errors when signing ... messages
+   * @return int exitValue, 0 means all ok, all other exit vlaues identifys errors
+   */
+  public int getReturnValue() {
+    return exitVal;
+  }
 
-	/**
-	 * Method sign.
-	 * @param pgpMessage
-	 * @param item
-	 * @return String
-	 */
-	/*
-	public String decrypt(String pgpMessage, PGPItem item) {
-		DefaultUtil util;
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-	
-			} else {
-				return new String("");
-			}
-		}
-	
-		try {
-			util = utils[type];
-	
-			exitVal = util.decrypt(path, pgpMessage, passphrase);
-	
-			if (exitVal == 2) {
-				// unknown error
-	
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					util.getErrorString());
-				if (save == false)
-					item.clearPassphrase();
-	
-				return null;
-			} else if (exitVal == 1) {
-				// this means: decrypted message successfully, but
-				// was not able to verify the signature
-	
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					"Couldn't verify signature: " + util.getErrorString());
-	
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-	
-			if (save == false)
-				item.clearPassphrase();
-	
-			return null;
-		}
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		return util.getOutputString();
-	}
-	
-	public String verify(
-		String pgpMessage,
-		String signatureString,
-		PGPItem item) {
-		//System.out.println("message file:\n"+ pgpMessage );
-		//System.out.println("signature file:\n"+ signatureString );
-	
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-		File outputFile;
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if ((passphrase.length() == 0)) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-	
-			} else {
-				return new String("");
-			}
-		}
-	
-		try {
-	
-			util = load(type);
-	
-			exitVal =
-				util.verify(path, pgpMessage, signatureString, passphrase);
-	
-			System.out.println("exitvalue: " + exitVal);
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-		}
-	
-		if (exitVal > 0) {
-			// error
-			String errorString = util.errorStream.getBuffer();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-		}
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		return util.getOutputString();
-	}
-	
-	public String encrypt(
-		String pgpMessage,
-		boolean signValue,
-		Vector recipients,
-		PGPItem item) {
-		System.out.println("pgpcontroller->encrypt");
-		exitVal = -1;
-	
-		type = item.getType();
-		path = item.getPath();
-		id = item.getId();
-	
-	
-		String passphrase = item.getPassphrase();
-		boolean save = false;
-	
-		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
-	
-			if (dialog.success()) {
-				passphrase =
-					new String(
-						dialog.getPassword(),
-						0,
-						dialog.getPassword().length);
-	
-				save = dialog.getSave();
-			} else {
-				return new String("");
-			}
-		}
-	
-		try {
-			util = load(type);
-	
-			exitVal =
-				util.encrypt(
-					path,
-					pgpMessage,
-					passphrase,
-					signValue,
-					recipients,
-					id);
-	
-			if (exitVal == 2) {
-				JOptionPane.showMessageDialog(
-					MainInterface.mainFrame,
-					util.getErrorString());
-				if (save == false)
-					item.clearPassphrase();
-	
-				return null;
-			} else if (exitVal == 1) {
-	
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
-	
-		} catch (Exception ex) {
-			ex.printStackTrace();
-	
-			JOptionPane.showMessageDialog(
-				MainInterface.mainFrame,
-				util.getErrorString());
-	
-			if (save == false)
-				item.clearPassphrase();
-	
-			return null;
-		}
-	
-		//        }
-	
-		if (save == false)
-			item.clearPassphrase();
-	
-		// now read encrypted message from File
-		StringBuffer strbuf = null;
-		try {
-			BufferedReader in =
-				new BufferedReader(new FileReader(util.outputFile));
-			String str;
-			strbuf = new StringBuffer();
-	
-			while ((str = in.readLine()) != null) {
-				strbuf.append(str + "\n");
-			}
-	
-			System.out.println(
-				"----------------------->encrpted message:\n" + strbuf);
-			in.close();
-	
-			// delete tmp file
-			util.outputFile.delete();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	
-		return strbuf.toString();
-	}
-	
-	*/
+  /**
+   * Method sign.
+   * @param pgpMessage
+   * @param item
+   * @return String
+   */
+  /*
+  public String decrypt(String pgpMessage, PGPItem item) {
+  	DefaultUtil util;
+  	exitVal = -1;
   
+  	type = item.getType();
+  	path = item.getPath();
+  	id = item.getId();
+  
+  	String passphrase = item.getPassphrase();
+  	boolean save = false;
+  
+  	if (passphrase.length() == 0) {
+  		PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
+  		//dialog.showDialog( id, false );
+  
+  		if (dialog.success()) {
+  			passphrase =
+  				new String(
+  					dialog.getPassword(),
+  					0,
+  					dialog.getPassword().length);
+  
+  			save = dialog.getSave();
+  
+  		} else {
+  			return new String("");
+  		}
+  	}
+  
+  	try {
+  		util = utils[type];
+  
+  		exitVal = util.decrypt(path, pgpMessage, passphrase);
+  
+  		if (exitVal == 2) {
+  			// unknown error
+  
+  			JOptionPane.showMessageDialog(
+  				MainInterface.mainFrame,
+  				util.getErrorString());
+  			if (save == false)
+  				item.clearPassphrase();
+  
+  			return null;
+  		} else if (exitVal == 1) {
+  			// this means: decrypted message successfully, but
+  			// was not able to verify the signature
+  
+  			JOptionPane.showMessageDialog(
+  				MainInterface.mainFrame,
+  				"Couldn't verify signature: " + util.getErrorString());
+  
+  			if (save == false)
+  				item.clearPassphrase();
+  			return null;
+  		}
+  
+  	} catch (Exception ex) {
+  		ex.printStackTrace();
+  
+  		JOptionPane.showMessageDialog(
+  			MainInterface.mainFrame,
+  			util.getErrorString());
+  
+  		if (save == false)
+  			item.clearPassphrase();
+  
+  		return null;
+  	}
+  
+  	if (save == false)
+  		item.clearPassphrase();
+  
+  	return util.getOutputString();
+  }
+  
+  */
+  public String verifySignature(String pgpMessage, String signatureString, PGPItem item) {
+    try {
+      exitVal = utils[GPG].verify(pgpMessage, signatureString, item);
+      ColumbaLogger.log.debug("return value: "+exitVal);
+    } catch (Exception e) {
+      ColumbaLogger.log.error(e);
+      JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+      return null;
+    }
+
+    return utils[GPG].getOutputString();
+  }
+  /*
+  public String verify(
+  	String pgpMessage,
+  	String signatureString,
+  	PGPItem item) {
+  	//System.out.println("message file:\n"+ pgpMessage );
+  	//System.out.println("signature file:\n"+ signatureString );
+  
+  	exitVal = -1;
+  
+  	type = item.getType();
+  	path = item.getPath();
+  	id = item.getId();
+  
+  	File outputFile;
+  
+  	String passphrase = item.getPassphrase();
+  	boolean save = false;
+  
+  	if ((passphrase.length() == 0)) {
+  		PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
+  		//dialog.showDialog( id, false );
+  
+  		if (dialog.success()) {
+  			passphrase =
+  				new String(
+  					dialog.getPassword(),
+  					0,
+  					dialog.getPassword().length);
+  
+  			save = dialog.getSave();
+  
+  		} else {
+  			return new String("");
+  		}
+  	}
+  
+  	try {
+  
+  		util = load(type);
+  
+  		exitVal =
+  			util.verify(path, pgpMessage, signatureString, passphrase);
+  
+  		System.out.println("exitvalue: " + exitVal);
+  
+  	} catch (Exception ex) {
+  		ex.printStackTrace();
+  
+  		JOptionPane.showMessageDialog(
+  			MainInterface.mainFrame,
+  			util.getErrorString());
+  	}
+  
+  	if (exitVal > 0) {
+  		// error
+  		String errorString = util.errorStream.getBuffer();
+  
+  		JOptionPane.showMessageDialog(
+  			MainInterface.mainFrame,
+  			util.getErrorString());
+  	}
+  
+  	if (save == false)
+  		item.clearPassphrase();
+  
+  	return util.getOutputString();
+  }
+  
+  public String encrypt(
+  	String pgpMessage,
+  	boolean signValue,
+  	Vector recipients,
+  	PGPItem item) {
+  	System.out.println("pgpcontroller->encrypt");
+  	exitVal = -1;
+  
+  	type = item.getType();
+  	path = item.getPath();
+  	id = item.getId();
+  
+  
+  	String passphrase = item.getPassphrase();
+  	boolean save = false;
+  
+  	if (passphrase.length() == 0) {
+  		PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
+  		//dialog.showDialog( id, false );
+  
+  		if (dialog.success()) {
+  			passphrase =
+  				new String(
+  					dialog.getPassword(),
+  					0,
+  					dialog.getPassword().length);
+  
+  			save = dialog.getSave();
+  		} else {
+  			return new String("");
+  		}
+  	}
+  
+  	try {
+  		util = load(type);
+  
+  		exitVal =
+  			util.encrypt(
+  				path,
+  				pgpMessage,
+  				passphrase,
+  				signValue,
+  				recipients,
+  				id);
+  
+  		if (exitVal == 2) {
+  			JOptionPane.showMessageDialog(
+  				MainInterface.mainFrame,
+  				util.getErrorString());
+  			if (save == false)
+  				item.clearPassphrase();
+  
+  			return null;
+  		} else if (exitVal == 1) {
+  
+  			if (save == false)
+  				item.clearPassphrase();
+  			return null;
+  		}
+  
+  	} catch (Exception ex) {
+  		ex.printStackTrace();
+  
+  		JOptionPane.showMessageDialog(
+  			MainInterface.mainFrame,
+  			util.getErrorString());
+  
+  		if (save == false)
+  			item.clearPassphrase();
+  
+  		return null;
+  	}
+  
+  	//        }
+  
+  	if (save == false)
+  		item.clearPassphrase();
+  
+  	// now read encrypted message from File
+  	StringBuffer strbuf = null;
+  	try {
+  		BufferedReader in =
+  			new BufferedReader(new FileReader(util.outputFile));
+  		String str;
+  		strbuf = new StringBuffer();
+  
+  		while ((str = in.readLine()) != null) {
+  			strbuf.append(str + "\n");
+  		}
+  
+  		System.out.println(
+  			"----------------------->encrpted message:\n" + strbuf);
+  		in.close();
+  
+  		// delete tmp file
+  		util.outputFile.delete();
+  	} catch (IOException ex) {
+  		ex.printStackTrace();
+  	}
+  
+  	return strbuf.toString();
+  }
+  
+  */
+
   /**
    * signs an message and gives the signed message string back to the
    * application. This method call the GPG-Util to sign the message. If no
@@ -353,62 +367,63 @@ public class PGPController {
    * @return String the signed message with the sign string inside. Null, when
    * an error or an exit-value not equal 0 from the whole gpg-util is returned
    */
-	public String sign(String pgpMessage, PGPItem item) {
-		exitVal = -1;
+  public String sign(String pgpMessage, PGPItem item) {
+    exitVal = -1;
 
-		type = item.getInteger("type");
-		path = item.get("path");
-		id = item.get("id");
+    type = item.getInteger("type");
+    path = item.get("path");
+    id = item.get("id");
 
-		String passphrase = item.getPassphrase();
-		boolean save = false;
+    String passphrase = item.getPassphrase();
+    boolean save = false;
 
-		if (passphrase.length() == 0) {
-			PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
-			//dialog.showDialog( id, false );
+    if (passphrase.length() == 0) {
+      PGPPassphraseDialog dialog = new PGPPassphraseDialog(id, false);
+      //dialog.showDialog( id, false );
 
-			if (dialog.success()) {
-				passphrase = new String(dialog.getPassword(), 0, dialog.getPassword().length);
+      if (dialog.success()) {
+        passphrase = new String(dialog.getPassword(), 0, dialog.getPassword().length);
         item.setPassphrase(passphrase);
-				save = dialog.getSave();
-			} else {
-				return new String("");
-			}
-		}
+        save = dialog.getSave();
+      } else {
+        return new String("");
+      }
+    }
 
-		try {
-			exitVal = utils[GPG].sign(item, pgpMessage);
+    try {
+      ColumbaLogger.log.debug("pgpmessage: !!"+pgpMessage+"!!");
+      exitVal = utils[GPG].sign(item, pgpMessage);
 
-			if (exitVal == 2) {
-				JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
-				if (save == false)
-					item.clearPassphrase();
+      if (exitVal == 2) {
+        JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+        if (save == false)
+          item.clearPassphrase();
 
-				return null;
-			} else if (exitVal == 1) {
+        return null;
+      } else if (exitVal == 1) {
 
-				if (save == false)
-					item.clearPassphrase();
-				return null;
-			}
+        if (save == false)
+          item.clearPassphrase();
+        return null;
+      }
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+    } catch (Exception ex) {
+      ex.printStackTrace();
 
-			JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
+      JOptionPane.showMessageDialog(null, utils[GPG].getErrorString());
 
-			if (save == false)
-				item.clearPassphrase();
+      if (save == false)
+        item.clearPassphrase();
 
-			return null;
-		}
+      return null;
+    }
 
-		//        }
+    //        }
 
-		if (save == false)
-			item.clearPassphrase();
-
-		return utils[GPG].getResult();
-	}
+    if (save == false)
+      item.clearPassphrase();
+    ColumbaLogger.log.debug(utils[GPG].getResult());
+    return utils[GPG].getResult();
+  }
 
 }
