@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's HTML viewer. It uses a Swing JEditorPane to display the HTML,
  * and implements a URL history.
  * @author Slava Pestov
- * @version $Id: HelpViewer.java,v 1.2 2002/09/23 20:46:59 spestov Exp $
+ * @version $Id: HelpViewer.java,v 1.3 2002/10/04 19:41:08 spestov Exp $
  */
 public class HelpViewer extends JFrame implements EBComponent
 {
@@ -143,8 +143,9 @@ public class HelpViewer extends JFrame implements EBComponent
 		tabs.addTab(jEdit.getProperty("helpviewer.search.label"),
 			new HelpSearchPanel(this));
 
+		// search not finished yet so we don't show the search panel
 		final JSplitPane splitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			tabs,new JScrollPane(viewer));
+			toc,new JScrollPane(viewer));
 		splitter.setBorder(null);
 
 		getContentPane().add(BorderLayout.CENTER,splitter);
