@@ -55,13 +55,14 @@ import org.tigris.scarab.test.BaseTestCase;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.util.Criteria;
 
 
 /**
  * A Testing Suite for the om.Issue class.
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Id: IssueTest.java,v 1.21 2003/02/02 09:09:39 jon Exp $
+ * @version $Id: IssueTest.java,v 1.22 2003/02/06 18:20:38 jmcnally Exp $
  */
 public class IssueTest extends BaseTestCase
 {
@@ -90,8 +91,9 @@ public class IssueTest extends BaseTestCase
         testGetUserAttributeValues();
         testGetEligibleUsers();
         testGetUsersToEmail();
+        testCounts();
     }
-    
+
     private void createTestIssues() throws Exception
     {
         // loops thru module and issue type combinations
@@ -228,5 +230,17 @@ public class IssueTest extends BaseTestCase
                                  Attachment.MODIFICATION__PK);
         attachment.save();
         return attachment;
+    }
+
+    private void testCounts()
+        throws Exception
+    {
+        log("Testing IssuePeer count methods");
+        int count = IssuePeer.count(new Criteria());
+        assertTrue("IssuePeer.count(new Criteria()) returned " + 
+                   count + ". Expected 2",  (count == 2));
+        count = IssuePeer.countDistinct(new Criteria());
+        assertTrue("IssuePeer.countDistinct(new Criteria()) returned " + 
+                   count + ". Expected 2",  (count == 2));
     }
 }
