@@ -62,7 +62,7 @@ package org.apache.tomcat.util.hooks;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.lang.reflect.*;
+import org.apache.tomcat.util.IntrospectionUtils;
 
 /** Hooks support. Hooks implement a chain-of-command pattern, and
  * are commonly used in most web servers as a mechanism of extensibility.
@@ -201,30 +201,29 @@ public class Hooks {
     /** Test if the interceptor implements a particular
      *  method
      */
-    public static boolean hasHook( Object obj, String methodN ) {
-	try {
-	    Method myMethods[]=obj.getClass().getMethods();
-	    for( int i=0; i< myMethods.length; i++ ) {
-		if( methodN.equals ( myMethods[i].getName() )) {
-		    // check if it's overriden
-		    Class declaring=myMethods[i].getDeclaringClass();
-		    Class parentOfDeclaring=declaring.getSuperclass();
-		    // this works only if the base class doesn't extend
-		    // another class.
+    private static boolean hasHook( Object obj, String methodN ) {
+	if( hookFinder==null ) 
+	    return true;
+	return hookFinder.hasHook( obj, methodN );
 
-		    // if the method is declared in a top level class
-		    // like BaseInterceptor parent is Object, otherwise
-		    // parent is BaseInterceptor or an intermediate class
-		    if( ! "java.lang.Object".
-			equals(parentOfDeclaring.getName() )) {
-			return true;
-		    }
-		}
-	    }
-	} catch ( Exception ex ) {
-	    ex.printStackTrace();
-	}
-	return false;
     }
 
+    // -------------------- hook for hook detection --------------------
+    
+    /** Interface that decouples the Hooks from the introspection code.
+	We want to allow future modes that are not based on introspection -
+	for example declarative	( using modules.xml declarations ) or
+	based on code generation ( introspection done at deploy time ).
+    */
+    public static interface HookFinder {
+	public boolean hasHook( Object obj, String hookName );
+    }
+    
+    // 
+    static HookFinder hookFinder=null;
+    
+    public static void setHookFinder( HookFinder hf ) {
+	hookFinder=hf;
+    }
+    
 }
