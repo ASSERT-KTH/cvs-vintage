@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.6 2000/02/29 22:42:44 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/29 22:42:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/URLUtil.java,v 1.7 2000/05/01 23:07:48 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/05/01 23:07:48 $
  *
  * ====================================================================
  *
@@ -147,4 +147,40 @@ public class URLUtil {
 
         return s;
     }
+
+    public static String removeLast( String s) {
+	int i = s.lastIndexOf("/");
+	
+	if (i > 0) {
+	    s = s.substring(0, i);
+	} else if (i == 0 && ! s.equals("/")) {
+	    s = "/";
+	} else {
+	    s = "";
+	}
+	return s;
+    }
+
+    public static String getFirst( String path ) {
+	if (path.startsWith("/")) 
+	    path = path.substring(1);
+	
+	int i = path.indexOf("/");
+	if (i > -1) {
+	    path = path.substring(0, i);
+	}
+
+	return  "/" + path;
+    }
+    
+    public static String getExtension( String path ) {
+        int i = path.lastIndexOf(".");
+	int j = path.lastIndexOf("/");
+
+	if ((i > 0) && (i > j))
+	    return path.substring(i);
+	else
+	    return null;
+    }
+
 }
