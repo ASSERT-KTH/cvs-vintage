@@ -1,7 +1,7 @@
 /**
- * JOnAS : Java(TM) OpenSource Application Server
- * Copyright (C) 1999-2004 Bull S.A.
- * Contact: jonas-team@objectweb.org
+ * Copyright (C) 2004-2005 - Bull S.A.
+ *
+ * CAROL: Common Architecture for RMI ObjectWeb Layer
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: IiopUtility.java,v 1.1 2004/10/13 14:25:57 pelletib Exp $
+ * $Id: IiopUtility.java,v 1.2 2005/03/10 09:51:46 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
