@@ -1,4 +1,4 @@
-// $Id: UMLListCellRenderer2.java,v 1.19 2004/03/25 22:30:01 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.20 2004/04/25 00:43:06 d00mst Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLListCellRenderer2.java,v 1.19 2004/03/25 22:30:01 mvw Exp $
+// $Id: UMLListCellRenderer2.java,v 1.20 2004/04/25 00:43:06 d00mst Exp $
 package org.argouml.uml.ui;
 
 import org.argouml.model.ModelFacade;
@@ -73,7 +73,7 @@ public class UMLListCellRenderer2 extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList list, Object value, 
                     int index, boolean isSelected, boolean cellHasFocus) {
         
-        if (org.argouml.model.ModelFacade.isABase(value)) {
+        if (ModelFacade.isABase(value) || ModelFacade.isAMultiplicity(value)) {
             
             String text = makeText(value);
             setText(text);
