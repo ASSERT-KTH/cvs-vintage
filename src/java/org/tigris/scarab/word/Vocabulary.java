@@ -51,19 +51,37 @@ import java.util.*;
 
 // Turbine classes
 import org.apache.turbine.util.db.Criteria;
+import org.apache.turbine.om.peer.*;
+
+//Village classes
+import com.workingdogs.village.*;
 
 // Scarab classes
 import org.tigris.scarab.om.*;
 
 /**
-  * This class handles vocabulary information for a single issue
-  *
-  */
+ * This class handles vocabulary information for a single issue
+ *
+ * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
+ * @version $Id: Vocabulary.java,v 1.5 2001/04/12 09:45:47 fedor Exp $
+ */
 public class Vocabulary
 {
     private static HashSet ignoredWords;
+    // pardon our dust
+    private static String issueQuery1 =
+        "SELECT i.ISSUE_ID,"+
+            " sum(iw.occurences * w.rating - iw.position) as issue_rating"+
+            " FROM SCARAB_ISSUE i, SCARAB_WORD w, SCARAB_R_ISSUE_WORD iw"+
+            " WHERE iw.word_id = w.word_id"+
+                " AND iw.issue_id = i.issue_id"+
+                " AND w.word_id in (";
+    private static String issueQuery2 =     ")"+
+            " GROUP BY i.ISSUE_ID"+
+            " ORDER BY issue_rating desc";
     private Hashtable words;
     private int pos = 1;
+    private Vector foundWords;
 
     static
     {
@@ -89,6 +107,7 @@ public class Vocabulary
     public Vocabulary(String text) throws Exception
     {
         words = new Hashtable(1+text.length()/5); // should be a good guess?
+        foundWords = new Vector();
         add(text);
     }
 
@@ -143,8 +162,37 @@ public class Vocabulary
                 Entry entry = (Entry)words.get(word.getWord());
                 entry.setRating(word.getRating());
                 entry.setNew(false);
+                // this is ugly. any better way to do this?:
+                entry.setWordId(Integer.parseInt(word.getWordId().toString()));
+                foundWords.add(entry);
             }
         }
+    }
+
+    /**
+     *  returns a list of related issue IDs sorted
+     *  by relevance descending
+     *
+     */
+    public int[] getRelatedIssues() throws Exception
+    {
+        if (foundWords.size() == 0)
+            return new int[0]; /* if there are no words to search for let's
+                                    return an empty list. or should we
+                                    throw instead? */
+
+        //for now use plain old SQL as GROUP BY is not supported by Criteria
+        StringBuffer sb = new StringBuffer(issueQuery1);
+        sb.append(((Entry)foundWords.get(0)).getWordId());
+        for(int i=1; i<foundWords.size(); i++)
+            sb.append(", ").append(((Entry)foundWords.get(i)).getWordId());
+        sb.append(issueQuery2);
+
+        Vector issues = BasePeer.executeQuery(sb.toString());
+        int[] result = new int[issues.size()];
+        for(int i=0; i<issues.size(); i++)
+            result[i] = ((Record)issues.get(i)).getValue("ISSUE_ID").asInt();
+        return result;
     }
 
     /**
@@ -156,8 +204,9 @@ public class Vocabulary
         private String word;
         private int count;
         private int firstPos;
-        private int rating=0;
+        private int rating=-1; //new entries are less then all others.
         private boolean isNew=true;
+        private int wordId=-1;
 
         public Entry(String word, int firstPos)
         {
@@ -179,6 +228,26 @@ public class Vocabulary
         public void setNew(boolean isNew)
         {
             this.isNew = isNew;
+        }
+
+        public void setWordId(int wordId)
+        {
+            this.wordId = wordId;
+        }
+
+        public int getRating()
+        {
+            return this.rating;
+        }
+
+        public int getCount()
+        {
+            return this.count;
+        }
+
+        public int getWordId()
+        {
+            return this.wordId;
         }
     }
 }
