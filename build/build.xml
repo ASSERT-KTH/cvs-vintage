@@ -99,7 +99,7 @@
             </fileset>
         </copy>
         <copy todir="${build.project}/images" filtering="no">
-            <fileset dir="${src.images.dir}"/>
+            <fileset dir="${src.images.dir}" defaultexcludes="no"/>
         </copy>
         <copy todir="${build.project}/templates" filtering="no">
             <fileset dir="${src.templates.dir}" defaultexcludes="no"/>
@@ -112,7 +112,7 @@
 
         <!-- things to go into the web-inf directory -->
         <copy todir="${build.project.webinf}/conf" filtering="no">
-            <fileset dir="${src.conf.dir}/">
+            <fileset dir="${src.conf.dir}/" defaultexcludes="no">
                 <include name="*.properties"/>
                 <include name="*.xml"/>
             </fileset>
@@ -128,7 +128,7 @@
 
         <!-- the source code directory -->
         <copy todir="${build.src.scarab}/org" filtering="yes">
-            <fileset dir="${src.java.dir.scarab}/org">
+            <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
                 <include name="**/*.java"/>
                 <include name="**/*.properties"/>
                 <include name="**/package.html"/>
