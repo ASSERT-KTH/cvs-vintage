@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.20 2004/10/13 05:52:21 linus Exp $
+// $Id: PropPanelDiagram.java,v 1.21 2004/11/22 18:50:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,8 +32,6 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.ArgoDiagram;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.PropPanel;
-import org.argouml.uml.ui.UMLTextField;
-import org.argouml.uml.ui.UMLTextProperty;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -42,6 +40,8 @@ import org.argouml.util.ConfigLoader;
  */
 public class PropPanelDiagram extends PropPanel {
 
+    private JTextField field;
+    
     /**
      * Constructs a proppanel with a given name.
      * @see org.argouml.ui.TabSpawnable#TabSpawnable(String)
@@ -49,11 +49,8 @@ public class PropPanelDiagram extends PropPanel {
     protected PropPanelDiagram(String diagramName) {
         super(diagramName, ConfigLoader.getTabPropsOrientation());
         
-        JTextField field =
-	    new UMLTextField(this, new UMLTextProperty(ArgoDiagram.class,
-						       "name",
-						       "getName",
-						       "setName"));
+        field = new JTextField();
+        field.getDocument().addDocumentListener(new DiagramNameDocument(field));
         
         addField(Translator.localize("label.name"), field);
     }
