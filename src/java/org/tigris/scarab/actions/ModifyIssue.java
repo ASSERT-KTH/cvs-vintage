@@ -95,6 +95,7 @@ import org.tigris.scarab.om.DependType;
 import org.tigris.scarab.om.DependTypePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.cache.ScarabCache; 
 import org.apache.fulcrum.upload.FileItem;
 import org.apache.fulcrum.TurbineServices;
 import org.apache.fulcrum.upload.TurbineUploadService;
@@ -109,7 +110,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.81 2002/03/14 01:13:09 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.82 2002/03/21 01:03:38 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -437,6 +438,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                 data.setMessage("Attachment was added");
                 // remove the group so that the form data doesn't show up again
                 intake.remove(group);
+                ScarabCache.clear();
             }
             else
             {
