@@ -31,6 +31,15 @@ public class WebXmlReader extends BaseInterceptor {
 	// read default web.xml
 	try {
             String home = ctx.getContextManager().getHome();
+
+	    // Calculate pathname to the local web.dtd file
+	    File default_dtd = new File( home + "/conf/web.dtd" );
+	    if ( ! default_dtd.exists() ) {
+		String tchome=ctx.getContextManager().getInstallDir();
+		if ( tchome != null )
+		    default_dtd = new File( tchome + "/conf/web.dtd" );
+	    }
+
 	    // XXX make it configurable
 	    File default_xml=new File( home + "/conf/web.xml" );
 
@@ -44,7 +53,8 @@ public class WebXmlReader extends BaseInterceptor {
 	    if( ! default_xml.exists() )
 		throw new TomcatException("Can't find default web.xml configuration");
 	    
-	    processFile(ctx, default_xml.toString());
+	    processFile(ctx, default_xml.toString(),
+			"file://" + default_dtd.toString());
 	    ctx.expectUserWelcomeFiles();
 	    
 	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
@@ -52,7 +62,8 @@ public class WebXmlReader extends BaseInterceptor {
 	    if (!inf_xml.isAbsolute())
 		inf_xml = new File(home, inf_xml.toString());
 
-	    processFile(ctx, inf_xml.toString());
+	    processFile(ctx, inf_xml.toString(),
+			"file://" + default_dtd.toString());
 	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
 	    String msg = sm.getString("context.getConfig.e",ctx.getPath() + " " + ctx.getDocBase());
@@ -61,7 +72,7 @@ public class WebXmlReader extends BaseInterceptor {
 
     }
 
-    void processFile( Context ctx, String file) {
+    void processFile( Context ctx, String file, String dtdURL) {
 	try {
 	    File f=new File(FileUtil.patch(file));
 	    if( ! f.exists() ) {
@@ -70,6 +81,9 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
+	    xh.setValidating(true);
+	    xh.register("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+			dtdURL);
 	    //	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
 
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );

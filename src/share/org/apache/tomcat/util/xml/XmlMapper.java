@@ -5,6 +5,8 @@ import java.beans.*;
 import java.io.*;
 import java.io.IOException;
 import java.lang.reflect.*;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.StringTokenizer;
 import javax.xml.parsers.SAXParser;
@@ -30,6 +32,12 @@ public class XmlMapper
 
     Locator locator;
 
+    /**
+     * The URLs of DTDs that have been registered, keyed by the public
+     * identifier that corresponds.
+     */
+    private Hashtable dtds = new Hashtable();
+
     // Stack of elements
     Stack oStack=new Stack();
     Object root;
@@ -41,6 +49,7 @@ public class XmlMapper
     String body;
 
     int debug=0;
+    boolean validating=false;
 
     public XmlMapper() {
 	attributeStack = new Object[100]; // depth of the xml doc
@@ -175,6 +184,16 @@ public class XmlMapper
 	return debug;
     }
 
+    public void setValidating( boolean validating ) {
+	if (debug >= 1)
+	    log("Validating = " + validating);
+	this.validating = validating;
+    }
+
+    public boolean getValidating() {
+	return (this.validating);
+    }
+
     public void log(String msg) {
 	// log is for debug only, it should't be enabled for anything else
 	// ( no dependency on Logger or any external tomcat package )
@@ -195,7 +214,7 @@ public class XmlMapper
 	try {
 	    SAXParserFactory factory = SAXParserFactory.newInstance();
 	    factory.setNamespaceAware(false);
-	    factory.setValidating(false);	// FIXME - ?
+	    factory.setValidating(validating);
 	    parser = factory.newSAXParser();
 	    parser.parse(xmlFile, this);
 	    return root;
@@ -229,7 +248,7 @@ public class XmlMapper
 	try {
 	    SAXParserFactory factory = SAXParserFactory.newInstance();
 	    factory.setNamespaceAware(false);
-	    factory.setValidating(false);	// FIXME - ?
+	    factory.setValidating(validating);
 	    parser = factory.newSAXParser();
 	    parser.parse(xmlFile, this);
 	    return root;
@@ -248,6 +267,19 @@ public class XmlMapper
 	    throw ex1;
 	}
     }
+
+
+    /**
+     * Register the specified DTD URL for the specified public identifier.
+     * This must be called prior to the first call to <code>readXml()</code>.
+     *
+     * @param publicId Public identifier of the DTD to be resolved
+     * @param dtdURL The URL to use for reading this DTD
+     */
+    public void register(String publicId, String dtdURL) {
+	dtds.put(publicId, dtdURL);
+    }
+
 
     class Rule {
 	XmlMatch match;
@@ -350,16 +382,28 @@ public class XmlMapper
 	    matching[i].action.cleanup( ctx );
     }
 
-    /** Trick for off-line usage
+
+    /**
+     * Resolve the requested external entity, replacing it by an internal
+     * DTD if one has been registered.
+     *
+     * @param publicId Public identifier of the entity being referenced
+     * @param systemId System identifier of the entity being referenced
+     *
+     * @exception SAXException if a parsing error occurs
      */
-    public InputSource resolveEntity(String publicId, String systemId) {
-	if( debug>0 ) log("Entity: " + publicId + " " + systemId);
-	// We need to return a valid IS - or the default will be used,
-	// and that means reading from net.
-	InputSource is=new InputSource();
-	//	is.setByteStream( new StringBufferInputStream(""));
-	is.setByteStream(new ByteArrayInputStream(new byte[0]));
-	return is;
+    public InputSource resolveEntity(String publicId, String systemId)
+	throws SAXException {
+
+	String dtdURL = (String) dtds.get(publicId);
+	if (dtdURL == null) {
+	    log("Entity: " + publicId + " --> " + systemId);
+	    return (null);
+	} else {
+	    log("Entity: " + publicId + " --> " + dtdURL);
+	    return (new InputSource(dtdURL));
+	}
+
     }
 
     public void notationDecl (String name,
