@@ -1,6 +1,12 @@
 /*
- * @(#)MDI_InternalFrame.java 5.2
+ * @(#)MDI_InternalFrame.java
  *
+ * Project:		JHotdraw - a GUI framework for technical drawings
+ *				http://www.jhotdraw.org
+ *				http://jhotdraw.sourceforge.net
+ * Copyright:	© by the original author(s) and all contributors
+ * License:		Lesser GNU Public License (LGPL)
+ *				http://www.opensource.org/licenses/lgpl-license.html
  */
 
 package CH.ifa.draw.contrib;
@@ -15,11 +21,11 @@ import javax.swing.JInternalFrame;
  * document interfaces.
  *
  * @author  Wolfram Kaiser
- * @version JHotDraw 5.2    31.7.1999
+ * @version <$CURRENT_VERSION$>
  */
 public class MDI_InternalFrame extends JInternalFrame {
 	private DrawingView internalDrawingView;
-    
+	
 	/**
 	 * Create a new internal frame
 	 */
@@ -118,14 +124,14 @@ public class MDI_InternalFrame extends JInternalFrame {
 		return getDrawingView().drawing();
 	}
 
-    /**
-     * Replace an existing drawing view with a new one. A JHotDraw application can
-     * have only one DrawingView active at a time. Therefore, the currently active
-     * internal frame gets the active DrawingView after its Drawing view has
-     * been backed up for later restorage.
-     *
-     * @parame	newDrawingView	DrawingView which should replace the current one
-     */
+	/**
+	 * Replace an existing drawing view with a new one. A JHotDraw application can
+	 * have only one DrawingView active at a time. Therefore, the currently active
+	 * internal frame gets the active DrawingView after its Drawing view has
+	 * been backed up for later restorage.
+	 *
+	 * @parame	newDrawingView	DrawingView which should replace the current one
+	 */
 	public DrawingView replaceDrawingView(DrawingView newDrawingView) {
 		DrawingView oldDrawingView = findDrawingView(newDrawingView, getContentPane());
 		if (oldDrawingView != null) {
@@ -141,12 +147,12 @@ public class MDI_InternalFrame extends JInternalFrame {
 		}
 	}
 
-    /**
-     * Searches the DrawingView in the children's component hierarchy.
-     *
-     * @param	newDrawingView	DrawingView to be searched
-     * @param	container		Container which is searched
-     */
+	/**
+	 * Searches the DrawingView in the children's component hierarchy.
+	 *
+	 * @param	newDrawingView	DrawingView to be searched
+	 * @param	container		Container which is searched
+	 */
 	protected DrawingView findDrawingView(DrawingView newDrawingView, Container container) {
 		DrawingView oldDrawingView = null;
 		Component[] components = container.getComponents();

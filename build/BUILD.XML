@@ -86,6 +86,7 @@
   <taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
   <target name="stylecheck">
       <checkstyle allowtabs="yes"
+              allownoauthor="yes"
               maxlinelen="100"
               headerfile="headerfile.txt"
               headerignoreline="2"
