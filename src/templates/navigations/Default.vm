@@ -1,3 +1,4 @@
+<p>
 <div><strong>My start page</strong></div>
 <div><strong>Projects &amp; categories</strong></div>
  <div id="tools"><strong>Project tools</strong>
@@ -14,3 +15,15 @@
      <div><small>Documents</small></div>
       <div><small>News</small></div>
 </div>
+</p>
+
+#set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#if ($issueTypes.size() > 0)
+<div><small><strong>Artifact Types</strong></small>
+#foreach($issueType in $issueTypes)
+<div><small>
+<a href="$link.setPage("SelectArtifactType.vm")">$issueType.Name</a>
+</small></div>
+#end
+</div>
+#end
