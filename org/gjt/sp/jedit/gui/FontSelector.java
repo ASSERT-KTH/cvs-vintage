@@ -31,13 +31,14 @@ import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.*;
 import org.gjt.sp.jedit.*;
+import org.gjt.sp.util.Log;
 //}}}
 
 //{{{ FontSelector class
 /**
  * A font chooser widget.
  * @author Slava Pestov
- * @version $Id: FontSelector.java,v 1.5 2003/05/30 00:49:52 spestov Exp $
+ * @version $Id: FontSelector.java,v 1.6 2003/06/11 20:33:36 spestov Exp $
  */
 public class FontSelector extends JButton
 {
@@ -193,10 +194,25 @@ class FontSelectorDialog extends EnhancedDialog
 
 		JPanel listPanel = new JPanel(new GridLayout(1,3,6,6));
 
+		String[] fonts;
+		try
+		{
+			fonts = getFontList();
+		}
+		catch(Exception e)
+		{
+			Log.log(Log.ERROR,this,"Broken Java implementation!");
+			/* Log.log(Log.ERROR,this,"Using deprecated Toolkit.getFontList()"); */
+			Log.log(Log.ERROR,this,e);
+
+			/* fonts = getToolkit().getFontList(); */
+			fonts = new String[] { "Broken Java implementation!" };
+		}
+
 		JPanel familyPanel = createTextFieldAndListPanel(
 			"font-selector.family",
 			familyField = new JTextField(),
-			familyList = new JList(getFontList()));
+			familyList = new JList(fonts));
 		listPanel.add(familyPanel);
 
 		String[] sizes = { "9", "10", "12", "14", "16", "18", "24" };

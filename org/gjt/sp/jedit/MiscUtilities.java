@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.54 2003/06/08 22:23:40 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.55 2003/06/11 20:33:35 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -367,10 +367,23 @@ public class MiscUtilities
 			return false;
 
 		int cIndex = str.indexOf(':');
-		if(cIndex <= 1) // D:\WINDOWS
+		if(cIndex <= 1) // D:\WINDOWS, or doesn't contain : at all
 			return false;
 		else if(fsIndex != -1 && cIndex > fsIndex) // /tmp/RTF::read.pm
 			return false;
+		else if(cIndex == str.length() - 1)
+		{
+			String protocol = str.substring(0,cIndex);
+			if(VFSManager.getVFSForProtocol(protocol) == null)
+			{
+				// maybe protocol is http: or other built-in,
+				// but if file name is just protocol plus :
+				// then no Java URL handler will recognize it!
+				// this allows user to use file names like
+				// foobar:
+				return false;
+			}
+		}
 
 		return true;
 	} //}}}

@@ -103,7 +103,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.82 2003/06/03 20:35:52 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.83 2003/06/11 20:33:35 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1516,9 +1516,15 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			Dimension _bottom = bottom.getPreferredSize();
 			Dimension _right = right.getPreferredSize();
 
-			int topHeight = Math.min(Math.max(0,_height - _bottom.height),_top.height);
+			int maxTopHeight = _height - _bottom.height
+				- _topToolbars.height - _bottomToolbars.height;
+			int topHeight = Math.min(Math.max(0,maxTopHeight),
+				_top.height);
 			int leftWidth = Math.min(Math.max(0,_width - _right.width),_left.width);
-			int bottomHeight = Math.min(Math.max(0,_height - topHeight),_bottom.height);
+			int maxBottomHeight = _height - topHeight
+				- _topToolbars.height - _bottomToolbars.height;
+			int bottomHeight = Math.min(Math.max(0,maxBottomHeight),
+				_bottom.height);
 			int rightWidth = Math.min(Math.max(0,_width - leftWidth),_right.width);
 
 			DockableWindowManager.this.top.setDimension(topHeight);
@@ -1629,31 +1635,31 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			if(topToolbars != null)
 			{
 				topToolbars.setBounds(
-					_leftButtons.width + _left.width,
-					_topButtons.height + _top.height,
-					_width - _left.width - _right.width,
+					_leftButtons.width + leftWidth,
+					_topButtons.height + topHeight,
+					_width - leftWidth - rightWidth,
 					_topToolbars.height);
 			}
 
 			if(bottomToolbars != null)
 			{
 				bottomToolbars.setBounds(
-					_leftButtons.width + _left.width,
-					_height - _bottom.height
+					_leftButtons.width + leftWidth,
+					_height - bottomHeight
 					- _bottomToolbars.height
 					+ _topButtons.height,
-					_width - _left.width - _right.width,
+					_width - leftWidth - rightWidth,
 					_bottomToolbars.height);
 			}
 
 			if(center != null)
 			{
 				center.setBounds(
-					_leftButtons.width + _left.width,
-					_topButtons.height + _top.height
+					_leftButtons.width + leftWidth,
+					_topButtons.height + topHeight
 					+ _topToolbars.height,
-					_width - _left.width - _right.width,
-					_height - _top.height - _bottom.height
+					_width - leftWidth - rightWidth,
+					_height - topHeight - bottomHeight
 					- _topToolbars.height
 					- _bottomToolbars.height);
 			}
