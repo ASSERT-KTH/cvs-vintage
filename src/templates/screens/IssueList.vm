@@ -43,7 +43,7 @@
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doCancel" />&#160;
-#if ($searchType.equals("advanced") &&  $queryString)
+#if ($searchType.equals("advanced") && !$queryString.equals(""))
 <input type="submit" value="Save query" name="eventSubmit_doRedirecttosavequery" />&#160;
 <input type="submit" value="Refine query" name="eventSubmit_doRefinequery" />&#160;
 #end
@@ -71,7 +71,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel("Add/remove attributes from view
 
  <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap">&#160;</th>
+  <th nowrap="nowrap">Select</th>
 
   <th>
      #if (!$sortAttrId || $sortAttrId.length() == 0)
