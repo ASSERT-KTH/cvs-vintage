@@ -331,7 +331,7 @@ public class OutgoingServerPanel extends DefaultPanel implements ActionListener 
         portLabel = new LabelWithMnemonic(MailResourceLoader.getString(
                     "dialog", "account", "port")); //$NON-NLS-1$
 
-        portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 99999, 1));
+        portSpinner = new JSpinner(new SpinnerNumberModel(100, 1, 65535, 1));
         portLabel.setLabelFor(portSpinner);
 
         needAuthCheckBox = new CheckBoxWithMnemonic(MailResourceLoader.getString(
