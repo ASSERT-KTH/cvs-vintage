@@ -1,4 +1,4 @@
-// $Id: ClassdiagramNode.java,v 1.7 2003/06/30 18:00:34 linus Exp $
+// $Id: ClassdiagramNode.java,v 1.8 2003/12/13 10:03:43 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -96,20 +96,28 @@ class ClassdiagramNode implements LayoutedNode {
      * @return The rank for this node.
      */
     public int getRank() {
-
-	if (_rank == NORANK) { 
-	    // If the rank was not computed yet, compute it now.
-	    if (getUplinks().size() == 0) {  // If there are no uplinks,
-		_rank = 0;  // place the node in the 1st row.
-	    } else {  // Otherwise compute the max rank of the uplinks + 1
-		for (int i = 0; i < getUplinks().size(); i++) {
-		    if (getUplink(i).getRank() + 1 > _rank) {
-			_rank = getUplink(i).getRank() + 1;
-		    }
-		}
-	    }
-	}
-	return _rank; 
+        
+        if (_rank == NORANK) {
+            // If the rank was not computed yet, compute it now.
+            if (getUplinks().size() == 0) {  // If there are no uplinks,
+                _rank = 0;  // place the node in the 1st row.
+            } else {  // Otherwise compute the max rank of the uplinks + 1
+                for (int i = 0; i < getUplinks().size(); i++) {
+                    
+                    // avoid recursing, causing stack overflow error, if the
+                    // uplinks are cyclic.
+                    if (getUplink(i) == this){
+                        return _rank;
+                    }
+                    
+                    if (getUplink(i).getRank() + 1 > _rank) {
+                        
+                        _rank = getUplink(i).getRank() + 1;
+                    }
+                }
+            }
+        }
+        return _rank;
     }
 
     /**
