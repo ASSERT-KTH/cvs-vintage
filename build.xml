@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.52 2002/01/28 23:42:21 mnf999 Exp $ -->
+<!-- $Id: build.xml,v 1.53 2002/02/04 21:27:07 patriot1burke Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -172,7 +172,7 @@
     <property name="javagroups.javagroups.root" value="${project.thirdparty}/javagroups/javagroups"/>
     <property name="javagroups.javagroups.lib" value="${javagroups.javagroups.root}/lib"/>
     <path id="javagroups.javagroups.classpath">
-      <pathelement path="${javagroups.javagroups.lib}/JavaGroups.jar"/>
+      <pathelement path="${javagroups.javagroups.lib}/javagroups-2.0.jar"/>
     </path>
 
     <!-- JSR 77 -->
