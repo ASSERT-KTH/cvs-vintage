@@ -81,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.113 2003/11/13 19:40:35 mpoeschl Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.114 2003/11/22 18:09:24 dep4b Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -673,7 +673,8 @@ public class ScarabUserImpl
     {
         String expireDays = Turbine.getConfiguration()
             .getString("scarab.login.password.expire", null);
-        if (expireDays == null)
+        
+        if (expireDays == null || expireDays.trim().length() == 0)
         {
             setPasswordExpire(null);
         }
