@@ -56,6 +56,7 @@ import org.apache.torque.util.Criteria;
 import org.apache.turbine.Log;
 
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.util.ScarabConstants;
@@ -75,6 +76,11 @@ public class RModuleAttribute
     extends BaseRModuleAttribute
     implements Persistent
 {
+    private static final String R_MODULE_ATTTRIBUTE = 
+        "RModuleAttribute";
+    private static final String GET_RMAS = 
+        "getRMAs";
+
     // need a local reference
     private Attribute aAttribute = null;
 
@@ -189,6 +195,7 @@ public class RModuleAttribute
                 .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
                 .add(RModuleAttributePeer.ATTRIBUTE_ID, getAttributeId());
             RModuleAttributePeer.doDelete(c);
+            ScarabCache.clear();
         } 
         else
         {
@@ -196,6 +203,30 @@ public class RModuleAttribute
         }            
     }
 
+
+    private static List getRMAs(NumberKey moduleId, NumberKey issueTypeId)
+        throws Exception
+    {
+        List result = null;
+        Object obj = ScarabCache.get(R_MODULE_ATTTRIBUTE, GET_RMAS, 
+                                     moduleId, issueTypeId); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria()
+                .add(RModuleAttributePeer.MODULE_ID, moduleId)
+                .add(RModuleAttributePeer.ISSUE_TYPE_ID, issueTypeId);
+            crit.addAscendingOrderByColumn(
+                RModuleAttributePeer.PREFERRED_ORDER);
+            result = RModuleAttributePeer.doSelect(crit);
+            ScarabCache.put(result, R_MODULE_ATTTRIBUTE, GET_RMAS, 
+                            moduleId, issueTypeId);
+        }
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
+    }
 
     /**
      * if this RMA is the chosen attribute for email subjects then return
@@ -212,12 +243,7 @@ public class RModuleAttribute
         if ( !isDefault && getAttribute().isTextAttribute() ) 
         {
             // get related RMAs
-            Criteria crit = new Criteria()
-                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId());
-            crit.addAscendingOrderByColumn(
-                RModuleAttributePeer.PREFERRED_ORDER);
-            List rmas = RModuleAttributePeer.doSelect(crit);
+            List rmas = getRMAs(getModuleId(), getIssueTypeId());
             
             // check if another is chosen
             boolean anotherIsDefault = false;
@@ -269,10 +295,7 @@ public class RModuleAttribute
         if (b && !getDefaultTextFlag()) 
         {
             // get related RMAs
-            Criteria crit = new Criteria()
-                .add(RModuleAttributePeer.MODULE_ID, getModuleId())
-                .add(RModuleAttributePeer.ISSUE_TYPE_ID, getIssueTypeId());
-            List rmas = RModuleAttributePeer.doSelect(crit);
+            List rmas = getRMAs(getModuleId(), getIssueTypeId());
             
             // make sure no other rma is selected
             for ( int i=0; i<rmas.size(); i++ ) 

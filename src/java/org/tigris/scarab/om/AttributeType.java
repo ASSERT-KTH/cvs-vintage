@@ -100,6 +100,7 @@ public class AttributeType
      */
 
     /*
+
     private static final String  = 
         "";
         List result = null;

@@ -77,6 +77,7 @@ import org.tigris.scarab.services.user.UserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 import org.apache.turbine.Log;
 // FIXME! do not like referencing servlet inside of business objects
@@ -102,12 +103,17 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.91 2002/02/08 19:52:42 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.92 2002/02/19 05:03:39 jmcnally Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
     implements Persistent, ModuleEntity, Group
 {
+    private static final String GET_USERS = 
+        "getUsers";
+    private static final String GET_R_MODULE_ISSUE_TYPES = 
+        "getRModuleIssueTypes";
+
     protected static final NumberKey ROOT_ID = new NumberKey("0");
 
     /**
@@ -120,52 +126,62 @@ public class ScarabModule
         return getUsers(perms);
     }
 
+
     /**
      * @see org.tigris.scarab.services.module.ModuleEntity#getUsers(List)
      */
     public ScarabUser[] getUsers(List permissions)
     {
-        ScarabUser[] scarabUsers = null;
-        Criteria crit = new Criteria();
-        crit.setDistinct();
-        if ( permissions.size() == 1 ) 
-        {
-            crit.add(TurbinePermissionPeer.NAME, permissions.get(0));
-        }
-        else if (permissions.size() > 1)
-        {
-            crit.addIn(TurbinePermissionPeer.NAME, permissions);
-        }      
-
-        if (permissions.size() >= 1)
-        {
-            crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
-                         TurbineRolePermissionPeer.PERMISSION_ID);
-            crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
-                         TurbineUserGroupRolePeer.ROLE_ID);
-            crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
-                     ((Persistent)this).getPrimaryKey());
-            crit.addJoin(ScarabUserImplPeer.USER_ID, 
-                         TurbineUserGroupRolePeer.USER_ID);
-            try
+        ScarabUser[] result = null;
+        Object obj = ScarabCache.get(this, GET_USERS, permissions); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.setDistinct();
+            if ( permissions.size() == 1 ) 
             {
-                User[] users = TurbineSecurity.getUsers(crit);
-                scarabUsers = new ScarabUser[users.length];
-                for ( int i=scarabUsers.length-1; i>=0; i--) 
+                crit.add(TurbinePermissionPeer.NAME, permissions.get(0));
+            }
+            else if (permissions.size() > 1)
+            {
+                crit.addIn(TurbinePermissionPeer.NAME, permissions);
+            }      
+            
+            if (permissions.size() >= 1)
+            {
+                crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+                             TurbineRolePermissionPeer.PERMISSION_ID);
+                crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                             TurbineUserGroupRolePeer.ROLE_ID);
+                crit.add(TurbineUserGroupRolePeer.GROUP_ID, 
+                         ((Persistent)this).getPrimaryKey());
+                crit.addJoin(ScarabUserImplPeer.USER_ID, 
+                             TurbineUserGroupRolePeer.USER_ID);
+                try
                 {
-                    scarabUsers[i] = (ScarabUser)users[i];
+                    User[] users = TurbineSecurity.getUsers(crit);
+                    result = new ScarabUser[users.length];
+                    for ( int i=result.length-1; i>=0; i--) 
+                    {
+                        result[i] = (ScarabUser)users[i];
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.error("An exception prevented retrieving any users", e);
                 }
             }
-            catch (Exception e)
+            else 
             {
-                Log.error("An exception prevented retrieving any users", e);
+                result = new ScarabUser[0];
             }
+            ScarabCache.put(result, this, GET_USERS, permissions);
         }
         else 
         {
-            scarabUsers = new ScarabUser[0];
+            result = (ScarabUser[])obj;
         }
-        return scarabUsers;
+        return result;
     }
 
 
@@ -179,36 +195,49 @@ public class ScarabModule
                          String username, String email, IssueType issueType)
         throws Exception
     {
-        ScarabUser[] eligibleUsers = getUsers(getUserPermissions(issueType));
-        List userIds = new ArrayList();
-        for (int i = 0; i < eligibleUsers.length; i++)
-        {
-            userIds.add(eligibleUsers[i].getUserId());
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_USERS, firstName, lastName, 
+                                     username, email, issueType); 
+        if ( obj == null ) 
+        {        
+            ScarabUser[] eligibleUsers = getUsers(getUserPermissions(issueType));
+            List userIds = new ArrayList();
+            for (int i = 0; i < eligibleUsers.length; i++)
+            {
+                userIds.add(eligibleUsers[i].getUserId());
+            }
+            Criteria crit = new Criteria();
+            crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
+            
+            if (firstName != null)
+            {
+                crit.add(ScarabUserImplPeer.FIRST_NAME, addWildcards(firstName), 
+                         Criteria.LIKE);
+            }
+            if (lastName != null)
+            {
+                crit.add(ScarabUserImplPeer.LAST_NAME, addWildcards(lastName), 
+                         Criteria.LIKE);
+            }
+            if (username != null)
+            {
+                crit.add(ScarabUserImplPeer.LOGIN_NAME, addWildcards(username), 
+                         Criteria.LIKE);
+            }
+            if (email != null)
+            {
+                crit.add(ScarabUserImplPeer.EMAIL, addWildcards(email), 
+                         Criteria.LIKE);
+            }
+            result = ScarabUserImplPeer.doSelect(crit);
+            ScarabCache.put(result, this, GET_USERS, firstName, lastName, 
+                                     username, email, issueType);
         }
-        Criteria crit = new Criteria();
-        crit.addIn(ScarabUserImplPeer.USER_ID, userIds);
-
-        if (firstName != null)
+        else 
         {
-            crit.add(ScarabUserImplPeer.FIRST_NAME, addWildcards(firstName), 
-                     Criteria.LIKE);
+            result = (List)obj;
         }
-        if (lastName != null)
-        {
-            crit.add(ScarabUserImplPeer.LAST_NAME, addWildcards(lastName), 
-                     Criteria.LIKE);
-        }
-        if (username != null)
-        {
-            crit.add(ScarabUserImplPeer.LOGIN_NAME, addWildcards(username), 
-                     Criteria.LIKE);
-        }
-        if (email != null)
-        {
-            crit.add(ScarabUserImplPeer.EMAIL, addWildcards(email), 
-                     Criteria.LIKE);
-        }
-        return ScarabUserImplPeer.doSelect(crit);
+        return result;
     }
 
     private Object addWildcards(String s)
@@ -253,17 +282,30 @@ public class ScarabModule
         return super.getRModuleAttributes(crit);
     }
 
+
     public Vector getRModuleIssueTypes()
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
-        .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
-                     IssueTypePeer.ISSUE_TYPE_ID)
-        .add(IssueTypePeer.PARENT_ID, 0)
-        .add(IssueTypePeer.DELETED, 0)
-        .addAscendingOrderByColumn(RModuleIssueTypePeer.PREFERRED_ORDER);
-        return super.getRModuleIssueTypes(crit);
+        Vector result = null;
+        Object obj = ScarabCache.get(this, GET_R_MODULE_ISSUE_TYPES); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
+                .addJoin(RModuleIssueTypePeer.ISSUE_TYPE_ID, 
+                         IssueTypePeer.ISSUE_TYPE_ID)
+                .add(IssueTypePeer.PARENT_ID, 0)
+                .add(IssueTypePeer.DELETED, 0)
+                .addAscendingOrderByColumn(
+                    RModuleIssueTypePeer.PREFERRED_ORDER);
+            result = super.getRModuleIssueTypes(crit);
+            ScarabCache.put(result, this, GET_R_MODULE_ISSUE_TYPES);
+        }
+        else 
+        {
+            result = (Vector)obj;
+        }
+        return result;
     }
 
     public boolean allowsIssues()

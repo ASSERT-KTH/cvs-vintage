@@ -76,6 +76,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.services.module.ModuleManager;
 import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.services.cache.ScarabCache;
 import org.tigris.scarab.util.ScarabException;
 
 import org.apache.turbine.Turbine;
@@ -90,7 +91,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.48 2002/02/17 18:57:52 jmcnally Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.49 2002/02/19 05:03:39 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -285,8 +286,9 @@ public class ScarabUserImpl
         
         if (torqueLog.isDebugEnabled()) 
         {
+            String name = (module == null) ? null : module.getName();
             torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
-                            module.getName() + ") started");
+                            name + ") started");
         }
         
         // Cache permission check results internally, so that we do not have
@@ -335,8 +337,9 @@ public class ScarabUserImpl
         
         if (torqueLog.isDebugEnabled()) 
         {
+            String name = (module == null) ? null : module.getName();
             torqueLog.debug("ScarabUserImpl.hasPermission(" + perm + ", " + 
-                            module.getName() + ") end\n");
+                            name + ") end\n");
         }
         return hasPermission;
     }
@@ -351,49 +354,61 @@ public class ScarabUserImpl
         return getModules(perms);
     }
     
+    private static final String GET_MODULES = 
+        "getModules";
+
     
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules(String[])
      */
     public ModuleEntity[] getModules(String[] permissions)
     {        
-        Criteria crit = new Criteria();
-        crit.setDistinct();
-        crit.addIn(TurbinePermissionPeer.PERMISSION_NAME, permissions);
-        crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
+        ModuleEntity[] result = null;
+        Object obj = ScarabCache.get(this, GET_MODULES, permissions); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
+            crit.setDistinct();
+            crit.addIn(TurbinePermissionPeer.PERMISSION_NAME, permissions);
+            crit.addJoin(TurbinePermissionPeer.PERMISSION_ID, 
                      TurbineRolePermissionPeer.PERMISSION_ID);
-        crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
-                     TurbineUserGroupRolePeer.ROLE_ID);
-        crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-        crit.addJoin(ScarabModulePeer.MODULE_ID, 
-                     TurbineUserGroupRolePeer.GROUP_ID);
-        
-        ModuleEntity[] modules = null;
-        try
-        {
-            List scarabModules = ScarabModulePeer.doSelect(crit);
-            // check for permissions in global, if so get all modules
-            for ( int i=scarabModules.size()-1; i>=0; i--) 
+            crit.addJoin(TurbineRolePermissionPeer.ROLE_ID, 
+                         TurbineUserGroupRolePeer.ROLE_ID);
+            crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+            crit.addJoin(ScarabModulePeer.MODULE_ID, 
+                         TurbineUserGroupRolePeer.GROUP_ID);
+            
+            try
             {
-                if ( ModuleEntity.ROOT_ID.equals( 
-                     ((ModuleEntity)scarabModules.get(i)).getModuleId()) ) 
+                List scarabModules = ScarabModulePeer.doSelect(crit);
+                // check for permissions in global, if so get all modules
+                for ( int i=scarabModules.size()-1; i>=0; i--) 
                 {
-                    crit = new Criteria();
-                    scarabModules = ScarabModulePeer.doSelect(crit);
-                    break;
+                    if ( ModuleEntity.ROOT_ID.equals( 
+                     ((ModuleEntity)scarabModules.get(i)).getModuleId()) ) 
+                    {
+                        crit = new Criteria();
+                        scarabModules = ScarabModulePeer.doSelect(crit);
+                        break;
+                    }
+                }
+                result = new ModuleEntity[scarabModules.size()];
+                for ( int i=scarabModules.size()-1; i>=0; i--) 
+                {
+                    result[i] = (ModuleEntity)scarabModules.get(i);
                 }
             }
-            modules = new ModuleEntity[scarabModules.size()];
-            for ( int i=scarabModules.size()-1; i>=0; i--) 
+            catch (Exception e)
             {
-                modules[i] = (ModuleEntity)scarabModules.get(i);
+                Log.error("An exception prevented retrieving any modules", e);
             }
+            ScarabCache.put(result, this, GET_MODULES, permissions);
         }
-        catch (Exception e)
+        else 
         {
-            Log.error("An exception prevented retrieving any modules", e);
+            result = (ModuleEntity[])obj;
         }
-        return modules;
+        return result;
     }
     
     /**
@@ -405,6 +420,10 @@ public class ScarabUserImpl
         return getRoles(module).size() != 0;
     }
     
+    private static final String GET_ROLES = 
+        "getRoles";
+
+
     /* *
      * @see org.tigris.scarab.om.ScarabUser#getRoles(ModuleEntity)
      * !FIXME! need to define a Role interface (maybe the one in fulcrum is 
@@ -416,35 +435,44 @@ public class ScarabUserImpl
     private List getRoles(ModuleEntity module)
         throws Exception
     {
-        Criteria crit = new Criteria();
-        crit.setDistinct();
-        crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-        crit.add(TurbineUserGroupRolePeer.GROUP_ID, module.getModuleId());
-        crit.addJoin(TurbineRolePeer.ROLE_ID, 
-                     TurbineUserGroupRolePeer.ROLE_ID);
-        List roles = TurbineRolePeer.doSelect(crit);
-
-        // check the global module
-        if ( !ModuleEntity.ROOT_ID.equals(module.getModuleId()) ) 
-        {
-            crit = new Criteria();
+        List result = null;
+        Object obj = ScarabCache.get(this, GET_ROLES, module); 
+        if ( obj == null ) 
+        {        
+            Criteria crit = new Criteria();
             crit.setDistinct();
             crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
-            crit.add(TurbineUserGroupRolePeer.GROUP_ID, ModuleEntity.ROOT_ID);
+            crit.add(TurbineUserGroupRolePeer.GROUP_ID, module.getModuleId());
             crit.addJoin(TurbineRolePeer.ROLE_ID, 
-                         TurbineUserGroupRolePeer.ROLE_ID);
-            List globalRoles = TurbineRolePeer.doSelect(crit);
-
-            for ( int i=0; i<globalRoles.size(); i++ ) 
+                     TurbineUserGroupRolePeer.ROLE_ID);
+            result = TurbineRolePeer.doSelect(crit);
+            
+            // check the global module
+            if ( !ModuleEntity.ROOT_ID.equals(module.getModuleId()) ) 
             {
-                if ( !roles.contains(globalRoles.get(i)) ) 
+                crit = new Criteria();
+                crit.setDistinct();
+                crit.add(TurbineUserGroupRolePeer.USER_ID, getUserId());
+                crit.add(TurbineUserGroupRolePeer.GROUP_ID, ModuleEntity.ROOT_ID);
+                crit.addJoin(TurbineRolePeer.ROLE_ID, 
+                             TurbineUserGroupRolePeer.ROLE_ID);
+                List globalRoles = TurbineRolePeer.doSelect(crit);
+                
+                for ( int i=0; i<globalRoles.size(); i++ ) 
                 {
-                    roles.add(globalRoles.get(i));
+                    if ( !result.contains(globalRoles.get(i)) ) 
+                    {
+                        result.add(globalRoles.get(i));
+                    }
                 }
             }
+            ScarabCache.put(result, this, GET_ROLES, module);
         }
-        
-        return roles;
+        else 
+        {
+            result = (List)obj;
+        }
+        return result;
     }
     
     
