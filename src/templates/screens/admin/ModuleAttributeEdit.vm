@@ -96,7 +96,7 @@ On this screen, one can modify a module's Attribute information.
        #foreach ($parent in $parents)
          #if ($parents.size() > 1)
            #if ($velocityCount < $parents.size())
-               #set ($comma = ",")
+               #set ($comma = ", ")
            #else
                #set ($comma = "")
            #end
