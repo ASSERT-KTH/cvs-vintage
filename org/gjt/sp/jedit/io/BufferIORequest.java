@@ -34,7 +34,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer I/O request.
  * @author Slava Pestov
- * @version $Id: BufferIORequest.java,v 1.23 2002/04/08 13:13:56 spestov Exp $
+ * @version $Id: BufferIORequest.java,v 1.24 2002/05/13 07:34:49 spestov Exp $
  */
 public class BufferIORequest extends WorkRequest
 {
@@ -582,26 +582,26 @@ public class BufferIORequest extends WorkRequest
 						if(!vfs._rename(session,savePath,path,view))
 							throw new IOException(path);
 					}
+
+					// We only save markers to VFS's that support deletion.
+					// Otherwise, we will accumilate stale marks files.
+					if((vfs.getCapabilities() & VFS.DELETE_CAP) != 0)
+					{
+						if(jEdit.getBooleanProperty("persistentMarkers")
+							&& buffer.getMarkers().size() != 0)
+						{
+							setStatus(jEdit.getProperty("vfs.status.save-markers",args));
+							setProgressValue(0);
+							out = vfs._createOutputStream(session,markersPath,view);
+							if(out != null)
+								writeMarkers(buffer,out);
+						}
+						else
+							vfs._delete(session,markersPath,view);
+					}
 				}
 				else
 					buffer.setBooleanProperty(ERROR_OCCURRED,true);
-
-				// We only save markers to VFS's that support deletion.
-				// Otherwise, we will accumilate stale marks files.
-				if((vfs.getCapabilities() & VFS.DELETE_CAP) != 0)
-				{
-					if(jEdit.getBooleanProperty("persistentMarkers")
-						&& buffer.getMarkers().size() != 0)
-					{
-						setStatus(jEdit.getProperty("vfs.status.save-markers",args));
-						setProgressValue(0);
-						out = vfs._createOutputStream(session,markersPath,view);
-						if(out != null)
-							writeMarkers(buffer,out);
-					}
-					else
-						vfs._delete(session,markersPath,view);
-				}
 			}
 			catch(IOException io)
 			{

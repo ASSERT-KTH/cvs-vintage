@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.21 2002/04/07 11:44:14 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.22 2002/05/13 07:34:49 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -275,6 +275,12 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 			{
 				if(SearchAndReplace.find(view))
 					closeOrKeepDialog();
+				else
+				{
+					toFront();
+					requestFocus();
+					find.requestFocus();
+				}
 			}
 		}
 		finally

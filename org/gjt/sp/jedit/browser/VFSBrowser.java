@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.36 2002/03/10 05:36:13 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.37 2002/05/13 07:34:48 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -323,7 +323,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 	} //}}}
 
 	//{{{ handleMessage() method
-	public void handleMessage(EBMessage msg)
+	public void handleMessage(final EBMessage msg)
 	{
 		if(msg instanceof ViewUpdate)
 			handleViewUpdate((ViewUpdate)msg);
@@ -354,7 +354,17 @@ public class VFSBrowser extends JPanel implements EBComponent
 				{
 					requestRunning = true;
 
-					browserView.maybeReloadDirectory(((VFSUpdate)msg).getPath());
+					// Have to use invokeLater() because
+					// when using FTP the DirectoryCache
+					// might receive the event after this
+					SwingUtilities.invokeLater(new Runnable()
+					{
+						public void run()
+						{
+							browserView.maybeReloadDirectory(
+								((VFSUpdate)msg).getPath());
+						}
+					});
 				}
 				finally
 				{

@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.116 2002/04/12 03:49:45 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.117 2002/05/13 07:34:49 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -6250,6 +6250,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		private void doTripleClick(MouseEvent evt)
 		{
 			int newCaret = getLineEndOffset(dragStartLine);
+			if(dragStartLine == buffer.getLineCount() - 1)
+				newCaret--;
+
 			addToSelection(new Selection.Range(
 				getLineStartOffset(dragStartLine),
 				newCaret));

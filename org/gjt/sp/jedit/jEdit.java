@@ -50,7 +50,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.65 2002/04/26 07:28:54 spestov Exp $
+ * @version $Id: jEdit.java,v 1.66 2002/05/13 07:34:48 spestov Exp $
  */
 public class jEdit
 {
@@ -71,7 +71,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.00.99.01";
+		return "04.01.01.00";
 	} //}}}
 
 	//{{{ main() method
@@ -1613,6 +1613,13 @@ public class jEdit
 			{
 				if(!buffer.save(view,null,true))
 					return false;
+
+				VFSManager.waitForRequests();
+				if(buffer.getBooleanProperty(BufferIORequest
+					.ERROR_OCCURRED))
+				{
+					return false;
+				}
 			}
 			else if(result != JOptionPane.NO_OPTION)
 				return false;
