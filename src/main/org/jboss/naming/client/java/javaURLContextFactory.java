@@ -10,6 +10,8 @@ import java.util.Hashtable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
@@ -25,13 +27,12 @@ import javax.naming.spi.ObjectFactory;
  * @see javax.naming.spi.ObjectFactory
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class javaURLContextFactory
    implements ObjectFactory
 {
    public static final String J2EE_CLIENT_NAME_PROP = "j2ee.clientName";
-
 
    // ObjectFactory implementation ----------------------------------
    public Object getObjectInstance(Object obj, Name name, Context nameCtx,
@@ -40,14 +41,34 @@ public class javaURLContextFactory
    {
       // Get the j2ee.clientName value
       String clientName = (String) env.get(J2EE_CLIENT_NAME_PROP);
-      if( clientName == null )
-         throw new NamingException("Failed to find j2ee.clientName in jndi env");
+      if (clientName == null)
+      {
+         // Look for the name as a system property
+         clientName = (String) AccessController.doPrivileged(
+            new PrivilegedAction()
+            {
+               public Object run()
+               {
+                  try
+                  {
+                     return System.getProperty(J2EE_CLIENT_NAME_PROP);
+                  }
+                  catch (SecurityException e)
+                  {
+                     return null;
+                  }
+               }
+            }
+         );
+         if (clientName == null)
+            throw new NamingException("Failed to find j2ee.clientName in jndi env");
+      }
 
       Object result = null;
 
-      if( nameCtx == null )
+      if (nameCtx == null)
          nameCtx = new InitialContext(env);
-      if( obj == null )
+      if (obj == null)
       {
          // Create a context for resolving the java: url
          InvocationHandler handler = new EncContextProxy(nameCtx, clientName);
@@ -62,6 +83,7 @@ public class javaURLContextFactory
    {
       Context lookupCtx;
       String clientName;
+
       EncContextProxy(Context lookupCtx, String clientName)
       {
          this.lookupCtx = lookupCtx;
@@ -74,17 +96,17 @@ public class javaURLContextFactory
          throws Throwable
       {
          String methodName = method.getName();
-         if( methodName.equals("toString") == true )
-            return "Client ENC("+clientName+")";
+         if (methodName.equals("toString") == true)
+            return "Client ENC(" + clientName + ")";
 
-         if( methodName.equals("lookup") == false )
-            throw new OperationNotSupportedException("Only lookup is supported, op="+method);
+         if (methodName.equals("lookup") == false)
+            throw new OperationNotSupportedException("Only lookup is supported, op=" + method);
          NameParser parser = lookupCtx.getNameParser("");
          Name name = null;
-         if( args[0] instanceof String )
+         if (args[0] instanceof String)
             name = parser.parse((String) args[0]);
          else
-           name = (Name)args[0];
+            name = (Name) args[0];
 
          // Lookup the client application context from the server
          Context clientCtx = (Context) lookupCtx.lookup(clientName);
