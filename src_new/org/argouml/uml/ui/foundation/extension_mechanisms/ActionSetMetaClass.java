@@ -1,4 +1,4 @@
-// $Id: ActionSetMetaClass.java,v 1.2 2004/08/09 05:48:37 linus Exp $
+// $Id: ActionSetMetaClass.java,v 1.3 2004/08/28 16:12:10 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,9 @@ import org.argouml.uml.ui.UMLComboBox2;
  */
 public class ActionSetMetaClass extends UMLChangeAction {
 
+    /**
+     * The Singleton.
+     */
     public static final ActionSetMetaClass SINGLETON =
 	new ActionSetMetaClass();
 
@@ -47,6 +50,9 @@ public class ActionSetMetaClass extends UMLChangeAction {
         super("Set");
     }
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         Object source = e.getSource();
