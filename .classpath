@@ -8,11 +8,11 @@
     <classpathentry kind="src" path="src/addressbook/core"/>
     <classpathentry kind="src" path="src/addressbook/independent"/>
     <classpathentry kind="src" path="res"/>
-    <classpathentry kind="var" path="JRE_SRC"/>
     <classpathentry kind="var" path="JRE_LIB"/>
     <classpathentry kind="lib" path="lib/junit.jar"/>
     <classpathentry kind="lib" path="lib/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/jakarta-oro-2.0.6.jar"/>
+    <classpathentry kind="lib" path="lib/jakarta-oro-2.0.6.jar"/>
     <classpathentry kind="lib" path="lib/lucene-1.2.jar"/>
+    <classpathentry kind="lib" path="lib/jargs.jar"/>
     <classpathentry kind="output" path="classes"/>
 </classpath>
