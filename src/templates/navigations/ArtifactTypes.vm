@@ -9,7 +9,7 @@
   #else
     #set ($wizardScreen = "entry,Wizard3.vm")
   #end 
-  #if ($issueType.equals($scarabR.NavIssueType))
+  #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><strong>$rmit.DisplayText</strong>
     #if ($scarabR.CurrentModule.allowsNewIssues())
     <div>$link.setPage("$wizardScreen").setLabel("Enter new")</div>

@@ -984,8 +984,7 @@ try{
 
     /**
      * Gets the IssueType associated with the information
-     * passed around in the query string. if a current issue type
-     * is not specifies, fall back to getNavIssueType()
+     * passed around in the query string.
      */
     public IssueType getCurrentIssueType() throws Exception
     {
@@ -999,48 +998,30 @@ try{
                 currentIssueType = getIssueType(data.getParameters()
                     .getString(ScarabConstants.CURRENT_ISSUE_TYPE));
             }
-            else 
-            {
-                currentIssueType = getNavIssueType();
-            }
-        }
-        return currentIssueType;
-    }
-
-
-    /**
-     * Gets the IssueType associated with the information
-     * passed around in the query string. 
-     * If it has not been selected, defaults to first nav issue type.
-     * will return null if none of the conditions pass
-     */
-    public IssueType getNavIssueType() throws Exception
-    {
-        if (navIssueType == null)
-        {
-            // if the nav issue_type_id is present in the parameter list
-            //then select that issue as the nav issue_type
-            if (data.getParameters()
-                .containsKey(ScarabConstants.NAV_ISSUE_TYPE))
-            {
-                navIssueType = getIssueType(data.getParameters()
-                    .getString(ScarabConstants.NAV_ISSUE_TYPE));
-            }
             else if (getCurrentModule() != null)
             {
                 List navIssueTypes = getCurrentModule().getNavIssueTypes();
                 if (navIssueTypes.size() > 0)
                 {
-                    return (IssueType)navIssueTypes.get(0);
+                    currentIssueType = (IssueType)navIssueTypes.get(0);
                 }
-                List activeIssueTypes = getCurrentModule().getIssueTypes(true);
-                if (activeIssueTypes.size() > 0)
+                else 
                 {
-                    currentIssueType = (IssueType)activeIssueTypes.get(0);
+                    List activeIssueTypes = 
+                        getCurrentModule().getIssueTypes(true);
+                    if (activeIssueTypes.size() > 0)
+                    {
+                        currentIssueType = (IssueType)activeIssueTypes.get(0);
+                    }
                 }
             }
         }
-        return navIssueType;
+        return currentIssueType;
+    }
+
+    public void setCurrentIssueType(IssueType type)
+    {
+        currentIssueType = type;
     }
 
     /**
@@ -1103,14 +1084,6 @@ try{
     public void setCurrentModule(Module me)
     {
         currentModule = me;
-    }
-
-    /**
-     * Sets the current ArtifactType
-     */
-    public void setNavIssueType(IssueType issueType)
-    {
-        navIssueType = issueType;
     }
 
     /**
