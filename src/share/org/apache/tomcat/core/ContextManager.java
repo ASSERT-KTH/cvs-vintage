@@ -1294,7 +1294,7 @@ public class ContextManager implements LogAware {
      *
      */
     public Context getContext(String name) {
-	loghelper.log("getContext(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
+	//	loghelper.log("getContext(String) is deprecated", new Throwable("trace"), Logger.DEBUG);
 	return (Context)contexts.get(name);
     }
 

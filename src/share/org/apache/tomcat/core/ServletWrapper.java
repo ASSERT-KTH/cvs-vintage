@@ -180,10 +180,12 @@ public class ServletWrapper extends Handler {
      */
     public void addSecurityMapping( String name, String role,
 				    String description ) {
+// 	System.out.println("Adding role:  " + name + " " + role + " " + securityRoleRefs + " " + this);
 	securityRoleRefs.put( name, role );
     }
 
     public String getSecurityRole( String name ) {
+// 	System.out.println("Role: " + name + " "  +securityRoleRefs.get(name) + " " + securityRoleRefs + " " + this);
 	return (String)securityRoleRefs.get( name );
     }
 

@@ -86,11 +86,13 @@ public interface ServletLoader {
     public boolean shouldReload();
 
     /** Reset the class loader. The caller should take all actions
-     *  required by this step ( free resources for GC, etc)
+     *  required by this step ( free resources for GC, etc).
+     *  part of the interceptor
      */
     public void reload();
 
     /** Return a real class loader
+     *  The interceptor will set and maybe change the class loader
      */
     public ClassLoader getClassLoader();
     
@@ -111,6 +113,8 @@ public interface ServletLoader {
      *  a class loaded from this entry in the repository.
      *  Not all loaders can add resources dynamically -
      *  that may require a reload.
+     * @deprecated each class loader has it's own mechanisms, the
+     *  interceptor needs to deal with that.
      */
     public void addRepository( File f, Object protectionDomain );
     // XXX notify if it can't add it
@@ -123,7 +127,9 @@ public interface ServletLoader {
     // XXX notify if it can't add it
 
     /** The parent loader - used to load tomcat classes. The Loader must delegate
-     *  to it, instead of using the system loader
+     *  to it, instead of using the system loader.
+     * 
+     *  @deprecated the interceptor must deal with that.
      */
     public void setParentLoader( ClassLoader parent );
 

@@ -123,8 +123,8 @@ public class Container implements Cloneable {
     /** Per/container interceptors.
 	XXX Not implemented, it's easy to wire it in ( 2-3 h).
      */
-    Vector contextInterceptors;
-    Vector requestInterceptors;
+    Vector contextInterceptors=new Vector();
+    Vector requestInterceptors=new Vector();
     // interceptor cache - avoid Vector enumeration
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];

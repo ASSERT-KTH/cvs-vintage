@@ -348,7 +348,6 @@ public class Context implements LogAware {
 	return envEntryTypes.keys();
     }
 
-
     public String getInitParameter(String name) {
         return (String)initializationParameters.get(name);
     }
@@ -959,6 +958,7 @@ public class Context implements LogAware {
  
      /**
       * Get the SecurityManager Permissions for this Context.
+      *@deprecated Included in PD
       */
     public Object getPermissions() {
 	return perms;
@@ -1048,16 +1048,10 @@ public class Context implements LogAware {
 	return trusted;
     }
 
-    public boolean allowAttribute( String name ) {
+    private boolean allowAttribute( String name ) {
 	// check if we can access this attribute.
 	if( isTrusted() ) return true;
-	if( true ) {
-	    // XXX  XXX XXX
-	    log( "Illegal access to internal attribute ", null, Logger.ERROR);
-	    return true;
-	}
-	 	
-	// XXX We may check Permissions, etc 
+	log( "Illegal access to internal attribute ", null, Logger.ERROR);
 	return false;
     }
 }
