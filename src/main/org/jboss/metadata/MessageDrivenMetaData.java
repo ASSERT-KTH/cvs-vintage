@@ -28,7 +28,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class MessageDrivenMetaData
    extends BeanMetaData
@@ -349,7 +349,7 @@ public class MessageDrivenMetaData
       Element activationConfig = getOptionalChild(element, "activation-config");
       if (activationConfig != null)
       {
-         Iterator iterator = getChildrenByTagName(element, "activation-config-property");
+         Iterator iterator = getChildrenByTagName(activationConfig, "activation-config-property");
          while (iterator.hasNext())
          {
             Element resourceRef = (Element) iterator.next();
