@@ -90,6 +90,7 @@
       #set ($dependA = $issue.DependsRelatedByObserverId)
       #set ($dependB = $issue.DependsRelatedByObservedId)
       #if (!$dependA.isEmpty() || !$dependB.isEmpty())
+
       <dependencies>
       #foreach ($depend in $dependA)
 
