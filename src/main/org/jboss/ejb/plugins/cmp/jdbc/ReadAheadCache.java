@@ -35,7 +35,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public class ReadAheadCache
 {
@@ -104,7 +104,7 @@ public class ReadAheadCache
       listCache = null;
    }
 
-   public synchronized void addFinderResults(
+   public void addFinderResults(
       List results,
       JDBCReadAheadMetaData readahead)
    {
@@ -228,7 +228,7 @@ public class ReadAheadCache
       }
    }
 
-   private synchronized void removeFinderResult(List results)
+   private void removeFinderResult(List results)
    {
       Map listMap = getListMap();
       if(listMap == null)
@@ -257,7 +257,7 @@ public class ReadAheadCache
       }
    }
 
-   public synchronized EntityReadAheadInfo getEntityReadAheadInfo(Object pk)
+   public EntityReadAheadInfo getEntityReadAheadInfo(Object pk)
    {
       Map listMap = getListMap();
       if(listMap == null)
@@ -462,7 +462,7 @@ public class ReadAheadCache
       preloadDataMap.put(field, fieldValue);
    }
 
-   public synchronized void removeCachedData(Object primaryKey)
+   public void removeCachedData(Object primaryKey)
    {
       if(log.isTraceEnabled())
       {
