@@ -1,5 +1,4 @@
-## Before you can use this macro, $module must be defined
-#macro( advancedQuery )
+#macro( advancedQuery $module )
 #set ($search = $scarabR.Search)
 #set ($intake = $scarabR.getConditionalIntake($scarabG.Constant.CURRENT_QUERY))
 #set ($query = $intake.SearchIssue.mapTo($search))
@@ -214,8 +213,7 @@ from:&#160;<input type="text" size="20"
 <input type="radio" name="resultsPerPage" value="2" checked="checked" /> 25
 <input type="radio" name="resultsPerPage" value="50" /> 50
 <input type="radio" name="resultsPerPage" value="75" /> 75
-<input type="radio" name="resultsPerPage"
-    value="100" /> 100
+<input type="radio" name="resultsPerPage" value="100" /> 100
 </td>
 </tr>
 </table>
