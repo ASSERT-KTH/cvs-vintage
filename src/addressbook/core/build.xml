@@ -5,7 +5,7 @@
 	<property name="currsrc" value="${src}"/>
 	
 	<target name="compile">
-		<echo message="compile adressbook core"/>
+		<echo message="compile addressbook core"/>
 		<javac srcdir="${currsrc}" destdir="${dest}" classpath="${ownclasspath}" encoding="ISO-8859-1" debug="yes">
 			<exclude name="**/*.html"/>
 			<exclude name="**/*.xml"/>
