@@ -52,10 +52,7 @@ public class ToolbarButton extends JButton {
 		setMargin(new Insets(1, 1, 1, 1));
 
 		GuiItem item = Config.getOptionsConfig().getGuiItem();
-		/*
-		WindowItem item =
-			MailConfig.getMainFrameOptionsConfig().getWindowItem();
-		*/
+		
 		
 		if (item.getBoolean("toolbar","enable_icon") == true)
 			WITH_ICON = true;
@@ -80,7 +77,8 @@ public class ToolbarButton extends JButton {
 			setHorizontalTextPosition(SwingConstants.CENTER);
 			setIcon(a.getLargeIcon());
 
-			setText(a.getToolbarName());
+			//setText(a.getToolbarName());
+			setText( a.getName() );
 
 		} else if (
 			(WITH_ICON == true)
@@ -90,7 +88,10 @@ public class ToolbarButton extends JButton {
 			setHorizontalTextPosition(SwingConstants.RIGHT);
 			setIcon(a.getLargeIcon());
 
-			setText(a.getName());
+			boolean showText = a.isShowToolbarText();
+			if ( showText == false ) setText("");
+			else setText( a.getToolbarName() );
+			//setText(a.getName());
 
 		} else if ((WITH_ICON == true) && (WITH_TEXT == false)) {
 
@@ -104,11 +105,13 @@ public class ToolbarButton extends JButton {
 
 		}
 		
+		/*
 		if ( WITH_TEXT == true )
 		{
 			boolean showText = a.isShowToolbarText();
 			if ( showText == false ) setText("");
 		}
+		*/
 	}
 
 	public boolean isFocusTraversable() {
