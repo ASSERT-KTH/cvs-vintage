@@ -105,7 +105,7 @@ public  class RModuleIssueType
                 .add(RModuleIssueTypePeer.MODULE_ID, getModuleId())
                 .add(RModuleIssueTypePeer.ISSUE_TYPE_ID, getIssueTypeId());
             RModuleIssueTypePeer.doDelete(c);
-            save();
+            RModuleIssueTypeManager.removeFromCache(this);
             List rmits = module.getRModuleIssueTypes();
             rmits.remove(this);
         }

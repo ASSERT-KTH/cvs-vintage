@@ -43,4 +43,11 @@ public class RModuleIssueTypeManager
         notifyListeners(listeners, oldOm, om);
         return oldOm;
     }
+
+    public static void removeFromCache(RModuleIssueType module)
+        throws TorqueException
+    {
+        ObjectKey key = module.getPrimaryKey();
+        getManager().removeInstanceImpl(key);
+    }
 }
