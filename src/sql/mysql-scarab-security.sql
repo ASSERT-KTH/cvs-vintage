@@ -17,21 +17,23 @@ INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME)
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
     VALUES (3, 'Module | Edit');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (4, 'Domain | Edit');
+    VALUES (4, 'Module | Add');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (5, 'Item | Approve');
+    VALUES (5, 'Domain | Edit');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (6, 'Item | Delete');
+    VALUES (6, 'Item | Approve');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (7, 'Issue | Assign');
+    VALUES (7, 'Item | Delete');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (8, 'Vote | Manage');
+    VALUES (8, 'Issue | Assign');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (9, 'Issue | Attach');
+    VALUES (9, 'Vote | Manage');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (10, 'User | Edit Preferences');
+    VALUES (10, 'Issue | Attach');
 INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
-    VALUES (11, 'Issue | Search');
+    VALUES (11, 'User | Edit Preferences');
+INSERT INTO TURBINE_PERMISSION (PERMISSION_ID, PERMISSION_NAME) 
+    VALUES (12, 'Issue | Search');
 
 
 # Create an account 'turbine@collab.net' for system administartor
@@ -119,6 +121,7 @@ insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
          from  TURBINE_ROLE, TURBINE_PERMISSION
          where TURBINE_ROLE.ROLE_NAME = "Developer"
            and TURBINE_PERMISSION.PERMISSION_NAME in (
+                "Module | Add",
                 "Issue | Edit",
                 "Issue | Assign",
                 "Issue | Search",
