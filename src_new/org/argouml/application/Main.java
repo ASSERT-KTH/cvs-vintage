@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.100 2004/09/24 12:38:28 linus Exp $
+// $Id: Main.java,v 1.101 2004/10/08 09:14:03 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -121,10 +121,7 @@ public class Main {
         /* set properties for application behaviour */
         System.setProperty("gef.imageLocation", "/org/argouml/Images");
 
-        /* TODO: disable apple menu bar to enable proper running
-	 * of Mac OS X java web start 
-	 */
-        System.setProperty("com.apple.macos.useScreenMenuBar", "false");
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
 
         /* FIX: set the application name for Mac OS X */
         System.setProperty("com.apple.mrj.application.apple.menu.about.name",
