@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.42 2003/03/22 20:00:40 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.43 2003/03/31 02:58:17 spestov Exp $
  */
 public class TextUtilities
 {
@@ -459,7 +459,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 				if(whitespace != 0)
 				{
 					buf.append(MiscUtilities
-						.createWhiteSpace(whitespace,tabSize));
+						.createWhiteSpace(whitespace,tabSize,width));
 				}
 				whitespace = 0;
 				width = 0;
@@ -469,7 +469,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 				if(whitespace != 0)
 				{
 					buf.append(MiscUtilities
-						.createWhiteSpace(whitespace,tabSize));
+						.createWhiteSpace(whitespace,tabSize,width));
 					whitespace = 0;
 				}
 				buf.append(in.charAt(i));
@@ -480,7 +480,7 @@ loop:		for(int i = pos; i < line.length(); i++)
 
 		if(whitespace != 0)
 		{
-			buf.append(MiscUtilities.createWhiteSpace(whitespace,tabSize));
+			buf.append(MiscUtilities.createWhiteSpace(whitespace,tabSize,width));
 		}
 
                 return buf.toString();
