@@ -64,7 +64,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.17 2002/03/14 01:13:10 jmcnally Exp $
+ * @version $Id: IssueType.java,v 1.18 2002/03/19 03:05:11 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -93,7 +93,6 @@ public  class IssueType
 
     /**
      * Gets the id of the template that corresponds to the issue type.
-     */
     public String test(Module module, boolean b)
         throws Exception
     {
@@ -106,6 +105,7 @@ public  class IssueType
             return "false";
          }
     }
+     */
 
 
     /**
@@ -182,7 +182,7 @@ public  class IssueType
               .retrieveByPK(getTemplateId());
         IssueType newTemplate = new IssueType();
         newTemplate.setName(template.getName());
-        newTemplate.setParentId(template.getParentId());
+        newTemplate.setParentId(newIssueType.getIssueTypeId());
         newTemplate.save();
         return newIssueType;
     }

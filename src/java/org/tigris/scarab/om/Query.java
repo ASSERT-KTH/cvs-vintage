@@ -242,18 +242,6 @@ public class Query
         }
     }
 
-    /**
-     * Gets RQueryUser objects for this query.
-    public List getRQueryUsers()
-        throws Exception
-    {
-        Criteria crit = new Criteria();
-        crit.add(RQueryUserPeer.QUERY_ID, getQueryId());
-        crit.add(RQueryUserPeer.USER_ID, getUserId());
-        return (List)RQueryUserPeer.doSelect(crit);
-    }
-     */
-
 
     /**
      * Gets RQueryUser object for this query and user.
@@ -320,7 +308,6 @@ public class Query
          throws Exception
     {                
         Module module = getModule();
-
         if (user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
           || (user.getUserId().equals(getUserId()) 
              && getScopeId().equals(Scope.PERSONAL__PK)))
@@ -358,18 +345,20 @@ public class Query
          newQuery.setIssueTypeId(getIssueTypeId());
          newQuery.setApproved(getApproved());
          newQuery.setCreatedDate(new Date());
-         newQuery.setCreatedDate(new Date());
          newQuery.setUserId(getUserId());
          newQuery.setScopeId(getScopeId());
          newQuery.save();
 
          RQueryUser rqu = getRQueryUser(user);
-         RQueryUser rquNew = new RQueryUser();
-         rquNew.setQueryId(newQuery.getQueryId());
-         rquNew.setUserId(user.getUserId());
-         rquNew.setSubscriptionFrequency(rqu.getSubscriptionFrequency());
-         rquNew.setIsdefault(rqu.getIsdefault());
-         rquNew.setIsSubscribed(rqu.getIsSubscribed());
-         rquNew.save();
+         if (rqu != null)
+         {
+             RQueryUser rquNew = new RQueryUser();
+             rquNew.setQueryId(newQuery.getQueryId());
+             rquNew.setUserId(user.getUserId());
+             rquNew.setSubscriptionFrequency(rqu.getSubscriptionFrequency());
+             rquNew.setIsdefault(rqu.getIsdefault());
+             rquNew.setIsSubscribed(rqu.getIsSubscribed());
+             rquNew.save();
+         }
     }
 }
