@@ -24,7 +24,7 @@
 // File: TabStyle.java
 // Classes: TabStyle
 // Original Author:
-// $Id: TabStyle.java,v 1.12 2003/05/03 10:13:43 kataka Exp $
+// $Id: TabStyle.java,v 1.13 2003/05/06 21:52:16 alexb Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // use case style panel that handles optional display of extension points.
@@ -139,7 +139,10 @@ public class TabStyle
 
     /**
      * Sets the target of the style tab. 
-     * @deprecated will change visibility in the near future
+     *
+     * @deprecated As of ArgoUml version 0.13.5,
+     *             the visibility of this method will change in the future,
+     *             replaced by {@link org.argouml.ui.targetmanager.TargetManager}.
      * @param Object the new target
      */
     public void setTarget(Object t) {

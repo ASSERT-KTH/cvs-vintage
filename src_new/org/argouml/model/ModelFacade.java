@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.42 2003/05/06 14:32:07 alexb Exp $
+// $Id: ModelFacade.java,v 1.43 2003/05/06 21:52:14 alexb Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -625,7 +625,8 @@ public class ModelFacade {
      * @param handle candidate
      * @param stereotype a string that is the stereotype name.
      * @return true if handle is a singleton.
-     * @deprecated ExtensionMechanismsFactory::isStereotype should be used
+     * @deprecated As of ArgoUml version 0.13.5, 
+     *             {@link org.argouml.model.uml.foundation.extensionmechanisms.ExtensionMechanismsHelper#isStereotype(Object,String,String)} should be used
      *	instead. Since this should only ever be used together with predefined
      *	stereotypes the base class can be found in the UML 1.3 specification.
      */

@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.19 2003/05/02 20:51:18 kataka Exp $
+// $Id: TabDiagram.java,v 1.20 2003/05/06 21:52:16 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -136,7 +136,9 @@ public class TabDiagram
      * Sets the target of the tab. The target should allways be an instance of
      * UMLDiagram
      * @param t
-     * @deprecated the visibility of this method will change in the future
+     * @deprecated As of ArgoUml version 0.13.5,
+     *             the visibility of this method will change in the future,
+     *             replaced by {@link org.argouml.ui.targetmanager.TargetManager}.
      */
     public void setTarget(Object t) {
 

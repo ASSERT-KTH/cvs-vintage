@@ -24,7 +24,7 @@
 // File: FigInclude.java
 // Classes: FigInclude
 // Original Author: mail@jeremybennett.com
-// $Id: FigInclude.java,v 1.5 2003/01/24 20:36:04 kataka Exp $
+// $Id: FigInclude.java,v 1.6 2003/05/06 21:52:16 alexb Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Include relationships.
@@ -61,7 +61,8 @@ public class FigInclude extends FigEdgeModelElement {
      *   can't mark it as private, since GEF expects to be able to call this
      *   when creating the diagram.</p>
      *
-     * @deprecated use {@link #FigInclude(Object)}, since that sets the owner.
+     * @deprecated As of ArgoUml version 0.9.8,
+     *             use {@link #FigInclude(Object)}, since that sets the owner.
      */
 
     public FigInclude() {

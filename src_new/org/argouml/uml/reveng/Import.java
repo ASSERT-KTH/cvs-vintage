@@ -69,7 +69,7 @@ import org.tigris.gef.base.Globals;
  *
  * <p>Supports recursive search in folder for all .java classes.
  *
- * <p>$Id: Import.java,v 1.31 2003/04/30 21:51:03 alexb Exp $
+ * <p>$Id: Import.java,v 1.32 2003/05/06 21:52:16 alexb Exp $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -113,19 +113,19 @@ public class Import {
     
     /**
      * not used.
-     * @deprecated
+     * @deprecated As of ArgoUml version 0.13.5, don't use this!
      */
     public static final String separator = "/";
     
     /**
      * Unnecessary attribute
-     * @deprecated
+     * @deprecated As of ArgoUml version 0.13.5, don't use this!
      */
     private ProjectBrowser pb = ProjectBrowser.getInstance();
     
     /**
      * Unnecessary attribute
-     * @deprecated
+     * @deprecated As of ArgoUml version 0.13.5, don't use this!
      */
     private Project p = ProjectManager.getManager().getCurrentProject();
     
@@ -158,7 +158,7 @@ public class Import {
     
     /**
      * Unnecessary method
-     * @deprecated
+     * @deprecated As of ArgoUml version 0.13.5, don't use this!
      */
     public Project getProject() {
         return p;
@@ -166,7 +166,7 @@ public class Import {
     
     /**
      * Unnecessary method
-     * @deprecated
+     * @deprecated As of ArgoUml version 0.13.5, don't use this!
      */
     public ProjectBrowser getProjectBrowser() {
         return pb;

@@ -28,12 +28,17 @@ package org.argouml.ui;
  *   This interface is used to received notification of navigation 
  *   events.
  *
- *    @author Curt Arnold * @deprecated replaced by TargetListener and TargetManager
+ *    @author Curt Arnold
+ * @deprecated As of ArgoUml version 0.13.5, replaced by
+ *             {@link org.argouml.ui.targetmanager.TargetListener} and
+ *             {@link org.argouml.ui.targetmanager.TargetManager}
  */
 public interface NavigationListener {
     /**
      *     Called by a user interface element when a request to 
-     *     navigate to a model element has been received.     * @deprecated replaced by TargetManager.getInstance().setTarget(Object target)
+     *     navigate to a model element has been received.
+     * @deprecated As of ArgoUml version 0.13.5,replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetManager#setTarget(Object) TargetManager.getInstance().setTarget(Object target)}
      */
     public void navigateTo(Object element);
 
@@ -43,7 +48,9 @@ public interface NavigationListener {
      *    returns true if navigation performed
      *
      *    @param attempt false if navigation accomplished by earlier listener
-     *    @return true if navigation performed     * @deprecated replaced by TargetManager.getInstance().navigateBack()
+     *    @return true if navigation performed
+     * @deprecated As of ArgoUml version 0.13.5,replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetManager#navigateBack() TargetManager.getInstance().navigateBack()}
      */
     public boolean navigateBack(boolean attempt);  
     
@@ -52,22 +59,29 @@ public interface NavigationListener {
      *    returns true if navigation performed
      *
      *    @param attempt false if navigation accomplished by earlier listener
-     *    @return true if navigation performed     * @deprecated replaced by TargetManager.getInstance().navigateForward()
+     *    @return true if navigation performed
+     * @deprecated As of ArgoUml version 0.13.5,replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetManager#navigateForward() TargetManager.getInstance().navigateForward()}
      */
     public boolean navigateForward(boolean attempt);    
 
     /**  
      *    Returns true if this listener has a target for
      *    a back navigation.  Only one listener needs to
-     *    return true for the back button to be enabled.     * @deprecated replaced by TargetManager.getInstance().navigateBackPossible()
+     *    return true for the back button to be enabled.
+     * @deprecated As of ArgoUml version 0.13.5,replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetManager#navigateBackPossible() TargetManager.getInstance().navigateBackPossible()}
     */
     public boolean isNavigateBackEnabled();
 
     /**  
      *    Returns true if this listener has a target for
      *    a back navigation.  Only one listener needs to
-     *    return true for the back button to be enabled.      * @deprecated replaced by TargetManager.getInstance().navigateForwardPossible()
+     *    return true for the back button to be enabled.
+      * @deprecated As of ArgoUml version 0.13.5,replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetManager#navigateForwardPossible() TargetManager.getInstance().navigateForwardPossible()}
     */
     public boolean isNavigateForwardEnabled();
 
-      }
+      
+}

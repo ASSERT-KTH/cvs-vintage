@@ -24,7 +24,7 @@
 // File: FigExtend.java
 // Classes: FigExtend
 // Original Author: mail@jeremybennett.com
-// $Id: FigExtend.java,v 1.7 2003/01/24 20:36:04 kataka Exp $
+// $Id: FigExtend.java,v 1.8 2003/05/06 21:52:16 alexb Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Written to support
 // Extend relationships.
@@ -87,7 +87,8 @@ public class FigExtend extends FigEdgeModelElement {
      *   can't mark it as private, since GEF expects to be able to call this
      *   when creating the diagram.</p>
      *
-     * @deprecated use {@link #FigExtend(Object)}, since that sets the owner.
+     * @deprecated As of ArgoUml version 0.9.8,
+     *             use {@link #FigExtend(Object)}, since that sets the owner.
      */
 
     public FigExtend() {

@@ -70,7 +70,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.27 2003/05/04 10:50:15 kataka Exp $
+ * $Id: DetailsPane.java,v 1.28 2003/05/06 21:52:14 alexb Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -234,7 +234,10 @@ public class DetailsPane
      * the owner(model element) of a selected fig.
      *
      * <p>Decides which panels to enable.
-     * @deprecated replaced by TargetListener, will become non-public in 
+     * @deprecated As of ArgoUml version 0.13.5,
+     *             replaced by
+     *             {@link org.argouml.ui.targetmanager.TargetListener},
+     *             will become non-public in 
      * the future
      */
     public void setTarget(Object target) {
