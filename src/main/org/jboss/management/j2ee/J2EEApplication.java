@@ -6,12 +6,19 @@
 */
 package org.jboss.management.j2ee;
 
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.management.MalformedObjectNameException;
+import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 /**
@@ -19,7 +26,7 @@ import javax.management.ObjectName;
 * JBoss specific implementation.
 *
 * @author <a href="mailto:andreas@jboss.org">Andreas Schafer</a>
-* @version $Revision: 1.2 $
+* @version $Revision: 1.3 $
 */
 public class J2EEApplication
   extends J2EEDeployedObject
@@ -30,6 +37,54 @@ public class J2EEApplication
    // -------------------------------------------------------------------------  
 
    private List mModules = new ArrayList();
+   
+   public static ObjectName create( MBeanServer pServer, String pName, URL pURL ) {
+      String lDD = null;
+      ObjectName lServer = null;
+      try {
+         lServer = (ObjectName) pServer.queryNames(
+             new ObjectName( J2EEManagedObject.getDomainName() + ":type=J2EEServer,*" ),
+             null
+         ).iterator().next();
+         // First get the deployement descriptor
+         System.out.println( "URL: " + pURL.getFile() );
+         JarFile lFile = new JarFile( pURL.getFile() );
+         JarEntry lDDEntry = lFile.getJarEntry( "META-INF/application.xml" );
+         if( lDDEntry != null ) {
+            InputStreamReader lInput = new InputStreamReader( lFile.getInputStream( lDDEntry ) );
+            StringWriter lOutput = new StringWriter();
+            char[] lBuffer = new char[ 1024 ];
+            int lLength = 0;
+            while( ( lLength = lInput.read( lBuffer ) ) > 0 ) {
+               lOutput.write( lBuffer, 0, lLength );
+            }
+            lDD = lOutput.toString();
+         }
+      }
+      catch( Exception e ) {
+         e.printStackTrace();
+      }
+      try {
+         // Now create the J2EEApplication
+         return pServer.createMBean(
+            "org.jboss.management.j2ee.J2EEApplication",
+            null,
+            new Object[] {
+               pName,
+               lServer,
+               lDD
+            },
+            new String[] {
+               String.class.getName(),
+               ObjectName.class.getName(),
+               String.class.getName()
+            }
+         ).getObjectName();
+      }
+      catch( Exception e ) {
+         return null;
+      }
+   }
 
    // -------------------------------------------------------------------------
    // Constructors
@@ -65,6 +120,22 @@ public class J2EEApplication
       return null;
    }
    
+   public void addChild( ObjectName pChild ) {
+      Hashtable lProperties = pChild.getKeyPropertyList();
+      String lType = lProperties.get( "type" ) + "";
+      if( "EJBModule".equals( lType ) ) {
+         mModules.add( pChild );
+      } else if( "WebModule".equals( lType ) ) {
+         mModules.add( pChild );
+      } else if( "ConnectorModule".equals( lType ) ) {
+         mModules.add( pChild );
+      }
+   }
+   
+   public void removeChild( ObjectName pChild ) {
+      //AS ToDo
+   }
+
    public String toString() {
       return "J2EEApplication { " + super.toString() + " } [ " +
          "modules: " + mModules +

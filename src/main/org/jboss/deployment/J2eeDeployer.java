@@ -49,6 +49,9 @@ import org.jboss.util.MBeanProxy;
 import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.ContainerFactoryMBean;
 
+import org.jboss.management.j2ee.J2EEApplication;
+import org.jboss.management.j2ee.J2EEManagedObject;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -72,7 +75,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.44 $
+ * @version $Revision: 1.45 $
  */
 
 public class J2eeDeployer
@@ -429,6 +432,13 @@ implements J2eeDeployerMBean {
      *           modules
      */
     protected void startApplication(Deployment _d) throws J2eeDeploymentException {
+        // Create the appropriate JSR-77 instance
+        ObjectName lApplication = J2EEApplication.create(
+            getServer(),
+            _d.getName(),
+            _d.getSourceUrl()
+        );
+        
         // save the old classloader
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         

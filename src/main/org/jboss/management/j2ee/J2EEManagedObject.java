@@ -98,7 +98,7 @@ public abstract class J2EEManagedObject
          InvalidParentException
    {
       try {
-      Hashtable lProperties = pParent.getKeyPropertyList();
+      Hashtable lProperties = (Hashtable) pParent.getKeyPropertyList().clone();
       System.out.println( "J2EEManagedObject(), parent properties: " + lProperties );
       System.out.println( "J2EEManagedObject(), parent type: " + lProperties.get( "type" ) );
       System.out.println( "J2EEManagedObject(), parent name: " + lProperties.get( "name" ) );

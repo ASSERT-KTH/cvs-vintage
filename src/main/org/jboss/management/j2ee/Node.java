@@ -6,6 +6,11 @@
 */
 package org.jboss.management.j2ee;
 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+
 import java.security.InvalidParameterException;
 
 import javax.management.MalformedObjectNameException;
@@ -23,7 +28,7 @@ public class Node
    // -------------------------------------------------------------------------  
 
    private String mHardwareType;
-   private ObjectName[] mIPAddressList;
+   private List mIPAddressList = new ArrayList();
    private String mOSType;
 
    // -------------------------------------------------------------------------
@@ -34,23 +39,16 @@ public class Node
    * @param pName Name of the Node
    * @param pHardwareType Type of Hardware
    * @param pOsType Type of the OS
-   * @param pIpAddresses List of IP Addresses
    *
    * @throws InvalidParameterException If list of IPAddresses or Java VMs is null or empty
    **/
-   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType, ObjectName[] pIpAddresses )
+   public Node( String pName, ObjectName pServer, String pHardwareType, String pOsType )
       throws
          MalformedObjectNameException,
          InvalidParentException
    {
       super( "Node", pName, pServer );
       mHardwareType = pHardwareType;
-/*
-      if( pIpAddresses == null || pIpAddresses.length == 0 ) {
-         throw new InvalidParameterException( "There must always be at least one IpAddress defined" );
-      }
-*/
-      mIPAddressList = pIpAddresses;
       mOSType = pOsType;
    }
 
@@ -67,42 +65,38 @@ public class Node
    }
 
    public ObjectName[] getIpAddresses() {
-      return mIPAddressList;
+      return (ObjectName[]) mIPAddressList.toArray( new ObjectName[ 0 ] );
    }
 
    public ObjectName getIpAddress( int pIndex ) {
-      if( pIndex >= 0 && pIndex < mIPAddressList.length ) {
-         return mIPAddressList[ pIndex ];
+      if( pIndex >= 0 && pIndex < mIPAddressList.size() ) {
+         return (ObjectName) mIPAddressList.get( pIndex );
       } else {
          return null;
       }
    }
 
    public void addChild( ObjectName pChild ) {
-/*
       Hashtable lProperties = pChild.getKeyPropertyList();
       String lType = lProperties.get( "type" ) + "";
-      if( "J2EEApplication".equals( lType ) ) {
-         m
-         mApplications.add( pChild );
-      } else if( "J2EEDeployments".equals( lType ) ) {
-         mDeployments.add( pChild );
-      } else if( "J2EEServer".equals( lType ) ) {
-         mServers.add( pChild );
+      if( "IpAddress".equals( lType ) ) {
+         mIPAddressList.add( pChild );
       }
-*/
    }
    
    public void removeChild( ObjectName pChild ) {
-      //AS ToDo
+      Hashtable lProperties = pChild.getKeyPropertyList();
+      String lType = lProperties.get( "type" ) + "";
+      if( "IpAddress".equals( lType ) ) {
+         mIPAddressList.remove( pChild );
+      }
    }
 
    public String toString() {
-      return "Node [ " +
-         "name: " + getName() +
-         ", hardware type: " + getHardwareType() +
+      return "Node { " + super.toString() + " } [ " +
+         "hardware type: " + getHardwareType() +
          ", os type: " + getOsType() +
-         ", IP addresses: " + getIpAddresses() +
+         ", IP addresses: " + mIPAddressList +
          " ]";
    }
 }

@@ -11,14 +11,12 @@ import java.security.InvalidParameterException;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import javax.management.j2ee.Port;
-
 /**
  * @author Marc Fleury
  **/
 public class IpAddress
    extends J2EEManagedObject
-   implements javax.management.j2ee.IpAddress
+   implements IpAddressMBean
 {
    // -------------------------------------------------------------------------
    // Members
@@ -54,7 +52,7 @@ public class IpAddress
    }
 
    public String toString() {
-      return "IpAddress [ " +
+      return "IpAddress { " + super.toString() + " } [ " +
          "IpAddress: " + getAddress() +
          " ]";
    }

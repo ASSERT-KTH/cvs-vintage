@@ -65,15 +65,28 @@ public class SingleJBossServerManagement
                   "Localhost",
                   lServer,
                   "PC Pentium 4",
-                  "Windows 2000",
-                  new ObjectName[ 0 ]
+                  "Windows 2000"
                },
                new String[] {
                   String.class.getName(),
                   ObjectName.class.getName(),
                   String.class.getName(),
+                  String.class.getName()
+               }
+            ).getObjectName();
+            // Create its IP-Address
+            ObjectName lIpAddress = getServer().createMBean(
+               "org.jboss.management.j2ee.IpAddress",
+               null,
+               new Object[] {
+                  "Localhost",
+                  lNode,
+                  "127.0.0.1"
+               },
+               new String[] {
                   String.class.getName(),
-                  ObjectName[].class.getName()
+                  ObjectName.class.getName(),
+                  String.class.getName()
                }
             ).getObjectName();
          }

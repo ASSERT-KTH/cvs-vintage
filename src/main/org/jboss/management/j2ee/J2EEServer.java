@@ -122,7 +122,7 @@ public class J2EEServer
    public void addChild( ObjectName pChild ) {
       Hashtable lProperties = pChild.getKeyPropertyList();
       String lType = lProperties.get( "type" ) + "";
-      if( "Application".equals( lType ) ) {
+      if( "J2EEApplication".equals( lType ) ) {
          mApplications.add( pChild );
       } else if( "Node".equals( lType ) ) {
          mNodes.add( pChild );
