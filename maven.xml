@@ -7,7 +7,7 @@
     xmlns:maven="jelly:maven">
     
     <!--
-    The list of goals should be:
+    The ordering of goals in this file should be:
     scarab:*
     preGoals
     postGoals
@@ -19,16 +19,38 @@
     <goal name="scarab:database">
         <i:ask question="Please enter the adminstrator username to use:" 
             answer="askAdminstratorUsername" default="administrator"/>
+        <i:ask question="Please enter the database type to use {mysql,hypersonic,postgres,db2,oracle,mssql}:" 
+            answer="mavenDatabaseType" default="mysql"/>            
+        <j:set var="scarab.database.type" value="${mavenDatabaseType}"/>                    
+        <ant:echo message="Using database type ${scarab.database.type}"/>
         <attainGoal name="scarab:int_database"/>
     </goal>
         
     <goal name="scarab:int_database">
+        <ant:echo message="Using database type ${scarab.database.type}"/>
+    
+        <j:set var="prop_name" value="scarab.jdbc.handler.${scarab.database.type}"/>
+        <j:set var="scarab.jdbc.handler" value="${context.getVariable(prop_name)}"/>        
+        <j:set var="prop_name" value="scarab.database.port.${scarab.database.type}"/>
+        <j:set var="scarab.database.port" value="${context.getVariable(prop_name)}"/>
+        <j:set var="prop_name" value="scarab.database.admin.url.${scarab.database.type}"/>
+        <j:set var="scarab.database.admin.url" value="${context.getVariable(prop_name)}"/>
+        <j:set var="prop_name" value="scarab.database.url.${scarab.database.type}"/>
+        <j:set var="scarab.database.url" value="${context.getVariable(prop_name)}"/>
+        <j:set var="prop_name" value="scarab.database.admin.url.${scarab.database.type}"/>
+        <j:set var="scarab.database.admin.url" value="${context.getVariable(prop_name)}"/>
+        <j:set var="prop_name" value="scarab.database.pool.validationQuery.${scarab.database.type}"/>
+        <j:set var="scarab.database.pool.validationQuery" value="${context.getVariable(prop_name)}"/>
+        <j:set var="prop_name" value="scarab.database.jdbc.driver.${scarab.database.type}"/>
+        <j:set var="scarab.database.jdbc.driver" value="${context.getVariable(prop_name)}"/>            
+
+                
         <ant:filterset id="scarab.sql.filter">
             <ant:filter token="ADMIN_USERNAME" 
                 value="${askAdminstratorUsername}" />
             <ant:filter token="SCARAB_MODULE_CODE_LENGTH" 
                 value="${scarab.module.code.length}" />
-    		<ant:replacestring from="integer (1)" to="integer"/>
+            <ant:replacestring from="integer (1)" to="integer"/>
         </ant:filterset>
         
         <mkdir dir="${torque.schema.dir}"/>
@@ -36,20 +58,20 @@
         
         <ant:copy todir="${maven.build.dir}/sql">
             <ant:fileset dir="${basedir}/src/sql" includes="**/*.*"/>
-			<ant:filterset refid="scarab.sql.filter"/>
+            <ant:filterset refid="scarab.sql.filter"/>
         </ant:copy>
         <attainGoal name="torque:sql"/>
         <attainGoal name="torque:id-table-init-sql"/>
         <attainGoal name="torque:create-db"/>
         
-		<j:set var="database" value="${torque.database}"/>
+        <j:set var="database" value="${torque.database}"/>
         <j:if test="${database == 'hypersonic'}">
-	        <attainGoal name="scarab:fix_hsql_schema"/>
+            <attainGoal name="scarab:fix_hsql_schema"/>
         </j:if>
         
         <copy tofile="${maven.build.dir}/sql/scarab-schema-filtered.sql"
               filtering="yes" file="${maven.build.dir}/sql/scarab-schema.sql">
-			<ant:filterset refid="scarab.sql.filter"/>
+            <ant:filterset refid="scarab.sql.filter"/>
         </copy>
         
         <attainGoal name="scarab:load-default-data"/>
@@ -283,7 +305,7 @@
     </goal>      
     
     
-    <goal name="scarab:fix_hsql_schema">		
+    <goal name="scarab:fix_hsql_schema">        
        <bsh:script>
        // fix the illegal column widths from torque-3.1.1 for hsqldb 1.7.2+
        System.out.println("Fixing hsqldb schema.");
@@ -301,7 +323,6 @@
            rdr.close();
            wrtr.close();
        } catch (java.io.IOException e) {
-           // TODO Auto-generated catch block
            e.printStackTrace();
        }           
        </bsh:script>
@@ -429,17 +450,17 @@
     
     <postGoal name="xdoc:init"> 
   
-    	<j:set var="genDocs" value="${maven.gen.docs}"/> 
+        <j:set var="genDocs" value="${maven.gen.docs}"/> 
         ${systemScope.setProperty('javax.xml.transform.TransformerFactory','org.apache.xalan.processor.TransformerFactoryImpl')} 
         <ant:style basedir="xdocs/" destdir="${genDocs}" extension=".xml" 
         style="xdocs/properties.xsl" includes="**/scarab_properties.xml" /> 
         
         <!-- This little shuffling of files seems to be required to get the 
-	     text to actually be in the correct encoding so that the xdoc
-	     goal will process it!  
-		--> 
+         text to actually be in the correct encoding so that the xdoc
+         goal will process it!  
+        --> 
 
-		<ant:copy file="${genDocs}/scarab_properties.xml" 
+        <ant:copy file="${genDocs}/scarab_properties.xml" 
         toFile="${genDocs}/scarab_properties_final.xml" overwrite="true"/> 
 
     </postGoal>
