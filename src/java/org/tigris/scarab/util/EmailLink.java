@@ -64,7 +64,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.7 2003/12/04 19:26:16 mpoeschl Exp $
+ * @version $Id: EmailLink.java,v 1.8 2003/12/19 22:26:02 dep4b Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -389,11 +389,11 @@ public class EmailLink
      * supplied StringBuffer as encoded path info.
      *
      * @param pairs A Vector of key/value arrays.
-     * @param out Buffer to which encoded path info is written
+     * @return a StringBuffer to which encoded path info is written
      */
-    protected void renderPathInfo(List pairs, StringBuffer out)
+    protected StringBuffer renderPathInfo(List pairs)
     {
-        renderPairs( pairs, out, '/', '/' );
+        return renderPairs( pairs, '/', '/' );
     }
 
     /**
@@ -401,18 +401,17 @@ public class EmailLink
      * into a URL encoded key/value pair format with the appropriate
      * separator.
      *
-     * @param out the buffer to write the pairs to.
+     * @return a StringBuffer to write the pairs to.
      * @param pairs A List of key/value arrays.
      * @param pairSep the character to use as a separator between pairs.
      * For example for a query-like rendering it would be '&'.
      * @param keyValSep the character to use as a separator between
      * key and value. For example for a query-like rendering, it would be '='.
      */
-    protected void renderPairs(List pairs, StringBuffer out,
-                               char pairSep, char keyValSep)
+    protected StringBuffer renderPairs(List pairs, char pairSep, char keyValSep)
     {
         boolean first = true;
-
+        StringBuffer out = new StringBuffer();
         final int count = pairs.size();
         for (int i = 0; i < count; i++)
         {
@@ -427,10 +426,11 @@ public class EmailLink
                 out.append(pairSep);
             }
 
-            writeFastEncoded((String) pair[0], out);
+            out.append(ScarabUtil.urlEncode((String) pair[0]));
             out.append(keyValSep);
-            writeFastEncoded((String) pair[1], out);
+            out.append(ScarabUtil.urlEncode((String) pair[1]));
         }
+        return out;
     }
 
     /**
@@ -471,7 +471,7 @@ public class EmailLink
         if (this.hasPathInfo())
         {
             output.append('/');
-            renderPathInfo(this.pathInfo, output);
+            output.append(renderPathInfo(this.pathInfo));
         }
         return output.toString();
     }
@@ -567,137 +567,4 @@ public class EmailLink
     {
         return disposed;
     }    
-
-    // ------------------------------------- private constants for url encoding
-
-    /**
-     * URL encodes <code>in</code> and writes it to <code>out</code>. If the
-     * string is null, 'null' will be written.  
-     * This method is faster if
-     * the string does not contain any characters needing encoding.  It
-     * adds some penalty for strings which actually need to be encoded.
-     * for short strings ~20 characters the upside is a 75% decrease.  while
-     * the penalty is a 10% increase.  As many query parameters do not need
-     * encoding even in i18n applications it should be much better to
-     * delay the byte conversion.
-     *
-     * @param in String to write.
-     * @param out Buffer to write to.
-     */
-    protected static final void writeFastEncoded(String in, StringBuffer out)
-    {
-        if (in == null || in.length() == 0)
-        {
-            out.append("null");
-            return;
-        }
-
-        char[] chars = in.toCharArray();
-
-        for (int i = 0; i < chars.length; i++)
-        {
-            char c = chars[i];
-
-            if ( c < 128 && safe[ c ] )
-            {
-                out.append(c);
-            }
-            else if (c == ' ')
-            {
-                out.append('+');
-            }
-            else
-            {
-                // since we need to encode we will give up on 
-                // doing it the fast way and convert to bytes.
-                writeEncoded(new String(chars, i, chars.length-i), out);
-                break;
-            }
-        }
-    }
-
-    /**
-     * URL encodes <code>in</code> and writes it to <code>out</code>. If the
-     * string is null, 'null' will be written.
-     *
-     * @param in String to write.
-     * @param out Buffer to write to.
-     */
-    protected static final void writeEncoded(String in, StringBuffer out)
-    {
-        if (in == null || in.length() == 0)
-        {
-            out.append("null");
-            return;
-        }
-
-        // This is the most expensive operation:
-
-        byte[] bytes = in.getBytes();
-
-        for (int i = 0; i < bytes.length; i++)
-        {
-            char c = (char) bytes[i];
-
-            if ( c < 128 && safe[ c ] )
-            {
-                out.append(c);
-            }
-            else if (c == ' ')
-            {
-                out.append('+');
-            }
-            else
-            {
-                byte toEscape = bytes[i];
-                out.append('%');
-                int low = (int) (toEscape & 0x0f);
-                int high = (int) ((toEscape & 0xf0) >> 4);
-                out.append(HEXADECIMAL[high]);
-                out.append(HEXADECIMAL[low]);
-            }
-        }
-    }
-
-    /**
-     * Array mapping HEXADECIMAL values to the corresponding ASCII characters.
-     */
-    private static final char[] HEXADECIMAL =
-        {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'A', 'B', 'C', 'D', 'E', 'F'
-        };
-
-    /**
-     * Characters that need not be encoded. This is much faster than using a
-     * BitSet, and for such a small array the space cost seems justified.
-     */
-    private static boolean[] safe = new boolean[ 128 ];
-
-    /** Static initializer for {@link #safe} */
-    static
-    {
-        for (int i = 'a'; i <= 'z'; i++)
-        {
-            safe[ i ] = true;
-        }
-        for (int i = 'A'; i <= 'Z'; i++)
-        {
-            safe[ i ] = true;
-        }
-        for (int i = '0'; i <= '9'; i++)
-        {
-            safe[ i ] = true;
-        }
-
-        safe['-'] = true;
-        safe['_'] = true;
-        safe['.'] = true;
-        safe['!'] = true;
-        safe['~'] = true;
-        safe['*'] = true;
-        safe['\''] = true;
-        safe['('] = true;
-        safe[')'] = true;
-    }
 }    

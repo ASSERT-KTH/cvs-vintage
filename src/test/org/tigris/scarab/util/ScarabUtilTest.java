@@ -46,33 +46,28 @@ package org.tigris.scarab.util;
  * individuals on behalf of Collab.Net.
  */
 
-import org.tigris.scarab.test.BaseTestCase;
+import junit.framework.TestCase;
 
 /**
  * Used for testing the ScarabUtil.java class.
  *
- * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtilTest.java,v 1.1 2003/01/31 19:30:54 jon Exp $
+ * @author <a href="mailto:Sebastian.Dietrich@anecon.com">Sebastian Dietrich</a>
+ * @version $Id: ScarabUtilTest.java,v 1.2 2003/12/19 22:26:02 dep4b Exp $
  */
-public class ScarabUtilTest extends BaseTestCase
+public class ScarabUtilTest extends TestCase
 {
-    /**
-     * Creates a new instance.
-     *
-     */
-    public ScarabUtilTest()
-    {
-        super("ScarabUtilTest");
-    }
-
-    public static junit.framework.Test suite()
-    {
-        return new ScarabUtilTest();
-    }
-
-    protected void runTest()
-        throws Throwable
-    {
-        // nothing to test right now
-    }
+	public static junit.framework.Test suite()
+	{
+		return new junit.framework.TestSuite(ScarabUtilTest.class);
+	}
+	
+	public void testUrlEncode()
+	{
+		assertEquals("urlEncode of null should be null", null, ScarabUtil.urlEncode(null));
+		assertEquals("urlEncode of empty string should be empty string", "", ScarabUtil.urlEncode("").toString());
+		assertEquals("urlEncode of 'test' should be 'test'", "test", ScarabUtil.urlEncode("test").toString());
+		assertEquals("urlEncode of '-_.!~*\'()' should remain the same", "-_.!~*\'()", ScarabUtil.urlEncode("-_.!~*\'()").toString());
+		assertEquals("urlEncode of 'הצü ßִײÜ?' should be some nasty url-string", "%E4%F6%FC+%DF%C4%D6%DC%3F", ScarabUtil.urlEncode("הצü ßִײÜ?").toString());
+		assertEquals("urlEncode of 'test הצü' should be some nasty url-string", "test+%E4%F6%FC", ScarabUtil.urlEncode("test הצü").toString());
+	}
 }

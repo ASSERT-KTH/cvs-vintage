@@ -60,7 +60,7 @@ import org.tigris.scarab.util.IssueIdParser;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.8 2003/08/26 23:16:49 dlr Exp $
+ * @version $Id: ScarabUtil.java,v 1.9 2003/12/19 22:26:02 dep4b Exp $
  */
 public class ScarabUtil
 {
@@ -157,54 +157,96 @@ public class ScarabUtil
     }
               
     /**
-     * URL encodes <code>in</code> and writes it to <code>out</code>. If the
-     * string is null, 'null' will be written. Code 'borrowed' from DynamicURI.java
-     * in the Jakarta Turbine 3 package. We use this code instead of java.net.Encoder
-     * because Encoder.encode is deprecated and we don't feel like putting a dependency
-     * on JDK 1.4.1. This should work fine for our purposes.
-     *
-     * @param in String to write.
-     * @param out Buffer to write to. Null if nothing in in.
-     */
-    public static final String urlEncode(String in)
-    {
-        if (in == null || in.length() == 0)
-        {
-            return null;
-        }
+	 * URL encodes <code>in</code> and writes it to <code>out</code>. If the
+	 * string is null, nothing will be written.  
+	 * This method is faster than urlEncodeSlow if the string to encode
+	 * does not contain any characters needing encoding.  It
+	 * adds some penalty for strings which actually need to be encoded.
+	 * for short strings ~20 characters the upside is a 75% decrease.  while
+	 * the penalty is a 10% increase.  As many query parameters do not need
+	 * encoding even in i18n applications it should be much better to
+	 * delay the byte conversion.
+	 *
+	 * @param in String to write.
+	 * @return a StringBuffer written to.
+	 */
+	public static final StringBuffer urlEncode(String in)
+	{
+		if (in == null)
+		{
+			return null;
+		}
+		
+		if (in.length() == 0)
+		{
+			return new StringBuffer();
+		}
 
-        StringBuffer out = new StringBuffer(in.length()+128);
-        // This is the most expensive operation:
-        byte[] bytes = in.getBytes();
+	    StringBuffer out = new StringBuffer(in.length());
+	    char[] chars = in.toCharArray();
+	
+	    for (int i = 0; i < chars.length; i++)
+	    {
+	        char c = chars[i];
+	
+	        if ( c < 128 && safe[ c ] )
+	        {
+	            out.append(c);
+	        }
+	        else if (c == ' ')
+	        {
+	            out.append('+');
+	        }
+	        else
+	        {
+	        	// since we need to encode we will give up on 
+	            // doing it the fast way and convert to bytes.
+	        	return out.append(urlEncodeSlow(in.substring(i).getBytes()));
+	        }
+	    }
+	    return out;
+	}
 
-        for (int i = 0; i < bytes.length; i++)
-        {
-            char c = (char) bytes[i];
+	/**
+	 * URL encodes <code>in</code> and writes it to <code>out</code>. If the
+	 * string is null, 'null' will be written. Code 'borrowed' from DynamicURI.java
+	 * in the Jakarta Turbine 3 package. We use this code instead of java.net.Encoder
+	 * because Encoder.encode is deprecated and we don't feel like putting a dependency
+	 * on JDK 1.4.1. This should work fine for our purposes.
+	 *
+	 * @param in a non-empty String to encode.
+	 * @return the url-encoded string as StringBuffer.
+	 */
+	private static final StringBuffer urlEncodeSlow(byte[] bytes)
+	{
+		StringBuffer out = new StringBuffer(bytes.length*2);
 
-            if ( c < 128 && safe[ c ] )
-            {
-                out.append(c);
-            }
-            else if (c == ' ')
-            {
-                out.append('+');
-            }
-            else
-            {
-                byte toEscape = bytes[i];
-                out.append('%');
-                int low = (int) (toEscape & 0x0f);
-                int high = (int) ((toEscape & 0xf0) >> 4);
-                out.append(HEXADECIMAL[high]);
-                out.append(HEXADECIMAL[low]);
-            }
-        }
-        return out.toString();
-    }
+		for (int i = 0; i < bytes.length; i++)
+		{
+			char c = (char) bytes[i];
 
-    // ------------------------------------- private constants for url encoding
-
-    /**
+			if ( c < 128 && safe[ c ] )
+			{
+				out.append(c);
+			}
+			else if (c == ' ')
+			{
+				out.append('+');
+			}
+			else
+			{
+				byte toEscape = bytes[i];
+				out.append('%');
+				int low = (int) (toEscape & 0x0f);
+				int high = (int) ((toEscape & 0xf0) >> 4);
+				out.append(HEXADECIMAL[high]);
+				out.append(HEXADECIMAL[low]);
+			}
+		}
+		return out;
+	}
+	
+	/**
      * Array mapping hexadecimal values to the corresponding ASCII characters.
      */
     private static final char[] HEXADECIMAL =
