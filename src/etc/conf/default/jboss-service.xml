@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.92 2003/11/09 00:12:21 tdiesler Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.93 2003/11/11 20:08:13 pilhuhn Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -160,7 +160,9 @@
       <attribute name="RmiBindAddress"></attribute>
    </mbean>
 
-   <mbean code="org.jboss.naming.JNDIView" name="jboss:service=JNDIView">
+   <mbean code="org.jboss.naming.JNDIView" 
+   		name="jboss:service=JNDIView"
+   		xmbean-dd="resource:xmdesc/JNDIView-xmbean.xml">
    </mbean>
 
 
