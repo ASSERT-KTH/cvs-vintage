@@ -34,7 +34,7 @@ import org.gjt.sp.jedit.OperatingSystem;
  * hopelessly broken in this regard.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.10 2002/03/19 05:41:42 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.11 2002/03/19 08:59:59 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -73,11 +73,8 @@ public class KeyEventWorkaround
 						return evt;
 				}
 
-				if(!OperatingSystem.isMacOS()
-					&& !OperatingSystem.hasJava14())
-				{
+				if(!OperatingSystem.isMacOS())
 					handleBrokenKeys(evt,keyCode);
-				}
 				else
 					last = LAST_NOTHING;
 				break;
