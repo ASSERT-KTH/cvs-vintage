@@ -95,59 +95,23 @@ public class DefaultErrorPage extends HttpServlet {
 	Throwable e= (Throwable)request.getAttribute("tomcat.servlet.error.throwable");
 	if( e!=null ) {
 	    e.printStackTrace();
-	    sendError(request, response, 500, exceptionString( e ));
+	    sendPrivateError(request, response, 500, exceptionString( e ));
 	    return;
 	}
 
 	if( status==HttpServletResponse.SC_MOVED_TEMPORARILY) {
 	    redirect( request, response, msg);
 	} else {
-	    sendError( request, response, status, msg);
+	    sendPrivateError( request, response, status, msg);
 
 	}
-    }
-
-    // -------------------- Redirect to error page if any --------------------
-    public void sendError(Request request, Response response, int sc, String msg) throws IOException {
-	response.setStatus(sc);
-	Context context = request.getContext();
-
-	if (context == null) {
-	    sendPrivateError(request, response, sc, msg);
-	    return;
-	}
-
-	String path = context.getErrorPage(String.valueOf(sc));
-	//System.out.println("X " + path + " " + request + " " + response + " " + (path==null));
-	if (path == null) {
-	    sendPrivateError(request, response, sc, msg);
-	    return;
-	}
-	
-	RequestDispatcher rd = context.getRequestDispatcher(path);
-	if( rd==null) {
-	    //  System.out.println("No error page for " + path);
-	    sendPrivateError( request, response, sc, msg);
-	    return;
-	}
-	
-	try {
-	    if( response.isStarted() )
-		rd.forward(request.getFacade(), response.getFacade());
-	    else
-		rd.include(request.getFacade(), response.getFacade());
-	} catch (ServletException se) {
-	    sendPrivateError(request, response, sc, msg);
-	}
-
-	// XXX
-	// we only should set this if we are the head, not in an include
     }
 
     // -------------------- Default error page --------------------
     private void sendPrivateError(Request request, Response response, int sc, String msg) throws IOException {
 	response.setContentType("text/html");
 
+	response.setStatus( sc );
 	StringBuffer buf = new StringBuffer();
 	if( response.isIncluded() ) {
 	    buf.append("<h1>Included servlet error: " );

@@ -143,10 +143,12 @@
 
     <gtest request="GET /test/jsp/HelloWorld.jsp?????? HTTP/1.0"
            goldenFile="${gdir}/HelloWorld.txt"
+           debug="0"
     />
 
     <gtest request="GET /test/jsp/HelloWorld.jsp?a=b&amp;c=d HTTP/1.0"
            goldenFile="${gdir}/HelloWorld.txt"
+           debug="0"
     />
 
     <gtest request="GET /test/jsp/HelloWorld.jsp?&amp;&amp; HTTP/1.0"
@@ -155,6 +157,7 @@
 
     <gtest request="GET /test/jsp/declaration/IntegerOverflow.jsp HTTP/1.0"
            returnCode="HTTP/1.0 500 Internal Server Error"
+           debug="0"
     />
 
     <gtest request="GET /test/jsp/error/err.jsp HTTP/1.0"
@@ -275,6 +278,7 @@
 
     <gtest request="GET /test/jsp/beanScopeSession.jsp HTTP/1.0"
            returnCode="HTTP/1.0 200 OK"
+           debug="0"
     />
 
     <gtest request="GET /test/jsp/implicitOut.jsp HTTP/1.0"

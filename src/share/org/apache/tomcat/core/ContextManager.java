@@ -146,12 +146,12 @@ public class ContextManager {
      */
     public void setDefaults() {
 	if(connectors.size()==0) {
-	    log("Setting default adapter");
+	    if(debug>5) log("Setting default adapter");
 	    addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
 	}
 	
 	if( contextInterceptors.size()==0) {
-	    log("Setting default context interceptors");
+	    if(debug>5) log("Setting default context interceptors");
 	    addContextInterceptor(new LogEvents());
 	    addContextInterceptor(new AutoSetup());
 	    addContextInterceptor(new DefaultCMSetter());
@@ -161,7 +161,7 @@ public class ContextManager {
 	}
 	
 	if( requestInterceptors.size()==0) {
-	    log("Setting default request interceptors");
+	    if(debug>5) log("Setting default request interceptors");
 	    SimpleMapper smap=new SimpleMapper();
 	    smap.setContextManager( this );
 	    addRequestInterceptor(smap);
@@ -240,7 +240,7 @@ public class ContextManager {
     }
 
     public void stop() throws Exception {//TomcatException {
-	log("Stopping context manager ");
+	if(debug>0) log("Stopping context manager ");
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).stop();
@@ -275,7 +275,7 @@ public class ContextManager {
 	// it will replace existing context - it's better than  IllegalStateException.
 	String path=ctx.getPath();
 	if( getContext( path ) != null ) {
-	    log("Warning: replacing context for " + path, Logger.WARNING);
+	    if(debug>0) log("Warning: replacing context for " + path, Logger.WARNING);
 	    removeContext(path);
 	}
 
@@ -348,7 +348,7 @@ public class ContextManager {
     }
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	log(" adding request intereptor " + ri.getClass().getName(), Logger.INFORMATION);
+	if(debug>0) log(" adding request intereptor " + ri.getClass().getName(), Logger.INFORMATION);
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
@@ -400,6 +400,7 @@ public class ContextManager {
     public void addLogger(Logger logger) {
 	// Will use this later once I feel more sure what I want to do here.
 	// -akv
+	cmLog=logger;
     }
 
 
@@ -464,7 +465,7 @@ public class ContextManager {
      * WorkDir property - where all temporary files will be created
      */ 
     public void setWorkDir( String wd ) {
-	log("set work dir " + wd, Logger.INFORMATION);
+	if(debug>0) log("set work dir " + wd, Logger.INFORMATION);
 	this.workDir=wd;
     }
 
@@ -512,7 +513,7 @@ public class ContextManager {
 	    rrequest.recycle();
 	    rresponse.recycle();
 	} catch( Throwable ex ) {
-	    log( "Error closing request " + ex);
+	    if(debug>0) log( "Error closing request " + ex);
 	}
 	//	log( "Done with request " + rrequest );
 	return;
@@ -524,7 +525,7 @@ public class ContextManager {
      */
     int processRequest( Request req ) {
 	req.setContextManager( this );
-	log("ProcessRequest: "+req.toString(), Logger.DEBUG);
+	if(debug>0) log("ProcessRequest: "+req.toString(), Logger.DEBUG);
 
 	for( int i=0; i< requestInterceptors.size(); i++ ) {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).contextMap( req );
@@ -534,7 +535,7 @@ public class ContextManager {
 	    ((RequestInterceptor)requestInterceptors.elementAt(i)).requestMap( req );
 	}
 
-	log("After processing: "+req.toString(), Logger.DEBUG);
+	if(debug>0) log("After processing: "+req.toString(), Logger.DEBUG);
 
 	return 0;
     }
@@ -565,10 +566,9 @@ public class ContextManager {
     void handleError( Request req, Response res , Throwable t, int code ) {
 	Context ctx = req.getContext();
 	if(ctx==null) {
-	    /// *DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	    ctx=getContext("");
 	}
-	if(ctx.getDebug() > 0 ) ctx.log("In error handler " + code + " " + t +  " / " + req );
+	if(ctx.getDebug() > 4 ) ctx.log("In error handler " + code + " " + t +  " / " + req );
 	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	String path=null;
 	ServletWrapper errorServlet=null;
@@ -637,6 +637,7 @@ public class ContextManager {
 		    rd.forward(req.getFacade(), res.getFacade());
 		return ;
 	    } catch( Throwable t1 ) {
+		ctx.log(" Error in custom error handler " + t1 );
 		// nothing - we'll call DefaultErrorPage
 	    }
 	}
@@ -704,7 +705,7 @@ public class ContextManager {
     
     public final void log(String msg) {
 	if (firstLog == true) {
-	    cmLog = Logger.getLogger("CTXMGR_LOG");
+	    cmLog = Logger.getLogger("log:cm");
 	    firstLog = false;
 	}
 
@@ -714,7 +715,7 @@ public class ContextManager {
 
     public final void log(String msg, int level) {
 	if (firstLog == true) {
-	    cmLog = Logger.getLogger("CTXMGR_LOG");
+	    cmLog = Logger.getLogger("log:cm");
 	    firstLog = false;
 	}
 

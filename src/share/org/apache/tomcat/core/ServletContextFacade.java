@@ -162,7 +162,7 @@ public class ServletContextFacade implements ServletContext {
     }
 
     public void log(String msg) {
-	context.log( msg );
+	context.logServlet( msg );
     }
 
     public String getInitParameter(String name) {
@@ -174,7 +174,7 @@ public class ServletContextFacade implements ServletContext {
     }
 
     public void log(String msg, Throwable t) {
-	context.log(msg, t);
+	context.logServlet(msg, t);
     }
 
     /**

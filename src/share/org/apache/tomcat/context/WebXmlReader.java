@@ -49,7 +49,7 @@ public class WebXmlReader extends BaseInterceptor {
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );
 	    XmlMapper xh=new XmlMapper();
-	    if( ctx.getDebug() > 5 ) xh.setDebug( 2 );
+	    //	    if( ctx.getDebug() > 5 ) xh.setDebug( 3 );
 
 	    xh.addRule("web-app/context-param", xh.methodSetter("addInitParameter", 2) );
 	    xh.addRule("web-app/context-param/param-name", xh.methodParam(0) ); 

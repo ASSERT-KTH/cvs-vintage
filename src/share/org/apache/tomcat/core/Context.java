@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.*;
+import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -141,6 +142,7 @@ public class Context {
     
     public Context() {
 	//	System.out.println("New Context ");
+	// XXX  customize it per context
     }
 	
     ServletContextFacade getFacade() {
@@ -559,8 +561,42 @@ public class Context {
 	return debug;
     }
 
-    public void log( String msg ) {
-	System.out.println("Context(" + path  + "): " + msg );
+    boolean firstLog = true;
+    Logger cLog = null;
+    Logger csLog = null;
+
+    /** Internla log method
+     */
+    public final void log(String msg) {
+	if (firstLog == true) {
+	    cLog = Logger.getLogger("log:context");
+	    csLog = Logger.getLogger("log:servlet");
+	    firstLog = false;
+	}
+	if (cLog != null)
+	    cLog.log("Context(" + path  + "): " + msg, Logger.DEBUG);
+    }
+
+    /** User-level log method ( called from a servlet)
+     */
+    public void logServlet( String msg ) {
+	if (firstLog == true) {
+	    cLog = Logger.getLogger("log:context");
+	    csLog = Logger.getLogger("log:servlet");
+	    firstLog = false;
+	}
+	if (csLog != null)
+	    csLog.log("Context(" + path  + "): " + msg, Logger.DEBUG);
+    }
+
+    public void logServlet( String msg , Throwable t ) {
+	if (firstLog == true) {
+	    cLog = Logger.getLogger("log:context");
+	    csLog = Logger.getLogger("log:servlet");
+	    firstLog = false;
+	}
+	if (csLog != null)
+	    csLog.log("Context(" + path  + "): " + msg, t, Logger.DEBUG);
     }
     
     public String toString() {

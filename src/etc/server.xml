@@ -19,10 +19,20 @@
             DEBUG
          -->
 
-    <Logger name="CTXMGR_LOG" 
-	    verbosityLevel = "DEBUG" />
+    <Logger name="log:cm" 
+	    verbosityLevel = "DEBUG" 
+	    timestamp = "no" />
 
-    <Logger name="STARTUP_LOG"
+    <Logger name="log:context" 
+	    verbosityLevel = "DEBUG" 
+	    timestamp = "no"/>
+
+    <Logger name="log:servlet" 
+            path="logs/servlet.log"
+	    verbosityLevel = "DEBUG" 
+	    timestamp = "no" />
+
+    <Logger name="log:startup"
             verbosityLevel = "DEBUG"
 	    timestamp = "no" />
 
@@ -38,7 +48,7 @@
         <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
         <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
         <!-- Request processing -->
-        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" />
+        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" debug="0" />
         <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
         <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
         <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />

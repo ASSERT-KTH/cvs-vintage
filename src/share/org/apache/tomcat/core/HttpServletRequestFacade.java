@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.6 2000/02/01 22:53:30 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/02/01 22:53:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletRequestFacade.java,v 1.7 2000/02/18 18:14:50 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2000/02/18 18:14:50 $
  *
  * ====================================================================
  *
@@ -175,7 +175,6 @@ public class HttpServletRequestFacade implements HttpServletRequest {
     {
 	String value=request.getHeader( name );
 	if( value==null) return -1;
-
 	int valueInt=Integer.parseInt(value);
 	return valueInt;
     }

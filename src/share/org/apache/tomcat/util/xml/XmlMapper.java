@@ -610,7 +610,7 @@ class AddChild extends XmlAction {
 	st.push( obj ); // put it back
 
 	String parentC=parent.getClass().getName();
-	ctx.log("Calling " + parentC + "." + parentM  +" " + obj  );
+	if( ctx.getDebug() >0) ctx.log("Calling " + parentC + "." + parentM  +" " + obj  );
 
 	Class params[]=new Class[1];
 	if( paramT==null) {

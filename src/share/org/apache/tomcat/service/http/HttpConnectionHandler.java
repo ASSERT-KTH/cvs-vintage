@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.13 2000/02/17 23:37:51 costin Exp $
- * $Revision: 1.13 $
- * $Date: 2000/02/17 23:37:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.14 2000/02/18 18:14:51 costin Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/02/18 18:14:51 $
  *
  * ====================================================================
  *
@@ -160,7 +160,7 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	       // do nothing - same
 	   }
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    contextM.log( "Error reading request " + e.getMessage());
 	} finally {
 	    // recycle kernel sockets ASAP
 	    try { socket.close (); }

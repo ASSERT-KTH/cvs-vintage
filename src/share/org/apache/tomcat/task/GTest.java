@@ -118,7 +118,9 @@ public class GTest  {
     public void execute() throws Exception {
 	
 	try {
-	    boolean result=runTest();
+	    dispatch(request, null);
+
+	    boolean result=checkResponse( magnitude );
 	    if(result) {
 		if(  "No description".equals( description )) {
 		    System.out.println("OK " + request );
@@ -126,23 +128,18 @@ public class GTest  {
 		else
 		    System.out.println("OK " + description + " (" + request + ")");
 	    } else {
-		System.out.println("==================== FAIL ====================");
-		System.out.println("(" + description + ")" + request );
+		if(  "No description".equals( description )) {
+		    System.out.println("FAIL " + request );
+		} else
+		    System.out.println("FAIL " + description + " (" + request + ")" );
 	    }
 	} catch(Exception ex ) {
-	    System.out.println("==================== FAIL ====================");
-	    System.out.println("(" + description + ")" + request );
+	    if(  "No description".equals( description )) {
+		System.out.println("FAIL " + request );
+	    } else
+		System.out.println("FAIL " + description + " (" + request + ")" );
 	    ex.printStackTrace();
 	}
-    }
-
-    // XXX move to exec, get rid of TestResult
-    public boolean runTest()
-	throws Exception
-    {
-	dispatch(request, null);
-	
-	return checkResponse( magnitude );
     }
 
     private boolean checkResponse(boolean testCondition)
@@ -234,21 +231,26 @@ public class GTest  {
 	// Write the request
 	OutputStreamWriter out=new OutputStreamWriter(s.getOutputStream());
 	PrintWriter pw = new PrintWriter(out);
-	pw.println(request);
 
-	if( content != null) {
-	    pw.println("Content-Length: " + content.length());
+	try {
+	    pw.println(request);
+	    
+	    if( content != null) {
+		pw.println("Content-Length: " + content.length());
+	    }
+	    
+	    if( request.indexOf( "HTTP/1." ) > -1) 
+		pw.println("");
+	    
+	    if( content != null) {
+		pw.println(content);
+		// XXX no /n at the end -see HTTP specs!
+	    }
+	    
+	    pw.flush();
+	} catch (Exception ex1 ) {
+	    System.out.println("Error writing request " + ex1);
 	}
-	
-	if( request.indexOf( "HTTP/1." ) > -1) 
-	    pw.println("");
-
-	if( content != null) {
-	    pw.println(content);
-	    // XXX no /n at the end -see HTTP specs!
-	}
-	
-	pw.flush();
 	
 	try {
 	    // http 0.9
@@ -261,8 +263,16 @@ public class GTest  {
 	    StringBuffer result =  readBody( is );
 	    if(result!=null)
 		responseBody=result.toString();
-    
+
+	    if( debug>0) {
+		System.out.println("DEBUG Response: " );
+		System.out.println(responseLine );
+		System.out.println(responseBody );
+		System.out.println("DEBUG END " );
+	    }
 	} catch( SocketException ex ) {
+	    System.out.println("Socket Exception: " + ex);
+	    ex.printStackTrace();
 	    s.close();
 	    return;
 	}
@@ -333,19 +343,22 @@ public class GTest  {
 
     // XXX return byte [], fix the reading !!!!!
     StringBuffer readBody( InputStream input )
-	throws Exception
     {
 	StringBuffer sb = new StringBuffer();
 	while (true) {
-	    int ch = input.read();
-	    if (ch < 0) {
-		if (sb.length() == 0) {
-		    return (null);
-		} else {
-		    break;
+	    try {
+		int ch = input.read();
+		if (ch < 0) {
+		    if (sb.length() == 0) {
+			return (null);
+		    } else {
+			break;
+		    }
 		}
+		sb.append((char) ch);
+	    } catch(IOException ex ) {
+		return sb;
 	    }
-	    sb.append((char) ch);
 	}
         return sb;
     }
@@ -401,17 +414,26 @@ public class GTest  {
 	// Read the next line from the input stream
 	StringBuffer sb = new StringBuffer();
 	while (true) {
-	    int ch = input.read();
-	    if (ch < 0) {
-		if (sb.length() == 0) {
-		    return (null);
-		} else {
+	    try {
+		int ch = input.read();
+		if (ch < 0) {
+		    if (sb.length() == 0) {
+			if(debug>0) System.out.println("Error reading line " + ch + " " + sb.toString() );
+			return "";
+		    } else {
+			break;
+		    }
+		} else if (ch == '\n') {
 		    break;
 		}
-	    } else if (ch == '\n') {
-		break;
+		sb.append((char) ch);
+	    } catch( IOException ex ) {
+		System.out.println("Error reading : " + ex );
+		debug=1;
+		if(debug>0) System.out.println("Partial read: " + sb.toString());
+		//ex.printStackTrace();
+		//break;
 	    }
-	    sb.append((char) ch);
 	}
 
 	// Strip any trailing carriage return
