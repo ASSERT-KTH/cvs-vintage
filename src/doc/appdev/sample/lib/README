@@ -1,0 +1,4 @@
+Put any library JAR files required by your application in this directory.
+They will be copied to the deployment WEB-INF/lib directory when you build
+your project.
+

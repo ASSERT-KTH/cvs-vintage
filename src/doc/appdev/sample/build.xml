@@ -52,9 +52,9 @@
 
   <target name="dist" depends="prepare,compile">
     <jar jarfile="${dist.home}/${dist.src}"
-         basedir="." includes="*"/>
+         basedir="." includes="**"/>
     <jar jarfile="${dist.home}/${dist.war}"
-         basedir="${deploy.home}" includes="*"/>
+         basedir="${deploy.home}" includes="**"/>
   </target>
 
 
