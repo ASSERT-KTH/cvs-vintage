@@ -72,74 +72,67 @@ public class ViewMessageCommand extends FolderCommand {
 
 		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
 
-        if(mimePartTree != null){
-          // FIXME
-          /*
-            boolean viewhtml =
-			MailConfig
-            .getMainFrameOptionsConfig()
-            .getWindowItem()
-            .getHtmlViewer();
-          */
+		if (mimePartTree != null) {
 
+			XmlElement html =
+				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+					"/options/html");
+			boolean viewhtml =
+				new Boolean(html.getAttribute("prefer")).booleanValue();
 
-          XmlElement html =
-			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-                                                          "/options/html");
-          boolean viewhtml =
-			new Boolean(html.getAttribute("prefer")).booleanValue();
+			// Which Bodypart shall be shown? (html/plain)
 
-          //boolean viewhtml = true;
-          // Which Bodypart shall be shown? (html/plain)
+			if (viewhtml)
+				bodyPart = mimePartTree.getFirstTextPart("html");
+			else
+				bodyPart = mimePartTree.getFirstTextPart("plain");
 
-          if (viewhtml)
-			bodyPart = mimePartTree.getFirstTextPart("html");
-          else
-			bodyPart = mimePartTree.getFirstTextPart("plain");
-
-          if (bodyPart == null) {
-			bodyPart = new MimePart();
-			bodyPart.setBody(new String("<No Message-Text>"));
-          } else
-			bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress(), wsc);
-        }
+			if (bodyPart == null) {
+				bodyPart = new MimePart();
+				bodyPart.setBody(new String("<No Message-Text>"));
+			} else
+				bodyPart =
+					srcFolder.getMimePart(uid, bodyPart.getAddress(), wsc);
+		}
 	}
 
 	/**
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
-  public void updateGUI() throws Exception {
+	public void updateGUI() throws Exception {
 
-    AttachmentSelectionHandler h = ((AttachmentSelectionHandler)frameController.getSelectionManager().getHandler("mail.attachment"));
-    if ( h!= null)
-      h.setMessage(folder, uid);
+		AttachmentSelectionHandler h =
+			((AttachmentSelectionHandler) frameController
+				.getSelectionManager()
+				.getHandler("mail.attachment"));
+		if (h != null)
+			h.setMessage(folder, uid);
 
+		if (header != null && bodyPart != null) {
+			(
+				(
+					MailFrameController) frameController)
+						.messageController
+						.showMessage(
+				header,
+				bodyPart,
+				mimePartTree);
 
-    if(header != null && bodyPart != null){
-      ((MailFrameController) frameController)
-        .messageController
-        .showMessage(
-                     header,
-                     bodyPart,
-                     mimePartTree);
-
-
-      if (header.getFlags().getSeen() == false) {
-        ((MailFrameController) frameController)
-          .tableController
-          .getMarkAsReadTimer()
-          .restart((FolderCommandReference)getReferences()[0]);
-      }
-    }
-  }
-
-		/**
-		 * @see org.columba.core.command.Command#execute(Worker)
-		 */
-		public void execute(Worker worker) throws Exception {
-			FolderCommandReference[] r =
-				(FolderCommandReference[]) getReferences();
-			getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
+			if (header.getFlags().getSeen() == false) {
+				((MailFrameController) frameController)
+					.tableController
+					.getMarkAsReadTimer()
+					.restart((FolderCommandReference) getReferences()[0]);
+			}
 		}
-
 	}
+
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(Worker worker) throws Exception {
+		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+		getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
+	}
+
+}

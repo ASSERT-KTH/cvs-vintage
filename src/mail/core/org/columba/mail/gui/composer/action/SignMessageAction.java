@@ -9,7 +9,9 @@ package org.columba.mail.gui.composer.action;
 import java.awt.event.ActionEvent;
 
 import org.columba.core.action.CheckBoxAction;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
@@ -61,7 +63,10 @@ public class SignMessageAction extends CheckBoxAction {
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-
+		ColumbaLogger.log.debug("start signing...");
+		
+		ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
+		model.setSignMessage( getCheckBoxMenuItem().isSelected() );
 	}
 
 }
