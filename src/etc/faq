@@ -9,7 +9,7 @@ A: In simple terms, it means the server was not able to locate
 
    * One, the URL you typed was wrong or has a typo.
    * Two, the URL you requested could not be resolved with 
-     the current "docsBase". If you are trying to run your own 
+     the current "docBase". If you are trying to run your own 
      "web-application" please read  the questions related to 
      "installing your own web-application" in this FAQ.
    * Three, you're using JDK 1.1.x on a Windows platform. It's
@@ -67,9 +67,9 @@ A: webserver.jar	     -- class files for Servlet Engine.
 
 Q: Can I combine these classes with other webservers?
 
-A: The JSP engine uses just the public portion of the Java Servlet 2.1 
+A: The JSP engine uses just the public portion of the Java Servlet 2.2 
    API. In theory, it could run on other servlet engines that support 
-   the Servlet 2.1 API but we have not tested this release on any servlet 
+   the Servlet 2.2 API but we have not tested this release on any servlet 
    engine other than the one in JSWDK.
 
 Q: Where do I put my jsp sources and beans?
@@ -98,33 +98,36 @@ A: A web-application is a collection of resources such as jsps, servlets,
    into a "baseball" directory and correspondingly all the requests that
    start with "/baseball"  can be mapped to this application.
 
-   A new application can be added to JSWDK by editing webserver.xml file.
+   A new application can be added to Tomcat by editing server.xml file.
    To add "baseball" application you can make the following additions to 
    the file (at the appropriate place):
 
-   <WebApplication id="baseball0" mapping="/baseball" docBase="baseball"/>
+   <Context path="/baseball" docBase="baseball"
+      defaultSessionTimeOut="30" isWARExpanded="true"
+      isWARValidated="false" isInvokerEnabled="true"
+      isWorkDirPersistent="false"/>
 
-   Please read "webserver.xml" for more details.
+   Please read "server.xml" for more details.
 
    a) To install servlets within a web-application, you can do the following:
 
-   * Once a servlet has been compiled, it can be added to JSWDK by:
+   * Once a servlet has been compiled, it can be added to Tomcat by:
      determine which "web application" context you'd like to add the servlet 
      to
 
 		add the servlet class file to the
-		WEBAPP/WEB-INF/servlets directory
+		WEBAPP/WEB-INF/classes directory
 
-   * In order to activate the newly installed servlet
-     you need to also:
+   * In order to define a name and init params for the newly installed 
+     servlet you need to also:
 
-		register the servlet with the
-		WEBAPP/WEB-INF/servlets.properties file
+		register the servlet with a <servlet> element in the
+		WEBAPP/WEB-INF/web.xml file
 
 		you can optionally map your servlet
 		to uri requests relative to the context
-		within it is located by adding an
-		entry in the WEBAPP/WEB-INF/mappings.properties
+		within it is located by adding a <servlet-mapping>
+		element in the WEBAPP/WEB-INF/web.xml
 		file
 		
     * And finally restart the server
@@ -158,13 +161,7 @@ A: A web-application is a collection of resources such as jsps, servlets,
    
    * Make sure that the compiled beans are in the CLASSPATH. This can
      be done either by setting the CLASSPATH manually or by editing 
-     the startserver script.
-
-   * Edit the file WEBAPP/WEB-INF/mappings.properties and the file 
-     WEBAPP/WEB-INF/servlets.properties to map ".jsp" in the URI to 
-     the JspServlet which will process the jsp file. 
-     (Please refer to property files under /examples/WEB-INF/ to do 
-     this. The mapping should be very similar.)
+     the startup script.
 
    * And finally restart the server.
 
@@ -178,14 +175,14 @@ A: First, the web-server will match the beginning of the requested URI
    against the prefixes of all contexts (web-applications). If no context 
    matches, it will use the default context instead. 
 
-Q: What do different init parameters mean?
+Q: What do different init parameters for the JSP engine mean?
 
    * keepgenerated: 
         Whether to keep the generated java file or no. Can take a
         value of true/false. If value is true then the generated files 
         are kept else they are deleted.
 
-   * scratchDir: 
+   * scratchdir: 
 	The work dir which will be created for storing all the
 	generated code. This can be set to any dir. That directory will be 
 	created under the docbase.
@@ -205,3 +202,40 @@ Q: What do different init parameters mean?
 	set to activate the plugin. The default value for IE 4 and 5 are 
 	set as of now. This is for future use incase the classId for IE 
 	changes in the future. 
+
+   To set any of these to a value other than the default you need to
+   explicitely define the JSP engine servlet and a mapping for the
+   .jps extension in WEBAPP/WEB-INF/web.xml, e.g.
+
+    <servlet>
+      <servlet-name>
+          jsp
+      </servlet-name>
+      <servlet-class>
+          org.apache.jasper.runtime.JSPServlet
+      </servlet-class>
+      <init-param>
+          <param-name>
+              keepgenerated
+          </param-name>
+          <param-value>
+              true
+          </param-value>
+      </init-param>
+      <init-param>
+          <param-name>
+              sendErrToClient
+          </param-name>
+          <param-value>
+              true
+          </param-value>
+      </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>
+            jsp
+        </servlet-name>
+        <url-pattern>
+            *.jsp
+        </url-pattern>
+    </servlet-mapping>
