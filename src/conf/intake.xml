@@ -225,11 +225,13 @@
         </field>
         <field name="UserIds" key="visids" type="NumberKey" multiValued="true"/>
         <field name="Value" key="val" type="String">
-            <rule name="maxLength" value="255">Value length cannot be &gt; 255</rule>
+            <rule name="maxLength" value="5000">Length cannot be greater than 
+5000 characters.  Consider using an Attachment or adding later as a Comment
+</rule>
            <required-message>This module requires data for this attribute.</required-message>
         </field>
         <field name="Url" key="url" type="String" mapToProperty="Value">
-            <rule name="maxLength" value="255">Url length cannot be &gt; 255</rule>
+            <rule name="maxLength" value="255">Url length cannot be greater than 255</rule>
             <rule name="mask" value="^$|http.+">Please enter an url starting with "http"</rule>
            <required-message>This module requires a valid url.</required-message>
         </field>

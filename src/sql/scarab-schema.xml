@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.74 2001/12/27 22:39:24 dr Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.75 2002/01/10 05:24:55 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -662,7 +662,7 @@
          populate this field with an apropriate value.
 
     -->
-    <column name="VALUE" required="false" type="VARCHAR" size="255"></column>
+    <column name="VALUE" required="false" type="LONGVARCHAR"></column>
 
     <!--
         Flag, which marks that attribute has been deleted.
