@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: documentationstandards.xml,v 1.3 2004/01/08 20:19:54 linus Exp $ -->
+<!-- $Id: documentationstandards.xml,v 1.4 2004/02/14 18:42:24 mvw Exp $ -->
 
 <!--
 
@@ -280,7 +280,7 @@ editors use 6 spaces), making documents unreadable between users.
 </para>
       </listitem>
 
-      <listitem>
+      <!--listitem>
 	<para>
 Indent only the tags, not the text.
 The Docbook source is kept in CVS that is a line-oriented tool. 
@@ -294,7 +294,7 @@ The contributions that Jeremy Bennet did for the 0.10 User Manual
 are not indented like this.
 Change it while changing the paragraphs.
 </para>
-      </listitem>
+      </listitem-->
 
       <listitem>
 	<para>
