@@ -24,7 +24,7 @@
 // File: NavPerspective.java
 // Classes: NavPerspective
 // Original Author: your email address here
-// $Id: NavPerspective.java,v 1.18 2002/12/30 13:39:17 kataka Exp $
+// $Id: NavPerspective.java,v 1.19 2003/01/21 11:23:20 kataka Exp $
 
 // 16 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extends/includes and extension points in the package centric
@@ -109,6 +109,7 @@ import org.argouml.uml.diagram.use_case.ui.GoModelToActor;
 import org.argouml.uml.diagram.use_case.ui.GoModelToUseCase;
 import org.argouml.uml.diagram.use_case.ui.GoUseCaseToExtensionPoint;
 import org.argouml.uml.ui.behavior.common_behavior.GoSignalToReception;
+import org.argouml.uml.ui.foundation.core.GoModelElementToComment;
 
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.common_behavior.MComponentInstance;
@@ -243,6 +244,7 @@ implements Serializable, TreeModel, Cloneable {
 
     packageCentric.addSubTreeModel(new GoProjectModel());
     packageCentric.addSubTreeModel(new GoModelToDiagram());
+    packageCentric.addSubTreeModel(new GoModelElementToComment());
     packageCentric.addSubTreeModel(modelToPackages);
     packageCentric.addSubTreeModel(modelToClassifiers);
     packageCentric.addSubTreeModel(modelToAssociations);
@@ -279,6 +281,7 @@ implements Serializable, TreeModel, Cloneable {
     packageCentric.addSubTreeModel(new GoStateToDoActivity());
     packageCentric.addSubTreeModel(new GoStateToEntry());
     packageCentric.addSubTreeModel(new GoStateToExit());
+
 	
     diagramCentric.addSubTreeModel(new GoProjectDiagram());
     diagramCentric.addSubTreeModel(new GoDiagramToNode());

@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.9 2002/12/29 21:18:25 kataka Exp $
+// $Id: FigSeqObject.java,v 1.10 2003/01/21 11:23:21 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -616,9 +616,9 @@ public class FigSeqObject extends FigNodeModelElement
   public void setForCreate(FigSeqLink linkFig, String connectTo, boolean isCreate) {
     Vector contents = getContents();   
     int portNumber = linkFig.getPortNumber(contents);   
-    FigDynPort fsp = (FigDynPort) linkFig.getSourcePortFig();
+    FigRect fsp = (FigRect) linkFig.getSourcePortFig();
     if (connectTo == "Dest") {
-      fsp = (FigDynPort) linkFig.getDestPortFig();
+      fsp = (FigRect) linkFig.getDestPortFig();
     }
    
     int firstPos = 10000;
