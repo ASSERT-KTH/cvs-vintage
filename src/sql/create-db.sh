@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# $Id: create-db.sh,v 1.8 2002/03/19 00:00:15 jon Exp $
+# $Id: create-db.sh,v 1.9 2002/04/22 21:47:51 jon Exp $
 #
 
 CMDNAME=`basename "$0"`
@@ -185,7 +185,7 @@ fi
 # Creating new database and inputting default data
 
 if [ -z "${quiet}" ] ; then
-    echo "Creating Database ${name}..."
+    echo "Creating database ${name}..."
 fi
 ${MYSQLADMIN} ${MYSQLCMD} create ${name}
 
