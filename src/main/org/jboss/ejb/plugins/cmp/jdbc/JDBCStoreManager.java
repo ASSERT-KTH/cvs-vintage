@@ -58,7 +58,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -277,7 +277,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       metaData = loadJDBCEntityMetaData();
 
       // get the transaction manager
-      tm = (TransactionManager) container.getTransactionManager();
+      tm = container.getTransactionManager();
 
       // setup the type factory, which is used to map java types to sql types.
       typeFactory = new JDBCTypeFactory(
@@ -314,8 +314,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       activateEntityCommand = commandFactory.createActivateEntityCommand();
       passivateEntityCommand = commandFactory.createPassivateEntityCommand();
 
-      // Create relationship commands
-//      findByForeignKeyCommand = commandFactory.createFindByForeignKeyCommand();
       loadRelationCommand = commandFactory.createLoadRelationCommand();
       deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
       insertRelationsCommand = commandFactory.createInsertRelationsCommand();
