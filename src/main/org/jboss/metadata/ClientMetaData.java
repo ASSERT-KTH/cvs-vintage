@@ -1,7 +1,14 @@
+/*
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.metadata;
 
+// $Id: ClientMetaData.java,v 1.5 2004/04/20 16:57:30 tdiesler Exp $
+
 import org.jboss.deployment.DeploymentException;
-import org.jboss.logging.Logger;
 import org.w3c.dom.Element;
 
 import java.util.ArrayList;
@@ -11,12 +18,11 @@ import java.util.Iterator;
 /** The metdata data from a j2ee application-client.xml descriptor
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.4 $
+ * @author Thomas.Diesler@jboss.org
+ * @version $Revision: 1.5 $
  */
 public class ClientMetaData
 {
-   private static Logger log = Logger.getLogger(ClientMetaData.class);
-
    /** The application-client/display-name */
    private String displayName;
    /** The location for the server side client context ENC bindings */
@@ -31,8 +37,8 @@ public class ClientMetaData
    private HashMap resourceEnvReferences = new HashMap();
    /** The JAAS callback handler */
    private String callbackHandler;
-   /** The webservicesclient.xml metadata */
-   private Object webservicesClient;
+   /** The HashMap<ServiceRefMetaData> service-ref element(s) info */
+   private HashMap serviceReferences = new HashMap();
 
    /** The application-client/display-name
     * @return application-client/display-name value
@@ -90,15 +96,12 @@ public class ClientMetaData
    {
       return callbackHandler;
    }
-
-   /** Get the webservicesclient.xml metadata, null if there is none */
-   public Object getWebservicesClient()
+   /**
+    * @return HashMap<ServiceRefMetaData>
+    */
+   public HashMap getServiceReferences()
    {
-      return webservicesClient;
-   }
-   public void setWebservicesClient(Object webservicesClient)
-   {
-      this.webservicesClient = webservicesClient;
+      return serviceReferences;
    }
 
    public void importClientXml(Element element)
@@ -162,6 +165,16 @@ public class ClientMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
+
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         ServiceRefMetaData refMetaData = new ServiceRefMetaData();
+         refMetaData.importClientXml(serviceRef);
+         serviceReferences.put(refMetaData.getServiceRefName(), refMetaData);
+      }
    }
 
    public void importJbossClientXml(Element element) throws DeploymentException
@@ -218,6 +231,20 @@ public class ClientMetaData
          refMetaData.importJbossXml(resourceRef);
       }
 
+      // Parse the service-ref elements
+      iterator = MetaData.getChildrenByTagName(element, "service-ref");
+      while (iterator.hasNext())
+      {
+         Element serviceRef = (Element) iterator.next();
+         String serviceRefName = MetaData.getUniqueChildContent(serviceRef, "service-ref-name");
+         ServiceRefMetaData refMetaData = (ServiceRefMetaData)serviceReferences.get(serviceRefName);
+         if (refMetaData == null)
+         {
+            throw new DeploymentException("service-ref " + serviceRefName
+               + " found in jboss-client.xml but not in application-client.xml");
+         }
+         refMetaData.importJbossClientXml(serviceRef);
+      }
    }
 
 }
