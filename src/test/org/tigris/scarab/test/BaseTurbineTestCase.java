@@ -76,6 +76,7 @@ public class BaseTurbineTestCase extends TestCase {
 	protected void setUp() throws Exception {
 
 		if (!initialized) {
+            createLog4jDirectory();
 			initTurbine();
 			initialized=true;
 		}
@@ -91,7 +92,12 @@ public class BaseTurbineTestCase extends TestCase {
 		}
 	}
 
-		
+	private void createLog4jDirectory(){
+        File log4jDir = new File(".\\target\\scarab\\logs\\");
+        if(!log4jDir.exists()){
+            log4jDir.mkdirs();
+        }
+    }
 	private void initTurbine() throws Exception {
 		File directoryFile = new File("src/test");
 		String directory = directoryFile.getAbsolutePath();
