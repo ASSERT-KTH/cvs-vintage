@@ -1,4 +1,4 @@
-// $Id: PropPanelObject.java,v 1.31 2004/04/27 08:20:14 thn Exp $
+// $Id: PropPanelObject.java,v 1.32 2004/05/17 07:04:59 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,11 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-// File: PropPanelObject.java
-// Classes: PropPanelObject
-// Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.31 2004/04/27 08:20:14 thn Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -50,6 +45,10 @@ import org.argouml.uml.ui.UMLList;
 import org.argouml.uml.ui.UMLStimulusListModel;
 import org.argouml.uml.ui.foundation.core.PropPanelModelElement;
 import org.argouml.util.ConfigLoader;
+
+import ru.novosoft.uml.foundation.core.MClassifier;
+import ru.novosoft.uml.foundation.core.MModelElement;
+
 
 /**
  * TODO: this property panel needs refactoring to remove dependency on
@@ -102,7 +101,19 @@ public class PropPanelObject extends PropPanelModelElement {
 
 
 
-    public boolean isAcceptibleClassifier(/*MModelElement*/Object classifier) {
+    /**
+     * Callback method from UMLComboBoxModel.
+     *
+     * Note: UMLComboBoxModel uses reflection to find this one so when 
+     * changing it is not enough that the compiler accepts this. All test
+     * cases must also accept this.
+     * Linus has sofar changed the parameter type back from Object to 
+     * MModelElement twice in order to get it to work again.
+     *
+     * @param classifier The classifier to test.
+     * @return <tt>true</tt> if acceptible.
+     */
+    public boolean isAcceptibleClassifier(MModelElement classifier) {
         return org.argouml.model.ModelFacade.isAClassifier(classifier);
     }
 
@@ -124,7 +135,18 @@ public class PropPanelObject extends PropPanelModelElement {
         return classifier;
     }
 
-    public void setClassifier(/*MClassifier*/Object element) {
+    /**
+     * Callback method from UMLComboBoxModel.
+     *
+     * Note: UMLComboBoxModel uses reflection to find this one so when 
+     * changing it is not enough that the compiler accepts this. All test
+     * cases must also accept this.
+     * Linus has sofar changed the parameter type back from Object to 
+     * MClassifier twice in order to get it to work again.
+     *
+     * @param element The classifier to test.
+     */
+    public void setClassifier(MClassifier element) {
         Object target = getTarget();
 
         if (org.argouml.model.ModelFacade.isAInstance(target)) {
