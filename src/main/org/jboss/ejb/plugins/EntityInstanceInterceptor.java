@@ -42,7 +42,7 @@ import org.jboss.invocation.Invocation;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  */
 public class EntityInstanceInterceptor extends AbstractInterceptor
 {
@@ -126,9 +126,15 @@ public class EntityInstanceInterceptor extends AbstractInterceptor
                lock.sync(); 
                try
                {
+                  // Check there isn't a context already in the cache
+                  // e.g. commit-option B where the entity was
+                  // created then removed externally
+                  InstanceCache cache = container.getInstanceCache();
+                  cache.remove(ctx.getCacheKey());
+
                   // marcf: possible race on creation and usage
                   // insert instance in cache,
-                  container.getInstanceCache().insert(ctx);
+                  cache.insert(ctx);
                }
                finally
                {
