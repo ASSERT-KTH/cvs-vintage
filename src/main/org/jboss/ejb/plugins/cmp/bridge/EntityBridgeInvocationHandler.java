@@ -33,7 +33,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean instance, including beans in pool.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 public class EntityBridgeInvocationHandler implements InvocationHandler {
    protected EntityContainer container;
@@ -90,6 +90,11 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
                throw new EJBException("Field is read-only: " +
                      cmpField.getFieldName());
             }
+            if(cmpField.isPrimaryKeyMember() && entityBridge.isCreated(ctx)) {
+               throw new IllegalStateException("A field that is a member " +
+                     "of the primary key can only be set in ejbCreate");
+            }
+
             cmpField.setInstanceValue(ctx, args[0]);
             return null;
          }
@@ -105,6 +110,12 @@ public class EntityBridgeInvocationHandler implements InvocationHandler {
          if(methodName.startsWith("get")) {
             return cmrField.getValue(ctx);
          } else if(methodName.startsWith("set")) {
+            if(!entityBridge.isCreated(ctx)) {
+               throw new IllegalStateException("A CMR field cannot be set " +
+                     "in ejbCreate; this should be done in the ejbPostCreate " +
+                     "method instead.");
+            }
+
             cmrField.setValue(ctx, args[0]);
             return null;
          }
