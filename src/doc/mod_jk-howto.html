@@ -308,12 +308,21 @@ The <tt>server.xml</tt> file already has a block similar to this for Ajp12 conne
 <h4>Quick start?</h4>
 <div class=subsection>
 <p>
-In most of simple cases Tomcat can generate the needed Apache configuration.
-When Tomcat starts up it will automatically generate
-a configuration file for Apache in <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt>.
+In most simple cases Tomcat can generate the needed Apache configuration. You
+can configure Tomcat so that when it starts up it will automatically generate
+a configuration file for Apache.
 Most of the time you don't need to do anything but
-include this file (appending <tt>&quot;Include TOMCAT_HOME/conf/mod_jk.conf-auto&quot;</tt>)
-in your httpd.conf. That's it, you can
+include this file (appending <tt>&quot;Include TOMCAT_HOME/conf/jk/mod_jk.conf-auto&quot;</tt>)
+in your httpd.conf. To configure Tomcat to generate the Apache
+auto-configuration:</p>
+<p>
+Add the following block to your <tt>TOMCAT_HOME/conf/server.xml</tt>  file after &lt;AutoWebApp ... />.
+</p>
+<blockquote><pre>
+&lt;ApacheConfig /&gt;
+</pre></blockquote>
+<p>
+That's it, you can
 now start Tomcat and Apache and access Tomcat from the Apache server.
 </p>
 <p>
@@ -323,23 +332,55 @@ customized configuration and save the results in another file. If you manage
 the Apache configuration yourself you'll need to update it whenever you add a
 new context.
 </p>
-<p class=note><b>Tomcat 3.2:</b> you must restart tomcat and apache after adding a new
+<p>Note that you must restart tomcat and apache after adding a new
 context; Apache doesn't support configuration changes without a restart. Also
-the file <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> is generated when
+the file <tt>TOMCAT_HOME/conf/jk/mod_jk.conf-auto</tt> is generated when
 tomcat starts, so you'll need to start Tomcat before Apache. Tomcat will
-overwrite <tt>TOMCAT_HOME/conf/mod_jk.conf-auto</tt> each startup so
-customized configuration should be kept elsewhere.</p>
-<p class=note><b>Tomcat 3.3:</b> The default location of mod_jk.conf and
-mod_jk.conf-auto has changed.  They are now in
-<tt>TOMCAT_HOME/conf/jk/mod_jk.conf</tt> and
-<tt>TOMCAT_HOME/conf/jk/mod_jk.conf-auto</tt>. 
+overwrite <tt>TOMCAT_HOME/conf/jk/mod_jk.conf-auto</tt> each startup so
+a customized configuration should be kept elsewhere.&nbsp; For example, copy&nbsp;
+<tt>TOMCAT_HOME/conf/jk/mod_jk.conf-auto</tt> to <tt>TOMCAT_HOME/conf/jk/mod_jk.conf-local
+</tt>before making changes.&nbsp; You'll need to startup Tomcat once to generate
+this file with your configuration for the first time.
 </p>
+<p>It is also possible to specify the location of the auto generated files by
+setting options in the &lt;ApacheConfig /&gt; block.&nbsp; The following details
+the syntax:
+</p>
+<blockquote><pre>
+&lt; ContextManager ... &gt;
+  ...
+  &lt;ApacheConfig <i>options</i> /&gt;
+  ...
+&lt; /ContextManager &gt;
+</pre></blockquote>
+<p>
+&nbsp;where <i>options</i> can include any of the following attributes:
+</p>
+<ul>
+  <li><b>confighome</b> - default parent directory for the following paths. If
+    not set, this defaults to TOMCAT_HOME. Ignored whenever any of the following
+    paths is absolute.
+  <li><b>jservconfig</b> - path to write apache jserv conf file to. If not set,
+    defaults to &quot;conf/jserv/tomcat-apache.conf&quot;.
+  <li><b>jkconfig</b> - path to write apacke mod_jk conf file to. If not set,
+    defaults to &quot;conf/jk/mod_jk.conf&quot;.
+  <li><b>workersconfig</b> - path to workers.properties file used by mod_jk. If
+    not set, defaults to &quot;conf/jk/workers.properties&quot;.
+  <li><b>modjserv</b> - path to Apache JServ plugin module file. If not set,
+    defaults to &quot;modules/ApacheModuleJServ.dll&quot; on windows,
+    &quot;modules/Jserv.nlm&quot; on netware, and &quot;libexec/mod_jserv.so&quot;
+    everywhere else.
+  <li><b>modjk</b> - path to Apache mod_jk plugin file. If not set, defaults to
+    &quot;modules/mod_jk.dll&quot; on windows, &quot;modules/mod_jk.nlm&quot; on
+    netware, and &quot;libexec/mod_jk.so&quot; everywhere else.
+  <li><b>jklog</b> - path to log file to be used by mod_jk.</li>
+</ul>
 </div>
 
 <h4>Configuring workers manually.</h4>
 <div class=subsection>
 <p>
-Workers are configured using the file <tt>TOMCAT_HOME/conf/workers.properties</tt>.
+Workers are configured using the file <tt>TOMCAT_HOME/conf/jk/workers.properties</tt>.
 There is a great deal of information in the
 <a href="Tomcat-Workers-HowTo.html">workers.properties howto</a> document, and you
 should really look at that first. If you're in a hurry however, you can probably get away
@@ -368,7 +409,7 @@ A simple example would be to include the following lines in your <tt>httpd.conf<
 <blockquote><pre>
 LoadModule    jk_module  libexec/mod_jk.so
 AddModule     mod_jk.c
-JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
+JkWorkersFile /usr/local/jakarta-tomcat/conf/jk/workers.properties
 JkLogFile     /usr/local/apache/logs/mod_jk.log
 JkLogLevel    warn
 </pre></blockquote>
@@ -464,7 +505,7 @@ AddModule     mod_jk.c
 
 # Configure mod_jk
 #
-JkWorkersFile /usr/local/jakarta-tomcat/conf/workers.properties
+JkWorkersFile /usr/local/jakarta-tomcat/conf/jk/workers.properties
 JkLogFile     /usr/local/apache/logs/mod_jk.log
 JkLogLevel    warn
 
