@@ -1,4 +1,4 @@
-// $Id: TabProps.java,v 1.39 2003/09/19 21:28:41 d00mst Exp $
+// $Id: TabProps.java,v 1.40 2003/10/04 08:53:27 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,6 @@ import org.argouml.uml.diagram.activity.ui.UMLActivityDiagram;
 import org.argouml.uml.diagram.collaboration.ui.UMLCollaborationDiagram;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
-import org.argouml.uml.diagram.state.ui.PropPanelUMLStateDiagram;
 import org.argouml.uml.diagram.state.ui.UMLStateDiagram;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 import org.argouml.uml.diagram.ui.PropPanelDiagram;
@@ -69,6 +68,7 @@ import org.argouml.uml.diagram.ui.PropPanelUMLClassDiagram;
 import org.argouml.uml.diagram.ui.PropPanelUMLCollaborationDiagram;
 import org.argouml.uml.diagram.ui.PropPanelUMLDeploymentDiagram;
 import org.argouml.uml.diagram.ui.PropPanelUMLSequenceDiagram;
+import org.argouml.uml.diagram.ui.PropPanelUMLStateDiagram;
 import org.argouml.uml.diagram.ui.PropPanelUMLUseCaseDiagram;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 import org.argouml.uml.ui.behavior.state_machines.PropPanelSimpleState;

@@ -1,4 +1,4 @@
-// $Id: PropPanelUMLStateDiagram.java,v 1.6 2003/10/04 08:53:27 alexb Exp $
+// $Id: PropPanelUMLStateDiagram.java,v 1.1 2003/10/04 08:53:27 alexb Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,15 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.uml.diagram.state.ui;
+package org.argouml.uml.diagram.ui;
 
 import org.argouml.application.api.Argo;
 import org.argouml.uml.diagram.ui.PropPanelDiagram;
 
-/**
- * @deprecated as of 0.15.2, replaced with 
- *             org.argouml.uml.diagram.ui.PropPanelUMLStateDiagram.
- */
 public class PropPanelUMLStateDiagram extends PropPanelDiagram {
 
 
