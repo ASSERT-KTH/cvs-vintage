@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.35 2002/07/10 00:58:21 jmcnally Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.36 2002/07/11 00:46:27 jon Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -137,7 +137,7 @@ public abstract class AbstractScarabUser
     private Map mitListMap;
 
     private Map activeKeys = new HashMap();
-    private ThreadLocal threadKey = new ThreadLocal();
+    private transient ThreadLocal threadKey = null;
 
     /** 
      * counter used as a key to keep concurrent activities by the same
@@ -150,9 +150,9 @@ public abstract class AbstractScarabUser
     // will be reset for each request, so we can keep it simple and use
     // a ThreadLocal for each.  Even though the threads may be pooled the
     // value will be set correctly when first needed in a request cycle.
-    private ThreadLocal currentModule = new ThreadLocal();
-    private ThreadLocal currentIssueType = new ThreadLocal();
-    
+    private transient ThreadLocal currentModule = null;
+    private transient ThreadLocal currentIssueType = null;
+
     
     /**
      * Calls the superclass constructor to initialize this object.
@@ -163,6 +163,31 @@ public abstract class AbstractScarabUser
         issueMap = new HashMap();
         reportMap = new HashMap();
         mitListMap = new HashMap();
+        initThreadLocals();
+    }
+
+    /**
+     * Need to override readObject in order to initialize
+     * the transient ThreadLocal objects which are not serializable.
+     */
+    private void readObject(java.io.ObjectInputStream in)
+         throws java.io.IOException, ClassNotFoundException
+    {
+        try
+        {
+            in.defaultReadObject();
+        }
+        catch (java.io.NotActiveException e)
+        {
+        }
+        initThreadLocals();
+    }
+
+    private void initThreadLocals()
+    {
+        currentIssueType = new ThreadLocal();
+        currentModule = new ThreadLocal();
+        threadKey = new ThreadLocal();
     }
 
     /** The Primary Key used to reference this user in storage */
