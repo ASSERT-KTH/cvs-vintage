@@ -127,7 +127,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.45 2002/08/01 17:44:21 elicia Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.46 2002/08/08 23:55:26 elicia Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1332,6 +1332,7 @@ public abstract class AbstractScarabModule
         crit.addJoin(RModuleAttributePeer.ATTRIBUTE_ID, 
                      AttributePeer.ATTRIBUTE_ID);
         crit.add(AttributePeer.DELETED, false);
+        crit.add(RModuleAttributePeer.ACTIVE, true);
         crit.addAscendingOrderByColumn(
                 RModuleAttributePeer.DISPLAY_VALUE);
         return AttributePeer.doSelect(crit);
