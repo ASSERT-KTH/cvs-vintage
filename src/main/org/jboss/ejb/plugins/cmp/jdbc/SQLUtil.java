@@ -13,7 +13,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class SQLUtil {
 	// =======================================================================
@@ -263,4 +263,73 @@ public class SQLUtil {
 		return buf.toString();
 	}	
 
+	/**
+	* Returns parent.pkColumnName0=child.fkColumnName0 [AND parent.pkColumnName1=child.fkColumnName1 [AND parent.pkColumnName2=child.fkColumnName2 [...]]] 
+	*/
+	public static String getWhereClause(JDBCCMPFieldBridge pkField, String parent, JDBCCMPFieldBridge fkField, String child) {
+		return getWhereClause(pkField.getJDBCType(), parent, fkField.getJDBCType(), child);
+	}
+
+	/**
+	* Returns parent.pkColumnName0=child.fkColumnName0 [AND parent.pkColumnName1=child.fkColumnName1 [AND parent.pkColumnName2=child.fkColumnName2 [...]]] 
+	*/
+	public static String getWhereClause(JDBCType pkType, String parent, JDBCType fkType, String child) {
+		if(parent.length() > 0) {
+			parent += ".";
+		}
+		if(child.length() > 0) {
+			child += ".";
+		}
+
+		String[] pkColumnNames = pkType.getColumnNames();
+		String[] fkColumnNames = fkType.getColumnNames();
+		if(pkColumnNames.length != fkColumnNames.length) {
+			throw new IllegalArgumentException("PK and FK have different number of columns");
+		}
+
+		StringBuffer buf = new StringBuffer();
+		for(int i=0; i<pkColumnNames.length; i++) {
+			if(i!=0) {
+				buf.append(" AND ");
+			}
+			buf.append(parent).append(pkColumnNames[i]);
+			buf.append("=");
+			buf.append(child).append(fkColumnNames[i]);
+		}
+		return buf.toString();
+	}	
+
+	public static String getSelfCompareWhereClause(JDBCCMPFieldBridge[] fields, String fromIdentifier, String toIdentifier) {
+		
+		StringBuffer buf = new StringBuffer();
+		for(int i=0; i<fields.length; i++) {
+			if(i!=0) {
+				buf.append(" AND ");
+			}
+			buf.append(getSelfCompareWhereClause(fields[i].getJDBCType(), fromIdentifier, toIdentifier));
+		}
+		return buf.toString();
+	}	
+			
+	public static String getSelfCompareWhereClause(JDBCType type, String fromIdentifier, String toIdentifier) {
+		if(fromIdentifier.length() > 0) {
+			fromIdentifier += ".";
+		}
+		if(toIdentifier.length() > 0) {
+			toIdentifier += ".";
+		}
+		
+		String[] columnNames = type.getColumnNames();
+
+		StringBuffer buf = new StringBuffer();
+		for(int i=0; i<columnNames.length; i++) {
+			if(i!=0) {
+				buf.append(" AND ");
+			}
+			buf.append(fromIdentifier).append(columnNames[i]);
+			buf.append(" = ");
+			buf.append(toIdentifier).append(columnNames[i]);
+		}
+		return buf.toString();
+	}	
 }
