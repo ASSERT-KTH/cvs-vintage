@@ -800,6 +800,48 @@
 <!-- ============================================================= -->
 
     <!-- ================================================================== -->
+    <!-- Tool to create proper import statements                            -->
+    <!-- ==================================================================
+    <target name="scrub" depends="om-peer,prepare">
+        <taskdef name="scrub" 
+          classname="org.apache.tools.ant.taskdefs.optional.importscrubber.ImportScrubberTask"/>
+
+        <property name="tmp.dir" value="tmp"/>
+
+        <delete dir="${tmp.dir}" quiet="true"/>
+
+        <copy todir="${tmp.dir}/org">
+          <fileset dir="${build.src.scarab}/org"/>
+        </copy>
+
+        <javac srcdir="${tmp.dir}"
+            destdir="${tmp.dir}"
+            excludes="**/package.html,torque/**"
+            debug="true">
+
+          <classpath refid="classpath"/>
+
+          <classpath>
+            <fileset dir="${build.project.webinf.lib}">
+              <include name="**/torque*.jar"/>
+            </fileset>
+          </classpath>
+        </javac>
+        
+        <scrub root="${tmp.dir}" format="nobreaks" recurse="true"/>
+
+        <delete>
+          <fileset dir="${tmp.dir}" includes="**/*.class"/>
+        </delete>
+
+        <copy todir="${src.java.dir.scarab}/org" overwrite="true">
+          <fileset dir="${tmp.dir}/org"/>
+        </copy>
+
+    </target>
+    -->
+
+    <!-- ================================================================== -->
     <!-- Dump data from DB into xml                                         -->
     <!-- ================================================================== -->
     <target name="datadump" depends="compile">
