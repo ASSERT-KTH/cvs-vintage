@@ -1,0 +1,22 @@
+start with:
+
+try to use the run.sh script
+
+watch out: this script has to be made executable with the chmod u+x command...
+
+
+
+or try it manually:
+
+java org/columba/main/Main
+
+
+if this does not work:
+
+Most of the time java was not able to find the classes from package org.w3c..
+If this happens you have to add these packages to the classpath.
+They reside in the ext directory.
+
+try this command:
+
+java -cp .:./ext/jaxp.jar:./ext/parser.jar org/columba/main/Main
