@@ -27,7 +27,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class SQLUtil {
    public static String fixTableName(String tableName, DataSource dataSource) 
@@ -40,7 +40,7 @@ public class SQLUtil {
 
          // fix length
          int maxLength = dmd.getMaxTableNameLength();
-         if(tableName.length() > maxLength) {
+         if(maxLength > 0 && tableName.length() > maxLength) {
             CRC32 crc = new CRC32();
             crc.update(tableName.getBytes());
             String nameCRC = Long.toString(crc.getValue(), 36);
