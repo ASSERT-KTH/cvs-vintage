@@ -18,6 +18,7 @@ package org.columba.mail.gui.composer;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 /**
  * @author frd
  *
@@ -27,34 +28,32 @@ import java.awt.event.ItemListener;
  * Window>Preferences>Java>Code Generation.
  */
 public class PriorityController implements ItemListener {
-	
-	PriorityView view;
-	ComposerController controller;
-		
-	public PriorityController(ComposerController controller) {
-		this.controller = controller;
-		
-		view = new PriorityView( this );
-	}
-	
-	public void installListener() {
-		view.installListener(this);
-	}
-	
-	
-	public void updateComponents( boolean b ) {
-		if (b) {
-			//view.setSelectedItem( model.getHeaderField("X-Priority") );
-		} else {
-			controller.getModel().setPriority( (String) view.getSelectedItem() );
-			//model.setHeaderField("X-Priority",(String) view.getSelectedItem());
-		}
-	}
-	
-	public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-			controller.getModel().setPriority( (String) view.getSelectedItem() );
+    PriorityView view;
+    ComposerController controller;
 
-                } 
+    public PriorityController(ComposerController controller) {
+        this.controller = controller;
+
+        view = new PriorityView(this);
+    }
+
+    public void installListener() {
+        view.installListener(this);
+    }
+
+    public void updateComponents(boolean b) {
+        if (b) {
+            //view.setSelectedItem( model.getHeaderField("X-Priority") );
+        } else {
+            controller.getModel().setPriority((String) view.getSelectedItem());
+
+            //model.setHeaderField("X-Priority",(String) view.getSelectedItem());
         }
+    }
+
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            controller.getModel().setPriority((String) view.getSelectedItem());
+        }
+    }
 }

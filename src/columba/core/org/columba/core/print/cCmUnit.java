@@ -16,27 +16,25 @@
 package org.columba.core.print;
 
 public class cCmUnit extends cUnit {
-	
-	private static final double POINTS_PER_CM = 28.8;
+    private static final double POINTS_PER_CM = 28.8;
 
-	public cCmUnit() {
-		setUnits( 0.0 );	
-	}
+    public cCmUnit() {
+        setUnits(0.0);
+    }
 
-	public cCmUnit( cUnit u ) {
-		setPoints( u.getPoints() );	
-	}
+    public cCmUnit(cUnit u) {
+        setPoints(u.getPoints());
+    }
 
-	public cCmUnit( double u ) {
-		setUnits( u );	
-	}
-	
-	public void setPoints( double p ) {
-		setUnits( p / POINTS_PER_CM	);
-	}
-	
-	public double getPoints() {
-		return getUnits() * POINTS_PER_CM;		
-	}	
-	
+    public cCmUnit(double u) {
+        setUnits(u);
+    }
+
+    public void setPoints(double p) {
+        setUnits(p / POINTS_PER_CM);
+    }
+
+    public double getPoints() {
+        return getUnits() * POINTS_PER_CM;
+    }
 }

@@ -15,92 +15,93 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.plugin.AbstractPluginHandler;
+
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.util.DateChooserDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.text.DateFormat;
+
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.util.DateChooserDialog;
 
-public class DateCriteriaRow
-	extends DefaultCriteriaRow
-	implements ActionListener {
+public class DateCriteriaRow extends DefaultCriteriaRow
+    implements ActionListener {
+    private JComboBox matchComboBox;
+    private JButton dateButton;
 
-	private JComboBox matchComboBox;
-	private JButton dateButton;
+    public DateCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
+        super(pluginHandler, criteriaList, c);
+    }
 
-	public DateCriteriaRow(
-		AbstractPluginHandler pluginHandler,
-		CriteriaList criteriaList,
-		FilterCriteria c) {
-		super(pluginHandler, criteriaList, c);
+    public void updateComponents(boolean b) {
+        super.updateComponents(b);
 
-	}
+        if (b) {
+            matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-	public void updateComponents(boolean b) {
-		super.updateComponents(b);
+            //textField.setText(criteria.getPattern());
+            dateButton.setText(criteria.getPattern());
+        } else {
+            criteria.setCriteria((String) matchComboBox.getSelectedItem());
 
-		if (b) {
-			matchComboBox.setSelectedItem(criteria.getCriteriaString());
-			//textField.setText(criteria.getPattern());
-			dateButton.setText(criteria.getPattern());
-		} else {
-			criteria.setCriteria((String) matchComboBox.getSelectedItem());
-			//criteria.setPattern((String) textField.getText());
-			criteria.setPattern((String) dateButton.getText());
-		}
+            //criteria.setPattern((String) textField.getText());
+            criteria.setPattern((String) dateButton.getText());
+        }
+    }
 
-	}
+    public void initComponents() {
+        super.initComponents();
 
-	public void initComponents() {
-		super.initComponents();
+        matchComboBox = new JComboBox();
+        matchComboBox.addItem("before");
+        matchComboBox.addItem("after");
 
-		matchComboBox = new JComboBox();
-		matchComboBox.addItem("before");
-		matchComboBox.addItem("after");
+        addComponent(matchComboBox);
 
-		addComponent(matchComboBox);
+        dateButton = new JButton("date");
+        dateButton.setActionCommand("DATE");
+        dateButton.addActionListener(this);
 
-		dateButton = new JButton("date");
-		dateButton.setActionCommand("DATE");
-		dateButton.addActionListener(this);
+        addComponent(dateButton);
+    }
 
-		addComponent(dateButton);
+    public void actionPerformed(ActionEvent ev) {
+        String action = ev.getActionCommand();
 
-	}
+        if (action.equals("DATE")) {
+            DateFormat f = DateFormat.getDateInstance();
+            Date d = null;
 
-	public void actionPerformed(ActionEvent ev) {
-		String action = ev.getActionCommand();
+            try {
+                d = f.parse(dateButton.getText());
+            } catch (Exception ex) {
+                //ex.printStackTrace();
+            }
 
-		if (action.equals("DATE")) {
-			DateFormat f = DateFormat.getDateInstance();
-			Date d = null;
-			try {
-				d = f.parse(dateButton.getText());
-			} catch (Exception ex) {
-				//ex.printStackTrace();
-			}
+            DateChooserDialog dialog = new DateChooserDialog();
 
-			DateChooserDialog dialog =
-				new DateChooserDialog();
-			if (d != null)
-				dialog.setDate(d);
-			dialog.setVisible(true);
+            if (d != null) {
+                dialog.setDate(d);
+            }
 
-			if (dialog.success() == true) {
-				// Ok
-				Date date = dialog.getDate();
-				dateButton.setText(f.format(date));
-			} else {
-				// cancel
-			}
-		}
-	}
+            dialog.setVisible(true);
 
+            if (dialog.success() == true) {
+                // Ok
+                Date date = dialog.getDate();
+                dateButton.setText(f.format(date));
+            } else {
+                // cancel
+            }
+        }
+    }
 }

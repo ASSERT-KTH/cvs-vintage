@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+
 /**
  * Frames found in package org.columba.core.gui.frame are loaded
  * dynamically.
@@ -25,11 +26,9 @@ package org.columba.core.plugin;
  * @author fdietz
  */
 public class FramePluginHandler extends AbstractPluginHandler {
+    public FramePluginHandler() {
+        super("org.columba.core.frame", "org/columba/core/plugin/frame.xml");
 
-	public FramePluginHandler() {
-		super("org.columba.core.frame", "org/columba/core/plugin/frame.xml");
-
-		parentNode = getConfig().getRoot().getElement("framelist");
-	}
-
+        parentNode = getConfig().getRoot().getElement("framelist");
+    }
 }

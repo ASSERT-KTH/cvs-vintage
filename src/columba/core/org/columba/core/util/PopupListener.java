@@ -20,32 +20,25 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JPopupMenu;
 
-public class PopupListener extends MouseAdapter
-{
+
+public class PopupListener extends MouseAdapter {
     private JPopupMenu popup;
-    
-    public PopupListener(JPopupMenu pop)
-        {
-            popup = pop;
-        }
-    
-    public void mousePressed( MouseEvent e )
-        {
-            maybeShowPopup( e );
-        }
 
-    public void mouseReleased( MouseEvent e )
-        {
-            maybeShowPopup( e );
-        }
+    public PopupListener(JPopupMenu pop) {
+        popup = pop;
+    }
 
-    private void maybeShowPopup( MouseEvent e )
-        {
-            if( e.isPopupTrigger() )
-            {
-                popup.show( e.getComponent() ,e.getX(), e.getY() );
-            }
+    public void mousePressed(MouseEvent e) {
+        maybeShowPopup(e);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        maybeShowPopup(e);
+    }
+
+    private void maybeShowPopup(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            popup.show(e.getComponent(), e.getX(), e.getY());
         }
+    }
 }
-
-

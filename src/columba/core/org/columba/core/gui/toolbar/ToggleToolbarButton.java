@@ -13,10 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.toolbar;
 
+import org.columba.core.action.CheckBoxAction;
+import org.columba.core.action.FrameAction;
+import org.columba.core.action.SelectionStateObservable;
+import org.columba.core.gui.util.ImageUtil;
+
 import java.awt.Insets;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,10 +30,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.action.SelectionStateObservable;
-import org.columba.core.gui.util.ImageUtil;
 
 /**
  * Customized JToogleButton for a Toolbar.
@@ -43,56 +44,57 @@ import org.columba.core.gui.util.ImageUtil;
  * @author fdietz
  */
 public class ToggleToolbarButton extends JToggleButton implements Observer {
+    /**
+     *
+     */
+    public ToggleToolbarButton() {
+        super();
+        setRequestFocusEnabled(false);
+    }
 
-	/**
-	 * 
-	 */
-	public ToggleToolbarButton() {
-		super();
-		setRequestFocusEnabled(false);
-	}
+    /**
+     * @param icon
+     */
+    public ToggleToolbarButton(Icon icon) {
+        super(icon);
+        setRequestFocusEnabled(false);
+    }
 
-	/**
-	 * @param icon
-	 */
-	public ToggleToolbarButton(Icon icon) {
-		super(icon);
-		setRequestFocusEnabled(false);
-	}
+    /**
+     * @param action
+     */
+    public ToggleToolbarButton(Action action) {
+        super(action);
+        setRequestFocusEnabled(false);
+        setMargin(new Insets(1, 1, 1, 1));
 
-	/**
-	 * @param action
-	 */
-	public ToggleToolbarButton(Action action) {
-		super(action);
-		setRequestFocusEnabled(false);
-		setMargin(new Insets(1, 1, 1, 1));
+        // no text!
+        setText("");
 
-		// no text!
-		setText("");
+        ImageIcon icon = (ImageIcon) action.getValue(FrameAction.SMALL_ICON);
 
-                ImageIcon icon = (ImageIcon)action.getValue(FrameAction.SMALL_ICON);
-                if (icon != null) {
-                        setIcon(icon);
-                        // apply transparent icon
-                        setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon)icon));
-                }
-		
-		//setToolTipText(((BasicAction) action).getTooltipText());
-		((CheckBoxAction) getAction()).getObservable().addObserver(this);
-	}
+        if (icon != null) {
+            setIcon(icon);
 
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
+            // apply transparent icon
+            setDisabledIcon(ImageUtil.createTransparentIcon((ImageIcon) icon));
+        }
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable obs, Object arg1) {
-		SelectionStateObservable o = (SelectionStateObservable) obs;
+        //setToolTipText(((BasicAction) action).getTooltipText());
+        ((CheckBoxAction) getAction()).getObservable().addObserver(this);
+    }
 
-		boolean selectionState = o.isSelected();
-		setSelected(selectionState);
-	}
+    public boolean isFocusTraversable() {
+        return isRequestFocusEnabled();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable obs, Object arg1) {
+        SelectionStateObservable o = (SelectionStateObservable) obs;
+
+        boolean selectionState = o.isSelected();
+        setSelected(selectionState);
+    }
 }

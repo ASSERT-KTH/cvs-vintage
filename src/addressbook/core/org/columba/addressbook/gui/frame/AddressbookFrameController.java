@@ -17,72 +17,66 @@ package org.columba.addressbook.gui.frame;
 
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
+
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class AddressbookFrameController extends AbstractFrameController {
-	
-	protected TreeController tree;
-	protected TableController table;
+    protected TreeController tree;
+    protected TableController table;
 
+    /**
+     * Constructor for AddressbookController.
+     */
+    public AddressbookFrameController(ViewItem viewItem) {
+        super("Addressbook", viewItem);
+    }
 
-	/**
-	 * Constructor for AddressbookController.
-	 */
-	public AddressbookFrameController(ViewItem viewItem) {
-		super( "Addressbook", viewItem);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#createView()
-	 */
-	protected AbstractFrameView createView() {
-		AddressbookFrameView view = new AddressbookFrameView(this);
-		view.init(tree.getView(),table.getView());
-		
-		view.pack();
-		
-		view.setVisible(true);
-		
-		return view;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameController#createView()
+     */
+    protected AbstractFrameView createView() {
+        AddressbookFrameView view = new AddressbookFrameView(this);
+        view.init(tree.getView(), table.getView());
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#init()
-	 */
-	protected void init() {
-		tree = new TreeController( this );
-		table = new TableController(this);
+        view.pack();
 
-	}
+        view.setVisible(true);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameController#initInternActions()
-	 */
-	protected void initInternActions() {
-		
+        return view;
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameController#init()
+     */
+    protected void init() {
+        tree = new TreeController(this);
+        table = new TableController(this);
+    }
 
-	
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameController#initInternActions()
+     */
+    protected void initInternActions() {
+    }
 
-	/**
-	 * @return AddressbookTableController
-	 */
-	public TableController getTable() {
-		return table;
-	}
+    /**
+     * @return AddressbookTableController
+     */
+    public TableController getTable() {
+        return table;
+    }
 
-	/**
-	 * @return AddressbookTreeController
-	 */
-	public TreeController getTree() {
-		return tree;
-	}
-
+    /**
+     * @return AddressbookTreeController
+     */
+    public TreeController getTree() {
+        return tree;
+    }
 }

@@ -15,48 +15,34 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-import java.io.File;
-
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.ViewItem;
 
-public class ComposerOptionsXmlConfig extends DefaultXmlConfig
-{
-	//private File file;
-	ViewItem viewItem;
-	SpellcheckItem spellcheckItem;
+import java.io.File;
 
-	public ComposerOptionsXmlConfig(File file)
-	{
-		super(file);
-	}
 
-	
-	
-	public ViewItem getViewItem()
-	{
-		if ( viewItem == null )
-		{
-			viewItem = new ViewItem( getRoot().getElement("/options/gui/view") );
-		}
-		
-		return viewItem;
-		
-		
+public class ComposerOptionsXmlConfig extends DefaultXmlConfig {
+    //private File file;
+    ViewItem viewItem;
+    SpellcheckItem spellcheckItem;
 
-	}
-	
-	
-	
-	public SpellcheckItem getSpellcheckItem()
-	{
-		if ( spellcheckItem == null )
-		{
-			spellcheckItem = new SpellcheckItem(getRoot().getElement("/options/spellcheck"));
-		}
-		
-		return spellcheckItem;
-	}
-	
+    public ComposerOptionsXmlConfig(File file) {
+        super(file);
+    }
 
+    public ViewItem getViewItem() {
+        if (viewItem == null) {
+            viewItem = new ViewItem(getRoot().getElement("/options/gui/view"));
+        }
+
+        return viewItem;
+    }
+
+    public SpellcheckItem getSpellcheckItem() {
+        if (spellcheckItem == null) {
+            spellcheckItem = new SpellcheckItem(getRoot().getElement("/options/spellcheck"));
+        }
+
+        return spellcheckItem;
+    }
 }

@@ -14,52 +14,51 @@
 //
 //All Rights Reserved.
 package org.columba.mail.gui.tree.util;
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
 import javax.swing.tree.TreePath;
 
+
 /**
 * This represents a TreePath (a node in a JTree) that can be transferred between a drag source and a drop target.
 */
 public class CTransferableTreePath implements Transferable {
-	// The type of DnD object being dragged...
-	public static final DataFlavor TREEPATH_FLAVOR =
-		new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "TreePath");
+    // The type of DnD object being dragged...
+    public static final DataFlavor TREEPATH_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType,
+            "TreePath");
+    private TreePath _path;
+    private DataFlavor[] _flavors = { TREEPATH_FLAVOR };
 
-	private TreePath _path;
+    /**
+    * Constructs a transferrable tree path object for the specified path.
+    */
+    public CTransferableTreePath(TreePath path) {
+        _path = path;
+    }
 
-	private DataFlavor[] _flavors = { TREEPATH_FLAVOR };
+    // Transferable interface methods...
+    public DataFlavor[] getTransferDataFlavors() {
+        return _flavors;
+    }
 
-	/**
-	* Constructs a transferrable tree path object for the specified path.
-	*/
-	public CTransferableTreePath(TreePath path) {
-		_path = path;
-	}
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+        return java.util.Arrays.asList(_flavors).contains(flavor);
+    }
 
-	// Transferable interface methods...
-	public DataFlavor[] getTransferDataFlavors() {
-		return _flavors;
-	}
-
-	public boolean isDataFlavorSupported(DataFlavor flavor) {
-		return java.util.Arrays.asList(_flavors).contains(flavor);
-	}
-
-	public synchronized Object getTransferData(DataFlavor flavor)
-		throws UnsupportedFlavorException {
-		if (flavor.isMimeTypeEqual(TREEPATH_FLAVOR.getMimeType()))
-			// DataFlavor.javaJVMLocalObjectMimeType))
-			return _path;
-		else
-			throw new UnsupportedFlavorException(flavor);
-	}
-
+    public synchronized Object getTransferData(DataFlavor flavor)
+        throws UnsupportedFlavorException {
+        if (flavor.isMimeTypeEqual(TREEPATH_FLAVOR.getMimeType())) {
+            // DataFlavor.javaJVMLocalObjectMimeType))
+            return _path;
+        } else {
+            throw new UnsupportedFlavorException(flavor);
+        }
+    }
 }

@@ -13,8 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.config.Config;
+import org.columba.core.facade.DialogFacade;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+import org.columba.core.xml.XmlIO;
+
+import org.columba.mail.filter.Filter;
+import org.columba.mail.filter.FilterList;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,10 +42,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 
 import javax.swing.BorderFactory;
@@ -52,27 +68,14 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.config.Config;
-import org.columba.core.facade.DialogFacade;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
-import org.columba.core.xml.XmlIO;
-import org.columba.mail.filter.Filter;
-import org.columba.mail.filter.FilterList;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * JDialog that displays Filter actions for one message folder.
  *
  * @author Erik Mattsson
  */
-public class ConfigFrame extends JDialog implements ListSelectionListener, ActionListener {
-
+public class ConfigFrame extends JDialog implements ListSelectionListener,
+    ActionListener {
     /*
     private JTextField textField;
     private JPanel leftPanel;
@@ -86,26 +89,24 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
     private JFrame frame;
     */
     private FilterListTable listView;
-
     private Config config;
 
     //private AdapterNode actNode;
     private FilterList filterList;
+
     //private Filter filter;
     //private JDialog dialog;
-
     private JTextField nameTextField = new JTextField();
-
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
+
     /*private JButton enableButton;
     private JButton disableButton;*/
     private JButton moveupButton;
     private JButton movedownButton;
     private JButton importButton;
     private JButton exportButton;
-
     private Folder folder;
 
     /**
@@ -113,7 +114,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
      * @param messageFolder folder to set filter actions for.
      */
     public ConfigFrame(Folder messageFolder) {
-
         super();
         folder = messageFolder;
 
@@ -136,10 +136,12 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
     public Filter getSelected() {
         Filter filter = null;
         ListSelectionModel model = listView.getSelectionModel();
+
         if (!model.isSelectionEmpty()) {
             int index = model.getAnchorSelectionIndex();
             filter = filterList.get(index);
         }
+
         return filter;
     }
 
@@ -149,6 +151,7 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
      */
     public void setSelected(Filter f) {
         int index = filterList.indexOf(f);
+
         if (index != -1) {
             listView.getSelectionModel().setSelectionInterval(index, index);
         }
@@ -163,16 +166,19 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         getContentPane().add(mainPanel);
 
-        addButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "add_filter"));
+        addButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "add_filter"));
         addButton.setActionCommand("ADD");
         addButton.addActionListener(this);
 
-        removeButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "remove_filter"));
+        removeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "remove_filter"));
         removeButton.setActionCommand("REMOVE");
         removeButton.setEnabled(false);
         removeButton.addActionListener(this);
 
-        editButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "edit_filter"));
+        editButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "edit_filter"));
         editButton.setActionCommand("EDIT");
         editButton.setEnabled(false);
         editButton.addActionListener(this);
@@ -186,41 +192,45 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         disableButton.setActionCommand("DISABLE");
         disableButton.addActionListener( this );
         */
-
-        moveupButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "moveup"));
+        moveupButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "moveup"));
         moveupButton.setActionCommand("MOVEUP");
         moveupButton.setEnabled(false);
         moveupButton.addActionListener(this);
 
-        movedownButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "movedown"));
+        movedownButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "movedown"));
         movedownButton.setActionCommand("MOVEDOWN");
         movedownButton.setEnabled(false);
         movedownButton.addActionListener(this);
 
-        importButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "import"));
+        importButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "import"));
         importButton.setActionCommand("IMPORT");
         importButton.setEnabled(true);
         importButton.addActionListener(this);
 
-        exportButton = new ButtonWithMnemonic(MailResourceLoader.getString("dialog", "filter", "export"));
+        exportButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "filter", "export"));
         exportButton.setActionCommand("EXPORT");
         exportButton.setEnabled(false);
         exportButton.addActionListener(this);
 
         // top panel
-
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+
         GridBagLayout gridBagLayout = new GridBagLayout();
         GridBagConstraints c = new GridBagConstraints();
-        //topPanel.setLayout( );
 
+        //topPanel.setLayout( );
         JPanel topBorderPanel = new JPanel();
         topBorderPanel.setLayout(new BorderLayout());
+
         //topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
         topBorderPanel.add(topPanel);
-        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
 
+        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
         JLabel nameLabel = new JLabel("name");
         nameLabel.setEnabled(false);
         topPanel.add(nameLabel);
@@ -235,11 +245,13 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         Component glue = Box.createVerticalGlue();
         c.anchor = GridBagConstraints.EAST;
         c.gridwidth = GridBagConstraints.REMAINDER;
+
         //c.fill = GridBagConstraints.HORIZONTAL;
         gridBagLayout.setConstraints(glue, c);
 
         gridBagLayout = new GridBagLayout();
         c = new GridBagConstraints();
+
         JPanel eastPanel = new JPanel(gridBagLayout);
         mainPanel.add(eastPanel, BorderLayout.EAST);
 
@@ -282,7 +294,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         gridBagLayout.setConstraints( strut, c );
         eastPanel.add( strut );
         */
-
         gridBagLayout.setConstraints(moveupButton, c);
         eastPanel.add(moveupButton);
 
@@ -292,7 +303,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
         gridBagLayout.setConstraints(movedownButton, c);
         eastPanel.add(movedownButton);
-
 
         strut = Box.createRigidArea(new Dimension(30, 20));
         gridBagLayout.setConstraints(strut, c);
@@ -307,7 +317,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
         gridBagLayout.setConstraints(exportButton, c);
         eastPanel.add(exportButton);
-
 
         glue = Box.createVerticalGlue();
         c.fill = GridBagConstraints.BOTH;
@@ -324,7 +333,6 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         */
 
         // centerpanel
-
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
         listView = new FilterListTable(filterList, this);
@@ -343,20 +351,30 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString("global", "close"));
+
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString("global", "help"));
+
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
+
         // associate with JavaHelp
-        HelpManager.enableHelpOnButton(helpButton, "organising_and_managing_your_email_3");
+        HelpManager.enableHelpOnButton(helpButton,
+            "organising_and_managing_your_email_3");
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE", KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         /*
         getRootPane().registerKeyboardAction(
         this,
@@ -368,12 +386,12 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
 
     /** {@inheritDoc} */
     public void valueChanged(ListSelectionEvent e) {
-
         if (e.getValueIsAdjusting()) {
             return;
         }
 
         DefaultListSelectionModel theList = (DefaultListSelectionModel) e.getSource();
+
         if (theList.isSelectionEmpty()) {
             removeButton.setEnabled(false);
             editButton.setEnabled(false);
@@ -419,10 +437,12 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
      */
     public boolean showFilterDialog(Filter filter) {
         boolean saveFilter = false;
+
         if (filter != null) {
             FilterDialog dialog = new FilterDialog(filter);
             saveFilter = !dialog.wasCancelled();
         }
+
         return saveFilter;
     }
 
@@ -435,46 +455,49 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
         if (action.equals("CLOSE")) {
             // FIXME
             //Config.save();
-
             setVisible(false);
         } else if (action.equals("ADD")) {
             Filter filter = FilterList.createEmptyFilter();
+
             if (showFilterDialog(filter)) {
                 filterList.add(filter);
                 listView.update();
                 setSelected(filter);
             }
-
         } else if (action.equals("REMOVE")) {
             int[] selectedRows = listView.getSelectedRows();
+
             // Must go backwards or else the list will remove the wrong filters.
             for (int i = selectedRows.length - 1; i >= 0; i--) {
                 filterList.remove(selectedRows[i]);
             }
-            listView.update();
 
+            listView.update();
         } else if (action.equals("EDIT")) {
             editSelectedFilter();
-
         } else if (action.equals("MOVEUP")) {
             int[] selectedRows = listView.getSelectedRows();
+
             for (int i = 0; i < selectedRows.length; i++) {
                 filterList.move(selectedRows[i], -1);
                 selectedRows[i]--;
             }
-            listView.setRowSelection(selectedRows);
 
+            listView.setRowSelection(selectedRows);
         } else if (action.equals("MOVEDOWN")) {
             int[] selectedRows = listView.getSelectedRows();
+
             // Must go backwards or else the filters will swap places with each other.
             for (int i = selectedRows.length - 1; i >= 0; i--) {
                 filterList.move(selectedRows[i], 1);
                 selectedRows[i]++;
             }
+
             listView.setRowSelection(selectedRows);
         } else if (action.equals("EXPORT")) {
             int[] selectedRows = listView.getSelectedRows();
             FilterList newFilterList = new FilterList();
+
             for (int i = 0; i < selectedRows.length; i++) {
                 newFilterList.add(filterList.get(i));
             }
@@ -485,10 +508,12 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
             chooser.setMultiSelectionEnabled(false);
 
             int result = chooser.showSaveDialog(this);
+
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
 
                 XmlIO xmlIO = new XmlIO(newFilterList.getRoot());
+
                 try {
                     xmlIO.write(new FileOutputStream(file));
                 } catch (FileNotFoundException fnfe) {
@@ -498,18 +523,20 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
                 }
             }
         } else if (action.equals("IMPORT")) {
-
             // ask the user about the destination file
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             chooser.setMultiSelectionEnabled(false);
 
             int result = chooser.showOpenDialog(this);
+
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 XmlIO xmlIO;
+
                 try {
                     xmlIO = new XmlIO(file.toURL());
+
                     if (xmlIO.load()) {
                         XmlElement root = xmlIO.getRoot().getElement("filterlist");
 
@@ -533,8 +560,10 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
      */
     private void editSelectedFilter() {
         Filter oldFilter = getSelected();
+
         if (oldFilter != null) {
             Filter newFilter = (Filter) oldFilter.clone();
+
             if (showFilterDialog(newFilter)) {
                 int index = listView.getSelectedRow();
                 filterList.insert(newFilter, index);
@@ -550,7 +579,8 @@ public class ConfigFrame extends JDialog implements ListSelectionListener, Actio
     private class MouseTableListener extends MouseAdapter {
         /** {@inheritDoc} */
         public void mouseClicked(MouseEvent e) {
-            if ((e.getButton() == MouseEvent.BUTTON1) && (e.getClickCount() >= 2)) {
+            if ((e.getButton() == MouseEvent.BUTTON1) &&
+                    (e.getClickCount() >= 2)) {
                 editSelectedFilter();
             }
         }

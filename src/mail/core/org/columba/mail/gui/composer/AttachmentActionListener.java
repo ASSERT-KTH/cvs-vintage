@@ -18,6 +18,7 @@ package org.columba.mail.gui.composer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 /**
  * @author frd
  *
@@ -26,28 +27,20 @@ import java.awt.event.ActionListener;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AttachmentActionListener implements ActionListener{
-	
-	AttachmentController controller;
-	
-	public AttachmentActionListener( AttachmentController c )
-	{
-		this.controller = c;
-	}
-	
-	
-	public void actionPerformed( ActionEvent ev )
-	{
-		String action = ev.getActionCommand();
-		
-		if ( action.equals("ADD") )
-		{
-			controller.addFileAttachment();
-		}
-		else if ( action.equals("REMOVE") )
-		{
-			controller.removeSelected();
-		}
-	}
+public class AttachmentActionListener implements ActionListener {
+    AttachmentController controller;
 
+    public AttachmentActionListener(AttachmentController c) {
+        this.controller = c;
+    }
+
+    public void actionPerformed(ActionEvent ev) {
+        String action = ev.getActionCommand();
+
+        if (action.equals("ADD")) {
+            controller.addFileAttachment();
+        } else if (action.equals("REMOVE")) {
+            controller.removeSelected();
+        }
+    }
 }

@@ -13,13 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.main;
 
-import java.io.PrintWriter;
-import java.net.Socket;
-
 import org.columba.addressbook.main.AddressbookMain;
+
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -40,139 +37,142 @@ import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
 
+import java.io.PrintWriter;
+
+import java.net.Socket;
+
+
 public class Main {
-  private static ColumbaLoader columbaLoader;
+    private static ColumbaLoader columbaLoader;
 
-  public static void loadInVMInstance(String[] arguments) {
-    try {
-      Socket clientSocket = new Socket("127.0.0.1", ColumbaLoader.COLUMBA_PORT);
+    public static void loadInVMInstance(String[] arguments) {
+        try {
+            Socket clientSocket = new Socket("127.0.0.1",
+                    ColumbaLoader.COLUMBA_PORT);
 
-      PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
+            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 
-      StringBuffer buf = new StringBuffer();
-      buf.append("columba:");
-      for (int i = 0; i < arguments.length; i++) {
-        buf.append(arguments[i]);
-        buf.append("%");
-      }
+            StringBuffer buf = new StringBuffer();
+            buf.append("columba:");
 
-	  if ( MainInterface.DEBUG )
-	  	ColumbaLogger.log.debug("trying to pass arguments to a running Columba session:\n"+buf.toString());
-	  
-      writer.write(buf.toString());
-      writer.flush();
-      writer.close();
+            for (int i = 0; i < arguments.length; i++) {
+                buf.append(arguments[i]);
+                buf.append("%");
+            }
 
-      clientSocket.close();
+            if (MainInterface.DEBUG) {
+                ColumbaLogger.log.debug(
+                    "trying to pass arguments to a running Columba session:\n" +
+                    buf.toString());
+            }
 
-      System.exit(5);
+            writer.write(buf.toString());
+            writer.flush();
+            writer.close();
 
-    } catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
-      //  -> this means that no server is running
-      //      -> lets start one
-      columbaLoader = new ColumbaLoader();
+            clientSocket.close();
+
+            System.exit(5);
+        } catch (Exception ex) { // we get a java.net.ConnectException: Connection refused
+            columbaLoader = new ColumbaLoader();
+        }
     }
 
-  }
+    public static void main(String[] args) {
+        ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
+        cmdLineParser.initCmdLine(args);
 
-  public static void main(String[] args) {
-    ColumbaCmdLineParser cmdLineParser = new ColumbaCmdLineParser();
-    cmdLineParser.initCmdLine(args);
+        MainInterface.DEBUG = cmdLineParser.isDebugOption();
 
-    MainInterface.DEBUG = cmdLineParser.isDebugOption();
-    // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
+        // the configPath settings are made in the commandlineParser @see ColumbaCmdLineParser  
+        loadInVMInstance(args);
 
-    loadInVMInstance(args);
+        final StartUpFrame frame = new StartUpFrame();
+        frame.setVisible(true);
 
-    final StartUpFrame frame = new StartUpFrame();
-    frame.setVisible(true);
+        // enable logging 
+        new ColumbaLogger();
 
-    // enable logging 
-    new ColumbaLogger();
+        // initialize configuration backend
+        new Config();
 
-	// initialize configuration backend
-    new Config();
-    
-   
+        AddressbookMain addressbook = new AddressbookMain();
+        addressbook.initConfiguration();
 
-    AddressbookMain addressbook = new AddressbookMain();
-    addressbook.initConfiguration();
+        MailMain mail = new MailMain();
+        mail.initConfiguration();
 
-    MailMain mail = new MailMain();
-    mail.initConfiguration();
+        Config.init();
 
-    Config.init();
+        MainInterface.clipboardManager = new ClipboardManager();
+        MainInterface.focusManager = new FocusManager();
 
+        MainInterface.processor = new DefaultProcessor();
+        MainInterface.processor.start();
 
-    MainInterface.clipboardManager = new ClipboardManager();
-	MainInterface.focusManager = new FocusManager();
-	
-    MainInterface.processor = new DefaultProcessor();
-    MainInterface.processor.start();
+        MainInterface.pluginManager = new PluginManager();
 
-    MainInterface.pluginManager = new PluginManager();
-    
-    MainInterface.pluginManager.registerHandler(new InterpreterHandler());
-    
-	MainInterface.pluginManager.registerHandler(new ExternalToolsPluginHandler());
+        MainInterface.pluginManager.registerHandler(new InterpreterHandler());
 
-    MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
+        MainInterface.pluginManager.registerHandler(new ExternalToolsPluginHandler());
 
-    MainInterface.pluginManager.registerHandler(new MenuPluginHandler("org.columba.core.menu"));
-	MainInterface.pluginManager.registerHandler(new ConfigPluginHandler());
+        MainInterface.pluginManager.registerHandler(new ActionPluginHandler());
 
-    MainInterface.pluginManager.registerHandler(new FramePluginHandler());
-    
-    MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
-	
-    MainInterface.shutdownManager = new ShutdownManager();
+        MainInterface.pluginManager.registerHandler(new MenuPluginHandler(
+                "org.columba.core.menu"));
+        MainInterface.pluginManager.registerHandler(new ConfigPluginHandler());
 
-    MainInterface.backgroundTaskManager = new BackgroundTaskManager();
+        MainInterface.pluginManager.registerHandler(new FramePluginHandler());
 
-    addressbook.initPlugins();
-    mail.initPlugins();
+        MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
 
-    MainInterface.pluginManager.initPlugins();
-    
-	ThemeSwitcher.setTheme();
-	
-	// init font configuration
-	new FontProperties();
-	
-	// set application wide font
-	FontProperties.setFont();
-	
-	// initialze JavaHelp manager
-	new HelpManager();
+        MainInterface.shutdownManager = new ShutdownManager();
 
-    frame.advance();
+        MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 
-    //MainInterface.frameModelManager = new FrameModelManager();
+        addressbook.initPlugins();
+        mail.initPlugins();
 
-    addressbook.initGui();
+        MainInterface.pluginManager.initPlugins();
 
-    frame.advance();
+        ThemeSwitcher.setTheme();
 
-    mail.initGui();
+        // init font configuration
+        new FontProperties();
 
-    new FrameModel();
+        // set application wide font
+        FontProperties.setFont();
 
-    frame.setVisible(false);
+        // initialze JavaHelp manager
+        new HelpManager();
 
-    if (MailConfig.getAccountList().count() == 0) {
-      try {
-        new AccountWizardLauncher().launchWizard();
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
+        frame.advance();
 
+        //MainInterface.frameModelManager = new FrameModelManager();
+        addressbook.initGui();
+
+        frame.advance();
+
+        mail.initGui();
+
+        new FrameModel();
+
+        frame.setVisible(false);
+
+        if (MailConfig.getAccountList().count() == 0) {
+            try {
+                new AccountWizardLauncher().launchWizard();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        new CmdLineArgumentHandler(args);
     }
-    
-    new CmdLineArgumentHandler(args);
-
-  } // main
+     // main
 }

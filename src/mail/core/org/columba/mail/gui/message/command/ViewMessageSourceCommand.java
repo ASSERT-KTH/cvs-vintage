@@ -13,8 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.message.command;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.StatusObservableImpl;
+import org.columba.core.command.Worker;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.io.TempFileStore;
+
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.frame.AbstractMailFrameController;
+import org.columba.mail.gui.mimetype.MimeTypeViewer;
+
+import org.columba.ristretto.message.MimeHeader;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -24,17 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.StatusObservableImpl;
-import org.columba.core.command.Worker;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.io.TempFileStore;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.mimetype.MimeTypeViewer;
-import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy
@@ -45,72 +47,75 @@ import org.columba.ristretto.message.MimeHeader;
  * Window>Preferences>Java>Code Generation.
  */
 public class ViewMessageSourceCommand extends FolderCommand {
-	protected File tempFile;
+    protected File tempFile;
 
-	/**
-	 * Constructor for ViewMessageSourceCommand.
-	 * @param frameMediator
-	 * @param references
-	 */
-	public ViewMessageSourceCommand(
-		FrameMediator frameMediator,
-		DefaultCommandReference[] references) {
-		super(frameMediator, references);
-	}
+    /**
+     * Constructor for ViewMessageSourceCommand.
+     * @param frameMediator
+     * @param references
+     */
+    public ViewMessageSourceCommand(FrameMediator frameMediator,
+        DefaultCommandReference[] references) {
+        super(frameMediator, references);
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		MimeHeader header = new MimeHeader();
-		viewer.open(header, tempFile);
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        MimeTypeViewer viewer = new MimeTypeViewer();
+        MimeHeader header = new MimeHeader();
+        viewer.open(header, tempFile);
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		AbstractMailFrameController mailFrameController =
-			(AbstractMailFrameController) frameMediator;
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        AbstractMailFrameController mailFrameController = (AbstractMailFrameController) frameMediator;
 
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		Object[] uids = r[0].getUids();
+        Object[] uids = r[0].getUids();
 
-		Folder folder = (Folder) r[0].getFolder();
-//		register for status events
-		((StatusObservableImpl)folder.getObservable()).setWorker(worker);
+        Folder folder = (Folder) r[0].getFolder();
 
-		Object[] destUids = new Object[uids.length];
-		Object uid = uids[0];
-		
-                InputStream in = null;
-                OutputStream out = null;
-		try {
-                        in = new BufferedInputStream(
-                                folder.getMessageSourceStream(uid));
-			tempFile = TempFileStore.createTempFile();
-			out = new BufferedOutputStream(
-                                new FileOutputStream(tempFile));
-                        byte[] buffer = new byte[1024];
-                        int read;
-                        while ((read = in.read(buffer, 0, buffer.length)) > 0) {
-                                out.write(buffer, 0, read);
-                        }
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		} finally {
-                        if (in != null) {
-                                try {
-                                        in.close();
-                                } catch (IOException ioe) {}
-                        }
-                        if (out != null) {
-                                try {
-                                        out.close();
-                                } catch (IOException ioe) {}
-                        }
+        //		register for status events
+        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+
+        Object[] destUids = new Object[uids.length];
+        Object uid = uids[0];
+
+        InputStream in = null;
+        OutputStream out = null;
+
+        try {
+            in = new BufferedInputStream(folder.getMessageSourceStream(uid));
+            tempFile = TempFileStore.createTempFile();
+            out = new BufferedOutputStream(new FileOutputStream(tempFile));
+
+            byte[] buffer = new byte[1024];
+            int read;
+
+            while ((read = in.read(buffer, 0, buffer.length)) > 0) {
+                out.write(buffer, 0, read);
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ioe) {
                 }
-	}
+            }
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ioe) {
+                }
+            }
+        }
+    }
 }

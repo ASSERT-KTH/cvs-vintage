@@ -13,182 +13,188 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+
 public class HeaderItem {
+    //private int type;
+    public static int CONTACT = 0;
+    public static int GROUPLIST = 1;
 
-	//private DefaultCard item;
-	private Hashtable hashtable;
-	//private int type;
+    //private DefaultCard item;
+    private Hashtable hashtable;
+    private Object uid;
+    private Folder folder;
 
-	public static int CONTACT = 0;
-	public static int GROUPLIST = 1;
+    public HeaderItem() {
+        hashtable = new Hashtable();
+    }
 
-	private Object uid;
+    public HeaderItem(int type) {
+        hashtable = new Hashtable();
 
-	private Folder folder;
+        if (type == CONTACT) {
+            add("type", "contact");
+        } else {
+            add("type", "grouplist");
+        }
+    }
 
-	public HeaderItem() {
+    public boolean matchPattern(String pattern) {
+        if (pattern == null) {
+            return false;
+        }
 
-		hashtable = new Hashtable();
-	}
+        pattern = pattern.toLowerCase();
 
-	public HeaderItem(int type) {
+        if (isContact()) {
+            String displayname = (String) get("displayname");
+            String address = (String) get("email;internet");
 
-		hashtable = new Hashtable();
+            if (address != null) {
+                address = address.toLowerCase();
 
-		if (type == CONTACT)
-			add("type", "contact");
-		else
-			add("type", "grouplist");
-	}
+                if (address.startsWith(pattern) == true) {
+                    return true;
+                }
+            }
 
-	public boolean matchPattern(String pattern) {
-		if (pattern == null)
-			return false;
+            if (displayname != null) {
+                displayname = displayname.toLowerCase();
 
-		pattern = pattern.toLowerCase();
+                if (displayname.startsWith(pattern) == true) {
+                    return true;
+                }
+            }
 
-		if (isContact()) {
-			String displayname = (String) get("displayname");
-			String address = (String) get("email;internet");
+            return false;
+        } else {
+            String displayname = (String) get("displayname");
 
-			if (address != null) {
-				address = address.toLowerCase();
-				if (address.startsWith(pattern) == true)
-					return true;
-			}
+            if (displayname != null) {
+                displayname = displayname.toLowerCase();
 
-			if (displayname != null) {
-				displayname = displayname.toLowerCase();
-				if (displayname.startsWith(pattern) == true)
-					return true;
-			}
+                if (displayname.startsWith(pattern) == true) {
+                    return true;
+                }
+            }
 
-			return false;
-		} else {
-			String displayname = (String) get("displayname");
+            return false;
+        }
+    }
 
-			if (displayname != null) {
-				displayname = displayname.toLowerCase();
-				if (displayname.startsWith(pattern) == true)
-					return true;
-			}
+    public Folder getFolder() {
+        return folder;
+    }
 
-			return false;
-		}
-	}
+    public void setFolder(Folder f) {
+        folder = f;
+    }
 
-	public Folder getFolder() {
-		return folder;
-	}
+    public boolean contains(String key) {
+        if (hashtable.containsKey(key)) {
+            return true;
+        }
 
-	public void setFolder(Folder f) {
-		folder = f;
-	}
+        return false;
+    }
 
-	public boolean contains(String key) {
-		if (hashtable.containsKey(key))
-			return true;
+    public boolean isContact() {
+        String type = (String) get("type");
 
-		return false;
-	}
+        if (type.equals("contact")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public boolean isContact() {
-		String type = (String) get("type");
-		if (type.equals("contact"))
-			return true;
-		else
-			return false;
-	}
+    public void add(Object key, Object value) {
+        if ((key != null) && (value != null)) {
+            hashtable.put(((String) key).toLowerCase(), value);
+        }
+    }
 
-	public void add(Object key, Object value) {
-		if ((key != null) && (value != null)) {
+    public Object get(Object key) {
+        if (key != null) {
+            Object value = hashtable.get(((String) key).toLowerCase());
 
-			hashtable.put(((String) key).toLowerCase(), value);
-		}
-	}
+            return value;
+        } else {
+            return null;
+        }
+    }
 
-	public Object get(Object key) {
-		if (key != null) {
-			Object value = hashtable.get(((String) key).toLowerCase());
+    public Enumeration elements() {
+        return hashtable.elements();
+    }
 
-			return value;
-		} else
-			return null;
-	}
+    public Enumeration keys() {
+        return hashtable.keys();
+    }
 
-	public Enumeration elements() {
-		return hashtable.elements();
-	}
+    /*
+    public DefaultCard getCard()
+    {
+            return item;
+    }
 
-	public Enumeration keys() {
-		return hashtable.keys();
-	}
+    public void setCard( DefaultCard item )
+    {
+            this.item = item;
+    }
+    */
+    public void setUid(Object uid) {
+        this.uid = uid;
+    }
 
-	/*
-	public DefaultCard getCard()
-	{
-		return item;
-	}
-	
-	public void setCard( DefaultCard item )
-	{
-		this.item = item;
-	}
-	*/
+    public void setHashtable(Hashtable t) {
+        this.hashtable = t;
+    }
 
-	public void setUid(Object uid) {
-		this.uid = uid;
-	}
-	public void setHashtable(Hashtable t) {
-		this.hashtable = t;
-	}
+    public Object getUid() {
+        return uid;
+    }
 
-	public Object getUid() {
-		return uid;
-	}
+    public Object clone() {
+        /*
+        HeaderItem item = null;
+        try{
+                item = (HeaderItem)super.clone();
+        }catch(CloneNotSupportedException cnse){} //does not occur
+        //necessary?
+        item.setHashtable((Hashtable) hashtable.clone());
+        return item;
+        */
+        HeaderItem item = new HeaderItem();
+        item.setUid(getUid());
+        item.setFolder(getFolder());
 
-	public Object clone() {
-		/*
-		HeaderItem item = null;
-		try{
-			item = (HeaderItem)super.clone();
-		}catch(CloneNotSupportedException cnse){} //does not occur
-		//necessary?
-		item.setHashtable((Hashtable) hashtable.clone());
-		return item;
-		*/
+        Hashtable t = new Hashtable();
 
-		HeaderItem item = new HeaderItem();
-		item.setUid(getUid());
-		item.setFolder(getFolder());
+        for (Enumeration keys = hashtable.keys(); keys.hasMoreElements();) {
+            String key = (String) keys.nextElement();
 
-		Hashtable t = new Hashtable();
-		for (Enumeration keys = hashtable.keys(); keys.hasMoreElements();) {
-			String key = (String) keys.nextElement();
+            Object value = hashtable.get(key);
+            t.put(key, value);
+        }
 
-			Object value = hashtable.get(key);
-			t.put(key,value);
-			
-		}
-		
-		item.setHashtable(t);
-		//item.setHashtable( (Hashtable) hashtable.clone() );
+        item.setHashtable(t);
 
-		return item;
-	}
-	
-	public String toString()
-		{
-			String str = (String) get("displayname");
-		
-			if ( str == null ) str = (String) get("email;internet");
-				
-			return str;
-		}
+        //item.setHashtable( (Hashtable) hashtable.clone() );
+        return item;
+    }
+
+    public String toString() {
+        String str = (String) get("displayname");
+
+        if (str == null) {
+            str = (String) get("email;internet");
+        }
+
+        return str;
+    }
 }

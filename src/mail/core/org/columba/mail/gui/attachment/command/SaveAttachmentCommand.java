@@ -17,6 +17,22 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.Worker;
+import org.columba.core.io.StreamUtils;
+import org.columba.core.util.cFileChooser;
+import org.columba.core.util.cFileFilter;
+
+import org.columba.mail.command.FolderCommand;
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+
+import org.columba.ristretto.coder.Base64DecoderInputStream;
+import org.columba.ristretto.coder.EncodedWord;
+import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -24,121 +40,111 @@ import java.io.InputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.command.Worker;
-import org.columba.core.io.StreamUtils;
-import org.columba.core.util.cFileChooser;
-import org.columba.core.util.cFileFilter;
-import org.columba.mail.command.FolderCommand;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.ristretto.coder.Base64DecoderInputStream;
-import org.columba.ristretto.coder.EncodedWord;
-import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
 
 /**
  * @author freddy
- * 
+ *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class SaveAttachmentCommand extends FolderCommand {
+    static File lastDir = null;
+    File tempFile = null;
+    LocalMimePart part;
 
-	File tempFile = null;
-	LocalMimePart part;
-	static File lastDir = null;
+    /**
+     * Constructor for SaveAttachmentCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public SaveAttachmentCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for SaveAttachmentCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public SaveAttachmentCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        Folder folder = (Folder) r[0].getFolder();
+        Object[] uids = r[0].getUids();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		Folder folder = (Folder) r[0].getFolder();
-		Object[] uids = r[0].getUids();
+        Integer[] address = r[0].getAddress();
 
-		Integer[] address = r[0].getAddress();
+        part = (LocalMimePart) folder.getMimePart(uids[0], address);
 
-		part = (LocalMimePart) folder.getMimePart(uids[0], address);
+        String fileName = part.getHeader().getContentParameter("name");
 
-		String fileName = part.getHeader().getContentParameter("name");
-		if (fileName == null)
-			fileName = part.getHeader().getDispositionParameter("filename");
+        if (fileName == null) {
+            fileName = part.getHeader().getDispositionParameter("filename");
+        }
 
-		// decode filename
-		if (fileName != null) {
-			StringBuffer buf = EncodedWord.decode(fileName);
-			fileName = buf.toString();
-		}
+        // decode filename
+        if (fileName != null) {
+            StringBuffer buf = EncodedWord.decode(fileName);
+            fileName = buf.toString();
+        }
 
-		cFileChooser fileChooser;
+        cFileChooser fileChooser;
 
-		if (lastDir == null)
-			fileChooser = new cFileChooser();
-		else
-			fileChooser = new cFileChooser(lastDir);
+        if (lastDir == null) {
+            fileChooser = new cFileChooser();
+        } else {
+            fileChooser = new cFileChooser(lastDir);
+        }
 
-		cFileFilter fileFilter = new cFileFilter();
-		fileFilter.acceptFilesWithProperty(cFileFilter.FILEPROPERTY_FILE);
+        cFileFilter fileFilter = new cFileFilter();
+        fileFilter.acceptFilesWithProperty(cFileFilter.FILEPROPERTY_FILE);
 
-		fileChooser.setDialogTitle("Save Attachment as ...");
-		if (fileName != null)
-			fileChooser.forceSelectedFile(new File(fileName));
-		fileChooser.setSelectFilter(fileFilter);
+        fileChooser.setDialogTitle("Save Attachment as ...");
 
-		while (true) {
-			if (fileChooser.showSaveDialog(null)
-				!= JFileChooser.APPROVE_OPTION) {
-				return;
-			}
-			tempFile = fileChooser.getSelectedFile();
-			lastDir = tempFile.getParentFile();
-			if (tempFile.exists()) {
-				if (JOptionPane
-					.showConfirmDialog(
-						null,
-						"Overwrite File?",
-						"Warning",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE)
-					== JOptionPane.YES_OPTION) {
-					break;
-				}
-			} else {
-				break;
-			}
-		}
+        if (fileName != null) {
+            fileChooser.forceSelectedFile(new File(fileName));
+        }
 
-		MimeHeader header;
-		header = part.getHeader();
-		InputStream bodyStream = part.getInputStream();
-		String encoding = header.getContentTransferEncoding();
-		if (encoding != null) {
-			if (encoding.equals("quoted-printable")) {
-				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-			} else if (encoding.equals("base64")) {
-				bodyStream = new Base64DecoderInputStream(bodyStream);
-			}
-		}
+        fileChooser.setSelectFilter(fileFilter);
 
-		StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
-	}
+        while (true) {
+            if (fileChooser.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+
+            tempFile = fileChooser.getSelectedFile();
+            lastDir = tempFile.getParentFile();
+
+            if (tempFile.exists()) {
+                if (JOptionPane.showConfirmDialog(null, "Overwrite File?",
+                            "Warning", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        MimeHeader header;
+        header = part.getHeader();
+
+        InputStream bodyStream = part.getInputStream();
+        String encoding = header.getContentTransferEncoding();
+
+        if (encoding != null) {
+            if (encoding.equals("quoted-printable")) {
+                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+            } else if (encoding.equals("base64")) {
+                bodyStream = new Base64DecoderInputStream(bodyStream);
+            }
+        }
+
+        StreamUtils.streamCopy(bodyStream, new FileOutputStream(tempFile));
+    }
 }

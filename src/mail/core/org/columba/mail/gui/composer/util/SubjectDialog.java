@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -29,164 +34,155 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class SubjectDialog implements ActionListener {
-	private JDialog dialog;
-	private boolean bool = false;
-	private JTextField subjectTextField;
-	private String subject;
-	
-	JButton[] buttons = new JButton[1];
+    private JDialog dialog;
+    private boolean bool = false;
+    private JTextField subjectTextField;
+    private String subject;
+    JButton[] buttons = new JButton[1];
 
-	public SubjectDialog() {
-		
-	}
+    public SubjectDialog() {
+    }
 
-	public void showDialog(String subject) {
-		this.subject = subject;
+    public void showDialog(String subject) {
+        this.subject = subject;
 
-		JLabel questionLabel = new JLabel("Please enter subject!");
-		JLabel subjectLabel = new JLabel("Subject:");
+        JLabel questionLabel = new JLabel("Please enter subject!");
+        JLabel subjectLabel = new JLabel("Subject:");
 
-		buttons[0] = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
-		buttons[0].addActionListener(this);
-		buttons[0].setActionCommand("OK");
-		buttons[0].setDefaultCapable(true);
-		buttons[0].setSelected(true);
+        buttons[0] = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "ok"));
+        buttons[0].addActionListener(this);
+        buttons[0].setActionCommand("OK");
+        buttons[0].setDefaultCapable(true);
+        buttons[0].setSelected(true);
 
-		subjectTextField = new JTextField(subject, 30);
-		subjectTextField.setCaretPosition( subject.length() );
-		subjectTextField.selectAll();
-		subjectTextField.getDocument().addDocumentListener(new MyDocumentListener());
-		
+        subjectTextField = new JTextField(subject, 30);
+        subjectTextField.setCaretPosition(subject.length());
+        subjectTextField.selectAll();
+        subjectTextField.getDocument().addDocumentListener(new MyDocumentListener());
 
-		dialog = DialogStore.getDialog();
-		dialog.setTitle( "Enter Subject..." );
-		//dialog.getContentPane().setLayout( new BoxLayout( dialog.getContentPane(), BoxLayout.Y_AXIS ) );
-		dialog.getContentPane().setLayout(new BorderLayout());
+        dialog = DialogStore.getDialog();
+        dialog.setTitle("Enter Subject...");
 
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new BorderLayout());
-		//centerPanel.setLayout( new BoxLayout( centerPanel, BoxLayout.Y_AXIS ) );
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        //dialog.getContentPane().setLayout( new BoxLayout( dialog.getContentPane(), BoxLayout.Y_AXIS ) );
+        dialog.getContentPane().setLayout(new BorderLayout());
 
-		/*
-		TitledBorder etched = javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Login ");
-		centerPanel.setBorder( etched );
-		*/
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
 
-		JPanel panel = new JPanel();
-		
-		panel.setLayout(new BorderLayout());
+        //centerPanel.setLayout( new BoxLayout( centerPanel, BoxLayout.Y_AXIS ) );
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		JPanel leftInformationPanel = new JPanel();
-		leftInformationPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		leftInformationPanel.setLayout(new GridLayout(0, 1, 50, 5));
-		panel.add(leftInformationPanel, BorderLayout.CENTER);
+        /*
+        TitledBorder etched = javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Login ");
+        centerPanel.setBorder( etched );
+        */
+        JPanel panel = new JPanel();
 
-		JPanel rightInformationPanel = new JPanel();
-		rightInformationPanel.setLayout(new GridLayout(0, 1, 50, 5));
-		rightInformationPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		panel.add(rightInformationPanel, BorderLayout.EAST);
+        panel.setLayout(new BorderLayout());
 
-		leftInformationPanel.add(subjectLabel);
-		rightInformationPanel.add(subjectTextField);
+        JPanel leftInformationPanel = new JPanel();
+        leftInformationPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5,
+                5));
+        leftInformationPanel.setLayout(new GridLayout(0, 1, 50, 5));
+        panel.add(leftInformationPanel, BorderLayout.CENTER);
 
-		//centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        JPanel rightInformationPanel = new JPanel();
+        rightInformationPanel.setLayout(new GridLayout(0, 1, 50, 5));
+        rightInformationPanel.setBorder(BorderFactory.createEmptyBorder(0, 5,
+                5, 5));
+        panel.add(rightInformationPanel, BorderLayout.EAST);
 
-		centerPanel.add(panel, BorderLayout.NORTH);
+        leftInformationPanel.add(subjectLabel);
+        rightInformationPanel.add(subjectTextField);
 
-		/*	
-		JPanel panel = new JPanel();
-		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
-		panel.add( hostLabel );
-		centerPanel.add( panel );
-		*/
+        //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        centerPanel.add(panel, BorderLayout.NORTH);
 
-		//centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        /*
+        JPanel panel = new JPanel();
+        panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+        panel.add( hostLabel );
+        centerPanel.add( panel );
+        */
+        //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        //centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
 
-		//centerPanel.add( Box.createRigidArea( new java.awt.Dimension(0,5) ) );
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
 
-		dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        buttonPanel.setLayout(new GridLayout(1, 2, 10, 0));
+        buttonPanel.add(buttons[0]);
 
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-		buttonPanel.setLayout(new GridLayout(1, 2, 10, 0));
-		buttonPanel.add(buttons[0]);
-		
+        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        dialog.pack();
 
-		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        dialog.getRootPane().setDefaultButton(buttons[0]);
 
-		dialog.pack();
+        /*
+        java.awt.Dimension dim = new Dimension(300, 200);
 
-		dialog.getRootPane().setDefaultButton(buttons[0]);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-		/*
-		java.awt.Dimension dim = new Dimension(300, 200);
+        dialog.setLocation(
+                screenSize.width / 2 - dim.width / 2,
+                screenSize.height / 2 - dim.height / 2);
+        */
+        dialog.setLocationRelativeTo(null);
+        dialog.show();
+    }
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public boolean success() {
+        return bool;
+    }
 
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-		*/
-		dialog.setLocationRelativeTo(null);
-		dialog.show();
-	}
+    public String getSubject() {
+        return subject;
+    }
 
-	public boolean success() {
-		return bool;
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-	}
+        if (action.equals("OK")) {
+            subject = subjectTextField.getText();
 
-	public String getSubject() {
-		return subject;
-	}
+            bool = true;
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+            dialog.dispose();
+        }
+    }
 
-		if (action.equals("OK")) {
+    class MyDocumentListener implements DocumentListener {
+        public void insertUpdate(DocumentEvent e) {
+            if (subjectTextField.getText().length() == 0) {
+                buttons[0].setEnabled(false);
+            } else {
+                buttons[0].setEnabled(true);
+            }
+        }
 
-			subject = subjectTextField.getText();
+        public void removeUpdate(DocumentEvent e) {
+            if (subjectTextField.getText().length() == 0) {
+                buttons[0].setEnabled(false);
+            } else {
+                buttons[0].setEnabled(true);
+            }
+        }
 
-			bool = true;
-
-			dialog.dispose();
-		}
-
-	}
-
-	class MyDocumentListener implements DocumentListener {
-		public void insertUpdate(DocumentEvent e) {
-			if (subjectTextField.getText().length() == 0)
-				buttons[0].setEnabled(false);
-			else
-				buttons[0].setEnabled(true);
-
-		}
-		public void removeUpdate(DocumentEvent e) {
-			if (subjectTextField.getText().length() == 0)
-				buttons[0].setEnabled(false);
-			else
-				buttons[0].setEnabled(true);
-		}
-		public void changedUpdate(DocumentEvent e) {
-			//Plain text components don't fire these events
-		}
-
-	};
+        public void changedUpdate(DocumentEvent e) {
+            //Plain text components don't fire these events
+        }
+    }
 }

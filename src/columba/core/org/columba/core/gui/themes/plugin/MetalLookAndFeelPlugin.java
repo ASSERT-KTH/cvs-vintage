@@ -19,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
+
 /**
  * @author frd
  *
@@ -26,25 +27,19 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class MetalLookAndFeelPlugin extends AbstractThemePlugin {
+    /**
+     *
+     */
+    public MetalLookAndFeelPlugin() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public MetalLookAndFeelPlugin() {
-		super();
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+     */
+    public void setLookAndFeel() throws Exception {
+        MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-	 */
-	public void setLookAndFeel() throws Exception {
-
-		MetalLookAndFeel.setCurrentTheme(new DefaultMetalTheme());
-
-		UIManager.setLookAndFeel(
-			UIManager.getCrossPlatformLookAndFeelClassName());
-
-	}
-
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+    }
 }

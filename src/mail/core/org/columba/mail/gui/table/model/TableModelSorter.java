@@ -15,8 +15,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.model;
+
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
+import org.columba.core.config.WindowItem;
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.table.SortingStateObservable;
+import org.columba.mail.gui.table.TableView;
+import org.columba.mail.message.HeaderList;
 
 import java.util.Vector;
 
@@ -24,206 +34,190 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.table.TableColumnModel;
 
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
-import org.columba.core.config.WindowItem;
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.table.SortingStateObservable;
-import org.columba.mail.gui.table.TableView;
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author fdietz
- * 
+ *
  * Extends <class>BasicTableModelSorter</class> with Columba specific stuff.
- * 
+ *
  * Sorting order and column are initially loaded/saved from an xml
  * configuration file.
- * 
+ *
  * It especially implements <interface>TableModelModifier</interface>.
- *  
+ *
  */
 public class TableModelSorter extends BasicTableModelSorter {
+    protected WindowItem config;
+    protected SortingStateObservable sortingStateObservable;
 
-	protected WindowItem config;
-	protected SortingStateObservable sortingStateObservable;
+    public TableModelSorter(TreeTableModelInterface tableModel) {
+        super(tableModel);
 
-	public TableModelSorter(TreeTableModelInterface tableModel) {
-		super(tableModel);
+        TableItem headerTableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
+                                                          .getTableItem();
 
-		TableItem headerTableItem =
-			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+        setSortingColumn(headerTableItem.get("selected"));
+        setSortingOrder(headerTableItem.getBoolean("ascending"));
 
-		setSortingColumn(headerTableItem.get("selected"));
-		setSortingOrder(headerTableItem.getBoolean("ascending"));
+        // observable connects the sorting table with the sort menu (View->Sort
+        // Messages)
+        sortingStateObservable = new SortingStateObservable();
+        sortingStateObservable.setSortingState(getSortingColumn(),
+            getSortingOrder());
+    }
 
-		// observable connects the sorting table with the sort menu (View->Sort
-		// Messages)
-		sortingStateObservable = new SortingStateObservable();
-		sortingStateObservable.setSortingState(
-			getSortingColumn(),
-			getSortingOrder());
+    /**
+     * @return
+     */
+    public SortingStateObservable getSortingStateObservable() {
+        return sortingStateObservable;
+    }
 
-	}
+    public void saveConfig() {
+        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
+                                                    .getTableItem();
 
-	/**
-	 * @return
-	 */
-	public SortingStateObservable getSortingStateObservable() {
-		return sortingStateObservable;
-	}
+        boolean ascending = getSortingOrder();
+        String sortingColumn = getSortingColumn();
 
-	public void saveConfig() {
-		TableItem tableItem =
-			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+        tableItem.set("ascending", ascending);
+        tableItem.set("selected", sortingColumn);
+    }
 
-		boolean ascending = getSortingOrder();
-		String sortingColumn = getSortingColumn();
+    /**
+     *
+     * This method is used by <class>SortMessagesMenu</class> to generate the
+     * available menuitem entries
+     *
+     * @return array of visible columns
+     */
+    public Object[] getColumns() {
+        TableItem tableItem = (TableItem) MailConfig.getMainFrameOptionsConfig()
+                                                    .getTableItem();
 
-		tableItem.set("ascending", ascending);
-		tableItem.set("selected", sortingColumn);
-	}
+        Vector v = new Vector();
 
-	/**
-	 * 
-	 * This method is used by <class>SortMessagesMenu</class> to generate the
-	 * available menuitem entries
-	 * 
-	 * @return array of visible columns
-	 */
-	public Object[] getColumns() {
-		TableItem tableItem =
-			(TableItem) MailConfig.getMainFrameOptionsConfig().getTableItem();
+        for (int i = 0; i < tableItem.count(); i++) {
+            HeaderItem headerItem = tableItem.getHeaderItem(i);
 
-		Vector v = new Vector();
+            if (headerItem.getBoolean("enabled")) {
+                v.add((String) headerItem.get("name"));
+            }
+        }
 
-		for (int i = 0; i < tableItem.count(); i++) {
-			HeaderItem headerItem = tableItem.getHeaderItem(i);
-			if (headerItem.getBoolean("enabled"))
-				v.add((String) headerItem.get("name"));
-		}
+        Object[] result = new String[v.size()];
+        result = v.toArray();
 
-		Object[] result = new String[v.size()];
-		result = v.toArray();
+        return result;
+    }
 
-		return result;
-	}
+    public void loadConfig(TableView view) {
+        String column = getSortingColumn();
+        int columnNumber = getSortInt();
+        ImageIcon icon = null;
 
-	public void loadConfig(TableView view) {
-		String column = getSortingColumn();
-		int columnNumber = getSortInt();
-		ImageIcon icon = null;
-		if (getSortingOrder() == true)
-			icon = new AscendingIcon();
-		else
-			icon = new DescendingIcon();
+        if (getSortingOrder() == true) {
+            icon = new AscendingIcon();
+        } else {
+            icon = new DescendingIcon();
+        }
 
-		TableColumnModel columnModel = view.getColumnModel();
-		JLabel renderer =
-			(JLabel) columnModel.getColumn(columnNumber).getHeaderRenderer();
+        TableColumnModel columnModel = view.getColumnModel();
+        JLabel renderer = (JLabel) columnModel.getColumn(columnNumber)
+                                              .getHeaderRenderer();
 
-		renderer.setIcon(icon);
-	}
+        renderer.setIcon(icon);
+    }
 
-	public void setWindowItem(WindowItem item) {
-		this.config = item;
+    public void setWindowItem(WindowItem item) {
+        this.config = item;
 
-		if (sort == null)
-			sort = new String("Status");
+        if (sort == null) {
+            sort = new String("Status");
+        }
 
-		ascending = true;
+        ascending = true;
 
-		setSortingColumn(sort);
-		setSortingOrder(ascending);
+        setSortingColumn(sort);
+        setSortingOrder(ascending);
+    }
 
-	}
+    public void setSortingColumn(String str) {
+        sort = str;
+    }
 
-	public void setSortingColumn(String str) {
-		sort = str;
+    public void setSortingOrder(boolean b) {
+        ascending = b;
+    }
 
-	}
+    /**
+     * ***************************** implements TableModelModifier
+     * ******************
+     */
 
-	public void setSortingOrder(boolean b) {
-		ascending = b;
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
+    public void modify(Object[] uids) {
+        super.modify(uids);
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
+    public void remove(Object[] uids) {
+        super.remove(uids);
+    }
 
-	/**
-	 * ***************************** implements TableModelModifier
-	 * ******************
-	 */
+    public void sort() {
+        super.sort();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-	 */
-	public void modify(Object[] uids) {
-		super.modify(uids);
+        // notify tree
+        getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-	}
+        // notify table
+        getRealModel().fireTableDataChanged();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-	 */
-	public void remove(Object[] uids) {
-		super.remove(uids);
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#update()
+     */
+    public void update() {
+        super.update();
 
-	}
+        // sort table model data
+        sort();
 
-	public void sort() {
-		super.sort();
+        // notify tree
+        getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-		// notify tree
-		getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
+        // notify table
+        getRealModel().fireTableDataChanged();
+    }
 
-		// notify table
-		getRealModel().fireTableDataChanged();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+     */
+    public void set(HeaderList headerList) {
+        super.set(headerList);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#update()
-	 */
-	public void update() {
+        if ((headerList != null) && (headerList.count() != 0)) {
+            update();
+        } else {
+            // messagelist is empty
+            //		notify tree
+            getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
 
-		super.update();
-
-		// sort table model data
-		sort();
-
-		// notify tree
-		getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
-
-		// notify table
-		getRealModel().fireTableDataChanged();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-	 */
-	public void set(HeaderList headerList) {
-
-		super.set(headerList);
-
-		if ((headerList != null) && (headerList.count() != 0))
-			update();
-		else {
-			// messagelist is empty
-			
-			//		notify tree
-			getRealModel().getTreeModel().nodeStructureChanged(getRootNode());
-
-			// notify table
-			getRealModel().fireTableDataChanged();
-		}
-	}
-
+            // notify table
+            getRealModel().fireTableDataChanged();
+        }
+    }
 }

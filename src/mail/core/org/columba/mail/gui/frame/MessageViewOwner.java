@@ -17,11 +17,12 @@ package org.columba.mail.gui.frame;
 
 import org.columba.mail.gui.message.MessageController;
 
+
 /**
- * 
+ *
  *
  * @author fdietz
  */
 public interface MessageViewOwner {
-	public MessageController getMessageController();
+    public MessageController getMessageController();
 }

@@ -13,23 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.externaltools;
-
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataLookup;
@@ -42,139 +26,142 @@ import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.gui.util.WizardTextField;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.io.File;
+
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+
+
 /**
  * Asks the user about the location of an executable file.
  * <p>
  * Usually this should should include a short explanation about
  * what the tool does, where to download, etc.
- * 
+ *
  * @author fdietz
  */
 class LocationStep extends AbstractStep implements ActionListener {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    protected DataModel data;
+    protected JButton sourceButton;
+    protected File sourceFile;
 
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-        
-	protected DataModel data;
-	protected JButton sourceButton;
-	protected File sourceFile;
+    /**
+     * @param arg0
+     * @param arg1
+     */
+    public LocationStep(DataModel data) {
+        super(GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "LocationStep.title"),
+            GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "LocationStep.description"));
 
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public LocationStep(DataModel data) {
-		super(GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "LocationStep.title"),
-                        GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "LocationStep.description"));
+        this.data = data;
 
-		this.data = data;
+        data.registerDataLookup("Location.source",
+            new DataLookup() {
+                public Object lookupData() {
+                    return sourceFile;
+                }
+            });
 
-		data.registerDataLookup("Location.source", new DataLookup() {
-			public Object lookupData() {
-				return sourceFile;
-			}
-		});
+        setCanGoNext(false);
+    }
 
-		setCanGoNext(false);
-	}
+    /* (non-Javadoc)
+     * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+     */
+    protected JComponent createComponent() {
+        JPanel panel = new JPanel(new BorderLayout());
 
-	/* (non-Javadoc)
-	 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-	 */
-	protected JComponent createComponent() {
-		JPanel panel = new JPanel(new BorderLayout());
+        AbstractExternalToolsPlugin plugin = (AbstractExternalToolsPlugin) data.getData(
+                "Plugin");
 
-		AbstractExternalToolsPlugin plugin =
-			(AbstractExternalToolsPlugin) data.getData("Plugin");
+        sourceFile = plugin.locate();
 
-		sourceFile = plugin.locate();
-		if (sourceFile == null) {
-			MultiLineLabel label =
-				new MultiLineLabel(GlobalResourceLoader.getString(
-                                        RESOURCE_PATH,
-                                        "externaltools",
-                                        "LocationStep.noauto"));
-			panel.add(label, BorderLayout.NORTH);
+        if (sourceFile == null) {
+            MultiLineLabel label = new MultiLineLabel(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, "externaltools", "LocationStep.noauto"));
+            panel.add(label, BorderLayout.NORTH);
 
-			WizardTextField middlePanel = new WizardTextField();
-			LabelWithMnemonic sourceLabel =
-				new LabelWithMnemonic(GlobalResourceLoader.getString(
-                                        RESOURCE_PATH,
-                                        "externaltools",
-                                        "LocationStep.location"));
-			middlePanel.add(sourceLabel);
+            WizardTextField middlePanel = new WizardTextField();
+            LabelWithMnemonic sourceLabel = new LabelWithMnemonic(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, "externaltools", "LocationStep.location"));
+            middlePanel.add(sourceLabel);
 
-			sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                                        RESOURCE_PATH,
-                                        "externaltools",
-                                        "LocationStep.browse"));
-			sourceLabel.setLabelFor(sourceButton);
-			sourceButton.addActionListener(this);
-			middlePanel.add(sourceButton);
+            sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, "externaltools", "LocationStep.browse"));
+            sourceLabel.setLabelFor(sourceButton);
+            sourceButton.addActionListener(this);
+            middlePanel.add(sourceButton);
 
-			panel.add(middlePanel, BorderLayout.CENTER);
-		} else {
-			JPanel northPanel = new JPanel(new GridLayout(2, 1, 0, 15));
-			MultiLineLabel label =
-				new MultiLineLabel(GlobalResourceLoader.getString(
-                                        RESOURCE_PATH,
-                                        "externaltools",
-                                        "LocationStep.auto"));
-			northPanel.add(label);
+            panel.add(middlePanel, BorderLayout.CENTER);
+        } else {
+            JPanel northPanel = new JPanel(new GridLayout(2, 1, 0, 15));
+            MultiLineLabel label = new MultiLineLabel(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, "externaltools", "LocationStep.auto"));
+            northPanel.add(label);
 
-			JPanel sourceFilePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-                        JLabel label2 = new JLabel(sourceFile.getPath());
-			Font font = (Font) UIManager.getFont("Label.font");
-			font = font.deriveFont(Font.BOLD);
-			label2.setFont(font);
-			sourceFilePanel.add(label2);
+            JPanel sourceFilePanel = new JPanel(new FlowLayout(
+                        FlowLayout.LEFT, 20, 0));
+            JLabel label2 = new JLabel(sourceFile.getPath());
+            Font font = (Font) UIManager.getFont("Label.font");
+            font = font.deriveFont(Font.BOLD);
+            label2.setFont(font);
+            sourceFilePanel.add(label2);
 
-			sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
-                                        RESOURCE_PATH,
-                                        "externaltools",
-                                        "LocationStep.change"));
-			sourceButton.addActionListener(this);
-                        sourceFilePanel.add(sourceButton);
-                        
-                        northPanel.add(sourceFilePanel);
-			panel.add(northPanel, BorderLayout.NORTH);
-		}
-		return panel;
-	}
+            sourceButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                        RESOURCE_PATH, "externaltools", "LocationStep.change"));
+            sourceButton.addActionListener(this);
+            sourceFilePanel.add(sourceButton);
 
-	/* (non-Javadoc)
-	 * @see net.javaprog.ui.wizard.Step#prepareRendering()
-	 */
-	public void prepareRendering() {
-                // init component before querying for sourceFile
-                getComponent();
-		updateCanFinish();
-	}
+            northPanel.add(sourceFilePanel);
+            panel.add(northPanel, BorderLayout.NORTH);
+        }
 
-	protected void updateCanFinish() {
-		setCanFinish(sourceFile != null);
-	}
+        return panel;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-		if (source == sourceButton) {
-			JFileChooser fc = new JFileChooser();
-			fc.setMultiSelectionEnabled(true);
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fc.setFileHidingEnabled(false);
-			if (fc.showOpenDialog(getComponent())
-				== JFileChooser.APPROVE_OPTION) {
-				sourceFile = fc.getSelectedFile();
+    /* (non-Javadoc)
+     * @see net.javaprog.ui.wizard.Step#prepareRendering()
+     */
+    public void prepareRendering() {
+        // init component before querying for sourceFile
+        getComponent();
+        updateCanFinish();
+    }
 
-				sourceButton.setText(sourceFile.getPath());
+    protected void updateCanFinish() {
+        setCanFinish(sourceFile != null);
+    }
 
-			}
-			updateCanFinish();
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+
+        if (source == sourceButton) {
+            JFileChooser fc = new JFileChooser();
+            fc.setMultiSelectionEnabled(true);
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fc.setFileHidingEnabled(false);
+
+            if (fc.showOpenDialog(getComponent()) == JFileChooser.APPROVE_OPTION) {
+                sourceFile = fc.getSelectedFile();
+
+                sourceButton.setText(sourceFile.getPath());
+            }
+
+            updateCanFinish();
+        }
+    }
 }

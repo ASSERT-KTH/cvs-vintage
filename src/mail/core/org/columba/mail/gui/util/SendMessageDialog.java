@@ -17,6 +17,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.util;
 
+import org.columba.core.command.Worker;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
+import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
@@ -31,11 +37,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import org.columba.core.command.Worker;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangeListener;
-import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * Dialog shows progress while sending message.
@@ -45,142 +46,129 @@ import org.columba.core.gui.util.ImageLoader;
  * This is the first example of watching the progress for a specific
  * worker, using the timestamp attribute, which is created by
  * {@link DefaultProcessor} when executing the {@link Command}.
- * 
+ *
  * @author fdietz
  */
-public class SendMessageDialog
-	extends JDialog
-	implements WorkerStatusChangeListener, ActionListener {
+public class SendMessageDialog extends JDialog
+    implements WorkerStatusChangeListener, ActionListener {
+    private JProgressBar progressBar;
+    private JButton cancelButton;
+    private JLabel label;
+    private Worker worker;
 
-	private JProgressBar progressBar;
-	private JButton cancelButton;
-	private JLabel label;
+    /**
+     * @param arg0
+     * @throws java.awt.HeadlessException
+     */
+    public SendMessageDialog(Worker worker) throws HeadlessException {
+        super(new JFrame(), false);
 
-	
-	private Worker worker;
+        setTitle("Sending message...");
 
-	/**
-	 * @param arg0
-	 * @throws java.awt.HeadlessException
-	 */
-	public SendMessageDialog(Worker worker) throws HeadlessException {
-		super(new JFrame(), false);
+        setWorker(worker);
 
-		setTitle("Sending message...");
-		
-		setWorker(worker);
-		
-		initComponents();
-		layoutComponents();
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-	}
+        initComponents();
+        layoutComponents();
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
 
-	protected void initComponents() {
-		label = new JLabel("Sending message...");
-		label.setIcon( ImageLoader.getSmallImageIcon("sending.png"));
-		
-		progressBar = new JProgressBar();
-		progressBar.setPreferredSize( new Dimension(300,20) );
-		
-		cancelButton = new ButtonWithMnemonic("&Cancel");
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
+    protected void initComponents() {
+        label = new JLabel("Sending message...");
+        label.setIcon(ImageLoader.getSmallImageIcon("sending.png"));
 
-	}
+        progressBar = new JProgressBar();
+        progressBar.setPreferredSize(new Dimension(300, 20));
 
-	protected void layoutComponents() {
-		
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		panel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
-		
-		getContentPane().add(panel);
-		
-		JPanel top = new JPanel();
-		top.setBorder(BorderFactory.createEmptyBorder(0,12,6,0));
-		top.setLayout( new BorderLayout() );
-		top.add(label, BorderLayout.WEST);
-		
-		panel.add(top, BorderLayout.NORTH);
+        cancelButton = new ButtonWithMnemonic("&Cancel");
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+    }
 
-		panel.add(progressBar, BorderLayout.CENTER);
+    protected void layoutComponents() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		JPanel bottom = new JPanel();
-		bottom.setBorder(BorderFactory.createEmptyBorder(12,0,0,0));
-		bottom.add(cancelButton);
-		
-		panel.add(bottom, BorderLayout.SOUTH);
+        getContentPane().add(panel);
 
-	}
+        JPanel top = new JPanel();
+        top.setBorder(BorderFactory.createEmptyBorder(0, 12, 6, 0));
+        top.setLayout(new BorderLayout());
+        top.add(label, BorderLayout.WEST);
 
-	/** ********************** WorkerStatusListener ************************** */
+        panel.add(top, BorderLayout.NORTH);
 
-	public void workerStatusChanged(WorkerStatusChangedEvent e) {
-		int ts = e.getTimeStamp();
+        panel.add(progressBar, BorderLayout.CENTER);
 
-		// only update if timestamp is equal
-		if (worker.getTimeStamp() == ts) {
-			switch (e.getType()) {
+        JPanel bottom = new JPanel();
+        bottom.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
+        bottom.add(cancelButton);
 
-				case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED :
+        panel.add(bottom, BorderLayout.SOUTH);
+    }
 
-					label.setText((String) e.getNewValue());
-					break;
+    /** ********************** WorkerStatusListener ************************** */
+    public void workerStatusChanged(WorkerStatusChangedEvent e) {
+        int ts = e.getTimeStamp();
 
-				case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED :
-				
-					// implemented for completeness.
-					// Time-out for clearing text is ignored here.
-					label.setText("");
-					break;
-				
-				case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED :
-					{
-						progressBar.setMaximum(
-							((Integer) e.getNewValue()).intValue());
+        // only update if timestamp is equal
+        if (worker.getTimeStamp() == ts) {
+            switch (e.getType()) {
+            case WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED:
+                label.setText((String) e.getNewValue());
 
-						break;
-					}
-				case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED :
-					progressBar.setValue(
-						((Integer) e.getNewValue()).intValue());
-					break;
+                break;
 
-				/*
-				case WorkerStatusChangedEvent.FINISHED :
-					setVisible(false);
-					break;
-					*/
-			}
-		}
-	}
+            case WorkerStatusChangedEvent.DISPLAY_TEXT_CLEARED:
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
+                // implemented for completeness.
+                // Time-out for clearing text is ignored here.
+                label.setText("");
 
-		if (arg0.equals("CANCEL")) {
-			// send cancel event to worker
-			worker.cancel();
-			setVisible(false);
-		}
+                break;
 
-	}
+            case WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED: {
+                progressBar.setMaximum(((Integer) e.getNewValue()).intValue());
 
-	/**
-	 * @param worker
-	 *            The worker to set.
-	 */
-	public void setWorker(Worker worker) {
-		this.worker = worker;
+                break;
+            }
 
-		worker.addWorkerStatusChangeListener(this);
-	}
+            case WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED:
+                progressBar.setValue(((Integer) e.getNewValue()).intValue());
 
-	
+                break;
+
+                /*
+                case WorkerStatusChangedEvent.FINISHED :
+                        setVisible(false);
+                        break;
+                        */
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        if (arg0.equals("CANCEL")) {
+            // send cancel event to worker
+            worker.cancel();
+            setVisible(false);
+        }
+    }
+
+    /**
+     * @param worker
+     *            The worker to set.
+     */
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+
+        worker.addWorkerStatusChangeListener(this);
+    }
 }

@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,6 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.ApplyFilterCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -34,65 +29,60 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class ApplyFilterAction
-	extends FrameAction
-	implements SelectionListener {
+public class ApplyFilterAction extends FrameAction implements SelectionListener {
+    public ApplyFilterAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_applyfilter"));
 
-	public ApplyFilterAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_applyfilter"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_applyfilter").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_folder_applyfilter")
-				.replaceAll("&", ""));
+        // icon
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("apply-filters-16.png"));
 
-		// icon
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("apply-filters-16.png"));
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.ALT_MASK));
+        setEnabled(false);
 
-		setEnabled(false);
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+    }
 
-		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTreeSelection();
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-				.getTreeSelection();
+        //Folder folder = (Folder) r[0].getFolder();
+        MainInterface.processor.addOp(new ApplyFilterCommand(r));
+    }
 
-		//Folder folder = (Folder) r[0].getFolder();
-		MainInterface.processor.addOp(new ApplyFilterCommand(r));
-	}
-
-	/* (non-Javadoc)
-	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	     */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-	}
+    /* (non-Javadoc)
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

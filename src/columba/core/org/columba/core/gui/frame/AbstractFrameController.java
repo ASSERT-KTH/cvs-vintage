@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.frame;
-
-import java.awt.event.MouseAdapter;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.menu.Menu;
@@ -25,265 +22,265 @@ import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.gui.frame.TooltipMouseHandler;
+
+import java.awt.event.MouseAdapter;
+
 
 /**
  * The Controller is responsible for creating a view.
- * 
- * It provides a selection handler facility through a 
+ *
+ * It provides a selection handler facility through a
  * {@link SelectionManager}.
- * 
+ *
  * @see org.columba.core.gui.selection.SelectionManager
- * 
+ *
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
-public abstract class AbstractFrameController implements FrameMediator{
+public abstract class AbstractFrameController implements FrameMediator {
+    protected StatusBar statusBar;
 
-	protected StatusBar statusBar;
-	
-	/**
-	 * Menuitems use this to display a string in the statusbar
-	 */
-	protected MouseAdapter mouseTooltipHandler;
+    /**
+     * Menuitems use this to display a string in the statusbar
+     */
+    protected MouseAdapter mouseTooltipHandler;
 
-	/**
-	 * Saves view information like position, size and maximization state
-	 */
-	protected ViewItem viewItem;
+    /**
+     * Saves view information like position, size and maximization state
+     */
+    protected ViewItem viewItem;
 
-	/**
-	 * 
-	 * View this controller handles
-	 */
-	protected AbstractFrameView view;
-	
-	/**
-	 * Selection handler
-	 */
-	protected SelectionManager selectionManager;
-	
-	/**
-	 * ID of controller
-	 */
-	protected String id;
+    /**
+     *
+     * View this controller handles
+     */
+    protected AbstractFrameView view;
 
-	/**
-	 * Constructor for FrameController.
-	 * 
-	 * Warning: Never do any inits in the constructor -> use init() instead!
-	 * 
-	 * The problem is that we have some circular dependencies here:
-	 * The view needs the action to be initializied first.
-	 * The actions need the controller properly initialized.
-	 * 
-	 * So, take care when changing the order of initialization
-	 * 
-	 */
-	public AbstractFrameController(String id, ViewItem viewItem) {
-		this.id = id;
-		this.viewItem = viewItem;
+    /**
+     * Selection handler
+     */
+    protected SelectionManager selectionManager;
 
-		// If no view spec. is given, use default
-		if (viewItem == null)
-			this.viewItem = new ViewItem(createDefaultConfiguration(id));
+    /**
+     * ID of controller
+     */
+    protected String id;
 
-		// register statusbar at global taskmanager
-		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
+    /**
+     * Constructor for FrameController.
+     *
+     * Warning: Never do any inits in the constructor -> use init() instead!
+     *
+     * The problem is that we have some circular dependencies here:
+     * The view needs the action to be initializied first.
+     * The actions need the controller properly initialized.
+     *
+     * So, take care when changing the order of initialization
+     *
+     */
+    public AbstractFrameController(String id, ViewItem viewItem) {
+        this.id = id;
+        this.viewItem = viewItem;
 
-		// add tooltip handler
-		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
+        // If no view spec. is given, use default
+        if (viewItem == null) {
+            this.viewItem = new ViewItem(createDefaultConfiguration(id));
+        }
 
-		// init selection handler
-		selectionManager = new SelectionManager();
-		
-		// initialize the view here
-		init();
+        // register statusbar at global taskmanager
+        statusBar = new StatusBar(MainInterface.processor.getTaskManager());
 
-		// initialize all actions
-		initActions();
-		
-		// create view
-		view = createView();
-		
-	}
+        // add tooltip handler
+        mouseTooltipHandler = new TooltipMouseHandler(statusBar);
 
-	/**
-	 * 
-	 * @see ThreePaneMailFrameController for an example of its usage
-	 *
-	 */
-	protected void initActions() {
-	}
+        // init selection handler
+        selectionManager = new SelectionManager();
 
-	/**
-	 * 
-	 * Create default view configuration
-	 * 
-	 * This is used by implementations of controllers who want
-	 * to store some more information, which is specific to their
-	 * domain.
-	 * 
-	 * @see AbstractMailFrameController for implementation example
-	 * 
-	 * 
-	 * @param id	ID of controller
-	 * @return		xml treenode containing the new configuration
-	 */
-	protected XmlElement createDefaultConfiguration(String id) {
-		/* *20030831, karlpeder* Moved code here from constructor
-		XmlElement child = (XmlElement) defaultView.clone();
-		child.addAttribute("id", id);
-		*/
-		
-		// initialize default view options
-		XmlElement defaultView = new XmlElement("view");
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("width", "640");
-		window.addAttribute("height", "480");
-		window.addAttribute("maximized", "true");
-		defaultView.addElement(window);
-		XmlElement toolbars = new XmlElement("toolbars");
-		toolbars.addAttribute("main","true");
-		defaultView.addElement(toolbars);
+        // initialize the view here
+        init();
 
-		defaultView.addAttribute("id", id);
+        // initialize all actions
+        initActions();
 
-		return defaultView;
-	}
+        // create view
+        view = createView();
+    }
 
+    /**
+     *
+     * @see ThreePaneMailFrameController for an example of its usage
+     *
+     */
+    protected void initActions() {
+    }
 
-	/**
-	 * - create all additional controllers
-	 * - register SelectionHandlers
-	 */
-	protected abstract void init();
+    /**
+     *
+     * Create default view configuration
+     *
+     * This is used by implementations of controllers who want
+     * to store some more information, which is specific to their
+     * domain.
+     *
+     * @see AbstractMailFrameController for implementation example
+     *
+     *
+     * @param id        ID of controller
+     * @return                xml treenode containing the new configuration
+     */
+    protected XmlElement createDefaultConfiguration(String id) {
+        /* *20030831, karlpeder* Moved code here from constructor
+        XmlElement child = (XmlElement) defaultView.clone();
+        child.addAttribute("id", id);
+        */
 
+        // initialize default view options
+        XmlElement defaultView = new XmlElement("view");
+        XmlElement window = new XmlElement("window");
+        window.addAttribute("width", "640");
+        window.addAttribute("height", "480");
+        window.addAttribute("maximized", "true");
+        defaultView.addElement(window);
 
-	/**
-	 * 
-	 * @return	statusbar
-	 */
-	public StatusBar getStatusBar() {
-		return statusBar;
-	}
+        XmlElement toolbars = new XmlElement("toolbars");
+        toolbars.addAttribute("main", "true");
+        defaultView.addElement(toolbars);
 
-	/**
-	 * Returns the mouseTooltipHandler.
-	 * 
-	 * @return MouseAdapter
-	 */
-	public MouseAdapter getMouseTooltipHandler() {
-		return mouseTooltipHandler;
-	}
+        defaultView.addAttribute("id", id);
 
-	/* *20030831, karlpeder* Not used, close method is used instead
-	public void saveAndClose() {
-		view.saveWindowPosition();
-	}
-	*/
+        return defaultView;
+    }
 
-	/**
-	 * Save window properties and close the window.
-	 * This includes telling the frame model that
-	 * this window/frame is closing, so it can be
-	 * "unregistered" correctly
-	 */
-	public void close() {
-        ColumbaLogger.log.info("Closing FrameController: " + 
-        		this.getClass().getName());
-		view.saveWindowPosition(); // ask view to store current pos and size
-		view.setVisible(false);
-		/*
-		 * Tell frame model that frame is closing.
-		 * If this frame hasn't been opened using FrameModel methods,
-		 * FrameModel.close does nothing.
-		 */		
-		FrameModel.close(this); 
-	}
+    /**
+     * - create all additional controllers
+     * - register SelectionHandlers
+     */
+    protected abstract void init();
 
-	/**
-	 * Create view 
-	 * 
-	 * @return	view object
-	 */
-	abstract protected AbstractFrameView createView();
+    /**
+     *
+     * @return        statusbar
+     */
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
 
-	/**
-	 * Open new view.
-	 *
-	 */
-	public void openView() {
-		view.loadWindowPosition();
-		
+    /**
+     * Returns the mouseTooltipHandler.
+     *
+     * @return MouseAdapter
+     */
+    public MouseAdapter getMouseTooltipHandler() {
+        return mouseTooltipHandler;
+    }
 
-		view.setVisible(true);
-		
-		// set the position afterwards
-		// if not the maximization fails
-		view.loadWindowPosition();
-	}
+    /* *20030831, karlpeder* Not used, close method is used instead
+    public void saveAndClose() {
+            view.saveWindowPosition();
+    }
+    */
 
-	/**
-	 * @return ViewItem
-	 */
-	public ViewItem getViewItem() {
-		return viewItem;
-	}
+    /**
+     * Save window properties and close the window.
+     * This includes telling the frame model that
+     * this window/frame is closing, so it can be
+     * "unregistered" correctly
+     */
+    public void close() {
+        ColumbaLogger.log.info("Closing FrameController: " +
+            this.getClass().getName());
+        view.saveWindowPosition(); // ask view to store current pos and size
+        view.setVisible(false);
 
-	/**
-	 * Sets the item.
-	 * @param item The item to set
-	 */
-	public void setViewItem(ViewItem item) {
-		this.viewItem = item;
-	}
-	
-	/**
-	 * Enable/Disable toolbar configuration
-	 * 
-	 * @param id		ID of controller
-	 * @param enable	true/false
-	 */
-	public void enableToolbar(String id, boolean enable)
-	{
-		getViewItem().set("toolbars", id, enable);
-	}
-	
-	/**
-	 * Returns true if the toolbar is enabled
-	 * 
-	 * @param id		ID of controller
-	 * @return			true, if toolbar is enabled, false otherwise
-	 */
-	public boolean isToolbarEnabled(String id)
-	{
-		return getViewItem().getBoolean("toolbars", id, true);
-	}
+        /*
+         * Tell frame model that frame is closing.
+         * If this frame hasn't been opened using FrameModel methods,
+         * FrameModel.close does nothing.
+         */
+        FrameModel.close(this);
+    }
 
-	/**
-	 * @return FrameView
-	 */
-	public AbstractFrameView getView() {
-		return view;
-	}
+    /**
+     * Create view
+     *
+     * @return        view object
+     */
+    abstract protected AbstractFrameView createView();
 
-	public Menu getMenu() {
-		return view.getMenu();
-	}
+    /**
+     * Open new view.
+     *
+     */
+    public void openView() {
+        view.loadWindowPosition();
 
-	/**
-	 * @return SelectionManager
-	 */
-	public SelectionManager getSelectionManager() {
-		return selectionManager;
-	}
+        view.setVisible(true);
 
-	/**
-	 * Sets the selectionManager.
-	 * @param selectionManager The selectionManager to set
-	 */
-	public void setSelectionManager(SelectionManager selectionManager) {
-		this.selectionManager = selectionManager;
-	}
+        // set the position afterwards
+        // if not the maximization fails
+        view.loadWindowPosition();
+    }
+
+    /**
+     * @return ViewItem
+     */
+    public ViewItem getViewItem() {
+        return viewItem;
+    }
+
+    /**
+     * Sets the item.
+     * @param item The item to set
+     */
+    public void setViewItem(ViewItem item) {
+        this.viewItem = item;
+    }
+
+    /**
+     * Enable/Disable toolbar configuration
+     *
+     * @param id                ID of controller
+     * @param enable        true/false
+     */
+    public void enableToolbar(String id, boolean enable) {
+        getViewItem().set("toolbars", id, enable);
+    }
+
+    /**
+     * Returns true if the toolbar is enabled
+     *
+     * @param id                ID of controller
+     * @return                        true, if toolbar is enabled, false otherwise
+     */
+    public boolean isToolbarEnabled(String id) {
+        return getViewItem().getBoolean("toolbars", id, true);
+    }
+
+    /**
+     * @return FrameView
+     */
+    public AbstractFrameView getView() {
+        return view;
+    }
+
+    public Menu getMenu() {
+        return view.getMenu();
+    }
+
+    /**
+     * @return SelectionManager
+     */
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
+    }
+
+    /**
+     * Sets the selectionManager.
+     * @param selectionManager The selectionManager to set
+     */
+    public void setSelectionManager(SelectionManager selectionManager) {
+        this.selectionManager = selectionManager;
+    }
 }

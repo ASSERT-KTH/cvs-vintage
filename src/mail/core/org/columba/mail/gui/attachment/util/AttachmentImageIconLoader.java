@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.util;
 
+import org.columba.core.gui.util.ImageLoader;
+
 import javax.swing.ImageIcon;
 
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author frd
@@ -28,27 +29,24 @@ import org.columba.core.gui.util.ImageLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class AttachmentImageIconLoader {
+    public static ImageIcon getImageIcon(String contentType,
+        String contentSubtype) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(contentType);
+        buf.append("_");
+        buf.append(contentSubtype);
+        buf.append(".png");
 
-	public static ImageIcon getImageIcon(
-		String contentType,
-		String contentSubtype) {
-		StringBuffer buf = new StringBuffer();
-		buf.append(contentType);
-		buf.append("_");
-		buf.append(contentSubtype);
-		buf.append(".png");
+        ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
 
-		ImageIcon icon = ImageLoader.getUnsafeImageIcon(buf.toString());
+        if (icon == null) {
+            icon = ImageLoader.getUnsafeImageIcon(contentType + ".png");
+        }
 
-		if (icon == null)
-			icon = ImageLoader.getUnsafeImageIcon(contentType + ".png");
+        if (icon == null) {
+            icon = ImageLoader.getImageIcon("text.png");
+        }
 
-		if (icon == null)
-			icon = ImageLoader.getImageIcon("text.png");
-
-		
-		
-		return icon;
-	}
-
+        return icon;
+    }
 }

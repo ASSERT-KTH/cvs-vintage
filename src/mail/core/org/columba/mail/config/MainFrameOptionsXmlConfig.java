@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.config;
-
-import java.io.File;
 
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.config.GuiItem;
@@ -26,107 +23,101 @@ import org.columba.core.config.WindowItem;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
+import java.io.File;
+
+
 public class MainFrameOptionsXmlConfig extends DefaultXmlConfig {
-	// private File file;
+    // private File file;
+    WindowItem windowItem;
+    GuiItem guiItem;
+    TableItem headerTableItem;
+    ViewItem viewItem;
+    boolean initialVersionWasApplied = false;
 
-	WindowItem windowItem;
-	GuiItem guiItem;
-	TableItem headerTableItem;
-	ViewItem viewItem;
+    public MainFrameOptionsXmlConfig(File file) {
+        super(file);
+    }
 
-	boolean initialVersionWasApplied = false;
+    public boolean load() {
+        boolean result = super.load();
 
-	public MainFrameOptionsXmlConfig(File file) {
-		super(file);
+        //		apply initial version information
+        XmlElement root = getRoot().getElement(0);
+        String version = root.getAttribute("version");
 
-	}
+        if (version == null) {
+            initialVersionWasApplied = true;
+            root.addAttribute("version", "1.0");
+        }
 
-	public boolean load() {
-		boolean result = super.load();
+        convert();
 
-		//		apply initial version information
-		XmlElement root = getRoot().getElement(0);
-		String version = root.getAttribute("version");
-		if (version == null) {
-			initialVersionWasApplied = true;
-			root.addAttribute("version", "1.0");
-		}
+        return result;
+    }
 
-		convert();
+    protected void convert() {
+        // add initial messageframe treenode
+        XmlElement root = getRoot();
+        String version = root.getAttribute("version");
 
-		return result;
-	}
+        if (initialVersionWasApplied) {
+            ColumbaLogger.log.info("converting configuration to new version...");
 
-	protected void convert() {
-		// add initial messageframe treenode
-		XmlElement root = getRoot();
-		String version = root.getAttribute("version");
+            XmlElement gui = root.getElement("/options/gui");
+            XmlElement messageframe = new XmlElement("messageframe");
+            gui.addElement(messageframe);
 
-		if (initialVersionWasApplied) {
-			ColumbaLogger.log.info(
-				"converting configuration to new version...");
+            XmlElement view = new XmlElement("view");
+            messageframe.addElement(view);
+            view.addAttribute("id", "messageframe");
 
-			XmlElement gui = root.getElement("/options/gui");
-			XmlElement messageframe = new XmlElement("messageframe");
-			gui.addElement(messageframe);
-			XmlElement view = new XmlElement("view");
-			messageframe.addElement(view);
-			view.addAttribute("id", "messageframe");
-			XmlElement window = new XmlElement("window");
-			window.addAttribute("width", "640");
-			window.addAttribute("height", "480");
-			window.addAttribute("maximized", "true");
-			view.addElement(window);
-			XmlElement toolbars = new XmlElement("toolbars");
-			toolbars.addAttribute("main", "true");
-			view.addElement(toolbars);
-			XmlElement splitpanes = new XmlElement("splitpanes");
-			splitpanes.addAttribute("main", "200");
-			splitpanes.addAttribute("header", "200");
-			splitpanes.addAttribute("attachment", "100");
-			view.addElement(splitpanes);
-		}
-	}
+            XmlElement window = new XmlElement("window");
+            window.addAttribute("width", "640");
+            window.addAttribute("height", "480");
+            window.addAttribute("maximized", "true");
+            view.addElement(window);
 
-	public TableItem getTableItem() {
-		if (headerTableItem == null) {
-			headerTableItem =
-				new TableItem(getRoot().getElement("/options/gui/table"));
-		}
+            XmlElement toolbars = new XmlElement("toolbars");
+            toolbars.addAttribute("main", "true");
+            view.addElement(toolbars);
 
-		return headerTableItem;
+            XmlElement splitpanes = new XmlElement("splitpanes");
+            splitpanes.addAttribute("main", "200");
+            splitpanes.addAttribute("header", "200");
+            splitpanes.addAttribute("attachment", "100");
+            view.addElement(splitpanes);
+        }
+    }
 
-	}
+    public TableItem getTableItem() {
+        if (headerTableItem == null) {
+            headerTableItem = new TableItem(getRoot().getElement("/options/gui/table"));
+        }
 
-	public ViewItem getViewItem() {
-		if (viewItem == null) {
-			viewItem =
-				new ViewItem(
-					getRoot().getElement("/options/gui/viewlist/view"));
-		}
+        return headerTableItem;
+    }
 
-		return viewItem;
-	}
+    public ViewItem getViewItem() {
+        if (viewItem == null) {
+            viewItem = new ViewItem(getRoot().getElement("/options/gui/viewlist/view"));
+        }
 
-	public GuiItem getGuiItem() {
-		if (guiItem == null) {
-			guiItem = new GuiItem(getRoot().getElement("/options/gui"));
-		}
+        return viewItem;
+    }
 
-		return guiItem;
-	}
+    public GuiItem getGuiItem() {
+        if (guiItem == null) {
+            guiItem = new GuiItem(getRoot().getElement("/options/gui"));
+        }
 
-	public WindowItem getWindowItem() {
-		if (windowItem == null) {
+        return guiItem;
+    }
 
-			windowItem =
-				new WindowItem(
-					getRoot().getElement("/options/gui/viewlist/view/window"));
+    public WindowItem getWindowItem() {
+        if (windowItem == null) {
+            windowItem = new WindowItem(getRoot().getElement("/options/gui/viewlist/view/window"));
+        }
 
-		}
-
-		return windowItem;
-
-	}
-
+        return windowItem;
+    }
 }

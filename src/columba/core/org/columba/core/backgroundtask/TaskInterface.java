@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.core.backgroundtask;
 
+
 /**
  * Every Task should implement this interface
  *
  * @author fdietz
  */
-public interface TaskInterface extends Runnable{
-	public abstract void run();
+public interface TaskInterface extends Runnable {
+    public abstract void run();
 }

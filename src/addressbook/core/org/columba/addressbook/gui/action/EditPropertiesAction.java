@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.ContactCard;
@@ -27,95 +24,96 @@ import org.columba.addressbook.gui.EditGroupDialog;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class EditPropertiesAction extends FrameAction {
+    public EditPropertiesAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties"));
 
-	public EditPropertiesAction(FrameMediator frameController) {
-		super(frameController, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_properties"));
-					
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_file_properties_tooltip").replaceAll("&", ""));
-					
-		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_properties_toolbar"));
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties_tooltip").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameController addressbookFrameController =
-			(AddressbookFrameController) frameMediator;
+        putValue(TOOLBAR_NAME,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_properties_toolbar"));
 
-		Object uid =
-			addressbookFrameController.getTable().getView().getSelectedUid();
-		if (uid == null)
-			return;
-		HeaderItem item =
-			addressbookFrameController.getTable().getView().getSelectedItem();
-		/*
-		AddressbookXmlConfig config =
-			AddressbookConfig.getAddressbookConfig();
-		*/
-		AddressbookFolder folder =
-			(AddressbookFolder) addressbookFrameController
-				.getTree()
-				.getView()
-				.getSelectedFolder();
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_edit-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_edit.png"));
+    }
 
-		if (item.isContact()) {
-			ContactCard card = (ContactCard) folder.get(uid);
-			ContactDialog dialog =
-				new ContactDialog(addressbookFrameController.getView());
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameMediator;
 
-			dialog.updateComponents(card, true);
-			dialog.setVisible(true);
+        Object uid = addressbookFrameController.getTable().getView()
+                                               .getSelectedUid();
 
-			if (dialog.getResult()) {
-				dialog.updateComponents(card, false);
-				folder.modify(card, uid);
+        if (uid == null) {
+            return;
+        }
 
-				addressbookFrameController.getTable().getView().setFolder(
-					folder);
-			}
-		} else {
-			GroupListCard card = (GroupListCard) folder.get(uid);
+        HeaderItem item = addressbookFrameController.getTable().getView()
+                                                    .getSelectedItem();
 
-			EditGroupDialog dialog =
-				new EditGroupDialog(
-					addressbookFrameController.getView(),
-					addressbookFrameController,
-					null);
+        /*
+        AddressbookXmlConfig config =
+                AddressbookConfig.getAddressbookConfig();
+        */
+        AddressbookFolder folder = (AddressbookFolder) addressbookFrameController.getTree()
+                                                                                 .getView()
+                                                                                 .getSelectedFolder();
 
-			dialog.setHeaderList(folder.getHeaderItemList());
-			Object[] uids = card.getUids();
-			HeaderItemList members = folder.getHeaderItemList(uids);
-			dialog.updateComponents(card, members, true);
+        if (item.isContact()) {
+            ContactCard card = (ContactCard) folder.get(uid);
+            ContactDialog dialog = new ContactDialog(addressbookFrameController.getView());
 
-			dialog.setVisible(true);
+            dialog.updateComponents(card, true);
+            dialog.setVisible(true);
 
-			if (dialog.getResult()) {
-				dialog.updateComponents(card, null, false);
-				folder.modify(card, uid);
-				addressbookFrameController.getTable().getView().setFolder(
-					folder);
-			}
-		}
-	}
+            if (dialog.getResult()) {
+                dialog.updateComponents(card, false);
+                folder.modify(card, uid);
+
+                addressbookFrameController.getTable().getView().setFolder(folder);
+            }
+        } else {
+            GroupListCard card = (GroupListCard) folder.get(uid);
+
+            EditGroupDialog dialog = new EditGroupDialog(addressbookFrameController.getView(),
+                    addressbookFrameController, null);
+
+            dialog.setHeaderList(folder.getHeaderItemList());
+
+            Object[] uids = card.getUids();
+            HeaderItemList members = folder.getHeaderItemList(uids);
+            dialog.updateComponents(card, members, true);
+
+            dialog.setVisible(true);
+
+            if (dialog.getResult()) {
+                dialog.updateComponents(card, null, false);
+                folder.modify(card, uid);
+                addressbookFrameController.getTable().getView().setFolder(folder);
+            }
+        }
+    }
 }

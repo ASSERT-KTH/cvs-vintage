@@ -16,8 +16,6 @@
 package org.columba.mail.plugin;
 
 
-
-
 /**
  * @author freddy
  *
@@ -27,20 +25,13 @@ package org.columba.mail.plugin;
  * Window>Preferences>Java>Code Generation.
  */
 public class FilterPluginHandler extends AbstractFilterPluginHandler {
-
-	
-
-	/**
-	 * Constructor for LocalFilterPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FilterPluginHandler() {
-		super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml", "filterlist");
-
-		
-	}
-	
-	
-
+    /**
+     * Constructor for LocalFilterPluginHandler.
+     * @param id
+     * @param config
+     */
+    public FilterPluginHandler() {
+        super("org.columba.mail.filter", "org/columba/mail/plugin/filter.xml",
+            "filterlist");
+    }
 }

@@ -17,6 +17,7 @@ package org.columba.mail.plugin;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 
+
 /**
  * @author freddy
  *
@@ -25,28 +26,25 @@ import org.columba.core.plugin.AbstractPluginHandler;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract class AbstractFilterPluginHandler
-	extends AbstractPluginHandler {
+public abstract class AbstractFilterPluginHandler extends AbstractPluginHandler {
+    public AbstractFilterPluginHandler(String name, String configFile,
+        String parent) {
+        super(name, configFile);
 
-	public AbstractFilterPluginHandler(
-		String name,
-		String configFile,
-		String parent) {
-		super(name, configFile);
+        parentNode = getConfig().getRoot().getElement(parent);
+    }
 
-		parentNode = getConfig().getRoot().getElement(parent);
-	}
+    public Object getGuiPlugin(String name, Object[] args)
+        throws Exception {
+        String className = getPluginClassName(name, "gui_class");
 
-	public Object getGuiPlugin(String name, Object[] args) throws Exception {
-		String className = getPluginClassName(name, "gui_class");
-		return getPlugin(name, className, args);
-	}
+        return getPlugin(name, className, args);
+    }
 
-	public Object getActionPlugin(String name, Object[] args)
-		throws Exception {
-		String className = getPluginClassName(name, "main_class");
+    public Object getActionPlugin(String name, Object[] args)
+        throws Exception {
+        String className = getPluginClassName(name, "main_class");
 
-		return getPlugin(name, className, args);
-	}
-
+        return getPlugin(name, className, args);
+    }
 }

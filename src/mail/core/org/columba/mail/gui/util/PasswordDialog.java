@@ -15,8 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.util;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -26,6 +30,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.text.MessageFormat;
 
 import javax.swing.BorderFactory;
@@ -39,206 +44,184 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Password dialog asks user the password.
- * 
+ *
  * @author fdietz
  */
 public class PasswordDialog implements ActionListener {
-	private char[] password;
+    private char[] password;
+    private JDialog dialog;
+    private boolean bool = false;
+    private JPasswordField passwordField;
+    private JCheckBox checkbox;
+    private String user;
+    private String host;
+    private boolean save;
+    private JButton okButton;
+    private JButton cancelButton;
+    private JButton helpButton;
 
-	private JDialog dialog;
-	private boolean bool = false;
-	private JPasswordField passwordField;
+    public PasswordDialog() {
+    }
 
-	private JCheckBox checkbox;
+    protected JPanel createButtonPanel() {
+        JPanel bottom = new JPanel();
+        bottom.setLayout(new BorderLayout());
 
-	private String user;
-	private String host;
+        //bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
+        bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
-	private boolean save;
+        //bottom.add( Box.createHorizontalStrut());
+        cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "cancel"));
 
-	private JButton okButton, cancelButton, helpButton;
+        //$NON-NLS-1$ //$NON-NLS-2$
+        cancelButton.addActionListener(this);
+        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-	public PasswordDialog() {
+        okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "ok"));
 
-	}
+        //$NON-NLS-1$ //$NON-NLS-2$
+        okButton.addActionListener(this);
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
+        okButton.setDefaultCapable(true);
+        dialog.getRootPane().setDefaultButton(okButton);
 
-	protected JPanel createButtonPanel() {
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new BorderLayout());
-		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+        helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
 
-		//bottom.add( Box.createHorizontalStrut());
+        //$NON-NLS-1$ //$NON-NLS-2$
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(helpButton);
 
-		cancelButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		cancelButton.addActionListener(this);
-		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+        //bottom.add( Box.createHorizontalGlue() );
+        bottom.add(buttonPanel, BorderLayout.EAST);
 
-		okButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton.addActionListener(this);
-		okButton.setActionCommand("OK"); //$NON-NLS-1$
-		okButton.setDefaultCapable(true);
-		dialog.getRootPane().setDefaultButton(okButton);
+        return bottom;
+    }
 
-		helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		//$NON-NLS-1$ //$NON-NLS-2$
+    /**
+     * Make dialog visible.
+     * <p>
+     * Note that the emailAddress parameter, needs to be really unique. I
+     * therefore suggest a combination between host and login name, instead.
+     * This way user can see his login name. -> changed method signature!
+     *
+     * @param login
+     *            login name
+     * @param host
+     *            host name
+     * @param password
+     *            password
+     * @param save
+     *            should the password be saved?
+     */
+    public void showDialog(String login, String host, String password,
+        boolean save) {
+        this.user = login;
+        this.host = host;
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(helpButton);
+        //JButton[] buttons = new JButton[2];
+        JLabel hostLabel = new JLabel(MessageFormat.format(
+                    MailResourceLoader.getString("dialog", "password",
+                        "enter_password"), new Object[] { user, host }));
 
-		//bottom.add( Box.createHorizontalGlue() );
+        JLabel passwordLabel = new JLabel("Password:");
 
-		bottom.add(buttonPanel, BorderLayout.EAST);
+        passwordField = new JPasswordField(password, 40);
 
-		return bottom;
-	}
+        checkbox = new JCheckBox(MailResourceLoader.getString("dialog",
+                    "password", "save_password"));
+        checkbox.setSelected(save);
 
-	/**
-	 * Make dialog visible.
-	 * <p>
-	 * Note that the emailAddress parameter, needs to be really unique. I
-	 * therefore suggest a combination between host and login name, instead.
-	 * This way user can see his login name. -> changed method signature!
-	 * 
-	 * @param login
-	 *            login name
-	 * @param host
-	 *            host name
-	 * @param password
-	 *            password
-	 * @param save
-	 *            should the password be saved?
-	 */
-	public void showDialog(
-		String login,
-		String host,
-		String password,
-		boolean save) {
+        dialog = new JDialog(new JFrame(), true);
+        dialog.setTitle(MailResourceLoader.getString("dialog", "password",
+                "dialog_title"));
 
-		this.user = login;
-		this.host = host;
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-		//JButton[] buttons = new JButton[2];
+        dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
 
-		JLabel hostLabel =
-			new JLabel(
-				MessageFormat.format(
-					MailResourceLoader.getString(
-						"dialog",
-						"password",
-						"enter_password"),
-					new Object[] { user, host }));
+        GridBagLayout mainLayout = new GridBagLayout();
+        centerPanel.setLayout(mainLayout);
 
-		JLabel passwordLabel = new JLabel("Password:");
+        GridBagConstraints mainConstraints = new GridBagConstraints();
 
-		passwordField = new JPasswordField(password, 40);
+        JLabel iconLabel = new JLabel(ImageLoader.getImageIcon(
+                    "pgp-signature-nokey.png"));
+        mainConstraints.anchor = GridBagConstraints.NORTHWEST;
+        mainConstraints.weightx = 1.0;
+        mainConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        mainConstraints.fill = GridBagConstraints.HORIZONTAL;
+        mainLayout.setConstraints(iconLabel, mainConstraints);
+        centerPanel.add(iconLabel);
 
-		checkbox =
-			new JCheckBox(
-				MailResourceLoader.getString(
-					"dialog",
-					"password",
-					"save_password"));
-		checkbox.setSelected(save);
+        mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        mainConstraints.anchor = GridBagConstraints.WEST;
+        mainConstraints.insets = new Insets(0, 5, 0, 0);
+        mainLayout.setConstraints(hostLabel, mainConstraints);
+        centerPanel.add(hostLabel);
 
-		dialog = new JDialog(new JFrame(), true);
-		dialog.setTitle(
-			MailResourceLoader.getString("dialog", "password", "dialog_title"));
+        mainConstraints.insets = new Insets(5, 5, 0, 0);
+        mainLayout.setConstraints(passwordField, mainConstraints);
+        centerPanel.add(passwordField);
 
-		JPanel centerPanel = new JPanel();
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        mainConstraints.insets = new Insets(5, 5, 0, 0);
+        mainLayout.setConstraints(checkbox, mainConstraints);
+        centerPanel.add(checkbox);
 
-		dialog.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
 
-		GridBagLayout mainLayout = new GridBagLayout();
-		centerPanel.setLayout(mainLayout);
-		GridBagConstraints mainConstraints = new GridBagConstraints();
+        JPanel buttonPanel = createButtonPanel();
+        bottomPanel.add(buttonPanel, BorderLayout.CENTER);
 
-		JLabel iconLabel =
-			new JLabel(ImageLoader.getImageIcon("pgp-signature-nokey.png"));
-		mainConstraints.anchor = GridBagConstraints.NORTHWEST;
-		mainConstraints.weightx = 1.0;
-		mainConstraints.gridwidth = GridBagConstraints.RELATIVE;
-		mainConstraints.fill = GridBagConstraints.HORIZONTAL;
-		mainLayout.setConstraints(iconLabel, mainConstraints);
-		centerPanel.add(iconLabel);
+        dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        dialog.getRootPane().setDefaultButton(okButton);
+        dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.show();
+        dialog.requestFocus();
+        passwordField.requestFocus();
+    }
 
-		mainConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		mainConstraints.anchor = GridBagConstraints.WEST;
-		mainConstraints.insets = new Insets(0, 5, 0, 0);
-		mainLayout.setConstraints(hostLabel, mainConstraints);
-		centerPanel.add(hostLabel);
+    public char[] getPassword() {
+        return password;
+    }
 
-		mainConstraints.insets = new Insets(5, 5, 0, 0);
-		mainLayout.setConstraints(passwordField, mainConstraints);
-		centerPanel.add(passwordField);
+    public boolean success() {
+        return bool;
+    }
 
-		mainConstraints.insets = new Insets(5, 5, 0, 0);
-		mainLayout.setConstraints(checkbox, mainConstraints);
-		centerPanel.add(checkbox);
+    public boolean getSave() {
+        return save;
+    }
 
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BorderLayout());
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		JPanel buttonPanel = createButtonPanel();
-		bottomPanel.add(buttonPanel, BorderLayout.CENTER);
+        if (action.equals("OK")) {
+            password = passwordField.getPassword();
 
-		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		dialog.getRootPane().setDefaultButton(okButton);
-		dialog.getRootPane().registerKeyboardAction(
-			this,
-			"CANCEL",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.show();
-		dialog.requestFocus();
-		passwordField.requestFocus();
-	}
+            //user = loginTextField.getText();
+            save = checkbox.isSelected();
 
-	public char[] getPassword() {
-		return password;
-	}
-
-	public boolean success() {
-		return bool;
-	}
-
-	public boolean getSave() {
-		return save;
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
-
-		if (action.equals("OK")) {
-			password = passwordField.getPassword();
-			//user = loginTextField.getText();
-			save = checkbox.isSelected();
-			//loginMethod = (String) loginMethodComboBox.getSelectedItem();
-			bool = true;
-			dialog.dispose();
-		} else if (action.equals("CANCEL")) {
-			bool = false;
-			dialog.dispose();
-		}
-	}
+            //loginMethod = (String) loginMethodComboBox.getSelectedItem();
+            bool = true;
+            dialog.dispose();
+        } else if (action.equals("CANCEL")) {
+            bool = false;
+            dialog.dispose();
+        }
+    }
 }

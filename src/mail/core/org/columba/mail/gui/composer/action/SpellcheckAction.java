@@ -13,19 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Start interactive spell-checking of composed message.
@@ -33,47 +34,45 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class SpellcheckAction extends FrameAction {
+    public SpellcheckAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_spellCheck"));
 
-	public SpellcheckAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "composer", "menu_message_spellCheck"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_message_spellCheck_tooltip").replaceAll("&", ""));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_spellcheck_24.png"));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
-		
-		// disable text in toolbar
-		setShowToolBarText(false);
-		
-                //shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-                        KeyEvent.VK_L, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_spellCheck_tooltip").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		ComposerController composerController =
-			(ComposerController) getFrameMediator();
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_spellcheck_24.png"));
 
-		//String checked =
-		//	composerController.getComposerSpellCheck().checkText(
-		//		composerController.getEditorController().getView().getText());
-		String checked =
-			composerController.getComposerSpellCheck().checkText(
-				composerController.getEditorController().getViewText());
+        // small icon for menu
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_spellcheck_16.png"));
 
+        // disable text in toolbar
+        setShowToolBarText(false);
 
-		//composerController.getEditorController().getView().setText(checked);
-		composerController.getEditorController().setViewText(checked);
-	}
+        //shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_L,
+                ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        ComposerController composerController = (ComposerController) getFrameMediator();
+
+        //String checked =
+        //	composerController.getComposerSpellCheck().checkText(
+        //		composerController.getEditorController().getView().getText());
+        String checked = composerController.getComposerSpellCheck().checkText(composerController.getEditorController()
+                                                                                                .getViewText());
+
+        //composerController.getEditorController().getView().setText(checked);
+        composerController.getEditorController().setViewText(checked);
+    }
 }

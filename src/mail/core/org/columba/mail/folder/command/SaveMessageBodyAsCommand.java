@@ -18,24 +18,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
@@ -45,6 +28,7 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -54,6 +38,7 @@ import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -65,676 +50,688 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+
+import java.text.DateFormat;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+
+
 /**
- * This class is used to save a message to file either as 
+ * This class is used to save a message to file either as
  * a html file or a text file.
- * 
+ *
  * @author Karl Peder Olesen (karlpeder), 20030611
  */
 public class SaveMessageBodyAsCommand extends FolderCommand {
+    /** Static field representing the system line separator */
+    private static final String nl = "\n"; //System.getProperty("line.separator");
 
-	/** Static field representing the system line separator */
-	private static final String nl = "\n"; //System.getProperty("line.separator");
+    /** The charset to use for decoding messages before save */
+    private String charset;
 
-	/** The charset to use for decoding messages before save */
-	private String charset;
-	
-	/**
-	 * Constructor for SaveMessageBodyAsCommand. Calls super
-	 * constructor and saves charset for later use
-	 * @param references
-	 * @param charset		Charset to use for decoding messages before save
-	 */
-	public SaveMessageBodyAsCommand(DefaultCommandReference[] references,
-								String charset) {
-		super(references);
-		this.charset = charset;
-	}
+    /**
+     * Constructor for SaveMessageBodyAsCommand. Calls super
+     * constructor and saves charset for later use
+     * @param references
+     * @param charset                Charset to use for decoding messages before save
+     */
+    public SaveMessageBodyAsCommand(DefaultCommandReference[] references,
+        String charset) {
+        super(references);
+        this.charset = charset;
+    }
 
-	/**
-	 * Implementation-specific: This method does not perform anything
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updatedGUI() throws Exception {
-	}
+    /**
+     * Implementation-specific: This method does not perform anything
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updatedGUI() throws Exception {
+    }
 
-	/**
-	 * This method executes the save action, i.e. it saves the
-	 * selected messages to disk as either plain text or as html.<br>
-	 * At the momemt no header or attachment information is saved
-	 * with the message!
-	 * 
-	 * @param	worker
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = 
-				(FolderCommandReference[]) getReferences();
-		Object[] uids = r[0].getUids(); // uid for messages to save
-		Folder srcFolder = (Folder) r[0].getFolder();
-//		register for status events
-	 ((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
-		JFileChooser fileChooser = new JFileChooser();
+    /**
+     * This method executes the save action, i.e. it saves the
+     * selected messages to disk as either plain text or as html.<br>
+     * At the momemt no header or attachment information is saved
+     * with the message!
+     *
+     * @param        worker
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        Object[] uids = r[0].getUids(); // uid for messages to save
+        Folder srcFolder = (Folder) r[0].getFolder();
 
-		// save each message
-		for (int j = 0; j < uids.length; j++) {
-			Object uid = uids[j];
-			ColumbaLogger.log.debug("Saving UID=" + uid);
+        //		register for status events
+        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-			// get headers, body part and attachment for message
-			ColumbaHeader header = srcFolder.getMessageHeader(uid);
-			StreamableMimePart bodyPart = getMessageBodyPart(uid, srcFolder, worker);
-			AttachmentModel attMod = new AttachmentModel();
-			attMod.setCollection(srcFolder.getMimePartTree(uid));
-			List attachments = attMod.getDisplayedMimeParts();
+        JFileChooser fileChooser = new JFileChooser();
 
-			// determine type of body part
-			boolean ishtml = false;
-			if (bodyPart.getHeader().getMimeType().getSubtype().equals("html"))
-				ishtml = true;
+        // save each message
+        for (int j = 0; j < uids.length; j++) {
+            Object uid = uids[j];
+            ColumbaLogger.log.debug("Saving UID=" + uid);
 
-			// setup filters and filename for file chooser dialog
-			ExtensionFileFilter txtFilter  =
-					new ExtensionFileFilter("txt", "Text (*.txt)");
-		    ExtensionFileFilter htmlFilter =
-		    		new ExtensionFileFilter("html", "Html (*.html)");
-		    fileChooser.resetChoosableFileFilters();
-			fileChooser.setAcceptAllFileFilterUsed(false);
-			fileChooser.addChoosableFileFilter(txtFilter);
-			fileChooser.addChoosableFileFilter(htmlFilter);
+            // get headers, body part and attachment for message
+            ColumbaHeader header = srcFolder.getMessageHeader(uid);
+            StreamableMimePart bodyPart = getMessageBodyPart(uid, srcFolder,
+                    worker);
+            AttachmentModel attMod = new AttachmentModel();
+            attMod.setCollection(srcFolder.getMimePartTree(uid));
 
-			// add check box for incl. of headers
-			JCheckBox inclHeaders =
-					new JCheckBox(MailResourceLoader.getString(
-										"dialog", "saveas",
-										"save_all_headers"),
-								  getInclAllHeadersOption());
-			fileChooser.setAccessory(inclHeaders);
-			
-			// setup dialog title, active filter and file name
-			String defaultName = getValidFilename(
-					(String) header.get("Subject"),	false);
-			if (ishtml) {
-				fileChooser.setDialogTitle(
-						MailResourceLoader.getString(
-							"dialog", "saveas",
-							"save_html_message"));
-				fileChooser.setFileFilter(htmlFilter);
-				if (defaultName.length() > 0) {
-					fileChooser.setSelectedFile(
-						new File(defaultName + "." + htmlFilter.getExtension()));
-				}
-			} else {
-				fileChooser.setDialogTitle(
-						MailResourceLoader.getString(
-							"dialog", "saveas",
-							"save_text_message"));
-				fileChooser.setFileFilter(txtFilter);
-				if (defaultName.length() > 0) {
-					fileChooser.setSelectedFile(
-						new File(defaultName + "." +  txtFilter.getExtension()));
-				}
-			}
-			
-			// show dialog
-			int res = fileChooser.showSaveDialog(null);
+            List attachments = attMod.getDisplayedMimeParts();
 
-			if (res == JFileChooser.APPROVE_OPTION)
-			{
-				File f = fileChooser.getSelectedFile();
-				ExtensionFileFilter filter = 
-						(ExtensionFileFilter) fileChooser.getFileFilter();
-				// Add default extension if no extension is given by the user
-				if (ExtensionFileFilter.getFileExtension(f) == null) {
-					f = new File(f.getAbsolutePath() + "." + 
-								 filter.getExtension());
-				}
+            // determine type of body part
+            boolean ishtml = false;
 
-				int confirm;
-				if (f.exists()) {
-					// file exists, user needs to confirm overwrite
-					confirm = JOptionPane.showConfirmDialog(
-								null,
-								MailResourceLoader.getString(
-									"dialog", "saveas",
-									"overwrite_existing_file"),
-								MailResourceLoader.getString(
-									"dialog", "saveas",
-									"file_exists"),
-								JOptionPane.YES_NO_OPTION,
-								JOptionPane.QUESTION_MESSAGE);
-				} else {
-					confirm = JOptionPane.YES_OPTION;
-				}
+            if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+                ishtml = true;
+            }
 
-				if (confirm == JOptionPane.YES_OPTION) {
-					// store whether all headers should be incl.
-					boolean incl = inclHeaders.isSelected();
-					storeInclAllHeadersOption(incl);
-					ColumbaLogger.log.debug("Incl. all headers: " + incl); 
+            // setup filters and filename for file chooser dialog
+            ExtensionFileFilter txtFilter = new ExtensionFileFilter("txt",
+                    "Text (*.txt)");
+            ExtensionFileFilter htmlFilter = new ExtensionFileFilter("html",
+                    "Html (*.html)");
+            fileChooser.resetChoosableFileFilters();
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.addChoosableFileFilter(txtFilter);
+            fileChooser.addChoosableFileFilter(htmlFilter);
 
-					// save message
-					if (filter.getExtension().equals(htmlFilter.getExtension())) {
-						saveMsgBodyAsHtml(header, bodyPart,
-								attachments, incl, f);
-					} else {
-						saveMsgBodyAsText(header, bodyPart,
-								attachments, incl, f);
-					}
-				}
+            // add check box for incl. of headers
+            JCheckBox inclHeaders = new JCheckBox(MailResourceLoader.getString(
+                        "dialog", "saveas", "save_all_headers"),
+                    getInclAllHeadersOption());
+            fileChooser.setAccessory(inclHeaders);
 
-			}
-		} // end of for loop over uids to save 
-	}
+            // setup dialog title, active filter and file name
+            String defaultName = getValidFilename((String) header.get("Subject"),
+                    false);
 
+            if (ishtml) {
+                fileChooser.setDialogTitle(MailResourceLoader.getString(
+                        "dialog", "saveas", "save_html_message"));
+                fileChooser.setFileFilter(htmlFilter);
 
-	/**
-	 * Private utility to extract a valid filename from a message
-	 * subject or another string.<br>
-	 * This means remove the chars: / \ : , \n \t
-	 * NB: If the input string is null, an empty string is returned 
-	 * @param	subj		Message subject
-	 * @param	replSpaces	If true, spaces are replaced by _
-	 * @return	A valid filename without the chars mentioned
-	 */
-	private String getValidFilename(String subj, boolean replSpaces) {
-		if (subj == null) {
-			return "";
-		}
-		StringBuffer buf = new StringBuffer();
-		for (int i=0; i<subj.length(); i++) {
-			char c = subj.charAt(i);
-			if ((c == '\\') ||
-					(c == '/') || (c == ':')  ||
-					(c == ',') || (c == '\n') ||
-					(c == '\t')) {
-				// dismiss char
-			} else if ((c == ' ') && (replSpaces)){
-				buf.append('_');
-			} else {
-				buf.append(c);
-			}
-		}
-		return buf.toString();
-	}
-	
-	/**
-	 * Gets the value of the option "Incl. all headers"
-	 * @return	true if all headers should be included, else false 
-	 */
-	private boolean getInclAllHeadersOption() {
-		boolean defaultValue = false; // default value
+                if (defaultName.length() > 0) {
+                    fileChooser.setSelectedFile(new File(defaultName + "." +
+                            htmlFilter.getExtension()));
+                }
+            } else {
+                fileChooser.setDialogTitle(MailResourceLoader.getString(
+                        "dialog", "saveas", "save_text_message"));
+                fileChooser.setFileFilter(txtFilter);
 
-		XmlElement options = Config.get("options").getElement("/options");
-		if (options == null) {
-			return defaultValue;
-		}
-		
-		XmlElement savemsg = options.getElement("/savemsg");
-		if (savemsg != null) {
-			if (savemsg
-					.getAttribute("incl_all_headers", String.valueOf(defaultValue))
-					.equals("true")) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return defaultValue;
-		}
-	}
+                if (defaultName.length() > 0) {
+                    fileChooser.setSelectedFile(new File(defaultName + "." +
+                            txtFilter.getExtension()));
+                }
+            }
 
-	/**
-	 * Saves the option "Incl. all headers"
-	 * @param	val		Value of the option (true to incl. all headers)
-	 */
-	private void storeInclAllHeadersOption(boolean val) {
-		XmlElement options = Config.get("options").getElement("/options");
-		if (options == null) {
-			return;
-		}
-		XmlElement savemsg = options.getElement("/savemsg");
-		if (savemsg == null) {
-			// create new
-			savemsg = new XmlElement("savemsg");
-			savemsg.addAttribute("incl_all_headers",
-								 String.valueOf(val));
-			options.addElement(savemsg);
-		} else {
-			savemsg.addAttribute("incl_all_headers",
-								 String.valueOf(val));
-		}
-	}
+            // show dialog
+            int res = fileChooser.showSaveDialog(null);
 
-	/**
-	 * Private utility to get body part of a message. User preferences
-	 * regarding html messages is used to select what to retrieve. If 
-	 * the body part retrieved is null, a fake one containing a simple
-	 * text is returned
-	 * @param 	uid			ID of message
-	 * @param	srcFolder	Folder containing the message
-	 * @param	worker
-	 * @return	body part of message
-	 */
-	private StreamableMimePart getMessageBodyPart(Object uid, 
-				Folder srcFolder, Worker worker) 
-					throws Exception {
-		// Does the user prefer html or plain text?
-		XmlElement html =
-			MailConfig.getMainFrameOptionsConfig().
-				getRoot().getElement("/options/html");
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File f = fileChooser.getSelectedFile();
+                ExtensionFileFilter filter = (ExtensionFileFilter) fileChooser.getFileFilter();
 
-		// Get body of message depending on user preferences
-		MimeTree mimePartTree = 
-				srcFolder.getMimePartTree(uid);
+                // Add default extension if no extension is given by the user
+                if (ExtensionFileFilter.getFileExtension(f) == null) {
+                    f = new File(f.getAbsolutePath() + "." +
+                            filter.getExtension());
+                }
 
-		MimePart bodyPart = null;
-		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-			bodyPart = mimePartTree.getFirstTextPart("html");
-		else
-			bodyPart = mimePartTree.getFirstTextPart("plain");
+                int confirm;
 
-		if (bodyPart == null) {
-			bodyPart = new LocalMimePart(new MimeHeader("text", "plain"));
-			((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
-		} else
-			bodyPart =
-				srcFolder.getMimePart(uid, bodyPart.getAddress());
-		
-		// return the body part found (or constructed)
-		return (StreamableMimePart) bodyPart;
-	}
-	
-	/**
-	 * Private utility to decode the message body with the proper charset
-	 * @param	bodyPart	The body of the message
-	 * @return	Decoded message body
-	 * @author 	Karl Peder Olesen (karlpeder), 20030601
-	 */
-	private String getDecodedMessageBody(StreamableMimePart bodyPart) throws IOException {
-		// First determine which charset to use
-		String charsetToUse;
-		if (charset.equals("auto")) {
-			// get charset from message
-			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
-		} else {
-			// use default charset
-			charsetToUse = charset;
-		}
+                if (f.exists()) {
+                    // file exists, user needs to confirm overwrite
+                    confirm = JOptionPane.showConfirmDialog(null,
+                            MailResourceLoader.getString("dialog", "saveas",
+                                "overwrite_existing_file"),
+                            MailResourceLoader.getString("dialog", "saveas",
+                                "file_exists"), JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                } else {
+                    confirm = JOptionPane.YES_OPTION;
+                }
 
+                if (confirm == JOptionPane.YES_OPTION) {
+                    // store whether all headers should be incl.
+                    boolean incl = inclHeaders.isSelected();
+                    storeInclAllHeadersOption(incl);
+                    ColumbaLogger.log.debug("Incl. all headers: " + incl);
 
-		MimeHeader header = bodyPart.getHeader();
-		// Decode message according to charset
-		InputStream bodyStream = bodyPart.getInputStream();
-		String encoding = header.getContentTransferEncoding();
-		if( encoding != null ) {
-			if( encoding.equals("quoted-printable") ) {
-				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-			} else if ( encoding.equals("base64")) {
-				bodyStream = new Base64DecoderInputStream( bodyStream );
-			}
-		}
-		
-		Charset charset;
-		try {
-			charset = Charset.forName(charsetToUse );
-		} catch (UnsupportedCharsetException ex) {
-			// decode using default charset
-			charset = Charset.forName(System.getProperty("file.encoding"));
-		}
+                    // save message
+                    if (filter.getExtension().equals(htmlFilter.getExtension())) {
+                        saveMsgBodyAsHtml(header, bodyPart, attachments, incl, f);
+                    } else {
+                        saveMsgBodyAsText(header, bodyPart, attachments, incl, f);
+                    }
+                }
+            }
+        }
+         // end of for loop over uids to save 
+    }
 
-		bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
+    /**
+     * Private utility to extract a valid filename from a message
+     * subject or another string.<br>
+     * This means remove the chars: / \ : , \n \t
+     * NB: If the input string is null, an empty string is returned
+     * @param        subj                Message subject
+     * @param        replSpaces        If true, spaces are replaced by _
+     * @return        A valid filename without the chars mentioned
+     */
+    private String getValidFilename(String subj, boolean replSpaces) {
+        if (subj == null) {
+            return "";
+        }
 
-		return StreamUtils.readInString(bodyStream).toString();
-	}
+        StringBuffer buf = new StringBuffer();
 
-	/**
-	 * Method for saving a message body as a html file.
-	 * No headers are saved with the message.
-	 * @param	header			Message headers
-	 * @param	bodyPart		Body of message
-	 * @param	attachments		List of attachments as MimePart objects
-	 * @param	inclAllHeaders	If true all (except Content-Type and 
-	 * 							Mime-Version) headers are output. If 
-	 * 							false, only a small subset is included
-	 * @param	file			File to output to
-	 */
-	private void saveMsgBodyAsHtml(ColumbaHeader header,
-							       StreamableMimePart bodyPart, 
-							       List attachments,
-							       boolean inclAllHeaders,
-							       File file) throws IOException {
+        for (int i = 0; i < subj.length(); i++) {
+            char c = subj.charAt(i);
 
-		// decode message body with respect to charset
-		String decodedBody = getDecodedMessageBody(bodyPart);
-		
-		/*
-		 * if it is not a html message body - we have to fake one
-		 * by encapsulating the message body in html tags
-		 */ 
-		String body;
-		if (!bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-			try {
-				// substitute special characters like:  <,>,&,\t,\n		
-				body = HtmlParser.substituteSpecialCharacters(decodedBody);
+            if ((c == '\\') || (c == '/') || (c == ':') || (c == ',') ||
+                    (c == '\n') || (c == '\t')) {
+                // dismiss char
+            } else if ((c == ' ') && (replSpaces)) {
+                buf.append('_');
+            } else {
+                buf.append(c);
+            }
+        }
 
-				// parse for urls / email adr. and substite with HTML-code
-				body = HtmlParser.substituteURL(body);
-				body = HtmlParser.substituteEmailAddress(body);
+        return buf.toString();
+    }
 
-				// mark quotings with special font
-				body = DocumentParser.markQuotings(body);
-				
-			} catch (Exception e) {
-				ColumbaLogger.log.error("Error parsing body", e);
-				body = "<em>Error parsing body!!!</em>";
-			}
+    /**
+     * Gets the value of the option "Incl. all headers"
+     * @return        true if all headers should be included, else false
+     */
+    private boolean getInclAllHeadersOption() {
+        boolean defaultValue = false; // default value
 
-			// encapsulate bodytext in html-code
-			String css = getDefaultStyleSheet();
-			body = "<html><head>" + nl +
-				css + nl +
-				"<title>E-mail saved by Columba</title>" + nl +  
-				"</head><body><p class=\"bodytext\">" + nl + 
-				body + nl +
-				"</p></body></html>";
+        XmlElement options = Config.get("options").getElement("/options");
 
-		} else {
-			// use body as is
-			body = HtmlParser.validateHTMLString(decodedBody); 
-		}
+        if (options == null) {
+            return defaultValue;
+        }
 
-		// headers
-		String[][] headers = getHeadersToSave(header, attachments, 
-											  inclAllHeaders);
-		String msg = insertHtmlHeaderTable(body, headers);
-		
-		// save message
-		try {
-			DiskIO.saveStringInFile(file, msg);
-			ColumbaLogger.log.info("Html msg saved as " + 
-					file.getAbsolutePath());
-		} catch (IOException ioe) {
-			ColumbaLogger.log.error("Error saving message to file", ioe);
-		}
-	}
+        XmlElement savemsg = options.getElement("/savemsg");
 
-	/**
-	 * Defines and returns a default stylesheet for use 
-	 * when text messages are saved as html.<br>
-	 * This stylesheet should be the same as the one defined
-	 * in BodyTextViewer for use when displaying text messages.
-	 */
-	private String getDefaultStyleSheet() {
-	
-		// read configuration from options.xml file
-		XmlElement textFont =
-			Config.get("options").getElement("/options/gui/textfont");
-		String name = textFont.getAttribute("name");
-		String size = textFont.getAttribute("size");
+        if (savemsg != null) {
+            if (savemsg.getAttribute("incl_all_headers",
+                        String.valueOf(defaultValue)).equals("true")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return defaultValue;
+        }
+    }
 
-		// create css-stylesheet string 
-		String css =
-			"<style type=\"text/css\"><!-- .bodytext {font-family:\""
-				+ name
-				+ "\"; font-size:\""
-				+ size
-				+ "pt; \"}"
-				+ ".quoting {color:#949494;}; --></style>";
-		return css;
-	}
-	
-	/**
-	 * Inserts a table with headers in a html message.
-	 * The table is inserted just after the body tag.
-	 * @param 	body	Original message body
-	 * @param 	headers	Array with headers (keys and values)
-	 * @return	message body with header table inserted
-	 */
-	private String insertHtmlHeaderTable(String body,
-									     String[][] headers) {
+    /**
+     * Saves the option "Incl. all headers"
+     * @param        val                Value of the option (true to incl. all headers)
+     */
+    private void storeInclAllHeadersOption(boolean val) {
+        XmlElement options = Config.get("options").getElement("/options");
 
-		// create header table
-		StringBuffer buf = new StringBuffer();
-		String csskey =
-			"border: 1px solid black; font-size: 8pt; font-weight: bold;";
-		String cssval =
-			"border: 1px solid black; font-size: 8pt;";
-		buf.append(
-			"<table style=\"background-color: #dddddd;\" cellspacing=\"0\">");
-		buf.append(nl);
-		for(int i=0; i<headers[0].length; i++) {
-			// process header value
-			String val = headers[1][i];
-			try {
-				val = HtmlParser.substituteSpecialCharactersInHeaderfields(val);
-				val = HtmlParser.substituteURL(val);
-				val = HtmlParser.substituteEmailAddress(val);
-			} catch (Exception e) {
-				ColumbaLogger.log.error("Error parsing header value", e);
-			}
-			buf.append("<tr><td style=\"" + csskey + "\">");
-			buf.append(headers[0][i]);
-			buf.append("</td>");
-			buf.append("<td style=\"" + cssval + "\">");
-			buf.append(val);
-			buf.append("</td></tr>");
-			buf.append(nl);
-		}
-		buf.append("</table>");
-		buf.append("<br>" + nl);
-		String headertbl = buf.toString();
-		
-		// insert into message right after <body...>
-		int pos = body.toLowerCase().indexOf("<body");
-		pos = body.indexOf(">", pos);
-		pos++;
-		String msg = body.substring(0,pos) + 
-					 headertbl + 
-					 body.substring(pos);
-		
-		return msg;
-	}
-	
-	
-	/**
-	 * Method for saving a message in a text file.
-	 * @param	header			Message headers
-	 * @param	bodyPart		Body of message
-	 * @param	attachments		List of attachments as MimePart objects
-	 * @param	inclAllHeaders	If true all (except Content-Type and 
-	 * 							Mime-Version) headers are output. If 
-	 * 							false, only a small subset is included
-	 * @param	file			File to output to
-	 */
-	private void saveMsgBodyAsText(ColumbaHeader header, 
-							       StreamableMimePart bodyPart,
-							   	   List attachments, 
-							   	   boolean inclAllHeaders, 
-							   	   File file) throws IOException {
-		//DocumentParser parser = new DocumentParser();
-		
-		// decode message body with respect to charset
-		String decodedBody = getDecodedMessageBody(bodyPart);
-		
-		String body;
-		if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
-			// strip tags
-			//body = parser.stripHTMLTags(decodedBody, true);
-			//body = parser.restoreSpecialCharacters(body);
-			body = HtmlParser.htmlToText(decodedBody);
-		} else {
-			// use body as is
-			body = decodedBody;
-		}
-		
-		// headers
-		String[][] headers = getHeadersToSave(header, attachments, 
-											  inclAllHeaders);
-		StringBuffer buf = new StringBuffer();
-		for(int i=0; i<headers[0].length; i++) {
-			buf.append(headers[0][i]);
-			buf.append(": ");
-			buf.append(headers[1][i]);
-			buf.append(nl);
-		}
-		buf.append(nl);
-		
-		// message composed of headers and body 		
-		String msg = buf.toString() + body;
+        if (options == null) {
+            return;
+        }
 
-		// save message
-			DiskIO.saveStringInFile(file, msg);
-			ColumbaLogger.log.info("Text msg saved as " + 
-					file.getAbsolutePath());
-	}
+        XmlElement savemsg = options.getElement("/savemsg");
 
-	/**
-	 * Private utility to get headers to save. Headers are returned
-	 * in a 2D array, so [0][i] is key[i] and [1][i] is value[i].
-	 * @param	header	All message headers
-	 * @param	attachments		Attachments, header lines with file
-	 * 							names are added
-	 * @param	inclAll	true if all headers except Content-Type and
-	 * 					Mime-Version should be included
-	 * @return	Array of headers to include when saving
-	 */
-	private String[][] getHeadersToSave(ColumbaHeader header,
-										List attachments, 
-									    boolean inclAll) {
-		List keyList   = new ArrayList();
-		List valueList = new ArrayList();
-		BasicHeader basicHeader = new BasicHeader( header.getHeader() );
-		
-		String from = (header.get("columba.from")).toString();
-		String to   = (basicHeader.getTo()[0]).toString();
-		
-		DateFormat df = DateFormat.getDateTimeInstance(
-									DateFormat.LONG, DateFormat.MEDIUM);
-		String date = df.format((Date) header.get("columba.date"));
+        if (savemsg == null) {
+            // create new
+            savemsg = new XmlElement("savemsg");
+            savemsg.addAttribute("incl_all_headers", String.valueOf(val));
+            options.addElement(savemsg);
+        } else {
+            savemsg.addAttribute("incl_all_headers", String.valueOf(val));
+        }
+    }
 
-		String subject = (String) header.get("columba.subject");
+    /**
+     * Private utility to get body part of a message. User preferences
+     * regarding html messages is used to select what to retrieve. If
+     * the body part retrieved is null, a fake one containing a simple
+     * text is returned
+     * @param         uid                        ID of message
+     * @param        srcFolder        Folder containing the message
+     * @param        worker
+     * @return        body part of message
+     */
+    private StreamableMimePart getMessageBodyPart(Object uid, Folder srcFolder,
+        Worker worker) throws Exception {
+        // Does the user prefer html or plain text?
+        XmlElement html = MailConfig.getMainFrameOptionsConfig().getRoot()
+                                    .getElement("/options/html");
 
-		// loop over all headers 
-		
-		Enumeration keys = header.getHeader().getKeys();
-		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
-			if (key.equals("From")) {
-			} else if (key.equals("To")) {
-			} else if (key.equals("Subject")) {				
-			} else if (key.equals("Date")) {
-				// ignore - columba.date is used instead
-			} else if (key.startsWith("Content-")) {
-				// ignore
-			} else if (key.equals("Mime-Version") ||
-					   key.equals("MIME-Version")) {
-				// ignore
-			} else if (key.startsWith("columba")) {
-				if (key.equals("columba.date")) {
-					
-				} else {
-					// ignore
-				}
-			} else {
-				if (inclAll) {
-					// all headers should be included
-					keyList.add(key);
-					valueList.add((String) header.get(key));
-				}
-			}
-		}
+        // Get body of message depending on user preferences
+        MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
-		// add from, to, date, subj so they are the last elements
-		keyList.add(MailResourceLoader.getString("header", "from"));
-		valueList.add(from);
-		keyList.add(MailResourceLoader.getString("header", "to"));
-		valueList.add(to);
-		keyList.add(MailResourceLoader.getString("header", "date"));
-		valueList.add(date);
-		keyList.add(MailResourceLoader.getString("header", "subject"));
-		valueList.add(subject);
+        MimePart bodyPart = null;
 
-		for (int i = 0; i < attachments.size(); i++) {
-			String name = ((StreamableMimePart) attachments.get(i))
-								.getHeader().getFileName();
-			if (name != null) {
-				keyList.add(MailResourceLoader.getString(
-								"header",
-								"attachment"));
-				valueList.add(name);
-			}
-		}
+        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+            bodyPart = mimePartTree.getFirstTextPart("html");
+        } else {
+            bodyPart = mimePartTree.getFirstTextPart("plain");
+        }
 
-		// create array and return
-		String[][] headerArray = new String[2][];
-		headerArray[0] = new String[keyList.size()];
-		headerArray[1] = new String[keyList.size()];
-		for(int i=0; i<keyList.size(); i++) {
-			headerArray[0][i] = (String) keyList.get(i);
-			headerArray[1][i] = (String) valueList.get(i);
-		}
-		return headerArray;
-	}
+        if (bodyPart == null) {
+            bodyPart = new LocalMimePart(new MimeHeader("text", "plain"));
+            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
+                    "<No Message-Text>"));
+        } else {
+            bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
+        }
+
+        // return the body part found (or constructed)
+        return (StreamableMimePart) bodyPart;
+    }
+
+    /**
+     * Private utility to decode the message body with the proper charset
+     * @param        bodyPart        The body of the message
+     * @return        Decoded message body
+     * @author         Karl Peder Olesen (karlpeder), 20030601
+     */
+    private String getDecodedMessageBody(StreamableMimePart bodyPart)
+        throws IOException {
+        // First determine which charset to use
+        String charsetToUse;
+
+        if (charset.equals("auto")) {
+            // get charset from message
+            charsetToUse = bodyPart.getHeader().getContentParameter("charset");
+        } else {
+            // use default charset
+            charsetToUse = charset;
+        }
+
+        MimeHeader header = bodyPart.getHeader();
+
+        // Decode message according to charset
+        InputStream bodyStream = bodyPart.getInputStream();
+        String encoding = header.getContentTransferEncoding();
+
+        if (encoding != null) {
+            if (encoding.equals("quoted-printable")) {
+                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+            } else if (encoding.equals("base64")) {
+                bodyStream = new Base64DecoderInputStream(bodyStream);
+            }
+        }
+
+        Charset charset;
+
+        try {
+            charset = Charset.forName(charsetToUse);
+        } catch (UnsupportedCharsetException ex) {
+            // decode using default charset
+            charset = Charset.forName(System.getProperty("file.encoding"));
+        }
+
+        bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+
+        return StreamUtils.readInString(bodyStream).toString();
+    }
+
+    /**
+     * Method for saving a message body as a html file.
+     * No headers are saved with the message.
+     * @param        header                        Message headers
+     * @param        bodyPart                Body of message
+     * @param        attachments                List of attachments as MimePart objects
+     * @param        inclAllHeaders        If true all (except Content-Type and
+     *                                                         Mime-Version) headers are output. If
+     *                                                         false, only a small subset is included
+     * @param        file                        File to output to
+     */
+    private void saveMsgBodyAsHtml(ColumbaHeader header,
+        StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
+        File file) throws IOException {
+        // decode message body with respect to charset
+        String decodedBody = getDecodedMessageBody(bodyPart);
+
+        /*
+         * if it is not a html message body - we have to fake one
+         * by encapsulating the message body in html tags
+         */
+        String body;
+
+        if (!bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+            try {
+                // substitute special characters like:  <,>,&,\t,\n		
+                body = HtmlParser.substituteSpecialCharacters(decodedBody);
+
+                // parse for urls / email adr. and substite with HTML-code
+                body = HtmlParser.substituteURL(body);
+                body = HtmlParser.substituteEmailAddress(body);
+
+                // mark quotings with special font
+                body = DocumentParser.markQuotings(body);
+            } catch (Exception e) {
+                ColumbaLogger.log.error("Error parsing body", e);
+                body = "<em>Error parsing body!!!</em>";
+            }
+
+            // encapsulate bodytext in html-code
+            String css = getDefaultStyleSheet();
+            body = "<html><head>" + nl + css + nl +
+                "<title>E-mail saved by Columba</title>" + nl +
+                "</head><body><p class=\"bodytext\">" + nl + body + nl +
+                "</p></body></html>";
+        } else {
+            // use body as is
+            body = HtmlParser.validateHTMLString(decodedBody);
+        }
+
+        // headers
+        String[][] headers = getHeadersToSave(header, attachments,
+                inclAllHeaders);
+        String msg = insertHtmlHeaderTable(body, headers);
+
+        // save message
+        try {
+            DiskIO.saveStringInFile(file, msg);
+            ColumbaLogger.log.info("Html msg saved as " +
+                file.getAbsolutePath());
+        } catch (IOException ioe) {
+            ColumbaLogger.log.error("Error saving message to file", ioe);
+        }
+    }
+
+    /**
+     * Defines and returns a default stylesheet for use
+     * when text messages are saved as html.<br>
+     * This stylesheet should be the same as the one defined
+     * in BodyTextViewer for use when displaying text messages.
+     */
+    private String getDefaultStyleSheet() {
+        // read configuration from options.xml file
+        XmlElement textFont = Config.get("options").getElement("/options/gui/textfont");
+        String name = textFont.getAttribute("name");
+        String size = textFont.getAttribute("size");
+
+        // create css-stylesheet string 
+        String css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" +
+            name + "\"; font-size:\"" + size + "pt; \"}" +
+            ".quoting {color:#949494;}; --></style>";
+
+        return css;
+    }
+
+    /**
+     * Inserts a table with headers in a html message.
+     * The table is inserted just after the body tag.
+     * @param         body        Original message body
+     * @param         headers        Array with headers (keys and values)
+     * @return        message body with header table inserted
+     */
+    private String insertHtmlHeaderTable(String body, String[][] headers) {
+        // create header table
+        StringBuffer buf = new StringBuffer();
+        String csskey = "border: 1px solid black; font-size: 8pt; font-weight: bold;";
+        String cssval = "border: 1px solid black; font-size: 8pt;";
+        buf.append(
+            "<table style=\"background-color: #dddddd;\" cellspacing=\"0\">");
+        buf.append(nl);
+
+        for (int i = 0; i < headers[0].length; i++) {
+            // process header value
+            String val = headers[1][i];
+
+            try {
+                val = HtmlParser.substituteSpecialCharactersInHeaderfields(val);
+                val = HtmlParser.substituteURL(val);
+                val = HtmlParser.substituteEmailAddress(val);
+            } catch (Exception e) {
+                ColumbaLogger.log.error("Error parsing header value", e);
+            }
+
+            buf.append("<tr><td style=\"" + csskey + "\">");
+            buf.append(headers[0][i]);
+            buf.append("</td>");
+            buf.append("<td style=\"" + cssval + "\">");
+            buf.append(val);
+            buf.append("</td></tr>");
+            buf.append(nl);
+        }
+
+        buf.append("</table>");
+        buf.append("<br>" + nl);
+
+        String headertbl = buf.toString();
+
+        // insert into message right after <body...>
+        int pos = body.toLowerCase().indexOf("<body");
+        pos = body.indexOf(">", pos);
+        pos++;
+
+        String msg = body.substring(0, pos) + headertbl + body.substring(pos);
+
+        return msg;
+    }
+
+    /**
+     * Method for saving a message in a text file.
+     * @param        header                        Message headers
+     * @param        bodyPart                Body of message
+     * @param        attachments                List of attachments as MimePart objects
+     * @param        inclAllHeaders        If true all (except Content-Type and
+     *                                                         Mime-Version) headers are output. If
+     *                                                         false, only a small subset is included
+     * @param        file                        File to output to
+     */
+    private void saveMsgBodyAsText(ColumbaHeader header,
+        StreamableMimePart bodyPart, List attachments, boolean inclAllHeaders,
+        File file) throws IOException {
+        //DocumentParser parser = new DocumentParser();
+        // decode message body with respect to charset
+        String decodedBody = getDecodedMessageBody(bodyPart);
+
+        String body;
+
+        if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
+            // strip tags
+            //body = parser.stripHTMLTags(decodedBody, true);
+            //body = parser.restoreSpecialCharacters(body);
+            body = HtmlParser.htmlToText(decodedBody);
+        } else {
+            // use body as is
+            body = decodedBody;
+        }
+
+        // headers
+        String[][] headers = getHeadersToSave(header, attachments,
+                inclAllHeaders);
+        StringBuffer buf = new StringBuffer();
+
+        for (int i = 0; i < headers[0].length; i++) {
+            buf.append(headers[0][i]);
+            buf.append(": ");
+            buf.append(headers[1][i]);
+            buf.append(nl);
+        }
+
+        buf.append(nl);
+
+        // message composed of headers and body 		
+        String msg = buf.toString() + body;
+
+        // save message
+        DiskIO.saveStringInFile(file, msg);
+        ColumbaLogger.log.info("Text msg saved as " + file.getAbsolutePath());
+    }
+
+    /**
+     * Private utility to get headers to save. Headers are returned
+     * in a 2D array, so [0][i] is key[i] and [1][i] is value[i].
+     * @param        header        All message headers
+     * @param        attachments                Attachments, header lines with file
+     *                                                         names are added
+     * @param        inclAll        true if all headers except Content-Type and
+     *                                         Mime-Version should be included
+     * @return        Array of headers to include when saving
+     */
+    private String[][] getHeadersToSave(ColumbaHeader header, List attachments,
+        boolean inclAll) {
+        List keyList = new ArrayList();
+        List valueList = new ArrayList();
+        BasicHeader basicHeader = new BasicHeader(header.getHeader());
+
+        String from = (header.get("columba.from")).toString();
+        String to = (basicHeader.getTo()[0]).toString();
+
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                DateFormat.MEDIUM);
+        String date = df.format((Date) header.get("columba.date"));
+
+        String subject = (String) header.get("columba.subject");
+
+        // loop over all headers 
+        Enumeration keys = header.getHeader().getKeys();
+
+        while (keys.hasMoreElements()) {
+            String key = (String) keys.nextElement();
+
+            if (key.equals("From")) {
+            } else if (key.equals("To")) {
+            } else if (key.equals("Subject")) {
+            } else if (key.equals("Date")) {
+                // ignore - columba.date is used instead
+            } else if (key.startsWith("Content-")) {
+                // ignore
+            } else if (key.equals("Mime-Version") ||
+                    key.equals("MIME-Version")) {
+                // ignore
+            } else if (key.startsWith("columba")) {
+                if (key.equals("columba.date")) {
+                } else {
+                    // ignore
+                }
+            } else {
+                if (inclAll) {
+                    // all headers should be included
+                    keyList.add(key);
+                    valueList.add((String) header.get(key));
+                }
+            }
+        }
+
+        // add from, to, date, subj so they are the last elements
+        keyList.add(MailResourceLoader.getString("header", "from"));
+        valueList.add(from);
+        keyList.add(MailResourceLoader.getString("header", "to"));
+        valueList.add(to);
+        keyList.add(MailResourceLoader.getString("header", "date"));
+        valueList.add(date);
+        keyList.add(MailResourceLoader.getString("header", "subject"));
+        valueList.add(subject);
+
+        for (int i = 0; i < attachments.size(); i++) {
+            String name = ((StreamableMimePart) attachments.get(i)).getHeader()
+                           .getFileName();
+
+            if (name != null) {
+                keyList.add(MailResourceLoader.getString("header", "attachment"));
+                valueList.add(name);
+            }
+        }
+
+        // create array and return
+        String[][] headerArray = new String[2][];
+        headerArray[0] = new String[keyList.size()];
+        headerArray[1] = new String[keyList.size()];
+
+        for (int i = 0; i < keyList.size(); i++) {
+            headerArray[0][i] = (String) keyList.get(i);
+            headerArray[1][i] = (String) valueList.get(i);
+        }
+
+        return headerArray;
+    }
 }
 
 
-
-/** 
+/**
  * Represents a file filter selecting only a given type of files.<br>
  * Extension is used to recognize files.<br>
  * Default file type is txt files.
  */
 class ExtensionFileFilter extends FileFilter {
+    /** extension to accept */
+    private String extension = "txt";
 
-	/** extension to accept */
-	private String extension = "txt";
-	/** description of the file type */
-	private String description = "Text files (*.txt)";
-	
-	/** Constructor setting the extension to accept and a type description*/
-	public ExtensionFileFilter(String extension, String description) {
-		super();
-		this.extension = extension; 
-		this.description = description;
-	}
+    /** description of the file type */
+    private String description = "Text files (*.txt)";
 
-	/** Returns true if a given file is of the correct type */
-	public boolean accept(File f) {
-		if (f.isDirectory()) {
-			return true;
-		}
-		// test on extension
-		String ext = getFileExtension(f);
-		if ((ext != null) && (this.extension.toLowerCase().equals(ext))) {
-			return true;
-		} else { 
-			return false;
-		}
-	}
+    /** Constructor setting the extension to accept and a type description*/
+    public ExtensionFileFilter(String extension, String description) {
+        super();
+        this.extension = extension;
+        this.description = description;
+    }
 
-	/** 
-	 * Static method for extracting the extension of a filename
-	 * @return	f	File to get extension for
-	 * @return	extension or null if no extension exist 
-	 */
-	public static String getFileExtension(File f) {
-		String ext = null;
-		String s = f.getName();
-		int i = s.lastIndexOf('.');
-		if ((i > 0) && (i < (s.length() - 1))) {
-			ext = s.substring(i+1).toLowerCase();
-		}
-		return ext;
-	}
+    /** Returns true if a given file is of the correct type */
+    public boolean accept(File f) {
+        if (f.isDirectory()) {
+            return true;
+        }
 
-	/** Returns the description of this filter / file type */
-	public String getDescription() {
-		return this.description;
-	}
-	
-	/** Returns the extension used by this filter */
-	public String getExtension() {
-		return this.extension;
-	}
+        // test on extension
+        String ext = getFileExtension(f);
+
+        if ((ext != null) && (this.extension.toLowerCase().equals(ext))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Static method for extracting the extension of a filename
+     * @return        f        File to get extension for
+     * @return        extension or null if no extension exist
+     */
+    public static String getFileExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if ((i > 0) && (i < (s.length() - 1))) {
+            ext = s.substring(i + 1).toLowerCase();
+        }
+
+        return ext;
+    }
+
+    /** Returns the description of this filter / file type */
+    public String getDescription() {
+        return this.description;
+    }
+
+    /** Returns the extension used by this filter */
+    public String getExtension() {
+        return this.extension;
+    }
 }

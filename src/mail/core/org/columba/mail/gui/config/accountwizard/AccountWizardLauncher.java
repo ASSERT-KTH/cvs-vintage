@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
-
-import javax.help.CSH;
 
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.DefaultWizardModel;
@@ -27,37 +24,40 @@ import net.javaprog.ui.wizard.WizardModel;
 
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.util.MailResourceLoader;
 
+import javax.help.CSH;
+
+
 public class AccountWizardLauncher {
-    public AccountWizardLauncher() {}
-    
+    public AccountWizardLauncher() {
+    }
+
     public void launchWizard() {
         DataModel data = new DataModel();
         Step[] steps;
+
         if (MailConfig.getAccountList().count() == 0) {
-            steps = new Step[]{
-                new WelcomeStep(),
-                new IdentityStep(data),
-                new IncomingServerStep(data),
-                new OutgoingServerStep(data, false),
-                new FinishStep()
-            };
+            steps = new Step[] {
+                    new WelcomeStep(), new IdentityStep(data),
+                    new IncomingServerStep(data),
+                    new OutgoingServerStep(data, false), new FinishStep()
+                };
         } else {
-            steps = new Step[]{
-                new IdentityStep(data),
-                new IncomingServerStep(data),
-                new OutgoingServerStep(data, true)
-            };
+            steps = new Step[] {
+                    new IdentityStep(data), new IncomingServerStep(data),
+                    new OutgoingServerStep(data, true)
+                };
         }
+
         WizardModel model = new DefaultWizardModel(steps);
         model.addWizardModelListener(new AccountCreator(data));
-        Wizard wizard = new Wizard(model, MailResourceLoader.getString(
-                                "dialog",
-                                "accountwizard",
-                                "title"),
-                                ImageLoader.getSmallImageIcon("stock_preferences.png"));
+
+        Wizard wizard = new Wizard(model,
+                MailResourceLoader.getString("dialog", "accountwizard", "title"),
+                ImageLoader.getSmallImageIcon("stock_preferences.png"));
         CSH.setHelpIDString(wizard, "getting_started_1");
         JavaHelpSupport.enableHelp(wizard, HelpManager.getHelpBroker());
         wizard.pack();

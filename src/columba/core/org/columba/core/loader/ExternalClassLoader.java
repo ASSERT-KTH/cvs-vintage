@@ -16,138 +16,135 @@
 package org.columba.core.loader;
 
 import java.lang.reflect.Constructor;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 
+
 /**
- * Classloader responsible for instanciating plugins which 
+ * Classloader responsible for instanciating plugins which
  * can also be outside.
  * <p>
  * Note, that this classloader tries to find the correct
  * constructor based on the arguments.
- * 
+ *
  * @author fdietz
  */
 public class ExternalClassLoader extends URLClassLoader {
+    /**
+     * Constructor for ExternalClassLoader.
+     * @param urls
+     * @param parent
+     */
+    public ExternalClassLoader(URL[] urls, ClassLoader parent) {
+        super(urls, parent);
+    }
 
-	/**
-	 * Constructor for ExternalClassLoader.
-	 * @param urls
-	 * @param parent
-	 */
-	public ExternalClassLoader(URL[] urls, ClassLoader parent) {
-		super(urls, parent);
-	}
+    /**
+     * Constructor for ExternalClassLoader.
+     * @param urls
+     */
+    public ExternalClassLoader(URL[] urls) {
+        super(urls);
+    }
 
-	/**
-	 * Constructor for ExternalClassLoader.
-	 * @param urls
-	 */
-	public ExternalClassLoader(URL[] urls) {
-		super(urls);
-	}
+    /**
+     * Constructor for ExternalClassLoader.
+     * @param urls
+     * @param parent
+     * @param factory
+     */
+    public ExternalClassLoader(URL[] urls, ClassLoader parent,
+        URLStreamHandlerFactory factory) {
+        super(urls, parent, factory);
+    }
 
-	/**
-	 * Constructor for ExternalClassLoader.
-	 * @param urls
-	 * @param parent
-	 * @param factory
-	 */
-	public ExternalClassLoader(
-		URL[] urls,
-		ClassLoader parent,
-		URLStreamHandlerFactory factory) {
-		super(urls, parent, factory);
-	}
+    public void addURL(URL url) {
+        super.addURL(url);
+    }
 
-	public void addURL(URL url) {
-		super.addURL(url);
-	}
+    public Class findClass(String className) throws ClassNotFoundException {
+        Class temp = super.findClass(className);
 
-	public Class findClass(String className) throws ClassNotFoundException {
-		Class temp = super.findClass(className);
-		return temp;
-	}
+        return temp;
+    }
 
-	public Object instanciate(String className) throws Exception {
-		Class actClass = findClass(className);
+    public Object instanciate(String className) throws Exception {
+        Class actClass = findClass(className);
 
-		return actClass.newInstance();
-	}
+        return actClass.newInstance();
+    }
 
-	public Object instanciate(String className, Object[] args)
-		throws Exception {
-		
-		/*
-		//ColumbaLogger.log.debug("class="+className);
+    public Object instanciate(String className, Object[] args)
+        throws Exception {
+        /*
+        //ColumbaLogger.log.debug("class="+className);
 
-		Class actClass = findClass(className);
+        Class actClass = findClass(className);
 
-		Constructor[] constructors = actClass.getConstructors();
-		Constructor constructor = constructors[0];
+        Constructor[] constructors = actClass.getConstructors();
+        Constructor constructor = constructors[0];
 
-		return constructor.newInstance(args);
-		*/
-		
-		Class actClass = findClass(className);
+        return constructor.newInstance(args);
+        */
+        Class actClass = findClass(className);
 
-		Constructor constructor = null;
+        Constructor constructor = null;
 
-		// FIXME
-		//
-		// we can't just load the first constructor 
-		//  -> go find the correct constructor based
-		//  -> based on the arguments
-		//
-		//    old solution and wrong:
-		//Constructor constructor = actClass.getConstructors()[0];//argClazz);
-		//
-		if ( ( args == null ) || (args.length == 0) ) {
-			constructor = actClass.getConstructors()[0];
-			
-			return constructor.newInstance(args);
-		}
+        // FIXME
+        //
+        // we can't just load the first constructor 
+        //  -> go find the correct constructor based
+        //  -> based on the arguments
+        //
+        //    old solution and wrong:
+        //Constructor constructor = actClass.getConstructors()[0];//argClazz);
+        //
+        if ((args == null) || (args.length == 0)) {
+            constructor = actClass.getConstructors()[0];
 
-		Constructor[] list = actClass.getConstructors();
+            return constructor.newInstance(args);
+        }
 
-		Class[] classes = new Class[args.length];
+        Constructor[] list = actClass.getConstructors();
 
-		for (int i = 0; i < list.length; i++) {
-			Constructor c = list[i];
+        Class[] classes = new Class[args.length];
 
-			Class[] parameterTypes = c.getParameterTypes();
+        for (int i = 0; i < list.length; i++) {
+            Constructor c = list[i];
 
-			// this constructor has the correct number 
-			// of arguments
-			if (parameterTypes.length == args.length) {
-				boolean success = true;
-				for (int j = 0; j < parameterTypes.length; j++) {
-					Class parameter = parameterTypes[j];
+            Class[] parameterTypes = c.getParameterTypes();
 
-					if (args[j] == null)
-						success = true;
+            // this constructor has the correct number 
+            // of arguments
+            if (parameterTypes.length == args.length) {
+                boolean success = true;
 
-					else if (!parameter.isAssignableFrom(args[j].getClass()))
-						success = false;
-				}
+                for (int j = 0; j < parameterTypes.length; j++) {
+                    Class parameter = parameterTypes[j];
 
-				// ok, we found a matching constructor
-				// -> create correct list of arguments
-				if (success) {
-					constructor = actClass.getConstructor(parameterTypes);
-				}
+                    if (args[j] == null) {
+                        success = true;
+                    }
+                    else if (!parameter.isAssignableFrom(args[j].getClass())) {
+                        success = false;
+                    }
+                }
 
-			}
-		}
+                // ok, we found a matching constructor
+                // -> create correct list of arguments
+                if (success) {
+                    constructor = actClass.getConstructor(parameterTypes);
+                }
+            }
+        }
 
-		
+        // couldn't find correct constructor
+        if (constructor == null) {
+            return null;
+        }
 
-		// couldn't find correct constructor
-		if (constructor == null)
-			return null;
-
-		return constructor.newInstance(args);
-	}
-
+        return constructor.newInstance(args);
+    }
 }

@@ -17,32 +17,30 @@ package org.columba.core.gui.util;
 
 import javax.swing.JLabel;
 
+
 /**
  * Adds additionally a mnemonic to JLabel.
  * <p>
- * Mnemonic should be specified in the label text 
+ * Mnemonic should be specified in the label text
  * by using the "&" character.
  *
  * @author fdietz
  */
 public class LabelWithMnemonic extends JLabel {
+    /**
+     * default constructor
+     */
+    public LabelWithMnemonic() {
+        super();
+    }
 
-	/**
-	 * default constructor
-	 */
-	public LabelWithMnemonic() {
-		super();
+    /**
+     * @param str        text including a mnemonic
+     */
+    public LabelWithMnemonic(String textWithMnemonic) {
+        super();
 
-	}
-
-	/**
-	 * @param str	text including a mnemonic
-	 */
-	public LabelWithMnemonic(String textWithMnemonic) {
-		super();
-
-		// set display text - possible with a mnemonic defined using &
-		MnemonicSetter.setTextWithMnemonicOnLabel(this, textWithMnemonic);
-	}
-
+        // set display text - possible with a mnemonic defined using &
+        MnemonicSetter.setTextWithMnemonicOnLabel(this, textWithMnemonic);
+    }
 }

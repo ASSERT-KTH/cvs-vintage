@@ -13,8 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.folder.GroupListCard;
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+import org.columba.addressbook.gui.util.AddressbookDNDListView;
+import org.columba.addressbook.gui.util.AddressbookListModel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.main.MainInterface;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -22,6 +35,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -39,422 +53,390 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.folder.GroupListCard;
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
-import org.columba.addressbook.gui.util.AddressbookDNDListView;
-import org.columba.addressbook.gui.util.AddressbookListModel;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
+public class SelectAddressDialog extends JDialog implements ActionListener {
+    private AddressbookDNDListView toList;
+    private AddressbookDNDListView ccList;
+    private AddressbookDNDListView bccList;
+    private AddressbookDNDListView addressbook;
+    private JButton toButton;
+    private JButton ccButton;
+    private JButton bccButton;
+    private JButton toRemoveButton;
+    private JButton ccRemoveButton;
+    private JButton bccRemoveButton;
+    private JButton chooseButton;
+    private JLabel chooseLabel;
+    private AddressbookListModel[] dialogList;
+    private HeaderItemList[] headerItemList;
 
-public class SelectAddressDialog extends JDialog implements ActionListener
-{
-	private AddressbookDNDListView toList;
-	private AddressbookDNDListView ccList;
-	private AddressbookDNDListView bccList;
-	private AddressbookDNDListView addressbook;
+    public SelectAddressDialog(JFrame frame, HeaderItemList[] list) {
+        super(frame, true);
 
-	private JButton toButton;
-	private JButton ccButton;
-	private JButton bccButton;
-	private JButton toRemoveButton;
-	private JButton ccRemoveButton;
-	private JButton bccRemoveButton;
+        this.headerItemList = list;
 
-	private JButton chooseButton;
-	private JLabel chooseLabel;
+        dialogList = new AddressbookListModel[3];
 
-	private AddressbookListModel[] dialogList;
+        init();
+    }
 
-	private HeaderItemList[] headerItemList;
-	
-	public SelectAddressDialog(
-		JFrame frame,
-		HeaderItemList[] list)
-	{
-		super(frame, true);
+    public HeaderItemList[] getHeaderItemLists() {
+        return headerItemList;
+    }
 
-		this.headerItemList = list;
-		
-		dialogList = new AddressbookListModel[3];
+    protected void init() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		init();
-	}
+        //panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+        JPanel panel = new JPanel(new BorderLayout());
 
-	public HeaderItemList[] getHeaderItemLists()
-	{
-		return headerItemList;
-	}
-	
-	protected void init()
-	{
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		//panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+        JPanel leftPanel = new JPanel();
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
-		JPanel panel = new JPanel(new BorderLayout());
+        leftPanel.add(Box.createVerticalGlue());
 
-		JPanel leftPanel = new JPanel();
-		leftPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
-		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        JPanel list1Panel = new JPanel(new BorderLayout());
+        JPanel list1TopPanel = new JPanel(new BorderLayout());
+        list1TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-		leftPanel.add(Box.createVerticalGlue());
+        JLabel label1 = new JLabel("To:");
+        list1TopPanel.add(label1, BorderLayout.WEST);
+        list1Panel.add(list1TopPanel, BorderLayout.NORTH);
 
-		JPanel list1Panel = new JPanel(new BorderLayout());
-		JPanel list1TopPanel = new JPanel(new BorderLayout());
-		list1TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        /*
+        JPanel list1EastPanel = new JPanel();
+        list1EastPanel.setLayout( new GridLayout(2,1) );
+        toButton = new JButton("<- To");
+        toButton.addActionListener(this);
+        toButton.setActionCommand("TO");
+        list1EastPanel.add( toButton );
+        toRemoveButton = new JButton("To ->");
+        toRemoveButton.addActionListener(this);
+        toRemoveButton.setActionCommand("TO_REMOVE");
+        list1EastPanel.add( toRemoveButton );
 
-		JLabel label1 = new JLabel("To:");
-		list1TopPanel.add(label1, BorderLayout.WEST);
-		list1Panel.add(list1TopPanel, BorderLayout.NORTH);
+        list1Panel.add( list1EastPanel, BorderLayout.EAST );
+        */
+        dialogList[0] = new AddressbookListModel();
+        dialogList[0].setHeaderList(headerItemList[0]);
+        toList = new AddressbookDNDListView(dialogList[0]);
 
-		/*
-		JPanel list1EastPanel = new JPanel();
-		list1EastPanel.setLayout( new GridLayout(2,1) );
-		toButton = new JButton("<- To");
-		toButton.addActionListener(this);
-		toButton.setActionCommand("TO");
-		list1EastPanel.add( toButton );
-		toRemoveButton = new JButton("To ->");
-		toRemoveButton.addActionListener(this);
-		toRemoveButton.setActionCommand("TO_REMOVE");
-		list1EastPanel.add( toRemoveButton );
-		
-		list1Panel.add( list1EastPanel, BorderLayout.EAST );
-		*/
+        //toList.setCellRenderer(new AddressbookListRenderer());
+        JScrollPane toPane = new JScrollPane(toList);
+        toPane.setPreferredSize(new Dimension(250, 150));
+        list1Panel.add(toPane);
+        leftPanel.add(list1Panel);
 
-		dialogList[0] = new AddressbookListModel();
-		dialogList[0].setHeaderList( headerItemList[0]);
-		toList = new AddressbookDNDListView(dialogList[0]);
-		//toList.setCellRenderer(new AddressbookListRenderer());
-		JScrollPane toPane = new JScrollPane(toList);
-		toPane.setPreferredSize(new Dimension(250, 150));
-		list1Panel.add(toPane);
-		leftPanel.add(list1Panel);
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        JPanel list2Panel = new JPanel(new BorderLayout());
+        JPanel list2TopPanel = new JPanel(new BorderLayout());
+        list2TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-		JPanel list2Panel = new JPanel(new BorderLayout());
-		JPanel list2TopPanel = new JPanel(new BorderLayout());
-		list2TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        JLabel label2 = new JLabel("Cc:");
+        list2TopPanel.add(label2, BorderLayout.WEST);
+        list2Panel.add(list2TopPanel, BorderLayout.NORTH);
+        dialogList[1] = new AddressbookListModel();
+        dialogList[1].setHeaderList(headerItemList[1]);
+        ccList = new AddressbookDNDListView(dialogList[1]);
 
-		JLabel label2 = new JLabel("Cc:");
-		list2TopPanel.add(label2, BorderLayout.WEST);
-		list2Panel.add(list2TopPanel, BorderLayout.NORTH);
-		dialogList[1] = new AddressbookListModel();
-		dialogList[1].setHeaderList( headerItemList[1] );
-		ccList = new AddressbookDNDListView(dialogList[1]);
-		//ccList.setCellRenderer(new AddressbookListRenderer());
-		JScrollPane ccPane = new JScrollPane(ccList);
-		ccPane.setPreferredSize(new Dimension(250, 150));
-		list2Panel.add(ccPane);
-		leftPanel.add(list2Panel);
+        //ccList.setCellRenderer(new AddressbookListRenderer());
+        JScrollPane ccPane = new JScrollPane(ccList);
+        ccPane.setPreferredSize(new Dimension(250, 150));
+        list2Panel.add(ccPane);
+        leftPanel.add(list2Panel);
 
-		leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-		JPanel list3Panel = new JPanel(new BorderLayout());
-		JPanel list3TopPanel = new JPanel(new BorderLayout());
-		list3TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        JPanel list3Panel = new JPanel(new BorderLayout());
+        JPanel list3TopPanel = new JPanel(new BorderLayout());
+        list3TopPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-		JLabel label3 = new JLabel("Bcc:");
+        JLabel label3 = new JLabel("Bcc:");
 
-		list3TopPanel.add(label3, BorderLayout.WEST);
-		list3Panel.add(list3TopPanel, BorderLayout.NORTH);
+        list3TopPanel.add(label3, BorderLayout.WEST);
+        list3Panel.add(list3TopPanel, BorderLayout.NORTH);
 
-		dialogList[2] = new AddressbookListModel();
-		dialogList[2].setHeaderList( headerItemList[2] );
-		bccList = new AddressbookDNDListView(dialogList[2]);
-		//bccList.setCellRenderer(new AddressbookListRenderer());
-		JScrollPane bccPane = new JScrollPane(bccList);
-		bccPane.setPreferredSize(new Dimension(250, 150));
-		list3Panel.add(bccPane);
-		leftPanel.add(list3Panel);
+        dialogList[2] = new AddressbookListModel();
+        dialogList[2].setHeaderList(headerItemList[2]);
+        bccList = new AddressbookDNDListView(dialogList[2]);
 
-		/*
-		for (int i = 0; i < 3; i++)
-		{
-			Object[] array = list[i].toArray();
+        //bccList.setCellRenderer(new AddressbookListRenderer());
+        JScrollPane bccPane = new JScrollPane(bccList);
+        bccPane.setPreferredSize(new Dimension(250, 150));
+        list3Panel.add(bccPane);
+        leftPanel.add(list3Panel);
 
-			for (int j = 0; j < array.length; j++)
-			{
-				dialogList[i].addElement(array[j]);
-			}
+        /*
+        for (int i = 0; i < 3; i++)
+        {
+                Object[] array = list[i].toArray();
 
-		}
-		*/
+                for (int j = 0; j < array.length; j++)
+                {
+                        dialogList[i].addElement(array[j]);
+                }
 
-		leftPanel.add(Box.createVerticalGlue());
+        }
+        */
+        leftPanel.add(Box.createVerticalGlue());
 
-		//panel.add( Box.createRigidArea( new Dimension(20,0) ) );
+        //panel.add( Box.createRigidArea( new Dimension(20,0) ) );
+        panel.add(leftPanel);
 
-		panel.add(leftPanel);
+        mainPanel.add(panel, BorderLayout.WEST);
 
-		mainPanel.add(panel, BorderLayout.WEST);
+        JPanel middlePanel = new JPanel();
+        middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
 
-		JPanel middlePanel = new JPanel();
-		middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
+        middlePanel.add(Box.createVerticalGlue());
 
-		middlePanel.add(Box.createVerticalGlue());
+        toButton = new JButton("<- To");
+        toButton.addActionListener(this);
+        toButton.setActionCommand("TO");
+        middlePanel.add(toButton);
+        toRemoveButton = new JButton("To ->");
+        toRemoveButton.addActionListener(this);
+        toRemoveButton.setActionCommand("TO_REMOVE");
+        middlePanel.add(toRemoveButton);
 
-		toButton = new JButton("<- To");
-		toButton.addActionListener(this);
-		toButton.setActionCommand("TO");
-		middlePanel.add(toButton);
-		toRemoveButton = new JButton("To ->");
-		toRemoveButton.addActionListener(this);
-		toRemoveButton.setActionCommand("TO_REMOVE");
-		middlePanel.add(toRemoveButton);
+        //middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
+        middlePanel.add(Box.createVerticalGlue());
 
-		//middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
-		middlePanel.add(Box.createVerticalGlue());
+        ccButton = new JButton("<- Cc");
+        ccButton.addActionListener(this);
+        ccButton.setActionCommand("CC");
+        middlePanel.add(ccButton);
+        ccRemoveButton = new JButton("Cc ->");
+        ccRemoveButton.addActionListener(this);
+        ccRemoveButton.setActionCommand("CC_REMOVE");
+        middlePanel.add(ccRemoveButton);
 
-		ccButton = new JButton("<- Cc");
-		ccButton.addActionListener(this);
-		ccButton.setActionCommand("CC");
-		middlePanel.add(ccButton);
-		ccRemoveButton = new JButton("Cc ->");
-		ccRemoveButton.addActionListener(this);
-		ccRemoveButton.setActionCommand("CC_REMOVE");
-		middlePanel.add(ccRemoveButton);
+        //middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
+        middlePanel.add(Box.createVerticalGlue());
 
-		//middlePanel.add( Box.createRigidArea( new Dimension(0,20) ) );
-		middlePanel.add(Box.createVerticalGlue());
+        bccButton = new JButton("<- Bcc");
+        bccButton.addActionListener(this);
+        bccButton.setActionCommand("BCC");
+        middlePanel.add(bccButton);
+        bccRemoveButton = new JButton("Bcc ->");
+        bccRemoveButton.addActionListener(this);
+        bccRemoveButton.setActionCommand("BCC_REMOVE");
+        middlePanel.add(bccRemoveButton);
 
-		bccButton = new JButton("<- Bcc");
-		bccButton.addActionListener(this);
-		bccButton.setActionCommand("BCC");
-		middlePanel.add(bccButton);
-		bccRemoveButton = new JButton("Bcc ->");
-		bccRemoveButton.addActionListener(this);
-		bccRemoveButton.setActionCommand("BCC_REMOVE");
-		middlePanel.add(bccRemoveButton);
+        middlePanel.add(Box.createVerticalGlue());
 
-		middlePanel.add(Box.createVerticalGlue());
+        //panel.add( Box.createRigidArea( new Dimension(20,0) ) );
+        panel.add(middlePanel, BorderLayout.EAST);
 
-		//panel.add( Box.createRigidArea( new Dimension(20,0) ) );
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-		panel.add(middlePanel, BorderLayout.EAST);
+        JPanel rightTopPanel = new JPanel();
 
-		JPanel rightPanel = new JPanel(new BorderLayout());
-		rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-		JPanel rightTopPanel = new JPanel();
-		//rightTopPanel.setLayout( new GridBagLayout() );
-		chooseLabel = new JLabel("Addressbook:");
-		rightTopPanel.add(chooseLabel);
-		chooseButton = new JButton("Personal Addressbook");
-		chooseButton.setActionCommand("CHOOSE");
-		chooseButton.addActionListener(this);
-		rightTopPanel.add(chooseButton);
-		rightPanel.add(rightTopPanel, BorderLayout.NORTH);
+        //rightTopPanel.setLayout( new GridBagLayout() );
+        chooseLabel = new JLabel("Addressbook:");
+        rightTopPanel.add(chooseLabel);
+        chooseButton = new JButton("Personal Addressbook");
+        chooseButton.setActionCommand("CHOOSE");
+        chooseButton.addActionListener(this);
+        rightTopPanel.add(chooseButton);
+        rightPanel.add(rightTopPanel, BorderLayout.NORTH);
 
-		addressbook = new AddressbookDNDListView();
-		addressbook.setAcceptDrop(false);
-		//addressbook.setCellRenderer(new AddressbookListRenderer());
+        addressbook = new AddressbookDNDListView();
+        addressbook.setAcceptDrop(false);
 
-		JScrollPane scrollPane = new JScrollPane(addressbook);
-		scrollPane.setPreferredSize(new Dimension(250, 200));
-		rightPanel.add(scrollPane);
+        //addressbook.setCellRenderer(new AddressbookListRenderer());
+        JScrollPane scrollPane = new JScrollPane(addressbook);
+        scrollPane.setPreferredSize(new Dimension(250, 200));
+        rightPanel.add(scrollPane);
 
-		mainPanel.add(rightPanel);
+        mainPanel.add(rightPanel);
 
-		getContentPane().add(mainPanel);
+        getContentPane().add(mainPanel);
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		ButtonWithMnemonic okButton = new ButtonWithMnemonic(
-				AddressbookResourceLoader.getString("global", "ok"));
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
-		buttonPanel.add(okButton);
-		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
-				AddressbookResourceLoader.getString("global", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(okButton);
-		getRootPane().registerKeyboardAction(this,"CANCEL",KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),JComponent.WHEN_IN_FOCUSED_WINDOW);
-		pack();
-		setLocationRelativeTo(null);
-	}
 
-	public void setHeaderList(HeaderItemList list)
-	{
-		//members = new DefaultListModel();
+        ButtonWithMnemonic okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
+                    "global", "ok"));
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
+        buttonPanel.add(okButton);
 
-		/*
-		for ( int i=0; i<list.count(); i++ )
-		{
-			HeaderItem item = list.get(i);
-			//members.addElement( item );
-		}
-		*/
-		List v = list.getVector();
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
+                    "global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        buttonPanel.add(cancelButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(okButton);
+        getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        pack();
+        setLocationRelativeTo(null);
+    }
 
-		addressbook.setListData((Vector)v);
-	}
+    public void setHeaderList(HeaderItemList list) {
+        //members = new DefaultListModel();
 
-	public void updateComponents(
-		GroupListCard card,
-		HeaderItemList list,
-		boolean b)
-	{
-		/*
-		if ( b == true )
-		{
-			// gettext
-			nameTextField.setText( card.get("displayname") );
-			
-			
-			members = new DefaultListModel();
-			for ( int i=0; i<list.count(); i++ )
-			{
-				HeaderItem item = list.get(i);
-				members.addElement(item);
-			}
-			
-			this.list.setModel( members );
-			
-		}
-		else
-		{
-			// settext
-			card.set("displayname",nameTextField.getText() );
-			
-			// remove all children
-			card.removeMembers();
-			
-			// add children
-			for ( int i=0; i<members.size(); i++ )
-			{
-				HeaderItem item = (HeaderItem) members.get(i);
-				Object uid = item.getUid();
-				card.addMember( ((Integer) uid).toString() );
-			}
-		}
-		*/
-	}
+        /*
+        for ( int i=0; i<list.count(); i++ )
+        {
+                HeaderItem item = list.get(i);
+                //members.addElement( item );
+        }
+        */
+        List v = list.getVector();
 
-	public void actionPerformed(ActionEvent e)
-	{
-		String command = e.getActionCommand();
-		if (command.equals("CANCEL"))
-		{
-			setVisible(false);
-		}
-		else if (command.equals("OK"))
-		{
-			setVisible(false);
-			for (int i = 0; i < 3; i++)
-			{
-				Object[] array = dialogList[i].toArray();
-				headerItemList[i].clear();
-		
-				System.out.println("array-size="+array.length);
-				
-				for (int j = 0; j < array.length; j++)
-				{
-					HeaderItem item = (HeaderItem) array[j];
-					if (item.isContact())
-					{
-						String address = (String) item.get("email;internet");
-						System.out.println("old address:" + address);
-						if ( address == null ) address = "";
-						/*
-						String newaddress = AddressParser.quoteAddress(address);
-						System.out.println("new address:" + newaddress);
-						item.add("email;internet", newaddress);
-						*/
-					}
-					
-					if ( i == 0 ) item.add("field","To");
-					else if ( i == 1 ) item.add("field","Cc");
-					else if ( i == 2 ) item.add("field","Bcc");					
+        addressbook.setListData((Vector) v);
+    }
 
-					headerItemList[i].add((HeaderItem)item.clone());
-					//headerItemList[i].add(item);
-				}
-			}
-		}
-		else if (command.equals("TO"))
-		{
-			int[] array = addressbook.getSelectedIndices();
-			ListModel model = addressbook.getModel();
-			HeaderItem item;
+    public void updateComponents(GroupListCard card, HeaderItemList list,
+        boolean b) {
+        /*
+        if ( b == true )
+        {
+                // gettext
+                nameTextField.setText( card.get("displayname") );
 
-			for (int j = 0; j < array.length; j++)
-			{
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogList[0].addElement((HeaderItem)item.clone());
-			}
-		}
-		else if (command.equals("CC"))
-		{
-			int[] array = addressbook.getSelectedIndices();
-			ListModel model = addressbook.getModel();
-			HeaderItem item;
 
-			for (int j = 0; j < array.length; j++)
-			{
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogList[1].addElement((HeaderItem)item.clone());
-			}
-		}
-		else if (command.equals("BCC"))
-		{
-			int[] array = addressbook.getSelectedIndices();
-			ListModel model = addressbook.getModel();
-			HeaderItem item;
+                members = new DefaultListModel();
+                for ( int i=0; i<list.count(); i++ )
+                {
+                        HeaderItem item = list.get(i);
+                        members.addElement(item);
+                }
 
-			for (int j = 0; j < array.length; j++)
-			{
-				item = (HeaderItem) model.getElementAt(array[j]);
-				dialogList[2].addElement((HeaderItem)item.clone());
-			}
-		}
-		else if (command.equals("TO_REMOVE"))
-		{
-			Object[] array = toList.getSelectedValues();
-			for (int j = 0; j < array.length; j++)
-			{
-				dialogList[0].removeElement(array[j]);
-			}
-		}
-		else if (command.equals("CC_REMOVE"))
-		{
-			Object[] array = ccList.getSelectedValues();
-			for (int j = 0; j < array.length; j++)
-			{
-				dialogList[1].removeElement(array[j]);
-			}
-		}
-		else if (command.equals("BCC_REMOVE"))
-		{
-			Object[] array = bccList.getSelectedValues();
-			for (int j = 0; j < array.length; j++)
-			{
-				dialogList[2].removeElement(array[j]);
-			}
-		}
-		else if (command.equals("CHOOSE"))
-		{
-			SelectAddressbookFolderDialog dialog =
-				MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+                this.list.setModel( members );
 
-			Folder selectedFolder = dialog.getSelectedFolder();
-			if (selectedFolder != null){
-				HeaderItemList list = selectedFolder.getHeaderItemList();
-				setHeaderList(list);
-				chooseButton.setText(selectedFolder.getName());
-			}
-		}
-	}
+        }
+        else
+        {
+                // settext
+                card.set("displayname",nameTextField.getText() );
+
+                // remove all children
+                card.removeMembers();
+
+                // add children
+                for ( int i=0; i<members.size(); i++ )
+                {
+                        HeaderItem item = (HeaderItem) members.get(i);
+                        Object uid = item.getUid();
+                        card.addMember( ((Integer) uid).toString() );
+                }
+        }
+        */
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+
+        if (command.equals("CANCEL")) {
+            setVisible(false);
+        } else if (command.equals("OK")) {
+            setVisible(false);
+
+            for (int i = 0; i < 3; i++) {
+                Object[] array = dialogList[i].toArray();
+                headerItemList[i].clear();
+
+                System.out.println("array-size=" + array.length);
+
+                for (int j = 0; j < array.length; j++) {
+                    HeaderItem item = (HeaderItem) array[j];
+
+                    if (item.isContact()) {
+                        String address = (String) item.get("email;internet");
+                        System.out.println("old address:" + address);
+
+                        if (address == null) {
+                            address = "";
+                        }
+
+                        /*
+                        String newaddress = AddressParser.quoteAddress(address);
+                        System.out.println("new address:" + newaddress);
+                        item.add("email;internet", newaddress);
+                        */
+                    }
+
+                    if (i == 0) {
+                        item.add("field", "To");
+                    } else if (i == 1) {
+                        item.add("field", "Cc");
+                    } else if (i == 2) {
+                        item.add("field", "Bcc");
+                    }
+
+                    headerItemList[i].add((HeaderItem) item.clone());
+
+                    //headerItemList[i].add(item);
+                }
+            }
+        } else if (command.equals("TO")) {
+            int[] array = addressbook.getSelectedIndices();
+            ListModel model = addressbook.getModel();
+            HeaderItem item;
+
+            for (int j = 0; j < array.length; j++) {
+                item = (HeaderItem) model.getElementAt(array[j]);
+                dialogList[0].addElement((HeaderItem) item.clone());
+            }
+        } else if (command.equals("CC")) {
+            int[] array = addressbook.getSelectedIndices();
+            ListModel model = addressbook.getModel();
+            HeaderItem item;
+
+            for (int j = 0; j < array.length; j++) {
+                item = (HeaderItem) model.getElementAt(array[j]);
+                dialogList[1].addElement((HeaderItem) item.clone());
+            }
+        } else if (command.equals("BCC")) {
+            int[] array = addressbook.getSelectedIndices();
+            ListModel model = addressbook.getModel();
+            HeaderItem item;
+
+            for (int j = 0; j < array.length; j++) {
+                item = (HeaderItem) model.getElementAt(array[j]);
+                dialogList[2].addElement((HeaderItem) item.clone());
+            }
+        } else if (command.equals("TO_REMOVE")) {
+            Object[] array = toList.getSelectedValues();
+
+            for (int j = 0; j < array.length; j++) {
+                dialogList[0].removeElement(array[j]);
+            }
+        } else if (command.equals("CC_REMOVE")) {
+            Object[] array = ccList.getSelectedValues();
+
+            for (int j = 0; j < array.length; j++) {
+                dialogList[1].removeElement(array[j]);
+            }
+        } else if (command.equals("BCC_REMOVE")) {
+            Object[] array = bccList.getSelectedValues();
+
+            for (int j = 0; j < array.length; j++) {
+                dialogList[2].removeElement(array[j]);
+            }
+        } else if (command.equals("CHOOSE")) {
+            SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
+
+            Folder selectedFolder = dialog.getSelectedFolder();
+
+            if (selectedFolder != null) {
+                HeaderItemList list = selectedFolder.getHeaderItemList();
+                setHeaderList(list);
+                chooseButton.setText(selectedFolder.getName());
+            }
+        }
+    }
 }

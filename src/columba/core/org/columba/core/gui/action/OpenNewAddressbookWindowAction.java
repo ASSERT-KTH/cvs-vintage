@@ -15,10 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -26,34 +23,37 @@ import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
- * 
+ *
  * To change this generated comment go to Window>Preferences>Java>Code
  * Generation>Code and Comments
  */
 public class OpenNewAddressbookWindowAction extends FrameAction {
+    public OpenNewAddressbookWindowAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null,
+                "menu_file_new_addressbook"));
 
-	public OpenNewAddressbookWindowAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_file_new_addressbook"));
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null,
+                "menu_file_new_addressbook_tooltip").replaceAll("&", ""));
 
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-			null,
-			"menu_file_new_addressbook_tooltip").replaceAll("&", ""));
-		
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
-	}
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_book-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_book.png"));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FrameModel.openView("Addressbook");
-		//getFrameController().getModel().openView();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FrameModel.openView("Addressbook");
+
+        //getFrameController().getModel().openView();
+    }
 }

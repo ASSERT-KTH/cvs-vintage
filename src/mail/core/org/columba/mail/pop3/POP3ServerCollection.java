@@ -15,12 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Vector;
-
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.config.MailConfig;
@@ -28,118 +24,130 @@ import org.columba.mail.config.PopItem;
 import org.columba.mail.pop3.event.ModelChangeListener;
 import org.columba.mail.pop3.event.ModelChangedEvent;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Vector;
+
+
 public class POP3ServerCollection //implements ActionListener
-{
-	private List serverList;
-	private POP3Server popServer;
-	private List listeners;
+ {
+    private List serverList;
+    private POP3Server popServer;
+    private List listeners;
 
-	public POP3ServerCollection() {
-		serverList = new Vector();
-		listeners = new Vector();
+    public POP3ServerCollection() {
+        serverList = new Vector();
+        listeners = new Vector();
 
-		AccountList list = MailConfig.getAccountList();
+        AccountList list = MailConfig.getAccountList();
 
-		for (int i = 0; i < list.count(); i++) {
-			AccountItem accountItem = list.get(i);
-			if (accountItem.isPopAccount()) {
+        for (int i = 0; i < list.count(); i++) {
+            AccountItem accountItem = list.get(i);
 
-				add(accountItem);
-			}
-		}
+            if (accountItem.isPopAccount()) {
+                add(accountItem);
+            }
+        }
+    }
 
-	}
+    public ListIterator getServerIterator() {
+        return serverList.listIterator();
+    }
 
-	public ListIterator getServerIterator() {
-		return serverList.listIterator();
-	}
+    public POP3ServerController[] getList() {
+        POP3ServerController[] list = new POP3ServerController[count()];
 
-	public POP3ServerController[] getList() {
-		POP3ServerController[] list = new POP3ServerController[count()];
+        ((Vector) serverList).copyInto(list);
 
-		((Vector)serverList).copyInto(list);
+        return list;
+    }
 
-		return list;
-	}
+    public void add(AccountItem item) {
+        POP3ServerController server = new POP3ServerController(item);
+        serverList.add(server);
 
-	public void add(AccountItem item) {
-		POP3ServerController server = new POP3ServerController(item);
-		serverList.add(server);
+        notifyListeners(new ModelChangedEvent(ModelChangedEvent.ADDED, server));
+    }
 
-		notifyListeners(new ModelChangedEvent(ModelChangedEvent.ADDED, server));
-	}
+    public POP3ServerController uidGet(int uid) {
+        int index = getIndex(uid);
 
-	public POP3ServerController uidGet(int uid) {
-		int index = getIndex(uid);
+        if (index != -1) {
+            return get(index);
+        } else {
+            return null;
+        }
+    }
 
-		if (index != -1)
-			return get(index);
-		else
-			return null;
-	}
+    public POP3ServerController get(int index) {
+        return (POP3ServerController) serverList.get(index);
+    }
 
-	public POP3ServerController get(int index) {
-		return (POP3ServerController) serverList.get(index);
-	}
+    public int count() {
+        return serverList.size();
+    }
 
-	public int count() {
-		return serverList.size();
-	}
+    public void removePopServer(int uid) {
+        int index = getIndex(uid);
+        POP3ServerController server;
 
-	public void removePopServer(int uid) {
-		int index = getIndex(uid);
-		POP3ServerController server;
-		
-		if (index == -1) {
-			ColumbaLogger.log.error("could not find popserver");
-			return;
-		} else {
-			server = (POP3ServerController) serverList.remove(index);
-		}
+        if (index == -1) {
+            ColumbaLogger.log.error("could not find popserver");
 
-		notifyListeners(new ModelChangedEvent(ModelChangedEvent.REMOVED));
-	}
+            return;
+        } else {
+            server = (POP3ServerController) serverList.remove(index);
+        }
 
-	public int getIndex(int uid) {
-		POP3ServerController c;
-		int number;
-		PopItem item;
-		for (int i = 0; i < count(); i++) {
-			c = get(i);
-			number = c.getUid();
+        notifyListeners(new ModelChangedEvent(ModelChangedEvent.REMOVED));
+    }
 
-			if (number == uid) {
-				return i;
-			}
-		}
-		return -1;
-	}
+    public int getIndex(int uid) {
+        POP3ServerController c;
+        int number;
+        PopItem item;
 
-	public void saveAll() {
-		POP3ServerController c;
-		for (int i = 0; i < count(); i++) {
-			c = get(i);
-			try {
-				c.getServer().save();
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
+        for (int i = 0; i < count(); i++) {
+            c = get(i);
+            number = c.getUid();
 
-	public POP3Server getSelected() {
-		return popServer;
-	}
+            if (number == uid) {
+                return i;
+            }
+        }
 
-	public void addModelListener(ModelChangeListener l) {
-		listeners.add(l);
-	}
+        return -1;
+    }
 
-	private void notifyListeners(ModelChangedEvent e) {
-		for (Iterator it = listeners.iterator(); it.hasNext();) {
-			((ModelChangeListener) it.next()).modelChanged(e);
-		// for (int i = 0; i < listeners.size(); i++) {
-			// ((ModelChangeListener) listeners.get(i)).modelChanged(e);
-		}
-	}
+    public void saveAll() {
+        POP3ServerController c;
+
+        for (int i = 0; i < count(); i++) {
+            c = get(i);
+
+            try {
+                c.getServer().save();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public POP3Server getSelected() {
+        return popServer;
+    }
+
+    public void addModelListener(ModelChangeListener l) {
+        listeners.add(l);
+    }
+
+    private void notifyListeners(ModelChangedEvent e) {
+        for (Iterator it = listeners.iterator(); it.hasNext();) {
+            ((ModelChangeListener) it.next()).modelChanged(e);
+
+            // for (int i = 0; i < listeners.size(); i++) {
+            // ((ModelChangeListener) listeners.get(i)).modelChanged(e);
+        }
+    }
 }

@@ -19,6 +19,7 @@ import org.columba.mail.gui.tree.TreeModel;
 import org.columba.mail.pgp.PGPController;
 import org.columba.mail.pop3.POP3ServerCollection;
 
+
 /**
  * Main Interface keeping static instances of all objects
  * which need to be accessed by other subsystems.
@@ -26,14 +27,12 @@ import org.columba.mail.pop3.POP3ServerCollection;
  * @author fdietz
  */
 public class MailInterface {
+    // POP3 servers 
+    public static POP3ServerCollection popServerCollection;
 
-	// POP3 servers 
-	public static POP3ServerCollection popServerCollection;
-	
-	// mailfolder treemodel
-	public static TreeModel treeModel;
-	
-	// PGP encryption package
-	public static PGPController pgpController;
+    // mailfolder treemodel
+    public static TreeModel treeModel;
 
+    // PGP encryption package
+    public static PGPController pgpController;
 }

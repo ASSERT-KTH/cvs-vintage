@@ -15,8 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.account;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.help.HelpManager;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
+import org.columba.mail.config.SmtpItem;
+import org.columba.mail.folder.imap.IMAPRootFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.pop3.POP3ServerController;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -31,230 +42,204 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.help.HelpManager;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
-import org.columba.mail.config.SmtpItem;
-import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.pop3.POP3ServerController;
-import org.columba.mail.util.MailResourceLoader;
 
 public class AccountDialog implements ActionListener {
-	private JDialog dialog;
+    private JDialog dialog;
+    private AccountItem accountItem;
+    private IdentityPanel identityPanel;
+    private IncomingServerPanel incomingServerPanel;
+    private OutgoingServerPanel outgoingServerPanel;
+    private SecurityPanel securityPanel;
+    private ReceiveOptionsPanel receiveOptionsPanel;
+    private JPanel selected = null;
+    private JTabbedPane tp;
 
-	private AccountItem accountItem;
+    public AccountDialog(AccountItem item) {
+        dialog = DialogStore.getDialog();
+        dialog.setTitle(MailResourceLoader.getString("dialog", "account",
+                "preferences_for") + " " + item.getName());
+        this.accountItem = item;
+        createPanels();
+        initComponents();
 
-	private IdentityPanel identityPanel;
-	private IncomingServerPanel incomingServerPanel;
-	private OutgoingServerPanel outgoingServerPanel;
-	private SecurityPanel securityPanel;
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }
 
-	private ReceiveOptionsPanel receiveOptionsPanel;
+    protected void createPanels() {
+        IdentityItem identityItem = accountItem.getIdentityItem();
+        identityPanel = new IdentityPanel(accountItem, identityItem);
 
-	private JPanel selected = null;
+        receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
 
-	private JTabbedPane tp;
+        incomingServerPanel = new IncomingServerPanel(dialog, accountItem,
+                receiveOptionsPanel);
 
-	public AccountDialog(AccountItem item) {
-		dialog = DialogStore.getDialog();
-		dialog.setTitle(
-			MailResourceLoader.getString(
-				"dialog",
-				"account",
-				"preferences_for")
-				+ " "
-				+ item.getName());
-		this.accountItem = item;
-		createPanels();
-		initComponents();
+        outgoingServerPanel = new OutgoingServerPanel(accountItem);
 
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
-	}
+        securityPanel = new SecurityPanel(accountItem.getPGPItem());
+    }
 
-	protected void createPanels() {
+    protected void initComponents() {
+        dialog.getContentPane().setLayout(new BorderLayout());
 
-		IdentityItem identityItem = accountItem.getIdentityItem();
-		identityPanel = new IdentityPanel(accountItem, identityItem);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
 
-		receiveOptionsPanel = new ReceiveOptionsPanel(dialog, accountItem);
+        //mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        tp = new JTabbedPane();
+        tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tp.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
 
-		incomingServerPanel =
-			new IncomingServerPanel(dialog, accountItem, receiveOptionsPanel);
+        tp.add(MailResourceLoader.getString("dialog", "account", "identity"),
+            identityPanel);
 
-		outgoingServerPanel = new OutgoingServerPanel(accountItem);
+        //$NON-NLS-1$
+        String incomingServerPanelTitle = MailResourceLoader.getString("dialog",
+                "account", "incomingserver");
 
-		securityPanel = new SecurityPanel(accountItem.getPGPItem());
-	}
+        if (accountItem.isPopAccount()) {
+            incomingServerPanelTitle += " (POP3)";
+        } else {
+            incomingServerPanelTitle += " (IMAP4)";
+        }
 
-	protected void initComponents() {
-		dialog.getContentPane().setLayout(new BorderLayout());
+        tp.add(incomingServerPanelTitle, incomingServerPanel);
 
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		//mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        tp.add(MailResourceLoader.getString("dialog", "account",
+                "receiveoptions"), receiveOptionsPanel);
 
-		tp = new JTabbedPane();
-		tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		tp.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 10));
+        SmtpItem smtpItem = accountItem.getSmtpItem();
 
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "identity"),
-			identityPanel);
-		//$NON-NLS-1$
+        tp.add(MailResourceLoader.getString("dialog", "account",
+                "outgoingserver"), outgoingServerPanel);
 
-		String incomingServerPanelTitle =
-			MailResourceLoader.getString("dialog", "account", "incomingserver");
-		if (accountItem.isPopAccount()) {
-			incomingServerPanelTitle += " (POP3)";
-		} else {
-			incomingServerPanelTitle += " (IMAP4)";
-		}
-		tp.add(incomingServerPanelTitle, incomingServerPanel);
+        //$NON-NLS-1$
+        tp.add(MailResourceLoader.getString("dialog", "account", "security"),
+            securityPanel);
 
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "receiveoptions"),
-			receiveOptionsPanel);
+        //$NON-NLS-1$
+        mainPanel.add(tp, BorderLayout.CENTER);
 
-		SmtpItem smtpItem = accountItem.getSmtpItem();
+        dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
+        dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
+        dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        dialog.getRootPane().registerKeyboardAction(this, "HELP",
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "outgoingserver"),
-			outgoingServerPanel);
-		//$NON-NLS-1$
+    protected JPanel createButtonPanel() {
+        JPanel bottom = new JPanel();
+        bottom.setLayout(new BorderLayout());
 
-		tp.add(
-			MailResourceLoader.getString("dialog", "account", "security"),
-			securityPanel);
-		//$NON-NLS-1$
+        bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		mainPanel.add(tp, BorderLayout.CENTER);
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "cancel"));
 
-		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
-		dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
-		dialog.getRootPane().registerKeyboardAction(
-			this,
-			"CANCEL",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		dialog.getRootPane().registerKeyboardAction(
-			this,
-			"HELP",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
+        //$NON-NLS-1$ //$NON-NLS-2$
+        cancelButton.addActionListener(this);
+        cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
 
-	protected JPanel createButtonPanel() {
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new BorderLayout());
+        ButtonWithMnemonic okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "ok"));
 
-		bottom.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        //$NON-NLS-1$ //$NON-NLS-2$
+        okButton.addActionListener(this);
+        okButton.setActionCommand("OK"); //$NON-NLS-1$
+        okButton.setDefaultCapable(true);
+        dialog.getRootPane().setDefaultButton(okButton);
 
-		ButtonWithMnemonic cancelButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		cancelButton.addActionListener(this);
-		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
 
-		ButtonWithMnemonic okButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton.addActionListener(this);
-		okButton.setActionCommand("OK"); //$NON-NLS-1$
-		okButton.setDefaultCapable(true);
-		dialog.getRootPane().setDefaultButton(okButton);
+        // associate with JavaHelp
+        HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
 
-		ButtonWithMnemonic helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(helpButton);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 6, 0));
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(helpButton);
+        bottom.add(buttonPanel, BorderLayout.EAST);
 
-		bottom.add(buttonPanel, BorderLayout.EAST);
+        return bottom;
+    }
 
-		return bottom;
-	}
+    /**
+     * Check if user entered valid data in all panels
+     * <p>
+     * Note, that we also select the panel.
+     *
+     * @return true, if data is valid. false, otherwise
+     */
+    protected boolean isFinished() {
+        boolean result = identityPanel.isFinished();
 
-	/**
-	 * Check if user entered valid data in all panels
-	 * <p>
-	 * Note, that we also select the panel.
-	 * 
-	 * @return true, if data is valid. false, otherwise
-	 */
-	protected boolean isFinished() {
-		boolean result = identityPanel.isFinished();
-		if (result == false) {
-			tp.setSelectedComponent(identityPanel);
-			return false;
-		}
+        if (result == false) {
+            tp.setSelectedComponent(identityPanel);
 
-		result = incomingServerPanel.isFinished();
-		if (result == false) {
-			tp.setSelectedComponent(incomingServerPanel);
-			return false;
-		}
+            return false;
+        }
 
-		result = outgoingServerPanel.isFinished();
-		if (result == false) {
-			tp.setSelectedComponent(outgoingServerPanel);
-			return false;
-		}
+        result = incomingServerPanel.isFinished();
 
-		return true;
-	}
+        if (result == false) {
+            tp.setSelectedComponent(incomingServerPanel);
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+            return false;
+        }
 
-		if (action.equals("OK")) //$NON-NLS-1$
-			{
-			// check if the user entered valid data
-			boolean isFinished = isFinished();
-			if (isFinished == false)
-				return;
+        result = outgoingServerPanel.isFinished();
 
-			identityPanel.updateComponents(false);
-			incomingServerPanel.updateComponents(false);
-			receiveOptionsPanel.updateComponents(false);
-			outgoingServerPanel.updateComponents(false);
+        if (result == false) {
+            tp.setSelectedComponent(outgoingServerPanel);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        if (action.equals("OK")) //$NON-NLS-1$
+         {
+            // check if the user entered valid data
+            boolean isFinished = isFinished();
+
+            if (isFinished == false) {
+                return;
+            }
+
+            identityPanel.updateComponents(false);
+            incomingServerPanel.updateComponents(false);
+            receiveOptionsPanel.updateComponents(false);
+            outgoingServerPanel.updateComponents(false);
             securityPanel.updateComponents(false);
 
-			if (accountItem.isPopAccount()) {
+            if (accountItem.isPopAccount()) {
+                int uid = accountItem.getUid();
+                POP3ServerController c = MailInterface.popServerCollection.uidGet(uid);
+                c.restartTimer();
+            } else {
+                // update tree label
+                int uid = accountItem.getUid();
 
-				int uid = accountItem.getUid();
-				POP3ServerController c =
-					MailInterface.popServerCollection.uidGet(uid);
-				c.restartTimer();
+                IMAPRootFolder folder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
+                folder.updateConfiguration();
+            }
 
-			} else {
-				// update tree label
-				int uid = accountItem.getUid();
-
-				IMAPRootFolder folder =
-					(IMAPRootFolder) MailInterface.treeModel.getImapFolder(uid);
-				folder.updateConfiguration();
-
-			}
-
-			dialog.setVisible(false);
-		} else if (action.equals("CANCEL")) //$NON-NLS-1$
-			{
-			dialog.setVisible(false);
-		}
-
-	}
-
+            dialog.setVisible(false);
+        } else if (action.equals("CANCEL")) //$NON-NLS-1$
+         {
+            dialog.setVisible(false);
+        }
+    }
 }

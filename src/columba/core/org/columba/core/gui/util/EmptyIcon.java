@@ -20,6 +20,7 @@ import java.awt.Graphics;
 
 import javax.swing.Icon;
 
+
 /**
  * @author freddy
  *
@@ -29,25 +30,23 @@ import javax.swing.Icon;
  * Window>Preferences>Java>Code Generation.
  */
 public class EmptyIcon implements Icon {
+    /**
+     * @see javax.swing.Icon#paintIcon(Component, Graphics, int, int)
+     */
+    public void paintIcon(Component arg0, Graphics arg1, int arg2, int arg3) {
+    }
 
-	/**
-	 * @see javax.swing.Icon#paintIcon(Component, Graphics, int, int)
-	 */
-	public void paintIcon(Component arg0, Graphics arg1, int arg2, int arg3) {
-	}
+    /**
+     * @see javax.swing.Icon#getIconWidth()
+     */
+    public int getIconWidth() {
+        return 16;
+    }
 
-	/**
-	 * @see javax.swing.Icon#getIconWidth()
-	 */
-	public int getIconWidth() {
-		return 16;
-	}
-
-	/**
-	 * @see javax.swing.Icon#getIconHeight()
-	 */
-	public int getIconHeight() {
-		return 16;
-	}
-
+    /**
+     * @see javax.swing.Icon#getIconHeight()
+     */
+    public int getIconHeight() {
+        return 16;
+    }
 }

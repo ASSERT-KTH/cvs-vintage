@@ -13,47 +13,48 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment.util;
 
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
 
+
 class OneSizeLabel extends JLabel {
-	
-	private OneSizeLabelFactory factory;
-	
-	/**
-	 * @param arg0
-	 */
-	public OneSizeLabel(OneSizeLabelFactory factory, String arg0) {
-		super(arg0);
-		this.factory = factory;
-		adjustSize();
-	}
+    private OneSizeLabelFactory factory;
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#getPreferredSize()
-	 */
-	public Dimension getPreferredSize() {
-		return factory.getPreferredSize();
-	}
-	
-	public void adjustSize() {
-		Dimension mySize = super.getPreferredSize();
-		if( mySize == null ) return;
-		
-		if( mySize.width > factory.getPreferredSize().width )
-			factory.setPreferredSize( mySize );
-	}
+    /**
+     * @param arg0
+     */
+    public OneSizeLabel(OneSizeLabelFactory factory, String arg0) {
+        super(arg0);
+        this.factory = factory;
+        adjustSize();
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#setPreferredSize(java.awt.Dimension)
-	 */
-	public void setPreferredSize(Dimension arg0) {
-		factory.setPreferredSize(arg0);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.Component#getPreferredSize()
+     */
+    public Dimension getPreferredSize() {
+        return factory.getPreferredSize();
+    }
 
+    public void adjustSize() {
+        Dimension mySize = super.getPreferredSize();
+
+        if (mySize == null) {
+            return;
+        }
+
+        if (mySize.width > factory.getPreferredSize().width) {
+            factory.setPreferredSize(mySize);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#setPreferredSize(java.awt.Dimension)
+     */
+    public void setPreferredSize(Dimension arg0) {
+        factory.setPreferredSize(arg0);
+    }
 }
-

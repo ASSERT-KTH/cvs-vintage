@@ -13,20 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.mail.gui.composer.text;
+
+import org.columba.core.config.Config;
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.gui.composer.util.UndoDocument;
 
 import java.awt.Dimension;
 import java.awt.Font;
+
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JTextPane;
 
-import org.columba.core.config.Config;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.composer.util.UndoDocument;
 
 /**
  * @author frd
@@ -37,52 +39,52 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * Window>Preferences>Java>Code Generation.
  */
 public class TextEditorView extends JTextPane implements Observer {
+    private TextEditorController controller;
+    private UndoDocument message;
 
-	private TextEditorController controller;
-	private UndoDocument message;
+    public TextEditorView(TextEditorController controller, UndoDocument m) {
+        super();
 
-	public TextEditorView(TextEditorController controller, UndoDocument m) {
-		super();
+        this.controller = controller;
 
-		this.controller = controller;
+        message = m;
 
-		message = m;
+        setStyledDocument(message);
+        setEditable(true);
 
-		setStyledDocument(message);
-		setEditable(true);
+        Font font = FontProperties.getTextFont();
+        setFont(font);
 
-		Font font = FontProperties.getTextFont();
-		setFont(font);
+        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement gui = options.getElement("gui");
+        XmlElement fonts = gui.getElement("fonts");
 
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement gui = options.getElement("gui");
-		XmlElement fonts = gui.getElement("fonts");
-		if (fonts == null)
-			fonts = gui.addSubElement("fonts");
-			
-		// register interest on configuratin changes
-		fonts.addObserver(this);
+        if (fonts == null) {
+            fonts = gui.addSubElement("fonts");
+        }
 
-		setPreferredSize(new Dimension(300, 200));
-	}
+        // register interest on configuratin changes
+        fonts.addObserver(this);
 
-	public void installListener(TextEditorController controller) {
-		message.addDocumentListener(controller);
-	}
+        setPreferredSize(new Dimension(300, 200));
+    }
 
-	public void setCharset(String charset) {
-		setContentType("text/plain; charset=\"" + charset + "\"");
-	}
+    public void installListener(TextEditorController controller) {
+        message.addDocumentListener(controller);
+    }
 
-	/**
-	 * 
-	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		Font font = FontProperties.getTextFont();
-		setFont(font);
-	}
+    public void setCharset(String charset) {
+        setContentType("text/plain; charset=\"" + charset + "\"");
+    }
 
+    /**
+     *
+     * @see org.columba.mail.gui.config.general.MailOptionsDialog
+     *
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+        Font font = FontProperties.getTextFont();
+        setFont(font);
+    }
 }

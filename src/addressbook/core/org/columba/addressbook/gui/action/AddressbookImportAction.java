@@ -13,39 +13,39 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.gui.dialog.importfilter.ImportWizardLauncher;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AddressbookImportAction extends FrameAction {
+    public AddressbookImportAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_utilities_addressbook"));
 
-	public AddressbookImportAction(FrameMediator frameController) {
-		super(frameController, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_utilities_addressbook"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_utilities_addressbook").replaceAll("&", ""));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_utilities_addressbook").replaceAll("&", ""));
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		new ImportWizardLauncher().launchWizard();
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        new ImportWizardLauncher().launchWizard();
+    }
 }

@@ -15,12 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.command;
 
-import java.io.File;
-import java.lang.reflect.Array;
-
 import org.columba.core.command.DefaultCommandReference;
+
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.ColumbaMessage;
+
+import java.io.File;
+
+import java.lang.reflect.Array;
+
 
 /**
  * This is a reference implemention suitable for folders containing
@@ -29,177 +32,166 @@ import org.columba.mail.message.ColumbaMessage;
  * Its main purpose is to store source and/or destination folders and
  * arrays of message UIDs.
  * <p>
- * 
+ *
  *
  * @author fdietz
  */
 public class FolderCommandReference extends DefaultCommandReference {
-	private FolderTreeNode folder;
-	private Object[] uids;
-	private Integer[] address;
-	private ColumbaMessage message;
-	private int markVariant;
-	private String folderName;
-	private int colorValue;
-	
-	private File destFile;
-	
-	/**
-	 * Constructor for FolderCommandReference.
-	 * @param folder
-	 */
-	public FolderCommandReference(FolderTreeNode folder) {
-		this.folder = folder;
-		
-	}
-	
-	public FolderCommandReference(FolderTreeNode folder, ColumbaMessage message) {
-		this.folder = folder;
-		this.message = message;
-		
-	}
+    private FolderTreeNode folder;
+    private Object[] uids;
+    private Integer[] address;
+    private ColumbaMessage message;
+    private int markVariant;
+    private String folderName;
+    private int colorValue;
+    private File destFile;
 
-	/**
-	 * Constructor for FolderCommandReference.
-	 * @param folder
-	 * @param uids
-	 */
-	public FolderCommandReference(FolderTreeNode folder, Object[] uids) {
-		
-		this.folder = folder;
-		this.uids = uids;
-	}
+    /**
+     * Constructor for FolderCommandReference.
+     * @param folder
+     */
+    public FolderCommandReference(FolderTreeNode folder) {
+        this.folder = folder;
+    }
 
-	/**
-	 * Constructor for FolderCommandReference.
-	 * @param folder
-	 * @param uids
-	 * @param address
-	 */
-	public FolderCommandReference(
-		FolderTreeNode folder,
-		Object[] uids,
-		Integer[] address) {
-		
-		this.folder = folder;
-		this.uids = uids;
-		this.address = address;
-	}
+    public FolderCommandReference(FolderTreeNode folder, ColumbaMessage message) {
+        this.folder = folder;
+        this.message = message;
+    }
 
-	public FolderTreeNode getFolder() {
-		return folder;
-	}
+    /**
+     * Constructor for FolderCommandReference.
+     * @param folder
+     * @param uids
+     */
+    public FolderCommandReference(FolderTreeNode folder, Object[] uids) {
+        this.folder = folder;
+        this.uids = uids;
+    }
 
-	public void setFolder(FolderTreeNode folder) {
-		this.folder = folder;
-	}
+    /**
+     * Constructor for FolderCommandReference.
+     * @param folder
+     * @param uids
+     * @param address
+     */
+    public FolderCommandReference(FolderTreeNode folder, Object[] uids,
+        Integer[] address) {
+        this.folder = folder;
+        this.uids = uids;
+        this.address = address;
+    }
 
-	public Object[] getUids() {
-		return uids;
-	}
+    public FolderTreeNode getFolder() {
+        return folder;
+    }
 
-	public Integer[] getAddress() {
-		return address;
-	}
+    public void setFolder(FolderTreeNode folder) {
+        this.folder = folder;
+    }
 
-	public void setUids(Object[] uids) {
-		this.uids = uids;
-	}
-	
-	public ColumbaMessage getMessage()
-	{
-		return message;
-	}
-	
-	public void setMessage( ColumbaMessage message )
-	{
-		this.message = message;
-	}
+    public Object[] getUids() {
+        return uids;
+    }
 
-	public void reduceToFirstUid() {
-		if (uids == null)
-			return;
+    public Integer[] getAddress() {
+        return address;
+    }
 
-		int size = Array.getLength(uids);
+    public void setUids(Object[] uids) {
+        this.uids = uids;
+    }
 
-		if (size > 1) {
-			Object[] oneUid = new Object[1];
-			oneUid[0] = uids[0];
-			uids = oneUid;
-		}
-	}
+    public ColumbaMessage getMessage() {
+        return message;
+    }
 
-	public boolean tryToGetLock(Object locker) {
-		//ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
-		
-		//Lock result = folder.tryToGetLock();
-		return folder.tryToGetLock(locker);
-		
-	}
+    public void setMessage(ColumbaMessage message) {
+        this.message = message;
+    }
 
-	public void releaseLock(Object locker) {
-		
-		//ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
-		folder.releaseLock(locker);
-	}
-	/**
-	 * Returns the markVariant.
-	 * @return int
-	 */
-	public int getMarkVariant() {
-		return markVariant;
-	}
+    public void reduceToFirstUid() {
+        if (uids == null) {
+            return;
+        }
 
-	/**
-	 * Sets the markVariant.
-	 * @param markVariant The markVariant to set
-	 */
-	public void setMarkVariant(int markVariant) {
-		this.markVariant = markVariant;
-	}
+        int size = Array.getLength(uids);
 
-	/**
-	 * Returns the folderName.
-	 * @return String
-	 */
-	public String getFolderName() {
-		return folderName;
-	}
+        if (size > 1) {
+            Object[] oneUid = new Object[1];
+            oneUid[0] = uids[0];
+            uids = oneUid;
+        }
+    }
 
-	/**
-	 * Sets the folderName.
-	 * @param folderName The folderName to set
-	 */
-	public void setFolderName(String folderName) {
-		this.folderName = folderName;
-	}
+    public boolean tryToGetLock(Object locker) {
+        //ColumbaLogger.log.debug("try to get lock on: "+folder.getName() );
+        //Lock result = folder.tryToGetLock();
+        return folder.tryToGetLock(locker);
+    }
 
-	/**
-	 * @return
-	 */
-	public File getDestFile() {
-		return destFile;
-	}
+    public void releaseLock(Object locker) {
+        //ColumbaLogger.log.debug("releasing lock: "+folder.getName() );
+        folder.releaseLock(locker);
+    }
 
-	/**
-	 * @param destFile
-	 */
-	public void setDestFile(File destFile) {
-		this.destFile = destFile;
-	}
+    /**
+     * Returns the markVariant.
+     * @return int
+     */
+    public int getMarkVariant() {
+        return markVariant;
+    }
 
-	/**
-	 * @return Returns the colorValue.
-	 */
-	public int getColorValue() {
-		return colorValue;
-	}
+    /**
+     * Sets the markVariant.
+     * @param markVariant The markVariant to set
+     */
+    public void setMarkVariant(int markVariant) {
+        this.markVariant = markVariant;
+    }
 
-	/**
-	 * @param colorValue The colorValue to set.
-	 */
-	public void setColorValue(int colorValue) {
-		this.colorValue = colorValue;
-	}
+    /**
+     * Returns the folderName.
+     * @return String
+     */
+    public String getFolderName() {
+        return folderName;
+    }
 
+    /**
+     * Sets the folderName.
+     * @param folderName The folderName to set
+     */
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
+
+    /**
+     * @return
+     */
+    public File getDestFile() {
+        return destFile;
+    }
+
+    /**
+     * @param destFile
+     */
+    public void setDestFile(File destFile) {
+        this.destFile = destFile;
+    }
+
+    /**
+     * @return Returns the colorValue.
+     */
+    public int getColorValue() {
+        return colorValue;
+    }
+
+    /**
+     * @param colorValue The colorValue to set.
+     */
+    public void setColorValue(int colorValue) {
+        this.colorValue = colorValue;
+    }
 }

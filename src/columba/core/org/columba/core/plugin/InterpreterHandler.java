@@ -15,58 +15,57 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import java.util.Hashtable;
-
 import org.columba.core.scripting.AbstractInterpreter;
 import org.columba.core.xml.XmlElement;
+
+import java.util.Hashtable;
+
 
 /**
  * This handler makes it possible to add new interpreter support
  * in Columba.
  * <p>
  * This is the way we realized the python support for plugins.
- * 
+ *
  * @author fdietz
  */
 public class InterpreterHandler extends AbstractPluginHandler {
+    private Hashtable interpreterTable;
 
-	private Hashtable interpreterTable;
+    /**
+     * Constructor for InterpreterHandler.
+     * @param id
+     * @param config
+     */
+    public InterpreterHandler() {
+        super("org.columba.core.interpreter", null);
+        interpreterTable = new Hashtable();
+    }
 
-	/**
-	 * Constructor for InterpreterHandler.
-	 * @param id
-	 * @param config
-	 */
+    /**
+     * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
+     */
+    public String[] getPluginIdList() {
+        return null;
+    }
 
-	public InterpreterHandler() {
-		super("org.columba.core.interpreter", null);
-		interpreterTable = new Hashtable();
-	}
+    public AbstractInterpreter getInterpreter(String type) {
+        return (AbstractInterpreter) interpreterTable.get(type);
+    }
 
-	/**
-	 * @see org.columba.core.plugin.AbstractPluginHandler#getDefaultNames()
-	 */
-	public String[] getPluginIdList() {
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+     */
+    public void addExtension(String id, XmlElement extension) {
+        XmlElement interpreter = extension.getElement("interpreter");
 
-	
-
-	public AbstractInterpreter getInterpreter(String type) {
-		return (AbstractInterpreter) interpreterTable.get(type);		
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-	 */
-	public void addExtension(String id, XmlElement extension) {
-		XmlElement interpreter = extension.getElement("interpreter");
-		
-		try {
-			interpreterTable.put(interpreter.getAttribute("name"), PluginLoader.loadExternalPlugin(interpreter.getAttribute("main_class"), pluginManager.getPluginType(id),pluginManager.getJarFile(id),null));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+        try {
+            interpreterTable.put(interpreter.getAttribute("name"),
+                PluginLoader.loadExternalPlugin(interpreter.getAttribute(
+                        "main_class"), pluginManager.getPluginType(id),
+                    pluginManager.getJarFile(id), null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

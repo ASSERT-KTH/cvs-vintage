@@ -23,331 +23,331 @@ import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.Point2D;
+
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+
 public class cParagraph extends cPrintObject {
+    public static final int LEFT = 0;
+    public static final int CENTER = 1;
+    public static final int RIGHT = 2;
+    public static final int BLOCK = 3;
+    private String original;
+    private List paragraphs;
+    private int alignment;
+    private Font font;
+
+    public cParagraph() {
+        super();
+        paragraphs = new Vector();
+
+        alignment = 0;
+
+        font = new Font("Default", Font.PLAIN, 10);
+    }
+
+    public void setFontStyle(int style) {
+        font = font.deriveFont(style);
+
+        updateFont();
+    }
+
+    public void setFontSize(float size) {
+        font = font.deriveFont(size);
+        updateFont();
+    }
 
-	public static final int LEFT = 0;
-	public static final int CENTER = 1;
-	public static final int RIGHT = 2;
-	public static final int BLOCK = 3;
-
-	private String original;
-	private List paragraphs;
-	private int alignment;
-
-	private Font font;
-
-	public cParagraph() {
-		super();
-		paragraphs = new Vector();
-
-		alignment = 0;
-
-		font = new Font("Default", Font.PLAIN, 10);
-	}
-	
-	public void setFontStyle( int style ) {
-		font = font.deriveFont( style );
-			
-		updateFont();		
-	}
-
-	public void setFontSize( float size ) {	
-		font = font.deriveFont(size);
-		updateFont();		
-	}	
-	
-	private void updateFont() {
-		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
-			((AttributedString) it.next()).addAttribute(TextAttribute.FONT, font);
-		// for( int i=0; i<paragraphs.size(); i++ ) {
-			// ((AttributedString)paragraphs.get(i)).addAttribute(TextAttribute.FONT, font);
-		}			
-	}
-	
-	/**
-	 * Inserts space between newlines if necessary to avoid
-	 * empty lines. Also inserts a space at the beginning if
-	 * the text starts with a newline.
-	 * @param t		Text to validate
-	 * @return		Validated text
-	 */
-	private String validate(String t) {
-		if ((t.indexOf("\n\n") == -1) && (!t.startsWith("\n"))) {
-			return t;
-		}
-
-		StringBuffer result = new StringBuffer();
-
-		// ensure that the text does not start with a newline
-		if (t.startsWith("\n")) {
-			result.append(' ');
-		}
-
-		// insert space btw. double newlines
-		char last = ' ';
-		for (int i = 0; i < t.length(); i++) {
-			if ((t.charAt(i) == '\n') && (last == '\n')) {
-				result.append(" \n");
-			} else {
-				result.append(t.charAt(i));
-			}
-			last = t.charAt(i);
-		}
-
-		return result.toString();
-	}
-
-	public void setText(String t) {
-		original = validate(t);
-
-		paragraphs.clear();
-		StringBuffer buffer = new StringBuffer();
-
-		AttributedString act;
-
-		for (int i = 0; i < original.length(); i++) {
-			if (original.charAt(i) == '\n') {
-				act = new AttributedString(buffer.toString());
-				act.addAttribute(TextAttribute.FONT, font);
-				paragraphs.add(act);
-				buffer = new StringBuffer();
-			} else {
-				buffer.append(original.charAt(i));
-			}
-		}
-
-		if (buffer.length() != 0) {
-			act = new AttributedString(buffer.toString());
-			act.addAttribute(TextAttribute.FONT, font);
-			paragraphs.add(act);
-		}
-	}
-
-	public void setTextAlignment(int v) {
-		alignment = v;
-	}
+    private void updateFont() {
+        for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+            ((AttributedString) it.next()).addAttribute(TextAttribute.FONT, font);
 
-	public void print(Graphics2D g) {
-		computePositionAndSize();
+            // for( int i=0; i<paragraphs.size(); i++ ) {
+            // ((AttributedString)paragraphs.get(i)).addAttribute(TextAttribute.FONT, font);
+        }
+    }
 
-		Color saveForeground = g.getColor();
+    /**
+     * Inserts space between newlines if necessary to avoid
+     * empty lines. Also inserts a space at the beginning if
+     * the text starts with a newline.
+     * @param t                Text to validate
+     * @return                Validated text
+     */
+    private String validate(String t) {
+        if ((t.indexOf("\n\n") == -1) && (!t.startsWith("\n"))) {
+            return t;
+        }
+
+        StringBuffer result = new StringBuffer();
 
-		g.setColor(color);
+        // ensure that the text does not start with a newline
+        if (t.startsWith("\n")) {
+            result.append(' ');
+        }
 
-		switch (alignment) {
-			case LEFT :
-				renderLeftAligned(g);
-				break;
+        // insert space btw. double newlines
+        char last = ' ';
 
-			case RIGHT :
-				renderRightAligned(g);
-				break;
+        for (int i = 0; i < t.length(); i++) {
+            if ((t.charAt(i) == '\n') && (last == '\n')) {
+                result.append(" \n");
+            } else {
+                result.append(t.charAt(i));
+            }
 
-			case CENTER :
-				renderCenterAligned(g);
-				break;
+            last = t.charAt(i);
+        }
 
-		}
+        return result.toString();
+    }
 
-		g.setColor(saveForeground);
-	}
+    public void setText(String t) {
+        original = validate(t);
 
-	private void renderLeftAligned(Graphics2D g) {
+        paragraphs.clear();
 
-		Point2D.Double pen = getDrawingOrigin().getPoint2D();
+        StringBuffer buffer = new StringBuffer();
 
-		double width = getDrawingSize().getWidth().getPoints();
-		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
-			LineBreakMeasurer lineBreaker =
-				new LineBreakMeasurer(
-					((AttributedString) it.next()).getIterator(),
-					new FontRenderContext(null, true, true));
-		// for (int i = 0; i < paragraphs.size(); i++) {
-			// LineBreakMeasurer lineBreaker =
-				// new LineBreakMeasurer(
-					// ((AttributedString) paragraphs.get(i)).getIterator(),
-					// new FontRenderContext(null, true, true));
+        AttributedString act;
 
-			TextLayout layout;
-			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
-				pen.y += layout.getAscent();
+        for (int i = 0; i < original.length(); i++) {
+            if (original.charAt(i) == '\n') {
+                act = new AttributedString(buffer.toString());
+                act.addAttribute(TextAttribute.FONT, font);
+                paragraphs.add(act);
+                buffer = new StringBuffer();
+            } else {
+                buffer.append(original.charAt(i));
+            }
+        }
 
-				layout.draw(g, (float) pen.x, (float) pen.y);
+        if (buffer.length() != 0) {
+            act = new AttributedString(buffer.toString());
+            act.addAttribute(TextAttribute.FONT, font);
+            paragraphs.add(act);
+        }
+    }
 
-				pen.y += layout.getDescent() + layout.getLeading();
-			}
+    public void setTextAlignment(int v) {
+        alignment = v;
+    }
 
-		}
+    public void print(Graphics2D g) {
+        computePositionAndSize();
 
-	}
+        Color saveForeground = g.getColor();
 
-	private void renderRightAligned(Graphics2D g) {
+        g.setColor(color);
 
-		Point2D.Double pen = getDrawingOrigin().getPoint2D();
+        switch (alignment) {
+        case LEFT:
+            renderLeftAligned(g);
 
-		double width = getDrawingSize().getWidth().getPoints();
-		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
-			LineBreakMeasurer lineBreaker =
-				new LineBreakMeasurer(
-					((AttributedString) it.next()).getIterator(),
-					new FontRenderContext(null, true, true));
-		// for (int i = 0; i < paragraphs.size(); i++) {
-			// LineBreakMeasurer lineBreaker =
-				// new LineBreakMeasurer(
-					// ((AttributedString) paragraphs.get(i)).getIterator(),
-					// new FontRenderContext(null, true, true));
+            break;
 
-			TextLayout layout;
-			float layoutX;
+        case RIGHT:
+            renderRightAligned(g);
 
-			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
-				pen.y += layout.getAscent();
+            break;
 
-				layoutX = ((float) (pen.x + width)) - layout.getAdvance();
+        case CENTER:
+            renderCenterAligned(g);
 
-				layout.draw(g, layoutX, (float) pen.y);
+            break;
+        }
 
-				pen.y += layout.getDescent() + layout.getLeading();
-			}
+        g.setColor(saveForeground);
+    }
 
-		}
-	}
+    private void renderLeftAligned(Graphics2D g) {
+        Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
-	private void renderCenterAligned(Graphics2D g) {
+        double width = getDrawingSize().getWidth().getPoints();
 
-		Point2D.Double pen = getDrawingOrigin().getPoint2D();
+        for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+            LineBreakMeasurer lineBreaker = new LineBreakMeasurer(((AttributedString) it.next()).getIterator(),
+                    new FontRenderContext(null, true, true));
 
-		double width = getDrawingSize().getWidth().getPoints();
-		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
-			LineBreakMeasurer lineBreaker =
-				new LineBreakMeasurer(
-					((AttributedString) it.next()).getIterator(),
-					new FontRenderContext(null, true, true));
-		// for (int i = 0; i < paragraphs.size(); i++) {
-			// LineBreakMeasurer lineBreaker =
-				// new LineBreakMeasurer(
-					// ((AttributedString) paragraphs.get(i)).getIterator(),
-					// new FontRenderContext(null, true, true));
+            // for (int i = 0; i < paragraphs.size(); i++) {
+            // LineBreakMeasurer lineBreaker =
+            // new LineBreakMeasurer(
+            // ((AttributedString) paragraphs.get(i)).getIterator(),
+            // new FontRenderContext(null, true, true));
+            TextLayout layout;
 
-			TextLayout layout;
+            while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+                pen.y += layout.getAscent();
 
-			float layoutX;
+                layout.draw(g, (float) pen.x, (float) pen.y);
 
-			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
-				pen.y += layout.getAscent();
+                pen.y += (layout.getDescent() + layout.getLeading());
+            }
+        }
+    }
 
-				layoutX = ((float) (pen.x + (width / 2))) - (layout.getAdvance() / 2);
+    private void renderRightAligned(Graphics2D g) {
+        Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
-				layout.draw(g, layoutX, (float) pen.y);
+        double width = getDrawingSize().getWidth().getPoints();
 
-				pen.y += layout.getDescent() + layout.getLeading();
-			}
+        for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+            LineBreakMeasurer lineBreaker = new LineBreakMeasurer(((AttributedString) it.next()).getIterator(),
+                    new FontRenderContext(null, true, true));
 
-		}
-	}
+            // for (int i = 0; i < paragraphs.size(); i++) {
+            // LineBreakMeasurer lineBreaker =
+            // new LineBreakMeasurer(
+            // ((AttributedString) paragraphs.get(i)).getIterator(),
+            // new FontRenderContext(null, true, true));
+            TextLayout layout;
+            float layoutX;
 
-	public cSize getSize(cUnit w) {
-		cCmUnit textHeight = new cCmUnit();
-		float maxAdvance = -1;
+            while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+                pen.y += layout.getAscent();
 
-		Point2D.Double pen = new Point2D.Double(0.0, 0.0);
+                layoutX = ((float) (pen.x + width)) - layout.getAdvance();
 
-		double width = w.sub(leftMargin).sub(rightMargin).getPoints();
-		for (Iterator it = paragraphs.iterator(); it.hasNext();) {
-			LineBreakMeasurer lineBreaker =
-				new LineBreakMeasurer(
-					((AttributedString) it.next()).getIterator(),
-					new FontRenderContext(null, true, true));
-		// for (int i = 0; i < paragraphs.size(); i++) {
-			// LineBreakMeasurer lineBreaker =
-				// new LineBreakMeasurer(
-					// ((AttributedString) paragraphs.get(i)).getIterator(),
-					// new FontRenderContext(null, true, true));
+                layout.draw(g, layoutX, (float) pen.y);
 
-			TextLayout layout;
-			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
-				pen.y += layout.getAscent() + layout.getDescent() + layout.getLeading();
-				if( layout.getAdvance() > maxAdvance )
-					maxAdvance = layout.getAdvance();
-			}
+                pen.y += (layout.getDescent() + layout.getLeading());
+            }
+        }
+    }
 
-		}
+    private void renderCenterAligned(Graphics2D g) {
+        Point2D.Double pen = getDrawingOrigin().getPoint2D();
 
-		textHeight.setPoints(pen.y);
-		textHeight.addI(topMargin);
-		textHeight.addI(bottomMargin);
+        double width = getDrawingSize().getWidth().getPoints();
 
-		cCmUnit bwidth = new cCmUnit();
-		bwidth.setPoints( maxAdvance );
-		bwidth.addI( leftMargin );
-		bwidth.addI( rightMargin );
+        for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+            LineBreakMeasurer lineBreaker = new LineBreakMeasurer(((AttributedString) it.next()).getIterator(),
+                    new FontRenderContext(null, true, true));
 
-		return new cSize(bwidth, textHeight);
-	}
+            // for (int i = 0; i < paragraphs.size(); i++) {
+            // LineBreakMeasurer lineBreaker =
+            // new LineBreakMeasurer(
+            // ((AttributedString) paragraphs.get(i)).getIterator(),
+            // new FontRenderContext(null, true, true));
+            TextLayout layout;
 
-	public cPrintObject breakBlock(cUnit w, cUnit maxHeight) {
-		AttributedCharacterIterator it;
-		int lastPos;
-		int pos = 0;
+            float layoutX;
 
-		cParagraph remainParagraph = null;
+            while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+                pen.y += layout.getAscent();
 
-		Point2D.Double pen = new Point2D.Double(0.0, topMargin.getPoints());
+                layoutX = ((float) (pen.x + (width / 2))) -
+                    (layout.getAdvance() / 2);
 
-		double width = w.sub(leftMargin).sub(rightMargin).getPoints();
-		for (Iterator iter = paragraphs.iterator(); iter.hasNext();) {
-			it = ((AttributedString) iter.next()).getIterator();
-		// for (int i = 0; i < paragraphs.size(); i++) {
-			// it = ((AttributedString) paragraphs.get(i)).getIterator();
+                layout.draw(g, layoutX, (float) pen.y);
 
-			LineBreakMeasurer lineBreaker =
-				new LineBreakMeasurer(it, new FontRenderContext(null, true, true));
+                pen.y += (layout.getDescent() + layout.getLeading());
+            }
+        }
+    }
 
-			TextLayout layout;
-			lastPos = 0;
+    public cSize getSize(cUnit w) {
+        cCmUnit textHeight = new cCmUnit();
+        float maxAdvance = -1;
 
-			while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+        Point2D.Double pen = new Point2D.Double(0.0, 0.0);
 
-				pen.y += layout.getAscent() + layout.getDescent() + layout.getLeading();
+        double width = w.sub(leftMargin).sub(rightMargin).getPoints();
 
-				if (pen.y > maxHeight.getPoints()) {
+        for (Iterator it = paragraphs.iterator(); it.hasNext();) {
+            LineBreakMeasurer lineBreaker = new LineBreakMeasurer(((AttributedString) it.next()).getIterator(),
+                    new FontRenderContext(null, true, true));
 
-					remainParagraph = new cParagraph();
-					remainParagraph.setTextAlignment(alignment);
-					remainParagraph.setTopMargin(topMargin);
-					remainParagraph.setLeftMargin(leftMargin);
-					remainParagraph.setRightMargin(rightMargin);
+            // for (int i = 0; i < paragraphs.size(); i++) {
+            // LineBreakMeasurer lineBreaker =
+            // new LineBreakMeasurer(
+            // ((AttributedString) paragraphs.get(i)).getIterator(),
+            // new FontRenderContext(null, true, true));
+            TextLayout layout;
 
-					topMargin = new cCmUnit();
+            while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+                pen.y += (layout.getAscent() + layout.getDescent() +
+                layout.getLeading());
 
-					remainParagraph.setText(original.substring(0, pos + lastPos));
-					this.setText(original.substring(pos + lastPos));
+                if (layout.getAdvance() > maxAdvance) {
+                    maxAdvance = layout.getAdvance();
+                }
+            }
+        }
 
-					return remainParagraph;
-				}
-				lastPos += layout.getCharacterCount();
-			}
+        textHeight.setPoints(pen.y);
+        textHeight.addI(topMargin);
+        textHeight.addI(bottomMargin);
 
-			pos += it.getEndIndex() + 1;
+        cCmUnit bwidth = new cCmUnit();
+        bwidth.setPoints(maxAdvance);
+        bwidth.addI(leftMargin);
+        bwidth.addI(rightMargin);
 
-		}
+        return new cSize(bwidth, textHeight);
+    }
 
-		return remainParagraph;
-	}
+    public cPrintObject breakBlock(cUnit w, cUnit maxHeight) {
+        AttributedCharacterIterator it;
+        int lastPos;
+        int pos = 0;
 
-	public Font getFont() {
-		return font;
-	}
+        cParagraph remainParagraph = null;
 
-	public void setFont(Font font) {
-		this.font = font;
-		updateFont();		
-	}
+        Point2D.Double pen = new Point2D.Double(0.0, topMargin.getPoints());
 
+        double width = w.sub(leftMargin).sub(rightMargin).getPoints();
+
+        for (Iterator iter = paragraphs.iterator(); iter.hasNext();) {
+            it = ((AttributedString) iter.next()).getIterator();
+
+            // for (int i = 0; i < paragraphs.size(); i++) {
+            // it = ((AttributedString) paragraphs.get(i)).getIterator();
+            LineBreakMeasurer lineBreaker = new LineBreakMeasurer(it,
+                    new FontRenderContext(null, true, true));
+
+            TextLayout layout;
+            lastPos = 0;
+
+            while ((layout = lineBreaker.nextLayout((float) width)) != null) {
+                pen.y += (layout.getAscent() + layout.getDescent() +
+                layout.getLeading());
+
+                if (pen.y > maxHeight.getPoints()) {
+                    remainParagraph = new cParagraph();
+                    remainParagraph.setTextAlignment(alignment);
+                    remainParagraph.setTopMargin(topMargin);
+                    remainParagraph.setLeftMargin(leftMargin);
+                    remainParagraph.setRightMargin(rightMargin);
+
+                    topMargin = new cCmUnit();
+
+                    remainParagraph.setText(original.substring(0, pos +
+                            lastPos));
+                    this.setText(original.substring(pos + lastPos));
+
+                    return remainParagraph;
+                }
+
+                lastPos += layout.getCharacterCount();
+            }
+
+            pos += (it.getEndIndex() + 1);
+        }
+
+        return remainParagraph;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
+        updateFont();
+    }
 }

@@ -15,8 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
-import java.io.File;
-
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
@@ -25,57 +23,63 @@ import org.columba.core.config.Config;
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
 import org.columba.core.xml.XmlElement;
 
+import java.io.File;
+
+
 /**
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
- * 
+ *
  * @author fdietz
  */
 class ExternalToolsWizardModelListener implements WizardModelListener {
+    protected DataModel data;
+    protected boolean finished = false;
 
-	protected DataModel data;
-	protected boolean finished = false;
+    public ExternalToolsWizardModelListener(DataModel data) {
+        this.data = data;
+    }
 
-	public ExternalToolsWizardModelListener(DataModel data) {
-		this.data = data;
-	}
+    public void wizardFinished(WizardModelEvent e) {
+        // get selected plugin
+        AbstractExternalToolsPlugin plugin = (AbstractExternalToolsPlugin) data.getData(
+                "Plugin");
 
-	public void wizardFinished(WizardModelEvent e) {
+        // get location of executable
+        File sourceFile = (File) data.getData("Location.source");
 
-		// get selected plugin
-		AbstractExternalToolsPlugin plugin =
-			(AbstractExternalToolsPlugin) data.getData("Plugin");
+        // get plugin ID
+        String id = (String) data.getData("id");
 
-		// get location of executable
-		File sourceFile = (File) data.getData("Location.source");
+        // get configuration
+        XmlElement root = Config.get("external_tools").getElement("tools");
 
-		// get plugin ID
-		String id = (String) data.getData("id");
+        for (int i = 0; i < root.count(); i++) {
+            XmlElement child = root.getElement(i);
 
-		// get configuration
-		XmlElement root = Config.get("external_tools").getElement("tools");
-		for (int i = 0; i < root.count(); i++) {
-			XmlElement child = root.getElement(i);
-			if (child.getAttribute("name").equals(id)) {
-				
-				// set configuration of this plugin
-				child.addAttribute("first_time", "false");
-				child.addAttribute("location", sourceFile.getPath());
-				
-				// exit for-loop
-				break;
-			}
-		}
-		
-		finished = true;
-	}
+            if (child.getAttribute("name").equals(id)) {
+                // set configuration of this plugin
+                child.addAttribute("first_time", "false");
+                child.addAttribute("location", sourceFile.getPath());
 
-	public void stepShown(WizardModelEvent e) {}
-	public void wizardCanceled(WizardModelEvent e) {}
-	public void wizardModelChanged(WizardModelEvent e) {}
-	
-	public boolean isFinished()
-	{
-		return finished;
-	}
+                // exit for-loop
+                break;
+            }
+        }
+
+        finished = true;
+    }
+
+    public void stepShown(WizardModelEvent e) {
+    }
+
+    public void wizardCanceled(WizardModelEvent e) {
+    }
+
+    public void wizardModelChanged(WizardModelEvent e) {
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
 }

@@ -13,43 +13,39 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
+
 import org.columba.mail.gui.config.general.MailOptionsDialog;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
- * 
+ *
  * Opens a Mail Options Dialog.
- * 
+ *
  *
  * @author fdietz
  */
 public class MailOptionsAction extends FrameAction {
+    /**
+     * @param frameMediator
+     * @param name
+     */
+    public MailOptionsAction(FrameMediator frameController) {
+        super(frameController,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_edit_mailoptions"));
+    }
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 */
-	public MailOptionsAction(
-			FrameMediator frameController) {
-		super(
-				frameController,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_edit_mailoptions"));
-	}
-
-	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		new MailOptionsDialog(null);
-	}
-
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        new MailOptionsDialog(null);
+    }
 }

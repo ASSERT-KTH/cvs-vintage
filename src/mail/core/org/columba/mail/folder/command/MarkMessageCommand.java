@@ -15,12 +15,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -29,113 +29,98 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
+
 /**
  * Mark selected messages with specific variant.
  * <p>
- * 
+ *
  * Variant can be: - read/unread - flagged/unflagged - expunged/unexpunged -
  * answered
- * 
+ *
  * @author fdietz
  */
 public class MarkMessageCommand extends FolderCommand {
+    public final static int MARK_AS_READ = 0;
+    public final static int MARK_AS_FLAGGED = 1;
+    public final static int MARK_AS_EXPUNGED = 2;
+    public final static int MARK_AS_ANSWERED = 3;
+    public final static int MARK_AS_UNREAD = 4;
+    public final static int MARK_AS_UNFLAGGED = 5;
+    public final static int MARK_AS_UNEXPUNGED = 6;
+    public final static int MARK_AS_SPAM = 7;
+    public final static int MARK_AS_NOTSPAM = 8;
+    protected FolderCommandAdapter adapter;
 
-	public final static int MARK_AS_READ = 0;
-	public final static int MARK_AS_FLAGGED = 1;
-	public final static int MARK_AS_EXPUNGED = 2;
-	public final static int MARK_AS_ANSWERED = 3;
-	public final static int MARK_AS_UNREAD = 4;
-	public final static int MARK_AS_UNFLAGGED = 5;
-	public final static int MARK_AS_UNEXPUNGED = 6;
-	public final static int MARK_AS_SPAM = 7;
-	public final static int MARK_AS_NOTSPAM = 8;
+    /**
+     * Constructor for MarkMessageCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public MarkMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	protected FolderCommandAdapter adapter;
+    public void updateGUI() throws Exception {
+        // get source references
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-	/**
-	 * Constructor for MarkMessageCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public MarkMessageCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+        // for every source references
+        TableModelChangedEvent ev;
 
-	public void updateGUI() throws Exception {
+        for (int i = 0; i < r.length; i++) {
+            // update table
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    r[i].getFolder(), r[i].getUids(), r[i].getMarkVariant());
 
-		// get source references
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+            TableUpdater.tableChanged(ev);
 
-		// for every source references
-		TableModelChangedEvent ev;
-		for (int i = 0; i < r.length; i++) {
+            // update treemodel
+            MailInterface.treeModel.nodeChanged(r[i].getFolder());
+        }
 
-			// update table
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					r[i].getFolder(),
-					r[i].getUids(),
-					r[i].getMarkVariant());
+        // get update reference
+        // -> only available if VirtualFolder is involved in operation
+        FolderCommandReference u = adapter.getUpdateReferences();
 
-			TableUpdater.tableChanged(ev);
+        if (u != null) {
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    u.getFolder(), u.getUids(), u.getMarkVariant());
 
-			// update treemodel
-			MailInterface.treeModel.nodeChanged(r[i].getFolder());
-		}
+            TableUpdater.tableChanged(ev);
+            MailInterface.treeModel.nodeChanged(u.getFolder());
+        }
+    }
 
-		// get update reference
-		// -> only available if VirtualFolder is involved in operation
-		FolderCommandReference u = adapter.getUpdateReferences();
-		if (u != null) {
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        // use wrapper class for easier handling of references array
+        adapter = new FolderCommandAdapter((FolderCommandReference[]) getReferences());
 
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					u.getFolder(),
-					u.getUids(),
-					u.getMarkVariant());
+        // get array of source references
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-			TableUpdater.tableChanged(ev);
-			MailInterface.treeModel.nodeChanged(u.getFolder());
-		}
-	}
+        // for every folder
+        for (int i = 0; i < r.length; i++) {
+            // get array of message UIDs
+            Object[] uids = r[i].getUids();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
+            // get source folder
+            Folder srcFolder = (Folder) r[i].getFolder();
 
-		// use wrapper class for easier handling of references array
-		adapter =
-			new FolderCommandAdapter(
-				(FolderCommandReference[]) getReferences());
+            // register for status events
+            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-		// get array of source references
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+            // which kind of mark?
+            int markVariant = r[i].getMarkVariant();
 
-		// for every folder
-		for (int i = 0; i < r.length; i++) {
+            // saving last selected Massage to the folder
+            srcFolder.setLastSelection(uids[0]);
 
-			// get array of message UIDs
-			Object[] uids = r[i].getUids();
-
-			// get source folder
-			Folder srcFolder = (Folder) r[i].getFolder();
-			
-			// register for status events
-			((StatusObservableImpl) srcFolder.getObservable()).setWorker(
-				worker);
-
-			// which kind of mark?
-			int markVariant = r[i].getMarkVariant();
-			
-			// saving last selected Massage to the folder
-			srcFolder.setLastSelection(uids[0]);
-			
-			// mark message
-			srcFolder.markMessage(uids, markVariant);
-		}
-	}
+            // mark message
+            srcFolder.markMessage(uids, markVariant);
+        }
+    }
 }

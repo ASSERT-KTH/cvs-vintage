@@ -15,8 +15,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.CTextField;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.ToolbarToggleButton;
+
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.model.TableModelFilter;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -31,287 +45,216 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.CTextField;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.ToolbarToggleButton;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.model.TableModelFilter;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
 
 public class FilterToolbar extends JPanel implements ActionListener {
-	public JToggleButton newButton;
-	public JToggleButton oldButton;
-	private JToggleButton answeredButton;
-	private JToggleButton flaggedButton;
-	private JToggleButton expungedButton;
-	private JToggleButton draftButton;
-	private JToggleButton attachmentButton;
-	private JToggleButton secureButton;
+    public JToggleButton newButton;
+    public JToggleButton oldButton;
+    private JToggleButton answeredButton;
+    private JToggleButton flaggedButton;
+    private JToggleButton expungedButton;
+    private JToggleButton draftButton;
+    private JToggleButton attachmentButton;
+    private JToggleButton secureButton;
+    public JButton clearButton;
+    public JButton advancedButton;
+    private JLabel label;
+    private JTextField textField;
+    private TableController tableController;
 
-	public JButton clearButton;
-	public JButton advancedButton;
+    public FilterToolbar(TableController headerTableViewer) {
+        super();
+        this.tableController = headerTableViewer;
 
-	private JLabel label;
-	private JTextField textField;
+        initComponents();
+        layoutComponents();
+    }
 
-	private TableController tableController;
+    public void initComponents() {
+        //addSeparator();
+        newButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon(
+                    "mail-new.png"));
+        newButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_unread"));
+        newButton.addActionListener(this);
+        newButton.setActionCommand("NEW");
+        newButton.setSelected(false);
+        newButton.setMargin(new Insets(0, 0, 0, 0));
 
-	public FilterToolbar(TableController headerTableViewer) {
-		super();
-		this.tableController = headerTableViewer;
+        answeredButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon(
+                    "reply_small.png"));
+        answeredButton.addActionListener(this);
+        answeredButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_answered"));
+        answeredButton.setActionCommand("ANSWERED");
+        answeredButton.setMargin(new Insets(0, 0, 0, 0));
+        answeredButton.setSelected(false);
 
-		initComponents();
-		layoutComponents();
-	}
+        flaggedButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon(
+                    "mark-as-important-16.png"));
+        flaggedButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_flagged"));
+        flaggedButton.setMargin(new Insets(0, 0, 0, 0));
+        flaggedButton.addActionListener(this);
+        flaggedButton.setActionCommand("FLAGGED");
+        flaggedButton.setSelected(false);
 
-	public void initComponents() {
+        expungedButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon(
+                    "stock_delete-16.png"));
+        expungedButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_expunged"));
+        expungedButton.setMargin(new Insets(0, 0, 0, 0));
+        expungedButton.addActionListener(this);
+        expungedButton.setActionCommand("EXPUNGED");
+        expungedButton.setSelected(false);
 
-		
+        attachmentButton = new ToolbarToggleButton(ImageLoader.getSmallImageIcon(
+                    "attachment.png"));
+        attachmentButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_attachment"));
+        attachmentButton.setMargin(new Insets(0, 0, 0, 0));
+        attachmentButton.addActionListener(this);
+        attachmentButton.setActionCommand("ATTACHMENT");
+        attachmentButton.setSelected(false);
 
-		//addSeparator();
-		newButton =
-			new ToolbarToggleButton(
-				ImageLoader.getSmallImageIcon("mail-new.png"));
-		newButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_unread"));
-		newButton.addActionListener(this);
-		newButton.setActionCommand("NEW");
-		newButton.setSelected(false);
-		newButton.setMargin(new Insets(0, 0, 0, 0));
+        label = new LabelWithMnemonic(MailResourceLoader.getString("menu",
+                    "mainframe", "filtertoolbar_header"));
 
-		answeredButton =
-			new ToolbarToggleButton(
-				ImageLoader.getSmallImageIcon("reply_small.png"));
-		answeredButton.addActionListener(this);
-		answeredButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_answered"));
-		answeredButton.setActionCommand("ANSWERED");
-		answeredButton.setMargin(new Insets(0, 0, 0, 0));
-		answeredButton.setSelected(false);
+        textField = new CTextField();
+        label.setLabelFor(textField);
+        textField.addActionListener(this);
+        textField.setActionCommand("TEXTFIELD");
+        textField.addFocusListener(new FocusListener() {
+                public void focusGained(FocusEvent e) {
+                }
 
-		flaggedButton =
-			new ToolbarToggleButton(
-				ImageLoader.getSmallImageIcon("mark-as-important-16.png"));
-		flaggedButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_flagged"));
-		flaggedButton.setMargin(new Insets(0, 0, 0, 0));
-		flaggedButton.addActionListener(this);
-		flaggedButton.setActionCommand("FLAGGED");
-		flaggedButton.setSelected(false);
+                public void focusLost(FocusEvent e) {
+                    TableModelFilter model = tableController.getTableModelFilteredView();
 
-		expungedButton =
-			new ToolbarToggleButton(
-				ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-		expungedButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_expunged"));
-		expungedButton.setMargin(new Insets(0, 0, 0, 0));
-		expungedButton.addActionListener(this);
-		expungedButton.setActionCommand("EXPUNGED");
-		expungedButton.setSelected(false);
+                    try {
+                        model.setPatternString(textField.getText());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
 
-		attachmentButton =
-			new ToolbarToggleButton(
-				ImageLoader.getSmallImageIcon("attachment.png"));
-		attachmentButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_attachment"));
-		attachmentButton.setMargin(new Insets(0, 0, 0, 0));
-		attachmentButton.addActionListener(this);
-		attachmentButton.setActionCommand("ATTACHMENT");
-		attachmentButton.setSelected(false);
+        clearButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "menu", "mainframe", "filtertoolbar_clear"));
+        clearButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_clear_tooltip"));
 
-		label =
-			new LabelWithMnemonic(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"filtertoolbar_header"));
+        attachmentButton.setSelected(false);
+        clearButton.setActionCommand("CLEAR");
+        clearButton.addActionListener(this);
 
-		textField = new CTextField();
-		label.setLabelFor(textField);
-		textField.addActionListener(this);
-		textField.setActionCommand("TEXTFIELD");
-		textField.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {
-			}
+        advancedButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "menu", "mainframe", "filtertoolbar_advanced"));
+        advancedButton.setToolTipText(MailResourceLoader.getString("menu",
+                "mainframe", "filtertoolbar_advanced_tooltip"));
 
-			public void focusLost(FocusEvent e) {
-				TableModelFilter model =
-					tableController.getTableModelFilteredView();
-				try {
-					model.setPatternString(textField.getText());
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		});
+        attachmentButton.setSelected(false);
+        advancedButton.setActionCommand("ADVANCED");
+        advancedButton.addActionListener(this);
+    }
 
-		clearButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"filtertoolbar_clear"));
-		clearButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_clear_tooltip"));
+    public void layoutComponents() {
+        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-		attachmentButton.setSelected(false);
-		clearButton.setActionCommand("CLEAR");
-		clearButton.addActionListener(this);
+        FormLayout l = new FormLayout("default, default, default, default, default, 3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
+                "fill:default:grow");
+        PanelBuilder b = new PanelBuilder(this, l);
 
-		advancedButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"filtertoolbar_advanced"));
-		advancedButton.setToolTipText(
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"filtertoolbar_advanced_tooltip"));
+        CellConstraints c = new CellConstraints();
 
-		attachmentButton.setSelected(false);
-		advancedButton.setActionCommand("ADVANCED");
-		advancedButton.addActionListener(this);
+        b.add(newButton, c.xy(1, 1));
+        b.add(answeredButton, c.xy(2, 1));
+        b.add(flaggedButton, c.xy(3, 1));
+        b.add(expungedButton, c.xy(4, 1));
+        b.add(attachmentButton, c.xy(5, 1));
 
-	}
+        b.add(label, c.xy(7, 1));
+        b.add(textField, c.xy(9, 1));
 
-	public void layoutComponents() {
-		setBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-		
-		FormLayout l =
-			new FormLayout(
-				"default, default, default, default, default, 3dlu, default, 3dlu, fill:default:grow, 3dlu, default, 3dlu, default",
-				"fill:default:grow");
-		PanelBuilder b = new PanelBuilder(this, l);
+        b.add(clearButton, c.xy(11, 1));
+        b.add(advancedButton, c.xy(13, 1));
+    }
 
-		CellConstraints c = new CellConstraints();
+    public void update() throws Exception {
+        tableController.getTableModelFilteredView().setDataFiltering(true);
 
-		b.add(newButton, c.xy(1, 1 ));
-		b.add(answeredButton, c.xy(2, 1 ));
-		b.add(flaggedButton, c.xy(3, 1 ));
-		b.add(expungedButton, c.xy(4, 1 ));
-		b.add(attachmentButton, c.xy(5, 1 ));
+        tableController.getUpdateManager().update();
+    }
 
-		b.add(label, c.xy(7, 1 ));
-		b.add(textField, c.xy(9, 1 ));
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		b.add(clearButton, c.xy(11, 1 ));
-		b.add(advancedButton, c.xy(13, 1 ));
+        try {
+            //TableModelFilteredView model =
+            // MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
+            TableModelFilter model = tableController.getTableModelFilteredView();
 
-	}
+            if (action.equals("ADVANCED")) {
+                Folder searchFolder = (Folder) MailInterface.treeModel.getFolder(106);
 
-	public void update() throws Exception {
+                Folder folder = (Folder) tableController.getMailFrameController()
+                                                        .getTableSelection()[0].getFolder();
 
-		tableController.getTableModelFilteredView().setDataFiltering(true);
+                if (folder == null) {
+                    return;
+                }
 
-		tableController.getUpdateManager().update();
+                org.columba.mail.gui.config.search.SearchFrame frame = new org.columba.mail.gui.config.search.SearchFrame(tableController.getMailFrameController(),
+                        searchFolder);
 
-	}
+                frame.setSourceFolder(folder);
+                frame.setVisible(true);
+            } else if (action.equals("NEW")) {
+                model.setNewFlag(!model.getNewFlag());
+                update();
+            } else if (action.equals("ANSWERED")) {
+                model.setAnsweredFlag(!model.getAnsweredFlag());
+                update();
+            } else if (action.equals("FLAGGED")) {
+                model.setFlaggedFlag(!model.getFlaggedFlag());
+                update();
+            } else if (action.equals("EXPUNGED")) {
+                model.setExpungedFlag(!model.getExpungedFlag());
+                update();
+            } else if (action.equals("ATTACHMENT")) {
+                model.setAttachmentFlag(!model.getAttachmentFlag());
+                update();
+            } else if (action.equals("TEXTFIELD")) {
+                model.setPatternString(textField.getText());
+                update();
+            } else if (action.equals("CLEAR")) {
+                if (model == null) {
+                    return;
+                }
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+                model.setNewFlag(false);
 
-		try {
+                //model.setOldFlag(true);
+                model.setAnsweredFlag(false);
+                model.setFlaggedFlag(false);
+                model.setExpungedFlag(false);
+                model.setAttachmentFlag(false);
+                model.setPatternString("");
 
-			//TableModelFilteredView model =
-			// MainInterface.tableController.getHeaderTable().getTableModelFilteredView();
-			TableModelFilter model =
-				tableController.getTableModelFilteredView();
+                textField.setText("");
 
-			if (action.equals("ADVANCED")) {
+                newButton.setSelected(false);
 
-				Folder searchFolder =
-					(Folder) MailInterface.treeModel.getFolder(106);
+                //oldButton.setSelected(true);
+                answeredButton.setSelected(false);
+                flaggedButton.setSelected(false);
+                expungedButton.setSelected(false);
+                attachmentButton.setSelected(false);
 
-				Folder folder =
-					(Folder) tableController
-						.getMailFrameController()
-						.getTableSelection()[0]
-						.getFolder();
-
-				if (folder == null)
-					return;
-
-				org.columba.mail.gui.config.search.SearchFrame frame =
-					new org.columba.mail.gui.config.search.SearchFrame(
-						tableController.getMailFrameController(),
-						searchFolder);
-
-				frame.setSourceFolder(folder);
-				frame.setVisible(true);
-
-			} else if (action.equals("NEW")) {
-				model.setNewFlag(!model.getNewFlag());
-				update();
-			} else if (action.equals("ANSWERED")) {
-				model.setAnsweredFlag(!model.getAnsweredFlag());
-				update();
-			} else if (action.equals("FLAGGED")) {
-				model.setFlaggedFlag(!model.getFlaggedFlag());
-				update();
-			} else if (action.equals("EXPUNGED")) {
-				model.setExpungedFlag(!model.getExpungedFlag());
-				update();
-			} else if (action.equals("ATTACHMENT")) {
-				model.setAttachmentFlag(!model.getAttachmentFlag());
-				update();
-			} else if (action.equals("TEXTFIELD")) {
-				model.setPatternString(textField.getText());
-				update();
-			} else if (action.equals("CLEAR")) {
-				if (model == null) {
-					return;
-				}
-
-				model.setNewFlag(false);
-				//model.setOldFlag(true);
-				model.setAnsweredFlag(false);
-				model.setFlaggedFlag(false);
-				model.setExpungedFlag(false);
-				model.setAttachmentFlag(false);
-				model.setPatternString("");
-
-				textField.setText("");
-
-				newButton.setSelected(false);
-				//oldButton.setSelected(true);
-				answeredButton.setSelected(false);
-				flaggedButton.setSelected(false);
-				expungedButton.setSelected(false);
-				attachmentButton.setSelected(false);
-
-				tableController.getTableModelFilteredView().setDataFiltering(
-					true);
-				update();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+                tableController.getTableModelFilteredView().setDataFiltering(true);
+                update();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

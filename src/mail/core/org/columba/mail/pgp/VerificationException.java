@@ -6,6 +6,7 @@
  */
 package org.columba.mail.pgp;
 
+
 /**
  * @author frd
  *
@@ -13,15 +14,11 @@ package org.columba.mail.pgp;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class VerificationException extends PGPException {
+    public VerificationException() {
+        super("Verification failed");
+    }
 
-	public VerificationException()
-	{
-		super("Verification failed");
-	}
-	
-	public VerificationException( String message)
-	{
-		super(message);
-		
-	}
+    public VerificationException(String message) {
+        super(message);
+    }
 }

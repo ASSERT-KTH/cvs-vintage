@@ -18,6 +18,7 @@ package org.columba.core.gui.util;
 import javax.swing.Icon;
 import javax.swing.JToggleButton;
 
+
 /**
  * @author freddy
  *
@@ -26,20 +27,17 @@ import javax.swing.JToggleButton;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ToolbarToggleButton extends JToggleButton{
+public class ToolbarToggleButton extends JToggleButton {
+    public ToolbarToggleButton() {
+        setRequestFocusEnabled(false);
+    }
 
-	public ToolbarToggleButton()
-	{
-		setRequestFocusEnabled(false);
-	}
-	
-	public ToolbarToggleButton( Icon icon )
-	{
-		super(icon);
-		setRequestFocusEnabled(false);
-	}
-	
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
+    public ToolbarToggleButton(Icon icon) {
+        super(icon);
+        setRequestFocusEnabled(false);
+    }
+
+    public boolean isFocusTraversable() {
+        return isRequestFocusEnabled();
+    }
 }

@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -29,41 +23,43 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class CancelAction
-	extends FrameAction
-	implements WorkerListChangeListener {
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-	public CancelAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-                        null, null, "menu_file_cancel"));
+import javax.swing.KeyStroke;
 
-		// small icon for JMenuItem
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
-		
-		// big icon for JToolBar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
-		
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
-		
-		// set JavaHelp topic ID
-		//setTopicID("cancel");
 
-		setEnabled(false);
-		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
-			this);
-	}
+public class CancelAction extends FrameAction
+    implements WorkerListChangeListener {
+    public CancelAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_file_cancel"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		getFrameMediator().getStatusBar().cancelDisplayedWorker();
-	}
+        // small icon for JMenuItem
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_stop-16.png"));
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
-	 */
-	public void workerListChanged(WorkerListChangedEvent e) {
-		setEnabled(e.getNewValue() != 0);
-	}
+        // big icon for JToolBar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_stop.png"));
+
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_CANCEL, 0));
+
+        // set JavaHelp topic ID
+        //setTopicID("cancel");
+        setEnabled(false);
+        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        getFrameMediator().getStatusBar().cancelDisplayedWorker();
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
+     */
+    public void workerListChanged(WorkerListChangedEvent e) {
+        setEnabled(e.getNewValue() != 0);
+    }
 }

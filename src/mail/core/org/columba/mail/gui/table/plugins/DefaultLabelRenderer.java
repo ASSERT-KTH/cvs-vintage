@@ -15,6 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.core.plugin.PluginInterface;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+
+import org.columba.ristretto.message.Flags;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -26,180 +33,164 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.core.plugin.PluginInterface;
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.Flags;
 
 /**
- * 
+ *
  *
  * The is basic class every renderer should inherite
- * 
+ *
  * It is responsible for paint the background/foreground and borders
  * and gives us a central place for optimization
- * 
+ *
  * @author dietz
  */
-public class DefaultLabelRenderer extends JLabel implements TableCellRenderer, PluginInterface {
+public class DefaultLabelRenderer extends JLabel implements TableCellRenderer,
+    PluginInterface {
+    private Border unselectedBorder = null;
+    private Border selectedBorder = null;
+    private Color background;
+    private Color foreground;
+    private Font plainFont;
+    private Font boldFont;
+    private Font underlinedFont;
+    private boolean isBordered = true;
 
-	private Border unselectedBorder = null;
-	private Border selectedBorder = null;
+    /**
+     * Constructor for DefaultLabelRenderer.
+     */
+    public DefaultLabelRenderer() {
+        super();
 
-	private Color background;
-	private Color foreground;
+        boldFont = UIManager.getFont("Tree.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-	private Font plainFont, boldFont, underlinedFont;
+        plainFont = UIManager.getFont("Tree.font");
 
-	private boolean isBordered = true;
+        underlinedFont = UIManager.getFont("Tree.font");
+        underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
+    }
 
-	/**
-	 * Constructor for DefaultLabelRenderer.
-	 */
-	public DefaultLabelRenderer() {
-		super();
+    /**
+     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     */
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
+                }
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+                //setBorder(selectedBorder);
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
+                }
 
-		plainFont = UIManager.getFont("Tree.font");
+                setBackground(table.getBackground());
 
-		underlinedFont = UIManager.getFont("Tree.font");
-		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
-	}
+                //setBorder(unselectedBorder);
+                setForeground(table.getForeground());
+            }
+        }
 
-	/**
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        //TreePath path = tree.getPathForRow(row);
+        MessageNode messageNode = (MessageNode) value;
 
-		if (isBordered) {
-			if (isSelected) {
-				if (selectedBorder == null) {
-					selectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getSelectionBackground());
-				}
-				//setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			} else {
-				if (unselectedBorder == null) {
-					unselectedBorder =
-						BorderFactory.createMatteBorder(
-							2,
-							5,
-							2,
-							5,
-							table.getBackground());
-				}
+        ColumbaHeader header = messageNode.getHeader();
 
-				setBackground(table.getBackground());
-				//setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
+        if (header == null) {
+            System.out.println("header is null");
 
-		//TreePath path = tree.getPathForRow(row);
-		MessageNode messageNode = (MessageNode) value;
+            return this;
+        }
 
-		ColumbaHeader header = messageNode.getHeader();
-		if (header == null) {
-			System.out.println("header is null");
+        Flags flags = ((ColumbaHeader) header).getFlags();
 
-			return this;
-		}
+        if (flags != null) {
+            // mark as bold if message is unseen
+            if (!flags.getSeen()) {
+                if (!getFont().equals(boldFont)) {
+                    setFont(boldFont);
+                }
+            } else if (messageNode.isHasRecentChildren()) {
+                if (!getFont().equals(underlinedFont)) {
+                    setFont(underlinedFont);
+                }
+            } else if (!getFont().equals(plainFont)) {
+                setFont(plainFont);
+            }
+        }
 
-		Flags flags = ((ColumbaHeader)header).getFlags();
+        Color msgColor = (Color) header.get("columba.color");
 
-		if (flags != null) {
-			// mark as bold if message is unseen
-			if (!flags.getSeen()) {
-				if (!getFont().equals(boldFont))
-					setFont(boldFont);
-			} else if (messageNode.isHasRecentChildren()) {
-				if (!getFont().equals(underlinedFont))
-					setFont(underlinedFont);
-			} else if (!getFont().equals(plainFont)) {
-				setFont(plainFont);
-			}
-		}
-		
-		Color msgColor = (Color) header.get("columba.color");
-		if (msgColor != null) {
-			setForeground(msgColor);
-		} else {
-			setForeground(foreground);
-		}
+        if (msgColor != null) {
+            setForeground(msgColor);
+        } else {
+            setForeground(foreground);
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	public boolean isOpaque() {
-		return (background != null);
-	}
+    public boolean isOpaque() {
+        return (background != null);
+    }
 
-	/**
-	 * Returns the background.
-	 * @return Color
-	 */
-	public Color getBackground() {
-		return background;
-	}
+    /**
+     * Returns the background.
+     * @return Color
+     */
+    public Color getBackground() {
+        return background;
+    }
 
-	/**
-	 * Returns the foreground.
-	 * @return Color
-	 */
-	public Color getForeground() {
-		return foreground;
-	}
+    /**
+     * Returns the foreground.
+     * @return Color
+     */
+    public Color getForeground() {
+        return foreground;
+    }
 
-	/**
-	 * Sets the background.
-	 * @param background The background to set
-	 */
-	public void setBackground(Color background) {
-		this.background = background;
-	}
+    /**
+     * Sets the background.
+     * @param background The background to set
+     */
+    public void setBackground(Color background) {
+        this.background = background;
+    }
 
-	/**
-	 * Sets the foreground.
-	 * @param foreground The foreground to set
-	 */
-	public void setForeground(Color foreground) {
-		this.foreground = foreground;
-	}
+    /**
+     * Sets the foreground.
+     * @param foreground The foreground to set
+     */
+    public void setForeground(Color foreground) {
+        this.foreground = foreground;
+    }
 
-	/*************** optimization *****************/
+    /*************** optimization *****************/
 
-	// if graphics doesn't seem to work correctly
-	//  -> comment the following lines
+    // if graphics doesn't seem to work correctly
+    //  -> comment the following lines
 
-	/*
-	public void paint(Graphics g) {
-		ui.update(g, this);
-	}
-	public void repaint() {
-	}
-	*/
-
-	/*
-	protected void firePropertyChange(
-		String propertyName,
-		Object oldValue,
-		Object newValue) {
-		// this is only needed when using HTML text labels
-	}
-	*/
+    /*
+    public void paint(Graphics g) {
+            ui.update(g, this);
+    }
+    public void repaint() {
+    }
+    */
+    /*
+    protected void firePropertyChange(
+            String propertyName,
+            Object oldValue,
+            Object newValue) {
+            // this is only needed when using HTML text labels
+    }
+    */
 }

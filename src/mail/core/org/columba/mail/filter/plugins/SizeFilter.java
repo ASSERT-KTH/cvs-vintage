@@ -20,70 +20,73 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
+
 /**
  * @author freddy
- * 
+ *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class SizeFilter extends AbstractFilter {
+    /**
+     * Constructor for SizeFilter.
+     */
+    public SizeFilter() {
+        super();
+    }
 
-	/**
-	 * Constructor for SizeFilter.
-	 */
-	public SizeFilter() {
-		super();
-	}
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
+     */
+    public Object[] getAttributes() {
+        Object[] args = { "criteria", "pattern" };
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-	 */
-	public Object[] getAttributes() {
-		Object[] args = { "criteria", "pattern" };
+        return args;
+    }
 
-		return args;
-	}
+    protected Integer transformSize(String pattern) {
+        Integer searchPattern = Integer.valueOf(pattern);
 
-	protected Integer transformSize(String pattern) {
-		Integer searchPattern = Integer.valueOf(pattern);
-		return searchPattern;
-	}
+        return searchPattern;
+    }
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-	 *      org.columba.mail.folder.Folder, java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
-	 */
-	public boolean process(Object[] args, Folder folder, Object uid)
-		throws Exception {
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+     *      org.columba.mail.folder.Folder, java.lang.Object,
+     *      org.columba.core.command.WorkerStatusController)
+     */
+    public boolean process(Object[] args, Folder folder, Object uid)
+        throws Exception {
+        boolean result = false;
 
-		boolean result = false;
+        int condition = FilterCriteria.getCriteria((String) args[0]);
+        Integer size = transformSize((String) args[1]);
 
-		int condition = FilterCriteria.getCriteria((String) args[0]);
-		Integer size = transformSize((String) args[1]);
+        Integer s = (Integer) folder.getAttribute(uid, "columba.size");
 
-		Integer s = (Integer) folder.getAttribute(uid, "columba.size");
+        if (s == null) {
+            return false;
+        }
 
-		if (s == null)
-			return false;
+        switch (condition) {
+        case FilterCriteria.SIZE_SMALLER: {
+            if (size.compareTo(s) > 0) {
+                result = true;
+            }
 
-		switch (condition) {
-			case FilterCriteria.SIZE_SMALLER :
-				{
-					if (size.compareTo(s) > 0)
-						result = true;
-					break;
-				}
-			case FilterCriteria.SIZE_BIGGER :
-				{
-					if (size.compareTo(s) < 0)
-						result = true;
-					break;
-				}
-		}
+            break;
+        }
 
-		return result;
-	}
+        case FilterCriteria.SIZE_BIGGER: {
+            if (size.compareTo(s) < 0) {
+                result = true;
+            }
 
+            break;
+        }
+        }
+
+        return result;
+    }
 }

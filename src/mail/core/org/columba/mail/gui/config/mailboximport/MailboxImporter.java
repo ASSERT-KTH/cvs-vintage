@@ -13,52 +13,61 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.mailboximport;
-
-import java.io.File;
 
 import net.javaprog.ui.wizard.DataModel;
 import net.javaprog.ui.wizard.WizardModelEvent;
 import net.javaprog.ui.wizard.WizardModelListener;
 
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.mail.plugin.ImportPluginHandler;
 
+import java.io.File;
+
+
 class MailboxImporter implements WizardModelListener {
     protected DataModel data;
-    
+
     public MailboxImporter(DataModel data) {
         this.data = data;
     }
-    
+
     public void wizardFinished(WizardModelEvent e) {
-        ImportPluginHandler pluginHandler = 
-                (ImportPluginHandler)data.getData("Plugin.handler");
+        ImportPluginHandler pluginHandler = (ImportPluginHandler) data.getData(
+                "Plugin.handler");
         DefaultMailboxImporter importer = null;
         Object[] args = new Object[] {
-            data.getData("Location.destination"),
-            data.getData("Location.source")
-        };
+                data.getData("Location.destination"),
+                data.getData("Location.source")
+            };
+
         try {
-                importer = (DefaultMailboxImporter)pluginHandler.getPlugin(
-                        (String)data.getData("Plugin.ID"), args);
+            importer = (DefaultMailboxImporter) pluginHandler.getPlugin((String) data.getData(
+                        "Plugin.ID"), args);
         } catch (Exception ex) {
-                ex.printStackTrace();
-                return;
+            ex.printStackTrace();
+
+            return;
         }
+
         ImportFolderCommandReference[] r = new ImportFolderCommandReference[] {
-            new ImportFolderCommandReference((FolderTreeNode)args[0],
-                                                    (File[])args[1], importer)
-        };
+                new ImportFolderCommandReference((FolderTreeNode) args[0],
+                    (File[]) args[1], importer)
+            };
         MainInterface.processor.addOp(new ImportMessageCommand(r));
     }
-    
-    public void stepShown(WizardModelEvent e) {}
-    public void wizardCanceled(WizardModelEvent e) {}
-    public void wizardModelChanged(WizardModelEvent e) {}
+
+    public void stepShown(WizardModelEvent e) {
+    }
+
+    public void wizardCanceled(WizardModelEvent e) {
+    }
+
+    public void wizardModelChanged(WizardModelEvent e) {
+    }
 }

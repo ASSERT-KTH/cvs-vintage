@@ -13,122 +13,105 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
+
+import org.columba.addressbook.config.AdapterNode;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.columba.addressbook.config.AdapterNode;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-public class GroupListCard extends DefaultCard
-{
-	public GroupListCard()
-	{
-		super();
-		
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+public class GroupListCard extends DefaultCard {
+    public GroupListCard() {
+        super();
 
-		try
-		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			document = builder.newDocument();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-			Element root = (Element) document.createElement("grouplist");
-			document.appendChild(root);
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            document = builder.newDocument();
 
-		}
-		catch (ParserConfigurationException pce)
-		{
-			// Parser with specified options can't be built
-			pce.printStackTrace();
-		}
+            Element root = (Element) document.createElement("grouplist");
+            document.appendChild(root);
+        } catch (ParserConfigurationException pce) {
+            // Parser with specified options can't be built
+            pce.printStackTrace();
+        }
 
-		AdapterNode node = new AdapterNode(getDocument());
-		this.rootNode = node.getChild(0);
-	}
-	
-	public GroupListCard( Document doc, AdapterNode root )
-	{
-		super( doc, root );
-		
-		if (doc != null)
-		{
-			if (getRootNode() == null)
-			{
-				AdapterNode node = new AdapterNode(getDocument());
+        AdapterNode node = new AdapterNode(getDocument());
+        this.rootNode = node.getChild(0);
+    }
 
-				this.rootNode = node.getChild(0);
+    public GroupListCard(Document doc, AdapterNode root) {
+        super(doc, root);
 
-			}
-		}
-	}
-	
-	public int members()
-	{
-		AdapterNode membersRoot = getRootNode().getChild("list");
-		if (membersRoot != null )
-		{
-			return membersRoot.getChildCount();
-		}
-		else
-		{
-			return 0;	
-		}
-		
-	}
-	
-	public String getMember( int index )
-	{
-		AdapterNode membersRoot = getRootNode().getChild("list");
-		if ( membersRoot != null )
-		{
-			AdapterNode child = membersRoot.getChildAt(index);
-			if ( child != null ) return getTextValue(child);
-		}
-		return "";
-	}
-	
-	public void addMember( String uid )
-	{
-		AdapterNode membersRoot = getRootNode().getChild("list");
-		if ( membersRoot != null )
-		{
-			addKey( membersRoot, "uid", uid );
-		}
-		else
-		{
-			Element e = createElementNode( "list" );
-			AdapterNode newNode = new AdapterNode( e );
-        		getRootNode().add( newNode );
-        		addKey( newNode, "uid", uid);
-		}
-	}
-	
-	public void removeMembers()
-	{
-		AdapterNode membersRoot = getRootNode().getChild("list");
-		if ( membersRoot != null )
-		{
-			membersRoot.removeChildren();
-		}
-	}
-	
-	public Object[] getUids()
-	{
-		Object[] uids = new Object[ members() ];
-		
-		for ( int i=0; i<members(); i++ )
-		{
-			Object uid = getMember(i);
-			uids[i] = uid;
-			System.out.println("uid["+i+"]="+uid);
-		}
-		
-		return uids;
-	}
+        if (doc != null) {
+            if (getRootNode() == null) {
+                AdapterNode node = new AdapterNode(getDocument());
 
+                this.rootNode = node.getChild(0);
+            }
+        }
+    }
+
+    public int members() {
+        AdapterNode membersRoot = getRootNode().getChild("list");
+
+        if (membersRoot != null) {
+            return membersRoot.getChildCount();
+        } else {
+            return 0;
+        }
+    }
+
+    public String getMember(int index) {
+        AdapterNode membersRoot = getRootNode().getChild("list");
+
+        if (membersRoot != null) {
+            AdapterNode child = membersRoot.getChildAt(index);
+
+            if (child != null) {
+                return getTextValue(child);
+            }
+        }
+
+        return "";
+    }
+
+    public void addMember(String uid) {
+        AdapterNode membersRoot = getRootNode().getChild("list");
+
+        if (membersRoot != null) {
+            addKey(membersRoot, "uid", uid);
+        } else {
+            Element e = createElementNode("list");
+            AdapterNode newNode = new AdapterNode(e);
+            getRootNode().add(newNode);
+            addKey(newNode, "uid", uid);
+        }
+    }
+
+    public void removeMembers() {
+        AdapterNode membersRoot = getRootNode().getChild("list");
+
+        if (membersRoot != null) {
+            membersRoot.removeChildren();
+        }
+    }
+
+    public Object[] getUids() {
+        Object[] uids = new Object[members()];
+
+        for (int i = 0; i < members(); i++) {
+            Object uid = getMember(i);
+            uids[i] = uid;
+            System.out.println("uid[" + i + "]=" + uid);
+        }
+
+        return uids;
+    }
 }

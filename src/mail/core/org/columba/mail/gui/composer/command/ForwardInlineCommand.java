@@ -20,6 +20,7 @@ package org.columba.mail.gui.composer.command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -28,6 +29,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaMessage;
+
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -35,124 +37,120 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.io.CharSequenceSource;
 
+
 /**
  * Forward message inline, which is the same as replying to someone who is not
  * the original sender.
- * 
+ *
  * @author fdietz
  */
 public class ForwardInlineCommand extends FolderCommand {
+    protected ComposerController controller;
+    protected ComposerModel model;
 
-	protected ComposerController controller;
-	protected ComposerModel model;
+    /**
+     * Constructor for ForwardInlineCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public ForwardInlineCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for ForwardInlineCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public ForwardInlineCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    public void updateGUI() throws Exception {
+        // open composer frame
+        controller = new ComposerController();
 
-	public void updateGUI() throws Exception {
-		// open composer frame
-		controller = new ComposerController();
+        // apply model
+        controller.setComposerModel(model);
 
-		// apply model
-		controller.setComposerModel(model);
-		// model->view update
-		controller.updateComponents(true);
-	}
+        // model->view update
+        controller.updateComponents(true);
+    }
 
-	public void execute(Worker worker) throws Exception {
+    public void execute(Worker worker) throws Exception {
+        // get selected folder
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
-		// get selected folder
-		Folder folder =
-			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
-		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+        // get first selected message
+        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		// create new message object
-		ColumbaMessage message = new ColumbaMessage();
+        // create new message object
+        ColumbaMessage message = new ColumbaMessage();
 
-		// get headerfields
-		Header header =
-			folder.getHeaderFields(
-				uids[0],
-				new String[] {
-					"Subject",
-					"From"});
-		message.setHeader(header);
-		
-		// get mimeparts
-		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
-		message.setMimePartTree(mimePartTree);
+        // get headerfields
+        Header header = folder.getHeaderFields(uids[0],
+                new String[] { "Subject", "From" });
+        message.setHeader(header);
 
-		XmlElement html =
-			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-				"/options/html");
+        // get mimeparts
+        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
+        message.setMimePartTree(mimePartTree);
 
-		// Which Bodypart shall be shown? (html/plain)
-		MimePart bodyPart = null;
+        XmlElement html = MailConfig.getMainFrameOptionsConfig().getRoot()
+                                    .getElement("/options/html");
 
-		if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue())
-			bodyPart = mimePartTree.getFirstTextPart("html");
-		else
-			bodyPart = mimePartTree.getFirstTextPart("plain");
+        // Which Bodypart shall be shown? (html/plain)
+        MimePart bodyPart = null;
 
-		if (bodyPart == null) {
-			bodyPart = new LocalMimePart(new MimeHeader(header));
-			((LocalMimePart) bodyPart).setBody(
-				new CharSequenceSource("<No Message-Text>"));
-		} else
-			bodyPart = folder.getMimePart(uids[0], bodyPart.getAddress());
+        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
+            bodyPart = mimePartTree.getFirstTextPart("html");
+        } else {
+            bodyPart = mimePartTree.getFirstTextPart("plain");
+        }
 
-		message.setBodyPart(bodyPart);
+        if (bodyPart == null) {
+            bodyPart = new LocalMimePart(new MimeHeader(header));
+            ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
+                    "<No Message-Text>"));
+        } else {
+            bodyPart = folder.getMimePart(uids[0], bodyPart.getAddress());
+        }
 
-		// create composer model
-		model = new ComposerModel();
+        message.setBodyPart(bodyPart);
 
-		// set character set
-		bodyPart = message.getBodyPart();
-		if (bodyPart != null) {
-			String charset =
-				bodyPart.getHeader().getContentParameter("charset");
-			if (charset != null) {
-				model.setCharsetName(charset);
-			}
-		}
+        // create composer model
+        model = new ComposerModel();
 
-		// set subject
-		model.setSubject(
-			MessageBuilderHelper.createForwardSubject(
-				(String) header.get("Subject")));
+        // set character set
+        bodyPart = message.getBodyPart();
 
+        if (bodyPart != null) {
+            String charset = bodyPart.getHeader().getContentParameter("charset");
 
-		/*
-		 * original message is sent "inline" - model is setup according to the
-		 * type of the original message. NB: If the original message was plain
-		 * text, the message type seen here is always text. If the original
-		 * message contained html, the message type seen here will depend on
-		 * the "prefer html" option.
-		 */
-		MimeHeader bodyHeader = message.getBodyPart().getHeader();
-		if (bodyHeader.getMimeType().getSubtype().equals("html")) {
-			model.setHtml(true);
-		} else {
-			model.setHtml(false);
-		}
+            if (charset != null) {
+                model.setCharsetName(charset);
+            }
+        }
 
-		// prepend "> " to every line of the bodytext
-		String bodyText =
-			MessageBuilderHelper.createQuotedBodyText(
-				message.getBodyPart(),
-				model.isHtml());
-		if (bodyText == null) {
-			bodyText = "[Error parsing bodytext]";
-		}
-		model.setBodyText(bodyText);
-	}
+        // set subject
+        model.setSubject(MessageBuilderHelper.createForwardSubject(
+                (String) header.get("Subject")));
 
+        /*
+         * original message is sent "inline" - model is setup according to the
+         * type of the original message. NB: If the original message was plain
+         * text, the message type seen here is always text. If the original
+         * message contained html, the message type seen here will depend on
+         * the "prefer html" option.
+         */
+        MimeHeader bodyHeader = message.getBodyPart().getHeader();
+
+        if (bodyHeader.getMimeType().getSubtype().equals("html")) {
+            model.setHtml(true);
+        } else {
+            model.setHtml(false);
+        }
+
+        // prepend "> " to every line of the bodytext
+        String bodyText = MessageBuilderHelper.createQuotedBodyText(message.getBodyPart(),
+                model.isHtml());
+
+        if (bodyText == null) {
+            bodyText = "[Error parsing bodytext]";
+        }
+
+        model.setBodyText(bodyText);
+    }
 }

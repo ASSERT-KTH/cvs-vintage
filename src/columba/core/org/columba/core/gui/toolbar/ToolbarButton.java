@@ -15,14 +15,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.toolbar;
-
-import java.awt.Insets;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.config.Config;
@@ -30,58 +23,69 @@ import org.columba.core.config.GuiItem;
 import org.columba.core.gui.menu.CButton;
 import org.columba.core.gui.util.ImageUtil;
 
+import java.awt.Insets;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+
+
 public class ToolbarButton extends CButton {
-	protected static boolean WITH_TEXT = false;
-	protected static boolean ALIGNMENT = true;
+    protected static boolean WITH_TEXT = false;
+    protected static boolean ALIGNMENT = true;
 
-	public ToolbarButton() {
-		super();
-		setRequestFocusEnabled(false);
-	}
+    public ToolbarButton() {
+        super();
+        setRequestFocusEnabled(false);
+    }
 
-	public ToolbarButton(Icon icon) {
-		super(icon);
-		setRequestFocusEnabled(false);
-	}
+    public ToolbarButton(Icon icon) {
+        super(icon);
+        setRequestFocusEnabled(false);
+    }
 
-	public ToolbarButton(FrameAction a) {
-		super(a);
+    public ToolbarButton(FrameAction a) {
+        super(a);
 
-		setRequestFocusEnabled(false);
-		setMargin(new Insets(1, 1, 1, 1));
+        setRequestFocusEnabled(false);
+        setMargin(new Insets(1, 1, 1, 1));
 
-		GuiItem item = Config.getOptionsConfig().getGuiItem();
+        GuiItem item = Config.getOptionsConfig().getGuiItem();
 
-		WITH_TEXT = item.getBoolean("toolbar", "enable_text");
-		ALIGNMENT = item.getBoolean("toolbar", "text_position");
+        WITH_TEXT = item.getBoolean("toolbar", "enable_text");
+        ALIGNMENT = item.getBoolean("toolbar", "text_position");
 
-		ImageIcon icon = (ImageIcon)a.getValue(FrameAction.LARGE_ICON);
-		if (icon != null) {
-                        setIcon(icon);
-                        // apply transparent icon
-                        setDisabledIcon(ImageUtil.createTransparentIcon(icon));
-                }
+        ImageIcon icon = (ImageIcon) a.getValue(FrameAction.LARGE_ICON);
 
-		if (WITH_TEXT) {
-			boolean showText = (a.isShowToolBarText() || ALIGNMENT);
-			if (!showText)
-				setText("");
-			else
-				setText((String)a.getValue(FrameAction.TOOLBAR_NAME));
+        if (icon != null) {
+            setIcon(icon);
 
-			if (ALIGNMENT) {
-				setVerticalTextPosition(SwingConstants.BOTTOM);
-				setHorizontalTextPosition(SwingConstants.CENTER);
-			} else {
-				setVerticalTextPosition(SwingConstants.CENTER);
-				setHorizontalTextPosition(SwingConstants.RIGHT);
-			}
-		} else {
-			setText(null);
-		}
-	}
+            // apply transparent icon
+            setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+        }
 
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
+        if (WITH_TEXT) {
+            boolean showText = (a.isShowToolBarText() || ALIGNMENT);
+
+            if (!showText) {
+                setText("");
+            } else {
+                setText((String) a.getValue(FrameAction.TOOLBAR_NAME));
+            }
+
+            if (ALIGNMENT) {
+                setVerticalTextPosition(SwingConstants.BOTTOM);
+                setHorizontalTextPosition(SwingConstants.CENTER);
+            } else {
+                setVerticalTextPosition(SwingConstants.CENTER);
+                setHorizontalTextPosition(SwingConstants.RIGHT);
+            }
+        } else {
+            setText(null);
+        }
+    }
+
+    public boolean isFocusTraversable() {
+        return isRequestFocusEnabled();
+    }
 }

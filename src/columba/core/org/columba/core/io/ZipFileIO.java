@@ -15,118 +15,115 @@
 //All Rights Reserved.
 package org.columba.core.io;
 
+import org.columba.core.gui.util.NotifyDialog;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.columba.core.gui.util.NotifyDialog;
 
 /**
  * @author fdietz
  *
  * zip archive operations are handled by this class
- * 
+ *
  */
 public class ZipFileIO {
+    /**
+     * default constructor
+     */
+    public ZipFileIO() {
+        super();
+    }
 
-	/**
-	 * default constructor
-	 */
-	public ZipFileIO() {
-		super();
+    /**
+     *
+     * extract zip file to destination folder
+     *
+     * @param file                        zip file to extract
+     * @param destination        destinatin folder
+     */
+    public static void extract(File file, File destination) {
+        try {
+            // Open the ZIP file
+            ZipInputStream in = new ZipInputStream(new FileInputStream(file));
 
-	}
+            // Get the first entry
+            ZipEntry entry = null;
 
-	/**
-	 * 
-	 * extract zip file to destination folder
-	 * 
-	 * @param file			zip file to extract
-	 * @param destination	destinatin folder 
-	 */
-	public static void extract(File file, File destination) {
-		try {
-			// Open the ZIP file
+            while ((entry = in.getNextEntry()) != null) {
+                String outFilename = entry.getName();
 
-			ZipInputStream in = new ZipInputStream(new FileInputStream(file));
+                // Open the output file
+                if (entry.isDirectory()) {
+                    new File(destination, outFilename).mkdirs();
+                } else {
+                    OutputStream out = new FileOutputStream(new File(
+                                destination, outFilename));
 
-			// Get the first entry
-			ZipEntry entry = null;
+                    // Transfer bytes from the ZIP file to the output file
+                    byte[] buf = new byte[1024];
+                    int len;
 
-			while ((entry = in.getNextEntry()) != null) {
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
 
-				String outFilename = entry.getName();
+                    // Close the stream
+                    out.close();
+                }
+            }
 
-				// Open the output file
-				if (entry.isDirectory()) {
-					new File(destination, outFilename).mkdirs();
-				} else {
+            // Close the stream
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
 
-					OutputStream out =
-						new FileOutputStream(
-							new File(destination, outFilename));
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(e);
+        }
+    }
 
-					// Transfer bytes from the ZIP file to the output file
-					byte[] buf = new byte[1024];
-					int len;
-					while ((len = in.read(buf)) > 0) {
-						out.write(buf, 0, len);
-					}
+    /**
+     *
+     * Return the first directory of this archive
+     *
+     * This is needed to determine the plugin directory.
+     *
+     *
+     * @param zipFile
+     * @return        <class>File</class> containing the first entry of this archive
+     */
+    public static File getFirstFile(File zipFile) {
+        try {
+            // Open the ZIP file
+            ZipInputStream in = new ZipInputStream(new FileInputStream(zipFile));
 
-					// Close the stream
-					out.close();
-				}
-			}
+            // Get the first entry
+            ZipEntry entry = null;
 
-			// Close the stream
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(e);
-		}
-	}
+            while ((entry = in.getNextEntry()) != null) {
+                String outFilename = entry.getName();
 
-	/**
-	 * 
-	 * Return the first directory of this archive
-	 * 
-	 * This is needed to determine the plugin directory.
-	 * 
-	 * 
-	 * @param zipFile
-	 * @return	<class>File</class> containing the first entry of this archive
-	 */
-	public static File getFirstFile(File zipFile) {
-		try {
-			// Open the ZIP file
+                if (entry.isDirectory()) {
+                    return new File(outFilename);
+                }
+            }
 
-			ZipInputStream in = new ZipInputStream(new FileInputStream(zipFile));
+            // Close the stream
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
 
-			// Get the first entry
-			ZipEntry entry = null;
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(e);
+        }
 
-			while ((entry = in.getNextEntry()) != null) {
-
-				String outFilename = entry.getName();
-
-				if (entry.isDirectory()) {
-					return new File(outFilename);
-				}
-			}
-			// Close the stream
-			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(e);
-		}
-		
-		return null;
-	}
-
+        return null;
+    }
 }

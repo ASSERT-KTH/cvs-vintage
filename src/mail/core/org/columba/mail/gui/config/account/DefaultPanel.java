@@ -18,38 +18,33 @@ package org.columba.mail.gui.config.account;
 import javax.swing.JPanel;
 
 
-public class DefaultPanel extends JPanel{
+public class DefaultPanel extends JPanel {
+    /**
+     * model->view
+     * view->model
+     *
+     * @param b
+     */
+    protected void updateComponents(boolean b) {
+        if (b) {
+        } else {
+        }
+    }
 
-	/**
-	 * model->view
-	 * view->model
-	 * 
-	 * @param b
-	 */
-	protected void updateComponents(boolean b) {
-		if (b) {
-		} else {
-		}
-	}
+    /**
+     *
+     * Initialize all widgets
+     *
+     */
+    protected void initComponents() {
+    }
 
-	/**
-	 * 
-	 * Initialize all widgets
-	 *
-	 */
-	protected void initComponents() {
-	}
-
-
-	
-	
-	/**
-	 * Check if user entered valid data
-	 * 
-	 * @return		true, if data was entered correctly, false otherwise
-	 */
-	public boolean isFinished() {
-		return false;
-	}
-
+    /**
+     * Check if user entered valid data
+     *
+     * @return                true, if data was entered correctly, false otherwise
+     */
+    public boolean isFinished() {
+        return false;
+    }
 }

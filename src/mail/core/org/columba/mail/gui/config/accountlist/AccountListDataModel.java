@@ -15,44 +15,44 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.accountlist;
 
-import javax.swing.table.AbstractTableModel;
-
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
 import org.columba.mail.util.MailResourceLoader;
 
-class AccountListDataModel extends AbstractTableModel
-{
-    final String[] columnNames = {MailResourceLoader.getString("dialog","account", "accountname"), //$NON-NLS-1$
-                                  MailResourceLoader.getString("dialog","account", "type"), //$NON-NLS-1$
-                                  };
+import javax.swing.table.AbstractTableModel;
 
+
+class AccountListDataModel extends AbstractTableModel {
+    final String[] columnNames = {
+        MailResourceLoader.getString("dialog", "account", "accountname"), //$NON-NLS-1$
+        MailResourceLoader.getString("dialog", "account", "type"), //$NON-NLS-1$
+    };
     private AccountList accountList;
 
-    public AccountListDataModel( AccountList list )
-    {
+    public AccountListDataModel(AccountList list) {
         super();
         this.accountList = list;
     }
 
-    public int getColumnCount()
-    {
+    public int getColumnCount() {
         return columnNames.length;
     }
 
-    public int getRowCount()
-    {
+    public int getRowCount() {
         return accountList.count();
     }
 
-    public String getColumnName(int col)
-    {
+    public String getColumnName(int col) {
         return columnNames[col];
     }
 
     public Object getValueAt(int row, int col) {
         AccountItem item = accountList.get(row);
-        if (item == null) return new String();
+
+        if (item == null) {
+            return new String();
+        }
+
         if (col == 0) {
             /*
             String description = item.getName();
@@ -65,12 +65,12 @@ class AccountListDataModel extends AbstractTableModel
         }
     }
 
-    public Class getColumnClass(int c)
-    {
-        if ( c==0 )
-           return AccountItem.class;
-        else
-           return String.class;
+    public Class getColumnClass(int c) {
+        if (c == 0) {
+            return AccountItem.class;
+        } else {
+            return String.class;
+        }
     }
 
     /*

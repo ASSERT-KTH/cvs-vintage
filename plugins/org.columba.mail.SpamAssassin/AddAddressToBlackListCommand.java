@@ -15,91 +15,85 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+
 import org.columba.ristretto.message.Header;
+
 
 /**
  * @author fdietz
- * 
- *  
+ *
+ *
  */
 public class AddAddressToBlackListCommand extends FolderCommand {
+    /**
+     * @param references
+     */
+    public AddAddressToBlackListCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * @param references
-	 */
-	public AddAddressToBlackListCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    /**
+     * @param frame
+     * @param references
+     */
+    public AddAddressToBlackListCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
+    }
 
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public AddAddressToBlackListCommand(
-		FrameMediator frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        Object[] uids = r[0].getUids();
+        Folder folder = (Folder) r[0].getFolder();
 
-		Object[] uids = r[0].getUids();
-		Folder folder = (Folder) r[0].getFolder();
+        for (int i = 0; i < uids.length; i++) {
+            Header header = folder.getHeaderFields(uids[i],
+                    new String[] { "From" });
+            String sender = (String) header.get("From");
 
-		for (int i = 0; i < uids.length; i++) {
+            addSender(sender);
+        }
+    }
 
-			Header header =
-				folder.getHeaderFields(uids[i], new String[] { "From" });
-			String sender = (String) header.get("From");
+    public void addSender(String sender) {
+        if (sender == null) {
+            return;
+        }
 
-			addSender(sender);
+        if (sender.length() > 0) {
+            IPCHelper ipcHelper = new IPCHelper();
 
-		}
+            if (sender.length() > 0) {
+                int exitVal = -1;
 
-	}
+                try {
+                    ColumbaLogger.log.debug("creating process..");
 
-	public void addSender(String sender) {
-		if (sender == null)
-			return;
+                    String cmd = "spamassassin -a --add-addr-to-blacklist=\"" +
+                        sender + "\"";
+                    ipcHelper.executeCommand(cmd);
 
-		if (sender.length() > 0) {
+                    exitVal = ipcHelper.waitFor();
 
-			IPCHelper ipcHelper = new IPCHelper();
+                    ColumbaLogger.log.debug("exitcode=" + exitVal);
 
-			if (sender.length() > 0) {
-				int exitVal = -1;
-				try {
-					ColumbaLogger.log.debug("creating process..");
-
-					String cmd =
-						"spamassassin -a --add-addr-to-blacklist=\""
-							+ sender
-							+ "\"";
-					ipcHelper.executeCommand(cmd);
-
-					exitVal = ipcHelper.waitFor();
-
-					ColumbaLogger.log.debug("exitcode=" + exitVal);
-
-					ipcHelper.waitForThreads();
-
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
-
+                    ipcHelper.waitForThreads();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 }

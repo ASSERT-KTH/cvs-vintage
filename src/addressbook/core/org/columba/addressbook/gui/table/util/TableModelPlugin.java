@@ -13,34 +13,25 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
 
 import org.columba.addressbook.gui.table.AddressbookTableModel;
 
-public abstract class TableModelPlugin
-{
+
+public abstract class TableModelPlugin {
+    public static final int STRUCTURE_CHANGE = 0;
+    public static final int NODES_REMOVED = 1;
+    public static final int NODES_INSERTED = 2;
+    public static final int NODES_CHANGED = 3;
     protected AddressbookTableModel headerTableModel;
 
-    public static final int STRUCTURE_CHANGE = 0;
-    public static final int NODES_REMOVED    = 1;
-    public static final int NODES_INSERTED   = 2;
-    public static final int NODES_CHANGED    = 3;
-
-
-    public TableModelPlugin( AddressbookTableModel headerTableModel )
-    {
-
+    public TableModelPlugin(AddressbookTableModel headerTableModel) {
         this.headerTableModel = headerTableModel;
     }
 
-    public AddressbookTableModel getTableModel()
-    {
+    public AddressbookTableModel getTableModel() {
         return headerTableModel;
     }
 
-    public abstract boolean manipulateModel( int mode ) throws Exception;
-
-
-
+    public abstract boolean manipulateModel(int mode) throws Exception;
 }

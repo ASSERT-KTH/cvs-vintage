@@ -17,12 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.smtp.command;
 
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -38,10 +37,14 @@ import org.columba.mail.pgp.CancelledException;
 import org.columba.mail.pgp.PGPException;
 import org.columba.mail.smtp.SMTPServer;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.smtp.SMTPException;
 
+import javax.swing.JOptionPane;
+
+
 /**
- * 
+ *
  * This command is started when the user sends the message after creating it in
  * the composer window.
  * <p>
@@ -49,178 +52,144 @@ import org.columba.ristretto.smtp.SMTPException;
  * the progress of sending the message.
  * <p>
  * If the user cancelles sending, the composer window will be opened again.
- * 
- * @author fdietz 
+ *
+ * @author fdietz
  */
 public class SendMessageCommand extends FolderCommand {
+    private SendMessageDialog sendMessageDialog;
+    private boolean showComposer = false;
+    private ComposerController composerController;
 
-	private SendMessageDialog sendMessageDialog;
-	private boolean showComposer = false;
-	
-	private ComposerController composerController;
+    /**
+     * Constructor for SendMessageCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public SendMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for SendMessageCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public SendMessageCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
+        //	display status message
+        worker.setDisplayText(MailResourceLoader.getString("statusbar",
+                "message", "send_message_compose"));
 
-		ComposerCommandReference[] r =
-			(ComposerCommandReference[]) getReferences();
+        // get composer controller
+        // -> get all the account information from the controller
+        composerController = r[0].getComposerController();
 
-		//	display status message
-		worker.setDisplayText(
-			MailResourceLoader.getString(
-				"statusbar",
-				"message",
-				"send_message_compose"));
+        // close composer view
+        composerController.getView().setVisible(false);
 
-		// get composer controller
-		// -> get all the account information from the controller
-		composerController = r[0].getComposerController();
+        sendMessageDialog = new SendMessageDialog(worker);
 
-		// close composer view
-		composerController.getView().setVisible(false);
+        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
 
-		sendMessageDialog = new SendMessageDialog(worker);
+        // sent folder
+        Folder sentFolder = (Folder) MailInterface.treeModel.getFolder(item.getSpecialFoldersItem()
+                                                                           .getInteger("sent"));
 
-		AccountItem item =
-			((ComposerModel) composerController.getModel()).getAccountItem();
+        // get the SendableMessage object
+        SendableMessage message = null;
 
-		// sent folder
-		Folder sentFolder =
-			(Folder) MailInterface.treeModel.getFolder(
-				item.getSpecialFoldersItem().getInteger("sent"));
+        try {
+            // compose the message suitable for sending
+            message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
+        } catch (PGPException e1) {
+            if (e1 instanceof CancelledException) {
+                // user cancelled sending operation
+                // open composer view
+                showComposer = true;
 
-		// get the SendableMessage object
-		SendableMessage message = null;
-		try {
-			// compose the message suitable for sending
-			message =
-				new MessageComposer(
-					((ComposerModel) composerController.getModel())).compose(
-					worker);
-		} catch (PGPException e1) {
-			if (e1 instanceof CancelledException) {
-				// user cancelled sending operation
+                return;
+            } else {
+                JOptionPane.showMessageDialog(null, e1.getMessage());
 
-				// open composer view
-				showComposer = true;
-				return;
-			} else {
-				JOptionPane.showMessageDialog(null, e1.getMessage());
-				//	open composer view
-				showComposer = true;
-				return;
-			}
-		}
+                //	open composer view
+                showComposer = true;
 
-		// display status message
-		worker.setDisplayText(
-			MailResourceLoader.getString(
-				"statusbar",
-				"message",
-				"send_message_connect"));
+                return;
+            }
+        }
 
-		// open connection
-		SMTPServer server = new SMTPServer(item);
-		boolean open = server.openConnection();
+        // display status message
+        worker.setDisplayText(MailResourceLoader.getString("statusbar",
+                "message", "send_message_connect"));
 
-		// show interest on status information
-		 ((StatusObservableImpl) server.getObservable()).setWorker(worker);
+        // open connection
+        SMTPServer server = new SMTPServer(item);
+        boolean open = server.openConnection();
 
-		if (open) {
-			// successfully connected and autenthenticated to SMTP server
+        // show interest on status information
+        ((StatusObservableImpl) server.getObservable()).setWorker(worker);
 
-			try {
+        if (open) {
+            // successfully connected and autenthenticated to SMTP server
+            try {
+                // display status message
+                worker.setDisplayText(MailResourceLoader.getString(
+                        "statusbar", "message", "send_message"));
 
-				// display status message
-				worker.setDisplayText(
-					MailResourceLoader.getString(
-						"statusbar",
-						"message",
-						"send_message"));
+                // send message
+                server.sendMessage(message, worker);
 
-				// send message
-				server.sendMessage(message, worker);
+                // close composer frame
+                composerController.close();
 
-				// close composer frame
-				composerController.close();
+                // save message in Sent folder
+                ComposerCommandReference[] ref = new ComposerCommandReference[1];
+                ref[0] = new ComposerCommandReference(composerController,
+                        sentFolder);
+                ref[0].setMessage(message);
 
-				// save message in Sent folder
-				ComposerCommandReference[] ref =
-					new ComposerCommandReference[1];
-				ref[0] =
-					new ComposerCommandReference(
-						composerController,
-						sentFolder);
-				ref[0].setMessage(message);
+                SaveMessageCommand c = new SaveMessageCommand(ref);
 
-				SaveMessageCommand c = new SaveMessageCommand(ref);
+                MainInterface.processor.addOp(c);
 
-				MainInterface.processor.addOp(c);
+                //	display status message
+                worker.setDisplayText(MailResourceLoader.getString(
+                        "statusbar", "message", "send_message_closing"));
 
-				//	display status message
-				worker.setDisplayText(
-					MailResourceLoader.getString(
-						"statusbar",
-						"message",
-						"send_message_closing"));
+                // close connection to server
+                server.closeConnection();
 
-				// close connection to server
-				server.closeConnection();
+                // display status message
+                worker.setDisplayText(MailResourceLoader.getString(
+                        "statusbar", "message", "send_message_success"));
+            } catch (SMTPException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(),
+                    "Error while sending", JOptionPane.ERROR_MESSAGE);
 
-				// display status message
-				worker.setDisplayText(
-					MailResourceLoader.getString(
-						"statusbar",
-						"message",
-						"send_message_success"));
-			
-			} catch (SMTPException e) {
-				JOptionPane.showMessageDialog(
-					null,
-					e.getMessage(),
-					"Error while sending",
-					JOptionPane.ERROR_MESSAGE);
+                // open composer view
+                showComposer = true;
+            } catch (Exception e) {
+                e.printStackTrace();
 
-				// open composer view
-				showComposer = true;
-			} catch (Exception e) {
-				e.printStackTrace();
-				// open composer view
-				showComposer = true;
-			}
+                // open composer view
+                showComposer = true;
+            }
+        } else {
+            // open == false
+            // -> user cancelled sending 
+            // open composer view
+            showComposer = true;
+        }
+    }
 
-		} else {
-			// open == false
-			// -> user cancelled sending 
+    public void updateGUI() throws Exception {
+        // close send message dialog
+        sendMessageDialog.setVisible(false);
 
-			// open composer view
-			showComposer = true;
-		}
-
-	}
-
-	public void updateGUI() throws Exception {
-		// close send message dialog
-		sendMessageDialog.setVisible(false);
-		
-		if (showComposer == true) {
-			// re-open composer view
-			composerController.getView().setVisible(true);
-			composerController.getView().requestFocus();
-		}
-		
-	}
-
+        if (showComposer == true) {
+            // re-open composer view
+            composerController.getView().setVisible(true);
+            composerController.getView().requestFocus();
+        }
+    }
 }

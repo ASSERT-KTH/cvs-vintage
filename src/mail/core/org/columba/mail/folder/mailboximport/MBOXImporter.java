@@ -15,88 +15,76 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mailboximport;
 
+import org.columba.core.command.WorkerStatusController;
+
+import org.columba.mail.folder.Folder;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.util.MailResourceLoader;
 
 public class MBOXImporter extends DefaultMailboxImporter {
-	
-	public MBOXImporter()
-	{
-		super();
-	}
-	
-	public MBOXImporter(Folder destinationFolder, File[] sourceFiles) {
-		super(destinationFolder, sourceFiles);
-	}
+    public MBOXImporter() {
+        super();
+    }
 
-	public int getType() {
-		return TYPE_FILE;
-	}
+    public MBOXImporter(Folder destinationFolder, File[] sourceFiles) {
+        super(destinationFolder, sourceFiles);
+    }
 
-	public void importMailboxFile(
-		File file,
-		WorkerStatusController worker,
-		Folder destFolder)
-		throws Exception {
+    public int getType() {
+        return TYPE_FILE;
+    }
 
-		boolean success = false;
+    public void importMailboxFile(File file, WorkerStatusController worker,
+        Folder destFolder) throws Exception {
+        boolean success = false;
 
-		StringBuffer strbuf = new StringBuffer();
+        StringBuffer strbuf = new StringBuffer();
 
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String str;
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String str;
 
-		// parse line by line
-		while ((str = in.readLine()) != null) {
-			// if user cancelled task exit immediately			
-			if (worker.cancelled())
-				return;
+        // parse line by line
+        while ((str = in.readLine()) != null) {
+            // if user cancelled task exit immediately			
+            if (worker.cancelled()) {
+                return;
+            }
 
-			// if line doesn't start with "From" or line length is 0
-			//  -> save everything in StringBuffer
-			if (!str.startsWith("From ") || (str.length() == 0)) {
-				strbuf.append(str + "\n");
-			} else {
+            // if line doesn't start with "From" or line length is 0
+            //  -> save everything in StringBuffer
+            if (!str.startsWith("From ") || (str.length() == 0)) {
+                strbuf.append(str + "\n");
+            } else {
+                //  -> import message in Columba
+                if (strbuf.length() != 0) {
+                    // found new message
+                    saveMessage(strbuf.toString(), worker,
+                        getDestinationFolder());
 
-				//  -> import message in Columba
+                    success = true;
+                }
 
-				if (strbuf.length() != 0) {
-					// found new message
+                strbuf = new StringBuffer();
+            }
+        }
 
-					saveMessage(
-						strbuf.toString(),
-						worker,
-						getDestinationFolder());
+        // save last message, because while loop aborted before being able to save message
+        if (success && (strbuf.length() > 0)) {
+            saveMessage(strbuf.toString(), worker, getDestinationFolder());
+        }
 
-					success = true;
+        in.close();
+    }
 
-				}
-				strbuf = new StringBuffer();
-
-			}
-
-		}
-
-		// save last message, because while loop aborted before being able to save message
-		if (success && (strbuf.length() > 0)) {
-			saveMessage(strbuf.toString(), worker, getDestinationFolder());
-		}
-
-		in.close();
-	}
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
-	 */
-	public String getDescription() {
-		return MailResourceLoader.getString(
-			"dialog",
-			"mailboximport",
-			"MBOX_description");
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.mailboximport.DefaultMailboxImporter#getDescription()
+     */
+    public String getDescription() {
+        return MailResourceLoader.getString("dialog", "mailboximport",
+            "MBOX_description");
+    }
 }

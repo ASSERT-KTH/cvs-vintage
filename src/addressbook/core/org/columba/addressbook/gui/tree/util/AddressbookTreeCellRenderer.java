@@ -13,8 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.tree.util;
+
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
+import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.Component;
 
@@ -23,121 +26,98 @@ import javax.swing.JTree;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.core.gui.util.ImageLoader;
 
-public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer
-{
-	Border unselectedBorder = null;
-	Border selectedBorder = null;
-	boolean isBordered = true;
-	boolean bool;
-	ImageIcon image;
+public class AddressbookTreeCellRenderer extends DefaultTreeCellRenderer {
+    Border unselectedBorder = null;
+    Border selectedBorder = null;
+    boolean isBordered = true;
+    boolean bool;
+    ImageIcon image;
+    private ImageIcon image1;
+    private ImageIcon image2;
+    private ImageIcon image3;
+    private String fontName;
+    private int fontSize;
 
-	private ImageIcon image1;
-	private ImageIcon image2;
-	private ImageIcon image3;
+    public AddressbookTreeCellRenderer(boolean bool) {
+        super();
 
-	private String fontName;
-	private int fontSize;
+        this.bool = bool;
 
-	public AddressbookTreeCellRenderer(boolean bool)
-	{
-		super();
+        image1 = ImageLoader.getSmallImageIcon("stock_book-16.png");
 
-		this.bool = bool;
+        image2 = ImageLoader.getSmallImageIcon("localhost.png");
 
-		image1 = ImageLoader.getSmallImageIcon("stock_book-16.png");
-		
-		
-		image2 = ImageLoader.getSmallImageIcon("localhost.png");
-		
+        image3 = ImageLoader.getSmallImageIcon("remotehost.png");
 
-		image3 = ImageLoader.getSmallImageIcon("remotehost.png");
-		
+        //setOpaque(true); //MUST do this for background to show up.
+    }
 
-		//setOpaque(true); //MUST do this for background to show up.
-	}
+    public Component getTreeCellRendererComponent(JTree tree, Object value,
+        boolean isSelected, boolean expanded, boolean leaf, int row,
+        boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, isSelected, expanded,
+            leaf, row, hasFocus);
 
-	public Component getTreeCellRendererComponent(
-		JTree tree,
-		Object value,
-		boolean isSelected,
-		boolean expanded,
-		boolean leaf,
-		int row,
-		boolean hasFocus)
-	{
-		super.getTreeCellRendererComponent(
-			tree,
-			value,
-			isSelected,
-			expanded,
-			leaf,
-			row,
-			hasFocus);
+        AddressbookTreeNode folder = (AddressbookTreeNode) value;
 
-		AddressbookTreeNode folder = (AddressbookTreeNode) value;
-		if ( folder==null ) return this;
-		
-		setText( folder.getName() );
-		setIcon( folder.getIcon() );
-		
-		/*
-		FolderItem item = folder.getFolderItem();
-		if ( item==null ) return this;
-		
-		//int uid = item.getUid();
-		int uid = 100;
-		
-		if ( uid == 100 )
-		{
-			setIcon(image2);
-		}
-		else if ( uid == 200 )
-		{
-			setIcon(image3);
-		}
-		else
-		{
-			setIcon(image1);
-		}
-		*/
-		
-		/*
-		if (value instanceof AddressbookFolder)
-		{
-			AddressbookFolder folder = (AddressbookFolder) value;
+        if (folder == null) {
+            return this;
+        }
 
-			FolderItem item = folder.getFolderItem();
-			if (item != null)
-			{
-				String name = item.getName();
-				String type = item.getType();
+        setText(folder.getName());
+        setIcon(folder.getIcon());
 
-				if ( type == "addressbook") )
-					setIcon(image1);
-				else
-					setIcon(image2);
-				
+        /*
+        FolderItem item = folder.getFolderItem();
+        if ( item==null ) return this;
 
-			}
-			
-		
-			setText(folder.getName());	
-			
+        //int uid = item.getUid();
+        int uid = 100;
 
-		}
-		else
-		{
-			
-			
-		}
-		*/
-		
+        if ( uid == 100 )
+        {
+                setIcon(image2);
+        }
+        else if ( uid == 200 )
+        {
+                setIcon(image3);
+        }
+        else
+        {
+                setIcon(image1);
+        }
+        */
+        /*
+        if (value instanceof AddressbookFolder)
+        {
+                AddressbookFolder folder = (AddressbookFolder) value;
+
+                FolderItem item = folder.getFolderItem();
+                if (item != null)
+                {
+                        String name = item.getName();
+                        String type = item.getType();
+
+                        if ( type == "addressbook") )
+                                setIcon(image1);
+                        else
+                                setIcon(image2);
 
 
-			return this;
-		}
+                }
 
-	}
+
+                setText(folder.getName());
+
+
+        }
+        else
+        {
+
+
+        }
+        */
+        return this;
+    }
+}

@@ -13,15 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment;
 
-import java.util.List;
-
 import org.columba.mail.folder.Folder;
+
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
+
+import java.util.List;
+
 
 /**
  * @author freddy
@@ -32,83 +33,79 @@ import org.columba.ristretto.message.StreamableMimePart;
  * Window>Preferences>Java>Code Generation.
  */
 public class AttachmentModel {
+    private Folder folder;
+    private Object uid;
+    private List displayedMimeParts;
+    private MimeTree collection;
 
-	private Folder folder;
-	private Object uid;
+    public AttachmentModel() {
+    }
 
-	private List displayedMimeParts;
+    public synchronized void setFolder(Folder folder) {
+        this.folder = folder;
+    }
 
-	private MimeTree collection;
+    public synchronized void setUid(Object uid) {
+        this.uid = uid;
+    }
 
-	public AttachmentModel() {}
+    public Folder getFolder() {
+        return folder;
+    }
 
-	public synchronized void setFolder(Folder folder) {
-		this.folder = folder;
-	}
+    public Object getUid() {
+        return uid;
+    }
 
-	public synchronized void setUid(Object uid) {
-		this.uid = uid;
-	}
+    /**
+     * Returns the collection.
+     * @return MimePartTree
+     */
+    public MimeTree getCollection() {
+        return collection;
+    }
 
-	public Folder getFolder() {
-		return folder;
-	}
+    /**
+     * Sets the collection.
+     * @param collection The collection to set
+     */
+    public void setCollection(MimeTree collection) {
+        this.collection = collection;
 
-	public Object getUid() {
-		return uid;
-	}
+        // Get all MimeParts
+        displayedMimeParts = collection.getAllLeafs();
 
-	/**
-	 * Returns the collection.
-	 * @return MimePartTree
-	 */
-	public MimeTree getCollection() {
-		return collection;
-	}
+        // Remove the BodyPart(s) if any
+        StreamableMimePart bodyPart = (StreamableMimePart) collection.getFirstTextPart(
+                "plain");
 
-	/**
-	 * Sets the collection.
-	 * @param collection The collection to set
-	 */
-	public void setCollection(MimeTree collection) {
-		this.collection = collection;
+        if (bodyPart != null) {
+            MimePart bodyParent = bodyPart.getParent();
 
-		// Get all MimeParts
-		displayedMimeParts = collection.getAllLeafs();
+            if (bodyParent != null) {
+                if (bodyParent.getHeader().getMimeType().getSubtype().equals("alternative")) {
+                    List bodyParts = bodyParent.getChilds();
+                    displayedMimeParts.removeAll(bodyParts);
+                } else {
+                    displayedMimeParts.remove(bodyPart);
+                }
+            }
+        }
+    }
 
-		// Remove the BodyPart(s) if any
-		StreamableMimePart bodyPart = (StreamableMimePart) collection.getFirstTextPart("plain");
-		if (bodyPart != null) {
-			MimePart bodyParent = bodyPart.getParent();
-			if (bodyParent != null) {
-				if (bodyParent
-					.getHeader()
-					.getMimeType()
-					.getSubtype()
-					.equals("alternative")) {
-					List bodyParts = bodyParent.getChilds();
-					displayedMimeParts.removeAll(bodyParts);
-				} else {
-					displayedMimeParts.remove(bodyPart);
-				}
-			}
-		}
-	}
+    /**
+     * Returns the displayedMimeParts.
+     * @return List
+     */
+    public List getDisplayedMimeParts() {
+        return displayedMimeParts;
+    }
 
-	/**
-	 * Returns the displayedMimeParts.
-	 * @return List
-	 */
-	public List getDisplayedMimeParts() {
-		return displayedMimeParts;
-	}
-
-	/**
-	 * Sets the displayedMimeParts.
-	 * @param displayedMimeParts The displayedMimeParts to set
-	 */
-	public void setDisplayedMimeParts(List displayedMimeParts) {
-		this.displayedMimeParts = displayedMimeParts;
-	}
-
+    /**
+     * Sets the displayedMimeParts.
+     * @param displayedMimeParts The displayedMimeParts to set
+     */
+    public void setDisplayedMimeParts(List displayedMimeParts) {
+        this.displayedMimeParts = displayedMimeParts;
+    }
 }

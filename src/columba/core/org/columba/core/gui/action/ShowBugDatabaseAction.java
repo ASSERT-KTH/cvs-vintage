@@ -13,51 +13,52 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
+
 import org.columba.mail.gui.util.URLController;
+
+import java.awt.event.ActionEvent;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ShowBugDatabaseAction extends FrameAction {
+    /**
+     * @param frameMediator
+     * @param name
+     * @param longDescription
+     * @param actionCommand
+     * @param small_icon
+     * @param big_icon
+     * @param mnemonic
+     * @param keyStroke
+     */
+    public ShowBugDatabaseAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            GlobalResourceLoader.getString(null, null, "menu_help_bug"));
+    }
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public ShowBugDatabaseAction(FrameMediator frameMediator) {
-		super(
-		frameMediator,
-				GlobalResourceLoader.getString(
-					null, null, "menu_help_bug"));
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        URLController c = new URLController();
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		URLController c = new URLController();
-		try {
-			c.open(new URL("http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
-		} catch (MalformedURLException mue) {
-		}
-	}
+        try {
+            c.open(new URL(
+                    "http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
+        } catch (MalformedURLException mue) {
+        }
+    }
 }

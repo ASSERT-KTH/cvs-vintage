@@ -13,13 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.message.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * Copy selected text to clipboard.
@@ -27,20 +27,19 @@ import org.columba.core.gui.frame.FrameMediator;
  * @author fdietz
  */
 public class CopyTextAction extends FrameAction {
+    /**
+     *
+     */
+    public CopyTextAction(FrameMediator controller) {
+        super(controller, "Copy Text");
 
-	/**
-	 * 
-	 */
-	public CopyTextAction(FrameMediator controller) {
-		super(controller, "Copy Text");
-		
-		setEnabled(false);
-	}
+        setEnabled(false);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		// TODO Auto-generated method stub
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        // TODO Auto-generated method stub
+    }
 }

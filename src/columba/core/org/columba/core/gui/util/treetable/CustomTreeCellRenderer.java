@@ -27,87 +27,61 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+
 public class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
+    /** Last tree the renderer was painted in. */
+    private JTree tree;
 
-	/** Last tree the renderer was painted in. */
-	private JTree tree;
+    /*
+    private Color background;
+    private Color foreground;
+    */
+    public CustomTreeCellRenderer() {
+    }
 
-	/*
-	private Color background;
-	private Color foreground;
-	*/
+    public Component getTreeCellRendererComponent(JTree tree, Object value,
+        boolean isSelected, boolean expanded, boolean leaf, int row,
+        boolean hasFocus) {
+        this.tree = tree;
 
-	public CustomTreeCellRenderer() {
+        return super.getTreeCellRendererComponent(tree, value, isSelected,
+            expanded, leaf, row, hasFocus);
+    }
 
-	}
+    public void paint(Graphics g) {
+        Rectangle bounds = g.getClipBounds();
+        Font font = g.getFont();
+        FontMetrics fontMetrics = g.getFontMetrics(font);
 
-	public Component getTreeCellRendererComponent(
-		JTree tree,
-		Object value,
-		boolean isSelected,
-		boolean expanded,
-		boolean leaf,
-		int row,
-		boolean hasFocus) {
-		this.tree = tree;
+        int textWidth = fontMetrics.stringWidth(getText());
 
-		return super.getTreeCellRendererComponent(
-			tree,
-			value,
-			isSelected,
-			expanded,
-			leaf,
-			row,
-			hasFocus);
-	}
+        int iconOffset = 0;
 
-	public void paint(Graphics g) {
+        //int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
+        if ((bounds.x == 0) && (bounds.y == 0)) {
+            bounds.width -= iconOffset;
 
-		Rectangle bounds = g.getClipBounds();
-		Font font = g.getFont();
-		FontMetrics fontMetrics = g.getFontMetrics(font);
+            String labelStr = layout(this, fontMetrics, getText(), bounds);
+            setText(labelStr);
+        }
 
-		int textWidth = fontMetrics.stringWidth(getText());
+        super.paint(g);
+    }
 
-		int iconOffset = 0;
+    private String layout(JLabel label, FontMetrics fontMetrics, String text,
+        Rectangle viewR) {
+        Rectangle iconR = new Rectangle();
+        Rectangle textR = new Rectangle();
 
-		//int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
+        return SwingUtilities.layoutCompoundLabel(fontMetrics, text, null,
+            SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.RIGHT,
+            SwingConstants.RIGHT, viewR, iconR, textR, 0);
+    }
 
-		if (bounds.x == 0 && bounds.y == 0) {
-			bounds.width -= iconOffset;
-			String labelStr = layout(this, fontMetrics, getText(), bounds);
-			setText(labelStr);
-		}
-
-		super.paint(g);
-	}
-
-	private String layout(
-		JLabel label,
-		FontMetrics fontMetrics,
-		String text,
-		Rectangle viewR) {
-		Rectangle iconR = new Rectangle();
-		Rectangle textR = new Rectangle();
-		return SwingUtilities.layoutCompoundLabel(
-			fontMetrics,
-			text,
-			null,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			viewR,
-			iconR,
-			textR,
-			0);
-	}
-
-	/**
-	 * @return
-	 */
-	public JTree getTree() {
-		return tree;
-	}
-
+    /**
+     * @return
+     */
+    public JTree getTree() {
+        return tree;
+    }
 }

@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
 
 import org.columba.addressbook.folder.HeaderItem;
+
 
 /**
  * @author frd
@@ -27,14 +27,11 @@ import org.columba.addressbook.folder.HeaderItem;
  * Window>Preferences>Java>Code Generation.
  */
 public interface HeaderColumnInterface {
-	
-	
-	public Object getValue( HeaderItem item );
-	
-	public String getName();
-	
-	public String getValueString();
-	
-	public int getColumnSize();
-	
+    public Object getValue(HeaderItem item);
+
+    public String getName();
+
+    public String getValueString();
+
+    public int getColumnSize();
 }

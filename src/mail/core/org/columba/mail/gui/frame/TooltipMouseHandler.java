@@ -13,8 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.frame;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.statusbar.StatusBar;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,57 +24,55 @@ import java.awt.event.MouseEvent;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.statusbar.StatusBar;
 
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class TooltipMouseHandler extends MouseAdapter {
+    private StatusBar statusBar;
 
-	private StatusBar statusBar;
+    /**
+     * Constructor for MouseHandler.
+     */
+    public TooltipMouseHandler(StatusBar statusBar) {
+        super();
+        this.statusBar = statusBar;
+    }
 
-	/**
-	 * Constructor for MouseHandler.
-	 */
-	public TooltipMouseHandler(StatusBar statusBar) {
-		super();
-		this.statusBar = statusBar;
-	}
+    /**
+     * Called when the mouse is placed over e.g. a menu or a toolbar
+     * button. Either the tooltip text (preferred) or SHORT_DESCRIPTION
+     * is fetched from the action associated with the menu/button if
+     * possible, and displayed in the status bar.
+     */
+    public void mouseEntered(MouseEvent evt) {
+        if (evt.getSource() instanceof AbstractButton) {
+            AbstractButton button = (AbstractButton) evt.getSource();
+            Action action = button.getAction();
 
-	/**
-	 * Called when the mouse is placed over e.g. a menu or a toolbar 
-	 * button. Either the tooltip text (preferred) or SHORT_DESCRIPTION
-	 * is fetched from the action associated with the menu/button if 
-	 * possible, and displayed in the status bar.
-	 */
-	public void mouseEntered(MouseEvent evt) {
-		if (evt.getSource() instanceof AbstractButton) {
-			AbstractButton button = (AbstractButton) evt.getSource();
-			Action action = button.getAction();
-			if (action != null) {
-				String message = (String)action.getValue(Action.SHORT_DESCRIPTION);
-				statusBar.displayTooltipMessage(message);
-			}
-		}
-	}
-	
-	/** 
-	 * Called when the mouse is moved away from e.g. a menu or a toolbar
-	 * button. Clears the text displayed in the status bar.
-	 */
-	public void mouseExited(MouseEvent e) {
-		// clear the tooltip message previously displayed in the status bar
-		statusBar.displayTooltipMessage("");
-	}
+            if (action != null) {
+                String message = (String) action.getValue(Action.SHORT_DESCRIPTION);
+                statusBar.displayTooltipMessage(message);
+            }
+        }
+    }
 
-	/**
-	 * Called when the mouse is pressed on e.g. a menu or a toolbar
-	 * button. Clears the text displayed in the status bar.
-	 */
-	public void mousePressed(MouseEvent e) {
-		// clear the tooltip message previously displayed in the status bar
-		statusBar.displayTooltipMessage("");
-	}
+    /**
+     * Called when the mouse is moved away from e.g. a menu or a toolbar
+     * button. Clears the text displayed in the status bar.
+     */
+    public void mouseExited(MouseEvent e) {
+        // clear the tooltip message previously displayed in the status bar
+        statusBar.displayTooltipMessage("");
+    }
+
+    /**
+     * Called when the mouse is pressed on e.g. a menu or a toolbar
+     * button. Clears the text displayed in the status bar.
+     */
+    public void mousePressed(MouseEvent e) {
+        // clear the tooltip message previously displayed in the status bar
+        statusBar.displayTooltipMessage("");
+    }
 }

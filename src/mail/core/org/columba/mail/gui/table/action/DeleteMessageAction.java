@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,6 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.RootFolder;
@@ -38,108 +33,94 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class DeleteMessageAction
-	extends FrameAction
-	implements SelectionListener {
+public class DeleteMessageAction extends FrameAction
+    implements SelectionListener {
+    public DeleteMessageAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_delete"));
 
-	public DeleteMessageAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_delete"));
+        // toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_delete_toolbar"));
 
-		// toolbar text
-		putValue(
-			TOOLBAR_NAME,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_delete_toolbar"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_delete_tooltip").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_message_delete_tooltip")
-				.replaceAll("&", ""));
+        // icon for menu
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_delete-16.png"));
 
-		// icon for menu
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+        // icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
 
-		// icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
+        // disable toolbar text
+        setShowToolBarText(false);
 
-		// disable toolbar text
-		setShowToolBarText(false);
+        setEnabled(false);
 
-		setEnabled(false);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
+    }
 
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-				.getTableSelection();
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        Folder folder = (Folder) r[0].getFolder();
+        int uid = folder.getFolderItem().getInteger("uid");
+        Folder trash = (Folder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
 
-		Folder folder = (Folder) r[0].getFolder();
-		int uid = folder.getFolderItem().getInteger("uid");
-		Folder trash =
-			(Folder) ((RootFolder) folder.getRootFolder()).getTrashFolder();
+        //Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
+        // trash folder has uid==105
+        if (uid == trash.getUid()) {
+            // trash folder is selected
+            //  -> delete message
+            MainInterface.processor.addOp(new MarkMessageCommand(r));
 
-		//Folder trash = (Folder) MainInterface.treeModel.getTrashFolder();
+            MainInterface.processor.addOp(new ExpungeFolderCommand(r));
+        } else {
+            // -> move messages to trash
+            Folder destFolder = trash;
 
-		// trash folder has uid==105
-		if (uid == trash.getUid()) {
-			// trash folder is selected
-			//  -> delete message
+            FolderCommandReference[] result = new FolderCommandReference[2];
+            FolderCommandReference[] r1 = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+            FolderCommandReference r2 = new FolderCommandReference(destFolder);
 
-			MainInterface.processor.addOp(new MarkMessageCommand(r));
+            result[0] = r1[0];
+            result[1] = r2;
 
-			MainInterface.processor.addOp(new ExpungeFolderCommand(r));
-		} else {
-			// -> move messages to trash
-			Folder destFolder = trash;
+            MoveMessageCommand c = new MoveMessageCommand(result);
 
-			FolderCommandReference[] result = new FolderCommandReference[2];
-			FolderCommandReference[] r1 =
-				((AbstractMailFrameController) getFrameMediator())
-					.getTableSelection();
-			FolderCommandReference r2 = new FolderCommandReference(destFolder);
+            MainInterface.processor.addOp(c);
+        }
+    }
 
-			result[0] = r1[0];
-			result[1] = r2;
-
-			MoveMessageCommand c = new MoveMessageCommand(result);
-
-			MainInterface.processor.addOp(c);
-		}
-	}
-
-	/* (non-Javadoc)
-	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	     */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+    /* (non-Javadoc)
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

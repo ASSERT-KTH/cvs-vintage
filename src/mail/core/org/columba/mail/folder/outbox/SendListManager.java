@@ -13,87 +13,77 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.outbox;
+
+import org.columba.mail.composer.SendableMessage;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.composer.SendableMessage;
 
 /**
  * Keeps a list of {@SenableMessage} objects.
- * 
+ *
  *
  * @author fdietz
  */
-public class SendListManager
-{
+public class SendListManager {
     private List sendAccounts;
     private int counter;
-
     private boolean mutex;
 
-
-    public SendListManager()
-    {
+    public SendListManager() {
         sendAccounts = new Vector();
         counter = 0;
 
         mutex = false;
     }
 
-    private synchronized void getMutex()
-    {
-        while( mutex ) {
+    private synchronized void getMutex() {
+        while (mutex) {
             try {
                 wait();
-            }
-            catch( InterruptedException e )
-            {
+            } catch (InterruptedException e) {
             }
         }
 
         mutex = true;
     }
 
-    private synchronized void releaseMutex()
-    {
+    private synchronized void releaseMutex() {
         mutex = false;
         notify();
     }
 
-
-    public void add( SendableMessage message )
-    {
+    public void add(SendableMessage message) {
         getMutex();
 
         SendList actList;
         counter++;
 
-	System.out.println("SMTP_SEND::Adding message in sendlistManager");
-				for (Iterator it = sendAccounts.iterator(); it.hasNext();) {
-					actList = (SendList) it.next();
-        // for( int i=0; i<sendAccounts.size(); i++)
-        // {
-            // actList = (SendList) sendAccounts.get(i);
+        System.out.println("SMTP_SEND::Adding message in sendlistManager");
 
-            if( message.getAccountUid() == actList.getAccountUid() )
-            {
-                actList.add( message );
+        for (Iterator it = sendAccounts.iterator(); it.hasNext();) {
+            actList = (SendList) it.next();
+
+            // for( int i=0; i<sendAccounts.size(); i++)
+            // {
+            // actList = (SendList) sendAccounts.get(i);
+            if (message.getAccountUid() == actList.getAccountUid()) {
+                actList.add(message);
                 releaseMutex();
+
                 return;
             }
         }
 
-        sendAccounts.add( new SendList( message ) );
+        sendAccounts.add(new SendList(message));
 
         releaseMutex();
     }
 
-    public boolean hasMoreMessages()
-    {
+    public boolean hasMoreMessages() {
         getMutex();
 
         boolean output = (counter > 0);
@@ -103,8 +93,7 @@ public class SendListManager
         return output;
     }
 
-    public int count()
-    {
+    public int count() {
         int output;
 
         System.out.println("DEBUG");
@@ -118,19 +107,15 @@ public class SendListManager
         return output;
     }
 
-
-
-    public Object getNextUid()
-    {
+    public Object getNextUid() {
         getMutex();
 
         SendList actList = (SendList) sendAccounts.get(0);
         Object output = actList.getFirst().getUID();
 
-        counter --;
+        counter--;
 
-        if( actList.count() == 0 )
-        {
+        if (actList.count() == 0) {
             sendAccounts.remove(0);
         }
 
@@ -139,18 +124,15 @@ public class SendListManager
         return output;
     }
 
-
-    public SendableMessage getNextMessage()
-    {
+    public SendableMessage getNextMessage() {
         getMutex();
 
         SendList actList = (SendList) sendAccounts.get(0);
         SendableMessage output = actList.getFirst();
 
-        counter --;
+        counter--;
 
-        if( actList.count() == 0 )
-        {
+        if (actList.count() == 0) {
             sendAccounts.remove(0);
         }
 
@@ -158,48 +140,37 @@ public class SendListManager
 
         return output;
     }
-
-
 }
 
 
-class SendList
-{
+class SendList {
     private Vector messages;
     private int accountUid;
 
-
-    public SendList( SendableMessage message )
-    {
+    public SendList(SendableMessage message) {
         this.accountUid = message.getAccountUid();
 
         messages = new Vector();
-        messages.add( message );
+        messages.add(message);
     }
 
-    public int getAccountUid()
-    {
+    public int getAccountUid() {
         return accountUid;
     }
 
-    public void add( SendableMessage message )
-    {
-        messages.add( message );
+    public void add(SendableMessage message) {
+        messages.add(message);
     }
 
-    public SendableMessage getFirst()
-    {
+    public SendableMessage getFirst() {
         return (SendableMessage) messages.remove(0);
     }
 
-    public SendableMessage get(int index)
-    {
+    public SendableMessage get(int index) {
         return (SendableMessage) messages.get(index);
     }
 
-    public int count()
-    {
+    public int count() {
         return messages.size();
     }
-
 }

@@ -13,137 +13,127 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter;
-
-import javax.swing.table.AbstractTableModel;
 
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.util.MailResourceLoader;
 
-class FilterListDataModel extends AbstractTableModel
-{
+import javax.swing.table.AbstractTableModel;
 
-    final String[] columnNames = {MailResourceLoader.getString(
-                                        "dialog",
-                                        "filter",
-                                        "description_tableheader"),
-                                  MailResourceLoader.getString(
-                                        "dialog",
-                                        "filter",
-                                        "enabled_tableheader")
-                                  };
 
+class FilterListDataModel extends AbstractTableModel {
+    final String[] columnNames = {
+        MailResourceLoader.getString("dialog", "filter",
+            "description_tableheader"),
+        MailResourceLoader.getString("dialog", "filter", "enabled_tableheader")
+    };
     private FilterList filterList;
 
-    public FilterListDataModel( FilterList list )
-    {
+    public FilterListDataModel(FilterList list) {
         super();
         this.filterList = list;
     }
 
-	/** {@inheritDoc} */
-    public int getColumnCount()
-    {
+    /** {@inheritDoc} */
+    public int getColumnCount() {
         return columnNames.length;
     }
 
-	/** {@inheritDoc} */
-    public int getRowCount()
-    {
+    /** {@inheritDoc} */
+    public int getRowCount() {
         return filterList.count();
     }
 
-	/** {@inheritDoc} */
-    public String getColumnName(int col)
-    {
+    /** {@inheritDoc} */
+    public String getColumnName(int col) {
         return columnNames[col];
     }
 
-	/** {@inheritDoc} */
-    public Object getValueAt(int row, int col)
-    {
+    /** {@inheritDoc} */
+    public Object getValueAt(int row, int col) {
         Filter filter = filterList.get(row);
-        if ( filter == null ) return new String();
 
-        if ( col == 0 )
-        {
+        if (filter == null) {
+            return new String();
+        }
+
+        if (col == 0) {
             // description
             String description = filter.get("description");
-            if ( description == null ) return new String();
+
+            if (description == null) {
+                return new String();
+            }
 
             return description;
-        }
-        else
-        {
+        } else {
             // enabled/disabled
             boolean enabled = filter.getBoolean("enabled");
+
             return enabled ? Boolean.TRUE : Boolean.FALSE;
         }
     }
 
-	/** {@inheritDoc} */
-    public Class getColumnClass(int c)
-    {
-        if ( c==0 )
-           return String.class;
-        else
-           return Boolean.class;
-    }
-
-	/** {@inheritDoc} */
-    public boolean isCellEditable(int row, int col)
-    {
-        return col == 1;
-    }
-	
-	/** {@inheritDoc} */
-    public void setValueAt(Object value, int row, int col)
-    {
-        if (col == 1) {
-            Filter filter = filterList.get(row);
-            filter.setEnabled(((Boolean)value).booleanValue());
+    /** {@inheritDoc} */
+    public Class getColumnClass(int c) {
+        if (c == 0) {
+            return String.class;
+        } else {
+            return Boolean.class;
         }
     }
-    
+
+    /** {@inheritDoc} */
+    public boolean isCellEditable(int row, int col) {
+        return col == 1;
+    }
+
+    /** {@inheritDoc} */
+    public void setValueAt(Object value, int row, int col) {
+        if (col == 1) {
+            Filter filter = filterList.get(row);
+            filter.setEnabled(((Boolean) value).booleanValue());
+        }
+    }
+
     /**
      * Returns the filter at the specified row/index.
      * @param row the row.
      * @return a Filter;
      */
     public Filter getFilter(int row) {
-    	return filterList.get(row);
+        return filterList.get(row);
     }
 
-	/**
-	 * Inserts the filter into the filter list at the end of the filter list.
-	 * @param newFilter the filter to insert at the end.	 * 
-	 * @throws IndexOutOfBoundsException if the index is out of range.
-	 */
+    /**
+     * Inserts the filter into the filter list at the end of the filter list.
+     * @param newFilter the filter to insert at the end.         *
+     * @throws IndexOutOfBoundsException if the index is out of range.
+     */
     public void addFilter(Filter newFilter) throws IndexOutOfBoundsException {
-    	int row = filterList.count();
-    	filterList.add(newFilter);
-		fireTableRowsInserted(row, row);    	
+        int row = filterList.count();
+        filterList.add(newFilter);
+        fireTableRowsInserted(row, row);
     }
-    
+
     /**
      * Inserts the filter into the filter list at the specified index.
      * Filters that are at a position below the index (higher) is moved down.
      * @param newFilter the filter to insert.
-     * @param index the positiong in the list to add the filter too. 
+     * @param index the positiong in the list to add the filter too.
      */
     public void insertFilter(Filter newFilter, int index) {
-    	filterList.insert(newFilter, index);
-    	fireTableRowsInserted(index,index);
+        filterList.insert(newFilter, index);
+        fireTableRowsInserted(index, index);
     }
-    
+
     /**
      * Removes the filter from the filter list.
      * @param filter the filter to remove.
      */
     public void removeFilter(Filter filter) {
-    	filterList.remove(filter);
-    	fireTableDataChanged();
+        filterList.remove(filter);
+        fireTableDataChanged();
     }
 }

@@ -15,251 +15,234 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import org.columba.mail.message.ColumbaHeader;
+
+import org.columba.ristretto.message.Flags;
+
 import java.text.Collator;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.Flags;
 
 /**
  * @author fdietz
  *
  * Adds sorting capability to the TableModel.
- * 
+ *
  * We support the following sorting orders:
  *  - In Order Received (no sorting applied)
  *  - Ascending
  *  - Descending
- * 
+ *
  * Sorting is applied on the selected column.
- * 
+ *
  * When inserting new headers we use insertion sort
  * to insert them in the already sorted list of headers
- * 
- * 
+ *
+ *
  */
 public class BasicTableModelSorter extends TreeTableModelDecorator {
+    protected boolean ascending = true;
+    protected String sort = new String("In Order Received");
+    protected Collator collator;
 
-	protected boolean ascending = true;
-	protected String sort = new String("In Order Received");
+    public BasicTableModelSorter(TreeTableModelInterface tableModel) {
+        super(tableModel);
 
-	protected Collator collator;
+        collator = Collator.getInstance();
+    }
 
-	public BasicTableModelSorter(TreeTableModelInterface tableModel) {
-		super(tableModel);
+    public String getSortingColumn() {
+        return sort;
+    }
 
-		collator = Collator.getInstance();
+    public boolean getSortingOrder() {
+        return ascending;
+    }
 
-	}
+    public void setSortingColumn(String str) {
+        sort = str;
+    }
 
-	public String getSortingColumn() {
-		return sort;
-	}
+    public void setSortingOrder(boolean b) {
+        ascending = b;
+    }
 
-	public boolean getSortingOrder() {
-		return ascending;
-	}
+    /**
+     *
+     * sort the table
+     *
+     * use selected column and sorting order
+     *
+     */
+    public void sort() {
+        String str = getSortingColumn();
 
-	public void setSortingColumn(String str) {
-		sort = str;
+        if (str.equals("In Order Received")) {
+            // do not sort the table, just use
+            MessageNode rootNode = getRootNode();
+        } else {
+            MessageNode rootNode = getRootNode();
 
-	}
+            // get a list of MessageNode objects of the first
+            // hierachy level	
+            List v = rootNode.getVector();
 
-	public void setSortingOrder(boolean b) {
-		ascending = b;
+            // do the sorting
+            Collections.sort(v,
+                new MessageHeaderComparator(getRealModel().getColumnNumber(getSortingColumn()),
+                    getSortingOrder()));
+        }
+    }
 
-	}
+    /**
+     * sort the table
+     *
+     * @param column        index of column
+     */
+    public void sort(int column) {
+        String c = getColumnName(column);
 
-	/**
-	 * 
-	 * sort the table
-	 * 
-	 * use selected column and sorting order
-	 *
-	 */
-	public void sort() {
+        // if the same column is selected we change the sorting order
+        // between ascending/descending
+        if (getSortingColumn().equals(c)) {
+            if (getSortingOrder()) {
+                setSortingOrder(false);
+            } else {
+                setSortingOrder(true);
+            }
+        }
 
-		String str = getSortingColumn();
+        setSortingColumn(c);
+        sort();
+    }
 
-		if (str.equals("In Order Received")) {
+    /**
+     *
+     *
+     * @return        index of selected column
+     */
+    public int getSortInt() {
+        return getRealModel().getColumnNumber(getSortingColumn());
+    }
 
-			// do not sort the table, just use
-			MessageNode rootNode = getRootNode();
+    class MessageHeaderComparator implements Comparator {
+        protected int column;
+        protected boolean ascending;
 
-		} else {
+        public MessageHeaderComparator(int sortCol, boolean sortAsc) {
+            column = sortCol;
+            ascending = sortAsc;
+        }
 
-		
-			MessageNode rootNode = getRootNode();
-			
-			// get a list of MessageNode objects of the first
-			// hierachy level	
-			List v = rootNode.getVector();
-		
-			// do the sorting
-			Collections.sort(
-				v,
-				new MessageHeaderComparator(
-					getRealModel().getColumnNumber(getSortingColumn()),
-					getSortingOrder()));
+        public int compare(Object o1, Object o2) {
+            MessageNode node1 = (MessageNode) o1;
+            MessageNode node2 = (MessageNode) o2;
 
-		}
+            ColumbaHeader header1 = (ColumbaHeader) node1.getUserObject();
+            ColumbaHeader header2 = (ColumbaHeader) node2.getUserObject();
 
-	}
+            if ((header1 == null) || (header2 == null)) {
+                return 0;
+            }
 
-	/**
-	 * sort the table 
-	 * 
-	 * @param column	index of column
-	 */
-	public void sort(int column) {
-		String c = getColumnName(column);
+            int result = 0;
 
-		// if the same column is selected we change the sorting order
-		// between ascending/descending
-		if (getSortingColumn().equals(c)) {
-			if (getSortingOrder())
-				setSortingOrder(false);
-			else
-				setSortingOrder(true);
-		}
+            String columnName = getRealModel().getColumnName(column);
 
-		setSortingColumn(c);
-		sort();
-	}
+            if (columnName.equals("Status")) {
+                Flags flags1 = header1.getFlags();
+                Flags flags2 = header2.getFlags();
 
-	/**
-	 * 
-	 * 
-	 * @return	index of selected column
-	 */
-	public int getSortInt() {
-		return getRealModel().getColumnNumber(getSortingColumn());
-	}
+                if ((flags1 == null) || (flags2 == null)) {
+                    result = 0;
+                } else if ((flags1.getSeen()) && (!flags2.getSeen())) {
+                    result = -1;
+                } else if ((!flags1.getSeen()) && (flags2.getSeen())) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+            } else if (columnName.equals("Flagged")) {
+                Flags flags1 = header1.getFlags();
+                Flags flags2 = header2.getFlags();
 
-	class MessageHeaderComparator implements Comparator {
+                boolean f1 = flags1.getFlagged();
+                boolean f2 = flags2.getFlagged();
 
-		protected int column;
+                if (f1 == f2) {
+                    result = 0;
+                } else if (f1) { // define false < true
+                    result = 1;
+                } else {
+                    result = -1;
+                }
+            } else if (columnName.equals("Attachment")) {
+                boolean f1 = ((Boolean) header1.get("columba.attachment")).booleanValue();
+                boolean f2 = ((Boolean) header2.get("columba.attachment")).booleanValue();
 
-		protected boolean ascending;
+                if (f1 == f2) {
+                    result = 0;
+                } else if (f1) { // define false < true
+                    result = 1;
+                } else {
+                    result = -1;
+                }
+            } else if (columnName.equals("Date")) {
+                Date d1 = (Date) header1.get("columba.date");
+                Date d2 = (Date) header2.get("columba.date");
 
-		public MessageHeaderComparator(int sortCol, boolean sortAsc) {
-			column = sortCol;
-			ascending = sortAsc;
-		}
+                if ((d1 == null) || (d2 == null)) {
+                    result = 0;
+                } else {
+                    result = d1.compareTo(d2);
+                }
+            } else if (columnName.equals("Size")) {
+                int i1 = ((Integer) header1.get("columba.size")).intValue();
+                int i2 = ((Integer) header2.get("columba.size")).intValue();
 
-		public int compare(Object o1, Object o2) {
-			
-			MessageNode node1 = (MessageNode) o1;
-			MessageNode node2 = (MessageNode) o2;
+                if (i1 == i2) {
+                    result = 0;
+                } else if (i1 > i2) {
+                    result = 1;
+                } else {
+                    result = -1;
+                }
+            } else {
+                Object item1 = header1.get(columnName);
+                Object item2 = header2.get(columnName);
 
-			ColumbaHeader header1 = (ColumbaHeader) node1.getUserObject();
-			ColumbaHeader header2 = (ColumbaHeader) node2.getUserObject();
+                if ((item1 != null) && (item2 == null)) {
+                    result = 1;
+                } else if ((item1 == null) && (item2 != null)) {
+                    result = -1;
+                } else if ((item1 == null) && (item2 == null)) {
+                    result = 0;
+                }
+                else if (item1 instanceof String) {
+                    result = collator.compare((String) item1, (String) item2);
+                }
+            }
 
-			if ((header1 == null) || (header2 == null))
-				return 0;
+            if (!ascending) {
+                result = -result;
+            }
 
-			int result = 0;
+            return result;
+        }
 
-			String columnName = getRealModel().getColumnName(column);
+        public boolean equals(Object obj) {
+            if (obj instanceof MessageHeaderComparator) {
+                MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
 
-			if (columnName.equals("Status")) {
-				Flags flags1 = header1.getFlags();
-				Flags flags2 = header2.getFlags();
+                return (compObj.column == column) &&
+                (compObj.ascending == ascending);
+            }
 
-				if ((flags1 == null) || (flags2 == null))
-					result = 0;
-				else if ((flags1.getSeen()) && (!flags2.getSeen())) {
-					result = -1;
-				} else if ((!flags1.getSeen()) && (flags2.getSeen())) {
-					result = 1;
-				} else
-					result = 0;
-			} else if (columnName.equals("Flagged")) {
-				Flags flags1 = header1.getFlags();
-				Flags flags2 = header2.getFlags();
-
-				boolean f1 = flags1.getFlagged();
-				boolean f2 = flags2.getFlagged();
-
-				if (f1 == f2) {
-					result = 0;
-				} else if (f1) { // define false < true
-					result = 1;
-				} else {
-					result = -1;
-				}
-			} else if (columnName.equals("Attachment")) {
-				boolean f1 =
-					((Boolean) header1.get("columba.attachment"))
-						.booleanValue();
-				boolean f2 =
-					((Boolean) header2.get("columba.attachment"))
-						.booleanValue();
-
-				if (f1 == f2) {
-					result = 0;
-				} else if (f1) { // define false < true
-					result = 1;
-				} else {
-					result = -1;
-				}
-			} else if (columnName.equals("Date")) {
-				Date d1 = (Date) header1.get("columba.date");
-				Date d2 = (Date) header2.get("columba.date");
-				if ((d1 == null) || (d2 == null))
-					result = 0;
-				else
-					result = d1.compareTo(d2);
-			} else if (columnName.equals("Size")) {
-				int i1 = ((Integer) header1.get("columba.size")).intValue();
-				int i2 = ((Integer) header2.get("columba.size")).intValue();
-
-				if (i1 == i2) {
-					result = 0;
-				} else if (i1 > i2) {
-					result = 1;
-				} else {
-					result = -1;
-				}
-			} else {
-				Object item1 = header1.get(columnName);
-				Object item2 = header2.get(columnName);
-
-				if ((item1 != null) && (item2 == null))
-					result = 1;
-				else if ((item1 == null) && (item2 != null))
-					result = -1;
-				else if ((item1 == null) && (item2 == null))
-					result = 0;
-
-				else if (item1 instanceof String) {
-					result = collator.compare((String) item1, (String) item2);
-				}
-			}
-
-			if (!ascending)
-				result = -result;
-			return result;
-		}
-
-		public boolean equals(Object obj) {
-
-			if (obj instanceof MessageHeaderComparator) {
-
-				MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
-
-				return (compObj.column == column)
-					&& (compObj.ascending == ascending);
-
-			}
-
-			return false;
-
-		}
-
-	}
-
+            return false;
+        }
+    }
 }

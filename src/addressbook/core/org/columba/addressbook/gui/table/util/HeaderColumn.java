@@ -13,8 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
+
+import org.columba.addressbook.folder.HeaderItem;
 
 import java.awt.Component;
 
@@ -24,113 +25,93 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.addressbook.folder.HeaderItem;
 
-public class HeaderColumn extends JLabel implements HeaderColumnInterface, TableCellRenderer
-{
-	protected Border unselectedBorder = null;
-	protected Border selectedBorder = null;
-	protected boolean isBordered = true;
+public class HeaderColumn extends JLabel implements HeaderColumnInterface,
+    TableCellRenderer {
+    protected Border unselectedBorder = null;
+    protected Border selectedBorder = null;
+    protected boolean isBordered = true;
+    protected String value;
+    protected String name;
+    protected String prefix;
+    protected String suffix;
+    boolean splitted;
 
-	protected String value;
-	
-	protected String name;
-	protected String prefix;
-	protected String suffix;
-	boolean splitted;
+    public HeaderColumn(String name) {
+        super();
+        this.name = name;
+        this.value = null;
 
-	public HeaderColumn( String name )
-	{
-		super();
-		this.name = name;
-		this.value = null;
-		int index = name.indexOf(";");
+        int index = name.indexOf(";");
 
-		setOpaque(true);
-		
-		isBordered = true;
-	}
-	
-	public HeaderColumn( String name, String value )
-	{
-		super();
-		this.name = name;
-		isBordered = true;
-		this.value = value;
-		setOpaque(true);
-	}
+        setOpaque(true);
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-		if (isBordered)
-		{
-			if (isSelected)
-			{
-				if (selectedBorder == null)
-				{
-					selectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
-				}
-				
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			}
-			else
-			{
-				if (unselectedBorder == null)
-				{
-					unselectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
-				}
-				setBackground(table.getBackground());
-				
-				
-				setForeground(table.getForeground());
-			}
-		}
-		
-		
-		setText((String) object);
-		return this;
-	}
+        isBordered = true;
+    }
 
-	public Object getValue( HeaderItem item )
-	{
-		if ( item == null ) return "";
-		
-		if ( name == null ) return "";
-		
-		Object o = item.get( (String) name);
-		if ( o == null ) return "";
-		
-		return o;
-		
-		
-		
-		
-		
-	}
-	
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public String getValueString()
-	{
-		return value;
-	}
-	
-	public int getColumnSize()
-	{
-		return -1;
-	}
-	
+    public HeaderColumn(String name, String value) {
+        super();
+        this.name = name;
+        isBordered = true;
+        this.value = value;
+        setOpaque(true);
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
+                }
+
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
+                }
+
+                setBackground(table.getBackground());
+
+                setForeground(table.getForeground());
+            }
+        }
+
+        setText((String) object);
+
+        return this;
+    }
+
+    public Object getValue(HeaderItem item) {
+        if (item == null) {
+            return "";
+        }
+
+        if (name == null) {
+            return "";
+        }
+
+        Object o = item.get((String) name);
+
+        if (o == null) {
+            return "";
+        }
+
+        return o;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValueString() {
+        return value;
+    }
+
+    public int getColumnSize() {
+        return -1;
+    }
 }

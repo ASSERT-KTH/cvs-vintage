@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.message;
 
-import java.util.List;
-
 import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
+
+import java.util.List;
+
 
 /**
  * Contains additional attributes useful for sending
@@ -31,40 +32,33 @@ import org.columba.ristretto.message.Header;
  *
  *  @author fdietz, tstich
  */
-public class SendableHeader extends ColumbaHeader{
-	
-	public SendableHeader()
-	{
-		super();
-	}
-	
-	 public int getAccountUid()
-    {
-        return ((Integer)attributes.get("columba.accountuid")).intValue();
+public class SendableHeader extends ColumbaHeader {
+    public SendableHeader() {
+        super();
     }
 
-
-    public List getRecipients()
-    {
-        return ((List)attributes.get("columba.recipients"));
+    public int getAccountUid() {
+        return ((Integer) attributes.get("columba.accountuid")).intValue();
     }
 
-    public void setAccountUid( int uid )
-    {
-        attributes.put( "columba.accountuid" , new Integer(uid));
+    public List getRecipients() {
+        return ((List) attributes.get("columba.recipients"));
     }
 
-    public void setRecipients( List rcpt )
-    {
+    public void setAccountUid(int uid) {
+        attributes.put("columba.accountuid", new Integer(uid));
+    }
+
+    public void setRecipients(List rcpt) {
         attributes.put("columba.recipients", rcpt);
     }
-    
+
     public Object clone() {
-		SendableHeader clone = new SendableHeader();
-		clone.attributes = (Attributes) this.attributes.clone();
-		clone.flags = (Flags) this.flags.clone();
-		clone.header = (Header) this.header.clone();
-		
-		return clone;
+        SendableHeader clone = new SendableHeader();
+        clone.attributes = (Attributes) this.attributes.clone();
+        clone.flags = (Flags) this.flags.clone();
+        clone.header = (Header) this.header.clone();
+
+        return clone;
     }
 }

@@ -13,11 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table;
+
+import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -25,161 +27,137 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
-import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 
-public class FilterToolbar extends JToolBar implements ActionListener
-{
+public class FilterToolbar extends JToolBar implements ActionListener {
+    public JButton searchButton;
+    private JComboBox comboBox;
+    private JTextField textField;
+    private TableView table;
+    private ResourceBundle toolbarLabels;
 
-	public JButton searchButton;
+    public FilterToolbar(TableView table) {
+        super();
 
-	private JComboBox comboBox;
-	private JTextField textField;
+        this.table = table;
 
-	private TableView table;
+        //setMargin( new Insets(0,0,0,0) );
+        addCButtons();
 
-	private ResourceBundle toolbarLabels;
+        setBorderPainted(false);
+        setFloatable(false);
+    }
 
-	public FilterToolbar(TableView table)
-	{
-		super();
+    public void addCButtons() {
+        /*
+        //addSeparator();
 
-		this.table = table;
+        //HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
+        TableItem list = table.getHeaderTableItem();
+        comboBox = new JComboBox();
+        String name;
 
-		//setMargin( new Insets(0,0,0,0) );
+        for (int i = 0; i < list.count(); i++)
+        {
+                name = list.getName(i);
+                boolean enabled = list.getEnabled(i);
 
-		addCButtons();
+                if (enabled == false)
+                        continue;
 
-		setBorderPainted(false);
-		setFloatable(false);
+                if (!(name.equalsIgnoreCase("type")))
+                        comboBox.addItem(name);
 
-	}
+        }
 
-	public void addCButtons()
-	{
+        //comboBox.setMaximumSize( new java.awt.Dimension( 100, 25 ) );
+        comboBox.setSelectedIndex(0);
+        comboBox.addActionListener(this);
+        comboBox.setActionCommand("COMBO");
+        add(comboBox);
 
-		/*
-		//addSeparator();
+        addSeparator();
 
-		//HeaderTableItem list = mainInterface.config.getOptionsConfig().getHeaderTableItem();
-		TableItem list = table.getHeaderTableItem();
-		comboBox = new JComboBox();
-		String name;
+        JLabel label = new JLabel("contains");
+        add(label);
 
-		for (int i = 0; i < list.count(); i++)
-		{
-			name = list.getName(i);
-			boolean enabled = list.getEnabled(i);
+        addSeparator();
 
-			if (enabled == false)
-				continue;
+        textField = new JTextField(20);
+        textField.addActionListener(this);
+        textField.setActionCommand("TEXTFIELD");
+        textField.addFocusListener(new FocusListener()
+        {
+                public void focusGained(FocusEvent e)
+                {
+                }
 
-			if (!(name.equalsIgnoreCase("type")))
-				comboBox.addItem(name);
+                public void focusLost(FocusEvent e)
+                {
+                        TableModelFilteredView model = table.getTableModelFilteredView();
+                        try
+                        {
+                                model.setPatternString(textField.getText());
+                        }
+                        catch (Exception ex)
+                        {
+                                ex.printStackTrace();
+                        }
+                }
+        });
+        //textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
 
-		}
+        add(textField);
 
-		//comboBox.setMaximumSize( new java.awt.Dimension( 100, 25 ) );
-		comboBox.setSelectedIndex(0);
-		comboBox.addActionListener(this);
-		comboBox.setActionCommand("COMBO");
-		add(comboBox);
+        addSeparator();
 
-		addSeparator();
-		
-		JLabel label = new JLabel("contains");
-		add(label);
-		
-		addSeparator();
+        searchButton = new JButton("Search..");
+        //searchButton.setMaximumSize( new java.awt.Dimension( 150, 25 ) );
+        //attachmentButton.setSelected( false );
+        searchButton.addActionListener(this);
+        searchButton.setActionCommand("OK");
+        add(searchButton);
 
-		textField = new JTextField(20);
-		textField.addActionListener(this);
-		textField.setActionCommand("TEXTFIELD");
-		textField.addFocusListener(new FocusListener()
-		{
-			public void focusGained(FocusEvent e)
-			{
-			}
+        addSeparator();
+                */
+    }
 
-			public void focusLost(FocusEvent e)
-			{
-				TableModelFilteredView model = table.getTableModelFilteredView();
-				try
-				{
-					model.setPatternString(textField.getText());
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-			}
-		});
-		//textField.setMaximumSize( new java.awt.Dimension( 600, 25 ) );
+    public void update() {
+        table.getTableModel().update();
+    }
 
-		add(textField);
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		addSeparator();
+        try {
+            //TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
+            TableModelFilteredView model = table.getTableModelFilteredView();
 
-		searchButton = new JButton("Search..");
-		//searchButton.setMaximumSize( new java.awt.Dimension( 150, 25 ) );
-		//attachmentButton.setSelected( false );
-		searchButton.addActionListener(this);
-		searchButton.setActionCommand("OK");
-		add(searchButton);
+            if (action.equals("COMBO")) {
+                JComboBox cb = (JComboBox) e.getSource();
+                model.setPatternItem((String) cb.getSelectedItem());
+            } else if (action.equals("TEXTFIELD")) {
+                model.setPatternString(textField.getText());
 
-		addSeparator();
-			*/
-	}
+                //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
+                // tableModel.update();
+                //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
+                //update();
+            } else if (action.equals("OK")) {
+                if (model == null) {
+                    System.out.println("model is null");
 
-	public void update()
-	{
-		table.getTableModel().update();
-	}
+                    return;
+                }
 
-	public void actionPerformed(ActionEvent e)
-	{
-		String action = e.getActionCommand();
+                //HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
+                //tableModel.update();
+                model.setDataFiltering(true);
 
-		try
-		{
-
-			//TableModelFilteredView model = mainInterface.headerTableViewer.getHeaderTable().getTableModelFilteredView();
-			TableModelFilteredView model = table.getTableModelFilteredView();
-
-			if (action.equals("COMBO"))
-			{
-				JComboBox cb = (JComboBox) e.getSource();
-				model.setPatternItem((String) cb.getSelectedItem());
-			}
-			else if (action.equals("TEXTFIELD"))
-			{
-				model.setPatternString(textField.getText());
-				//HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-				// tableModel.update();
-				//mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-				//update();
-			}
-			else if (action.equals("OK"))
-			{
-				if (model == null)
-				{
-					System.out.println("model is null");
-					return;
-				}
-				
-					//HeaderTableModel tableModel = mainInterface.headerTableViewer.getHeaderTable().getHeaderTableModel();
-					//tableModel.update();
-					model.setDataFiltering(true);
-					//mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
-					update();
-				
-
-			}
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-
-	}
-
+                //mainInterface.headerTableViewer.getHeaderTable().getIndexedTableModel().update();
+                update();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -15,6 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import org.columba.core.config.HeaderItem;
+import org.columba.core.config.TableItem;
+import org.columba.core.gui.util.treetable.CustomTreeTableCellRenderer;
+import org.columba.core.gui.util.treetable.Tree;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,165 +30,159 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.config.HeaderItem;
-import org.columba.core.config.TableItem;
-import org.columba.core.gui.util.treetable.CustomTreeTableCellRenderer;
-import org.columba.core.gui.util.treetable.Tree;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author fdietz
  *
  * <class>BasicHeaderTableModel</class> extends AbstractTableModel
  * and adds a <class>DefaultTreeModel</class>.
- * 
+ *
  * The TableModel uses the TreeModel data. You can say, that it just
  * wraps the TreeModel in the TableModel.
- * 
+ *
  * This is necessary to support a threaded view of messages, useful
  * when following discussions of mailing-lists or newsgroups.
- * 
- * Another possible scenario would be adding a grouping support 
+ *
+ * Another possible scenario would be adding a grouping support
  * which also needs a tree-like structure.
- * 
+ *
  */
 public class BasicHeaderTableModel extends AbstractTableModel {
+    protected TableItem item;
+    protected HeaderList headerList;
+    protected Tree tree;
 
-	protected TableItem item;
-	protected HeaderList headerList;
-	protected Tree tree;
-	/**
-	 * 
-	* We cache all <class>MessageNode</class> here.
-	* 
-	* This is much faster than searching through the complete
-	* <class>HeaderList</class> all the time.
-	* 
-	*/
-	protected HashMap map;
+    /**
+     *
+    * We cache all <class>MessageNode</class> here.
+    *
+    * This is much faster than searching through the complete
+    * <class>HeaderList</class> all the time.
+    *
+    */
+    protected HashMap map;
+    protected MessageNode root;
+    private boolean enableThreadedView;
 
-	protected MessageNode root;
+    public BasicHeaderTableModel(TableItem item) {
+        this.item = item;
 
-	private boolean enableThreadedView;
+        map = new HashMap();
+    }
 
-	public BasicHeaderTableModel(TableItem item) {
+    /************************ getter/setter methods ****************************/
+    public void enableThreadedView(boolean b) {
+        enableThreadedView = b;
+    }
 
-		this.item = item;
+    public MessageNode getRootNode() {
+        return root;
+    }
 
-		map = new HashMap();
+    public void setTree(Tree tree) {
+        this.tree = tree;
+        tree.setRootNode(new MessageNode(new ColumbaHeader(), "0"));
+    }
 
-	}
+    public HeaderList getHeaderList() {
+        return headerList;
+    }
 
-	/************************ getter/setter methods ****************************/
+    public void setHeaderList(HeaderList list) {
+        headerList = list;
+    }
 
-	public void enableThreadedView(boolean b) {
-		enableThreadedView = b;
-	}
+    public MessageNode getMessageNode(Object uid) {
+        return (MessageNode) map.get(uid);
+    }
 
-	public MessageNode getRootNode() {
-		return root;
-	}
+    /**
+             * @return
+             */
+    public Map getMap() {
+        return map;
+    }
 
-	public void setTree(Tree tree) {
-		this.tree = tree;
-		tree.setRootNode(new MessageNode(new ColumbaHeader(), "0"));
-	}
+    public DefaultTreeModel getTreeModel() {
+        return (DefaultTreeModel) tree.getModel();
+    }
 
-	public HeaderList getHeaderList() {
-		return headerList;
-	}
+    /**
+     * @return
+     */
+    public Tree getTree() {
+        return tree;
+    }
 
-	public void setHeaderList(HeaderList list) {
-		headerList = list;
-	}
+    /********************* AbstractTableModel implementation ********************/
+    public int getColumnCount() {
+        int count = 0;
 
-	public MessageNode getMessageNode(Object uid) {
-		return (MessageNode) map.get(uid);
-	}
+        for (int i = 0; i < item.count(); i++) {
+            HeaderItem headerItem = item.getHeaderItem(i);
 
-	/**
-		 * @return
-		 */
-	public Map getMap() {
-		return map;
-	}
+            if (headerItem.getBoolean("enabled")) {
+                count++;
+            }
+        }
 
-	public DefaultTreeModel getTreeModel() {
-		return (DefaultTreeModel) tree.getModel();
-	}
+        return count;
+    }
 
-	/**
-	 * @return
-	 */
-	public Tree getTree() {
-		return tree;
-	}
+    public int getRowCount() {
+        if (tree != null) {
+            return tree.getRowCount();
+        } else {
+            return 0;
+        }
+    }
 
-	/********************* AbstractTableModel implementation ********************/
+    public Object getValueAt(int row, int col) {
+        TreePath treePath = tree.getPathForRow(row);
 
-	public int getColumnCount() {
-		int count = 0;
+        return (MessageNode) treePath.getLastPathComponent();
 
-		for (int i = 0; i < item.count(); i++) {
-			HeaderItem headerItem = item.getHeaderItem(i);
-			if (headerItem.getBoolean("enabled"))
-				count++;
-		}
-		return count;
-	}
+        //if ( col == 0 ) return tree;
+    }
 
-	public int getRowCount() {
-		if (tree != null) {
-			return tree.getRowCount();
-		} else {
-			return 0;
-		}
-	}
+    public String getColumnName(int column) {
+        return item.getHeaderItem(column).get("name");
+    }
 
-	public Object getValueAt(int row, int col) {
-		TreePath treePath = tree.getPathForRow(row);
-		return (MessageNode) treePath.getLastPathComponent();
+    public int getColumnNumber(String name) {
+        for (int i = 0; i < getColumnCount(); i++) {
+            //System.out.println("column name: "+ getColumnName(i) );
+            if (name.indexOf(getColumnName(i)) != -1) {
+                return i;
+            }
+        }
 
-		//if ( col == 0 ) return tree;
-	}
+        return -1;
+    }
 
-	public String getColumnName(int column) {
-		return item.getHeaderItem(column).get("name");
-	}
+    public Class getColumnClass(int column) {
+        if (enableThreadedView) {
+            String name = getColumnName(column);
 
-	public int getColumnNumber(String name) {
-		for (int i = 0; i < getColumnCount(); i++) {
-			//System.out.println("column name: "+ getColumnName(i) );
-			if (name.indexOf(getColumnName(i)) != -1)
-				return i;
-		}
+            if (name.equalsIgnoreCase("Subject")) {
+                return CustomTreeTableCellRenderer.class;
+            } else {
+                return getValueAt(0, column).getClass();
+            }
+        } else {
+            return getValueAt(0, column).getClass();
+        }
 
-		return -1;
-	}
+        //return null;
+    }
 
-	public Class getColumnClass(int column) {
-		if (enableThreadedView) {
+    public boolean isCellEditable(int row, int col) {
+        String name = getColumnName(col);
 
-			String name = getColumnName(column);
-			if (name.equalsIgnoreCase("Subject"))
-				return CustomTreeTableCellRenderer.class;
-			else
-				return getValueAt(0, column).getClass();
-		} else
-			return getValueAt(0, column).getClass();
+        if (name.equalsIgnoreCase("Subject")) {
+            return true;
+        }
 
-		//return null;
-	}
-
-	public boolean isCellEditable(int row, int col) {
-		
-		String name = getColumnName(col);
-		if (name.equalsIgnoreCase("Subject"))
-			return true;
-
-		return false;
-		
-	}
-
+        return false;
+    }
 }

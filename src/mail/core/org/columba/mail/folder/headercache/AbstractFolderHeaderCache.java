@@ -15,10 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import org.columba.core.command.StatusObservable;
+
+import org.columba.mail.folder.Folder;
+
 import java.io.File;
 
-import org.columba.core.command.StatusObservable;
-import org.columba.mail.folder.Folder;
 
 /**
  * @author frd
@@ -27,19 +29,17 @@ import org.columba.mail.folder.Folder;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractFolderHeaderCache extends AbstractHeaderCache {
+    protected Folder folder;
 
-	protected Folder folder;
+    /**
+     * @param folder
+     */
+    public AbstractFolderHeaderCache(Folder folder) {
+        super(new File(folder.getDirectoryFile(), ".header"));
+        this.folder = folder;
+    }
 
-	/**
-	 * @param folder
-	 */
-	public AbstractFolderHeaderCache(Folder folder) {
-		super(new File(folder.getDirectoryFile(), ".header"));
-		this.folder = folder;
-	}
-
-	public StatusObservable getObservable() {
-		return folder.getObservable();
-	}
-
+    public StatusObservable getObservable() {
+        return folder.getObservable();
+    }
 }

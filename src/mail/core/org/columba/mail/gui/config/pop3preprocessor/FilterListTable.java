@@ -13,36 +13,37 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.pop3preprocessor;
+
+import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.columba.core.config.Config;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
 
 class FilterListTable extends JTable {
-	private Config config;
+    private Config config;
 
-	public FilterListTable(XmlElement filterList, ConfigFrame frame) {
-		super(new FilterListTableModel(filterList));
-		config = MainInterface.config;
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-                setShowGrid(false);
-		setIntercellSpacing(new java.awt.Dimension(0, 0));
-                TableColumn tc = getColumnModel().getColumn(1);
-                tc.setMaxWidth(80);
-                tc.setMinWidth(80);
-                DefaultTableCellRenderer renderer = 
-                        (DefaultTableCellRenderer)tableHeader.getDefaultRenderer();
-                renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
-	}
+    public FilterListTable(XmlElement filterList, ConfigFrame frame) {
+        super(new FilterListTableModel(filterList));
+        config = MainInterface.config;
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        setShowGrid(false);
+        setIntercellSpacing(new java.awt.Dimension(0, 0));
 
-	public void update() {
-		((FilterListTableModel)getModel()).fireTableDataChanged();
-	}
+        TableColumn tc = getColumnModel().getColumn(1);
+        tc.setMaxWidth(80);
+        tc.setMinWidth(80);
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tableHeader.getDefaultRenderer();
+        renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
+    }
+
+    public void update() {
+        ((FilterListTableModel) getModel()).fireTableDataChanged();
+    }
 }

@@ -13,8 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.util;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,163 +44,142 @@ import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.tree.command.CreateSubFolderCommand;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
 
-public class SelectFolderDialog
-	implements ActionListener, TreeSelectionListener {
-	private String name;
+public class SelectFolderDialog implements ActionListener,
+    TreeSelectionListener {
+    private String name;
+    private boolean bool = false;
 
-	private boolean bool = false;
+    //public SelectFolderTree tree;
+    private JTree tree;
+    private JButton okButton;
+    private JButton newButton;
 
-	//public SelectFolderTree tree;
+    //private TreeController treeController;
+    //private TreeModel treeModel;
+    private FolderTreeNode selectedFolder;
 
-	private JTree tree;
+    //private JFrame frame;
+    protected JDialog dialog;
 
-	private JButton okButton, newButton;
+    public SelectFolderDialog() {
+        dialog = DialogStore.getDialog(MailResourceLoader.getString("dialog",
+                    "folder", "select_folder"));
 
-	//private TreeController treeController;
-	//private TreeModel treeModel;
+        name = new String("name");
 
-	private FolderTreeNode selectedFolder;
+        init();
+    }
 
-	//private JFrame frame;
+    public void init() {
+        JPanel contentPane = (JPanel) dialog.getContentPane();
+        contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 
-	protected JDialog dialog;
+        tree = new JTree(MailInterface.treeModel);
+        tree.expandRow(0);
+        tree.expandRow(1);
+        tree.putClientProperty("JTree.lineStyle", "Angled");
+        tree.setShowsRootHandles(true);
+        tree.setRootVisible(false);
+        tree.addTreeSelectionListener(this);
 
-	public SelectFolderDialog() {
-		dialog =
-			DialogStore.getDialog(
-				MailResourceLoader.getString(
-					"dialog",
-					"folder",
-					"select_folder"));
+        FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
+        tree.setCellRenderer(renderer);
 
-		name = new String("name");
+        JScrollPane scrollPane = new JScrollPane(tree);
+        scrollPane.setPreferredSize(new Dimension(150, 300));
+        contentPane.add(scrollPane);
 
-		init();
-	}
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 
-	public void init() {
-		JPanel contentPane = (JPanel) dialog.getContentPane();
-		contentPane.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
+        okButton = new ButtonWithMnemonic(MailResourceLoader.getString("", "ok"));
+        okButton.setEnabled(false);
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
+        buttonPanel.add(okButton);
+        newButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "folder", "new_folder"));
+        newButton.setEnabled(true);
+        newButton.setActionCommand("NEW");
+        newButton.addActionListener(this);
+        buttonPanel.add(newButton);
 
-		tree = new JTree(MailInterface.treeModel);
-		tree.expandRow(0);
-		tree.expandRow(1);
-		tree.putClientProperty("JTree.lineStyle", "Angled");
-		tree.setShowsRootHandles(true);
-		tree.setRootVisible(false);
-		tree.addTreeSelectionListener(this);
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        buttonPanel.add(cancelButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        contentPane.add(bottomPanel, BorderLayout.SOUTH);
+        dialog.getRootPane().setDefaultButton(okButton);
+        dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }
 
-		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
-		tree.setCellRenderer(renderer);
+    public boolean success() {
+        return bool;
+    }
 
-		JScrollPane scrollPane = new JScrollPane(tree);
-		scrollPane.setPreferredSize(new Dimension(150, 300));
-		contentPane.add(scrollPane);
+    public Folder getSelectedFolder() {
+        return (Folder) selectedFolder;
+    }
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 5, 0));
-		okButton =
-			new ButtonWithMnemonic(MailResourceLoader.getString("", "ok"));
-		okButton.setEnabled(false);
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
-		buttonPanel.add(okButton);
-		newButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("dialog", "folder", "new_folder"));
-		newButton.setEnabled(true);
-		newButton.setActionCommand("NEW");
-		newButton.addActionListener(this);
-		buttonPanel.add(newButton);
-		ButtonWithMnemonic cancelButton =
-			new ButtonWithMnemonic(MailResourceLoader.getString("", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-		dialog.getRootPane().setDefaultButton(okButton);
-		dialog.getRootPane().registerKeyboardAction(
-			this,
-			"CANCEL",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
-	}
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-	public boolean success() {
-		return bool;
-	}
+        if (action.equals("OK")) {
+            //name = textField.getText();
+            bool = true;
 
-	public Folder getSelectedFolder() {
-		return (Folder) selectedFolder;
-	}
+            dialog.dispose();
+        } else if (action.equals("CANCEL")) {
+            bool = false;
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+            dialog.dispose();
+        } else if (action.equals("NEW")) {
+            CreateFolderDialog dialog = new CreateFolderDialog(tree.getSelectionPath());
+            dialog.showDialog();
 
-		if (action.equals("OK")) {
-			//name = textField.getText();
+            String name;
 
-			bool = true;
+            if (dialog.success()) {
+                // ok pressed
+                name = dialog.getName();
+            } else {
+                // cancel pressed
+                return;
+            }
 
-			dialog.dispose();
-		} else if (action.equals("CANCEL")) {
-			bool = false;
+            FolderCommandReference[] r = new FolderCommandReference[1];
+            r[0] = new FolderCommandReference(getSelectedFolder());
+            r[0].setFolderName(name);
 
-			dialog.dispose();
-		} else if (action.equals("NEW")) {
-			CreateFolderDialog dialog =
-				new CreateFolderDialog(tree.getSelectionPath());
-			dialog.showDialog();
+            MainInterface.processor.addOp(new CreateSubFolderCommand(r));
+        }
+    }
 
-			String name;
+    /******************************* tree selection listener ********************************/
+    public void valueChanged(TreeSelectionEvent e) {
+        FolderTreeNode node = (FolderTreeNode) tree.getLastSelectedPathComponent();
 
-			if (dialog.success()) {
-				// ok pressed
-				name = dialog.getName();
-			} else {
-				// cancel pressed
-				return;
-			}
+        if (node == null) {
+            return;
+        }
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(getSelectedFolder());
-			r[0].setFolderName(name);
+        if (node instanceof Folder) {
+            selectedFolder = (Folder) node;
+        }
 
-			MainInterface.processor.addOp(new CreateSubFolderCommand(r));
-
-		}
-
-	}
-
-	/******************************* tree selection listener ********************************/
-
-	public void valueChanged(TreeSelectionEvent e) {
-		FolderTreeNode node =
-			(FolderTreeNode) tree.getLastSelectedPathComponent();
-		if (node == null)
-			return;
-
-		if (node instanceof Folder)
-			selectedFolder = (Folder) node;
-
-		if (node.supportsAddMessage())
-			okButton.setEnabled(true);
-		else
-			okButton.setEnabled(false);
-	}
+        if (node.supportsAddMessage()) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
 }

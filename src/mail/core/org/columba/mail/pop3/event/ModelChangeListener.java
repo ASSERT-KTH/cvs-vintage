@@ -13,11 +13,8 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.pop3.event;
 
 public interface ModelChangeListener {
-	
-	public void modelChanged(ModelChangedEvent e);
-
+    public void modelChanged(ModelChangedEvent e);
 }

@@ -15,14 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.filter.FilterRule;
+
+import org.columba.ristretto.imap.protocol.Arguments;
+import org.columba.ristretto.imap.protocol.Atom;
+
 import java.io.UnsupportedEncodingException;
+
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.filter.FilterRule;
-import org.columba.ristretto.imap.protocol.Arguments;
-import org.columba.ristretto.imap.protocol.Atom;
 
 /**
  * Builds IMAP search request strings, from {@link FilterList}
@@ -34,354 +37,373 @@ import org.columba.ristretto.imap.protocol.Atom;
  * @author fdietz
  */
 public class SearchRequestBuilder {
+    protected String charset;
+    protected boolean usesCharset = false;
 
-	protected String charset;
-	protected boolean usesCharset = false;
+    public SearchRequestBuilder() {
+    }
 
-	public SearchRequestBuilder() {
+    protected Arguments createBccArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
 
-	}
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
 
-	protected Arguments createBccArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
+        args.add(new Atom("BCC"));
 
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
+        String pattern = criteria.getPattern();
 
-		args.add(new Atom("BCC"));
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
 
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
+        return args;
+    }
 
-		return args;
-	}
+    protected Arguments createBodyArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
 
-	protected Arguments createBodyArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
 
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
+        args.add(new Atom("BODY"));
 
-		args.add(new Atom("BODY"));
+        String pattern = criteria.getPattern();
 
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
 
-		return args;
-	}
-
-	protected Arguments createCcArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
-
-		args.add(new Atom("CC"));
-
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
-
-		return args;
-	}
+        return args;
+    }
 
-	protected Arguments createDateArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
+    protected Arguments createCcArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
 
-		args.add(new Atom("DATE"));
-
-		if (criteria.getCriteria() == FilterCriteria.DATE_BEFORE)
-			args.add(new Atom("SENTBEFORE"));
-		else
-			args.add(new Atom("SENTAFTER"));
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
 
-		args.add(criteria.getPattern());
+        args.add(new Atom("CC"));
 
-		return args;
-	}
+        String pattern = criteria.getPattern();
 
-	protected Arguments createFlagsArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
 
-		//			we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
+        return args;
+    }
 
-		String headerField = criteria.getPattern();
+    protected Arguments createDateArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
 
-		if (headerField.equalsIgnoreCase("Answered")) {
-			args.add(new Atom("ANSWERED"));
-		} else if (headerField.equalsIgnoreCase("Deleted")) {
-			args.add(new Atom("DELETED"));
-		} else if (headerField.equalsIgnoreCase("Flagged")) {
-			args.add(new Atom("FLAGGED"));
-		} else if (headerField.equalsIgnoreCase("Recent")) {
-			args.add(new Atom("NEW"));
-		} else if (headerField.equalsIgnoreCase("Draft")) {
-			args.add(new Atom("DRAFT"));
-		} else if (headerField.equalsIgnoreCase("Seen")) {
-			args.add(new Atom("SEEN"));
-
-		}
-		return args;
-	}
-
-	protected Arguments createFromArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
-
-		args.add(new Atom("FROM"));
-
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
-
-		return args;
-	}
-
-	protected Arguments createPriorityArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		args.add(new Atom("HEADER"));
-		
-		args.add(new Atom("X-Priority"));
-
-		Integer searchPattern = null;
-		String pattern = criteria.getPattern();
-		if (pattern.equalsIgnoreCase("Highest")) {
-			searchPattern = new Integer(1);
-		} else if (pattern.equalsIgnoreCase("High")) {
-			searchPattern = new Integer(2);
-		} else if (pattern.equalsIgnoreCase("Normal")) {
-			searchPattern = new Integer(3);
-		} else if (pattern.equalsIgnoreCase("Low")) {
-			searchPattern = new Integer(4);
-		} else if (pattern.equalsIgnoreCase("Lowest")) {
-			searchPattern = new Integer(5);
-		}
-		args.add(searchPattern.toString());
-
-		return args;
-	}
-
-	protected Arguments createSizeArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		if (criteria.getCriteria() == FilterCriteria.SIZE_BIGGER)
-			args.add(new Atom("LARGER"));
-		else
-			args.add(new Atom("SMALLER"));
-
-		args.add(criteria.getPattern());
-
-		return args;
-	}
-
-	protected Arguments createSubjectArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
-
-		args.add(new Atom("SUBJECT"));
-
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
-
-		return args;
-	}
-
-	protected Arguments createToArguments(FilterCriteria criteria)
-		throws UnsupportedEncodingException {
-		Arguments args = new Arguments();
-
-		// we need to append "NOT"
-		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
-			args.add(new Atom("NOT"));
-
-		args.add(new Atom("TO"));
-
-		String pattern = criteria.getPattern();
-		if (isAscii(pattern))
-			args.add(pattern);
-		else
-			args.add(pattern, charset);
-
-		return args;
-	}
-
-	public List generateSearchArguments(FilterRule rule)
-		throws UnsupportedEncodingException {
-		List ruleStringList = new Vector();
-
-		for (int i = 0; i < rule.count(); i++) {
-			FilterCriteria criteria = rule.get(i);
-			//StringBuffer searchString = new StringBuffer();
-			Arguments args = null;
-
-			switch (criteria.getTypeItem()) {
-				case FilterCriteria.SUBJECT :
-					{
-						args = createSubjectArguments(criteria);
-
-						break;
-					}
-				case FilterCriteria.TO :
-					{
-						args = createToArguments(criteria);
-						break;
-					}
-				case FilterCriteria.FROM :
-					{
-						args = createFromArguments(criteria);
-						break;
-					}
-				case FilterCriteria.CC :
-					{
-						args = createCcArguments(criteria);
-						break;
-					}
-				case FilterCriteria.BCC :
-					{
-						args = createBccArguments(criteria);
-						break;
-					}
-				case FilterCriteria.TO_CC :
-					{
-						args = createToArguments(criteria);
-
-						break;
-					}
-				case FilterCriteria.BODY :
-					{
-						args = createBodyArguments(criteria);
-						break;
-					}
-				case FilterCriteria.SIZE :
-					{
-						args = createSizeArguments(criteria);
-
-						break;
-					}
-				case FilterCriteria.DATE :
-					{
-						args = createDateArguments(criteria);
-
-						break;
-					}
-				case FilterCriteria.FLAGS :
-					{
-						args = createFlagsArguments(criteria);
-
-						break;
-					}
-				case FilterCriteria.PRIORITY :
-					{
-						args = createPriorityArguments(criteria);
-
-						break;
-					}
-
-			}
-
-			ruleStringList.add(args);
-		}
-
-		return ruleStringList;
-	}
-
-	public Arguments generateSearchArguments(
-		FilterRule rule,
-		List ruleStringList) {
-		Arguments args = new Arguments();
-
-		if (rule.count() > 1) {
-
-			int condition = rule.getConditionInt();
-			String conditionString;
-			if (condition == FilterRule.MATCH_ALL) {
-				// match all
-				conditionString = "AND";
-
-			} else {
-				// match any
-				conditionString = "OR";
-			}
-
-			
-			
-			// concatenate all criteria together
-			//  -> create one search-request string
-			for (int i = 0; i < rule.count(); i++) {
-
-				if ( (i != rule.count() - 1) && (conditionString.equals("OR")) )
-					args.add(new Atom(conditionString));
-				
-				args.add((Arguments) ruleStringList.get(i));
-
-			}
-			
-		} else {
-
-			args.add((Arguments) ruleStringList.get(0));
-		}
-
-		return args;
-	}
-
-	
-
-	protected static boolean isAscii(String s) {
-		int l = s.length();
-
-		for (int i = 0; i < l; i++) {
-			if ((int) s.charAt(i) > 0177) // non-ascii
-				return false;
-		}
-		return true;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getCharset() {
-		return charset;
-	}
-
-	/**
-	 * @param string
-	 */
-	public void setCharset(String string) {
-		charset = string;
-	}
+        args.add(new Atom("DATE"));
 
+        if (criteria.getCriteria() == FilterCriteria.DATE_BEFORE) {
+            args.add(new Atom("SENTBEFORE"));
+        } else {
+            args.add(new Atom("SENTAFTER"));
+        }
+
+        args.add(criteria.getPattern());
+
+        return args;
+    }
+
+    protected Arguments createFlagsArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        //			we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
+
+        String headerField = criteria.getPattern();
+
+        if (headerField.equalsIgnoreCase("Answered")) {
+            args.add(new Atom("ANSWERED"));
+        } else if (headerField.equalsIgnoreCase("Deleted")) {
+            args.add(new Atom("DELETED"));
+        } else if (headerField.equalsIgnoreCase("Flagged")) {
+            args.add(new Atom("FLAGGED"));
+        } else if (headerField.equalsIgnoreCase("Recent")) {
+            args.add(new Atom("NEW"));
+        } else if (headerField.equalsIgnoreCase("Draft")) {
+            args.add(new Atom("DRAFT"));
+        } else if (headerField.equalsIgnoreCase("Seen")) {
+            args.add(new Atom("SEEN"));
+        }
+
+        return args;
+    }
+
+    protected Arguments createFromArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
+
+        args.add(new Atom("FROM"));
+
+        String pattern = criteria.getPattern();
+
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
+
+        return args;
+    }
+
+    protected Arguments createPriorityArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        args.add(new Atom("HEADER"));
+
+        args.add(new Atom("X-Priority"));
+
+        Integer searchPattern = null;
+        String pattern = criteria.getPattern();
+
+        if (pattern.equalsIgnoreCase("Highest")) {
+            searchPattern = new Integer(1);
+        } else if (pattern.equalsIgnoreCase("High")) {
+            searchPattern = new Integer(2);
+        } else if (pattern.equalsIgnoreCase("Normal")) {
+            searchPattern = new Integer(3);
+        } else if (pattern.equalsIgnoreCase("Low")) {
+            searchPattern = new Integer(4);
+        } else if (pattern.equalsIgnoreCase("Lowest")) {
+            searchPattern = new Integer(5);
+        }
+
+        args.add(searchPattern.toString());
+
+        return args;
+    }
+
+    protected Arguments createSizeArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        if (criteria.getCriteria() == FilterCriteria.SIZE_BIGGER) {
+            args.add(new Atom("LARGER"));
+        } else {
+            args.add(new Atom("SMALLER"));
+        }
+
+        args.add(criteria.getPattern());
+
+        return args;
+    }
+
+    protected Arguments createSubjectArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
+
+        args.add(new Atom("SUBJECT"));
+
+        String pattern = criteria.getPattern();
+
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
+
+        return args;
+    }
+
+    protected Arguments createToArguments(FilterCriteria criteria)
+        throws UnsupportedEncodingException {
+        Arguments args = new Arguments();
+
+        // we need to append "NOT"
+        if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT) {
+            args.add(new Atom("NOT"));
+        }
+
+        args.add(new Atom("TO"));
+
+        String pattern = criteria.getPattern();
+
+        if (isAscii(pattern)) {
+            args.add(pattern);
+        } else {
+            args.add(pattern, charset);
+        }
+
+        return args;
+    }
+
+    public List generateSearchArguments(FilterRule rule)
+        throws UnsupportedEncodingException {
+        List ruleStringList = new Vector();
+
+        for (int i = 0; i < rule.count(); i++) {
+            FilterCriteria criteria = rule.get(i);
+
+            //StringBuffer searchString = new StringBuffer();
+            Arguments args = null;
+
+            switch (criteria.getTypeItem()) {
+            case FilterCriteria.SUBJECT: {
+                args = createSubjectArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.TO: {
+                args = createToArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.FROM: {
+                args = createFromArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.CC: {
+                args = createCcArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.BCC: {
+                args = createBccArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.TO_CC: {
+                args = createToArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.BODY: {
+                args = createBodyArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.SIZE: {
+                args = createSizeArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.DATE: {
+                args = createDateArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.FLAGS: {
+                args = createFlagsArguments(criteria);
+
+                break;
+            }
+
+            case FilterCriteria.PRIORITY: {
+                args = createPriorityArguments(criteria);
+
+                break;
+            }
+            }
+
+            ruleStringList.add(args);
+        }
+
+        return ruleStringList;
+    }
+
+    public Arguments generateSearchArguments(FilterRule rule,
+        List ruleStringList) {
+        Arguments args = new Arguments();
+
+        if (rule.count() > 1) {
+            int condition = rule.getConditionInt();
+            String conditionString;
+
+            if (condition == FilterRule.MATCH_ALL) {
+                // match all
+                conditionString = "AND";
+            } else {
+                // match any
+                conditionString = "OR";
+            }
+
+            // concatenate all criteria together
+            //  -> create one search-request string
+            for (int i = 0; i < rule.count(); i++) {
+                if ((i != (rule.count() - 1)) &&
+                        (conditionString.equals("OR"))) {
+                    args.add(new Atom(conditionString));
+                }
+
+                args.add((Arguments) ruleStringList.get(i));
+            }
+        } else {
+            args.add((Arguments) ruleStringList.get(0));
+        }
+
+        return args;
+    }
+
+    protected static boolean isAscii(String s) {
+        int l = s.length();
+
+        for (int i = 0; i < l; i++) {
+            if ((int) s.charAt(i) > 0177) { // non-ascii
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * @param string
+     */
+    public void setCharset(String string) {
+        charset = string;
+    }
 }

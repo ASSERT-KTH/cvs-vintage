@@ -17,6 +17,11 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.mail.gui.util.URLController;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,7 +30,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -43,123 +50,115 @@ import javax.swing.UIManager;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.mail.gui.util.URLController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Dialg showing information to the user. This can be either a URL to document
  * or a string.
- * 
+ *
  * @author fdietz
  */
 public class InfoViewerDialog extends JDialog implements ActionListener {
+    JButton helpButton;
+    JButton closeButton;
+    JTextPane textPane;
 
-	JButton helpButton;
-	JButton closeButton;
+    public InfoViewerDialog(String message) {
+        this();
 
-	JTextPane textPane;
+        HTMLEditorKit editorKit = new HTMLEditorKit();
+        StyleSheet styles = new StyleSheet();
 
-	public InfoViewerDialog(String message) {
-		this();
-		HTMLEditorKit editorKit = new HTMLEditorKit();
-		StyleSheet styles = new StyleSheet();
+        Font font = UIManager.getFont("Label.font");
+        String name = font.getName();
+        int size = font.getSize();
+        String css = "<style type=\"text/css\"><!--p {font-family:\"" + name +
+            "\"; font-size:\"" + size + "pt\"}--></style>";
+        styles.addRule(css);
+        editorKit.setStyleSheet(styles);
 
-		Font font = UIManager.getFont("Label.font");
-		String name = font.getName();
-		int size = font.getSize();
-		String css =
-			"<style type=\"text/css\"><!--p {font-family:\""
-				+ name
-				+ "\"; font-size:\""
-				+ size
-				+ "pt\"}--></style>";
-		styles.addRule(css);
-		editorKit.setStyleSheet(styles);
+        textPane.setEditorKit(editorKit);
+        textPane.setText(message);
+        setVisible(true);
+    }
 
-		textPane.setEditorKit(editorKit);
-		textPane.setText(message);
-		setVisible(true);
-	}
+    /**
+     * @throws java.awt.HeadlessException
+     */
+    public InfoViewerDialog(URL url) {
+        this();
 
-	/**
-	 * @throws java.awt.HeadlessException
-	 */
-	public InfoViewerDialog(URL url) {
-		this();
-		try {
-			textPane.setPage(url);
-		} catch (IOException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
-		}
-		setVisible(true);
-	}
+        try {
+            textPane.setPage(url);
+        } catch (IOException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
 
-	protected InfoViewerDialog() {
-		super(new JFrame(), "Info", true);
-		initComponents();
-		pack();
-		setLocationRelativeTo(null);
-		textPane.setEditable(false);
-	}
+        setVisible(true);
+    }
 
-	protected void initComponents() {
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		getContentPane().add(mainPanel);
+    protected InfoViewerDialog() {
+        super(new JFrame(), "Info", true);
+        initComponents();
+        pack();
+        setLocationRelativeTo(null);
+        textPane.setEditable(false);
+    }
 
-		// centerpanel
-		textPane = new JTextPane();
-		JScrollPane scrollPane = new JScrollPane(textPane);
-		scrollPane.setPreferredSize(new Dimension(450, 300));
-		scrollPane.getViewport().setBackground(Color.white);
+    protected void initComponents() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        getContentPane().add(mainPanel);
 
-		mainPanel.add(scrollPane);
+        // centerpanel
+        textPane = new JTextPane();
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		ButtonWithMnemonic closeButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
-		buttonPanel.add(helpButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(closeButton);
-		getRootPane().registerKeyboardAction(
-			this,
-			"CLOSE",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		getRootPane().registerKeyboardAction(
-			this,
-			"HELP",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
+        JScrollPane scrollPane = new JScrollPane(textPane);
+        scrollPane.setPreferredSize(new Dimension(450, 300));
+        scrollPane.getViewport().setBackground(Color.white);
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+        mainPanel.add(scrollPane);
 
-		if (action.equals("CLOSE")) {
-			setVisible(false);
-		} else if (action.equals("HELP")) {
-			URLController c = new URLController();
-			try {
-				c.open(new URL("help.html"));
-			} catch (MalformedURLException mue) {
-			}
-		}
-	}
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
+        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+        closeButton.addActionListener(this);
+        buttonPanel.add(closeButton);
+
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
+        helpButton.setActionCommand("HELP");
+        helpButton.addActionListener(this);
+        buttonPanel.add(helpButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(closeButton);
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "HELP",
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        if (action.equals("CLOSE")) {
+            setVisible(false);
+        } else if (action.equals("HELP")) {
+            URLController c = new URLController();
+
+            try {
+                c.open(new URL("help.html"));
+            } catch (MalformedURLException mue) {
+            }
+        }
+    }
 }

@@ -15,186 +15,181 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 
+import java.util.List;
+
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class UndoManagerTest extends TestCase {
+    private DefaultProcessor processor;
+    private UndoManager undoManager;
+    private DefaultCommandReference[] nullReferences;
 
-	private DefaultProcessor processor;
-	private UndoManager undoManager;
-	private DefaultCommandReference[] nullReferences;
-	
-	/**
-	 * Constructor for UndoManagerTest.
-	 * @param arg0
-	 */
-	public UndoManagerTest(String arg0) {
-		super(arg0);
-	}
+    /**
+     * Constructor for UndoManagerTest.
+     * @param arg0
+     */
+    public UndoManagerTest(String arg0) {
+        super(arg0);
+    }
 
-	/**
-	 * @see TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-		
-		new ColumbaLogger();
-		
-		processor = new DefaultProcessor();
-		undoManager = processor.getUndoManager();		
-		
-		nullReferences = new DefaultCommandReference[1];
-		nullReferences[0] = new DefaultCommandReference();
-	}
+    /**
+     * @see TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
 
-	/**
-	 * @see TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();		
-		processor = null;
-	}
+        new ColumbaLogger();
 
-	/**
-	 * Method testAddToUndo_TimeStampOrdering.
-	 * Tests if the Commands are sorted in respect to
-	 * increasing TimeStamps.
-	 */
-	public void testAddToUndo_TimeStampOrdering() {
-		Command command1 = new TestUndoCommand(null,nullReferences);
-		command1.setTimeStamp(0);
-		undoManager.addToUndo(command1);
+        processor = new DefaultProcessor();
+        undoManager = processor.getUndoManager();
 
-		Command command2 = new TestUndoCommand(null,nullReferences);
-		command2.setTimeStamp(4);
-		undoManager.addToUndo(command2);
+        nullReferences = new DefaultCommandReference[1];
+        nullReferences[0] = new DefaultCommandReference();
+    }
 
-		Command command3 = new TestUndoCommand(null,nullReferences);
-		command3.setTimeStamp(2);
-		undoManager.addToUndo(command3);
+    /**
+     * @see TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        processor = null;
+    }
 
-		Command command4 = new TestUndoCommand(null,nullReferences);
-		command4.setTimeStamp(7);
-		undoManager.addToUndo(command4);
-		
-		List result = undoManager.getUndoQueue();
-		assertTrue( result.get(0) == command1);
-		assertTrue( result.get(1) == command3);
-		assertTrue( result.get(2) == command2);
-		assertTrue( result.get(3) == command4);
-	}
+    /**
+     * Method testAddToUndo_TimeStampOrdering.
+     * Tests if the Commands are sorted in respect to
+     * increasing TimeStamps.
+     */
+    public void testAddToUndo_TimeStampOrdering() {
+        Command command1 = new TestUndoCommand(null, nullReferences);
+        command1.setTimeStamp(0);
+        undoManager.addToUndo(command1);
 
-	public void testUndoLast() {
-		Command command1 = new TestUndoCommand(null,nullReferences);
-		command1.setTimeStamp(0);
-		undoManager.addToUndo(command1);
+        Command command2 = new TestUndoCommand(null, nullReferences);
+        command2.setTimeStamp(4);
+        undoManager.addToUndo(command2);
 
-		Command command2 = new TestUndoCommand(null,nullReferences);
-		command2.setTimeStamp(4);
-		undoManager.addToUndo(command2);
+        Command command3 = new TestUndoCommand(null, nullReferences);
+        command3.setTimeStamp(2);
+        undoManager.addToUndo(command3);
 
-		Command command3 = new TestUndoCommand(null,nullReferences);
-		command3.setTimeStamp(2);
-		undoManager.addToUndo(command3);
+        Command command4 = new TestUndoCommand(null, nullReferences);
+        command4.setTimeStamp(7);
+        undoManager.addToUndo(command4);
 
-		Command command4 = new TestUndoCommand(null,nullReferences);
-		command4.setTimeStamp(7);
-		undoManager.addToUndo(command4);
+        List result = undoManager.getUndoQueue();
+        assertTrue(result.get(0) == command1);
+        assertTrue(result.get(1) == command3);
+        assertTrue(result.get(2) == command2);
+        assertTrue(result.get(3) == command4);
+    }
 
-		undoManager.undoLast();
-		undoManager.undoLast();
-		undoManager.undoLast();
-		undoManager.undoLast();
-		
-		List result = processor.getOperationQueue();
-		assertTrue( ((OperationItem)result.get(0)).operation == command4);
-		assertTrue( ((OperationItem)result.get(1)).operation == command2);
-		assertTrue( ((OperationItem)result.get(2)).operation == command3);
-		assertTrue( ((OperationItem)result.get(3)).operation == command1);		
-	}
+    public void testUndoLast() {
+        Command command1 = new TestUndoCommand(null, nullReferences);
+        command1.setTimeStamp(0);
+        undoManager.addToUndo(command1);
 
-	public void testRedoLast() {
-		Command command1 = new TestUndoCommand(null,nullReferences);
-		command1.setTimeStamp(0);
-		undoManager.addToUndo(command1);
+        Command command2 = new TestUndoCommand(null, nullReferences);
+        command2.setTimeStamp(4);
+        undoManager.addToUndo(command2);
 
-		Command command2 = new TestUndoCommand(null,nullReferences);
-		command2.setTimeStamp(4);
-		undoManager.addToUndo(command2);
+        Command command3 = new TestUndoCommand(null, nullReferences);
+        command3.setTimeStamp(2);
+        undoManager.addToUndo(command3);
 
-		Command command3 = new TestUndoCommand(null,nullReferences);
-		command3.setTimeStamp(2);
-		undoManager.addToUndo(command3);
+        Command command4 = new TestUndoCommand(null, nullReferences);
+        command4.setTimeStamp(7);
+        undoManager.addToUndo(command4);
 
-		Command command4 = new TestUndoCommand(null,nullReferences);
-		command4.setTimeStamp(7);
-		undoManager.addToUndo(command4);
+        undoManager.undoLast();
+        undoManager.undoLast();
+        undoManager.undoLast();
+        undoManager.undoLast();
 
-		undoManager.undoLast();
-		undoManager.undoLast();
-		undoManager.undoLast();
-		undoManager.undoLast();
-		
-		List result = processor.getOperationQueue();
-		result.clear();
+        List result = processor.getOperationQueue();
+        assertTrue(((OperationItem) result.get(0)).operation == command4);
+        assertTrue(((OperationItem) result.get(1)).operation == command2);
+        assertTrue(((OperationItem) result.get(2)).operation == command3);
+        assertTrue(((OperationItem) result.get(3)).operation == command1);
+    }
 
-		undoManager.redoLast();
-		undoManager.redoLast();
-		undoManager.redoLast();
-		undoManager.redoLast();		
-		
-		assertTrue( ((OperationItem)result.get(0)).operation == command1);
-		assertTrue( ((OperationItem)result.get(1)).operation == command3);
-		assertTrue( ((OperationItem)result.get(2)).operation == command2);
-		assertTrue( ((OperationItem)result.get(3)).operation == command4);		
-	}
+    public void testRedoLast() {
+        Command command1 = new TestUndoCommand(null, nullReferences);
+        command1.setTimeStamp(0);
+        undoManager.addToUndo(command1);
 
+        Command command2 = new TestUndoCommand(null, nullReferences);
+        command2.setTimeStamp(4);
+        undoManager.addToUndo(command2);
 
+        Command command3 = new TestUndoCommand(null, nullReferences);
+        command3.setTimeStamp(2);
+        undoManager.addToUndo(command3);
+
+        Command command4 = new TestUndoCommand(null, nullReferences);
+        command4.setTimeStamp(7);
+        undoManager.addToUndo(command4);
+
+        undoManager.undoLast();
+        undoManager.undoLast();
+        undoManager.undoLast();
+        undoManager.undoLast();
+
+        List result = processor.getOperationQueue();
+        result.clear();
+
+        undoManager.redoLast();
+        undoManager.redoLast();
+        undoManager.redoLast();
+        undoManager.redoLast();
+
+        assertTrue(((OperationItem) result.get(0)).operation == command1);
+        assertTrue(((OperationItem) result.get(1)).operation == command3);
+        assertTrue(((OperationItem) result.get(2)).operation == command2);
+        assertTrue(((OperationItem) result.get(3)).operation == command4);
+    }
 }
+
 
 class TestUndoCommand extends Command {
-	
-	public TestUndoCommand( FrameMediator controller, DefaultCommandReference[] arguments ) {
-		super( controller, arguments );
-		
-		commandType = Command.UNDOABLE_OPERATION;
-	}
+    public TestUndoCommand(FrameMediator controller,
+        DefaultCommandReference[] arguments) {
+        super(controller, arguments);
 
-	public void updateGUI()
-	{}
+        commandType = Command.UNDOABLE_OPERATION;
+    }
 
-	public void execute( Worker worker ) throws Exception {
-		
-	}
-	
-	public void undo( Worker worker ) throws Exception {
-		
-	}
+    public void updateGUI() {
+    }
 
-	public void redo( Worker worker ) throws Exception {
-		
-	}
+    public void execute(Worker worker) throws Exception {
+    }
+
+    public void undo(Worker worker) throws Exception {
+    }
+
+    public void redo(Worker worker) throws Exception {
+    }
 }
+
 
 class TestNoChangeCommand extends Command {
-	
-	public TestNoChangeCommand( FrameMediator controller, DefaultCommandReference[] arguments ) {
-		super( controller, arguments );		
-	}
+    public TestNoChangeCommand(FrameMediator controller,
+        DefaultCommandReference[] arguments) {
+        super(controller, arguments);
+    }
 
-	public void updateGUI()
-	{}
+    public void updateGUI() {
+    }
 
-	public void execute( Worker worker ) throws Exception {
-		
-	}	
+    public void execute(Worker worker) throws Exception {
+    }
 }
-

@@ -17,19 +17,21 @@
 //All Rights Reserved.
 package org.columba.core.gui.util;
 
+import org.columba.core.config.Config;
+import org.columba.core.xml.XmlElement;
+
 import java.awt.Font;
+
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-import org.columba.core.config.Config;
-import org.columba.core.xml.XmlElement;
 
 /**
- * 
- * 
+ *
+ *
  * Provides font configuration and helper methods to set the fonts
  * application-wide.
  * <p>
@@ -42,149 +44,156 @@ import org.columba.core.xml.XmlElement;
  * attribute: overwrite (true/false)
  * <p>
  * default is of course "false", to respect Look and Feel settings
- * 
+ *
  * @author fdietz
  */
 public class FontProperties extends Observable implements Observer {
+    private static XmlElement fonts;
 
-	private static XmlElement fonts;
+    /**
+     *
+     */
+    public FontProperties() {
+        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement gui = options.getElement("gui");
+        fonts = gui.getElement("fonts");
 
-	/**
-	 *  
-	 */
-	public FontProperties() {
+        if (fonts == null) {
+            fonts = gui.addSubElement("fonts");
+        }
 
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement gui = options.getElement("gui");
-		fonts = gui.getElement("fonts");
-		if (fonts == null)
-			fonts = gui.addSubElement("fonts");
+        XmlElement mainFontElement = fonts.getElement("main");
 
-		XmlElement mainFontElement = fonts.getElement("main");
-		if (mainFontElement == null)
-			mainFontElement = fonts.addSubElement("main");
+        if (mainFontElement == null) {
+            mainFontElement = fonts.addSubElement("main");
+        }
 
-		XmlElement textFontElement = fonts.getElement("text");
-		if (textFontElement == null)
-			textFontElement = fonts.addSubElement("text");
+        XmlElement textFontElement = fonts.getElement("text");
 
-		// register as configuration change listener
-		fonts.addObserver(this);
+        if (textFontElement == null) {
+            textFontElement = fonts.addSubElement("text");
+        }
 
-	}
+        // register as configuration change listener
+        fonts.addObserver(this);
+    }
 
-	/**
-	 * Gets the currently selected text font used in the message-viewer and
-	 * composer editor.
-	 * 
-	 * @return text font
-	 */
-	public static Font getTextFont() {
-		return getFont("text");
-	}
+    /**
+     * Gets the currently selected text font used in the message-viewer and
+     * composer editor.
+     *
+     * @return text font
+     */
+    public static Font getTextFont() {
+        return getFont("text");
+    }
 
-	/**
-	 * Gets the currenlty selected widget font.
-	 * 
-	 * @return widget font
-	 */
-	public static Font getMainFont() {
-		return getFont("main");
-	}
+    /**
+     * Gets the currenlty selected widget font.
+     *
+     * @return widget font
+     */
+    public static Font getMainFont() {
+        return getFont("main");
+    }
 
-	/**
-	 * Gets the currently configured font
-	 * 
-	 * @param id
-	 *            can be of value "text" or "main"
-	 * @return currently selected font
-	 */
-	protected static Font getFont(String id) {
-		XmlElement textFontElement = fonts.getElement(id);
-		if (textFontElement == null)
-			textFontElement = fonts.addSubElement(id);
+    /**
+     * Gets the currently configured font
+     *
+     * @param id
+     *            can be of value "text" or "main"
+     * @return currently selected font
+     */
+    protected static Font getFont(String id) {
+        XmlElement textFontElement = fonts.getElement(id);
 
-		boolean overwrite =
-			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
+        if (textFontElement == null) {
+            textFontElement = fonts.addSubElement(id);
+        }
 
-		Font font = null;
-		String name = null;
-		String size = null;
-		if (!overwrite) {
-			name = "Default";
-			size = "12";
+        boolean overwrite = Boolean.valueOf(fonts.getAttribute("overwrite",
+                    "true")).booleanValue();
 
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+        Font font = null;
+        String name = null;
+        String size = null;
 
-		} else {
-			name = textFontElement.getAttribute("name", "Default");
-			size = textFontElement.getAttribute("size", "12");
+        if (!overwrite) {
+            name = "Default";
+            size = "12";
 
-			font = new Font(name, Font.PLAIN, Integer.parseInt(size));
-		}
+            font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+        } else {
+            name = textFontElement.getAttribute("name", "Default");
+            size = textFontElement.getAttribute("size", "12");
 
-		return font;
-	}
-	/**
-	 * 
-	 * overwrite Look and Feel font settings
-	 * 
-	 * @param item
-	 *            font configuration item
-	 */
-	public static void setFont() {
-		// should we really overwrite the Look and Feel font settings
-		boolean overwrite =
-			Boolean.valueOf(fonts.getAttribute("overwrite", "true")).booleanValue();
-		if (!overwrite)
-			return;
+            font = new Font(name, Font.PLAIN, Integer.parseInt(size));
+        }
 
-		FontUIResource mainFont = new FontUIResource(getFont("main"));
+        return font;
+    }
 
-		// patch submitted by forum user Turbo Chen
-		// FIXED: user wasn't able to enter chinese text in Composer Subject textfield
-		
-		/*
-		UIManager.put("Label.font", mainFont);
-		UIManager.put("Textfield.font", mainFont);
-		UIManager.put("TextArea.font", mainFont);
-		UIManager.put("MenuItem.font", mainFont);
-		UIManager.put("MenuItem.acceleratorFont", mainFont);
-		UIManager.put("Menu.font", mainFont);
-		UIManager.put("Menu.acceleratorFont", mainFont);
-		UIManager.put("MenuBar.font", mainFont);
-		UIManager.put("Tree.font", mainFont);
-		UIManager.put("Table.font", mainFont);
-		UIManager.put("Button.font", mainFont);
-		UIManager.put("CheckBoxButton.font", mainFont);
-		UIManager.put("RadioButton.font", mainFont);
-		UIManager.put("ComboBox.font", mainFont);
-		UIManager.put("ToggleButton.font", mainFont);
-		UIManager.put("CheckBoxMenuItem.font", mainFont);
-		UIManager.put("RadioButtonMenuItem.font", mainFont);
-		UIManager.put("TabbedPane.font", mainFont);
-		UIManager.put("List.font", mainFont);
-		*/
-		
-		java.util.Enumeration keys = UIManager.getDefaults().keys();
-		while (keys.hasMoreElements()) {
-			Object key = keys.nextElement();
-			Object value = UIManager.get(key);
-			if (value instanceof javax.swing.plaf.FontUIResource)
-				UIManager.put(key, mainFont);
-		}
+    /**
+     *
+     * overwrite Look and Feel font settings
+     *
+     * @param item
+     *            font configuration item
+     */
+    public static void setFont() {
+        // should we really overwrite the Look and Feel font settings
+        boolean overwrite = Boolean.valueOf(fonts.getAttribute("overwrite",
+                    "true")).booleanValue();
 
-	}
+        if (!overwrite) {
+            return;
+        }
 
-	/**
-	 * Gets fired if configuration changes.
-	 * 
-	 * @see org.colulmba.core.gui.config.GeneralOptionsDialog
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
+        FontUIResource mainFont = new FontUIResource(getFont("main"));
 
-	}
+        // patch submitted by forum user Turbo Chen
+        // FIXED: user wasn't able to enter chinese text in Composer Subject textfield
 
+        /*
+        UIManager.put("Label.font", mainFont);
+        UIManager.put("Textfield.font", mainFont);
+        UIManager.put("TextArea.font", mainFont);
+        UIManager.put("MenuItem.font", mainFont);
+        UIManager.put("MenuItem.acceleratorFont", mainFont);
+        UIManager.put("Menu.font", mainFont);
+        UIManager.put("Menu.acceleratorFont", mainFont);
+        UIManager.put("MenuBar.font", mainFont);
+        UIManager.put("Tree.font", mainFont);
+        UIManager.put("Table.font", mainFont);
+        UIManager.put("Button.font", mainFont);
+        UIManager.put("CheckBoxButton.font", mainFont);
+        UIManager.put("RadioButton.font", mainFont);
+        UIManager.put("ComboBox.font", mainFont);
+        UIManager.put("ToggleButton.font", mainFont);
+        UIManager.put("CheckBoxMenuItem.font", mainFont);
+        UIManager.put("RadioButtonMenuItem.font", mainFont);
+        UIManager.put("TabbedPane.font", mainFont);
+        UIManager.put("List.font", mainFont);
+        */
+        java.util.Enumeration keys = UIManager.getDefaults().keys();
+
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+
+            if (value instanceof javax.swing.plaf.FontUIResource) {
+                UIManager.put(key, mainFont);
+            }
+        }
+    }
+
+    /**
+     * Gets fired if configuration changes.
+     *
+     * @see org.colulmba.core.gui.config.GeneralOptionsDialog
+     *
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+    }
 }

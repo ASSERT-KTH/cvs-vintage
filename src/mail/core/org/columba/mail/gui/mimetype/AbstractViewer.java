@@ -13,22 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.mimetype;
-
-import java.io.File;
-import java.net.URL;
 
 import org.columba.ristretto.message.MimeHeader;
 
-public abstract class AbstractViewer
-{
+import java.io.File;
 
+import java.net.URL;
+
+
+public abstract class AbstractViewer {
     public abstract Process openWith(MimeHeader header, File tempFile);
 
     public abstract Process open(MimeHeader header, File tempFile);
 
     public abstract Process openURL(URL url);
-    
+
     public abstract Process openWithURL(URL url);
 }

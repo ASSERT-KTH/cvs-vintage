@@ -13,8 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.dialog.contact;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -31,99 +35,91 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.gui.util.ButtonWithMnemonic;
 
-public class ContactDialog extends JDialog implements ActionListener
-{
-	JTabbedPane centerPane;
-	IdentityPanel identityPanel;
-	AddressPanel addressPanel;
-	JButton okButton;
+public class ContactDialog extends JDialog implements ActionListener {
+    JTabbedPane centerPane;
+    IdentityPanel identityPanel;
+    AddressPanel addressPanel;
+    JButton okButton;
+    boolean result;
 
-	boolean result;
+    public ContactDialog(JFrame frame) {
+        super(frame, true);
 
-	public ContactDialog(JFrame frame)
-	{
-		super(frame,true);
-		//LOCALIZE
-		setTitle("Add Contact");
-		initComponents();
-		pack();
-                setLocationRelativeTo(null);
-	}
+        //LOCALIZE
+        setTitle("Add Contact");
+        initComponents();
+        pack();
+        setLocationRelativeTo(null);
+    }
 
-	public void updateComponents(ContactCard card, boolean b)
-	{
-		identityPanel.updateComponents(card, b);
-		addressPanel.updateComponents(card, b);
+    public void updateComponents(ContactCard card, boolean b) {
+        identityPanel.updateComponents(card, b);
+        addressPanel.updateComponents(card, b);
 
-		/*
-		if ( b == true )
-		{
-			identityPanel.updateComponents( rootNode, b );
-		}
-		else
-		{
-		}
-		*/
-	}
+        /*
+        if ( b == true )
+        {
+                identityPanel.updateComponents( rootNode, b );
+        }
+        else
+        {
+        }
+        */
+    }
 
-	protected void initComponents()
-	{
-		JPanel contentPane = new JPanel(new BorderLayout(0,0));
-		centerPane = new JTabbedPane();
-		identityPanel = new IdentityPanel();
-		identityPanel.dialog = new FullNameDialog(this,identityPanel);
-		//LOCALIZE
-		centerPane.add(identityPanel, "Identity");
-		addressPanel = new AddressPanel();
-		//LOCALIZE
-		centerPane.add(addressPanel,"Address & Phone");
-		contentPane.add(centerPane, BorderLayout.CENTER);
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(17,0,11,11));
-		JPanel buttonPanel = new JPanel(new GridLayout(1,2,5,0));
+    protected void initComponents() {
+        JPanel contentPane = new JPanel(new BorderLayout(0, 0));
+        centerPane = new JTabbedPane();
+        identityPanel = new IdentityPanel();
+        identityPanel.dialog = new FullNameDialog(this, identityPanel);
 
-		okButton = new ButtonWithMnemonic(
-				AddressbookResourceLoader.getString("global", "ok"));
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
-		buttonPanel.add(okButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		contentPane.add(bottomPanel,BorderLayout.SOUTH);
-		setContentPane(contentPane);
-		getRootPane().setDefaultButton(okButton);
-		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
-				AddressbookResourceLoader.getString("global", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-		getRootPane().registerKeyboardAction(
-				this,"CANCEL",
-				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0),
-				JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
+        //LOCALIZE
+        centerPane.add(identityPanel, "Identity");
+        addressPanel = new AddressPanel();
 
-	public void actionPerformed(ActionEvent event)
-	{
-		String action = event.getActionCommand();
-		if (action.equals("OK"))
-		{
-			result = true;
-			setVisible(false);
-		}
-		else if (action.equals("CANCEL"))
-		{
-			result = false;
-			setVisible(false);
-		}
-	}
+        //LOCALIZE
+        centerPane.add(addressPanel, "Address & Phone");
+        contentPane.add(centerPane, BorderLayout.CENTER);
 
-	public boolean getResult()
-	{
-		return result;
-	}
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 11, 11));
 
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+
+        okButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
+                    "global", "ok"));
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
+        buttonPanel.add(okButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        contentPane.add(bottomPanel, BorderLayout.SOUTH);
+        setContentPane(contentPane);
+        getRootPane().setDefaultButton(okButton);
+
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(AddressbookResourceLoader.getString(
+                    "global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        buttonPanel.add(cancelButton);
+        getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    public void actionPerformed(ActionEvent event) {
+        String action = event.getActionCommand();
+
+        if (action.equals("OK")) {
+            result = true;
+            setVisible(false);
+        } else if (action.equals("CANCEL")) {
+            result = false;
+            setVisible(false);
+        }
+    }
+
+    public boolean getResult() {
+        return result;
+    }
 }

@@ -15,75 +15,74 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import javax.swing.BorderFactory;
-import javax.swing.JTextField;
-import javax.swing.ToolTipManager;
-import javax.swing.tree.TreePath;
-
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 
+import javax.swing.BorderFactory;
+import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
+import javax.swing.tree.TreePath;
+
+
 /**
  * this class does all the dirty work for the TreeController
  */
 public class TreeView extends DndTree {
+    private String selectedLeaf = new String();
+    private JTextField textField;
 
-	private String selectedLeaf = new String();
+    public TreeView(AbstractMailFrameController frameController, TreeModel model) {
+        super(frameController, model);
 
-	private JTextField textField;
+        ToolTipManager.sharedInstance().registerComponent(this);
 
-	public TreeView(
-		AbstractMailFrameController frameController,
-		TreeModel model) {
-		super(frameController, model);
+        putClientProperty("JTree.lineStyle", "Angled");
 
-		ToolTipManager.sharedInstance().registerComponent(this);
+        setShowsRootHandles(true);
+        setRootVisible(false);
 
-		putClientProperty("JTree.lineStyle", "Angled");
+        setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
 
-		setShowsRootHandles(true);
-		setRootVisible(false);
+        FolderTreeNode root = (FolderTreeNode) treeModel.getRoot();
 
-		setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
+        expand(root);
 
-		FolderTreeNode root = (FolderTreeNode) treeModel.getRoot();
-		
-		
-		expand(root);
+        repaint();
+    }
 
-		repaint();
-	}
+    public Folder getSelected() {
+        return null;
+    }
 
-	public Folder getSelected() {
-		return null;
-	}
+    public void expand(FolderTreeNode parent) {
+        // get configuration from tree.xml file
+        FolderItem item = parent.getFolderItem();
 
-	public void expand(FolderTreeNode parent) {
+        XmlElement property = item.getElement("property");
 
-		// get configuration from tree.xml file
-		FolderItem item = parent.getFolderItem();
+        if (property != null) {
+            String expanded = property.getAttribute("expanded");
 
-		XmlElement property = item.getElement("property");
-		if (property != null) {
-			String expanded = property.getAttribute("expanded");
-			if ( expanded == null ) expanded = "true";
-			
-			// expand folder 
-			int row = getRowForPath(new TreePath(parent.getPath()));
-			if (expanded.equals("true"))
-				expandRow(row);
-			
-		}
-		// recursivly expand all children
-		for (int i = 0; i < parent.getChildCount(); i++) {
-			FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
-			expand(child);
-		}
+            if (expanded == null) {
+                expanded = "true";
+            }
 
-		
-	}
+            // expand folder 
+            int row = getRowForPath(new TreePath(parent.getPath()));
 
+            if (expanded.equals("true")) {
+                expandRow(row);
+            }
+        }
+
+        // recursivly expand all children
+        for (int i = 0; i < parent.getChildCount(); i++) {
+            FolderTreeNode child = (FolderTreeNode) parent.getChildAt(i);
+            expand(child);
+        }
+    }
 }

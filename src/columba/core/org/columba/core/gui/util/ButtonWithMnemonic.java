@@ -17,32 +17,31 @@ package org.columba.core.gui.util;
 
 import javax.swing.JButton;
 
+
 /**
  * Adds additionally a mnemonic to JButton.
  * <p>
- * Mnemonic should be specified in the button text 
+ * Mnemonic should be specified in the button text
  * by using the "&" character.
  *
  * @author fdietz
  */
 public class ButtonWithMnemonic extends JButton {
+    /**
+     * default constructor
+     *
+     */
+    public ButtonWithMnemonic() {
+        super();
+    }
 
-	/**
-	 * default constructor
-	 *
-	 */
-	public ButtonWithMnemonic()
-	{
-		super();
-	}
-	
-	/**
-	 * @param str	text including a mnemonic
-	 */
-	public ButtonWithMnemonic(String textWithMnemonic) {
-		super();
-		
-		// set display text - possible with a mnemonic defined using &
-		MnemonicSetter.setTextWithMnemonic(this, textWithMnemonic);
-	}
+    /**
+     * @param str        text including a mnemonic
+     */
+    public ButtonWithMnemonic(String textWithMnemonic) {
+        super();
+
+        // set display text - possible with a mnemonic defined using &
+        MnemonicSetter.setTextWithMnemonic(this, textWithMnemonic);
+    }
 }

@@ -13,64 +13,61 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment.util;
 
 import java.awt.Dimension;
 
+
 public class OneSizeLabelFactory {
+    private Dimension preferredSize;
+    private int maxWidth;
 
-	private Dimension preferredSize;
-	private int maxWidth;
+    public OneSizeLabelFactory(int maxWidth) {
+        this.maxWidth = maxWidth;
+        preferredSize = new Dimension(-1, -1);
+    }
 
-	public OneSizeLabelFactory(int maxWidth) {
-		this.maxWidth = maxWidth;
-		preferredSize = new Dimension(-1, -1);
-	}
+    public OneSizeLabel getNewLabel(String text) {
+        return new OneSizeLabel(this, text);
+    }
 
-	public OneSizeLabel getNewLabel(String text) {
-		return new OneSizeLabel(this, text);
-	}
+    /**
+     * @return
+     */
+    public int getMaxWidth() {
+        return maxWidth;
+    }
 
-	/**
-	 * @return
-	 */
-	public int getMaxWidth() {
-		return maxWidth;
-	}
+    /**
+     * @return
+     */
+    public Dimension getPreferredSize() {
+        return preferredSize;
+    }
 
-	/**
-	 * @return
-	 */
-	public Dimension getPreferredSize() {
-		return preferredSize;
-	}
+    /**
+     * @param i
+     */
+    public void setMaxWidth(int width) {
+        if (width < preferredSize.width) {
+            preferredSize.width = width;
+        }
 
-	/**
-	 * @param i
-	 */
-	public void setMaxWidth(int width) {
+        maxWidth = width;
+    }
 
-		if (width < preferredSize.width) {
-			preferredSize.width = width;
-		}
+    /**
+     * @param dimension
+     */
+    public void setPreferredSize(Dimension dimension) {
+        preferredSize = dimension;
 
-		maxWidth = width;
-	}
-	
-	/**
-	 * @param dimension
-	 */
-	public void setPreferredSize(Dimension dimension) {
-		preferredSize = dimension;
-		if( preferredSize.width > maxWidth ) {
-			preferredSize.width = maxWidth;
-		}
-	}
-	
-	public void reset() {
-		preferredSize = new Dimension(-1,-1);
-	}
+        if (preferredSize.width > maxWidth) {
+            preferredSize.width = maxWidth;
+        }
+    }
 
+    public void reset() {
+        preferredSize = new Dimension(-1, -1);
+    }
 }
-

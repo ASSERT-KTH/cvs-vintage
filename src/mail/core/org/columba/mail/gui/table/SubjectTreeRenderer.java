@@ -13,8 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+
+import org.columba.ristretto.message.Flags;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -29,139 +33,117 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.Flags;
 
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
+    private Font plainFont;
+    private Font boldFont;
+    private Font underlinedFont;
 
-	private Font plainFont, boldFont, underlinedFont;
+    /**
+     * @param table
+     */
+    public SubjectTreeRenderer() {
+        super();
 
-	/**
-	 * @param table
-	 */
-	public SubjectTreeRenderer() {
-		super();
+        boldFont = UIManager.getFont("Label.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-		boldFont = UIManager.getFont("Label.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+        plainFont = UIManager.getFont("Label.font");
 
-		plainFont = UIManager.getFont("Label.font");
+        underlinedFont = UIManager.getFont("Tree.font");
+        underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
+    }
 
-		underlinedFont = UIManager.getFont("Tree.font");
-		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     */
+    public Component getTreeCellRendererComponent(JTree tree, Object value,
+        boolean selected, boolean expanded, boolean leaf, int row,
+        boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, selected, expanded,
+            leaf, row, hasFocus);
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
-	public Component getTreeCellRendererComponent(
-		JTree tree,
-		Object value,
-		boolean selected,
-		boolean expanded,
-		boolean leaf,
-		int row,
-		boolean hasFocus) {
+        MessageNode messageNode = (MessageNode) value;
 
-		super.getTreeCellRendererComponent(
-			tree,
-			value,
-			selected,
-			expanded,
-			leaf,
-			row,
-			hasFocus);
+        if (messageNode.getUserObject().equals("root")) {
+            setText("...");
+            setIcon(null);
 
-		MessageNode messageNode = (MessageNode) value;
+            return this;
+        }
 
-		if (messageNode.getUserObject().equals("root")) {
-			setText("...");
-			setIcon(null);
-			return this;
-		}
+        ColumbaHeader header = messageNode.getHeader();
 
-		ColumbaHeader header = messageNode.getHeader();
-		if (header == null) {
-			return this;
-		}
+        if (header == null) {
+            return this;
+        }
 
-		//if (getFont() != null) {
-		Flags flags = ((ColumbaHeader)header).getFlags();
+        //if (getFont() != null) {
+        Flags flags = ((ColumbaHeader) header).getFlags();
 
-		if (flags != null) {
-			if (!flags.getSeen()) {
-				//if (!getFont().equals(boldFont))
-				setFont(boldFont);
-			} else if (messageNode.isHasRecentChildren()) {
-				//if (!getFont().equals(underlinedFont))
-				setFont(underlinedFont);
-			} else //if (!getFont().equals(plainFont)) {
-				setFont(plainFont);
-		}
+        if (flags != null) {
+            if (!flags.getSeen()) {
+                //if (!getFont().equals(boldFont))
+                setFont(boldFont);
+            } else if (messageNode.isHasRecentChildren()) {
+                //if (!getFont().equals(underlinedFont))
+                setFont(underlinedFont);
+            } else { //if (!getFont().equals(plainFont)) {
+                setFont(plainFont);
+            }
+        }
 
-		//}
+        //}
+        String subject = (String) header.get("columba.subject");
 
-		String subject = (String) header.get("columba.subject");
-		if (subject != null)
-			setText(subject);
-		else
-			setText("null");
+        if (subject != null) {
+            setText(subject);
+        } else {
+            setText("null");
+        }
 
-		setIcon(null);
+        setIcon(null);
 
-		/*
-		return super.getTreeCellRendererComponent(
-		tree,
-		value,
-		selected,
-		expanded,
-		leaf,
-		row,
-		hasFocus);
-		*/
-		return this;
-	}
+        /*
+        return super.getTreeCellRendererComponent(
+        tree,
+        value,
+        selected,
+        expanded,
+        leaf,
+        row,
+        hasFocus);
+        */
+        return this;
+    }
 
-	public void paint(Graphics g) {
+    public void paint(Graphics g) {
+        Rectangle bounds = g.getClipBounds();
+        Font font = getFont();
+        FontMetrics fontMetrics = g.getFontMetrics(font);
 
-		Rectangle bounds = g.getClipBounds();
-		Font font = getFont();
-		FontMetrics fontMetrics = g.getFontMetrics(font);
+        int textWidth = fontMetrics.stringWidth(getText());
 
-		int textWidth = fontMetrics.stringWidth(getText());
+        int iconOffset = 0;
 
-		int iconOffset = 0;
+        //int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
+        if ((bounds.x == 0) && (bounds.y == 0)) {
+            bounds.width -= iconOffset;
 
-		//int iconOffset = getHorizontalAlignment() + getIcon().getIconWidth() + 1;
+            String labelStr = layout(this, fontMetrics, getText(), bounds);
+            setText(labelStr);
+        }
 
-		if (bounds.x == 0 && bounds.y == 0) {
-			bounds.width -= iconOffset;
-			String labelStr = layout(this, fontMetrics, getText(), bounds);
-			setText(labelStr);
-		}
+        super.paint(g);
+    }
 
-		super.paint(g);
-	}
+    private String layout(JLabel label, FontMetrics fontMetrics, String text,
+        Rectangle viewR) {
+        Rectangle iconR = new Rectangle();
+        Rectangle textR = new Rectangle();
 
-	private String layout(
-		JLabel label,
-		FontMetrics fontMetrics,
-		String text,
-		Rectangle viewR) {
-		Rectangle iconR = new Rectangle();
-		Rectangle textR = new Rectangle();
-		return SwingUtilities.layoutCompoundLabel(
-			fontMetrics,
-			text,
-			null,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			SwingConstants.RIGHT,
-			viewR,
-			iconR,
-			textR,
-			0);
-	}
+        return SwingUtilities.layoutCompoundLabel(fontMetrics, text, null,
+            SwingConstants.RIGHT, SwingConstants.RIGHT, SwingConstants.RIGHT,
+            SwingConstants.RIGHT, viewR, iconR, textR, 0);
+    }
 }

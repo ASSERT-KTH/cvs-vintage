@@ -20,15 +20,18 @@ package org.columba.core.xml;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+
 /**
  * @author fdietz
  */
 public class AllTests {
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.core.xml");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(XmlTest2.class);
-		//$JUnit-END$
-		return suite;
-	}
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.core.xml");
+
+        //$JUnit-BEGIN$
+        suite.addTestSuite(XmlTest2.class);
+
+        //$JUnit-END$
+        return suite;
+    }
 }

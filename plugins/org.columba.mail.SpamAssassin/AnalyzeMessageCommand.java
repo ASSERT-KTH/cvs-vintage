@@ -1,9 +1,8 @@
-import java.io.InputStream;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -12,158 +11,147 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
+import java.io.InputStream;
+
+
 /**
  * @author fdietz
- * 
+ *
  * let spamassassin go through all messages: - analyze message - tag as
  * spam/ham in adding two more headerfields
- * 
+ *
  * added headerfields are: X-Spam-Level: digit number columba.spam: true/false
  * (create a filter on this headerfield)
- *  
+ *
  */
 public class AnalyzeMessageCommand extends FolderCommand {
+    Folder srcFolder;
+    protected FolderCommandAdapter adapter;
 
-	Folder srcFolder;
-	protected FolderCommandAdapter adapter;
+    /**
+     * @param references
+     */
+    public AnalyzeMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * @param references
-	 */
-	public AnalyzeMessageCommand(DefaultCommandReference[] references) {
-		super(references);
+    /**
+     * @param frame
+     * @param references
+     */
+    public AnalyzeMessageCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
+    }
 
-	}
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public AnalyzeMessageCommand(
-		FrameMediator frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
+    public void updateGUI() throws Exception {
+        // get source references
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-	}
+        // for every source references
+        TableModelChangedEvent ev;
 
-	public void updateGUI() throws Exception {
+        for (int i = 0; i < r.length; i++) {
+            // update table
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    r[i].getFolder(), r[i].getUids(), r[i].getMarkVariant());
 
-		// get source references
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+            TableUpdater.tableChanged(ev);
 
-		// for every source references
-		TableModelChangedEvent ev;
-		for (int i = 0; i < r.length; i++) {
+            // update treemodel
+            MailInterface.treeModel.nodeChanged(r[i].getFolder());
+        }
 
-			// update table
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					r[i].getFolder(),
-					r[i].getUids(),
-					r[i].getMarkVariant());
+        // get update reference
+        // -> only available if VirtualFolder is involved in operation
+        FolderCommandReference u = adapter.getUpdateReferences();
 
-			TableUpdater.tableChanged(ev);
+        if (u != null) {
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    u.getFolder(), u.getUids(), u.getMarkVariant());
 
-			// update treemodel
-			MailInterface.treeModel.nodeChanged(r[i].getFolder());
-		}
+            TableUpdater.tableChanged(ev);
+            MailInterface.treeModel.nodeChanged(u.getFolder());
+        }
+    }
 
-		// get update reference
-		// -> only available if VirtualFolder is involved in operation
-		FolderCommandReference u = adapter.getUpdateReferences();
-		if (u != null) {
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        adapter = new FolderCommandAdapter(r);
 
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					u.getFolder(),
-					u.getUids(),
-					u.getMarkVariant());
+        // this could also happen while using a virtual folder
+        // -> loop through all available source references
+        for (int j = 0; j < adapter.getSourceFolderReferences().length; j++) {
+            srcFolder = (Folder) adapter.getSourceFolderReferences()[j].getFolder();
 
-			TableUpdater.tableChanged(ev);
-			MailInterface.treeModel.nodeChanged(u.getFolder());
-		}
-	}
+            Object[] uids = adapter.getSourceFolderReferences()[j].getUids();
+            worker.setDisplayText("Applying analyzer to " +
+                srcFolder.getName() + "...");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		adapter = new FolderCommandAdapter(r);
+            worker.setProgressBarMaximum(uids.length);
 
-		// this could also happen while using a virtual folder
-		// -> loop through all available source references
-		for (int j = 0; j < adapter.getSourceFolderReferences().length; j++) {
-			srcFolder =
-				(Folder) adapter.getSourceFolderReferences()[j].getFolder();
-			Object[] uids = adapter.getSourceFolderReferences()[j].getUids();
-			worker.setDisplayText(
-				"Applying analyzer to " + srcFolder.getName() + "...");
+            for (int i = 0; i < uids.length; i++) {
+                if (worker.cancelled()) {
+                    return;
+                }
 
-			worker.setProgressBarMaximum(uids.length);
-			for (int i = 0; i < uids.length; i++) {
-				if ( worker.cancelled() ) return;
-				
-				AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
-				worker.setProgressBarValue(i);
-			}
+                AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
+                worker.setProgressBarValue(i);
+            }
+        }
+    }
 
-		}
+    public static void addHeader(Folder srcFolder, Object uid, Worker worker)
+        throws Exception {
+        //Header header = srcFolder.getHeaderFields(uid, new String[]
+        // {"X-Spam-Level"} );
+        InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
+        IPCHelper ipcHelper = new IPCHelper();
 
-	}
+        //String cmd = "spamassassin -L";
+        String cmd = ExternalToolsHelper.getSpamc() + " -c";
 
-	public static void addHeader(Folder srcFolder, Object uid, Worker worker)
-		throws Exception {
-		//Header header = srcFolder.getHeaderFields(uid, new String[]
-		// {"X-Spam-Level"} );
-		InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
-		IPCHelper ipcHelper = new IPCHelper();
+        String result = null;
+        int exitVal = -1;
 
-		//String cmd = "spamassassin -L";
+        try {
+            ColumbaLogger.log.debug("creating process..");
 
-		String cmd = ExternalToolsHelper.getSpamc() + " -c";
+            ipcHelper.executeCommand(cmd);
 
-		String result = null;
-		int exitVal = -1;
-		try {
-			ColumbaLogger.log.debug("creating process..");
+            ColumbaLogger.log.debug("sending to stdin..");
 
-			ipcHelper.executeCommand(cmd);
+            ipcHelper.send(rawMessageSource);
 
-			ColumbaLogger.log.debug("sending to stdin..");
+            exitVal = ipcHelper.waitFor();
 
-			ipcHelper.send(rawMessageSource);
+            ColumbaLogger.log.debug("exitcode=" + exitVal);
 
-			exitVal = ipcHelper.waitFor();
+            ColumbaLogger.log.debug("retrieving output..");
+            result = ipcHelper.getOutputString();
 
-			ColumbaLogger.log.debug("exitcode=" + exitVal);
+            ipcHelper.waitForThreads();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-			ColumbaLogger.log.debug("retrieving output..");
-			result = ipcHelper.getOutputString();
+        if (result == null) {
+            return;
+        }
 
-			ipcHelper.waitForThreads();
+        //header.set("X-Spam-Level", result);
+        if (exitVal == 1) {
+            // spam found
+            srcFolder.setAttribute(uid, "columba.spam", Boolean.TRUE);
+        } else {
+            srcFolder.setAttribute(uid, "columba.spam", Boolean.FALSE);
+        }
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		if (result == null)
-			return;
-
-		//header.set("X-Spam-Level", result);
-
-		if (exitVal == 1)
-			// spam found
-
-			srcFolder.setAttribute(uid, "columba.spam", Boolean.TRUE);
-		else
-			srcFolder.setAttribute(uid, "columba.spam", Boolean.FALSE);
-
-		result = null;
-
-	}
-
+        result = null;
+    }
 }

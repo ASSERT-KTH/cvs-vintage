@@ -13,84 +13,88 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.command;
-
-import java.util.Hashtable;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.main.MailInterface;
 
+import java.util.Hashtable;
+
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class CreateSubFolderCommand extends Command {
+    private FolderTreeNode parentFolder;
+    private boolean success;
+    private Hashtable attributes;
 
-	private FolderTreeNode parentFolder;
-	private boolean success;
-	private Hashtable attributes;
+    /**
+     * Constructor for CreateSubFolderCommand.
+     * @param references
+     */
+    public CreateSubFolderCommand(DefaultCommandReference[] references) {
+        super(references);
 
-	/**
-	 * Constructor for CreateSubFolderCommand.
-	 * @param references
-	 */
-	public CreateSubFolderCommand(DefaultCommandReference[] references) {
-		super(references);
+        priority = Command.REALTIME_PRIORITY;
+        commandType = Command.UNDOABLE_OPERATION;
 
-		priority = Command.REALTIME_PRIORITY;
-		commandType = Command.UNDOABLE_OPERATION;
+        success = true;
+    }
 
-		success = true;
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        if (success) {
+            MailInterface.treeModel.nodeStructureChanged(parentFolder);
+        }
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		if (success)
-                        MailInterface.treeModel.nodeStructureChanged(parentFolder);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        parentFolder = ((FolderCommandReference) getReferences()[0]).getFolder();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
+        String name = ((FolderCommandReference) getReferences()[0]).getFolderName();
 
-		parentFolder =
-			((FolderCommandReference) getReferences()[0]).getFolder();
-		String name =
-			((FolderCommandReference) getReferences()[0]).getFolderName();
+        /*
+        attributes = parentFolder.getAttributes();
+        attributes.put("name", name);
+        */
+        try {
+            FolderTreeNode subFolder = FolderFactory.getInstance()
+                                                    .createDefaultChild(parentFolder,
+                    name);
 
-		/*
-		attributes = parentFolder.getAttributes();
-		attributes.put("name", name);
-		*/
-		try {
-			FolderTreeNode subFolder = FolderFactory.getInstance().createDefaultChild(parentFolder, name);
-			
-			// if folder creation failed
-			//  -> don't update tree ui
-			if (subFolder==null) success = false;
-			
-		} catch (Exception ex) {
-			success = false;
-			throw ex;
-		}
-	}
+            // if folder creation failed
+            //  -> don't update tree ui
+            if (subFolder == null) {
+                success = false;
+            }
+        } catch (Exception ex) {
+            success = false;
+            throw ex;
+        }
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {}
+    /**
+     * @see org.columba.core.command.Command#undo(Worker)
+     */
+    public void undo(Worker worker) throws Exception {
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {}
+    /**
+     * @see org.columba.core.command.Command#undo(Worker)
+     */
+    public void redo(Worker worker) throws Exception {
+    }
 }

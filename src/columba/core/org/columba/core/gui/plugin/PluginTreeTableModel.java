@@ -6,11 +6,12 @@
  */
 package org.columba.core.gui.plugin;
 
+import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
+import org.columba.core.main.MainInterface;
+
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.gui.util.treetable.AbstractTreeTableModel;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
@@ -19,88 +20,87 @@ import org.columba.core.main.MainInterface;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PluginTreeTableModel extends AbstractTreeTableModel {
+    PluginNode root;
 
-	PluginNode root;
+    /**
+     * @param tree
+     * @param columns
+     */
+    public PluginTreeTableModel(String[] columns) {
+        super(columns);
 
-	/**
-	 * @param tree
-	 * @param columns
-	 */
-	public PluginTreeTableModel(String[] columns) {
-		super(columns);
+        PluginNode root = new PluginNode();
+        root.setId("root");
+    }
 
-		PluginNode root = new PluginNode();
-		root.setId("root");
-	}
+    public Class getColumnClass(int c) {
+        // first column is a tree
+        if (c == 0) {
+            return tree.getClass();
+        }
 
-	public Class getColumnClass(int c) {
-		// first column is a tree
-		if (c == 0)
-			return tree.getClass();
+        if (c == 1) {
+            return String.class;
+        }
+        else {
+            // third column is a JCheckBox column
+            return Boolean.class;
+        }
+    }
 
-		if (c == 1)
-			return String.class;
+    public Object getValueAt(int row, int col) {
+        PluginNode node = (PluginNode) tree.getPathForRow(row)
+                                           .getLastPathComponent();
 
-		else
-			// third column is a JCheckBox column
-			return Boolean.class;
-	}
+        return node;
+    }
 
-	public Object getValueAt(int row, int col) {
-		PluginNode node =
-			(PluginNode) tree.getPathForRow(row).getLastPathComponent();
+    public void set(PluginNode root) {
+        tree.setRootNode(root);
 
-		return node;
-	}
+        ((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
 
-	public void set(PluginNode root) {
-		tree.setRootNode(root);
+        fireTableDataChanged();
+    }
 
-		((DefaultTreeModel) tree.getModel()).nodeStructureChanged(root);
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
+     */
+    public void setValueAt(Object value, int row, int col) {
+        if (col == 2) {
+            // checkbox pressed
+            TreePath path = tree.getPathForRow(row);
+            PluginNode node = (PluginNode) path.getLastPathComponent();
 
-		fireTableDataChanged();
-	}
+            if (node.isCategory()) {
+                return;
+            }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
-	 */
+            // enable/disable tree node
+            node.setEnabled(((Boolean) value).booleanValue());
 
-	public void setValueAt(Object value, int row, int col) {
+            // enable/disable plugin
+            String id = node.getId();
 
-		if (col == 2) {
+            MainInterface.pluginManager.setEnabled(id,
+                ((Boolean) value).booleanValue());
+        }
+    }
 
-			// checkbox pressed
-			TreePath path = tree.getPathForRow(row);
-			PluginNode node = (PluginNode) path.getLastPathComponent();
-			if (node.isCategory())
-				return;
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#isCellEditable(int, int)
+     */
+    public boolean isCellEditable(int row, int col) {
+        // enabled/disabled checkbox must be editable
+        if (col == 2) {
+            return true;
+        }
 
-			// enable/disable tree node
-			node.setEnabled(((Boolean) value).booleanValue());
+        // tree must be editable, otherwise you can't collapse/expand tree nodes
+        if (col == 0) {
+            return true;
+        }
 
-			// enable/disable plugin
-			String id = node.getId();
-
-			MainInterface.pluginManager.setEnabled(
-				id,
-				((Boolean) value).booleanValue());
-
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableModel#isCellEditable(int, int)
-	 */
-	public boolean isCellEditable(int row, int col) {
-		// enabled/disabled checkbox must be editable
-		if (col == 2)
-			return true;
-
-		// tree must be editable, otherwise you can't collapse/expand tree nodes
-		if (col == 0)
-			return true;
-
-		return false;
-	}
-
+        return false;
+    }
 }

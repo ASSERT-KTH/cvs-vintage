@@ -13,15 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
+
 import org.columba.mail.gui.config.export.ExportDialog;
 import org.columba.mail.util.MailResourceLoader;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
@@ -30,15 +31,13 @@ import org.columba.mail.util.MailResourceLoader;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class ExportDialogAction extends FrameAction {
+    public ExportDialogAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_utilities_exportmail"));
+    }
 
-	public ExportDialogAction(FrameMediator frameMediator) {
-
-		super(frameMediator,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_utilities_exportmail"));
-	}
-
-	public void actionPerformed(ActionEvent evt) {
-		new ExportDialog();
-	}
+    public void actionPerformed(ActionEvent evt) {
+        new ExportDialog();
+    }
 }

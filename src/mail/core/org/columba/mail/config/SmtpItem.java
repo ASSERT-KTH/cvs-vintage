@@ -18,11 +18,9 @@ package org.columba.mail.config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-public class SmtpItem extends DefaultItem
-{
-	public SmtpItem(XmlElement e)
-	{
-		super(e);
-	}
 
+public class SmtpItem extends DefaultItem {
+    public SmtpItem(XmlElement e) {
+        super(e);
+    }
 }

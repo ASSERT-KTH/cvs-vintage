@@ -17,50 +17,38 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+
+import org.columba.ristretto.message.Address;
+
 import java.awt.Component;
 
 import javax.swing.JTable;
 
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.ristretto.message.Address;
 
 public class FromRenderer extends DefaultLabelRenderer {
+    public FromRenderer() {
+        super();
+    }
 
-	public FromRenderer() {
-		super();
+    public void updateUI() {
+        super.updateUI();
+    }
 
-	}
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value == null) {
+            setText("");
 
-	public void updateUI() {
-		super.updateUI();
+            return this;
+        }
 
-	}
+        ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        setText(((Address) header.get("columba.from")).getShortAddress());
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
-
-		ColumbaHeader header =
-			(ColumbaHeader) ((MessageNode) value).getHeader();
-
-		setText(((Address) header.get("columba.from")).getShortAddress());
-
-		return super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
-	}
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

@@ -13,191 +13,157 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.util;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.folder.HeaderItemList;
+import org.columba.addressbook.gui.table.util.TableModelPlugin;
 
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.folder.HeaderItemList;
-import org.columba.addressbook.gui.table.util.TableModelPlugin;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class AddressbookListModel extends AbstractListModel
-{
-	private List listClone;
-	private List list;
+public class AddressbookListModel extends AbstractListModel {
+    private List listClone;
+    private List list;
+    private String patternString = new String();
 
-	private String patternString = new String();
+    public AddressbookListModel() {
+        super();
+        list = new Vector();
+        listClone = new Vector();
+    }
 
-	public AddressbookListModel()
-	{
-		super();
-		list = new Vector();
-		listClone = new Vector();
+    public Object getElementAt(int index) {
+        return (HeaderItem) list.get(index);
+    }
 
-	}
+    public int getSize() {
+        return list.size();
+    }
 
-	public Object getElementAt(int index)
-	{
-		return (HeaderItem) list.get(index);
-	}
+    public String getPatternString() {
+        return patternString;
+    }
 
-	public int getSize()
-	{
-		return list.size();
-	}
+    public void setPatternString(String s) throws Exception {
+        patternString = s;
 
-	public String getPatternString()
-	{
-		return patternString;
-	}
+        //manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    }
 
-	public void setPatternString(String s) throws Exception
-	{
-		patternString = s;
+    public void clear() {
+        list.clear();
+    }
 
-		//manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    public void addElement(Object item) {
+        list.add(item);
 
-	}
+        int index = list.indexOf(item);
 
-	public void clear()
-	{
-		list.clear();
-	}
+        fireIntervalAdded(this, index, index);
+    }
 
-	public void addElement(Object item)
-	{
-		list.add(item);
-		int index = list.indexOf(item);
-		
-		fireIntervalAdded( this, index, index );
-	}
+    public void setHeaderList(HeaderItemList l) {
+        System.out.println("list size:" + l.count());
 
-	public void setHeaderList(HeaderItemList l)
-	{
+        list = (List) ((Vector) l.getVector()).clone();
 
-		System.out.println("list size:" + l.count());
+        fireContentsChanged(this, 0, list.size() - 1);
+    }
 
-		list = (List) ((Vector)l.getVector()).clone();
+    public HeaderItem get(int i) {
+        return (HeaderItem) list.get(i);
+    }
 
-		fireContentsChanged(this, 0, list.size() - 1);
+    public boolean addItem(HeaderItem header) {
+        boolean result1 = false;
 
-	}
+        Object o = header.get("displayname");
 
-	public HeaderItem get(int i)
-	{
-		return (HeaderItem) list.get(i);
-	}
+        if (o != null) {
+            if (o instanceof String) {
+                String item = (String) o;
 
-	public boolean addItem(HeaderItem header)
-	{
-		boolean result1 = false;
+                //System.out.println("add item?:"+item);
+                item = item.toLowerCase();
 
-		Object o = header.get("displayname");
-		if (o != null)
-		{
-			if (o instanceof String)
-			{
-				String item = (String) o;
-				//System.out.println("add item?:"+item);
+                String pattern = getPatternString().toLowerCase();
 
-				item = item.toLowerCase();
-				String pattern = getPatternString().toLowerCase();
+                if (item.indexOf(pattern) != -1) {
+                    result1 = true;
+                } else {
+                    result1 = false;
+                }
+            } else {
+                result1 = false;
+            }
+        } else {
+            result1 = false;
+        }
 
-				if (item.indexOf(pattern) != -1)
-					result1 = true;
-				else
-					result1 = false;
-			}
-			else
-				result1 = false;
-		}
-		else
-			result1 = false;
+        return result1;
+    }
 
-		return result1;
-	}
+    public Object[] toArray() {
+        return list.toArray();
+    }
 
-	public Object[] toArray()
-	{
-		return list.toArray();
-	}
+    public void remove(int index) {
+        list.remove(index);
+        fireIntervalRemoved(this, index, index);
+    }
 
-	public void remove(int index)
-	{
-		list.remove(index);
-		fireIntervalRemoved(this,index,index);
-	}
+    public void removeElement(Object o) {
+        int index = list.indexOf(o);
 
-	public void removeElement(Object o)
-	{
-		int index = list.indexOf(o);
-		
-		remove( index );
-	}
+        remove(index);
+    }
 
-	public boolean manipulateModel(int mode) throws Exception
-	{
-		listClone = (Vector)((Vector)list).clone();
+    public boolean manipulateModel(int mode) throws Exception {
+        listClone = (Vector) ((Vector) list).clone();
 
-		switch (mode)
-		{
-			case TableModelPlugin.STRUCTURE_CHANGE :
-				{
+        switch (mode) {
+        case TableModelPlugin.STRUCTURE_CHANGE: {
+            if (getSize() == 0) {
+                return false;
+            }
 
-					if (getSize() == 0)
-						return false;
+            //System.out.println("starting filtering");
+            HeaderItem item = null;
 
-					//System.out.println("starting filtering");
+            for (int i = 0; i < getSize(); i++) {
+                item = (HeaderItem) get(i);
 
-					HeaderItem item = null;
+                boolean result = addItem(item);
 
-					for (int i = 0; i < getSize(); i++)
-					{
+                //ystem.out.println("item: "+i+" - result: "+result);
+                if (!result) {
+                    //System.out.println("removing item:"+item);
+                    list.remove(item);
+                    i--;
 
-						item = (HeaderItem) get(i);
+                    /*
+                    Object uid = list.getUid(i);
+                    MessageNode childNode = new MessageNode( header, uid );
+                    rootNode.add( childNode );
+                    */
+                }
+            }
 
-						boolean result = addItem(item);
+            // System.out.println("finished filtering");
+            return true;
+        }
 
-						//ystem.out.println("item: "+i+" - result: "+result);
+        case TableModelPlugin.NODES_INSERTED:return true;
+        }
 
-						if (!result)
-						{
-							//System.out.println("removing item:"+item);
-
-							list.remove(item);
-							i--;
-							/*
-							Object uid = list.getUid(i);
-							MessageNode childNode = new MessageNode( header, uid );
-							rootNode.add( childNode );
-							*/
-						}
-
-					}
-
-					// System.out.println("finished filtering");
-
-					return true;
-
-				}
-
-			case TableModelPlugin.NODES_INSERTED :
-				{
-
-					return true;
-
-				}
-		}
-
-		return false;
-	}
-
+        return false;
+    }
 }

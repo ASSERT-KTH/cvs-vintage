@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,6 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.ReplyCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -34,66 +29,59 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ReplyAction extends FrameAction implements SelectionListener {
+    public ReplyAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_reply"));
 
-	public ReplyAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_reply_tooltip").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_message_reply_tooltip")
-				.replaceAll("&", ""));
+        // toolbar text is usually a bit shorter
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_reply_toolbar"));
 
-		// toolbar text is usually a bit shorter
-		putValue(
-			TOOLBAR_NAME,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_reply_toolbar"));
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("reply_small.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("reply.png"));
 
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("reply_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("reply.png"));
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        setEnabled(false);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
+    }
 
-		setEnabled(false);
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        MainInterface.processor.addOp(new ReplyCommand(r));
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-				.getTableSelection();
-		MainInterface.processor.addOp(new ReplyCommand(r));
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		TableSelectionChangedEvent tableEvent = (TableSelectionChangedEvent) e;
-		setEnabled(tableEvent.getUids().length != 0);
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.selection.SelectionListener#selectionChanged(org.columba.core.gui.selection.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        TableSelectionChangedEvent tableEvent = (TableSelectionChangedEvent) e;
+        setEnabled(tableEvent.getUids().length != 0);
+    }
 }

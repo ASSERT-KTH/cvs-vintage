@@ -23,6 +23,7 @@ import javax.help.HelpSet;
 import javax.help.JHelp;
 import javax.help.JHelpContentViewer;
 import javax.help.TextHelpModel;
+
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -31,113 +32,118 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.text.JTextComponent;
 
+
 /**
  * @author fdietz
  *
- * Frame showing the user manual 
- * 
+ * Frame showing the user manual
+ *
  */
 public class HelpFrame {
-	private static String title = "";
+    private static String title = "";
 
-	//	The initial width and height of the frame
-	public static int WIDTH = 645;
-	public static int HEIGHT = 495;
+    //	The initial width and height of the frame
+    public static int WIDTH = 645;
+    public static int HEIGHT = 495;
+    protected static boolean debug = false;
+    private static JHelp jh = null;
+    private static JFrame frame;
 
-	protected static boolean debug = false;
+    public HelpFrame(JHelp jh) {
+        super();
 
-	private static JHelp jh = null;
+        HelpFrame.jh = jh;
+    }
 
-	private static JFrame frame;
+    private JTextComponent getEditor() {
+        JHelpContentViewer viewer = jh.getContentViewer();
+        JScrollPane sp = (JScrollPane) viewer.getComponent(0);
+        JViewport vp = sp.getViewport();
 
-	public HelpFrame(JHelp jh)  {
-		super();
+        return (JTextComponent) vp.getView();
+    }
 
-		HelpFrame.jh = jh;
-	}
+    protected static JFrame createFrame(String title, JMenuBar bar) {
+        if (jh == null) {
+            return null;
+        }
 
-	private JTextComponent getEditor() {
-		JHelpContentViewer viewer = jh.getContentViewer();
-		JScrollPane sp = (JScrollPane) viewer.getComponent(0);
-		JViewport vp = sp.getViewport();
-		return (JTextComponent) vp.getView();
-	}
+        if ((title == null) || title.equals("")) {
+            TextHelpModel m = jh.getModel();
+            HelpSet hs = m.getHelpSet();
+            String hsTitle = hs.getTitle();
 
-	protected static JFrame createFrame(String title, JMenuBar bar) {
-		if (jh == null)
-			return null;
-		if (title == null || title.equals("")) {
-			TextHelpModel m = jh.getModel();
-			HelpSet hs = m.getHelpSet();
-			String hsTitle = hs.getTitle();
-			if (hsTitle == null || hsTitle.equals("")) {
-				setTitle("Unnamed HelpSet"); // maybe based on HS?
-			} else {
-				setTitle(hsTitle);
-			}
-		} else {
-			setTitle(title);
-		}
-		if (frame == null) {
+            if ((hsTitle == null) || hsTitle.equals("")) {
+                setTitle("Unnamed HelpSet"); // maybe based on HS?
+            } else {
+                setTitle(hsTitle);
+            }
+        } else {
+            setTitle(title);
+        }
 
-			frame = new JFrame(getTitle());
-			frame.setSize(WIDTH, HEIGHT);
-			/*
-			frame.setForeground(Color.black);
-			frame.setBackground(Color.lightGray);
-			*/
+        if (frame == null) {
+            frame = new JFrame(getTitle());
+            frame.setSize(WIDTH, HEIGHT);
 
-			//frame.addWindowListener(closer);
-			frame.getContentPane().add(jh); // the JH panel
-			if (bar == null) {
-				bar = createMenuBar();
-			}
-			frame.setJMenuBar(bar);
-		} else {
-			frame.setTitle(getTitle());
-		}
-		frame.pack();
+            /*
+            frame.setForeground(Color.black);
+            frame.setBackground(Color.lightGray);
+            */
 
-		// maximize frame
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+            //frame.addWindowListener(closer);
+            frame.getContentPane().add(jh); // the JH panel
 
-		return frame;
-	}
+            if (bar == null) {
+                bar = createMenuBar();
+            }
 
-	/**
-		 * MenuBar
-		 */
-	private static JMenuBar createMenuBar() {
-		// MenuBar
-		JMenuBar menuBar = new JMenuBar();
+            frame.setJMenuBar(bar);
+        } else {
+            frame.setTitle(getTitle());
+        }
 
-		JMenuItem mi;
+        frame.pack();
 
-		// File Menu
-		JMenu file = (JMenu) menuBar.add(new JMenu("File"));
-		file.setMnemonic('F');
+        // maximize frame
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
-		mi = (JMenuItem) file.add(new JMenuItem("Exit"));
-		mi.setMnemonic('x');
-		mi.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-			}
-		});
+        return frame;
+    }
 
-		// Option Menu
-		JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
-		options.setMnemonic('O');
+    /**
+             * MenuBar
+             */
+    private static JMenuBar createMenuBar() {
+        // MenuBar
+        JMenuBar menuBar = new JMenuBar();
 
-		return menuBar;
-	}
+        JMenuItem mi;
 
-	public static void setTitle(String s) {
-		title = s;
-	}
+        // File Menu
+        JMenu file = (JMenu) menuBar.add(new JMenu("File"));
+        file.setMnemonic('F');
 
-	public static String getTitle() {
-		return title;
-	}
+        mi = (JMenuItem) file.add(new JMenuItem("Exit"));
+        mi.setMnemonic('x');
+        mi.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    frame.setVisible(false);
+                }
+            });
 
+        // Option Menu
+        JMenu options = (JMenu) menuBar.add(new JMenu("Options"));
+        options.setMnemonic('O');
+
+        return menuBar;
+    }
+
+    public static void setTitle(String s) {
+        title = s;
+    }
+
+    public static String getTitle() {
+        return title;
+    }
 }

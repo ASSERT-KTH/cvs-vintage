@@ -16,11 +16,13 @@
 package org.columba.mail.folder;
 
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.FilterList;
 
+
 /**
- * Top-level folder of every IMAP account. 
+ * Top-level folder of every IMAP account.
  * <p>
  * Only purpose of this folder is to allow for a better structure
  * of the folder hierachy, where local and remote folders are
@@ -29,27 +31,24 @@ import org.columba.mail.filter.FilterList;
  *  @author fdietz
  */
 public abstract class RemoteFolder extends Folder {
+    //protected RemoteSearchEngine searchEngine;
+    public RemoteFolder(FolderItem item) {
+        super(item);
 
-	//protected RemoteSearchEngine searchEngine;
+        XmlElement filterListElement = node.getElement("filterlist");
 
-	public RemoteFolder(FolderItem item) {
-		super(item);
+        if (filterListElement == null) {
+            filterListElement = new XmlElement("filterlist");
+            getFolderItem().getRoot().addElement(filterListElement);
+        }
 
-		XmlElement filterListElement = node.getElement("filterlist");
-		if (filterListElement == null) {
-			filterListElement = new XmlElement("filterlist");
-			getFolderItem().getRoot().addElement(filterListElement);
-		}
+        filterList = new FilterList(filterListElement);
+    }
 
-		filterList = new FilterList(filterListElement);
-
-	}
-
-	/**
-	 * @param type
-	 */
-	public RemoteFolder(String name, String type) {
-		super(name, type);
-	}
-
+    /**
+     * @param type
+     */
+    public RemoteFolder(String name, String type) {
+        super(name, type);
+    }
 }

@@ -15,10 +15,14 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.mail.gui.table.model.MessageNode;
+
 import java.awt.Component;
 import java.awt.Font;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -26,93 +30,75 @@ import java.util.TimeZone;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 
-import org.columba.mail.gui.table.model.MessageNode;
 
 public class DateRenderer extends DefaultLabelRenderer {
+    static SimpleDateFormat dfWeek = new SimpleDateFormat("EEE HH:mm",
+            Locale.getDefault());
+    static DateFormat dfCommon = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+            DateFormat.SHORT);
+    static final long OneDay = 24 * 60 * 60 * 1000;
+    static TimeZone localTimeZone = TimeZone.getDefault();
+    private Font plainFont;
+    private Font boldFont;
 
-	static SimpleDateFormat dfWeek =
-		new SimpleDateFormat("EEE HH:mm", Locale.getDefault());
-	static DateFormat dfCommon =
-		DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+    public DateRenderer() {
+        super();
 
-	static final long OneDay = 24 * 60 * 60 * 1000;
-	static TimeZone localTimeZone = TimeZone.getDefault();
+        //setOpaque(true); //MUST do this for background to show up.
+        boldFont = UIManager.getFont("Tree.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-	private Font plainFont, boldFont;
+        plainFont = UIManager.getFont("Tree.font");
+    }
 
-	public DateRenderer() {
-		super();
+    public void updateUI() {
+        super.updateUI();
 
-		//setOpaque(true); //MUST do this for background to show up.
+        boldFont = UIManager.getFont("Tree.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+        plainFont = UIManager.getFont("Tree.font");
+    }
 
-		plainFont = UIManager.getFont("Tree.font");
-	}
+    public static int getLocalDaysDiff(long t) {
+        return (int) (((System.currentTimeMillis() +
+        localTimeZone.getRawOffset()) -
+        (((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)) / OneDay);
+    }
 
-	public void updateUI() {
-		super.updateUI();
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value == null) {
+            setText("");
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+            return this;
+        }
 
-		plainFont = UIManager.getFont("Tree.font");
-	}
+        /*
+        if (!(value instanceof Date)) {
+        setText("");
+        return this;
+        }
 
-	public static int getLocalDaysDiff(long t) {
+        if (value instanceof String)
+        return this;
+        */
+        Date date = (Date) ((MessageNode) value).getHeader().get("columba.date");
 
-		return (int)
-			((System.currentTimeMillis()
-				+ localTimeZone.getRawOffset()
-				- ((t + localTimeZone.getRawOffset()) / OneDay) * OneDay)
-				/ OneDay);
-	}
+        if (date == null) {
+            return this;
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        int diff = getLocalDaysDiff(date.getTime());
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
+        //if ( today
+        if ((diff >= 0) && (diff < 7)) {
+            setText(dfWeek.format(date));
+        } else {
+            setText(dfCommon.format(date));
+        }
 
-		/*
-		if (!(value instanceof Date)) {
-		setText("");
-		return this;
-		}
-		
-		if (value instanceof String)
-		return this;
-		*/
-
-		Date date =
-			(Date) ((MessageNode) value).getHeader().get("columba.date");
-
-		if (date == null)
-			return this;
-
-		int diff = getLocalDaysDiff(date.getTime());
-
-		//if ( today
-		if ((diff >= 0) && (diff < 7))
-			setText(dfWeek.format(date));
-		else
-			setText(dfCommon.format(date));
-
-		return super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
-
-	}
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

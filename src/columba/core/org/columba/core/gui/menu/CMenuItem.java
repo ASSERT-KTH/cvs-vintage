@@ -13,74 +13,74 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
-
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageUtil;
 import org.columba.core.gui.util.MnemonicSetter;
 import org.columba.core.help.HelpManager;
 
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+
+
 /**
  * Default MenuItem which automatically sets a JavaHelp topic ID
  * based on the AbstractAction name attribute.
  * <p>
  * This is necessary to provide a complete context-specific help.
- * 
+ *
  *
  * @author fdietz
  */
 public class CMenuItem extends JMenuItem {
+    /**
+     * Creates a menu item with a given action attached.
+     * <br>
+     * If JavaHelp topic ID is defined for the action, help is enabled
+     * for the menu.
+     * <br>
+     * If the name of the action contains &, the next character is used as
+     * mnemonic. If not, the fall-back solution is to use default behaviour,
+     * i.e. the mnemonic defined using setMnemonic on the action.
+     *
+     * @param action        The action to attach to the menu item
+     */
+    public CMenuItem(Action action) {
+        super(action);
 
-	/**
-	 * Creates a menu item with a given action attached.
-	 * <br>
-	 * If JavaHelp topic ID is defined for the action, help is enabled
-	 * for the menu.
-	 * <br>
-	 * If the name of the action contains &, the next character is used as
-	 * mnemonic. If not, the fall-back solution is to use default behaviour,
-	 * i.e. the mnemonic defined using setMnemonic on the action.
-	 *  
-	 * @param action	The action to attach to the menu item
-	 */
-	public CMenuItem(Action action)
-	{
-		super(action);
+        // Enable JavaHelp support if topic id is defined
+        String topicID = (String) action.getValue(FrameAction.TOPIC_ID);
 
-		// Enable JavaHelp support if topic id is defined
-                String topicID = (String)action.getValue(FrameAction.TOPIC_ID);
-		if (topicID != null) {
-			HelpManager.enableHelpOnButton(this, topicID);
-                }
-		
-		// Set text, possibly with a mnemonic if defined using &
-		MnemonicSetter.setTextWithMnemonic(this,
-                        (String)action.getValue(Action.NAME));
+        if (topicID != null) {
+            HelpManager.enableHelpOnButton(this, topicID);
+        }
 
-		// apply transparent icon
-                ImageIcon icon = (ImageIcon)action.getValue(Action.SMALL_ICON);
-		if (icon != null) {
-			setDisabledIcon(ImageUtil.createTransparentIcon(icon));
-                }
-	}
-	
-	/**
-	 * Creates a menu item with the specified text.
-	 * <br>
-	 * This does <i>not</i> enable JavaHelp support.
-	 * <br>
-	 * If the textcontains &, the next character is used as
-	 * mnemonic. If not, no mnemonic is set.
-	 * 
-	 * @param	text	Text of menu item
-	 */
-	public CMenuItem(String text) {
-		super();
-		MnemonicSetter.setTextWithMnemonic(this, text);
-	}
+        // Set text, possibly with a mnemonic if defined using &
+        MnemonicSetter.setTextWithMnemonic(this,
+            (String) action.getValue(Action.NAME));
+
+        // apply transparent icon
+        ImageIcon icon = (ImageIcon) action.getValue(Action.SMALL_ICON);
+
+        if (icon != null) {
+            setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+        }
+    }
+
+    /**
+     * Creates a menu item with the specified text.
+     * <br>
+     * This does <i>not</i> enable JavaHelp support.
+     * <br>
+     * If the textcontains &, the next character is used as
+     * mnemonic. If not, no mnemonic is set.
+     *
+     * @param        text        Text of menu item
+     */
+    public CMenuItem(String text) {
+        super();
+        MnemonicSetter.setTextWithMnemonic(this, text);
+    }
 }

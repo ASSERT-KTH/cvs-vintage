@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,38 +21,42 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class DeleteAction extends FrameAction {
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-	public DeleteAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_edit_delete"));
-					
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "menu_edit_delete_tooltip").replaceAll("&", ""));
-					
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
-		
-		// disable toolbar text
-		setShowToolBarText(false);
-		
-		// short cut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-		
-		setEnabled(false);
-		MainInterface.focusManager.setDeleteAction(this);
-	}
-        
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		MainInterface.focusManager.delete();
-	}
+import javax.swing.KeyStroke;
+
+
+public class DeleteAction extends FrameAction {
+    public DeleteAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_edit_delete"));
+
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null,
+                "menu_edit_delete_tooltip").replaceAll("&", ""));
+
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_delete-16.png"));
+
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+
+        // disable toolbar text
+        setShowToolBarText(false);
+
+        // short cut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+
+        setEnabled(false);
+        MainInterface.focusManager.setDeleteAction(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        MainInterface.focusManager.delete();
+    }
 }

@@ -15,10 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+
 import java.util.EventObject;
 
 import javax.swing.JTable;
@@ -28,7 +31,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.EventListenerList;
 import javax.swing.table.TableCellEditor;
 
-import org.columba.addressbook.folder.HeaderItem;
 
 /**
  * @author frd
@@ -38,136 +40,112 @@ import org.columba.addressbook.folder.HeaderItem;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AddressCellEditor
-	extends AddressComboBox
-	implements TableCellEditor, KeyListener {
+public class AddressCellEditor extends AddressComboBox
+    implements TableCellEditor, KeyListener {
+    AddressbookTableView table;
+    HeaderItem selection;
+    protected EventListenerList listenerList = new EventListenerList();
+    protected ChangeEvent changeEvent = new ChangeEvent(this);
+    boolean editing = false;
 
-	AddressbookTableView table;
+    public AddressCellEditor(AddressbookTableView table) {
+        super(table);
+        this.table = table;
 
-	HeaderItem selection;
+        getEditor().getEditorComponent().addKeyListener(this);
+    }
 
-	protected EventListenerList listenerList = new EventListenerList();
-	protected ChangeEvent changeEvent = new ChangeEvent(this);
+    public void addCellEditorListener(CellEditorListener listener) {
+        listenerList.add(CellEditorListener.class, listener);
+    }
 
-	boolean editing = false;
+    public void removeCellEditorListener(CellEditorListener listener) {
+        listenerList.remove(CellEditorListener.class, listener);
+    }
 
-	public AddressCellEditor(AddressbookTableView table) {
-		super(table);
-		this.table = table;
+    protected void fireEditingStopped() {
+        CellEditorListener listener;
+        Object[] listeners = listenerList.getListenerList();
 
-		getEditor().getEditorComponent().addKeyListener(this);
-		
+        for (int i = 0; i < listeners.length; i++) {
+            if (listeners[i] == CellEditorListener.class) {
+                listener = (CellEditorListener) listeners[i + 1];
+                listener.editingStopped(changeEvent);
+            }
+        }
+    }
 
-	}
+    protected void fireEditingCanceled() {
+        CellEditorListener listener;
+        Object[] listeners = listenerList.getListenerList();
 
-	public void addCellEditorListener(CellEditorListener listener) {
-		listenerList.add(CellEditorListener.class, listener);
-	}
+        for (int i = 0; i < listeners.length; i++) {
+            if (listeners[i] == CellEditorListener.class) {
+                listener = (CellEditorListener) listeners[i + 1];
+                listener.editingCanceled(changeEvent);
+            }
+        }
+    }
 
-	public void removeCellEditorListener(CellEditorListener listener) {
-		listenerList.remove(CellEditorListener.class, listener);
-	}
+    public void cancelCellEditing() {
+        fireEditingCanceled();
+    }
 
-	protected void fireEditingStopped() {
+    public boolean stopCellEditing() {
+        fireEditingStopped();
 
-		CellEditorListener listener;
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i++) {
-			if (listeners[i] == CellEditorListener.class) {
-				listener = (CellEditorListener) listeners[i + 1];
-				listener.editingStopped(changeEvent);
-			}
-		}
+        return true;
+    }
 
-	}
+    public boolean isCellEditable(EventObject event) {
+        if (event instanceof MouseEvent) {
+            return ((MouseEvent) event).getClickCount() >= 2;
+        }
 
-	protected void fireEditingCanceled() {
-		CellEditorListener listener;
-		Object[] listeners = listenerList.getListenerList();
-		for (int i = 0; i < listeners.length; i++) {
-			if (listeners[i] == CellEditorListener.class) {
-				listener = (CellEditorListener) listeners[i + 1];
-				listener.editingCanceled(changeEvent);
-			}
-		}
-	}
+        return true;
+    }
 
-	public void cancelCellEditing() {
-		fireEditingCanceled();
-	}
+    public boolean shouldSelectCell(EventObject event) {
+        return true;
+    }
 
-	public boolean stopCellEditing() {
+    public Object getCellEditorValue() {
+        return ((JTextField) getEditor().getEditorComponent()).getText();
+    }
 
-		fireEditingStopped();
-		return true;
-	}
+    public Component getTableCellEditorComponent(JTable table, Object value,
+        boolean isSelected, int row, int column) {
+        selection = (HeaderItem) value;
 
-	public boolean isCellEditable(EventObject event) {
-		if (event instanceof MouseEvent) { 
-		return ((MouseEvent)event).getClickCount() >= 2;
-	    }
-	    
-		return true;
-	}
+        setSelectedItem(selection.get("displayname"));
 
-	public boolean shouldSelectCell(EventObject event) {
-		return true;
-	}
+        return this;
+    }
 
-	public Object getCellEditorValue() {
+    /******************* Key Listener **************************/
+    public void keyTyped(KeyEvent e) {
+        char ch = e.getKeyChar();
 
-		return ((JTextField) getEditor().getEditorComponent()).getText();
+        if (ch == KeyEvent.VK_BACK_SPACE) {
+            int length = ((JTextField) getEditor().getEditorComponent()).getText()
+                          .length();
 
-	}
+            if (length == 0) {
+                this.table.removeEditingRow();
+            }
+        }
+    }
 
-	public Component getTableCellEditorComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		int row,
-		int column) {
+    public void keyPressed(KeyEvent e) {
+    }
 
-		selection = (HeaderItem) value;
+    public void keyReleased(KeyEvent e) {
+        char ch = e.getKeyChar();
 
-		setSelectedItem(selection.get("displayname"));
+        if (ch == KeyEvent.VK_ENTER) {
+            fireEditingStopped();
 
-		return this;
-	}
-
-	/******************* Key Listener **************************/
-
-	public void keyTyped(KeyEvent e) {
-		char ch = e.getKeyChar();
-
-		
-		if (ch == KeyEvent.VK_BACK_SPACE) {
-
-			int length =
-				((JTextField) getEditor().getEditorComponent())
-					.getText()
-					.length();
-			if (length == 0) {
-				this.table.removeEditingRow();
-			}
-
-		}
-		
-
-	}
-
-	public void keyPressed(KeyEvent e) {}
-
-	public void keyReleased(KeyEvent e) {
-
-		char ch = e.getKeyChar();
-
-		if (ch == KeyEvent.VK_ENTER) {
-
-			fireEditingStopped();
-
-			table.appendRow();
-
-		}
-
-	}
+            table.appendRow();
+        }
+    }
 }

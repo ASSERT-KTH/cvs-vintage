@@ -13,15 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -32,49 +30,50 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SaveAsTemplateAction extends FrameAction {
+    public SaveAsTemplateAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_savetemplate"));
 
-	public SaveAsTemplateAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "composer", "menu_file_savetemplate"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_file_savetemplate").replaceAll("&", ""));
-		
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_savetemplate").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		final ComposerController composerController = (ComposerController ) getFrameMediator();
-		if (composerController.checkState())
-			return;
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_news.png"));
+    }
 
-		AccountItem item =
-		((ComposerModel)composerController.getModel()).getAccountItem();
-		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-		String str = folderItem.get("templates");
-		int destUid = Integer.parseInt(str);
-		Folder destFolder = (Folder) MailInterface.treeModel.getFolder(destUid);
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        final ComposerController composerController = (ComposerController) getFrameMediator();
 
-		ComposerCommandReference[] r = new ComposerCommandReference[1];
-		r[0] = new ComposerCommandReference(
-				composerController,
-				destFolder);
+        if (composerController.checkState()) {
+            return;
+        }
 
-		SaveMessageCommand c = new SaveMessageCommand(r);
+        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
+        SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
+        String str = folderItem.get("templates");
+        int destUid = Integer.parseInt(str);
+        Folder destFolder = (Folder) MailInterface.treeModel.getFolder(destUid);
 
-		MainInterface.processor.addOp(c);
-	}
+        ComposerCommandReference[] r = new ComposerCommandReference[1];
+        r[0] = new ComposerCommandReference(composerController, destFolder);
+
+        SaveMessageCommand c = new SaveMessageCommand(r);
+
+        MainInterface.processor.addOp(c);
+    }
 }

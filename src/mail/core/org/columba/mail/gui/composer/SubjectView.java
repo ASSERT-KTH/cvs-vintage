@@ -15,11 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import org.columba.core.gui.util.CTextField;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-import org.columba.core.gui.util.CTextField;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -30,34 +32,33 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class SubjectView extends CTextField {
-	
-	SubjectController controller;
-		
-	public SubjectView( SubjectController controller )
-	{
-		super(MailResourceLoader.getString("dialog","composer","composer_no_subject")); //$NON-NLS-1$
-		this.controller = controller;				
-		addFocusListener(new FocusEventHandler());
-	}
-	
-	public void installListener( SubjectController controller )
-	{
-		getDocument().addDocumentListener(controller);
-	}
-	
-	private class FocusEventHandler extends FocusAdapter
-	{
-		/**
-		 * Used to clear the subject field if the user clicks in it for
-		 * the first time and the text contained in it is the default emtpy
-		 * subject test.
-		 * 
-		 * @param evt The focus event fired when the focus was gained by this
-		 * component.
-		 */
-		public void focusGained(FocusEvent evt) {
-			if(SubjectView.this.getText().equals(MailResourceLoader.getString("dialog","composer","composer_no_subject")))
-				SubjectView.this.setText("");
-		}
-	}
+    SubjectController controller;
+
+    public SubjectView(SubjectController controller) {
+        super(MailResourceLoader.getString("dialog", "composer",
+                "composer_no_subject")); //$NON-NLS-1$
+        this.controller = controller;
+        addFocusListener(new FocusEventHandler());
+    }
+
+    public void installListener(SubjectController controller) {
+        getDocument().addDocumentListener(controller);
+    }
+
+    private class FocusEventHandler extends FocusAdapter {
+        /**
+         * Used to clear the subject field if the user clicks in it for
+         * the first time and the text contained in it is the default emtpy
+         * subject test.
+         *
+         * @param evt The focus event fired when the focus was gained by this
+         * component.
+         */
+        public void focusGained(FocusEvent evt) {
+            if (SubjectView.this.getText().equals(MailResourceLoader.getString(
+                            "dialog", "composer", "composer_no_subject"))) {
+                SubjectView.this.setText("");
+            }
+        }
+    }
 }

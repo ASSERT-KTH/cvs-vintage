@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
+
+import org.columba.mail.gui.table.model.TableModelSorter;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -24,86 +29,78 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
-import org.columba.mail.gui.table.model.TableModelSorter;
 
 /**
  * @author fdietz
  *
  * MouseListener for selecting columns with the left mouse
  * to change the sorting order.
- * 
- * 
+ *
+ *
  * Its also responsible for changing the icon in the renderer
- * 
- * 
+ *
+ *
  */
 public class TableHeaderMouseListener extends MouseAdapter {
+    private TableView view;
+    private TableModelSorter sorter;
+    private SortingStateObservable observable;
+    private ImageIcon ascending = new AscendingIcon();
+    private ImageIcon descending = new DescendingIcon();
 
-	private TableView view;
-	private TableModelSorter sorter;
-	private SortingStateObservable observable;
-	
-	
-	private ImageIcon ascending = new AscendingIcon();
-	private ImageIcon descending = new DescendingIcon();
+    /**
+     *
+     */
+    public TableHeaderMouseListener(TableView view, TableModelSorter sorter) {
+        this.view = view;
+        this.sorter = sorter;
 
-	/**
-	 * 
-	 */
-	public TableHeaderMouseListener(TableView view, TableModelSorter sorter) {
-		this.view = view;
-		this.sorter = sorter;
-		
-		this.observable = sorter.getSortingStateObservable();
-		
-		JTableHeader th = view.getTableHeader();
-		th.addMouseListener(this);
-	}
+        this.observable = sorter.getSortingStateObservable();
 
-	public void mouseClicked(MouseEvent e) {
-		TableColumnModel columnModel = view.getColumnModel();
-		int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-		int column = view.convertColumnIndexToModel(viewColumn);
+        JTableHeader th = view.getTableHeader();
+        th.addMouseListener(this);
+    }
 
-		if (column != -1) {
+    public void mouseClicked(MouseEvent e) {
+        TableColumnModel columnModel = view.getColumnModel();
+        int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+        int column = view.convertColumnIndexToModel(viewColumn);
 
-			ImageIcon icon = null;
-			if (sorter.getSortingOrder() == true)
-				icon = ascending;
-			else
-				icon = descending;
+        if (column != -1) {
+            ImageIcon icon = null;
 
-			// disable every icon
-			// -> set appropriate icon for selected column
-			for (int i = 0; i < columnModel.getColumnCount(); i++) {
-				JLabel renderer =
-					(JLabel) columnModel.getColumn(i).getHeaderRenderer();
-				if (i == column)
-					renderer.setIcon(icon);
-				else
-					renderer.setIcon(null);
-			}
+            if (sorter.getSortingOrder() == true) {
+                icon = ascending;
+            } else {
+                icon = descending;
+            }
 
-			// repaint table header
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					view.getTableHeader().repaint();
+            // disable every icon
+            // -> set appropriate icon for selected column
+            for (int i = 0; i < columnModel.getColumnCount(); i++) {
+                JLabel renderer = (JLabel) columnModel.getColumn(i)
+                                                      .getHeaderRenderer();
 
-				}
-			});
+                if (i == column) {
+                    renderer.setIcon(icon);
+                } else {
+                    renderer.setIcon(null);
+                }
+            }
 
+            // repaint table header
+            SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        view.getTableHeader().repaint();
+                    }
+                });
 
-			// notify the model to sort the table
-			sorter.sort(column);
-			
-			
-			// notify observers
-			observable.setSortingState(sorter.getSortingColumn(), sorter.getSortingOrder());
-			
-			
-		}
+            // notify the model to sort the table
+            sorter.sort(column);
 
-	}
+            // notify observers
+            observable.setSortingState(sorter.getSortingColumn(),
+                sorter.getSortingOrder());
+        }
+    }
 }

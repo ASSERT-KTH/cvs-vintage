@@ -13,36 +13,31 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.util;
 
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.undo.UndoManager;
 
-public class UndoDocument extends DefaultStyledDocument
-{
+
+public class UndoDocument extends DefaultStyledDocument {
     private UndoManager undoManager;
 
-    public UndoDocument()
-        {
-            super();
+    public UndoDocument() {
+        super();
 
-            undoManager = new UndoManager();
-            this.addUndoableEditListener( undoManager );
-        }
+        undoManager = new UndoManager();
+        this.addUndoableEditListener(undoManager);
+    }
 
-    public void Undo()
-        {
-            if( undoManager.canUndo() )
-                undoManager.undo();
+    public void Undo() {
+        if (undoManager.canUndo()) {
+            undoManager.undo();
         }
+    }
 
-    public void Redo()
-        {
-            if( undoManager.canRedo() )
-                undoManager.redo();
+    public void Redo() {
+        if (undoManager.canRedo()) {
+            undoManager.redo();
         }
+    }
 }
-
-
-

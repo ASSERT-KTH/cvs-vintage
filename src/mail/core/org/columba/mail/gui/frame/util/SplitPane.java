@@ -18,96 +18,93 @@ package org.columba.mail.gui.frame.util;
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
 
+
 public class SplitPane extends JSplitPane {
-	public JSplitPane splitPane = new JSplitPane();
-	JComponent header, message, attachment;
-	boolean hide = false;
-	int last = 0;
-	int lastAttach = 0;
+    public JSplitPane splitPane = new JSplitPane();
+    JComponent header;
+    JComponent message;
+    JComponent attachment;
+    boolean hide = false;
+    int last = 0;
+    int lastAttach = 0;
 
-	public SplitPane() {
-		super();
-	}
+    public SplitPane() {
+        super();
+    }
 
-	public SplitPane(
-		JComponent header,
-		JComponent message,
-		JComponent attachment) {
-		super();
-		this.header = header;
-		this.message = message;
-		this.attachment = attachment;
+    public SplitPane(JComponent header, JComponent message,
+        JComponent attachment) {
+        super();
+        this.header = header;
+        this.message = message;
+        this.attachment = attachment;
 
-		setBorder(null);
-		splitPane.setBorder(null);
-		//splitPane.setDividerSize(1);
-		//setDividerSize(5);
+        setBorder(null);
+        splitPane.setBorder(null);
 
-		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		setOrientation(JSplitPane.VERTICAL_SPLIT);
+        //splitPane.setDividerSize(1);
+        //setDividerSize(5);
+        splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-		setDividerLocation(0.75);
+        setDividerLocation(0.75);
 
-		// this has to be set by themes
-		//setDividerSize( 5 );
+        // this has to be set by themes
+        //setDividerSize( 5 );
+        setResizeWeight(0.25);
 
-		setResizeWeight(0.25);
+        splitPane.setDividerLocation(0.9);
+        splitPane.setResizeWeight(0.9);
 
-		splitPane.setDividerLocation(0.9);
-		splitPane.setResizeWeight(0.9);
+        // this has to be set by themes
+        //splitPane.setDividerSize( 5 );
+        add(header, JSplitPane.TOP);
+        add(splitPane, JSplitPane.BOTTOM);
+        splitPane.add(message, JSplitPane.TOP);
+        splitPane.add(attachment, JSplitPane.BOTTOM);
 
-		// this has to be set by themes
-		//splitPane.setDividerSize( 5 );
+        //splitPane.resetToPreferredSizes();
+        //hideAttachmentViewer();
+    }
 
-		add(header, JSplitPane.TOP);
-		add(splitPane, JSplitPane.BOTTOM);
-		splitPane.add(message, JSplitPane.TOP);
-		splitPane.add(attachment, JSplitPane.BOTTOM);
-		//splitPane.resetToPreferredSizes();
+    public void hideAttachmentViewer() {
+        if (hide == true) {
+            return;
+        }
 
-		//hideAttachmentViewer();
+        last = getDividerLocation();
+        lastAttach = splitPane.getDividerLocation();
 
-	}
+        remove(splitPane);
+        remove(header);
 
-	public void hideAttachmentViewer() {
-		if (hide == true)
-			return;
+        add(header, JSplitPane.TOP);
+        add(message, JSplitPane.BOTTOM);
 
-		last = getDividerLocation();
-		lastAttach = splitPane.getDividerLocation();
+        hide = true;
 
-		remove(splitPane);
-		remove(header);
+        setDividerLocation(last);
+    }
 
-		add(header, JSplitPane.TOP);
-		add(message, JSplitPane.BOTTOM);
+    public void showAttachmentViewer() {
+        if (hide == false) {
+            return;
+        }
 
-		hide = true;
+        last = getDividerLocation();
 
-		setDividerLocation(last);
+        remove(header);
+        remove(message);
 
-	}
+        splitPane.add(message, JSplitPane.TOP);
+        splitPane.add(attachment, JSplitPane.BOTTOM);
 
-	public void showAttachmentViewer() {
-		if (hide == false)
-			return;
+        add(header, JSplitPane.TOP);
+        add(splitPane, JSplitPane.BOTTOM);
 
-		last = getDividerLocation();
+        setDividerLocation(last);
+        splitPane.setDividerLocation(lastAttach);
 
-		remove(header);
-		remove(message);
-
-		splitPane.add(message, JSplitPane.TOP);
-		splitPane.add(attachment, JSplitPane.BOTTOM);
-
-		add(header, JSplitPane.TOP);
-		add(splitPane, JSplitPane.BOTTOM);
-
-		setDividerLocation(last);
-		splitPane.setDividerLocation(lastAttach);
-
-		hide = false;
-
-	}
-
+        hide = false;
+    }
 }

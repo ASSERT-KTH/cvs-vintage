@@ -13,54 +13,50 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.externaltools;
 
-import java.io.File;
-import java.net.URL;
-
 import org.columba.core.plugin.PluginInterface;
+
+import java.io.File;
+
+import java.net.URL;
 
 
 /**
  * Provides easy configuration for external tools.
- * 
+ *
  * @author fdietz
  */
 public abstract class AbstractExternalToolsPlugin implements PluginInterface {
+    public AbstractExternalToolsPlugin() {
+    }
 
-	public AbstractExternalToolsPlugin()
-	{
-	}
-	
-	
-	/**
-	 * Gets the path to the commandline tool.
-	 * <p>
-	 * If this method returns "null", a dialog will ask
-	 * the user the location of the tool
-	 * 
-	 * @return	path to external tool, or "null" if tool can't be located automatically
-	 */
-	public File locate()
-	{
-		return null;
-	}
-	
-	/**
-	 * Gets description which should be presented to the user.
-	 * 
-	 * @return	description of external tool
-	 */
-	public abstract String getDescription();
-	
-	/**
-	 * Gets web address of this tool.
-	 * <p>
-	 * This will be presented to the user as clickable Hyperlink in
-	 * the configuration wizard.
-	 * 
-	 * @return	website of this tool
-	 */
-	public abstract URL getWebsite();
+    /**
+     * Gets the path to the commandline tool.
+     * <p>
+     * If this method returns "null", a dialog will ask
+     * the user the location of the tool
+     *
+     * @return        path to external tool, or "null" if tool can't be located automatically
+     */
+    public File locate() {
+        return null;
+    }
+
+    /**
+     * Gets description which should be presented to the user.
+     *
+     * @return        description of external tool
+     */
+    public abstract String getDescription();
+
+    /**
+     * Gets web address of this tool.
+     * <p>
+     * This will be presented to the user as clickable Hyperlink in
+     * the configuration wizard.
+     *
+     * @return        website of this tool
+     */
+    public abstract URL getWebsite();
 }

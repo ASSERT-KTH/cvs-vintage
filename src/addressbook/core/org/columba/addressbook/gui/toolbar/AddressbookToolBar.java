@@ -13,76 +13,62 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.toolbar;
 
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.gui.toolbar.ToolbarButton;
 
 import java.util.ResourceBundle;
 
 import javax.swing.JToolBar;
 
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.toolbar.ToolbarButton;
 
-
-
-public class AddressbookToolBar extends JToolBar
-{
+public class AddressbookToolBar extends JToolBar {
     private AddressbookInterface addressbookInterface;
-
     private ResourceBundle toolbarLabels;
 
-    public AddressbookToolBar( AddressbookInterface addressbookInterface )
-        {
-            super();
-            this.addressbookInterface = addressbookInterface;
+    public AddressbookToolBar(AddressbookInterface addressbookInterface) {
+        super();
+        this.addressbookInterface = addressbookInterface;
 
+        addCButtons();
 
+        putClientProperty("JToolBar.isRollover", Boolean.TRUE);
 
-
-            addCButtons();
-
-	    putClientProperty("JToolBar.isRollover",Boolean.TRUE);
-
-            setFloatable(false);
-        }
-
-    public void addButton( ToolbarButton button )
-    {
-        add( button  );
-        button.setRolloverEnabled( true );
-          //button.setBorder( new ColumbaButtonBorder() );
+        setFloatable(false);
     }
 
-    public void addCButtons()
-        {
-        	
+    public void addButton(ToolbarButton button) {
+        add(button);
+        button.setRolloverEnabled(true);
 
-/*
-	    //MouseAdapter handler = MainInterface.statusBar.getHandler();
-	    ToolbarButton button;
+        //button.setBorder( new ColumbaButtonBorder() );
+    }
 
-	    addSeparator();
+    public void addCButtons() {
+        /*
+                    //MouseAdapter handler = MainInterface.statusBar.getHandler();
+                    ToolbarButton button;
 
-		
-	    button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
-	    addButton( button  );
-
-            button = new ToolbarButton( addressbookInterface.actionListener.addGroupAction);
-	    addButton( button  );
-
-            addSeparator();
-
-            button = new ToolbarButton( addressbookInterface.actionListener.propertiesAction);
-	    addButton( button  );
-
-            button = new ToolbarButton( addressbookInterface.actionListener.removeAction);
-	    addButton( button  );
-
-            addSeparator();
-*/
-		
-        }
+                    addSeparator();
 
 
+                    button = new ToolbarButton( addressbookInterface.actionListener.addContactAction);
+                    addButton( button  );
+
+                    button = new ToolbarButton( addressbookInterface.actionListener.addGroupAction);
+                    addButton( button  );
+
+                    addSeparator();
+
+                    button = new ToolbarButton( addressbookInterface.actionListener.propertiesAction);
+                    addButton( button  );
+
+                    button = new ToolbarButton( addressbookInterface.actionListener.removeAction);
+                    addButton( button  );
+
+                    addSeparator();
+        */
+    }
 }

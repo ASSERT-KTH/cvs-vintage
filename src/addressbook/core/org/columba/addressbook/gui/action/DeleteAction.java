@@ -13,50 +13,50 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.action;
+
+import org.columba.addressbook.util.AddressbookResourceLoader;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.addressbook.util.AddressbookResourceLoader;
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class DeleteAction extends FrameAction {
+    public DeleteAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_edit_delete"));
 
-	public DeleteAction(FrameMediator frameMediator) {
-		super(frameMediator, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_edit_delete"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_edit_delete").replaceAll("&", ""));
-					
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_paste-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_edit_delete").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		// TODO implement action
-	}
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_paste-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
+
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        // TODO implement action
+    }
 }

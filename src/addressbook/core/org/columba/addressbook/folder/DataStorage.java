@@ -13,25 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
+public abstract interface DataStorage {
+    public abstract void saveDefaultCard(DefaultCard card, Object uid);
 
-public abstract interface DataStorage
-{
-	public abstract void saveDefaultCard( DefaultCard card, Object uid );
+    //public abstract ContactCard loadContactCard( Object uid );
+    //public abstract void removeContactCard( Object uid );
+    //public abstract void saveGroupListCard( GroupListCard card, Object uid );
+    //public abstract GroupListCard loadGroupListCard( Object uid );
+    //public abstract void removeGroupListCard( Object uid );
+    public abstract DefaultCard loadDefaultCard(Object uid);
 
-	//public abstract ContactCard loadContactCard( Object uid );
-	//public abstract void removeContactCard( Object uid );
-	//public abstract void saveGroupListCard( GroupListCard card, Object uid );
-	//public abstract GroupListCard loadGroupListCard( Object uid );
-	//public abstract void removeGroupListCard( Object uid );
-	
-	public abstract DefaultCard loadDefaultCard( Object uid );
+    public abstract void removeCard(Object uid);
 
-	public abstract void removeCard( Object uid );
-	
-	public abstract void modifyCard( DefaultCard card, Object uid );
-	
-	//public abstract void getContactCard( Object uid );
+    public abstract void modifyCard(DefaultCard card, Object uid);
+
+    //public abstract void getContactCard( Object uid );
 }

@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,300 +35,305 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.event.MouseInputListener;
 
+
 public class IconPanel extends JPanel implements MouseInputListener {
-	int count;
-	List selection;
-	ArrayList selectionListener;
-	Action doubleClickAction;
-	Dimension preferredIconSize;
-	OneSizeLabelFactory labelFactory;
+    int count;
+    List selection;
+    ArrayList selectionListener;
+    Action doubleClickAction;
+    Dimension preferredIconSize;
+    OneSizeLabelFactory labelFactory;
 
-	public IconPanel() {
-		super();		
-		setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+    public IconPanel() {
+        super();
+        setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
 
-		setOpaque(true);
-		setBackground(UIManager.getColor("List.background"));
+        setOpaque(true);
+        setBackground(UIManager.getColor("List.background"));
 
-		addMouseListener(this);
-		addMouseMotionListener(this);
+        addMouseListener(this);
+        addMouseMotionListener(this);
 
-		count = 0;
-		selection = new Vector();
-		selectionListener = new ArrayList();
-		
-		labelFactory = new OneSizeLabelFactory(150 );	
-	}
+        count = 0;
+        selection = new Vector();
+        selectionListener = new ArrayList();
 
-	/* (non-Javadoc)
-	 * @see java.awt.Component#getPreferredSize()
-	 */
-	public Dimension getPreferredSize() {
-		Dimension dim = new Dimension(super.getWidth(), 0);
-		if( dim == null || preferredIconSize == null) return dim;
-		int componentWidth = preferredIconSize.width + 20;
-		
-		int iconsperline = dim.width / componentWidth;
-		if( iconsperline == 0) iconsperline = 1;
-		
-		int lines =  count / iconsperline;			
-		if(  count % iconsperline != 0) lines++;
-		
-		dim.height = (preferredIconSize.height + 5 ) * lines;
-		
-		return dim;
-	}
+        labelFactory = new OneSizeLabelFactory(150);
+    }
 
+    /* (non-Javadoc)
+     * @see java.awt.Component#getPreferredSize()
+     */
+    public Dimension getPreferredSize() {
+        Dimension dim = new Dimension(super.getWidth(), 0);
 
-	public void updateUI() {
-		super.updateUI();
-		setBackground(UIManager.getColor("List.background"));
-	}
+        if ((dim == null) || (preferredIconSize == null)) {
+            return dim;
+        }
 
-	public void setDoubleClickAction(Action a) {
-		doubleClickAction = a;
-	}
+        int componentWidth = preferredIconSize.width + 20;
 
-	protected void addItem(ClickableIcon icon) {
-		super.add(icon);
-	}
+        int iconsperline = dim.width / componentWidth;
 
-	public void add(Icon image, String text) {
-		ClickableIcon icon = new ClickableIcon(labelFactory, image, text, count);
-		preferredIconSize = icon.getPreferredSize();
-		addItem(icon);
-		count++;
+        if (iconsperline == 0) {
+            iconsperline = 1;
+        }
 
-		revalidate();
-		repaint();
+        int lines = count / iconsperline;
 
-	}
+        if ((count % iconsperline) != 0) {
+            lines++;
+        }
 
-	public void removeAll() {
-		super.removeAll();
-		count = 0;
+        dim.height = (preferredIconSize.height + 5) * lines;
 
-		selection.clear();
-		labelFactory.reset();
+        return dim;
+    }
 
-		revalidate();
-		repaint();
-	}
+    public void updateUI() {
+        super.updateUI();
+        setBackground(UIManager.getColor("List.background"));
+    }
 
-	public void removeSelected() {
-		for (Iterator it = selection.iterator(); it.hasNext();) {
-			super.remove((ClickableIcon) it.next());
-		// for (int i = 0; i < selection.size(); i++) {
-			// super.remove((ClickableIcon) selection.get(i));
-		}
+    public void setDoubleClickAction(Action a) {
+        doubleClickAction = a;
+    }
 
-		count -= selection.size();
+    protected void addItem(ClickableIcon icon) {
+        super.add(icon);
+    }
 
-		selection.clear();
+    public void add(Icon image, String text) {
+        ClickableIcon icon = new ClickableIcon(labelFactory, image, text, count);
+        preferredIconSize = icon.getPreferredSize();
+        addItem(icon);
+        count++;
 
-		revalidate();
-		repaint();
-	}
+        revalidate();
+        repaint();
+    }
 
-	public int getSelected() {
-		if (selection.size() != 0)
-			return ((ClickableIcon) selection.get(0)).getIndex();
+    public void removeAll() {
+        super.removeAll();
+        count = 0;
 
-		return -1;
-	}
+        selection.clear();
+        labelFactory.reset();
 
-	public int countSelected() {
-		return selection.size();
-	}
+        revalidate();
+        repaint();
+    }
 
-	public int[] getSelection() {
-		int[] output = new int[selection.size()];
-			
-		for (int i = 0; i < selection.size(); i++) {
-			output[i] = ((ClickableIcon) selection.get(i)).getIndex();
-		}
+    public void removeSelected() {
+        for (Iterator it = selection.iterator(); it.hasNext();) {
+            super.remove((ClickableIcon) it.next());
 
-		return output;
-	}
+            // for (int i = 0; i < selection.size(); i++) {
+            // super.remove((ClickableIcon) selection.get(i));
+        }
 
-	public void select(Point pos, int mode) {
-		Object clicked;
-		ClickableIcon aktIcon;
+        count -= selection.size();
 
-		clicked = getComponentAt(pos);
+        selection.clear();
 
-		if (clicked instanceof ClickableIcon) {
-			aktIcon = (ClickableIcon) clicked;
+        revalidate();
+        repaint();
+    }
 
-			switch (mode) {
-				case (0) :
-					{
-						clearSelection();
-						selection.add(aktIcon);
-						aktIcon.setSelection(true);
+    public int getSelected() {
+        if (selection.size() != 0) {
+            return ((ClickableIcon) selection.get(0)).getIndex();
+        }
 
-						break;
-					}
-				case (1) :
-					{
-						if (selection.contains(aktIcon)) {
-							selection.remove(aktIcon);
-							aktIcon.setSelection(false);
-						} else {
-							selection.add(aktIcon);
-							aktIcon.setSelection(true);
-						}
-						break;
-					}
+        return -1;
+    }
 
-			}
+    public int countSelected() {
+        return selection.size();
+    }
 
-		} else {
-			if (mode == 0)
-				clearSelection();
-		}
+    public int[] getSelection() {
+        int[] output = new int[selection.size()];
 
-		fireSelectionChanged();
+        for (int i = 0; i < selection.size(); i++) {
+            output[i] = ((ClickableIcon) selection.get(i)).getIndex();
+        }
 
-		revalidate();
-		repaint();
-	}
+        return output;
+    }
 
-	private void clearSelection() {
-		for (Iterator it = selection.iterator(); it.hasNext();) {
-			((ClickableIcon) it.next()).setSelection(false);
-		// for (int i = 0; i < selection.size(); i++) {
-			// ((ClickableIcon) selection.get(i)).setSelection(false);
+    public void select(Point pos, int mode) {
+        Object clicked;
+        ClickableIcon aktIcon;
 
-		}
+        clicked = getComponentAt(pos);
 
-		selection.clear();
-	}
+        if (clicked instanceof ClickableIcon) {
+            aktIcon = (ClickableIcon) clicked;
 
-	public void mouseClicked(MouseEvent e) {
-	}
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
+            switch (mode) {
+            case (0): {
+                clearSelection();
+                selection.add(aktIcon);
+                aktIcon.setSelection(true);
 
-	public void mousePressed(MouseEvent e) {
-		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+                break;
+            }
 
-			if (e.isControlDown()) {
-				select(e.getPoint(), 1);
-				return;
-			}
+            case (1): {
+                if (selection.contains(aktIcon)) {
+                    selection.remove(aktIcon);
+                    aktIcon.setSelection(false);
+                } else {
+                    selection.add(aktIcon);
+                    aktIcon.setSelection(true);
+                }
 
-			select(e.getPoint(), 0);
+                break;
+            }
+            }
+        } else {
+            if (mode == 0) {
+                clearSelection();
+            }
+        }
 
-			if (e.getClickCount() >= 2) {
-				if (doubleClickAction != null)
-					doubleClickAction.actionPerformed(null);
-			}
-		}
+        fireSelectionChanged();
 
-	}
+        revalidate();
+        repaint();
+    }
 
-	public void mouseReleased(MouseEvent e) {
-	}
+    private void clearSelection() {
+        for (Iterator it = selection.iterator(); it.hasNext();) {
+            ((ClickableIcon) it.next()).setSelection(false);
 
-	public void mouseDragged(MouseEvent e) {
-		/*        Graphics g = getGraphics();
-		        
-		        if( saveRegion!= null ) {
-		            g.drawImage( saveRegion, 0,0,null ) ;
-		        }
-		        
-		        saveRegion = createImage( getWidth(), getHeight() );
-		        
-		        g.drawRect(selectionPoint.x,
-		                   selectionPoint.y,
-		                   e.getPoint().x - selectionPoint.x,
-		                   e.getPoint().y - selectionPoint.y);
-		*/
-	}
+            // for (int i = 0; i < selection.size(); i++) {
+            // ((ClickableIcon) selection.get(i)).setSelection(false);
+        }
 
-	public void mouseMoved(MouseEvent e) {
-	}
+        selection.clear();
+    }
 
-	public void addIconPanelSelectionListener(IconPanelSelectionListener listener) {
-		selectionListener.add(listener);
-	}
+    public void mouseClicked(MouseEvent e) {
+    }
 
-	private void fireSelectionChanged() {
+    public void mouseEntered(MouseEvent e) {
+    }
 
-		int[] newSelection = getSelection();
+    public void mouseExited(MouseEvent e) {
+    }
 
-		for (int i = 0; i < selectionListener.size(); i++) {
-			(
-				(IconPanelSelectionListener) selectionListener.get(
-					i)).selectionChanged(
-				newSelection);
-		}
-	}
+    public void mousePressed(MouseEvent e) {
+        if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+            if (e.isControlDown()) {
+                select(e.getPoint(), 1);
 
-	
+                return;
+            }
 
+            select(e.getPoint(), 0);
+
+            if (e.getClickCount() >= 2) {
+                if (doubleClickAction != null) {
+                    doubleClickAction.actionPerformed(null);
+                }
+            }
+        }
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        /*        Graphics g = getGraphics();
+
+                if( saveRegion!= null ) {
+                    g.drawImage( saveRegion, 0,0,null ) ;
+                }
+
+                saveRegion = createImage( getWidth(), getHeight() );
+
+                g.drawRect(selectionPoint.x,
+                           selectionPoint.y,
+                           e.getPoint().x - selectionPoint.x,
+                           e.getPoint().y - selectionPoint.y);
+        */
+    }
+
+    public void mouseMoved(MouseEvent e) {
+    }
+
+    public void addIconPanelSelectionListener(
+        IconPanelSelectionListener listener) {
+        selectionListener.add(listener);
+    }
+
+    private void fireSelectionChanged() {
+        int[] newSelection = getSelection();
+
+        for (int i = 0; i < selectionListener.size(); i++) {
+            ((IconPanelSelectionListener) selectionListener.get(i)).selectionChanged(newSelection);
+        }
+    }
 }
+
 
 class ClickableIcon extends JComponent {
-	private boolean selected;
-	private int index;
-	private Color selectionForeground;
-	private Color selectionBackground;
-	private Color foreground;
-	private Color background;
+    private boolean selected;
+    private int index;
+    private Color selectionForeground;
+    private Color selectionBackground;
+    private Color foreground;
+    private Color background;
+    private JLabel icon;
+    private JLabel label;
 
-	private JLabel icon;
-	private JLabel label;
+    public ClickableIcon(OneSizeLabelFactory factory, Icon image, String text,
+        int index) {
+        selectionForeground = UIManager.getColor("List.selectionForeground");
+        selectionBackground = UIManager.getColor("List.selectionBackground");
+        foreground = UIManager.getColor("List.foreground");
+        background = UIManager.getColor("List.background");
 
-	public ClickableIcon(OneSizeLabelFactory factory, Icon image, String text, int index) {
-		selectionForeground = UIManager.getColor("List.selectionForeground");
-		selectionBackground = UIManager.getColor("List.selectionBackground");
-		foreground = UIManager.getColor("List.foreground");
-		background = UIManager.getColor("List.background");
+        setLayout(new BorderLayout());
 
-		setLayout(new BorderLayout());
+        label = factory.getNewLabel(text);
+        label.setOpaque(true);
+        label.setBackground(background);
+        label.setForeground(foreground);
+        label.setHorizontalAlignment(JLabel.CENTER);
 
-		label = factory.getNewLabel(text);
-		label.setOpaque(true);
-		label.setBackground(background);
-		label.setForeground(foreground);
-		label.setHorizontalAlignment(JLabel.CENTER);			
+        icon = new JLabel(image);
+        icon.setOpaque(true);
+        icon.setBackground(background);
+        icon.setForeground(foreground);
 
-		icon = new JLabel(image);
-		icon.setOpaque(true);
-		icon.setBackground(background);
-		icon.setForeground(foreground);
+        add(icon, BorderLayout.CENTER);
+        add(label, BorderLayout.SOUTH);
 
-		add(icon, BorderLayout.CENTER);
-		add(label, BorderLayout.SOUTH);
+        selected = false;
 
-		selected = false;
+        this.index = index;
+    }
 
-		this.index = index;
-	}
+    public void setSelection(boolean set) {
+        selected = set;
 
-	public void setSelection(boolean set) {
-		selected = set;
+        if (set) {
+            label.setForeground(selectionForeground);
+            label.setBackground(selectionBackground);
+        } else {
+            label.setBackground(background);
+            label.setForeground(foreground);
+        }
+    }
 
-		if (set) {
-			label.setForeground(selectionForeground);
-			label.setBackground(selectionBackground);
-		} else {
-			label.setBackground(background);
-			label.setForeground(foreground);
-		}
-	}
+    public boolean isSelected() {
+        return selected;
+    }
 
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
+    public int getIndex() {
+        return index;
+    }
 }
-

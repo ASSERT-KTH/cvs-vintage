@@ -13,21 +13,22 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
@@ -35,39 +36,33 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MarkAsUnflaggedAction
-	extends FrameAction
-	implements SelectionListener {
+public class MarkAsUnflaggedAction extends FrameAction
+    implements SelectionListener {
+    public MarkAsUnflaggedAction(FrameMediator frameMediator) {
+        // TODO: i18n missing here
+        super(frameMediator, "Not Flagged");
 
-	public MarkAsUnflaggedAction(FrameMediator frameMediator) {
-		
-		// TODO: i18n missing here
-		
-		super(frameMediator, "Not Flagged");
-	
-		setEnabled(false);
-		
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
-	}
+        setEnabled(false);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
+    }
 
-		MarkMessageCommand c = new MarkMessageCommand(r);
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_UNFLAGGED);
 
-		MainInterface.processor.addOp(c);
-	}
-        
-	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+        MarkMessageCommand c = new MarkMessageCommand(r);
+
+        MainInterface.processor.addOp(c);
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

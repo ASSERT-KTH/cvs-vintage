@@ -14,7 +14,6 @@
 //
 // All Rights Reserved.
 //$Log: Filter.java,v $
-
 package org.columba.mail.filter;
 
 import org.columba.core.command.Command;
@@ -22,18 +21,20 @@ import org.columba.core.command.CompoundCommand;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.filter.plugins.AbstractFilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
+
 /**
- * 
+ *
  * @author frd
  *
  * This is a wrapper for the filter xml configuration, which makes
  * code easier to read in comparison to using the XmlElement stuff.
- * 
+ *
  */
 
 // example configuration (tree.xml):
@@ -48,154 +49,141 @@ import org.columba.mail.plugin.FilterActionPluginHandler;
 // </filter>
 //
 public class Filter extends DefaultItem {
+    /**
+     *
+     * Constructor for Filter
+     *
+     * XmlElement should be "filter" in this case
+     *
+     * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
+     */
+    public Filter(XmlElement root) {
+        super(root);
+    }
 
-	/**
-	 * 
-	 * Constructor for Filter
-	 * 
-	 * XmlElement should be "filter" in this case
-	 * 
-	 * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
-	 */
-	public Filter(XmlElement root) {
-		super(root);
+    /**
+     *
+     * @return FilterActionList         this is also a simple wrapper
+     */
+    public FilterActionList getFilterActionList() {
+        return new FilterActionList(getRoot().getElement("actionlist"));
+    }
 
-	}
+    /**
+     *
+     *
+     * @return FilterRule        this is also a simple wrapper
+     */
+    public FilterRule getFilterRule() {
+        return new FilterRule(getRoot().getElement("rules"));
+    }
 
-	/**
-	 * 
-	 * @return FilterActionList 	this is also a simple wrapper
-	 */
-	public FilterActionList getFilterActionList() {
-		return new FilterActionList(getRoot().getElement("actionlist"));
-	}
+    /**
+     * Is filter enabled?
+     *
+     * @return boolean        true if enabled
+     */
+    public boolean getEnabled() {
+        return getBoolean("enabled");
+    }
 
-	/**
-	 * 
-	 * 
-	 * @return FilterRule	this is also a simple wrapper
-	 */
-	public FilterRule getFilterRule() {
-		return new FilterRule(getRoot().getElement("rules"));
-	}
+    /**
+     *
+     * enable Filter
+     *
+     * @param bool        if true enable filter otherwise disable filter
+     */
+    public void setEnabled(boolean bool) {
+        set("enabled", bool);
+    }
 
-	/**
-	 * Is filter enabled?
-	 * 
-	 * @return boolean	true if enabled
-	 */
-	public boolean getEnabled() {
+    /**
+     * Set filter name
+     *
+     * @param s                new filter name
+     */
+    public void setName(String s) {
+        set("description", s);
+    }
 
-		return getBoolean("enabled");
-	}
+    /**
+     *
+     *  return Name of Filter
+     *
+     * @return String
+     */
+    public String getName() {
+        return get("description");
+    }
 
-	/**
-	 * 
-	 * enable Filter
-	 * 
-	 * @param bool	if true enable filter otherwise disable filter
-	 */
-	public void setEnabled(boolean bool) {
-		set("enabled", bool);
+    /**
+     * if filter matches we need to execute all actions
+     *
+     * For efficiency reasons all commands are packaged in
+     * a compound command object. This compound command uses
+     * only one worker to execute all commands, instead of
+     * creating new workers for every command
+     *
+     * @param srcFolder                                source folder
+     * @param uids                                        message uid array
+     * @return CompoundCommand                return Collection of Commands
+     * @throws Exception
+     */
+    public CompoundCommand getCommand(Folder srcFolder, Object[] uids)
+        throws Exception {
+        // instanciate CompoundCommand
+        CompoundCommand c = new CompoundCommand();
 
-	}
-	
-	/**
-	 * Set filter name
-	 * 
-	 * @param s		new filter name
-	 */
-	public void setName(String s) {
-		set("description", s);
+        // get plugin handler for filter actions
+        FilterActionPluginHandler pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
+                "org.columba.mail.filteraction");
 
-	}
-	
-	/**
-	 * 
-	 *  return Name of Filter
-	 * 
-	 * @return String
-	 */
-	public String getName() {
-		return get("description");
+        // get list of all filter actions
+        FilterActionList list = getFilterActionList();
 
-	}
+        for (int i = 0; i < list.getChildCount(); i++) {
+            // interate through all filter actions
+            FilterAction action = list.get(i);
 
-	/**
-	 * if filter matches we need to execute all actions 
-	 * 
-	 * For efficiency reasons all commands are packaged in
-	 * a compound command object. This compound command uses
-	 * only one worker to execute all commands, instead of 
-	 * creating new workers for every command
-	 * 
-	 * @param srcFolder				source folder
-	 * @param uids					message uid array
-	 * @return CompoundCommand		return Collection of Commands
-	 * @throws Exception
-	 */
-	public CompoundCommand getCommand(Folder srcFolder, Object[] uids)
-		throws Exception {
-			
-		// instanciate CompoundCommand
-		CompoundCommand c = new CompoundCommand();
+            // name is used to load plugin
+            String name = action.getAction();
+            AbstractFilterAction instance = null;
 
-		// get plugin handler for filter actions
-		FilterActionPluginHandler pluginHandler =
-			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.filteraction");
+            // try to get instance of FilterAction
+            try {
+                instance = (AbstractFilterAction) ((AbstractFilterPluginHandler) pluginHandler).getActionPlugin(name,
+                        null);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-		// get list of all filter actions
-		FilterActionList list = getFilterActionList();
-		for (int i = 0; i < list.getChildCount(); i++) {
-			// interate through all filter actions
-			FilterAction action = list.get(i);
+            // retrieve Command of filter action
+            Command command = instance.getCommand(action, srcFolder, uids);
 
-			// name is used to load plugin
-			String name = action.getAction();
-			AbstractFilterAction instance = null;
+            // add command to CompoundCommand
+            if (command != null) {
+                c.add(command);
+            }
+        }
 
-			// try to get instance of FilterAction
-			try {
-				instance =
-					(AbstractFilterAction)
-						(
-							(
-								AbstractFilterPluginHandler) pluginHandler)
-									.getActionPlugin(
-						name,
-						null);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+        // return CompoundCommand
+        return c;
+    }
 
-			// retrieve Command of filter action
-			Command command = instance.getCommand(action, srcFolder, uids);
+    /** {@inheritDoc} */
+    public Object clone() {
+        return super.clone();
+    }
 
-			// add command to CompoundCommand
-			if (command != null)
-				c.add(command);
+    /** {@inheritDoc} */
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Filter[name=");
+        sb.append(getName());
+        sb.append(", enabled=");
+        sb.append(getEnabled());
+        sb.append("]");
 
-		}
-
-		// return CompoundCommand
-		return c;
-	}
-
-	/** {@inheritDoc} */
-	public Object clone() {
-		return super.clone();
-	}
-	
-	
-	/** {@inheritDoc} */
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("Filter[name=");
-		sb.append(getName());
-		sb.append(", enabled=");
-		sb.append(getEnabled());
-		sb.append("]");
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 }

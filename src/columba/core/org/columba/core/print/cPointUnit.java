@@ -16,17 +16,15 @@
 package org.columba.core.print;
 
 public class cPointUnit extends cUnit {
-	
-	public cPointUnit( double units ) {
-		setUnits( units );
-	}
-	
-	public double getPoints() {
-		return getUnits();		
-	}	
+    public cPointUnit(double units) {
+        setUnits(units);
+    }
 
-	public void setPoints( double p ) {
-		setUnits( p	);
-	}
-	
+    public double getPoints() {
+        return getUnits();
+    }
+
+    public void setPoints(double p) {
+        setUnits(p);
+    }
 }

@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.util;
 
 import java.awt.event.MouseEvent;
@@ -25,37 +24,34 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-public class AddressLabel extends JPanel implements MouseListener//, ActionListener
-{
+
+public class AddressLabel extends JPanel implements MouseListener //, ActionListener
+ {
     private String address;
     private JLabel[] list = new JLabel[3];
 
     //private AddressbookXmlConfig addressbookXmlConfig;
-
     private JPopupMenu popup;
 
-    public AddressLabel( String str ) {
+    public AddressLabel(String str) {
         super();
+
         //this.frame = MainInterface.frameMediator.getView();
         //this.addressbookXmlConfig = MainInterface.config.getAddressbookConfig();
-
-        setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
-        setBorder( null );
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setBorder(null);
         this.address = str;
 
         parse();
 
         URLController controller = new URLController();
 
-        if ( list[1] != null )
-        {
-            controller.setAddress( list[1].getText() );
-            popup = controller.createContactMenu( list[1].getText() );
-        }
-        else
-        {
-            controller.setAddress( address );
-            popup = controller.createContactMenu( address );
+        if (list[1] != null) {
+            controller.setAddress(list[1].getText());
+            popup = controller.createContactMenu(list[1].getText());
+        } else {
+            controller.setAddress(address);
+            popup = controller.createContactMenu(address);
         }
     }
 
@@ -63,58 +59,67 @@ public class AddressLabel extends JPanel implements MouseListener//, ActionListe
         int index1 = address.indexOf("<");
         int index2 = address.indexOf(">");
 
-        if ( index1 != -1 ) {
-            String str = address.substring( 0, index1+1 );
-            list[0] = new JLabel( str );
-            add( list[0] );
+        if (index1 != -1) {
+            String str = address.substring(0, index1 + 1);
+            list[0] = new JLabel(str);
+            add(list[0]);
 
-            str = address.substring( index1+1, index2 );
-            list[1] = new LinkLabel( str );
-            list[1].addMouseListener( this );
-            add( list[1] );
+            str = address.substring(index1 + 1, index2);
+            list[1] = new LinkLabel(str);
+            list[1].addMouseListener(this);
+            add(list[1]);
 
-            str = address.substring( index2, address.length() );
-            list[2] = new JLabel( str );
-            add( list[2] );
+            str = address.substring(index2, address.length());
+            list[2] = new JLabel(str);
+            add(list[2]);
         } else //if ( address.indexOf("@") != -1 )
-        {
+         {
             String str = address;
 
             int index = str.indexOf(",");
-            if ( index != -1 ) {
+
+            if (index != -1) {
                 // we got this from headerfieldtree
                 list[0] = new JLabel();
-                add( list[0] );
+                add(list[0]);
 
-                list[1] = new LinkLabel( str.substring(0, index) );
-                list[1].addMouseListener( this );
-                add( list[1] );
+                list[1] = new LinkLabel(str.substring(0, index));
+                list[1].addMouseListener(this);
+                add(list[1]);
 
-                list[2] = new JLabel( str.substring(index, str.length() ) );
-                add( list[2] );
+                list[2] = new JLabel(str.substring(index, str.length()));
+                add(list[2]);
             } else {
                 list[0] = new JLabel();
-                add( list[0] );
+                add(list[0]);
 
-                list[1] = new LinkLabel( str );
-                list[1].addMouseListener( this );
-                add( list[1] );
+                list[1] = new LinkLabel(str);
+                list[1].addMouseListener(this);
+                add(list[1]);
             }
         }
     }
 
-    public void setIcon( ImageIcon icon ) {
+    public void setIcon(ImageIcon icon) {
         //list[2].setHorizontalTextPosition( JLabel.LEADING );
-        if ( list[0] != null )list[0].setIcon( icon );
+        if (list[0] != null) {
+            list[0].setIcon(icon);
+        }
     }
 
-    public void mouseClicked( MouseEvent e ) {
-        popup.show( e.getComponent(),
-                    e.getX(), e.getY() );
+    public void mouseClicked(MouseEvent e) {
+        popup.show(e.getComponent(), e.getX(), e.getY());
     }
 
-    public void mouseEntered( MouseEvent e ){}
-    public void mouseExited( MouseEvent e ){}
-    public void mousePressed( MouseEvent e ){}
-    public void mouseReleased( MouseEvent e ){}
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
 }

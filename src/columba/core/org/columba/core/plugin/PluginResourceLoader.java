@@ -13,86 +13,81 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.plugin;
 
+import org.columba.core.main.MainInterface;
+
 import java.io.File;
+
 import java.net.URL;
 import java.net.URLClassLoader;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import org.columba.core.main.MainInterface;
 
 /**
  * @author fdietz
  *
  * Adds internationalization support for plugins
- * 
- * 
+ *
+ *
  */
 public class PluginResourceLoader {
+    String pluginId;
+    File pluginFolder;
+    Map map;
 
-	String pluginId;
-	File pluginFolder;
+    /**
+     *
+     */
+    public PluginResourceLoader(String pluginId) {
+        this.pluginId = pluginId;
 
-	Map map;
+        pluginFolder = MainInterface.pluginManager.getFolder(pluginId);
 
-	/**
-	 * 
-	 */
-	public PluginResourceLoader(String pluginId) {
-		this.pluginId = pluginId;
+        map = new HashMap();
+    }
 
-		pluginFolder = MainInterface.pluginManager.getFolder(pluginId);
+    public String getString(String propertyFile, String resource) {
+        if (map.containsKey(propertyFile)) {
+            // use already cached ResouceBundle class
+            try {
+                return ((ResourceBundle) map.get(propertyFile)).getString(resource);
+            } catch (Exception ex) {
+                ex.printStackTrace();
 
-		map = new HashMap();
-	}
+                return resource;
+            }
+        }
 
-	public String getString(String propertyFile, String resource) {
+        // create File from directory and name of property file
+        File rcFile = new File(pluginFolder, propertyFile);
 
-		if (map.containsKey(propertyFile)) {
-			// use already cached ResouceBundle class
+        try {
+            // initialize URL classloader with rcFile url
+            URL[] urls = new URL[1];
+            urls[0] = rcFile.toURL();
 
-			try {
+            URLClassLoader loader = new URLClassLoader(urls);
 
-				return ((ResourceBundle) map.get(propertyFile)).getString(
-					resource);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+            // init locale
+            Locale locale = Locale.getDefault();
 
-				return resource;
-			}
+            // create resource bundle
+            // -> pass current locale and classloader
+            ResourceBundle rb = ResourceBundle.getBundle(rcFile.getPath(),
+                    locale, loader);
 
-		}
-		// create File from directory and name of property file
-		File rcFile = new File(pluginFolder, propertyFile);
-		try {
+            // return string if available
+            return rb.getString(resource);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-			// initialize URL classloader with rcFile url
-			URL[] urls = new URL[1];
-			urls[0] = rcFile.toURL();
-
-			URLClassLoader loader = new URLClassLoader(urls);
-
-			// init locale
-			Locale locale = Locale.getDefault();
-
-			// create resource bundle
-			// -> pass current locale and classloader
-			ResourceBundle rb =
-				ResourceBundle.getBundle(rcFile.getPath(), locale, loader);
-
-			// return string if available
-			return rb.getString(resource);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		// failcase -> return i18n id
-		return resource;
-	}
-
+        // failcase -> return i18n id
+        return resource;
+    }
 }

@@ -18,74 +18,70 @@ package org.columba.core.print;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+
 public class cPoint {
-	
-	private cUnit x;
-	private cUnit y;
-	
-	public 	cPoint( cUnit x, cUnit y ) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	public void setLocation( cUnit x, cUnit y ) {
-		this.x = x;
-		this.y = y;
-	}
+    private cUnit x;
+    private cUnit y;
 
-	public void setX( cUnit x ) {
-		this.x = x;
-	}
-	
-	public void setY( cUnit y ) {
-		this.y = y;
-	}
-	
-	public cUnit getX() {
-		return x;
-	}	
-	
-	public cUnit getY() {
-		return y;
-	}
-	
-	public Point2D.Double getPoint2D() {
-		Point2D.Double temp = new Point2D.Double( x.getPoints(), y.getPoints() );
-		
-		return temp;
-	}
-	
-	public Point getPoint() {
-		Point temp = new Point(  (int) x.getPoints(), (int) y.getPoints() );
-		
-		return temp;
-	}
-	
-	public cPoint add( cPoint p ) {
-		cPoint temp = new cPoint( p.getX().add( getX() ),
-								  p.getY().add( getY() ));
-		
-		return temp;
-	}
+    public cPoint(cUnit x, cUnit y) {
+        this.x = x;
+        this.y = y;
+    }
 
-	public cPoint subHeight( cUnit h ) {
-		cPoint temp = new cPoint( getX() ,
-								  getY().sub( h ) );
-		
-		return temp;
-	}
+    public void setLocation(cUnit x, cUnit y) {
+        this.x = x;
+        this.y = y;
+    }
 
-	public cPoint addHeight( cUnit h ) {
-		cPoint temp = new cPoint( getX() ,
-								  getY().add( h ) );
-		
-		return temp;
-	}
-	
-	
-	public Object clone() {
-		cPoint clone = new cPoint(getX(), getY());
-		
-		return clone;	
-	}
+    public void setX(cUnit x) {
+        this.x = x;
+    }
+
+    public void setY(cUnit y) {
+        this.y = y;
+    }
+
+    public cUnit getX() {
+        return x;
+    }
+
+    public cUnit getY() {
+        return y;
+    }
+
+    public Point2D.Double getPoint2D() {
+        Point2D.Double temp = new Point2D.Double(x.getPoints(), y.getPoints());
+
+        return temp;
+    }
+
+    public Point getPoint() {
+        Point temp = new Point((int) x.getPoints(), (int) y.getPoints());
+
+        return temp;
+    }
+
+    public cPoint add(cPoint p) {
+        cPoint temp = new cPoint(p.getX().add(getX()), p.getY().add(getY()));
+
+        return temp;
+    }
+
+    public cPoint subHeight(cUnit h) {
+        cPoint temp = new cPoint(getX(), getY().sub(h));
+
+        return temp;
+    }
+
+    public cPoint addHeight(cUnit h) {
+        cPoint temp = new cPoint(getX(), getY().add(h));
+
+        return temp;
+    }
+
+    public Object clone() {
+        cPoint clone = new cPoint(getX(), getY());
+
+        return clone;
+    }
 }

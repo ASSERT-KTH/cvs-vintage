@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
+import org.columba.core.config.DefaultXmlConfig;
+
 import java.io.File;
 
-import org.columba.core.config.DefaultXmlConfig;
 
 /**
  * @author freddy
@@ -28,9 +29,7 @@ import org.columba.core.config.DefaultXmlConfig;
  * Window>Preferences>Java>Code Generation.
  */
 public class AccountTemplateXmlConfig extends DefaultXmlConfig {
-
-	public AccountTemplateXmlConfig(File file) {
-		super(file);
-	}
-
+    public AccountTemplateXmlConfig(File file) {
+        super(file);
+    }
 }

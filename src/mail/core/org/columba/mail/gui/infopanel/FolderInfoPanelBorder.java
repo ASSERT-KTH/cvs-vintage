@@ -13,8 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
-package org.columba.mail.gui.infopanel;		    
+package org.columba.mail.gui.infopanel;
 
 import java.awt.Component;
 import java.awt.Graphics;
@@ -23,25 +22,22 @@ import java.awt.Graphics2D;
 import javax.swing.border.BevelBorder;
 
 
-public class FolderInfoPanelBorder extends BevelBorder
-{
+public class FolderInfoPanelBorder extends BevelBorder {
+    public FolderInfoPanelBorder() {
+        super(0);
+    }
 
-	public FolderInfoPanelBorder()
-	{
-	    super(0);
+    public void paintBorder(Component c, Graphics g, int x, int y, int width,
+        int height) {
+        Graphics2D g2 = (Graphics2D) g;
 
-	}
-	
-	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
-	{
-            Graphics2D g2 = (Graphics2D) g;
-            
-            g2.setColor( getHighlightOuterColor(c) );
-            g2.drawLine(0,0,c.getWidth()-1, 0 );
-            g2.drawLine(0,0,0,c.getHeight()-1 );
-            
-            g2.setColor( getShadowOuterColor(c) );
-            g2.drawLine( 0,c.getHeight()-1, c.getWidth()-1, c.getHeight()-1 );
-              //g2.drawLine( c.getWidth()-1,1,c.getWidth()-1, c.getHeight()-1 );
-	}
+        g2.setColor(getHighlightOuterColor(c));
+        g2.drawLine(0, 0, c.getWidth() - 1, 0);
+        g2.drawLine(0, 0, 0, c.getHeight() - 1);
+
+        g2.setColor(getShadowOuterColor(c));
+        g2.drawLine(0, c.getHeight() - 1, c.getWidth() - 1, c.getHeight() - 1);
+
+        //g2.drawLine( c.getWidth()-1,1,c.getWidth()-1, c.getHeight()-1 );
+    }
 }

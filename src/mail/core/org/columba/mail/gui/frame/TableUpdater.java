@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.frame;
 
+import org.columba.mail.gui.table.model.TableModelChangedEvent;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.gui.table.model.TableModelChangedEvent;
 
 /**
  * Sends update event to {@link TableController}.
@@ -28,45 +29,36 @@ import org.columba.mail.gui.table.model.TableModelChangedEvent;
  * <p>
  * All commands use this static object to notify that the table model
  * has changed.
- * 
+ *
  *
  * @author fdietz
  */
 public class TableUpdater {
+    /**
+     * Listeners list
+     */
+    protected static List list = new Vector();
 
-	/**
-	 * Listeners list
-	 */
-	protected static List list = new Vector();
+    /**
+     * Notify all tables that the table model has changed.
+     *
+     * @param ev                        event
+     * @throws Exception
+     */
+    public static void tableChanged(TableModelChangedEvent ev)
+        throws Exception {
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            AbstractMailFrameController frame = (AbstractMailFrameController) it.next();
+            ((ThreePaneMailFrameController) frame).tableController.tableChanged(ev);
+        }
+    }
 
-	/**
-	 * Notify all tables that the table model has changed.
-	 * 
-	 * @param ev			event  
-	 * @throws Exception
-	 */
-	public static void tableChanged(TableModelChangedEvent ev)
-		throws Exception {
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			AbstractMailFrameController frame =
-				(AbstractMailFrameController) it.next();
-			(
-				(
-					ThreePaneMailFrameController) frame)
-						.tableController
-						.tableChanged(
-				ev);
-		}
-
-	}
-
-	/**
-	 * Add listener.
-	 * 
-	 * @param frameMediator		frame controller with table component
-	 */
-	public static void add(TableViewOwner frameController) {
-		list.add(frameController);
-	}
-
+    /**
+     * Add listener.
+     *
+     * @param frameMediator                frame controller with table component
+     */
+    public static void add(TableViewOwner frameController) {
+        list.add(frameController);
+    }
 }

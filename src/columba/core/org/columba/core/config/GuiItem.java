@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import org.columba.core.xml.XmlElement;
+
 import java.awt.Font;
 
-import org.columba.core.xml.XmlElement;
 
 /**
  * @author freddy
@@ -28,22 +29,21 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation.
  */
 public class GuiItem extends DefaultItem {
+    public GuiItem(XmlElement root) {
+        super(root);
+    }
 
-	public GuiItem(XmlElement root) {
-		super(root);
-	}
+    public Font getMainFont() {
+        String name = get("mainfont", "name");
+        int size = getInteger("mainfont", "size");
 
-	public Font getMainFont() {
-		String name = get("mainfont", "name");
-		int size = getInteger("mainfont", "size");
+        return new Font(name, Font.PLAIN, size);
+    }
 
-		return new Font(name, Font.PLAIN, size);
-	}
+    public Font getTextFont() {
+        String name = get("textfont", "name");
+        int size = getInteger("textfont", "size");
 
-	public Font getTextFont() {
-		String name = get("textfont", "name");
-		int size = getInteger("textfont", "size");
-
-		return new Font(name, Font.PLAIN, size);
-	}
+        return new Font(name, Font.PLAIN, size);
+    }
 }

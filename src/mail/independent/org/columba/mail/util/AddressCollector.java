@@ -13,34 +13,31 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.util;
-
-import java.util.Hashtable;
 
 import org.columba.addressbook.folder.HeaderItem;
 
-public class AddressCollector {
+import java.util.Hashtable;
 
+
+public class AddressCollector {
     static private Hashtable _adds = new Hashtable();
 
     static public void addAddress(String add, HeaderItem item) {
-    	if ( add != null ) 
-	_adds.put(add, item);
+        if (add != null) {
+            _adds.put(add, item);
+        }
     }
 
     static public Object[] getAddresses() {
-	return _adds.keySet().toArray();
-    }
-    
-    static public HeaderItem getHeaderItem( String add )
-    {
-    	return (HeaderItem) _adds.get(add);
-    }
-    
-    static public void clear()
-    {
-    	_adds.clear();
+        return _adds.keySet().toArray();
     }
 
+    static public HeaderItem getHeaderItem(String add) {
+        return (HeaderItem) _adds.get(add);
+    }
+
+    static public void clear() {
+        _adds.clear();
+    }
 }

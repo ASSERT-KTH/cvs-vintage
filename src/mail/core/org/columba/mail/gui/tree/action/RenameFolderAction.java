@@ -13,18 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
@@ -35,60 +30,57 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * Action used to popup a folder renaming dialog to the user.
- *  
+ *
  * @author Frederik
  */
-public class RenameFolderAction
-	extends FrameAction
-	implements SelectionListener {
+public class RenameFolderAction extends FrameAction implements SelectionListener {
+    public RenameFolderAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_renamefolder"));
 
-	public RenameFolderAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_renamefolder"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_renamefolder").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_folder_renamefolder")
-				.replaceAll("&", ""));
+        // shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
+        setEnabled(false);
 
-		setEnabled(false);
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+    }
 
-		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-	}
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = (FolderCommandReference[]) ((AbstractMailFrameController) frameMediator).getTreeSelection();
 
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			(FolderCommandReference[])
-				((AbstractMailFrameController) frameMediator)
-				.getTreeSelection();
+        new FolderOptionsDialog((Folder) r[0].getFolder(), true);
+    }
 
-		new FolderOptionsDialog((Folder) r[0].getFolder(), true);
-	}
+    public void selectionChanged(SelectionChangedEvent evt) {
+        if (((TreeSelectionChangedEvent) evt).getSelected().length > 0) {
+            FolderTreeNode folder = ((TreeSelectionChangedEvent) evt).getSelected()[0];
 
-	public void selectionChanged(SelectionChangedEvent evt) {
-		if (((TreeSelectionChangedEvent) evt).getSelected().length > 0) {
-			FolderTreeNode folder =
-				((TreeSelectionChangedEvent) evt).getSelected()[0];
+            if ((folder != null) && folder instanceof Folder) {
+                FolderItem item = folder.getFolderItem();
 
-			if (folder != null && folder instanceof Folder) {
-				FolderItem item = folder.getFolderItem();
-				if (item.get("property", "accessrights").equals("user"))
-					setEnabled(true);
-				else
-					setEnabled(false);
-			}
-		} else
-			setEnabled(false);
-	}
+                if (item.get("property", "accessrights").equals("user")) {
+                    setEnabled(true);
+                } else {
+                    setEnabled(false);
+                }
+            }
+        } else {
+            setEnabled(false);
+        }
+    }
 }

@@ -13,15 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -30,6 +22,7 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.command.ForwardCommand;
@@ -39,6 +32,15 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * Forward Message As Attachment or Inline.
  * <p>
@@ -46,97 +48,81 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * @author fdietz
  */
-public class ForwardAction
-	extends FrameAction
-	implements SelectionListener, Observer {
+public class ForwardAction extends FrameAction implements SelectionListener,
+    Observer {
+    private XmlElement forward;
+    private String forwardStyle;
 
-	private XmlElement forward;
-	private String forwardStyle;
+    public ForwardAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_forward"));
 
-	public ForwardAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_forward_tooltip").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_message_forward_tooltip")
-				.replaceAll("&", ""));
+        // icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("forward_small.png"));
 
-		// icon for menu
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("forward_small.png"));
+        // icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("forward.png"));
 
-		// icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("forward.png"));
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+        // toolbar text is usually a bit shorter
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_forward_toolbar"));
+        setEnabled(false);
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
 
-		// toolbar text is usually a bit shorter
-		putValue(
-			TOOLBAR_NAME,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_forward_toolbar"));
-		setEnabled(false);
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
+        XmlElement composerOptions = MailConfig.getComposerOptionsConfig()
+                                               .getRoot().getElement("/options");
 
-		XmlElement composerOptions =
-			MailConfig.getComposerOptionsConfig().getRoot().getElement(
-				"/options");
+        forward = composerOptions.getElement("forward");
 
-		forward = composerOptions.getElement("forward");
-		if (forward == null) {
-			forward = composerOptions.addSubElement("forward");
-		}
+        if (forward == null) {
+            forward = composerOptions.addSubElement("forward");
+        }
 
-		// listen for configuration changes
-		forward.addObserver(this);
+        // listen for configuration changes
+        forward.addObserver(this);
 
-		forwardStyle = forward.getAttribute("style", "attachment");
-	}
+        forwardStyle = forward.getAttribute("style", "attachment");
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-				.getTableSelection();
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
-		if (forwardStyle.equals("attachment"))
-			MainInterface.processor.addOp(new ForwardCommand(r));
-		else
-			MainInterface.processor.addOp(new ForwardInlineCommand(r));
+        if (forwardStyle.equals("attachment")) {
+            MainInterface.processor.addOp(new ForwardCommand(r));
+        } else {
+            MainInterface.processor.addOp(new ForwardInlineCommand(r));
+        }
+    }
 
-	}
+    /* (non-Javadoc)
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 
-	/* (non-Javadoc)
-	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	     */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
-
-	/**
-	 * Gets fired if configuration changes
-	 * 
-	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		forwardStyle = forward.getAttribute("style", "attachment");
-	}
+    /**
+     * Gets fired if configuration changes
+     *
+     * @see org.columba.mail.gui.config.general.MailOptionsDialog
+     *
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+        forwardStyle = forward.getAttribute("style", "attachment");
+    }
 }

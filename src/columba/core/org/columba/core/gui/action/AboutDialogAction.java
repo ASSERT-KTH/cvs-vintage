@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -24,25 +21,27 @@ import org.columba.core.gui.util.AboutDialog;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * Open About Dialog.
  *
  * @author fdietz
  */
 public class AboutDialogAction extends FrameAction {
+    public AboutDialogAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            GlobalResourceLoader.getString(null, null, "menu_help_about"));
 
-	public AboutDialogAction(FrameMediator frameMediator) {
- 		super(frameMediator, GlobalResourceLoader.getString(
- 			null, null, "menu_help_about"));
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_about-16.png"));
+    }
 
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_about-16.png"));
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AboutDialog dialog = new AboutDialog();
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        AboutDialog dialog = new AboutDialog();
+    }
 }

@@ -11,8 +11,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.mail.gui.config.accountlist;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.Component;
 
@@ -22,9 +25,6 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -35,61 +35,56 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class NameRenderer extends JLabel implements TableCellRenderer {
-	 Border unselectedBorder = null;
+    Border unselectedBorder = null;
     Border selectedBorder = null;
     boolean isBordered = true;
-    
-    public NameRenderer()
-    {
+
+    public NameRenderer() {
         super();
         this.isBordered = true;
         setOpaque(true); //MUST do this for background to show up.
+
         //setBorder( BorderFactory.createEmptyBorder(0,1,0,0) );
     }
-    
-    public Component getTableCellRendererComponent(
-        JTable table, Object value, 
-        boolean isSelected, boolean hasFocus,
-        int row, int column)
-    {
-        if (isBordered)
-        {
-            if (isSelected)
-            {
-                if (selectedBorder == null)
-                {
-                    selectedBorder = BorderFactory.createMatteBorder(2,5,2,5,table.getSelectionBackground() );
+
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
                 }
+
                 setBorder(selectedBorder);
-                setBackground( table.getSelectionBackground() );
-                setForeground( table.getSelectionForeground() );
-            } else
-            {
-                if (unselectedBorder == null)
-                {
-                    unselectedBorder = BorderFactory.createMatteBorder(2,5,2,5,
-                                                                       table.getBackground() );
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
                 }
-                setBackground( table.getBackground() );
+
+                setBackground(table.getBackground());
                 setBorder(unselectedBorder);
-                setForeground( table.getForeground() );
+                setForeground(table.getForeground());
             }
         }
-        
-        StringBuffer buf = new StringBuffer();
-        
 
-		AccountItem item = (AccountItem) value;
-		
-		buf.append( item.getName() );
-		
-		if (MailConfig.getAccountList().getDefaultAccountUid()
-				== item.getUid()) {
-			
-				buf.append(" ("+MailResourceLoader.getString("dialog","account","standard")+")" );	
-			} 
-       setText( buf.toString() );
-        
+        StringBuffer buf = new StringBuffer();
+
+        AccountItem item = (AccountItem) value;
+
+        buf.append(item.getName());
+
+        if (MailConfig.getAccountList().getDefaultAccountUid() == item.getUid()) {
+            buf.append(" (" +
+                MailResourceLoader.getString("dialog", "account", "standard") +
+                ")");
+        }
+
+        setText(buf.toString());
+
         return this;
     }
 }

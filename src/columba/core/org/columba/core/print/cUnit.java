@@ -15,118 +15,118 @@
 //All Rights Reserved.
 package org.columba.core.print;
 
-
 public abstract class cUnit implements Cloneable {
+    private double points = 0.0;
+    private double units = 0.0;
 
-	private double points = 0.0;
-	private double units = 0.0;
+    public cUnit() {
+    }
 
-	public cUnit() {}
+    public double getUnits() {
+        return units;
+    }
 
-	public double getUnits() {
-		return units;
-	}
+    public void setUnits(double units) {
+        this.units = units;
+    }
 
-	public void setUnits(double units) {
-		this.units = units;
-	}
+    public abstract void setPoints(double p);
 
-	public abstract void setPoints(double p);
+    public abstract double getPoints();
 
-	public abstract double getPoints();
+    public cUnit add(double units) {
+        cUnit temp = (cUnit) clone();
+        temp.setUnits(this.getUnits() + units);
 
-	public cUnit add(double units) {
-		cUnit temp = (cUnit) clone();
-		temp.setUnits(this.getUnits() + units);
+        return temp;
+    }
 
-		return temp;
-	}
+    public cUnit add(cUnit units) {
+        cUnit temp = (cUnit) clone();
+        temp.setPoints(this.getPoints() + units.getPoints());
 
-	public cUnit add(cUnit units) {
-		cUnit temp = (cUnit) clone();
-		temp.setPoints(this.getPoints() + units.getPoints());
+        return temp;
+    }
 
-		return temp;
-	}
+    public void addI(cUnit units) {
+        setPoints(getPoints() + units.getPoints());
+    }
 
-	public void addI(cUnit units) {
-		setPoints(getPoints() + units.getPoints());
-	}
+    public cUnit sub(double units) {
+        cUnit temp = (cUnit) clone();
+        temp.setUnits(this.getUnits() - units);
 
-	public cUnit sub(double units) {
-		cUnit temp = (cUnit) clone();
-		temp.setUnits(this.getUnits() - units);
+        return temp;
+    }
 
-		return temp;
-	}
+    public cUnit sub(cUnit units) {
+        cUnit temp = (cUnit) clone();
+        temp.setPoints(this.getPoints() - units.getPoints());
 
-	public cUnit sub(cUnit units) {
-		cUnit temp = (cUnit) clone();
-		temp.setPoints(this.getPoints() - units.getPoints());
+        return temp;
+    }
 
-		return temp;
-	}
+    public void subI(cUnit units) {
+        setPoints(getPoints() - units.getPoints());
+    }
 
-	public void subI(cUnit units) {
-		setPoints(getPoints() - units.getPoints());
-	}
+    public cUnit mul(double units) {
+        cUnit temp = (cUnit) clone();
+        temp.setUnits(this.getUnits() * units);
 
-	public cUnit mul(double units) {
-		cUnit temp = (cUnit) clone();
-		temp.setUnits(this.getUnits() * units);
+        return temp;
+    }
 
-		return temp;
-	}
+    public cUnit mul(cUnit units) {
+        cUnit temp = (cUnit) clone();
+        temp.setPoints(this.getPoints() * units.getPoints());
 
-	public cUnit mul(cUnit units) {
-		cUnit temp = (cUnit) clone();
-		temp.setPoints(this.getPoints() * units.getPoints());
+        return temp;
+    }
 
-		return temp;
-	}
+    public void mulI(cUnit units) {
+        setPoints(getPoints() * units.getPoints());
+    }
 
-	public void mulI(cUnit units) {
-		setPoints(getPoints() * units.getPoints());
-	}
+    public cUnit div(double units) {
+        cUnit temp = (cUnit) clone();
+        temp.setUnits(this.getUnits() / units);
 
-	public cUnit div(double units) {
-		cUnit temp = (cUnit) clone();
-		temp.setUnits(this.getUnits() / units);
+        return temp;
+    }
 
-		return temp;
-	}
+    public cUnit div(cUnit units) {
+        cUnit temp = (cUnit) clone();
+        temp.setPoints(this.getPoints() / units.getPoints());
 
-	public cUnit div(cUnit units) {
-		cUnit temp = (cUnit) clone();
-		temp.setPoints(this.getPoints() / units.getPoints());
+        return temp;
+    }
 
-		return temp;
-	}
+    public void divI(cUnit units) {
+        setPoints(getPoints() / units.getPoints());
+    }
 
-	public void divI(cUnit units) {
-		setPoints(getPoints() / units.getPoints());
-	}
+    public boolean equals(Object unit) {
+        if (unit instanceof cUnit) {
+            return (getPoints() == ((cUnit) unit).getPoints());
+        }
 
-	public boolean equals(Object unit) {
-		if (unit instanceof cUnit) {
-			return (getPoints() == ((cUnit) unit).getPoints());
-		}
-		return false;
-	}
+        return false;
+    }
 
-	public Object clone() {
-		cUnit clone;
-		
-		try {
-			clone = (cUnit) super.clone();
-		} catch (Exception e) {
-			System.err.println(e);
-			return null;
-		}
+    public Object clone() {
+        cUnit clone;
 
-		clone.setUnits(getPoints());
+        try {
+            clone = (cUnit) super.clone();
+        } catch (Exception e) {
+            System.err.println(e);
 
-		return clone;
-	}
+            return null;
+        }
 
+        clone.setUnits(getPoints());
+
+        return clone;
+    }
 }

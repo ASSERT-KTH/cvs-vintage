@@ -17,6 +17,7 @@ package org.columba.addressbook.plugin;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 
+
 /**
  * @author frd
  *
@@ -24,14 +25,13 @@ import org.columba.core.plugin.AbstractPluginHandler;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ImportPluginHandler extends AbstractPluginHandler {
-
-	/**
-	 * @param id
-	 * @param config
-	 */
-	public ImportPluginHandler() {
-		super("org.columba.addressbook.import", "org/columba/addressbook/plugin/import.xml");
-		parentNode = getConfig().getRoot().getElement("importlist");
-	}
-
+    /**
+     * @param id
+     * @param config
+     */
+    public ImportPluginHandler() {
+        super("org.columba.addressbook.import",
+            "org/columba/addressbook/plugin/import.xml");
+        parentNode = getConfig().getRoot().getElement("importlist");
+    }
 }

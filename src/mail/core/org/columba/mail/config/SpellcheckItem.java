@@ -18,16 +18,13 @@ package org.columba.mail.config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class SpellcheckItem extends DefaultItem {
-	
-
-	public SpellcheckItem(XmlElement root) {
-		super(root);
-
-	}
-
+    public SpellcheckItem(XmlElement root) {
+        super(root);
+    }
 }

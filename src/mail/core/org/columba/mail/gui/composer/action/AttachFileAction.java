@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Add attachment to message.
@@ -32,37 +33,39 @@ import org.columba.mail.util.MailResourceLoader;
  * @author fdietz
  */
 public class AttachFileAction extends FrameAction {
+    public AttachFileAction(ComposerController composerController) {
+        super(composerController,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_attachFile"));
 
-	public AttachFileAction(ComposerController composerController) {
-		super(composerController, MailResourceLoader.getString(
-			"menu", "composer", "menu_message_attachFile"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_message_attachFile_tooltip").replaceAll("&", ""));
-		
-		// toolbar text
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-			"menu", "composer", "menu_message_attachFile_toolbar"));
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_attach.png"));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_attach-16.png"));
-		
-                //shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_attachFile_tooltip").replaceAll("&", ""));
 
-	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		ComposerController composerController = ((ComposerController)getFrameMediator());
+        // toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_attachFile_toolbar"));
 
-		composerController.getAttachmentController().addFileAttachment();
-	}
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_attach.png"));
+
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_attach-16.png"));
+
+        //shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_A,
+                ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        ComposerController composerController = ((ComposerController) getFrameMediator());
+
+        composerController.getAttachmentController().addFileAttachment();
+    }
 }

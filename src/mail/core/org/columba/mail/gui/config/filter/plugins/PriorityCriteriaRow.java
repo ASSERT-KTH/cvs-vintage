@@ -15,58 +15,55 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-
 import org.columba.core.plugin.AbstractPluginHandler;
+
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+
+
 public class PriorityCriteriaRow extends DefaultCriteriaRow {
-	private JComboBox priorityComboBox;
-	private JComboBox matchComboBox;
-	private JTextField textField;
+    private JComboBox priorityComboBox;
+    private JComboBox matchComboBox;
+    private JTextField textField;
 
-	public PriorityCriteriaRow(
-		AbstractPluginHandler pluginHandler,
-		CriteriaList criteriaList,
-		FilterCriteria c) {
-		super(pluginHandler, criteriaList, c);
+    public PriorityCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
+        super(pluginHandler, criteriaList, c);
+    }
 
-	}
+    public void updateComponents(boolean b) {
+        super.updateComponents(b);
 
-	public void updateComponents(boolean b) {
-		super.updateComponents(b);
+        if (b) {
+            matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-		if (b) {
-			matchComboBox.setSelectedItem(criteria.getCriteriaString());
-			String priority = criteria.getPattern();
-			priorityComboBox.setSelectedItem(priority);
-		} else {
-			criteria.setCriteria((String) matchComboBox.getSelectedItem());
-			criteria.setPattern((String) priorityComboBox.getSelectedItem());
-		}
+            String priority = criteria.getPattern();
+            priorityComboBox.setSelectedItem(priority);
+        } else {
+            criteria.setCriteria((String) matchComboBox.getSelectedItem());
+            criteria.setPattern((String) priorityComboBox.getSelectedItem());
+        }
+    }
 
-	}
+    public void initComponents() {
+        super.initComponents();
 
-	public void initComponents() {
-		super.initComponents();
+        matchComboBox = new JComboBox();
+        matchComboBox.addItem("is");
+        matchComboBox.addItem("is not");
 
-		matchComboBox = new JComboBox();
-		matchComboBox.addItem("is");
-		matchComboBox.addItem("is not");
+        addComponent(matchComboBox);
 
-		addComponent(matchComboBox);
+        priorityComboBox = new JComboBox();
+        priorityComboBox.addItem("Highest");
+        priorityComboBox.addItem("High");
+        priorityComboBox.addItem("Normal");
+        priorityComboBox.addItem("Low");
+        priorityComboBox.addItem("Lowest");
 
-		priorityComboBox = new JComboBox();
-		priorityComboBox.addItem("Highest");
-		priorityComboBox.addItem("High");
-		priorityComboBox.addItem("Normal");
-		priorityComboBox.addItem("Low");
-		priorityComboBox.addItem("Lowest");
-
-		addComponent(priorityComboBox);
-
-	}
-
+        addComponent(priorityComboBox);
+    }
 }

@@ -13,113 +13,103 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
 
 import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 
+
 /**
  * This class contains utility methods to set text on buttons, checkboxes,
- * menus, menuitems and labels with mnemonics. The mnemonics is to be 
- * specified using the & character in the display text just before the 
+ * menus, menuitems and labels with mnemonics. The mnemonics is to be
+ * specified using the & character in the display text just before the
  * mnemonic character.
  * <br>
- * The first & character in the display text is used to define the 
+ * The first & character in the display text is used to define the
  * mnemonic. Please be aware of this when trying to set display texts
  * containing a & character.
- * 
+ *
  * @author Karl Peder Olesen (karlpeder)
  */
 public class MnemonicSetter {
+    /**
+     * Sets the text of a menu, menuitem, button or checkbox. If
+     * a & character is found, it is used to define the mnemonic.
+     * Else the text is set just as if the setText method of the component
+     * was called.
+     *
+     * @param        component        Menu, menuitem, button or checkbox to handle
+     * @param        text                Displaytext, possibly including & for mnemonic
+     *                                                 specification
+     */
+    public static void setTextWithMnemonic(AbstractButton component, String text) {
+        // search for mnemonic
+        int index = text.indexOf("&");
 
-	/**
-	 * Sets the text of a menu, menuitem, button or checkbox. If
-	 * a & character is found, it is used to define the mnemonic.
-	 * Else the text is set just as if the setText method of the component
-	 * was called. 
-	 * 
-	 * @param	component	Menu, menuitem, button or checkbox to handle
-	 * @param	text		Displaytext, possibly including & for mnemonic
-	 * 						specification
-	 */
-	public static void setTextWithMnemonic(
-			AbstractButton component, String text) {
+        if ((index != -1) && ((index + 1) < text.length())) {
+            // mnemonic found
+            // ...and not at the end of the string (which doesn't make sence) 
+            char mnemonic = text.charAt(index + 1);
 
-		// search for mnemonic
-		int index = text.indexOf("&");
-		if ((index != -1) && ((index + 1) < text.length())) {
-			// mnemonic found
-			// ...and not at the end of the string (which doesn't make sence) 
+            StringBuffer buf = new StringBuffer();
 
-			char mnemonic = text.charAt(index + 1);
+            // if mnemonic is first character of this string
+            if (index == 0) {
+                buf.append(text.substring(1));
+            } else {
+                buf.append(text.substring(0, index));
+                buf.append(text.substring(index + 1));
+            }
 
-			StringBuffer buf = new StringBuffer();
+            // set display text
+            component.setText(buf.toString());
 
-			// if mnemonic is first character of this string
-			if (index == 0)
-				buf.append(text.substring(1));
-			else {
-				buf.append(text.substring(0, index));
-				buf.append(text.substring(index + 1));
-			}
+            // set mnemonic
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(index);
+        } else {
+            // no mnemonic found - just set the text on the menu item
+            component.setText(text);
+        }
+    }
 
-			// set display text
-			component.setText(buf.toString());
+    /**
+     * Sets the text of a label including mnemonic.
+     * <br>
+     * Same functionality as @see setTextWithMnemonic
+     *
+     * @param        label                Label to handle
+     * @param        text                Displaytext, possibly including & for mnemonic
+     *                                                 specification
+     */
+    public static void setTextWithMnemonicOnLabel(JLabel label, String text) {
+        // search for mnemonic
+        int index = text.indexOf("&");
 
-			// set mnemonic
-			component.setMnemonic(mnemonic);
-			component.setDisplayedMnemonicIndex(index);
+        if ((index != -1) && ((index + 1) < text.length())) {
+            // mnemonic found
+            // ...and not at the end of the string (which doesn't make sence) 
+            char mnemonic = text.charAt(index + 1);
 
-		} else {
-			// no mnemonic found - just set the text on the menu item
-			component.setText(text);
-		}
-		
-	}
+            StringBuffer buf = new StringBuffer();
 
-	/**
-	 * Sets the text of a label including mnemonic.
-	 * <br>
-	 * Same functionality as @see setTextWithMnemonic
-	 * 
-	 * @param	label		Label to handle
-	 * @param	text		Displaytext, possibly including & for mnemonic
-	 * 						specification
-	 */
-	public static void setTextWithMnemonicOnLabel(
-			JLabel label, String text) {
+            // if mnemonic is first character of this string
+            if (index == 0) {
+                buf.append(text.substring(1));
+            } else {
+                buf.append(text.substring(0, index));
+                buf.append(text.substring(index + 1));
+            }
 
-		// search for mnemonic
-		int index = text.indexOf("&");
-		if ((index != -1) && ((index + 1) < text.length())) {
-			// mnemonic found
-			// ...and not at the end of the string (which doesn't make sence) 
+            // set display text
+            label.setText(buf.toString());
 
-			char mnemonic = text.charAt(index + 1);
-
-			StringBuffer buf = new StringBuffer();
-
-			// if mnemonic is first character of this string
-			if (index == 0)
-				buf.append(text.substring(1));
-			else {
-				buf.append(text.substring(0, index));
-				buf.append(text.substring(index + 1));
-			}
-
-			// set display text
-			label.setText(buf.toString());
-
-			// set mnemonic
-			label.setDisplayedMnemonic(mnemonic);
-			label.setDisplayedMnemonicIndex(index);
-
-		} else {
-			// no mnemonic found - just set the text on the menu item
-			label.setText(text);
-		}
-		
-	}
-
+            // set mnemonic
+            label.setDisplayedMnemonic(mnemonic);
+            label.setDisplayedMnemonicIndex(index);
+        } else {
+            // no mnemonic found - just set the text on the menu item
+            label.setText(text);
+        }
+    }
 }

@@ -1,7 +1,10 @@
 package org.columba.mail.message;
+
 import org.columba.mail.config.PGPItem;
+
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
+
 
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
@@ -18,24 +21,21 @@ import org.columba.ristretto.message.MimePart;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 public class PGPMimePart extends MimePart {
+    private PGPItem pgpItem;
 
-	private PGPItem pgpItem;
+    /**
+     * @param header
+     */
+    public PGPMimePart(MimeHeader header, PGPItem pgpItem) {
+        super(header);
+        this.pgpItem = pgpItem;
+    }
 
-	/**
-	 * @param header
-	 */
-	public PGPMimePart(MimeHeader header, PGPItem pgpItem ) {
-		super(header);
-		this.pgpItem = pgpItem;
-	}
-
-	/**
-	 * @return
-	 */
-	public PGPItem getPgpItem() {
-		return pgpItem;
-	}
-
+    /**
+     * @return
+     */
+    public PGPItem getPgpItem() {
+        return pgpItem;
+    }
 }

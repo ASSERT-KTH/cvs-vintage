@@ -13,188 +13,146 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
 
-public class TableModelFilteredView extends TableModelPlugin
-{
-	/*
-	private boolean newFlag = true;
-	private boolean oldFlag = true;
-	private boolean answeredFlag = false;
-	private boolean flaggedFlag = false;
-	private boolean expungedFlag = false;
-	private boolean attachmentFlag = false;
-	*/
 
-	private String patternItem = new String("displayname");
-	private String patternString = new String();
+public class TableModelFilteredView extends TableModelPlugin {
+    /*
+    private boolean newFlag = true;
+    private boolean oldFlag = true;
+    private boolean answeredFlag = false;
+    private boolean flaggedFlag = false;
+    private boolean expungedFlag = false;
+    private boolean attachmentFlag = false;
+    */
+    private String patternItem = new String("displayname");
+    private String patternString = new String();
+    private boolean dataFiltering = false;
+    private HeaderItemList listClone;
 
-	private boolean dataFiltering = false;
-	
-	private HeaderItemList listClone;
+    public TableModelFilteredView(AddressbookTableModel tableModel) {
+        super(tableModel);
+    }
 
-	public TableModelFilteredView(AddressbookTableModel tableModel)
-	{
-		super(tableModel);
-	}
+    /************** filter view *********************/
+    public void setDataFiltering(boolean b) throws Exception {
+        dataFiltering = b;
+        manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
 
-	/************** filter view *********************/
+        getTableModel().update();
+    }
 
-	public void setDataFiltering(boolean b) throws Exception
-	{
-		dataFiltering = b;
-		manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    public boolean getDataFiltering() {
+        return dataFiltering;
+    }
 
-		getTableModel().update();
-	}
+    public void setPatternItem(String s) {
+        patternItem = s;
+    }
 
-	public boolean getDataFiltering()
-	{
-		return dataFiltering;
-	}
+    public void setPatternString(String s) throws Exception {
+        patternString = s;
 
-	public void setPatternItem(String s)
-	{
-		patternItem = s;
-	}
+        //manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    }
 
-	public void setPatternString(String s) throws Exception
-	{
-		patternString = s;
+    public String getPatternItem() {
+        return patternItem;
+    }
 
-		//manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+    public String getPatternString() {
+        return patternString;
+    }
 
-	}
+    public boolean addItem(HeaderItem header) {
+        boolean result1 = false;
 
-	public String getPatternItem()
-	{
-		return patternItem;
-	}
+        if (!(getPatternString().equals(""))) {
+            Object o = header.get(getPatternItem());
 
-	public String getPatternString()
-	{
-		return patternString;
-	}
+            if (o != null) {
+                if (o instanceof String) {
+                    String item = (String) o;
 
-	public boolean addItem(HeaderItem header)
-	{
-		boolean result1 = false;
-		
+                    //System.out.println("add item?:"+item);
+                    String pattern = getPatternString().toLowerCase();
 
-		if (!(getPatternString().equals("")))
-		{
+                    if (item.indexOf(pattern) != -1) {
+                        result1 = true;
+                    } else {
+                        result1 = false;
+                    }
+                } else {
+                    result1 = false;
+                }
+            } else {
+                result1 = false;
+            }
+        } else {
+            result1 = true;
+        }
 
-			Object o = header.get(getPatternItem());
-			if (o != null)
-			{
-				if (o instanceof String)
-				{
-					String item = (String) o;
-					//System.out.println("add item?:"+item);
-					
-					
-					
-					String pattern = getPatternString().toLowerCase();
+        return result1;
+    }
 
-					if (item.indexOf(pattern) != -1)
-						result1 = true;
-					else
-						result1 = false;
-				}
-				else
-					result1 = false;
-			}
-			else
-				result1 = false;
+    public boolean manipulateModel(int mode) throws Exception {
+        switch (mode) {
+        case TableModelPlugin.STRUCTURE_CHANGE: {
+            HeaderItemList list = getTableModel().getHeaderList();
 
-		}
-		else
-			result1 = true;
+            if (list == null) {
+                return false;
+            }
 
-		return result1;
-	}
+            if (list.count() == 0) {
+                return false;
+            }
 
-	public boolean manipulateModel(int mode) throws Exception
-	{
-		switch (mode)
-		{
-			case TableModelPlugin.STRUCTURE_CHANGE :
-				{
+            if (getDataFiltering() == true) {
+                //System.out.println("starting filtering");
+                HeaderItem item = null;
 
-					HeaderItemList list = getTableModel().getHeaderList();
+                for (int i = 0; i < list.count(); i++) {
+                    item = list.get(i);
 
-					if (list == null)
-						return false;
-					if (list.count() == 0)
-						return false;
+                    boolean result = addItem(item);
 
-					if (getDataFiltering() == true)
-					{
-						//System.out.println("starting filtering");
+                    //ystem.out.println("item: "+i+" - result: "+result);
+                    if (!result) {
+                        //System.out.println("removing item:"+item);
+                        list.getVector().remove(item);
+                        i--;
 
-						HeaderItem item = null;
+                        /*
+                        Object uid = list.getUid(i);
+                        MessageNode childNode = new MessageNode( header, uid );
+                        rootNode.add( childNode );
+                        */
+                    }
+                }
 
-						for (int i = 0; i < list.count(); i++)
-						{
+                // System.out.println("finished filtering");
+                return true;
+            } else {
+                // do not filter anything
+                // System.out.println("do not filter anything");
+                return false;
+            }
+        }
 
-							item = list.get(i);
+        case TableModelPlugin.NODES_INSERTED: {
+            HeaderItem item = getTableModel().getSelectedItem();
 
-							boolean result = addItem(item);
+            boolean result = addItem(item);
 
-							//ystem.out.println("item: "+i+" - result: "+result);
+            return result;
+        }
+        }
 
-							if (!result)
-							{
-								//System.out.println("removing item:"+item);
-								
-								list.getVector().remove(item);
-								i--;
-								/*
-								Object uid = list.getUid(i);
-								MessageNode childNode = new MessageNode( header, uid );
-								rootNode.add( childNode );
-								*/
-							}
-
-						}
-
-						// System.out.println("finished filtering");
-
-						return true;
-
-					}
-					else
-					{
-						// do not filter anything
-
-						// System.out.println("do not filter anything");
-
-						return false;
-
-					}
-
-					
-				}
-
-			case TableModelPlugin.NODES_INSERTED :
-				{
-					HeaderItem item = getTableModel().getSelectedItem();
-					
-					boolean result = addItem( item );
-					
-					return result;
-					
-					
-
-				}
-		}
-
-		return false;
-	}
-
+        return false;
+    }
 }

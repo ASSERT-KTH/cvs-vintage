@@ -13,143 +13,119 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.focus;
 
 import javax.swing.JComponent;
 
+
 /**
- * 
+ *
  *
  * Default Implementation of FocusOwner
- * 
+ *
  * @author fdietz
  */
 public abstract class AbstractFocusOwner implements FocusOwner {
+    /**
+     * default constructor
+     *
+     */
+    public AbstractFocusOwner() {
+    }
 
-	/**
-	 * default constructor
-	 *
-	 */
-	public AbstractFocusOwner()
-	{
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-	 */
-	public boolean isCutActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+     */
+    public boolean isCutActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-	 */
-	public boolean isCopyActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+     */
+    public boolean isCopyActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-	 */
-	public boolean isPasteActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+     */
+    public boolean isPasteActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-	 */
-	public boolean isDeleteActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+     */
+    public boolean isDeleteActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-	 */
-	public boolean isSelectAllActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+     */
+    public boolean isSelectAllActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-	 */
-	public boolean isUndoActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+     */
+    public boolean isUndoActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-	 */
-	public boolean isRedoActionEnabled() {
-		
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+     */
+    public boolean isRedoActionEnabled() {
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#cut()
-	 */
-	public void cut() {
-		
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#cut()
+     */
+    public void cut() {
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#copy()
+     */
+    public void copy() {
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#copy()
-	 */
-	public void copy() {
-		
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#paste()
+     */
+    public void paste() {
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#delete()
+     */
+    public void delete() {
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#paste()
-	 */
-	public void paste() {
-		
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#undo()
+     */
+    public void undo() {
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#redo()
+     */
+    public void redo() {
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#delete()
-	 */
-	public void delete() {
-		
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+     */
+    public void selectAll() {
+    }
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#undo()
-	 */
-	public void undo() {
-		
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#redo()
-	 */
-	public void redo() {
-		
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-	 */
-	public void selectAll() {
-		
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-	 */
-	public abstract JComponent getComponent();
-
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+     */
+    public abstract JComponent getComponent();
 }

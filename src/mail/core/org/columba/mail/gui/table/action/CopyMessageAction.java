@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -24,6 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.CopyMessageCommand;
@@ -34,83 +32,70 @@ import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CopyMessageAction
-	extends FrameAction
-	implements SelectionListener {
+public class CopyMessageAction extends FrameAction implements SelectionListener {
+    public CopyMessageAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_copy"));
 
-	public CopyMessageAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_copy"));
+        // toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_copy_toolbar"));
 
-		// toolbar text
-		putValue(
-			TOOLBAR_NAME,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_message_copy_toolbar"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_copy_tooltip").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_message_copy_tooltip")
-				.replaceAll("&", ""));
+        // icons
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("copymessage_small.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
 
-		// icons
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("copymessage_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("copy-message.png"));
+        // disable toolbar text
+        setShowToolBarText(false);
 
-		// disable toolbar text
-		setShowToolBarText(false);
+        setEnabled(false);
 
-		setEnabled(false);
-		
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
-	}
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		SelectFolderDialog dialog =
-			MailInterface.treeModel.getSelectFolderDialog();
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
 
-		if (dialog.success()) {
+        if (dialog.success()) {
+            Folder destFolder = dialog.getSelectedFolder();
 
-			Folder destFolder = dialog.getSelectedFolder();
+            FolderCommandReference[] result = new FolderCommandReference[2];
+            FolderCommandReference[] r1 = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+            FolderCommandReference r2 = new FolderCommandReference(destFolder);
 
-			FolderCommandReference[] result = new FolderCommandReference[2];
-			FolderCommandReference[] r1 =
-				((AbstractMailFrameController) getFrameMediator())
-					.getTableSelection();
-			FolderCommandReference r2 = new FolderCommandReference(destFolder);
+            result[0] = r1[0];
+            result[1] = r2;
 
-			result[0] = r1[0];
-			result[1] = r2;
-			CopyMessageCommand c = new CopyMessageCommand(result);
+            CopyMessageCommand c = new CopyMessageCommand(result);
 
-			MainInterface.processor.addOp(c);
-		}
-	}
+            MainInterface.processor.addOp(c);
+        }
+    }
 
-	/* (non-Javadoc)
-	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	     */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+    /* (non-Javadoc)
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

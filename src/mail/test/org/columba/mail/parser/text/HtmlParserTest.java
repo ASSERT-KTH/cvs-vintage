@@ -13,31 +13,33 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.parser.text;
 
 import junit.framework.TestCase;
 
+
 public class HtmlParserTest extends TestCase {
-	
-	public void testSubstituteURL1() {
-		String input = "This page http://columba.sourceforge.net is net!";
-		
-		String result = HtmlParser.substituteURL(input);
-		assertTrue( result.equals("This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A> is net!"));
-	}
+    public void testSubstituteURL1() {
+        String input = "This page http://columba.sourceforge.net is net!";
 
-	public void testSubstituteURL3() {
-		String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
-		
-		String result = HtmlParser.substituteURL(input);
-		assertTrue( result.equals("This page \t(<A HREF=http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239>http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239</A>) is net!"));
-	}
+        String result = HtmlParser.substituteURL(input);
+        assertTrue(result.equals(
+                "This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A> is net!"));
+    }
 
-	public void testSubstituteURL4() {
-		String input = "This page http://columba.sourceforge.net. is net!";
-		
-		String result = HtmlParser.substituteURL(input);
-		assertTrue( result.equals("This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A>. is net!"));
-	}
+    public void testSubstituteURL3() {
+        String input = "This page \t(http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239) is net!";
+
+        String result = HtmlParser.substituteURL(input);
+        assertTrue(result.equals(
+                "This page \t(<A HREF=http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239>http://columba.sourceforge.net/phpBB2/viewtopic.php?p=239#239</A>) is net!"));
+    }
+
+    public void testSubstituteURL4() {
+        String input = "This page http://columba.sourceforge.net. is net!";
+
+        String result = HtmlParser.substituteURL(input);
+        assertTrue(result.equals(
+                "This page <A HREF=http://columba.sourceforge.net>http://columba.sourceforge.net</A>. is net!"));
+    }
 }

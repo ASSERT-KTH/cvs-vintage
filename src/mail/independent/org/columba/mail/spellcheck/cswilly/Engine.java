@@ -19,19 +19,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package org.columba.mail.spellcheck.cswilly;
 
 import java.util.List;
+
 
 /**
  * Models a spelling checking engine
  *<p>
  *
  */
-public
-        interface Engine
-{
+public interface Engine {
     /**
      * Spell check a list of words
      *<p>
@@ -42,8 +40,7 @@ public
      * @param words {@link String} with list of works to be spell checked.
      * @return List of {@link Result}
      */
-    public List checkLine(String line)
-            throws SpellException;
+    public List checkLine(String line) throws SpellException;
 
     // to be defined
     //public void addWord( String word );

@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
+import org.columba.mail.gui.tree.action.ViewHeaderListAction;
+
 import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
@@ -23,48 +25,37 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.TreePath;
 
-import org.columba.mail.gui.tree.action.ViewHeaderListAction;
 
-
-public class FolderTreeMouseListener extends MouseAdapter
-{
+public class FolderTreeMouseListener extends MouseAdapter {
     private TreeController treeController;
+    private ViewHeaderListAction viewHeaderListAction;
 
-	private ViewHeaderListAction viewHeaderListAction;
-
-    public FolderTreeMouseListener( TreeController t )
-    {
+    public FolderTreeMouseListener(TreeController t) {
         this.treeController = t;
-        viewHeaderListAction = new ViewHeaderListAction( t.getMailFrameController() );
+        viewHeaderListAction = new ViewHeaderListAction(t.getMailFrameController());
     }
 
-    protected JPopupMenu getPopupMenu()
-    {
+    protected JPopupMenu getPopupMenu() {
         return treeController.getPopupMenu();
     }
 
-	// Use PopUpTrigger in both mousePressed and mouseReleasedMethods due to
-	// different handling of *nix and windows
-
-    public void mousePressed(MouseEvent e)
-    {
+    // Use PopUpTrigger in both mousePressed and mouseReleasedMethods due to
+    // different handling of *nix and windows
+    public void mousePressed(MouseEvent e) {
         maybeShowPopup(e);
     }
 
-    public void mouseReleased(MouseEvent e)
-    {
+    public void mouseReleased(MouseEvent e) {
         maybeShowPopup(e);
     }
 
-    public void mouseClicked(MouseEvent event)
-    {
-    	//if ( SwingUtilities.isLeftMouseButton(event) ) treeController.selectFolder();
+    public void mouseClicked(MouseEvent event) {
+        //if ( SwingUtilities.isLeftMouseButton(event) ) treeController.selectFolder();
+        if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
+            viewHeaderListAction.actionPerformed(null);
+        }
 
-		if( event.getModifiers() == InputEvent.BUTTON1_MASK ) {
-			viewHeaderListAction.actionPerformed(null);
-		}
-
-    	/*
+        /*
         if ( e.getClickCount() == 1 )
         {
             treeController.selectFolder();
@@ -74,22 +65,19 @@ public class FolderTreeMouseListener extends MouseAdapter
             treeController.expandImapRootFolder();
         }
         */
-
     }
 
-    private void maybeShowPopup(MouseEvent e)
-    {
-         if ( e.isPopupTrigger() )
-         {
-             Point point = e.getPoint();
-             TreePath path = treeController.getView().getClosestPathForLocation( point.x, point.y );
-			
-             treeController.getView().clearSelection();
-             treeController.getView().addSelectionPath( path );
+    private void maybeShowPopup(MouseEvent e) {
+        if (e.isPopupTrigger()) {
+            Point point = e.getPoint();
+            TreePath path = treeController.getView().getClosestPathForLocation(point.x,
+                    point.y);
 
-             //treeController.getActionListener().changeActions();
+            treeController.getView().clearSelection();
+            treeController.getView().addSelectionPath(path);
 
-             getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-         }
+            //treeController.getActionListener().changeActions();
+            getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+        }
     }
 }

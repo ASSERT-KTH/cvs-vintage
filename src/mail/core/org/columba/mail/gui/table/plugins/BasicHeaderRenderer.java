@@ -23,38 +23,30 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+
 public class BasicHeaderRenderer extends DefaultTableCellRenderer {
+    public BasicHeaderRenderer() {
+        super();
 
-	public BasicHeaderRenderer() {
-		super();
+        setHorizontalAlignment(SwingConstants.LEFT);
+        setHorizontalTextPosition(SwingConstants.LEFT);
+    }
 
-		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
-		
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (table != null) {
+            JTableHeader header = table.getTableHeader();
 
-	}
+            if (header != null) {
+                setForeground(header.getForeground());
+                setBackground(header.getBackground());
+                setFont(header.getFont());
+            }
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        setText((value == null) ? "" : value.toString());
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
-		
-		if (table != null) {
-			JTableHeader header = table.getTableHeader();
-			if (header != null) {
-				setForeground(header.getForeground());
-				setBackground(header.getBackground());
-				setFont(header.getFont());
-			}
-		}
-		setText((value == null) ? "" : value.toString());
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-		
-
-		return this;
-	}
+        return this;
+    }
 }

@@ -13,267 +13,266 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.config.ConfigPath;
+import org.columba.core.io.DiskIO;
+
 import java.io.File;
+
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.gui.tree.AddressbookTreeNode;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.config.ConfigPath;
-import org.columba.core.io.DiskIO;
 
 public abstract class Folder extends AddressbookTreeNode {
+    protected List folderListeners;
 
+    /**
+     *    Description of the Field
+     *
+     *@since
+     */
+    protected List treeNodeListeners;
 
-	protected List folderListeners;
+    /**
+     *  unique identification number
+     */
+    private int uid;
 
-	/**
-	 *    Description of the Field
-	 *
-	 *@since
-	 */
-	protected List treeNodeListeners;
+    /**
+     * folder where we save everything
+     * name of folder is usually the UID-number
+     */
+    protected File directoryFile;
 
-	/**
-	 *  unique identification number
-	 */
-	private int uid;
+    /**
+     * FolderItem keeps information about the folder
+     * for example: name, accessrights, type
+     */
 
-	/**
-	 * folder where we save everything
-	 * name of folder is usually the UID-number
-	 */
-	protected File directoryFile;
+    //protected FolderItem folderItem;
+    protected AddressbookInterface addressbookInterface;
 
-	/**
-	 * FolderItem keeps information about the folder
-	 * for example: name, accessrights, type
-	 */
-	//protected FolderItem folderItem;
+    public Folder(FolderItem item) {
+        super(item);
 
-	protected AddressbookInterface addressbookInterface;
+        /*
+        this.folderItem = item;
+        this.uid = folderItem.getUid();
+        this.addressbookInterface = addressbookInterface;
 
-	public Folder(FolderItem item) {
-		super(item);
+        String dir =
+                ConfigPath.getConfigDirectory() + "/addressbook" + "/" + new Integer(uid).toString();
 
-		/*
-		this.folderItem = item;
-		this.uid = folderItem.getUid();
-		this.addressbookInterface = addressbookInterface;
-		
-		String dir =
-			ConfigPath.getConfigDirectory() + "/addressbook" + "/" + new Integer(uid).toString();
-		
-		directoryFile = new File(dir);
-		if (directoryFile.exists() == false)
-		{
-			directoryFile.mkdir();
-		}
-		*/
+        directoryFile = new File(dir);
+        if (directoryFile.exists() == false)
+        {
+                directoryFile.mkdir();
+        }
+        */
+        init();
 
-		init();
+        String dir = ConfigPath.getConfigDirectory() + "/addressbook/" +
+            getUid();
 
-		String dir =
-			ConfigPath.getConfigDirectory() + "/addressbook/" + getUid();
-		if (DiskIO.ensureDirectory(dir))
-			directoryFile = new File(dir);
-	}
+        if (DiskIO.ensureDirectory(dir)) {
+            directoryFile = new File(dir);
+        }
+    }
 
-	/*
-	public Folder(String name) {
-		super(name);
+    /*
+    public Folder(String name) {
+            super(name);
 
-		children = new Vector();
+            children = new Vector();
 
-		init();
+            init();
 
-		String dir = ConfigPath.getConfigDirectory() + "/addressbook/" + name;
-		if (DiskIO.ensureDirectory(dir))
-			directoryFile = new File(dir);
+            String dir = ConfigPath.getConfigDirectory() + "/addressbook/" + name;
+            if (DiskIO.ensureDirectory(dir))
+                    directoryFile = new File(dir);
 
-	}
-	*/
-	/**
-		 * Do some initialization work both constructors share
-		 *
-		 */
-	protected void init() {
+    }
+    */
 
-		//messageFolderInfo = new MessageFolderInfo();
+    /**
+             * Do some initialization work both constructors share
+             *
+             */
+    protected void init() {
+        //messageFolderInfo = new MessageFolderInfo();
+        //changed = false;
+        folderListeners = new Vector();
 
-		//changed = false;
+        treeNodeListeners = new Vector();
+    }
 
-		folderListeners = new Vector();
+    public File getDirectoryFile() {
+        return directoryFile;
+    }
 
-		treeNodeListeners = new Vector();
+    /*
+    public AddressbookTreeNode getRootFolder() {
+            AddressbookTreeNode folderTreeNode = (AddressbookTreeNode) getParent();
+            while (folderTreeNode != null) {
 
-	}
+                    if (folderTreeNode instanceof Root) {
 
-	public File getDirectoryFile() {
-		return directoryFile;
-	}
+                            return (Root) folderTreeNode;
+                    }
 
-	/*
-	public AddressbookTreeNode getRootFolder() {
-		AddressbookTreeNode folderTreeNode = (AddressbookTreeNode) getParent();
-		while (folderTreeNode != null) {
+                    folderTreeNode = (AddressbookTreeNode) folderTreeNode.getParent();
 
-			if (folderTreeNode instanceof Root) {
+            }
 
-				return (Root) folderTreeNode;
-			}
+            return null;
+    }
+    */
+    public void createChildren(WorkerStatusController worker) {
+    }
 
-			folderTreeNode = (AddressbookTreeNode) folderTreeNode.getParent();
+    /**
+     * return HeaderItemList
+     *
+     * List of HeaderItem-Objects is needed for the table
+     * and therefore only keeps table-relevant information
+     *
+     * to get *all* the data of a contact use the uidGet-method
+     */
+    public abstract HeaderItemList getHeaderItemList();
 
-		}
+    /**
+     * this method it ATM only needed for group-support
+     *  -> get the uid-list (the grouplist-members!) from the
+     *     grouplistcard-object
+     *
+     *  -> this method return a HeaderItemList for use in a JList-object, etc.
+     */
+    public abstract HeaderItemList getHeaderItemList(Object[] uids);
 
-		return null;
-	}
-	*/
+    /**
+     * add ContactCard to Folder
+     */
+    public abstract void add(DefaultCard item);
 
-	public void createChildren(WorkerStatusController worker) {
-	}
+    public abstract void modify(DefaultCard item, Object uid);
 
-	
+    //public abstract void add(GroupListCard item);
 
-	/**
-	 * return HeaderItemList
-	 * 
-	 * List of HeaderItem-Objects is needed for the table
-	 * and therefore only keeps table-relevant information
-	 * 
-	 * to get *all* the data of a contact use the uidGet-method
-	 */
-	public abstract HeaderItemList getHeaderItemList();
+    /**
+     * remove ContactCard/GroupList
+     */
+    public abstract void remove(Object uid);
 
-	/**
-	 * this method it ATM only needed for group-support
-	 *  -> get the uid-list (the grouplist-members!) from the
-	 *     grouplistcard-object
-	 * 
-	 *  -> this method return a HeaderItemList for use in a JList-object, etc.
-	 */
-	public abstract HeaderItemList getHeaderItemList(Object[] uids);
+    /**
+     * this is for address-completion
+     */
+    public abstract HeaderItemList searchPattern(String pattern);
 
-	/** 
-	 * add ContactCard to Folder
-	 */
-	public abstract void add(DefaultCard item);
+    /**
+     * return ContactCard containing every information
+     * we have,
+     * use this method for the EditContact-Dialog
+     */
+    public abstract DefaultCard get(Object uid);
 
-	public abstract void modify(DefaultCard item, Object uid);
+    public abstract boolean exists(String email);
 
-	//public abstract void add(GroupListCard item);
+    /**
+     * remove folder from parent
+     */
 
-	/**
-	 * remove ContactCard/GroupList
-	 */
-	public abstract void remove(Object uid);
+    /*
+    public void removeFolder() {
+            // remove treenode from xml-config-file
+            FolderItem item = getFolderItem();
+            AdapterNode rootNode = item.getRootNode();
+            rootNode.remove();
 
-	/**
-	 * this is for address-completion
-	 */
-	public abstract HeaderItemList searchPattern(String pattern);
+            // remove treenode from JTree
+            removeFromParent();
+    }
+    */
 
-	/**
-	 * return ContactCard containing every information 
-	 * we have,
-	 * use this method for the EditContact-Dialog
-	 */
-	public abstract DefaultCard get(Object uid);
+    /**
+     * save header-cache (HeaderItemList)
+     */
+    public abstract void save(WorkerStatusController worker)
+        throws Exception;
 
-	public abstract boolean exists(String email);
+    /**
+     * load header-cache (HeaderItemList)
+     */
+    public abstract void load(WorkerStatusController worker)
+        throws Exception;
 
-	/**
-	 * remove folder from parent
-	 */
-	/*
-	public void removeFolder() {
-		// remove treenode from xml-config-file
-		FolderItem item = getFolderItem();
-		AdapterNode rootNode = item.getRootNode();
-		rootNode.remove();
-	
-		// remove treenode from JTree
-		removeFromParent();
-	}
-	*/
+    /**
+             * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
+             */
+    protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
+        TreeNode[] retNodes;
 
-	/**
-	 * save header-cache (HeaderItemList)
-	 */
-	public abstract void save(WorkerStatusController worker) throws Exception;
+        if (aNode == null) {
+            if (depth == 0) {
+                return null;
+            } else {
+                retNodes = new TreeNode[depth];
+            }
+        } else {
+            depth++;
+            retNodes = getPathToRoot(aNode.getParent(), depth);
+            retNodes[retNodes.length - depth] = aNode;
+        }
 
-	/**
-	 * load header-cache (HeaderItemList)
-	 */
-	public abstract void load(WorkerStatusController worker) throws Exception;
+        return retNodes;
+    }
 
-	/**
-		 * @see javax.swing.tree.DefaultMutableTreeNode#getPathToRoot(TreeNode, int)
-		 */
-	protected TreeNode[] getPathToRoot(TreeNode aNode, int depth) {
-		TreeNode[] retNodes;
+    /**
+     * Method getTreePath.
+     * @return String
+     */
+    public String getTreePath() {
+        TreeNode[] treeNode = getPathToRoot(this, 0);
 
-		if (aNode == null) {
-			if (depth == 0)
-				return null;
-			else
-				retNodes = new TreeNode[depth];
-		} else {
-			depth++;
-			retNodes = getPathToRoot(aNode.getParent(), depth);
-			retNodes[retNodes.length - depth] = aNode;
-		}
-		return retNodes;
-	}
+        StringBuffer path = new StringBuffer();
 
-	/**
-	 * Method getTreePath.
-	 * @return String
-	 */
-	public String getTreePath() {
-		TreeNode[] treeNode = getPathToRoot(this, 0);
+        for (int i = 1; i < treeNode.length; i++) {
+            AddressbookTreeNode folder = (AddressbookTreeNode) treeNode[i];
+            path.append("/" + folder.getName());
+        }
 
-		StringBuffer path = new StringBuffer();
+        return path.toString();
+    }
 
-		for (int i = 1; i < treeNode.length; i++) {
-			AddressbookTreeNode folder = (AddressbookTreeNode) treeNode[i];
-			path.append("/" + folder.getName());
-		}
+    public boolean isParent(Folder folder) {
+        Folder parent = (Folder) folder.getParent();
 
-		return path.toString();
-	}
+        if (parent == null) {
+            return false;
+        }
 
-	public boolean isParent(Folder folder) {
+        //while ( parent.getUid() != 100 )
+        while (parent.getFolderItem() != null) {
+            if (parent.getUid() == getUid()) {
+                return true;
+            }
 
-		Folder parent = (Folder) folder.getParent();
-		if (parent == null)
-			return false;
+            parent = (Folder) parent.getParent();
+        }
 
-		//while ( parent.getUid() != 100 )
-		while (parent.getFolderItem() != null) {
+        return false;
+    }
 
-			if (parent.getUid() == getUid()) {
-
-				return true;
-			}
-
-			parent = (Folder) parent.getParent();
-		}
-
-		return false;
-	}
-
-	/*
-	public String toString() {
-		return getName();
-	}
-	*/
+    /*
+    public String toString() {
+            return getName();
+    }
+    */
 }

@@ -19,6 +19,7 @@ import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.headercache.CachedFolder;
 
+
 /**
  * @author freddy
  *
@@ -28,27 +29,26 @@ import org.columba.mail.folder.headercache.CachedFolder;
  * Window>Preferences>Java>Code Generation.
  */
 public class CachedMHFolder extends CachedFolder {
+    public CachedMHFolder(FolderItem item) {
+        super(item);
+    }
 
-	public CachedMHFolder(FolderItem item) {
-		super(item);
-	}
+    /**
+     * @param type
+     */
+    public CachedMHFolder(String name, String type) {
+        super(name, type);
 
-	public DataStorageInterface getDataStorageInstance() {
-		if (dataStorage == null)
-			dataStorage = new MHDataStorage(this);
+        FolderItem item = getFolderItem();
+        item.set("property", "accessrights", "user");
+        item.set("property", "subfolder", "true");
+    }
 
-		return dataStorage;
-	}
+    public DataStorageInterface getDataStorageInstance() {
+        if (dataStorage == null) {
+            dataStorage = new MHDataStorage(this);
+        }
 
-	/**
-	 * @param type
-	 */
-	public CachedMHFolder(String name, String type) {
-		super(name, type);
-		
-		FolderItem item = getFolderItem();
-		item.set("property", "accessrights", "user");
-		item.set("property", "subfolder", "true");		
-	}
-
+        return dataStorage;
+    }
 }

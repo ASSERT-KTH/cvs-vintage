@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.mail.gui.table.model.MessageNode;
+
 import java.awt.Component;
 import java.awt.Font;
 
@@ -22,59 +24,43 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
-import org.columba.mail.gui.table.model.MessageNode;
 
 public class SizeRenderer extends DefaultLabelRenderer {
+    private Font plainFont;
+    private Font boldFont;
 
-	
-	private Font plainFont, boldFont;
+    public SizeRenderer() {
+        super();
 
-	public SizeRenderer() {
-		super();
-		
+        setHorizontalAlignment(SwingConstants.RIGHT);
 
-		setHorizontalAlignment(SwingConstants.RIGHT);
+        //setOpaque(true); //MUST do this for background to show up.
+        boldFont = UIManager.getFont("Tree.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-		//setOpaque(true); //MUST do this for background to show up.
+        plainFont = UIManager.getFont("Tree.font");
+    }
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+    public void updateUI() {
+        super.updateUI();
 
-		plainFont = UIManager.getFont("Tree.font");
-	}
+        boldFont = UIManager.getFont("Tree.font");
+        boldFont = boldFont.deriveFont(Font.BOLD);
 
-	public void updateUI() {
-		super.updateUI();
+        plainFont = UIManager.getFont("Tree.font");
+    }
 
-		boldFont = UIManager.getFont("Tree.font");
-		boldFont = boldFont.deriveFont(Font.BOLD);
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value == null) {
+            setText("");
 
-		plainFont = UIManager.getFont("Tree.font");
-	}
+            return this;
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        setText(((MessageNode) value).getHeader().get("columba.size") + "KB");
 
-		
-
-		if (value == null) {
-			setText("");
-			return this;
-		}
-
-		setText( ((MessageNode)value).getHeader().get("columba.size")  + "KB");
-
-		return super.getTableCellRendererComponent(
-		table,
-		value,
-		isSelected,
-		hasFocus,
-		row,
-		column);
-	}
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

@@ -22,34 +22,30 @@ import java.awt.Graphics2D;
 
 import javax.swing.ImageIcon;
 
-public class DescendingIcon extends ImageIcon
-    {
-        public DescendingIcon()
-            {
-                super();
-		
-            }
-        public void paintIcon(Component c, Graphics g, int x, int y)
-            {
-                Graphics2D g2 = (Graphics2D) g;
 
-                    //int x=0;
-                    //int y = 0;
-                
-                int[] xp = new int[3];
-                int[] yp = new int[3];
-                xp[0]=x+6;
-                xp[1]=x+12;
-                xp[2]=x;
-                yp[0]=y - (c.getHeight()/4) ;
-                yp[1]=y + (c.getHeight()/4);
-                yp[2]=y + (c.getHeight()/4);
-                
-                g2.setColor( Color.white );
-                g2.drawLine(xp[0],yp[0],xp[1],yp[1]);
-                g2.drawLine(xp[1],yp[1],xp[2],yp[2]);
-                g2.setColor( Color.gray );
-                g2.drawLine(xp[2],yp[2],xp[0],yp[0]);
-                        
-            }
+public class DescendingIcon extends ImageIcon {
+    public DescendingIcon() {
+        super();
     }
+
+    public void paintIcon(Component c, Graphics g, int x, int y) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        //int x=0;
+        //int y = 0;
+        int[] xp = new int[3];
+        int[] yp = new int[3];
+        xp[0] = x + 6;
+        xp[1] = x + 12;
+        xp[2] = x;
+        yp[0] = y - (c.getHeight() / 4);
+        yp[1] = y + (c.getHeight() / 4);
+        yp[2] = y + (c.getHeight() / 4);
+
+        g2.setColor(Color.white);
+        g2.drawLine(xp[0], yp[0], xp[1], yp[1]);
+        g2.drawLine(xp[1], yp[1], xp[2], yp[2]);
+        g2.setColor(Color.gray);
+        g2.drawLine(xp[2], yp[2], xp[0], yp[0]);
+    }
+}

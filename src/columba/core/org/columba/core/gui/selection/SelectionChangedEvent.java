@@ -13,13 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.selection;
 
 
-
 /**
- * Selection changed events implementations should add 
+ * Selection changed events implementations should add
  * their selection component specific attributes here.
  * <p>
  * For example: TreePath for a JTree
@@ -27,5 +25,4 @@ package org.columba.core.gui.selection;
  * @author fdietz, tstich
  */
 public class SelectionChangedEvent {
-
 }

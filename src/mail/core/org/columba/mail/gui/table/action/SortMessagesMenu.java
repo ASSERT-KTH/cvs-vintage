@@ -15,11 +15,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
+
+import org.columba.core.action.IMenu;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.frame.TableViewOwner;
+import org.columba.mail.gui.table.SortingStateObservable;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Enumeration;
 import java.util.Observable;
 import java.util.Observer;
@@ -27,141 +35,117 @@ import java.util.Observer;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButtonMenuItem;
 
-import org.columba.core.action.IMenu;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.table.SortingStateObservable;
-import org.columba.mail.util.MailResourceLoader;
 
-public class SortMessagesMenu
-	extends IMenu
-	implements ActionListener, Observer {
+public class SortMessagesMenu extends IMenu implements ActionListener, Observer {
+    private ButtonGroup columnGroup;
+    private ButtonGroup orderGroup;
+    private JRadioButtonMenuItem ascendingMenuItem;
+    private JRadioButtonMenuItem descendingMenuItem;
+    private Observable observable;
 
-	private ButtonGroup columnGroup;
-	private ButtonGroup orderGroup;
+    public SortMessagesMenu(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe", "menu_view_sort"));
 
-	private JRadioButtonMenuItem ascendingMenuItem;
-	private JRadioButtonMenuItem descendingMenuItem;
+        setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
 
-	private Observable observable;
+        // register as Observer
+        TableViewOwner table = (TableViewOwner) getController();
+        observable = table.getTableController().getTableModelSorter()
+                          .getSortingStateObservable();
+        observable.addObserver(this);
 
-	public SortMessagesMenu(FrameMediator controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_sort"));
+        createSubMenu();
+    }
 
-		setIcon(ImageLoader.getSmallImageIcon("stock_sort-ascending-16.png"));
+    protected void createSubMenu() {
+        TableViewOwner table = (TableViewOwner) getController();
 
-		// register as Observer
-		TableViewOwner table = (TableViewOwner) getController();
-		observable =
-			table
-				.getTableController()
-				.getTableModelSorter()
-				.getSortingStateObservable();
-		observable.addObserver(this);
+        Object[] items = table.getTableController().getTableModelSorter()
+                              .getColumns();
 
-		createSubMenu();
-	}
+        columnGroup = new ButtonGroup();
 
-	protected void createSubMenu() {
+        JRadioButtonMenuItem headerMenuItem;
 
-		TableViewOwner table = (TableViewOwner) getController();
+        for (int i = 0; i < items.length; i++) {
+            String item = (String) items[i];
 
-		Object[] items =
-			table.getTableController().getTableModelSorter().getColumns();
+            // all headerfields are lowercase in property file
+            String i18n = MailResourceLoader.getString("header",
+                    item.toLowerCase());
 
-		columnGroup = new ButtonGroup();
-		JRadioButtonMenuItem headerMenuItem;
+            headerMenuItem = new JRadioButtonMenuItem(i18n);
+            headerMenuItem.setActionCommand(item);
+            headerMenuItem.addActionListener(this);
+            columnGroup.add(headerMenuItem);
+            add(headerMenuItem);
+        }
 
-		for (int i = 0; i < items.length; i++) {
-			String item = (String) items[i];
+        addSeparator();
 
-			// all headerfields are lowercase in property file
-			String i18n =
-				MailResourceLoader.getString("header", item.toLowerCase());
+        orderGroup = new ButtonGroup();
+        ascendingMenuItem = new JRadioButtonMenuItem("Ascending");
+        ascendingMenuItem.setActionCommand("Ascending");
+        ascendingMenuItem.addActionListener(this);
+        orderGroup.add(ascendingMenuItem);
+        add(ascendingMenuItem);
+        descendingMenuItem = new JRadioButtonMenuItem("Descending");
+        descendingMenuItem.setActionCommand("Descending");
+        descendingMenuItem.addActionListener(this);
+        orderGroup.add(descendingMenuItem);
+        add(descendingMenuItem);
 
-			headerMenuItem = new JRadioButtonMenuItem(i18n);
-			headerMenuItem.setActionCommand(item);
-			headerMenuItem.addActionListener(this);
-			columnGroup.add(headerMenuItem);
-			add(headerMenuItem);
-		}
+        update(observable, null);
+    }
 
-		addSeparator();
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		orderGroup = new ButtonGroup();
-		ascendingMenuItem = new JRadioButtonMenuItem("Ascending");
-		ascendingMenuItem.setActionCommand("Ascending");
-		ascendingMenuItem.addActionListener(this);
-		orderGroup.add(ascendingMenuItem);
-		add(ascendingMenuItem);
-		descendingMenuItem = new JRadioButtonMenuItem("Descending");
-		descendingMenuItem.setActionCommand("Descending");
-		descendingMenuItem.addActionListener(this);
-		orderGroup.add(descendingMenuItem);
-		add(descendingMenuItem);
+        TableViewOwner table = (TableViewOwner) getController();
 
-		update(observable, null);
+        if (action.equals("Ascending")) {
+            table.getTableController().getTableModelSorter().setSortingOrder(true);
+            table.getTableController().getUpdateManager().update();
+        } else if (action.equals("Descending")) {
+            table.getTableController().getTableModelSorter().setSortingOrder(false);
+            table.getTableController().getUpdateManager().update();
+        } else {
+            table.getTableController().getTableModelSorter().setSortingColumn(action);
+            table.getTableController().getUpdateManager().update();
+        }
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable observable, Object object) {
+        String column = ((SortingStateObservable) observable).getColumn();
+        boolean ascending = ((SortingStateObservable) observable).isOrder();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+        Enumeration enum = columnGroup.getElements();
 
-		TableViewOwner table = (TableViewOwner) getController();
+        while (enum.hasMoreElements()) {
+            JRadioButtonMenuItem item = (JRadioButtonMenuItem) enum.nextElement();
 
-		if (action.equals("Ascending")) {
-			table.getTableController().getTableModelSorter().setSortingOrder(
-				true);
-			table.getTableController().getUpdateManager().update();
-		} else if (action.equals("Descending")) {
-			table.getTableController().getTableModelSorter().setSortingOrder(
-				false);
-			table.getTableController().getUpdateManager().update();
-		} else {
+            if (item.getActionCommand().equals(column)) {
+                item.setSelected(true);
 
-			table.getTableController().getTableModelSorter().setSortingColumn(
-				action);
-			table.getTableController().getUpdateManager().update();
-		}
-	}
+                break;
+            }
+        }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable observable, Object object) {
-		String column = ((SortingStateObservable) observable).getColumn();
-		boolean ascending = ((SortingStateObservable) observable).isOrder();
-
-		Enumeration enum = columnGroup.getElements();
-		while (enum.hasMoreElements()) {
-			JRadioButtonMenuItem item =
-				(JRadioButtonMenuItem) enum.nextElement();
-			if (item.getActionCommand().equals(column)) {
-				item.setSelected(true);
-				break;
-			}
-
-		}
-
-		if (ascending) {
-			ascendingMenuItem.setSelected(true);
-		} else {
-			descendingMenuItem.setSelected(true);
-		}
-
-	}
-
+        if (ascending) {
+            ascendingMenuItem.setSelected(true);
+        } else {
+            descendingMenuItem.setSelected(true);
+        }
+    }
 }

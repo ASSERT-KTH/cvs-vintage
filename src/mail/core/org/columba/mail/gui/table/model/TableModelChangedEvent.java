@@ -18,6 +18,7 @@ package org.columba.mail.gui.table.model;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.HeaderList;
 
+
 /**
  * @author freddy
  *
@@ -27,99 +28,87 @@ import org.columba.mail.message.HeaderList;
  * Window>Preferences>Java>Code Generation.
  */
 public class TableModelChangedEvent {
+    public final static int UPDATE = 0;
+    public final static int SET = 1;
+    public final static int REMOVE = 2;
+    public final static int MARK = 3;
+    protected FolderTreeNode srcFolder;
+    protected Object[] uids;
+    protected int markVariant;
+    protected int eventType;
+    protected HeaderList headerList;
 
-	public final static int UPDATE = 0;
-	public final static int SET = 1;
-	public final static int REMOVE = 2;
-	public final static int MARK = 3;
+    /**
+     * Constructor for TableChangedEvent.
+     */
+    public TableModelChangedEvent(int eventType) {
+        this.eventType = eventType;
+    }
 
-	protected FolderTreeNode srcFolder;
+    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder) {
+        this.eventType = eventType;
+        this.srcFolder = srcFolder;
+    }
 
-	protected Object[] uids;
-	protected int markVariant;
-	protected int eventType;
-	protected HeaderList headerList;
+    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+        Object[] uids) {
+        this.eventType = eventType;
+        this.srcFolder = srcFolder;
+        this.uids = uids;
+    }
 
-	/**
-	 * Constructor for TableChangedEvent.
-	 */
-	public TableModelChangedEvent(int eventType) {
-		this.eventType = eventType;
-	}
+    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+        HeaderList headerList) {
+        this.eventType = eventType;
+        this.srcFolder = srcFolder;
+        this.headerList = headerList;
+    }
 
-	public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder) {
-		this.eventType = eventType;
-		this.srcFolder = srcFolder;
+    public TableModelChangedEvent(int eventType, FolderTreeNode srcFolder,
+        Object[] uids, int markVariant) {
+        this.eventType = eventType;
+        this.srcFolder = srcFolder;
+        this.uids = uids;
+        this.markVariant = markVariant;
+    }
 
-	}
+    /**
+     * Returns the markVariant.
+     * @return int
+     */
+    public int getMarkVariant() {
+        return markVariant;
+    }
 
-	public TableModelChangedEvent(
-		int eventType,
-		FolderTreeNode srcFolder,
-		Object[] uids) {
-		this.eventType = eventType;
-		this.srcFolder = srcFolder;
-		this.uids = uids;
-	}
+    /**
+     * Returns the srcFolder.
+     * @return FolderTreeNode
+     */
+    public FolderTreeNode getSrcFolder() {
+        return srcFolder;
+    }
 
-	public TableModelChangedEvent(
-		int eventType,
-		FolderTreeNode srcFolder,
-		HeaderList headerList) {
-		this.eventType = eventType;
-		this.srcFolder = srcFolder;
-		this.headerList = headerList;
-	}
+    /**
+     * Returns the uids.
+     * @return Object[]
+     */
+    public Object[] getUids() {
+        return uids;
+    }
 
-	public TableModelChangedEvent(
-		int eventType,
-		FolderTreeNode srcFolder,
-		Object[] uids,
-		int markVariant) {
-		this.eventType = eventType;
-		this.srcFolder = srcFolder;
-		this.uids = uids;
-		this.markVariant = markVariant;
-	}
+    /**
+     * Returns the eventType.
+     * @return int
+     */
+    public int getEventType() {
+        return eventType;
+    }
 
-	/**
-	 * Returns the markVariant.
-	 * @return int
-	 */
-	public int getMarkVariant() {
-		return markVariant;
-	}
-
-	/**
-	 * Returns the srcFolder.
-	 * @return FolderTreeNode
-	 */
-	public FolderTreeNode getSrcFolder() {
-		return srcFolder;
-	}
-
-	/**
-	 * Returns the uids.
-	 * @return Object[]
-	 */
-	public Object[] getUids() {
-		return uids;
-	}
-
-	/**
-	 * Returns the eventType.
-	 * @return int
-	 */
-	public int getEventType() {
-		return eventType;
-	}
-
-	/**
-	 * Returns the headerList.
-	 * @return HeaderInterface[]
-	 */
-	public HeaderList getHeaderList() {
-		return headerList;
-	}
-
+    /**
+     * Returns the headerList.
+     * @return HeaderInterface[]
+     */
+    public HeaderList getHeaderList() {
+        return headerList;
+    }
 }

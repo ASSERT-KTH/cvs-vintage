@@ -13,32 +13,27 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
-
 package org.columba.addressbook.config;
-
 
 import org.w3c.dom.Document;
 
 
-public class GroupItem extends DefaultItem
-{
-    private AdapterNode name, uid, list;
+public class GroupItem extends DefaultItem {
+    private AdapterNode name;
+    private AdapterNode uid;
+    private AdapterNode list;
 
-    
-    public GroupItem(Document root)
-    {
-        super( root );
-    
+    public GroupItem(Document root) {
+        super(root);
     }
-    
+
     /*
-        
+
     public void setNameNode( AdapterNode node )
     {
         name = node;
     }
-    
+
     public void setUidNode( AdapterNode node )
     {
         uid= node;
@@ -48,9 +43,9 @@ public class GroupItem extends DefaultItem
     {
         list = node;
     }
-    
 
-    
+
+
     public void setUid( int i )
     {
         Integer h = new Integer( i );
@@ -58,26 +53,26 @@ public class GroupItem extends DefaultItem
         setTextValue( uid, h.toString() );
     }
 
-            
+
     public void setName( String str )
     {
         setTextValue( name, str );
     }
 
-    
-    
-    
+
+
+
 
     public String getName()
     {
         return getTextValue( name );
     }
 
-   
+
     public int getUid()
     {
         Integer i = new Integer(  getTextValue( uid ) );
-        
+
         return i.intValue();
     }
 
@@ -87,7 +82,7 @@ public class GroupItem extends DefaultItem
     {
         AdapterNode child;
         boolean hit = false;
-        
+
         for ( int i=0; i<list.getChildCount(); i++ )
         {
             child = list.getChild(i);
@@ -104,11 +99,11 @@ public class GroupItem extends DefaultItem
             Element element = createTextElementNode("uid", (new Integer( number )).toString() );
 
             list.addElement(  element );
-                        
+
         }
-        
+
     }
-    
+
     public Vector getListNodes()
     {
         Vector v = new Vector();
@@ -124,7 +119,7 @@ public class GroupItem extends DefaultItem
     {
         AdapterNode node = list.getChild(i);
         String str = node.getValue();
-        
+
         int uid = Integer.parseInt( str );
 
         return uid;
@@ -136,12 +131,7 @@ public class GroupItem extends DefaultItem
 
         return node;
     }
-    
-    
-	*/    
-    
+
+
+        */
 }
-    
-
-
-

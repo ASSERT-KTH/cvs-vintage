@@ -15,159 +15,144 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder.importfilter;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.main.AddressbookInterface;
+
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.plugin.PluginInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.main.AddressbookInterface;
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.plugin.PluginInterface;
 
 /**
  * @version 1.0
  * @author
  */
 public abstract class DefaultAddressbookImporter implements PluginInterface {
-	public static int TYPE_FILE = 0;
-	public static int TYPE_DIRECTORY = 1;
+    public static int TYPE_FILE = 0;
+    public static int TYPE_DIRECTORY = 1;
+    protected Folder destinationFolder;
+    protected File sourceFile;
+    protected AddressbookInterface addressbookInterface;
 
-	protected Folder destinationFolder;
+    //protected AddressbookFolder tempFolder;
+    protected int counter;
 
-	protected File sourceFile;
+    public DefaultAddressbookImporter() {
+    }
 
-	protected AddressbookInterface addressbookInterface;
+    public DefaultAddressbookImporter(File sourceFile, Folder destinationFolder) {
+        this.sourceFile = sourceFile;
+        this.destinationFolder = destinationFolder;
+    }
 
-	//protected AddressbookFolder tempFolder;
+    public void init() {
+        counter = 0;
 
-	protected int counter;
+        //tempFolder = new AddressbookFolder(null,addressbookInterface);
+    }
 
-	public DefaultAddressbookImporter() {
-	}
+    /** ********* overwrite the following messages ************************* */
+    /**
+     * overwrite this method to specify type the wizard dialog will open the
+     * correct file/directory dialog automatically
+     */
+    public int getType() {
+        return TYPE_FILE;
+    }
 
-	public DefaultAddressbookImporter(
-		File sourceFile,
-		Folder destinationFolder) {
-		this.sourceFile = sourceFile;
-		this.destinationFolder = destinationFolder;
+    /**
+     * enter a description which will be shown to the user here
+     */
+    public String getDescription() {
+        return "";
+    }
 
-	}
+    /**
+     * this method does all the import work
+     */
+    public abstract void importAddressbook(File file) throws Exception;
 
-	public void init() {
-		counter = 0;
+    /** ********* intern methods (no need to overwrite these) *************** */
+    public void setAddressbookInterface(AddressbookInterface i) {
+        this.addressbookInterface = i;
+    }
 
-		//tempFolder = new AddressbookFolder(null,addressbookInterface);
-	}
+    public void setSourceFile(File file) {
+        this.sourceFile = file;
+    }
 
-	/** ********* overwrite the following messages ************************* */
+    /**
+     * set destination folder
+     */
+    public void setDestinationFolder(Folder folder) {
+        destinationFolder = folder;
+    }
 
-	/**
-	 * overwrite this method to specify type the wizard dialog will open the
-	 * correct file/directory dialog automatically
-	 */
-	public int getType() {
-		return TYPE_FILE;
-	}
+    /**
+     * counter for successfully imported messages
+     */
+    public int getCount() {
+        return counter;
+    }
 
-	/**
-	 * enter a description which will be shown to the user here
-	 */
-	public String getDescription() {
-		return "";
-	}
+    /**
+     * this method calls your overwritten importMailbox(File)-method and
+     * handles exceptions
+     */
+    public void run() {
+        try {
+            importAddressbook(sourceFile);
+        } catch (Exception ex) {
+            if (ex instanceof FileNotFoundException) {
+                NotifyDialog dialog = new NotifyDialog();
+                dialog.showDialog("Source File not found!");
+            } else {
+                ExceptionDialog dialog = new ExceptionDialog();
+                dialog.showDialog(ex);
+            }
 
-	/**
-	 * this method does all the import work
-	 */
-	public abstract void importAddressbook(File file) throws Exception;
+            NotifyDialog dialog = new NotifyDialog();
+            dialog.showDialog(
+                "Addressbook import failed! No contacts were added to your folder.");
 
-	/** ********* intern methods (no need to overwrite these) *************** */
+            return;
+        }
 
-	public void setAddressbookInterface(AddressbookInterface i) {
-		this.addressbookInterface = i;
-	}
+        if (getCount() == 0) {
+            NotifyDialog dialog = new NotifyDialog();
+            dialog.showDialog(
+                "Addressbook import failed! No contacts were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
 
-	public void setSourceFile(File file) {
-		this.sourceFile = file;
-	}
+            return;
+        }
 
-	/**
-	 * set destination folder
-	 */
-	public void setDestinationFolder(Folder folder) {
-		destinationFolder = folder;
-	}
+        if (getCount() > 0) {
+            JOptionPane.showMessageDialog(null,
+                "Addressbook import was successfull!", "Information",
+                JOptionPane.INFORMATION_MESSAGE,
+                ImageLoader.getImageIcon("stock_dialog_info_48.png"));
 
-	/**
-	 * counter for successfully imported messages
-	 */
-	public int getCount() {
-		return counter;
-	}
+            addressbookInterface.table.setFolder(destinationFolder);
+        }
 
-	/**
-	 * this method calls your overwritten importMailbox(File)-method and
-	 * handles exceptions
-	 */
-	public void run() {
+        return;
+    }
 
-		try {
-			importAddressbook(sourceFile);
-		} catch (Exception ex) {
-			if (ex instanceof FileNotFoundException) {
-				NotifyDialog dialog = new NotifyDialog();
-				dialog.showDialog("Source File not found!");
-			} else {
-				ExceptionDialog dialog = new ExceptionDialog();
-				dialog.showDialog(ex);
-			}
+    /**
+     * use this method to save a message to the specified destination folder
+     */
+    protected void saveContact(ContactCard card) throws Exception {
+        destinationFolder.add(card);
 
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"Addressbook import failed! No contacts were added to your folder.");
-
-			return;
-		}
-
-		if (getCount() == 0) {
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"Addressbook import failed! No contacts were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
-
-			return;
-		}
-
-		if (getCount() > 0) {
-			JOptionPane.showMessageDialog(
-				null,
-				"Addressbook import was successfull!",
-				"Information",
-				JOptionPane.INFORMATION_MESSAGE,
-				ImageLoader.getImageIcon("stock_dialog_info_48.png"));
-
-			addressbookInterface.table.setFolder(destinationFolder);
-		}
-
-		return;
-
-	}
-
-	/**
-	 * use this method to save a message to the specified destination folder
-	 */
-	protected void saveContact(ContactCard card) throws Exception {
-
-		destinationFolder.add(card);
-
-		counter++;
-
-	}
-
+        counter++;
+    }
 }

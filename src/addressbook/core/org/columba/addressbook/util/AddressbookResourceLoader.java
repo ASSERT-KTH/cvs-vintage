@@ -15,44 +15,35 @@
 //All Rights Reserved.
 //
 //Contributor(s): (Luca Santarelli) <hrk@users.sourceforge.net>
-
 package org.columba.addressbook.util;
 
 import org.columba.core.util.GlobalResourceLoader;
 
+
 public class AddressbookResourceLoader extends GlobalResourceLoader {
+    protected static final String ADDRESSBOOK_RESOURCE_PATH = "org.columba.addressbook.i18n";
 
-	protected static final String ADDRESSBOOK_RESOURCE_PATH =
-		"org.columba.addressbook.i18n";
+    //This is used when package name and file name are different.
+    //Example: getString("dialog", "composer", "statusbar_label");
+    public static String getString(String sPath, String sName, String sID) {
+        return GlobalResourceLoader.getString(generateBundlePath(
+                ADDRESSBOOK_RESOURCE_PATH, sPath), sName, sID);
+    }
 
-	//This is used when package name and file name are different.
-	//Example: getString("dialog", "composer", "statusbar_label");
-	public static String getString(String sPath, String sName, String sID) {
-		return GlobalResourceLoader.getString(
-			generateBundlePath(ADDRESSBOOK_RESOURCE_PATH, sPath),
-			sName,
-			sID);
-	}
+    //This one is used when the package name and the file name are the same.
+    //Example: getString("action", "menu_folder_newfolder");
+    public static String getString(String sName, String sID) {
+        return GlobalResourceLoader.getString(generateBundlePath(
+                ADDRESSBOOK_RESOURCE_PATH, sName), sName, sID);
+    }
 
-	//This one is used when the package name and the file name are the same.
-	//Example: getString("action", "menu_folder_newfolder");
-	public static String getString(String sName, String sID) {
-		return GlobalResourceLoader.getString(
-			generateBundlePath(ADDRESSBOOK_RESOURCE_PATH, sName),
-			sName,
-			sID);
-	}
+    public static char getMnemonic(String sPath, String sName, String sID) {
+        return GlobalResourceLoader.getMnemonic(generateBundlePath(
+                ADDRESSBOOK_RESOURCE_PATH, sPath), sName, sID);
+    }
 
-	public static char getMnemonic(String sPath, String sName, String sID) {
-		return GlobalResourceLoader.getMnemonic(
-			generateBundlePath(ADDRESSBOOK_RESOURCE_PATH, sPath),
-			sName,
-			sID);
-	}
-	public static char getMnemonic(String sName, String sID) {
-		return GlobalResourceLoader.getMnemonic(
-			generateBundlePath(ADDRESSBOOK_RESOURCE_PATH, sName),
-			sName,
-			sID);
-	}
+    public static char getMnemonic(String sName, String sID) {
+        return GlobalResourceLoader.getMnemonic(generateBundlePath(
+                ADDRESSBOOK_RESOURCE_PATH, sName), sName, sID);
+    }
 }

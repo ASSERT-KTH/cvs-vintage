@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.frame;
 
 import org.columba.core.charset.CharsetManager;
@@ -24,12 +23,14 @@ import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.attachment.AttachmentController;
 import org.columba.mail.gui.message.MessageController;
 
+
 /**
- * 
+ *
  * Abstract frame controller for all mail windows.
  * <p>
  * The ThreePane and the message frame use this as basis.
@@ -49,124 +50,108 @@ import org.columba.mail.gui.message.MessageController;
  * @see MessageFrameController
  *
  * @author fdietz
- * 
+ *
  */
 public abstract class AbstractMailFrameController
-	extends AbstractFrameController
-	implements
-		MailFrameMediator,
-		MessageViewOwner,
-		AttachmentViewOwner,
-		CharsetOwnerInterface {
+    extends AbstractFrameController implements MailFrameMediator,
+        MessageViewOwner, AttachmentViewOwner, CharsetOwnerInterface {
+    private ToolBar toolBar;
+    public MessageController messageController;
+    public AttachmentController attachmentController;
+    protected CharsetManager charsetManager;
 
-	private ToolBar toolBar;
+    public AbstractMailFrameController(String id, ViewItem viewItem) {
+        super(id, viewItem);
+    }
 
-	public MessageController messageController;
-	public AttachmentController attachmentController;
+    public FolderCommandReference[] getTableSelection() {
+        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+                                                                    .getSelection("mail.table");
 
-	protected CharsetManager charsetManager;
+        return r;
+    }
 
-	public AbstractMailFrameController(String id, ViewItem viewItem) {
-		super(id, viewItem);
+    public void setTableSelection(FolderCommandReference[] r) {
+        getSelectionManager().setSelection("mail.table", r);
+    }
 
-	}
+    public FolderCommandReference[] getTreeSelection() {
+        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+                                                                    .getSelection("mail.tree");
 
-	public FolderCommandReference[] getTableSelection() {
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) getSelectionManager().getSelection(
-				"mail.table");
+        return r;
+    }
 
-		return r;
-	}
+    public void setTreeSelection(FolderCommandReference[] r) {
+        getSelectionManager().setSelection("mail.tree", r);
+    }
 
-	public void setTableSelection(FolderCommandReference[] r) {
-		getSelectionManager().setSelection("mail.table", r);
-	}
+    public FolderCommandReference[] getAttachmentSelection() {
+        FolderCommandReference[] r = (FolderCommandReference[]) getSelectionManager()
+                                                                    .getSelection("mail.attachment");
 
-	public FolderCommandReference[] getTreeSelection() {
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) getSelectionManager().getSelection(
-				"mail.tree");
+        return r;
+    }
 
-		return r;
-	}
+    public void setAttachmentSelection(FolderCommandReference[] r) {
+        getSelectionManager().setSelection("mail.attachment", r);
+    }
 
-	public void setTreeSelection(FolderCommandReference[] r) {
-		getSelectionManager().setSelection("mail.tree", r);
-	}
+    public void registerTableSelectionListener(SelectionListener l) {
+        getSelectionManager().registerSelectionListener("mail.table", l);
+    }
 
-	public FolderCommandReference[] getAttachmentSelection() {
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) getSelectionManager().getSelection(
-				"mail.attachment");
+    public void registerTreeSelectionListener(SelectionListener l) {
+        getSelectionManager().registerSelectionListener("mail.tree", l);
+    }
 
-		return r;
-	}
+    public void registerAttachmentSelectionListener(SelectionListener l) {
+        getSelectionManager().registerSelectionListener("mail.attachment", l);
+    }
 
-	public void setAttachmentSelection(FolderCommandReference[] r) {
-		getSelectionManager().setSelection("mail.attachment", r);
-	}
+    public AbstractFrameView getView() {
+        return view;
+    }
 
-	public void registerTableSelectionListener(SelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.table", l);
-	}
+    protected void registerSelectionHandlers() {
+    }
 
-	public void registerTreeSelectionListener(SelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.tree", l);
-	}
+    protected void initInternActions() {
+    }
 
-	public void registerAttachmentSelectionListener(SelectionListener l) {
-		getSelectionManager().registerSelectionListener("mail.attachment", l);
-	}
+    protected XmlElement createDefaultConfiguration(String id) {
+        XmlElement child = super.createDefaultConfiguration(id);
 
-	public AbstractFrameView getView() {
-		return view;
-	}
+        XmlElement splitpanes = new XmlElement("splitpanes");
+        splitpanes.addAttribute("main", "200");
+        splitpanes.addAttribute("header", "200");
+        splitpanes.addAttribute("attachment", "100");
+        child.addElement(splitpanes);
 
-	protected void registerSelectionHandlers() {
-	}
+        return child;
+    }
 
-	protected void initInternActions() {
+    protected void init() {
+        setCharsetManager(new CharsetManager(null));
 
-	}
+        attachmentController = new AttachmentController(this);
 
-	protected XmlElement createDefaultConfiguration(String id) {
+        messageController = new MessageController(this, attachmentController);
+    }
 
-		XmlElement child = super.createDefaultConfiguration(id);
+    public CharsetManager getCharsetManager() {
+        return charsetManager;
+    }
 
-		XmlElement splitpanes = new XmlElement("splitpanes");
-		splitpanes.addAttribute("main", "200");
-		splitpanes.addAttribute("header", "200");
-		splitpanes.addAttribute("attachment", "100");
-		child.addElement(splitpanes);
+    public void setCharsetManager(CharsetManager manager) {
+        charsetManager = manager;
+    }
 
-		return child;
-	}
+    public MessageController getMessageController() {
+        return messageController;
+    }
 
-	protected void init() {
-
-		setCharsetManager(new CharsetManager(null));
-
-		attachmentController = new AttachmentController(this);
-
-		messageController = new MessageController(this, attachmentController);
-
-	}
-
-	public CharsetManager getCharsetManager() {
-		return charsetManager;
-	}
-
-	public void setCharsetManager(CharsetManager manager) {
-		charsetManager = manager;
-	}
-
-	public MessageController getMessageController() {
-		return messageController;
-	}
-
-	public AttachmentController getAttachmentController() {
-		return attachmentController;
-	}
-
+    public AttachmentController getAttachmentController() {
+        return attachmentController;
+    }
 }

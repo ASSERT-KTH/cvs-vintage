@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
@@ -33,29 +34,23 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CutAction extends FrameAction {
+    TableController tableController;
+    AbstractMailFrameController frameController;
 
-	TableController tableController;
-	AbstractMailFrameController frameController;
+    public CutAction(AbstractMailFrameController frameController) {
+        super(frameController, "CutAction");
+        this.tableController = ((TableViewOwner) frameController).getTableController();
+        this.frameController = frameController;
+    }
 
-	public CutAction(AbstractMailFrameController frameController) {
-		super(frameController, "CutAction");
-		this.tableController =
-			((TableViewOwner) frameController).getTableController();
-		this.frameController = frameController;
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // add current selection to clipboard
+        // cut action
+        MainInterface.clipboardManager.setOperation(ClipboardManager.CUT_ACTION);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-
-		// add current selection to clipboard
-
-		// cut action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.CUT_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(
-			(FolderCommandReference[]) frameController.getTableSelection());
-	}
+        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) frameController.getTableSelection());
+    }
 }

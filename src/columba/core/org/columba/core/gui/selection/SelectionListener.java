@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.selection;
 
 
@@ -23,14 +22,10 @@ package org.columba.core.gui.selection;
  * @author fdietz, tstich
  */
 public interface SelectionListener {
-
-	/**
-	 * Called when the selection has changed.
-	 * 
-	 * @param e	changed event
-	 */
-	
-	public void selectionChanged(SelectionChangedEvent e);
-	
-
+    /**
+     * Called when the selection has changed.
+     *
+     * @param e        changed event
+     */
+    public void selectionChanged(SelectionChangedEvent e);
 }

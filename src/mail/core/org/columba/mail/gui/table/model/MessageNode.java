@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import org.columba.mail.message.ColumbaHeader;
+
 import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.mail.message.ColumbaHeader;
 
 /**
  * Title:
@@ -29,60 +30,61 @@ import org.columba.mail.message.ColumbaHeader;
  * @author
  * @version 1.0
  */
-
 public class MessageNode extends DefaultMutableTreeNode {
-	
-	protected  Object uid;
+    protected Object uid;
+    protected boolean hasRecentChildren;
 
-	protected boolean hasRecentChildren;
-	 
-	public MessageNode(Object header, Object uid) {
-		super(header);
+    public MessageNode(Object header, Object uid) {
+        super(header);
 
-		this.uid = uid;
-	}
+        this.uid = uid;
+    }
 
-	public List getVector() {
-		return children;
-	}
+    public List getVector() {
+        return children;
+    }
 
-	public void setUid(Object uid) {
-		this.uid = uid;
-	}
-	public Object getUid() {
-		return uid;
-	}
+    public void setUid(Object uid) {
+        this.uid = uid;
+    }
 
-	public ColumbaHeader getHeader() {
-		return (ColumbaHeader) getUserObject();
-	}
+    public Object getUid() {
+        return uid;
+    }
 
-	public static Object[] toUidArray(Object[] nodes) {
-		if (nodes[0] instanceof MessageNode) {
-			Object[] newUidList = new Object[nodes.length];
-			for (int i = 0; i < nodes.length; i++) {
-				newUidList[i] = ((MessageNode) nodes[i]).getUid();
-				//System.out.println("node=" + newUidList[i]);
-			}
-			return newUidList;
-		} else
-			return nodes;
-	}
+    public ColumbaHeader getHeader() {
+        return (ColumbaHeader) getUserObject();
+    }
 
-	/**
-	 * Returns the hasRecentChildren.
-	 * @return boolean
-	 */
-	public boolean isHasRecentChildren() {
-		return hasRecentChildren;
-	}
+    public static Object[] toUidArray(Object[] nodes) {
+        if (nodes[0] instanceof MessageNode) {
+            Object[] newUidList = new Object[nodes.length];
 
-	/**
-	 * Sets the hasRecentChildren.
-	 * @param hasRecentChildren The hasRecentChildren to set
-	 */
-	public void setHasRecentChildren(boolean hasRecentChildren) {
-		this.hasRecentChildren = hasRecentChildren;
-	}
-	
+            for (int i = 0; i < nodes.length; i++) {
+                newUidList[i] = ((MessageNode) nodes[i]).getUid();
+
+                //System.out.println("node=" + newUidList[i]);
+            }
+
+            return newUidList;
+        } else {
+            return nodes;
+        }
+    }
+
+    /**
+     * Returns the hasRecentChildren.
+     * @return boolean
+     */
+    public boolean isHasRecentChildren() {
+        return hasRecentChildren;
+    }
+
+    /**
+     * Sets the hasRecentChildren.
+     * @param hasRecentChildren The hasRecentChildren to set
+     */
+    public void setHasRecentChildren(boolean hasRecentChildren) {
+        this.hasRecentChildren = hasRecentChildren;
+    }
 }

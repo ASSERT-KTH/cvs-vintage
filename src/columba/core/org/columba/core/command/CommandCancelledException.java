@@ -18,56 +18,58 @@ package org.columba.core.command;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+
 /**
- * 
+ *
  * Throwing this exception in a Command aborts the execution
  * immediately.
- * 
+ *
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class CommandCancelledException extends Exception {
+    /**
+     * Constructor for CommandCancelledException.
+     */
+    public CommandCancelledException() {
+        super();
+    }
 
-	/**
-	 * Constructor for CommandCancelledException.
-	 */
-	public CommandCancelledException() {
-		super();
-	}
+    /**
+     * Constructor for CommandCancelledException.
+     * @param message
+     */
+    public CommandCancelledException(String message) {
+        super(message);
+    }
 
-	/**
-	 * Constructor for CommandCancelledException.
-	 * @param message
-	 */
-	public CommandCancelledException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor for CommandCancelledException.
+     * @param message
+     * @param cause
+     */
+    public CommandCancelledException(String message, Throwable cause) {
+        this(message);
+        compatibleInitCause(cause);
+    }
 
-	/**
-	 * Constructor for CommandCancelledException.
-	 * @param message
-	 * @param cause
-	 */
-	public CommandCancelledException(String message, Throwable cause) {
-		this(message);
-		compatibleInitCause(cause);
-	}
+    /**
+     * Constructor for CommandCancelledException.
+     * @param cause
+     */
+    public CommandCancelledException(Throwable cause) {
+        this();
+        compatibleInitCause(cause);
+    }
 
-	/**
-	 * Constructor for CommandCancelledException.
-	 * @param cause
-	 */
-	public CommandCancelledException(Throwable cause) {
-		this();
-		compatibleInitCause(cause);
-	}
-	
-	private void compatibleInitCause(Throwable cause) {
-		try{
-			Method initCause = getClass().getMethod("initCause", new Class[]{ Throwable.class });
-			initCause.invoke(this, new Object[]{ cause });
-		}catch(NoSuchMethodException nsme){
-		}catch(IllegalAccessException iae){
-		}catch(InvocationTargetException ite){}
-	}
+    private void compatibleInitCause(Throwable cause) {
+        try {
+            Method initCause = getClass().getMethod("initCause",
+                    new Class[] { Throwable.class });
+            initCause.invoke(this, new Object[] { cause });
+        } catch (NoSuchMethodException nsme) {
+        } catch (IllegalAccessException iae) {
+        } catch (InvocationTargetException ite) {
+        }
+    }
 }

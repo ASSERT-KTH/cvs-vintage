@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
+import org.columba.core.main.MainInterface;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import org.columba.core.main.MainInterface;
 
 /**
  * @author frd
@@ -26,128 +27,118 @@ import org.columba.core.main.MainInterface;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PluginNode extends DefaultMutableTreeNode {
+    String id;
+    String version;
+    String tooltip;
+    boolean category;
+    boolean enabled;
 
-	String id;
-	String version;
-	String tooltip;
-	
-	boolean category;
-	
-	boolean enabled;
-	
-	/** Lazily created Boolean stating if the plugin has info or not, can be null. */
-	Boolean hasInfo;
+    /** Lazily created Boolean stating if the plugin has info or not, can be null. */
+    Boolean hasInfo;
 
-	public PluginNode()
-	{
-		category = false;
-	}
-	
-	/**
-	 * @param arg0
-	 */
-	public PluginNode(Object arg0) {
-		super(arg0);
-		
-		category = false;
-		
-	}
+    public PluginNode() {
+        category = false;
+    }
 
+    /**
+     * @param arg0
+     */
+    public PluginNode(Object arg0) {
+        super(arg0);
 
-	/**
-	 * @return
-	 */
-	public String getId() {
-		return id;
-	}
+        category = false;
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
+    /**
+     * @return
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * @param string
-	 */
-	public void setId(String string) {
-		id = string;
-	}
+    /**
+     * @return
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setEnabled(boolean b) {
-		enabled = b;
-	}
+    /**
+     * @param string
+     */
+    public void setId(String string) {
+        id = string;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getTooltip() {
-		return tooltip;
-	}
+    /**
+     * @param b
+     */
+    public void setEnabled(boolean b) {
+        enabled = b;
+    }
 
-	/**
-	 * @param string
-	 */
-	public void setTooltip(String string) {
-		tooltip = string;
-	}
+    /**
+     * @return
+     */
+    public String getTooltip() {
+        return tooltip;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getVersion() {
-		return version;
-	}
+    /**
+     * @param string
+     */
+    public void setTooltip(String string) {
+        tooltip = string;
+    }
 
-	/**
-	 * @param string
-	 */
-	public void setVersion(String string) {
-		version = string;
-	}
+    /**
+     * @return
+     */
+    public String getVersion() {
+        return version;
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isCategory() {
-		return category;
-	}
+    /**
+     * @param string
+     */
+    public void setVersion(String string) {
+        version = string;
+    }
 
-	/**
-	 * @param b
-	 */
-	public void setCategory(boolean b) {
-		category = b;
-	}
-	
-	/**
-	 * Returns true if the plugin has information about the plugin.
-	 * This attribute is created lazily, and may take a while since it
-	 * has to check for files on the file system. (Using the <code>PluginManager</code>.)
-	 * @return true if the plugin has info files; false if it doesnt have an info file.
-	 */
-	public boolean hasInfo()
-	{
-		if ( hasInfo == null )
-		{
-			hasInfo = Boolean.valueOf( MainInterface.pluginManager.getInfoURL(id) != null );
-		}
-		return hasInfo.booleanValue(); 
-	}
-	
-	public void debug()
-	{
-	 	System.out.println("id="+id);
-		System.out.println("version="+version);
-		System.out.println("enabled="+enabled);
-		System.out.println("isCategory="+category);
-		System.out.println("description="+tooltip);
-		System.out.println("hasInfo="+hasInfo());
-		
-	}
+    /**
+     * @return
+     */
+    public boolean isCategory() {
+        return category;
+    }
 
+    /**
+     * @param b
+     */
+    public void setCategory(boolean b) {
+        category = b;
+    }
+
+    /**
+     * Returns true if the plugin has information about the plugin.
+     * This attribute is created lazily, and may take a while since it
+     * has to check for files on the file system. (Using the <code>PluginManager</code>.)
+     * @return true if the plugin has info files; false if it doesnt have an info file.
+     */
+    public boolean hasInfo() {
+        if (hasInfo == null) {
+            hasInfo = Boolean.valueOf(MainInterface.pluginManager.getInfoURL(id) != null);
+        }
+
+        return hasInfo.booleanValue();
+    }
+
+    public void debug() {
+        System.out.println("id=" + id);
+        System.out.println("version=" + version);
+        System.out.println("enabled=" + enabled);
+        System.out.println("isCategory=" + category);
+        System.out.println("description=" + tooltip);
+        System.out.println("hasInfo=" + hasInfo());
+    }
 }

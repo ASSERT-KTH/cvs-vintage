@@ -15,6 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
+import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.plugin.PluginInterface;
+
+import org.columba.mail.filter.FilterCriteria;
+import org.columba.mail.gui.config.filter.CriteriaList;
+import org.columba.mail.gui.config.filter.util.CriteriaComboBoxRenderer;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -24,154 +31,134 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.columba.core.plugin.AbstractPluginHandler;
-import org.columba.core.plugin.PluginInterface;
-import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.gui.config.filter.CriteriaList;
-import org.columba.mail.gui.config.filter.util.CriteriaComboBoxRenderer;
 
 public class DefaultCriteriaRow implements PluginInterface {
-	protected FilterCriteria criteria;
-	protected CriteriaList criteriaList;
+    protected FilterCriteria criteria;
+    protected CriteriaList criteriaList;
+    protected JPanel panel;
+    protected JComboBox conditionComboBox;
 
-	protected JPanel panel;
+    /*
+    private JComboBox matchComboBox;
+    private JTextField textField;
+    */
+    protected JButton removeButton;
 
-	protected JComboBox conditionComboBox;
-	/*
-	private JComboBox matchComboBox;
-	private JTextField textField;
-	*/
+    //protected Vector conditionList;
+    protected GridBagLayout gridbag = new GridBagLayout();
+    protected GridBagConstraints c = new GridBagConstraints();
+    AbstractPluginHandler pluginHandler;
+    protected int count;
 
-	protected JButton removeButton;
-	//protected Vector conditionList;
+    public DefaultCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
+        this.pluginHandler = pluginHandler;
 
-	protected GridBagLayout gridbag = new GridBagLayout();
-	protected GridBagConstraints c = new GridBagConstraints();
+        this.criteria = c;
+        this.criteriaList = criteriaList;
 
-	AbstractPluginHandler pluginHandler;
+        /*
+        conditionList = new Vector();
 
-	protected int count;
+        conditionList.add("Subject");
+        conditionList.add("From");
+        conditionList.add("To");
+        conditionList.add("Cc");
+        conditionList.add("Bcc");
+        conditionList.add("To or Cc");
+        conditionList.add("Custom Headerfield");
+        conditionList.add("Body");
+        conditionList.add("Date");
+        conditionList.add("Flags");
+        conditionList.add("Priority");
+        conditionList.add("Size");
+        */
+        panel = new JPanel();
 
-	public DefaultCriteriaRow(
-		AbstractPluginHandler pluginHandler,
-		CriteriaList criteriaList,
-		FilterCriteria c) {
-		this.pluginHandler = pluginHandler;
+        initComponents();
 
-		this.criteria = c;
-		this.criteriaList = criteriaList;
+        updateComponents(true);
 
-		/*
-		conditionList = new Vector();
-		
-		conditionList.add("Subject");
-		conditionList.add("From");
-		conditionList.add("To");
-		conditionList.add("Cc");
-		conditionList.add("Bcc");
-		conditionList.add("To or Cc");
-		conditionList.add("Custom Headerfield");
-		conditionList.add("Body");
-		conditionList.add("Date");
-		conditionList.add("Flags");
-		conditionList.add("Priority");
-		conditionList.add("Size");
-		*/
+        conditionComboBox.addActionListener(criteriaList);
+    }
 
-		panel = new JPanel();
+    public void updateComponents(boolean b) {
+        if (b) {
+            String conditionString = criteria.getType();
 
-		initComponents();
+            //int index = conditionList.indexOf(conditionString);
+            //System.out.println("condition: "+ conditionString );
+            conditionComboBox.setSelectedItem(conditionString);
+        } else {
+            //int conditionIndex = (int) conditionComboBox.getSelectedIndex();
+            //String conditionString = (String) conditionList.get(conditionIndex);
+            //conditionString = conditionString.toLowerCase();
+            String conditionString = (String) conditionComboBox.getSelectedItem();
 
-		updateComponents(true);
+            criteria.setType(conditionString);
+        }
+    }
 
-		conditionComboBox.addActionListener(criteriaList);
+    public void initComponents() {
+        panel.setLayout(gridbag);
 
-	}
+        //conditionComboBox = new JComboBox(pluginList.getFilters());
+        conditionComboBox = new JComboBox(pluginHandler.getPluginIdList());
+        conditionComboBox.setRenderer(new CriteriaComboBoxRenderer());
 
-	public void updateComponents(boolean b) {
-		if (b) {
-			String conditionString = criteria.getType();
-			//int index = conditionList.indexOf(conditionString);
+        /*
+        for (int i = 0; i < conditionList.size(); i++) {
+                String name = (String) conditionList.get(i);
 
-			//System.out.println("condition: "+ conditionString );
-			conditionComboBox.setSelectedItem(conditionString);
+                conditionComboBox.addItem(name);
+        }
+        */
+        //c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.VERTICAL;
+        c.weightx = 1.0;
+        c.insets = new Insets(2, 2, 2, 2);
+        c.gridx = 0;
+        c.anchor = GridBagConstraints.WEST;
+        c.gridwidth = 1;
 
-		} else {
-			//int conditionIndex = (int) conditionComboBox.getSelectedIndex();
-			//String conditionString = (String) conditionList.get(conditionIndex);
-			//conditionString = conditionString.toLowerCase();
-			String conditionString =
-				(String) conditionComboBox.getSelectedItem();
+        gridbag.setConstraints(conditionComboBox, c);
 
-			criteria.setType(conditionString);
-		}
-	}
+        panel.add(conditionComboBox);
 
-	public void initComponents() {
+        count = 0;
+    }
 
-		panel.setLayout(gridbag);
+    public JPanel getContentPane() {
+        return panel;
+    }
 
-		//conditionComboBox = new JComboBox(pluginList.getFilters());
-		conditionComboBox = new JComboBox(pluginHandler.getPluginIdList());
-		conditionComboBox.setRenderer(new CriteriaComboBoxRenderer());
-		
-		/*
-		for (int i = 0; i < conditionList.size(); i++) {
-			String name = (String) conditionList.get(i);
-		
-			conditionComboBox.addItem(name);
-		}
-		*/
+    public void addComponent(JComponent component) {
+        c.gridx = ++count;
+        gridbag.setConstraints(component, c);
+        panel.add(component);
+    }
 
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		c.fill = GridBagConstraints.VERTICAL;
-		c.weightx = 1.0;
-		c.insets = new Insets(2, 2, 2, 2);
-		c.gridx = 0;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridwidth = 1;
+    /**
+     * Returns the criteria.
+     * @return FilterCriteria
+     */
+    public FilterCriteria getCriteria() {
+        return criteria;
+    }
 
-		gridbag.setConstraints(conditionComboBox, c);
+    /**
+     * Returns the pluginHandler.
+     * @return AbstractPluginHandler
+     */
+    public AbstractPluginHandler getPluginHandler() {
+        return pluginHandler;
+    }
 
-		panel.add(conditionComboBox);
-
-		count = 0;
-
-	}
-	
-	public JPanel getContentPane()
-	{
-		return panel;
-	}
-
-	public void addComponent(JComponent component) {
-		c.gridx = ++count;
-		gridbag.setConstraints(component, c);
-		panel.add(component);
-	}
-
-	/**
-	 * Returns the criteria.
-	 * @return FilterCriteria
-	 */
-	public FilterCriteria getCriteria() {
-		return criteria;
-	}
-
-	/**
-	 * Returns the pluginHandler.
-	 * @return AbstractPluginHandler
-	 */
-	public AbstractPluginHandler getPluginHandler() {
-		return pluginHandler;
-	}
-
-	/**
-	 * Sets the pluginHandler.
-	 * @param pluginHandler The pluginHandler to set
-	 */
-	public void setPluginHandler(AbstractPluginHandler pluginHandler) {
-		this.pluginHandler = pluginHandler;
-	}
-
+    /**
+     * Sets the pluginHandler.
+     * @param pluginHandler The pluginHandler to set
+     */
+    public void setPluginHandler(AbstractPluginHandler pluginHandler) {
+        this.pluginHandler = pluginHandler;
+    }
 }

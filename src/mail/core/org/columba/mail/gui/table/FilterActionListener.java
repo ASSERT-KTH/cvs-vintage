@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table;
 
+import org.columba.mail.gui.table.model.TableModelFilter;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.mail.gui.table.model.TableModelFilter;
 
 /**
  * Title:
@@ -28,67 +29,60 @@ import org.columba.mail.gui.table.model.TableModelFilter;
  * @author
  * @version 1.0
  */
-
 public class FilterActionListener implements ActionListener {
-	private TableController tableController;
+    private TableController tableController;
 
-	public FilterActionListener(TableController headerTableViewer) {
-		this.tableController = headerTableViewer;
-	}
+    public FilterActionListener(TableController headerTableViewer) {
+        this.tableController = headerTableViewer;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		try {
+        try {
+            if (action.equals("ALL")) {
+                TableModelFilter model = tableController.getTableModelFilteredView();
 
-			if (action.equals("ALL")) {
-				TableModelFilter model =
-					tableController.getTableModelFilteredView();
+                model.setNewFlag(false);
 
-				model.setNewFlag(false);
-				//model.setOldFlag( true );
-				model.setAnsweredFlag(false);
-				model.setFlaggedFlag(false);
-				model.setExpungedFlag(false);
-				model.setAttachmentFlag(false);
-				model.setPatternString("");
+                //model.setOldFlag( true );
+                model.setAnsweredFlag(false);
+                model.setFlaggedFlag(false);
+                model.setExpungedFlag(false);
+                model.setAttachmentFlag(false);
+                model.setPatternString("");
 
-				model.setDataFiltering(false);
-				tableController.getUpdateManager().update();
+                model.setDataFiltering(false);
+                tableController.getUpdateManager().update();
 
-				FilterToolbar toolbar = tableController.getFilterToolbar();
+                FilterToolbar toolbar = tableController.getFilterToolbar();
 
-				// FIXME
-				//toolbar.newButton.setSelected(false);
-				
-				
+                // FIXME
+                //toolbar.newButton.setSelected(false);
+            } else if (action.equals("UNREAD")) {
+                TableModelFilter model = tableController.getTableModelFilteredView();
 
-			} else if (action.equals("UNREAD")) {
-				TableModelFilter model =
-					tableController.getTableModelFilteredView();
+                model.setNewFlag(true);
 
-				model.setNewFlag(true);
-				//model.setOldFlag( false );
-				model.setAnsweredFlag(false);
-				model.setFlaggedFlag(false);
-				model.setExpungedFlag(false);
-				model.setAttachmentFlag(false);
-				model.setPatternString("");
+                //model.setOldFlag( false );
+                model.setAnsweredFlag(false);
+                model.setFlaggedFlag(false);
+                model.setExpungedFlag(false);
+                model.setAttachmentFlag(false);
+                model.setPatternString("");
 
-				model.setDataFiltering(true);
-				
-				tableController.getUpdateManager().update();
+                model.setDataFiltering(true);
 
-				FilterToolbar toolbar = tableController.getFilterToolbar();
+                tableController.getUpdateManager().update();
 
-				// FIXME
-				//toolbar.newButton.setSelected(true);
+                FilterToolbar toolbar = tableController.getFilterToolbar();
 
-				//toolbar.oldButton.setSelected(false);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-	}
+                // FIXME
+                //toolbar.newButton.setSelected(true);
+                //toolbar.oldButton.setSelected(false);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -18,20 +18,20 @@ package org.columba.mail.facade;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.main.MailInterface;
 
+
 /**
  * @author fdietz
  *
- 
+
  */
 public class DialogFacade {
-
-	/**
-	 * opens a dialog which lets the user choose a folder
-	 * 
-	 * 
-	 * @return	SelectedFolderDialog
-	 */
-	public SelectFolderDialog getSelectFolderDialog() {
-		return MailInterface.treeModel.getSelectFolderDialog();
-	}
+    /**
+     * opens a dialog which lets the user choose a folder
+     *
+     *
+     * @return        SelectedFolderDialog
+     */
+    public SelectFolderDialog getSelectFolderDialog() {
+        return MailInterface.treeModel.getSelectFolderDialog();
+    }
 }

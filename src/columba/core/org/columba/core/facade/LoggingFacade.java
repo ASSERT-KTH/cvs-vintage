@@ -17,6 +17,7 @@ package org.columba.core.facade;
 
 import org.columba.core.logging.ColumbaLogger;
 
+
 /**
  * @author frd
  *
@@ -24,16 +25,15 @@ import org.columba.core.logging.ColumbaLogger;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class LoggingFacade {
+    public static void logInfo(String infoMessage) {
+        ColumbaLogger.log.info(infoMessage);
+    }
 
-	public static void logInfo(String infoMessage) {
-		ColumbaLogger.log.info(infoMessage);
-	}
+    public static void logDebug(String debugMessage) {
+        ColumbaLogger.log.debug(debugMessage);
+    }
 
-	public static void logDebug(String debugMessage) {
-		ColumbaLogger.log.debug(debugMessage);
-	}
-
-	public static void logError(String errorMessage) {
-		ColumbaLogger.log.error(errorMessage);
-	}
+    public static void logError(String errorMessage) {
+        ColumbaLogger.log.error(errorMessage);
+    }
 }

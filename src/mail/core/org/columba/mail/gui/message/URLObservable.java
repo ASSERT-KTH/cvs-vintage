@@ -7,7 +7,9 @@
 package org.columba.mail.gui.message;
 
 import java.net.URL;
+
 import java.util.Observable;
+
 
 /**
  * Encapsulates an URL object.
@@ -15,32 +17,29 @@ import java.util.Observable;
  * @author fdietz
  */
 public class URLObservable extends Observable {
+    URL url;
 
-	URL url;
-	
-	/**
-	 * 
-	 */
-	public URLObservable() {
-		super();
-		
-	}
+    /**
+     *
+     */
+    public URLObservable() {
+        super();
+    }
 
-	/**
-	 * @return
-	 */
-	public URL getUrl() {
-		return url;
-	}
+    /**
+     * @return
+     */
+    public URL getUrl() {
+        return url;
+    }
 
-	/**
-	 * @param url
-	 */
-	public void setUrl(URL url) {
-		this.url = url;
-		
-		setChanged();
-		notifyObservers();
-	}
+    /**
+     * @param url
+     */
+    public void setUrl(URL url) {
+        this.url = url;
 
+        setChanged();
+        notifyObservers();
+    }
 }

@@ -13,15 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.action;
-
-import javax.swing.JRadioButtonMenuItem;
 
 import org.columba.core.gui.frame.FrameMediator;
 
+import javax.swing.JRadioButtonMenuItem;
+
+
 /**
- * Adds an Observable/Observer to {@link FrameAction}. 
+ * Adds an Observable/Observer to {@link FrameAction}.
  * <p>
  * This makes it possible to notify gui-elements like
  * JRadioButtonMenuItem and JRadioButton, which are created using this
@@ -30,40 +30,37 @@ import org.columba.core.gui.frame.FrameMediator;
  * @author fdietz
  */
 public abstract class RadioButtonAction extends FrameAction {
+    JRadioButtonMenuItem menuItem;
+    SelectionStateObservable observable;
 
-	JRadioButtonMenuItem menuItem;
-	SelectionStateObservable observable;
-	
-	public RadioButtonAction(
-		FrameMediator frameController,
-		String name) {
-		super(frameController, name);
-		
-		observable = new SelectionStateObservable();
-	}
+    public RadioButtonAction(FrameMediator frameController, String name) {
+        super(frameController, name);
 
-	/**
-	 * @return
-	 * 
-	 * @deprecated Use Observable instead.
-	 */
-	public JRadioButtonMenuItem getMenuItem() {
-		return menuItem;
-	}
+        observable = new SelectionStateObservable();
+    }
 
-	/**
-	 * @param menuItem
-	 * 
-	 * @deprecated Use Observable instead.
-	 */
-	public void setMenuItem(JRadioButtonMenuItem menuItem) {
-		this.menuItem = menuItem;
-	}
+    /**
+     * @return
+     *
+     * @deprecated Use Observable instead.
+     */
+    public JRadioButtonMenuItem getMenuItem() {
+        return menuItem;
+    }
 
-	/**
-	 * @return	selection state observable
-	 */
-	public SelectionStateObservable getObservable() {
-		return observable;
-	}
+    /**
+     * @param menuItem
+     *
+     * @deprecated Use Observable instead.
+     */
+    public void setMenuItem(JRadioButtonMenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    /**
+     * @return        selection state observable
+     */
+    public SelectionStateObservable getObservable() {
+        return observable;
+    }
 }

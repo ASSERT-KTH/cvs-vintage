@@ -13,16 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 /* -*-mode: java; compile-command:"javac PopItem.java -classpath ../"; -*- */
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
-public class PopItem extends DefaultItem {
 
-	public PopItem(XmlElement e) {
-		super(e);
-	}
-	
+public class PopItem extends DefaultItem {
+    public PopItem(XmlElement e) {
+        super(e);
+    }
 }

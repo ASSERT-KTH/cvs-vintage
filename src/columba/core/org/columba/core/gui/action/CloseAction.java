@@ -13,46 +13,44 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.util.GlobalResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CloseAction extends FrameAction {
+    public CloseAction(FrameMediator frameMediator) {
+        super(frameMediator, GlobalResourceLoader.getString(null, null, "close"));
 
-	public CloseAction(FrameMediator frameMediator) {
-		super(frameMediator, GlobalResourceLoader.getString(
-			null, null, "close"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null, "close").replaceAll("&",
+                ""));
 
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "close").replaceAll("&", ""));
-					
-		// short cut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_W, ActionEvent.CTRL_MASK));
-	}
+        // short cut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		frameMediator.close();
-		//frameMediator.getView().setVisible(false);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        frameMediator.close();
+
+        //frameMediator.getView().setVisible(false);
+    }
 }

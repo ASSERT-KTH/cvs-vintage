@@ -13,8 +13,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultDataLookup;
+
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.WizardTextField;
+
+import org.columba.mail.util.MailResourceLoader;
 
 import java.lang.reflect.Method;
 
@@ -27,92 +36,87 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultDataLookup;
-
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
-import org.columba.mail.util.MailResourceLoader;
 
 class OutgoingServerStep extends AbstractStep {
-        protected DataModel data;
-        protected boolean isLastStep;
-	private JTextField hostTextField;
+    protected DataModel data;
+    protected boolean isLastStep;
+    private JTextField hostTextField;
 
-	public OutgoingServerStep(DataModel data, boolean isLastStep) {
-		super(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "outgoingserver"),
-                      MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "outgoingserver_description"));
-                this.data = data;
-                this.isLastStep = isLastStep;
-                setCanGoNext(false);
-	}
-        
-        protected JComponent createComponent() {
-		JComponent component = new JPanel();
-                component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
-                component.add(new MultiLineLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "outgoingserver_text")));
-                component.add(Box.createVerticalStrut(40));
-                WizardTextField middlePanel = new WizardTextField();
-                /*
-                JLabel addressLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "host"));
-                addressLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
-                                    "dialog",
-                                    "accountwizard",
-                                    "host"));
-                */
-				LabelWithMnemonic addressLabel = new LabelWithMnemonic(
-						MailResourceLoader.getString(
-							"dialog", "accountwizard", "host"));
-                middlePanel.addLabel(addressLabel);
-                hostTextField = new JTextField();
-                Method method = null;
-                try {
-                        method = hostTextField.getClass().getMethod("getText", null);
-                } catch (NoSuchMethodException nsme) {}
-                data.registerDataLookup("OutgoingServer.host", new DefaultDataLookup(hostTextField, method, null));
-                hostTextField.getDocument().addDocumentListener(new DocumentListener() {
-                        public void removeUpdate(DocumentEvent e) {
-                                setCanProceed(e.getDocument().getLength() > 0);
-                        }
-                        
-                        public void insertUpdate(DocumentEvent e) {
-                                setCanProceed(e.getDocument().getLength() > 0);
-                        }
-                        
-                        protected void setCanProceed(boolean b) {
-                                if (isLastStep) {
-                                        setCanFinish(b);
-                                } else {
-                                        setCanGoNext(b);
-                                }
-                        }
-                        
-                        public void changedUpdate(DocumentEvent e) {}
-                });
-                addressLabel.setLabelFor(hostTextField);
-                middlePanel.addTextField(hostTextField);
-                JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "example") + "mail.microsoft.com");
-                middlePanel.addExample(addressExampleLabel);
-                component.add(middlePanel);
-                return component;
-	}
+    public OutgoingServerStep(DataModel data, boolean isLastStep) {
+        super(MailResourceLoader.getString("dialog", "accountwizard",
+                "outgoingserver"),
+            MailResourceLoader.getString("dialog", "accountwizard",
+                "outgoingserver_description"));
+        this.data = data;
+        this.isLastStep = isLastStep;
+        setCanGoNext(false);
+    }
 
-        public void prepareRendering() {}
+    protected JComponent createComponent() {
+        JComponent component = new JPanel();
+        component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
+        component.add(new MultiLineLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "outgoingserver_text")));
+        component.add(Box.createVerticalStrut(40));
+
+        WizardTextField middlePanel = new WizardTextField();
+
+        /*
+        JLabel addressLabel = new JLabel(MailResourceLoader.getString(
+                            "dialog",
+                            "accountwizard",
+                            "host"));
+        addressLabel.setDisplayedMnemonic(MailResourceLoader.getMnemonic(
+                            "dialog",
+                            "accountwizard",
+                            "host"));
+        */
+        LabelWithMnemonic addressLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "host"));
+        middlePanel.addLabel(addressLabel);
+        hostTextField = new JTextField();
+
+        Method method = null;
+
+        try {
+            method = hostTextField.getClass().getMethod("getText", null);
+        } catch (NoSuchMethodException nsme) {
+        }
+
+        data.registerDataLookup("OutgoingServer.host",
+            new DefaultDataLookup(hostTextField, method, null));
+        hostTextField.getDocument().addDocumentListener(new DocumentListener() {
+                public void removeUpdate(DocumentEvent e) {
+                    setCanProceed(e.getDocument().getLength() > 0);
+                }
+
+                public void insertUpdate(DocumentEvent e) {
+                    setCanProceed(e.getDocument().getLength() > 0);
+                }
+
+                protected void setCanProceed(boolean b) {
+                    if (isLastStep) {
+                        setCanFinish(b);
+                    } else {
+                        setCanGoNext(b);
+                    }
+                }
+
+                public void changedUpdate(DocumentEvent e) {
+                }
+            });
+        addressLabel.setLabelFor(hostTextField);
+        middlePanel.addTextField(hostTextField);
+
+        JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "example") +
+                "mail.microsoft.com");
+        middlePanel.addExample(addressExampleLabel);
+        component.add(middlePanel);
+
+        return component;
+    }
+
+    public void prepareRendering() {
+    }
 }

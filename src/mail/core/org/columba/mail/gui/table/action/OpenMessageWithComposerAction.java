@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -24,6 +21,7 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.composer.command.OpenMessageWithComposerCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -31,49 +29,49 @@ import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class OpenMessageWithComposerAction
-	extends FrameAction
-	implements SelectionListener {
+public class OpenMessageWithComposerAction extends FrameAction
+    implements SelectionListener {
+    public OpenMessageWithComposerAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_openwithcomposer"));
 
-	public OpenMessageWithComposerAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_message_openwithcomposer"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_message_openwithcomposer_tooltip").replaceAll("&", ""));
-		
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("openmessage_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("compose-message.png"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_openwithcomposer_tooltip").replaceAll("&", ""));
 
-		setEnabled(false);
-		
-		((MailFrameMediator) frameMediator).registerTableSelectionListener(
-			this);
-	}
+        // icons
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("openmessage_small.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("compose-message.png"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
-		MainInterface.processor.addOp(new OpenMessageWithComposerCommand(r));
-	}
-        
-	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+        setEnabled(false);
+
+        ((MailFrameMediator) frameMediator).registerTableSelectionListener(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        MainInterface.processor.addOp(new OpenMessageWithComposerCommand(r));
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

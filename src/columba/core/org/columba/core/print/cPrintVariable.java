@@ -16,139 +16,140 @@
 package org.columba.core.print;
 
 import java.awt.Graphics2D;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+
 import java.text.DateFormat;
+
 import java.util.Date;
 
+
 public class cPrintVariable extends cParagraph {
+    String codeString;
+    CodeStringParser[] parser;
+    int parserCount = -1;
+    String[] keys = { "PAGE_NR", "PAGE_COUNT", "DATE_TODAY" };
+    String[] methods = { "getPageNr", "getPageCount", "getDateToday" };
 
-	String codeString;
-	CodeStringParser[] parser;
-	int parserCount = -1;
+    // Class	
+    public cPrintVariable() {
+        Class c = this.getClass();
+        parserCount = Array.getLength(keys);
+        parser = new CodeStringParser[parserCount];
 
-	String[] keys = { "PAGE_NR", "PAGE_COUNT", "DATE_TODAY" };
-	String[] methods = { "getPageNr", "getPageCount", "getDateToday" };
+        for (int i = 0; i < parserCount; i++) {
+            try {
+                parser[i] = new CodeStringParser(this, keys[i],
+                        c.getMethod(methods[i], new Class[0]));
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	// Methods called by the Variale parsers
+    // Methods called by the Variale parsers
+    public String getPageNr() {
+        return Integer.toString(page.getDocument().getPageNr(page));
+    }
 
-	public String getPageNr() {
-		return Integer.toString(page.getDocument().getPageNr(page));
-	}
+    public String getPageCount() {
+        return Integer.toString(page.getDocument().getPageCount());
+    }
 
-	public String getPageCount() {
-		return Integer.toString(page.getDocument().getPageCount());
-	}
+    public String getDateToday() {
+        DateFormat df = DateFormat.getDateInstance();
 
-	public String getDateToday() {
-		DateFormat df = DateFormat.getDateInstance();
-		return df.format(new Date());
-	}
+        return df.format(new Date());
+    }
 
-	// Class	
+    public void setCodeString(String n) {
+        codeString = n;
+        setText(n); // For getHeight() to return the rigth Value
+    }
 
-	public cPrintVariable() {
-		Class c = this.getClass();
-		parserCount = Array.getLength(keys);
-		parser = new CodeStringParser[parserCount];
+    public void print(Graphics2D g) {
+        setText(processCodeString());
 
-		for (int i = 0; i < parserCount; i++) {
-			try {
-				parser[i] =
-					new CodeStringParser(this, keys[i], c.getMethod(methods[i], new Class[0]));
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        super.print(g);
+    }
 
-	public void setCodeString(String n) {
-		codeString = n;
-		setText(n); // For getHeight() to return the rigth Value
-	}
+    public String processCodeString() {
+        int pos = 0;
+        StringBuffer result = new StringBuffer();
+        boolean isDecoding = false;
+        char c;
 
-	public void print(Graphics2D g) {
-		setText(processCodeString());
+        for (int i = 0; i < codeString.length(); i++) {
+            c = codeString.charAt(i);
 
-		super.print(g);
-	}
+            if (c == '%') {
+                isDecoding = !isDecoding;
 
-	public String processCodeString() {
-		int pos = 0;
-		StringBuffer result = new StringBuffer();
-		boolean isDecoding = false;
-		char c;
+                if (!isDecoding) {
+                    for (int j = 0; j < parserCount; j++) {
+                        parser[j].reset();
+                    }
+                }
+            } else {
+                if (isDecoding) {
+                    for (int j = 0; j < parserCount; j++) {
+                        if (parser[j].clock(c)) {
+                            result.append(parser[j].getValue());
+                        }
+                    }
+                } else {
+                    result.append(c);
+                }
+            }
+        }
 
-		for (int i = 0; i < codeString.length(); i++) {
-			c = codeString.charAt(i);
-
-			if (c == '%') {
-				isDecoding = !isDecoding;
-				if (!isDecoding) {
-					for (int j = 0; j < parserCount; j++) {
-						parser[j].reset();
-					}
-				}
-			} else {
-				if (isDecoding) {
-					for (int j = 0; j < parserCount; j++) {
-						if (parser[j].clock(c))
-							result.append(parser[j].getValue());
-					}
-				} else {
-					result.append(c);
-				}
-
-			}
-
-		}
-
-		return result.toString();
-	}
-
+        return result.toString();
+    }
 }
 
+
 class CodeStringParser {
+    Method hit;
+    char[] match;
+    int length;
+    Object parent;
+    int pos;
 
-	Method hit;
-	char[] match;
-	int length;
-	Object parent;
+    public CodeStringParser(Object p, String m, Method h) {
+        parent = p;
+        match = m.toCharArray();
+        length = m.length();
+        hit = h;
 
-	int pos;
+        pos = 0;
+    }
 
-	public CodeStringParser(Object p, String m, Method h) {
-		parent = p;
-		match = m.toCharArray();
-		length = m.length();
-		hit = h;
+    public boolean clock(char in) {
+        if (in == match[pos]) {
+            pos++;
 
-		pos = 0;
-	}
+            if (pos == length) {
+                pos = 0;
 
-	public boolean clock(char in) {
-		if (in == match[pos]) {
-			pos++;
-			if (pos == length) {
-				pos = 0;
-				return true;
-			}
-		} else {
-			pos = 0;
-		}
-		return false;
-	}
+                return true;
+            }
+        } else {
+            pos = 0;
+        }
 
-	public String getValue() {
-		try {
-			return (String) hit.invoke(parent, null);
-		} catch (Exception e) {
-			return new String("<unhandeled Exception occcured>");
-		}
-	}
+        return false;
+    }
 
-	public void reset() {
-		pos = 0;
-	}
+    public String getValue() {
+        try {
+            return (String) hit.invoke(parent, null);
+        } catch (Exception e) {
+            return new String("<unhandeled Exception occcured>");
+        }
+    }
 
+    public void reset() {
+        pos = 0;
+    }
 }

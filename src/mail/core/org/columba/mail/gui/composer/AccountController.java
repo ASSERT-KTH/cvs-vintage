@@ -13,17 +13,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.config.MailConfig;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.config.MailConfig;
 
 /**
  * @author frd
@@ -34,91 +34,89 @@ import org.columba.mail.config.MailConfig;
  * Window>Preferences>Java>Code Generation.
  */
 public class AccountController implements ItemListener {
-	AccountView view;
-	ComposerController controller;
+    AccountView view;
+    ComposerController controller;
+    JCheckBoxMenuItem signMenuItem;
+    JCheckBoxMenuItem encryptMenuItem;
 
-	JCheckBoxMenuItem signMenuItem;
-	JCheckBoxMenuItem encryptMenuItem;
+    public AccountController(ComposerController controller) {
+        this.controller = controller;
 
-	public AccountController(ComposerController controller) {
-		this.controller = controller;
-		
-		view = new AccountView(this);
-		
-		AccountList config = MailConfig.getAccountList();
+        view = new AccountView(this);
 
-		for (int i = 0; i < config.count(); i++) {
-			view.addItem(config.get(i));
-			if (i == 0) {
-				view.setSelectedItem(config.get(i));
-				controller.getModel().setAccountItem(config.get(i));
-			}
-		}
+        AccountList config = MailConfig.getAccountList();
 
-		AccountItem item = controller.getModel().getAccountItem();
-		
-		controller.getIdentityInfoPanel().set(item);
-					
-		view.addItemListener(this);
-	}
+        for (int i = 0; i < config.count(); i++) {
+            view.addItem(config.get(i));
 
-	/*
-	public void setSecurityMenuItems(
-		JCheckBoxMenuItem signItem,
-		JCheckBoxMenuItem encryptItem) {
-		signMenuItem = signItem;
-		encryptMenuItem = encryptItem;
+            if (i == 0) {
+                view.setSelectedItem(config.get(i));
+                controller.getModel().setAccountItem(config.get(i));
+            }
+        }
 
-		AccountItem item = (AccountItem) view.getSelectedItem();
+        AccountItem item = controller.getModel().getAccountItem();
 
-		PGPItem pgpItem = item.getPGPItem();
-		if( pgpItem.getBoolean("enabled") ) {
-			signMenuItem.setEnabled(true);
-			encryptMenuItem.setEnabled(true);
-			
-			model.setSignMessage(pgpItem.getBoolean("always_sign"));
-			model.setEncryptMessage(pgpItem.getBoolean("always_encrypt"));
-		}
-	}
-        */
+        controller.getIdentityInfoPanel().set(item);
 
-	public void itemStateChanged(ItemEvent e) {
-		if (e.getStateChange() == ItemEvent.SELECTED) {
-			updateComponents(false);
-			
-			AccountItem item = (AccountItem) view.getSelectedItem();
-			controller.getIdentityInfoPanel().set(item);
-			
-			
-			/*
-			AccountItem item = (AccountItem) view.getSelectedItem();
-			composerInterface.identityInfoPanel.set(item);
-			
-			PGPItem pgpItem = item.getPGPItem();
-			signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
-			signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
+        view.addItemListener(this);
+    }
 
-			encryptMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
-			encryptMenuItem.setSelected(pgpItem.getBoolean("always_encrypt"));
-			*/
-		}
-	}
+    /*
+    public void setSecurityMenuItems(
+            JCheckBoxMenuItem signItem,
+            JCheckBoxMenuItem encryptItem) {
+            signMenuItem = signItem;
+            encryptMenuItem = encryptItem;
 
-	public void updateComponents(boolean b) {
-		if (b) {
-			view.setSelectedItem(((ComposerModel)controller.getModel()).getAccountItem());
-			
-			/*
-			encryptMenuItem.setSelected(model.isEncryptMessage());
-			signMenuItem.setSelected(model.isSignMessage());
-			*/
-		} else {
-			((ComposerModel)controller.getModel()).setAccountItem((AccountItem) view.getSelectedItem());
-			
-			/*
-			model.setSignMessage(signMenuItem.isSelected());
-			model.setEncryptMessage(encryptMenuItem.isSelected());
-			*/
-		}
-	}
+            AccountItem item = (AccountItem) view.getSelectedItem();
+
+            PGPItem pgpItem = item.getPGPItem();
+            if( pgpItem.getBoolean("enabled") ) {
+                    signMenuItem.setEnabled(true);
+                    encryptMenuItem.setEnabled(true);
+
+                    model.setSignMessage(pgpItem.getBoolean("always_sign"));
+                    model.setEncryptMessage(pgpItem.getBoolean("always_encrypt"));
+            }
+    }
+    */
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            updateComponents(false);
+
+            AccountItem item = (AccountItem) view.getSelectedItem();
+            controller.getIdentityInfoPanel().set(item);
+
+            /*
+            AccountItem item = (AccountItem) view.getSelectedItem();
+            composerInterface.identityInfoPanel.set(item);
+
+            PGPItem pgpItem = item.getPGPItem();
+            signMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
+            signMenuItem.setSelected(pgpItem.getBoolean("always_sign"));
+
+            encryptMenuItem.setEnabled(pgpItem.getBoolean("enabled"));
+            encryptMenuItem.setSelected(pgpItem.getBoolean("always_encrypt"));
+            */
+        }
+    }
+
+    public void updateComponents(boolean b) {
+        if (b) {
+            view.setSelectedItem(((ComposerModel) controller.getModel()).getAccountItem());
+
+            /*
+            encryptMenuItem.setSelected(model.isEncryptMessage());
+            signMenuItem.setSelected(model.isSignMessage());
+            */
+        } else {
+            ((ComposerModel) controller.getModel()).setAccountItem((AccountItem) view.getSelectedItem());
+
+            /*
+            model.setSignMessage(signMenuItem.isSelected());
+            model.setEncryptMessage(encryptMenuItem.isSelected());
+            */
+        }
+    }
 }

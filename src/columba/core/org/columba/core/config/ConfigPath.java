@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import org.columba.core.util.OSInfo;
+
 import java.io.File;
 import java.io.IOException;
 
-import org.columba.core.util.OSInfo;
 
 /**
  * ConfigPath keeps the path to the user configuration directory.
@@ -26,56 +27,54 @@ import org.columba.core.util.OSInfo;
  * @author fdietz
  */
 public class ConfigPath {
+    public static String userName;
+    public static String userHome;
+    public static File configDirectory;
 
-	public static String userName;
-	public static String userHome;
+    public ConfigPath() {
+        getSystemProperties();
 
-	public static File configDirectory;
+        configDirectory.mkdir();
+    }
 
-	public ConfigPath() {
-		getSystemProperties();
-		
-		configDirectory.mkdir();
-	}
+    public ConfigPath(String configPath) {
+        configDirectory = new File(configPath);
 
-	public ConfigPath(String configPath) {
-		configDirectory = new File(configPath);
-		
-		configDirectory.mkdir();
-	}
+        configDirectory.mkdir();
+    }
 
-	public static File getConfigDirectory() {
-		return configDirectory;
-	}
+    public static File getConfigDirectory() {
+        return configDirectory;
+    }
 
-	protected void getSystemProperties() {
-		String hstr;
+    protected void getSystemProperties() {
+        String hstr;
 
-		userName = new String(System.getProperty("user.name"));
-		userHome = new String(System.getProperty("user.home"));
-		//userDir = new String(System.getProperty("user.dir"));
+        userName = new String(System.getProperty("user.name"));
+        userHome = new String(System.getProperty("user.home"));
 
-		if (OSInfo.isWindowsPlatform()) {
-			// this os has no home directory
-			// for example windows9x
+        //userDir = new String(System.getProperty("user.dir"));
+        if (OSInfo.isWindowsPlatform()) {
+            // this os has no home directory
+            // for example windows9x
+            if (configDirectory == null) {
+                configDirectory = new File("config");
+            }
+        } else {
+            if (configDirectory == null) {
+                configDirectory = new File(userHome, ".columba");
+            }
+        }
 
-			if (configDirectory == null)
-				configDirectory = new File("config");
+        try {
+            hstr = configDirectory.getCanonicalPath();
+        } catch (IOException e) {
+            hstr = userHome;
+        }
 
-		} else {
-			if (configDirectory == null)
-				configDirectory = new File(userHome, ".columba");
-		}
+        configDirectory = new File(hstr);
 
-		try {
-			hstr = configDirectory.getCanonicalPath();
-		} catch (IOException e) {
-			hstr = userHome;
-		}
-
-		configDirectory = new File(hstr);
-		//DiskIO.ensureDirectory(hstr);
-		
-		//createDefaultConfigFiles();
-	}
+        //DiskIO.ensureDirectory(hstr);
+        //createDefaultConfigFiles();
+    }
 }

@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -24,26 +21,28 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ShowHelpAction extends FrameAction {
+    public ShowHelpAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            GlobalResourceLoader.getString(null, null, "menu_help_help"));
 
-	public ShowHelpAction(FrameMediator frameMediator) {
-		super(frameMediator, GlobalResourceLoader.getString(
-			null, null, "menu_help_help"));
-				
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_help_16.png"));
-	}
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_help_16.png"));
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		HelpManager.openHelpFrame();
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        HelpManager.openHelpFrame();
+    }
 }

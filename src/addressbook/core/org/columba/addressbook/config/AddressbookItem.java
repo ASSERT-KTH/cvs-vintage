@@ -13,111 +13,74 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
-
 package org.columba.addressbook.config;
-
-import java.util.List;
-import java.util.Vector;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+import java.util.List;
+import java.util.Vector;
 
-public class AddressbookItem extends DefaultItem
-{
-    private AdapterNode name, uid, list;
-        
-    public AddressbookItem( XmlElement root )
-    {
-        super( root );
+
+public class AddressbookItem extends DefaultItem {
+    private AdapterNode name;
+    private AdapterNode uid;
+    private AdapterNode list;
+
+    public AddressbookItem(XmlElement root) {
+        super(root);
     }
-    
-        
-    public void setNameNode( AdapterNode node )
-    {
+
+    public void setNameNode(AdapterNode node) {
         name = node;
     }
-    
-    public void setUidNode( AdapterNode node )
-    {
-        uid= node;
+
+    public void setUidNode(AdapterNode node) {
+        uid = node;
     }
 
-    public void setListNode( AdapterNode node )
-    {
+    public void setListNode(AdapterNode node) {
         list = node;
     }
-    
 
-       
+    /******************************************** set ***************************************/
+    public void setUid(int i) {
+        Integer h = new Integer(i);
 
-
-      /******************************************** set ***************************************/
-    
-    
-    public void setUid( int i )
-    {
-        Integer h = new Integer( i );
-
-	 //       setTextValue( uid, h.toString() );
+        //       setTextValue( uid, h.toString() );
     }
 
-            
-    public void setName( String str )
-    {
-      //  setTextValue( name, str );
+    public void setName(String str) {
+        //  setTextValue( name, str );
     }
 
-    
-      /**************************************************** get *********************************/
-
-
-    
-
-    
-    
-
-    public String getName()
-    {
+    /**************************************************** get *********************************/
+    public String getName() {
         //return getTextValue( name );
         return "";
     }
 
-   
-    public int getUid()
-    {
-    	/*
+    public int getUid() {
+        /*
         Integer i = new Integer(  getTextValue( uid ) );
-        
+
         return i.intValue();
         */
-        
         return -1;
     }
 
-
-    public List getGroupList()
-    {
-        
+    public List getGroupList() {
         int count = list.getChildCount();
         List v = new Vector();
 
-        for ( int i=0; i<count; i++ )
-        {
+        for (int i = 0; i < count; i++) {
             AdapterNode child = list.getChild(i);
 
-            if ( child.getName().equals("group") )
-                v.add( child );
+            if (child.getName().equals("group")) {
+                v.add(child);
+            }
         }
 
         return v;
     }
-    
-        
-    
 }
-    
-
-
-

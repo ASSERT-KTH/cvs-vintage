@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+
 /**
  * @author frd
  *
@@ -21,56 +22,37 @@ import javax.swing.table.DefaultTableCellRenderer;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class EnabledRenderer extends DefaultTableCellRenderer {
+    JCheckBox checkBox = new JCheckBox();
 
-	JCheckBox checkBox = new JCheckBox();
+    public EnabledRenderer() {
+        setHorizontalAlignment(SwingConstants.CENTER);
+    }
 
-	public EnabledRenderer() {
-		setHorizontalAlignment(SwingConstants.CENTER);
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     */
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        PluginNode node = (PluginNode) value;
 
-	}
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
-	 */
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        if (node.isCategory()) {
+            // this node is category folder
+            // -> don't make it editable
+            return super.getTableCellRendererComponent(table, "", isSelected,
+                hasFocus, row, column);
+        } else {
+            boolean b = node.isEnabled();
 
-		PluginNode node = (PluginNode) value;
-		
-		
-		if (node.isCategory()) {
-			// this node is category folder
-			// -> don't make it editable
+            checkBox.setSelected(b);
+            checkBox.setHorizontalAlignment(JLabel.CENTER);
 
-			return super.getTableCellRendererComponent(
-				table,
-				"",
-				isSelected,
-				hasFocus,
-				row,
-				column);
-		} else {
-			boolean b = node.isEnabled();
+            if (isSelected) {
+                checkBox.setBackground(table.getSelectionBackground());
+            } else {
+                checkBox.setBackground(table.getBackground());
+            }
 
-			checkBox.setSelected(b);
-			checkBox.setHorizontalAlignment(JLabel.CENTER);
-
-			if (isSelected) {
-
-				checkBox.setBackground(table.getSelectionBackground());
-			} else {
-
-				checkBox.setBackground(table.getBackground());
-
-			}
-
-			return checkBox;
-		}
-
-	}
-
+            return checkBox;
+        }
+    }
 }

@@ -15,12 +15,14 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+import org.columba.core.config.ConfigPath;
+import org.columba.core.logging.ColumbaLogger;
+
 import java.io.File;
+
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.config.ConfigPath;
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * Find all plugins in the users config-directory and Columba's
@@ -29,59 +31,58 @@ import org.columba.core.logging.ColumbaLogger;
  * @author fdietz
  */
 public class PluginFinder {
+    /**
+     * Constructor for PluginFinder.
+     */
+    public PluginFinder() {
+        super();
+    }
 
-	/**
-	 * Constructor for PluginFinder.
-	 */
-	public PluginFinder() {
-		super();
-	}
+    /**
+     * Get list of all possible plugin folders.
+     *
+     * @return        array of plugin folders
+     */
+    public static File[] searchPlugins() {
+        List v = new Vector();
+        File[] programList = null;
+        File[] configList = null;
 
-	/**
-	 * Get list of all possible plugin folders.
-	 * 
-	 * @return	array of plugin folders
-	 */
-	public static File[] searchPlugins() {
-		List v = new Vector();
-		File[] programList = null;
-		File[] configList = null;
+        File programFolder = new File("plugins");
 
-		File programFolder = new File("plugins");
-		if (programFolder.exists()) {
-			programList = programFolder.listFiles();
-		} else {
-                        ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
-                }
-		File configFolder = new File(ConfigPath.configDirectory, "plugins");
-		if ( configFolder.exists() == false) configFolder.mkdir();
-		
-        ColumbaLogger.log.debug("config-folder path="+configFolder.getPath());
-		
-		if (configFolder.exists()) {
-			configList = configFolder.listFiles();
-		} else {
-                        ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
-                }
-		if ((programList != null) && (configList != null)) {
+        if (programFolder.exists()) {
+            programList = programFolder.listFiles();
+        } else {
+            ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+        }
 
-			File[] result = new File[programList.length + configList.length];
-			System.arraycopy(programList, 0, result, 0, programList.length);
-			System.arraycopy(
-				configList,
-				0,
-				result,
-				programList.length,
-				configList.length);
-			return result;
-		}
-		else if ( programList != null )
-		{
-			return programList;
-		}
-		else if ( configList != null )
-			return configList;
-			
-		return null;
-	}
+        File configFolder = new File(ConfigPath.configDirectory, "plugins");
+
+        if (configFolder.exists() == false) {
+            configFolder.mkdir();
+        }
+
+        ColumbaLogger.log.debug("config-folder path=" + configFolder.getPath());
+
+        if (configFolder.exists()) {
+            configList = configFolder.listFiles();
+        } else {
+            ColumbaLogger.log.info("Folder \"plugins\" doesn't exist.");
+        }
+
+        if ((programList != null) && (configList != null)) {
+            File[] result = new File[programList.length + configList.length];
+            System.arraycopy(programList, 0, result, 0, programList.length);
+            System.arraycopy(configList, 0, result, programList.length,
+                configList.length);
+
+            return result;
+        } else if (programList != null) {
+            return programList;
+        } else if (configList != null) {
+            return configList;
+        }
+
+        return null;
+    }
 }

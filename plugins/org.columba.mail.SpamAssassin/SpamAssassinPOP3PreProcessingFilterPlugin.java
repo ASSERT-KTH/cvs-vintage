@@ -4,10 +4,11 @@
  * To change the template for this generated file go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
+
 
 /**
  * @author frd
@@ -16,75 +17,77 @@ import org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SpamAssassinPOP3PreProcessingFilterPlugin
-	extends AbstractPOP3PreProcessingFilter {
+    extends AbstractPOP3PreProcessingFilter {
+    protected IPCHelper ipcHelper;
 
-	protected IPCHelper ipcHelper;
+    public SpamAssassinPOP3PreProcessingFilterPlugin(XmlElement rootElement) {
+        super(rootElement);
 
-	public SpamAssassinPOP3PreProcessingFilterPlugin(XmlElement rootElement) {
-		super(rootElement);
+        ipcHelper = new IPCHelper();
+    }
 
-		ipcHelper = new IPCHelper();
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter#modify(java.lang.String)
+     */
+    public String modify(String rawString) {
+        // this is for gathering configuration
+        // but we don't need this right now
+        String version = rootElement.getAttribute("version");
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.pop3.plugins.AbstractPOP3PreProcessingFilter#modify(java.lang.String)
-	 */
-	public String modify(String rawString) {
+        //String cmd = "spamassassin -L";
+        String cmd = "spamc -c";
 
-		// this is for gathering configuration
-		// but we don't need this right now
-		String version = rootElement.getAttribute("version");
+        String result = null;
+        int exitVal = -1;
 
-		//String cmd = "spamassassin -L";
-		String cmd = "spamc -c";
+        try {
+            ColumbaLogger.log.debug("creating process..");
 
-		String result = null;
-		int exitVal = -1;
-		try {
-			ColumbaLogger.log.debug("creating process..");
+            ipcHelper.executeCommand(cmd);
 
-			ipcHelper.executeCommand(cmd);
+            ColumbaLogger.log.debug("sending to stdin..");
 
-			ColumbaLogger.log.debug("sending to stdin..");
+            ipcHelper.send(rawString);
 
-			ipcHelper.send(rawString);
-			
-			exitVal = ipcHelper.waitFor(); 
+            exitVal = ipcHelper.waitFor();
 
-			ColumbaLogger.log.debug("exitcode=" + exitVal);
+            ColumbaLogger.log.debug("exitcode=" + exitVal);
 
-			ColumbaLogger.log.debug("retrieving output..");
-			result = ipcHelper.getOutputString();
+            ColumbaLogger.log.debug("retrieving output..");
+            result = ipcHelper.getOutputString();
 
-			ipcHelper.waitForThreads();
+            ipcHelper.waitForThreads();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+        if (result == null) {
+            return rawString;
+        }
 
-		if (result == null)
-			return rawString;
+        StringBuffer buf = new StringBuffer();
+        buf.append("X-Spam-Level: ");
 
-		StringBuffer buf = new StringBuffer();
-		buf.append("X-Spam-Level: ");
-		// result already contains "\n"
-		buf.append(result);
+        // result already contains "\n"
+        buf.append(result);
 
-		if (exitVal == 1)
-			// spam found
-			buf.append("X-Spam-Flag: YES\n");
-		else
-			buf.append("X-Spam-Flag: NO\n");
-		buf.append(rawString);
+        if (exitVal == 1) {
+            // spam found
+            buf.append("X-Spam-Flag: YES\n");
+        } else {
+            buf.append("X-Spam-Flag: NO\n");
+        }
 
-		rawString = null;
+        buf.append(rawString);
 
-		// free memory
-		rawString = null;
-		result = null;
+        rawString = null;
 
-		return buf.toString();
-		//return result;
-	}
+        // free memory
+        rawString = null;
+        result = null;
 
+        return buf.toString();
+
+        //return result;
+    }
 }

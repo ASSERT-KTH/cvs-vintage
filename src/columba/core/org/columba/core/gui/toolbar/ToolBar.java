@@ -15,14 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.toolbar;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.ListIterator;
-import java.util.ResourceBundle;
-
-import javax.swing.Box;
-import javax.swing.JToolBar;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.statusbar.ImageSequenceTimer;
@@ -31,85 +23,89 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.xml.XmlElement;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import java.util.ListIterator;
+import java.util.ResourceBundle;
+
+import javax.swing.Box;
+import javax.swing.JToolBar;
+
+
 /**
  * Toolbar which uses xml files to generate itself.
  * <p>
- * TODO: separate code which creates the toolbar from 
+ * TODO: separate code which creates the toolbar from
  * the swing JToolBar.
  *
  * @author fdietz
  */
 public class ToolBar extends JToolBar {
+    ResourceBundle toolbarLabels;
+    GridBagConstraints gridbagConstraints;
+    GridBagLayout gridbagLayout;
+    int i;
+    XmlElement rootElement;
 
-	ResourceBundle toolbarLabels;
-	GridBagConstraints gridbagConstraints;
-	GridBagLayout gridbagLayout;
-	int i;
-	XmlElement rootElement;
-	//XmlIO xmlFile;
+    //XmlIO xmlFile;
+    FrameMediator frameController;
 
-	FrameMediator frameController;
+    public ToolBar(XmlElement rootElement, FrameMediator controller) {
+        super();
+        this.frameController = controller;
 
-	public ToolBar(
-		XmlElement rootElement,
-		FrameMediator controller) {
-		super();
-		this.frameController = controller;
+        this.rootElement = rootElement;
 
-		this.rootElement = rootElement;
+        createButtons();
 
-		createButtons();
+        setRollover(true);
 
-		setRollover(true);
+        setFloatable(false);
+    }
 
-		setFloatable(false);
-	}
+    public boolean getVisible() {
+        return Boolean.valueOf(rootElement.getAttribute("visible"))
+                      .booleanValue();
+    }
 
-	public boolean getVisible() {
-		return Boolean.valueOf(rootElement.getAttribute("visible")).booleanValue();
-	}
+    private void createButtons() {
+        removeAll();
 
-	private void createButtons() {
-		removeAll();
-		ListIterator iterator = rootElement.getElements().listIterator();
-		XmlElement buttonElement = null;
+        ListIterator iterator = rootElement.getElements().listIterator();
+        XmlElement buttonElement = null;
 
-		while (iterator.hasNext()) {
-			try {
-				buttonElement = (XmlElement) iterator.next();
-				if (buttonElement.getName().equals("button"))
-					addButton(
-						(
-							(
-								ActionPluginHandler) MainInterface
-									.pluginManager
-									.getHandler(
-								"org.columba.core.action")).getAction(
-							buttonElement.getAttribute("action"),
-							frameController));
-				else if (buttonElement.getName().equals("separator"))
-					addSeparator();
-			} catch (Exception e) {
-				ColumbaLogger.log.debug(
-					"toolbar-button="
-						+ ((String) buttonElement.getAttribute("action")));
+        while (iterator.hasNext()) {
+            try {
+                buttonElement = (XmlElement) iterator.next();
 
-				e.printStackTrace();
-			}
-		}
-		add(Box.createHorizontalGlue());
+                if (buttonElement.getName().equals("button")) {
+                    addButton(((ActionPluginHandler) MainInterface.pluginManager.getHandler(
+                            "org.columba.core.action")).getAction(
+                            buttonElement.getAttribute("action"),
+                            frameController));
+                } else if (buttonElement.getName().equals("separator")) {
+                    addSeparator();
+                }
+            } catch (Exception e) {
+                ColumbaLogger.log.debug("toolbar-button=" +
+                    ((String) buttonElement.getAttribute("action")));
 
-		ImageSequenceTimer image =
-			frameController.getStatusBar().getImageSequenceTimer();
-		add(image);
-	}
+                e.printStackTrace();
+            }
+        }
 
-	public void addButton(FrameAction action) {
+        add(Box.createHorizontalGlue());
 
-		ToolbarButton button = new ToolbarButton(action);
-		button.setRolloverEnabled(true);
+        ImageSequenceTimer image = frameController.getStatusBar()
+                                                  .getImageSequenceTimer();
+        add(image);
+    }
 
-		add(button);
+    public void addButton(FrameAction action) {
+        ToolbarButton button = new ToolbarButton(action);
+        button.setRolloverEnabled(true);
 
-	}
+        add(button);
+    }
 }

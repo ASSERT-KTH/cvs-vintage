@@ -13,56 +13,53 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.search.SearchFrame;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 public class SearchMessageAction extends FrameAction {
+    public SearchMessageAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_edit_searchmessages"));
 
-	public SearchMessageAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_edit_searchmessages"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_edit_searchmessages").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_edit_searchmessages").replaceAll("&", ""));
 
-	}
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		Folder searchFolder =
-			(Folder) MailInterface.treeModel.getFolder(106);
-			
-		SearchFrame frame = new SearchFrame(
-				(AbstractMailFrameController) getFrameMediator(),
-				searchFolder);				
-	}
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
+
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        Folder searchFolder = (Folder) MailInterface.treeModel.getFolder(106);
+
+        SearchFrame frame = new SearchFrame((AbstractMailFrameController) getFrameMediator(),
+                searchFolder);
+    }
 }

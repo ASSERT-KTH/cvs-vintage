@@ -6,6 +6,7 @@
  */
 package org.columba.mail.pgp;
 
+
 /**
  * @author frd
  *
@@ -13,20 +14,17 @@ package org.columba.mail.pgp;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class MissingPublicKeyException extends VerificationException {
+    /**
+     *
+     */
+    public MissingPublicKeyException() {
+        super("Missing Public Key");
+    }
 
-	/**
-	 * 
-	 */
-	public MissingPublicKeyException() {
-		super("Missing Public Key");
-		
-	}
-
-	/**
-	 * @param message
-	 */
-	public MissingPublicKeyException(String message) {
-		super(message);
-	}
-
+    /**
+     * @param message
+     */
+    public MissingPublicKeyException(String message) {
+        super(message);
+    }
 }

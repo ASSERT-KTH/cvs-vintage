@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
 
 import java.awt.GridBagConstraints;
@@ -25,63 +24,65 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+
 public class WizardTextField extends JPanel {
-	private JTextField textField;
-	private JLabel label;
-	private JLabel example;
-	private GridBagLayout layout;
-	private int y = 0;
+    private JTextField textField;
+    private JLabel label;
+    private JLabel example;
+    private GridBagLayout layout;
+    private int y = 0;
 
-	public WizardTextField() {
-		setOpaque(false);
-		layout = new GridBagLayout();
-		setLayout(layout);
-	}
+    public WizardTextField() {
+        setOpaque(false);
+        layout = new GridBagLayout();
+        setLayout(layout);
+    }
 
-	public void addLabel(JLabel label) {
-		GridBagConstraints c = new GridBagConstraints();
+    public void addLabel(JLabel label) {
+        GridBagConstraints c = new GridBagConstraints();
 
-		c.gridx = 0;
-		c.gridy = y;
-		c.weightx = 0.0;
-		c.anchor = GridBagConstraints.WEST;
-		c.insets = new Insets(0, 0, 0, 20);
-		layout.setConstraints(label, c);
-		add(label);
-	}
+        c.gridx = 0;
+        c.gridy = y;
+        c.weightx = 0.0;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(0, 0, 0, 20);
+        layout.setConstraints(label, c);
+        add(label);
+    }
 
-	public void addTextField(JComponent component) {
-		GridBagConstraints c = new GridBagConstraints();
+    public void addTextField(JComponent component) {
+        GridBagConstraints c = new GridBagConstraints();
 
-		c.gridx = 1;
-		c.weightx = 1.0;
-		c.gridy = y;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		layout.setConstraints(component, c);
-		add(component);
-	}
+        c.gridx = 1;
+        c.weightx = 1.0;
+        c.gridy = y;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        layout.setConstraints(component, c);
+        add(component);
+    }
 
-	public void addExample(JLabel example) {
-		y += 1;
-		GridBagConstraints c = new GridBagConstraints();
+    public void addExample(JLabel example) {
+        y += 1;
 
-		c.gridx = 1;
+        GridBagConstraints c = new GridBagConstraints();
 
-		c.gridy = y;
-		c.weightx = 0.0;
-		c.insets = new Insets(0, 10, 10, 0);
-		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.NONE;
-		layout.setConstraints(example, c);
-		add(example);
+        c.gridx = 1;
 
-		y += 1;
-	}
-	
-	public void addEmptyExample() {
-		y += 2;
-	}
+        c.gridy = y;
+        c.weightx = 0.0;
+        c.insets = new Insets(0, 10, 10, 0);
+        c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.NONE;
+        layout.setConstraints(example, c);
+        add(example);
+
+        y += 1;
+    }
+
+    public void addEmptyExample() {
+        y += 2;
+    }
 }

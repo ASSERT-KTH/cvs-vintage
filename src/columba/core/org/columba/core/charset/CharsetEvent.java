@@ -17,6 +17,7 @@ package org.columba.core.charset;
 
 import java.util.EventObject;
 
+
 /**
  * @author -
  *
@@ -26,45 +27,44 @@ import java.util.EventObject;
  * Window>Preferences>Java>Code Generation.
  */
 public class CharsetEvent extends EventObject {
-	
-	private int id;
-	private String value;
+    private int id;
+    private String value;
 
-	public CharsetEvent( Object source, int id, String name ) {
-		super(source);
-		this.id = id;
-		value = name;	
-	}
+    public CharsetEvent(Object source, int id, String name) {
+        super(source);
+        this.id = id;
+        value = name;
+    }
 
-	/**
-	 * Returns the id.
-	 * @return int
-	 */
-	public int getId() {
-		return id;
-	}
+    /**
+     * Returns the id.
+     * @return int
+     */
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Returns the value.
-	 * @return String
-	 */
-	public String getValue() {
-		return value;
-	}
+    /**
+     * Returns the value.
+     * @return String
+     */
+    public String getValue() {
+        return value;
+    }
 
-	/**
-	 * Sets the id.
-	 * @param id The id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+    /**
+     * Sets the id.
+     * @param id The id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	/**
-	 * Sets the value.
-	 * @param value The value to set
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+    /**
+     * Sets the value.
+     * @param value The value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

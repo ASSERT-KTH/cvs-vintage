@@ -15,143 +15,143 @@
 //All Rights Reserved.
 package org.columba.mail.filter;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+import java.util.List;
+import java.util.Vector;
+
+
 public class FilterRule extends DefaultItem {
+    // Condition
+    public final static int MATCH_ALL = 0;
+    public final static int MATCH_ANY = 1;
 
-	// Condition
-	public final static int MATCH_ALL = 0;
-	public final static int MATCH_ANY = 1;
+    // list of FilterCriteria
+    private List list;
 
-	// list of FilterCriteria
-	private List list;
+    // condition: match all (AND) = 0, match any (OR) = 1
+    //private AdapterNode conditionNode;
+    public FilterRule(XmlElement root) {
+        super(root);
 
-	// condition: match all (AND) = 0, match any (OR) = 1
-	//private AdapterNode conditionNode;
+        list = new Vector();
+    }
 
-	public FilterRule(XmlElement root) {
-		super(root);
+    public FilterRule() {
+        super(new XmlElement());
 
-		list = new Vector();
+        list = new Vector();
+    }
 
-	}
-	
-	public FilterRule() {
-		super(new XmlElement());
-		
-		list = new Vector();
-	}
+    public FilterCriteria addEmptyCriteria() {
+        XmlElement criteria = new XmlElement("criteria");
+        criteria.addAttribute("type", "Subject");
+        criteria.addAttribute("criteria", "contains");
+        criteria.addAttribute("pattern", "pattern");
 
-	public FilterCriteria addEmptyCriteria() {
-		XmlElement criteria = new XmlElement("criteria");
-		criteria.addAttribute("type", "Subject");
-		criteria.addAttribute("criteria", "contains");
-		criteria.addAttribute("pattern", "pattern");
+        getRoot().addElement(criteria);
 
-		getRoot().addElement(criteria);
-		
-		FilterCriteria c = new FilterCriteria(criteria);
-		
-		return c;
-	}
+        FilterCriteria c = new FilterCriteria(criteria);
 
-	public void add(FilterCriteria criteria) {
-		getRoot().addElement(criteria.getRoot());
-	}
+        return c;
+    }
 
-	public void remove(int index) {
-		getRoot().removeElement(index);
-		/*
-		if ((index >= 0) && (index < list.size())) {
-			list.remove(index);
-		
-			int result = -1;
-		
-			for (int i = 0; i < getRootNode().getChildCount(); i++) {
-				AdapterNode child = (AdapterNode) getRootNode().getChildAt(i);
-				String name = child.getName();
-		
-				if (name.equals("filtercriteria"))
-					result++;
-		
-				if (result == index) {
-					child.remove();
-					break;
-				}
-			}
-		
-			//AdapterNode child = getRootNode().getChildAt(index);
-		
-		}
-		*/
-	}
+    public void add(FilterCriteria criteria) {
+        getRoot().addElement(criteria.getRoot());
+    }
 
-	public void removeAll() {
-		/*
-		for (int i = 0; i < count(); i++) {
-			remove(0);
-		}
-		*/
-		getRoot().removeAllElements();
-	}
+    public void remove(int index) {
+        getRoot().removeElement(index);
 
-	public void removeLast() {
-		/*
-		int index = list.size() - 1;
-		
-		remove(index);
-		*/
+        /*
+        if ((index >= 0) && (index < list.size())) {
+                list.remove(index);
 
-		getRoot().removeElement(getRoot().count() - 1);
+                int result = -1;
 
-	}
+                for (int i = 0; i < getRootNode().getChildCount(); i++) {
+                        AdapterNode child = (AdapterNode) getRootNode().getChildAt(i);
+                        String name = child.getName();
 
-	public FilterCriteria get(int index) {
-		return new FilterCriteria(getRoot().getElement(index));
-	}
+                        if (name.equals("filtercriteria"))
+                                result++;
 
-	public int count() {
-		return getRoot().count();
-	}
+                        if (result == index) {
+                                child.remove();
+                                break;
+                        }
+                }
 
-	public String getCondition() {
-		return getRoot().getAttribute("condition");
-		/*
-		if (conditionNode == null) {
-			System.out.println(
-				"---------------------------> failure: conditionNode == null !");
-		
-			return new String("matchany");
-		} else
-			return getTextValue(conditionNode);
-		*/
-	}
+                //AdapterNode child = getRootNode().getChildAt(index);
 
-	public void setCondition(String s) {
-		getRoot().addAttribute("condition", s);
-		/*
-		setTextValue(conditionNode, s);
-		*/
-	}
+        }
+        */
+    }
 
-	/*
-	public FilterCriteria getCriteria(int index) {
-		return (FilterCriteria) list.get(index);
-	}
-	*/
+    public void removeAll() {
+        /*
+        for (int i = 0; i < count(); i++) {
+                remove(0);
+        }
+        */
+        getRoot().removeAllElements();
+    }
 
-	public int getConditionInt() {
-		//System.out.println("condigtion: "+ condition );
+    public void removeLast() {
+        /*
+        int index = list.size() - 1;
 
-		if (getCondition().equals("matchall"))
-			return MATCH_ALL;
-		if (getCondition().equals("matchany"))
-			return MATCH_ANY;
-		return -1;
-	}
+        remove(index);
+        */
+        getRoot().removeElement(getRoot().count() - 1);
+    }
 
+    public FilterCriteria get(int index) {
+        return new FilterCriteria(getRoot().getElement(index));
+    }
+
+    public int count() {
+        return getRoot().count();
+    }
+
+    public String getCondition() {
+        return getRoot().getAttribute("condition");
+
+        /*
+        if (conditionNode == null) {
+                System.out.println(
+                        "---------------------------> failure: conditionNode == null !");
+
+                return new String("matchany");
+        } else
+                return getTextValue(conditionNode);
+        */
+    }
+
+    public void setCondition(String s) {
+        getRoot().addAttribute("condition", s);
+
+        /*
+        setTextValue(conditionNode, s);
+        */
+    }
+
+    /*
+    public FilterCriteria getCriteria(int index) {
+            return (FilterCriteria) list.get(index);
+    }
+    */
+    public int getConditionInt() {
+        //System.out.println("condigtion: "+ condition );
+        if (getCondition().equals("matchall")) {
+            return MATCH_ALL;
+        }
+
+        if (getCondition().equals("matchany")) {
+            return MATCH_ANY;
+        }
+
+        return -1;
+    }
 }

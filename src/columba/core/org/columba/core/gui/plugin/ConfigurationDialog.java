@@ -15,6 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.gui.plugin;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ConfigPluginHandler;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -30,14 +40,6 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ConfigPluginHandler;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -46,125 +48,112 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ConfigurationDialog extends JDialog implements ActionListener {
+    JButton okButton;
+    JButton cancelButton;
+    JButton helpButton;
+    String pluginId;
+    AbstractConfigPlugin plugin;
+    JPanel pluginPanel;
 
-	JButton okButton;
-	JButton cancelButton;
-	JButton helpButton;
-	
-	String pluginId;
+    /**
+     * @throws java.awt.HeadlessException
+     */
+    public ConfigurationDialog(String pluginId) {
+        // modal dialog
+        super(new JFrame(), true);
 
-	AbstractConfigPlugin plugin;
+        this.pluginId = pluginId;
 
-	JPanel pluginPanel;
+        pluginPanel = null;
 
-	/**
-	 * @throws java.awt.HeadlessException
-	 */
-	public ConfigurationDialog(String pluginId) {
-		// modal dialog
-		super(new JFrame(), true);
+        try {
+            ConfigPluginHandler h = (ConfigPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.config");
 
-		this.pluginId = pluginId;
+            Object[] args = {  };
 
-		pluginPanel = null;
+            plugin = (AbstractConfigPlugin) h.getPlugin(pluginId, null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-		try {
+        if (plugin == null) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog("Error while loading plugin " + pluginId + ".");
 
-			ConfigPluginHandler h =
-				(ConfigPluginHandler) MainInterface.pluginManager.getHandler(
-					"org.columba.core.config");
+            // exit
+            return;
+        }
 
-			Object[] args = {
-			};
+        pluginPanel = plugin.createPanel();
 
-			plugin = (AbstractConfigPlugin) h.getPlugin(pluginId, null);
+        initComponents();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+        // model->view
+        plugin.updateComponents(true);
 
-		if (plugin == null) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog("Error while loading plugin " + pluginId + ".");
+        pack();
+        setLocationRelativeTo(null);
 
-			// exit
-			return;
-		}
+        setVisible(true);
+    }
 
-		pluginPanel = plugin.createPanel();
+    protected void initComponents() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        getContentPane().add(mainPanel);
 
-		initComponents();
+        // centerpanel
+        JPanel centerPanel = new JPanel(new BorderLayout());
 
-		// model->view
-		plugin.updateComponents(true);
+        //centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        centerPanel.add(pluginPanel);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-		pack();
-		setLocationRelativeTo(null);
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-		setVisible(true);
-	}
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "ok"));
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
+        buttonPanel.add(okButton);
 
-	protected void initComponents() {
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		getContentPane().add(mainPanel);
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        buttonPanel.add(cancelButton);
+        helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
 
-		// centerpanel
+        // associate with JavaHelp
+        HelpManager.enableHelpOnButton(helpButton, "extending_columba_1");
+        buttonPanel.add(helpButton);
 
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		//centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-		centerPanel.add(pluginPanel);
-		mainPanel.add(centerPanel, BorderLayout.CENTER);
+        //setContentPane(mainPanel);
+        getRootPane().setDefaultButton(okButton);
+        getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		okButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
-		buttonPanel.add(okButton);
-		ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-		helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "extending_columba_1");
-		buttonPanel.add(helpButton);
-		
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		//setContentPane(mainPanel);
-		getRootPane().setDefaultButton(okButton);
-		getRootPane().registerKeyboardAction(
-			this,
-			"CANCEL",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-	}
+        if (action.equals("OK")) {
+            // view -> model
+            plugin.updateComponents(false);
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
-
-		if (action.equals("OK")) {
-
-			// view -> model
-			plugin.updateComponents(false);
-
-			setVisible(false);
-		} else if (action.equals("CANCEL")) {
-
-			setVisible(false);
-		}
-
-	}
-
+            setVisible(false);
+        } else if (action.equals("CANCEL")) {
+            setVisible(false);
+        }
+    }
 }

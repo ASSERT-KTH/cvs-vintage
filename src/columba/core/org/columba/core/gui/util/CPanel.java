@@ -22,101 +22,77 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-public class CPanel extends JPanel
-{
 
+public class CPanel extends JPanel {
+    static int size = 10;
     JPanel panel;
-
     JPanel innerPanel;
 
-    static int size = 10;
-
-    public CPanel( String title )
-    {
+    public CPanel(String title) {
         super();
-        setBorder( BorderFactory.createEmptyBorder( size, size, size, size ) );
+        setBorder(BorderFactory.createEmptyBorder(size, size, size, size));
 
         innerPanel = new JPanel();
-        innerPanel.setBorder( javax.swing.BorderFactory.createTitledBorder(
-                   javax.swing.BorderFactory.createEtchedBorder(),
-                   title ) );
-        innerPanel.setLayout( new BoxLayout( innerPanel, BoxLayout.Y_AXIS ) );
+        innerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createEtchedBorder(), title));
+        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
 
         panel = new JPanel();
-        panel.setBorder( BorderFactory.createEmptyBorder( size, size, size, size ) );
-        panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
+        panel.setBorder(BorderFactory.createEmptyBorder(size, size, size, size));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
+        innerPanel.add(panel);
 
-
-        innerPanel.add( panel );
-
-
-
-
-
-          //add( panel, BorderLayout.CENTER );
-        super.add( innerPanel );
-
+        //add( panel, BorderLayout.CENTER );
+        super.add(innerPanel);
     }
 
-
-    public CPanel( String title, boolean b)
-    {
+    public CPanel(String title, boolean b) {
         super();
-        setBorder( BorderFactory.createEmptyBorder( size, size, size, size ) );
+        setBorder(BorderFactory.createEmptyBorder(size, size, size, size));
 
         innerPanel = new JPanel();
-        innerPanel.setBorder( javax.swing.BorderFactory.createTitledBorder(
-                   javax.swing.BorderFactory.createEtchedBorder(),
-                   title ) );
-        if ( b == true )
-            innerPanel.setLayout( new BoxLayout( innerPanel, BoxLayout.Y_AXIS ) );
-        else
-            innerPanel.setLayout( new BoxLayout( innerPanel, BoxLayout.X_AXIS ) );
+        innerPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(
+                javax.swing.BorderFactory.createEtchedBorder(), title));
+
+        if (b == true) {
+            innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
+        } else {
+            innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.X_AXIS));
+        }
 
         panel = new JPanel();
-        panel.setBorder( BorderFactory.createEmptyBorder( size, size, size, size ) );
-        if ( b == true )
-            panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
-        else
-            panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+        panel.setBorder(BorderFactory.createEmptyBorder(size, size, size, size));
 
+        if (b == true) {
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        } else {
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        }
 
-        if ( b == true )
-            setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ) );
-        else
-            setLayout( new BoxLayout( this, BoxLayout.X_AXIS ) );
+        if (b == true) {
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        } else {
+            setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        }
 
+        innerPanel.add(panel);
 
-        innerPanel.add( panel );
-
-
-
-
-
-          //add( panel, BorderLayout.CENTER );
-        super.add( innerPanel );
+        //add( panel, BorderLayout.CENTER );
+        super.add(innerPanel);
     }
 
-
-    public Component add(Component comp)
-    {
-        return panel.add( comp );
+    public Component add(Component comp) {
+        return panel.add(comp);
     }
 
-    public Component add(Component comp, int index)
-    {
-        return panel.add( comp, index );
+    public Component add(Component comp, int index) {
+        return panel.add(comp, index);
     }
 
-    public void setInnerLayout(LayoutManager mgr)
-    {
-        panel.setLayout( mgr );
+    public void setInnerLayout(LayoutManager mgr) {
+        panel.setLayout(mgr);
     }
 }
-
-
-
-

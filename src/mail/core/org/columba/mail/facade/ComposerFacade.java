@@ -17,30 +17,30 @@ package org.columba.mail.facade;
 
 import org.columba.mail.gui.composer.ComposerController;
 
+
 /**
  * @author fdietz
  *
  */
 public class ComposerFacade {
+    /**
+     *
+     * open up composer window
+     */
+    public static void openComposer() {
+        // Choice btw. text and html will be based on stored option
+        new ComposerController();
+    }
 
-	/**
-	 * 
-	 * open up composer window
-	 */
-	public static void openComposer() {
-		// Choice btw. text and html will be based on stored option
-		new ComposerController();
-	}
-
-	/**
-	 * 
-	 * open up composer window and return reference
-	 * 
-	 * 
-	 * @return	ComposerController
-	 */
-	public static ComposerController createComposer() {
-		// Choice btw. text and html will be based on stored option
-		return new ComposerController();
-	}
+    /**
+     *
+     * open up composer window and return reference
+     *
+     *
+     * @return        ComposerController
+     */
+    public static ComposerController createComposer() {
+        // Choice btw. text and html will be based on stored option
+        return new ComposerController();
+    }
 }

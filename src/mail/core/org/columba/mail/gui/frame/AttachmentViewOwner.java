@@ -17,11 +17,12 @@ package org.columba.mail.gui.frame;
 
 import org.columba.mail.gui.attachment.AttachmentController;
 
+
 /**
- * 
+ *
  *
  * @author fdietz
  */
 public interface AttachmentViewOwner {
-	public AttachmentController getAttachmentController();
+    public AttachmentController getAttachmentController();
 }

@@ -13,14 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -31,47 +29,48 @@ import org.columba.mail.gui.composer.command.SaveMessageCommand;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SaveAsDraftAction extends FrameAction {
+    public SaveAsDraftAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_savedraft"));
 
-	public SaveAsDraftAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "composer", "menu_file_savedraft"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_file_savedraft").replaceAll("&", ""));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_savedraft").replaceAll("&", ""));
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		final ComposerController composerController = (ComposerController ) getFrameMediator();
-		if (composerController.checkState())
-			return;
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        final ComposerController composerController = (ComposerController) getFrameMediator();
 
-		AccountItem item =
-			((ComposerModel)composerController.getModel()).getAccountItem();
-		SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
-		String str = folderItem.get("drafts");
-		int destUid = Integer.parseInt(str);
-		Folder destFolder = (Folder) MailInterface.treeModel.getFolder(destUid);
+        if (composerController.checkState()) {
+            return;
+        }
 
-		ComposerCommandReference[] r = new ComposerCommandReference[1];
-		r[0] = new ComposerCommandReference(
-				composerController,
-				destFolder);
+        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
+        SpecialFoldersItem folderItem = item.getSpecialFoldersItem();
+        String str = folderItem.get("drafts");
+        int destUid = Integer.parseInt(str);
+        Folder destFolder = (Folder) MailInterface.treeModel.getFolder(destUid);
 
-		SaveMessageCommand c = new SaveMessageCommand(r);
+        ComposerCommandReference[] r = new ComposerCommandReference[1];
+        r[0] = new ComposerCommandReference(composerController, destFolder);
 
-		MainInterface.processor.addOp(c);
-	}
+        SaveMessageCommand c = new SaveMessageCommand(r);
+
+        MainInterface.processor.addOp(c);
+    }
 }

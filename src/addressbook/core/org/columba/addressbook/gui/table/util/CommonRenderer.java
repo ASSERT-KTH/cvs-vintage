@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
 
 import java.awt.Component;
@@ -24,52 +23,45 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-public class CommonRenderer extends JLabel implements TableCellRenderer
-{
+
+public class CommonRenderer extends JLabel implements TableCellRenderer {
     Border unselectedBorder = null;
     Border selectedBorder = null;
     boolean isBordered = true;
-    
-    
-    public CommonRenderer(boolean isBordered)
-    {
+
+    public CommonRenderer(boolean isBordered) {
         super();
         this.isBordered = isBordered;
         setOpaque(true); //MUST do this for background to show up.
-        
-        
-        
     }
-    
-    public Component getTableCellRendererComponent(
-        JTable table, Object value, 
-        boolean isSelected, boolean hasFocus,
-        int row, int column)
-    {
-        if (isBordered)
-        {
-            if (isSelected)
-            {
-                if (selectedBorder == null)
-                {
-                    selectedBorder = BorderFactory.createMatteBorder(2,5,2,5,table.getSelectionBackground() );
+
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
                 }
-                  //setBorder(selectedBorder);
-                setBackground( table.getSelectionBackground() );
-                setForeground( table.getSelectionForeground() );
-            } else
-            {
-                if (unselectedBorder == null)
-                {
-                    unselectedBorder = BorderFactory.createMatteBorder(2,5,2,5,
-                                                                       table.getBackground() );
+
+                //setBorder(selectedBorder);
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
                 }
-                setBackground( table.getBackground() );
-                  //setBorder(unselectedBorder);
-                setForeground( table.getForeground() );
+
+                setBackground(table.getBackground());
+
+                //setBorder(unselectedBorder);
+                setForeground(table.getForeground());
             }
         }
-        setText( (String) value );           
+
+        setText((String) value);
+
         return this;
     }
 }

@@ -13,45 +13,40 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.util;
-
-import java.applet.Applet;
-import java.applet.AudioClip;
-import java.net.URL;
 
 import org.columba.core.io.DiskIO;
 
-public class PlaySound
-{
-	public static void play(String filename)
-	{
-                play(DiskIO.getResourceURL("org/columba/mail/sound/" + filename));
-	}
+import java.applet.Applet;
+import java.applet.AudioClip;
 
-	public static void play(URL url)
-	{
-		if (url != null)
-		{
-			SoundLoader loader = new SoundLoader(url);
-			loader.setPriority(Thread.MIN_PRIORITY);
-			loader.start();
-		}
-	}
+import java.net.URL;
+
+
+public class PlaySound {
+    public static void play(String filename) {
+        play(DiskIO.getResourceURL("org/columba/mail/sound/" + filename));
+    }
+
+    public static void play(URL url) {
+        if (url != null) {
+            SoundLoader loader = new SoundLoader(url);
+            loader.setPriority(Thread.MIN_PRIORITY);
+            loader.start();
+        }
+    }
 }
 
-class SoundLoader extends Thread
-{
-	protected URL url;
 
-	SoundLoader(URL url)
-	{
-		this.url = url;
-	}
+class SoundLoader extends Thread {
+    protected URL url;
 
-	public void run()
-	{
-                AudioClip audioClip = Applet.newAudioClip(url);
-                audioClip.play();
-        }
+    SoundLoader(URL url) {
+        this.url = url;
+    }
+
+    public void run() {
+        AudioClip audioClip = Applet.newAudioClip(url);
+        audioClip.play();
+    }
 }

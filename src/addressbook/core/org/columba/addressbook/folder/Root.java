@@ -17,8 +17,10 @@ package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
+
 
 /**
  * @author freddy
@@ -29,29 +31,26 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation.
  */
 public class Root extends AddressbookTreeNode {
+    FolderItem item;
 
-	FolderItem item;
-	public Root(XmlElement node) {
-		super(new FolderItem(node));
-	}
+    public Root(XmlElement node) {
+        super(new FolderItem(node));
+    }
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
-	 */
-	public Class getDefaultChild() {
-		return null;
-	}
+    /**
+     * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
+     */
+    public Class getDefaultChild() {
+        return null;
+    }
 
-	public void createChildren(WorkerStatusController c) {
-	}
-	
-	
+    public void createChildren(WorkerStatusController c) {
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getName()
-	 */
-	public String getName() {
-		return "Root";
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.addressbook.gui.tree.AddressbookTreeNode#getName()
+     */
+    public String getName() {
+        return "Root";
+    }
 }

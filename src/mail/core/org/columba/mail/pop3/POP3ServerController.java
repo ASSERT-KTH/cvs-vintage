@@ -13,22 +13,23 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.pop3;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.command.POP3CommandReference;
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.PopItem;
+import org.columba.mail.pop3.command.CheckForNewMessagesCommand;
+import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.POP3CommandReference;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.PopItem;
-import org.columba.mail.pop3.command.CheckForNewMessagesCommand;
-import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 
 /**
  * @author freddy
@@ -39,160 +40,138 @@ import org.columba.mail.pop3.command.FetchNewMessagesCommand;
  * Window>Preferences>Java>Code Generation.
  */
 public class POP3ServerController implements ActionListener {
+    private final static int ONE_SECOND = 1000;
+    protected POP3Server server;
+    private boolean hide;
+    public FrameAction checkAction;
+    private FrameAction manageAction;
+    private Timer timer;
+    private int uid;
 
-	private final static int ONE_SECOND = 1000;
+    /**
+     * Constructor for POP3ServerController.
+     */
+    public POP3ServerController(AccountItem accountItem) {
+        server = new POP3Server(accountItem);
 
-	protected POP3Server server;
+        hide = true;
 
-	private boolean hide;
-
-	public FrameAction checkAction;
-	private FrameAction manageAction;
-
-	private Timer timer;
-
-	private int uid;
-	/**
-	 * Constructor for POP3ServerController.
-	 */
-	public POP3ServerController(AccountItem accountItem) {
-		server = new POP3Server(accountItem);
-
-		hide = true;
-
-		uid = accountItem.getUid();
-		checkAction =
-			new FrameAction(null,
-					accountItem.getName()
-						+ " ("
-						+ accountItem.getIdentityItem().get("address")
-						+ ")") {
-                        public void actionPerformed(ActionEvent e) {
-                                fetch();
-                        }
+        uid = accountItem.getUid();
+        checkAction = new FrameAction(null,
+                accountItem.getName() + " (" +
+                accountItem.getIdentityItem().get("address") + ")") {
+                    public void actionPerformed(ActionEvent e) {
+                        fetch();
+                    }
                 };
 
-		manageAction =
-			new FrameAction(null,
-					accountItem.getName()
-						+ " ("
-						+ accountItem.getIdentityItem().get("address")
-						+ ")") {
-                        public void actionPerformed(ActionEvent e) {
-                                ColumbaLogger.log.info("not yet implemented");
-                        }
+        manageAction = new FrameAction(null,
+                accountItem.getName() + " (" +
+                accountItem.getIdentityItem().get("address") + ")") {
+                    public void actionPerformed(ActionEvent e) {
+                        ColumbaLogger.log.info("not yet implemented");
+                    }
                 };
-		manageAction.setEnabled(false);
-		
-		restartTimer();
-	}
+        manageAction.setEnabled(false);
 
-	public POP3Server getServer() {
-		return server;
-	}
+        restartTimer();
+    }
 
-	public AccountItem getAccountItem() {
-		return getServer().getAccountItem();
-	}
+    public POP3Server getServer() {
+        return server;
+    }
 
-	public void restartTimer() {
-		PopItem item = getAccountItem().getPopItem();
+    public AccountItem getAccountItem() {
+        return getServer().getAccountItem();
+    }
 
-		if (item.getBoolean("enable_mailcheck")) {
-			int interval = item.getInteger("mailcheck_interval");
+    public void restartTimer() {
+        PopItem item = getAccountItem().getPopItem();
 
-			timer = new Timer(ONE_SECOND * interval * 60, this);
-			timer.restart();
+        if (item.getBoolean("enable_mailcheck")) {
+            int interval = item.getInteger("mailcheck_interval");
 
-			
-		} else {
-			
+            timer = new Timer(ONE_SECOND * interval * 60, this);
+            timer.restart();
+        } else {
+            if (timer != null) {
+                timer.stop();
+                timer = null;
+            }
+        }
+    }
 
-			if (timer != null) {
-				timer.stop();
-				timer = null;
-			}
-		}
-	}
+    public void updateAction() {
+        checkAction.putValue(FrameAction.NAME,
+            getAccountItem().getName() + " (" +
+            getAccountItem().getIdentityItem().get("address") + ")");
+        manageAction.putValue(FrameAction.NAME,
+            getAccountItem().getName() + " (" +
+            getAccountItem().getIdentityItem().get("address") + ")");
+        uid = getAccountItem().getUid();
+    }
 
-	public void updateAction() {
-		checkAction.putValue(FrameAction.NAME,
-			getAccountItem().getName()
-				+ " ("
-				+ getAccountItem().getIdentityItem().get("address")
-				+ ")");
-		manageAction.putValue(FrameAction.NAME,
-			getAccountItem().getName()
-				+ " ("
-				+ getAccountItem().getIdentityItem().get("address")
-				+ ")");
-		uid = getAccountItem().getUid();
-	}
+    public FrameAction getCheckAction() {
+        return checkAction;
+    }
 
-	public FrameAction getCheckAction() {
-		return checkAction;
-	}
+    public FrameAction getManageAction() {
+        return manageAction;
+    }
 
-	public FrameAction getManageAction() {
-		return manageAction;
-	}
+    public void enableActions(boolean b) {
+        getCheckAction().setEnabled(b);
+        getManageAction().setEnabled(b);
+    }
 
-	public void enableActions(boolean b) {
-		getCheckAction().setEnabled(b);
-		getManageAction().setEnabled(b);
-	}
+    public void setHide(boolean b) {
+        hide = b;
+    }
 
-	public void setHide(boolean b) {
-		hide = b;
-	}
+    public boolean getHide() {
+        return hide;
+    }
 
-	public boolean getHide() {
-		return hide;
-	}
+    public void fetch() {
+        enableActions(false);
 
-	public void fetch() {
-		
-		enableActions(false);
-		
-		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(this);
+        POP3CommandReference[] r = new POP3CommandReference[1];
+        r[0] = new POP3CommandReference(this);
 
-		FetchNewMessagesCommand c =
-			new FetchNewMessagesCommand( r);
+        FetchNewMessagesCommand c = new FetchNewMessagesCommand(r);
 
-		MainInterface.processor.addOp(c);
-	}
-	
-	public void check() {
-		
-		enableActions(false);
-		
-		POP3CommandReference[] r = new POP3CommandReference[1];
-		r[0] = new POP3CommandReference(this);
+        MainInterface.processor.addOp(c);
+    }
 
-		CheckForNewMessagesCommand c =
-			new CheckForNewMessagesCommand( r);
+    public void check() {
+        enableActions(false);
 
-		MainInterface.processor.addOp(c);
-	}
+        POP3CommandReference[] r = new POP3CommandReference[1];
+        r[0] = new POP3CommandReference(this);
 
-	public void actionPerformed(ActionEvent e) {
-		Object src = e.getSource();
+        CheckForNewMessagesCommand c = new CheckForNewMessagesCommand(r);
 
-		if (src.equals(timer)) {
-			if ((checkAction.isEnabled() == true)
-				&& (manageAction.isEnabled() == true))
-				check();
-			else
-				timer.restart();
+        MainInterface.processor.addOp(c);
+    }
 
-			return;
-		}
+    public void actionPerformed(ActionEvent e) {
+        Object src = e.getSource();
 
-		String action = e.getActionCommand();
-	}
-        
-	public int getUid() {
-		return uid;
-	}
+        if (src.equals(timer)) {
+            if ((checkAction.isEnabled() == true) &&
+                    (manageAction.isEnabled() == true)) {
+                check();
+            } else {
+                timer.restart();
+            }
+
+            return;
+        }
+
+        String action = e.getActionCommand();
+    }
+
+    public int getUid() {
+        return uid;
+    }
 }

@@ -15,13 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import javax.swing.ImageIcon;
-
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.config.FolderItem;
 
+import javax.swing.ImageIcon;
+
+
 /**
- * Top-level folder of all local folders. 
+ * Top-level folder of all local folders.
  * <p>
  * Only purpose of this folder is to allow for a better structure
  * of the folder hierachy, where local and remote folders are
@@ -30,37 +32,33 @@ import org.columba.mail.config.FolderItem;
  *  @author fdietz
  */
 public class LocalRootFolder extends FolderTreeNode implements RootFolder {
+    protected final static ImageIcon rootIcon = ImageLoader.getSmallImageIcon(
+            "localhost.png");
 
-	protected final static ImageIcon rootIcon =
-		ImageLoader.getSmallImageIcon("localhost.png");
-	//ImageLoader.getSmallImageIcon("16_computer.png");
+    //ImageLoader.getSmallImageIcon("16_computer.png");
+    public LocalRootFolder(FolderItem item) {
+        super(item);
+    }
 
-	public LocalRootFolder(FolderItem item) {
-		super(item);	
-	}
+    public ImageIcon getCollapsedIcon() {
+        return rootIcon;
+    }
 
+    public ImageIcon getExpandedIcon() {
+        return rootIcon;
+    }
 
-	public ImageIcon getCollapsedIcon() {
-		return rootIcon;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.RootFolder#getTrashFolder()
+     */
+    public FolderTreeNode getTrashFolder() {
+        return findChildWithUID(105, false);
+    }
 
-	public ImageIcon getExpandedIcon() {
-		return rootIcon;
-	}
-
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.RootFolder#getTrashFolder()
-	 */
-	public FolderTreeNode getTrashFolder() {
-		return findChildWithUID(105,false);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.RootFolder#getInbox()
-	 */
-	public FolderTreeNode getInboxFolder() {
-		return findChildWithUID(101,false);
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.RootFolder#getInbox()
+     */
+    public FolderTreeNode getInboxFolder() {
+        return findChildWithUID(101, false);
+    }
 }

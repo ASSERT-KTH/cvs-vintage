@@ -20,44 +20,46 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class cFileChooser extends JFileChooser {
-	
-	private FileFilter selectFilter;
-	
-	public cFileChooser() {
-		super();
-	}
+    private FileFilter selectFilter;
 
-	public cFileChooser(File currentDir) {
-		super(currentDir);
-	}
-	
-	public void setSelectFilter(FileFilter selectFilter){
-		this.selectFilter = selectFilter;
-	}
-	
-	public void setSelectedFile(File f) {
-		if( selectFilter != null ) {
-			if( selectFilter.accept( f ) ) {
-				super.setSelectedFile( f );	
-			} 	
-		}				
-	}
+    public cFileChooser() {
+        super();
+    }
 
-	public File getSelectedFile() {
-		File currentDir = super.getCurrentDirectory();
-		File selectedFile = super.getSelectedFile();
-		if( selectedFile == null ) return null;
-		
-		return new File( currentDir, selectedFile.getName() );
-	}
-	
-	public void forceSelectedFile( File f ) {
-		super.setSelectedFile( f );
-	}
+    public cFileChooser(File currentDir) {
+        super(currentDir);
+    }
 
+    public void setSelectFilter(FileFilter selectFilter) {
+        this.selectFilter = selectFilter;
+    }
+
+    public void setSelectedFile(File f) {
+        if (selectFilter != null) {
+            if (selectFilter.accept(f)) {
+                super.setSelectedFile(f);
+            }
+        }
+    }
+
+    public File getSelectedFile() {
+        File currentDir = super.getCurrentDirectory();
+        File selectedFile = super.getSelectedFile();
+
+        if (selectedFile == null) {
+            return null;
+        }
+
+        return new File(currentDir, selectedFile.getName());
+    }
+
+    public void forceSelectedFile(File f) {
+        super.setSelectedFile(f);
+    }
 }

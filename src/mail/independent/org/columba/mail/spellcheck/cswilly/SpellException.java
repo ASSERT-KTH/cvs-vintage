@@ -17,7 +17,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 /*--
 
 $Id: SpellException.java,v 1.2 2002/05/13 13:36:02 fdietz Exp $
@@ -26,11 +25,11 @@ Copyright (C) 2000 Brett McLaughlin & Jason Hunter.
 All rights reserved.
 
 */
-
 package org.columba.mail.spellcheck.cswilly;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+
 
 /**
  * <b><code>SpellException</code></b>
@@ -47,9 +46,7 @@ import java.io.PrintWriter;
  * @author Jason Hunter
  * @version 1.0
  */
-public class SpellException extends Exception
-{
-
+public class SpellException extends Exception {
     /** A wrapped <code>Throwable</code> */
     protected Throwable rootCause;
 
@@ -58,8 +55,7 @@ public class SpellException extends Exception
      * This will create an <code>Exception</code>.
      * </p>
      */
-    public SpellException()
-    {
+    public SpellException() {
         super("Error occurred in spell application.");
     }
 
@@ -71,8 +67,7 @@ public class SpellException extends Exception
      * @param message <code>String</code> message indicating
      *                the problem that occurred.
      */
-    public SpellException(String message)
-    {
+    public SpellException(String message) {
         super(message);
     }
 
@@ -88,8 +83,7 @@ public class SpellException extends Exception
      * @param exception <code>Exception</code> that caused this
      *                  to be thrown.
      */
-    public SpellException(String message, Throwable rootCause)
-    {
+    public SpellException(String message, Throwable rootCause) {
         super(message);
         this.rootCause = rootCause;
     }
@@ -103,14 +97,10 @@ public class SpellException extends Exception
      *
      * @return <code>String</code> - message for <code>Exception</code>.
      */
-    public String getMessage()
-    {
-        if (rootCause != null)
-        {
+    public String getMessage() {
+        if (rootCause != null) {
             return super.getMessage() + ": " + rootCause.getMessage();
-        }
-        else
-        {
+        } else {
             return super.getMessage();
         }
     }
@@ -122,11 +112,10 @@ public class SpellException extends Exception
      *   <code>Exception</code> is printed right after.
      * </p>
      */
-    public void printStackTrace()
-    {
+    public void printStackTrace() {
         super.printStackTrace();
-        if (rootCause != null)
-        {
+
+        if (rootCause != null) {
             System.err.print("Root cause: ");
             rootCause.printStackTrace();
         }
@@ -139,11 +128,10 @@ public class SpellException extends Exception
      *   <code>Exception</code> is printed right after.
      * </p>
      */
-    public void printStackTrace(PrintStream s)
-    {
+    public void printStackTrace(PrintStream s) {
         super.printStackTrace(s);
-        if (rootCause != null)
-        {
+
+        if (rootCause != null) {
             s.print("Root cause: ");
             rootCause.printStackTrace(s);
         }
@@ -156,11 +144,10 @@ public class SpellException extends Exception
      *   <code>Exception</code> is printed right after.
      * </p>
      */
-    public void printStackTrace(PrintWriter w)
-    {
+    public void printStackTrace(PrintWriter w) {
         super.printStackTrace(w);
-        if (rootCause != null)
-        {
+
+        if (rootCause != null) {
             w.print("Root cause: ");
             rootCause.printStackTrace(w);
         }
@@ -174,9 +161,7 @@ public class SpellException extends Exception
      *
      * @return <code>Throwable</code> - the wrapped <code>Throwable</code>.
      */
-    public Throwable getRootCause()
-    {
+    public Throwable getRootCause() {
         return rootCause;
     }
-
 }

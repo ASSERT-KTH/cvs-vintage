@@ -21,68 +21,67 @@ import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaMessage;
+
 import org.columba.ristretto.message.HeaderInterface;
+
 
 /**
  * Add message to folder
  * <p>
  * This command isn't used right now, and will most probably be removed in the
  * future.
- * 
+ *
  * @author fdietz
  */
 public class AddMessageCommand extends Command {
+    protected HeaderInterface[] headerList = new HeaderInterface[1];
+    protected Folder folder;
 
-	protected HeaderInterface[] headerList = new HeaderInterface[1];
-	protected Folder folder;
+    /**
+     * Constructor for AddMessageCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public AddMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for AddMessageCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public AddMessageCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    public void updateGUI() throws Exception {
+        // send update to message list
+        TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
+                folder);
 
-	public void updateGUI() throws Exception {
+        TableUpdater.tableChanged(ev);
 
-		// send update to message list
-		TableModelChangedEvent ev =
-			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, folder);
+        // notify treemodel
+        MailInterface.treeModel.nodeChanged(folder);
+    }
 
-		TableUpdater.tableChanged(ev);
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        // get reference
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		// notify treemodel
-		MailInterface.treeModel.nodeChanged(folder);
-	}
+        // get source folder
+        folder = (Folder) r[0].getFolder();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		// get reference
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        // register for status events
+        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-		// get source folder
-		folder = (Folder) r[0].getFolder();
+        // get message from reference
+        ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
-		// register for status events
-		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
-
-		// get message from reference
-		ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
-
-		// add message to folder
-		Object uid = folder.addMessage(message);
-
-	}
-
+        // add message to folder
+        Object uid = folder.addMessage(message);
+    }
 }

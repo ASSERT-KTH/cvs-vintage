@@ -20,89 +20,85 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
+
 /**
  * @author freddy
- * 
+ *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class FlagsFilter extends AbstractFilter {
+    /**
+     * Constructor for FlagsFilter.
+     */
+    public FlagsFilter() {
+        super();
+    }
 
-	/**
-	 * Constructor for FlagsFilter.
-	 */
-	public FlagsFilter() {
-		super();
-	}
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
+     */
+    public Object[] getAttributes() {
+        Object[] args = { "criteria", "pattern" };
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-	 */
-	public Object[] getAttributes() {
-		Object[] args = { "criteria", "pattern" };
+        return args;
+    }
 
-		return args;
-	}
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
+     *      org.columba.mail.folder.Folder, java.lang.Object,
+     *      org.columba.core.command.WorkerStatusController)
+     */
+    public boolean process(Object[] args, Folder folder, Object uid)
+        throws Exception {
+        boolean result = false;
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object,
-	 *      org.columba.mail.folder.Folder, java.lang.Object,
-	 *      org.columba.core.command.WorkerStatusController)
-	 */
-	public boolean process(Object[] args, Folder folder, Object uid)
-		throws Exception {
+        String headerField = (String) args[1];
+        int condition = FilterCriteria.getCriteria((String) args[0]);
 
-		boolean result = false;
+        String searchHeaderField = null;
 
-		String headerField = (String) args[1];
-		int condition = FilterCriteria.getCriteria((String) args[0]);
+        if (headerField.equalsIgnoreCase("Answered")) {
+            searchHeaderField = new String("columba.flags.answered");
+        } else if (headerField.equalsIgnoreCase("Deleted")) {
+            searchHeaderField = new String("columba.flags.expunged");
+        } else if (headerField.equalsIgnoreCase("Flagged")) {
+            searchHeaderField = new String("columba.flags.flagged");
+        } else if (headerField.equalsIgnoreCase("Recent")) {
+            searchHeaderField = new String("columba.flags.recent");
+        } else if (headerField.equalsIgnoreCase("Draft")) {
+            searchHeaderField = new String("columba.flags.draft");
+        } else if (headerField.equalsIgnoreCase("Seen")) {
+            searchHeaderField = new String("columba.flags.seen");
+        } else if (headerField.equalsIgnoreCase("Spam")) {
+            searchHeaderField = new String("columba.spam");
+        }
 
-		String searchHeaderField = null;
+        Boolean flags = (Boolean) folder.getAttribute(uid, searchHeaderField);
 
-		if (headerField.equalsIgnoreCase("Answered")) {
-			searchHeaderField = new String("columba.flags.answered");
-		} else if (headerField.equalsIgnoreCase("Deleted")) {
-			searchHeaderField = new String("columba.flags.expunged");
-		} else if (headerField.equalsIgnoreCase("Flagged")) {
-			searchHeaderField = new String("columba.flags.flagged");
-		} else if (headerField.equalsIgnoreCase("Recent")) {
-			searchHeaderField = new String("columba.flags.recent");
-		} else if (headerField.equalsIgnoreCase("Draft")) {
-			searchHeaderField = new String("columba.flags.draft");
-		} else if (headerField.equalsIgnoreCase("Seen")) {
-			searchHeaderField = new String("columba.flags.seen");
-		} else if (headerField.equalsIgnoreCase("Spam")) {
-			searchHeaderField = new String("columba.spam");
-		}
+        if (flags == null) {
+            return false;
+        }
 
-		Boolean flags = (Boolean) folder.getAttribute(uid, searchHeaderField);
-		if (flags == null) {
+        switch (condition) {
+        case FilterCriteria.IS: {
+            if (flags.equals(Boolean.TRUE)) {
+                result = true;
+            }
 
-			return false;
-		}
+            break;
+        }
 
-		switch (condition) {
+        case FilterCriteria.IS_NOT: {
+            if (flags.equals(Boolean.FALSE)) {
+                result = true;
+            }
 
-			case FilterCriteria.IS :
-				{
-					if (flags.equals(Boolean.TRUE))
-						result = true;
+            break;
+        }
+        }
 
-					break;
-
-				}
-			case FilterCriteria.IS_NOT :
-				{
-					if (flags.equals(Boolean.FALSE))
-						result = true;
-
-					break;
-
-				}
-
-		}
-		return result;
-	}
-
+        return result;
+    }
 }

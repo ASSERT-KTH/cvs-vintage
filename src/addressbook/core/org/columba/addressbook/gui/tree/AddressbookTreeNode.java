@@ -13,10 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.tree;
 
+import org.columba.addressbook.config.FolderItem;
+import org.columba.addressbook.folder.Folder;
+
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.util.Lock;
+import org.columba.core.xml.XmlElement;
+
 import java.lang.reflect.Method;
+
 import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
@@ -24,197 +32,173 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.Folder;
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.util.Lock;
-import org.columba.core.xml.XmlElement;
 
 public abstract class AddressbookTreeNode extends DefaultMutableTreeNode {
-	
+    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
+            "folder.png");
+    private static int nextUid = 0;
+    protected ImageIcon icon = ImageLoader.getSmallImageIcon(
+            "stock_book-16.png");
+    private String name;
+    protected FolderItem node;
+    protected Lock myLock;
+    private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
+    private final Class[] STRING_ARG = new Class[] { String.class };
 
-	protected ImageIcon icon = ImageLoader.getSmallImageIcon("stock_book-16.png");
-	
-	
-	private String name;
+    public AddressbookTreeNode(FolderItem item) {
+        super();
 
-	protected FolderItem node;
+        setNode(item);
+    }
 
-	protected final static ImageIcon collapsedIcon =
-		ImageLoader.getSmallImageIcon("folder.png");
+    /*
+    public AddressbookTreeNode(String name) {
+            super(name);
 
-	protected Lock myLock;
+            this.name = name;
+    }
+    */
+    public FolderItem getFolderItem() {
+        return node;
+    }
 
-	private static int nextUid = 0;
+    public ImageIcon getIcon() {
+        return icon;
+    }
 
-	private final Class[] FOLDER_ITEM_ARG = new Class[] { FolderItem.class };
-	private final Class[] STRING_ARG = new Class[] { String.class };
+    public final static FolderItem getDefaultItem(String className,
+        XmlElement props) {
+        XmlElement defaultElement = new XmlElement("folder");
+        defaultElement.addAttribute("class", className);
+        defaultElement.addAttribute("uid", Integer.toString(nextUid++));
 
-	public AddressbookTreeNode(FolderItem item) {
-		super();
+        if (props != null) {
+            defaultElement.addElement(props);
+        }
 
-		setNode(item);
-	}
+        // FAILURE!!!
 
-	/*
-	public AddressbookTreeNode(String name) {
-		super(name);
+        /*
+        XmlElement filter = new XmlElement("filter");
+        defaultElement.addElement(filter);
+        */
+        return new FolderItem(defaultElement);
+    }
 
-		this.name = name;
-	}
-	*/
-	
-	public FolderItem getFolderItem()
-	{
-		return node;
-	
-	}
-	
-	
-	
-	public ImageIcon getIcon()
-		{
-			return icon;
-		}
+    public TreePath getSelectionTreePath() {
+        //TreeNodeList list = new TreeNodeList( getTreePath() );
+        TreeNode[] treeNodes = getPathToRoot(this, 0);
+        TreePath path = new TreePath(treeNodes[0]);
 
-	public final static FolderItem getDefaultItem(
-		String className,
-		XmlElement props) {
-		XmlElement defaultElement = new XmlElement("folder");
-		defaultElement.addAttribute("class", className);
-		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
+        for (int i = 1; i < treeNodes.length; i++) {
+            Folder folder = (Folder) treeNodes[i];
+            path.pathByAddingChild(folder);
+        }
 
-		if (props != null)
-			defaultElement.addElement(props);
+        return path;
+    }
 
-		// FAILURE!!!
+    public static XmlElement getDefaultProperties() {
+        return null;
+    }
 
-		/*
-		XmlElement filter = new XmlElement("filter");
-		defaultElement.addElement(filter);
-		*/
+    public ImageIcon getCollapsedIcon() {
+        return collapsedIcon;
+    }
 
-		return new FolderItem(defaultElement);
-	}
+    public ImageIcon getExpandedIcon() {
+        return collapsedIcon;
+    }
 
-	public TreePath getSelectionTreePath() {
-		//TreeNodeList list = new TreeNodeList( getTreePath() );
-		TreeNode[] treeNodes = getPathToRoot(this, 0);
-		TreePath path = new TreePath(treeNodes[0]);
+    /*
+    public void setName(String s) {
+            name = s;
+    }
 
-		for (int i = 1; i < treeNodes.length; i++) {
-			Folder folder = (Folder) treeNodes[i];
-			path.pathByAddingChild(folder);
-		}
+    public String getName() {
+            return name;
+    }
+    */
+    public int getUid() {
+        return node.getInteger("uid");
+    }
 
-		return path;
-	}
+    public boolean tryToGetLock() {
+        return myLock.tryToGetLock(null);
+    }
 
-	public static XmlElement getDefaultProperties() {
-		return null;
-	}
+    public void releaseLock() {
+        myLock.release(null);
+    }
 
-	public ImageIcon getCollapsedIcon() {
-		return collapsedIcon;
-	}
+    /**
+     * Returns the node.
+     * @return FolderItem
+     */
+    public XmlElement getNode() {
+        return node.getRoot();
+    }
 
-	public ImageIcon getExpandedIcon() {
-		return collapsedIcon;
-	}
+    /**
+     * Sets the node.
+     * @param node The node to set
+     */
+    public void setNode(FolderItem node) {
+        this.node = node;
+    }
 
-	/*
-	public void setName(String s) {
-		name = s;
-	}
+    //public abstract Class getDefaultChild();
+    public Class getDefaultChild() {
+        return null;
+    }
 
-	public String getName() {
-		return name;
-	}
-	*/
-	public int getUid() {
-		return node.getInteger("uid");
-	}
+    final public Hashtable getAttributes() {
+        return node.getElement("property").getAttributes();
+    }
 
-	public boolean tryToGetLock() {
-		return myLock.tryToGetLock(null);
-	}
+    public abstract void createChildren(WorkerStatusController worker);
 
-	public void releaseLock() {
-		myLock.release(null);
-	}
+    public void addFolder(String name, Class childClass)
+        throws Exception {
+        Method m_getDefaultProperties = childClass.getMethod("getDefaultProperties",
+                null);
 
-	/**
-	 * Returns the node.
-	 * @return FolderItem
-	 */
-	public XmlElement getNode() {
-		return node.getRoot();
-	}
+        XmlElement props = (XmlElement) m_getDefaultProperties.invoke(null, null);
+        FolderItem childNode = getDefaultItem(childClass.getName(), props);
 
-	/**
-	 * Sets the node.
-	 * @param node The node to set
-	 */
-	public void setNode(FolderItem node) {
-		this.node = node;
-	}
+        childNode.set("property", "name", name);
 
-	//public abstract Class getDefaultChild();
-	public  Class getDefaultChild()
-	{
-		return null;
-	}
+        // Put properties that should be copied from parent here
+        Folder subFolder = (Folder) childClass.getConstructor(FOLDER_ITEM_ARG)
+                                              .newInstance(new Object[] {
+                    childNode
+                });
+        addWithXml(subFolder);
+    }
 
-	final public Hashtable getAttributes() {
-		return node.getElement("property").getAttributes();
-	}
+    public void addFolder(String name) throws Exception {
+        addFolder(name, getDefaultChild());
+    }
 
-	public abstract void createChildren(WorkerStatusController worker);
+    public void addWithXml(AddressbookTreeNode folder) {
+        add(folder);
+        this.getNode().addElement(folder.getNode());
+    }
 
-	public void addFolder(String name, Class childClass) throws Exception {
-		Method m_getDefaultProperties =
-			childClass.getMethod("getDefaultProperties", null);
+    public String getName() {
+        String name = null;
 
-		XmlElement props =
-			(XmlElement) m_getDefaultProperties.invoke(null, null);
-		FolderItem childNode = getDefaultItem(childClass.getName(), props);
+        FolderItem item = getFolderItem();
+        name = item.get("property", "name");
 
-		childNode.set("property", "name", name);
-		// Put properties that should be copied from parent here
+        return name;
+    }
 
-		Folder subFolder =
-			(Folder) childClass.getConstructor(FOLDER_ITEM_ARG).newInstance(
-				new Object[] { childNode });
-		addWithXml(subFolder);
-	}
-
-	public void addFolder(String name) throws Exception {
-		addFolder(name, getDefaultChild());
-	}
-
-	public void addWithXml(AddressbookTreeNode folder) {
-		add(folder);
-		this.getNode().addElement(folder.getNode());
-	}
-
-	public String getName() {
-		String name = null;
-	
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
-	
-		return name;
-	}
-
-	/**
-		 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-		 */
-	public void setName(String newName) {
-	
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
-	
-	}
-
+    /**
+             * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+             */
+    public void setName(String newName) {
+        FolderItem item = getFolderItem();
+        item.set("property", "name", newName);
+    }
 }

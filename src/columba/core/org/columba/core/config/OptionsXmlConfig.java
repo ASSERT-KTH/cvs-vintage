@@ -15,84 +15,84 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
-import java.io.File;
-
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
+import java.io.File;
+
+
 public class OptionsXmlConfig extends DefaultXmlConfig {
-	//private File file;
+    //private File file;
+    protected ThemeItem themeItem;
+    GuiItem guiItem;
+    boolean initialVersionWasApplied = false;
 
-	protected ThemeItem themeItem;
-	GuiItem guiItem;
+    public OptionsXmlConfig(File file) {
+        super(file);
+    }
 
-	boolean initialVersionWasApplied = false;
+    public boolean load() {
+        boolean result = super.load();
 
-	public OptionsXmlConfig(File file) {
-		super(file);
+        //		apply initial version information
+        XmlElement root = getRoot().getElement(0);
+        String version = root.getAttribute("version");
 
-	}
+        if (version == null) {
+            initialVersionWasApplied = true;
+            root.addAttribute("version", "1.0");
+        }
 
-	public boolean load() {
-		boolean result = super.load();
+        convert();
 
-		//		apply initial version information
-		XmlElement root = getRoot().getElement(0);
-		String version = root.getAttribute("version");
-		if (version == null) {
-			initialVersionWasApplied = true;
-			root.addAttribute("version", "1.0");
-		}
+        return result;
+    }
 
-		convert();
-		
-		return result;
-	}
+    protected void convert() {
+        // rename "Mail" to "ThreePaneMail
+        XmlElement root = getRoot();
+        String version = root.getAttribute("version");
 
-	protected void convert() {
-		// rename "Mail" to "ThreePaneMail
-		XmlElement root = getRoot();
-		String version = root.getAttribute("version");
+        if (initialVersionWasApplied) {
+            ColumbaLogger.log.info("converting configuration to new version...");
 
-		if (initialVersionWasApplied) {
-			ColumbaLogger.log.info(
-				"converting configuration to new version...");
+            XmlElement viewlist = root.getElement("/options/gui/viewlist");
 
-			XmlElement viewlist = root.getElement("/options/gui/viewlist");
-			for (int i = 0; i < viewlist.count(); i++) {
-				XmlElement view = viewlist.getElement(i);
-				if (view.getAttribute("id").equals("Mail"))
-					view.addAttribute("id", "ThreePaneMail");
-			}
-		}
-	}
+            for (int i = 0; i < viewlist.count(); i++) {
+                XmlElement view = viewlist.getElement(i);
 
-	public GuiItem getGuiItem() {
-		if (guiItem == null) {
-			guiItem = new GuiItem(getRoot().getElement("/options/gui"));
-		}
+                if (view.getAttribute("id").equals("Mail")) {
+                    view.addAttribute("id", "ThreePaneMail");
+                }
+            }
+        }
+    }
 
-		return guiItem;
-	}
+    public GuiItem getGuiItem() {
+        if (guiItem == null) {
+            guiItem = new GuiItem(getRoot().getElement("/options/gui"));
+        }
 
-	public ThemeItem getThemeItem() {
-		if (themeItem == null) {
-			themeItem =
-				new ThemeItem(getRoot().getElement("/options/gui/theme"));
-		}
+        return guiItem;
+    }
 
-		return themeItem;
-	}
+    public ThemeItem getThemeItem() {
+        if (themeItem == null) {
+            themeItem = new ThemeItem(getRoot().getElement("/options/gui/theme"));
+        }
 
-	public XmlElement getMimeTypeNode() {
-		XmlElement mimeTypes = getRoot().getElement("/options/mimetypes");
-		if (mimeTypes == null) {
-			getRoot().getElement("options").addElement(
-				new XmlElement("mimetypes"));
-			mimeTypes = getRoot().getElement("/options/mimetypes");
-		}
+        return themeItem;
+    }
 
-		return mimeTypes;
-	}
+    public XmlElement getMimeTypeNode() {
+        XmlElement mimeTypes = getRoot().getElement("/options/mimetypes");
 
+        if (mimeTypes == null) {
+            getRoot().getElement("options").addElement(new XmlElement(
+                    "mimetypes"));
+            mimeTypes = getRoot().getElement("/options/mimetypes");
+        }
+
+        return mimeTypes;
+    }
 }

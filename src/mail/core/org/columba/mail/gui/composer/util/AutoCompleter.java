@@ -15,10 +15,15 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+
+import org.columba.mail.util.AddressCollector;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -26,169 +31,163 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.mail.util.AddressCollector;
 
 /**
  *  This code is adapted from http://www.algonet.se/~set_lo/java/sbe/files/uts2/Chapter9html/Chapter9.htm
  */
-
 public class AutoCompleter implements KeyListener, ItemListener {
-	private JComboBox _comboBox = null;
-	private JTextField _editor = null;
-	private AddressbookTableView _table = null;
+    private JComboBox _comboBox = null;
+    private JTextField _editor = null;
+    private AddressbookTableView _table = null;
+    int cursor_pos = -1;
+    private Object[] _options;
 
-	int cursor_pos = -1;
+    public AutoCompleter(JComboBox comboBox, Object[] options) {
+        _comboBox = comboBox;
 
-	private Object[] _options;
+        _editor = (JTextField) comboBox.getEditor().getEditorComponent();
+        _editor.addKeyListener(this);
 
-	public AutoCompleter(JComboBox comboBox, Object[] options) {
-		_comboBox = comboBox;
+        _options = options;
+        _comboBox.addItemListener(this);
+    }
 
-		_editor = (JTextField) comboBox.getEditor().getEditorComponent();
-		_editor.addKeyListener(this);
+    public AutoCompleter(JComboBox comboBox, AddressbookTableView table,
+        Object[] options) {
+        _comboBox = comboBox;
 
-		_options = options;
-		_comboBox.addItemListener(this);
-	}
+        _table = table;
+        _editor = (JTextField) comboBox.getEditor().getEditorComponent();
+        _editor.addKeyListener(this);
+        _options = options;
 
-	public AutoCompleter(
-		JComboBox comboBox,
-		AddressbookTableView table,
-		Object[] options) {
-		_comboBox = comboBox;
+        _comboBox.addItemListener(this);
+    }
 
-		_table = table;
-		_editor = (JTextField) comboBox.getEditor().getEditorComponent();
-		_editor.addKeyListener(this);
-		_options = options;
+    public AutoCompleter(JTextField tf, Object[] options) {
+        _editor = tf;
+        _editor.addKeyListener(this);
+        _options = options;
+    }
 
-		_comboBox.addItemListener(this);
-	}
+    public void keyTyped(KeyEvent e) {
+    }
 
-	public AutoCompleter(JTextField tf, Object[] options) {
+    public void keyPressed(KeyEvent e) {
+    }
 
-		_editor = tf;
-		_editor.addKeyListener(this);
-		_options = options;
-	}
+    public void keyReleased(KeyEvent e) {
+        char ch = e.getKeyChar();
 
-	public void keyTyped(KeyEvent e) {
-	}
+        if ((ch == KeyEvent.CHAR_UNDEFINED) || Character.isISOControl(ch) ||
+                (ch == KeyEvent.VK_DELETE)) {
+            return;
+        }
 
-	public void keyPressed(KeyEvent e) {
-	}
+        int pos = _editor.getCaretPosition();
+        cursor_pos = _editor.getCaretPosition();
 
-	public void keyReleased(KeyEvent e) {
+        String str = _editor.getText();
 
-		char ch = e.getKeyChar();
+        if (str.length() == 0) {
+            return;
+        }
 
-		if (ch == KeyEvent.CHAR_UNDEFINED
-			|| Character.isISOControl(ch)
-			|| ch == KeyEvent.VK_DELETE)
-			return;
+        autoComplete(str, pos);
+    }
 
-		int pos = _editor.getCaretPosition();
-		cursor_pos = _editor.getCaretPosition();
-		String str = _editor.getText();
-		if (str.length() == 0)
-			return;
+    private void autoComplete(String strf, int pos) {
+        Object[] opts = getMatchingOptions(strf.substring(0, pos));
 
-		autoComplete(str, pos);
+        if (_comboBox != null) {
+            _comboBox.setModel(new DefaultComboBoxModel(opts));
+        }
 
-	}
+        if (opts.length > 0) {
+            String str = opts[0].toString();
 
-	private void autoComplete(String strf, int pos) {
+            HeaderItem item = AddressCollector.getHeaderItem((String) opts[0]);
 
-		Object[] opts = getMatchingOptions(strf.substring(0, pos));
-		if (_comboBox != null) {
-			_comboBox.setModel(new DefaultComboBoxModel(opts));
-		}
-		if (opts.length > 0) {
+            if (item == null) {
+                item = new HeaderItem(HeaderItem.CONTACT);
+                item.add("displayname", str);
+                item.add("field", "To");
+            } else {
+                item = (HeaderItem) item.clone();
+            }
 
-			String str = opts[0].toString();
+            _table.setHeaderItem(item);
 
-			HeaderItem item = AddressCollector.getHeaderItem((String) opts[0]);
+            String address = (String) item.get("displayname");
 
-			if (item == null) {
-				item = new HeaderItem(HeaderItem.CONTACT);
-				item.add("displayname", str);
-				item.add("field", "To");
-			} else {
-				item = (HeaderItem) item.clone();
-			}
+            if (address == null) {
+                address = (String) item.get("email;internet");
+            }
 
-			_table.setHeaderItem(item);
+            _editor.setCaretPosition(cursor_pos);
 
-			String address = (String) item.get("displayname");
-			if (address == null)
-				address = (String) item.get("email;internet");
+            //_editor.moveCaretPosition(cursor_pos);
+            if (_comboBox != null) {
+                try {
+                    _comboBox.showPopup();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
-			_editor.setCaretPosition(cursor_pos);
-			//_editor.moveCaretPosition(cursor_pos);
+    private Object[] getMatchingOptions(String str) {
+        _options = AddressCollector.getAddresses();
 
-			if (_comboBox != null) {
-				try {
+        List v = new Vector();
 
-					_comboBox.showPopup();
+        for (int k = 0; k < _options.length; k++) {
+            String item = _options[k].toString().toLowerCase();
 
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
+            if (item.startsWith(str.toLowerCase())) {
+                v.add(_options[k]);
+            }
+        }
 
-		}
-	}
+        if (v.isEmpty()) {
+            v.add(str);
+        }
 
-	private Object[] getMatchingOptions(String str) {
+        return v.toArray();
+    }
 
-		_options = AddressCollector.getAddresses();
+    public void itemStateChanged(ItemEvent event) {
+        if (event.getStateChange() == ItemEvent.SELECTED) {
+            String selected = (String) _comboBox.getSelectedItem();
 
-		List v = new Vector();
-		for (int k = 0; k < _options.length; k++) {
-			String item = _options[k].toString().toLowerCase();
+            HeaderItem item = AddressCollector.getHeaderItem(selected);
 
-			if (item.startsWith(str.toLowerCase())) {
+            if (item == null) {
+                item = new HeaderItem(HeaderItem.CONTACT);
+                item.add("displayname", selected);
+                item.add("field", "To");
+            } else {
+                item = (HeaderItem) item.clone();
+            }
 
-				v.add(_options[k]);
-			}
-		}
-		if (v.isEmpty())
-			v.add(str);
-		return v.toArray();
-	}
+            _table.setHeaderItem(item);
 
-	public void itemStateChanged(ItemEvent event) {
-		if (event.getStateChange() == ItemEvent.SELECTED) {
+            String address = (String) item.get("displayname");
 
-			String selected = (String) _comboBox.getSelectedItem();
+            if (address == null) {
+                address = (String) item.get("email;internet");
+            }
 
-			HeaderItem item = AddressCollector.getHeaderItem(selected);
+            int pos2 = _editor.getCaretPosition();
 
-			if (item == null) {
-				item = new HeaderItem(HeaderItem.CONTACT);
-				item.add("displayname", selected);
-				item.add("field", "To");
-			} else {
-				item = (HeaderItem) item.clone();
-			}
-
-			_table.setHeaderItem(item);
-
-			String address = (String) item.get("displayname");
-			if (address == null)
-				address = (String) item.get("email;internet");
-
-			int pos2 = _editor.getCaretPosition();
-
-			if (cursor_pos != -1) {
-				try {
-					_editor.moveCaretPosition(pos2);
-				} catch (IllegalArgumentException ex) {
-					ex.printStackTrace();
-				}
-			}
-
-		}
-	}
+            if (cursor_pos != -1) {
+                try {
+                    _editor.moveCaretPosition(pos2);
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 }

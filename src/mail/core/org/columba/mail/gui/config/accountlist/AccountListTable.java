@@ -13,48 +13,46 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountlist;
+
+import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.config.AccountList;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.columba.core.config.Config;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.config.AccountList;
 
-class AccountListTable extends JTable
-{
+class AccountListTable extends JTable {
     private Config config;
 
-    public AccountListTable(AccountList accountList, ConfigFrame frame)
-    {
+    public AccountListTable(AccountList accountList, ConfigFrame frame) {
         super(new AccountListDataModel(accountList));
 
         config = MainInterface.config;
 
-        setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setShowGrid(false);
         setIntercellSpacing(new java.awt.Dimension(0, 0));
 
         TableColumn tc = getColumnModel().getColumn(0);
-        tc.setCellRenderer( new NameRenderer() );
+        tc.setCellRenderer(new NameRenderer());
 
         tc = getColumnModel().getColumn(1);
         tc.setMaxWidth(100);
         tc.setMinWidth(100);
-        tc.setCellRenderer( new StringAccountRenderer(true) );
+        tc.setCellRenderer(new StringAccountRenderer(true));
 
-        sizeColumnsToFit( AUTO_RESIZE_NEXT_COLUMN );
-        DefaultTableCellRenderer renderer = 
-                    (DefaultTableCellRenderer)tableHeader.getDefaultRenderer();
+        sizeColumnsToFit(AUTO_RESIZE_NEXT_COLUMN);
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tableHeader.getDefaultRenderer();
         renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
     }
 
-    public void update()
-    {
-        ((AccountListDataModel)getModel()).fireTableDataChanged();
+    public void update() {
+        ((AccountListDataModel) getModel()).fireTableDataChanged();
     }
 }

@@ -13,116 +13,115 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.frame;
+
+import org.columba.addressbook.config.AddressbookConfig;
+import org.columba.addressbook.gui.menu.AddressbookMenu;
+import org.columba.addressbook.gui.table.TableView;
+import org.columba.addressbook.gui.tree.TreeView;
+
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.menu.Menu;
+import org.columba.core.gui.toolbar.ToolBar;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JSplitPane;
 
-import org.columba.addressbook.config.AddressbookConfig;
-import org.columba.addressbook.gui.menu.AddressbookMenu;
-import org.columba.addressbook.gui.table.TableView;
-import org.columba.addressbook.gui.tree.TreeView;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.core.gui.menu.Menu;
-import org.columba.core.gui.toolbar.ToolBar;
 
 public class AddressbookFrameView extends AbstractFrameView {
-	//private AddressbookInterface addressbookInterface;
-	//private TreeView tree;
-	//private TableView table;
+    //private AddressbookInterface addressbookInterface;
+    //private TreeView tree;
+    //private TableView table;
+    public AddressbookFrameView(FrameMediator frameController) {
+        super(frameController);
 
-	public AddressbookFrameView(FrameMediator frameController) {
-		super(frameController);
+        //super("Columba v" + MainInterface.version + " - Addressbook");
 
-		//super("Columba v" + MainInterface.version + " - Addressbook");
-		/*
-		this.setIconImage(
-			ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
-		*/
-		/*
-		addressbookInterface = MainInterface.addressbookInterface;
-		addressbookInterface.frame = this;
-		*/
-		// FIXME
+        /*
+        this.setIconImage(
+                ImageLoader.getImageIcon("ColumbaIcon.png").getImage());
+        */
+        /*
+        addressbookInterface = MainInterface.addressbookInterface;
+        addressbookInterface.frame = this;
+        */
 
-		/*
-		addressbookInterface.actionListener =
-			new AddressbookActionListener(addressbookInterface);
-		addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
-		*/
-		//init();
-	}
+        // FIXME
 
-	/* (non-Javadoc)
-		 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
-		 */
-	protected Menu createMenu(FrameMediator controller) {
-		Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml", controller);
-		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
+        /*
+        addressbookInterface.actionListener =
+                new AddressbookActionListener(addressbookInterface);
+        addressbookInterface.menu = new AddressbookMenu(addressbookInterface);
+        */
 
-		return menu;
-	}
+        //init();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
-	 */
-	protected ToolBar createToolbar(FrameMediator controller) {
-		return new ToolBar(
-			AddressbookConfig.get("main_toolbar").getElement("toolbar"),
-			controller);
-	}
+    /* (non-Javadoc)
+             * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
+             */
+    protected Menu createMenu(FrameMediator controller) {
+        Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml",
+                controller);
+        menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
 
-	public void init( TreeView tree, TableView table) {
-		
-		
-		Container c = getContentPane();
+        return menu;
+    }
 
-		//setJMenuBar(addressbookInterface.menu.getMenuBar());
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.FrameView#createToolbar(org.columba.core.gui.FrameController)
+     */
+    protected ToolBar createToolbar(FrameMediator controller) {
+        return new ToolBar(AddressbookConfig.get("main_toolbar").getElement("toolbar"),
+            controller);
+    }
 
-		/*
-		AddressbookToolBar toolbar =
-			new AddressbookToolBar(addressbookInterface);
-		
-		c.add(toolbar, BorderLayout.NORTH);
-		*/
+    public void init(TreeView tree, TableView table) {
+        Container c = getContentPane();
 
-		
-		table.setupRenderer();
-		//addressbookInterface.table = table;
+        //setJMenuBar(addressbookInterface.menu.getMenuBar());
+        /*
+        AddressbookToolBar toolbar =
+                new AddressbookToolBar(addressbookInterface);
 
-		JSplitPane splitPane =
-			new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tree.scrollPane, table);
-		splitPane.setBorder(null);
+        c.add(toolbar, BorderLayout.NORTH);
+        */
+        table.setupRenderer();
 
-		c.add(splitPane, BorderLayout.CENTER);
+        //addressbookInterface.table = table;
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+                tree.scrollPane, table);
+        splitPane.setBorder(null);
 
-		/*
-		StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
-		addressbookInterface.statusbar = statusbar;
+        c.add(splitPane, BorderLayout.CENTER);
 
-		c.add(statusbar, BorderLayout.SOUTH);
-		*/
-		
-		//pack();
+        /*
+        StatusBar statusbar = new StatusBar(addressbookInterface.taskManager);
+        addressbookInterface.statusbar = statusbar;
 
-		/*
-		Dimension size = getSize();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(
-			(screenSize.width - size.width) / 2,
-			(screenSize.height - size.height) / 2);
-		*/
-		//setVisible(true);
-	}
+        c.add(statusbar, BorderLayout.SOUTH);
+        */
 
-	/*
-	protected AddressbookTree createTree(AddressbookInterface addressbookInterface) {
-		AddressbookTree tree = new AddressbookTree(addressbookInterface);
-		return tree;
-	}
-	*/
+        //pack();
+
+        /*
+        Dimension size = getSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(
+                (screenSize.width - size.width) / 2,
+                (screenSize.height - size.height) / 2);
+        */
+
+        //setVisible(true);
+    }
+
+    /*
+    protected AddressbookTree createTree(AddressbookInterface addressbookInterface) {
+            AddressbookTree tree = new AddressbookTree(addressbookInterface);
+            return tree;
+    }
+    */
 }

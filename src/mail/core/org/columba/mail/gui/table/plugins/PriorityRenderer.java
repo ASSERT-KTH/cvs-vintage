@@ -15,84 +15,81 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.util.MailResourceLoader;
 
 public class PriorityRenderer extends DefaultLabelRenderer {
+    private ImageIcon image1 = ImageLoader.getSmallImageIcon(
+            "priority-high.png");
+    private ImageIcon image2 = null;
+    private ImageIcon image3 = null;
+    private ImageIcon image4 = ImageLoader.getSmallImageIcon("priority-low.png");
 
-	private ImageIcon image1 =
-		ImageLoader.getSmallImageIcon("priority-high.png");
-	private ImageIcon image2 = null;
-	private ImageIcon image3 = null;
-	private ImageIcon image4 =
-		ImageLoader.getSmallImageIcon("priority-low.png");
+    public PriorityRenderer() {
+        super();
+    }
 
-	public PriorityRenderer() {
-		super();
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+            row, column);
 
-	}
+        if (value == null) {
+            setText("");
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+            return this;
+        }
 
-		super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
+        Integer priority = (Integer) ((MessageNode) value).getHeader().get("columba.priority");
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
+        Integer in = priority;
 
-		Integer priority =
-			(Integer) ((MessageNode) value).getHeader().get("columba.priority");
+        if (in == null) {
+            return this;
+        }
 
-		Integer in = priority;
-		if (in == null)
-			return this;
+        int i = in.intValue();
 
-		int i = in.intValue();
+        if (i == 1) {
+            //setForeground( Color.red );
+            //setText("!!");
+            setIcon(image1);
 
-		if (i == 1) {
-			//setForeground( Color.red );
-			//setText("!!");
-			setIcon(image1);
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "priority_highest"));
+        } else if (i == 2) {
+            //setForeground( Color.red );
+            setIcon(image2);
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "priority_high"));
 
-			setToolTipText( MailResourceLoader.getString("header","column","priority_highest"));
-		} else if (i == 2) {
-			//setForeground( Color.red );
-			setIcon(image2);
-			setToolTipText( MailResourceLoader.getString("header","column","priority_high"));
-			//setText("!");
-		} else if (i == 3)
-			setIcon(null);
-		else if (i == 4) {
-			//eteTextForeground( Color.blue );
-			setIcon(image3);
-			setToolTipText( MailResourceLoader.getString("header","column","priority_low"));
-			//setText("!");
-		} else if (i == 5) {
-			//setForeground( Color.blue );
-			setIcon(image4);
-			setToolTipText( MailResourceLoader.getString("header","column","priority_lowest"));
-			//setText("!!");
-		}
+            //setText("!");
+        } else if (i == 3) {
+            setIcon(null);
+        } else if (i == 4) {
+            //eteTextForeground( Color.blue );
+            setIcon(image3);
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "priority_low"));
 
-		return this;
-	}
+            //setText("!");
+        } else if (i == 5) {
+            //setForeground( Color.blue );
+            setIcon(image4);
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "priority_lowest"));
+
+            //setText("!!");
+        }
+
+        return this;
+    }
 }

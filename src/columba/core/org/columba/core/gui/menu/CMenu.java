@@ -15,9 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.gui.menu;
 
+import org.columba.core.gui.util.MnemonicSetter;
+
 import javax.swing.JMenu;
 
-import org.columba.core.gui.util.MnemonicSetter;
 
 /**
  * @author frd
@@ -27,25 +28,20 @@ import org.columba.core.gui.util.MnemonicSetter;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class CMenu extends JMenu{
-	
-	/**
-	 * Creates a menu item with the specified text.
-	 * <br>
-	 * If the textcontains &, the next character is used as
-	 * mnemonic. If not, no mnemonic is set.
-	 * 
-	 * @param	str		Menu text
-	 */
-	public CMenu( String str ) {
-		super();
-		//super(str);
-	
-		// set menu text incl. mnemonic if specified
-		MnemonicSetter.setTextWithMnemonic(this, str);
-			
-	}
-	
-	
+public class CMenu extends JMenu {
+    /**
+     * Creates a menu item with the specified text.
+     * <br>
+     * If the textcontains &, the next character is used as
+     * mnemonic. If not, no mnemonic is set.
+     *
+     * @param        str                Menu text
+     */
+    public CMenu(String str) {
+        super();
 
+        //super(str);
+        // set menu text incl. mnemonic if specified
+        MnemonicSetter.setTextWithMnemonic(this, str);
+    }
 }

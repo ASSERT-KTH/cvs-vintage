@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -29,49 +23,53 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 public class UndoAction extends FrameAction implements WorkerListChangeListener {
+    public UndoAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_edit_undo"));
 
-	public UndoAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_edit_undo"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "menu_edit_undo_tooltip").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null, "menu_edit_undo_tooltip")
+                                .replaceAll("&", ""));
 
-		// disable toolbar text
-		setShowToolBarText(false);
-		
-		setEnabled(false);
-			
-		MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
-		
-		MainInterface.focusManager.setUndoAction(this);
-	}
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_undo-16.png"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		MainInterface.focusManager.undo();
-	}
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_undo.png"));
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
-	 */
-	public void workerListChanged(WorkerListChangedEvent e) {
-		setEnabled(e.getNewValue() != 0);
-	}
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
+
+        // disable toolbar text
+        setShowToolBarText(false);
+
+        setEnabled(false);
+
+        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+
+        MainInterface.focusManager.setUndoAction(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        MainInterface.focusManager.undo();
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.statusbar.event.WorkerListChangeListener#workerListChanged(org.columba.core.gui.statusbar.event.WorkerListChangedEvent)
+     */
+    public void workerListChanged(WorkerListChangedEvent e) {
+        setEnabled(e.getNewValue() != 0);
+    }
 }

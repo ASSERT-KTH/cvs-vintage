@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.util;
 
 import org.columba.addressbook.folder.HeaderItem;
+
 
 /**
  * @author frd
@@ -27,27 +27,22 @@ import org.columba.addressbook.folder.HeaderItem;
  * Window>Preferences>Java>Code Generation.
  */
 public class HeaderItemDNDManager {
+    private static HeaderItemDNDManager instance;
+    HeaderItem[] array;
 
-	HeaderItem[] array;
-	
-	private static HeaderItemDNDManager instance;
-	
-	
-	public static HeaderItemDNDManager getInstance()
-	{
-		if ( instance == null )
-			instance = new HeaderItemDNDManager();
-			
-		return instance;
-	}
-	
-	public void setHeaderItemList( HeaderItem[] array )
-	{
-		this.array = array;
-	}
-	
-	public HeaderItem[] getHeaderItemList()
-	{
-		return this.array;
-	}
+    public static HeaderItemDNDManager getInstance() {
+        if (instance == null) {
+            instance = new HeaderItemDNDManager();
+        }
+
+        return instance;
+    }
+
+    public void setHeaderItemList(HeaderItem[] array) {
+        this.array = array;
+    }
+
+    public HeaderItem[] getHeaderItemList() {
+        return this.array;
+    }
 }

@@ -18,6 +18,7 @@ package org.columba.mail.filter.plugins;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.folder.Folder;
 
+
 /**
  * @author freddy
  *
@@ -27,59 +28,51 @@ import org.columba.mail.folder.Folder;
  * Window>Preferences>Java>Code Generation.
  */
 public class BodyFilter extends AbstractFilter {
+    /**
+     * Constructor for BodyFilter.
+     */
+    public BodyFilter() {
+        super();
+    }
 
-	/**
-	 * Constructor for BodyFilter.
-	 */
-	public BodyFilter() {
-		super();
-	}
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
+     */
+    public Object[] getAttributes() {
+        Object[] args = { "criteria", "pattern" };
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
-	 */
-	public Object[] getAttributes() {
-		Object[] args = { "criteria", "pattern" };
+        return args;
+    }
 
-		return args;
-	}
+    /**
+     * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
+     */
+    public boolean process(Object[] args, Folder folder, Object uid)
+        throws Exception {
+        String body = folder.getMessageSource(uid);
+        int condition = FilterCriteria.getCriteria((String) args[0]);
+        String bodyText = (String) args[1];
 
-	/**
-	 * @see org.columba.mail.filter.plugins.AbstractFilter#process(java.lang.Object, org.columba.mail.folder.Folder, java.lang.Object, org.columba.core.command.WorkerStatusController)
-	 */
-	public boolean process(
-		Object[] args,
-		Folder folder,
-		Object uid)
-		throws Exception {
+        boolean result = false;
 
-		String body = folder.getMessageSource(uid);
-		int condition = FilterCriteria.getCriteria((String) args[0]);
-		String bodyText = (String) args[1];
+        switch (condition) {
+        case FilterCriteria.CONTAINS: {
+            if (body.indexOf(bodyText) != -1) {
+                result = true;
+            }
 
-		boolean result = false;
+            break;
+        }
 
-		switch (condition) {
-			case FilterCriteria.CONTAINS :
-				{
-					if (body.indexOf(bodyText) != -1)
-						result = true;
+        case FilterCriteria.CONTAINS_NOT: {
+            if (body.indexOf(bodyText) == -1) {
+                result = true;
+            }
 
-					break;
+            break;
+        }
+        }
 
-				}
-			case FilterCriteria.CONTAINS_NOT :
-				{
-					if (body.indexOf(bodyText) == -1)
-						result = true;
-
-					break;
-				}
-
-		}
-
-		return result;
-
-	}
-
+        return result;
+    }
 }

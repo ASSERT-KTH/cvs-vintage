@@ -13,16 +13,27 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer;
+
+import org.columba.core.gui.focus.FocusOwner;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.util.MailResourceLoader;
+
+import org.columba.ristretto.message.LocalMimePart;
+import org.columba.ristretto.message.MimeHeader;
+import org.columba.ristretto.message.StreamableMimePart;
+import org.columba.ristretto.message.io.FileSource;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
@@ -31,13 +42,6 @@ import javax.swing.JFileChooser;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.core.gui.focus.FocusOwner;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.util.MailResourceLoader;
-import org.columba.ristretto.message.LocalMimePart;
-import org.columba.ristretto.message.MimeHeader;
-import org.columba.ristretto.message.StreamableMimePart;
-import org.columba.ristretto.message.io.FileSource;
 
 /**
  * @author frd
@@ -47,317 +51,309 @@ import org.columba.ristretto.message.io.FileSource;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AttachmentController implements KeyListener, FocusOwner, ListSelectionListener {
-	AttachmentView view;
-	ComposerController controller;
+public class AttachmentController implements KeyListener, FocusOwner,
+    ListSelectionListener {
+    AttachmentView view;
+    ComposerController controller;
+    AttachmentActionListener actionListener;
+    AttachmentMenu menu;
+    private JFileChooser fileChooser;
 
-	AttachmentActionListener actionListener;
-	AttachmentMenu menu;
+    public AttachmentController(ComposerController controller) {
+        this.controller = controller;
 
-	private JFileChooser fileChooser;
+        view = new AttachmentView(this);
 
-	public AttachmentController(ComposerController controller) {
-		this.controller = controller;
+        actionListener = new AttachmentActionListener(this);
 
-		view = new AttachmentView(this);
-		
-		actionListener = new AttachmentActionListener(this);
+        menu = new AttachmentMenu(this);
 
-		menu = new AttachmentMenu(this);
+        view.addPopupListener(new PopupListener());
 
-		view.addPopupListener(new PopupListener());
+        // register Component as FocusOwner
+        MainInterface.focusManager.registerComponent(this);
 
-		// register Component as FocusOwner
-		MainInterface.focusManager.registerComponent(this);
+        fileChooser = new JFileChooser();
 
-		fileChooser = new JFileChooser();
+        installListener();
 
-		installListener();
-		
-		view.addListSelectionListener(this);
+        view.addListSelectionListener(this);
+    }
 
-	}
+    public ActionListener getActionListener() {
+        return actionListener;
+    }
 
-	public ActionListener getActionListener() {
-		return actionListener;
-	}
+    public void installListener() {
+        view.installListener(this);
+    }
 
-	public void installListener() {
-		view.installListener(this);
-	}
+    /**
+     * Synchronizes model and view.
+     * @param b                If true, model data is transferred to the view.
+     *                                 If false, view data is saved in the model.
+     */
+    public void updateComponents(boolean b) {
+        if (b) {
+            // transfer attachments from model to view
 
-	/**
-	 * Synchronizes model and view.
-	 * @param b		If true, model data is transferred to the view.
-	 * 				If false, view data is saved in the model.
-	 */
-	public void updateComponents(boolean b) {
-		if (b) {
-			// transfer attachments from model to view
-			
-			/*
-			 * clear existing attachments from the view
-			 * *20031105, karlpeder* Added to avoid dupplicating
-			 * attachments when switching btw. html and plain text.
-			 */
-			view.clear();
-			
-			// add attachments (mimeparts) from model to the view
-			for (int i = 0;
-				i < controller.getModel().getAttachments().size();
-				i++) {
-				StreamableMimePart p =
-					(StreamableMimePart) controller.getModel().getAttachments().get(i);
-				view.add(p);
-			}
-			
-		} else {
-			// transfer attachments from view to model
-			
-			// clear existing attachments from the model
-			controller.getModel().getAttachments().clear();
+            /*
+             * clear existing attachments from the view
+             * *20031105, karlpeder* Added to avoid dupplicating
+             * attachments when switching btw. html and plain text.
+             */
+            view.clear();
 
-			// add attachments (mimeparts) from view to the model
-			for (int i = 0; i < view.count(); i++) {
-				StreamableMimePart mp = (StreamableMimePart) view.get(i);
-				controller.getModel().getAttachments().add(mp);
-			}
-		}
-	}
+            // add attachments (mimeparts) from model to the view
+            for (int i = 0; i < controller.getModel().getAttachments().size();
+                    i++) {
+                StreamableMimePart p = (StreamableMimePart) controller.getModel()
+                                                                      .getAttachments()
+                                                                      .get(i);
+                view.add(p);
+            }
+        } else {
+            // transfer attachments from view to model
+            // clear existing attachments from the model
+            controller.getModel().getAttachments().clear();
 
-	public void add(StreamableMimePart part) {
-		view.add(part);
-		((ComposerModel) controller.getModel()).getAttachments().add(part);
-	}
+            // add attachments (mimeparts) from view to the model
+            for (int i = 0; i < view.count(); i++) {
+                StreamableMimePart mp = (StreamableMimePart) view.get(i);
+                controller.getModel().getAttachments().add(mp);
+            }
+        }
+    }
 
-	public void removeSelected() {
-		Object[] mp = view.getSelectedValues();
-		for (int i = 0; i < mp.length; i++) {
-			view.remove((StreamableMimePart) mp[i]);
-		}
+    public void add(StreamableMimePart part) {
+        view.add(part);
+        ((ComposerModel) controller.getModel()).getAttachments().add(part);
+    }
 
-	}
+    public void removeSelected() {
+        Object[] mp = view.getSelectedValues();
 
-	public void addFileAttachment() {
-		int returnValue;
-		File[] files;
+        for (int i = 0; i < mp.length; i++) {
+            view.remove((StreamableMimePart) mp[i]);
+        }
+    }
 
-		fileChooser.setDialogTitle(MailResourceLoader.getString("menu", "composer", "menu_message_attachFile")); //$NON-NLS-1$
-		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fileChooser.setMultiSelectionEnabled(true);
-		returnValue = fileChooser.showOpenDialog(view);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			files = fileChooser.getSelectedFiles();
+    public void addFileAttachment() {
+        int returnValue;
+        File[] files;
 
-			for (int i = 0; i < files.length; i++) {
-				File file = files[i];
+        fileChooser.setDialogTitle(MailResourceLoader.getString("menu",
+                "composer", "menu_message_attachFile")); //$NON-NLS-1$
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(true);
+        returnValue = fileChooser.showOpenDialog(view);
 
-				FileNameMap fileNameMap = URLConnection.getFileNameMap();
-				String mimetype = fileNameMap.getContentTypeFor(file.getName());
-				if (mimetype == null)
-					mimetype = "application/octet-stream"; //REALLY NEEDED?
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            files = fileChooser.getSelectedFiles();
 
-				MimeHeader header =
-					new MimeHeader(
-						mimetype.substring(0, mimetype.indexOf('/')),
-						mimetype.substring(mimetype.indexOf('/') + 1));
-						
-				header.putContentParameter("name", file.getName());
-				header.setContentDisposition("attachment");
-				header.putDispositionParameter("filename",file.getName());
-				header.setContentTransferEncoding("base64");
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
 
-				try {
-					LocalMimePart mimePart =
-						new LocalMimePart(header, new FileSource( file ));
-					
-					view.add(mimePart);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+                FileNameMap fileNameMap = URLConnection.getFileNameMap();
+                String mimetype = fileNameMap.getContentTypeFor(file.getName());
 
-	/******************* KeyListener ****************************/
+                if (mimetype == null) {
+                    mimetype = "application/octet-stream"; //REALLY NEEDED?
+                }
 
-	public void keyPressed(KeyEvent k) {
+                MimeHeader header = new MimeHeader(mimetype.substring(0,
+                            mimetype.indexOf('/')),
+                        mimetype.substring(mimetype.indexOf('/') + 1));
 
-		switch (k.getKeyCode()) {
-			case (KeyEvent.VK_DELETE) :
-				delete();
-				break;
-		}
-	}
+                header.putContentParameter("name", file.getName());
+                header.setContentDisposition("attachment");
+                header.putDispositionParameter("filename", file.getName());
+                header.setContentTransferEncoding("base64");
 
-	public void keyReleased(KeyEvent k) {
-	}
+                try {
+                    LocalMimePart mimePart = new LocalMimePart(header,
+                            new FileSource(file));
 
-	public void keyTyped(KeyEvent k) {
-	}
+                    view.add(mimePart);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	/********************** MouseListener *****************************/
+    /******************* KeyListener ****************************/
+    public void keyPressed(KeyEvent k) {
+        switch (k.getKeyCode()) {
+        case (KeyEvent.VK_DELETE):
+            delete();
 
-	class PopupListener extends MouseAdapter {
-		public void mousePressed(MouseEvent e) {
-			maybeShowPopup(e);
-		}
+            break;
+        }
+    }
 
-		public void mouseReleased(MouseEvent e) {
-			maybeShowPopup(e);
-		}
+    public void keyReleased(KeyEvent k) {
+    }
 
-		private void maybeShowPopup(MouseEvent e) {
-			if (e.isPopupTrigger()) {
+    public void keyTyped(KeyEvent k) {
+    }
 
-				Object[] values = view.getSelectedValues();
-				if (values.length == 0)
-					view.fixSelection(e.getX(), e.getY());
+    /********************** FocusOwner implementation *******************/
 
-				menu.show(e.getComponent(), e.getX(), e.getY());
-			}
-		}
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#copy()
+     */
+    public void copy() {
+        // attachment controller doesn't support copy-operation
+    }
 
-	/********************** FocusOwner implementation *******************/
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#cut()
+     */
+    public void cut() {
+        if (view.count() > 0) {
+            removeSelected();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#copy()
-	 */
-	public void copy() {
-		// attachment controller doesn't support copy-operation
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#delete()
+     */
+    public void delete() {
+        if (view.count() > 0) {
+            removeSelected();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#cut()
-	 */
-	public void cut() {
-		if (view.count() > 0)
-			removeSelected();
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+     */
+    public JComponent getComponent() {
+        return view;
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+     */
+    public boolean isCopyActionEnabled() {
+        // attachment controller doesn't support copy actions
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#delete()
-	 */
-	public void delete() {
-		if (view.count() > 0)
-			removeSelected();
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+     */
+    public boolean isCutActionEnabled() {
+        if (view.getSelectedValues().length > 0) {
+            return true;
+        }
 
-	}
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
-	 */
-	public JComponent getComponent() {
-		return view;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+     */
+    public boolean isDeleteActionEnabled() {
+        if (view.getSelectedValues().length > 0) {
+            return true;
+        }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
-	 */
-	public boolean isCopyActionEnabled() {
-		// attachment controller doesn't support copy actions
+        return false;
+    }
 
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+     */
+    public boolean isPasteActionEnabled() {
+        // attachment controller doesn't support paste actions
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
-	 */
-	public boolean isCutActionEnabled() {
-		if (view.getSelectedValues().length > 0)
-			return true;
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+     */
+    public boolean isSelectAllActionEnabled() {
+        if (view.count() > 0) {
+            return true;
+        }
 
-		return false;
-	}
+        return true;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
-	 */
-	public boolean isDeleteActionEnabled() {
-		if (view.getSelectedValues().length > 0)
-			return true;
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#paste()
+     */
+    public void paste() {
+        // attachment controller doesn't support paste actions
+    }
 
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+     */
+    public boolean isRedoActionEnabled() {
+        // attachment controller doesn't support redo operation
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
-	 */
-	public boolean isPasteActionEnabled() {
-		// attachment controller doesn't support paste actions
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+     */
+    public boolean isUndoActionEnabled() {
+        // attachment controller doesn't support undo operation
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
-	 */
-	public boolean isSelectAllActionEnabled() {
-		if (view.count() > 0)
-			return true;
-		return true;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#redo()
+     */
+    public void redo() {
+        // attachment controller doesn't support redo operation
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#paste()
-	 */
-	public void paste() {
-		// attachment controller doesn't support paste actions
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+     */
+    public void selectAll() {
+        view.setSelectionInterval(0, view.count() - 1);
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.focus.FocusOwner#undo()
+     */
+    public void undo() {
+        // attachment controller doesn't support undo operation
+    }
 
+    /********************* ListSelectionListener interface ***********************/
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
-	 */
-	public boolean isRedoActionEnabled() {
-		// attachment controller doesn't support redo operation
-		return false;
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
+    public void valueChanged(ListSelectionEvent arg0) {
+        MainInterface.focusManager.updateActions();
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
-	 */
-	public boolean isUndoActionEnabled() {
-		// attachment controller doesn't support undo operation
-		return false;
-	}
+    /********************** MouseListener *****************************/
+    class PopupListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#redo()
-	 */
-	public void redo() {
-		// attachment controller doesn't support redo operation
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
 
-	}
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                Object[] values = view.getSelectedValues();
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
-	 */
-	public void selectAll() {
-		view.setSelectionInterval(0, view.count()-1);
+                if (values.length == 0) {
+                    view.fixSelection(e.getX(), e.getY());
+                }
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.focus.FocusOwner#undo()
-	 */
-	public void undo() {
-		// attachment controller doesn't support undo operation
-
-	}
-	
-	/********************* ListSelectionListener interface ***********************/
-	
-	
-
-	/* (non-Javadoc)
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	public void valueChanged(ListSelectionEvent arg0) {
-		MainInterface.focusManager.updateActions();
-
-	}
-
+                menu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+    }
 }

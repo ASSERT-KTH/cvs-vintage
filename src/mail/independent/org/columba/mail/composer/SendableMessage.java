@@ -15,69 +15,70 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.composer;
+
+import org.columba.core.io.CloneStreamMaster;
+
+import org.columba.mail.message.ColumbaMessage;
+import org.columba.mail.message.SendableHeader;
+
+import org.columba.ristretto.message.io.SourceInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.List;
 
-import org.columba.core.io.CloneStreamMaster;
-import org.columba.mail.message.ColumbaMessage;
-import org.columba.mail.message.SendableHeader;
-import org.columba.ristretto.message.io.SourceInputStream;
 
 public class SendableMessage extends ColumbaMessage {
+    private CloneStreamMaster sourceStream;
 
-	private CloneStreamMaster sourceStream;
+    public SendableMessage() {
+        super();
+    }
 
-	public SendableMessage() {
-		super();
-	}
+    public SendableMessage(int accountUid, List recipients, String message) {
+        super();
+        setStringSource(message);
 
-	public SendableMessage(int accountUid, List recipients, String message) {
-		super();
-		setStringSource(message);
+        columbaHeader.getAttributes().put("columba.recipients", recipients);
+        columbaHeader.getAttributes().put("columba.accountuid",
+            new Integer(accountUid));
+    }
 
-		columbaHeader.getAttributes().put(
-			"columba.recipients",
-			recipients);
-		columbaHeader.getAttributes().put("columba.accountuid", new Integer(accountUid));
-	}
+    public int getAccountUid() {
+        return ((SendableHeader) getHeader()).getAccountUid();
+    }
 
-	public int getAccountUid() {
-		return ((SendableHeader) getHeader()).getAccountUid();
-	}
+    public List getRecipients() {
+        return ((SendableHeader) getHeader()).getRecipients();
+    }
 
-	public List getRecipients() {
-		return ((SendableHeader) getHeader()).getRecipients();
-	}
+    public void setAccountUid(int uid) {
+        ((SendableHeader) getHeader()).setAccountUid(uid);
+    }
 
-	public void setAccountUid(int uid) {
-		((SendableHeader) getHeader()).setAccountUid(uid);
-	}
+    public void setRecipients(List rcpt) {
+        ((SendableHeader) getHeader()).setRecipients(rcpt);
+    }
 
-	public void setRecipients(List rcpt) {
-		((SendableHeader) getHeader()).setRecipients(rcpt);
-	}
+    /**
+     * @return Returns the sourceStream.
+     */
+    public InputStream getSourceStream() {
+        if (sourceStream == null) {
+            return new SourceInputStream(getSource());
+        }
 
-	/**
-	 * @return Returns the sourceStream.
-	 */
-	public InputStream getSourceStream() {
-		if (sourceStream == null) {
-			return new SourceInputStream(getSource());
-		}
+        return sourceStream.getClone();
+    }
 
-		return sourceStream.getClone();
-	}
-
-	/**
-	 * @param sourceStream
-	 *            The sourceStream to set.
-	 */
-	public void setSourceStream(InputStream sourceStream) throws IOException {
-		this.sourceStream = new CloneStreamMaster(sourceStream);
-	}
-
+    /**
+     * @param sourceStream
+     *            The sourceStream to set.
+     */
+    public void setSourceStream(InputStream sourceStream)
+        throws IOException {
+        this.sourceStream = new CloneStreamMaster(sourceStream);
+    }
 }

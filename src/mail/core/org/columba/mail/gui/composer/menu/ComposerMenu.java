@@ -1,7 +1,7 @@
 /*
  * Created on 29.03.2003
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package org.columba.mail.gui.composer.menu;
@@ -14,43 +14,37 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ComposerMenu extends Menu {
+    /**
+     * @param xmlRoot
+     * @param frameMediator
+     */
+    public ComposerMenu(String xmlRoot, FrameMediator frameController) {
+        super(xmlRoot, frameController);
 
-	/**
-	 * @param xmlRoot
-	 * @param frameMediator
-	 */
-	public ComposerMenu(String xmlRoot, FrameMediator frameController) {
-		super(xmlRoot, frameController);
+        try {
+            ((MenuPluginHandler) MainInterface.pluginManager.getHandler(
+                "org.columba.mail.composer.menu")).insertPlugins(this);
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+    }
 
-		try {
+    public MenuBarGenerator createMenuBarGeneratorInstance(String xmlRoot,
+        FrameMediator frameController) {
+        if (menuGenerator == null) {
+            menuGenerator = new ComposerMenuBarGenerator(frameController,
+                    xmlRoot);
+        }
 
-			(
-				(MenuPluginHandler) MainInterface.pluginManager.getHandler(
-					"org.columba.mail.composer.menu")).insertPlugins(
-				this);
-		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
-		}
-
-	}
-
-	public MenuBarGenerator createMenuBarGeneratorInstance(
-		String xmlRoot,
-		FrameMediator frameController) {
-		if (menuGenerator == null) {
-			menuGenerator =
-				new ComposerMenuBarGenerator(frameController, xmlRoot);
-		}
-
-		return menuGenerator;
-	}
-
+        return menuGenerator;
+    }
 }

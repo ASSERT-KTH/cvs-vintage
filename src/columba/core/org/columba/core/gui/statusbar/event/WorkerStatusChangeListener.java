@@ -16,5 +16,5 @@
 package org.columba.core.gui.statusbar.event;
 
 public interface WorkerStatusChangeListener {
-	public void workerStatusChanged( WorkerStatusChangedEvent e );
+    public void workerStatusChanged(WorkerStatusChangedEvent e);
 }

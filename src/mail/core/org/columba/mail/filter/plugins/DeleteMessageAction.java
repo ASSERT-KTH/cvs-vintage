@@ -17,11 +17,13 @@ package org.columba.mail.filter.plugins;
 
 import org.columba.core.command.Command;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.ExpungeFolderCommand;
 import org.columba.mail.folder.command.MarkMessageCommand;
+
 
 /**
  * @author freddy
@@ -32,25 +34,22 @@ import org.columba.mail.folder.command.MarkMessageCommand;
  * Window>Preferences>Java>Code Generation.
  */
 public class DeleteMessageAction extends AbstractFilterAction {
+    /**
+     * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
+     */
+    public Command getCommand(FilterAction filterAction, Folder srcFolder,
+        Object[] uids) throws Exception {
+        FolderCommandReference[] r = new FolderCommandReference[1];
+        r[0] = new FolderCommandReference(srcFolder, uids);
+        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
 
-	
+        MarkMessageCommand c = new MarkMessageCommand(r);
 
-	/**
-	 * @see org.columba.modules.mail.filter.action.AbstractFilterAction#execute()
-	 */
-	public Command getCommand( FilterAction filterAction, Folder srcFolder, Object[] uids) throws Exception {
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		r[0] = new FolderCommandReference(srcFolder, uids);
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_EXPUNGED);
+        MainInterface.processor.addOp(c);
 
-		MarkMessageCommand c = new MarkMessageCommand( r);
+        r = new FolderCommandReference[1];
+        r[0] = new FolderCommandReference(srcFolder);
 
-		MainInterface.processor.addOp(c);
-
-		r = new FolderCommandReference[1];
-		r[0] = new FolderCommandReference(srcFolder);
-
-		return new ExpungeFolderCommand(r);
-	}
-
+        return new ExpungeFolderCommand(r);
+    }
 }

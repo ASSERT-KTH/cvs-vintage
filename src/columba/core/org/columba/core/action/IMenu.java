@@ -13,34 +13,32 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.action;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.CMenu;
 
+
 public class IMenu extends CMenu {
-	
-	protected FrameMediator controller;
-	
-	public IMenu( FrameMediator controller, String caption ) {
-		super(caption);
-		this.controller = controller;
-	}
+    protected FrameMediator controller;
 
-	/**
-	 * @return FrameController
-	 */
-	public FrameMediator getController() {
-		return controller;
-	}
+    public IMenu(FrameMediator controller, String caption) {
+        super(caption);
+        this.controller = controller;
+    }
 
-	/**
-	 * Sets the controller.
-	 * @param controller The controller to set
-	 */
-	public void setController(FrameMediator controller) {
-		this.controller = controller;
-	}
+    /**
+     * @return FrameController
+     */
+    public FrameMediator getController() {
+        return controller;
+    }
 
+    /**
+     * Sets the controller.
+     * @param controller The controller to set
+     */
+    public void setController(FrameMediator controller) {
+        this.controller = controller;
+    }
 }

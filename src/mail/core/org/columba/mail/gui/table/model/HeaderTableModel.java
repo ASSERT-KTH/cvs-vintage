@@ -15,124 +15,122 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.model;
 
-import java.util.Enumeration;
-
 import org.columba.core.config.TableItem;
+
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 
-public class HeaderTableModel
-	extends BasicHeaderTableModel
-	implements TreeTableModelInterface {
+import java.util.Enumeration;
 
-	public HeaderTableModel(TableItem item) {
-		super(item);
 
-	}
+public class HeaderTableModel extends BasicHeaderTableModel
+    implements TreeTableModelInterface {
+    public HeaderTableModel(TableItem item) {
+        super(item);
+    }
 
-	/**
-	 * ***************************** implements TableModelModifier
-	 * ******************
-	 */
+    /**
+     * ***************************** implements TableModelModifier
+     * ******************
+     */
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-	 */
-	public void modify(Object[] uids) {
-		for (int i = 0; i < uids.length; i++) {
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
+    public void modify(Object[] uids) {
+        for (int i = 0; i < uids.length; i++) {
+            MessageNode node = (MessageNode) map.get(uids[i]);
 
-			MessageNode node = (MessageNode) map.get(uids[i]);
-			if (node != null) {
-				// update treemodel
-				getTreeModel().nodeChanged(node);
-			}
-		}
+            if (node != null) {
+                // update treemodel
+                getTreeModel().nodeChanged(node);
+            }
+        }
 
-		// notify table
-		fireTableDataChanged();
+        // notify table
+        fireTableDataChanged();
+    }
 
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
+    public void remove(Object[] uids) {
+        if (uids != null) {
+            for (int i = 0; i < uids.length; i++) {
+                MessageNode node = (MessageNode) map.get(uids[i]);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-	 */
-	public void remove(Object[] uids) {
-		if (uids != null) {
-			for (int i = 0; i < uids.length; i++) {
-				MessageNode node = (MessageNode) map.get(uids[i]);
-				if (node != null) {
-					map.remove(node);
-					if (node.getParent() != null)
-						getTreeModel().removeNodeFromParent(node);
-				}
-			}
-			fireTableDataChanged();
-		}
+                if (node != null) {
+                    map.remove(node);
 
-	}
+                    if (node.getParent() != null) {
+                        getTreeModel().removeNodeFromParent(node);
+                    }
+                }
+            }
 
-	public void update() {
-		if (root == null)
-			root = new MessageNode(new ColumbaHeader(), "0");
+            fireTableDataChanged();
+        }
+    }
 
-		// remove all children from tree
-		root.removeAllChildren();
+    public void update() {
+        if (root == null) {
+            root = new MessageNode(new ColumbaHeader(), "0");
+        }
 
-		// clear messagenode cache
-		map.clear();
+        // remove all children from tree
+        root.removeAllChildren();
 
-		// set empty root node
-		tree.setRootNode(root);
+        // clear messagenode cache
+        map.clear();
 
-		if ((headerList == null) || (headerList.count() == 0)) {
-			// table is empty
-			// -> just display empty table
+        // set empty root node
+        tree.setRootNode(root);
 
-			return;
-		}
+        if ((headerList == null) || (headerList.count() == 0)) {
+            // table is empty
+            // -> just display empty table
+            return;
+        }
 
-		// add every header from HeaderList to the table as MessageNode
-		for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-			// get unique id
-			Object uid = e.nextElement();
+        // add every header from HeaderList to the table as MessageNode
+        for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+            // get unique id
+            Object uid = e.nextElement();
 
-			// get header
-			ColumbaHeader header = headerList.get(uid);
+            // get header
+            ColumbaHeader header = headerList.get(uid);
 
-			// create MessageNode
-			MessageNode child = new MessageNode(header, uid);
+            // create MessageNode
+            MessageNode child = new MessageNode(header, uid);
 
-			// add this node to cache
-			map.put(uid, child);
+            // add this node to cache
+            map.put(uid, child);
 
-			// add node to tree
-			root.add(child);
-		}
+            // add node to tree
+            root.add(child);
+        }
+    }
 
-	}
+    public void clear() {
+        root = new MessageNode(new ColumbaHeader(), "0");
+        tree.setRootNode(root);
+        fireTableDataChanged();
+    }
 
-	public void clear() {
-		root = new MessageNode(new ColumbaHeader(), "0");
-		tree.setRootNode(root);
-		fireTableDataChanged();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
+     */
+    public void set(HeaderList headerList) {
+        this.headerList = headerList;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#set(org.columba.mail.message.HeaderList)
-	 */
-	public void set(HeaderList headerList) {
-		this.headerList = headerList;
-
-		update();
-	}
-
+        update();
+    }
 }

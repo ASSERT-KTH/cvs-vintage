@@ -18,64 +18,63 @@
 package org.columba.mail.folder.headercache;
 
 import java.awt.Color;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+
 import java.util.Date;
+
 
 /**
  * @author fdietz
  */
 public class ObjectWriter {
+    private static final int NULL = 0;
+    private static final int STRING = 1;
+    private static final int DATE = 2;
+    private static final int BOOLEAN = 3;
+    private static final int INTEGER = 4;
+    private static final int COLOR = 5;
+    private static final int OBJECT = 6;
+    protected File file;
+    protected FileOutputStream ostream;
+    protected ObjectOutputStream oos;
 
-	protected File file;
-	protected FileOutputStream ostream;
-	protected ObjectOutputStream oos;
+    public ObjectWriter(File file) throws Exception {
+        this.file = file;
+        ostream = new FileOutputStream(file.getPath());
+        oos = new ObjectOutputStream(ostream);
+    }
 
-	private static final int NULL = 0;
-	private static final int STRING = 1;
-	private static final int DATE = 2;
-	private static final int BOOLEAN = 3;
-	private static final int INTEGER = 4;
-	private static final int COLOR = 5;
-	private static final int OBJECT = 6;
+    public void writeObject(Object value) throws Exception {
+        Object o = value;
 
-	public ObjectWriter(File file) throws Exception {
-		this.file = file;
-		ostream = new FileOutputStream(file.getPath());
-		oos = new ObjectOutputStream(ostream);
-	}
+        if (o == null) {
+            oos.writeInt(NULL);
+        } else if (o instanceof String) {
+            oos.writeInt(STRING);
+            oos.writeUTF((String) o);
+        } else if (o instanceof Integer) {
+            oos.writeInt(INTEGER);
+            oos.writeInt(((Integer) o).intValue());
+        } else if (o instanceof Boolean) {
+            oos.writeInt(BOOLEAN);
+            oos.writeBoolean(((Boolean) o).booleanValue());
+        } else if (o instanceof Date) {
+            oos.writeInt(DATE);
+            oos.writeLong(((Date) o).getTime());
+        } else if (o instanceof Color) {
+            oos.writeInt(COLOR);
+            oos.writeInt(((Color) o).getRGB());
+        } else {
+            oos.writeInt(OBJECT);
+            oos.writeObject(value);
+        }
+    }
 
-	public void writeObject(Object value) throws Exception {
-		Object o = value;
-
-		if (o == null) {
-			oos.writeInt(NULL);
-		} else if (o instanceof String) {
-			oos.writeInt(STRING);
-			oos.writeUTF((String) o);
-		} else if (o instanceof Integer) {
-			oos.writeInt(INTEGER);
-			oos.writeInt(((Integer) o).intValue());
-		} else if (o instanceof Boolean) {
-			oos.writeInt(BOOLEAN);
-			oos.writeBoolean(((Boolean) o).booleanValue());
-		} else if (o instanceof Date) {
-			oos.writeInt(DATE);
-			oos.writeLong(((Date) o).getTime());
-		} else if (o instanceof Color) {
-			oos.writeInt(COLOR);
-			oos.writeInt( ((Color)o).getRGB());
-		}	
-		else {		
-			oos.writeInt(OBJECT);
-			oos.writeObject(value);
-		}
-	}
-
-	public void close() throws Exception {
-
-		oos.close();
-		ostream.close();
-	}
+    public void close() throws Exception {
+        oos.close();
+        ostream.close();
+    }
 }

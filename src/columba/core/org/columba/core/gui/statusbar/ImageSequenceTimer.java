@@ -15,16 +15,6 @@
 //All Rights Reserved.
 package org.columba.core.gui.statusbar;
 
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.Properties;
-
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-
 import org.columba.core.config.Config;
 import org.columba.core.config.ConfigPath;
 import org.columba.core.config.ThemeItem;
@@ -34,6 +24,19 @@ import org.columba.core.gui.toolbar.ToolbarButton;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.io.File;
+
+import java.util.Properties;
+
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+
 /**
  * Animated image showing background activity.
  * <p>
@@ -41,203 +44,191 @@ import org.columba.core.main.MainInterface;
  * <p>
  * ImageSequenceTimer actually only listens for {@link WorkerListChangeEvent}
  * and starts/stops as appropriate.
- * 
+ *
  * @author fdietz
  */
-public class ImageSequenceTimer
-	extends ToolbarButton
-	implements ActionListener, WorkerListChangeListener {
-	private javax.swing.Timer timer;
-	private ImageIcon[] images;
-	private ImageIcon restImage;
-	private int frameNumber;
-	private int frameCount;
+public class ImageSequenceTimer extends ToolbarButton implements ActionListener,
+    WorkerListChangeListener {
+    private static int DELAY = 100;
+    private javax.swing.Timer timer;
+    private ImageIcon[] images;
+    private ImageIcon restImage;
+    private int frameNumber;
+    private int frameCount;
+    private Dimension scale;
+    private int imageWidth;
+    private int imageHeight;
 
-	private Dimension scale;
+    public ImageSequenceTimer() {
+        super();
 
-	private static int DELAY = 100;
+        timer = new javax.swing.Timer(DELAY, this);
+        timer.setInitialDelay(0);
+        timer.setCoalesce(true);
+        setMargin(new Insets(0, 0, 0, 0));
+        setRolloverEnabled(true);
+        setBorder(null);
+        setContentAreaFilled(false);
 
-	private int imageWidth;
-	private int imageHeight;
+        setRequestFocusEnabled(false);
+        init();
 
-	public ImageSequenceTimer() {
-		super();
+        // register interested on changes in the running worker list
+        MainInterface.processor.getTaskManager().addWorkerListChangeListener(this);
+    }
 
-		timer = new javax.swing.Timer(DELAY, this);
-		timer.setInitialDelay(0);
-		timer.setCoalesce(true);
-		setMargin(new Insets(0, 0, 0, 0));
-		setRolloverEnabled(true);
-		setBorder(null);
-		setContentAreaFilled(false);
+    /**
+     * Its an element of the toolbar, and therefor can't
+     * have the focus.
+     */
+    public boolean isFocusTraversable() {
+        return isRequestFocusEnabled();
+    }
 
-		setRequestFocusEnabled(false);
-		init();
+    /**
+     * Initialize the image array, using single frame images.
+     *
+     */
+    protected void initDefault() {
+        frameCount = 60;
+        frameNumber = 1;
 
-		// register interested on changes in the running worker list
-		MainInterface.processor.getTaskManager().addWorkerListChangeListener(
-			this);
+        imageWidth = 36;
+        imageHeight = 36;
 
-	}
+        images = new ImageIcon[frameCount];
 
-	/**
-	 * Its an element of the toolbar, and therefor can't 
-	 * have the focus.
-	 */
-	public boolean isFocusTraversable() {
-		return isRequestFocusEnabled();
-	}
+        for (int i = 0; i < frameCount; i++) {
+            StringBuffer buf = new StringBuffer();
 
-	/**
-	 * Initialize the image array, using single frame images.
-	 *
-	 */
-	protected void initDefault() {
-		frameCount = 60;
-		frameNumber = 1;
+            if (i < 10) {
+                buf.append("00");
+            }
 
-		imageWidth = 36;
-		imageHeight = 36;
+            if ((i >= 10) && (i < 100)) {
+                buf.append("0");
+            }
 
-		images = new ImageIcon[frameCount];
+            buf.append(Integer.toString(i));
 
-		for (int i = 0; i < frameCount; i++) {
-			StringBuffer buf = new StringBuffer();
+            buf.append(".png");
 
-			if (i < 10)
-				buf.append("00");
-			if ((i >= 10) && (i < 100))
-				buf.append("0");
+            images[i] = ImageLoader.getImageIcon(buf.toString());
+        }
 
-			buf.append(Integer.toString(i));
+        restImage = ImageLoader.getImageIcon("rest.png");
 
-			buf.append(".png");
+        setIcon(restImage);
+    }
 
-			images[i] = ImageLoader.getImageIcon(buf.toString());
-		}
+    protected void init() {
+        ThemeItem item = Config.getOptionsConfig().getThemeItem();
 
-		restImage = ImageLoader.getImageIcon("rest.png");
+        //String pulsator = item.getPulsator();
+        String pulsator = "default";
 
-		setIcon(restImage);
+        // we always use the default initialization
+        // -> Note: all the code in the else case is not used
+        // ->       I just left it in to be able to easily re-enable
+        // ->       themeing support of the throbber
+        if (pulsator.toLowerCase().equals("default")) {
+            initDefault();
+        } else {
+            try {
+                File zipFile = new File(ConfigPath.getConfigDirectory() +
+                        "/pulsators/" + pulsator + ".jar");
 
-	}
+                String zipFileEntry = new String(pulsator +
+                        "/pulsator.properties");
 
-	protected void init() {
-		ThemeItem item = Config.getOptionsConfig().getThemeItem();
-		//String pulsator = item.getPulsator();
-		String pulsator = "default";
+                //System.out.println("zipfileentry:"+zipFileEntry );
+                Properties properties = ImageLoader.loadProperties(zipFile,
+                        zipFileEntry);
 
-		// we always use the default initialization
-		// -> Note: all the code in the else case is not used
-		// ->       I just left it in to be able to easily re-enable
-		// ->       themeing support of the throbber
-		if (pulsator.toLowerCase().equals("default"))
-			initDefault();
-		else {
-			try {
-				File zipFile =
-					new File(
-						ConfigPath.getConfigDirectory()
-							+ "/pulsators/"
-							+ pulsator
-							+ ".jar");
+                String frameCountStr = (String) properties.getProperty("count");
+                frameCount = Integer.parseInt(frameCountStr);
 
-				String zipFileEntry =
-					new String(pulsator + "/pulsator.properties");
-				//System.out.println("zipfileentry:"+zipFileEntry );
+                String widthStr = (String) properties.getProperty("width");
+                imageWidth = Integer.parseInt(widthStr);
 
-				Properties properties =
-					ImageLoader.loadProperties(zipFile, zipFileEntry);
+                String heightStr = (String) properties.getProperty("height");
+                imageHeight = Integer.parseInt(heightStr);
 
-				String frameCountStr = (String) properties.getProperty("count");
-				frameCount = Integer.parseInt(frameCountStr);
+                /*
+                setPreferredSize(new Dimension(width, height));
+                setMinimumSize(new Dimension(width, height));
+                setMaximumSize(new Dimension(width, height));
+                */
+                images = new ImageIcon[frameCount];
 
-				String widthStr = (String) properties.getProperty("width");
-				imageWidth = Integer.parseInt(widthStr);
+                for (int i = 0; i < frameCount; i++) {
+                    String istr = (new Integer(i)).toString();
+                    String image = (String) properties.getProperty(istr);
 
-				String heightStr = (String) properties.getProperty("height");
-				imageHeight = Integer.parseInt(heightStr);
+                    zipFile = new File(ConfigPath.getConfigDirectory() +
+                            "/pulsators/" + pulsator + ".jar");
 
-				/*
-				setPreferredSize(new Dimension(width, height));
-				setMinimumSize(new Dimension(width, height));
-				setMaximumSize(new Dimension(width, height));
-				*/
+                    zipFileEntry = new String(pulsator + "/" + image);
 
-				images = new ImageIcon[frameCount];
-				for (int i = 0; i < frameCount; i++) {
-					String istr = (new Integer(i)).toString();
-					String image = (String) properties.getProperty(istr);
+                    //System.out.println("zuifileentry:"+zipFileEntry);
+                    images[i] = new ImageIcon(ImageLoader.loadImage(zipFile,
+                                zipFileEntry));
+                }
 
-					zipFile =
-						new File(
-							ConfigPath.getConfigDirectory()
-								+ "/pulsators/"
-								+ pulsator
-								+ ".jar");
+                String image = (String) properties.getProperty("rest");
+                zipFileEntry = new String(pulsator + "/" + image);
 
-					zipFileEntry = new String(pulsator + "/" + image);
+                restImage = new ImageIcon(ImageLoader.loadImage(zipFile,
+                            zipFileEntry));
+            } catch (Exception ex) {
+                StringBuffer buf = new StringBuffer();
+                buf.append("Error while loading pulsator icons!");
+                JOptionPane.showMessageDialog(null, buf.toString());
 
-					//System.out.println("zuifileentry:"+zipFileEntry);
-					images[i] =
-						new ImageIcon(
-							ImageLoader.loadImage(zipFile, zipFileEntry));
-				}
+                //Config.getOptionsConfig().getThemeItem().setPulsator("default");
+                initDefault();
+            }
+        }
+    }
 
-				String image = (String) properties.getProperty("rest");
-				zipFileEntry = new String(pulsator + "/" + image);
+    public void start() {
+        if (!timer.isRunning()) {
+            timer.start();
+        }
+    }
 
-				restImage =
-					new ImageIcon(ImageLoader.loadImage(zipFile, zipFileEntry));
-			} catch (Exception ex) {
-				StringBuffer buf = new StringBuffer();
-				buf.append("Error while loading pulsator icons!");
-				JOptionPane.showMessageDialog(null, buf.toString());
+    public void stop() {
+        if (timer.isRunning()) {
+            timer.stop();
+        }
 
-				//Config.getOptionsConfig().getThemeItem().setPulsator("default");
+        frameNumber = 0;
 
-				initDefault();
-			}
-		}
+        setIcon(restImage);
+    }
 
-	}
+    /**
+     * Listen for timer actionevents and update the image
+     */
+    public void actionPerformed(ActionEvent ev) {
+        String action = ev.getActionCommand();
 
-	public void start() {
-		if (!timer.isRunning())
-			timer.start();
-	}
+        frameNumber++;
 
-	public void stop() {
-		if (timer.isRunning())
-			timer.stop();
+        if (timer.isRunning()) {
+            setIcon(new ImageIcon(images[frameNumber % frameCount].getImage()));
+        } else {
+            setIcon(restImage);
+        }
+    }
 
-		frameNumber = 0;
-
-		setIcon(restImage);
-	}
-
-	/**
-	 * Listen for timer actionevents and update the image
-	 */
-	public void actionPerformed(ActionEvent ev) {
-		String action = ev.getActionCommand();
-
-		frameNumber++;
-
-		if (timer.isRunning())
-			setIcon(new ImageIcon(images[frameNumber % frameCount].getImage()));
-		else
-			setIcon(restImage);
-
-	}
-
-	public void workerListChanged(WorkerListChangedEvent e) {
-		// just the animation, if there are more than zero
-		// workers running
-		if (e.getNewValue() != 0)
-			start();
-		else
-			stop();
-	}
-
+    public void workerListChanged(WorkerListChangedEvent e) {
+        // just the animation, if there are more than zero
+        // workers running
+        if (e.getNewValue() != 0) {
+            start();
+        } else {
+            stop();
+        }
+    }
 }

@@ -15,10 +15,24 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import org.columba.core.config.Config;
+import org.columba.core.gui.util.FontProperties;
+import org.columba.core.io.DiskIO;
+import org.columba.core.io.TempFileStore;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.message.util.DocumentParser;
+import org.columba.mail.parser.text.HtmlParser;
+
 import java.awt.Font;
 import java.awt.Insets;
+
 import java.io.File;
+
 import java.net.URL;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -26,15 +40,6 @@ import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 
-import org.columba.core.config.Config;
-import org.columba.core.gui.util.FontProperties;
-import org.columba.core.io.DiskIO;
-import org.columba.core.io.TempFileStore;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.message.util.DocumentParser;
-import org.columba.mail.parser.text.HtmlParser;
 
 /**
  * @author freddy
@@ -45,220 +50,214 @@ import org.columba.mail.parser.text.HtmlParser;
  * Window>Preferences>Java>Code Generation.
  */
 public class BodyTextViewer extends JTextPane implements Observer {
+    // stylesheet is created dynamically because
+    // user configurable fonts are used
+    private String css = "";
 
-	// stylesheet is created dynamically because
-	// user configurable fonts are used
-	private String css = "";
+    // parser to transform text to html
+    private DocumentParser parser;
+    private HTMLEditorKit htmlEditorKit;
 
-	// parser to transform text to html
-	private DocumentParser parser;
+    // enable/disable smilies configuration 
+    private XmlElement smilies;
+    private boolean enableSmilies;
 
-	private HTMLEditorKit htmlEditorKit;
+    // name of font
+    private String name;
 
-	// enable/disable smilies configuration 
-	private XmlElement smilies;
+    // size of font
+    private String size;
 
-	private boolean enableSmilies;
+    // overwrite look and feel font settings
+    private boolean overwrite;
 
-	// name of font
-	private String name;
+    public BodyTextViewer() {
+        setMargin(new Insets(5, 5, 5, 5));
+        setEditable(false);
 
-	// size of font
-	private String size;
+        htmlEditorKit = new HTMLEditorKit();
+        setEditorKit(htmlEditorKit);
 
-	// overwrite look and feel font settings
-	private boolean overwrite;
+        parser = new DocumentParser();
 
-	public BodyTextViewer() {
-		setMargin(new Insets(5, 5, 5, 5));
-		setEditable(false);
+        setContentType("text/html");
 
-		htmlEditorKit = new HTMLEditorKit();
-		setEditorKit(htmlEditorKit);
+        XmlElement gui = MailConfig.get("options").getElement("/options/gui");
+        XmlElement messageviewer = gui.getElement("messageviewer");
 
-		parser = new DocumentParser();
+        if (messageviewer == null) {
+            messageviewer = gui.addSubElement("messageviewer");
+        }
 
-		setContentType("text/html");
+        smilies = messageviewer.getElement("smilies");
 
-		XmlElement gui = MailConfig.get("options").getElement("/options/gui");
-		XmlElement messageviewer = gui.getElement("messageviewer");
-		if (messageviewer == null) {
-			messageviewer = gui.addSubElement("messageviewer");
-		}
-		smilies = messageviewer.getElement("smilies");
-		if (smilies == null) {
-			smilies = gui.addSubElement("smilies");
-		}
+        if (smilies == null) {
+            smilies = gui.addSubElement("smilies");
+        }
 
-		// register as configuration change listener
-		smilies.addObserver(this);
+        // register as configuration change listener
+        smilies.addObserver(this);
 
-		String enable = smilies.getAttribute("enabled", "true");
-		if (enable.equals("true"))
-			enableSmilies = true;
-		else
-			enableSmilies = false;
+        String enable = smilies.getAttribute("enabled", "true");
 
-		XmlElement quote = messageviewer.getElement("quote");
-		if (quote == null) {
-			quote = messageviewer.addSubElement("quote");
-		}
+        if (enable.equals("true")) {
+            enableSmilies = true;
+        } else {
+            enableSmilies = false;
+        }
 
-		// register as configuration change listener
-		quote.addObserver(this);
+        XmlElement quote = messageviewer.getElement("quote");
 
-		// TODO use value in initStyleSheet()
-		String enabled = quote.getAttribute("enabled", "true");
-		String color = quote.getAttribute("color", "0");
+        if (quote == null) {
+            quote = messageviewer.addSubElement("quote");
+        }
 
-		// register for configuration changes
+        // register as configuration change listener
+        quote.addObserver(this);
 
-		Font font = FontProperties.getTextFont();
-		name = font.getName();
-		size = new Integer(font.getSize()).toString();
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement gui1 = options.getElement("gui");
-		XmlElement fonts = gui1.getElement("fonts");
-		if (fonts == null)
-			fonts = gui1.addSubElement("fonts");
+        // TODO use value in initStyleSheet()
+        String enabled = quote.getAttribute("enabled", "true");
+        String color = quote.getAttribute("color", "0");
 
-		// register interest on configuratin changes
-		fonts.addObserver(this);
+        // register for configuration changes
+        Font font = FontProperties.getTextFont();
+        name = font.getName();
+        size = new Integer(font.getSize()).toString();
 
-		initStyleSheet();
+        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement gui1 = options.getElement("gui");
+        XmlElement fonts = gui1.getElement("fonts");
 
-	}
+        if (fonts == null) {
+            fonts = gui1.addSubElement("fonts");
+        }
 
-	/**
-	 * 
-	 * read text-properties from configuration and 
-	 * create a stylesheet for the html-document 
-	 *
-	 */
-	protected void initStyleSheet() {
+        // register interest on configuratin changes
+        fonts.addObserver(this);
 
-		// read configuration from options.xml file
+        initStyleSheet();
+    }
 
-		// create css-stylesheet string 
-		// set font of html-element <P> 
-		css =
-			"<style type=\"text/css\"><!-- .bodytext {font-family:\""
-				+ name
-				+ "\"; font-size:\""
-				+ size
-				+ "pt; \"}"
-				+ ".quoting {color:#949494;}; --></style>";
-	}
+    /**
+     *
+     * read text-properties from configuration and
+     * create a stylesheet for the html-document
+     *
+     */
+    protected void initStyleSheet() {
+        // read configuration from options.xml file
+        // create css-stylesheet string 
+        // set font of html-element <P> 
+        css = "<style type=\"text/css\"><!-- .bodytext {font-family:\"" + name +
+            "\"; font-size:\"" + size + "pt; \"}" +
+            ".quoting {color:#949494;}; --></style>";
+    }
 
-	public void setBodyText(String bodyText, boolean html) {
+    public void setBodyText(String bodyText, boolean html) {
+        if (html) {
+            try {
+                // this is a HTML message
+                // try to fix broken html-strings
+                String validated = HtmlParser.validateHTMLString(bodyText);
+                ColumbaLogger.log.debug("validated bodytext:\n" + validated);
 
-		if (html) {
-			try {
-				// this is a HTML message
+                // create temporary file
+                File tempFile = TempFileStore.createTempFileWithSuffix("html");
 
-				// try to fix broken html-strings
-				String validated = HtmlParser.validateHTMLString(bodyText);
-				ColumbaLogger.log.debug("validated bodytext:\n" + validated);
+                // save bodytext to file
+                DiskIO.saveStringInFile(tempFile, validated);
 
-				// create temporary file
-				File tempFile = TempFileStore.createTempFileWithSuffix("html");
+                URL url = tempFile.toURL();
 
-				// save bodytext to file
-				DiskIO.saveStringInFile(tempFile, validated);
+                // use asynchronous loading method setPage to display
+                // URL correctly
+                setPage(url);
 
-				URL url = tempFile.toURL();
+                // this is the old method which doesn't work
+                // for many html-messages
+                /*
+                getDocument().remove(0,getDocument().getLength()-1);
 
-				// use asynchronous loading method setPage to display
-				// URL correctly
-				setPage(url);
+                ((HTMLDocument) getDocument()).getParser().parse(
+                        new StringReader(validated),
+                        ((HTMLDocument) getDocument()).getReader(0),
+                        true);
+                */
+                // scroll window to the beginning
+                setCaretPosition(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // this is a text/plain message
+            try {
+                // substitute special characters like:
+                //  <,>,&,\t,\n		
+                String r = HtmlParser.substituteSpecialCharacters(bodyText);
 
-				// this is the old method which doesn't work
-				// for many html-messages
-				/* 
-				getDocument().remove(0,getDocument().getLength()-1);
-								
-				((HTMLDocument) getDocument()).getParser().parse(
-					new StringReader(validated),
-					((HTMLDocument) getDocument()).getReader(0),
-					true);
-				*/
+                // parse for urls and substite with HTML-code
+                r = HtmlParser.substituteURL(r);
 
-				// scroll window to the beginning
-				setCaretPosition(0);
+                // parse for email addresses and substite with HTML-code
+                r = HtmlParser.substituteEmailAddress(r);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
+                // parse for quotings and color the darkgray
+                r = parser.markQuotings(r);
 
-			// this is a text/plain message
-			try {
-				// substitute special characters like:
-				//  <,>,&,\t,\n		
-				String r = HtmlParser.substituteSpecialCharacters(bodyText);
+                // add smilies
+                if (enableSmilies == true) {
+                    r = parser.addSmilies(r);
+                }
 
-				// parse for urls and substite with HTML-code
-				r = HtmlParser.substituteURL(r);
-				// parse for email addresses and substite with HTML-code
-				r = HtmlParser.substituteEmailAddress(r);
+                // encapsulate bodytext in html-code
+                r = transformToHTML(new StringBuffer(r));
 
-				// parse for quotings and color the darkgray
-				r = parser.markQuotings(r);
+                ColumbaLogger.log.debug("validated bodytext:\n" + r);
 
-				// add smilies
-				if (enableSmilies == true)
-					r = parser.addSmilies(r);
+                // display bodytext
+                setText(r);
 
-				// encapsulate bodytext in html-code
-				r = transformToHTML(new StringBuffer(r));
+                //		setup base url in order to be able to display images
+                // in html-component
+                URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
+                ColumbaLogger.log.debug(baseUrl.toString());
+                ((HTMLDocument) getDocument()).setBase(baseUrl);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
-				ColumbaLogger.log.debug("validated bodytext:\n" + r);
+            // scroll window to the beginning
+            setCaretPosition(0);
+        }
+    }
 
-				// display bodytext
-				setText(r);
+    /*
+     *
+     * encapsulate bodytext in HTML code
+     *
+     */
+    protected String transformToHTML(StringBuffer buf) {
+        // prepend
+        buf.insert(0,
+            "<HTML><HEAD>" + css + "</HEAD><BODY class=\"bodytext\"><P>");
 
-				//		setup base url in order to be able to display images
-				// in html-component
-				URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
-				ColumbaLogger.log.debug(baseUrl.toString());
-				((HTMLDocument) getDocument()).setBase(baseUrl);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+        // append
+        buf.append("</P></BODY></HTML>");
 
-			// scroll window to the beginning
-			setCaretPosition(0);
-		}
-	}
+        return buf.toString();
+    }
 
-	/*
-	 * 
-	 * encapsulate bodytext in HTML code
-	 * 
-	 */
-	protected String transformToHTML(StringBuffer buf) {
-		// prepend
-		buf.insert(
-			0,
-			"<HTML><HEAD>" + css + "</HEAD><BODY class=\"bodytext\"><P>");
-		// append
-		buf.append("</P></BODY></HTML>");
-		return buf.toString();
-	}
+    /* (non-Javadoc)
+     *
+     * @see org.columba.mail.gui.config.general.MailOptionsDialog
+     *
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+        Font font = FontProperties.getTextFont();
+        name = font.getName();
+        size = new Integer(font.getSize()).toString();
 
-	/* (non-Javadoc)
-	 * 
-	 * @see org.columba.mail.gui.config.general.MailOptionsDialog
-	 * 
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		Font font = FontProperties.getTextFont();
-		name = font.getName();
-		size = new Integer(font.getSize()).toString();
-
-		initStyleSheet();
-
-	}
-
+        initStyleSheet();
+    }
 }

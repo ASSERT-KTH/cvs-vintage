@@ -13,58 +13,56 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.mail.gui.composer;
-
-import java.io.File;
 
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ExternalToolsPluginHandler;
+
 import org.columba.mail.config.SpellcheckItem;
 import org.columba.mail.spellcheck.ASpellInterface;
 
+import java.io.File;
+
+
 public class ComposerSpellCheck {
-	private ComposerController composerController;
-	private SpellcheckItem spellCheckConfig = null;
+    private ComposerController composerController;
+    private SpellcheckItem spellCheckConfig = null;
 
-	public ComposerSpellCheck(ComposerController composerController) {
-		this.composerController = composerController;
+    public ComposerSpellCheck(ComposerController composerController) {
+        this.composerController = composerController;
 
-		/*
-		spellCheckConfig =
-			MailConfig.getComposerOptionsConfig().getSpellcheckItem();
-		ASpellInterface.setAspellExeFilename(
-			spellCheckConfig.get("executable"));
-		*/
-	}
+        /*
+        spellCheckConfig =
+                MailConfig.getComposerOptionsConfig().getSpellcheckItem();
+        ASpellInterface.setAspellExeFilename(
+                spellCheckConfig.get("executable"));
+        */
+    }
 
-	public String checkText(String text) {
-		ExternalToolsPluginHandler handler = null;
-		try {
-			handler =
-				(
-					ExternalToolsPluginHandler) MainInterface
-						.pluginManager
-						.getHandler(
-					"org.columba.core.externaltools");
-                        File externalToolFile = handler.getLocationOfExternalTool("aspell");
-                        if (externalToolFile != null) {
-                                ASpellInterface.setAspellExeFilename(
-                                        externalToolFile.getPath());
-                        }
+    public String checkText(String text) {
+        ExternalToolsPluginHandler handler = null;
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.externaltools");
 
-		String checked = ASpellInterface.checkBuffer(text);
+            File externalToolFile = handler.getLocationOfExternalTool("aspell");
 
-		if (checked == null) {
-			// Display error ?
-			// As it is inmutable
-			return text;
-		} else {
-			return checked;
-		}
-	}
+            if (externalToolFile != null) {
+                ASpellInterface.setAspellExeFilename(externalToolFile.getPath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String checked = ASpellInterface.checkBuffer(text);
+
+        if (checked == null) {
+            // Display error ?
+            // As it is inmutable
+            return text;
+        } else {
+            return checked;
+        }
+    }
 }

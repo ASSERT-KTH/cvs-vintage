@@ -17,14 +17,17 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.util.BooleanCompressor;
+
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+
 import java.io.File;
+
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.util.BooleanCompressor;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 
 /**
  * Provides basic support for saving and loading email headers as fast as
@@ -32,229 +35,209 @@ import org.columba.mail.message.HeaderList;
  * <p>
  * It therefor tries to compress the data to make it as small as possible,
  * which improves performance dramatically
- * 
+ *
  * @see CachedHeaderfields
- * 
+ *
  * @author fdietz
  */
 public abstract class AbstractHeaderCache {
+    protected HeaderList headerList;
+    protected File headerFile;
+    private boolean headerCacheLoaded;
+    protected String[] columnNames;
+    protected ObjectWriter writer;
+    protected ObjectReader reader;
+    protected List additionalHeaderfields;
 
-	protected HeaderList headerList;
+    /**
+     * @param folder
+     */
+    public AbstractHeaderCache(File headerFile) {
+        this.headerFile = headerFile;
 
-	protected File headerFile;
+        headerList = new HeaderList();
 
-	private boolean headerCacheLoaded;
+        headerCacheLoaded = false;
 
-	protected String[] columnNames;
+        columnNames = null;
 
-	protected ObjectWriter writer;
-	protected ObjectReader reader;
+        additionalHeaderfields = new Vector();
+    }
 
-	protected List additionalHeaderfields;
+    /**
+     * @return
+     */
+    public ColumbaHeader createHeaderInstance() {
+        return new ColumbaHeader();
+    }
 
-	/**
-	 * @param folder
-	 */
-	public AbstractHeaderCache(File headerFile) {
-		this.headerFile = headerFile;
+    /**
+     * @return
+     */
+    public boolean isHeaderCacheLoaded() {
+        return headerCacheLoaded;
+    }
 
-		headerList = new HeaderList();
+    /**
+     * @param uid
+     * @return @throws
+     *         Exception
+     */
+    public boolean exists(Object uid) throws Exception {
+        return headerList.containsKey(uid);
+    }
 
-		headerCacheLoaded = false;
+    /**
+     * @return
+     */
+    public int count() {
+        return headerList.count();
+    }
 
-		columnNames = null;
+    /**
+     * @param uid
+     * @throws Exception
+     */
+    public void remove(Object uid) throws Exception {
+        ColumbaLogger.log.debug("trying to remove message UID=" + uid);
 
-		additionalHeaderfields = new Vector();
+        if (headerList.containsKey(uid)) {
+            ColumbaLogger.log.debug("remove UID=" + uid);
 
-	}
+            headerList.remove(uid);
+        }
+    }
 
-	/**
-	 * @return
-	 */
-	public ColumbaHeader createHeaderInstance() {
-		return new ColumbaHeader();
-	}
+    /**
+     * @param header
+     * @throws Exception
+     */
+    public void add(ColumbaHeader header) throws Exception {
+        headerList.add(header, header.get("columba.uid"));
+    }
 
-	/**
-	 * @return
-	 */
-	public boolean isHeaderCacheLoaded() {
-		return headerCacheLoaded;
-	}
+    /**
+     * Get or (re)create the header cache file.
+     *
+     * @return the HeaderList
+     * @throws Exception
+     */
+    public HeaderList getHeaderList() throws Exception {
+        boolean needToRelease = false;
 
-	/**
-	 * @param uid
-	 * @return @throws
-	 *         Exception
-	 */
-	public boolean exists(Object uid) throws Exception {
-		return headerList.containsKey(uid);
-	}
+        // if there exists a ".header" cache-file
+        //  try to load the cache
+        if (!headerCacheLoaded) {
+            if (headerFile.exists()) {
+                try {
+                    load();
+                } catch (Exception e) {
+                    e.printStackTrace();
 
-	/**
-	 * @return
-	 */
-	public int count() {
-		return headerList.count();
-	}
+                    headerCacheLoaded = true;
+                    headerList = new HeaderList();
 
-	/**
-	 * @param uid
-	 * @throws Exception
-	 */
-	public void remove(Object uid) throws Exception {
-		ColumbaLogger.log.debug("trying to remove message UID=" + uid);
+                    return headerList;
+                }
+            }
 
-		if (headerList.containsKey(uid)) {
-			ColumbaLogger.log.debug("remove UID=" + uid);
+            headerCacheLoaded = true;
+        }
 
-			headerList.remove(uid);
-		}
-	}
+        return headerList;
+    }
 
-	/**
-	 * @param header
-	 * @throws Exception
-	 */
-	public void add(ColumbaHeader header) throws Exception {
-		headerList.add(header, header.get("columba.uid"));
-	}
+    /**
+     * @throws Exception
+     */
+    public abstract void load() throws Exception;
 
-	/**
-	 * Get or (re)create the header cache file.
-	 * 
-	 * @return the HeaderList
-	 * @throws Exception
-	 */
-	public HeaderList getHeaderList() throws Exception {
-		boolean needToRelease = false;
-		// if there exists a ".header" cache-file
-		//  try to load the cache
-		if (!headerCacheLoaded) {
+    /**
+     * @throws Exception
+     */
+    public abstract void save() throws Exception;
 
-			if (headerFile.exists()) {
-				try {
-					load();
-				} catch (Exception e) {
-					e.printStackTrace();
+    protected void loadHeader(ColumbaHeader h) throws Exception {
+        // load boolean headerfields, which are compressed in one int value
+        int compressedFlags = ((Integer) reader.readObject()).intValue();
 
-					headerCacheLoaded = true;
-					headerList = new HeaderList();
+        for (int i = 0;
+                i < CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS.length;
+                i++) {
+            h.set(CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS[i],
+                BooleanCompressor.decompress(compressedFlags, i));
+        }
 
-					return headerList;
-				}
-			}
+        // load other internal headerfields, non-boolean type
+        String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
 
-			headerCacheLoaded = true;
-		}
+        for (int j = 0; j < columnNames.length; j++) {
+            h.set(columnNames[j], reader.readObject());
+        }
 
-		return headerList;
-	}
+        //		load default headerfields, as defined in RFC822
+        columnNames = CachedHeaderfields.getDefaultHeaderfields();
 
-	/**
-	 * @throws Exception
-	 */
-	public abstract void load() throws Exception;
+        for (int j = 0; j < columnNames.length; j++) {
+            h.set(columnNames[j], reader.readObject());
+        }
 
-	/**
-	 * @throws Exception
-	 */
-	public abstract void save() throws Exception;
+        // load user-specified additional headerfields
+        // Note, that we use keys loaded from the headercache
+        // file.
+        for (int j = 0; j < additionalHeaderfields.size(); j++) {
+            h.set((String) additionalHeaderfields.get(j),
+                (String) reader.readObject());
+        }
+    }
 
-	protected void loadHeader(ColumbaHeader h) throws Exception {
+    protected void saveHeader(ColumbaHeader h) throws Exception {
+        // save boolean headerfields, compressing them to one int value
+        Boolean[] b = new Boolean[CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS.length];
 
-		// load boolean headerfields, which are compressed in one int value
-		int compressedFlags = ((Integer) reader.readObject()).intValue();
-		for (int i = 0;
-			i < CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS.length;
-			i++) {
-			h.set(
-				CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS[i],
-				BooleanCompressor.decompress(compressedFlags, i));
-		}
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (Boolean) h.get(CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS[i]);
 
-		// load other internal headerfields, non-boolean type
-		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
+            // if value doesn't exist, use false as default
+            if (b[i] == null) {
+                b[i] = Boolean.FALSE;
+            }
+        }
 
-		for (int j = 0; j < columnNames.length; j++) {
+        writer.writeObject(new Integer(BooleanCompressor.compress(b)));
 
-			
-			h.set(columnNames[j], reader.readObject());
-			
-		}
+        // save other internal headerfields, of non-boolean type
+        String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
+        Object o;
 
-		//		load default headerfields, as defined in RFC822
-		columnNames = CachedHeaderfields.getDefaultHeaderfields();
-		for (int j = 0; j < columnNames.length; j++) {
+        for (int j = 0; j < columnNames.length; j++) {
+            writer.writeObject(h.get(columnNames[j]));
+        }
 
-		
+        // save default headerfields, as defined in RFC822
+        columnNames = CachedHeaderfields.DEFAULT_HEADERFIELDS;
 
-			h.set(columnNames[j], reader.readObject());
-			
-		}
+        for (int j = 0; j < columnNames.length; j++) {
+            writer.writeObject(h.get(columnNames[j]));
+        }
 
-		// load user-specified additional headerfields
-		// Note, that we use keys loaded from the headercache
-		// file.
-		for (int j = 0; j < additionalHeaderfields.size(); j++) {
-			h.set(
-				(String) additionalHeaderfields.get(j),
-				(String) reader.readObject());
-		}
+        // -> also save additional headerfields specified by user
+        // we use the keys as specified in CachedHeaderfields
+        // Note: This is different from loading, where we use the
+        // keys from the headercache file
+        columnNames = CachedHeaderfields.getUserDefinedHeaderfieldArray();
 
-	}
+        if (columnNames != null) {
+            for (int j = 0; j < columnNames.length; j++) {
+                writer.writeObject((String) h.get(columnNames[j]));
+            }
+        }
+    }
 
-	protected void saveHeader(ColumbaHeader h) throws Exception {
-
-		// save boolean headerfields, compressing them to one int value
-		Boolean[] b =
-			new Boolean[CachedHeaderfields
-				.INTERNAL_COMPRESSED_HEADERFIELDS
-				.length];
-		for (int i = 0; i < b.length; i++) {
-			b[i] =
-				(Boolean) h.get(
-					CachedHeaderfields.INTERNAL_COMPRESSED_HEADERFIELDS[i]);
-			// if value doesn't exist, use false as default
-			if (b[i] == null)
-				b[i] = Boolean.FALSE;
-		}
-
-		writer.writeObject(new Integer(BooleanCompressor.compress(b)));
-
-		// save other internal headerfields, of non-boolean type
-		String[] columnNames = CachedHeaderfields.INTERNAL_HEADERFIELDS;
-		Object o;
-		for (int j = 0; j < columnNames.length; j++) {
-			
-			writer.writeObject(h.get(columnNames[j]));
-		}
-
-		// save default headerfields, as defined in RFC822
-		columnNames = CachedHeaderfields.DEFAULT_HEADERFIELDS;
-		for (int j = 0; j < columnNames.length; j++) {
-			
-			writer.writeObject(h.get(columnNames[j]));
-		}
-
-		// -> also save additional headerfields specified by user
-		// we use the keys as specified in CachedHeaderfields
-		// Note: This is different from loading, where we use the
-		// keys from the headercache file
-		columnNames = CachedHeaderfields.getUserDefinedHeaderfieldArray();
-		if (columnNames != null) {
-			for (int j = 0; j < columnNames.length; j++) {
-				writer.writeObject((String) h.get(columnNames[j]));
-			}
-		}
-
-	}
-
-	/**
-	 * @param b
-	 */
-	public void setHeaderCacheLoaded(boolean b) {
-		headerCacheLoaded = b;
-	}
-
+    /**
+     * @param b
+     */
+    public void setHeaderCacheLoaded(boolean b) {
+        headerCacheLoaded = b;
+    }
 }

@@ -13,34 +13,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
+
 import org.columba.core.config.TableItem;
 
-public class AddressbookFolder extends LocalHeaderCacheFolder
-{
 
-	private TableItem headerTableItemList;
+public class AddressbookFolder extends LocalHeaderCacheFolder {
+    private TableItem headerTableItemList;
 
-	public AddressbookFolder(
-		FolderItem folderItem)
-	{
-		super(folderItem);
+    public AddressbookFolder(FolderItem folderItem) {
+        super(folderItem);
 
-		if ( isHeaderCacheAlreadyLoaded() == false )
-		{
-			recreateIndex();
-		}
-	}
-	
-	public DataStorage getDataStorageInstance()
-	{
-		if (dataStorage == null)
-			dataStorage = new VCardXmlDataStorage(this);
+        if (isHeaderCacheAlreadyLoaded() == false) {
+            recreateIndex();
+        }
+    }
 
-		return dataStorage;
-	}
+    public DataStorage getDataStorageInstance() {
+        if (dataStorage == null) {
+            dataStorage = new VCardXmlDataStorage(this);
+        }
 
+        return dataStorage;
+    }
 }

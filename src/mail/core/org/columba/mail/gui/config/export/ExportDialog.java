@@ -15,6 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.export;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.folder.command.ExportFolderCommand;
+import org.columba.mail.gui.util.URLController;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -27,9 +39,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import java.io.File;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,16 +71,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.folder.command.ExportFolderCommand;
-import org.columba.mail.gui.util.URLController;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * ExportDialog lets you select a number of folders for exporting
@@ -73,300 +78,294 @@ import org.columba.mail.util.MailResourceLoader;
  *
  * I'm using here a rather ugly way of storing the selected state
  * of a checkbox in the tree:
- * First I just re-use the treemodel to be able to easily create 
+ * First I just re-use the treemodel to be able to easily create
  * a new JTree instance. Then have a HashMap which associates
  * FolderTreeNode as key with Boolean as value. This Boolean value
  * represents the selection state of the checkbox of this folder.
- * 
+ *
  * TODO: I really need to get rid of this HashMap.
  * Instead, just wrap an FolderTreeNode in a TreeNode Interface which.
  * This class should be called ExportTreeNode and has an additional
  * attribute boolean enabled.
  * Every method of ExportTreeNode should be passed to the underlying
  * FolderTreeNode.
- * 
- * 
+ *
+ *
  * @author fdietz
- * 
+ *
  */
-public class ExportDialog
-	extends JDialog
-	implements ActionListener, TreeSelectionListener {
+public class ExportDialog extends JDialog implements ActionListener,
+    TreeSelectionListener {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    JButton exportButton;
+    JButton selectAllButton;
+    JButton helpButton;
+    JButton closeButton;
 
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    //FolderTreeTable table;
+    JTree tree;
+    Map map;
+    protected DefaultMutableTreeNode selectedNode;
 
-	JButton exportButton;
-	JButton selectAllButton;
+    public ExportDialog() {
+        // modal JDialog
+        super(new JFrame(), true);
 
-	JButton helpButton;
-	JButton closeButton;
+        map = new HashMap();
 
-	//FolderTreeTable table;
-	JTree tree;
-	Map map;
+        initComponents();
 
-	protected DefaultMutableTreeNode selectedNode;
+        pack();
 
-	public ExportDialog() {
-		// modal JDialog
-		super(new JFrame(), true);
+        setLocationRelativeTo(null);
 
-		map = new HashMap();
+        setVisible(true);
+    }
 
-		initComponents();
+    protected void initComponents() {
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        getContentPane().add(mainPanel);
 
-		pack();
+        exportButton = new JButton("Export...");
 
-		setLocationRelativeTo(null);
+        exportButton.setActionCommand("EXPORT");
+        exportButton.addActionListener(this);
 
-		setVisible(true);
+        selectAllButton = new JButton("Select All");
 
-	}
+        selectAllButton.setActionCommand("SELECTALL");
+        selectAllButton.addActionListener(this);
 
-	protected void initComponents() {
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		getContentPane().add(mainPanel);
+        tree = new JTree(MailInterface.treeModel);
+        tree.setRootVisible(false);
+        tree.setCellRenderer(new CheckRenderer(map));
 
-		exportButton = new JButton("Export...");
+        //tree.setCellEditor(new CheckEditor());
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.addMouseListener(new NodeSelectionListener(tree));
+        tree.expandRow(0);
+        tree.expandRow(1);
+        tree.addTreeSelectionListener(this);
 
-		exportButton.setActionCommand("EXPORT");
-		exportButton.addActionListener(this);
+        // top panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-		selectAllButton = new JButton("Select All");
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
 
-		selectAllButton.setActionCommand("SELECTALL");
-		selectAllButton.addActionListener(this);
+        //topPanel.setLayout( );
+        JPanel topBorderPanel = new JPanel();
+        topBorderPanel.setLayout(new BorderLayout());
 
-		tree = new JTree(MailInterface.treeModel);
-		tree.setRootVisible(false);
-		tree.setCellRenderer(new CheckRenderer(map));
-		//tree.setCellEditor(new CheckEditor());
-		tree.getSelectionModel().setSelectionMode(
-			TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.addMouseListener(new NodeSelectionListener(tree));
-		tree.expandRow(0);
-		tree.expandRow(1);
-		tree.addTreeSelectionListener(this);
-		// top panel
+        //topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+        topBorderPanel.add(topPanel);
 
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		//topPanel.setLayout( );
+        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+        JLabel nameLabel = new JLabel("name");
+        nameLabel.setEnabled(false);
+        topPanel.add(nameLabel);
 
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
-		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
-		topBorderPanel.add(topPanel);
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+        topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
+        topPanel.add(Box.createHorizontalGlue());
 
-		JLabel nameLabel = new JLabel("name");
-		nameLabel.setEnabled(false);
-		topPanel.add(nameLabel);
+        Component glue = Box.createVerticalGlue();
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
 
-		topPanel.add(Box.createRigidArea(new java.awt.Dimension(10, 0)));
-		topPanel.add(Box.createHorizontalGlue());
+        //c.fill = GridBagConstraints.HORIZONTAL;
+        gridBagLayout.setConstraints(glue, c);
 
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		gridBagLayout.setConstraints(glue, c);
+        gridBagLayout = new GridBagLayout();
+        c = new GridBagConstraints();
 
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
+        JPanel eastPanel = new JPanel(gridBagLayout);
+        mainPanel.add(eastPanel, BorderLayout.EAST);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(exportButton, c);
-		eastPanel.add(exportButton);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagLayout.setConstraints(exportButton, c);
+        eastPanel.add(exportButton);
 
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
+        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+        gridBagLayout.setConstraints(strut1, c);
+        eastPanel.add(strut1);
 
-		gridBagLayout.setConstraints(selectAllButton, c);
-		eastPanel.add(selectAllButton);
+        gridBagLayout.setConstraints(selectAllButton, c);
+        eastPanel.add(selectAllButton);
 
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
+        glue = Box.createVerticalGlue();
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 1.0;
+        gridBagLayout.setConstraints(glue, c);
+        eastPanel.add(glue);
 
-		// centerpanel
+        // centerpanel
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        JScrollPane scrollPane = new JScrollPane(tree);
+        scrollPane.setPreferredSize(new Dimension(300, 300));
+        scrollPane.getViewport().setBackground(Color.white);
+        centerPanel.add(scrollPane);
 
-		JScrollPane scrollPane = new JScrollPane(tree);
-		scrollPane.setPreferredSize(new Dimension(300, 300));
-		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane);
+        mainPanel.add(centerPanel);
 
-		mainPanel.add(centerPanel);
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		ButtonWithMnemonic closeButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
-		buttonPanel.add(helpButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(closeButton);
-		getRootPane().registerKeyboardAction(
-			this,
-			"CLOSE",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		getRootPane().registerKeyboardAction(
-			this,
-			"HELP",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-	}
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
+        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+        closeButton.addActionListener(this);
+        buttonPanel.add(closeButton);
 
-	class NodeSelectionListener extends MouseAdapter {
-		JTree tree;
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
+        helpButton.setActionCommand("HELP");
+        helpButton.addActionListener(this);
+        buttonPanel.add(helpButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(closeButton);
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "HELP",
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 
-		NodeSelectionListener(JTree tree) {
-			this.tree = tree;
-		}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		public void mouseClicked(MouseEvent e) {
-			int x = e.getX();
-			int y = e.getY();
-			int row = tree.getRowForLocation(x, y);
-			TreePath path = tree.getPathForRow(row);
-			//TreePath  path = tree.getSelectionPath();
-			if (path != null) {
-				FolderTreeNode node =
-					(FolderTreeNode) path.getLastPathComponent();
+        if (action.equals("CLOSE")) {
+            setVisible(false);
+        } else if (action.equals("HELP")) {
+            URLController c = new URLController();
 
-				if (map.containsKey(node)) {
-					Boolean bool = (Boolean) map.get(node);
-					if (bool.equals(Boolean.TRUE))
-						map.put(node, Boolean.FALSE);
-					else
-						map.put(node, Boolean.TRUE);
-				} else {
-					// no entry in map for this node
-					// -> add default one
-					map.put(node, Boolean.TRUE);
-				}
+            try {
+                c.open(new URL("help.html"));
+            } catch (MalformedURLException mue) {
+            }
+        } else if (action.equals("EXPORT")) {
+            File destFile = null;
 
-				((DefaultTreeModel) tree.getModel()).nodeChanged(node);
-				// I need revalidate if node is root.  but why?
-				if (row == 0) {
-					tree.revalidate();
-					tree.repaint();
-				}
-			}
-		}
-	}
+            // ask the user about the destination file
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            chooser.setMultiSelectionEnabled(false);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+            int result = chooser.showSaveDialog(this);
 
-		if (action.equals("CLOSE")) {
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
 
-			setVisible(false);
-		} else if (action.equals("HELP")) {
-			URLController c = new URLController();
-			try {
-				c.open(new URL("help.html"));
-			} catch (MalformedURLException mue) {
-			}
-		} else if (action.equals("EXPORT")) {
+                destFile = file;
+            } else {
+                return;
+            }
 
-			File destFile = null;
+            setVisible(false);
 
-			// ask the user about the destination file
-			JFileChooser chooser = new JFileChooser();
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			chooser.setMultiSelectionEnabled(false);
+            // get list of all folders
+            Iterator it = map.keySet().iterator();
 
-			int result = chooser.showSaveDialog(this);
-			if (result == JFileChooser.APPROVE_OPTION) {
-				File file = chooser.getSelectedFile();
+            Vector v = new Vector();
 
-				destFile = file;
-			} else
-				return;
+            // get list of all selected folders
+            while (it.hasNext()) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) it.next();
 
-			setVisible(false);
+                Boolean export = (Boolean) map.get(node);
 
-			// get list of all folders
-			Iterator it = map.keySet().iterator();
+                if (export.equals(Boolean.TRUE)) {
+                    v.add(node);
+                }
+            }
 
-			Vector v = new Vector();
+            // create command reference array for the command
+            FolderCommandReference[] r = new FolderCommandReference[v.size()];
 
-			// get list of all selected folders
-			while (it.hasNext()) {
-				DefaultMutableTreeNode node =
-					(DefaultMutableTreeNode) it.next();
+            for (int i = 0; i < v.size(); i++) {
+                FolderTreeNode node = (FolderTreeNode) v.get(i);
 
-				Boolean export = (Boolean) map.get(node);
+                r[i] = new FolderCommandReference(node);
+                r[i].setDestFile(destFile);
+            }
 
-				if (export.equals(Boolean.TRUE)) {
-					v.add(node);
-				}
-			}
+            // execute the command
+            MainInterface.processor.addOp(new ExportFolderCommand(r));
+        }
+    }
 
-			// create command reference array for the command
-			FolderCommandReference[] r = new FolderCommandReference[v.size()];
-			for (int i = 0; i < v.size(); i++) {
-				FolderTreeNode node = (FolderTreeNode) v.get(i);
+    /* (non-Javadoc)
+     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+     */
+    public void valueChanged(TreeSelectionEvent arg0) {
+        selectedNode = (DefaultMutableTreeNode) arg0.getPath()
+                                                    .getLastPathComponent();
 
-				r[i] = new FolderCommandReference(node);
-				r[i].setDestFile(destFile);
-			}
+        if (selectedNode == null) {
+            return;
+        }
+    }
 
-			// execute the command
-			MainInterface.processor.addOp(new ExportFolderCommand(r));
+    /**
+     * @return
+     */
+    public DefaultMutableTreeNode getSelectedNode() {
+        return selectedNode;
+    }
 
-		}
+    class NodeSelectionListener extends MouseAdapter {
+        JTree tree;
 
-	}
+        NodeSelectionListener(JTree tree) {
+            this.tree = tree;
+        }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
-	public void valueChanged(TreeSelectionEvent arg0) {
-		selectedNode =
-			(DefaultMutableTreeNode) arg0.getPath().getLastPathComponent();
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            int row = tree.getRowForLocation(x, y);
+            TreePath path = tree.getPathForRow(row);
 
-		if (selectedNode == null)
-			return;
+            //TreePath  path = tree.getSelectionPath();
+            if (path != null) {
+                FolderTreeNode node = (FolderTreeNode) path.getLastPathComponent();
 
-	}
+                if (map.containsKey(node)) {
+                    Boolean bool = (Boolean) map.get(node);
 
-	/**
-	 * @return
-	 */
-	public DefaultMutableTreeNode getSelectedNode() {
-		return selectedNode;
-	}
+                    if (bool.equals(Boolean.TRUE)) {
+                        map.put(node, Boolean.FALSE);
+                    } else {
+                        map.put(node, Boolean.TRUE);
+                    }
+                } else {
+                    // no entry in map for this node
+                    // -> add default one
+                    map.put(node, Boolean.TRUE);
+                }
 
+                ((DefaultTreeModel) tree.getModel()).nodeChanged(node);
+
+                // I need revalidate if node is root.  but why?
+                if (row == 0) {
+                    tree.revalidate();
+                    tree.repaint();
+                }
+            }
+        }
+    }
 }

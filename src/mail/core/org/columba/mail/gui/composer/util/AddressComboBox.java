@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.mail.util.AddressCollector;
 
 import java.util.List;
 import java.util.Vector;
@@ -23,7 +24,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
-import org.columba.mail.util.AddressCollector;
 
 /**
  * Title:
@@ -33,57 +33,55 @@ import org.columba.mail.util.AddressCollector;
  * @author
  * @version 1.0
  */
-
-public class AddressComboBox extends JComboBox
-{
-
+public class AddressComboBox extends JComboBox {
     public AddressComboBox() {
-	super();
-	addCompleter();
+        super();
+        addCompleter();
     }
-    public AddressComboBox( AddressbookTableView table) {
-	super();
-	addCompleter(table);
+
+    public AddressComboBox(AddressbookTableView table) {
+        super();
+        addCompleter(table);
     }
 
     public AddressComboBox(ComboBoxModel cm) {
-	super(cm);
-	addCompleter();
+        super(cm);
+        addCompleter();
     }
 
     public AddressComboBox(Object[] items) {
-	super(items);
-	addCompleter();
+        super(items);
+        addCompleter();
     }
 
     public AddressComboBox(List v) {
-	super((Vector)v);
-	addCompleter();
+        super((Vector) v);
+        addCompleter();
     }
 
     private void addCompleter() {
-	setEditable(true);
-	Object[] completions = getAddresses();
-	new AutoCompleter(this, completions);
+        setEditable(true);
+
+        Object[] completions = getAddresses();
+        new AutoCompleter(this, completions);
     }
-    
+
     private void addCompleter(AddressbookTableView table) {
-	setEditable(true);
-	Object[] completions = getAddresses();
-	new AutoCompleter(this, table, completions);
+        setEditable(true);
+
+        Object[] completions = getAddresses();
+        new AutoCompleter(this, table, completions);
     }
 
     private Object[] getAddresses() {
-	return AddressCollector.getAddresses();
+        return AddressCollector.getAddresses();
     }
 
     public String getText() {
-	return ((JTextField) getEditor().getEditorComponent()).getText();
+        return ((JTextField) getEditor().getEditorComponent()).getText();
     }
 
     public void setText(String text) {
-	((JTextField) getEditor().getEditorComponent()).setText(text);
+        ((JTextField) getEditor().getEditorComponent()).setText(text);
     }
-
 }
-

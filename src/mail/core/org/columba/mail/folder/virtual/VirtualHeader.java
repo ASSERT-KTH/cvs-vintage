@@ -17,7 +17,9 @@ package org.columba.mail.folder.virtual;
 
 import org.columba.mail.folder.Folder;
 import org.columba.mail.message.ColumbaHeader;
+
 import org.columba.ristretto.message.HeaderInterface;
+
 
 /**
  * @author freddy
@@ -28,34 +30,29 @@ import org.columba.ristretto.message.HeaderInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class VirtualHeader extends ColumbaHeader implements HeaderInterface {
+    protected Folder srcFolder;
+    protected Object srcUid;
 
-	protected Folder srcFolder;
-	protected Object srcUid;
+    public VirtualHeader(ColumbaHeader header, Folder srcFolder, Object srcUid) {
+        super(header);
 
-	public VirtualHeader(
-		ColumbaHeader header,
-		Folder srcFolder,
-		Object srcUid) {
-		super(header);
-		
-		this.srcFolder = srcFolder;
-		this.srcUid = srcUid;
-	}
+        this.srcFolder = srcFolder;
+        this.srcUid = srcUid;
+    }
 
-	/**
-	 * Returns the srcFolder.
-	 * @return Folder
-	 */
-	public Folder getSrcFolder() {
-		return srcFolder;
-	}
+    /**
+     * Returns the srcFolder.
+     * @return Folder
+     */
+    public Folder getSrcFolder() {
+        return srcFolder;
+    }
 
-	/**
-	 * Returns the srcUid.
-	 * @return Object
-	 */
-	public Object getSrcUid() {
-		return srcUid;
-	}
-
+    /**
+     * Returns the srcUid.
+     * @return Object
+     */
+    public Object getSrcUid() {
+        return srcUid;
+    }
 }

@@ -15,11 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-import java.io.File;
-
 import org.columba.core.config.DefaultConfig;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.xml.XmlElement;
+
+import java.io.File;
+
 
 /**
  * @author frd
@@ -30,191 +31,173 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation.
  */
 public class MailConfig extends DefaultConfig {
+    public static final String MODULE_NAME = "mail";
+    private static File accountFile;
+    private static File accountTemplateFile;
+    private static File folderFile;
+    private static File mainFrameOptionsFile;
+    private static File popManageOptionsFile;
+    private static File composerOptionsFile;
 
-	public static final String MODULE_NAME = "mail";
+    //private static File filterActionFile;
+    //private static File localFilterFile;
+    //private static File remoteFilterFile;
 
-	private static File accountFile;
-	private static File accountTemplateFile;
+    /**
+     * @see java.lang.Object#Object()
+     */
+    public MailConfig() {
+        File configDirectory = createConfigDir(MODULE_NAME);
 
-	private static File folderFile;
-	private static File mainFrameOptionsFile;
-	private static File popManageOptionsFile;
-	private static File composerOptionsFile;
+        accountFile = new File(configDirectory, "account.xml");
+        registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
 
-	//private static File filterActionFile;
-	//private static File localFilterFile;
-	//private static File remoteFilterFile;
+        accountTemplateFile = new File("account_template.xml");
+        registerTemplatePlugin(accountTemplateFile.getName(),
+            new AccountTemplateXmlConfig(accountTemplateFile));
 
-	/**
-	 * @see java.lang.Object#Object()
-	 */
-	public MailConfig() {
+        folderFile = new File(configDirectory, "tree.xml");
+        registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
 
-		File configDirectory = createConfigDir(MODULE_NAME);
+        mainFrameOptionsFile = new File(configDirectory, "options.xml");
+        registerPlugin(mainFrameOptionsFile.getName(),
+            new MainFrameOptionsXmlConfig(mainFrameOptionsFile));
 
-		accountFile = new File(configDirectory, "account.xml");
-		registerPlugin(
-			accountFile.getName(),
-			new AccountXmlConfig(accountFile));
+        File mainToolBarFile = new File(configDirectory, "main_toolbar.xml");
+        registerPlugin(mainToolBarFile.getName(),
+            new DefaultXmlConfig(mainToolBarFile));
 
-		accountTemplateFile = new File("account_template.xml");
-		registerTemplatePlugin(
-			accountTemplateFile.getName(),
-			new AccountTemplateXmlConfig(accountTemplateFile));
+        File composerToolBarFile = new File(configDirectory,
+                "composer_toolbar.xml");
+        registerPlugin(composerToolBarFile.getName(),
+            new DefaultXmlConfig(composerToolBarFile));
 
-		folderFile = new File(configDirectory, "tree.xml");
-		registerPlugin(folderFile.getName(), new FolderXmlConfig(folderFile));
+        File messageframeToolBarFile = new File(configDirectory,
+                "messageframe_toolbar.xml");
+        registerPlugin(messageframeToolBarFile.getName(),
+            new DefaultXmlConfig(messageframeToolBarFile));
 
-		mainFrameOptionsFile =
-			new File(configDirectory, "options.xml");
-		registerPlugin(
-			mainFrameOptionsFile.getName(),
-			new MainFrameOptionsXmlConfig(mainFrameOptionsFile));
-			
-		File mainToolBarFile =  new File(configDirectory, "main_toolbar.xml");
-		registerPlugin( mainToolBarFile.getName(), new DefaultXmlConfig(mainToolBarFile) );
-		File composerToolBarFile = new File( configDirectory, "composer_toolbar.xml");
-		registerPlugin( composerToolBarFile.getName(), new DefaultXmlConfig(composerToolBarFile) );
-		
-		File messageframeToolBarFile = new File( configDirectory, "messageframe_toolbar.xml");
-				registerPlugin( messageframeToolBarFile.getName(), new DefaultXmlConfig(messageframeToolBarFile) );
+        /*
+        popManageOptionsFile =
+                new File(configDirectory, "popmanageoptions.xml");
+        registerPlugin(
+                popManageOptionsFile.getName(),
+                new PopManageOptionsXmlConfig(popManageOptionsFile));
+        */
+        composerOptionsFile = new File(configDirectory, "composer_options.xml");
+        registerPlugin(composerOptionsFile.getName(),
+            new ComposerOptionsXmlConfig(composerOptionsFile));
 
-		
+        /*
+        filterActionFile = new File(configDirectory, "filter_actions.xml");
+        registerPlugin(
+                filterActionFile.getName(),
+                new FilterActionXmlConfig(filterActionFile));
+        */
+        /*
+        localFilterFile = new File(configDirectory, "filter_local.xml");
+        registerPlugin(
+                localFilterFile.getName(),
+                new LocalFilterXmlConfig(localFilterFile));
+        remoteFilterFile = new File(configDirectory, "filter_remote.xml");
+        registerPlugin(
+                remoteFilterFile.getName(),
+                new LocalFilterXmlConfig(remoteFilterFile));
+        */
+    }
 
-		/*
-		popManageOptionsFile =
-			new File(configDirectory, "popmanageoptions.xml");
-		registerPlugin(
-			popManageOptionsFile.getName(),
-			new PopManageOptionsXmlConfig(popManageOptionsFile));
-		*/
-		
-		composerOptionsFile = new File(configDirectory, "composer_options.xml");
-		registerPlugin(
-			composerOptionsFile.getName(),
-			new ComposerOptionsXmlConfig(composerOptionsFile));
+    /**
+     * Method registerPlugin.
+     * @param id
+     * @param plugin
+     */
+    protected static void registerPlugin(String id, DefaultXmlConfig plugin) {
+        DefaultConfig.registerPlugin(MODULE_NAME, id, plugin);
+    }
 
-		/*
-		filterActionFile = new File(configDirectory, "filter_actions.xml");
-		registerPlugin(
-			filterActionFile.getName(),
-			new FilterActionXmlConfig(filterActionFile));
-		*/
+    protected static void registerTemplatePlugin(String id,
+        DefaultXmlConfig plugin) {
+        DefaultConfig.registerTemplatePlugin(MODULE_NAME, id, plugin);
+    }
 
-		/*
-		localFilterFile = new File(configDirectory, "filter_local.xml");
-		registerPlugin(
-			localFilterFile.getName(),
-			new LocalFilterXmlConfig(localFilterFile));
-		remoteFilterFile = new File(configDirectory, "filter_remote.xml");
-		registerPlugin(
-			remoteFilterFile.getName(),
-			new LocalFilterXmlConfig(remoteFilterFile));
-		*/
+    /**
+     * Method getPlugin.
+     * @param id
+     * @return DefaultXmlConfig
+     */
+    protected static DefaultXmlConfig getPlugin(String id) {
+        return DefaultConfig.getPlugin(MODULE_NAME, id);
+    }
 
-	}
+    protected static DefaultXmlConfig getTemplatePlugin(String id) {
+        return DefaultConfig.getTemplatePlugin(MODULE_NAME, id);
+    }
 
-	/**
-	 * Method registerPlugin.
-	 * @param id
-	 * @param plugin
-	 */
-	protected static void registerPlugin(String id, DefaultXmlConfig plugin) {
-		DefaultConfig.registerPlugin(MODULE_NAME, id, plugin);
-	}
+    /**
+     * Method getAccountList.
+     * @return AccountList
+     */
+    public static AccountList getAccountList() {
+        return getAccountConfig().getAccountList();
+    }
 
-	protected static void registerTemplatePlugin(
-		String id,
-		DefaultXmlConfig plugin) {
-		DefaultConfig.registerTemplatePlugin(MODULE_NAME, id, plugin);
-	}
+    public static AccountTemplateXmlConfig getAccountTemplateConfig() {
+        return (AccountTemplateXmlConfig) getTemplatePlugin(accountTemplateFile.getName());
+    }
 
-	/**
-	 * Method getPlugin.
-	 * @param id
-	 * @return DefaultXmlConfig
-	 */
-	protected static DefaultXmlConfig getPlugin(String id) {
-		return DefaultConfig.getPlugin(MODULE_NAME, id);
-	}
+    public static XmlElement get(String name) {
+        DefaultXmlConfig xml = getPlugin(name + ".xml");
 
-	protected static DefaultXmlConfig getTemplatePlugin(String id) {
-		return DefaultConfig.getTemplatePlugin(MODULE_NAME, id);
-	}
+        return xml.getRoot();
+    }
 
-	/**
-	 * Method getAccountList.
-	 * @return AccountList
-	 */
-	public static AccountList getAccountList() {
-		return getAccountConfig().getAccountList();
-	}
+    /**
+     * Method getAccountConfig.
+     * @return AccountXmlConfig
+     */
+    public static AccountXmlConfig getAccountConfig() {
+        //return accountConfig;
+        return (AccountXmlConfig) getPlugin(accountFile.getName());
+    }
 
-	public static AccountTemplateXmlConfig getAccountTemplateConfig() {
-		return (AccountTemplateXmlConfig) getTemplatePlugin(
-			accountTemplateFile.getName());
-	}
+    /*
+    public static FilterActionXmlConfig getFilterActionConfig() {
+            return (FilterActionXmlConfig) getPlugin(filterActionFile.getName());
+    }
+    */
+    /*
+    public static LocalFilterXmlConfig getLocalFilterConfig() {
+            return (LocalFilterXmlConfig) getPlugin(localFilterFile.getName());
+    }
+    public static RemoteFilterXmlConfig getRemoteFilterConfig() {
+            return (RemoteFilterXmlConfig) getPlugin(remoteFilterFile.getName());
+    }
+    */
 
-	public static XmlElement get(String name) {
-		DefaultXmlConfig xml = getPlugin(name + ".xml");
-		return xml.getRoot();
-	}
+    /**
+     * Method getFolderConfig.
+     * @return FolderXmlConfig
+     */
+    public static FolderXmlConfig getFolderConfig() {
+        //return folderConfig;
+        return (FolderXmlConfig) getPlugin(folderFile.getName());
+    }
 
-	/**
-	 * Method getAccountConfig.
-	 * @return AccountXmlConfig
-	 */
-	public static AccountXmlConfig getAccountConfig() {
-		//return accountConfig;
+    /**
+     * Method getMainFrameOptionsConfig.
+     * @return MainFrameOptionsXmlConfig
+     */
+    public static MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
+        //return mainFrameOptionsConfig;
+        return (MainFrameOptionsXmlConfig) getPlugin(mainFrameOptionsFile.getName());
+    }
 
-		return (AccountXmlConfig) getPlugin(accountFile.getName());
-	}
-
-	/*
-	public static FilterActionXmlConfig getFilterActionConfig() {
-		return (FilterActionXmlConfig) getPlugin(filterActionFile.getName());
-	}
-	*/
-	/*
-	public static LocalFilterXmlConfig getLocalFilterConfig() {
-		return (LocalFilterXmlConfig) getPlugin(localFilterFile.getName());
-	}
-	public static RemoteFilterXmlConfig getRemoteFilterConfig() {
-		return (RemoteFilterXmlConfig) getPlugin(remoteFilterFile.getName());
-	}
-	*/
-
-	/**
-	 * Method getFolderConfig.
-	 * @return FolderXmlConfig
-	 */
-	public static FolderXmlConfig getFolderConfig() {
-		//return folderConfig;
-
-		return (FolderXmlConfig) getPlugin(folderFile.getName());
-	}
-
-	/**
-	 * Method getMainFrameOptionsConfig.
-	 * @return MainFrameOptionsXmlConfig
-	 */
-	public static MainFrameOptionsXmlConfig getMainFrameOptionsConfig() {
-		//return mainFrameOptionsConfig;
-		return (MainFrameOptionsXmlConfig) getPlugin(
-			mainFrameOptionsFile.getName());
-	}
-
-	
-
-	/**
-	 * Method getComposerOptionsConfig.
-	 * @return ComposerOptionsXmlConfig
-	 */
-	public static ComposerOptionsXmlConfig getComposerOptionsConfig() {
-		//return composerOptionsConfig;
-
-		return (ComposerOptionsXmlConfig) getPlugin(
-			composerOptionsFile.getName());
-	}
-
+    /**
+     * Method getComposerOptionsConfig.
+     * @return ComposerOptionsXmlConfig
+     */
+    public static ComposerOptionsXmlConfig getComposerOptionsConfig() {
+        //return composerOptionsConfig;
+        return (ComposerOptionsXmlConfig) getPlugin(composerOptionsFile.getName());
+    }
 }

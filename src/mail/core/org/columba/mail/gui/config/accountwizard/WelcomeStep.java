@@ -13,41 +13,37 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
+
+import net.javaprog.ui.wizard.AbstractStep;
+
+import org.columba.core.gui.util.MultiLineLabel;
+
+import org.columba.mail.util.MailResourceLoader;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import net.javaprog.ui.wizard.AbstractStep;
-
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.mail.util.MailResourceLoader;
 
 class WelcomeStep extends AbstractStep {
-	public WelcomeStep() {
-		super(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "welcome"),
-                      MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "welcome_description"));
-	}
-        
-        protected JComponent createComponent() {
-                JComponent component = new JPanel();
-		component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
-		component.add(new MultiLineLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "welcome_text")));
-		component.add(Box.createVerticalGlue());
-                return component;
-        }
-        
-        public void prepareRendering() {}
+    public WelcomeStep() {
+        super(MailResourceLoader.getString("dialog", "accountwizard", "welcome"),
+            MailResourceLoader.getString("dialog", "accountwizard",
+                "welcome_description"));
+    }
+
+    protected JComponent createComponent() {
+        JComponent component = new JPanel();
+        component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
+        component.add(new MultiLineLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "welcome_text")));
+        component.add(Box.createVerticalGlue());
+
+        return component;
+    }
+
+    public void prepareRendering() {
+    }
 }

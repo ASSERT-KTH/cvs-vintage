@@ -13,64 +13,52 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.main;
-
-import java.util.Enumeration;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.Folder;
 
+import java.util.Enumeration;
+
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class AddressbookExitWorker
-{
-	private AddressbookInterface addressbookInterface;
-	
-	public AddressbookExitWorker( AddressbookInterface i )
-	{
-		this.addressbookInterface = i;
-	}
-	
-	public void saveAllAddressbooks()
-	{
-		//mainInterface.addressbookInterface.
-		Folder rootFolder =
-			(Folder) addressbookInterface.tree.getRootFolder();
+public class AddressbookExitWorker {
+    private AddressbookInterface addressbookInterface;
 
-		//timer.start();
-		saveAddressbookFolder(rootFolder);
-	}
-	
-	public void saveAddressbookFolder(Folder parentFolder)
-	{
+    public AddressbookExitWorker(AddressbookInterface i) {
+        this.addressbookInterface = i;
+    }
 
-		int count = parentFolder.getChildCount();
-		Folder child;
-		Folder folder;
+    public void saveAllAddressbooks() {
+        //mainInterface.addressbookInterface.
+        Folder rootFolder = (Folder) addressbookInterface.tree.getRootFolder();
 
-		for (Enumeration e = parentFolder.children(); e.hasMoreElements();)
-		{
-			child = (Folder) e.nextElement();
-			if ( child != null )
-			{
-				if ( child instanceof AddressbookFolder )
-				{
-					try
-					{
-						child.save( null );
-					}
-					catch ( Exception ex )
-					{
-						ex.printStackTrace();
-					}
-				}
-			}
-			
-			saveAddressbookFolder( child );
-		}
-	}
+        //timer.start();
+        saveAddressbookFolder(rootFolder);
+    }
 
+    public void saveAddressbookFolder(Folder parentFolder) {
+        int count = parentFolder.getChildCount();
+        Folder child;
+        Folder folder;
+
+        for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+            child = (Folder) e.nextElement();
+
+            if (child != null) {
+                if (child instanceof AddressbookFolder) {
+                    try {
+                        child.save(null);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+            saveAddressbookFolder(child);
+        }
+    }
 }

@@ -17,12 +17,12 @@ package org.columba.mail.gui.frame;
 
 import org.columba.mail.gui.tree.TreeController;
 
+
 /**
- * 
+ *
  *
  * @author fdietz
  */
 public interface TreeViewOwner {
-
-	public TreeController getTreeController();
+    public TreeController getTreeController();
 }

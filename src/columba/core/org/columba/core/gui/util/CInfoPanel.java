@@ -24,59 +24,56 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+
 public class CInfoPanel extends JPanel {
-	protected JPanel panel;
-	protected GridBagLayout gridbagLayout;
-	protected GridBagConstraints gridbagConstraints;
+    protected JPanel panel;
+    protected GridBagLayout gridbagLayout;
+    protected GridBagConstraints gridbagConstraints;
+    protected Font font;
 
-	protected Font font;
+    public CInfoPanel() {
+        super();
 
-	public CInfoPanel() {
-		super();
+        font = UIManager.getFont("Label.font");
 
-		font = UIManager.getFont("Label.font");
+        /*
+        font = font.deriveFont(Font.BOLD);
 
-		/*
-		font = font.deriveFont(Font.BOLD);
 
-		
-		int size = font.getSize();
-		font = font.deriveFont( Font.BOLD, size+2 );
-		*/
+        int size = font.getSize();
+        font = font.deriveFont( Font.BOLD, size+2 );
+        */
+        setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        setLayout(new BorderLayout());
 
-		setLayout(new BorderLayout());
+        panel = new JPanel();
 
-		panel = new JPanel();
+        add(panel, BorderLayout.CENTER);
 
-		add(panel, BorderLayout.CENTER);
+        initComponents();
+    }
 
-		initComponents();
-	}
+    public void initComponents() {
+        panel.removeAll();
 
-	public void initComponents() {
-		panel.removeAll();
+        gridbagLayout = new GridBagLayout();
+        panel.setLayout(gridbagLayout);
 
-		gridbagLayout = new GridBagLayout();
-		panel.setLayout(gridbagLayout);
+        gridbagConstraints = new GridBagConstraints();
 
-		gridbagConstraints = new GridBagConstraints();
-		
+        panel.setLayout(gridbagLayout);
 
-		panel.setLayout(gridbagLayout);
+        panel.setBackground(UIManager.getColor("controlShadow"));
+    }
 
-		panel.setBackground(UIManager.getColor("controlShadow"));
-	}
-	
-	public void updateUI()
-	{
-		super.updateUI();
-		
-		if ( panel != null )
-			panel.setBackground(UIManager.getColor("controlShadow"));
-			
-		revalidate();
-		
-	}
+    public void updateUI() {
+        super.updateUI();
+
+        if (panel != null) {
+            panel.setBackground(UIManager.getColor("controlShadow"));
+        }
+
+        revalidate();
+    }
 }

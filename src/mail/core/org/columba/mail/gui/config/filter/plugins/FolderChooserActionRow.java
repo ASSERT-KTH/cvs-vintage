@@ -15,11 +15,6 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -27,71 +22,70 @@ import org.columba.mail.gui.tree.util.SelectFolderDialog;
 import org.columba.mail.gui.tree.util.TreeNodeList;
 import org.columba.mail.main.MailInterface;
 
-public class FolderChooserActionRow
-	extends DefaultActionRow
-	implements ActionListener {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-	private JButton treePathButton;
+import javax.swing.JButton;
 
-	public FolderChooserActionRow(ActionList list, FilterAction action) {
-		super(list, action);
 
-	}
+public class FolderChooserActionRow extends DefaultActionRow
+    implements ActionListener {
+    private JButton treePathButton;
 
-	public void updateComponents(boolean b) {
-		super.updateComponents(b);
+    public FolderChooserActionRow(ActionList list, FilterAction action) {
+        super(list, action);
+    }
 
-		if (b) {
-			int uid = filterAction.getUid();
-			Folder folder = (Folder) MailInterface.treeModel.getFolder(uid);
-			String treePath = folder.getTreePath();
+    public void updateComponents(boolean b) {
+        super.updateComponents(b);
 
-			treePathButton.setText(treePath);
-		} else {
-			String treePath = treePathButton.getText();
-			TreeNodeList list = new TreeNodeList(treePath);
-			Folder folder = (Folder) MailInterface.treeModel.getFolder(list);
+        if (b) {
+            int uid = filterAction.getUid();
+            Folder folder = (Folder) MailInterface.treeModel.getFolder(uid);
+            String treePath = folder.getTreePath();
 
-			if (folder == null) {
-				// user didn't select any folder
-				// -> make Inbox the default folder
-				folder = (Folder) MailInterface.treeModel.getFolder(101);
-			}
+            treePathButton.setText(treePath);
+        } else {
+            String treePath = treePathButton.getText();
+            TreeNodeList list = new TreeNodeList(treePath);
+            Folder folder = (Folder) MailInterface.treeModel.getFolder(list);
 
-			int uid = folder.getUid();
-			filterAction.setUid(uid);
-		}
+            if (folder == null) {
+                // user didn't select any folder
+                // -> make Inbox the default folder
+                folder = (Folder) MailInterface.treeModel.getFolder(101);
+            }
 
-	}
+            int uid = folder.getUid();
+            filterAction.setUid(uid);
+        }
+    }
 
-	public void initComponents() {
-		super.initComponents();
+    public void initComponents() {
+        super.initComponents();
 
-		treePathButton = new JButton();
-		//treePathButton.setMargin(new Insets(0,0,0,0));
-		treePathButton.addActionListener(this);
-		treePathButton.setActionCommand("TREEPATH");
+        treePathButton = new JButton();
 
-		addComponent(treePathButton);
+        //treePathButton.setMargin(new Insets(0,0,0,0));
+        treePathButton.addActionListener(this);
+        treePathButton.setActionCommand("TREEPATH");
 
-	}
+        addComponent(treePathButton);
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-		if (action.equals("TREEPATH")) {
-			SelectFolderDialog dialog =
-				MailInterface.treeModel.getSelectFolderDialog();
+        if (action.equals("TREEPATH")) {
+            SelectFolderDialog dialog = MailInterface.treeModel.getSelectFolderDialog();
 
-			if (dialog.success()) {
-				Folder folder = dialog.getSelectedFolder();
+            if (dialog.success()) {
+                Folder folder = dialog.getSelectedFolder();
 
-				String treePath = folder.getTreePath();
+                String treePath = folder.getTreePath();
 
-				treePathButton.setText(treePath);
-			}
-
-		}
-	}
-
+                treePathButton.setText(treePath);
+            }
+        }
+    }
 }

@@ -1,10 +1,12 @@
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
+
 
 /**
  * @author fdietz
@@ -12,55 +14,53 @@ import org.columba.mail.folder.Folder;
  * let spamassassin go through all messages:
  * - analyze message
  * - tag as spam/ham in adding two more headerfields
- * 
+ *
  * added headerfields are:
  *  X-Spam-Level: digit number
  *  X-Spam-Flag: YES/NO (create a filter on this headerfield)
- * 
+ *
  */
 public class AnalyzeFolderCommand extends FolderCommand {
+    Folder srcFolder;
 
-	Folder srcFolder;
+    /**
 
-	/**
-	
-		 * @param references
-		 */
-	public AnalyzeFolderCommand(DefaultCommandReference[] references) {
-		super(references);
+             * @param references
+             */
+    public AnalyzeFolderCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	}
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public AnalyzeFolderCommand(
-		FrameMediator frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
+    /**
+     * @param frame
+     * @param references
+     */
+    public AnalyzeFolderCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        FolderCommandAdapter adapter = new FolderCommandAdapter(r);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		FolderCommandAdapter adapter = new FolderCommandAdapter(r);
+        // there can be only one reference for this command
+        srcFolder = (Folder) adapter.getSourceFolderReferences()[0].getFolder();
 
-		// there can be only one reference for this command
-		srcFolder = (Folder) adapter.getSourceFolderReferences()[0].getFolder();
+        worker.setDisplayText("Applying analyzer to " + srcFolder.getName() +
+            "...");
 
-		worker.setDisplayText(
-			"Applying analyzer to " + srcFolder.getName() + "...");
+        Object[] uids = srcFolder.getUids();
 
-		Object[] uids = srcFolder.getUids();
+        for (int i = 0; i < uids.length; i++) {
+            if (worker.cancelled()) {
+                return;
+            }
 
-		for (int i = 0; i < uids.length; i++) {
-			if ( worker.cancelled() ) return;
-			AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
-		}
-
-	}
-
+            AnalyzeMessageCommand.addHeader(srcFolder, uids[i], worker);
+        }
+    }
 }

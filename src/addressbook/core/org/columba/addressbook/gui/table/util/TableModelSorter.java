@@ -13,311 +13,249 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
-
-import java.text.Collator;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 import org.columba.addressbook.gui.table.AddressbookTableModel;
 
-public class TableModelSorter extends TableModelPlugin
-{
+import java.text.Collator;
 
-	protected boolean dataSorting = false;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
-	protected boolean ascending = true;
-	protected String sort = new String("displayname");
 
-	protected Collator collator;
+public class TableModelSorter extends TableModelPlugin {
+    protected boolean dataSorting = false;
+    protected boolean ascending = true;
+    protected String sort = new String("displayname");
+    protected Collator collator;
 
-	public TableModelSorter(AddressbookTableModel tableModel)
-	{
-		super(tableModel);
+    public TableModelSorter(AddressbookTableModel tableModel) {
+        super(tableModel);
 
-		collator = Collator.getInstance();
+        collator = Collator.getInstance();
+    }
 
-	}
+    public void setDataSorting(boolean b) {
+        dataSorting = b;
+    }
 
-	public void setDataSorting(boolean b)
-	{
-		dataSorting = b;
-	}
+    public boolean getDataSorting() {
+        return dataSorting;
+    }
 
-	public boolean getDataSorting()
-	{
-		return dataSorting;
-	}
+    public String getSortingColumn() {
+        return sort;
+    }
 
-	public String getSortingColumn()
-	{
-		return sort;
-	}
+    public boolean getSortingOrder() {
+        return ascending;
+    }
 
-	public boolean getSortingOrder()
-	{
-		return ascending;
-	}
+    public void setSortingColumn(String str) {
+        sort = str;
 
-	public void setSortingColumn(String str)
-	{
-		sort = str;
-		//config.setSelectedHeader( sort );
+        //config.setSelectedHeader( sort );
+    }
 
-	}
+    public void setSortingOrder(boolean b) {
+        ascending = b;
 
-	public void setSortingOrder(boolean b)
-	{
-		ascending = b;
-		//config.setHeaderAscending( ascending );
+        //config.setHeaderAscending( ascending );
+    }
 
-	}
+    public synchronized void sortTable(String str) {
+        setSortingColumn(str);
 
-	public synchronized void sortTable(String str)
-	{
+        if (str.equals("In Order Received")) {
+            setDataSorting(true);
 
-		setSortingColumn(str);
+            /*
+            MessageNode rootNode = getHeaderTableModel().getRootNode();
 
-		if (str.equals("In Order Received"))
-		{
-			setDataSorting(true);
+            Vector v = rootNode.getVector();
+            */
+            System.out.println("in order received");
 
-			/*
-			MessageNode rootNode = getHeaderTableModel().getRootNode();
-			
-			Vector v = rootNode.getVector();
-			*/
+            setDataSorting(false);
+        } else {
+            for (int i = 0; i < getTableModel().getColumnCount(); i++) {
+                if (str.equals(getTableModel().getColumnName(i))) {
+                    setDataSorting(true);
 
-			System.out.println("in order received");
+                    //MessageNode rootNode = getHeaderTableModel().getRootNode();
+                    List v = getTableModel().getHeaderList().getVector();
 
-			setDataSorting(false);
-		}
-		else
-		{
-			for (int i = 0; i < getTableModel().getColumnCount(); i++)
-			{
-				if (str.equals(getTableModel().getColumnName(i)))
-				{
+                    Collections.sort(v,
+                        new MessageHeaderComparator(getTableModel()
+                                                        .getColumnNumber(getSortingColumn()),
+                            getSortingOrder()));
 
-					setDataSorting(true);
+                    //getTableModel().update();
+                    setDataSorting(false);
+                }
+            }
+        }
+    }
 
-					
-					//MessageNode rootNode = getHeaderTableModel().getRootNode();
-					List v = getTableModel().getHeaderList().getVector();
-					
-					
-					
-					Collections.sort( v, new MessageHeaderComparator(
-					    getTableModel().getColumnNumber( getSortingColumn() ) ,
-					    getSortingOrder() ) );
-					
-					//getTableModel().update();
+    public void sort(int column) {
+        String c = getTableModel().getColumnName(column);
 
-					setDataSorting(false);
+        if (getSortingColumn().equals(c)) {
+            if (getSortingOrder() == true) {
+                setSortingOrder(false);
+            } else {
+                setSortingOrder(true);
+            }
+        }
 
-				}
-			}
-		}
+        setSortingColumn(c);
 
-	}
+        sortTable(c);
+    }
 
-	public void sort(int column)
-	{
+    public void setSortingColumn(int column) {
+        String c = getTableModel().getColumnName(column);
 
-		
-		String c = getTableModel().getColumnName(column);
-		
-		if ( getSortingColumn().equals(c) )
-		{
-		    if ( getSortingOrder() == true ) setSortingOrder( false );
-		    else setSortingOrder( true );
-		}
-		
-		setSortingColumn( c );
-		
-		sortTable( c );
-		
+        if (getSortingColumn().equals(c)) {
+            if (getSortingOrder() == true) {
+                setSortingOrder(false);
+            } else {
+                setSortingOrder(true);
+            }
+        }
 
-	}
+        setSortingColumn(c);
+    }
 
-	public void setSortingColumn(int column)
-	{
-		
-		String c = getTableModel().getColumnName( column );
-		
-		if ( getSortingColumn().equals(c) )
-		{
-		    if ( getSortingOrder() == true ) setSortingOrder( false );
-		    else setSortingOrder( true );
-		}
-		
-		setSortingColumn( c );
-		
-	}
+    public boolean manipulateModel(int mode) {
+        sortTable(getSortingColumn());
 
-	public boolean manipulateModel(int mode)
-	{
+        return true;
+    }
 
-		sortTable(getSortingColumn());
+    public int getSortInt() {
+        return getTableModel().getColumnNumber(getSortingColumn());
+    }
 
-		return true;
-	}
+    public int getInsertionSortIndex(HeaderItem newChild) {
+        HeaderItemList list = getTableModel().getHeaderList();
 
-	public int getSortInt()
-	{
+        /*
+        if ( getSortingColumn().equals("In Order Received") )
+        {
 
-		return getTableModel().getColumnNumber(getSortingColumn());
+            return rootNode.getChildCount();
+        }
+        */
+        MessageHeaderComparator comparator = new MessageHeaderComparator(getTableModel()
+                                                                             .getColumnNumber(getSortingColumn()),
+                getSortingOrder());
 
-	}
+        HeaderItem child;
+        int compare;
 
-	public int getInsertionSortIndex(HeaderItem newChild)
-	{
-		
-		
-		HeaderItemList list = getTableModel().getHeaderList();
-		
-		/*
-		if ( getSortingColumn().equals("In Order Received") )
-		{
-		 
-		    return rootNode.getChildCount();
-		}
-		*/
-		
-		
-		MessageHeaderComparator comparator = new MessageHeaderComparator(
-		                                         getTableModel().getColumnNumber( getSortingColumn() ),
-		                                         getSortingOrder() );
-		
-		HeaderItem child;
-		int compare;
-		
-		// no children !
-		if ( list == null ) return 0;
-		
-		for ( int i=0; i<list.count(); i++ )
-		{
-		    child = (HeaderItem) list.get(i);
-		    compare = comparator.compare( child, newChild );
-		
-		    if ( compare == -1 )
-		    {
-		
-		    }
-		    else if ( compare == 1 )
-		    {
-		        return i;
-		    }
-		
-		}
-		
-		return list.count();
-		
-	}
+        // no children !
+        if (list == null) {
+            return 0;
+        }
 
-	class MessageHeaderComparator implements Comparator
-	{
+        for (int i = 0; i < list.count(); i++) {
+            child = (HeaderItem) list.get(i);
+            compare = comparator.compare(child, newChild);
 
-		protected int column;
+            if (compare == -1) {
+            } else if (compare == 1) {
+                return i;
+            }
+        }
 
-		protected boolean ascending;
+        return list.count();
+    }
 
-		public MessageHeaderComparator(int sortCol, boolean sortAsc)
-		{
-			column = sortCol;
-			ascending = sortAsc;
-		}
+    class MessageHeaderComparator implements Comparator {
+        protected int column;
+        protected boolean ascending;
 
-		public int compare(Object ob1, Object ob2)
-		{
-			
-			HeaderItem item1 = (HeaderItem) ob1;
-			HeaderItem item2 = (HeaderItem) ob2;
+        public MessageHeaderComparator(int sortCol, boolean sortAsc) {
+            column = sortCol;
+            ascending = sortAsc;
+        }
 
-			
-			if ((item1 == null) || (item2 == null))
-				return 0;
+        public int compare(Object ob1, Object ob2) {
+            HeaderItem item1 = (HeaderItem) ob1;
+            HeaderItem item2 = (HeaderItem) ob2;
 
-			int result = 0;
+            if ((item1 == null) || (item2 == null)) {
+                return 0;
+            }
 
-			String columnName = getTableModel().getColumnName(column);
+            int result = 0;
 
-			if (columnName.equals("type"))
-			{
-				String type1 = (String) item1.get("type");
-				String type2 = (String) item2.get("type");
+            String columnName = getTableModel().getColumnName(column);
 
-				if ((type1 == null) || (type2 == null))
-					result = 0;
+            if (columnName.equals("type")) {
+                String type1 = (String) item1.get("type");
+                String type2 = (String) item2.get("type");
 
-				if ( (type1.equals("contact")) && ( type2.equals("grouplist")) )
-				{
-					result = -1;
-				}
-				else if ( (type2.equals("contact")) && ( type2.equals("grouplist")) )
-				{
-					result = 1;
-				}
-				else
-					result = 0;
-			}
-			
-			else if (columnName.equals("Date"))
-			{
-				Date d1 = (Date) item1.get("Date");
-				Date d2 = (Date) item2.get("Date");
-				if ((d1 == null) || (d2 == null))
-					result = 0;
-				else
-					result = d1.compareTo(d2);
-			}
-			
-			else
-			{
-				Object o1 = item1.get(columnName);
-				Object o2 = item2.get(columnName);
+                if ((type1 == null) || (type2 == null)) {
+                    result = 0;
+                }
 
-				if ((o1 != null) && (o2 == null))
-					result = 1;
-				else if ((o1 == null) && (o2 != null))
-					result = -1;
-				else if ((o1 == null) && (o2 == null))
-					result = 0;
+                if ((type1.equals("contact")) && (type2.equals("grouplist"))) {
+                    result = -1;
+                } else if ((type2.equals("contact")) &&
+                        (type2.equals("grouplist"))) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+            }
+            else if (columnName.equals("Date")) {
+                Date d1 = (Date) item1.get("Date");
+                Date d2 = (Date) item2.get("Date");
 
-				else if (o1 instanceof String)
-				{
-					result = collator.compare((String) o1, (String) o2);
-				}
-			}
+                if ((d1 == null) || (d2 == null)) {
+                    result = 0;
+                } else {
+                    result = d1.compareTo(d2);
+                }
+            }
+            else {
+                Object o1 = item1.get(columnName);
+                Object o2 = item2.get(columnName);
 
-			if (!ascending)
-				result = -result;
-			return result;
-			
-		
-		}
+                if ((o1 != null) && (o2 == null)) {
+                    result = 1;
+                } else if ((o1 == null) && (o2 != null)) {
+                    result = -1;
+                } else if ((o1 == null) && (o2 == null)) {
+                    result = 0;
+                }
+                else if (o1 instanceof String) {
+                    result = collator.compare((String) o1, (String) o2);
+                }
+            }
 
-		public boolean equals(Object obj)
-		{
+            if (!ascending) {
+                result = -result;
+            }
 
-			if (obj instanceof MessageHeaderComparator)
-			{
+            return result;
+        }
 
-				MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
+        public boolean equals(Object obj) {
+            if (obj instanceof MessageHeaderComparator) {
+                MessageHeaderComparator compObj = (MessageHeaderComparator) obj;
 
-				return (compObj.column == column) && (compObj.ascending == ascending);
+                return (compObj.column == column) &&
+                (compObj.ascending == ascending);
+            }
 
-			}
-
-			return false;
-
-		}
-
-	}
-
+            return false;
+        }
+    }
 }

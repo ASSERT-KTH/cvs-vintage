@@ -17,15 +17,10 @@
 //All Rights Reserved.
 package org.columba.mail.pop3;
 
-import java.io.File;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.columba.core.command.StatusObservable;
 import org.columba.core.config.Config;
 import org.columba.core.util.ListTools;
+
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.PopItem;
 import org.columba.mail.config.SpecialFoldersItem;
@@ -34,185 +29,187 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+
 import org.columba.ristretto.pop3.protocol.POP3Protocol;
 
+import java.io.File;
+
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+
 public class POP3Server {
+    private AccountItem accountItem;
+    private File file;
+    public POP3Protocol pop3Connection;
+    private boolean alreadyLoaded;
+    private POP3Store store;
+    protected POP3HeaderCache headerCache;
 
-	private AccountItem accountItem;
+    public POP3Server(AccountItem accountItem) {
+        this.accountItem = accountItem;
 
-	private File file;
+        int uid = accountItem.getUid();
 
-	public POP3Protocol pop3Connection;
+        file = new File(Config.pop3Directory, (new Integer(uid)).toString());
 
-	private boolean alreadyLoaded;
+        PopItem item = accountItem.getPopItem();
 
-	private POP3Store store;
+        store = new POP3Store(item);
 
-	protected POP3HeaderCache headerCache;
+        headerCache = new POP3HeaderCache(this);
+    }
 
-	public POP3Server(AccountItem accountItem) {
-		this.accountItem = accountItem;
+    public void save() throws Exception {
+        headerCache.save();
+    }
 
-		int uid = accountItem.getUid();
+    public File getConfigFile() {
+        return file;
+    }
 
-		file = new File(Config.pop3Directory, (new Integer(uid)).toString());
+    public AccountItem getAccountItem() {
+        return accountItem;
+    }
 
-		PopItem item = accountItem.getPopItem();
+    public Folder getFolder() {
+        SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
+        String inboxStr = foldersItem.get("inbox");
 
-		store = new POP3Store(item);
+        int inboxInt = Integer.parseInt(inboxStr);
 
-		headerCache = new POP3HeaderCache(this);
+        Folder f = (Folder) MailInterface.treeModel.getFolder(inboxInt);
 
-	}
+        return f;
+    }
 
-	public void save() throws Exception {
-		headerCache.save();
-	}
+    public void logout() throws Exception {
+        getStore().logout();
+    }
 
-	public File getConfigFile() {
-		return file;
-	}
+    public void forceLogout() throws Exception {
+        getStore().logout();
+    }
 
-	public AccountItem getAccountItem() {
-		return accountItem;
-	}
+    protected boolean existsLocally(Object uid, HeaderList list)
+        throws Exception {
+        for (Enumeration e = headerCache.getHeaderList().keys();
+                e.hasMoreElements();) {
+            Object localUID = e.nextElement();
 
-	public Folder getFolder() {
-		SpecialFoldersItem foldersItem = accountItem.getSpecialFoldersItem();
-		String inboxStr = foldersItem.get("inbox");
+            //System.out.println("local message uid: " + localUID);
+            if (uid.equals(localUID)) {
+                //System.out.println("remote uid exists locally");
+                return true;
+            }
+        }
 
-		int inboxInt = Integer.parseInt(inboxStr);
+        return false;
+    }
 
-		Folder f = (Folder) MailInterface.treeModel.getFolder(inboxInt);
+    protected boolean existsRemotely(Object uid, List uidList)
+        throws Exception {
+        for (Iterator it = uidList.iterator(); it.hasNext();) {
+            Object serverUID = it.next();
 
-		return f;
-	}
+            // for (int i = 0; i < uidList.size(); i++) {
+            // Object serverUID = uidList.get(i);
+            //System.out.println("server message uid: " + serverUID);
+            if (uid.equals(serverUID)) {
+                //System.out.println("local uid exists remotely");
+                return true;
+            }
+        }
 
-	public void logout() throws Exception {
-		getStore().logout();
-	}
+        return false;
+    }
 
-	public void forceLogout() throws Exception {
-		getStore().logout();
-	}
+    public List synchronize() throws Exception {
+        // Get the uids from the headercache
+        LinkedList headerUids = new LinkedList();
+        Enumeration keys = headerCache.getHeaderList().keys();
 
-	protected boolean existsLocally(Object uid, HeaderList list)
-		throws Exception {
+        while (keys.hasMoreElements()) {
+            headerUids.add(keys.nextElement());
+        }
 
-		for (Enumeration e = headerCache.getHeaderList().keys();
-			e.hasMoreElements();
-			) {
-			Object localUID = e.nextElement();
+        // Get the list of the uids on the server
+        List newUids = store.getUIDList();
 
-			//System.out.println("local message uid: " + localUID);
-			if (uid.equals(localUID)) {
-				//System.out.println("remote uid exists locally");
-				return true;
-			}
-		}
+        // substract the uids that we already downloaded ->
+        // newUids contains all uids to fetch from the server
+        ListTools.substract(newUids, headerUids);
 
-		return false;
-	}
+        // substract the uids on the server from the downloaded uids ->
+        // headerUids are the uids that have been removed from the server
+        ListTools.substract(headerUids, store.getUIDList());
 
-	protected boolean existsRemotely(Object uid, List uidList)
-		throws Exception {
-		for (Iterator it = uidList.iterator(); it.hasNext();) {
-			Object serverUID = it.next();
-			// for (int i = 0; i < uidList.size(); i++) {
-			// Object serverUID = uidList.get(i);
+        Iterator it = headerUids.iterator();
 
-			//System.out.println("server message uid: " + serverUID);
-			if (uid.equals(serverUID)) {
-				//System.out.println("local uid exists remotely");
-				return true;
-			}
-		}
+        // update the cache 
+        while (it.hasNext()) {
+            headerCache.getHeaderList().remove(it.next());
+        }
 
-		return false;
-	}
+        // return the uids that are new
+        return newUids;
+    }
 
-	public List synchronize() throws Exception {		
-		// Get the uids from the headercache
-		LinkedList headerUids = new LinkedList();
-		Enumeration keys = headerCache.getHeaderList().keys();
-		
-		while (keys.hasMoreElements()) {
-			headerUids.add(keys.nextElement());
-		}
-		
-		// Get the list of the uids on the server
-		List newUids = store.getUIDList();
+    public void deleteMessage(Object uid) throws Exception {
+        store.deleteMessage(uid);
+    }
 
-		// substract the uids that we already downloaded ->
-		// newUids contains all uids to fetch from the server
-		ListTools.substract(newUids, headerUids);
+    public int getMessageCount() throws Exception {
+        return getStore().getMessageCount();
+    }
 
-		// substract the uids on the server from the downloaded uids ->
-		// headerUids are the uids that have been removed from the server
-		ListTools.substract(headerUids, store.getUIDList());
-		Iterator it = headerUids.iterator();
-		// update the cache 
-		while (it.hasNext()) {
-			headerCache.getHeaderList().remove(it.next());
-		}
+    public ColumbaMessage getMessage(Object uid) throws Exception {
+        ColumbaMessage message = getStore().fetchMessage(uid);
 
-		// return the uids that are new
-		return newUids;
-	}
+        if (message == null) {
+            return null;
+        }
 
-	public void deleteMessage(Object uid) throws Exception {
-		store.deleteMessage(uid);
-	}
+        ColumbaHeader header = (ColumbaHeader) message.getHeader();
+        header.set("columba.pop3uid", uid);
+        header.getFlags().setRecent(true);
 
-	public int getMessageCount() throws Exception {
-		return getStore().getMessageCount();
-	}
+        // set the attachment flag
+        String contentType = (String) header.get("Content-Type");
 
-	public ColumbaMessage getMessage(Object uid) throws Exception {
+        if (contentType != null) {
+            if (contentType.indexOf("multipart") != -1) {
+                header.set("columba.attachment", Boolean.TRUE);
+            } else {
+                header.set("columba.attachment", Boolean.FALSE);
+            }
+        }
 
-		ColumbaMessage message = getStore().fetchMessage(uid);
+        headerCache.getHeaderList().add(header, uid);
 
-		if (message == null)
-			return null;
+        return message;
+    }
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
-		header.set("columba.pop3uid", uid);
-		header.getFlags().setRecent(true);
+    public int getMessageSize(Object uid) throws Exception {
+        return store.getSize(uid);
+    }
 
-		// set the attachment flag
-		String contentType = (String) header.get("Content-Type");
+    public String getFolderName() {
+        return accountItem.getName();
+    }
 
-		if (contentType != null) {
-			if (contentType.indexOf("multipart") != -1)
-				header.set("columba.attachment", Boolean.TRUE);
-			else
-				header.set("columba.attachment", Boolean.FALSE);
-		}
+    /**
+     * Returns the store.
+     *
+     * @return POP3Store
+     */
+    public POP3Store getStore() {
+        return store;
+    }
 
-		headerCache.getHeaderList().add(header, uid);
-
-		return message;
-	}
-
-	public int getMessageSize(Object uid) throws Exception {
-		return store.getSize(uid);
-	}
-
-	public String getFolderName() {
-		return accountItem.getName();
-	}
-
-	/**
-	 * Returns the store.
-	 * 
-	 * @return POP3Store
-	 */
-	public POP3Store getStore() {
-		return store;
-	}
-
-	public StatusObservable getObservable() {
-		return store.getObservable();
-	}
-
+    public StatusObservable getObservable() {
+        return store.getObservable();
+    }
 }

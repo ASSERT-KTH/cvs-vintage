@@ -13,77 +13,56 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.util;
-
-import javax.swing.BorderFactory;
-import javax.swing.JList;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
 
-public class AddressbookListView extends JList
-{
-	private AddressbookListModel model;
+import javax.swing.BorderFactory;
+import javax.swing.JList;
 
-	public AddressbookListView(AddressbookListModel model)
-	{
-		super(model);
-		this.model = model;
 
-		setCellRenderer(new AddressbookListRenderer());
+public class AddressbookListView extends JList {
+    private AddressbookListModel model;
 
-		
+    public AddressbookListView(AddressbookListModel model) {
+        super(model);
+        this.model = model;
 
-		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        setCellRenderer(new AddressbookListRenderer());
 
-	}
+        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    }
 
-	public AddressbookListView()
-	{
-		super();
+    public AddressbookListView() {
+        super();
 
-		model = new AddressbookListModel();
-		setModel(model);
+        model = new AddressbookListModel();
+        setModel(model);
 
-		
+        setCellRenderer(new AddressbookListRenderer());
 
-		setCellRenderer(new AddressbookListRenderer());
+        setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    }
 
-		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    public void setHeaderList(HeaderItemList list) {
+        removeAll();
 
-	}
+        model.setHeaderList(list);
+    }
 
-	public void setHeaderList(HeaderItemList list)
-	{
-		removeAll();
+    public void setModel(AddressbookListModel model) {
+        this.model = model;
+        super.setModel(model);
+    }
 
-		model.setHeaderList(list);
-		
-		
+    public void addElement(HeaderItem item) {
+        model.addElement(item);
+    }
 
-	}
+    public HeaderItem get(int index) {
+        HeaderItem item = (HeaderItem) model.get(index);
 
-	public void setModel(AddressbookListModel model)
-	{
-		this.model = model;
-		super.setModel(model);
-		
-		
-		
-		
-	}
-
-	public void addElement(HeaderItem item)
-	{
-		model.addElement(item);
-	}
-
-	public HeaderItem get(int index)
-	{
-		HeaderItem item = (HeaderItem) model.get(index);
-
-		return item;
-	}
-
+        return item;
+    }
 }

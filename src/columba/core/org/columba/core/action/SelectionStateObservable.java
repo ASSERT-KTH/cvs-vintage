@@ -17,40 +17,39 @@ package org.columba.core.action;
 
 import java.util.Observable;
 
+
 /**
  * Observable encapsulating a selection state useful for buttons,
  * menuitems and their corresponding actions.
- * 
+ *
  * @author fdietz
  */
 public class SelectionStateObservable extends Observable {
+    boolean selected;
 
-	boolean selected;
-	
-	/**
-	 * Default constructor
-	 */
-	public SelectionStateObservable() {
-		super();
-		
-		selected = false;
-	}
+    /**
+     * Default constructor
+     */
+    public SelectionStateObservable() {
+        super();
 
-	/**
-	 * @return
-	 */
-	public boolean isSelected() {
-		return selected;
-	}
+        selected = false;
+    }
 
-	/**
-	 * @param selected
-	 */
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-		
-		setChanged();
-		notifyObservers();
-	}
+    /**
+     * @return
+     */
+    public boolean isSelected() {
+        return selected;
+    }
 
+    /**
+     * @param selected
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+
+        setChanged();
+        notifyObservers();
+    }
 }

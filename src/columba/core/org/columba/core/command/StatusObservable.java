@@ -15,58 +15,61 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+
 /**
- * 
+ *
  * Represents the clue between the gui and all the folders which want
  * to notify the statusbar.
- * 
+ *
  * <p>
  * We want the folders to be independent from the gui code. So, the
- * folders should communicate with the Observable, whereas the 
+ * folders should communicate with the Observable, whereas the
  * status observers with the Observable.
- * 
+ *
  * <p>
  * This makes it necessary of course to register as Observer.
- * 
+ *
  * @author fdietz
  */
 public interface StatusObservable {
-	
-	/**
-	 * Sets the current value of the progress bar.
-	 * @param i		New current value of progress bar
-	 */	
-	public void setCurrent(int i);
-	/**
-	 * Sets the maximum value for the progress bar.
-	 * @param i		New max. value for progress bar
-	 */
-	public void setMax(int i);
-	/**
-	 * Sets the progress bar value to zero, i.e. clears the progress bar.
-	 * This is the same as calling setCurrent(0)
-	 */
-	public void resetCurrent();
-	
-	public boolean isCancelled();
-	public void cancel( boolean b );
-	
+    /**
+     * Sets the current value of the progress bar.
+     * @param i                New current value of progress bar
+     */
+    public void setCurrent(int i);
 
-	/**
-	 * Set the text to be displayed in the status bar
-	 * @param string	Text to display in status bar
-	 */
-	public void setMessage(String string);
-	/**
-	 * Clears the text displayed in the status bar.
-	 */
-	public void clearMessage();
-	/**
-	 * Clears the text displayed in the status bar - with a given delay.
-	 * The delay used is 500 ms.
-	 * <br>
-	 * If a new text is set within this delay, the text is not cleared.
-	 */
-	public void clearMessageWithDelay();
-	
+    /**
+     * Sets the maximum value for the progress bar.
+     * @param i                New max. value for progress bar
+     */
+    public void setMax(int i);
+
+    /**
+     * Sets the progress bar value to zero, i.e. clears the progress bar.
+     * This is the same as calling setCurrent(0)
+     */
+    public void resetCurrent();
+
+    public boolean isCancelled();
+
+    public void cancel(boolean b);
+
+    /**
+     * Set the text to be displayed in the status bar
+     * @param string        Text to display in status bar
+     */
+    public void setMessage(String string);
+
+    /**
+     * Clears the text displayed in the status bar.
+     */
+    public void clearMessage();
+
+    /**
+     * Clears the text displayed in the status bar - with a given delay.
+     * The delay used is 500 ms.
+     * <br>
+     * If a new text is set within this delay, the text is not cleared.
+     */
+    public void clearMessageWithDelay();
 }

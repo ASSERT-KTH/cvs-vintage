@@ -13,14 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.message.action;
+
+import org.columba.core.action.FrameAction;
+
+import org.columba.mail.gui.message.MessageController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.columba.core.action.FrameAction;
-import org.columba.mail.gui.message.MessageController;
 
 /**
  * Title:
@@ -30,72 +31,67 @@ import org.columba.mail.gui.message.MessageController;
  * @author
  * @version 1.0
  */
+public class MessageActionListener implements ActionListener {
+    private MessageController messageController;
+    public FrameAction dictAction;
 
-public class MessageActionListener implements ActionListener
-{
-	private MessageController messageController;
+    public MessageActionListener(MessageController messageController) {
+        this.messageController = messageController;
 
-	public FrameAction dictAction;
+        dictAction = new FrameAction(null, "Dict.org lookup selection...") {
+                    public void actionPerformed(ActionEvent e) {
+                        // FIXME
 
-	public MessageActionListener( MessageController messageController )
-	{
-		this.messageController = messageController;
+                        /*
+                        String text = messageController.getView().getSelectedText();
 
-		dictAction = new FrameAction(null,
-				"Dict.org lookup selection...") {
-                        public void actionPerformed(ActionEvent e) {
-                                // FIXME
-                                /*
-                                String text = messageController.getView().getSelectedText();
-
-                                DictLookup dict = DictLookup.getInstance();
-                                dict.lookup( text );
-                                */
-                        }
+                        DictLookup dict = DictLookup.getInstance();
+                        dict.lookup( text );
+                        */
+                    }
                 };
-		
-		dictAction.putValue(FrameAction.SHORT_DESCRIPTION,
-				"Look up definition of selection with online dictionary...");
-	}
 
-	public void actionPerformed(ActionEvent e)
-	{
-		String action = e.getActionCommand();
+        dictAction.putValue(FrameAction.SHORT_DESCRIPTION,
+            "Look up definition of selection with online dictionary...");
+    }
 
-		/*
-		if (action
-			.equals(MainInterface.frameMediator.globalActionCollection.copyAction.getActionCommand()))
-		{
-			copy();
-		}
-		else if (
-			action.equals(
-				MainInterface.frameMediator.globalActionCollection.selectAllAction.getActionCommand()))
-		{
-			selectAll();
-		}
-		*/
-	}
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
 
-	public void copy()
-	{
-		// FIXME
-		/*
-		JTextComponent c =
-			(JTextComponent) messageController.getView().getActiveViewer();
+        /*
+        if (action
+                .equals(MainInterface.frameMediator.globalActionCollection.copyAction.getActionCommand()))
+        {
+                copy();
+        }
+        else if (
+                action.equals(
+                        MainInterface.frameMediator.globalActionCollection.selectAllAction.getActionCommand()))
+        {
+                selectAll();
+        }
+        */
+    }
 
-		c.copy();
-		*/
-	}
+    public void copy() {
+        // FIXME
 
-	public void selectAll()
-	{
-		// FIXME
-		/*
-		JTextComponent c =
-			(JTextComponent) messageController.getView().getActiveViewer();
+        /*
+        JTextComponent c =
+                (JTextComponent) messageController.getView().getActiveViewer();
 
-		c.selectAll();
-		*/
-	}
+        c.copy();
+        */
+    }
+
+    public void selectAll() {
+        // FIXME
+
+        /*
+        JTextComponent c =
+                (JTextComponent) messageController.getView().getActiveViewer();
+
+        c.selectAll();
+        */
+    }
 }

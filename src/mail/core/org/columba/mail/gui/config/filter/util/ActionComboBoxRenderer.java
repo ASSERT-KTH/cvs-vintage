@@ -13,8 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.filter.util;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+
+import org.columba.mail.plugin.FilterActionPluginHandler;
 
 import java.awt.Component;
 
@@ -22,69 +27,54 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.UIManager;
 
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.mail.plugin.FilterActionPluginHandler;
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ActionComboBoxRenderer extends DefaultListCellRenderer {
+    protected FilterActionPluginHandler pluginHandler;
 
-	protected FilterActionPluginHandler pluginHandler;
+    /**
+     *
+     */
+    public ActionComboBoxRenderer() {
+        super();
 
-	/**
-	 * 
-	 */
-	public ActionComboBoxRenderer() {
-		super();
+        try {
+            pluginHandler = (FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.mail.filteraction");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+    }
 
-		try {
-			pluginHandler =
-				(
-					FilterActionPluginHandler) MainInterface
-						.pluginManager
-						.getHandler(
-					"org.columba.mail.filteraction");
-		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
-		}
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+     */
+    public Component getListCellRendererComponent(JList list, Object value,
+        int index, boolean isSelected, boolean cellHasFocus) {
+        if (cellHasFocus) {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+        } else {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+        }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-	 */
-	public Component getListCellRendererComponent(
-		JList list,
-		Object value,
-		int index,
-		boolean isSelected,
-		boolean cellHasFocus) {
-		if (cellHasFocus) {
-			setBackground(list.getSelectionBackground());
-			setForeground(list.getSelectionForeground());
-		} else {
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-		}
-		setBorder(
-			(cellHasFocus)
-				? UIManager.getBorder("List.focusCellHighlightBorder")
-				: noFocusBorder);
+        setBorder((cellHasFocus)
+            ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
-		// id = org.columba.example.HelloWorld$HelloWorldPlugin
-		String id = (String) value;
+        // id = org.columba.example.HelloWorld$HelloWorldPlugin
+        String id = (String) value;
 
-		String userVisibleName = pluginHandler.getUserVisibleName(id);
+        String userVisibleName = pluginHandler.getUserVisibleName(id);
 
-		setText(userVisibleName);
+        setText(userVisibleName);
 
-		return this;
-	}
+        return this;
+    }
 }
-

@@ -9,6 +9,7 @@ package org.columba.mail.gui.messageframe;
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
@@ -17,155 +18,145 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.main.MailInterface;
 
+
 /**
  *
  *  Mail frame controller which contains a message viewer only.
  *
  *  @author fdietz
- * 
+ *
  */
 public class MessageFrameController extends AbstractMailFrameController {
+    FolderCommandReference[] treeReference;
+    FolderCommandReference[] tableReference;
+    FixedTableSelectionHandler tableSelectionHandler;
 
-	FolderCommandReference[] treeReference;
-	FolderCommandReference[] tableReference;
+    /**
+     * @param viewItem
+     */
+    public MessageFrameController() {
+        super("MessageFrame",
+            new ViewItem(MailConfig.get("options").getElement("/options/gui/messageframe/view")));
 
-	FixedTableSelectionHandler tableSelectionHandler;
-	
-	/**
-	 * @param viewItem
-	 */
-	public MessageFrameController() {
-		super(
-			"MessageFrame",
-			new ViewItem(
-				MailConfig.get("options").getElement(
-					"/options/gui/messageframe/view")));
+        getView().loadWindowPosition();
 
-		getView().loadWindowPosition();
+        getView().setVisible(true);
+    }
 
-		getView().setVisible(true);
-	}
+    protected void init() {
+        super.init();
 
-	protected void init() {
-		super.init();
+        tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
+        getSelectionManager().addSelectionHandler(tableSelectionHandler);
 
-		tableSelectionHandler = new FixedTableSelectionHandler(tableReference);
-		getSelectionManager().addSelectionHandler(tableSelectionHandler);
+        getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
+                attachmentController.getView()));
+    }
 
-		getSelectionManager().addSelectionHandler(
-			new AttachmentSelectionHandler(attachmentController.getView()));
-	}
+    public void selectInbox() {
+        Folder inboxFolder = (Folder) MailInterface.treeModel.getFolder(101);
 
-	public void selectInbox() {
-		Folder inboxFolder = (Folder) MailInterface.treeModel.getFolder(101);
-		try {
+        try {
+            Object[] uids = inboxFolder.getUids();
 
-			Object[] uids = inboxFolder.getUids();
-			if (uids.length > 0) {
-				Object uid = uids[0];
+            if (uids.length > 0) {
+                Object uid = uids[0];
 
-				Object[] newUids = new Object[1];
-				newUids[0] = uid;
+                Object[] newUids = new Object[1];
+                newUids[0] = uid;
 
-				FolderCommandReference[] r = new FolderCommandReference[1];
-				r[0] = new FolderCommandReference(inboxFolder, newUids);
+                FolderCommandReference[] r = new FolderCommandReference[1];
+                r[0] = new FolderCommandReference(inboxFolder, newUids);
 
-				// set tree and table references
-				treeReference = new FolderCommandReference[1];
-				treeReference[0] = new FolderCommandReference(inboxFolder);
+                // set tree and table references
+                treeReference = new FolderCommandReference[1];
+                treeReference[0] = new FolderCommandReference(inboxFolder);
 
-				tableReference = new FolderCommandReference[1];
-				tableReference[0] =
-					new FolderCommandReference(inboxFolder, newUids);
+                tableReference = new FolderCommandReference[1];
+                tableReference[0] = new FolderCommandReference(inboxFolder,
+                        newUids);
 
-				// FIXME
-				/*
-				getSelectionManager().getHandler("mail.table").setSelection(r);
-				*/
+                // FIXME
+                /*
+                getSelectionManager().getHandler("mail.table").setSelection(r);
+                */
+                MainInterface.processor.addOp(new ViewMessageCommand(this, r));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
-				MainInterface.processor.addOp(new ViewMessageCommand(this, r));
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.frame.FrameMediator#createView()
+     */
+    public AbstractFrameView createView() {
+        MessageFrameView view = new MessageFrameView(this);
 
-	}
+        /*
+        view.setFolderInfoPanel(folderInfoPanel);
+        */
+        view.init(messageController.getView(), statusBar);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.FrameMediator#createView()
-	 */
-	public AbstractFrameView createView() {
-		MessageFrameView view = new MessageFrameView(this);
+        view.pack();
 
-		/*
-		view.setFolderInfoPanel(folderInfoPanel);
-		*/
+        view.setVisible(true);
 
-		view.init(messageController.getView(), statusBar);
+        return view;
+    }
 
-		view.pack();
+    /* *20030831, karlpeder* Using method on super class instead
+    public void close() {
+            view.saveWindowPosition();
+            view.setVisible(false);
+    }
+    */
+    /* *20030831, karlpeder* Not used, close method is used instead
+    public void saveAndClose() {
 
-		view.setVisible(true);
+            super.saveAndClose();
+    }
+    */
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.frame.FrameMediator#initInternActions()
+     */
+    protected void initInternActions() {
+    }
 
-		return view;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.frame.MailFrameInterface#getTableSelection()
+     */
+    public FolderCommandReference[] getTableSelection() {
+        return tableReference;
+    }
 
-	/* *20030831, karlpeder* Using method on super class instead
-	public void close() {
-		view.saveWindowPosition();
-		view.setVisible(false);
-	}
-	*/
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.frame.MailFrameInterface#getTreeSelection()
+     */
+    public FolderCommandReference[] getTreeSelection() {
+        return treeReference;
+    }
 
-	/* *20030831, karlpeder* Not used, close method is used instead
-	public void saveAndClose() {
+    /**
+     * @param references
+     */
+    public void setTreeSelection(FolderCommandReference[] references) {
+        treeReference = references;
+    }
 
-		super.saveAndClose();
-	}
-	*/
+    /**
+     * @param references
+     */
+    public void setTableSelection(FolderCommandReference[] references) {
+        tableReference = references;
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.frame.FrameMediator#initInternActions()
-	 */
-	protected void initInternActions() {
+        tableSelectionHandler.setSelection(tableReference);
+    }
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTableSelection()
-	 */
-	public FolderCommandReference[] getTableSelection() {
-		return tableReference;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.frame.MailFrameInterface#getTreeSelection()
-	 */
-	public FolderCommandReference[] getTreeSelection() {
-		return treeReference;
-	}
-
-	/**
-	 * @param references
-	 */
-	public void setTreeSelection(FolderCommandReference[] references) {
-		treeReference = references;
-	}
-
-	/**
-	 * @param references
-	 */
-	public void setTableSelection(FolderCommandReference[] references) {
-		tableReference = references;
-		
-		tableSelectionHandler.setSelection(tableReference);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
-	 */
-	public boolean hasTable() {
-		return false;
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.frame.AbstractMailFrameController#hasTable()
+     */
+    public boolean hasTable() {
+        return false;
+    }
 }

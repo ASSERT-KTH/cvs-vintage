@@ -13,463 +13,413 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
-import java.util.Hashtable;
-
 import org.columba.addressbook.config.AdapterNode;
+
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.Hashtable;
+
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class DefaultCard
-{
-	protected Hashtable hashtable;
-	protected Object uid;
-	protected AdapterNode rootNode;
+public class DefaultCard {
+    protected Hashtable hashtable;
+    protected Object uid;
+    protected AdapterNode rootNode;
+    protected Document document;
 
-	protected Document document;
+    public DefaultCard(Document doc, AdapterNode rootNode) {
+        //super( doc );
+        this.document = doc;
+        this.rootNode = rootNode;
 
-	public DefaultCard(Document doc, AdapterNode rootNode)
-	{
-		//super( doc );
-		this.document = doc;
-		this.rootNode = rootNode;
+        hashtable = new Hashtable();
+    }
 
-		hashtable = new Hashtable();
-	}
+    public DefaultCard() {
+    }
 
-	public DefaultCard()
-	{
-	}
+    public AdapterNode getRootNode() {
+        return rootNode;
+    }
 
-	public AdapterNode getRootNode()
-	{
-		return rootNode;
-	}
-	
-	public void formatSet(String key, String subkey, String value )
-	{
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			AdapterNode subchild = child.getChild(subkey);
-			if (subchild != null)
-			{
-				setCDATAValue(child, value);
-			}
-			else
-			{
-				System.out.println("parent to add child to:" + getRootNode().getName());
+    public void formatSet(String key, String subkey, String value) {
+        AdapterNode child = getRootNode().getChild(key);
 
-				Element sub = createElementNode(subkey);
-				
-				CDATASection cdata = createCDATAElementNode( value );
-            	addCDATASection( sub, cdata );
-            	
-            	AdapterNode newNode = new AdapterNode(sub);
-            	child.add( newNode );
-			}
-			
-		}
-		else
-		{
-			
-			System.out.println("parent to add child to:" + getRootNode().getName());
+        if (child != null) {
+            AdapterNode subchild = child.getChild(subkey);
 
-			Element e = createElementNode(key);
-			Element sub = createElementNode(subkey);
-			addElement( e, sub );
-			CDATASection cdata = createCDATAElementNode( value );
-            addCDATASection( sub, cdata );
-			
-			AdapterNode newNode = new AdapterNode(e);
-			getRootNode().add(newNode);
-			
-		}	
-	}
-	
-	public void formatSet(String key, String value )
-	{
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			setCDATAValue(child, value);
-		}
-		else
-		{
-			
-			System.out.println("parent to add child to:" + getRootNode().getName());
+            if (subchild != null) {
+                setCDATAValue(child, value);
+            } else {
+                System.out.println("parent to add child to:" +
+                    getRootNode().getName());
 
-			Element e = createElementNode(key);
-			
-			CDATASection cdata = createCDATAElementNode( value );
-            addCDATASection( e, cdata );
-			
-			AdapterNode newNode = new AdapterNode(e);
-			getRootNode().add(newNode);
-			
-		}	
-	}
+                Element sub = createElementNode(subkey);
 
-	public void set(String key, String value)
-	{
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			setTextValue(child, value);
-		}
-		else
-		{
-			System.out.println("parent to add child to:" + getRootNode().getName());
+                CDATASection cdata = createCDATAElementNode(value);
+                addCDATASection(sub, cdata);
 
-			
-			addKey(getRootNode(), key, value);
-		}
-	}
+                AdapterNode newNode = new AdapterNode(sub);
+                child.add(newNode);
+            }
+        } else {
+            System.out.println("parent to add child to:" +
+                getRootNode().getName());
 
-	public void set(String key, String subkey, String value)
-	{
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			AdapterNode subchild = child.getChild(subkey);
-			if (subchild != null)
-			{
-				setTextValue(subchild, value);
-			}
-			else
-			{
-				System.out.println("parent to add child to:" + getRootNode().getName());
+            Element e = createElementNode(key);
+            Element sub = createElementNode(subkey);
+            addElement(e, sub);
 
-				addKey(child, subkey, value);
-				//addKey( getRootNode(), key, value );	
-			}
-		}
-		else
-		{
-			System.out.println("parent to add child to:" + getRootNode().getName());
+            CDATASection cdata = createCDATAElementNode(value);
+            addCDATASection(sub, cdata);
 
-			Element e = createElementNode(key);
-			/*
-			Element subelement = createTextElementNode(subkey,value);
-			addElement( subelement, e );
-			*/
+            AdapterNode newNode = new AdapterNode(e);
+            getRootNode().add(newNode);
+        }
+    }
 
-			AdapterNode newNode = new AdapterNode(e);
-			getRootNode().add(newNode);
+    public void formatSet(String key, String value) {
+        AdapterNode child = getRootNode().getChild(key);
 
-			addKey(newNode, subkey, value);
+        if (child != null) {
+            setCDATAValue(child, value);
+        } else {
+            System.out.println("parent to add child to:" +
+                getRootNode().getName());
 
-		}
-	}
+            Element e = createElementNode(key);
 
-	public String get(String key)
-	{
-		if (key == null)
-			return "";
+            CDATASection cdata = createCDATAElementNode(value);
+            addCDATASection(e, cdata);
 
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			return getTextValue(child);
-		}
+            AdapterNode newNode = new AdapterNode(e);
+            getRootNode().add(newNode);
+        }
+    }
 
-		return "";
-	}
-	
-	public String formatGet(String key)
-	{
-		if (key == null)
-			return "";
+    public void set(String key, String value) {
+        AdapterNode child = getRootNode().getChild(key);
 
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			return getCDATAValue(child);
-		}
+        if (child != null) {
+            setTextValue(child, value);
+        } else {
+            System.out.println("parent to add child to:" +
+                getRootNode().getName());
 
-		return "";
-	}
+            addKey(getRootNode(), key, value);
+        }
+    }
 
-	public String get(String key, String subkey)
-	{
-		if ((key == null) || (subkey == null))
-			return "";
+    public void set(String key, String subkey, String value) {
+        AdapterNode child = getRootNode().getChild(key);
 
-		AdapterNode child = getRootNode().getChild(key);
-		if (child != null)
-		{
-			AdapterNode subchild = child.getChild(subkey);
-			if (subchild != null)
-				return subchild.getValue();
+        if (child != null) {
+            AdapterNode subchild = child.getChild(subkey);
 
-		}
+            if (subchild != null) {
+                setTextValue(subchild, value);
+            } else {
+                System.out.println("parent to add child to:" +
+                    getRootNode().getName());
 
-		return "";
-	}
+                addKey(child, subkey, value);
 
-	/*
-	public void add( String key, String attribut, String value )
-	{
-		key = key.toLowerCase();
-		for ( int i=0; i<getRootNode().getChildCount(); i++ )
-		{
-			AdapterNode child = getRootNode().getChildAt(i);
-			System.out.println("node-name:"+child.getName() );
-			String name = child.getName();
-			
-			if ( name.equalsIgnoreCase(key) == true )
-			{
-				// found key, now search for attributes
-				//String value = (String) child.getValue();
-				//System.out.println("node-value:"+value);
-				child.setValue( value );
-			}
-		
-		}	
-	}
-	
-	public String get( String key, String attribut )
-	{
-		key = key.toLowerCase();
-		
-		for ( int i=0; i<getRootNode().getChildCount(); i++ )
-		{
-			AdapterNode child = getRootNode().getChildAt(i);
-			System.out.println("node-name:"+child.getName() );
-			String name = child.getName();
-			
-			if ( name.equalsIgnoreCase(key) == true )
-			{
-				// found key, now search for attributes
-				String value = (String) child.getValue();
-				
-				
-				System.out.println("node-value:"+value);
-				return value;
-			}
-		
-		}
-		
-		return "";
-	}
-	
-	public String get( String key  )
-	{
-		key = key.toLowerCase();
-		
-		for ( int i=0; i<getRootNode().getChildCount(); i++ )
-		{
-			AdapterNode child = getRootNode().getChildAt(i);
-			System.out.println("node-name:"+child.getName() );
-			String name = child.getName();
-			
-			if ( name.equalsIgnoreCase(key) == true )
-			{
-				// found key, now search for attributes
-				String value = (String) child.getValue();
-				
-				
-				System.out.println("node-value:"+value);
-				return value;
-			}
-		
-		}
-		
-		return "";
-	}
-	
-	
-	*/
+                //addKey( getRootNode(), key, value );	
+            }
+        } else {
+            System.out.println("parent to add child to:" +
+                getRootNode().getName());
 
-	public void setUid(Object uid)
-	{
-		this.uid = uid;
-	}
+            Element e = createElementNode(key);
 
-	public Object getUid()
-	{
-		return uid;
-	}
+            /*
+            Element subelement = createTextElementNode(subkey,value);
+            addElement( subelement, e );
+            */
+            AdapterNode newNode = new AdapterNode(e);
+            getRootNode().add(newNode);
 
-	/************************************** ADD **************************************/
+            addKey(newNode, subkey, value);
+        }
+    }
 
-	public void addElement(Element parent, Element child)
-	{
-		parent.appendChild(child);
-	}
+    public String get(String key) {
+        if (key == null) {
+            return "";
+        }
 
-	public void addCDATASection(Element parent, CDATASection child)
-	{
-		parent.appendChild(child);
-	}
+        AdapterNode child = getRootNode().getChild(key);
 
-	/***************************************** CREATE ***********************************/
+        if (child != null) {
+            return getTextValue(child);
+        }
 
-	public Element createTextElementNode(String key, String value)
-	{
-		AdapterNode adpNode = new AdapterNode(document);
+        return "";
+    }
 
-		Element newElement = (Element) document.createElement(key);
-		newElement.appendChild(document.createTextNode(value));
+    public String formatGet(String key) {
+        if (key == null) {
+            return "";
+        }
 
-		return newElement;
-	}
+        AdapterNode child = getRootNode().getChild(key);
 
-	public CDATASection createCDATAElementNode(String key)
-	{
-		AdapterNode adpNode = new AdapterNode(document);
+        if (child != null) {
+            return getCDATAValue(child);
+        }
 
-		CDATASection newElement = (CDATASection) document.createCDATASection(key);
+        return "";
+    }
 
-		return newElement;
-	}
+    public String get(String key, String subkey) {
+        if ((key == null) || (subkey == null)) {
+            return "";
+        }
 
-	public Element createElementNode(String key)
-	{
-		AdapterNode adpNode = new AdapterNode(document);
+        AdapterNode child = getRootNode().getChild(key);
 
-		Element newElement = (Element) document.createElement(key);
-		return newElement;
-	}
+        if (child != null) {
+            AdapterNode subchild = child.getChild(subkey);
 
-	public AdapterNode addKey(
-		AdapterNode parent,
-		String elementName,
-		String defaultValue)
-	{
-		Element e = createTextElementNode(elementName, defaultValue);
-		AdapterNode newNode = new AdapterNode(e);
+            if (subchild != null) {
+                return subchild.getValue();
+            }
+        }
 
-		parent.add(newNode);
+        return "";
+    }
 
-		return newNode;
-	}
+    /*
+    public void add( String key, String attribut, String value )
+    {
+            key = key.toLowerCase();
+            for ( int i=0; i<getRootNode().getChildCount(); i++ )
+            {
+                    AdapterNode child = getRootNode().getChildAt(i);
+                    System.out.println("node-name:"+child.getName() );
+                    String name = child.getName();
 
-	public void setTextValue(AdapterNode node, String value)
-	{
-		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+                    if ( name.equalsIgnoreCase(key) == true )
+                    {
+                            // found key, now search for attributes
+                            //String value = (String) child.getValue();
+                            //System.out.println("node-value:"+value);
+                            child.setValue( value );
+                    }
 
-		//System.out.println("length: "+ nodeList.getLength() +"  value: "+value +"  name: "+ node.getName() );
+            }
+    }
 
-		if (nodeList.getLength() == 1)
-		{
-			org.w3c.dom.Node n = nodeList.item(0);
-			int type = n.getNodeType();
+    public String get( String key, String attribut )
+    {
+            key = key.toLowerCase();
 
-			n.setNodeValue(value);
-		}
-		else if (nodeList.getLength() == 0)
-		{
-			node.appendChild(document.createTextNode(value));
-		}
-		else if (nodeList.getLength() > 1)
-		{
-			//System.out.println("lenght1: "+ node.domNode.getChildNodes() );
-			for (int i = nodeList.getLength() - 1; i >= 0; i--)
-			{
-				//System.out.println("nodeList length: "+ nodeList.getLength() );
-				node.domNode.removeChild(nodeList.item(i));
-			}
-			//System.out.println("lenght2: "+ node.domNode.getChildNodes() );
-			node.appendChild(document.createTextNode(value));
-			//System.out.println("lenght3: "+ node.domNode.getChildNodes() );
-		}
-	}
+            for ( int i=0; i<getRootNode().getChildCount(); i++ )
+            {
+                    AdapterNode child = getRootNode().getChildAt(i);
+                    System.out.println("node-name:"+child.getName() );
+                    String name = child.getName();
 
-	public void setCDATAValue(AdapterNode node, String value)
-	{
-		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+                    if ( name.equalsIgnoreCase(key) == true )
+                    {
+                            // found key, now search for attributes
+                            String value = (String) child.getValue();
 
-		if (nodeList.getLength() >= 1)
-		{
-			for (int i = 0; i < nodeList.getLength(); i++)
-			{
-				org.w3c.dom.Node n = nodeList.item(i);
-				int type = n.getNodeType();
-				AdapterNode adpNode = new AdapterNode(n);
 
-				if (type == AdapterNode.CDATA_TYPE)
-				{
-					n.setNodeValue(value);
-				}
-			}
-		}
-	}
+                            System.out.println("node-value:"+value);
+                            return value;
+                    }
 
-	public String getTextValue(AdapterNode node)
-	{
-		String s = new String("");
-		String t = new String();
+            }
 
-		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+            return "";
+    }
 
-		if (nodeList.getLength() >= 1)
-		{
-			for (int i = 0; i < nodeList.getLength(); i++)
-			{
+    public String get( String key  )
+    {
+            key = key.toLowerCase();
 
-				org.w3c.dom.Node n = nodeList.item(i);
-				AdapterNode adpNode = new AdapterNode(n);
-				int type = n.getNodeType();
+            for ( int i=0; i<getRootNode().getChildCount(); i++ )
+            {
+                    AdapterNode child = getRootNode().getChildAt(i);
+                    System.out.println("node-name:"+child.getName() );
+                    String name = child.getName();
 
-				if (type == AdapterNode.ENTITYREF_TYPE)
-				{
-					String value = adpNode.getValue();
-					t = value.trim();
-				}
-				else
-				{
-					String value = n.getNodeValue();
-					t = value.trim();
-					int x = t.indexOf("\n");
-					if (x >= 0)
-						t = t.substring(0, x);
+                    if ( name.equalsIgnoreCase(key) == true )
+                    {
+                            // found key, now search for attributes
+                            String value = (String) child.getValue();
 
-				}
-				s += t;
-			}
-		}
 
-		return s.trim();
-	}
+                            System.out.println("node-value:"+value);
+                            return value;
+                    }
 
-	public String getCDATAValue(AdapterNode node)
-	{
-		String s = new String("");
-		org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+            }
 
-		if (nodeList.getLength() >= 1)
-		{
-			for (int i = 0; i < nodeList.getLength(); i++)
-			{
-				org.w3c.dom.Node n = nodeList.item(i);
-				int type = n.getNodeType();
-				AdapterNode adpNode = new AdapterNode(n);
+            return "";
+    }
 
-				if (type == AdapterNode.CDATA_TYPE)
-				{
-					s += n.getNodeValue();
-				}
-			}
-		}
 
-		return s.trim();
-	}
+    */
+    public void setUid(Object uid) {
+        this.uid = uid;
+    }
 
-	public Document getDocument()
-	{
-		return document;
-	}
+    public Object getUid() {
+        return uid;
+    }
 
-	public void setDocument(Document doc)
-	{
-		this.document = doc;
-	}
+    /************************************** ADD **************************************/
+    public void addElement(Element parent, Element child) {
+        parent.appendChild(child);
+    }
+
+    public void addCDATASection(Element parent, CDATASection child) {
+        parent.appendChild(child);
+    }
+
+    /***************************************** CREATE ***********************************/
+    public Element createTextElementNode(String key, String value) {
+        AdapterNode adpNode = new AdapterNode(document);
+
+        Element newElement = (Element) document.createElement(key);
+        newElement.appendChild(document.createTextNode(value));
+
+        return newElement;
+    }
+
+    public CDATASection createCDATAElementNode(String key) {
+        AdapterNode adpNode = new AdapterNode(document);
+
+        CDATASection newElement = (CDATASection) document.createCDATASection(key);
+
+        return newElement;
+    }
+
+    public Element createElementNode(String key) {
+        AdapterNode adpNode = new AdapterNode(document);
+
+        Element newElement = (Element) document.createElement(key);
+
+        return newElement;
+    }
+
+    public AdapterNode addKey(AdapterNode parent, String elementName,
+        String defaultValue) {
+        Element e = createTextElementNode(elementName, defaultValue);
+        AdapterNode newNode = new AdapterNode(e);
+
+        parent.add(newNode);
+
+        return newNode;
+    }
+
+    public void setTextValue(AdapterNode node, String value) {
+        org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+
+        //System.out.println("length: "+ nodeList.getLength() +"  value: "+value +"  name: "+ node.getName() );
+        if (nodeList.getLength() == 1) {
+            org.w3c.dom.Node n = nodeList.item(0);
+            int type = n.getNodeType();
+
+            n.setNodeValue(value);
+        } else if (nodeList.getLength() == 0) {
+            node.appendChild(document.createTextNode(value));
+        } else if (nodeList.getLength() > 1) {
+            //System.out.println("lenght1: "+ node.domNode.getChildNodes() );
+            for (int i = nodeList.getLength() - 1; i >= 0; i--) {
+                //System.out.println("nodeList length: "+ nodeList.getLength() );
+                node.domNode.removeChild(nodeList.item(i));
+            }
+
+            //System.out.println("lenght2: "+ node.domNode.getChildNodes() );
+            node.appendChild(document.createTextNode(value));
+
+            //System.out.println("lenght3: "+ node.domNode.getChildNodes() );
+        }
+    }
+
+    public void setCDATAValue(AdapterNode node, String value) {
+        org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+
+        if (nodeList.getLength() >= 1) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                org.w3c.dom.Node n = nodeList.item(i);
+                int type = n.getNodeType();
+                AdapterNode adpNode = new AdapterNode(n);
+
+                if (type == AdapterNode.CDATA_TYPE) {
+                    n.setNodeValue(value);
+                }
+            }
+        }
+    }
+
+    public String getTextValue(AdapterNode node) {
+        String s = new String("");
+        String t = new String();
+
+        org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+
+        if (nodeList.getLength() >= 1) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                org.w3c.dom.Node n = nodeList.item(i);
+                AdapterNode adpNode = new AdapterNode(n);
+                int type = n.getNodeType();
+
+                if (type == AdapterNode.ENTITYREF_TYPE) {
+                    String value = adpNode.getValue();
+                    t = value.trim();
+                } else {
+                    String value = n.getNodeValue();
+                    t = value.trim();
+
+                    int x = t.indexOf("\n");
+
+                    if (x >= 0) {
+                        t = t.substring(0, x);
+                    }
+                }
+
+                s += t;
+            }
+        }
+
+        return s.trim();
+    }
+
+    public String getCDATAValue(AdapterNode node) {
+        String s = new String("");
+        org.w3c.dom.NodeList nodeList = node.domNode.getChildNodes();
+
+        if (nodeList.getLength() >= 1) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                org.w3c.dom.Node n = nodeList.item(i);
+                int type = n.getNodeType();
+                AdapterNode adpNode = new AdapterNode(n);
+
+                if (type == AdapterNode.CDATA_TYPE) {
+                    s += n.getNodeValue();
+                }
+            }
+        }
+
+        return s.trim();
+    }
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document doc) {
+        this.document = doc;
+    }
 }

@@ -17,11 +17,12 @@
 //All Rights Reserved.
 package org.columba.core.gui.frame;
 
-import java.awt.event.MouseAdapter;
-
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.selection.SelectionManager;
 import org.columba.core.gui.statusbar.StatusBar;
+
+import java.awt.event.MouseAdapter;
+
 
 /**
  * Mediator is reponsible for managing all the interaction between the
@@ -42,28 +43,30 @@ import org.columba.core.gui.statusbar.StatusBar;
  * methods of other classes. Classes send inform the mediator when changes
  * occur and the Mediator passes them on to any other classes that need to be
  * informed.
- * 
+ *
  * @author fdietz
  */
 public interface FrameMediator {
+    public AbstractFrameView getView();
 
-	public AbstractFrameView getView();
+    public void openView();
 
-	public void openView();
+    /**
+     * Save window properties and close the window. This includes telling the
+     * frame model that this window/frame is closing, so it can be
+     * "unregistered" correctly
+     */
+    public void close();
 
-	/**
-	 * Save window properties and close the window. This includes telling the
-	 * frame model that this window/frame is closing, so it can be
-	 * "unregistered" correctly
-	 */
-	public void close();
+    public ViewItem getViewItem();
 
-	public ViewItem getViewItem();
-	public StatusBar getStatusBar();
-	public SelectionManager getSelectionManager();
-	public MouseAdapter getMouseTooltipHandler();
-	
-	public void enableToolbar(String id, boolean enable);
-	public boolean isToolbarEnabled(String id);
-	
+    public StatusBar getStatusBar();
+
+    public SelectionManager getSelectionManager();
+
+    public MouseAdapter getMouseTooltipHandler();
+
+    public void enableToolbar(String id, boolean enable);
+
+    public boolean isToolbarEnabled(String id);
 }

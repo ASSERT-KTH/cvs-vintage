@@ -16,28 +16,29 @@
 package org.columba.mail.facade;
 
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.MailConfig;
+
 
 /**
  * @author fdietz
  *
- * 
+ *
  */
 public class MailFacade {
-	
-	/**
-		 * @param configName	id of config-file
-		 * 						example: - options
-		 * 							     - tree
-		 * 								 - account
-		 * 						
-		 * 
-		 * 	
-		 * @return XmlElement	represents an xml-treenode
-		 */
-	public static XmlElement getConfigElement(String configName) {
-		XmlElement root = MailConfig.get(configName);
+    /**
+             * @param configName        id of config-file
+             *                                                 example: - options
+             *                                                              - tree
+             *                                                                  - account
+             *
+             *
+             *
+             * @return XmlElement        represents an xml-treenode
+             */
+    public static XmlElement getConfigElement(String configName) {
+        XmlElement root = MailConfig.get(configName);
 
-		return root;
-	}
+        return root;
+    }
 }

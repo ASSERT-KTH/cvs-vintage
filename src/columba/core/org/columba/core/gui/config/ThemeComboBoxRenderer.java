@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.core.gui.config;
 
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ThemePluginHandler;
+
 import java.awt.Component;
 
 import javax.swing.JLabel;
@@ -24,10 +29,6 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.core.plugin.ThemePluginHandler;
 
 /**
  * @author frd
@@ -36,60 +37,51 @@ import org.columba.core.plugin.ThemePluginHandler;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ThemeComboBoxRenderer extends JLabel implements ListCellRenderer {
+    protected static Border noFocusBorder;
+    ThemePluginHandler pluginHandler;
 
-	ThemePluginHandler pluginHandler;
+    public ThemeComboBoxRenderer() {
+        super();
 
-	protected static Border noFocusBorder;
+        try {
+            pluginHandler = (ThemePluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.theme");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
 
-	public ThemeComboBoxRenderer() {
-		super();
-		try {
+        if (noFocusBorder == null) {
+            noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+        }
 
-			pluginHandler =
-				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
-					"org.columba.core.theme");
-		} catch (PluginHandlerNotFoundException ex) {
-			NotifyDialog d = new NotifyDialog();
-			d.showDialog(ex);
-		}
+        setOpaque(true);
+        setBorder(noFocusBorder);
+    }
 
-		if (noFocusBorder == null) {
-			noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-		}
-		setOpaque(true);
-		setBorder(noFocusBorder);
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+     */
+    public Component getListCellRendererComponent(JList list, Object value,
+        int index, boolean isSelected, boolean cellHasFocus) {
+        if (isSelected) {
+            setBackground(list.getSelectionBackground());
+            setForeground(list.getSelectionForeground());
+        } else {
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
+        }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-	 */
-	public Component getListCellRendererComponent(
-		JList list,
-		Object value,
-		int index,
-		boolean isSelected,
-		boolean cellHasFocus) {
-		if (isSelected) {
-			setBackground(list.getSelectionBackground());
-			setForeground(list.getSelectionForeground());
-		} else {
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-		}
+        setBorder((cellHasFocus)
+            ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
-		setBorder(
-			(cellHasFocus)
-				? UIManager.getBorder("List.focusCellHighlightBorder")
-				: noFocusBorder);
+        // id = org.columba.example.HelloWorld$HelloWorldPlugin
+        String id = (String) value;
 
-		// id = org.columba.example.HelloWorld$HelloWorldPlugin
-		String id = (String) value;
+        String userVisibleName = pluginHandler.getUserVisibleName(id);
 
-		String userVisibleName = pluginHandler.getUserVisibleName(id);
+        setText(userVisibleName);
 
-		setText(userVisibleName);
-
-		return this;
-	}
-
+        return this;
+    }
 }

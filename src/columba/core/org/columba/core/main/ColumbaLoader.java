@@ -15,124 +15,133 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
+import org.columba.core.logging.ColumbaLogger;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.columba.core.logging.ColumbaLogger;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba
  * able to passing commands to the main session.
  * <p>
- * 
+ *
  * ideas taken from www.jext.org (author Roman Guy)
- * 
+ *
  * @author fdietz
- * 
+ *
  */
 public class ColumbaLoader implements Runnable {
-  public final static int COLUMBA_PORT = 50000;
-  private Thread thread;
-  private ServerSocket serverSocket;
+    public final static int COLUMBA_PORT = 50000;
+    private Thread thread;
+    private ServerSocket serverSocket;
 
-  public ColumbaLoader() {
-    try {
-      serverSocket = new ServerSocket(COLUMBA_PORT);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-
-    thread = new Thread(this);
-    thread.setDaemon(false);
-    thread.start();
-  }
-
-  public synchronized void stop() {
-    thread.interrupt();
-    thread = null;
-
-    try {
-      if (serverSocket != null)
-        serverSocket.close();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
-
-  public synchronized boolean isRunning() {
-    return thread != null;
-  }
-
-  public void run() {
-    while (isRunning()) {
-      try {
-        // does a client trying to connect to server ?
-        Socket client = serverSocket.accept();
-        if (client == null)
-          continue;
-
-        // only accept client from local machine
-        String host = client.getLocalAddress().getHostAddress();
-        if (!(host.equals("127.0.0.1"))) {
-          // client isn't from local machine
-          client.close();
+    public ColumbaLoader() {
+        try {
+            serverSocket = new ServerSocket(COLUMBA_PORT);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        // try to read possible arguments
-        BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        thread = new Thread(this);
+        thread.setDaemon(false);
+        thread.start();
+    }
 
-        StringBuffer arguments = new StringBuffer();
-        arguments.append(reader.readLine());
+    public synchronized void stop() {
+        thread.interrupt();
+        thread = null;
 
-        if (!(arguments.toString().startsWith("columba:"))) {
-          // client isn't a Columba client
-          client.close();
+        try {
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public synchronized boolean isRunning() {
+        return thread != null;
+    }
+
+    public void run() {
+        while (isRunning()) {
+            try {
+                // does a client trying to connect to server ?
+                Socket client = serverSocket.accept();
+
+                if (client == null) {
+                    continue;
+                }
+
+                // only accept client from local machine
+                String host = client.getLocalAddress().getHostAddress();
+
+                if (!(host.equals("127.0.0.1"))) {
+                    // client isn't from local machine
+                    client.close();
+                }
+
+                // try to read possible arguments
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                            client.getInputStream()));
+
+                StringBuffer arguments = new StringBuffer();
+                arguments.append(reader.readLine());
+
+                if (!(arguments.toString().startsWith("columba:"))) {
+                    // client isn't a Columba client
+                    client.close();
+                }
+
+                if (MainInterface.DEBUG) {
+                    ColumbaLogger.log.debug(
+                        "passing to running Columba session:\n" +
+                        arguments.toString());
+                }
+
+                // do something with the arguments..
+                handleArgs(arguments.toString());
+
+                client.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Parsing the given argumentString and split this String into a StringArray. The separator is
+     * the character %, thus the whole arguments should not have this character inside. The
+     * character itselfs is added in Main.java @see Main#loadInVMInstance(String[]). After splitting
+     * is finished the CmdLineArgumentHandler is called, to do things with the arguments
+     * @see CmdLineArgumentHandler
+     * @param argumentString String which holds any arguments seperated by <br>%</br> character
+     */
+    protected void handleArgs(String argumentString) {
+        List v = new Vector();
+
+        // remove trailing "columba:"
+        argumentString = argumentString.substring(8, argumentString.length());
+
+        StringTokenizer st = new StringTokenizer(argumentString, "%");
+
+        while (st.hasMoreTokens()) {
+            String tok = (String) st.nextToken();
+            v.add(tok);
         }
 
-		if ( MainInterface.DEBUG )
-			ColumbaLogger.log.debug("passing to running Columba session:\n"+arguments.toString());
-		
-        // do something with the arguments..
-        handleArgs(arguments.toString());
+        String[] args = new String[v.size()];
+        v.toArray((String[]) args);
 
-        client.close();
-
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
+        new CmdLineArgumentHandler(args);
     }
-  }
-
-  /**
-   * Parsing the given argumentString and split this String into a StringArray. The separator is
-   * the character %, thus the whole arguments should not have this character inside. The  
-   * character itselfs is added in Main.java @see Main#loadInVMInstance(String[]). After splitting
-   * is finished the CmdLineArgumentHandler is called, to do things with the arguments
-   * @see CmdLineArgumentHandler
-   * @param argumentString String which holds any arguments seperated by <br>%</br> character
-   */
-  protected void handleArgs(String argumentString) {
-    List v = new Vector();
-
-	// remove trailing "columba:"
-	argumentString = argumentString.substring(8,argumentString.length());
-	 
-    StringTokenizer st = new StringTokenizer(argumentString, "%");
-    while (st.hasMoreTokens()) {
-      String tok = (String) st.nextToken();
-      v.add(tok);
-    }
-
-    String[] args = new String[v.size()];
-    v.toArray( (String[]) args);
-
-    new CmdLineArgumentHandler(args);
-
-  }
-
 }

@@ -13,39 +13,38 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.dnd;
 
 import javax.swing.DefaultListSelectionModel;
 
+
 public class HeaderTableSelectionModel extends DefaultListSelectionModel {
+    boolean gestureStarted = false;
 
-	boolean gestureStarted = false;
-	
-	
-	public void setSelectionInterval(int index0, int index1) {
-		if (!gestureStarted && !isSelectedIndex(index0)) {
-			super.setSelectionInterval(index0, index1);
-		}
-	}
+    public void setSelectionInterval(int index0, int index1) {
+        if (!gestureStarted && !isSelectedIndex(index0)) {
+            super.setSelectionInterval(index0, index1);
+        }
+    }
 
-	public void setValueIsAdjusting(boolean isAdjusting) {
-		if (isAdjusting == false)
-			gestureStarted = false;
-	}
-	/**
-	 * @return boolean
-	 */
-	public boolean isGestureStarted() {
-		return gestureStarted;
-	}
+    public void setValueIsAdjusting(boolean isAdjusting) {
+        if (isAdjusting == false) {
+            gestureStarted = false;
+        }
+    }
 
-	/**
-	 * Sets the gestureStarted.
-	 * @param gestureStarted The gestureStarted to set
-	 */
-	public void setGestureStarted(boolean gestureStarted) {
-		this.gestureStarted = gestureStarted;
-	}
+    /**
+     * @return boolean
+     */
+    public boolean isGestureStarted() {
+        return gestureStarted;
+    }
 
+    /**
+     * Sets the gestureStarted.
+     * @param gestureStarted The gestureStarted to set
+     */
+    public void setGestureStarted(boolean gestureStarted) {
+        this.gestureStarted = gestureStarted;
+    }
 }

@@ -15,61 +15,57 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter.plugins;
 
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-
 import org.columba.core.plugin.AbstractPluginHandler;
+
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.gui.config.filter.CriteriaList;
 
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+
+
 public class FlagsCriteriaRow extends DefaultCriteriaRow {
+    private JComboBox matchComboBox;
+    private JComboBox flagsComboBox;
+    private JTextField textField;
 
-	private JComboBox matchComboBox;
-	private JComboBox flagsComboBox;
-	private JTextField textField;
+    public FlagsCriteriaRow(AbstractPluginHandler pluginHandler,
+        CriteriaList criteriaList, FilterCriteria c) {
+        super(pluginHandler, criteriaList, c);
+    }
 
-	public FlagsCriteriaRow(
-		AbstractPluginHandler pluginHandler,
-		CriteriaList criteriaList,
-		FilterCriteria c) {
-		super(pluginHandler, criteriaList, c);
+    public void updateComponents(boolean b) {
+        super.updateComponents(b);
 
-	}
+        if (b) {
+            matchComboBox.setSelectedItem(criteria.getCriteriaString());
 
-	public void updateComponents(boolean b) {
-		super.updateComponents(b);
+            String flag = criteria.getPattern();
+            flagsComboBox.setSelectedItem(flag);
+        } else {
+            criteria.setCriteria((String) matchComboBox.getSelectedItem());
+            criteria.setPattern((String) flagsComboBox.getSelectedItem());
+        }
+    }
 
-		if (b) {
-			matchComboBox.setSelectedItem(criteria.getCriteriaString());
-			String flag = criteria.getPattern();
-			flagsComboBox.setSelectedItem(flag);
-		} else {
-			criteria.setCriteria((String) matchComboBox.getSelectedItem());
-			criteria.setPattern((String) flagsComboBox.getSelectedItem());
-		}
+    public void initComponents() {
+        super.initComponents();
 
-	}
+        matchComboBox = new JComboBox();
+        matchComboBox.addItem("is");
+        matchComboBox.addItem("is not");
 
-	public void initComponents() {
-		super.initComponents();
+        addComponent(matchComboBox);
 
-		matchComboBox = new JComboBox();
-		matchComboBox.addItem("is");
-		matchComboBox.addItem("is not");
+        flagsComboBox = new JComboBox();
+        flagsComboBox.addItem("Answered");
+        flagsComboBox.addItem("Deleted");
+        flagsComboBox.addItem("Flagged");
+        flagsComboBox.addItem("Recent");
+        flagsComboBox.addItem("Draft");
+        flagsComboBox.addItem("Seen");
+        flagsComboBox.addItem("Spam");
 
-		addComponent(matchComboBox);
-
-		flagsComboBox = new JComboBox();
-		flagsComboBox.addItem("Answered");
-		flagsComboBox.addItem("Deleted");
-		flagsComboBox.addItem("Flagged");
-		flagsComboBox.addItem("Recent");
-		flagsComboBox.addItem("Draft");
-		flagsComboBox.addItem("Seen");
-		flagsComboBox.addItem("Spam");
-
-		addComponent(flagsComboBox);
-
-	}
-
+        addComponent(flagsComboBox);
+    }
 }

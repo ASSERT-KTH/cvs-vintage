@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.core.main;
 
+import org.columba.core.util.SwingWorker;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -22,55 +24,48 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-import org.columba.core.util.SwingWorker;
 
 /**
  * Dialog showing the progress while exiting Columba.
- * 
+ *
  *
  * @author fdietz
  */
 public class ExitWorker extends SwingWorker {
-	private JProgressBar bar;
-	private int value = 0;
-	private int count = 0;
+    private JProgressBar bar;
+    private int value = 0;
+    private int count = 0;
 
-	public Object construct() {
-		showDialog();
+    public Object construct() {
+        showDialog();
 
-		return null;
-	}
+        return null;
+    }
 
-	
+    public void showDialog() {
+        JFrame dialog = new JFrame("Saving Folders...");
 
-	public void showDialog() {
-		JFrame dialog = new JFrame("Saving Folders...");
-		
-		bar = new JProgressBar();
-		bar.setValue(0);
-		bar.setStringPainted(true);
+        bar = new JProgressBar();
+        bar.setValue(0);
+        bar.setStringPainted(true);
 
-		dialog.getContentPane().add(bar, BorderLayout.CENTER);
-		dialog.pack();
+        dialog.getContentPane().add(bar, BorderLayout.CENTER);
+        dialog.pack();
 
-		java.awt.Dimension dim = new Dimension(300, 50);
-		dialog.setSize(dim);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
+        java.awt.Dimension dim = new Dimension(300, 50);
+        dialog.setSize(dim);
 
-		dialog.setVisible(true);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setLocation((screenSize.width / 2) - (dim.width / 2),
+            (screenSize.height / 2) - (dim.height / 2));
 
-		
-	}
+        dialog.setVisible(true);
+    }
 
-	
-	/**
-	 * @return
-	 */
-	public JProgressBar getBar() {
-		return bar;
-	}
-
+    /**
+     * @return
+     */
+    public JProgressBar getBar() {
+        return bar;
+    }
 }

@@ -13,8 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.selection;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.selection.SelectionHandler;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.Folder;
+import org.columba.mail.gui.table.TableView;
+import org.columba.mail.gui.table.model.MessageNode;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -24,19 +31,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.table.TableView;
-import org.columba.mail.gui.table.model.MessageNode;
 
 /**
- * TableSelectionHandler adds another abstraction layer to the 
+ * TableSelectionHandler adds another abstraction layer to the
  * swing JTable selection model.
  * <p>
  * It is responsible for providing a mapping between swing
- * table rows or tree nodes into message UIDs and back. 
+ * table rows or tree nodes into message UIDs and back.
  * <p>
  * Additionally it is able to encapsulate a message object transparently
  * for every action in Columba. This means actions don't need to care
@@ -47,122 +48,118 @@ import org.columba.mail.gui.table.model.MessageNode;
  * <p>
  * For this reason it uses a temporary folder to save such a message and
  * provide actions with the correctly mapped FolderCommandReference[] object.
- * 
- * 
- * 
+ *
+ *
+ *
  * @author fdietz
  */
-public class TableSelectionHandler
-	extends SelectionHandler
-	implements ListSelectionListener {
+public class TableSelectionHandler extends SelectionHandler
+    implements ListSelectionListener {
+    private final static MessageNode[] messageNodeArray = { null };
+    private TableView view;
+    private LinkedList messages;
+    private Folder folder;
 
-	private TableView view;
-	private LinkedList messages;
-	private Folder folder;
+    // if this is set to true, we use the local selection, instead
+    // of using the table selection
+    private boolean useLocalSelection;
+    private FolderCommandReference[] local;
 
-	private final static MessageNode[] messageNodeArray = { null };
+    /**
+     * @param id
+     */
+    public TableSelectionHandler(TableView view) {
+        super("mail.table");
+        this.view = view;
 
-	// if this is set to true, we use the local selection, instead
-	// of using the table selection
-	private boolean useLocalSelection;
+        view.getSelectionModel().addListSelectionListener(this);
 
-	private FolderCommandReference[] local;
+        messages = new LinkedList();
 
-	/**
-	 * @param id
-	 */
-	public TableSelectionHandler(TableView view) {
-		super("mail.table");
-		this.view = view;
+        useLocalSelection = false;
+    }
 
-		view.getSelectionModel().addListSelectionListener(this);
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionHandler#getSelection()
+     */
+    public DefaultCommandReference[] getSelection() {
+        if (useLocalSelection == true) {
+            return local;
+        }
 
-		messages = new LinkedList();
+        FolderCommandReference[] references = new FolderCommandReference[1];
 
-		useLocalSelection = false;
-	}
+        references[0] = new FolderCommandReference(folder, getUidArray());
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
-	 */
-	public DefaultCommandReference[] getSelection() {
+        return references;
+    }
 
-		if (useLocalSelection == true) {
-			return local;
-		}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+     */
+    public void setSelection(DefaultCommandReference[] selection) {
+        FolderCommandReference ref = (FolderCommandReference) selection[0];
 
-		FolderCommandReference[] references = new FolderCommandReference[1];
+        folder = (Folder) ref.getFolder();
 
-		references[0] = new FolderCommandReference(folder, getUidArray());
+        useLocalSelection = false;
+    }
 
-		return references;
-	}
+    /**
+     * Sets the folder.
+     * @param folder The folder to set
+     */
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
-	 */
-	public void setSelection(DefaultCommandReference[] selection) {
-		FolderCommandReference ref = (FolderCommandReference) selection[0];
+    private Object[] getUidArray() {
+        Object[] result = new Object[messages.size()];
+        ListIterator it = messages.listIterator();
 
-		folder = (Folder) ref.getFolder();
+        int i = 0;
 
-		useLocalSelection = false;
+        while (it.hasNext()) {
+            result[i++] = ((MessageNode) it.next()).getUid();
+        }
 
-	}
+        return result;
+    }
 
-	/**
-	 * Sets the folder.
-	 * @param folder The folder to set
-	 */
-	public void setFolder(Folder folder) {
-		this.folder = folder;
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
+    public void valueChanged(ListSelectionEvent e) {
+        useLocalSelection = false;
 
-	private Object[] getUidArray() {
-		Object[] result = new Object[messages.size()];
-		ListIterator it = messages.listIterator();
+        // user is still manipulating the selection
+        if (e.getValueIsAdjusting() == true) {
+            return;
+        }
 
-		int i = 0;
-		while (it.hasNext()) {
-			result[i++] = ((MessageNode) it.next()).getUid();
-		}
+        messages = new LinkedList();
 
-		return result;
-	}
-	/* (non-Javadoc)
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	public void valueChanged(ListSelectionEvent e) {
-		useLocalSelection = false;
+        ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
-		// user is still manipulating the selection
-		if (e.getValueIsAdjusting() == true)
-			return;
+        if (lsm.isSelectionEmpty()) {
+            //no rows are selected
+        } else {
+            int[] rows = view.getSelectedRows();
 
-		messages = new LinkedList();
+            for (int i = 0; i < rows.length; i++) {
+                TreePath path = view.getTree().getPathForRow(rows[i]);
+                MessageNode node = (MessageNode) path.getLastPathComponent();
+                messages.add(node);
+            }
+        }
 
-		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-		if (lsm.isSelectionEmpty()) {
-			//no rows are selected
-		} else {
-			int[] rows = view.getSelectedRows();
+        fireSelectionChanged(new TableSelectionChangedEvent(folder,
+                getUidArray()));
+    }
 
-			for (int i = 0; i < rows.length; i++) {
-				TreePath path = view.getTree().getPathForRow(rows[i]);
-				MessageNode node = (MessageNode) path.getLastPathComponent();
-				messages.add(node);
-			}
-		}
+    public void setLocalReference(FolderCommandReference[] r) {
+        this.local = r;
 
-		fireSelectionChanged(
-			new TableSelectionChangedEvent(folder, getUidArray()));
-
-	}
-
-	public void setLocalReference(FolderCommandReference[] r) {
-		this.local = r;
-
-		useLocalSelection = true;
-	}
-
+        useLocalSelection = true;
+    }
 }

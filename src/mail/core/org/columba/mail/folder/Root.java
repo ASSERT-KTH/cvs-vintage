@@ -16,38 +16,36 @@
 package org.columba.mail.folder;
 
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
+
 
 /**
  * Root treenode, is actually not visible and only needed by
  * the inner structure of Columba.
  * <p>
  * Its only used to have a determined root.
- * 
+ *
  * @author Timo Stich (tstich@users.sourceforge.net)
  */
 public class Root extends FolderTreeNode {
+    FolderItem item;
 
-	
-	FolderItem item;
-	public Root(XmlElement node) {
-			super(new FolderItem(node));
-	}
+    public Root(XmlElement node) {
+        super(new FolderItem(node));
+    }
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
-	 */
-	public String getDefaultChild() {
-		return null;
-	}
+    /**
+     * @see org.columba.modules.mail.folder.FolderTreeNode#instanceNewChildNode(AdapterNode, FolderItem)
+     */
+    public String getDefaultChild() {
+        return null;
+    }
 
-
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.folder.FolderTreeNode#getName()
-	 */
-	public String getName() {
-		return "Root";
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.FolderTreeNode#getName()
+     */
+    public String getName() {
+        return "Root";
+    }
 }

@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.charset.CharsetOwnerInterface;
@@ -28,71 +22,72 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.PrintMessageCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-public class PrintAction 
-		extends FrameAction 
-		implements SelectionListener {
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-	public PrintAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu",	"mainframe", "menu_message_print"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_message_print_tooltip").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_print-16.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_print.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_P, ActionEvent.CTRL_MASK));
-		
-		// *20030614, karlpeder* In main view only enabled when 
-		// message(s) selected
-		if (frameMediator instanceof AbstractMailFrameController) {
-			((AbstractMailFrameController) frameMediator)
-					.registerTableSelectionListener(this);
-		}
-		setEnabled(false);
-	}
+import javax.swing.KeyStroke;
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			(FolderCommandReference[]) getFrameMediator()
-				.getSelectionManager()
-				.getSelection("mail.table");
 
-		// GetCharset() added
-		String charset =
-			((CharsetOwnerInterface) getFrameMediator())
-				.getCharsetManager()
-				.getSelectedCharset();
+public class PrintAction extends FrameAction implements SelectionListener {
+    public PrintAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_print"));
 
-		PrintMessageCommand c = new PrintMessageCommand(r, charset);
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_message_print_tooltip").replaceAll("&", ""));
 
-		MainInterface.processor.addOp(c);
-	}
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_print-16.png"));
 
-	/**
-	 * Ensures that the action is only enabled when at least 
-	 * one message is selected in the GUI.
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_print.png"));
+
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+
+        // *20030614, karlpeder* In main view only enabled when 
+        // message(s) selected
+        if (frameMediator instanceof AbstractMailFrameController) {
+            ((AbstractMailFrameController) frameMediator).registerTableSelectionListener(this);
+        }
+
+        setEnabled(false);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = (FolderCommandReference[]) getFrameMediator()
+                                                                    .getSelectionManager()
+                                                                    .getSelection("mail.table");
+
+        // GetCharset() added
+        String charset = ((CharsetOwnerInterface) getFrameMediator()).getCharsetManager()
+                          .getSelectedCharset();
+
+        PrintMessageCommand c = new PrintMessageCommand(r, charset);
+
+        MainInterface.processor.addOp(c);
+    }
+
+    /**
+     * Ensures that the action is only enabled when at least
+     * one message is selected in the GUI.
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

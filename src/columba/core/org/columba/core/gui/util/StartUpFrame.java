@@ -25,105 +25,102 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
+
 import java.net.URL;
 
 import javax.swing.ImageIcon;
 
+
 public class StartUpFrame extends Frame {
+    private ImageIcon[] anim = new ImageIcon[4];
+    private Window window;
 
-	private ImageIcon[] anim = new ImageIcon[4];
-	private Window window;
+    public StartUpFrame() {
+        super();
 
-	public StartUpFrame() {
-		super();
+        URL url;
 
-		URL url;
+        anim[0] = ImageLoader.getImageIcon("splash.gif");
+        anim[1] = ImageLoader.getImageIcon("dove00.gif");
+        anim[2] = ImageLoader.getImageIcon("dove01.gif");
+        anim[3] = ImageLoader.getImageIcon("dove02.gif");
 
-		anim[0] = ImageLoader.getImageIcon("splash.gif");
-		anim[1] = ImageLoader.getImageIcon("dove00.gif");
-		anim[2] = ImageLoader.getImageIcon("dove01.gif");
-		anim[3] = ImageLoader.getImageIcon("dove02.gif");
+        try {
+            window = new TransparentWindow(ImageLoader.getImageIcon(
+                        "startup.png"));
 
-		try {
-			window = new TransparentWindow(ImageLoader.getImageIcon("startup.png"));
-			Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-			window.setLocation(
-							(screenDim.width - window.getWidth()) / 2,
-							(screenDim.height - window.getHeight()) / 2);
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
+            Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
+            window.setLocation((screenDim.width - window.getWidth()) / 2,
+                (screenDim.height - window.getHeight()) / 2);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+    }
 
-	}
+    public void advance() {
+        //window.advance();
+        window.repaint();
+    }
 
-	public void advance() {
-		//window.advance();
-		window.repaint();
-	}
+    public void setVisible(boolean b) {
+        window.setVisible(b);
+    }
 
-	public void setVisible(boolean b) {
-		window.setVisible(b);
-	}
+    class StartUpWindow extends Window {
+        ImageIcon img;
+        ImageIcon[] anim;
+        int w;
+        int h;
+        String txt;
+        int fh = -1;
+        Font font = null;
+        BufferedImage buffer;
+        int status;
 
-	class StartUpWindow extends Window {
-		ImageIcon img;
-		ImageIcon[] anim;
-		int w, h;
-		String txt;
-		int fh = -1;
-		Font font = null;
-		BufferedImage buffer;
-		int status;
+        StartUpWindow(Frame parent, ImageIcon[] anim) {
+            super(parent);
+            this.anim = anim;
+            img = anim[0];
 
-		StartUpWindow(Frame parent, ImageIcon[] anim) {
-			super(parent);
-			this.anim = anim;
-			img = anim[0];
+            status = 0;
 
-			status = 0;
+            Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 
-			Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
-			//Rectangle winDim = this.getBounds();
-			w = img.getIconWidth();
-			h = img.getIconHeight();
+            //Rectangle winDim = this.getBounds();
+            w = img.getIconWidth();
+            h = img.getIconHeight();
 
-			buffer =
-				new BufferedImage(w + 2, h + 2, BufferedImage.TYPE_INT_RGB);
+            buffer = new BufferedImage(w + 2, h + 2, BufferedImage.TYPE_INT_RGB);
 
-			this.setSize(w + 2, h + 2);
+            this.setSize(w + 2, h + 2);
 
-			Dimension winDim = this.getSize();
+            Dimension winDim = this.getSize();
 
-			this.setLocation(
-				(screenDim.width - w) / 2,
-				(screenDim.height - h) / 2);
+            this.setLocation((screenDim.width - w) / 2,
+                (screenDim.height - h) / 2);
 
-			this.setVisible(true);
-		}
+            this.setVisible(true);
+        }
 
-		public void advance() {
-			status++;
-		}
+        public void advance() {
+            status++;
+        }
 
-		public void setText(String s) {
-			this.txt = s;
-		}
+        public void setText(String s) {
+            this.txt = s;
+        }
 
-		public void paint(Graphics g) {
-			Graphics2D g2 = buffer.createGraphics();
+        public void paint(Graphics g) {
+            Graphics2D g2 = buffer.createGraphics();
 
-			if (anim[status] != null) {
-				g2.drawImage(anim[status].getImage(), 1, 1, this);
+            if (anim[status] != null) {
+                g2.drawImage(anim[status].getImage(), 1, 1, this);
 
-				g2.setColor(Color.black);
-				g2.drawRect(0, 0, w - 1 + 2, h - 1 + 2);
+                g2.setColor(Color.black);
+                g2.drawRect(0, 0, w - 1 + 2, h - 1 + 2);
+            }
 
-			}
-
-			g.drawImage(buffer, 0, 0, this);
-
-		}
-
-	}
-
+            g.drawImage(buffer, 0, 0, this);
+        }
+    }
 }

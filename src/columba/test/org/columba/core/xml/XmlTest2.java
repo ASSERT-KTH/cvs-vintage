@@ -20,20 +20,18 @@ package org.columba.core.xml;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+
 /**
  * Test case for TextUtils class.
- * 
+ *
  * @author fdietz
  */
 public class XmlTest2 extends TestCase {
+    public void testEscapeText() {
+        String source = "Heinz Müller <heinz@mail.com>";
 
-	public void testEscapeText() {
-		String source = "Heinz Müller <heinz@mail.com>";
+        String dest = TextUtils.escapeText(source);
 
-		String dest = TextUtils.escapeText(source);
-
-		Assert.assertEquals(dest, "Heinz Müller &lt;heinz@mail.com&gt;");
-	}
-    
-    
+        Assert.assertEquals(dest, "Heinz Müller &lt;heinz@mail.com&gt;");
+    }
 }

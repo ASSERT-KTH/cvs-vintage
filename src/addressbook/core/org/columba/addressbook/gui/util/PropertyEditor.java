@@ -13,8 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.util;
+
+import org.columba.addressbook.config.AdapterNode;
+import org.columba.addressbook.folder.ContactCard;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -35,136 +37,118 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.folder.ContactCard;
 
-public class PropertyEditor
-	extends JDialog
-	implements ActionListener, TableModelListener
-{
-	protected JTable table;
-	protected DefaultTableModel model;
+public class PropertyEditor extends JDialog implements ActionListener,
+    TableModelListener {
+    protected JTable table;
+    protected DefaultTableModel model;
+    protected JButton addButton;
+    protected JButton removeButton;
+    protected ContactCard item;
 
-	protected JButton addButton,removeButton;
+    public PropertyEditor(ContactCard item, JFrame frame) {
+        super(frame);
 
-	protected ContactCard item;
+        init();
 
-	public PropertyEditor(ContactCard item, JFrame frame)
-	{
-		super(frame);
+        if (item != null) {
+            this.item = item;
 
-		init();
+            for (int i = 0; i < item.getRootNode().getChildCount(); i++) {
+                AdapterNode child = item.getRootNode().getChildAt(i);
+                model.addRow(new Object[] { child.getName(), child.getValue() });
+            }
 
-		if (item != null)
-		{
-			this.item = item;
+            /*
+            for (Enumeration e = item.getKeys(); e.hasMoreElements();)
+            {
+                    String key = (String) e.nextElement();
+                    Object value = item.getValue(key);
+                    model.addRow(new Object[]{key, value});
+            }
+            */
+        }
+    }
 
-			for (int i = 0; i < item.getRootNode().getChildCount(); i++)
-			{
-				AdapterNode child = item.getRootNode().getChildAt(i);
-				model.addRow(new Object[]{child.getName(), child.getValue()});
-			}
-			/*
-			for (Enumeration e = item.getKeys(); e.hasMoreElements();)
-			{
-				String key = (String) e.nextElement();
-				Object value = item.getValue(key);
-				model.addRow(new Object[]{key, value});
-			}
-			*/
-		}
-	}
+    protected void init() {
+        getContentPane().setLayout(new BorderLayout());
 
-	protected void init()
-	{
-		getContentPane().setLayout(new BorderLayout());
+        model = new DefaultTableModel() {
+                    public boolean isCellEditable(int row, int col) {
+                        return (col != 0);
+                    }
+                };
 
-		model = new DefaultTableModel()
-		{
-			public boolean isCellEditable(int row, int col)
-			{
-				return (col != 0);
-			}
-		};
+        model.addColumn("key");
+        model.addColumn("value");
+        model.addTableModelListener(this);
 
-		model.addColumn("key");
-		model.addColumn("value");
-		model.addTableModelListener(this);
+        table = new JTable(model);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setColumnSelectionAllowed(false);
 
-		table = new JTable(model);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		table.setColumnSelectionAllowed(false);
+        JScrollPane scrollPane = new JScrollPane(table);
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-		JScrollPane scrollPane = new JScrollPane(table);
-		getContentPane().add(scrollPane, BorderLayout.CENTER);
+        addButton = new JButton("Add");
+        addButton.setActionCommand("ADD");
+        addButton.addActionListener(this);
 
-		addButton = new JButton("Add");
-		addButton.setActionCommand("ADD");
-		addButton.addActionListener(this);
+        removeButton = new JButton("Remove");
+        removeButton.setActionCommand("REMOVE");
+        removeButton.addActionListener(this);
 
-		removeButton = new JButton("Remove");
-		removeButton.setActionCommand("REMOVE");
-		removeButton.addActionListener(this);
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setAlignmentX(0);
+        bottomPanel.setLayout(new GridLayout(0, 2, 10, 10));
 
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setAlignmentX(0);
-		bottomPanel.setLayout(new GridLayout(0, 2, 10, 10));
+        bottomPanel.add(addButton);
+        bottomPanel.add(removeButton);
 
-		bottomPanel.add(addButton);
-		bottomPanel.add(removeButton);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        ListSelectionModel sel = new DefaultListSelectionModel();
+        table.setSelectionModel(sel);
+        sel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        sel.addListSelectionListener(new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent ev) {
+                    removeButton.setEnabled(!(table.getSelectionModel()
+                                                   .isSelectionEmpty()));
+                }
+            });
 
-		ListSelectionModel sel = new DefaultListSelectionModel();
-		table.setSelectionModel(sel);
-		sel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		sel.addListSelectionListener(new ListSelectionListener()
-		{
-			public void valueChanged(ListSelectionEvent ev)
-			{
-				removeButton.setEnabled(!(table.getSelectionModel().isSelectionEmpty()));
-			}
-		});
+        pack();
 
-		pack();
+        setVisible(true);
+    }
 
-		setVisible(true);
-	}
+    public void actionPerformed(ActionEvent ev) {
+        String command = ev.getActionCommand();
 
-	public void actionPerformed(ActionEvent ev)
-	{
-		String command = ev.getActionCommand();
+        if (command.equals("ADD")) {
+            Object[] row = new Object[2];
+            row[0] = "key";
+            row[1] = "value";
+            model.addRow(row);
 
-		if (command.equals("ADD"))
-		{
-			Object row[] = new Object[2];
-			row[0] = "key";
-			row[1] = "value";
-			model.addRow(row);
+            //item.add(row[0], row[1]);
+        } else if (command.equals("REMOVE")) {
+            int[] rows = table.getSelectedRows();
 
-			//item.add(row[0], row[1]);
-		}
-		else if (command.equals("REMOVE"))
-		{
-			int rows[] = table.getSelectedRows();
-			
-			//String key = (String) table.getValueAt(rows[0], 0);
-			//item.remove(key);
+            //String key = (String) table.getValueAt(rows[0], 0);
+            //item.remove(key);
+            model.removeRow(rows[0]);
+        }
+    }
 
-			model.removeRow(rows[0]);
-		}
-	}
+    public void tableChanged(TableModelEvent e) {
+        if (e.getType() == TableModelEvent.UPDATE) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            String columnName = model.getColumnName(column);
+            Object data = model.getValueAt(row, column);
 
-	public void tableChanged(TableModelEvent e)
-	{
-		if (e.getType() == TableModelEvent.UPDATE)
-		{
-			int row = e.getFirstRow();
-			int column = e.getColumn();
-			String columnName = model.getColumnName(column);
-			Object data = model.getValueAt(row, column);
-
-			System.out.println("data:" + data);
-		}
-	}
+            System.out.println("data:" + data);
+        }
+    }
 }

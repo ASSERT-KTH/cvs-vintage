@@ -41,115 +41,102 @@ import javax.swing.JTable;
  * @author
  * @version 1.0
  */
+public class HeaderTableDnd implements DragGestureListener, DragSourceListener,
+    DropTargetListener {
+    private JTable table;
+    private DragSource dragSource;
+    private HeaderTableSelectionModel slm;
 
-public class HeaderTableDnd
-	implements DragGestureListener, DragSourceListener, DropTargetListener {
-	private JTable table;
-	private DragSource dragSource;
-	private HeaderTableSelectionModel slm;
+    public HeaderTableDnd(JTable table) {
+        this.table = table;
 
-	public HeaderTableDnd(JTable table) {
-		this.table = table;
-		//slm = (HeaderTableSelectionModel) table.getSelectionModel();
+        //slm = (HeaderTableSelectionModel) table.getSelectionModel();
+        dragSource = DragSource.getDefaultDragSource();
 
-		dragSource = DragSource.getDefaultDragSource();
-		// creating the recognizer is all that?s necessary - it
-		// does not need to be manipulated after creation
+        // creating the recognizer is all that?s necessary - it
+        // does not need to be manipulated after creation
+        dragSource.createDefaultDragGestureRecognizer(table,
+            
+        // component where drag originates
+        DnDConstants.ACTION_COPY_OR_MOVE, // actions
+            this); // drag gesture listener
+    }
 
-		dragSource.createDefaultDragGestureRecognizer(table,
-		// component where drag originates
-		DnDConstants.ACTION_COPY_OR_MOVE, // actions
-		this); // drag gesture listener
-	}
+    public void dragGestureRecognized(DragGestureEvent e) {
+        InputEvent event = e.getTriggerEvent();
+        int mod = event.getModifiers();
 
-	public void dragGestureRecognized(DragGestureEvent e) {
-		InputEvent event = e.getTriggerEvent();
-		int mod = event.getModifiers();
-		//slm.setGestureStarted(true);		
+        //slm.setGestureStarted(true);		
+        if ((mod & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+            //System.out.println("middle button pressed");
+            if (table.getSelectedRowCount() > 0) {
+                //mainInterface.treeViewer.saveTreePath();
+                //messageNodes = getSelectedNodes();
+                if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+                    //setSelection( getUidList() );
+                    e.startDrag(DragSource.DefaultCopyDrop, // cursor
+                        new StringSelection("message"), // transferable
+                        this); // drag source listener
+                } else {
+                    e.startDrag(DragSource.DefaultMoveDrop, // cursor
+                        new StringSelection("message"), // transferable
+                        this); // drag source listener
+                }
 
-		if ((mod & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-			//System.out.println("middle button pressed");
+                //setSelection( oldMessageNodes );
+            }
+        }
+    }
 
-			if (table.getSelectedRowCount() > 0) {
-				//mainInterface.treeViewer.saveTreePath();
-				//messageNodes = getSelectedNodes();
-				if ((mod & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+    public void dragDropEnd(DragSourceDropEvent e) {
+    }
 
-					//setSelection( getUidList() );
-					e.startDrag(DragSource.DefaultCopyDrop, // cursor
-					new StringSelection("message"), // transferable
-					this); // drag source listener
+    public void dragEnter(DragSourceDragEvent e) {
+    }
 
-				} else {
+    public void dragExit(DragSourceEvent e) {
+    }
 
-					e.startDrag(DragSource.DefaultMoveDrop, // cursor
-					new StringSelection("message"), // transferable
-					this); // drag source listener
+    public void dragOver(DragSourceDragEvent e) {
+    }
 
-				}
+    public void dropActionChanged(DragSourceDragEvent e) {
+    }
 
-				//setSelection( oldMessageNodes );
+    /********************* DropTargetListener ***************************/
 
-			}
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dragEnter(DropTargetDragEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-		}
-	}
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
+     */
+    public void dragExit(DropTargetEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-	public void dragDropEnd(DragSourceDropEvent e) {
-	}
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dragOver(DropTargetDragEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-	public void dragEnter(DragSourceDragEvent e) {
-	}
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
+     */
+    public void drop(DropTargetDropEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 
-	public void dragExit(DragSourceEvent e) {
-	}
-	public void dragOver(DragSourceDragEvent e) {
-	}
-	public void dropActionChanged(DragSourceDragEvent e) {
-	}
-	
-	
-	/********************* DropTargetListener ***************************/
-	
-	
-	/* (non-Javadoc)
-	 * @see java.awt.dnd.DropTargetListener#dragEnter(java.awt.dnd.DropTargetDragEvent)
-	 */
-	public void dragEnter(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.dnd.DropTargetListener#dragExit(java.awt.dnd.DropTargetEvent)
-	 */
-	public void dragExit(DropTargetEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.dnd.DropTargetListener#dragOver(java.awt.dnd.DropTargetDragEvent)
-	 */
-	public void dragOver(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.dnd.DropTargetListener#drop(java.awt.dnd.DropTargetDropEvent)
-	 */
-	public void drop(DropTargetDropEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
-	 */
-	public void dropActionChanged(DropTargetDragEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
+    /* (non-Javadoc)
+     * @see java.awt.dnd.DropTargetListener#dropActionChanged(java.awt.dnd.DropTargetDragEvent)
+     */
+    public void dropActionChanged(DropTargetDragEvent arg0) {
+        // TODO Auto-generated method stub
+    }
 }

@@ -15,191 +15,184 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.folder.HeaderItem;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class ListParser
-{
+public class ListParser {
+    public ListParser() {
+    }
 
-	public ListParser()
-	{
-	}
+    public static List parseString(String list) {
+        List result = new Vector();
 
-	public static List parseString(String list)
-	{
-		List result = new Vector();
+        int pos = 0;
+        boolean bracket = false;
+        StringBuffer buf = new StringBuffer();
+        int listLength = list.length();
 
-		int pos = 0;
-		boolean bracket = false;
-		StringBuffer buf = new StringBuffer();
-		int listLength = list.length();
-		while (pos < listLength)
-		{
-			char ch = list.charAt(pos);
-			//System.out.println("ch=" + ch);
+        while (pos < listLength) {
+            char ch = list.charAt(pos);
 
-			if ((ch == ',') && (bracket == false))
-			{
-				// found new message
-				String address = buf.toString();
-				result.add(address);
-				//System.out.println("address:" + address);
+            //System.out.println("ch=" + ch);
+            if ((ch == ',') && (bracket == false)) {
+                // found new message
+                String address = buf.toString();
+                result.add(address);
 
-				buf = new StringBuffer();
-				pos++;
-			}
-			else if (ch == '"')
-			{
-				buf.append(ch);
+                //System.out.println("address:" + address);
+                buf = new StringBuffer();
+                pos++;
+            } else if (ch == '"') {
+                buf.append(ch);
 
-				pos++;
-				
-				if (bracket == false)
-					bracket = true;
-				else
-					bracket = false;
-			}
-			else
-			{
-				buf.append(ch);
+                pos++;
 
-				pos++;
-			}
-		}
+                if (bracket == false) {
+                    bracket = true;
+                } else {
+                    bracket = false;
+                }
+            } else {
+                buf.append(ch);
 
-		String address = buf.toString();
-		result.add(address);
-		//System.out.println("address:" + address);
+                pos++;
+            }
+        }
 
-		return result;
-	}
+        String address = buf.toString();
+        result.add(address);
 
-	public static List parseVector(List list)
-	{
-		List result = new Vector();
+        //System.out.println("address:" + address);
+        return result;
+    }
 
-//		int size = list.size();
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
-//		for (int i = 0; i < size; i++)
-//		{
-//			HeaderItem item = (HeaderItem) list.get(i);
-			if ( item == null ) continue;
-			
-			if (item.isContact())
-			{
-				String address = isValid(item);
-				
-				if ( address == null ) continue;
-				
-				result.add(address);
-				System.out.println("parsed item:"+ address );
-			}
-			else
-			{
-				// group item
+    public static List parseVector(List list) {
+        List result = new Vector();
 
-				Object uid = item.getUid();
-				Folder folder = item.getFolder();
+        //		int size = list.size();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            HeaderItem item = (HeaderItem) it.next();
 
-				GroupListCard card = (GroupListCard) folder.get(uid);
-				for (int j = 0; j < card.members(); j++)
-				{
-					Object memberID = card.getMember(j);
-					//System.out.println("memberID:" + memberID);
+            //		for (int i = 0; i < size; i++)
+            //		{
+            //			HeaderItem item = (HeaderItem) list.get(i);
+            if (item == null) {
+                continue;
+            }
 
-					ContactCard contactCard = (ContactCard) folder.get(memberID);
-					String address = contactCard.get("email", "internet");
-					//System.out.println("address:" + address);
+            if (item.isContact()) {
+                String address = isValid(item);
 
-					result.add(address.trim());
-					
-					System.out.println("parsed item:"+ address );
-				}
+                if (address == null) {
+                    continue;
+                }
 
-			}
+                result.add(address);
+                System.out.println("parsed item:" + address);
+            } else {
+                // group item
+                Object uid = item.getUid();
+                Folder folder = item.getFolder();
 
-			
+                GroupListCard card = (GroupListCard) folder.get(uid);
 
-		}
+                for (int j = 0; j < card.members(); j++) {
+                    Object memberID = card.getMember(j);
 
-		return result;
-	}
+                    //System.out.println("memberID:" + memberID);
+                    ContactCard contactCard = (ContactCard) folder.get(memberID);
+                    String address = contactCard.get("email", "internet");
 
-	public static String parse(List list)
-	{
+                    //System.out.println("address:" + address);
+                    result.add(address.trim());
 
-		StringBuffer output = new StringBuffer();
-//		int size = list.size();
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
-//		for (int i = 0; i < size; i++)
-//		{
-//			HeaderItem item = (HeaderItem) list.get(i);
-			if ( item == null ) continue;
-			
-			if (item.isContact())
-			{
-				String address = isValid(item);
-				
-				if ( address == null ) continue;
-				
-				output.append(address);
-				System.out.println("parsed item:"+ address );
-				output.append(",");
-			}
-			else
-			{
-				// group item
-				
+                    System.out.println("parsed item:" + address);
+                }
+            }
+        }
 
-				Object uid = item.getUid();
-				Folder folder = item.getFolder();
+        return result;
+    }
 
-				GroupListCard card = (GroupListCard) folder.get(uid);
-				for (int j = 0; j < card.members(); j++)
-				{
-					Object memberID = card.getMember(j);
-					//System.out.println("memberID:" + memberID);
+    public static String parse(List list) {
+        StringBuffer output = new StringBuffer();
 
-					ContactCard contactCard = (ContactCard) folder.get(memberID);
-					String address = contactCard.get("email", "internet");
-					//System.out.println("address:" + address);
+        //		int size = list.size();
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            HeaderItem item = (HeaderItem) it.next();
 
-					output.append(address);
-					System.out.println("parsed item:"+ address );
-					output.append(",");
-				}
-			}
-		}
+            //		for (int i = 0; i < size; i++)
+            //		{
+            //			HeaderItem item = (HeaderItem) list.get(i);
+            if (item == null) {
+                continue;
+            }
 
-		if ( output.length() > 0 )
-			output.deleteCharAt(output.length() - 1);
-		
-		return output.toString();
-	}
-	
-	protected static String isValid( HeaderItem headerItem )
-	{
-		String address = (String) headerItem.get("email;internet");
-		System.out.println("address to parse:"+address);
-		if ( AddressParser.isValid(address) ) return address.trim();
-		
-		address = (String) headerItem.get("displayname");
-		System.out.println("address to parse:"+address);
-		if ( AddressParser.isValid(address) ) return address.trim();
-		
-		return null;
-	}
+            if (item.isContact()) {
+                String address = isValid(item);
 
+                if (address == null) {
+                    continue;
+                }
+
+                output.append(address);
+                System.out.println("parsed item:" + address);
+                output.append(",");
+            } else {
+                // group item
+                Object uid = item.getUid();
+                Folder folder = item.getFolder();
+
+                GroupListCard card = (GroupListCard) folder.get(uid);
+
+                for (int j = 0; j < card.members(); j++) {
+                    Object memberID = card.getMember(j);
+
+                    //System.out.println("memberID:" + memberID);
+                    ContactCard contactCard = (ContactCard) folder.get(memberID);
+                    String address = contactCard.get("email", "internet");
+
+                    //System.out.println("address:" + address);
+                    output.append(address);
+                    System.out.println("parsed item:" + address);
+                    output.append(",");
+                }
+            }
+        }
+
+        if (output.length() > 0) {
+            output.deleteCharAt(output.length() - 1);
+        }
+
+        return output.toString();
+    }
+
+    protected static String isValid(HeaderItem headerItem) {
+        String address = (String) headerItem.get("email;internet");
+        System.out.println("address to parse:" + address);
+
+        if (AddressParser.isValid(address)) {
+            return address.trim();
+        }
+
+        address = (String) headerItem.get("displayname");
+        System.out.println("address to parse:" + address);
+
+        if (AddressParser.isValid(address)) {
+            return address.trim();
+        }
+
+        return null;
+    }
 }

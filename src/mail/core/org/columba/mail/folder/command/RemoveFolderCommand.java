@@ -18,54 +18,52 @@ package org.columba.mail.folder.command;
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.main.MailInterface;
 
+
 /**
  * Delete this folder.
- * 
+ *
  * @author fdietz
  */
 public class RemoveFolderCommand extends Command {
+    private FolderTreeNode parentFolder;
+    private boolean success;
 
-	private FolderTreeNode parentFolder;
-	private boolean success;
+    /**
+     * Constructor for RemoveFolder.
+     * @param frameMediator
+     * @param references
+     */
+    public RemoveFolderCommand(DefaultCommandReference[] references) {
+        super(references);
 
-	/**
-	 * Constructor for RemoveFolder.
-	 * @param frameMediator
-	 * @param references
-	 */
-	public RemoveFolderCommand(DefaultCommandReference[] references) {
-		super(references);
+        success = false;
+    }
 
-		success = false;
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        // update treemodel
+        MailInterface.treeModel.nodeStructureChanged(parentFolder);
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		// update treemodel
-		MailInterface.treeModel.nodeStructureChanged(parentFolder);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        // get source folder
+        Folder childFolder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		// get source folder
-		Folder childFolder =
-			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        // get parent of source folder
+        parentFolder = (FolderTreeNode) childFolder.getParent();
 
-		// get parent of source folder
-		parentFolder = (FolderTreeNode) childFolder.getParent();
-
-		// remove source folder
-		childFolder.removeFolder();
-
-	}
-
+        // remove source folder
+        childFolder.removeFolder();
+    }
 }

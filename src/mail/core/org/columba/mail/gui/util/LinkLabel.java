@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.util;
 
 import java.awt.Color;
@@ -26,6 +25,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 
+
 /**
  * Title:
  * Description:
@@ -34,65 +34,59 @@ import javax.swing.JLabel;
  * @author
  * @version 1.0
  */
-
-public class LinkLabel extends JLabel implements MouseListener
-{
+public class LinkLabel extends JLabel implements MouseListener {
     boolean entered = false;
     boolean mousehover;
-
     ActionListener actionListener = null;
 
-    public LinkLabel( String s )
-    {
-        super( s );
+    public LinkLabel(String s) {
+        super(s);
 
-        addMouseListener( this );
+        addMouseListener(this);
+
         //setFont( UIManager.getFont("TextField.font") );
-        setForeground( Color.blue );
+        setForeground(Color.blue);
 
         mousehover = false;
     }
 
-
-    public void mouseClicked( MouseEvent e )
-    {
-
+    public void mouseClicked(MouseEvent e) {
     }
 
-    public void mouseEntered( MouseEvent e )
-    {
-        setCursor( new Cursor( Cursor.HAND_CURSOR ) );
+    public void mouseEntered(MouseEvent e) {
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
         entered = true;
 
-        if ( mousehover )
-           repaint();
+        if (mousehover) {
+            repaint();
+        }
     }
 
-    public void mouseExited( MouseEvent e )
-    {
-        setCursor( new Cursor( Cursor.DEFAULT_CURSOR ) );
+    public void mouseExited(MouseEvent e) {
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         entered = false;
 
-        if ( mousehover )
-           repaint();
+        if (mousehover) {
+            repaint();
+        }
     }
 
-    public void mousePressed( MouseEvent e ) {}
-    public void mouseReleased( MouseEvent e ) {}
+    public void mousePressed(MouseEvent e) {
+    }
 
-    public void paint( Graphics g )
-    {
-        super.paint( g );
+    public void mouseReleased(MouseEvent e) {
+    }
 
-        if ( entered || !mousehover )
-        {
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        if (entered || !mousehover) {
             Rectangle r = g.getClipBounds();
 
             g.drawLine(0,
-                     r.height - this.getFontMetrics(this.getFont()).getDescent(),
-                     this.getFontMetrics(this.getFont()).stringWidth(this.getText()),
-                     r.height - this.getFontMetrics(this.getFont()).getDescent());
+                r.height - this.getFontMetrics(this.getFont()).getDescent(),
+                this.getFontMetrics(this.getFont()).stringWidth(this.getText()),
+                r.height - this.getFontMetrics(this.getFont()).getDescent());
         }
-
     }
 }

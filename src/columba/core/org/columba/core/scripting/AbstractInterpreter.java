@@ -17,6 +17,7 @@ package org.columba.core.scripting;
 
 import org.columba.core.plugin.PluginInterface;
 
+
 /**
  * @author freddy
  *
@@ -26,11 +27,6 @@ import org.columba.core.plugin.PluginInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public abstract class AbstractInterpreter implements PluginInterface {
-
-	abstract public Object instanciate(
-		String fileName,
-		String className,
-		Object[] args,
-		Object parent);
-
+    abstract public Object instanciate(String fileName, String className,
+        Object[] args, Object parent);
 }

@@ -13,77 +13,81 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
+
+import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.logging.ColumbaLogger;
+
+import org.columba.mail.config.PGPItem;
+import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.config.PGPItem;
-import org.columba.mail.gui.composer.ComposerController;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SignMessageAction extends CheckBoxAction {
-    
     private ComposerController composerController;
 
-	public SignMessageAction(ComposerController composerController) {
-		super(composerController, MailResourceLoader.getString(
-			"menu", "composer", "menu_message_sign"));
-                this.composerController = composerController;
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_message_sign").replaceAll("&", ""));
-					
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
-			 
-		//setEnabled(false);
-	}
+    public SignMessageAction(ComposerController composerController) {
+        super(composerController,
+            MailResourceLoader.getString("menu", "composer", "menu_message_sign"));
+        this.composerController = composerController;
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		ColumbaLogger.log.debug("start signing...");
-		
-		//ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
-		this.composerController.getModel().setSignMessage( getCheckBoxMenuItem().isSelected() );
-	}
-    
-    /** 
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer", "menu_message_sign")
+                              .replaceAll("&", ""));
+
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("16_sign.png"));
+
+        //setEnabled(false);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        ColumbaLogger.log.debug("start signing...");
+
+        //ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
+        this.composerController.getModel().setSignMessage(getCheckBoxMenuItem()
+                                                              .isSelected());
+    }
+
+    /**
      * Overwritten to initialize the selection state of the
      * CheckBoxMenuItem.
-     * 
+     *
      * @see org.columba.core.action.CheckBoxAction#setCheckBoxMenuItem(javax.swing.JCheckBoxMenuItem)
      */
     public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem) {
         /** idea from kpeder ... i don't know why we must use this deprecated method */
         super.setCheckBoxMenuItem(checkBoxMenuItem);
         ColumbaLogger.log.debug(
-                "Initializing selected state of AlwaysSignAction");
-        
-        PGPItem item = this.composerController.getModel().getAccountItem().getPGPItem();
+            "Initializing selected state of AlwaysSignAction");
+
+        PGPItem item = this.composerController.getModel().getAccountItem()
+                                              .getPGPItem();
+
         if (item.get("always_sign").equals("true")) {
             getCheckBoxMenuItem().setSelected(true);
         } else {
             getCheckBoxMenuItem().setSelected(false);
         }
+
         // let the model knowing if signing is preferred or not
         //ComposerModel model = (ComposerModel) ((ComposerController)getFrameController()).getModel();
-        this.composerController.getModel().setSignMessage( getCheckBoxMenuItem().isSelected() );
+        this.composerController.getModel().setSignMessage(getCheckBoxMenuItem()
+                                                              .isSelected());
     }
 }

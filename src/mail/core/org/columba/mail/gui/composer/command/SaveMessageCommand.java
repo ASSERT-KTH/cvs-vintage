@@ -17,11 +17,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.command;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.composer.MessageComposer;
@@ -33,89 +31,85 @@ import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
+
 import org.columba.ristretto.imap.protocol.StreamUtils;
 import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.io.FileSource;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
+
 /**
  * @author freddy
- * 
+ *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class SaveMessageCommand extends FolderCommand {
+    protected Folder folder;
+    protected HeaderInterface[] headerList = new HeaderInterface[1];
 
-	protected Folder folder;
-	protected HeaderInterface[] headerList = new HeaderInterface[1];
+    /**
+     * Constructor for SaveMessageCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public SaveMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for SaveMessageCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public SaveMessageCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    public void updateGUI() throws Exception {
+        // update the table
+        TableModelChangedEvent ev = new TableModelChangedEvent(TableModelChangedEvent.UPDATE,
+                folder);
 
-	public void updateGUI() throws Exception {
+        TableUpdater.tableChanged(ev);
 
-		// update the table
-		TableModelChangedEvent ev =
-			new TableModelChangedEvent(TableModelChangedEvent.UPDATE, folder);
+        MailInterface.treeModel.nodeChanged(folder);
+    }
 
-		TableUpdater.tableChanged(ev);
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        ComposerCommandReference[] r = (ComposerCommandReference[]) getReferences();
 
-		MailInterface.treeModel.nodeChanged(folder);
-	}
+        ComposerController composerController = r[0].getComposerController();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
+        AccountItem item = ((ComposerModel) composerController.getModel()).getAccountItem();
 
-		ComposerCommandReference[] r =
-			(ComposerCommandReference[]) getReferences();
+        SendableMessage message = (SendableMessage) r[0].getMessage();
 
-		ComposerController composerController = r[0].getComposerController();
+        if (message == null) {
+            message = new MessageComposer(((ComposerModel) composerController.getModel())).compose(worker);
+        }
 
-		AccountItem item =
-			((ComposerModel) composerController.getModel()).getAccountItem();
+        folder = (Folder) r[0].getFolder();
 
-		SendableMessage message = (SendableMessage) r[0].getMessage();
-		if (message == null) {
-			message =
-				new MessageComposer(
-					((ComposerModel) composerController.getModel())).compose(
-					worker);
-		}
+        if (folder.getUid() == 103) {
+            // Outbox folder hack!
+            // -> this is necessary because SendableMessage contains
+            // -> additional information (like recipients list) which
+            // -> would get lost otherwise
+            File tempFile = File.createTempFile("columba-outbox", "tmp");
 
-		folder = (Folder) r[0].getFolder();
+            //	make sure file is deleted automatically when closing VM
+            tempFile.deleteOnExit();
 
-		if (folder.getUid() == 103) {
-			// Outbox folder hack!
-			// -> this is necessary because SendableMessage contains
-			// -> additional information (like recipients list) which
-			// -> would get lost otherwise
-			File tempFile = File.createTempFile("columba-outbox", "tmp");
-			//	make sure file is deleted automatically when closing VM
-			tempFile.deleteOnExit();
-			FileOutputStream out = new FileOutputStream(tempFile);
-			StreamUtils.streamCopy(message.getSourceStream(), out);
-			out.close();
+            FileOutputStream out = new FileOutputStream(tempFile);
+            StreamUtils.streamCopy(message.getSourceStream(), out);
+            out.close();
 
-			message.setSource(new FileSource(tempFile));
+            message.setSource(new FileSource(tempFile));
 
-			Object uid = folder.addMessage(message);
-
-		} else {
-			// we can't use this addMessage(message) here
-			// -> IMAP only supports adding sources
-
-			Object uid = folder.addMessage(message.getSourceStream());
-		}
-
-	}
-
+            Object uid = folder.addMessage(message);
+        } else {
+            // we can't use this addMessage(message) here
+            // -> IMAP only supports adding sources
+            Object uid = folder.addMessage(message.getSourceStream());
+        }
+    }
 }

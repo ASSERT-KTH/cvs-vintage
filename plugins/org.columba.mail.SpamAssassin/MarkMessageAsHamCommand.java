@@ -1,9 +1,8 @@
-import java.io.InputStream;
-
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -12,130 +11,119 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
+import java.io.InputStream;
+
+
 /**
  * @author fdietz
- * 
- * 
- *  
+ *
+ *
+ *
  */
 public class MarkMessageAsHamCommand extends FolderCommand {
+    Folder srcFolder;
+    protected FolderCommandAdapter adapter;
 
-	Folder srcFolder;
+    /**
+     * @param references
+     */
+    public MarkMessageAsHamCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	protected FolderCommandAdapter adapter;
-	/**
-	 * @param references
-	 */
-	public MarkMessageAsHamCommand(DefaultCommandReference[] references) {
-		super(references);
+    /**
+     * @param frame
+     * @param references
+     */
+    public MarkMessageAsHamCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
+    }
 
-	}
-	/**
-	 * @param frame
-	 * @param references
-	 */
-	public MarkMessageAsHamCommand(
-		FrameMediator frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
+    public void updateGUI() throws Exception {
+        // get source references
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-	}
+        // for every source references
+        TableModelChangedEvent ev;
 
-	public void updateGUI() throws Exception {
+        for (int i = 0; i < r.length; i++) {
+            // update table
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    r[i].getFolder(), r[i].getUids(), r[i].getMarkVariant());
 
-		// get source references
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+            TableUpdater.tableChanged(ev);
 
-		// for every source references
-		TableModelChangedEvent ev;
-		for (int i = 0; i < r.length; i++) {
+            // update treemodel
+            MailInterface.treeModel.nodeChanged(r[i].getFolder());
+        }
 
-			// update table
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					r[i].getFolder(),
-					r[i].getUids(),
-					r[i].getMarkVariant());
+        // get update reference
+        // -> only available if VirtualFolder is involved in operation
+        FolderCommandReference u = adapter.getUpdateReferences();
 
-			TableUpdater.tableChanged(ev);
+        if (u != null) {
+            ev = new TableModelChangedEvent(TableModelChangedEvent.MARK,
+                    u.getFolder(), u.getUids(), u.getMarkVariant());
 
-			// update treemodel
-			MailInterface.treeModel.nodeChanged(r[i].getFolder());
-		}
+            TableUpdater.tableChanged(ev);
+            MailInterface.treeModel.nodeChanged(u.getFolder());
+        }
+    }
 
-		// get update reference
-		// -> only available if VirtualFolder is involved in operation
-		FolderCommandReference u = adapter.getUpdateReferences();
-		if (u != null) {
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        adapter = new FolderCommandAdapter(r);
 
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.MARK,
-					u.getFolder(),
-					u.getUids(),
-					u.getMarkVariant());
+        // this could also happen while using a virtual folder
+        // -> loop through all available source references
+        for (int j = 0; j < adapter.getSourceFolderReferences().length; j++) {
+            srcFolder = (Folder) adapter.getSourceFolderReferences()[j].getFolder();
 
-			TableUpdater.tableChanged(ev);
-			MailInterface.treeModel.nodeChanged(u.getFolder());
-		}
-	}
+            Object[] uids = adapter.getSourceFolderReferences()[j].getUids();
+            worker.setDisplayText("Applying analyzer to " +
+                srcFolder.getName() + "...");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.columba.core.command.Command#execute(org.columba.core.command.Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		adapter = new FolderCommandAdapter(r);
+            worker.setProgressBarMaximum(uids.length);
 
-		// this could also happen while using a virtual folder
-		// -> loop through all available source references
-		for (int j = 0; j < adapter.getSourceFolderReferences().length; j++) {
-			srcFolder =
-				(Folder) adapter.getSourceFolderReferences()[j].getFolder();
-			Object[] uids = adapter.getSourceFolderReferences()[j].getUids();
-			worker.setDisplayText(
-				"Applying analyzer to " + srcFolder.getName() + "...");
+            for (int i = 0; i < uids.length; i++) {
+                markMessage(srcFolder, uids[i], worker);
+                worker.setProgressBarValue(i);
+            }
+        }
+    }
 
-			worker.setProgressBarMaximum(uids.length);
-			for (int i = 0; i < uids.length; i++) {
-				markMessage(srcFolder, uids[i], worker);
-				worker.setProgressBarValue(i);
-			}
-		}
+    public static void markMessage(Folder srcFolder, Object uid, Worker worker)
+        throws Exception {
+        InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
 
-	}
+        IPCHelper ipcHelper = new IPCHelper();
 
-	public static void markMessage(Folder srcFolder, Object uid, Worker worker)
-		throws Exception {
+        ColumbaLogger.log.debug("creating process..");
+        ipcHelper.executeCommand(ExternalToolsHelper.getSALearn() +
+            " --no-rebuild --ham --single");
 
-		InputStream rawMessageSource = srcFolder.getMessageSourceStream(uid);
+        ColumbaLogger.log.debug("sending to stdin..");
 
-		IPCHelper ipcHelper = new IPCHelper();
+        ipcHelper.send(rawMessageSource);
 
-		ColumbaLogger.log.debug("creating process..");
-		ipcHelper.executeCommand(
-			ExternalToolsHelper.getSALearn() + " --no-rebuild --ham --single");
+        int exitVal = ipcHelper.waitFor();
 
-		ColumbaLogger.log.debug("sending to stdin..");
+        ColumbaLogger.log.debug("exitcode=" + exitVal);
 
-		ipcHelper.send(rawMessageSource);
+        ColumbaLogger.log.debug("retrieving output..");
 
-		int exitVal = ipcHelper.waitFor();
+        String result = ipcHelper.getOutputString();
 
-		ColumbaLogger.log.debug("exitcode=" + exitVal);
+        ColumbaLogger.log.debug("output=" + result);
 
-		ColumbaLogger.log.debug("retrieving output..");
-		String result = ipcHelper.getOutputString();
+        ipcHelper.waitForThreads();
 
-		ColumbaLogger.log.debug("output=" + result);
-
-		ipcHelper.waitForThreads();
-
-		srcFolder.setAttribute(uid, "columba.spam", Boolean.FALSE);
-
-	}
-
+        srcFolder.setAttribute(uid, "columba.spam", Boolean.FALSE);
+    }
 }

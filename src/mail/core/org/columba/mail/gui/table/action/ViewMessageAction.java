@@ -13,50 +13,50 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 
+import java.awt.event.ActionEvent;
+
+
 public class ViewMessageAction extends FrameAction {
+    protected Object oldUid;
 
-	protected Object oldUid;
-	
+    /**
+     * @param controller
+     */
+    public ViewMessageAction(FrameMediator controller) {
+        super(controller, "ViewMessageAction");
+    }
 
-	/**
-	 * @param controller
-	 */
-	public ViewMessageAction(FrameMediator controller) {
-		super(controller, "ViewMessageAction");
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] references = (FolderCommandReference[]) getFrameMediator()
+                                                                             .getSelectionManager()
+                                                                             .getSelection("mail.table");
+        Object[] uids = references[0].getUids();
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameMediator().getSelectionManager().getSelection("mail.table");
-		Object[] uids = references[0].getUids(); 
-		
-		if( uids.length == 1) {
-		
-			if (oldUid == uids[0]) {
-				ColumbaLogger.log.debug(
-					"this message was already selected, don't fire any event");
-				return;
-			}
+        if (uids.length == 1) {
+            if (oldUid == uids[0]) {
+                ColumbaLogger.log.debug(
+                    "this message was already selected, don't fire any event");
 
-			oldUid = uids[0];
+                return;
+            }
 
-		MainInterface.processor.addOp(
-			new ViewMessageCommand(
-				getFrameMediator(), references));
-		}
-	}
+            oldUid = uids[0];
+
+            MainInterface.processor.addOp(new ViewMessageCommand(
+                    getFrameMediator(), references));
+        }
+    }
 }

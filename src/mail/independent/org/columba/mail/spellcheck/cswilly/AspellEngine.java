@@ -19,7 +19,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package org.columba.mail.spellcheck.cswilly;
 
 import java.io.BufferedReader;
@@ -27,41 +26,35 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Models a spelling checker
  *<p>
  *
  */
-public
-        class AspellEngine
-        implements Engine
-{
+public class AspellEngine implements Engine {
     BufferedReader _aSpellReader;
     BufferedWriter _aSpellWriter;
     String _aSpellWelcomeMsg;
     Process _aSpellProcess;
 
-    public AspellEngine(String aSpellCommandLine)
-            throws SpellException
-    {
-        try
-        {
+    public AspellEngine(String aSpellCommandLine) throws SpellException {
+        try {
             Runtime runtime = Runtime.getRuntime();
             _aSpellProcess = runtime.exec(aSpellCommandLine);
 
-            _aSpellReader =
-                    new BufferedReader(new InputStreamReader(_aSpellProcess.getInputStream()));
+            _aSpellReader = new BufferedReader(new InputStreamReader(
+                        _aSpellProcess.getInputStream()));
 
-            _aSpellWriter =
-                    new BufferedWriter(new OutputStreamWriter(_aSpellProcess.getOutputStream()));
+            _aSpellWriter = new BufferedWriter(new OutputStreamWriter(
+                        _aSpellProcess.getOutputStream()));
 
             _aSpellWelcomeMsg = _aSpellReader.readLine();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             String msg = "Cannot create aspell process.";
             throw new SpellException(msg, e);
         }
@@ -77,11 +70,8 @@ public
      * @param words {@link String} with list of works to be spell checked.
      * @return List of {@link Result}
      */
-    public List checkLine(String line)
-            throws SpellException
-    {
-        try
-        {
+    public List checkLine(String line) throws SpellException {
+        try {
             List results = new ArrayList();
 
             final String spellCheckLinePrefix = "^";
@@ -90,9 +80,8 @@ public
             _aSpellWriter.flush();
 
             String response = _aSpellReader.readLine();
-            while (response != null &&
-                    !response.equals(""))
-            {
+
+            while ((response != null) && !response.equals("")) {
                 Result result = new Result(response);
                 results.add(result);
 
@@ -100,23 +89,17 @@ public
             }
 
             return results;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             String msg = "Cannot access aspell process.";
             throw new SpellException(msg, e);
         }
     }
 
-    public
-            String getVersion()
-    {
+    public String getVersion() {
         return _aSpellWelcomeMsg;
     }
 
-    public
-            void stop()
-    {
+    public void stop() {
         _aSpellProcess.destroy();
     }
 }

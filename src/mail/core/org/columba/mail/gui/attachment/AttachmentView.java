@@ -13,18 +13,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment;
 
+import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
+import org.columba.mail.gui.attachment.util.IconPanel;
+
+import org.columba.ristretto.message.MimeTree;
+import org.columba.ristretto.message.StreamableMimePart;
+
 import java.awt.Dimension;
+
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import org.columba.mail.gui.attachment.util.AttachmentImageIconLoader;
-import org.columba.mail.gui.attachment.util.IconPanel;
-import org.columba.ristretto.message.MimeTree;
-import org.columba.ristretto.message.StreamableMimePart;
 
 /**
  * @author freddy
@@ -35,62 +37,59 @@ import org.columba.ristretto.message.StreamableMimePart;
  * Window>Preferences>Java>Code Generation.
  */
 public class AttachmentView extends IconPanel {
+    private AttachmentModel model;
 
-	private AttachmentModel model;
+    public AttachmentView(AttachmentModel model) {
+        super();
+        this.model = model;
+    }
 
-	public AttachmentView(AttachmentModel model) {
-		super();
-		this.model = model;
-	}
+    public AttachmentModel getModel() {
+        return model;
+    }
 
-	public AttachmentModel getModel() {
-		return model;
-	}
+    public StreamableMimePart getSelectedMimePart() {
+        return (StreamableMimePart) model.getDisplayedMimeParts().get(getSelected());
+    }
 
-	public StreamableMimePart getSelectedMimePart() {
-		return (StreamableMimePart) model.getDisplayedMimeParts().get(getSelected());
-	}
+    public boolean setMimePartTree(MimeTree collection) {
+        String contentType;
+        String contentSubtype;
+        String text = new String();
+        boolean output = false;
 
-	public boolean setMimePartTree(MimeTree collection) {
-		String contentType;
-		String contentSubtype;
-		String text = new String();
-		boolean output = false;
+        removeAll();
 
-		removeAll();
+        model.setCollection(collection);
 
-		model.setCollection(collection);
+        List displayedMimeParts = model.getDisplayedMimeParts();
 
-		List displayedMimeParts = model.getDisplayedMimeParts();
+        // Display resulting MimeParts
+        for (int i = 0; i < displayedMimeParts.size(); i++) {
+            StreamableMimePart mp = (StreamableMimePart) displayedMimeParts.get(i);
 
-		// Display resulting MimeParts
+            contentType = mp.getHeader().getMimeType().getType();
+            contentSubtype = mp.getHeader().getMimeType().getSubtype();
 
-		for (int i = 0; i < displayedMimeParts.size(); i++) {
-			StreamableMimePart mp = (StreamableMimePart) displayedMimeParts.get(i);
+            if (mp.getHeader().getFileName() != null) {
+                text = mp.getHeader().getFileName();
+            } else {
+                text = contentType + "/" + contentSubtype;
+            }
 
-			contentType = mp.getHeader().getMimeType().getType();
-			contentSubtype = mp.getHeader().getMimeType().getSubtype();
+            ImageIcon icon = null;
 
-			if (mp.getHeader().getFileName() != null) {
-				text =
-					mp.getHeader().getFileName();
-			} else {
-				text = contentType + "/" + contentSubtype;
-			}
+            icon = AttachmentImageIconLoader.getImageIcon(mp.getHeader()
+                                                            .getMimeType()
+                                                            .getType(),
+                    mp.getHeader().getMimeType().getSubtype());
 
-			ImageIcon icon = null;
+            add(icon, text);
+            output = true;
+        }
 
-			icon =
-				AttachmentImageIconLoader.getImageIcon(
-					mp.getHeader().getMimeType().getType(),
-					mp.getHeader().getMimeType().getSubtype());
+        Dimension d = getSize();
 
-			add(icon, text);
-			output = true;
-		}
-
-		Dimension d = getSize();
-		
-		return output;
-	}
+        return output;
+    }
 }

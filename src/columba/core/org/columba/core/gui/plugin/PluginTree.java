@@ -6,6 +6,11 @@
  */
 package org.columba.core.gui.plugin;
 
+import org.columba.core.gui.util.treetable.Tree;
+import org.columba.core.gui.util.treetable.TreeTable;
+import org.columba.core.main.MainInterface;
+import org.columba.core.xml.XmlElement;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -15,157 +20,145 @@ import javax.swing.JCheckBox;
 import javax.swing.table.TableColumn;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.core.gui.util.treetable.Tree;
-import org.columba.core.gui.util.treetable.TreeTable;
-import org.columba.core.main.MainInterface;
-import org.columba.core.xml.XmlElement;
 
 /**
  * TreeTable component responsible for displaying plugins in a categorized
  * way.
- * 
+ *
  * Additionally shows plugin version information, the plugin description as
- * tooltip. 
- * 
+ * tooltip.
+ *
  * The third column is a checkbox to enable/disable the plugin.
  *
  * @author fdietz
  */
 public class PluginTree extends TreeTable {
+    final static String[] columns = { "Description", "Version", "Enabled" };
+    final static String[] CATEGORIES = {
+        "Look and Feel", "Filter", "Filter Action", "Spam", "Mail Import",
+        "Addressbook Import", "Interpreter Language", "Examples",
+        "Uncategorized"
+    };
+    protected Map map;
+    protected PluginTreeTableModel model;
+    private JCheckBox enabledCheckBox;
 
-	final static String[] columns = { "Description", "Version", "Enabled" };
+    /**
+     *
+     */
+    public PluginTree() {
+        super();
 
-	final static String[] CATEGORIES =
-		{
-			"Look and Feel",
-			"Filter",
-			"Filter Action",
-			"Spam",
-			"Mail Import",
-			"Addressbook Import",
-			"Interpreter Language",
-			"Examples",
-			"Uncategorized" };
+        map = new HashMap();
 
-	protected Map map;
-	protected PluginTreeTableModel model;
-	
-	private JCheckBox enabledCheckBox;
+        model = new PluginTreeTableModel(columns);
+        model.setTree((Tree) getTree());
+        ((DefaultTreeModel) model.getTree().getModel()).setAsksAllowsChildren(true);
 
-	/**
-	 * 
-	 */
-	public PluginTree() {
-		super();
+        initTree();
 
-		map = new HashMap();
+        setModel(model);
 
-		model = new PluginTreeTableModel(columns);
-		model.setTree((Tree) getTree());
-		((DefaultTreeModel) model.getTree().getModel()).setAsksAllowsChildren(
-			true);
+        getTree().setCellRenderer(new DescriptionTreeRenderer());
 
-		initTree();
+        // make "version" column fixed size
+        TableColumn tc = getColumn(columns[1]);
+        tc.setCellRenderer(new VersionRenderer());
+        tc.setMaxWidth(80);
+        tc.setMinWidth(80);
 
-		setModel(model);
+        // make "enabled" column fixed size
+        tc = getColumn(columns[2]);
+        tc.setCellRenderer(new EnabledRenderer());
+        tc.setCellEditor(new EnabledEditor());
 
-		getTree().setCellRenderer(new DescriptionTreeRenderer());
+        tc.setMaxWidth(80);
+        tc.setMinWidth(80);
+    }
 
-		// make "version" column fixed size
-		TableColumn tc = getColumn(columns[1]);
-		tc.setCellRenderer(new VersionRenderer());
-		tc.setMaxWidth(80);
-		tc.setMinWidth(80);
+    public void addPlugin(XmlElement pluginElement) {
+        //		plugin wasn't correctly loaded
+        if (pluginElement == null) {
+            return;
+        }
 
-		
-		// make "enabled" column fixed size
-		tc = getColumn(columns[2]);
-		tc.setCellRenderer(new EnabledRenderer());
-		tc.setCellEditor(new EnabledEditor());		
-		
-		tc.setMaxWidth(80);
-		tc.setMinWidth(80);
-		
-	}
+        String category = pluginElement.getAttribute("category");
 
-	public void addPlugin(XmlElement pluginElement) {
-		//		plugin wasn't correctly loaded
-		if (pluginElement == null)
-			return;
+        if (category == null) {
+            // this plugin doesn't define a category to which it belongs
+            category = "Uncategorized";
+        }
 
-		String category = pluginElement.getAttribute("category");
-		if (category == null) {
-			// this plugin doesn't define a category to which it belongs
-			category = "Uncategorized";
-		}
+        PluginNode childNode = new PluginNode();
+        childNode.setCategory(false);
+        childNode.setId(pluginElement.getAttribute("id"));
+        childNode.setTooltip(pluginElement.getAttribute("description"));
+        childNode.setVersion(pluginElement.getAttribute("version"));
 
-		PluginNode childNode = new PluginNode();
-		childNode.setCategory(false);
-		childNode.setId(pluginElement.getAttribute("id"));
-		childNode.setTooltip(pluginElement.getAttribute("description"));
-		childNode.setVersion(pluginElement.getAttribute("version"));
-		String enabled = pluginElement.getAttribute("enabled");
-		if (enabled == null)
-			enabled = "true";
-		childNode.setEnabled(Boolean.valueOf(enabled).booleanValue());
+        String enabled = pluginElement.getAttribute("enabled");
 
-		System.out.println("adding plugin to table: "+enabled);
-		
-		PluginNode node = (PluginNode) map.get(category);
-		if (node == null) {
-			// unknown category found 
-			// -> just add this plugin to "Uncategorized"
-			category = "Uncategorized";
-			node = (PluginNode) map.get(category);
-		}
+        if (enabled == null) {
+            enabled = "true";
+        }
 
-		node.add(childNode);
-		
-		// notify table
-		model.fireTableDataChanged();
-	}
+        childNode.setEnabled(Boolean.valueOf(enabled).booleanValue());
 
-	public void initTree() {
-		PluginNode root = new PluginNode();
-		root.setId("root");
+        System.out.println("adding plugin to table: " + enabled);
 
-		initCategories(root);
+        PluginNode node = (PluginNode) map.get(category);
 
-		List list = MainInterface.pluginManager.getIds();
-		ListIterator it = list.listIterator();
-		while (it.hasNext()) {
-			// plugin id
-			String id = (String) it.next();
+        if (node == null) {
+            // unknown category found 
+            // -> just add this plugin to "Uncategorized"
+            category = "Uncategorized";
+            node = (PluginNode) map.get(category);
+        }
 
-			XmlElement pluginElement =
-				MainInterface.pluginManager.getPluginElement(id);
-	
-			addPlugin(pluginElement);		
-		}
+        node.add(childNode);
 
-		model.set(root);
+        // notify table
+        model.fireTableDataChanged();
+    }
 
-	}
+    public void initTree() {
+        PluginNode root = new PluginNode();
+        root.setId("root");
 
-	protected void initCategories(PluginNode root) {
-		for (int i = 0; i < CATEGORIES.length; i++) {
-			String c = CATEGORIES[i];
-			PluginNode node = new PluginNode();
-			node.setAllowsChildren(true);
-			node.setId(c);
-			node.setEnabled(true);
-			node.setCategory(true);
-			root.add(node);
-			map.put(c, node);
-		}
-	}
+        initCategories(root);
 
-	public void removePluginNode(PluginNode node) {
-		// notify tree
-		node.removeFromParent();
+        List list = MainInterface.pluginManager.getIds();
+        ListIterator it = list.listIterator();
 
-		// notify table
-		model.fireTableDataChanged();
-	}
+        while (it.hasNext()) {
+            // plugin id
+            String id = (String) it.next();
 
+            XmlElement pluginElement = MainInterface.pluginManager.getPluginElement(id);
+
+            addPlugin(pluginElement);
+        }
+
+        model.set(root);
+    }
+
+    protected void initCategories(PluginNode root) {
+        for (int i = 0; i < CATEGORIES.length; i++) {
+            String c = CATEGORIES[i];
+            PluginNode node = new PluginNode();
+            node.setAllowsChildren(true);
+            node.setId(c);
+            node.setEnabled(true);
+            node.setCategory(true);
+            root.add(node);
+            map.put(c, node);
+        }
+    }
+
+    public void removePluginNode(PluginNode node) {
+        // notify tree
+        node.removeFromParent();
+
+        // notify table
+        model.fireTableDataChanged();
+    }
 }

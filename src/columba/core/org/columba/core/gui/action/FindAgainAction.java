@@ -13,31 +13,29 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class FindAgainAction extends FrameAction {
+import java.awt.event.ActionEvent;
 
-	public FindAgainAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_edit_findagain"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "menu_edit_findagain_tooltip").replaceAll("&", ""));
-		
-		setEnabled(false);
-	}
-        
-        public void actionPerformed(ActionEvent e) {
-                //TODO: implement
-        }
+
+public class FindAgainAction extends FrameAction {
+    public FindAgainAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_edit_findagain"));
+
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null,
+                "menu_edit_findagain_tooltip").replaceAll("&", ""));
+
+        setEnabled(false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        //TODO: implement
+    }
 }

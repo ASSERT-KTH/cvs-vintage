@@ -13,8 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.util;
+
+import org.columba.core.gui.util.CInfoPanel;
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.IdentityItem;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -24,69 +29,67 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import org.columba.core.gui.util.CInfoPanel;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.IdentityItem;
 
 public class IdentityInfoPanel extends CInfoPanel {
-	private JLabel label;
+    private JLabel label;
+    private ImageIcon image1;
+    private ImageIcon image2;
 
-	private ImageIcon image1;
-	private ImageIcon image2;
+    public IdentityInfoPanel() {
+        super();
+    }
 
-	public IdentityInfoPanel() {
-		super();
-	}
+    public void initComponents() {
+        super.initComponents();
 
-	public void initComponents() {
-		super.initComponents();
+        image1 = ImageLoader.getSmallImageIcon("localhost.png");
+        image2 = ImageLoader.getSmallImageIcon("remotehost.png");
 
-		image1 = ImageLoader.getSmallImageIcon("localhost.png");
-		image2 = ImageLoader.getSmallImageIcon("remotehost.png");
+        gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
+        gridbagConstraints.gridx = 0;
+        gridbagConstraints.weightx = 0.5;
 
-		gridbagConstraints.gridwidth = GridBagConstraints.RELATIVE;
-		gridbagConstraints.gridx = 0;
-		gridbagConstraints.weightx = 0.5;
-		Box box = Box.createHorizontalBox();
-		gridbagLayout.setConstraints(box, gridbagConstraints);
-		panel.add(box);
+        Box box = Box.createHorizontalBox();
+        gridbagLayout.setConstraints(box, gridbagConstraints);
+        panel.add(box);
 
-		label = new JLabel("Identity");
-		label.setForeground(Color.white);
-		label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		label.setFont(font);
-		label.setIconTextGap(10);
-		label.setIcon(image1);
+        label = new JLabel("Identity");
+        label.setForeground(Color.white);
+        label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        label.setFont(font);
+        label.setIconTextGap(10);
+        label.setIcon(image1);
 
-		gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
-		gridbagConstraints.gridx = 1;
-		//gridbagConstraints.insets = new Insets(0, 0, 0, 20);
-		gridbagConstraints.anchor = GridBagConstraints.EAST;
-		gridbagLayout.setConstraints(label, gridbagConstraints);
+        gridbagConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        gridbagConstraints.gridx = 1;
 
-		panel.add(label);
-	}
+        //gridbagConstraints.insets = new Insets(0, 0, 0, 20);
+        gridbagConstraints.anchor = GridBagConstraints.EAST;
+        gridbagLayout.setConstraints(label, gridbagConstraints);
 
-	public void resetRenderer() {
-		initComponents();
-	}
+        panel.add(label);
+    }
 
-	public void set(AccountItem item) {
-		String accountName = item.getName();
+    public void resetRenderer() {
+        initComponents();
+    }
 
-		IdentityItem identity = item.getIdentityItem();
-		String address = identity.get("address");
-		String name = identity.get("name");
+    public void set(AccountItem item) {
+        String accountName = item.getName();
 
-		if (item.isPopAccount())
-			label.setIcon(image1);
-		else
-			label.setIcon(image2);
+        IdentityItem identity = item.getIdentityItem();
+        String address = identity.get("address");
+        String name = identity.get("name");
 
-		label.setText(accountName + ":    " + name + " <" + address + ">");
-		
-		revalidate();
-		repaint();
-	}
+        if (item.isPopAccount()) {
+            label.setIcon(image1);
+        } else {
+            label.setIcon(image2);
+        }
+
+        label.setText(accountName + ":    " + name + " <" + address + ">");
+
+        revalidate();
+        repaint();
+    }
 }

@@ -13,8 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.mail.gui.composer.util;
+
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.gui.table.AddressbookTableModel;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -25,9 +28,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.table.AddressbookTableModel;
-import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
  * @author frd
@@ -38,218 +38,202 @@ import org.columba.addressbook.util.AddressbookResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class AddressbookTableView extends JTable {
+    public JComboBox fieldComboBox;
+    public AddressbookTableModel addressbookModel;
+    public AddressComboBox comboBox;
+    public AddressCellEditor addressEditor;
 
-	public JComboBox fieldComboBox;
+    public AddressbookTableView() {
+        initComponents();
 
-	public AddressbookTableModel addressbookModel;
+        initKeys();
+    }
 
-	public AddressComboBox comboBox;
+    protected void initKeys() {
+    }
 
-	public AddressCellEditor addressEditor;
+    protected void initComponents() {
+        addressbookModel = new AddressbookTableModel();
 
-	public AddressbookTableView() {
-		initComponents();
+        addressbookModel.editable = true;
 
-		initKeys();
+        ComboBoxHeaderColumn c1 = new ComboBoxHeaderColumn("field",
+                AddressbookResourceLoader.getString("header", "field"));
+        addressbookModel.addColumn(c1);
 
-	}
+        DisplaynameHeaderColumn c2 = new DisplaynameHeaderColumn("displayname",
+                AddressbookResourceLoader.getString("header", "displayname"));
+        addressbookModel.addColumn(c2);
 
-	protected void initKeys() {
+        setModel(addressbookModel);
 
-	}
+        addressEditor = new AddressCellEditor(this);
 
-	protected void initComponents() {
+        getColumn("displayname").setCellEditor(addressEditor);
 
-		addressbookModel = new AddressbookTableModel();
+        getColumn("displayname").setCellRenderer(c2);
 
-		addressbookModel.editable = true;
+        TableColumn tc = getColumn("field");
+        tc.setMaxWidth(80);
+        tc.setMinWidth(80);
+        fieldComboBox = new JComboBox();
+        fieldComboBox.addItem("To");
+        fieldComboBox.addItem("Cc");
+        fieldComboBox.addItem("Bcc");
 
-		ComboBoxHeaderColumn c1 =
-			new ComboBoxHeaderColumn(
-				"field",
-				AddressbookResourceLoader.getString("header", "field"));
-		addressbookModel.addColumn(c1);
+        FieldCellEditor editor = new FieldCellEditor(fieldComboBox, this);
+        getColumn("field").setCellEditor(editor);
+        getColumn("field").setCellRenderer(new FieldCellRenderer());
 
-		DisplaynameHeaderColumn c2 =
-			new DisplaynameHeaderColumn(
-				"displayname",
-				AddressbookResourceLoader.getString("header", "displayname"));
-		addressbookModel.addColumn(c2);
+        setShowHorizontalLines(true);
+        setShowVerticalLines(false);
+        setIntercellSpacing(new Dimension(0, 2));
+        setRowHeight(getRowHeight() + 6);
 
-		setModel(addressbookModel);
+        setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
+        setTableHeader(null);
+    }
 
-		addressEditor = new AddressCellEditor(this);
+    public void initFocus(Component c) {
+        ((JTextField) addressEditor.getEditor().getEditorComponent()).setNextFocusableComponent(c);
 
-		getColumn("displayname").setCellEditor(addressEditor);
+        addressEditor.setNextFocusableComponent(c);
+    }
 
-		getColumn("displayname").setCellRenderer(c2);
+    public AddressbookTableModel getAddressbookTableModel() {
+        return addressbookModel;
+    }
 
-		TableColumn tc = getColumn("field");
-		tc.setMaxWidth(80);
-		tc.setMinWidth(80);
-		fieldComboBox = new JComboBox();
-		fieldComboBox.addItem("To");
-		fieldComboBox.addItem("Cc");
-		fieldComboBox.addItem("Bcc");
-		FieldCellEditor editor = new FieldCellEditor(fieldComboBox, this);
-		getColumn("field").setCellEditor(editor);
-		getColumn("field").setCellRenderer(new FieldCellRenderer());
+    protected void makeVisible(int row, int column) {
+        Rectangle r = getCellRect(row, column, true);
 
-		setShowHorizontalLines(true);
-		setShowVerticalLines(false);
-		setIntercellSpacing(new Dimension(0, 2));
-		setRowHeight(getRowHeight() + 6);
+        scrollRectToVisible(r);
+    }
 
-		setAutoResizeMode(AUTO_RESIZE_ALL_COLUMNS);
-		setTableHeader(null);
+    protected void focusToTextField() {
+        JComboBox box = (JComboBox) getEditorComponent();
 
-	}
+        if (box == null) {
+            return;
+        }
 
-	public void initFocus(Component c) {
-		(
-			(JTextField) addressEditor
-				.getEditor()
-				.getEditorComponent())
-				.setNextFocusableComponent(
-			c);
+        JTextField textfield = (JTextField) box.getEditor().getEditorComponent();
 
-		addressEditor.setNextFocusableComponent(c);
-	}
+        textfield.requestFocus();
+    }
 
-	public AddressbookTableModel getAddressbookTableModel() {
-		return addressbookModel;
-	}
+    protected void addEmptyRow() {
+        /*
+        if (emptyRowExists())
+                return;
+        */
+        HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
+        item.add("displayname", "");
+        item.add("field", "To");
 
-	protected void makeVisible(int row, int column) {
-		Rectangle r = getCellRect(row, column, true);
+        try {
+            addressbookModel.addItem(item);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-		scrollRectToVisible(r);
-	}
+        makeVisible(getRowCount() - 1, 1);
+    }
 
-	protected void focusToTextField() {
-		JComboBox box = (JComboBox) getEditorComponent();
-		if (box == null)
-			return;
+    public void editLastRow() {
+        int row = getRowCount() - 1;
 
-		JTextField textfield =
-			(JTextField) box.getEditor().getEditorComponent();
+        if (editCellAt(row, 1)) {
+            focusToTextField();
+        }
+    }
 
-		textfield.requestFocus();
+    protected boolean isEmpty(int row) {
+        HeaderItem item1 = (HeaderItem) addressbookModel.getValueAt(row, 1);
 
-	}
+        String value = (String) item1.get("displayname");
 
-	protected void addEmptyRow() {
-		/*
-		if (emptyRowExists())
-			return;
-		*/
-		HeaderItem item = new HeaderItem(HeaderItem.CONTACT);
-		item.add("displayname", "");
-		item.add("field", "To");
+        return value.length() == 0;
+    }
 
-		try {
-			addressbookModel.addItem(item);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+    protected boolean emptyRowExists() {
+        int rowCount = getRowCount();
 
-		makeVisible(getRowCount() - 1, 1);
-	}
+        if (rowCount == 0) {
+            return false;
+        }
 
-	public void editLastRow() {
-		int row = getRowCount() - 1;
+        HeaderItem item1 = (HeaderItem) addressbookModel.getValueAt(rowCount -
+                1, 1);
 
-		if (editCellAt(row, 1)) {
-			focusToTextField();
-		}
+        String value = (String) item1.get("displayname");
 
-	}
+        return value.length() == 0;
+    }
 
-	protected boolean isEmpty(int row) {
-		HeaderItem item1 = (HeaderItem) addressbookModel.getValueAt(row, 1);
+    public void setHeaderItem(HeaderItem item) {
+        int row = getEditingRow();
 
-		String value = (String) item1.get("displayname");
+        addressbookModel.setHeaderItem(row, item);
+    }
 
-		return value.length() == 0;
-	}
+    public void removeEditingRow() {
+        int rowCount = getRowCount();
 
-	protected boolean emptyRowExists() {
-		int rowCount = getRowCount();
+        int row = getEditingRow();
+        int column = getEditingColumn();
 
-		if (rowCount == 0)
-			return false;
+        if (row == (rowCount - 1)) {
+            return;
+        }
 
-		HeaderItem item1 =
-			(HeaderItem) addressbookModel.getValueAt(rowCount - 1, 1);
+        if ((row != -1) && (column != -1)) {
+            getCellEditor(row, column).stopCellEditing();
+        }
 
-		String value = (String) item1.get("displayname");
+        HeaderItem[] items = new HeaderItem[1];
+        items[0] = addressbookModel.getHeaderItem(row);
 
-		return value.length() == 0;
-	}
+        addressbookModel.removeItem(items);
 
-	public void setHeaderItem(HeaderItem item) {
-		int row = getEditingRow();
+        boolean b;
 
-		addressbookModel.setHeaderItem(row, item);
-	}
+        if (row == 0) {
+            b = editCellAt(0, 1);
+        } else {
+            b = editCellAt(row - 1, 1);
+        }
 
-	public void removeEditingRow() {
-		int rowCount = getRowCount();
+        if (b) {
+            focusToTextField();
+        }
+    }
 
-		int row = getEditingRow();
-		int column = getEditingColumn();
+    public void appendRow() {
+        if (isEditing()) {
+            // cancel editor, if necessary
+            // (if this is not happening we can't add another row
+            // without loosing table data
+            removeEditor();
+        }
 
-		if (row == rowCount - 1)
-			return;
+        if (!emptyRowExists()) {
+            addEmptyRow();
+        }
 
-		if ((row != -1) && (column != -1)) {
-			getCellEditor(row, column).stopCellEditing();
-		}
+        editLastRow();
+    }
 
-		HeaderItem[] items = new HeaderItem[1];
-		items[0] = addressbookModel.getHeaderItem(row);
+    public void cleanupHeaderItemList() {
+        for (int i = getRowCount() - 1; i >= 0; i--) {
+            boolean b = isEmpty(i);
 
-		addressbookModel.removeItem(items);
+            if (b) {
+                HeaderItem[] items = new HeaderItem[1];
+                items[0] = addressbookModel.getHeaderItem(i);
 
-		boolean b;
-
-		if (row == 0)
-			b = editCellAt(0, 1);
-		else
-			b = editCellAt(row - 1, 1);
-
-		if (b) {
-			focusToTextField();
-		}
-	}
-
-	public void appendRow() {
-
-		if (isEditing()) {
-			// cancel editor, if necessary
-			// (if this is not happening we can't add another row
-			// without loosing table data
-			removeEditor();
-		}
-
-		if (!emptyRowExists()) {
-			addEmptyRow();
-		}
-
-		editLastRow();
-
-	}
-
-	public void cleanupHeaderItemList() {
-		for (int i = getRowCount() - 1; i >= 0; i--) {
-			boolean b = isEmpty(i);
-
-			if (b) {
-				HeaderItem[] items = new HeaderItem[1];
-				items[0] = addressbookModel.getHeaderItem(i);
-
-				addressbookModel.removeItem(items);
-			}
-		}
-	}
+                addressbookModel.removeItem(items);
+            }
+        }
+    }
 }

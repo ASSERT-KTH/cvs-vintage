@@ -15,54 +15,43 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class PGPItem extends DefaultItem
-{
+public class PGPItem extends DefaultItem {
     private String passphrase;
-	private String digestAlgorithm;
+    private String digestAlgorithm;
 
-    public PGPItem( XmlElement e )
-    {
-        super( e );
+    public PGPItem(XmlElement e) {
+        super(e);
 
-		passphrase = new String();
+        passphrase = new String();
     }
 
-    public String getPassphrase()
-    {
-		return passphrase;
+    public String getPassphrase() {
+        return passphrase;
     }
 
-    public void clearPassphrase()
-    {
-		passphrase = new String();
+    public void clearPassphrase() {
+        passphrase = new String();
     }
 
-    public void setPassphrase( String s )
-    {
-		passphrase = s;
+    public void setPassphrase(String s) {
+        passphrase = s;
     }
 
-	/**
-	 * @return
-	 */
-	public String getDigestAlgorithm() {
-		return digestAlgorithm;
-	}
+    /**
+     * @return
+     */
+    public String getDigestAlgorithm() {
+        return digestAlgorithm;
+    }
 
-	/**
-	 * @param digestAlgorithm
-	 */
-	public void setDigestAlgorithm(String digestAlgorithm) {
-		this.digestAlgorithm = digestAlgorithm;
-	}
-
+    /**
+     * @param digestAlgorithm
+     */
+    public void setDigestAlgorithm(String digestAlgorithm) {
+        this.digestAlgorithm = digestAlgorithm;
+    }
 }
-
-
-
-

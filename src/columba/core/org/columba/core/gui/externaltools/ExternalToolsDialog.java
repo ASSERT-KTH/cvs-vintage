@@ -17,6 +17,18 @@
 //All Rights Reserved.
 package org.columba.core.gui.externaltools;
 
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.InfoViewerDialog;
+import org.columba.core.help.HelpManager;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.ExternalToolsPluginHandler;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -45,208 +57,195 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.InfoViewerDialog;
-import org.columba.core.help.HelpManager;
-import org.columba.core.main.MainInterface;
-import org.columba.core.plugin.ExternalToolsPluginHandler;
-import org.columba.core.plugin.PluginHandlerNotFoundException;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * Shows a list of external tools used in Columba.
  * <p>
  * Should be the central location to configure these tools
- * 
+ *
  * @author fdietz
  */
-public class ExternalToolsDialog
-	extends JDialog
-	implements ActionListener, ListSelectionListener {
+public class ExternalToolsDialog extends JDialog implements ActionListener,
+    ListSelectionListener {
+    ExternalToolsPluginHandler handler;
+    protected JButton helpButton;
+    protected JButton closeButton;
+    protected JButton configButton;
+    protected JButton infoButton;
+    protected JList list;
+    protected String selection;
 
-	ExternalToolsPluginHandler handler;
+    /**
+     * @throws java.awt.HeadlessException
+     */
+    public ExternalToolsDialog() throws HeadlessException {
+        super(new JFrame(), true);
 
-	protected JButton helpButton, closeButton, configButton, infoButton;
-	protected JList list;
-	protected String selection;
+        // TODO: i18n
+        setTitle("External Tools");
 
-	/**
-	 * @throws java.awt.HeadlessException
-	 */
-	public ExternalToolsDialog() throws HeadlessException {
-		super(new JFrame(), true);
+        try {
+            handler = (ExternalToolsPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.externaltools");
+        } catch (PluginHandlerNotFoundException e) {
+            e.printStackTrace();
+        }
 
-		// TODO: i18n
-		setTitle("External Tools");
-		try {
-			handler =
-				(
-					ExternalToolsPluginHandler) MainInterface
-						.pluginManager
-						.getHandler(
-					"org.columba.core.externaltools");
-		} catch (PluginHandlerNotFoundException e) {
-			e.printStackTrace();
-		}
+        initComponents();
 
-		initComponents();
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
 
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-	}
+    protected void initComponents() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-	protected void initComponents() {
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        // TODO: i18n
+        configButton = new ButtonWithMnemonic("Con&figure...");
+        configButton.setActionCommand("CONFIG");
+        configButton.addActionListener(this);
+        configButton.setEnabled(false);
 
-		// TODO: i18n
-		configButton = new ButtonWithMnemonic("Con&figure...");
-		configButton.setActionCommand("CONFIG");
-		configButton.addActionListener(this);
-		configButton.setEnabled(false);
+        // TODO: i18n
+        infoButton = new ButtonWithMnemonic("&Details...");
+        infoButton.setActionCommand("INFO");
+        infoButton.addActionListener(this);
+        infoButton.setEnabled(false);
 
-		// TODO: i18n
-		infoButton = new ButtonWithMnemonic("&Details...");
-		infoButton.setActionCommand("INFO");
-		infoButton.addActionListener(this);
-		infoButton.setEnabled(false);
+        String[] ids = handler.getPluginIdList();
+        list = new JList(ids);
+        list.addListSelectionListener(this);
 
-		String[] ids = handler.getPluginIdList();
-		list = new JList(ids);
-		list.addListSelectionListener(this);
+        // top panel
+        JPanel topPanel = new JPanel();
 
-		// top panel
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
-		JPanel topPanel = new JPanel();
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
 
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		//topPanel.setLayout( );
+        //topPanel.setLayout( );
+        JPanel topBorderPanel = new JPanel();
+        topBorderPanel.setLayout(new BorderLayout());
 
-		JPanel topBorderPanel = new JPanel();
-		topBorderPanel.setLayout(new BorderLayout());
-		//topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
-		// 0));
-		topBorderPanel.add(topPanel);
-		//mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+        //topBorderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5,
+        // 0));
+        topBorderPanel.add(topPanel);
 
-		JLabel nameLabel = new JLabel("name");
-		nameLabel.setEnabled(false);
-		topPanel.add(nameLabel);
+        //mainPanel.add( topBorderPanel, BorderLayout.NORTH );
+        JLabel nameLabel = new JLabel("name");
+        nameLabel.setEnabled(false);
+        topPanel.add(nameLabel);
 
-		topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        topPanel.add(Box.createHorizontalGlue());
 
-		Component glue = Box.createVerticalGlue();
-		c.anchor = GridBagConstraints.EAST;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		//c.fill = GridBagConstraints.HORIZONTAL;
-		gridBagLayout.setConstraints(glue, c);
+        Component glue = Box.createVerticalGlue();
+        c.anchor = GridBagConstraints.EAST;
+        c.gridwidth = GridBagConstraints.REMAINDER;
 
-		gridBagLayout = new GridBagLayout();
-		c = new GridBagConstraints();
-		JPanel eastPanel = new JPanel(gridBagLayout);
-		mainPanel.add(eastPanel, BorderLayout.EAST);
+        //c.fill = GridBagConstraints.HORIZONTAL;
+        gridBagLayout.setConstraints(glue, c);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		gridBagLayout.setConstraints(configButton, c);
-		eastPanel.add(configButton);
+        gridBagLayout = new GridBagLayout();
+        c = new GridBagConstraints();
 
-		Component strut1 = Box.createRigidArea(new Dimension(30, 5));
-		gridBagLayout.setConstraints(strut1, c);
-		eastPanel.add(strut1);
+        JPanel eastPanel = new JPanel(gridBagLayout);
+        mainPanel.add(eastPanel, BorderLayout.EAST);
 
-		gridBagLayout.setConstraints(infoButton, c);
-		eastPanel.add(infoButton);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1.0;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagLayout.setConstraints(configButton, c);
+        eastPanel.add(configButton);
 
-		glue = Box.createVerticalGlue();
-		c.fill = GridBagConstraints.BOTH;
-		c.weighty = 1.0;
-		gridBagLayout.setConstraints(glue, c);
-		eastPanel.add(glue);
+        Component strut1 = Box.createRigidArea(new Dimension(30, 5));
+        gridBagLayout.setConstraints(strut1, c);
+        eastPanel.add(strut1);
 
-		// centerpanel
+        gridBagLayout.setConstraints(infoButton, c);
+        eastPanel.add(infoButton);
 
-		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setPreferredSize(new Dimension(250, 150));
-		scrollPane.getViewport().setBackground(Color.white);
-		centerPanel.add(scrollPane);
+        glue = Box.createVerticalGlue();
+        c.fill = GridBagConstraints.BOTH;
+        c.weighty = 1.0;
+        gridBagLayout.setConstraints(glue, c);
+        eastPanel.add(glue);
 
-		mainPanel.add(centerPanel);
-		getContentPane().add(mainPanel, BorderLayout.CENTER);
+        // centerpanel
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 6));
 
-		JPanel bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-		ButtonWithMnemonic closeButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "close"));
-		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
-		closeButton.addActionListener(this);
-		buttonPanel.add(closeButton);
-		ButtonWithMnemonic helpButton =
-			new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		// associate with JavaHelp
-		HelpManager.enableHelpOnButton(helpButton, "extending_columba_2");
-		buttonPanel.add(helpButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-		getRootPane().setDefaultButton(closeButton);
-		getRootPane().registerKeyboardAction(
-			this,
-			"CLOSE",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-		getRootPane().registerKeyboardAction(
-			this,
-			"HELP",
-			KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setPreferredSize(new Dimension(250, 150));
+        scrollPane.getViewport().setBackground(Color.white);
+        centerPanel.add(scrollPane);
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+        mainPanel.add(centerPanel);
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-		if (action.equals("CLOSE")) {
-			setVisible(false);
-		} else if (action.equals("CONFIG")) {
-			new ExternalToolsWizardLauncher().launchWizard(selection);
-		} else if (action.equals("INFO")) {
-			AbstractExternalToolsPlugin plugin = null;
-			try {
-				plugin =
-					(AbstractExternalToolsPlugin) handler.getPlugin(
-						selection,
-						null);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-			String info = plugin.getDescription();
-			new InfoViewerDialog(info);
-		}
-	}
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
-	 */
-	public void valueChanged(ListSelectionEvent e) {
-		boolean enabled = !list.isSelectionEmpty();
-		configButton.setEnabled(enabled);
-		infoButton.setEnabled(enabled);
-		selection = (String) list.getSelectedValue();
-	}
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "close"));
+        closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
+        closeButton.addActionListener(this);
+        buttonPanel.add(closeButton);
+
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
+
+        // associate with JavaHelp
+        HelpManager.enableHelpOnButton(helpButton, "extending_columba_2");
+        buttonPanel.add(helpButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(closeButton);
+        getRootPane().registerKeyboardAction(this, "CLOSE",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(this, "HELP",
+            KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        if (action.equals("CLOSE")) {
+            setVisible(false);
+        } else if (action.equals("CONFIG")) {
+            new ExternalToolsWizardLauncher().launchWizard(selection);
+        } else if (action.equals("INFO")) {
+            AbstractExternalToolsPlugin plugin = null;
+
+            try {
+                plugin = (AbstractExternalToolsPlugin) handler.getPlugin(selection,
+                        null);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+
+            String info = plugin.getDescription();
+            new InfoViewerDialog(info);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
+    public void valueChanged(ListSelectionEvent e) {
+        boolean enabled = !list.isSelectionEmpty();
+        configButton.setEnabled(enabled);
+        infoButton.setEnabled(enabled);
+        selection = (String) list.getSelectedValue();
+    }
 }

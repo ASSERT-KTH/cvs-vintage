@@ -6,6 +6,7 @@
  */
 package org.columba.mail.pgp;
 
+
 /**
  * @author frd
  *
@@ -13,22 +14,17 @@ package org.columba.mail.pgp;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class PGPException extends Exception {
+    /**
+     *
+     */
+    public PGPException() {
+        super("PGP failure");
+    }
 
-	/**
-	 * 
-	 */
-	public PGPException() {
-		super("PGP failure");
-		
-	}
-
-	/**
-	 * @param arg0
-	 */
-	public PGPException(String arg0) {
-		super(arg0);
-	}
-
-	
-
+    /**
+     * @param arg0
+     */
+    public PGPException(String arg0) {
+        super(arg0);
+    }
 }

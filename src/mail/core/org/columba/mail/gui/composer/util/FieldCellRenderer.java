@@ -21,6 +21,7 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+
 /**
  * @author frd
  *
@@ -29,31 +30,21 @@ import javax.swing.table.TableCellRenderer;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FieldCellRenderer extends JComboBox implements TableCellRenderer{
+public class FieldCellRenderer extends JComboBox implements TableCellRenderer {
+    public FieldCellRenderer() {
+        super();
 
-	public FieldCellRenderer()
-	{
-		super();
-		
-		addItem("To");
-		addItem("Cc");
-		addItem("Bcc");
-		
-		setOpaque(true);
-	}
-	
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-		
-		
-		setSelectedItem( (String) object );
-		
-		return this;
-	}
+        addItem("To");
+        addItem("Cc");
+        addItem("Bcc");
+
+        setOpaque(true);
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        setSelectedItem((String) object);
+
+        return this;
+    }
 }

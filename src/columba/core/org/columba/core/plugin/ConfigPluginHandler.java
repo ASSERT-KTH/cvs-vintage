@@ -15,26 +15,24 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+
 /**
  * ConfigPluginHandler provides an easy way for plugins to have
  * their own configuration dialog.
  * <p>
  * Note that every plugin can have its own configuration file
- * "config.xml" in its folder anyway.  
+ * "config.xml" in its folder anyway.
  *
  * @author fdietz
  */
 public class ConfigPluginHandler extends AbstractPluginHandler {
+    /**
+     * @param id
+     * @param config
+     */
+    public ConfigPluginHandler() {
+        super("org.columba.core.config", "org/columba/core/plugin/config.xml");
 
-	/**
-	 * @param id
-	 * @param config
-	 */
-	public ConfigPluginHandler() {
-		super("org.columba.core.config", "org/columba/core/plugin/config.xml");
-
-		parentNode = getConfig().getRoot().getElement("configlist");
-		
-	}
-
+        parentNode = getConfig().getRoot().getElement("configlist");
+    }
 }

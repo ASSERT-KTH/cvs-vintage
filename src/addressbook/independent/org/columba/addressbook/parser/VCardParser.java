@@ -15,235 +15,194 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import org.columba.addressbook.folder.ContactCard;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.addressbook.folder.ContactCard;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class VCardParser
-{
-	public static ContactCard parse(String str)
-	{
+public class VCardParser {
+    public static ContactCard parse(String str) {
+        //char[] chars = new char[ str.length() ];
+        ContactCard card = new ContactCard();
 
-		//char[] chars = new char[ str.length() ];
-		ContactCard card = new ContactCard();
+        List keys = new Vector();
+        List values = new Vector();
+        int pos = 0;
+        char ch;
+        StringBuffer line = new StringBuffer();
+        StringBuffer keybuf = new StringBuffer();
+        StringBuffer valuebuf = new StringBuffer();
+        boolean mode = false;
 
-		List keys = new Vector();
-		List values = new Vector();
-		int pos = 0;
-		char ch;
-		StringBuffer line = new StringBuffer();
-		StringBuffer keybuf = new StringBuffer();
-		StringBuffer valuebuf = new StringBuffer();
-		boolean mode = false;
-		while (pos < str.length())
-		{
-			ch = str.charAt(pos);
+        while (pos < str.length()) {
+            ch = str.charAt(pos);
 
-			if (ch == '\n')
-			{
-				values.add(valuebuf.toString());
-				//System.out.println("value:" + word);
+            if (ch == '\n') {
+                values.add(valuebuf.toString());
 
-				//System.out.println("finished parsing line:" + line);
-				if (keys.size() > 1)
-				{
-					String key0 = (String) keys.get(0);
+                //System.out.println("value:" + word);
+                //System.out.println("finished parsing line:" + line);
+                if (keys.size() > 1) {
+                    String key0 = (String) keys.get(0);
 
-					
-					if (key0.toLowerCase().equalsIgnoreCase("label"))
-					{
-						for (Iterator it = keys.iterator(); it.hasNext();) {
-							String keyi = (String)  it.next();
-						// for (int i = 1; i < keys.size(); i++)
-						// {
+                    if (key0.toLowerCase().equalsIgnoreCase("label")) {
+                        for (Iterator it = keys.iterator(); it.hasNext();) {
+                            String keyi = (String) it.next();
 
-							// String keyi = (String) keys.get(i);
-							System.out.println("label-key:"+keyi);
-							
-							card.formatSet(key0.toLowerCase(), keyi.toLowerCase(), valuebuf.toString());
-							System.out.println("card:" + key0 + " - " + keyi + " :" + valuebuf.toString());
+                            // for (int i = 1; i < keys.size(); i++)
+                            // {
+                            // String keyi = (String) keys.get(i);
+                            System.out.println("label-key:" + keyi);
 
-						}
-					}
-					else
-					{
-						for (Iterator it = keys.iterator(); it.hasNext();) {
-							String keyi = (String) it.next();
-						// for (int i = 1; i < keys.size(); i++)
-						// {
+                            card.formatSet(key0.toLowerCase(),
+                                keyi.toLowerCase(), valuebuf.toString());
+                            System.out.println("card:" + key0 + " - " + keyi +
+                                " :" + valuebuf.toString());
+                        }
+                    } else {
+                        for (Iterator it = keys.iterator(); it.hasNext();) {
+                            String keyi = (String) it.next();
 
-							// String keyi = (String) keys.get(i);
-							card.set(key0.toLowerCase(), keyi.toLowerCase(), valuebuf.toString());
-							System.out.println("card:" + key0 + " - " + keyi + " :" + valuebuf.toString());
+                            // for (int i = 1; i < keys.size(); i++)
+                            // {
+                            // String keyi = (String) keys.get(i);
+                            card.set(key0.toLowerCase(), keyi.toLowerCase(),
+                                valuebuf.toString());
+                            System.out.println("card:" + key0 + " - " + keyi +
+                                " :" + valuebuf.toString());
+                        }
+                    }
+                } else if (keys.size() == 1) {
+                    String key0 = (String) keys.get(0);
 
-						}
-					}
+                    if (key0.toLowerCase().equalsIgnoreCase("BEGIN")) {
+                        String s = (String) keys.get(0);
 
-				}
-				else if (keys.size() == 1)
-				{
-					String key0 = (String) keys.get(0);
+                        if (s.toLowerCase().equalsIgnoreCase("BEGIN")) {
+                            System.out.println("vcard section begin");
+                        } else if (s.toLowerCase().equalsIgnoreCase("END")) {
+                            System.out.println("vcard section end");
+                        }
+                    } else if (key0.toLowerCase().equalsIgnoreCase("n")) {
+                        String s = null;
 
-					if (key0.toLowerCase().equalsIgnoreCase("BEGIN"))
-					{
-						String s = (String) keys.get(0);
-						if (s.toLowerCase().equalsIgnoreCase("BEGIN"))
-						{
-							System.out.println("vcard section begin");
-						}
-						else if (s.toLowerCase().equalsIgnoreCase("END"))
-						{
-							System.out.println("vcard section end");
-						}
+                        if (values.size() > 0) {
+                            s = (String) values.get(0);
+                            card.set("n", "family", s);
+                        }
 
-					}
-					else if (key0.toLowerCase().equalsIgnoreCase("n"))
-					{
-						String s = null;
-						if ( values.size()>0 )
-						{
-							s = (String) values.get(0);
-							card.set("n", "family", s);
-						}
-							
-						
-						
-						if ( values.size()>1 )
-						{
-							card.set("n", "given", s);
-							s = (String) values.get(1);
-						}
-						
-						if ( values.size()>2 )
-						{
-							card.set("n", "middle", s);
-							s = (String) values.get(2);
-						}
-						
-						if ( values.size()>3 )
-						{
-							card.set("n", "prefix", s);
-							s = (String) values.get(3);
-						}
-						
-						if ( values.size()>4 )
-						{
-							s = (String) values.get(4);
-							card.set("n", "suffix", s);
-						}
+                        if (values.size() > 1) {
+                            card.set("n", "given", s);
+                            s = (String) values.get(1);
+                        }
 
-					}
-					else if (key0.toLowerCase().equalsIgnoreCase("fn"))
-					{
-						card.formatSet(key0.toLowerCase(), valuebuf.toString());	
-					}
-					/*
-					else if ( key0.toLowerCase().equalsIgnoreCase("adr") )
-					{
-						
-						String s = (String) values.get(0);
-						card.set( "adr","street", s );
-						s = (String) values.get(1);
-						card.set( "adr","locality", s );
-						s = (String) values.get(2);
-						card.set( "adr","region", s );
-						s = (String) values.get(3);
-						card.set( "adr","pcode", s );
-						s = (String) values.get(4);
-						card.set( "adr","country", s );
-						
-						
-					
-					}
-					*/
-					else
-					{
+                        if (values.size() > 2) {
+                            card.set("n", "middle", s);
+                            s = (String) values.get(2);
+                        }
 
-						card.set(key0.toLowerCase(), valuebuf.toString());
-						//System.out.println("card:"+keys.get(0)+ " - " + word.toString() );
+                        if (values.size() > 3) {
+                            card.set("n", "prefix", s);
+                            s = (String) values.get(3);
+                        }
 
-					}
-				}
-				else
-				{
-					System.out.println("unable to parse clueful information");
-				}
+                        if (values.size() > 4) {
+                            s = (String) values.get(4);
+                            card.set("n", "suffix", s);
+                        }
+                    } else if (key0.toLowerCase().equalsIgnoreCase("fn")) {
+                        card.formatSet(key0.toLowerCase(), valuebuf.toString());
+                    }
+                    /*
+                    else if ( key0.toLowerCase().equalsIgnoreCase("adr") )
+                    {
 
-				line = new StringBuffer();
-				keybuf = new StringBuffer();
-				valuebuf = new StringBuffer();
-				keys = new Vector();
-				values = new Vector();
-				mode = false;
-			}
-			else if (ch == ';')
-			{
-				//System.out.println("key:" + word);
-				if (mode == false)
-				{
-					//key
-					keys.add(keybuf.toString());
-					System.out.println("key:" + keybuf);
+                            String s = (String) values.get(0);
+                            card.set( "adr","street", s );
+                            s = (String) values.get(1);
+                            card.set( "adr","locality", s );
+                            s = (String) values.get(2);
+                            card.set( "adr","region", s );
+                            s = (String) values.get(3);
+                            card.set( "adr","pcode", s );
+                            s = (String) values.get(4);
+                            card.set( "adr","country", s );
 
-					keybuf = new StringBuffer();
-				}
-				else
-				{
-					//value
-					values.add(valuebuf.toString());
-					System.out.println("value:" + valuebuf);
 
-					valuebuf = new StringBuffer();
-				}
-			}
-			else if (ch == ':')
-			{
-				//System.out.println("key:" + word);
-				keys.add(keybuf.toString());
-				System.out.println("key:" + keybuf);
 
-				keybuf = new StringBuffer();
-				mode = true;
-				//System.out.println("value starts here");
-			}
-			else
-			{
-				// just collect characters
-				//word.append(ch);
-				//System.out.print(ch);
-				if (mode == false)
-				{
-					//key
-					keybuf.append(ch);
-				}
-				else
-				{
-					//value
-					valuebuf.append(ch);
-				}
+                    }
+                    */
+                    else {
+                        card.set(key0.toLowerCase(), valuebuf.toString());
 
-			}
+                        //System.out.println("card:"+keys.get(0)+ " - " + word.toString() );
+                    }
+                } else {
+                    System.out.println("unable to parse clueful information");
+                }
 
-			pos++;
-			line.append(ch);
+                line = new StringBuffer();
+                keybuf = new StringBuffer();
+                valuebuf = new StringBuffer();
+                keys = new Vector();
+                values = new Vector();
+                mode = false;
+            } else if (ch == ';') {
+                //System.out.println("key:" + word);
+                if (mode == false) {
+                    //key
+                    keys.add(keybuf.toString());
+                    System.out.println("key:" + keybuf);
 
-		}
-		
-		String email = card.get("email","internet");
-		String fn = card.formatGet("fn");
-		
-		if ( fn.length() != 0 ) card.set("displayname", fn );
-		else if  (email.length() != 0 ) card.set("displayname", email);
-		
+                    keybuf = new StringBuffer();
+                } else {
+                    //value
+                    values.add(valuebuf.toString());
+                    System.out.println("value:" + valuebuf);
 
-		return card;
+                    valuebuf = new StringBuffer();
+                }
+            } else if (ch == ':') {
+                //System.out.println("key:" + word);
+                keys.add(keybuf.toString());
+                System.out.println("key:" + keybuf);
 
-	}
+                keybuf = new StringBuffer();
+                mode = true;
 
+                //System.out.println("value starts here");
+            } else {
+                // just collect characters
+                //word.append(ch);
+                //System.out.print(ch);
+                if (mode == false) {
+                    //key
+                    keybuf.append(ch);
+                } else {
+                    //value
+                    valuebuf.append(ch);
+                }
+            }
+
+            pos++;
+            line.append(ch);
+        }
+
+        String email = card.get("email", "internet");
+        String fn = card.formatGet("fn");
+
+        if (fn.length() != 0) {
+            card.set("displayname", fn);
+        } else if (email.length() != 0) {
+            card.set("displayname", email);
+        }
+
+        return card;
+    }
 }

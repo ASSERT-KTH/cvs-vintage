@@ -25,32 +25,34 @@ package org.columba.core.util;
  * Window>Preferences>Java>Code Generation.
  */
 public class Lock {
-	private boolean locked;
-	private Object locker;
-	
-	public Lock() {
-		locked = false;
-	}	
+    private boolean locked;
+    private Object locker;
 
-	public synchronized boolean tryToGetLock(Object locker) {
-		// Is it already locked from locker ?
-		if( this.locker == locker && locker!=null) return true;
+    public Lock() {
+        locked = false;
+    }
 
-		// Check if locked
-		if( locked ) {
-			return false;
-		} else {
-			locked = true;
-			this.locker = locker;
-			return true;
-		}
-	}
+    public synchronized boolean tryToGetLock(Object locker) {
+        // Is it already locked from locker ?
+        if ((this.locker == locker) && (locker != null)) {
+            return true;
+        }
 
-	public void release(Object locker) {
-		if( this.locker == locker || this.locker == null) {
-			locked = false;
-			locker = null;
-		}
-	}
+        // Check if locked
+        if (locked) {
+            return false;
+        } else {
+            locked = true;
+            this.locker = locker;
 
+            return true;
+        }
+    }
+
+    public void release(Object locker) {
+        if ((this.locker == locker) || (this.locker == null)) {
+            locked = false;
+            locker = null;
+        }
+    }
 }

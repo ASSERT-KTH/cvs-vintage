@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+
 /**
  * @author freddy
  *
@@ -24,14 +25,12 @@ package org.columba.core.plugin;
  * Window>Preferences>Java>Code Generation.
  */
 public abstract class DefaultPlugin {
+    /**
+     * Constructor for DefaultPlugin.
+     */
+    public DefaultPlugin() {
+        super();
+    }
 
-	/**
-	 * Constructor for DefaultPlugin.
-	 */
-	public DefaultPlugin() {
-		super();
-	}
-	
-	//abstract public void run(Object o);
-
+    //abstract public void run(Object o);
 }

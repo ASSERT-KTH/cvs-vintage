@@ -15,38 +15,38 @@
 //All Rights Reserved.
 
 /*
-	Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
-	Comments: this class provides some methods to enlarge or maximise a java.awt.Component object.
-	
+        Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
+        Comments: this class provides some methods to enlarge or maximise a java.awt.Component object.
+
 */
 package org.columba.core.gui.frame;
+
 
 //Resizing
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 
+
 public class WindowMaximizer {
+    public static void maximize(Object obj) {
+        //We can use the Java way to maximize the window 		
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Frame frame = (Frame) obj;
+        frame.setSize(screenSize);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    }
 
-	public static void maximize(Object obj) {
-		//We can use the Java way to maximize the window 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Frame frame = (Frame) obj;
-		frame.setSize(screenSize);
-		frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+    public static boolean isWindowMaximized(Object obj) {
+        //We can use the Java way to maximize the window 
+        Frame frame = (Frame) obj;
+        int state = frame.getExtendedState();
 
-	}
+        if ((state & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH) {
+            return true;
+        }
 
-	public static boolean isWindowMaximized(Object obj) {
-		//We can use the Java way to maximize the window 
-
-		Frame frame = (Frame) obj;
-		int state = frame.getExtendedState();
-		if ((state & Frame.MAXIMIZED_BOTH) == Frame.MAXIMIZED_BOTH)
-			return true;
-
-		return false;
-
-	}
-
-};
+        return false;
+    }
+}
+;

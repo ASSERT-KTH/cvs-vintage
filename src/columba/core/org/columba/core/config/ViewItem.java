@@ -17,6 +17,7 @@ package org.columba.core.config;
 
 import org.columba.core.xml.XmlElement;
 
+
 /**
  * @author freddy
  *
@@ -26,15 +27,11 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation.
  */
 public class ViewItem extends DefaultItem {
+    public ViewItem(XmlElement root) {
+        super(root);
+    }
 
-	public ViewItem( XmlElement root )
-	{
-		super(root);
-	}
-	
-	public WindowItem getWindowItem()
-	{
-		return new WindowItem(getRoot().getElement("window"));
-	}
-	
+    public WindowItem getWindowItem() {
+        return new WindowItem(getRoot().getElement("window"));
+    }
 }

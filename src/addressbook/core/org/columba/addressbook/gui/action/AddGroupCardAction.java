@@ -13,75 +13,75 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.Folder;
 import org.columba.addressbook.folder.GroupListCard;
 import org.columba.addressbook.gui.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AddGroupCardAction extends FrameAction {
+    public AddGroupCardAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addgroup"));
 
-	public AddGroupCardAction(FrameMediator frameController) {
-		super(frameController, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_addgroup"));
-					
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_file_addgroup_tooltip").replaceAll("&", ""));
-					
-		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_addgroup_toolbar"));
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("group_small.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("group.png"));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addgroup_tooltip").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameController addressbookFrameController =
-				(AddressbookFrameController) frameMediator;
-		
-		Folder folder =
-				(Folder) addressbookFrameController.getTree().
-					getView().getSelectedFolder();
-		if (folder == null) return;
+        putValue(TOOLBAR_NAME,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_addgroup_toolbar"));
 
-		EditGroupDialog dialog =
-				new EditGroupDialog(
-					addressbookFrameController.getView(),
-					addressbookFrameController,
-					null);
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("group_small.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("group.png"));
+    }
 
-		dialog.setHeaderList(folder.getHeaderItemList());
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameMediator;
 
-		dialog.setVisible(true);
+        Folder folder = (Folder) addressbookFrameController.getTree().getView()
+                                                           .getSelectedFolder();
 
-		if (dialog.getResult()) {
-			// Ok
-			GroupListCard card = new GroupListCard();
+        if (folder == null) {
+            return;
+        }
 
-			dialog.updateComponents(card, null, false);
+        EditGroupDialog dialog = new EditGroupDialog(addressbookFrameController.getView(),
+                addressbookFrameController, null);
 
-			folder.add(card);
-			addressbookFrameController.getTable().getView().setFolder(folder);
-		}
-	}
+        dialog.setHeaderList(folder.getHeaderItemList());
+
+        dialog.setVisible(true);
+
+        if (dialog.getResult()) {
+            // Ok
+            GroupListCard card = new GroupListCard();
+
+            dialog.updateComponents(card, null, false);
+
+            folder.add(card);
+            addressbookFrameController.getTable().getView().setFolder(folder);
+        }
+    }
 }

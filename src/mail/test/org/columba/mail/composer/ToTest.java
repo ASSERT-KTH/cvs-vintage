@@ -21,70 +21,70 @@ import junit.framework.TestCase;
 
 import org.columba.ristretto.message.Header;
 
+
 /**
  * Testcases for generation of To: headerfield
- * 
+ *
  * @author fdietz
  */
 public class ToTest extends TestCase {
+    /**
+     * Check if Reply-To: headerfield is used as default
+     *
+     */
+    public void testReplyTo() {
+        String s = "donald@mail.com";
+        Header header = new Header();
+        header.set("Reply-To", s);
+        header.set("From", "donald.duck@mail.com");
 
-	/**
-	 * Check if Reply-To: headerfield is used as default
-	 *  
-	 */
-	public void testReplyTo() {
-		String s = "donald@mail.com";
-		Header header = new Header();
-		header.set("Reply-To", s);
-		header.set("From", "donald.duck@mail.com");
+        String result = MessageBuilderHelper.createTo(header);
 
-		String result = MessageBuilderHelper.createTo(header);
+        assertEquals(s, result);
+    }
 
-		assertEquals(s, result);
-	}
+    /**
+     * Check if method is falling back to From: headerfield, if Reply-To:
+     * headerfield is not available
+     *
+     */
+    public void testReplyTo2() {
+        String s = "donald.duck@mail.com";
+        Header header = new Header();
+        header.set("From", "donald.duck@mail.com");
 
-	/**
-	 * Check if method is falling back to From: headerfield, if Reply-To:
-	 * headerfield is not available
-	 *  
-	 */
-	public void testReplyTo2() {
-		String s = "donald.duck@mail.com";
-		Header header = new Header();
-		header.set("From", "donald.duck@mail.com");
+        String result = MessageBuilderHelper.createTo(header);
 
-		String result = MessageBuilderHelper.createTo(header);
+        assertEquals(s, result);
+    }
 
-		assertEquals(s, result);
-	}
+    /**
+     * Test it Reply-To: or From: headerfield and
+     * all To: and Cc: headerfields are concatenated correctly
+     *
+     */
+    public void testReplyToAll() {
+        String s = "donald@mail.com";
+        Header header = new Header();
+        header.set("Reply-To", s);
+        header.set("From", "donald.duck@mail.com");
+        header.set("To", "dagobert.duck@mail.com");
+        header.set("Cc", "tick@mail.com, trick@mail.com, daisy@mail.com");
 
-	/**
-	 * Test it Reply-To: or From: headerfield and
-	 * all To: and Cc: headerfields are concatenated correctly
-	 *
-	 */
-	public void testReplyToAll() {
-		String s = "donald@mail.com";
-		Header header = new Header();
-		header.set("Reply-To", s);
-		header.set("From", "donald.duck@mail.com");
-		header.set("To", "dagobert.duck@mail.com");
-		header.set("Cc", "tick@mail.com, trick@mail.com, daisy@mail.com");
+        String result = MessageBuilderHelper.createToAll(header);
 
-		String result = MessageBuilderHelper.createToAll(header);
+        String shouldbe = "donald@mail.com, dagobert.duck@mail.com, tick@mail.com, trick@mail.com, daisy@mail.com";
 
-		String shouldbe = "donald@mail.com, dagobert.duck@mail.com, tick@mail.com, trick@mail.com, daisy@mail.com";
-		
-		assertEquals(shouldbe, result);
-	}
-	
-	/**
-	 * 
-	 * Check if method is falling back to X-BeenThere:, to Reply-To or From: headerfield,
-	 * if not available
-	 *
-	 */
-	public void testReplyToMailinglist() {
-		// TODO: implement test
-	}
+        assertEquals(shouldbe, result);
+    }
+
+    /**
+     *
+     * Check if method is falling back to X-BeenThere:, to Reply-To or From: headerfield,
+     * if not available
+     *
+     */
+    public void testReplyToMailinglist() {
+        // TODO: implement test
+    }
 }

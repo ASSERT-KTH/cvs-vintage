@@ -15,44 +15,42 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+import org.columba.core.logging.ColumbaLogger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.columba.core.logging.ColumbaLogger;
 
 public class StreamThread extends Thread {
-	InputStream is;
-	String type;
+    InputStream is;
+    String type;
+    StringBuffer buf;
 
-	StringBuffer buf;
+    public StreamThread(InputStream is, String type) {
+        this.is = is;
+        this.type = type;
 
-	public StreamThread(InputStream is, String type) {
-		this.is = is;
-		this.type = type;
+        buf = new StringBuffer();
+    }
 
-		buf = new StringBuffer();
-	}
+    public void run() {
+        try {
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line = null;
 
-	public void run() {
+            while ((line = br.readLine()) != null) {
+                ColumbaLogger.log.debug(type + ">" + line);
+                buf.append(line + "\n");
+            }
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
-		try {
-			InputStreamReader isr = new InputStreamReader(is);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				ColumbaLogger.log.debug(type + ">" + line);
-				buf.append(line + "\n");
-			}
-
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
-
-	public String getBuffer() {
-		return buf.toString();
-	}
-
+    public String getBuffer() {
+        return buf.toString();
+    }
 }

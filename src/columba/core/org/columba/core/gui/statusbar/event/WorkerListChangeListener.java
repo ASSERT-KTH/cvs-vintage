@@ -16,7 +16,5 @@
 package org.columba.core.gui.statusbar.event;
 
 public interface WorkerListChangeListener {
-
-	public void workerListChanged( WorkerListChangedEvent e );
-
+    public void workerListChanged(WorkerListChangedEvent e);
 }

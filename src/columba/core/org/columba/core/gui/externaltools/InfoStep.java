@@ -13,59 +13,52 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.externaltools;
-
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import net.javaprog.ui.wizard.AbstractStep;
 
 import org.columba.core.gui.util.MultiLineLabel;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
+
 /**
  * Shows a little info page which explains to the user
  * what happens.
- * 
+ *
  * @author fdietz
  */
 class InfoStep extends AbstractStep {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-        
-	public InfoStep() {
-		super(GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "InfoStep.title"),
-                        GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "InfoStep.description"));
-	}
+    public InfoStep() {
+        super(GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "InfoStep.title"),
+            GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "InfoStep.description"));
+    }
 
-	/* (non-Javadoc)
-		 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-		 */
-	protected JComponent createComponent() {
-		JPanel panel = new JPanel(new BorderLayout());
+    /* (non-Javadoc)
+             * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+             */
+    protected JComponent createComponent() {
+        JPanel panel = new JPanel(new BorderLayout());
 
-		MultiLineLabel label =
-			new MultiLineLabel(GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "InfoStep.text"));
+        MultiLineLabel label = new MultiLineLabel(GlobalResourceLoader.getString(
+                    RESOURCE_PATH, "externaltools", "InfoStep.text"));
 
-		panel.add(label, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.CENTER);
 
-		return panel;
-	}
+        return panel;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.javaprog.ui.wizard.Step#prepareRendering()
-	 */
-	public void prepareRendering() {}
+    /* (non-Javadoc)
+     * @see net.javaprog.ui.wizard.Step#prepareRendering()
+     */
+    public void prepareRendering() {
+    }
 }

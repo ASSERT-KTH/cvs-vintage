@@ -13,18 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class AccountItem extends DefaultItem
-{
+public class AccountItem extends DefaultItem {
     private AccountItem defaultAccount;
     private boolean pop3;
-
     private IdentityItem identity;
     private PopItem pop;
     private ImapItem imap;
@@ -32,126 +29,115 @@ public class AccountItem extends DefaultItem
     private PGPItem pgp;
     private SpecialFoldersItem folder;
 
-    public AccountItem( XmlElement e )
-    {
-        super( e );
+    public AccountItem(XmlElement e) {
+        super(e);
 
-        pop3=(e.getElement("/popserver") != null);
-  	}
+        pop3 = (e.getElement("/popserver") != null);
+    }
 
-
-    public boolean isPopAccount()
-    {
+    public boolean isPopAccount() {
         return pop3;
     }
 
+    public SpecialFoldersItem getSpecialFoldersItem() {
+        if (folder == null) {
+            folder = new SpecialFoldersItem(getRoot().getElement("specialfolders"));
+        }
 
-    public SpecialFoldersItem getSpecialFoldersItem()
-    {
-    	if( folder == null) {
-    		folder = new SpecialFoldersItem( getRoot().getElement("specialfolders") );
-    	}
-    	
-    	if ( folder.getBoolean("use_default_account") ) 
-    	{
-    		// return default-account ImapItem instead 
-    		
-    		SpecialFoldersItem item = MailConfig.getAccountList().getDefaultAccount().getSpecialFoldersItem();
-    		return item;
-    	}
-    	
+        if (folder.getBoolean("use_default_account")) {
+            // return default-account ImapItem instead 
+            SpecialFoldersItem item = MailConfig.getAccountList()
+                                                .getDefaultAccount()
+                                                .getSpecialFoldersItem();
+
+            return item;
+        }
+
         return folder;
     }
 
-	private AccountItem getDefaultAccount() {
-		if( defaultAccount == null) {
-			defaultAccount = MailConfig.getAccountList().getDefaultAccount();	
-		}
-		
-		return defaultAccount;
-	}
+    private AccountItem getDefaultAccount() {
+        if (defaultAccount == null) {
+            defaultAccount = MailConfig.getAccountList().getDefaultAccount();
+        }
 
-    public PopItem getPopItem()
-    {
-    	if( pop == null) {
-    		pop = new PopItem( getRoot().getElement("popserver") );	
-    	}
-    	
-    	if ( pop.getBoolean("use_default_account") ) 
-    	{
-    		// return default-account ImapItem instead 
-    		
-    		PopItem item = MailConfig.getAccountList().getDefaultAccount().getPopItem();
-    		return item;
-    	}
-    	
+        return defaultAccount;
+    }
+
+    public PopItem getPopItem() {
+        if (pop == null) {
+            pop = new PopItem(getRoot().getElement("popserver"));
+        }
+
+        if (pop.getBoolean("use_default_account")) {
+            // return default-account ImapItem instead 
+            PopItem item = MailConfig.getAccountList().getDefaultAccount()
+                                     .getPopItem();
+
+            return item;
+        }
+
         return pop;
     }
 
-    public SmtpItem getSmtpItem()
-    {
-		if( smtp == null) {
-			smtp = new SmtpItem( getRoot().getElement("smtpserver") );	
-		}
-		    	
-    	if ( smtp.getBoolean("use_default_account") ) 
-    	{
-    		// return default-account ImapItem instead 
-    		
-    		return getDefaultAccount().getSmtpItem();
-    	}
-    	
+    public SmtpItem getSmtpItem() {
+        if (smtp == null) {
+            smtp = new SmtpItem(getRoot().getElement("smtpserver"));
+        }
+
+        if (smtp.getBoolean("use_default_account")) {
+            // return default-account ImapItem instead 
+            return getDefaultAccount().getSmtpItem();
+        }
+
         return smtp;
     }
 
-    public PGPItem getPGPItem()
-    {
-    	if( pgp == null) {
-    		pgp = new PGPItem(getRoot().getElement("pgp"));	
-    	}
-    	
-    	if ( pgp.getBoolean("use_default_account") ) 
-    	{
-    		// return default-account ImapItem instead 
-    		
-    		PGPItem item = MailConfig.getAccountList().getDefaultAccount().getPGPItem();
-    		return item;
-    	}
-    	
+    public PGPItem getPGPItem() {
+        if (pgp == null) {
+            pgp = new PGPItem(getRoot().getElement("pgp"));
+        }
+
+        if (pgp.getBoolean("use_default_account")) {
+            // return default-account ImapItem instead 
+            PGPItem item = MailConfig.getAccountList().getDefaultAccount()
+                                     .getPGPItem();
+
+            return item;
+        }
+
         return pgp;
     }
 
-    public ImapItem getImapItem()
-    {
-    	if( imap == null ) {
-    		imap = new ImapItem(getRoot().getElement("imapserver"));
-    	}
-    	
-    	if ( imap.getBoolean("use_default_account") ) 
-    	{
-    		// return default-account ImapItem instead 
-    		
-    		ImapItem item = MailConfig.getAccountList().getDefaultAccount().getImapItem();
-    		return item;
-    	}
-    	
+    public ImapItem getImapItem() {
+        if (imap == null) {
+            imap = new ImapItem(getRoot().getElement("imapserver"));
+        }
+
+        if (imap.getBoolean("use_default_account")) {
+            // return default-account ImapItem instead 
+            ImapItem item = MailConfig.getAccountList().getDefaultAccount()
+                                      .getImapItem();
+
+            return item;
+        }
+
         return imap;
     }
 
-    public IdentityItem getIdentityItem()
-    {
-    	if( identity == null ) {
-    		identity = new IdentityItem(getRoot().getElement("identity"));
-    	}
+    public IdentityItem getIdentityItem() {
+        if (identity == null) {
+            identity = new IdentityItem(getRoot().getElement("identity"));
+        }
 
-    	if ( identity.getBoolean("use_default_account") )
-    	{
-    		// return default-account identityItem instead
+        if (identity.getBoolean("use_default_account")) {
+            // return default-account identityItem instead
+            IdentityItem item = MailConfig.getAccountList().getDefaultAccount()
+                                          .getIdentityItem();
 
-    		IdentityItem item = MailConfig.getAccountList().getDefaultAccount().getIdentityItem();
-    		return item;
-    	}
-    	
+            return item;
+        }
+
         return identity;
     }
 
@@ -164,62 +150,55 @@ public class AccountItem extends DefaultItem
             return true;
     }
     */
-
-
-    public void setName( String str )
-    {
-        set( "name", str );
+    public void setName(String str) {
+        set("name", str);
     }
 
-    public String getName()
-    {
-        return get( "name" );
+    public String getName() {
+        return get("name");
     }
 
-    public void setUid( int i )
-    {
-        set( "uid", i );
+    public void setUid(int i) {
+        set("uid", i);
     }
 
-
-    public int getUid()
-    {
+    public int getUid() {
         return getInteger("uid");
     }
 
-	public boolean isDefault()
-	{
-		if ( MailConfig.getAccountList().getDefaultAccountUid()
-				== getUid() ) return true;
-		
-		return false;		
-	}
+    public boolean isDefault() {
+        if (MailConfig.getAccountList().getDefaultAccountUid() == getUid()) {
+            return true;
+        }
 
-	/** {@inheritDoc} */
-	public boolean equals(Object obj) {
-		if (this == obj) return true;	// same object
-		if ((obj == null) || !(obj instanceof AccountItem)) return false;
+        return false;
+    }
 
-		/*
-		 * The fields on this object is in fact represented in the xml
-		 * structure found as getRoot(). Therefore super.equals()
-		 * should do the job
-		 */
-		return super.equals(obj);
-	}
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // same object
+        }
 
-	/** {@inheritDoc} */
-	public int hashCode() {
-		/*
-		 * The fields on this object is in fact represented in the xml
-		 * structure found as getRoot(). Therefore super.hashCode()
-		 * should do the job.
-		 */
-		return super.hashCode();
-	}
-	
+        if ((obj == null) || !(obj instanceof AccountItem)) {
+            return false;
+        }
+
+        /*
+         * The fields on this object is in fact represented in the xml
+         * structure found as getRoot(). Therefore super.equals()
+         * should do the job
+         */
+        return super.equals(obj);
+    }
+
+    /** {@inheritDoc} */
+    public int hashCode() {
+        /*
+         * The fields on this object is in fact represented in the xml
+         * structure found as getRoot(). Therefore super.hashCode()
+         * should do the job.
+         */
+        return super.hashCode();
+    }
 }
-
-
-
-

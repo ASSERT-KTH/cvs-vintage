@@ -15,16 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
+
 /**
  *
  *
  * Every abstract plugin class should implement this interface.
- * 
- * This is needed by the plugin loader classes which handle all 
+ *
+ * This is needed by the plugin loader classes which handle all
  * plugins equally, using this interface as the common determinator.
- * 
+ *
  *  @author fdietz
  */
 public interface PluginInterface {
-
 }

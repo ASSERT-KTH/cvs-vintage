@@ -14,6 +14,9 @@
 //
 //All Rights Reserved.
 //$Log: SaveAllAddressbooksPlugin.java,v $
+//Revision 1.8  2003/11/21 11:29:49  fdietz
+//[intern] applied jalopy source code formatting -> reduced checkstyle warnings to about 20.000, disabled some checks as suggested by redsolo, re-enabled whitespace/tab checks
+//
 //Revision 1.7  2003/06/15 18:46:18  fdietz
 //[feature]cleanup of shutdown interface, create background-thread manager which saves configuration/header-cache/etc in the background while Columba is running
 //
@@ -33,8 +36,10 @@ package org.columba.addressbook.shutdown;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeNode;
+
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.MainInterface;
+
 
 /**
  * @author freddy
@@ -45,43 +50,33 @@ import org.columba.core.main.MainInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class SaveAllAddressbooksPlugin implements TaskInterface {
+    /**
+     * Constructor for SaveAllFoldersPlugin.
+     */
+    public SaveAllAddressbooksPlugin() {
+        super();
+    }
 
-	/**
-	 * Constructor for SaveAllFoldersPlugin.
-	 */
-	public SaveAllAddressbooksPlugin() {
-		super();
-	}
+    /**
+     * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
+     */
+    public void run() {
+        saveFolders((AddressbookTreeNode) MainInterface.addressbookTreeModel.getRoot());
+    }
 
-	/**
-	 * @see org.columba.core.shutdown.ShutdownPluginInterface#run()
-	 */
-	public void run() {	
-		saveFolders(
-			(AddressbookTreeNode) MainInterface				
-				.addressbookTreeModel
-				.getRoot());
-		
-	}
+    public void saveFolders(AddressbookTreeNode folder) {
+        for (int i = 0; i < folder.getChildCount(); i++) {
+            AddressbookTreeNode child = (AddressbookTreeNode) folder.getChildAt(i);
 
-	public void saveFolders(AddressbookTreeNode folder) {
-		for (int i = 0; i < folder.getChildCount(); i++) {
-			AddressbookTreeNode child =
-				(AddressbookTreeNode) folder.getChildAt(i);
+            if (child instanceof AddressbookFolder) {
+                try {
+                    ((AddressbookFolder) child).save(null);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
-			
-			if (child instanceof AddressbookFolder) {
-				try {
-					
-					((AddressbookFolder) child).save(null);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-			
-			saveFolders(child);
-
-		}
-	}
-
+            saveFolders(child);
+        }
+    }
 }

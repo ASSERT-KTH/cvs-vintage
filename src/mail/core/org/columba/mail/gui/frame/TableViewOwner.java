@@ -8,6 +8,7 @@ package org.columba.mail.gui.frame;
 
 import org.columba.mail.gui.table.TableController;
 
+
 /**
  * FrameControllers having a table component should implement
  * this interface.
@@ -17,9 +18,9 @@ import org.columba.mail.gui.table.TableController;
  * <p>
  * To recognize we can just test it:
  * <pre>
- *  if ( frameMediator instanceof TableOwner ) 
- *   { 
- *      TableController table = ( (TableOwner) frameMediator).getTableController() 
+ *  if ( frameMediator instanceof TableOwner )
+ *   {
+ *      TableController table = ( (TableOwner) frameMediator).getTableController()
  *      // do something here
  *   }
  * </pre>
@@ -27,7 +28,5 @@ import org.columba.mail.gui.table.TableController;
  * @author fdietz
  */
 public interface TableViewOwner {
-
-	public abstract TableController getTableController();
-
+    public abstract TableController getTableController();
 }

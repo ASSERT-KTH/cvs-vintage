@@ -17,6 +17,7 @@ package org.columba.core.gui.themes.plugin;
 
 import javax.swing.UIManager;
 
+
 /**
  * @author frd
  *
@@ -24,21 +25,17 @@ import javax.swing.UIManager;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class GtkLookAndFeelPlugin extends AbstractThemePlugin {
+    /**
+     *
+     */
+    public GtkLookAndFeelPlugin() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public GtkLookAndFeelPlugin() {
-		super();
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
-	 */
-	public void setLookAndFeel() throws Exception {
-		UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.themes.plugin.AbstractThemePlugin#setLookAndFeel()
+     */
+    public void setLookAndFeel() throws Exception {
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+    }
 }

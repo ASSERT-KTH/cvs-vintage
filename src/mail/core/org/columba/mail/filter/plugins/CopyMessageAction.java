@@ -15,14 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.filter.plugins;
 
-import javax.swing.JOptionPane;
-
 import org.columba.core.command.Command;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.command.CopyMessageCommand;
 import org.columba.mail.main.MailInterface;
+
+import javax.swing.JOptionPane;
+
 
 /**
  * @author freddy
@@ -33,29 +35,24 @@ import org.columba.mail.main.MailInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class CopyMessageAction extends AbstractFilterAction {
+    public Command getCommand(FilterAction filterAction, Folder srcFolder,
+        Object[] uids) throws Exception {
+        int uid = filterAction.getUid();
 
-	
+        Folder destFolder = (Folder) MailInterface.treeModel.getFolder(uid);
 
-	public Command getCommand(FilterAction filterAction, Folder srcFolder, Object[] uids) throws Exception {
+        if (destFolder == null) {
+            JOptionPane.showMessageDialog(null,
+                "Unable to find destination folder, please correct the destination folder path for this filter");
+            throw new Exception("File not found");
+        }
 
-		int uid = filterAction.getUid();
+        FolderCommandReference[] r = new FolderCommandReference[2];
+        r[0] = new FolderCommandReference(srcFolder, uids);
+        r[1] = new FolderCommandReference(destFolder);
 
-		Folder destFolder = (Folder) MailInterface.treeModel.getFolder(uid);
+        CopyMessageCommand c = new CopyMessageCommand(r);
 
-		if (destFolder == null) {
-			JOptionPane.showMessageDialog(
-				null,
-				"Unable to find destination folder, please correct the destination folder path for this filter");
-			throw new Exception("File not found");
-		}
-
-		FolderCommandReference[] r = new FolderCommandReference[2];
-		r[0] = new FolderCommandReference(srcFolder, uids);
-		r[1] = new FolderCommandReference(destFolder);
-
-		CopyMessageCommand c = new CopyMessageCommand( r);
-
-		return c;
-	}
-
+        return c;
+    }
 }

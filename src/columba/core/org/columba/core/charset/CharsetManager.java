@@ -13,24 +13,28 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.ion, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.core.charset;
+
+import org.columba.core.gui.menu.CMenu;
+import org.columba.core.gui.menu.CMenuItem;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+
 import java.lang.reflect.Array;
+
 import java.nio.charset.Charset;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JMenu;
 
-import org.columba.core.gui.menu.CMenu;
-import org.columba.core.gui.menu.CMenuItem;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * The CharsetManager is in charge for managing the displayed and selected
@@ -38,339 +42,273 @@ import org.columba.mail.util.MailResourceLoader;
  * into the menubar and/or a contextmenu.
  */
 public class CharsetManager implements ActionListener {
+    // String definitions for the charsetnames
+    // NOTE: these are also used to look up the
+    // menuentries from the resourceloader  
+    private static final String[] charsets = {
+        
+        // Auto
+        "auto", 
+        // Global # 1
+        "UTF-8", "UTF-16", "US-ASCII",
+        
 
-	// String definitions for the charsetnames
-	// NOTE: these are also used to look up the
-	// menuentries from the resourceloader  
+        // West Europe # 4
+        "windows-1252", "ISO-8859-1", "ISO-8859-15", "IBM850", "MacRoman",
+        "ISO-8859-7", "MacGreek", "windows-1253", "MacIceland", "ISO-8859-3",
+        
 
-	private static final String[] charsets = {
-		// Auto
-		"auto",
-		// Global # 1
-		"UTF-8", "UTF-16", "US-ASCII",
+        // East Europe # 14
+        "ISO-8859-4", "ISO-8859-13", "windows-1257", "IBM852", "ISO-8859-2",
+        "MacCentralEurope", "MacCroatian", "IBM855", "ISO-8859-5", "KOI8-R",
+        "MacCyrillic", "windows-1251", "IBM866", "MacUkraine", "MacRomania",
+        
 
-		// West Europe # 4
-		"windows-1252",
-			"ISO-8859-1",
-			"ISO-8859-15",
-			"IBM850",
-			"MacRoman",
-			"ISO-8859-7",
-			"MacGreek",
-			"windows-1253",
-			"MacIceland",
-			"ISO-8859-3",
+        // East Asian # 29
+        "GB2312", "GBK", "GB18030", "Big5", "Big5-HKSCS", "EUC-TW", "EUC-JP",
+        "Shift_JIS", "ISO-2022-JP", "MS932", "EUC-KR", "JOHAB", "ISO-2022-KR",
+        
 
-		// East Europe # 14
-		"ISO-8859-4",
-			"ISO-8859-13",
-			"windows-1257",
-			"IBM852",
-			"ISO-8859-2",
-			"MacCentralEurope",
-			"MacCroatian",
-			"IBM855",
-			"ISO-8859-5",
-			"KOI8-R",
-			"MacCyrillic",
-			"windows-1251",
-			"IBM866",
-			"MacUkraine",
-			"MacRomania",
+        // West Asian # 42
+        "TIS620", "IBM857", "ISO-8859-9", "MacTurkish", "windows-1254",
+        "windows-1258"
+    };
+    private static final String[] groups = {
+        "global", "westeurope", "easteurope", "eastasian", "seswasian"
+    };
+    private static final int[] groupOffset = { 1, 4, 14, 29, 42, 48 };
+    private List listeners;
+    private CharsetMenuItem selectedMenuItem;
+    private XmlElement config;
+    private int defaultId;
+    private int selectedId;
 
-		// East Asian # 29
-		"GB2312",
-			"GBK",
-			"GB18030",
-			"Big5",
-			"Big5-HKSCS",
-			"EUC-TW",
-			"EUC-JP",
-			"Shift_JIS",
-			"ISO-2022-JP",
-			"MS932",
-			"EUC-KR",
-			"JOHAB",
-			"ISO-2022-KR",
+    /**
+     *
+     * @param config The configuration that contains the user-selected Charset
+     */
+    public CharsetManager(XmlElement config) {
+        listeners = new Vector();
+        this.config = config;
 
-		// West Asian # 42
-		"TIS620",
-			"IBM857",
-			"ISO-8859-9",
-			"MacTurkish",
-			"windows-1254",
-			"windows-1258"
+        // Grab default Charset of the System
+        defaultId = getCharsetId(System.getProperty("file.encoding"));
 
-		// # 48
-	};
+        int charsetId;
+        selectedId = 0;
 
-	private static final String[] groups =
-		{ "global", "westeurope", "easteurope", "eastasian", "seswasian" };
+        // Grab the user-selected charset if it exists
+        if (config != null) {
+            selectedId = getCharsetId(config.getAttribute("name"));
+        }
 
-	private static final int[] groupOffset = { 1, 4, 14, 29, 42, 48 };
+        // if user selected auto or no user-preferences found
+        // select the default Charset of the system else select
+        // the preferred Charset
+        if (selectedId == 0) {
+            charsetId = defaultId;
+        } else {
+            charsetId = selectedId;
+        }
 
-	private List listeners;
+        // this is the menuitem that shows the selected Charset
+        // and changes when the selected/displayed charset changed
+        selectedMenuItem = new CharsetMenuItem(MailResourceLoader.getString(
+                    "menu", "mainframe",
+                    "menu_view_charset_" + charsets[charsetId]), -1, 0,
+                charsets[selectedId]);
+    }
 
-	private CharsetMenuItem selectedMenuItem;
+    /**
+     * Change the menuitem that shows the selected/displayed Charset
+     *
+     * @param name
+     */
+    public void displayCharset(String name) {
+        int charsetId = getCharsetId(name);
 
-	private XmlElement config;
+        if (charsetId != -1) {
+            selectedMenuItem.setText(MailResourceLoader.getString("menu",
+                    "mainframe", "menu_view_charset_" + charsets[charsetId]));
+        }
+    }
 
-	private int defaultId;
-	private int selectedId;
+    private int getCharsetId(String name) {
+        // default should be 0
+        // -> charsets[0] == "auto"
+        if (name == null) {
+            return -1;
+        }
 
-	/**
-	 * 
-	 * @param config The configuration that contains the user-selected Charset
-	 */
-	public CharsetManager(XmlElement config) {
-		listeners = new Vector();
-		this.config = config;
+        if (name.equals("auto")) {
+            return defaultId;
+        }
 
-		// Grab default Charset of the System
-		defaultId = getCharsetId(System.getProperty("file.encoding"));
-		
-		int charsetId;
-		selectedId = 0;
-		
-		
-		// Grab the user-selected charset if it exists
-		if (config != null) {
-			selectedId = getCharsetId(config.getAttribute("name"));
-		}
+        // looking if the given charsetname is in the charset-list, if not return default-id
+        boolean found = false;
 
+        for (int i = 0; i < charsets.length; i++) {
+            if (charsets[i].equals(name)) {
+                found = true;
 
-		// if user selected auto or no user-preferences found
-		// select the default Charset of the system else select
-		// the preferred Charset
-		if (selectedId == 0) {
-			charsetId = defaultId;
-		} else {
-			charsetId = selectedId;
-		}
+                break;
+            }
+        }
 
-		
-		// this is the menuitem that shows the selected Charset
-		// and changes when the selected/displayed charset changed
-		selectedMenuItem =
-			new CharsetMenuItem(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_view_charset_" + charsets[charsetId]),
-				-1,
-				0,
-				charsets[selectedId]);
-	}
+        // if name not found in the charset array return the defaultId
+        if (!found) {
+            return defaultId;
+        }
 
-	
-	
-	/**
-	 * Change the menuitem that shows the selected/displayed Charset 
-	 * 
-	 * @param name
-	 */
-	public void displayCharset(String name) {
-		int charsetId = getCharsetId(name);
+        int charsetId = 0;
+        String charsetCanonicalName = Charset.forName(name).name();
 
-		if (charsetId != -1) {
-			selectedMenuItem.setText(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_view_charset_" + charsets[charsetId]));
-		}
-	}
+        //System.out.println( name + " -> " + charsetCanonicalName);
+        for (int i = 0; i < charsets.length; i++) {
+            if (charsets[i].equals(charsetCanonicalName)) {
+                charsetId = i;
+            }
+        }
 
-	private int getCharsetId(String name) {
-		// default should be 0
-		// -> charsets[0] == "auto"
-		if ( name == null ) return -1;
-		if( name.equals("auto")) return defaultId;
-		// looking if the given charsetname is in the charset-list, if not return default-id
-		boolean found=false;
-		for (int i=0; i < charsets.length; i++) {
-			if (charsets[i].equals(name)) {
-				found=true;
-				break;
-			}
-		}
-		// if name not found in the charset array return the defaultId
-		if (!found) {
-			return defaultId;
-		}
-		int charsetId = 0;
-		String charsetCanonicalName = Charset.forName( name ).name();
-		//System.out.println( name + " -> " + charsetCanonicalName);
+        return charsetId;
+    }
 
-		for (int i = 0; i < charsets.length; i++) {
-			if (charsets[i].equals(charsetCanonicalName)) {
-				charsetId = i;
-			}
-		}
-		return charsetId;
-	}
+    /**
+     * Generates a charset menu from which this CharsetManager can
+     * be controlled.
+     *
+     * @param subMenu Menu in wich the charsetmenu will be inserted
+     * @param handler
+     */
+    public void createMenu(JMenu subMenu, MouseListener handler) {
+        JMenu subsubMenu;
+        CharsetMenuItem menuItem;
 
-	/**
-	 * Generates a charset menu from which this CharsetManager can
-	 * be controlled.
-	 * 
-	 * @param subMenu Menu in wich the charsetmenu will be inserted
-	 * @param handler  
-	 */
-	public void createMenu(JMenu subMenu, MouseListener handler) {
-		JMenu subsubMenu;
-		CharsetMenuItem menuItem;
+        int groupSize = Array.getLength(groups);
+        int charsetSize = Array.getLength(charsets);
 
-		int groupSize = Array.getLength(groups);
-		int charsetSize = Array.getLength(charsets);
+        subMenu.add(selectedMenuItem);
 
-		subMenu.add(selectedMenuItem);
+        subMenu.addSeparator();
 
-		subMenu.addSeparator();
+        menuItem = new CharsetMenuItem(MailResourceLoader.getString("menu",
+                    "mainframe", "menu_view_charset_" + charsets[0]), -1, 0,
+                charsets[0]);
+        menuItem.addMouseListener(handler);
+        menuItem.addActionListener(this);
 
-		menuItem =
-			new CharsetMenuItem(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_view_charset_" + charsets[0]),
-				-1,
-				0,
-				charsets[0]);
-		menuItem.addMouseListener(handler);
-		menuItem.addActionListener(this);
+        subMenu.add(menuItem);
 
-		subMenu.add(menuItem);
+        // Automatic Generation of Groups
+        for (int i = 0; i < groupSize; i++) {
+            subsubMenu = new CMenu(MailResourceLoader.getString("menu",
+                        "mainframe", "menu_view_charset_" + groups[i]));
+            subMenu.add(subsubMenu);
 
-		// Automatic Generation of Groups
+            for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
+                menuItem = new CharsetMenuItem(MailResourceLoader.getString(
+                            "menu", "mainframe",
+                            "menu_view_charset_" + charsets[j]), -1, j,
+                        charsets[j]);
+                menuItem.addMouseListener(handler);
+                menuItem.addActionListener(this);
+                subsubMenu.add(menuItem);
+            }
+        }
+    }
 
-		for (int i = 0; i < groupSize; i++) {
-			subsubMenu =
-				new CMenu(
-					MailResourceLoader.getString(
-						"menu",
-						"mainframe",
-						"menu_view_charset_" + groups[i]));
-			subMenu.add(subsubMenu);
+    /**
+     * Adds a CharcterCodingListener.
+     * @param listener The listener to set
+     */
+    public void addCharsetListener(CharsetListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
 
-			for (int j = groupOffset[i]; j < groupOffset[i + 1]; j++) {
-				menuItem =
-					new CharsetMenuItem(
-						MailResourceLoader.getString(
-							"menu",
-							"mainframe",
-							"menu_view_charset_" + charsets[j]),
-						-1,
-						j,
-						charsets[j]);
-				menuItem.addMouseListener(handler);
-				menuItem.addActionListener(this);
-				subsubMenu.add(menuItem);
-			}
-		}
+    public void actionPerformed(ActionEvent e) {
+        CharsetEvent event;
 
-	}
+        int charsetId = ((CharsetMenuItem) e.getSource()).getId();
 
-	/**
-	 * Adds a CharcterCodingListener.
-	 * @param listener The listener to set
-	 */
-	public void addCharsetListener(CharsetListener listener) {
-		if (!listeners.contains(listener))
-			listeners.add(listener);
-	}
+        changeCharset(charsetId);
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		CharsetEvent event;
+    private void changeCharset(int charsetId) {
+        CharsetEvent event;
+        event = new CharsetEvent(this, charsetId, charsets[charsetId]);
+        selectedId = charsetId;
 
-		int charsetId = ((CharsetMenuItem) e.getSource()).getId();
+        // Save the charset as user preference
+        // NOTE: This may also be auto
+        if (config != null) {
+            config.addAttribute("name", charsets[charsetId]);
+        }
 
-		changeCharset(charsetId);
-	}
+        // Set displayed Charset
+        if (charsetId == 0) {
+            selectedMenuItem.setText(MailResourceLoader.getString("menu",
+                    "mainframe", "menu_view_charset_" + charsets[defaultId]));
+        } else {
+            selectedMenuItem.setText(MailResourceLoader.getString("menu",
+                    "mainframe", "menu_view_charset_" + charsets[charsetId]));
+        }
 
-	private void changeCharset(int charsetId) {
-		CharsetEvent event;
-		event = new CharsetEvent(this, charsetId, charsets[charsetId]);
-		selectedId = charsetId;
+        // Notify Listeners
+        for (Iterator it = listeners.iterator(); it.hasNext();) {
+            // passing all events to the listeners
+            ((CharsetListener) it.next()).charsetChanged(event);
+        }
+    }
 
-		// Save the charset as user preference
-		// NOTE: This may also be auto
-		if (config != null) {
-			config.addAttribute("name",charsets[charsetId]);
-		}
-
-		// Set displayed Charset
-		if (charsetId == 0) {
-			selectedMenuItem.setText(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_view_charset_" + charsets[defaultId]));
-		} else {
-			selectedMenuItem.setText(
-				MailResourceLoader.getString(
-					"menu",
-					"mainframe",
-					"menu_view_charset_" + charsets[charsetId]));
-		}
-
-
-		// Notify Listeners
-		for (Iterator it = listeners.iterator(); it.hasNext();) {
-			// passing all events to the listeners
-			((CharsetListener) it.next()).charsetChanged(event);
-		}
-	}
-	
-	public String getSelectedCharset() {
-		return charsets[selectedId];
-	}
-
+    public String getSelectedCharset() {
+        return charsets[selectedId];
+    }
 }
 
+
 class CharsetMenuItem extends CMenuItem {
+    int id;
+    String javaCodingName;
 
-	int id;
-	String javaCodingName;
+    public CharsetMenuItem(String name, int i, int id, String javaCodingName) {
+        //super( name, i );
+        super(name);
 
-	public CharsetMenuItem(String name, int i, int id, String javaCodingName) {
-		//super( name, i );
-		super(name);
+        this.id = id;
+        this.javaCodingName = javaCodingName;
+    }
 
-		this.id = id;
-		this.javaCodingName = javaCodingName;
-	}
+    /**
+     * Returns the javaCodingName.
+     * @return String
+     */
+    public String getJavaCodingName() {
+        return javaCodingName;
+    }
 
-	/**
-	 * Returns the javaCodingName.
-	 * @return String
-	 */
-	public String getJavaCodingName() {
-		return javaCodingName;
-	}
+    /**
+     * Sets the javaCodingName.
+     * @param javaCodingName The javaCodingName to set
+     */
+    public void setJavaCodingName(String javaCodingName) {
+        this.javaCodingName = javaCodingName;
+    }
 
-	/**
-	 * Sets the javaCodingName.
-	 * @param javaCodingName The javaCodingName to set
-	 */
-	public void setJavaCodingName(String javaCodingName) {
-		this.javaCodingName = javaCodingName;
-	}
+    /**
+     * Returns the id.
+     * @return int
+     */
+    public int getId() {
+        return id;
+    }
 
-	/**
-	 * Returns the id.
-	 * @return int
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Sets the id.
-	 * @param id The id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
+    /**
+     * Sets the id.
+     * @param id The id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
 }

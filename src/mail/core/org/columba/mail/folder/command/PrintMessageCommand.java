@@ -13,22 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
@@ -48,6 +33,7 @@ import org.columba.core.print.cPrintObject;
 import org.columba.core.print.cPrintVariable;
 import org.columba.core.print.cVGroup;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
@@ -56,6 +42,7 @@ import org.columba.mail.gui.attachment.AttachmentModel;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.MailResourceLoader;
+
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.CharsetDecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
@@ -67,382 +54,415 @@ import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
 
+import java.awt.Color;
+import java.awt.Font;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.lang.reflect.Array;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+
+import java.text.DateFormat;
+
+import java.util.Date;
+import java.util.List;
+
+
 /**
  * Print the selected message.
- * 
+ *
  * @author karlpeder
  */
 public class PrintMessageCommand extends FolderCommand {
+    private cPrintObject mailHeader;
+    private cPrintObject mailFooter;
+    private DateFormat mailDateFormat;
+    private String[] headerKeys = { "From", "To", "Date", "Subject" };
+    private String attHeaderKey = "attachment";
+    private String charset;
 
-	private cPrintObject mailHeader;
-	private cPrintObject mailFooter;
-	private DateFormat mailDateFormat;
-	private String[] headerKeys = { "From", "To", "Date", "Subject" };
-	private String attHeaderKey = "attachment";
-	private String charset;
+    /**
+     * Constructor for PrintMessageCommdn.
+     * @param frameMediator
+     * @param references
+     */
+    public PrintMessageCommand(DefaultCommandReference[] references,
+        String charset) {
+        super(references);
+        this.charset = charset;
 
-	/**
-	 * Constructor for PrintMessageCommdn.
-	 * @param frameMediator
-	 * @param references
-	 */
-	public PrintMessageCommand(
-		DefaultCommandReference[] references,
-		String charset) {
-		super(references);
-		this.charset = charset;
+        // Header
+        cParagraph columbaParagraph = new cParagraph();
+        columbaParagraph.setText("The Columba Project");
+        columbaParagraph.setColor(Color.lightGray);
+        columbaParagraph.setFontStyle(Font.BOLD);
 
-		// Header
+        cParagraph link = new cParagraph();
+        link.setText(" - http://sourceforge.columba.net");
+        link.setTextAlignment(cParagraph.LEFT);
+        link.setLeftMargin(columbaParagraph.getSize(new cCmUnit(100)).getWidth());
+        link.setColor(Color.lightGray);
 
-		cParagraph columbaParagraph = new cParagraph();
-		columbaParagraph.setText("The Columba Project");
-		columbaParagraph.setColor(Color.lightGray);
-		columbaParagraph.setFontStyle(Font.BOLD);
+        cPrintVariable date = new cPrintVariable();
+        date.setCodeString("%DATE_TODAY%");
+        date.setTextAlignment(cParagraph.RIGHT);
+        date.setColor(Color.lightGray);
 
-		cParagraph link = new cParagraph();
-		link.setText(" - http://sourceforge.columba.net");
-		link.setTextAlignment(cParagraph.LEFT);
-		link.setLeftMargin(
-			columbaParagraph.getSize(new cCmUnit(100)).getWidth());
-		link.setColor(Color.lightGray);
+        cHGroup headerText = new cHGroup();
+        headerText.add(columbaParagraph);
+        headerText.add(link);
+        headerText.add(date);
 
-		cPrintVariable date = new cPrintVariable();
-		date.setCodeString("%DATE_TODAY%");
-		date.setTextAlignment(cParagraph.RIGHT);
-		date.setColor(Color.lightGray);
+        cLine headerLine = new cLine();
 
-		cHGroup headerText = new cHGroup();
-		headerText.add(columbaParagraph);
-		headerText.add(link);
-		headerText.add(date);
+        headerLine.setThickness(1);
+        headerLine.setColor(Color.lightGray);
+        headerLine.setTopMargin(new cCmUnit(0.1));
 
-		cLine headerLine = new cLine();
+        cVGroup header = new cVGroup();
+        header.add(headerText);
+        header.add(headerLine);
+        header.setBottomMargin(new cCmUnit(0.5));
 
-		headerLine.setThickness(1);
-		headerLine.setColor(Color.lightGray);
-		headerLine.setTopMargin(new cCmUnit(0.1));
+        mailHeader = header;
 
-		cVGroup header = new cVGroup();
-		header.add(headerText);
-		header.add(headerLine);
-		header.setBottomMargin(new cCmUnit(0.5));
+        // Footer
+        cPrintVariable footer = new cPrintVariable();
+        footer.setTextAlignment(cParagraph.CENTER);
+        footer.setCodeString("%PAGE_NR% / %PAGE_COUNT%");
+        footer.setTopMargin(new cCmUnit(0.5));
+        footer.setColor(Color.lightGray);
 
-		mailHeader = header;
+        mailFooter = footer;
 
-		// Footer
+        // DateFormat
+        mailDateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG,
+                DateFormat.MEDIUM);
+    }
 
-		cPrintVariable footer = new cPrintVariable();
-		footer.setTextAlignment(cParagraph.CENTER);
-		footer.setCodeString("%PAGE_NR% / %PAGE_COUNT%");
-		footer.setTopMargin(new cCmUnit(0.5));
-		footer.setColor(Color.lightGray);
+    public cPrintObject getMailHeader() {
+        return mailHeader;
+    }
 
-		mailFooter = footer;
+    public cPrintObject getMailFooter() {
+        return mailFooter;
+    }
 
-		// DateFormat
+    public String[] getHeaderKeys() {
+        return headerKeys;
+    }
 
-		mailDateFormat =
-			DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM);
-	}
+    public DateFormat getMailDateFormat() {
+        return mailDateFormat;
+    }
 
-	public cPrintObject getMailHeader() {
-		return mailHeader;
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updatedGUI() throws Exception {
+    }
 
-	public cPrintObject getMailFooter() {
-		return mailFooter;
-	}
+    /**
+     * This method executes the print action, i.e. it prints the selected
+     * messages.
+     *
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        /*
+         * *20030604, karlpeder* Fixed minor flaws to be able to print
+         * text messages. Further more added support for html messages.
+         */
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-	public String[] getHeaderKeys() {
-		return headerKeys;
-	}
+        Object[] uids = r[0].getUids(); // uid for messages to print
 
-	public DateFormat getMailDateFormat() {
-		return mailDateFormat;
-	}
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updatedGUI() throws Exception {
-	}
+        Folder srcFolder = (Folder) r[0].getFolder();
 
-	/**
-	 * This method executes the print action, i.e. it prints the selected
-	 * messages.
-	 * 
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
+        //		register for status events
+        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-		/*
-		 * *20030604, karlpeder* Fixed minor flaws to be able to print
-		 * text messages. Further more added support for html messages.
-		 */
+        // Print each message
+        for (int j = 0; j < uids.length; j++) {
+            Object uid = uids[j];
+            ColumbaLogger.log.debug("Printing UID=" + uid);
 
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+            ColumbaMessage message = new ColumbaMessage();
+            Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
 
-		Object[] uids = r[0].getUids(); // uid for messages to print
+            MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
 
-		Folder srcFolder = (Folder) r[0].getFolder();
-		//		register for status events
-		 ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
+            // Does the user prefer html or plain text?
+            XmlElement html = MailConfig.getMainFrameOptionsConfig().getRoot()
+                                        .getElement("/options/html");
+            boolean viewhtml = Boolean.valueOf(html.getAttribute("prefer"))
+                                      .booleanValue();
 
-		// Print each message
-		for (int j = 0; j < uids.length; j++) {
-			Object uid = uids[j];
-			ColumbaLogger.log.debug("Printing UID=" + uid);
+            // Which Bodypart shall be shown? (html/plain)
+            MimePart bodyPart = null;
 
-			ColumbaMessage message = new ColumbaMessage();
-			Header header = srcFolder.getHeaderFields(uids[j], getHeaderKeys());
-			
-			MimeTree mimePartTree = srcFolder.getMimePartTree(uid);
+            if (viewhtml) {
+                bodyPart = mimePartTree.getFirstTextPart("html");
+            } else {
+                bodyPart = mimePartTree.getFirstTextPart("plain");
+            }
 
-			// Does the user prefer html or plain text?
-			XmlElement html =
-				MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
-					"/options/html");
-			boolean viewhtml =
-				Boolean.valueOf(html.getAttribute("prefer")).booleanValue();
+            if (bodyPart == null) {
+                bodyPart = new LocalMimePart(new MimeHeader(header));
+                ((LocalMimePart) bodyPart).setBody(new CharSequenceSource(
+                        "<No Message-Text>"));
+            } else {
+                bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
+            }
 
-			// Which Bodypart shall be shown? (html/plain)
-			MimePart bodyPart = null;
-			if (viewhtml)
-				bodyPart = mimePartTree.getFirstTextPart("html");
-			else
-				bodyPart = mimePartTree.getFirstTextPart("plain");
+            // Setup print document for message
+            cDocument messageDoc = new cDocument();
+            messageDoc.setHeader(getMailHeader());
+            messageDoc.setFooter(getMailFooter());
 
-			if (bodyPart == null) {
-				bodyPart = new LocalMimePart(new MimeHeader(header));
-				((LocalMimePart)bodyPart).setBody(new CharSequenceSource("<No Message-Text>"));
-			} else
-				bodyPart = srcFolder.getMimePart(uid, bodyPart.getAddress());
+            String[] headerKeys = getHeaderKeys();
+            cParagraph hKey;
+            cParagraph hValue;
+            cHGroup hLine;
+            Object value;
 
-			// Setup print document for message
-			cDocument messageDoc = new cDocument();
-			messageDoc.setHeader(getMailHeader());
-			messageDoc.setFooter(getMailFooter());
+            // Add header information to print
+            for (int i = 0; i < Array.getLength(headerKeys); i++) {
+                hKey = new cParagraph();
 
-			String[] headerKeys = getHeaderKeys();
-			cParagraph hKey, hValue;
-			cHGroup hLine;
-			Object value;
+                // *20030531, karlpeder* setting headerKeys to lowercase for lookup!
+                hKey.setText(MailResourceLoader.getString("header",
+                        headerKeys[i].toLowerCase()));
+                hKey.setFontStyle(Font.BOLD);
 
-			// Add header information to print
-			for (int i = 0; i < Array.getLength(headerKeys); i++) {
-				hKey = new cParagraph();
-				// *20030531, karlpeder* setting headerKeys to lowercase for lookup!
-				hKey.setText(
-					MailResourceLoader.getString(
-						"header",
-						headerKeys[i].toLowerCase()));
-				hKey.setFontStyle(Font.BOLD);
+                hValue = new cParagraph();
 
-				hValue = new cParagraph();
-				// *20030531, karlpeder* case ignored for string comparison
-				if (headerKeys[i].equalsIgnoreCase("date")) {
-					value = header.get("columba.date");
-				} else {
-					value = header.get(headerKeys[i]);
-				}
+                // *20030531, karlpeder* case ignored for string comparison
+                if (headerKeys[i].equalsIgnoreCase("date")) {
+                    value = header.get("columba.date");
+                } else {
+                    value = header.get(headerKeys[i]);
+                }
 
-				if (value instanceof Date) {
-					hValue.setText(getMailDateFormat().format((Date) value));
-				} else {
-					hValue.setText((String) value);
-				}
-				hValue.setLeftMargin(new cCmUnit(3.0));
+                if (value instanceof Date) {
+                    hValue.setText(getMailDateFormat().format((Date) value));
+                } else {
+                    hValue.setText((String) value);
+                }
 
-				hLine = new cHGroup();
-				hLine.add(hKey);
-				hLine.add(hValue);
+                hValue.setLeftMargin(new cCmUnit(3.0));
 
-				messageDoc.appendPrintObject(hLine);
-			}
+                hLine = new cHGroup();
+                hLine.add(hKey);
+                hLine.add(hValue);
 
-			// Add list of attachments if applicable
-			AttachmentModel attMod = new AttachmentModel();
-			attMod.setCollection(mimePartTree);
-			List attachments = attMod.getDisplayedMimeParts();
+                messageDoc.appendPrintObject(hLine);
+            }
 
-			for (int i = 0; i < attachments.size(); i++) {
-				StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
-				String contenttype = 
-						mp.getHeader().getMimeType().getType();
-				String contentSubtype = 
-						mp.getHeader().getMimeType().getSubtype();
+            // Add list of attachments if applicable
+            AttachmentModel attMod = new AttachmentModel();
+            attMod.setCollection(mimePartTree);
 
-				if (mp.getHeader().getFileName() != null) {
-					// one line is added to the header for each attachment
-					// (which has a filename defined)
-					hKey = new cParagraph();
-					hKey.setText(
-						MailResourceLoader.getString("header", attHeaderKey));
-					hKey.setFontStyle(Font.BOLD);
+            List attachments = attMod.getDisplayedMimeParts();
 
-					hValue = new cParagraph();
-					hValue.setText(mp.getHeader().getFileName());
-					hValue.setLeftMargin(new cCmUnit(3.0));
+            for (int i = 0; i < attachments.size(); i++) {
+                StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
+                String contenttype = mp.getHeader().getMimeType().getType();
+                String contentSubtype = mp.getHeader().getMimeType().getSubtype();
 
-					hLine = new cHGroup();
-					hLine.add(hKey);
-					hLine.add(hValue);
+                if (mp.getHeader().getFileName() != null) {
+                    // one line is added to the header for each attachment
+                    // (which has a filename defined)
+                    hKey = new cParagraph();
+                    hKey.setText(MailResourceLoader.getString("header",
+                            attHeaderKey));
+                    hKey.setFontStyle(Font.BOLD);
 
-					messageDoc.appendPrintObject(hLine);
-				}
-			}
+                    hValue = new cParagraph();
+                    hValue.setText(mp.getHeader().getFileName());
+                    hValue.setLeftMargin(new cCmUnit(3.0));
 
-			// Add body of message to print
-			String mimesubtype = 
-					bodyPart.getHeader().getMimeType().getSubtype();
-			if (mimesubtype.equals("html")) {
-				messageDoc.appendPrintObject(getHTMLBodyPrintObject((StreamableMimePart)bodyPart));
-			} else {
-				messageDoc.appendPrintObject(getPlainBodyPrintObject((StreamableMimePart)bodyPart));
-			}
+                    hLine = new cHGroup();
+                    hLine.add(hKey);
+                    hLine.add(hValue);
 
-			// print the print document (i.e. the message)
-			messageDoc.print();
+                    messageDoc.appendPrintObject(hLine);
+                }
+            }
 
-		} // end of for loop over uids to print 
+            // Add body of message to print
+            String mimesubtype = bodyPart.getHeader().getMimeType().getSubtype();
 
-	}
+            if (mimesubtype.equals("html")) {
+                messageDoc.appendPrintObject(getHTMLBodyPrintObject(
+                        (StreamableMimePart) bodyPart));
+            } else {
+                messageDoc.appendPrintObject(getPlainBodyPrintObject(
+                        (StreamableMimePart) bodyPart));
+            }
 
-	/**
-	 * Private utility to create a print object representing the 
-	 * body of a plain text message. The messagebody is decoded according
-	 * to present charset.<br>
-	 * Precondition: Mime subtype is "plain".
-	 *
-	 * @param	bodyPart	Body part of message
-	 * @return	Print object ready to be appended to the print document
-	 * @author	Karl Peder Olesen (karlpeder), 20030531
-	 */
-	private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart) throws IOException {
+            // print the print document (i.e. the message)
+            messageDoc.print();
+        }
+         // end of for loop over uids to print 
+    }
 
-		// decode message body with respect to charset
-		String decodedBody = getDecodedMessageBody(bodyPart);
-		// create a print object and return it
-		cParagraph printBody = new cParagraph();
-		printBody.setTopMargin(new cCmUnit(1.0));
-		printBody.setText(decodedBody);
-		return printBody;
-	}
+    /**
+     * Private utility to create a print object representing the
+     * body of a plain text message. The messagebody is decoded according
+     * to present charset.<br>
+     * Precondition: Mime subtype is "plain".
+     *
+     * @param        bodyPart        Body part of message
+     * @return        Print object ready to be appended to the print document
+     * @author        Karl Peder Olesen (karlpeder), 20030531
+     */
+    private cPrintObject getPlainBodyPrintObject(StreamableMimePart bodyPart)
+        throws IOException {
+        // decode message body with respect to charset
+        String decodedBody = getDecodedMessageBody(bodyPart);
 
-	/**
-	 * retrieve printer options from configuration file
-	 * 
-	 * @return	true, if scaling is allowed
-	 * 			false, otherwise 
-	 */
-	protected boolean isScalingAllowed() {
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement printer = null;
-		if (options != null)
-			printer = options.getElement("/printer");
+        // create a print object and return it
+        cParagraph printBody = new cParagraph();
+        printBody.setTopMargin(new cCmUnit(1.0));
+        printBody.setText(decodedBody);
 
-		// no configuration available, create default config
-		if (printer == null) {
-			// create new local xml treenode
-			ColumbaLogger.log.debug(
-				"printer config node not found - creating new");
-			printer = new XmlElement("printer");
-			printer.addAttribute("allow_scaling", "true");
+        return printBody;
+    }
 
-			// add to options if possible (so it will be saved)
-			if (options != null) {
-				ColumbaLogger.log.debug("storing new printer config node");
-				options.addElement(printer);
-			}
-		}
+    /**
+     * retrieve printer options from configuration file
+     *
+     * @return        true, if scaling is allowed
+     *                         false, otherwise
+     */
+    protected boolean isScalingAllowed() {
+        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement printer = null;
 
-		return Boolean
-			.valueOf(printer.getAttribute("allow_scaling", "true"))
-			.booleanValue();
-	}
+        if (options != null) {
+            printer = options.getElement("/printer");
+        }
 
-	/**
-	 * Private utility to create a print object representing the 
-	 * body of a html message.<br>
-	 * Precondition: Mime subtype is "html".
-	 * 
-	 * @param	bodyPart	Body part of message
-	 * @return	Print object ready to be appended to the print document
-	 * @author	Karl Peder Olesen (karlpeder), 20030531
-	 */
-	private cPrintObject getHTMLBodyPrintObject(StreamableMimePart bodyPart) throws IOException {
+        // no configuration available, create default config
+        if (printer == null) {
+            // create new local xml treenode
+            ColumbaLogger.log.debug(
+                "printer config node not found - creating new");
+            printer = new XmlElement("printer");
+            printer.addAttribute("allow_scaling", "true");
 
-		// decode message body with respect to charset
-		String decodedBody = getDecodedMessageBody(bodyPart);
+            // add to options if possible (so it will be saved)
+            if (options != null) {
+                ColumbaLogger.log.debug("storing new printer config node");
+                options.addElement(printer);
+            }
+        }
 
-		// try to fix broken html-strings
-		String validated = HtmlParser.validateHTMLString(decodedBody);
+        return Boolean.valueOf(printer.getAttribute("allow_scaling", "true"))
+                      .booleanValue();
+    }
 
-		try {
-			// create temporary file and save validated body
-			File tempFile = TempFileStore.createTempFileWithSuffix("html");
-			DiskIO.saveStringInFile(tempFile, validated);
-			URL url = tempFile.toURL();
+    /**
+     * Private utility to create a print object representing the
+     * body of a html message.<br>
+     * Precondition: Mime subtype is "html".
+     *
+     * @param        bodyPart        Body part of message
+     * @return        Print object ready to be appended to the print document
+     * @author        Karl Peder Olesen (karlpeder), 20030531
+     */
+    private cPrintObject getHTMLBodyPrintObject(StreamableMimePart bodyPart)
+        throws IOException {
+        // decode message body with respect to charset
+        String decodedBody = getDecodedMessageBody(bodyPart);
 
-			boolean allowScaling = isScalingAllowed();
-			cHTMLPart htmlBody = new cHTMLPart(allowScaling);
-			// true ~ scaling allowed
-			htmlBody.setTopMargin(new cCmUnit(1.0));
-			htmlBody.setHTML(url);
-			return htmlBody;
-		} catch (MalformedURLException e) {
-			ColumbaLogger.log.error("Error loading html for print", e);
-			return null;
-		} catch (IOException e) {
-			ColumbaLogger.log.error("Error loading html for print", e);
-			return null;
-		}
-	}
+        // try to fix broken html-strings
+        String validated = HtmlParser.validateHTMLString(decodedBody);
 
-	/**
-	 * Private utility to decode the message body with the proper charset
-	 * @param	bodyPart	The body of the message
-	 * @return	Decoded message body
-	 * @author 	Karl Peder Olesen (karlpeder), 20030601
-	 */
-	private String getDecodedMessageBody(StreamableMimePart bodyPart) throws IOException {
-		// First determine which charset to use
-		String charsetToUse;
-		if (charset.equals("auto")) {
-			// get charset from message
-			charsetToUse = bodyPart.getHeader().getContentParameter("charset");
-		} else {
-			// use default charset
-			charsetToUse = charset;
-		}
+        try {
+            // create temporary file and save validated body
+            File tempFile = TempFileStore.createTempFileWithSuffix("html");
+            DiskIO.saveStringInFile(tempFile, validated);
 
+            URL url = tempFile.toURL();
 
-		MimeHeader header = bodyPart.getHeader();
-		// Decode message according to charset
-		InputStream bodyStream = bodyPart.getInputStream();
-		String encoding = header.getContentTransferEncoding();
-		if( encoding != null ) {
-			if( encoding.equals("quoted-printable") ) {
-				bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-			} else if ( encoding.equals("base64")) {
-				bodyStream = new Base64DecoderInputStream( bodyStream );
-			}
-		}
+            boolean allowScaling = isScalingAllowed();
+            cHTMLPart htmlBody = new cHTMLPart(allowScaling);
 
-		// charset may be null if not specified properly in Content-Type header 
-		if (charsetToUse != null) {
-			Charset charset;
-			try {
-				charset = Charset.forName(charsetToUse );
-			} catch (UnsupportedCharsetException ex) {
-				// decode using default charset
-				charset = Charset.forName(System.getProperty("file.encoding"));
-			}
-			bodyStream = new CharsetDecoderInputStream( bodyStream, charset);
-		} else {
-			ColumbaLogger.log.debug("No charset specified " + 
-					"- no decoding will be performed");
-		}
+            // true ~ scaling allowed
+            htmlBody.setTopMargin(new cCmUnit(1.0));
+            htmlBody.setHTML(url);
 
-		return StreamUtils.readInString(bodyStream).toString();
-	}
+            return htmlBody;
+        } catch (MalformedURLException e) {
+            ColumbaLogger.log.error("Error loading html for print", e);
+
+            return null;
+        } catch (IOException e) {
+            ColumbaLogger.log.error("Error loading html for print", e);
+
+            return null;
+        }
+    }
+
+    /**
+     * Private utility to decode the message body with the proper charset
+     * @param        bodyPart        The body of the message
+     * @return        Decoded message body
+     * @author         Karl Peder Olesen (karlpeder), 20030601
+     */
+    private String getDecodedMessageBody(StreamableMimePart bodyPart)
+        throws IOException {
+        // First determine which charset to use
+        String charsetToUse;
+
+        if (charset.equals("auto")) {
+            // get charset from message
+            charsetToUse = bodyPart.getHeader().getContentParameter("charset");
+        } else {
+            // use default charset
+            charsetToUse = charset;
+        }
+
+        MimeHeader header = bodyPart.getHeader();
+
+        // Decode message according to charset
+        InputStream bodyStream = bodyPart.getInputStream();
+        String encoding = header.getContentTransferEncoding();
+
+        if (encoding != null) {
+            if (encoding.equals("quoted-printable")) {
+                bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+            } else if (encoding.equals("base64")) {
+                bodyStream = new Base64DecoderInputStream(bodyStream);
+            }
+        }
+
+        // charset may be null if not specified properly in Content-Type header 
+        if (charsetToUse != null) {
+            Charset charset;
+
+            try {
+                charset = Charset.forName(charsetToUse);
+            } catch (UnsupportedCharsetException ex) {
+                // decode using default charset
+                charset = Charset.forName(System.getProperty("file.encoding"));
+            }
+
+            bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
+        } else {
+            ColumbaLogger.log.debug("No charset specified " +
+                "- no decoding will be performed");
+        }
+
+        return StreamUtils.readInString(bodyStream).toString();
+    }
 }

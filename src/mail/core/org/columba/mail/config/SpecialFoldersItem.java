@@ -15,20 +15,12 @@
 //All Rights Reserved.
 package org.columba.mail.config;
 
-
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
 
-public class SpecialFoldersItem extends DefaultItem
-{
-    public SpecialFoldersItem( XmlElement e )
-    {
-        super( e );
+public class SpecialFoldersItem extends DefaultItem {
+    public SpecialFoldersItem(XmlElement e) {
+        super(e);
     }
-
 }
-
-
-
-

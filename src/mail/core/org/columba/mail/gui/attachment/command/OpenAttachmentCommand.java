@@ -15,16 +15,13 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -33,10 +30,16 @@ import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.messageframe.MessageFrameController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.main.MailInterface;
+
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.StreamableMimePart;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 
 /**
  * @author freddy
@@ -47,124 +50,118 @@ import org.columba.ristretto.message.StreamableMimePart;
  * Window>Preferences>Java>Code Generation.
  */
 public class OpenAttachmentCommand extends FolderCommand {
+    StreamableMimePart part;
+    File tempFile;
 
-	StreamableMimePart part;
-	File tempFile;
-	// true, if showing a message as attachment
-	boolean inline = false;
-	TempFolder tempFolder;
-	Object tempMessageUid;
+    // true, if showing a message as attachment
+    boolean inline = false;
+    TempFolder tempFolder;
+    Object tempMessageUid;
 
-	/**
-	 * Constructor for OpenAttachmentCommand.
-	 * @param references
-	 */
-	public OpenAttachmentCommand(DefaultCommandReference[] references) {
-		super(references);
+    /**
+     * Constructor for OpenAttachmentCommand.
+     * @param references
+     */
+    public OpenAttachmentCommand(DefaultCommandReference[] references) {
+        super(references);
 
-		priority = Command.REALTIME_PRIORITY;
-		commandType = Command.NORMAL_OPERATION;
+        priority = Command.REALTIME_PRIORITY;
+        commandType = Command.NORMAL_OPERATION;
+    }
 
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        MimeHeader header = part.getHeader();
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		MimeHeader header = part.getHeader();
+        if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
+            MessageFrameController c = new MessageFrameController();
 
-		if (header.getMimeType().getType().toLowerCase().indexOf("message") != -1) {
+            FolderCommandReference[] r = new FolderCommandReference[1];
+            Object[] uidList = new Object[1];
+            uidList[0] = tempMessageUid;
 
-			MessageFrameController c = new MessageFrameController();
+            r[0] = new FolderCommandReference(tempFolder, uidList);
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			Object[] uidList = new Object[1];
-			uidList[0] = tempMessageUid;
+            c.setTreeSelection(r);
+            c.setTableSelection(r);
 
-			r[0] = new FolderCommandReference(tempFolder, uidList);
+            MainInterface.processor.addOp(new ViewMessageCommand(c, r));
 
-			c.setTreeSelection(r);
-			c.setTableSelection(r);
+            //inline = true;
+            //openInlineMessage(part, tempFile);
+        } else {
+            //inline = false;
+            MimeTypeViewer viewer = new MimeTypeViewer();
+            viewer.open(header, tempFile);
+        }
+    }
 
-			MainInterface.processor.addOp(new ViewMessageCommand(c, r));
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        Folder folder = (Folder) r[0].getFolder();
+        Object[] uids = r[0].getUids();
 
-			//inline = true;
-			//openInlineMessage(part, tempFile);
-		} else {
-			//inline = false;
-			MimeTypeViewer viewer = new MimeTypeViewer();
-			viewer.open(header, tempFile);
-		}
-	}
+        Integer[] address = r[0].getAddress();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		Folder folder = (Folder) r[0].getFolder();
-		Object[] uids = r[0].getUids();
+        part = (StreamableMimePart) folder.getMimePart(uids[0], address);
 
-		Integer[] address = r[0].getAddress();
+        MimeHeader header;
+        tempFile = null;
 
-		part = (StreamableMimePart) folder.getMimePart(uids[0], address);
+        header = part.getHeader();
 
-		MimeHeader header;
-		tempFile = null;
+        // If part is Message/Rfc822 we do not need to download anything because
+        // we have already parsed the subMessage and can directly access the mime-parts
+        if (part.getHeader().getMimeType().getType().equals("message")) {
+            tempFolder = MailInterface.treeModel.getTempFolder();
+            tempMessageUid = tempFolder.addMessage(part.getInputStream());
 
-		header = part.getHeader();
+            inline = true;
+        } else {
+            try {
+                String filename = part.getHeader().getFileName();
 
-		// If part is Message/Rfc822 we do not need to download anything because
-		// we have already parsed the subMessage and can directly access the mime-parts
+                if (filename != null) {
+                    tempFile = TempFileStore.createTempFile(filename);
+                } else {
+                    tempFile = TempFileStore.createTempFile();
+                }
 
-		if (part.getHeader().getMimeType().getType().equals("message")) {
-			tempFolder = MailInterface.treeModel.getTempFolder();
-			tempMessageUid =
-				tempFolder.addMessage( part.getInputStream() );
+                InputStream bodyStream = part.getInputStream();
+                String encoding = header.getContentTransferEncoding();
 
-			inline = true;
-		} else {
+                if (encoding != null) {
+                    if (encoding.equals("quoted-printable")) {
+                        bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                    } else if (encoding.equals("base64")) {
+                        bodyStream = new Base64DecoderInputStream(bodyStream);
+                    }
+                }
 
-			try {
-				String filename = part.getHeader().getFileName();
-				if (filename != null) {
-					tempFile = TempFileStore.createTempFile(filename);
-				} else
-					tempFile = TempFileStore.createTempFile();
-				
-				InputStream bodyStream = part.getInputStream();
-				String encoding = header.getContentTransferEncoding();
-				if( encoding != null ) {
-					if( encoding.equals("quoted-printable") ) {
-						bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-					} else if ( encoding.equals("base64")) {
-						bodyStream = new Base64DecoderInputStream( bodyStream );
-					}
-				}
-				
-				// *20031019, karlpeder* Closing output stream after copying
-				FileOutputStream output = new FileOutputStream(tempFile);
-				StreamUtils.streamCopy(bodyStream, output);
-				output.close();
-				
-			} catch (Exception ex) {
-				ex.printStackTrace();
+                // *20031019, karlpeder* Closing output stream after copying
+                FileOutputStream output = new FileOutputStream(tempFile);
+                StreamUtils.streamCopy(bodyStream, output);
+                output.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
-			}
+    /**
+     * @see org.columba.core.command.Command#undo(Worker)
+     */
+    public void undo(Worker worker) throws Exception {
+    }
 
-		}
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#undo(Worker)
-	 */
-	public void undo(Worker worker) throws Exception {
-	}
-
-	/**
-	 * @see org.columba.core.command.Command#redo(Worker)
-	 */
-	public void redo(Worker worker) throws Exception {
-	}
-
+    /**
+     * @see org.columba.core.command.Command#redo(Worker)
+     */
+    public void redo(Worker worker) throws Exception {
+    }
 }

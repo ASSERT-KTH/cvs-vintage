@@ -15,12 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.gui.action;
 
-import java.awt.event.ActionEvent;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.externaltools.ExternalToolsDialog;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * Opens external tools configuration dialog.
@@ -28,23 +29,20 @@ import org.columba.core.util.GlobalResourceLoader;
  * @author fdietz
  */
 public class OpenExternalToolsDialogAction extends FrameAction {
+    /**
+     * @param frameMediator
+     * @param name
+     */
+    public OpenExternalToolsDialogAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            GlobalResourceLoader.getString(null, null,
+                "menu_utilities_externaltools"));
+    }
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 */
-	public OpenExternalToolsDialogAction(FrameMediator frameMediator) {
-		super(
-		frameMediator, 
-				GlobalResourceLoader.getString(
-					null, null, "menu_utilities_externaltools"));
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		new ExternalToolsDialog();
-	}
-
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        new ExternalToolsDialog();
+    }
 }

@@ -18,6 +18,7 @@ package org.columba.core.util;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+
 /**
  * @author timo
  *
@@ -27,13 +28,14 @@ import junit.framework.TestSuite;
  * Window>Preferences>Java>Code Generation.
  */
 public class AllTests {
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.core.util");
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.core.util");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(ListToolsTest.class));
-		suite.addTest(new TestSuite(BooleanCompressorTest.class));
-		//$JUnit-END$
-		return suite;
-	}
+        //$JUnit-BEGIN$
+        suite.addTest(new TestSuite(ListToolsTest.class));
+        suite.addTest(new TestSuite(BooleanCompressorTest.class));
+
+        //$JUnit-END$
+        return suite;
+    }
 }

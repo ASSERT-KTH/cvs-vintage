@@ -13,108 +13,108 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class HeaderItemList {
-	private List list;
+    private List list;
 
-	public HeaderItemList() {
-		list = new Vector();
-	}
+    public HeaderItemList() {
+        list = new Vector();
+    }
 
-	public HeaderItemList(List v) {
-		list = v;
-	}
+    public HeaderItemList(List v) {
+        list = v;
+    }
 
-	public void insertElementAt(HeaderItem item, int index) {
-		list.set(index, item);
-	}
+    public void insertElementAt(HeaderItem item, int index) {
+        list.set(index, item);
+    }
 
-	public void remove(HeaderItem item) {
-		list.remove(item);
-	}
+    public void remove(HeaderItem item) {
+        list.remove(item);
+    }
 
-	public int indexOf(HeaderItem item) {
-		return list.indexOf(item);
-	}
+    public int indexOf(HeaderItem item) {
+        return list.indexOf(item);
+    }
 
-	public List getVector() {
-		return list;
-	}
+    public List getVector() {
+        return list;
+    }
 
-	public void add(HeaderItem item) {
-		if (item != null) {
+    public void add(HeaderItem item) {
+        if (item != null) {
+            list.add(item);
+        } else {
+            System.out.println("item == null!!!");
+        }
+    }
 
-			list.add(item);
-		} else {
-			System.out.println("item == null!!!");
-		}
-	}
+    public void replace(int index, HeaderItem item) {
+        if ((index < list.size()) && (index >= 0)) {
+            list.remove(index);
+            list.add(index, item);
+        }
+    }
 
-	public void replace(int index, HeaderItem item) {
-		if ((index < list.size()) && (index >= 0)) {
-			list.remove(index);
-			list.add(index, item);
-		}
-	}
+    public void uidRemove(Object uid) {
+        for (int i = 0; i < count(); i++) {
+            HeaderItem item = (HeaderItem) get(i);
+            Object u = item.getUid();
 
-	public void uidRemove(Object uid) {
-		for (int i = 0; i < count(); i++) {
-			HeaderItem item = (HeaderItem) get(i);
-			Object u = item.getUid();
-			if (u.equals(uid)) {
-				list.remove(i);
-				break;
-			}
-		}
+            if (u.equals(uid)) {
+                list.remove(i);
 
-	}
+                break;
+            }
+        }
+    }
 
-	public HeaderItem uidGet(Object uid) {
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			HeaderItem item = (HeaderItem) it.next();
-			Object u = item.getUid();
-			if (u.equals(uid)) {
-				return item;
+    public HeaderItem uidGet(Object uid) {
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            HeaderItem item = (HeaderItem) it.next();
+            Object u = item.getUid();
 
-			}
-		}
+            if (u.equals(uid)) {
+                return item;
+            }
+        }
 
-		return null;
-		//	}
-		//	for (int i = 0; i < count(); i++) {
-		//		HeaderItem item = (HeaderItem) get(i);
-		//		Object u = item.getUid();
-		//		if (u.equals(uid)) {
-		//			return item;
-		//
-		//		}
-		//	}
-		//
-		//	return null;
-	}
+        return null;
 
-	public HeaderItem get(int index) {
-		HeaderItem item = (HeaderItem) list.get(index);
+        //	}
+        //	for (int i = 0; i < count(); i++) {
+        //		HeaderItem item = (HeaderItem) get(i);
+        //		Object u = item.getUid();
+        //		if (u.equals(uid)) {
+        //			return item;
+        //
+        //		}
+        //	}
+        //
+        //	return null;
+    }
 
-		return item;
-	}
+    public HeaderItem get(int index) {
+        HeaderItem item = (HeaderItem) list.get(index);
 
-	public int count() {
-		return list.size();
-	}
+        return item;
+    }
 
-	public void clear() {
-		list.clear();
-	}
+    public int count() {
+        return list.size();
+    }
 
+    public void clear() {
+        list.clear();
+    }
 }

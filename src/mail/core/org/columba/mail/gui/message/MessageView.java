@@ -15,114 +15,104 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import org.columba.mail.gui.attachment.AttachmentView;
+import org.columba.mail.message.ColumbaHeader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseListener;
+
 import java.io.InputStream;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkListener;
 
-import org.columba.mail.gui.attachment.AttachmentView;
-import org.columba.mail.message.ColumbaHeader;
 
 public class MessageView extends JScrollPane {
+    public static final int VIEWER_HTML = 1;
+    public static final int VIEWER_SIMPLE = 0;
 
-	public static final int VIEWER_HTML = 1;
-	public static final int VIEWER_SIMPLE = 0;
+    //private HtmlViewer debug;
+    protected MouseListener listener;
 
-	//private HtmlViewer debug;
+    //protected MessageController messageViewer;
+    protected int active;
 
-	protected MouseListener listener;
-	//protected MessageController messageViewer;
-	protected int active;
+    //HyperlinkTextViewer viewer;
+    //JList list;
+    protected JPanel panel;
+    protected HeaderViewer hv;
+    protected BodyTextViewer bodyTextViewer;
+    protected MessageController messageController;
+    protected SecurityIndicator pgp;
 
-	//HyperlinkTextViewer viewer;
-	//JList list;
-	protected JPanel panel;
+    public MessageView(MessageController controller,
+        AttachmentView attachmentView) {
+        super();
+        this.messageController = controller;
 
-	protected HeaderViewer hv;
-	protected BodyTextViewer bodyTextViewer;
+        getViewport().setBackground(Color.white);
 
-	protected MessageController messageController;
-	
-	protected SecurityIndicator pgp;
+        panel = new MessagePanel();
+        panel.setLayout(new BorderLayout());
 
-	public MessageView(MessageController controller, AttachmentView attachmentView) {
-		super();
-		this.messageController = controller;
+        setViewportView(panel);
 
-		getViewport().setBackground(Color.white);
+        active = VIEWER_SIMPLE;
 
-		panel = new MessagePanel();
-		panel.setLayout(new BorderLayout());
-		
-		setViewportView(panel);
+        hv = new HeaderViewer();
+        panel.add(hv, BorderLayout.NORTH);
 
-		active = VIEWER_SIMPLE;
-		
-		hv = new HeaderViewer();
-		panel.add(hv, BorderLayout.NORTH);
-		
-		bodyTextViewer = new BodyTextViewer();	
-		panel.add(bodyTextViewer, BorderLayout.CENTER);
-	
-		JPanel bottom = new JPanel();
-		bottom.setLayout( new BorderLayout() );
-		
-		pgp = new SecurityIndicator();
-		bottom.add( pgp, BorderLayout.NORTH);
-		bottom.add( attachmentView, BorderLayout.CENTER);
-		
-		panel.add( bottom, BorderLayout.SOUTH );		
-	}
+        bodyTextViewer = new BodyTextViewer();
+        panel.add(bodyTextViewer, BorderLayout.CENTER);
 
-	public void addHyperlinkListener(HyperlinkListener l) {
-		hv.addHyperlinkListener(l);
-		bodyTextViewer.addHyperlinkListener(l);
-	}
+        JPanel bottom = new JPanel();
+        bottom.setLayout(new BorderLayout());
 
-	public void addMouseListener(MouseListener l) {
-		hv.addMouseListener(l);
-		bodyTextViewer.addMouseListener(l);
-	}
+        pgp = new SecurityIndicator();
+        bottom.add(pgp, BorderLayout.NORTH);
+        bottom.add(attachmentView, BorderLayout.CENTER);
 
-	public void setDoc(
-		ColumbaHeader header,
-		String str,
-		boolean html,
-		boolean hasAttachments)
-		throws Exception {
+        panel.add(bottom, BorderLayout.SOUTH);
+    }
 
-		if (header != null)
-			hv.setHeader(header, hasAttachments);
+    public void addHyperlinkListener(HyperlinkListener l) {
+        hv.addHyperlinkListener(l);
+        bodyTextViewer.addHyperlinkListener(l);
+    }
 
-		bodyTextViewer.setBodyText(str, html);
+    public void addMouseListener(MouseListener l) {
+        hv.addMouseListener(l);
+        bodyTextViewer.addMouseListener(l);
+    }
 
-	}
+    public void setDoc(ColumbaHeader header, String str, boolean html,
+        boolean hasAttachments) throws Exception {
+        if (header != null) {
+            hv.setHeader(header, hasAttachments);
+        }
 
-	public void setDoc(
-		ColumbaHeader header,
-		InputStream in,
-		boolean html,
-		boolean hasAttachments)
-		throws Exception {
+        bodyTextViewer.setBodyText(str, html);
+    }
 
-		StringBuffer text = new StringBuffer();
-		int next = in.read();
-		while( next != -1 ) {
-			text.append((char) next);
-			next = in.read();
-		}
-		
-		setDoc( header, text.toString(), html, hasAttachments);
-	}
-	/**
-	 * @return
-	 */
-	public SecurityIndicator getPgp() {
-		return pgp;
-	}
+    public void setDoc(ColumbaHeader header, InputStream in, boolean html,
+        boolean hasAttachments) throws Exception {
+        StringBuffer text = new StringBuffer();
+        int next = in.read();
 
+        while (next != -1) {
+            text.append((char) next);
+            next = in.read();
+        }
+
+        setDoc(header, text.toString(), html, hasAttachments);
+    }
+
+    /**
+     * @return
+     */
+    public SecurityIndicator getPgp() {
+        return pgp;
+    }
 }

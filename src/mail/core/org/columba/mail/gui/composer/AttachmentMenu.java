@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import org.columba.core.gui.util.ImageLoader;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author frd
@@ -28,35 +29,29 @@ import org.columba.core.gui.util.ImageLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class AttachmentMenu extends JPopupMenu{
-	
-	JMenuItem menuItem;
-	
-	AttachmentController controller;
-	
-	public AttachmentMenu( AttachmentController c )
-	{
-		super();
-		
-		this.controller = c;
-		
-		initComponents( c);
-	}
-	
-	protected void initComponents( AttachmentController c )
-	{
-		
-    	menuItem = new JMenuItem("Attach File..", ImageLoader.getSmallImageIcon("stock_attach-16.png") );
-    	menuItem.setActionCommand("ADD");
-    	menuItem.addActionListener( c.getActionListener() );
-    	add( menuItem );
-    	addSeparator();
-    	menuItem = new JMenuItem("Remove Selected Attachments", ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-    	menuItem.setActionCommand("REMOVE");
-    	menuItem.addActionListener( c.getActionListener() );
-    	add( menuItem );
-    	   	
-	}
-	
-	
+public class AttachmentMenu extends JPopupMenu {
+    JMenuItem menuItem;
+    AttachmentController controller;
+
+    public AttachmentMenu(AttachmentController c) {
+        super();
+
+        this.controller = c;
+
+        initComponents(c);
+    }
+
+    protected void initComponents(AttachmentController c) {
+        menuItem = new JMenuItem("Attach File..",
+                ImageLoader.getSmallImageIcon("stock_attach-16.png"));
+        menuItem.setActionCommand("ADD");
+        menuItem.addActionListener(c.getActionListener());
+        add(menuItem);
+        addSeparator();
+        menuItem = new JMenuItem("Remove Selected Attachments",
+                ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+        menuItem.setActionCommand("REMOVE");
+        menuItem.addActionListener(c.getActionListener());
+        add(menuItem);
+    }
 }

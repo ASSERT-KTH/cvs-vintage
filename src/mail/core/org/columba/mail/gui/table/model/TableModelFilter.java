@@ -15,83 +15,82 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderList;
+
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author fdietz
  *
  * Extends <class>BasicTableModelFilter</class> with Columba
  * specific features.
- * 
+ *
  * It especially implements <interface>TableModelModifier</interface>.
- * 
+ *
  */
 public class TableModelFilter extends BasicTableModelFilter {
+    public TableModelFilter(TreeTableModelInterface tableModel) {
+        super(tableModel);
+    }
 
-	public TableModelFilter(TreeTableModelInterface tableModel) {
-		super(tableModel);
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TableModelModifier#add(org.columba.mail.message.HeaderInterface[])
+     */
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#add(org.columba.mail.message.HeaderInterface[])
-	 */
-	/******************************* implements TableModelModifier *******************/
+    /******************************* implements TableModelModifier *******************/
 
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
+    public void modify(Object[] uids) {
+        super.modify(uids);
+    }
 
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
+    public void remove(Object[] uids) {
+        super.remove(uids);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-	 */
-	public void modify(Object[] uids) {
-		super.modify(uids);
-	}
+    public void update() {
+        if (isEnabled()) {
+            HeaderList headerList = getHeaderList();
+            MessageNode rootNode = getRootNode();
+            Map map = getMap();
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-	 */
-	public void remove(Object[] uids) {
-		super.remove(uids);
-	}
+            // remove all children from tree
+            rootNode.removeAllChildren();
 
-	public void update() {
-		if (isEnabled()) {
-			HeaderList headerList = getHeaderList();
-			MessageNode rootNode = getRootNode();
-			Map map = getMap();
+            // clear messagenode cache
+            map.clear();
 
-			// remove all children from tree
-			rootNode.removeAllChildren();
+            ColumbaHeader header;
 
-			// clear messagenode cache
-			map.clear();
+            for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
+                Object uid = e.nextElement();
+                header = (ColumbaHeader) headerList.get(uid);
 
-			ColumbaHeader header;
-			for (Enumeration e = headerList.keys(); e.hasMoreElements();) {
-				Object uid = e.nextElement();
-				header = (ColumbaHeader) headerList.get(uid);
-				if (addItem(header)) {
-					MessageNode childNode = new MessageNode(header, uid);
-					rootNode.add(childNode);
-					map.put(uid, childNode);
-				}
-			}
+                if (addItem(header)) {
+                    MessageNode childNode = new MessageNode(header, uid);
+                    rootNode.add(childNode);
+                    map.put(uid, childNode);
+                }
+            }
+        } else {
+            // do not filter anything
+            super.update();
+        }
+    }
 
-		} else {
-			// do not filter anything
-			super.update();
-		}
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
-	 */
-	public void set(HeaderList headerList) {
-		super.set(headerList);
-		update();
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TreeTableModelInterface#set(org.columba.mail.message.HeaderList)
+     */
+    public void set(HeaderList headerList) {
+        super.set(headerList);
+        update();
+    }
 }

@@ -17,6 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.message;
 
+import org.columba.core.gui.util.FontProperties;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -24,61 +26,53 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 
-import org.columba.core.gui.util.FontProperties;
 
 /**
  * @author timo
- * 
+ *
  * To change this generated comment edit the template variable "typecomment":
  * Window>Preferences>Java>Templates. To enable and disable the creation of
  * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class MessagePanel extends JPanel implements Scrollable {
+    /**
+     * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
+     */
+    public Dimension getPreferredScrollableViewportSize() {
+        return getPreferredSize();
+    }
 
-	/**
-	 * @see javax.swing.Scrollable#getPreferredScrollableViewportSize()
-	 */
+    /**
+     * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle,
+     *      int, int)
+     */
+    public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
+        Font textFont = FontProperties.getTextFont();
 
-	public Dimension getPreferredScrollableViewportSize() {
-		return getPreferredSize();
+        return textFont.getSize() * 3;
+    }
 
-	}
+    /**
+     * @see javax.swing.Scrollable#getScrollableBlockIncrement(java.awt.Rectangle,
+     *      int, int)
+     */
+    public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
+        Font textFont = FontProperties.getTextFont();
 
-	/**
-	 * @see javax.swing.Scrollable#getScrollableUnitIncrement(java.awt.Rectangle,
-	 *      int, int)
-	 */
-	public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
-		Font textFont = FontProperties.getTextFont();
+        return textFont.getSize() * 10;
+    }
 
-		return textFont.getSize() * 3;
-	}
+    /**
+     * @see javax.swing.Scrollable#getScrollableTracksViewportWidth()
+     */
+    public boolean getScrollableTracksViewportWidth() {
+        return true;
+    }
 
-	/**
-	 * @see javax.swing.Scrollable#getScrollableBlockIncrement(java.awt.Rectangle,
-	 *      int, int)
-	 */
-	public int getScrollableBlockIncrement(
-		Rectangle arg0,
-		int arg1,
-		int arg2) {
-		Font textFont = FontProperties.getTextFont();
-
-		return textFont.getSize() * 10;
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableTracksViewportWidth()
-	 */
-	public boolean getScrollableTracksViewportWidth() {
-		return true;
-	}
-
-	/**
-	 * @see javax.swing.Scrollable#getScrollableTracksViewportHeight()
-	 */
-	public boolean getScrollableTracksViewportHeight() {
-		return false;
-	}
-
+    /**
+     * @see javax.swing.Scrollable#getScrollableTracksViewportHeight()
+     */
+    public boolean getScrollableTracksViewportHeight() {
+        return false;
+    }
 }

@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import org.columba.addressbook.config.AdapterNode;
+
+import org.w3c.dom.Document;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -24,126 +28,120 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.columba.addressbook.config.AdapterNode;
-import org.w3c.dom.Document;
 
-public class DomToTreeModelAdapter implements TreeModel 
-{
+public class DomToTreeModelAdapter implements TreeModel {
     Document document;
-    
-    public DomToTreeModelAdapter(Document document)
-    {
-	
-	this.document = document;
-	
+
+    /*
+     * Use these methods to add and remove event listeners.
+     * (Needed to satisfy TreeModel interface, but not used.)
+     */
+    private List listenerList = new Vector();
+
+    public DomToTreeModelAdapter(Document document) {
+        this.document = document;
     }
 
-        /* ===================================================================== */
-        // methods for TreeModel implementation
+    /* ===================================================================== */
 
-    
-    public Object  getRoot() 
-    {
-	
-	return new AdapterNode(document);
+    // methods for TreeModel implementation
+    public Object getRoot() {
+        return new AdapterNode(document);
     }
-    
-    public boolean isLeaf(Object aNode) 
-    {
-	// Determines whether the icon shows up to the left.
-	// Return true for any node with no children
-	AdapterNode node = (AdapterNode) aNode;
-	if (node.getChildCount() > 0) return false;
-	return true;
+
+    public boolean isLeaf(Object aNode) {
+        // Determines whether the icon shows up to the left.
+        // Return true for any node with no children
+        AdapterNode node = (AdapterNode) aNode;
+
+        if (node.getChildCount() > 0) {
+            return false;
+        }
+
+        return true;
     }
-    
-    public int getChildCount(Object parent) 
-    {
+
+    public int getChildCount(Object parent) {
         AdapterNode node = (AdapterNode) parent;
+
         return node.getChildCount();
     }
-    
-    public Object getChild(Object parent, int index) 
-    {
+
+    public Object getChild(Object parent, int index) {
         AdapterNode node = (AdapterNode) parent;
+
         return node.getChild(index);
     }
 
-    public int getIndexOfChild(Object parent, Object child) 
-    {
+    public int getIndexOfChild(Object parent, Object child) {
         AdapterNode node = (AdapterNode) parent;
+
         return node.getIndex((AdapterNode) child);
     }
-    
-    public void valueForPathChanged(TreePath path, Object newValue) 
-    {
+
+    public void valueForPathChanged(TreePath path, Object newValue) {
     }
 
-	/*
-	 * Use these methods to add and remove event listeners.
-	 * (Needed to satisfy TreeModel interface, but not used.)
-	 */
-    private List listenerList = new Vector();
-
-    public void addTreeModelListener(TreeModelListener listener) 
-    {
-        if ( listener != null 
-             && ! listenerList.contains( listener ) ) 
-        {
-            listenerList.add( listener );
-        }
-    }
-    
-    public void removeTreeModelListener(TreeModelListener listener) 
-    {
-        if ( listener != null ) 
-        {
-            listenerList.remove( listener );
+    public void addTreeModelListener(TreeModelListener listener) {
+        if ((listener != null) && !listenerList.contains(listener)) {
+            listenerList.add(listener);
         }
     }
 
+    public void removeTreeModelListener(TreeModelListener listener) {
+        if (listener != null) {
+            listenerList.remove(listener);
+        }
+    }
 
-        /* ==================================================================================== */
-        // TreeModelEvents
+    /* ==================================================================================== */
 
-      public void fireTreeNodesChanged( TreeModelEvent e ) {
-				for (Iterator it = listenerList.iterator(); it.hasNext();) {
-					TreeModelListener listener =  (TreeModelListener) it.next();
-        // Enumeration listeners = listenerList.elements();
-        // while ( listeners.hasMoreElements() ) {
-          // TreeModelListener listener = 
+    // TreeModelEvents
+    public void fireTreeNodesChanged(TreeModelEvent e) {
+        for (Iterator it = listenerList.iterator(); it.hasNext();) {
+            TreeModelListener listener = (TreeModelListener) it.next();
+
+            // Enumeration listeners = listenerList.elements();
+            // while ( listeners.hasMoreElements() ) {
+            // TreeModelListener listener = 
             // (TreeModelListener)listeners.nextElement();
-          listener.treeNodesChanged( e );
+            listener.treeNodesChanged(e);
         }
-      } 
-      public void fireTreeNodesInserted( TreeModelEvent e ) {
-				for (Iterator  it = listenerList.iterator(); it.hasNext();) {
-					TreeModelListener listener = (TreeModelListener) it.next();
-        // Enumeration listeners = listenerList.elements();
-        // while ( listeners.hasMoreElements() ) {
-           // TreeModelListener listener =
-             // (TreeModelListener)listeners.nextElement();
-           listener.treeNodesInserted( e );
-        }
-      }   
-      public void fireTreeNodesRemoved( TreeModelEvent e ) {
-				for (Iterator it = listenerList.iterator(); it.hasNext();) {
-					TreeModelListener listener = (TreeModelListener) it.next();
-        // Enumeration listeners = listenerList.elements();
-        // while ( listeners.hasMoreElements() ) {
-          // TreeModelListener listener = 
-            // (TreeModelListener)listeners.nextElement();
-          listener.treeNodesRemoved( e );
-        }
-      }   
-      public void fireTreeStructureChanged( TreeModelEvent e ) {
-				for (Iterator it = listenerList.iterator(); it.hasNext();) {
-					TreeModelListener listener = (TreeModelListener) it.next();
-        // Enumeration listeners = listenerList.elements();
-        // while ( listeners.hasMoreElements() ) {
-          // TreeModelListener listener =
-            // (TreeModelListener)listeners.nextElement();
-          listener.treeStructureChanged( e );
-        }
-      }
     }
+
+    public void fireTreeNodesInserted(TreeModelEvent e) {
+        for (Iterator it = listenerList.iterator(); it.hasNext();) {
+            TreeModelListener listener = (TreeModelListener) it.next();
+
+            // Enumeration listeners = listenerList.elements();
+            // while ( listeners.hasMoreElements() ) {
+            // TreeModelListener listener =
+            // (TreeModelListener)listeners.nextElement();
+            listener.treeNodesInserted(e);
+        }
+    }
+
+    public void fireTreeNodesRemoved(TreeModelEvent e) {
+        for (Iterator it = listenerList.iterator(); it.hasNext();) {
+            TreeModelListener listener = (TreeModelListener) it.next();
+
+            // Enumeration listeners = listenerList.elements();
+            // while ( listeners.hasMoreElements() ) {
+            // TreeModelListener listener = 
+            // (TreeModelListener)listeners.nextElement();
+            listener.treeNodesRemoved(e);
+        }
+    }
+
+    public void fireTreeStructureChanged(TreeModelEvent e) {
+        for (Iterator it = listenerList.iterator(); it.hasNext();) {
+            TreeModelListener listener = (TreeModelListener) it.next();
+
+            // Enumeration listeners = listenerList.elements();
+            // while ( listeners.hasMoreElements() ) {
+            // TreeModelListener listener =
+            // (TreeModelListener)listeners.nextElement();
+            listener.treeStructureChanged(e);
+        }
+    }
+}

@@ -13,53 +13,49 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
-
-import javax.swing.JPopupMenu;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.xml.XmlElement;
 
+import javax.swing.JPopupMenu;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ContextMenu extends JPopupMenu {
+    protected PopupMenuGenerator menuGenerator;
 
-	protected PopupMenuGenerator menuGenerator;
-	/**
-	 * 
-	 */
-	public ContextMenu(FrameMediator frameController, String path) {
-		super();
+    /**
+     *
+     */
+    public ContextMenu(FrameMediator frameController, String path) {
+        super();
 
-		menuGenerator = createPopupMenuGeneratorInstance(path, frameController);
-		
-		menuGenerator.createPopupMenu(this);
+        menuGenerator = createPopupMenuGeneratorInstance(path, frameController);
 
-		
-	}
-	
-	public PopupMenuGenerator createPopupMenuGeneratorInstance(
-			String xmlRoot,
-			FrameMediator frameController) {
-			if (menuGenerator == null) {
-				menuGenerator = new PopupMenuGenerator(frameController, xmlRoot);
-			}
+        menuGenerator.createPopupMenu(this);
+    }
 
-			return menuGenerator;
-		}
+    public PopupMenuGenerator createPopupMenuGeneratorInstance(String xmlRoot,
+        FrameMediator frameController) {
+        if (menuGenerator == null) {
+            menuGenerator = new PopupMenuGenerator(frameController, xmlRoot);
+        }
 
-	public void extendMenuFromFile(String path) {
-		menuGenerator.extendMenuFromFile(path);
-		menuGenerator.createPopupMenu(this);
-	}
+        return menuGenerator;
+    }
 
-	public void extendMenu(XmlElement menuExtension) {
-		menuGenerator.extendMenu(menuExtension);
-	}
+    public void extendMenuFromFile(String path) {
+        menuGenerator.extendMenuFromFile(path);
+        menuGenerator.createPopupMenu(this);
+    }
 
+    public void extendMenu(XmlElement menuExtension) {
+        menuGenerator.extendMenu(menuExtension);
+    }
 }

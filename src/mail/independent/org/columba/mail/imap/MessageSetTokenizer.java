@@ -20,79 +20,78 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+
 /**
  * Cuts a list/array of uids in pieces of certain size.
- * 
+ *
  * @author fdietz
  */
 public class MessageSetTokenizer implements Iterator {
+    Object[] uids;
+    List list;
+    int index;
+    int sizeOfPieces;
+    int count;
+    int rest;
 
-	Object[] uids;
-	List list;
+    public MessageSetTokenizer(List l, int sizeOfPieces) {
+        this.uids = l.toArray();
 
-	int index;
-	int sizeOfPieces;
-	int count;
-	int rest;
+        this.sizeOfPieces = sizeOfPieces;
 
-	public MessageSetTokenizer(List l, int sizeOfPieces) {
-		this.uids = l.toArray();
+        index = 0;
 
-		this.sizeOfPieces = sizeOfPieces;
+        count = uids.length / sizeOfPieces;
+        rest = uids.length % sizeOfPieces;
 
-		index = 0;
+        list = new ArrayList(Arrays.asList(uids));
+    }
 
-		count = uids.length / sizeOfPieces;
-		rest = uids.length % sizeOfPieces;
+    public MessageSetTokenizer(Object[] uids, int sizeOfPieces) {
+        this.uids = uids;
+        this.sizeOfPieces = sizeOfPieces;
 
-		list = new ArrayList(Arrays.asList(uids));
-	}
+        index = 0;
 
-	public MessageSetTokenizer(Object[] uids, int sizeOfPieces) {
-		this.uids = uids;
-		this.sizeOfPieces = sizeOfPieces;
+        count = uids.length / sizeOfPieces;
+        rest = uids.length % sizeOfPieces;
 
-		index = 0;
+        list = new ArrayList(Arrays.asList(uids));
+    }
 
-		count = uids.length / sizeOfPieces;
-		rest = uids.length % sizeOfPieces;
+    /* (non-Javadoc)
+     * @see java.util.Iterator#hasNext()
+     */
+    public boolean hasNext() {
+        if (index < uids.length) {
+            return true;
+        }
 
-		list = new ArrayList(Arrays.asList(uids));
-	}
+        return false;
+    }
 
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#hasNext()
-	 */
-	public boolean hasNext() {
+    /* (non-Javadoc)
+     * @see java.util.Iterator#next()
+     */
+    public Object next() {
+        int i = sizeOfPieces;
 
-		if (index < uids.length)
-			return true;
+        // calculate rest
+        if ((index + sizeOfPieces) > uids.length) {
+            i = uids.length - index;
+        }
 
-		return false;
-	}
+        List sublist = list.subList(index, index + i);
 
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#next()
-	 */
-	public Object next() {
-		int i = sizeOfPieces;
+        index = index + i;
 
-		// calculate rest
-		if (index + sizeOfPieces > uids.length)
-			i = uids.length - index;
+        return sublist;
+    }
 
-		List sublist = list.subList(index, index + i);
-
-		index = index + i;
-
-		return sublist;
-	}
-
-	/* (non-Javadoc)
-	 * @see java.util.Iterator#remove()
-	 */
-	public void remove() {
-		// not needed
-	}
-
+    /* (non-Javadoc)
+     * @see java.util.Iterator#remove()
+     */
+    public void remove() {
+        // not needed
+    }
 }

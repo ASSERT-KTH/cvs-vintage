@@ -18,10 +18,9 @@ package org.columba.mail.config;
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+
 public class IdentityItem extends DefaultItem {
-
-	public IdentityItem(XmlElement e) {
-		super(e);
-	}
-
+    public IdentityItem(XmlElement e) {
+        super(e);
+    }
 }

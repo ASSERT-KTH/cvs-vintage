@@ -15,21 +15,23 @@
 //All Rights Reserved.
 package org.columba.core.backgroundtask;
 
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Timer;
 
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
- * 
+ *
  *
  * This manager runs in background.
  * <p>
@@ -39,60 +41,57 @@ import org.columba.core.main.MainInterface;
  * @author fdietz
  */
 public class BackgroundTaskManager implements ActionListener {
+    // one second (=1000 ms)
+    private int ONE_SECOND = 1000;
 
-	// one second (=1000 ms)
-	private int ONE_SECOND = 1000;
+    // sleep 5 minutes
+    private int SLEEP_TIME = ONE_SECOND * 60 * 5;
+    private Timer timer;
+    private List list;
 
-	// sleep 5 minutes
-	private int SLEEP_TIME = ONE_SECOND * 60 * 5;
+    public BackgroundTaskManager() {
+        super();
 
-	private Timer timer;
+        list = new Vector();
 
-	private List list;
+        timer = new Timer(SLEEP_TIME, this);
+        timer.start();
+    }
 
-	public BackgroundTaskManager() {
-		super();
+    public void register(TaskInterface task) {
+        list.add(task);
+    }
 
-		list = new Vector();
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent event) {
+        ColumbaLogger.log.debug("is their any task running?");
 
-		timer = new Timer(SLEEP_TIME, this);
-		timer.start();
-	}
+        // test if a task is already running 
+        EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
 
-	public void register(TaskInterface task) {
-		list.add(task);
-	}
+        if ((queue.peekEvent() == null) &&
+                (MainInterface.processor.getTaskManager().count() == 0)) {
+            // no java task running -> start background tasks
+            ColumbaLogger.log.info("starting background tasks...");
+            runTasks();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent event) {
-                ColumbaLogger.log.debug("is their any task running?");
+    public void runTasks() {
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            TaskInterface task = (TaskInterface) it.next();
+            task.run();
+        }
 
-		// test if a task is already running 
-		EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
-		if ((queue.peekEvent() == null)
-			&& (MainInterface.processor.getTaskManager().count() == 0)) {
-			// no java task running -> start background tasks
+        //		for (Enumeration e = list.elements(); e.hasMoreElements();) {
+        //			TaskInterface task = (TaskInterface) e.nextElement();
+        //			task.run();
+        //		}
+    }
 
-                        ColumbaLogger.log.info("starting background tasks...");
-			runTasks();
-		}
-	}
-
-	public void runTasks() {
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			TaskInterface task = (TaskInterface) it.next();
-			task.run();
-		}
-//		for (Enumeration e = list.elements(); e.hasMoreElements();) {
-//			TaskInterface task = (TaskInterface) e.nextElement();
-//			task.run();
-//		}
-	}
-	
-	public void stop()
-	{
-		timer.stop();
-	}
+    public void stop() {
+        timer.stop();
+    }
 }

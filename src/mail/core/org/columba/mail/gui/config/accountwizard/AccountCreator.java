@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
 
 import net.javaprog.ui.wizard.DataModel;
@@ -30,52 +29,69 @@ import org.columba.mail.folder.imap.IMAPFolder;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
 
+
 class AccountCreator implements WizardModelListener {
     protected DataModel data;
-    
+
     public AccountCreator(DataModel data) {
         this.data = data;
     }
-    
+
     public void wizardFinished(WizardModelEvent e) {
-        String type = (String)data.getData("IncomingServer.type");
+        String type = (String) data.getData("IncomingServer.type");
         AccountItem account = MailConfig.getAccountList().addEmptyAccount(type.toLowerCase());
+
         if (account == null) {
             //this should not happen, the templates seem to be missing
             throw new RuntimeException("Account templates missing!");
         }
-        account.setName((String)data.getData("Identity.accountName"));
+
+        account.setName((String) data.getData("Identity.accountName"));
+
         IdentityItem identity = account.getIdentityItem();
-        identity.set("name", (String)data.getData("Identity.name"));
-        identity.set("address", (String)data.getData("Identity.address"));
+        identity.set("name", (String) data.getData("Identity.name"));
+        identity.set("address", (String) data.getData("Identity.address"));
+
         if (type.equals("POP3")) {
             PopItem pop = account.getPopItem();
-            pop.set("host", (String)data.getData("IncomingServer.host"));
-            pop.set("user", (String)data.getData("IncomingServer.login"));
-	    MailInterface.popServerCollection.add(account);
+            pop.set("host", (String) data.getData("IncomingServer.host"));
+            pop.set("user", (String) data.getData("IncomingServer.login"));
+            MailInterface.popServerCollection.add(account);
         } else {
             ImapItem imap = account.getImapItem();
-            imap.set("host", (String)data.getData("IncomingServer.host"));
-            imap.set("user", (String)data.getData("IncomingServer.login"));
+            imap.set("host", (String) data.getData("IncomingServer.host"));
+            imap.set("user", (String) data.getData("IncomingServer.login"));
+
             IMAPRootFolder parentFolder = new IMAPRootFolder(account);
-            ((FolderTreeNode)MailInterface.treeModel.getRoot()).add(parentFolder);
-			((FolderTreeNode)MailInterface.treeModel.getRoot()).getNode().addElement(parentFolder.getNode());
+            ((FolderTreeNode) MailInterface.treeModel.getRoot()).add(parentFolder);
+            ((FolderTreeNode) MailInterface.treeModel.getRoot()).getNode()
+             .addElement(parentFolder.getNode());
 
             MailInterface.treeModel.nodeStructureChanged(parentFolder.getParent());
+
             try {
-                    FolderTreeNode inbox = new IMAPFolder("INBOX", "IMAPFolder");
-                    parentFolder.add(inbox);
-                    parentFolder.getNode().addElement(inbox.getNode());
+                FolderTreeNode inbox = new IMAPFolder("INBOX", "IMAPFolder");
+                parentFolder.add(inbox);
+                parentFolder.getNode().addElement(inbox.getNode());
             } catch (Exception ex) {
-                    ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
-        account.getSmtpItem().set("host", (String)data.getData("OutgoingServer.host"));
+
+        account.getSmtpItem().set("host",
+            (String) data.getData("OutgoingServer.host"));
+
         // generally we can just use the same login for both servers
-        account.getSmtpItem().set("user", (String)data.getData("IncomingServer.login"));
+        account.getSmtpItem().set("user",
+            (String) data.getData("IncomingServer.login"));
     }
-    
-    public void stepShown(WizardModelEvent e) {}
-    public void wizardCanceled(WizardModelEvent e) {}
-    public void wizardModelChanged(WizardModelEvent e) {}
+
+    public void stepShown(WizardModelEvent e) {
+    }
+
+    public void wizardCanceled(WizardModelEvent e) {
+    }
+
+    public void wizardModelChanged(WizardModelEvent e) {
+    }
 }

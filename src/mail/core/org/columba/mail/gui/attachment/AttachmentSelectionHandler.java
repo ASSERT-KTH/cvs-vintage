@@ -13,79 +13,74 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.gui.selection.SelectionHandler;
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.attachment.util.IconPanelSelectionListener;
 
-public class AttachmentSelectionHandler
-	extends SelectionHandler
-	implements IconPanelSelectionListener {
 
-	private Folder folder;
-	private Object messageUid;
-	private AttachmentView view;
-	private Integer[] address;
+public class AttachmentSelectionHandler extends SelectionHandler
+    implements IconPanelSelectionListener {
+    private Folder folder;
+    private Object messageUid;
+    private AttachmentView view;
+    private Integer[] address;
+    private boolean useLocalSelection;
 
-	private boolean useLocalSelection;
+    public AttachmentSelectionHandler(AttachmentView view) {
+        super("mail.attachment");
+        this.view = view;
+        view.addIconPanelSelectionListener(this);
 
-	public AttachmentSelectionHandler(AttachmentView view) {
-		super("mail.attachment");
-		this.view = view;
-		view.addIconPanelSelectionListener(this);
+        useLocalSelection = false;
+    }
 
-		useLocalSelection = false;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
+     */
+    public DefaultCommandReference[] getSelection() {
+        return new FolderCommandReference[] {
+            new FolderCommandReference(folder, new Object[] { messageUid },
+                address)
+        };
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.selection.SelectionHandler#getSelection()
-	 */
-	public DefaultCommandReference[] getSelection() {
-		return new FolderCommandReference[] {
-			 new FolderCommandReference(
-				folder,
-				new Object[] { messageUid },
-				address)
-		};
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
+     */
+    public void setSelection(DefaultCommandReference[] selection) {
+        ColumbaLogger.log.error("Not yet implemented!");
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.selection.SelectionHandler#setSelection(org.columba.core.command.DefaultCommandReference[])
-	 */
-	public void setSelection(DefaultCommandReference[] selection) {
-		ColumbaLogger.log.error("Not yet implemented!");
-	}
+    public void setMessage(Folder folder, Object messageUid) {
+        this.folder = folder;
+        this.messageUid = messageUid;
+    }
 
-	public void setMessage(Folder folder, Object messageUid) {
-		this.folder = folder;
-		this.messageUid = messageUid;
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
+     */
+    public void selectionChanged(int[] newselection) {
+        useLocalSelection = false;
 
-	}
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.attachment.util.IconPanelSelectionListener#selectionChanged(int[])
-	 */
-	public void selectionChanged(int[] newselection) {
-		useLocalSelection = false;
+        if (newselection.length > 0) {
+            address = view.getSelectedMimePart().getAddress();
+        } else {
+            address = null;
+        }
 
-		if (newselection.length > 0) {
-			address = view.getSelectedMimePart().getAddress();
-		} else {
-			address = null;
-		}
+        fireSelectionChanged(new AttachmentSelectionChangedEvent(folder,
+                messageUid, address));
+    }
 
-		fireSelectionChanged(
-			new AttachmentSelectionChangedEvent(folder, messageUid, address));
-	}
-
-	public void setLocalReference(FolderCommandReference[] r) {
-		// set selection
-		setMessage((Folder) r[0].getFolder(), r[0].getUids()[0]);
-		useLocalSelection = true;
-	}
-
+    public void setLocalReference(FolderCommandReference[] r) {
+        // set selection
+        setMessage((Folder) r[0].getFolder(), r[0].getUids()[0]);
+        useLocalSelection = true;
+    }
 }

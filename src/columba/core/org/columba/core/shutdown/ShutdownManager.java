@@ -13,14 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.shutdown;
+
+import org.columba.core.backgroundtask.TaskInterface;
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -29,9 +33,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
-import org.columba.core.backgroundtask.TaskInterface;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.core.main.MainInterface;
 
 /**
  * @author freddy
@@ -42,162 +43,142 @@ import org.columba.core.main.MainInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class ShutdownManager {
+    private static final int ONE_SECOND = 1000;
+    private static final int DELAY = ONE_SECOND * 4;
+    private static final int INITIAL_DELAY = ONE_SECOND * 10;
+    public static final int MAINTAINANCE = 0;
+    public static final int SHUTDOWN = 1;
+    private static int currentDelay;
+    private static List list;
+    private static Timer delayedTimer;
+    private static Timer timer;
+    private static int mode = MAINTAINANCE;
 
-	private static final int ONE_SECOND = 1000;
-	private static final int DELAY = ONE_SECOND * 4;
-	private static final int INITIAL_DELAY = ONE_SECOND * 10;
+    public ShutdownManager() {
+        list = new Vector();
+    }
 
-	public static final int MAINTAINANCE = 0;
-	public static final int SHUTDOWN = 1;
+    public void register(TaskInterface plugin) {
+        list.add(plugin);
+    }
 
-	private static int currentDelay;
+    protected static void restartDelayedTimer() {
+        if (delayedTimer != null) {
+            delayedTimer.stop();
+        }
 
-	private static List list;
+        //		increase "waiting time" (when should we open the dialog the next time)
+        currentDelay = currentDelay * 2;
 
-	private static Timer delayedTimer;
-	private static Timer timer;
-	
-	private static int mode = MAINTAINANCE;
+        ColumbaLogger.log.debug("current delay=" + currentDelay);
 
-	public ShutdownManager() {
-		list = new Vector();
-	}
+        //		start delayed timer
+        delayedTimer = new Timer(currentDelay,
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent ev) {
+                        delayedTimerCheck();
+                    }
+                });
 
-	public void register(TaskInterface plugin) {
-		list.add(plugin);
-	}
+        delayedTimer.setInitialDelay(INITIAL_DELAY + currentDelay);
+        delayedTimer.start();
+    }
 
-	protected static void restartDelayedTimer() {
-		if (delayedTimer != null)
-			delayedTimer.stop();
+    public void shutdown() {
+        mode = SHUTDOWN;
 
-		//		increase "waiting time" (when should we open the dialog the next time)
-		currentDelay = currentDelay * 2;
+        // stop background-manager so it doesn't interfere with
+        // shutdown manager
+        MainInterface.backgroundTaskManager.stop();
 
-		ColumbaLogger.log.debug("current delay=" + currentDelay);
-			
-		//		start delayed timer
-		delayedTimer = new Timer(currentDelay, new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				delayedTimerCheck();
-			}
-		});
-		
-		delayedTimer.setInitialDelay(INITIAL_DELAY+currentDelay);
-		delayedTimer.start();
-	}
+        // show shutdown dialog
+        showSaveFoldersDialog();
 
-	public void shutdown() {
-		mode = SHUTDOWN;
+        // we start from the end, to be sure that
+        // the core-plugins are saved as last
+        for (int i = list.size() - 1; i >= 0; i--) {
+            TaskInterface plugin = (TaskInterface) list.get(i);
 
-		// stop background-manager so it doesn't interfere with
-		// shutdown manager
-		MainInterface.backgroundTaskManager.stop();
+            plugin.run();
+        }
 
-		// show shutdown dialog
-		showSaveFoldersDialog();
+        // initialize delay time
+        currentDelay = DELAY;
+        restartDelayedTimer();
 
-		// we start from the end, to be sure that
-		// the core-plugins are saved as last
-		
-		for (int i = list.size() - 1; i >= 0; i--) {
-			TaskInterface plugin = (TaskInterface) list.get(i);
-			
-			plugin.run();
-		}
+        // start timer
+        timer = new Timer(ONE_SECOND,
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent ev) {
+                        defaultTimerCheck();
+                    }
+                });
+        timer.start();
+    }
 
-		// initialize delay time
-		currentDelay = DELAY;
-		restartDelayedTimer();
+    protected static void showSaveFoldersDialog() {
+        JFrame dialog = new JFrame("Exiting Columba...");
 
-		// start timer
-		timer = new Timer(ONE_SECOND, new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				defaultTimerCheck();
-			}
-		});
-		timer.start();
-	}
+        dialog.getContentPane().add(new JButton("Saving Folders..."),
+            BorderLayout.CENTER);
+        dialog.pack();
 
-	protected static void showSaveFoldersDialog() {
-		JFrame dialog = new JFrame("Exiting Columba...");
+        java.awt.Dimension dim = new Dimension(300, 50);
+        dialog.setSize(dim);
 
-		dialog.getContentPane().add(
-			new JButton("Saving Folders..."),
-			BorderLayout.CENTER);
-		dialog.pack();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setLocation((screenSize.width / 2) - (dim.width / 2),
+            (screenSize.height / 2) - (dim.height / 2));
 
-		java.awt.Dimension dim = new Dimension(300, 50);
-		dialog.setSize(dim);
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
+        dialog.setVisible(true);
+    }
 
-		dialog.setVisible(true);
-	}
+    protected static void defaultTimerCheck() {
+        // timer with 1 second delay
+        // exit if no task is running anymore
+        if (MainInterface.processor.getTaskManager().count() == 0) {
+            ColumbaLogger.log.debug("one second timer exited Columba");
 
-	protected static void defaultTimerCheck() {
-		// timer with 1 second delay
+            // save xml configuration 
+            new SaveConfigPlugin().run();
 
-		// exit if no task is running anymore
-		if (MainInterface.processor.getTaskManager().count() == 0) {
-			ColumbaLogger.log.debug("one second timer exited Columba");
-			
-			// save xml configuration 
-			new SaveConfigPlugin().run();
-					
-			// quit Columba	 
-			System.exit(1);
-		}
-	}
+            // quit Columba	 
+            System.exit(1);
+        }
+    }
 
-	protected static void delayedTimerCheck() {
-		//		delayed timer with increasing delay time
-		// to no annoy the user
+    protected static void delayedTimerCheck() {
+        //		delayed timer with increasing delay time
+        // to no annoy the user
+        // exit if no task is running anymore
+        if (MainInterface.processor.getTaskManager().count() == 0) {
+            System.exit(1);
+        } else {
+            // ask user to kill pending running tasks or wait
+            Object[] options = { "Wait", "Exit" };
+            int n = JOptionPane.showOptionDialog(null,
+                    "Some tasks seem to be running. \nWould you like to wait for these to finish or just exit Columba?",
+                    "Wait or exit Columba", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
-		// exit if no task is running anymore
-		if (MainInterface.processor.getTaskManager().count() == 0)
-			System.exit(1);
-		else {
-			// ask user to kill pending running tasks or wait
+            if (n == 0) {
+                // do nothing
+                // restart timer with increased delay time
+                restartDelayedTimer();
+            } else {
+                // save xml configuration 
+                new SaveConfigPlugin().run();
 
-			Object[] options = { "Wait", "Exit" };
-			int n =
-				JOptionPane.showOptionDialog(
-					null,
-					"Some tasks seem to be running. \nWould you like to wait for these to finish or just exit Columba?",
-					"Wait or exit Columba",
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE,
-					null,
-					options,
-					options[0]);
+                // quit Columba
+                System.exit(1);
+            }
+        }
+    }
 
-			if (n == 0) {
-				// do nothing
-
-				// restart timer with increased delay time
-				
-				restartDelayedTimer();
-			
-			} else {
-				
-				// save xml configuration 
-				new SaveConfigPlugin().run();
-				
-				// quit Columba
-				System.exit(1);
-				
-				
-			}
-		}
-	}
-	/**
-	 * @return
-	 */
-	public static int getMode() {
-		return mode;
-	}
-
+    /**
+     * @return
+     */
+    public static int getMode() {
+        return mode;
+    }
 }

@@ -13,92 +13,75 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.pop3preprocessor;
-
-import javax.swing.table.AbstractTableModel;
 
 import org.columba.core.xml.XmlElement;
 
+import javax.swing.table.AbstractTableModel;
 
-class FilterListTableModel extends AbstractTableModel
-{
 
-    final String[] columnNames = {"Name",
-                                  "Enabled",
-                                  };
-
+class FilterListTableModel extends AbstractTableModel {
+    final String[] columnNames = { "Name", "Enabled", };
     private XmlElement filterList;
 
-    public FilterListTableModel( XmlElement list )
-    {
+    public FilterListTableModel(XmlElement list) {
         super();
         this.filterList = list;
-
     }
 
-
-
-    public int getColumnCount()
-    {
+    public int getColumnCount() {
         return columnNames.length;
     }
 
-    public int getRowCount()
-    {
+    public int getRowCount() {
         return filterList.count();
     }
 
-    public String getColumnName(int col)
-    {
+    public String getColumnName(int col) {
         return columnNames[col];
     }
 
-    public Object getValueAt(int row, int col)
-    {
+    public Object getValueAt(int row, int col) {
         XmlElement filter = filterList.getElement(row);
-        // this shouldn't happen at any time
-        if ( filter == null ) return "";
 
-        if ( col == 0 )
-        {
+        // this shouldn't happen at any time
+        if (filter == null) {
+            return "";
+        }
+
+        if (col == 0) {
             // description
             String description = filter.getAttribute("name");
-            if ( description == null ) return new String();
+
+            if (description == null) {
+                return new String();
+            }
 
             return description;
-        }
-        else
-        {
+        } else {
             // enabled/disabled
             return Boolean.valueOf(filter.getAttribute("enabled"));
         }
     }
 
-
-    public Class getColumnClass(int c)
-    {
-        if ( c==0 )
-           return String.class;
-        else
-           return Boolean.class;
+    public Class getColumnClass(int c) {
+        if (c == 0) {
+            return String.class;
+        } else {
+            return Boolean.class;
+        }
     }
 
-
-    public boolean isCellEditable(int row, int col)
-    {
-        if ( col == 1 )
-           return true;
-        else
-           return false;
+    public boolean isCellEditable(int row, int col) {
+        if (col == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-
-    public void setValueAt(Object value, int row, int col)
-    {
+    public void setValueAt(Object value, int row, int col) {
         XmlElement filter = filterList.getElement(row);
-        filter.addAttribute("enabled", (String) value );
+        filter.addAttribute("enabled", (String) value);
     }
-
 }
-

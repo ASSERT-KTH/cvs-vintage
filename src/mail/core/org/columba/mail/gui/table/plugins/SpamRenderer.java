@@ -17,70 +17,59 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.util.MailResourceLoader;
 
 public class SpamRenderer extends DefaultLabelRenderer {
+    ImageIcon image;
 
-	ImageIcon image;
+    public SpamRenderer() {
+        super();
 
-	public SpamRenderer() {
-		super();
+        setHorizontalAlignment(SwingConstants.RIGHT);
+        image = ImageLoader.getSmallImageIcon("spam-16.png");
+    }
 
-		setHorizontalAlignment(SwingConstants.RIGHT);
-		image = ImageLoader.getSmallImageIcon("spam-16.png");
-	}
+    public void updateUI() {
+        super.updateUI();
+    }
 
-	public void updateUI() {
-		super.updateUI();
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value == null) {
+            setText("");
 
-	}
+            return this;
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        ColumbaHeader header = (ColumbaHeader) ((MessageNode) value).getHeader();
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
+        setIcon(null);
+        setToolTipText(MailResourceLoader.getString("header", "column", "nospam"));
 
-		ColumbaHeader header =
-			(ColumbaHeader) ((MessageNode) value).getHeader();
+        Boolean bool = (Boolean) header.getAttributes().get("columba.spam");
 
-		setIcon(null);
-		setToolTipText( MailResourceLoader.getString("header","column","nospam"));
-		
-		Boolean bool = (Boolean) header.getAttributes().get("columba.spam");
-		if (bool != null) {
+        if (bool != null) {
+            if (bool.equals(Boolean.TRUE)) {
+                setIcon(image);
+                setToolTipText(MailResourceLoader.getString("header", "column",
+                        "spam"));
+            } else {
+                setIcon(null);
+            }
+        }
 
-			if (bool.equals(Boolean.TRUE))
-			{	
-				setIcon(image);
-				setToolTipText( MailResourceLoader.getString("header","column","spam"));
-			}
-			else
-				setIcon(null);
-		}
-
-		return super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
-	}
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

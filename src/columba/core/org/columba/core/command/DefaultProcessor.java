@@ -15,297 +15,312 @@
 //All Rights Reserved.
 package org.columba.core.command;
 
+import org.columba.core.util.Mutex;
+
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.util.Mutex;
 
 /**
  * Scheduler for background threads
  * <p>
- * DefaultProcessor keeps a pool of {@link Worker} instances, which are 
+ * DefaultProcessor keeps a pool of {@link Worker} instances, which are
  * assigned to {@link Command}, when executed.
  *
  * @author tstich
  */
 public class DefaultProcessor extends Thread {
+    private final static int MAX_WORKERS = 5;
+    private List operationQueue;
+    private List worker;
+    private Mutex operationMutex;
+    private Mutex workerMutex;
+    private boolean isBusy;
+    private UndoManager undoManager;
+    private TaskManager taskManager;
+    private int timeStamp;
 
-	private final static int MAX_WORKERS = 5;
+    /**
+     *
+     */
+    public DefaultProcessor() {
+        operationQueue = new Vector(10);
 
-	private List operationQueue;
-	private List worker;
+        worker = new Vector();
 
-	private Mutex operationMutex;
-	private Mutex workerMutex;
+        for (int i = 0; i < MAX_WORKERS; i++) {
+            worker.add(new Worker(this));
+        }
 
-	private boolean isBusy;
+        isBusy = true;
 
-	private UndoManager undoManager;
+        operationMutex = new Mutex("operationMutex");
+        workerMutex = new Mutex("workerMutex");
 
-	private TaskManager taskManager;
+        taskManager = new TaskManager();
 
-	private int timeStamp;
+        undoManager = new UndoManager(this);
+        timeStamp = 0;
+    }
 
-	/**
-	 * 
-	 */
-	public DefaultProcessor() {
-		operationQueue = new Vector(10);
+    /**
+     * @param op
+     */
+    public void addOp(Command op) {
+        addOp(op, Command.FIRST_EXECUTION);
+    }
 
-		worker = new Vector();
+    /**
+     * @param op
+     * @param operationMode
+     */
+    synchronized void addOp(Command op, int operationMode) {
+        //ColumbaLogger.log.debug( "Adding Operation..." );
+        boolean needToRelease = false;
 
-		for (int i = 0; i < MAX_WORKERS; i++) {
-			worker.add(new Worker(this));
-		}
+        try {
+            needToRelease = operationMutex.getMutex();
 
-		isBusy = true;
+            int p = operationQueue.size() - 1;
+            OperationItem nextOp;
 
-		operationMutex = new Mutex("operationMutex");
-		workerMutex = new Mutex("workerMutex");
+            // Sort in with respect to priority
+            while (p != -1) {
+                nextOp = (OperationItem) operationQueue.get(p);
 
-		taskManager = new TaskManager();
+                if ((nextOp.operation.getPriority() < op.getPriority()) &&
+                        !nextOp.operation.isSynchronize()) {
+                    p--;
+                } else {
+                    break;
+                }
+            }
 
-		undoManager = new UndoManager(this);
-		timeStamp = 0;
+            operationQueue.add(p + 1, new OperationItem(op, operationMode));
+        } finally {
+            if (needToRelease) {
+                operationMutex.releaseMutex();
+            }
+        }
 
-	}
+        //ColumbaLogger.log.debug( "Operation added" );
+        notify();
+    }
 
-	/**
-	 * @param op
-	 */
-	public void addOp(Command op) {
-		addOp(op, Command.FIRST_EXECUTION);
-	}
+    /**
+     * @param opItem
+     * @return
+     */
+    private boolean canBeProcessed(OperationItem opItem) {
+        return opItem.operation.canBeProcessed(opItem.operationMode);
+    }
 
-	/**
-	 * @param op
-	 * @param operationMode
-	 */
-	synchronized void addOp(Command op, int operationMode) {
-		//ColumbaLogger.log.debug( "Adding Operation..." );
-		boolean needToRelease = false;
-		try {
-			needToRelease = operationMutex.getMutex();
+    /**
+     * @return
+     */
+    private OperationItem getNextOpItem() {
+        OperationItem nextOp = null;
+        boolean needToRelease = false;
 
-			int p = operationQueue.size() - 1;
-			OperationItem nextOp;
+        try {
+            needToRelease = operationMutex.getMutex();
 
-			// Sort in with respect to priority
-			while (p != -1) {
-				nextOp = (OperationItem) operationQueue.get(p);
-				if ((nextOp.operation.getPriority() < op.getPriority())
-					&& !nextOp.operation.isSynchronize())
-					p--;
-				else
-					break;
-			}
+            for (int i = 0; i < operationQueue.size(); i++) {
+                nextOp = (OperationItem) operationQueue.get(i);
 
-			operationQueue.add(p + 1, new OperationItem(op, operationMode));
-		} finally {
-			if (needToRelease) {
-				operationMutex.releaseMutex();
-			}
-		}
-		//ColumbaLogger.log.debug( "Operation added" );
+                if ((i != 0) && (nextOp.operation.isSynchronize())) {
+                    nextOp = null;
 
-		notify();
-	}
+                    break;
+                } else if (canBeProcessed(nextOp)) {
+                    operationQueue.remove(i);
 
-	/**
-	 * @param opItem
-	 * @return
-	 */
-	private boolean canBeProcessed(OperationItem opItem) {
-		return opItem.operation.canBeProcessed(opItem.operationMode);
-	}
+                    break;
+                } else {
+                    nextOp.operation.incPriority();
 
-	/**
-	 * @return
-	 */
-	private OperationItem getNextOpItem() {
-		OperationItem nextOp = null;
-		boolean needToRelease = false;
-		try {
-			needToRelease = operationMutex.getMutex();
-			for (int i = 0; i < operationQueue.size(); i++) {
-				nextOp = (OperationItem) operationQueue.get(i);
-				if ((i != 0) && (nextOp.operation.isSynchronize())) {
-					nextOp = null;
-					break;
-				} else if (canBeProcessed(nextOp)) {
-					operationQueue.remove(i);
-					break;
-				} else {
-					nextOp.operation.incPriority();
-					if (nextOp.operation.getPriority()
-						>= Command.DEFINETLY_NEXT_OPERATION_PRIORITY) {
-						nextOp = null;
-						break;
-					} else {
-						nextOp = null;
-					}
-				}
-			}
-		} finally {
-			if (needToRelease) {
-				operationMutex.releaseMutex();
-			}
-		}
-		return nextOp;
-	}
+                    if (nextOp.operation.getPriority() >= Command.DEFINETLY_NEXT_OPERATION_PRIORITY) {
+                        nextOp = null;
 
-	/**
-	 * @param op
-	 * @param w
-	 */
-	public synchronized void operationFinished(Command op, Worker w) {
-		boolean needToRelease = false;
-		try {
-			needToRelease = workerMutex.getMutex();
+                        break;
+                    } else {
+                        nextOp = null;
+                    }
+                }
+            }
+        } finally {
+            if (needToRelease) {
+                operationMutex.releaseMutex();
+            }
+        }
 
-			worker.add(w);
-		} finally {
-			if (needToRelease) {
-				workerMutex.releaseMutex();
-			}
-		}
-		//ColumbaLogger.log.debug( "Operation finished" );
-		notify();
-	}
+        return nextOp;
+    }
 
-	/**
-	 * @return
-	 */
-	private Worker getWorker() {
-		Worker result = null;
-		boolean needToRelease = false;
-		try {
-			needToRelease = workerMutex.getMutex();
+    /**
+     * @param op
+     * @param w
+     */
+    public synchronized void operationFinished(Command op, Worker w) {
+        boolean needToRelease = false;
 
-			if (worker.size() > 0)
-				result = (Worker) worker.remove(0);
-		} finally {
-			if (needToRelease) {
-				workerMutex.releaseMutex();
-			}
-		}
-		return result;
-	}
+        try {
+            needToRelease = workerMutex.getMutex();
 
-	/**
-	 * 
-	 */
-	private synchronized void waitForNotify() {
-		isBusy = false;
-		try {
-			wait();
-		} catch (InterruptedException e) {
-		}
-		isBusy = true;
-		//ColumbaLogger.log.debug( "Operator woke up" );
-	}
+            worker.add(w);
+        } finally {
+            if (needToRelease) {
+                workerMutex.releaseMutex();
+            }
+        }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	public void run() // Scheduler
-	{
-		OperationItem opItem = null;
-		Worker worker = null;
+        //ColumbaLogger.log.debug( "Operation finished" );
+        notify();
+    }
 
-		while (true) {
-			while ((opItem = getNextOpItem()) == null)
-				waitForNotify();
+    /**
+     * @return
+     */
+    private Worker getWorker() {
+        Worker result = null;
+        boolean needToRelease = false;
 
-			//ColumbaLogger.log.debug( "Processing new Operation" );
+        try {
+            needToRelease = workerMutex.getMutex();
 
-			while ((worker = getWorker()) == null)
-				waitForNotify();
+            if (worker.size() > 0) {
+                result = (Worker) worker.remove(0);
+            }
+        } finally {
+            if (needToRelease) {
+                workerMutex.releaseMutex();
+            }
+        }
 
-			//ColumbaLogger.log.debug( "Found Worker for new Operation" );
-			worker.process(opItem.operation, opItem.operationMode, timeStamp++);
-			//ColumbaLogger.log.debug( "Worker initilized" );
-			worker.register(taskManager);
-			//ColumbaLogger.log.debug( "Starting Worker" );
-			worker.start();
+        return result;
+    }
 
-			//ColumbaLogger.log.debug( "New Operation started..." );
-		}
-	}
+    /**
+     *
+     */
+    private synchronized void waitForNotify() {
+        isBusy = false;
 
-	/**
-	 * @return
-	 */
-	public boolean isBusy() {
-		return isBusy();
-	}
+        try {
+            wait();
+        } catch (InterruptedException e) {
+        }
 
-	/**
-	 * @return
-	 */
-	public boolean hasFinishedCommands() {
-		boolean result;
-		boolean needToRelease = false;
-		try {
-			needToRelease = workerMutex.getMutex();
-			result = (worker.size() == MAX_WORKERS);
-		} finally {
-			if (needToRelease) {
-				workerMutex.releaseMutex();
-			}
-		}
-		try {
-			needToRelease = operationMutex.getMutex();
-			result = result && (operationQueue.size() == 0);
-		} finally {
-			if (needToRelease) {
-				operationMutex.releaseMutex();
-			}
-		}
-		return result;
-	}
+        isBusy = true;
 
-	/**
-	 * @return
-	 */
-	/**
-	 * Returns the undoManager.
-	 * @return UndoManager
-	 */
-	public UndoManager getUndoManager() {
-		return undoManager;
-	}
+        //ColumbaLogger.log.debug( "Operator woke up" );
+    }
 
-	/**
-	 * @return
-	 */
-	/**
-	 * Returns the taskManager.
-	 * @return TaskManager
-	 */
-	public TaskManager getTaskManager() {
-		return taskManager;
-	}
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
+    public void run() // Scheduler
+     {
+        OperationItem opItem = null;
+        Worker worker = null;
 
-	/**
-	 * @return
-	 */
-	/**
-	 * Returns the operationQueue. This method is for testing only!
-	 * @return Vector
-	 */
-	public List getOperationQueue() {
-		return operationQueue;
-	}
+        while (true) {
+            while ((opItem = getNextOpItem()) == null)
+                waitForNotify();
 
+            //ColumbaLogger.log.debug( "Processing new Operation" );
+            while ((worker = getWorker()) == null)
+                waitForNotify();
+
+            //ColumbaLogger.log.debug( "Found Worker for new Operation" );
+            worker.process(opItem.operation, opItem.operationMode, timeStamp++);
+
+            //ColumbaLogger.log.debug( "Worker initilized" );
+            worker.register(taskManager);
+
+            //ColumbaLogger.log.debug( "Starting Worker" );
+            worker.start();
+
+            //ColumbaLogger.log.debug( "New Operation started..." );
+        }
+    }
+
+    /**
+     * @return
+     */
+    public boolean isBusy() {
+        return isBusy();
+    }
+
+    /**
+     * @return
+     */
+    public boolean hasFinishedCommands() {
+        boolean result;
+        boolean needToRelease = false;
+
+        try {
+            needToRelease = workerMutex.getMutex();
+            result = (worker.size() == MAX_WORKERS);
+        } finally {
+            if (needToRelease) {
+                workerMutex.releaseMutex();
+            }
+        }
+
+        try {
+            needToRelease = operationMutex.getMutex();
+            result = result && (operationQueue.size() == 0);
+        } finally {
+            if (needToRelease) {
+                operationMutex.releaseMutex();
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @return
+     */
+    /**
+     * Returns the undoManager.
+     * @return UndoManager
+     */
+    public UndoManager getUndoManager() {
+        return undoManager;
+    }
+
+    /**
+     * @return
+     */
+    /**
+     * Returns the taskManager.
+     * @return TaskManager
+     */
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
+
+    /**
+     * @return
+     */
+    /**
+     * Returns the operationQueue. This method is for testing only!
+     * @return Vector
+     */
+    public List getOperationQueue() {
+        return operationQueue;
+    }
 }
 
-class OperationItem {
-	public Command operation;
-	public int operationMode;
 
-	public OperationItem(Command op, int opMode) {
-		operation = op;
-		operationMode = opMode;
-	}
+class OperationItem {
+    public Command operation;
+    public int operationMode;
+
+    public OperationItem(Command op, int opMode) {
+        operation = op;
+        operationMode = opMode;
+    }
 }

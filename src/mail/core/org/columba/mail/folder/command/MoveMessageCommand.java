@@ -15,13 +15,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
@@ -29,108 +29,101 @@ import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
 
+
 /**
  * Move selected messages from source to destination folder.
  * <p>
  * A dialog asks the user the destination folder to use.
- * 
+ *
  * @author fdietz
  */
 public class MoveMessageCommand extends CopyMessageCommand {
+    /**
+     * Constructor for MoveMessageCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public MoveMessageCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for MoveMessageCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public MoveMessageCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    public void updateGUI() throws Exception {
+        // calling CopyMessageCommand.updateGUI() here!
+        super.updateGUI();
 
-	public void updateGUI() throws Exception {
-		// calling CopyMessageCommand.updateGUI() here!
-		super.updateGUI();
+        // get source references
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-		// get source references
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
+        // for each source reference
+        TableModelChangedEvent ev;
 
-		// for each source reference
-		TableModelChangedEvent ev;
-		for (int i = 0; i < r.length; i++) {
+        for (int i = 0; i < r.length; i++) {
+            // update message list
+            ev = new TableModelChangedEvent(TableModelChangedEvent.REMOVE,
+                    r[i].getFolder(), r[i].getUids());
 
-			// update message list
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.REMOVE,
-					r[i].getFolder(),
-					r[i].getUids());
+            TableUpdater.tableChanged(ev);
 
-			TableUpdater.tableChanged(ev);
+            // update treemodel
+            MailInterface.treeModel.nodeChanged(r[i].getFolder());
+        }
 
-			// update treemodel
-			MailInterface.treeModel.nodeChanged(r[i].getFolder());
-		}
+        // get update reference
+        // -> only available if virtual folder is involved in operation
+        FolderCommandReference u = adapter.getUpdateReferences();
 
-		// get update reference
-		// -> only available if virtual folder is involved in operation
-		FolderCommandReference u = adapter.getUpdateReferences();
-		if (u != null) {
-			ev =
-				new TableModelChangedEvent(
-					TableModelChangedEvent.REMOVE,
-					u.getFolder(),
-					u.getUids());
+        if (u != null) {
+            ev = new TableModelChangedEvent(TableModelChangedEvent.REMOVE,
+                    u.getFolder(), u.getUids());
 
-			TableUpdater.tableChanged(ev);
+            TableUpdater.tableChanged(ev);
 
-			MailInterface.treeModel.nodeChanged(u.getFolder());
-		}
-	}
+            MailInterface.treeModel.nodeChanged(u.getFolder());
+        }
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		// calling CopyMessageCommand.execute() here!
-		super.execute(worker);
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        // calling CopyMessageCommand.execute() here!
+        super.execute(worker);
 
-		// get source reference array
-		FolderCommandReference[] r = adapter.getSourceFolderReferences();
-		
-		// for every source reference
-		for (int i = 0; i < r.length; i++) {
+        // get source reference array
+        FolderCommandReference[] r = adapter.getSourceFolderReferences();
 
-			// get messgae UIDs
-			Object[] uids = r[i].getUids();
+        // for every source reference
+        for (int i = 0; i < r.length; i++) {
+            // get messgae UIDs
+            Object[] uids = r[i].getUids();
 
-			// get source folder
-			Folder srcFolder = (Folder) r[i].getFolder();
-			
-			// register for status events
-			((StatusObservableImpl) srcFolder.getObservable()).setWorker(
-				worker);
+            // get source folder
+            Folder srcFolder = (Folder) r[i].getFolder();
 
-			// setting lastSelection to null
-			srcFolder.setLastSelection(null);
-			
-			uids = r[i].getUids();
+            // register for status events
+            ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-			ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
+            // setting lastSelection to null
+            srcFolder.setLastSelection(null);
 
-			// update status message
-			worker.setDisplayText(
-				"Moving messages to " + destFolder.getName() + "...");
-			worker.setProgressBarMaximum(uids.length);
+            uids = r[i].getUids();
 
-			// mark all messages as expunged
-			srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
+            ColumbaLogger.log.debug("src=" + srcFolder + " dest=" + destFolder);
 
-			// expunge folder
-			srcFolder.expungeFolder();
+            // update status message
+            worker.setDisplayText("Moving messages to " + destFolder.getName() +
+                "...");
+            worker.setProgressBarMaximum(uids.length);
 
-			// We are done - clear the status message after a delay
-			worker.clearDisplayTextWithDelay();
-		}
-	}
+            // mark all messages as expunged
+            srcFolder.markMessage(uids, MarkMessageCommand.MARK_AS_EXPUNGED);
+
+            // expunge folder
+            srcFolder.expungeFolder();
+
+            // We are done - clear the status message after a delay
+            worker.clearDisplayTextWithDelay();
+        }
+    }
 }

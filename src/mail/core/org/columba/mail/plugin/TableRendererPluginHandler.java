@@ -17,22 +17,22 @@ package org.columba.mail.plugin;
 
 import org.columba.core.plugin.AbstractPluginHandler;
 
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class TableRendererPluginHandler extends AbstractPluginHandler {
+    /**
+     * @param id
+     * @param config
+     */
+    public TableRendererPluginHandler() {
+        super("org.columba.mail.tablerenderer",
+            "org/columba/mail/plugin/table_renderer.xml");
 
-	/**
-	 * @param id
-	 * @param config
-	 */
-	public TableRendererPluginHandler() {
-		super("org.columba.mail.tablerenderer", "org/columba/mail/plugin/table_renderer.xml");
-
-		parentNode = getConfig().getRoot().getElement("rendererlist");
-	}
-
+        parentNode = getConfig().getRoot().getElement("rendererlist");
+    }
 }

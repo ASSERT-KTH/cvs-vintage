@@ -25,17 +25,12 @@ package org.columba.mail.plugin;
  * Window>Preferences>Java>Code Generation.
  */
 public class FilterActionPluginHandler extends AbstractFilterPluginHandler {
-
-	/**
-	 * Constructor for FilterActionPluginHandler.
-	 * @param config
-	 */
-	public FilterActionPluginHandler() {
-		super(
-			"org.columba.mail.filteraction",
-			"org/columba/mail/plugin/filter_actions.xml",
-			"actionlist");
-
-	}
-
+    /**
+     * Constructor for FilterActionPluginHandler.
+     * @param config
+     */
+    public FilterActionPluginHandler() {
+        super("org.columba.mail.filteraction",
+            "org/columba/mail/plugin/filter_actions.xml", "actionlist");
+    }
 }

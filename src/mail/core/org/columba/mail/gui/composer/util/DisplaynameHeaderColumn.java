@@ -15,6 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
+
+import org.columba.core.gui.util.ImageLoader;
+
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
@@ -24,9 +29,6 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
-import org.columba.core.gui.util.ImageLoader;
 
 /**
  * @author frd
@@ -36,127 +38,99 @@ import org.columba.core.gui.util.ImageLoader;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class DisplaynameHeaderColumn extends JLabel implements HeaderColumnInterface, TableCellRenderer{
-	
-	protected Border unselectedBorder = null;
-	protected Border selectedBorder = null;
-	protected boolean isBordered = true;
-
-	protected String value;
-	protected String name;
-	
-	ImageIcon contactIcon = ImageLoader.getSmallImageIcon("contact_small.png");
+public class DisplaynameHeaderColumn extends JLabel
+    implements HeaderColumnInterface, TableCellRenderer {
+    protected Border unselectedBorder = null;
+    protected Border selectedBorder = null;
+    protected boolean isBordered = true;
+    protected String value;
+    protected String name;
+    ImageIcon contactIcon = ImageLoader.getSmallImageIcon("contact_small.png");
     ImageIcon groupIcon = ImageLoader.getSmallImageIcon("group_small.png");
-	
-	public DisplaynameHeaderColumn(String name)
-	{
-		this.value = null;
-		this.name  = name;
-		setOpaque(true);
-		
-		isBordered = true;
-	}
-	
-	public DisplaynameHeaderColumn(String name, String value)
-	{
-		this.value = value;
-		this.name  = name;
-		setOpaque(true);
-		
-		isBordered = true;
-	}
-	
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-		
-		if (isBordered)
-		{
-			if (isSelected)
-			{
-				if (selectedBorder == null)
-				{
-					selectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
-				}
-				
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			}
-			else
-			{
-				if (unselectedBorder == null)
-				{
-					unselectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
-				}
-				setBackground(table.getBackground());
-				
-				
-				setForeground(table.getForeground());
-			}
-		}
-		
-		
-		//System.out.println("value="+object);
-		
-		HeaderItem item = (HeaderItem) object;
-		
-		/*
-		String name = (String) item.get("displayname");
-		
-		if ( name == null ) 
-			name = (String) item.get("email;internet");
-		
-		setText( name );
-		*/
-		
-		setText( item.toString() );
-		
-		if ( item.isContact() )
-			setIcon( contactIcon );
-		else
-			setIcon( groupIcon );
-		
-		return this;
-	}
 
-	public Object getValue( HeaderItem item )
-	{
-		
-		return item;
-		
-		
-		/*
-		if ( name == null ) return "";
-		
-		Object o = item.get( (String) name);
-		if ( o == null ) return "";
-		
-		return o;		
-		*/
-	}
-	
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public String getValueString()
-	{
-		return value;
-	}
-	
-	public int getColumnSize()
-	{
-		return -1;
-	}
-	
-	
+    public DisplaynameHeaderColumn(String name) {
+        this.value = null;
+        this.name = name;
+        setOpaque(true);
+
+        isBordered = true;
+    }
+
+    public DisplaynameHeaderColumn(String name, String value) {
+        this.value = value;
+        this.name = name;
+        setOpaque(true);
+
+        isBordered = true;
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
+                }
+
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
+                }
+
+                setBackground(table.getBackground());
+
+                setForeground(table.getForeground());
+            }
+        }
+
+        //System.out.println("value="+object);
+        HeaderItem item = (HeaderItem) object;
+
+        /*
+        String name = (String) item.get("displayname");
+
+        if ( name == null )
+                name = (String) item.get("email;internet");
+
+        setText( name );
+        */
+        setText(item.toString());
+
+        if (item.isContact()) {
+            setIcon(contactIcon);
+        } else {
+            setIcon(groupIcon);
+        }
+
+        return this;
+    }
+
+    public Object getValue(HeaderItem item) {
+        return item;
+
+        /*
+        if ( name == null ) return "";
+
+        Object o = item.get( (String) name);
+        if ( o == null ) return "";
+
+        return o;
+        */
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValueString() {
+        return value;
+    }
+
+    public int getColumnSize() {
+        return -1;
+    }
 }

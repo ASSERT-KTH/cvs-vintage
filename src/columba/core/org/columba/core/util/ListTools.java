@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
+
 /**
  * @author timo
  *
@@ -28,149 +29,160 @@ import java.util.ListIterator;
  * Window>Preferences>Java>Code Generation.
  */
 public class ListTools {
+    private static int compare(int a, int b) {
+        if (a < b) {
+            return -1;
+        } else if (a > b) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
-	private static int compare(int a, int b) {
-		if (a < b) {
-			return -1;
-		} else if (a > b) {
-			return 1;
-		} else {
-			return 0;
-		}
-	}
+    /**
+     * Intersect two Lists that contain Objects that implement
+     * the Comparable Interface. The Result is in List a and sorted.
+     * Be aware that List b gets also sorted!
+     *
+     * @param a
+     * @param b
+     */
+    public static void intersect(List a, List b) {
+        ListIterator aIt;
+        ListIterator bIt;
 
-	/**
-	 * Intersect two Lists that contain Objects that implement
-	 * the Comparable Interface. The Result is in List a and sorted. 
-	 * Be aware that List b gets also sorted!
-	 * 
-	 * @param a
-	 * @param b
-	 */
-	public static void intersect(List a, List b) {
-		ListIterator aIt, bIt;
+        if (a.size() == 0) {
+            return;
+        }
 
-		if (a.size() == 0) {
-			return;
-		}
+        if (b.size() == 0) {
+            a.clear();
 
-		if (b.size() == 0) {
-			a.clear();
-			return;
-		}
+            return;
+        }
 
-		Collections.sort(a);
-		Collections.sort(b);
+        Collections.sort(a);
+        Collections.sort(b);
 
-		aIt = a.listIterator();
-		bIt = b.listIterator();
+        aIt = a.listIterator();
+        bIt = b.listIterator();
 
-		Comparable aVal, bVal;
+        Comparable aVal;
+        Comparable bVal;
 
-		aVal = (Comparable) aIt.next();
-		bVal = (Comparable) bIt.next();
+        aVal = (Comparable) aIt.next();
+        bVal = (Comparable) bIt.next();
 
-		boolean loop = true;
-		int compareResult;
+        boolean loop = true;
+        int compareResult;
 
-		while (loop) {
-			compareResult = aVal.compareTo(bVal);
-			if (compareResult < 0) { // a < b
-				aIt.remove();
-				if (aIt.hasNext())
-					aVal = (Comparable) aIt.next();
-				else {
-					return;
-				}
-			} else if (compareResult == 0) { // a == b
-				if (aIt.hasNext()) {
-					aVal = (Comparable) aIt.next();
-				} else {
-					loop = false;
-					return;
-				}
+        while (loop) {
+            compareResult = aVal.compareTo(bVal);
 
-				if (bIt.hasNext()) {
-					bVal = (Comparable) bIt.next();
-				} else {
-					loop = false;
-					aIt.remove();
-				}
-			} else { // a > b
-				if (bIt.hasNext()) {
-					bVal = (Comparable) bIt.next();
-				} else {
-					loop = false;
-					aIt.remove();
-				}
-			}
-		}
+            if (compareResult < 0) { // a < b
+                aIt.remove();
 
-		while (aIt.hasNext()) {
-			aIt.next();
-			aIt.remove();
-		}
-	}
+                if (aIt.hasNext()) {
+                    aVal = (Comparable) aIt.next();
+                } else {
+                    return;
+                }
+            } else if (compareResult == 0) { // a == b
 
-	/**
-	 * Subtract two Lists that contain Objects that implement
-	 * the Comparable Interface. The Result is in List a and sorted. 
-	 * Be aware that List b gets also sorted!
-	 * 
-	 * @param a
-	 * @param b
-	 */
-	public static void substract(List a, List b) {
-		ListIterator aIt, bIt;
+                if (aIt.hasNext()) {
+                    aVal = (Comparable) aIt.next();
+                } else {
+                    loop = false;
 
-		if ((a.size() == 0) || (b.size() == 0))
-			return;
+                    return;
+                }
 
-		Collections.sort(a);
-		Collections.sort(b);
+                if (bIt.hasNext()) {
+                    bVal = (Comparable) bIt.next();
+                } else {
+                    loop = false;
+                    aIt.remove();
+                }
+            } else { // a > b
 
-		aIt = a.listIterator();
-		bIt = b.listIterator();
+                if (bIt.hasNext()) {
+                    bVal = (Comparable) bIt.next();
+                } else {
+                    loop = false;
+                    aIt.remove();
+                }
+            }
+        }
 
-		Comparable aVal, bVal;
+        while (aIt.hasNext()) {
+            aIt.next();
+            aIt.remove();
+        }
+    }
 
-		aVal = (Comparable) aIt.next();
-		bVal = (Comparable) bIt.next();
+    /**
+     * Subtract two Lists that contain Objects that implement
+     * the Comparable Interface. The Result is in List a and sorted.
+     * Be aware that List b gets also sorted!
+     *
+     * @param a
+     * @param b
+     */
+    public static void substract(List a, List b) {
+        ListIterator aIt;
+        ListIterator bIt;
 
-		boolean loop = true;
-		int compareResult;
+        if ((a.size() == 0) || (b.size() == 0)) {
+            return;
+        }
 
-		while (loop) {
-			compareResult = aVal.compareTo(bVal);
-			if (compareResult < 0) { // a < b
-				if (aIt.hasNext()) {
-					aVal = (Comparable) aIt.next();
-				} else {
-					return;
-				}
-			} else if (compareResult == 0) { // a == b
-				aIt.remove();
-				if (aIt.hasNext())
-					aVal = (Comparable) aIt.next();
-				else {
-					return;
-				}
+        Collections.sort(a);
+        Collections.sort(b);
 
-				if (bIt.hasNext())
-					bVal = (Comparable) bIt.next();
-				else {
-					return;
-				}
-			} else { // a > b
-				if (bIt.hasNext()) {
-					bVal = (Comparable) bIt.next();
-				} else {
-					return;
-				}
-			}
+        aIt = a.listIterator();
+        bIt = b.listIterator();
 
-		}
+        Comparable aVal;
+        Comparable bVal;
 
-	}
+        aVal = (Comparable) aIt.next();
+        bVal = (Comparable) bIt.next();
 
+        boolean loop = true;
+        int compareResult;
+
+        while (loop) {
+            compareResult = aVal.compareTo(bVal);
+
+            if (compareResult < 0) { // a < b
+
+                if (aIt.hasNext()) {
+                    aVal = (Comparable) aIt.next();
+                } else {
+                    return;
+                }
+            } else if (compareResult == 0) { // a == b
+                aIt.remove();
+
+                if (aIt.hasNext()) {
+                    aVal = (Comparable) aIt.next();
+                } else {
+                    return;
+                }
+
+                if (bIt.hasNext()) {
+                    bVal = (Comparable) bIt.next();
+                } else {
+                    return;
+                }
+            } else { // a > b
+
+                if (bIt.hasNext()) {
+                    bVal = (Comparable) bIt.next();
+                } else {
+                    return;
+                }
+            }
+        }
+    }
 }

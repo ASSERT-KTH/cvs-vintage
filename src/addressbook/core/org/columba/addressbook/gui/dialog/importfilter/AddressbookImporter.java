@@ -13,7 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.dialog.importfilter;
 
 import net.javaprog.ui.wizard.DataModel;
@@ -23,39 +22,46 @@ import net.javaprog.ui.wizard.WizardModelListener;
 import org.columba.addressbook.folder.importfilter.DefaultAddressbookImporter;
 import org.columba.addressbook.plugin.ImportPluginHandler;
 
+
 class AddressbookImporter implements WizardModelListener {
-	protected DataModel data;
+    protected DataModel data;
 
-	public AddressbookImporter(DataModel data) {
-		this.data = data;
-	}
+    public AddressbookImporter(DataModel data) {
+        this.data = data;
+    }
 
-	public void wizardFinished(WizardModelEvent e) {
-		ImportPluginHandler pluginHandler =
-			(ImportPluginHandler) data.getData("Plugin.handler");
-		DefaultAddressbookImporter importer = null;
-		Object[] args =
-			new Object[] {
-				data.getData("Location.source"),
-				data.getData("Location.destination")};
-		try {
-			String pluginID = (String) data.getData("Plugin.ID");
-			importer =
-				(DefaultAddressbookImporter) pluginHandler.getPlugin(
-					pluginID,
-					args);
-					
-			importer.run();
-			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			if ( ex.getCause() != null ) ex.getCause().printStackTrace();
-			
-			return;
-		}
-	}
+    public void wizardFinished(WizardModelEvent e) {
+        ImportPluginHandler pluginHandler = (ImportPluginHandler) data.getData(
+                "Plugin.handler");
+        DefaultAddressbookImporter importer = null;
+        Object[] args = new Object[] {
+                data.getData("Location.source"),
+                data.getData("Location.destination")
+            };
 
-	public void stepShown(WizardModelEvent e) {}
-	public void wizardCanceled(WizardModelEvent e) {}
-	public void wizardModelChanged(WizardModelEvent e) {}
+        try {
+            String pluginID = (String) data.getData("Plugin.ID");
+            importer = (DefaultAddressbookImporter) pluginHandler.getPlugin(pluginID,
+                    args);
+
+            importer.run();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+            if (ex.getCause() != null) {
+                ex.getCause().printStackTrace();
+            }
+
+            return;
+        }
+    }
+
+    public void stepShown(WizardModelEvent e) {
+    }
+
+    public void wizardCanceled(WizardModelEvent e) {
+    }
+
+    public void wizardModelChanged(WizardModelEvent e) {
+    }
 }

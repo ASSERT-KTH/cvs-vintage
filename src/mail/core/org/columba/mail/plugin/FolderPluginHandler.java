@@ -18,6 +18,7 @@ package org.columba.mail.plugin;
 import org.columba.core.plugin.AbstractPluginHandler;
 import org.columba.core.xml.XmlElement;
 
+
 /**
  * @author frd
  *
@@ -27,28 +28,20 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation.
  */
 public class FolderPluginHandler extends AbstractPluginHandler {
+    /**
+     * Constructor for FolderPluginHandler.
+     * @param id
+     * @param config
+     */
+    public FolderPluginHandler() {
+        super("org.columba.mail.folder", "org/columba/mail/plugin/folder.xml");
 
-	
+        parentNode = getConfig().getRoot().getElement("folderlist");
+    }
 
-	/**
-	 * Constructor for FolderPluginHandler.
-	 * @param id
-	 * @param config
-	 */
-	public FolderPluginHandler() {
-		super("org.columba.mail.folder", "org/columba/mail/plugin/folder.xml");
-
-		parentNode = getConfig().getRoot().getElement("folderlist");
-	}
-
-	
-
-	
-	/* (non-Javadoc)
-	 * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
-	 */
-	public void addExtension(String id, XmlElement extension) {
-
-	}
-
+    /* (non-Javadoc)
+     * @see org.columba.core.plugin.AbstractPluginHandler#addExtension(java.lang.String, org.columba.core.xml.XmlElement)
+     */
+    public void addExtension(String id, XmlElement extension) {
+    }
 }

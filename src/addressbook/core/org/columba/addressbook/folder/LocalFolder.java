@@ -13,92 +13,76 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
 import org.columba.addressbook.config.FolderItem;
 
 
 /**
- * 
+ *
  * LocalFolder-class gives as an additional abstraction-layer:
  *  --> DataStorageInterface
- * 
+ *
  * this makes it very easy to add other folder-formats
- * 
+ *
  * the important methods from Folder are just mapped to
  * the corresponding methods from DataStorageInterface
- * 
- * 
+ *
+ *
  */
-public abstract class LocalFolder extends Folder
-{
-	
-	
-	protected DataStorage dataStorage;
-	
-	/**
-	 * 
-	 * unique identification number for the list of HeaderItem's
-	 * 
-	 */
-	protected int nextUid;
-	
+public abstract class LocalFolder extends Folder {
+    protected DataStorage dataStorage;
 
-	public LocalFolder(FolderItem item)
-	{
-		super(item);
-		nextUid = 0;
-	}
-	
-	protected Object generateNextUid()
-	{
-		return new Integer(nextUid++);
-	}
-	
+    /**
+     *
+     * unique identification number for the list of HeaderItem's
+     *
+     */
+    protected int nextUid;
 
-	public abstract DataStorage getDataStorageInstance();
+    public LocalFolder(FolderItem item) {
+        super(item);
+        nextUid = 0;
+    }
 
-	
-	/*
-	public void add(ContactCard item)
-	{
-		Object newUid = generateNextUid();
-		
-		getDataStorageInstance().saveDefaultCard(item, newUid);
-	}
-	*/
-	
-	public void add(DefaultCard item)
-	{
-		Object newUid = generateNextUid();
-		
-		getDataStorageInstance().saveDefaultCard(item, newUid);
-	}
+    protected Object generateNextUid() {
+        return new Integer(nextUid++);
+    }
 
-	public void remove(Object uid)
-	{
-		getDataStorageInstance().removeCard(uid);
-	}
-	
-	/*
-	public void removeFolder()
-	{
-		super.removeFolder();
-		
-		// remove folder from disc
-		directoryFile.delete();
-	}
-	*/
-	
-	public DefaultCard get(Object uid)
-	{
-		return getDataStorageInstance().loadDefaultCard(uid);
-	}
-	
-	public void modify( DefaultCard card, Object uid )
-	{
-		getDataStorageInstance().modifyCard(card, uid);
-	}
+    public abstract DataStorage getDataStorageInstance();
 
+    /*
+    public void add(ContactCard item)
+    {
+            Object newUid = generateNextUid();
+
+            getDataStorageInstance().saveDefaultCard(item, newUid);
+    }
+    */
+    public void add(DefaultCard item) {
+        Object newUid = generateNextUid();
+
+        getDataStorageInstance().saveDefaultCard(item, newUid);
+    }
+
+    public void remove(Object uid) {
+        getDataStorageInstance().removeCard(uid);
+    }
+
+    /*
+    public void removeFolder()
+    {
+            super.removeFolder();
+
+            // remove folder from disc
+            directoryFile.delete();
+    }
+    */
+    public DefaultCard get(Object uid) {
+        return getDataStorageInstance().loadDefaultCard(uid);
+    }
+
+    public void modify(DefaultCard card, Object uid) {
+        getDataStorageInstance().modifyCard(card, uid);
+    }
 }

@@ -15,6 +15,9 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer.util;
 
+import org.columba.addressbook.folder.HeaderItem;
+import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
+
 import java.awt.Component;
 
 import javax.swing.JComboBox;
@@ -22,8 +25,6 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.addressbook.folder.HeaderItem;
-import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 
 /**
  * @author frd
@@ -33,77 +34,64 @@ import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class ComboBoxHeaderColumn extends JComboBox implements HeaderColumnInterface, TableCellRenderer{
-	
-	protected Border unselectedBorder = null;
-	protected Border selectedBorder = null;
-	protected boolean isBordered = true;
+public class ComboBoxHeaderColumn extends JComboBox
+    implements HeaderColumnInterface, TableCellRenderer {
+    protected Border unselectedBorder = null;
+    protected Border selectedBorder = null;
+    protected boolean isBordered = true;
+    protected String value;
+    protected String name;
 
-	protected String value;
-	protected String name;
-	
-	public ComboBoxHeaderColumn(String name)
-	{
-		this.value = null;
-		this.name  = name;
-		setOpaque(true);
-		
-		isBordered = true;
-	}
-	
-	public ComboBoxHeaderColumn(String name, String value)
-	{
-		this.value = value;
-		this.name  = name;
-		setOpaque(true);
-		
-		isBordered = true;
-	}
-	
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-		
-		
-		
-		
-		setSelectedItem((String) object);
-		return this;
-	}
+    public ComboBoxHeaderColumn(String name) {
+        this.value = null;
+        this.name = name;
+        setOpaque(true);
 
-	public Object getValue( HeaderItem item )
-	{
-		
-		if ( item == null ) return "";
-		
-		if ( name == null ) return "";
-		
-		Object o = item.get( (String) name);
-		if ( o == null ) return "";
-		
-		return o;		
-	}
-	
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public String getValueString()
-	{
-		return value;
-	}
-	
-	public int getColumnSize()
-	{
-		return -1;
-	}
-	
-	
+        isBordered = true;
+    }
+
+    public ComboBoxHeaderColumn(String name, String value) {
+        this.value = value;
+        this.name = name;
+        setOpaque(true);
+
+        isBordered = true;
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        setSelectedItem((String) object);
+
+        return this;
+    }
+
+    public Object getValue(HeaderItem item) {
+        if (item == null) {
+            return "";
+        }
+
+        if (name == null) {
+            return "";
+        }
+
+        Object o = item.get((String) name);
+
+        if (o == null) {
+            return "";
+        }
+
+        return o;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getValueString() {
+        return value;
+    }
+
+    public int getColumnSize() {
+        return -1;
+    }
 }

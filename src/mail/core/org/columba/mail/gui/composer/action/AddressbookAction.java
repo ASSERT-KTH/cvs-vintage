@@ -13,69 +13,63 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
 
-import java.awt.event.ActionEvent;
-
 import org.columba.addressbook.gui.SelectAddressDialog;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.util.MailResourceLoader;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AddressbookAction extends FrameAction {
+    public AddressbookAction(ComposerController composerController) {
+        super(composerController,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_addressbook"));
 
-	public AddressbookAction(ComposerController composerController) {
-		super(composerController, MailResourceLoader.getString(
-			"menu", "composer", "menu_message_addressbook"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_message_addressbook_tooltip").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_message_addressbook_tooltip").replaceAll("&", ""));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("contact_small.png"));
-		
-		// disable text in toolbar
-		setShowToolBarText(false);
-	}
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("contact.png"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		ComposerController composerController =
-			((ComposerController) getFrameMediator());
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getImageIcon("contact_small.png"));
 
-		composerController.getHeaderController().cleanupHeaderItemList();
+        // disable text in toolbar
+        setShowToolBarText(false);
+    }
 
-		SelectAddressDialog dialog =
-			new SelectAddressDialog(
-				composerController.getView(),
-				composerController.getHeaderController().getHeaderItemLists());
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        ComposerController composerController = ((ComposerController) getFrameMediator());
 
-		org.columba.addressbook.folder.Folder folder =
-			(org.columba.addressbook.folder.Folder) MainInterface
-				.addressbookTreeModel
-				.getFolder(101);
-		dialog.setHeaderList(folder.getHeaderItemList());
+        composerController.getHeaderController().cleanupHeaderItemList();
 
-		dialog.setVisible(true);
+        SelectAddressDialog dialog = new SelectAddressDialog(composerController.getView(),
+                composerController.getHeaderController().getHeaderItemLists());
 
-		composerController.getHeaderController().setHeaderItemLists(
-			dialog.getHeaderItemLists());
-	}
+        org.columba.addressbook.folder.Folder folder = (org.columba.addressbook.folder.Folder) MainInterface.addressbookTreeModel.getFolder(101);
+        dialog.setHeaderList(folder.getHeaderItemList());
+
+        dialog.setVisible(true);
+
+        composerController.getHeaderController().setHeaderItemLists(dialog.getHeaderItemLists());
+    }
 }

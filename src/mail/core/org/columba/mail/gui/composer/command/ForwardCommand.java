@@ -19,6 +19,7 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -26,6 +27,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaMessage;
+
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
@@ -33,99 +35,92 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 
+
 /**
  * Forward message as attachment.
- * 
- * 
+ *
+ *
  * @author fdietz, tstich, karlpeder
  */
 public class ForwardCommand extends FolderCommand {
+    protected ComposerController controller;
+    protected ComposerModel model;
 
-	protected ComposerController controller;
-	protected ComposerModel model;
-	
-	/**
-	 * Constructor for ForwardCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public ForwardCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    /**
+     * Constructor for ForwardCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public ForwardCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	public void updateGUI() throws Exception {
+    public void updateGUI() throws Exception {
+        // open composer frame
+        controller = new ComposerController();
 
-		// open composer frame
-		controller = new ComposerController();
+        // apply model
+        controller.setComposerModel(model);
 
-		// apply model
-		controller.setComposerModel(model);
+        // model->view update
+        controller.updateComponents(true);
+    }
 
-		// model->view update
-		controller.updateComponents(true);
-	}
+    public void execute(Worker worker) throws Exception {
+        // get selected folder
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
-	public void execute(Worker worker) throws Exception {
+        // get first selected message
+        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-		// get selected folder
-		Folder folder =
-			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
+        // create new message object
+        ColumbaMessage message = new ColumbaMessage();
 
-		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+        // get headerfields
+        Header header = folder.getHeaderFields(uids[0],
+                new String[] { "Subject" });
+        message.setHeader(header);
 
-		// create new message object
-		ColumbaMessage message = new ColumbaMessage();
+        // get mimeparts
+        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
+        message.setMimePartTree(mimePartTree);
 
-		// get headerfields
-		Header header =
-			folder.getHeaderFields(uids[0], new String[] { "Subject" });
-		message.setHeader(header);
+        // get message source
+        String source = folder.getMessageSource(uids[0]);
+        message.setStringSource(source);
 
-		// get mimeparts
-		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
-		message.setMimePartTree(mimePartTree);
+        // create composer model
+        model = new ComposerModel();
 
-		// get message source
-		String source = folder.getMessageSource(uids[0]);
-		message.setStringSource(source);
+        // get bodypart
+        MimePart bodyPart = message.getBodyPart();
 
-		// create composer model
-		model = new ComposerModel();
+        // set character set
+        if (bodyPart != null) {
+            String charset = bodyPart.getHeader().getContentParameter("charset");
 
-		// get bodypart
-		MimePart bodyPart = message.getBodyPart();
+            if (charset != null) {
+                model.setCharsetName(charset);
+            }
+        }
 
-		// set character set
-		if (bodyPart != null) {
-			String charset =
-				bodyPart.getHeader().getContentParameter("charset");
-			if (charset != null) {
-				model.setCharsetName(charset);
-			}
-		}
+        // set subject
+        model.setSubject(MessageBuilderHelper.createForwardSubject(
+                (String) header.get("Subject")));
 
-		// set subject
-		model.setSubject(
-			MessageBuilderHelper.createForwardSubject(
-				(String) header.get("Subject")));
+        // original message is sent as attachment - model is setup according to
+        //the stored option for html / text
+        model.setHtml(MessageBuilderHelper.isHTMLEnabled());
 
-		// original message is sent as attachment - model is setup according to
-		//the stored option for html / text
-		model.setHtml(MessageBuilderHelper.isHTMLEnabled());
+        //	append message as mimepart
+        if (message.getSource() != null) {
+            // initialize MimeHeader as RFC822-compliant-message
+            MimeHeader mimeHeader = new MimeHeader();
+            mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
-		//	append message as mimepart
-		if (message.getSource() != null) {
-			// initialize MimeHeader as RFC822-compliant-message
-			MimeHeader mimeHeader = new MimeHeader();
-			mimeHeader.setMimeType(new MimeType("message", "rfc822"));
-
-			// add mimepart to model
-			model.addMimePart(
-				new LocalMimePart(mimeHeader, message.getSource()));
-		}
-
-	}
-
+            // add mimepart to model
+            model.addMimePart(new LocalMimePart(mimeHeader, message.getSource()));
+        }
+    }
 }

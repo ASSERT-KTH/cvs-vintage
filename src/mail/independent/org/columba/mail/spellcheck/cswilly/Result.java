@@ -19,12 +19,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package org.columba.mail.spellcheck.cswilly;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 
 /**
  * Models the result of a spell check of a single word.
@@ -52,61 +52,47 @@ import java.util.StringTokenizer;
  *       suggested replacements were found.</dd>
  *   </dl>
  */
-public
-        class Result
-{
+public class Result {
+    public static final Type ERROR = new Type("Error");
+    public static final Type OK = new Type("OK ");
+    public static final Type NONE = new Type("None");
+    public static final Type SUGGESTION = new Type("Suggestion");
     private int _offset;
     private Type _type;
     private List _suggestions;
     private String _originalWord;
 
-    public static final Type ERROR = new Type("Error");
-    public static final Type OK = new Type("OK ");
-    public static final Type NONE = new Type("None");
-    public static final Type SUGGESTION = new Type("Suggestion");
-
-
-    public Result(String line)
-    {
-        if (line == null || line.length() <= 0)
+    public Result(String line) {
+        if ((line == null) || (line.length() <= 0)) {
             processError(line);
-        else if (line.charAt(0) == '*')
+        } else if (line.charAt(0) == '*') {
             processOk(line);
-        else if (line.charAt(0) == '&')
+        } else if (line.charAt(0) == '&') {
             processSuggestion(line);
-        else if (line.charAt(0) == '#')
+        } else if (line.charAt(0) == '#') {
             processNone(line);
-        else
+        } else {
             processError(line);
+        }
     }
 
-    public
-            int getOffset()
-    {
+    public int getOffset() {
         return _offset;
     }
 
-    public
-            Type getType()
-    {
+    public Type getType() {
         return _type;
     }
 
-    public
-            List getSuggestions()
-    {
+    public List getSuggestions() {
         return _suggestions;
     }
 
-    public
-            String getOriginalWord()
-    {
+    public String getOriginalWord() {
         return _originalWord;
     }
 
-    public
-            String toString()
-    {
+    public String toString() {
         StringBuffer buff = new StringBuffer();
         buff.append("[type:");
         buff.append(_type);
@@ -116,30 +102,25 @@ public
         buff.append(_offset);
         buff.append(",suggestions:");
         buff.append(_suggestions);
+
         return buff.toString();
     }
 
-    private
-            void processError(String line)
-    {
+    private void processError(String line) {
         _offset = 0;
         _type = ERROR;
         _suggestions = new ArrayList();
         _originalWord = "";
     }
 
-    private
-            void processOk(String line)
-    {
+    private void processOk(String line) {
         _offset = 0;
         _type = OK;
         _suggestions = new ArrayList();
         _originalWord = "";
     }
 
-    private
-            void processNone(String line)
-    {
+    private void processNone(String line) {
         _type = NONE;
         _suggestions = new ArrayList();
 
@@ -149,40 +130,33 @@ public
         _offset = Integer.parseInt(st.nextToken());
     }
 
-    private
-            void processSuggestion(String line)
-    {
-
+    private void processSuggestion(String line) {
         _type = SUGGESTION;
 
         StringTokenizer st = new StringTokenizer(line);
         st.nextToken(); // skip '#'
         _originalWord = st.nextToken();
+
         int count = Integer.parseInt(st.nextToken().trim());
         _suggestions = new ArrayList(count);
         _offset = Integer.parseInt(st.nextToken(":").trim());
 
         st = new StringTokenizer(st.nextToken(":"), ",");
-        while (st.hasMoreTokens())
-        {
+
+        while (st.hasMoreTokens()) {
             String suggestion = st.nextToken().trim();
             _suggestions.add(suggestion);
         }
     }
 
-    private static
-            class Type
-    {
+    private static class Type {
         private final String _typeName;
 
-        Type(String typeName)
-        {
+        Type(String typeName) {
             _typeName = typeName;
         }
 
-        public
-                String toString()
-        {
+        public String toString() {
             return _typeName;
         }
     }

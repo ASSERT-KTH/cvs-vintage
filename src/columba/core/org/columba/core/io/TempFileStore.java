@@ -15,43 +15,39 @@
 //All Rights Reserved.
 package org.columba.core.io;
 
-import java.io.File;
-
 import org.columba.core.config.ConfigPath;
 
-public class TempFileStore
-{
+import java.io.File;
+
+
+public class TempFileStore {
     private static File tempDir;
-    
+
     static {
-	File configDir = ConfigPath.getConfigDirectory();
+        File configDir = ConfigPath.getConfigDirectory();
 
-	tempDir = new File( configDir, "tmp" );
-	DiskIO.emptyDirectory( tempDir );
-	DiskIO.ensureDirectory( tempDir );
+        tempDir = new File(configDir, "tmp");
+        DiskIO.emptyDirectory(tempDir);
+        DiskIO.ensureDirectory(tempDir);
     }
 
-    private TempFileStore() {}
-
-    protected static String replaceWhiteSpaces( String s )
-    {
-	return s.replace( ' ', '_' );
+    private TempFileStore() {
     }
 
-    public static File createTempFile()
-    {
-	return createTempFileWithSuffix( "tmp" );
+    protected static String replaceWhiteSpaces(String s) {
+        return s.replace(' ', '_');
     }
 
-
-    public static File createTempFile( String s )
-    {
-	return new File( tempDir, replaceWhiteSpaces(s) );
+    public static File createTempFile() {
+        return createTempFileWithSuffix("tmp");
     }
 
+    public static File createTempFile(String s) {
+        return new File(tempDir, replaceWhiteSpaces(s));
+    }
 
-    public static File createTempFileWithSuffix( String suffix )
-    {
-	return new File( tempDir, "columba"+System.currentTimeMillis()+"."+suffix );
+    public static File createTempFileWithSuffix(String suffix) {
+        return new File(tempDir,
+            "columba" + System.currentTimeMillis() + "." + suffix);
     }
 }

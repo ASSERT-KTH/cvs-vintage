@@ -13,27 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.util;
 
 public class BooleanCompressor {
+    public static int compress(Boolean[] input) {
+        int result = 0;
 
-	public static int compress(Boolean[] input) {
-		int result = 0;
-		
-		for( int i=0; i<input.length; i++) {
-			if( input[i].booleanValue() )
-				result |= 1 << i;
-		}
-		
-		return result;
-	}
-	
-	public static Boolean decompress(int input, int index) {
-                if (((input >> index ) & 1) == 1) {
-                    return Boolean.TRUE;
-                } else {
-                    return Boolean.FALSE;
-                }
-	}
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].booleanValue()) {
+                result |= (1 << i);
+            }
+        }
+
+        return result;
+    }
+
+    public static Boolean decompress(int input, int index) {
+        if (((input >> index) & 1) == 1) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
 }

@@ -13,15 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.action;
-
-import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
-import javax.swing.ImageIcon;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.plugin.PluginInterface;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
+
 
 /**
  * FrameAction has an additional reference to its frame
@@ -30,92 +30,91 @@ import org.columba.core.plugin.PluginInterface;
  * This is necessary because actions have to know in which
  * frame they are, to provide visual feedback for the user
  * in the correct frame.
- * 
+ *
  * <p>
  * Note: Most constructors of this class are depreceated.
- * 
+ *
  * The preferred way should be to use methods instead to add
  * additional information to the action.
- * 
+ *
  * Example: @see org.columba.core.gui.action.CancelAction
  *
  * @author fdietz
  */
-public abstract class FrameAction extends AbstractAction implements PluginInterface {
+public abstract class FrameAction extends AbstractAction
+    implements PluginInterface {
+    /**
+     * special label for toolbar buttons which is smaller
+     * than the regular label
+     *
+     * Example: Reply to Sender -> Reply
+     *
+     */
+    public static final String TOOLBAR_NAME = "ToolbarName";
 
-	/**
-	 * special label for toolbar buttons which is smaller
-	 * than the regular label
-	 * 
-	 * Example: Reply to Sender -> Reply
-	 * 
-	 */
-	public static final String TOOLBAR_NAME = "ToolbarName";
+    /**
+     * The toolbar uses the large icon, whereas menuitems
+     * use the small one.
+     *
+     */
+    public static final String LARGE_ICON = "LargeIcon";
 
-	/**
-	 * The toolbar uses the large icon, whereas menuitems 
-	 * use the small one.
-	 * 
-	 */
-	public static final String LARGE_ICON = "LargeIcon";
+    /**
+     * JavaHelp topic ID
+     */
+    public static final String TOPIC_ID = "TopicID";
 
-	/**
-	 * JavaHelp topic ID
-	 */
-	public static final String TOPIC_ID = "TopicID";
-	
-	/**
-	 * show button text in toolbar
-	 */
-	protected boolean showToolbarText = true;
+    /**
+     * show button text in toolbar
+     */
+    protected boolean showToolbarText = true;
+    protected FrameMediator frameMediator;
 
-	protected FrameMediator frameMediator;
+    /**
+     *
+     * default constructor
+     *
+     * @param frameMediator                frame controller
+     * @param name                                        i18n name
+     *
+     */
+    public FrameAction(FrameMediator frameMediator, String name) {
+        super(name);
+        this.frameMediator = frameMediator;
+    }
 
-	/**
-	 * 
-	 * default constructor 
-	 * 
-	 * @param frameMediator		frame controller 
-	 * @param name					i18n name
-	 * 
-	 */
-	public FrameAction(FrameMediator frameMediator, String name) {
-		super(name);
-		this.frameMediator = frameMediator;
-	}
+    /**
+     * Returns the frame controller
+     *
+     * @return FrameController
+     */
+    public FrameMediator getFrameMediator() {
+        return frameMediator;
+    }
 
-	/**
-	 * Returns the frame controller
-	 * 
-	 * @return FrameController
-	 */
-	public FrameMediator getFrameMediator() {
-		return frameMediator;
-	}
+    /**
+     * Sets the frameMediator.
+     *
+     * @param frameMediator
+     */
+    public void setFrameMediator(FrameMediator frameController) {
+        this.frameMediator = frameController;
+    }
 
-	/**
-	 * Sets the frameMediator.
-	 * 
-	 * @param frameMediator 
-	 */
-	public void setFrameMediator(FrameMediator frameController) {
-		this.frameMediator = frameController;
-	}
+    /**
+     * Return true if toolbar text should be visible
+     *
+     * @return boolean        true, if toolbar text should be enabled, false otherwise
+     *
+     */
+    public boolean isShowToolBarText() {
+        return showToolbarText;
+    }
 
-	/**
-	 * Return true if toolbar text should be visible
-	 * 
-	 * @return boolean	true, if toolbar text should be enabled, false otherwise
-	 * 
-	 */
-	public boolean isShowToolBarText() {
-		return showToolbarText;
-	}
-
-	/**
-	 * @param showToolbarText
-	 */
-	public void setShowToolBarText(boolean showToolbarText) {
-		this.showToolbarText = showToolbarText;
-	}
+    /**
+     * @param showToolbarText
+     */
+    public void setShowToolBarText(boolean showToolbarText) {
+        this.showToolbarText = showToolbarText;
+    }
 }

@@ -13,18 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.ComposerCommandReference;
 import org.columba.mail.folder.outbox.OutboxFolder;
 import org.columba.mail.gui.composer.ComposerController;
@@ -32,67 +27,70 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.smtp.command.SendMessageCommand;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class SendAction extends FrameAction {
+    public SendAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "composer", "menu_file_send"));
 
-	public SendAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "composer", "menu_file_send"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "composer",
-                        "menu_file_send_tooltip").replaceAll("&", ""));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_send_tooltip").replaceAll("&", ""));
 
-		// toolbar text
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-			"menu", "composer", "menu_file_send_toolbar"));
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-16.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
-	}
+        // toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "composer",
+                "menu_file_send_toolbar"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		final ComposerController composerController = (ComposerController ) getFrameMediator();
-		
-		if (composerController.checkState())
-			return;
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
 
-		/*
-		ComposerOperation op =
-			new ComposerOperation(
-				Operation.COMPOSER_SEND,
-				0,
-				composerInterface.composerController);
-		
-		MainInterface.crossbar.operate(op);
-		*/
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-16.png"));
 
-		OutboxFolder outboxFolder =
-			(OutboxFolder) MailInterface.treeModel.getFolder(103);
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, ActionEvent.CTRL_MASK));
+    }
 
-		ComposerCommandReference[] r = new ComposerCommandReference[1];
-		r[0] = new ComposerCommandReference(
-				composerController,
-				outboxFolder);
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        final ComposerController composerController = (ComposerController) getFrameMediator();
 
-		SendMessageCommand c = new SendMessageCommand(r);
+        if (composerController.checkState()) {
+            return;
+        }
 
-		MainInterface.processor.addOp(c);
-	}
+        /*
+        ComposerOperation op =
+                new ComposerOperation(
+                        Operation.COMPOSER_SEND,
+                        0,
+                        composerInterface.composerController);
+
+        MainInterface.crossbar.operate(op);
+        */
+        OutboxFolder outboxFolder = (OutboxFolder) MailInterface.treeModel.getFolder(103);
+
+        ComposerCommandReference[] r = new ComposerCommandReference[1];
+        r[0] = new ComposerCommandReference(composerController, outboxFolder);
+
+        SendMessageCommand c = new SendMessageCommand(r);
+
+        MainInterface.processor.addOp(c);
+    }
 }

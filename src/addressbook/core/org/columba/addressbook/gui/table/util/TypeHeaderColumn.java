@@ -13,8 +13,9 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
+
+import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.Component;
 
@@ -23,83 +24,64 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import org.columba.core.gui.util.ImageLoader;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class TypeHeaderColumn extends HeaderColumn
-{
-	ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
+public class TypeHeaderColumn extends HeaderColumn {
+    ImageIcon image1 = ImageLoader.getSmallImageIcon("contact_small.png");
     ImageIcon image2 = ImageLoader.getSmallImageIcon("group_small.png");
-    
-	public TypeHeaderColumn( String name )
-	{
-		super(name);
-		
-		setHorizontalAlignment( SwingConstants.CENTER );
-		
-	}
-	
-	public TypeHeaderColumn( String name, String value )
-	{
-		super(name, value);
-		setHorizontalAlignment( SwingConstants.CENTER );
-	}
-	
-	
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object object,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-		if (isBordered)
-		{
-			if (isSelected)
-			{
-				if (selectedBorder == null)
-				{
-					selectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getSelectionBackground());
-				}
-				//setBorder(selectedBorder);
-				setBackground(table.getSelectionBackground());
-				setForeground(table.getSelectionForeground());
-			}
-			else
-			{
-				if (unselectedBorder == null)
-				{
-					unselectedBorder =
-						BorderFactory.createMatteBorder(2, 5, 2, 5, table.getBackground());
-				}
-				setBackground(table.getBackground());
-				//setBorder(unselectedBorder);
-				setForeground(table.getForeground());
-			}
-		}
-		
-		
-		
-		
-		String type = (String) object;
-		
-		//setText( "type="+type );
-		
-		if ( type.equals("contact") )
-			setIcon( image1 );
-		else
-			setIcon ( image2 );
-		
-		return this;
-	}
-	
-	public int getColumnSize()
-	{
-		return 23;
-	}
+
+    public TypeHeaderColumn(String name) {
+        super(name);
+
+        setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    public TypeHeaderColumn(String name, String value) {
+        super(name, value);
+        setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object object,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isBordered) {
+            if (isSelected) {
+                if (selectedBorder == null) {
+                    selectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getSelectionBackground());
+                }
+
+                //setBorder(selectedBorder);
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                if (unselectedBorder == null) {
+                    unselectedBorder = BorderFactory.createMatteBorder(2, 5, 2,
+                            5, table.getBackground());
+                }
+
+                setBackground(table.getBackground());
+
+                //setBorder(unselectedBorder);
+                setForeground(table.getForeground());
+            }
+        }
+
+        String type = (String) object;
+
+        //setText( "type="+type );
+        if (type.equals("contact")) {
+            setIcon(image1);
+        } else {
+            setIcon(image2);
+        }
+
+        return this;
+    }
+
+    public int getColumnSize() {
+        return 23;
+    }
 }

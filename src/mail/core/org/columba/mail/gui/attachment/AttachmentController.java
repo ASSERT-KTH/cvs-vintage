@@ -13,8 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment;
+
+import org.columba.core.gui.frame.FrameMediator;
+
+import org.columba.mail.gui.attachment.action.OpenAction;
+
+import org.columba.ristretto.message.MimeTree;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,9 +28,6 @@ import java.awt.event.MouseListener;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.gui.attachment.action.OpenAction;
-import org.columba.ristretto.message.MimeTree;
 
 /**
  * This class shows the attachmentlist
@@ -34,90 +36,82 @@ import org.columba.ristretto.message.MimeTree;
  * @version 1.0
  * @author Timo Stich
  */
-
 public class AttachmentController {
+    public JScrollPane scrollPane;
 
-	public JScrollPane scrollPane;
+    //private IconPanel attachmentPanel;
+    //private int actIndex;
+    //private Object actUid;
+    //private TempFolder subMessageFolder;
+    //private boolean inline;
+    private AttachmentMenu menu;
 
-	//private IconPanel attachmentPanel;
+    //private AttachmentActionListener actionListener;
+    private AttachmentView view;
+    private AttachmentModel model;
+    private FrameMediator abstractFrameController;
 
-	//private int actIndex;
-	//private Object actUid;
+    public AttachmentController(FrameMediator superController) {
+        super();
 
-	//private TempFolder subMessageFolder;
+        this.abstractFrameController = superController;
 
-	//private boolean inline;
+        model = new AttachmentModel();
 
-	private AttachmentMenu menu;
-	//private AttachmentActionListener actionListener;
+        view = new AttachmentView(model);
 
-	private AttachmentView view;
-	private AttachmentModel model;
+        abstractFrameController.getSelectionManager().addSelectionHandler(new AttachmentSelectionHandler(
+                view));
 
-	private FrameMediator abstractFrameController;
+        getView().setDoubleClickAction(new OpenAction(superController));
 
-	public AttachmentController(FrameMediator superController) {
-		super();
+        MouseListener popupListener = new PopupListener();
+        getView().addMouseListener(popupListener);
+    }
 
-		this.abstractFrameController = superController;
+    public FrameMediator getFrameController() {
+        return abstractFrameController;
+    }
 
-		model = new AttachmentModel();
+    public AttachmentView getView() {
+        return view;
+    }
 
-		view = new AttachmentView(model);
+    public AttachmentModel getModel() {
+        return model;
+    }
 
-		abstractFrameController.getSelectionManager().addSelectionHandler(
-			new AttachmentSelectionHandler(view));
+    public boolean setMimePartTree(MimeTree collection) {
+        return getView().setMimePartTree(collection);
+    }
 
-		getView().setDoubleClickAction(new OpenAction(superController));
+    public void createPopupMenu() {
+        menu = new AttachmentMenu(getFrameController());
+    }
 
-		MouseListener popupListener = new PopupListener();
-		getView().addMouseListener(popupListener);
+    private JPopupMenu getPopupMenu() {
+        return menu;
+    }
 
-	}
+    class PopupListener extends MouseAdapter {
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
 
-	public FrameMediator getFrameController() {
-		return abstractFrameController;
-	}
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
 
-	public AttachmentView getView() {
-		return view;
-	}
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                if (getView().countSelected() <= 1) {
+                    getView().select(e.getPoint(), 0);
+                }
 
-	public AttachmentModel getModel() {
-		return model;
-	}
-
-	public boolean setMimePartTree(MimeTree collection) {
-		return getView().setMimePartTree(collection);
-	}
-
-	public void createPopupMenu() {
-		menu = new AttachmentMenu(getFrameController());
-	}
-
-	private JPopupMenu getPopupMenu() {
-
-		return menu;
-	}
-
-	class PopupListener extends MouseAdapter {
-		public void mousePressed(MouseEvent e) {
-			maybeShowPopup(e);
-		}
-
-		public void mouseReleased(MouseEvent e) {
-			maybeShowPopup(e);
-		}
-
-		private void maybeShowPopup(MouseEvent e) {
-			if (e.isPopupTrigger()) {
-				if (getView().countSelected() <= 1) {
-					getView().select(e.getPoint(), 0);
-				}
-				if (getView().countSelected() >= 1)
-					getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
-			}
-		}
-	}
-
+                if (getView().countSelected() >= 1) {
+                    getPopupMenu().show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        }
+    }
 }

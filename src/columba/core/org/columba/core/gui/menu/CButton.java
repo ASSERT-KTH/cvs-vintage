@@ -13,44 +13,41 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.menu;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.help.HelpManager;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.help.HelpManager;
 
 /**
  * Default Button which automatically sets a JavaHelp topic ID
  * based on the AbstractAction name attribute.
  * <p>
  * This is necessary to provide a complete context-specific help.
- * 
+ *
  *
  * @author fdietz
  */
 public class CButton extends JButton {
+    public CButton() {
+        super();
+    }
 
-	public CButton()
-	{
-		super();
-	}
-	
-	public CButton(Icon icon)
-	{
-		super(icon);
-	}
-	
-	public CButton(Action action)
-	{
-		super(action);
-		
-                String topicID = (String)action.getValue(FrameAction.TOPIC_ID);
-		if (topicID != null) {
-			HelpManager.enableHelpOnButton(this, topicID);
-                }
-	}
+    public CButton(Icon icon) {
+        super(icon);
+    }
+
+    public CButton(Action action) {
+        super(action);
+
+        String topicID = (String) action.getValue(FrameAction.TOPIC_ID);
+
+        if (topicID != null) {
+            HelpManager.enableHelpOnButton(this, topicID);
+        }
+    }
 }

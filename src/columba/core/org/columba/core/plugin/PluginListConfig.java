@@ -18,6 +18,7 @@ package org.columba.core.plugin;
 import org.columba.core.io.DiskIO;
 import org.columba.core.xml.XmlIO;
 
+
 /**
  * Responsible for loading the plugin.xml file found in every plugin
  * package.
@@ -25,15 +26,14 @@ import org.columba.core.xml.XmlIO;
  * @author freddy
  */
 public class PluginListConfig extends XmlIO {
+    /**
+     * Constructor for PluginListConfig.
+     */
+    public PluginListConfig(String fileName) {
+        super();
 
-	/**
-	 * Constructor for PluginListConfig.
-	 */
-	public PluginListConfig(String fileName) {
-		super();
+        setURL(DiskIO.getResourceURL(fileName));
 
-		setURL( DiskIO.getResourceURL(fileName) );
-		
-		load();
-	}
+        load();
+    }
 }

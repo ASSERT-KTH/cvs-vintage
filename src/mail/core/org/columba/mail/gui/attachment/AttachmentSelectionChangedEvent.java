@@ -13,43 +13,43 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.attachment;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
+
 import org.columba.mail.folder.Folder;
 
+
 public class AttachmentSelectionChangedEvent extends SelectionChangedEvent {
+    private Folder folder;
+    private Object messageUid;
+    private Integer[] address;
 
-	private Folder folder;
-	private Object messageUid;
-	private Integer[] address;
+    public AttachmentSelectionChangedEvent(Folder folder, Object messageUid,
+        Integer[] address) {
+        this.folder = folder;
+        this.messageUid = messageUid;
+        this.address = address;
+    }
 
-	public AttachmentSelectionChangedEvent( Folder folder, Object messageUid, Integer[] address ) {
-		this.folder = folder;
-		this.messageUid = messageUid;
-		this.address = address;
-	}
+    /**
+     * @return Integer[]
+     */
+    public Integer[] getAddress() {
+        return address;
+    }
 
-	/**
-	 * @return Integer[]
-	 */
-	public Integer[] getAddress() {
-		return address;
-	}
+    /**
+     * @return Folder
+     */
+    public Folder getFolder() {
+        return folder;
+    }
 
-	/**
-	 * @return Folder
-	 */
-	public Folder getFolder() {
-		return folder;
-	}
-
-	/**
-	 * @return Object
-	 */
-	public Object getMessageUid() {
-		return messageUid;
-	}
-
+    /**
+     * @return Object
+     */
+    public Object getMessageUid() {
+        return messageUid;
+    }
 }

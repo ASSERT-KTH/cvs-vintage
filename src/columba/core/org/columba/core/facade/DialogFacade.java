@@ -17,23 +17,22 @@ package org.columba.core.facade;
 
 import org.columba.core.gui.util.ExceptionDialog;
 
+
 /**
  * @author fdietz
  *
- * 
+ *
  */
 public class DialogFacade {
-
-	/**
-	 * Open an dialog showing an exception stack-trace
-	 * and offering the user the choice of sending 
-	 * in a bug-report
-	 * 
-	 * @param ex	Exception class
-	 */
-	public static void showExceptionDialog(Exception ex) {
-		ExceptionDialog dialog = new ExceptionDialog();
-		dialog.showDialog(ex);
-	}
-
+    /**
+     * Open an dialog showing an exception stack-trace
+     * and offering the user the choice of sending
+     * in a bug-report
+     *
+     * @param ex        Exception class
+     */
+    public static void showExceptionDialog(Exception ex) {
+        ExceptionDialog dialog = new ExceptionDialog();
+        dialog.showDialog(ex);
+    }
 }

@@ -17,6 +17,7 @@ package org.columba.core.charset;
 
 import java.util.EventListener;
 
+
 /**
  * @author -
  *
@@ -25,10 +26,6 @@ import java.util.EventListener;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public abstract interface CharsetListener extends EventListener
-{
-	
-	public abstract void charsetChanged( CharsetEvent e );
-	
-	
+public abstract interface CharsetListener extends EventListener {
+    public abstract void charsetChanged(CharsetEvent e);
 }

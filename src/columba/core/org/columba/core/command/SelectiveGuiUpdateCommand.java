@@ -22,7 +22,7 @@ import org.columba.core.gui.frame.FrameMediator;
  * Provides a more intelligent GUI update mechanism.
  * <p>
  * Imagine having many commands executed in parallel not finishing
- * in the same order they were started. The problem is that 
+ * in the same order they were started. The problem is that
  * the GUI reflects the changes of the finished commands in the order
  * they were started.
  * <p>
@@ -34,46 +34,46 @@ import org.columba.core.gui.frame.FrameMediator;
  * He has to wait until all Commands are finished to see gui update of
  * the last one. You think of it as ignoring other gui updates because
  * the most recent one has higher priority.
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public abstract class SelectiveGuiUpdateCommand extends Command {
-	
-	private static int lastTimeStamp;
+    private static int lastTimeStamp;
 
-	/**
-	 * Constructor for SelectiveGuiUpdateCommand.
-	 * @param frameMediator
-	 * @param references
-	 */
-	public SelectiveGuiUpdateCommand(
-		DefaultCommandReference[] references) {
-		super(references);
-	}
-	
-	public SelectiveGuiUpdateCommand(
-			FrameMediator frame, DefaultCommandReference[] references) {
-			super(frame, references);
-		}
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void finish() throws Exception {
-		if( getTimeStamp() == lastTimeStamp ) updateGUI();
-	}
+    /**
+     * Constructor for SelectiveGuiUpdateCommand.
+     * @param frameMediator
+     * @param references
+     */
+    public SelectiveGuiUpdateCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * @see org.columba.core.command.Command#setTimeStamp(int)
-	 */
-	public void setTimeStamp(int timeStamp) {
-		super.setTimeStamp(timeStamp);
-		
-		if( timeStamp > lastTimeStamp ) {
-			lastTimeStamp = timeStamp;
-		}
-	}
+    public SelectiveGuiUpdateCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
+    }
 
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void finish() throws Exception {
+        if (getTimeStamp() == lastTimeStamp) {
+            updateGUI();
+        }
+    }
+
+    /**
+     * @see org.columba.core.command.Command#setTimeStamp(int)
+     */
+    public void setTimeStamp(int timeStamp) {
+        super.setTimeStamp(timeStamp);
+
+        if (timeStamp > lastTimeStamp) {
+            lastTimeStamp = timeStamp;
+        }
+    }
 }

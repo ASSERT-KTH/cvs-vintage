@@ -6,10 +6,11 @@
  */
 package org.columba.mail.folder.search;
 
-import java.util.List;
-
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.message.ColumbaMessage;
+
+import java.util.List;
+
 
 /**
  * @author Frederik Dietz
@@ -18,17 +19,18 @@ import org.columba.mail.message.ColumbaMessage;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public interface QueryEngine {
-	
-	public abstract String[] getCaps();
+    public abstract String[] getCaps();
 
-	public void sync() throws Exception;
-	
-	public List queryEngine(FilterRule filter) throws Exception;
-	public List queryEngine(FilterRule filter, Object[] uids) throws Exception;
+    public void sync() throws Exception;
 
-	public void messageAdded(ColumbaMessage message) throws Exception;
+    public List queryEngine(FilterRule filter) throws Exception;
 
-	public void messageRemoved(Object uid) throws Exception;
+    public List queryEngine(FilterRule filter, Object[] uids)
+        throws Exception;
 
-	public void reset() throws Exception;
+    public void messageAdded(ColumbaMessage message) throws Exception;
+
+    public void messageRemoved(Object uid) throws Exception;
+
+    public void reset() throws Exception;
 }

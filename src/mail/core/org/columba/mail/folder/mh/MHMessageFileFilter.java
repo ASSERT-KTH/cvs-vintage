@@ -17,8 +17,10 @@ package org.columba.mail.folder.mh;
 
 import java.io.File;
 import java.io.FileFilter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * @author timo
@@ -29,30 +31,28 @@ import java.util.regex.Pattern;
  * Window>Preferences>Java>Code Generation.
  */
 public class MHMessageFileFilter implements FileFilter {
-	
-	private static final Pattern filePattern = Pattern.compile("[0-9]+");
-	private Matcher matcher; 
-	
-	protected static MHMessageFileFilter myInstance;
-	
-	public static MHMessageFileFilter getInstance() {
-		if( myInstance == null)
-			myInstance = new MHMessageFileFilter();
-		
-		
-		return myInstance;
-	}
-	
-	protected MHMessageFileFilter() {
-		matcher = filePattern.matcher("");		
-	}
-	
-	/**
-	 * @see java.io.FileFilter#accept(java.io.File)
-	 */
-	public boolean accept(File arg0) {
-		matcher.reset(arg0.getName());
-		return (arg0.isFile()) && matcher.matches();
-	}
+    private static final Pattern filePattern = Pattern.compile("[0-9]+");
+    protected static MHMessageFileFilter myInstance;
+    private Matcher matcher;
 
+    protected MHMessageFileFilter() {
+        matcher = filePattern.matcher("");
+    }
+
+    public static MHMessageFileFilter getInstance() {
+        if (myInstance == null) {
+            myInstance = new MHMessageFileFilter();
+        }
+
+        return myInstance;
+    }
+
+    /**
+     * @see java.io.FileFilter#accept(java.io.File)
+     */
+    public boolean accept(File arg0) {
+        matcher.reset(arg0.getName());
+
+        return (arg0.isFile()) && matcher.matches();
+    }
 }

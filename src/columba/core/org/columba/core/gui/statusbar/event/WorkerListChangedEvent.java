@@ -16,35 +16,32 @@
 package org.columba.core.gui.statusbar.event;
 
 public class WorkerListChangedEvent {
-	
-	public static final int SIZE_CHANGED = 0;
-	
-	private int type;
-	private int oldValue;
-	private int newValue;
-	
-	public int getType() {
-		return type;
-	}
+    public static final int SIZE_CHANGED = 0;
+    private int type;
+    private int oldValue;
+    private int newValue;
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public int getType() {
+        return type;
+    }
 
-	public int getOldValue() {
-		return oldValue;
-	}
+    public void setType(int type) {
+        this.type = type;
+    }
 
-	public void setOldValue(int oldSize) {
-		this.oldValue = oldSize;
-	}
+    public int getOldValue() {
+        return oldValue;
+    }
 
-	public int getNewValue() {
-		return newValue;
-	}
+    public void setOldValue(int oldSize) {
+        this.oldValue = oldSize;
+    }
 
-	public void setNewValue(int newSize) {
-		this.newValue = newSize;
-	}
+    public int getNewValue() {
+        return newValue;
+    }
 
+    public void setNewValue(int newSize) {
+        this.newValue = newSize;
+    }
 }

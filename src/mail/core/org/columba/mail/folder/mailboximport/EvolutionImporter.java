@@ -17,97 +17,86 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mailboximport;
 
+import org.columba.core.command.WorkerStatusController;
+
+import org.columba.mail.folder.Folder;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.mail.folder.Folder;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @version 1.0
  * @author
  */
 public class EvolutionImporter extends DefaultMailboxImporter {
+    public EvolutionImporter() {
+        super();
+    }
 
-	public EvolutionImporter() {
-		super();
-	}
+    public EvolutionImporter(Folder destinationFolder, File[] sourceFiles) {
+        super(destinationFolder, sourceFiles);
+    }
 
-	public EvolutionImporter(Folder destinationFolder, File[] sourceFiles) {
-		super(destinationFolder, sourceFiles);
-	}
+    public int getType() {
+        return TYPE_FILE;
+    }
 
-	public int getType() {
-		return TYPE_FILE;
-	}
+    public void importMailboxFile(File file, WorkerStatusController worker,
+        Folder destFolder) throws Exception {
+        int count = 0;
+        boolean sucess = false;
 
-	public void importMailboxFile(
-		File file,
-		WorkerStatusController worker,
-		Folder destFolder)
-		throws Exception {
+        StringBuffer strbuf = new StringBuffer();
 
-		int count = 0;
-		boolean sucess = false;
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String str;
 
-		StringBuffer strbuf = new StringBuffer();
+        // parse line by line
+        while ((str = in.readLine()) != null) {
+            // if user cancelled task exit immediately
+            if (worker.cancelled() == true) {
+                return;
+            }
 
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String str;
+            // if line doesn't start with "From" or line length is 0
+            //  -> save everything in StringBuffer
+            if ((str.startsWith("From ") == false) || (str.length() == 0)) {
+                strbuf.append(str + "\n");
+            } else {
+                // line contains "@" (evolution mbox style) or
+                //  -> import message in Columba
+                if (str.indexOf("@") != -1) {
+                    if (strbuf.length() != 0) {
+                        // found new message
+                        saveMessage(strbuf.toString(), worker,
+                            getDestinationFolder());
 
-		// parse line by line
-		while ((str = in.readLine()) != null) {
-			// if user cancelled task exit immediately
-			if (worker.cancelled() == true)
-				return;
+                        count++;
 
-			// if line doesn't start with "From" or line length is 0
-			//  -> save everything in StringBuffer
-			if ((str.startsWith("From ") == false) || (str.length() == 0)) {
-				strbuf.append(str + "\n");
-			} else {
+                        sucess = true;
+                    }
 
-				// line contains "@" (evolution mbox style) or
-				//  -> import message in Columba
-				if (str.indexOf("@") != -1) {
-					if (strbuf.length() != 0) {
-						// found new message
+                    strbuf = new StringBuffer();
+                } else {
+                    strbuf.append(str + "\n");
+                }
+            }
+        }
 
-						saveMessage(
-							strbuf.toString(),
-							worker,
-							getDestinationFolder());
+        // save last message, because while loop aborted before being able to
+        // save message
+        if ((sucess == true) && (strbuf.length() > 0)) {
+            saveMessage(strbuf.toString(), worker, getDestinationFolder());
+        }
 
-						count++;
+        in.close();
+    }
 
-						sucess = true;
-
-					}
-					strbuf = new StringBuffer();
-				} else {
-					strbuf.append(str + "\n");
-				}
-			}
-
-		}
-
-		// save last message, because while loop aborted before being able to
-		// save message
-		if ((sucess == true) && (strbuf.length() > 0)) {
-			saveMessage(strbuf.toString(), worker, getDestinationFolder());
-		}
-
-		in.close();
-
-	}
-
-	public String getDescription() {
-		return MailResourceLoader.getString(
-			"dialog",
-			"mailboximport",
-			"Evolution_description");
-	}
-
+    public String getDescription() {
+        return MailResourceLoader.getString("dialog", "mailboximport",
+            "Evolution_description");
+    }
 }

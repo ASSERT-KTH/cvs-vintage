@@ -15,15 +15,18 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.loader.ExternalClassLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.scripting.AbstractInterpreter;
+
+import java.io.File;
+
+import java.net.URL;
+
+import java.util.List;
+import java.util.Vector;
+
 
 /**
  * PluginLoader handles the different kinds of classloaders.
@@ -31,104 +34,93 @@ import org.columba.core.scripting.AbstractInterpreter;
  * Possible candidates can be java classes in Columba or outside
  * and classes, which are handled by the interpreter plugin.
  * (python classes at this time only)
- * 
+ *
  *
  *  @author freddy
  */
 public class PluginLoader {
+    /**
+     * Constructor for PluginLoader.
+     */
+    public PluginLoader() {
+        super();
+    }
 
-	/**
-	 * Constructor for PluginLoader.
-	 */
-	public PluginLoader() {
-		super();
-	}
+    /**
+     * @param className                name of class
+     * @param type                        type of plugin (java|jar|python)
+     * @param file                        File which specifies the class/jar/py file
+     * @param args                        arguments for the plugin
+     * @return                                instance of plugin
+     * @throws Exception
+     */
+    public static Object loadExternalPlugin(String className, String type,
+        File file, Object[] args) throws Exception {
+        if ((className == null) || (type == null) || (file == null)) {
+            return null;
+        }
 
-	/**
-	 * @param className		name of class
-	 * @param type			type of plugin (java|jar|python)
-	 * @param file			File which specifies the class/jar/py file
-	 * @param args			arguments for the plugin
-	 * @return				instance of plugin
-	 * @throws Exception
-	 */
-	public static Object loadExternalPlugin(
-		String className,
-		String type,
-		File file,
-		Object[] args)
-		throws Exception {
+        if (MainInterface.DEBUG) {
+            ColumbaLogger.log.debug("loading.. " + className);
+        }
 
-		if (className == null || type == null || file == null) {
-			return null;
-		}
-		
-		if (MainInterface.DEBUG )
-			ColumbaLogger.log.debug("loading.. "+className);
+        if (type.equals("java") || type.equals("jar")) {
+            // plugin-directory
+            String path = file.getPath();
 
-		if (type.equals("java") || type.equals("jar")) {
-			// plugin-directory
-			String path = file.getPath();
+            List urlList = new Vector();
 
-			List urlList = new Vector();
+            URL newURL = new File(path).toURL();
+            urlList.add(newURL);
 
-			
-			URL newURL = new File(path).toURL();
-			urlList.add(newURL);
+            // we add every jar-file in /lib, too
+            // plugin-directory
+            File directory = file.getParentFile();
 
-			// we add every jar-file in /lib, too
-			
-			// plugin-directory
-			File directory = file.getParentFile();
-			
-			File lib = new File(directory, "lib");
-			if (lib.exists()) {
+            File lib = new File(directory, "lib");
 
-				File[] libList = lib.listFiles();
-				for (int i = 0; i < libList.length; i++) {
-					File f = libList[i];
-					if (f.getName().endsWith(".jar")) {
-						// jar-file found
-						urlList.add(f.toURL());
-					}
-				}
-			}
+            if (lib.exists()) {
+                File[] libList = lib.listFiles();
 
-			URL[] url = new URL[urlList.size()];
-				
-			for (int i = 0; i < urlList.size(); i++) {
-				url[i] = (URL) urlList.get(i);
-			}
+                for (int i = 0; i < libList.length; i++) {
+                    File f = libList[i];
 
-			ColumbaLogger.log.debug("url=" + newURL);
+                    if (f.getName().endsWith(".jar")) {
+                        // jar-file found
+                        urlList.add(f.toURL());
+                    }
+                }
+            }
 
-			return new ExternalClassLoader(url).instanciate(className, args);
+            URL[] url = new URL[urlList.size()];
 
-		}
+            for (int i = 0; i < urlList.size(); i++) {
+                url[i] = (URL) urlList.get(i);
+            }
 
-		InterpreterHandler handler =
-			(InterpreterHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.core.interpreter");
+            ColumbaLogger.log.debug("url=" + newURL);
 
-		Object instance = handler.getInterpreter(type);
-		
+            return new ExternalClassLoader(url).instanciate(className, args);
+        }
 
-		if (instance != null) {
-			AbstractInterpreter ip = (AbstractInterpreter) instance;
+        InterpreterHandler handler = (InterpreterHandler) MainInterface.pluginManager.getHandler(
+                "org.columba.core.interpreter");
 
-			String pythonFile = file.toString() + "/" + className.toString();
+        Object instance = handler.getInterpreter(type);
 
-			String pythonClass =
-				className.toString().substring(
-					0,
-					className.toString().length() - 3);
+        if (instance != null) {
+            AbstractInterpreter ip = (AbstractInterpreter) instance;
 
-			Object i = ip.instanciate(pythonFile, pythonClass, args, "test");
+            String pythonFile = file.toString() + "/" + className.toString();
 
-			return i;
-		}
+            String pythonClass = className.toString().substring(0,
+                    className.toString().length() - 3);
 
-		return null;
-	}
+            Object i = ip.instanciate(pythonFile, pythonClass, args, "test");
 
+            return i;
+        }
+
+        return null;
+    }
 }

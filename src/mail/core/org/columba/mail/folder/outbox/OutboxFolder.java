@@ -17,10 +17,8 @@
 //All Rights Reserved.
 package org.columba.mail.folder.outbox;
 
-import java.util.List;
-import java.util.Vector;
-
 import org.columba.core.logging.ColumbaLogger;
+
 import org.columba.mail.composer.SendableMessage;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.headercache.AbstractHeaderCache;
@@ -30,151 +28,138 @@ import org.columba.mail.folder.mh.CachedMHFolder;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.SendableHeader;
+
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.MessageParser;
+
+import java.util.List;
+import java.util.Vector;
+
 
 /**
  * Additionally to {@CachedMHFolder}is capable of saving
  * {@link SendableMessage}objects.
  * <p>
  * It is used to store messages to send them later all at once.
- * 
+ *
  * @author fdietz
  */
 public class OutboxFolder extends CachedMHFolder {
+    private SendListManager[] sendListManager = new SendListManager[2];
+    private int actSender;
+    private boolean isSending;
+    protected OutboxHeaderCache cache;
 
-	private SendListManager[] sendListManager = new SendListManager[2];
-	private int actSender;
-	private boolean isSending;
+    public OutboxFolder(FolderItem item) {
+        super(item);
 
-	protected OutboxHeaderCache cache;
+        sendListManager[0] = new SendListManager();
+        sendListManager[1] = new SendListManager();
+        actSender = 0;
 
-	public OutboxFolder(FolderItem item) {
-		super(item);
+        isSending = false;
+    }
 
-		sendListManager[0] = new SendListManager();
-		sendListManager[1] = new SendListManager();
-		actSender = 0;
+    public AbstractHeaderCache getHeaderCacheInstance() {
+        if (headerCache == null) {
+            headerCache = new OutboxHeaderCache(this);
+        }
 
-		isSending = false;
+        return headerCache;
+    }
 
-	}
+    public ColumbaMessage getMessage(Object uid) throws Exception {
+        if (aktMessage != null) {
+            if (aktMessage.getUID().equals(uid)) {
+                // this message is already cached
+                ColumbaLogger.log.info("using already cached message..");
 
-	public AbstractHeaderCache getHeaderCacheInstance() {
-		if (headerCache == null) {
-			headerCache = new OutboxHeaderCache(this);
-		}
-		return headerCache;
-	}
+                return aktMessage;
+            }
+        }
 
-	public ColumbaMessage getMessage(Object uid) throws Exception {
-		if (aktMessage != null) {
-			if (aktMessage.getUID().equals(uid)) {
-				// this message is already cached
-				ColumbaLogger.log.info("using already cached message..");
+        String source = getMessageSource(uid);
 
-				return aktMessage;
-			}
-		}
+        ColumbaMessage message = new ColumbaMessage(MessageParser.parse(
+                    new CharSequenceSource(source)));
+        message.setUID(uid);
 
-		String source = getMessageSource(uid);
+        SendableHeader header = (SendableHeader) getHeaderList().get(uid);
+        SendableMessage sendableMessage = new SendableMessage();
+        sendableMessage.setHeader(header);
+        sendableMessage.setMimePartTree(message.getMimePartTree());
+        sendableMessage.setStringSource(source);
 
-		ColumbaMessage message =
-			new ColumbaMessage(
-				MessageParser.parse(new CharSequenceSource(source)));
-		message.setUID(uid);
+        aktMessage = sendableMessage;
 
-		SendableHeader header = (SendableHeader) getHeaderList().get(uid);
-		SendableMessage sendableMessage = new SendableMessage();
-		sendableMessage.setHeader(header);
-		sendableMessage.setMimePartTree(message.getMimePartTree());
-		sendableMessage.setStringSource(source);
+        return sendableMessage;
+    }
 
-		aktMessage = sendableMessage;
+    private void swapListManagers() throws Exception {
+        // copy lost Messages
+        System.out.println("Sizes : " + sendListManager[actSender].count() +
+            " - " + sendListManager[1 - actSender].count());
 
-		return sendableMessage;
-	}
+        while (sendListManager[actSender].hasMoreMessages()) {
+            sendListManager[1 - actSender].add((SendableMessage) getMessage(
+                    sendListManager[actSender].getNextUid()));
+        }
 
-	private void swapListManagers() throws Exception {
-		// copy lost Messages
-		System.out.println(
-			"Sizes : "
-				+ sendListManager[actSender].count()
-				+ " - "
-				+ sendListManager[1
-				- actSender].count());
+        // swap
+        actSender = 1 - actSender;
 
-		while (sendListManager[actSender].hasMoreMessages()) {
-			sendListManager[1
-				- actSender].add(
-					(SendableMessage) getMessage(sendListManager[actSender]
-						.getNextUid()));
-		}
+        System.out.println("Sizes : " + sendListManager[actSender].count() +
+            " - " + sendListManager[1 - actSender].count());
+    }
 
-		// swap
-		actSender = 1 - actSender;
+    public void stoppedSending() {
+        isSending = false;
+    }
 
-		System.out.println(
-			"Sizes : "
-				+ sendListManager[actSender].count()
-				+ " - "
-				+ sendListManager[1
-				- actSender].count());
+    public void save() throws Exception {
+        // only save header-cache if folder data changed
+        if (hasChanged() == true) {
+            getHeaderCacheInstance().save();
+            setChanged(false);
+        }
+    }
 
-	}
+    /**
+     *
+     * OutboxFolder doesn't allow adding messages, in comparison to other
+     * regular mailbox folders.
+     *
+     * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
+     */
+    public boolean supportsAddMessage() {
+        return false;
+    }
 
-	public void stoppedSending() {
-		isSending = false;
-	}
+    class OutboxHeaderCache extends LocalHeaderCache {
+        public OutboxHeaderCache(CachedFolder folder) {
+            super(folder);
+        }
 
-	public void save() throws Exception {
-		// only save header-cache if folder data changed
-		if (hasChanged() == true) {
+        public ColumbaHeader createHeaderInstance() {
+            return new SendableHeader();
+        }
 
-			getHeaderCacheInstance().save();
-			setChanged(false);
-		}
-	}
+        protected void loadHeader(ColumbaHeader h) throws Exception {
+            super.loadHeader(h);
 
-	class OutboxHeaderCache extends LocalHeaderCache {
-		public OutboxHeaderCache(CachedFolder folder) {
-			super(folder);
-		}
+            int accountUid = ((Integer) reader.readObject()).intValue();
+            ((SendableHeader) h).setAccountUid(accountUid);
 
-		public ColumbaHeader createHeaderInstance() {
-			return new SendableHeader();
-		}
+            List recipients = (Vector) reader.readObject();
+            ((SendableHeader) h).setRecipients(recipients);
+        }
 
-		protected void loadHeader(ColumbaHeader h) throws Exception {
-			super.loadHeader(h);
+        protected void saveHeader(ColumbaHeader h) throws Exception {
+            super.saveHeader(h);
 
-			int accountUid = ((Integer) reader.readObject()).intValue();
-			((SendableHeader) h).setAccountUid(accountUid);
+            writer.writeObject(new Integer(((SendableHeader) h).getAccountUid()));
 
-			List recipients = (Vector) reader.readObject();
-			((SendableHeader) h).setRecipients(recipients);
-
-		}
-
-		protected void saveHeader(ColumbaHeader h) throws Exception {
-			super.saveHeader(h);
-
-			writer.writeObject(
-				new Integer(((SendableHeader) h).getAccountUid()));
-
-			writer.writeObject(((SendableHeader) h).getRecipients());
-
-		}
-	}
-	/**
-	 * 
-	 * OutboxFolder doesn't allow adding messages, in comparison to other
-	 * regular mailbox folders.
-	 * 
-	 * @see org.columba.mail.folder.FolderTreeNode#supportsAddMessage()
-	 */
-	public boolean supportsAddMessage() {
-		return false;
-	}
-
+            writer.writeObject(((SendableHeader) h).getRecipients());
+        }
+    }
 }

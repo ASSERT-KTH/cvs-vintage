@@ -13,19 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
@@ -34,92 +29,91 @@ import org.columba.mail.gui.table.model.MessageNode;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class NextMessageAction
-	extends FrameAction
-	implements SelectionListener {
+public class NextMessageAction extends FrameAction implements SelectionListener {
+    public NextMessageAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_nextmessage"));
 
-	public NextMessageAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_view_nextmessage"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_view_nextmessage_tooltip").replaceAll("&", ""));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_nextmessage_tooltip").replaceAll("&", ""));
 
-		// icons
-		putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
+        // icons
+        putValue(LARGE_ICON, ImageLoader.getSmallImageIcon("next-message.png"));
 
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
-		
-		// disable toolbar text
-		setShowToolBarText(false);
+        // shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, 0));
 
-		setEnabled(false);
-		
-		// uncomment to enable action
-		/*
-		(
-			(
-				AbstractMailFrameController) frameMediator)
-					.registerTableSelectionListener(
-			this);
-		*/
+        // disable toolbar text
+        setShowToolBarText(false);
 
-	}
+        setEnabled(false);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-				.getTableSelection();
+        // uncomment to enable action
 
-		// TODO: fix next-message action
+        /*
+        (
+                (
+                        AbstractMailFrameController) frameMediator)
+                                .registerTableSelectionListener(
+                this);
+        */
+    }
 
-		if (r.length > 0) {
-			FolderCommandReference ref = r[0];
-			TableController table =
-				((TableViewOwner) getFrameMediator()).getTableController();
-			MessageNode node = table.getView().getSelectedNodes()[0];
-			if (node == null)
-				return;
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
-			/*
-			MessageNode nextNode = (MessageNode) node.getNextNode();
-			Object nextUid = nextNode.getUid();
+        // TODO: fix next-message action
+        if (r.length > 0) {
+            FolderCommandReference ref = r[0];
+            TableController table = ((TableViewOwner) getFrameMediator()).getTableController();
+            MessageNode node = table.getView().getSelectedNodes()[0];
 
-			Object[] uids = new Object[1];
-			uids[0] = nextUid;
-			ref.setUids(uids);
+            if (node == null) {
+                return;
+            }
 
-			(
-				(AbstractMailFrameController) getFrameController())
-					.setTableSelection(
-				r);
-			table.setSelected(uids);
+            /*
+            MessageNode nextNode = (MessageNode) node.getNextNode();
+            Object nextUid = nextNode.getUid();
 
-			MainInterface.processor.addOp(
-				new ViewMessageCommand(getFrameController(), r));
-			*/
+            Object[] uids = new Object[1];
+            uids[0] = nextUid;
+            ref.setUids(uids);
 
-		}
+            (
+                    (AbstractMailFrameController) getFrameController())
+                            .setTableSelection(
+                    r);
+            table.setSelected(uids);
 
-	}
-        
-	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+            MainInterface.processor.addOp(
+                    new ViewMessageCommand(getFrameController(), r));
+            */
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

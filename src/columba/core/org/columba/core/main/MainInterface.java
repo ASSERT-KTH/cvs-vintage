@@ -13,10 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.main;
 
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
+
 import org.columba.core.backgroundtask.BackgroundTaskManager;
 import org.columba.core.command.DefaultProcessor;
 import org.columba.core.config.Config;
@@ -24,6 +24,7 @@ import org.columba.core.gui.ClipboardManager;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.ShutdownManager;
+
 
 /**
  * Main Interface keeping static instances of all objects
@@ -33,38 +34,36 @@ import org.columba.core.shutdown.ShutdownManager;
  * @author fdietz
  */
 public class MainInterface {
+    // current version
+    public static final String version = "1.0 Milestone M1";
 
-	// current version
-	public static final String version = "1.0 Milestone M1";
+    // if true, enables debugging output from org.columba.core.logging 
+    public static boolean DEBUG = false;
 
-	// if true, enables debugging output from org.columba.core.logging 
-	public static boolean DEBUG = false;
+    // configuration file management
+    public static Config config;
 
-	// configuration file management
-	public static Config config;
+    // addressbook treemodel
+    // TODO: move this to the addressbook component
+    public static AddressbookTreeModel addressbookTreeModel;
 
-	// addressbook treemodel
-	// TODO: move this to the addressbook component
-	public static AddressbookTreeModel addressbookTreeModel;
+    // scheduler
+    public static DefaultProcessor processor;
+    public static PluginManager pluginManager;
 
-	// scheduler
-	public static DefaultProcessor processor;
+    // tasks which are executed on exiting Columba
+    public static ShutdownManager shutdownManager;
 
-	public static PluginManager pluginManager;
+    // tasks which are executed by a timer in the background
+    // if the program is currently in idle mode
+    public static BackgroundTaskManager backgroundTaskManager;
 
-	// tasks which are executed on exiting Columba
-	public static ShutdownManager shutdownManager;
-	
-	// tasks which are executed by a timer in the background
-	// if the program is currently in idle mode
-	public static BackgroundTaskManager backgroundTaskManager;
-	
-	// every component using cut/copy/paste/etc. uses this manager
-	public static ClipboardManager clipboardManager;
-	
-	// focus manager needed for cut/copy/paste/etc.
-	public static FocusManager focusManager;
+    // every component using cut/copy/paste/etc. uses this manager
+    public static ClipboardManager clipboardManager;
 
-	public MainInterface() {
-	}
+    // focus manager needed for cut/copy/paste/etc.
+    public static FocusManager focusManager;
+
+    public MainInterface() {
+    }
 }

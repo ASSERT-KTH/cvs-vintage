@@ -13,15 +13,16 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.util.GlobalResourceLoader;
+
 import org.columba.mail.gui.messageframe.MessageFrameController;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
@@ -30,22 +31,18 @@ import org.columba.mail.gui.messageframe.MessageFrameController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class OpenNewMessageFrameWindowAction extends FrameAction {
+    public OpenNewMessageFrameWindowAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            GlobalResourceLoader.getString(null, null, "menu_file_new_message"));
+    }
 
-	public OpenNewMessageFrameWindowAction(
-			FrameMediator frameMediator) {
-			
-		super(
-		frameMediator,
-				GlobalResourceLoader.getString(
-					null, null, "menu_file_new_message"));
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		MessageFrameController c = new MessageFrameController();
-		c.selectInbox();
-		//new NextMessageAction(c).actionPerformed(null);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        MessageFrameController c = new MessageFrameController();
+        c.selectInbox();
+
+        //new NextMessageAction(c).actionPerformed(null);
+    }
 }

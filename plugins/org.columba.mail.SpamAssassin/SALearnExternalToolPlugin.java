@@ -1,3 +1,6 @@
+import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.util.OSInfo;
+
 // The contents of this file are subject to the Mozilla Public License Version
 // 1.1
 //(the "License"); you may not use this file except in compliance with the
@@ -16,55 +19,53 @@
 //
 //All Rights Reserved.
 import java.io.File;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.util.OSInfo;
 
 /**
  * @author fdietz
  */
 public class SALearnExternalToolPlugin extends AbstractExternalToolsPlugin {
+    protected static URL websiteURL;
 
-	File defaultLinux = new File("/usr/bin/sa-learn");
-	File defaultLocalLinux = new File("/usr/local/bin/sa-learn");
+    static {
+        try {
+            websiteURL = new URL("http://www.spamassassin.org/");
+        } catch (MalformedURLException mue) {
+        }
+         //does not happen
+    }
 
-	protected static URL websiteURL;
+    File defaultLinux = new File("/usr/bin/sa-learn");
+    File defaultLocalLinux = new File("/usr/local/bin/sa-learn");
 
-	static {
-		try {
-			websiteURL = new URL("http://www.spamassassin.org/");
-		} catch (MalformedURLException mue) {
-		} //does not happen
-	}
-	
-	public SALearnExternalToolPlugin()
-	{
-		super();
-	}
+    public SALearnExternalToolPlugin() {
+        super();
+    }
 
-	public String getDescription() {
+    public String getDescription() {
+        return "<html><body><p>sa-learn - train SpamAssassin's Bayesian classifier</p></body></html>";
+    }
 
-		return "<html><body><p>sa-learn - train SpamAssassin's Bayesian classifier</p></body></html>";
-	}
+    public URL getWebsite() {
+        return websiteURL;
+    }
 
-	public URL getWebsite() {
-		return websiteURL;
-	}
+    public File locate() {
+        /*
+         * If this is a unix-based system, check the 2 best-known areas for the
+         * aspell binary.
+         */
+        if (OSInfo.isLinux() || OSInfo.isSolaris()) {
+            if (defaultLinux.exists()) {
+                return defaultLinux;
+            } else if (defaultLocalLinux.exists()) {
+                return defaultLocalLinux;
+            }
+        }
 
-	public File locate() {
-		/*
-		 * If this is a unix-based system, check the 2 best-known areas for the
-		 * aspell binary.
-		 */
-		if (OSInfo.isLinux() || OSInfo.isSolaris()) {
-			if (defaultLinux.exists())
-				return defaultLinux;
-			else if (defaultLocalLinux.exists())
-				return defaultLocalLinux;
-		}
-
-		return null;
-	}
+        return null;
+    }
 }

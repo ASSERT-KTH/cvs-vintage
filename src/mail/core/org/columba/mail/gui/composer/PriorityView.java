@@ -15,6 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.composer;
 
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
@@ -24,8 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -36,86 +38,84 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation.
  */
 public class PriorityView extends JComboBox {
-	
-	PriorityController controller;
+    private static final String[] priorities = {
+        MailResourceLoader.getString("dialog", "composer", "highest"),
+        MailResourceLoader.getString("dialog", "composer", "high"),
+        MailResourceLoader.getString("dialog", "composer", "normal"),
+        MailResourceLoader.getString("dialog", "composer", "low"),
+        MailResourceLoader.getString("dialog", "composer", "lowest")
+    }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    PriorityController controller;
 
-	private static final String[] priorities = { MailResourceLoader.getString("dialog", "composer", "highest"), MailResourceLoader.getString("dialog","composer", "high"), MailResourceLoader.getString("dialog","composer", "normal"), MailResourceLoader.getString("dialog","composer", "low"), MailResourceLoader.getString("dialog","composer", "lowest")}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    public PriorityView(PriorityController controller) {
+        super(priorities);
+        this.controller = controller;
 
-	public PriorityView(PriorityController controller) {
-		super(priorities);
-		this.controller = controller;
+        setRenderer(new ComboBoxRenderer());
 
-		setRenderer(new ComboBoxRenderer());
+        setSelectedIndex(2);
+    }
 
-		setSelectedIndex(2);
+    public void installListener(PriorityController controller) {
+        addItemListener(controller);
+    }
 
-	}
+    class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+        private ImageIcon image1 = ImageLoader.getSmallImageIcon(
+                "priority-high.png");
 
-	public void installListener(PriorityController controller) {
-		addItemListener(controller);
-	}
+        //private ImageIcon image2 = null;
+        //private ImageIcon image3 = null;
+        private ImageIcon image4 = ImageLoader.getSmallImageIcon(
+                "priority-low.png");
 
-	class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+        public ComboBoxRenderer() {
+            setOpaque(true);
+        }
 
-		private ImageIcon image1 =
-			ImageLoader.getSmallImageIcon("priority-high.png");
-		//private ImageIcon image2 = null;
-		//private ImageIcon image3 = null;
-		private ImageIcon image4 =
-			ImageLoader.getSmallImageIcon("priority-low.png");
+        public Component getListCellRendererComponent(JList list, Object value,
+            int index, boolean isSelected, boolean cellHasFocus) {
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
 
-		public ComboBoxRenderer() {
-			setOpaque(true);
+            String p = (String) value;
 
-		}
-		public Component getListCellRendererComponent(
-			JList list,
-			Object value,
-			int index,
-			boolean isSelected,
-			boolean cellHasFocus) {
-			if (isSelected) {
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
-			} else {
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
-			}
+            if (p == null) {
+                return this;
+            }
 
-			String p = (String) value;
-			if (p == null)
-				return this;
+            if (p.equals("Highest")) {
+                setIcon(image1);
+            }
+            /*
+            else if ( p.equals("High") )
+              setIcon( image2 );
+            */
+            /*
+            else if ( p.equals("Low") )
+                setIcon( image3 );
+             */
+            else if (p.equals("Lowest")) {
+                setIcon(image4);
+            } else {
+                setIcon(null);
+            }
 
-			if (p.equals("Highest"))
-				setIcon(image1);
-			/*
-			else if ( p.equals("High") )
-			  setIcon( image2 );
-			*/
+            if (getIcon() == null) {
+                setBorder(BorderFactory.createEmptyBorder(0,
+                        image1.getIconWidth() + getIconTextGap(), 0, 0));
+            } else {
+                setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            }
 
-			/*
-			else if ( p.equals("Low") )
-			    setIcon( image3 );      
-			 */
-			else if (p.equals("Lowest"))
-				setIcon(image4);
-			else
-				setIcon(null);
+            setText((String) value);
 
-			if (getIcon() == null) {
-				setBorder(
-					BorderFactory.createEmptyBorder(
-						0,
-						image1.getIconWidth() + getIconTextGap(),
-						0,
-						0));
-			} else {
-				setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-			}
-
-			setText((String) value);
-			return this;
-		}
-	}
-
+            return this;
+        }
+    }
 }

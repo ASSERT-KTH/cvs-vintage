@@ -13,44 +13,42 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 public class GlobalOptionsAction extends FrameAction {
+    public GlobalOptionsAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_edit_generaloptions"));
 
-	public GlobalOptionsAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_edit_generaloptions"));
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
 
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
 
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_preferences-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_preferences.png"));
+    }
 
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_preferences.png"));
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        GeneralOptionsDialog dialog = new GeneralOptionsDialog(frameMediator.getView());
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		GeneralOptionsDialog dialog =
-			new GeneralOptionsDialog(frameMediator.getView());
-
-		/*
-		ThemeSwitcher.updateFrame(frameMediator.getView());
-		*/
-	}
+        /*
+        ThemeSwitcher.updateFrame(frameMediator.getView());
+        */
+    }
 }

@@ -17,7 +17,9 @@ package org.columba.mail.gui.frame;
 
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionListener;
+
 import org.columba.mail.command.FolderCommandReference;
+
 
 /**
  * Adds selection handling methods to the {@link FrameMediator}
@@ -25,19 +27,21 @@ import org.columba.mail.command.FolderCommandReference;
  * @author fdietz
  */
 public interface MailFrameMediator extends FrameMediator {
+    public FolderCommandReference[] getTableSelection();
 
-	public FolderCommandReference[] getTableSelection();
-	public void setTableSelection(FolderCommandReference[] r);
-	
-	public FolderCommandReference[] getTreeSelection();
-	public void setTreeSelection(FolderCommandReference[] r);
-	
-	public FolderCommandReference[] getAttachmentSelection();
-	public void setAttachmentSelection(FolderCommandReference[] r);
-		
-	public void registerTableSelectionListener(SelectionListener l);
-	public void registerTreeSelectionListener(SelectionListener l);
-	public void registerAttachmentSelectionListener(SelectionListener l);
-	
-	
+    public void setTableSelection(FolderCommandReference[] r);
+
+    public FolderCommandReference[] getTreeSelection();
+
+    public void setTreeSelection(FolderCommandReference[] r);
+
+    public FolderCommandReference[] getAttachmentSelection();
+
+    public void setAttachmentSelection(FolderCommandReference[] r);
+
+    public void registerTableSelectionListener(SelectionListener l);
+
+    public void registerTreeSelectionListener(SelectionListener l);
+
+    public void registerAttachmentSelectionListener(SelectionListener l);
 }

@@ -13,8 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
+
+import org.columba.addressbook.parser.DefaultCardLoader;
+
+import org.w3c.dom.Document;
 
 import java.io.File;
 
@@ -24,317 +27,286 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.columba.addressbook.parser.DefaultCardLoader;
-import org.w3c.dom.Document;
 
 /**
- * 
+ *
  * VCardXmlDataStorage stores VCARD directory information
  * in an xml-file.
- * 
+ *
  * It uses one xml-file for every VCARD. This is very similar to
  * the MH-mailfolder approach.
- * 
- * 
+ *
+ *
  */
-public class VCardXmlDataStorage implements DataStorage
-{
-	Folder folder;
+public class VCardXmlDataStorage implements DataStorage {
+    Folder folder;
 
-	public VCardXmlDataStorage(Folder folder)
-	{
+    public VCardXmlDataStorage(Folder folder) {
+        this.folder = folder;
+    }
 
-		this.folder = folder;
-	}
+    /*
+    public void saveContactCard(ContactCard card, Object uid)
+    {
+            card.setUid(uid);
+            Document document = card.getDocument();
 
-	/*
-	public void saveContactCard(ContactCard card, Object uid)
-	{
-		card.setUid(uid);
-		Document document = card.getDocument();
+            try
+            {
 
-		try
-		{
+                    File file =
+                            new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
 
-			File file =
-				new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+                    // Use a Transformer for output
+                    TransformerFactory tFactory = TransformerFactory.newInstance();
+                    Transformer transformer = tFactory.newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 
-			// Use a Transformer for output
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer = tFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                    DOMSource source = new DOMSource(document);
+                    StreamResult result = new StreamResult(file);
+                    transformer.transform(source, result);
 
-			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(file);
-			transformer.transform(source, result);
+            }
+            catch (Exception ex)
+            {
+                    System.out.println(ex.getMessage());
 
-		}
-		catch (Exception ex)
-		{
-			System.out.println(ex.getMessage());
+            }
+    }
+    */
+    /*
+    public void removeContactCard(Object uid)
+    {
+            File file =
+                    new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+            file.delete();
+    }
+    */
+    public DefaultCard loadDefaultCard(Object uid) {
+        File file = new File(folder.directoryFile.toString() + "/" +
+                (uid.toString()) + ".xml");
 
-		}
-	}
-	*/
-	
+        DefaultCardLoader parser = new DefaultCardLoader(file);
+        parser.load();
 
-	/*
-	public void removeContactCard(Object uid)
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
-		file.delete();
-	}
-	*/
-	
-	public DefaultCard loadDefaultCard( Object uid )
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + (uid.toString()) + ".xml");
-			
-		DefaultCardLoader parser = new DefaultCardLoader(file);
-				parser.load();
+        DefaultCard card = null;
 
-		DefaultCard card = null;
-				if ( parser.isContact() == true )
-				{
-					card = parser.createContactCard();
+        if (parser.isContact() == true) {
+            card = parser.createContactCard();
+        } else {
+            card = parser.createGroupListCard();
+        }
 
-					
-				}
-				else
-				{
-					card = parser.createGroupListCard();
-					
-					
-				}
-				
-		return card;
-	}
+        return card;
+    }
 
+    /*
+    public GroupListCard loadGroupListCard(Object uid)
+    {
+            File file =
+                    new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
 
-	/*
-	public GroupListCard loadGroupListCard(Object uid)
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            Document document = null;
+            try
+            {
+                    DocumentBuilder builder = factory.newDocumentBuilder();
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		Document document = null;
-		try
-		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
+                    builder.setErrorHandler(new org.xml.sax.ErrorHandler()
+                    {
 
-			builder.setErrorHandler(new org.xml.sax.ErrorHandler()
-			{
+                            public void fatalError(SAXParseException exception) throws SAXException
+                            {
+                            }
 
-				public void fatalError(SAXParseException exception) throws SAXException
-				{
-				}
+                            public void error(SAXParseException e) throws SAXParseException
+                            {
+                                    throw e;
+                            }
 
-				public void error(SAXParseException e) throws SAXParseException
-				{
-					throw e;
-				}
+                            public void warning(SAXParseException err) throws SAXParseException
+                            {
+                                    System.out.println(
+                                            "** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
+                                    System.out.println("   " + err.getMessage());
+                            }
+                    });
 
-				public void warning(SAXParseException err) throws SAXParseException
-				{
-					System.out.println(
-						"** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
-					System.out.println("   " + err.getMessage());
-				}
-			});
+                    document = builder.parse(file);
 
-			document = builder.parse(file);
+            }
 
-		}
+            catch (SAXParseException spe)
+            {
+                    System.out.println(
+                            "\n** Parsing error"
+                                    + ", line "
+                                    + spe.getLineNumber()
+                                    + ", uri "
+                                    + spe.getSystemId());
+                    System.out.println("   " + spe.getMessage());
 
-		catch (SAXParseException spe)
-		{
-			System.out.println(
-				"\n** Parsing error"
-					+ ", line "
-					+ spe.getLineNumber()
-					+ ", uri "
-					+ spe.getSystemId());
-			System.out.println("   " + spe.getMessage());
+                    Exception x = spe;
+                    if (spe.getException() != null)
+                            x = spe.getException();
+                    x.printStackTrace();
 
-			Exception x = spe;
-			if (spe.getException() != null)
-				x = spe.getException();
-			x.printStackTrace();
+            }
+            catch (SAXException sxe)
+            {
+                    Exception x = sxe;
+                    if (sxe.getException() != null)
+                            x = sxe.getException();
+                    x.printStackTrace();
 
-		}
-		catch (SAXException sxe)
-		{
-			Exception x = sxe;
-			if (sxe.getException() != null)
-				x = sxe.getException();
-			x.printStackTrace();
+            }
+            catch (ParserConfigurationException pce)
+            {
+                    pce.printStackTrace();
+            }
+            catch (IOException ioe)
+            {
+                    ioe.printStackTrace();
+            }
 
-		}
-		catch (ParserConfigurationException pce)
-		{
-			pce.printStackTrace();
-		}
-		catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
+            //ContactCardParser parser = new ContactCardParser(file);
+            //parser.load();
 
-		//ContactCardParser parser = new ContactCardParser(file);
-		//parser.load();
+            //ContactCard card = parser.createContactCard();
+            GroupListCard card = new GroupListCard( document, null);
 
-		//ContactCard card = parser.createContactCard();
-		GroupListCard card = new GroupListCard( document, null);
+            return card;
+    }
+    */
+    public void saveDefaultCard(DefaultCard card, Object uid) {
+        card.setUid(uid);
 
-		return card;
-	}
-	*/
-	
-	
-	
-	public void saveDefaultCard(DefaultCard card, Object uid)
-	{
-		
-		
-		card.setUid(uid);
-		Document document = card.getDocument();
+        Document document = card.getDocument();
 
-		try
-		{
+        try {
+            File file = new File(folder.directoryFile.toString() + "/" +
+                    ((Integer) uid) + ".xml");
 
-			File file =
-				new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+            // Use a Transformer for output
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 
-			// Use a Transformer for output
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer = tFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(file);
+            transformer.transform(source, result);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(file);
-			transformer.transform(source, result);
+    public void modifyCard(DefaultCard card, Object uid) {
+        saveDefaultCard(card, uid);
 
-		}
-		catch (Exception ex)
-		{
-			System.out.println(ex.getMessage());
+        /*
+        if ( card instanceof ContactCard )
+        {
+                saveContactCard( (ContactCard) card, uid );
+        }
+        else
+        {
+                saveGroupListCard( (GroupListCard) card, uid );
+        }
+        */
+    }
 
-		}
-	}
-	
-	public void modifyCard( DefaultCard card, Object uid )
-	{
-		saveDefaultCard( card, uid );
-		/*
-		if ( card instanceof ContactCard )
-		{
-			saveContactCard( (ContactCard) card, uid );
-		}
-		else
-		{
-			saveGroupListCard( (GroupListCard) card, uid );
-		}
-		*/
-		
-	}
-	
-	public void removeCard( Object uid )
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
-		file.delete();
-	}
-	
-	/*
-	public void removeGroupListCard(Object uid)
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
-		file.delete();
-	}
-	*/
+    public void removeCard(Object uid) {
+        File file = new File(folder.directoryFile.toString() + "/" +
+                ((Integer) uid) + ".xml");
+        file.delete();
+    }
 
+    /*
+    public void removeGroupListCard(Object uid)
+    {
+            File file =
+                    new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+            file.delete();
+    }
+    */
+    /*
+    public ContactCard loadContactCard(Object uid)
+    {
+            File file =
+                    new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
 
-	/*
-	public ContactCard loadContactCard(Object uid)
-	{
-		File file =
-			new File(folder.directoryFile.toString() + "/" + ((Integer) uid) + ".xml");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            Document document = null;
+            try
+            {
+                    DocumentBuilder builder = factory.newDocumentBuilder();
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		Document document = null;
-		try
-		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
+                    builder.setErrorHandler(new org.xml.sax.ErrorHandler()
+                    {
 
-			builder.setErrorHandler(new org.xml.sax.ErrorHandler()
-			{
+                            public void fatalError(SAXParseException exception) throws SAXException
+                            {
+                            }
 
-				public void fatalError(SAXParseException exception) throws SAXException
-				{
-				}
+                            public void error(SAXParseException e) throws SAXParseException
+                            {
+                                    throw e;
+                            }
 
-				public void error(SAXParseException e) throws SAXParseException
-				{
-					throw e;
-				}
+                            public void warning(SAXParseException err) throws SAXParseException
+                            {
+                                    System.out.println(
+                                            "** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
+                                    System.out.println("   " + err.getMessage());
+                            }
+                    });
 
-				public void warning(SAXParseException err) throws SAXParseException
-				{
-					System.out.println(
-						"** Warning" + ", line " + err.getLineNumber() + ", uri " + err.getSystemId());
-					System.out.println("   " + err.getMessage());
-				}
-			});
+                    document = builder.parse(file);
 
-			document = builder.parse(file);
+            }
 
-		}
+            catch (SAXParseException spe)
+            {
+                    System.out.println(
+                            "\n** Parsing error"
+                                    + ", line "
+                                    + spe.getLineNumber()
+                                    + ", uri "
+                                    + spe.getSystemId());
+                    System.out.println("   " + spe.getMessage());
 
-		catch (SAXParseException spe)
-		{
-			System.out.println(
-				"\n** Parsing error"
-					+ ", line "
-					+ spe.getLineNumber()
-					+ ", uri "
-					+ spe.getSystemId());
-			System.out.println("   " + spe.getMessage());
+                    Exception x = spe;
+                    if (spe.getException() != null)
+                            x = spe.getException();
+                    x.printStackTrace();
 
-			Exception x = spe;
-			if (spe.getException() != null)
-				x = spe.getException();
-			x.printStackTrace();
+            }
+            catch (SAXException sxe)
+            {
+                    Exception x = sxe;
+                    if (sxe.getException() != null)
+                            x = sxe.getException();
+                    x.printStackTrace();
 
-		}
-		catch (SAXException sxe)
-		{
-			Exception x = sxe;
-			if (sxe.getException() != null)
-				x = sxe.getException();
-			x.printStackTrace();
+            }
+            catch (ParserConfigurationException pce)
+            {
+                    pce.printStackTrace();
+            }
+            catch (IOException ioe)
+            {
+                    ioe.printStackTrace();
+            }
 
-		}
-		catch (ParserConfigurationException pce)
-		{
-			pce.printStackTrace();
-		}
-		catch (IOException ioe)
-		{
-			ioe.printStackTrace();
-		}
+            //ContactCardParser parser = new ContactCardParser(file);
+            //parser.load();
 
-		//ContactCardParser parser = new ContactCardParser(file);
-		//parser.load();
+            //ContactCard card = parser.createContactCard();
+            ContactCard card = new ContactCard( document, null);
 
-		//ContactCard card = parser.createContactCard();
-		ContactCard card = new ContactCard( document, null);
-
-		return card;
-	}
-	*/
+            return card;
+    }
+    */
 }

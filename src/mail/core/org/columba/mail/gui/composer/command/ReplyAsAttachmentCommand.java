@@ -19,6 +19,7 @@ package org.columba.mail.gui.composer.command;
 
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
@@ -27,6 +28,7 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.message.ColumbaMessage;
+
 import org.columba.ristretto.coder.EncodedWord;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -35,133 +37,124 @@ import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
 import org.columba.ristretto.message.MimeType;
 
+
 /**
  * Reply to message, while keeping the original message as attachment. In
  * comparison to quoting the bodytext inline.
- * 
+ *
  * @author fdietz
  */
 public class ReplyAsAttachmentCommand extends FolderCommand {
+    protected ComposerController controller;
+    protected ComposerModel model;
 
-	protected ComposerController controller;
-	protected ComposerModel model;
+    /**
+     * Constructor for ReplyCommand.
+     *
+     * @param frameMediator
+     * @param references
+     */
+    public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for ReplyCommand.
-	 * 
-	 * @param frameMediator
-	 * @param references
-	 */
-	public ReplyAsAttachmentCommand(DefaultCommandReference[] references) {
-		super(references);
-	}
+    public void updateGUI() throws Exception {
+        // open composer frame
+        controller = new ComposerController();
 
-	public void updateGUI() throws Exception {
-		// open composer frame
-		controller = new ComposerController();
+        // apply model
+        controller.setComposerModel(model);
 
-		// apply model
-		controller.setComposerModel(model);
+        // model->view update
+        controller.updateComponents(true);
+    }
 
-		// model->view update
-		controller.updateComponents(true);
+    public void execute(Worker worker) throws Exception {
+        // get selected foloder
+        Folder folder = (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
 
-	}
+        // get first selected message
+        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
 
-	public void execute(Worker worker) throws Exception {
-		// get selected foloder
-		Folder folder =
-			(Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
-		// get first selected message
-		Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
+        // create new message object
+        ColumbaMessage message = new ColumbaMessage();
 
-		// create new message object
-		ColumbaMessage message = new ColumbaMessage();
+        // get headerfields
+        Header header = folder.getHeaderFields(uids[0],
+                new String[] {
+                    "Subject", "To", "From", "Reply-To", "Message-ID",
+                    "In-Reply-To", "References"
+                });
+        message.setHeader(header);
 
-		// get headerfields
-		Header header =
-			folder.getHeaderFields(
-				uids[0],
-				new String[] {
-					"Subject",
-					"To",
-					"From",
-					"Reply-To",
-					"Message-ID",
-					"In-Reply-To",
-					"References" });
-		message.setHeader(header);
+        // get mimeparts
+        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
+        message.setMimePartTree(mimePartTree);
 
-		// get mimeparts
-		MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
-		message.setMimePartTree(mimePartTree);
+        // get message source
+        String source = folder.getMessageSource(uids[0]);
+        message.setStringSource(source);
 
-		// get message source
-		String source = folder.getMessageSource(uids[0]);
-		message.setStringSource(source);
+        // create composer model
+        model = new ComposerModel();
 
-		// create composer model
-		model = new ComposerModel();
+        // get bodypart
+        MimePart bodyPart = message.getBodyPart();
 
-		// get bodypart
-		MimePart bodyPart = message.getBodyPart();
+        // set character set
+        if (bodyPart != null) {
+            String charset = bodyPart.getHeader().getContentParameter("charset");
 
-		// set character set
-		if (bodyPart != null) {
-			String charset =
-				bodyPart.getHeader().getContentParameter("charset");
-			if (charset != null) {
-				model.setCharsetName(charset);
-			}
-		}
+            if (charset != null) {
+                model.setCharsetName(charset);
+            }
+        }
 
-		// set subject
-		model.setSubject(
-			MessageBuilderHelper.createReplySubject(header.get("Subject")));
+        // set subject
+        model.setSubject(MessageBuilderHelper.createReplySubject(header.get(
+                    "Subject")));
 
-		// original message is sent as attachment - model is setup according to
-		// the stored option for html / text
-		model.setHtml(MessageBuilderHelper.isHTMLEnabled());
+        // original message is sent as attachment - model is setup according to
+        // the stored option for html / text
+        model.setHtml(MessageBuilderHelper.isHTMLEnabled());
 
-		// decode To: headerfield
-		String to = MessageBuilderHelper.createTo(header);
+        // decode To: headerfield
+        String to = MessageBuilderHelper.createTo(header);
 
-		if (to != null) {
-			to = EncodedWord.decode(to).toString();
-			model.setTo(to);
+        if (to != null) {
+            to = EncodedWord.decode(to).toString();
+            model.setTo(to);
 
-			// TODO: automatically add sender to addressbook
-			// -> split to-headerfield, there can be more than only one
-			// recipients!
-			MessageBuilderHelper.addSenderToAddressbook(to);
-		}
+            // TODO: automatically add sender to addressbook
+            // -> split to-headerfield, there can be more than only one
+            // recipients!
+            MessageBuilderHelper.addSenderToAddressbook(to);
+        }
 
-		// create In-Reply-To:, References: headerfields
-		MessageBuilderHelper.createMailingListHeaderItems(header, model);
+        // create In-Reply-To:, References: headerfields
+        MessageBuilderHelper.createMailingListHeaderItems(header, model);
 
-		// try to good guess the correct account
-		Integer accountUid =
-			(Integer) folder.getAttribute(uids[0], "columba.accountuid");
-		String host = (String) folder.getAttribute(uids[0], "columba.host");
-		String address = header.get("To");
-		AccountItem accountItem =
-			MessageBuilderHelper.getAccountItem(accountUid, host, address);
-		model.setAccountItem(accountItem);
+        // try to good guess the correct account
+        Integer accountUid = (Integer) folder.getAttribute(uids[0],
+                "columba.accountuid");
+        String host = (String) folder.getAttribute(uids[0], "columba.host");
+        String address = header.get("To");
+        AccountItem accountItem = MessageBuilderHelper.getAccountItem(accountUid,
+                host, address);
+        model.setAccountItem(accountItem);
 
-		//		original message is sent as attachment - model is setup according to
-		//the stored option for html / text
-		model.setHtml(MessageBuilderHelper.isHTMLEnabled());
+        //		original message is sent as attachment - model is setup according to
+        //the stored option for html / text
+        model.setHtml(MessageBuilderHelper.isHTMLEnabled());
 
-		//	append message as mimepart
-		if (message.getSource() != null) {
-			// initialize MimeHeader as RFC822-compliant-message
-			MimeHeader mimeHeader = new MimeHeader();
-			mimeHeader.setMimeType(new MimeType("message", "rfc822"));
+        //	append message as mimepart
+        if (message.getSource() != null) {
+            // initialize MimeHeader as RFC822-compliant-message
+            MimeHeader mimeHeader = new MimeHeader();
+            mimeHeader.setMimeType(new MimeType("message", "rfc822"));
 
-			// add mimepart to model
-			model.addMimePart(
-				new LocalMimePart(mimeHeader, message.getSource()));
-		}
-	}
-
+            // add mimepart to model
+            model.addMimePart(new LocalMimePart(mimeHeader, message.getSource()));
+        }
+    }
 }

@@ -15,53 +15,42 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.mail.gui.table.model.MessageNode;
+
 import java.awt.Component;
 
 import javax.swing.JTable;
 
-import org.columba.mail.gui.table.model.MessageNode;
 
 public class BasicRenderer extends DefaultLabelRenderer {
+    private String key;
 
-	private String key;
+    public BasicRenderer(String key) {
+        super();
 
-	public BasicRenderer(String key) {
-		super();
+        this.key = key;
+    }
 
-		this.key = key;
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (value == null) {
+            setText("");
 
-	}
+            return this;
+        }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+        String str = null;
 
-		if (value == null) {
-			setText("");
-			return this;
-		}
+        try {
+            str = (String) ((MessageNode) value).getHeader().get(key);
+        } catch (ClassCastException ex) {
+            System.out.println("headertablecommonrenderer: " + ex.getMessage());
+            str = new String();
+        }
 
-		String str = null;
-		try {
-			str = (String) ((MessageNode) value).getHeader().get(key);
-		} catch (ClassCastException ex) {
-			System.out.println("headertablecommonrenderer: " + ex.getMessage());
-			str = new String();
-		}
+        setText(str);
 
-		setText(str);
-
-		return super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
-	}
-
+        return super.getTableCellRendererComponent(table, value, isSelected,
+            hasFocus, row, column);
+    }
 }

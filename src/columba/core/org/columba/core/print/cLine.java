@@ -21,58 +21,50 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.geom.Line2D;
 
+
 public class cLine extends cPrintObject {
+    private double thickness;
 
-	private double thickness;
+    public cLine() {
+        super();
 
-	public cLine() {
-		super();
-		
-		thickness = 1.0;
-		color = Color.black; 
-	}
+        thickness = 1.0;
+        color = Color.black;
+    }
 
-	public void setThickness(double t) {
-		thickness = t;
-	}
+    public void setThickness(double t) {
+        thickness = t;
+    }
 
-	public double getThickness() {
-		return thickness;
-	}
+    public double getThickness() {
+        return thickness;
+    }
 
-	public void print(Graphics2D g) {
-		
-		computePositionAndSize();
-		
-		double x1 = getDrawingOrigin().getX().getPoints();
-		double x2 = x1 + getDrawingSize().getWidth().getPoints();
-		
-		Line2D.Double line =
-			new Line2D.Double(
-				x1,
-				getDrawingOrigin().getY().getPoints(),
-				x2,
-				getDrawingOrigin().getY().getPoints());
+    public void print(Graphics2D g) {
+        computePositionAndSize();
 
-		Stroke lineStroke = new BasicStroke((float) thickness);
-		g.setStroke(lineStroke);
+        double x1 = getDrawingOrigin().getX().getPoints();
+        double x2 = x1 + getDrawingSize().getWidth().getPoints();
 
-		Color saveForeground = g.getColor();
+        Line2D.Double line = new Line2D.Double(x1,
+                getDrawingOrigin().getY().getPoints(), x2,
+                getDrawingOrigin().getY().getPoints());
 
-		g.setColor(color);
-		g.draw(line);
-		g.setColor(saveForeground);
-	}
+        Stroke lineStroke = new BasicStroke((float) thickness);
+        g.setStroke(lineStroke);
 
-	public cSize getSize( cUnit width ) {
-		
-		cUnit height = new cPointUnit(thickness );
-		height.addI( topMargin );
-		height.addI( bottomMargin );
-		
-		return new cSize( width, height);		
-	}
-	
+        Color saveForeground = g.getColor();
 
+        g.setColor(color);
+        g.draw(line);
+        g.setColor(saveForeground);
+    }
 
+    public cSize getSize(cUnit width) {
+        cUnit height = new cPointUnit(thickness);
+        height.addI(topMargin);
+        height.addI(bottomMargin);
+
+        return new cSize(width, height);
+    }
 }

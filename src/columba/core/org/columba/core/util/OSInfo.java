@@ -13,77 +13,76 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 /*
-	columba: a Java open source email client
-	http://columba.sourceforge.net/
+        columba: a Java open source email client
+        http://columba.sourceforge.net/
 
-	Filename: OSInfo.java
-	Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
-	Comments: this is a util class which provides a quick and easy way to get useful informations on the OS where the JVM is running.
+        Filename: OSInfo.java
+        Author: Hrk (Luca Santarelli) <hrk@users.sourceforge.net>
+        Comments: this is a util class which provides a quick and easy way to get useful informations on the OS where the JVM is running.
 */
-
 package org.columba.core.util;
 
 public class OSInfo {
-        
-        private static final String OS_NAME = "os.name";
+    private static final String OS_NAME = "os.name";
 
-	//Public methods
-	//Platform identifiers: Windows, Linux, Mac OS, ...
-	public static boolean isWin32Platform() {
-		return (isWindowsPlatform() || isWinNTPlatform());
-	}
-	
-	public static boolean isWinNTPlatform() {
-		return (isWinNT() || isWin2K() || isWin2K3() || isWinXP());
-	}
-	
-	public static boolean isWindowsPlatform() {
-		return (isWin95() || isWin98() || isWinME());
-	}
-	
-	//Single OS identifiers: Window 95, Window 98, ...
-	public static boolean isWin95() {
-		return "Windows 95".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWin98() {
-		return "Windows 98".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWinME() {
-		return "Windows ME".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWinNT() {
-		return "Windows NT".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWin2K() {
-		return "Windows 2000".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWin2K3() {
-		return "Windows 2003".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isWinXP() {
-		return "Windows XP".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
+    //Public methods
+    //Platform identifiers: Windows, Linux, Mac OS, ...
+    public static boolean isWin32Platform() {
+        return (isWindowsPlatform() || isWinNTPlatform());
+    }
 
-	public static boolean isLinux() {
-		return "Linux".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
-	
-	public static boolean isSolaris() {
-		return "Solaris".equalsIgnoreCase(System.getProperty(OS_NAME));
-	}
+    public static boolean isWinNTPlatform() {
+        return (isWinNT() || isWin2K() || isWin2K3() || isWinXP());
+    }
 
-	//User home
-/*
-	public static String userHome() {
-		return "TO DO!!";
-	}
-*/
+    public static boolean isWindowsPlatform() {
+        return (isWin95() || isWin98() || isWinME());
+    }
 
+    //Single OS identifiers: Window 95, Window 98, ...
+    public static boolean isWin95() {
+        return "Windows 95".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWin98() {
+        return "Windows 98".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWinME() {
+        return "Windows ME".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWinNT() {
+        return "Windows NT".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWin2K() {
+        return "Windows 2000".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWin2K3() {
+        return "Windows 2003".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isWinXP() {
+        return "Windows XP".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isLinux() {
+        return "Linux".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    public static boolean isSolaris() {
+        return "Solaris".equalsIgnoreCase(System.getProperty(OS_NAME));
+    }
+
+    //User home
+
+    /*
+            public static String userHome() {
+                    return "TO DO!!";
+            }
+    */
 }

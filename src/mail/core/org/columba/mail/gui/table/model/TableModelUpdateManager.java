@@ -17,49 +17,44 @@ package org.columba.mail.gui.table.model;
 
 import org.columba.mail.message.HeaderList;
 
+
 /**
- * 
  *
- * This is the Controller for the <class>HeaderTableModel</class>. 
- * 
+ *
+ * This is the Controller for the <class>HeaderTableModel</class>.
+ *
  * Dont' update the <class>HeaderTableModel</class> directly, always
  * use <class>TableModelUpdateManager</class>.
- * 
+ *
  * @author fdietz
  */
-public class TableModelUpdateManager  {
+public class TableModelUpdateManager {
+    private TreeTableModelDecorator decorator;
 
-	private TreeTableModelDecorator decorator;
+    public TableModelUpdateManager(TreeTableModelDecorator decorator) {
+        this.decorator = decorator;
+    }
 
-	public TableModelUpdateManager(TreeTableModelDecorator decorator) {
-		this.decorator = decorator;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
+     */
+    public void modify(Object[] uids) {
+        // just send an update event to the TableModel
+        decorator.modify(uids);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#modify(java.lang.Object[])
-	 */
-	public void modify(Object[] uids) {
+    /* (non-Javadoc)
+     * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
+     */
+    public void remove(Object[] uids) {
+        decorator.remove(uids);
+    }
 
-		// just send an update event to the TableModel
-		decorator.modify(uids);
+    public void update() {
+        decorator.update();
+    }
 
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.mail.gui.table.model.TableModelModifier#remove(java.lang.Object[])
-	 */
-	public void remove(Object[] uids) {
-
-		decorator.remove(uids);
-
-	}
-
-	public void update() {
-		decorator.update();
-	}
-
-	public void set(HeaderList headerList) {
-		decorator.set(headerList);
-	}
-
+    public void set(HeaderList headerList) {
+        decorator.set(headerList);
+    }
 }

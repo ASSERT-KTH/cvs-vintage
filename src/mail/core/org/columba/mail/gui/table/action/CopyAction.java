@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.ClipboardManager;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
@@ -33,26 +34,21 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CopyAction extends FrameAction {
+    AbstractMailFrameController frameController;
 
-	AbstractMailFrameController frameController;
+    public CopyAction(AbstractMailFrameController frameController) {
+        super(frameController, "CopyAction");
+        this.frameController = frameController;
+    }
 
-	public CopyAction(AbstractMailFrameController frameController) {
-		super(frameController, "CopyAction");
-		this.frameController = frameController;
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        // add current selection to clipboard
+        // copy action
+        MainInterface.clipboardManager.setOperation(ClipboardManager.COPY_ACTION);
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		// add current selection to clipboard
-
-		// copy action
-		MainInterface.clipboardManager.setOperation(
-			ClipboardManager.COPY_ACTION);
-
-		MainInterface.clipboardManager.setMessageSelection(
-			(FolderCommandReference[]) frameController.getTableSelection());
-
-	}
+        MainInterface.clipboardManager.setMessageSelection((FolderCommandReference[]) frameController.getTableSelection());
+    }
 }

@@ -141,7 +141,9 @@
         <module name="HiddenField"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
+        <!-- fdietz - disabled this rule, using PMD instead 
         <module name="MagicNumber"/>
+        -->
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
         <module name="SimplifyBooleanExpression"/>
@@ -149,7 +151,10 @@
 
         <!-- Checks for class design                         -->
         <!-- See http://checkstyle.sf.net/config_design.html -->
+        
+        <!-- fdietz - disabled this rule
         <module name="DesignForExtension"/>
+        -->
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>

@@ -13,13 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.pop3.menu;
-
-import java.util.ListIterator;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
+
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.pop3.POP3ServerController;
@@ -27,49 +25,50 @@ import org.columba.mail.pop3.event.ModelChangeListener;
 import org.columba.mail.pop3.event.ModelChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.util.ListIterator;
+
+
 public class ManageServerSubMenu extends IMenu implements ModelChangeListener {
-	
-	private POP3ServerCollection popServer;
+    private POP3ServerCollection popServer;
 
-	/**
-	 * 
-	 */
-	public ManageServerSubMenu(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-		"menu",
-		"mainframe",
-		"menu_file_manage"));
-		
-		popServer = MailInterface.popServerCollection; 
-		popServer.addModelListener(this);
-		
-		createMenu();
-	}
+    /**
+     *
+     */
+    public ManageServerSubMenu(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe", "menu_file_manage"));
 
+        popServer = MailInterface.popServerCollection;
+        popServer.addModelListener(this);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.event.ModelChangeListener#modelChanged(org.columba.core.event.ModelChangedEvent)
-	 */
-	public void modelChanged(ModelChangedEvent e) {
-		switch( e.getMode() ) {
-			case  ModelChangedEvent.ADDED  : {				
-				add( ((POP3ServerController)e.getData()).getManageAction() );				
-				break;
-			}
-			
-			case ModelChangedEvent.REMOVED : {
-				removeAll();				
-				createMenu();
-				
-				break;
-			}
-		}
-	}
-	protected void createMenu() {
-		ListIterator it = popServer.getServerIterator();
-		while( it.hasNext() ) {
-			add(((POP3ServerController)it.next()).getManageAction());
-		}
-	}
-	
+        createMenu();
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.event.ModelChangeListener#modelChanged(org.columba.core.event.ModelChangedEvent)
+     */
+    public void modelChanged(ModelChangedEvent e) {
+        switch (e.getMode()) {
+        case ModelChangedEvent.ADDED: {
+            add(((POP3ServerController) e.getData()).getManageAction());
+
+            break;
+        }
+
+        case ModelChangedEvent.REMOVED: {
+            removeAll();
+            createMenu();
+
+            break;
+        }
+        }
+    }
+
+    protected void createMenu() {
+        ListIterator it = popServer.getServerIterator();
+
+        while (it.hasNext()) {
+            add(((POP3ServerController) it.next()).getManageAction());
+        }
+    }
 }

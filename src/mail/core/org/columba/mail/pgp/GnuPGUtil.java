@@ -26,65 +26,67 @@ import java.util.StringTokenizer;
  * @author waffel
  *
  */
-
 public class GnuPGUtil extends DefaultUtil {
-	// For signing we use the SHA1 algo as digest
+    // For signing we use the SHA1 algo as digest
     //	--textmode (textmode signature - not binary!!), --armor, --digest-algo SHA (we use SHA1 as default)
-	static String[] cmd =
-		{
-			"--batch --no-tty --passphrase-fd 0 -d",
-			"--no-secmem-warning --no-greeting --batch --no-tty --armor --output - --encrypt --group recipientgroup=%recipients%  -r recipientgroup",		
-			"--no-secmem-warning --no-greeting --batch --digest-algo SHA1 --yes --no-tty --armor --textmode --passphrase-fd 0 --output - --detach-sign -u %user% ",
-			"--no-secmem-warning --batch --no-tty --digest-algo %digest-algo% --verify %sigfile% -" };
+    static String[] cmd = {
+        "--batch --no-tty --passphrase-fd 0 -d",
+        "--no-secmem-warning --no-greeting --batch --no-tty --armor --output - --encrypt --group recipientgroup=%recipients%  -r recipientgroup",
+        "--no-secmem-warning --no-greeting --batch --digest-algo SHA1 --yes --no-tty --armor --textmode --passphrase-fd 0 --output - --detach-sign -u %user% ",
+        "--no-secmem-warning --batch --no-tty --digest-algo %digest-algo% --verify %sigfile% -"
+    };
 
-	/* (non-Javadoc)
-	 * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
-	 */
-	protected String[] getRawCommandString(int type) {
-		List ret = new ArrayList();
-		StringTokenizer strToken = new StringTokenizer(cmd[type], " ");
-		while (strToken.hasMoreTokens()) {
-			ret.add(strToken.nextToken());
-		}
-		return (String[]) ret.toArray(new String[0]);
-	}
+    /* (non-Javadoc)
+     * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
+     */
+    protected String[] getRawCommandString(int type) {
+        List ret = new ArrayList();
+        StringTokenizer strToken = new StringTokenizer(cmd[type], " ");
 
-	/**
-	 * every line of the error stream starts with "gpg"; remove these characters
-	 */
-	protected String parse(String s) {
-		StringBuffer str = new StringBuffer(s);
-		// remove on the start position of the string the "gpg:" string
+        while (strToken.hasMoreTokens()) {
+            ret.add(strToken.nextToken());
+        }
 
-		int pos = 0;
-		if (pos + 3 < str.length()) {
-			if ((str.charAt(pos) == 'g')
-				&& (str.charAt(pos + 1) == 'p')
-				&& (str.charAt(pos + 2) == 'g')
-				&& (str.charAt(pos + 3) == ':')) {
-				str.delete(pos, pos + 4);
-			}
-		}
+        return (String[]) ret.toArray(new String[0]);
+    }
 
-		pos++;
-		// remove on each beginning of an new line the start string "gpg:" from this line
-		while (pos < str.length()) {
-			if (str.charAt(pos) == '\n') {
-				pos++;
-				if (pos + 3 < str.length()) {
-					if ((str.charAt(pos) == 'g')
-						&& (str.charAt(pos + 1) == 'p')
-						&& (str.charAt(pos + 2) == 'g')
-						&& (str.charAt(pos + 3) == ':')) {
-						str.delete(pos, pos + 4);
-					}
-				}
-			}
+    /**
+     * every line of the error stream starts with "gpg"; remove these characters
+     */
+    protected String parse(String s) {
+        StringBuffer str = new StringBuffer(s);
 
-			pos++;
-		}
+        // remove on the start position of the string the "gpg:" string
+        int pos = 0;
 
-		return str.toString();
-	}
+        if ((pos + 3) < str.length()) {
+            if ((str.charAt(pos) == 'g') && (str.charAt(pos + 1) == 'p') &&
+                    (str.charAt(pos + 2) == 'g') &&
+                    (str.charAt(pos + 3) == ':')) {
+                str.delete(pos, pos + 4);
+            }
+        }
 
+        pos++;
+
+        // remove on each beginning of an new line the start string "gpg:" from this line
+        while (pos < str.length()) {
+            if (str.charAt(pos) == '\n') {
+                pos++;
+
+                if ((pos + 3) < str.length()) {
+                    if ((str.charAt(pos) == 'g') &&
+                            (str.charAt(pos + 1) == 'p') &&
+                            (str.charAt(pos + 2) == 'g') &&
+                            (str.charAt(pos + 3) == ':')) {
+                        str.delete(pos, pos + 4);
+                    }
+                }
+            }
+
+            pos++;
+        }
+
+        return str.toString();
+    }
 }

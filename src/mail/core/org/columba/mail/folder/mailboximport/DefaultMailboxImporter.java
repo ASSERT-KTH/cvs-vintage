@@ -15,190 +15,172 @@
 //All Rights Reserved.
 package org.columba.mail.folder.mailboximport;
 
+import org.columba.core.command.WorkerStatusController;
+import org.columba.core.gui.util.ExceptionDialog;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+
+import org.columba.mail.folder.Folder;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import javax.swing.JOptionPane;
 
-import org.columba.core.command.WorkerStatusController;
-import org.columba.core.gui.util.ExceptionDialog;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.gui.util.NotifyDialog;
-import org.columba.mail.folder.Folder;
 
 public abstract class DefaultMailboxImporter {
-	public static int TYPE_FILE = 0;
-	public static int TYPE_DIRECTORY = 1;
+    public static int TYPE_FILE = 0;
+    public static int TYPE_DIRECTORY = 1;
+    protected Folder destinationFolder;
+    protected File[] sourceFiles;
 
-	protected Folder destinationFolder;
-	protected File[] sourceFiles;
-	//protected TempFolder tempFolder;
-	protected int counter;
+    //protected TempFolder tempFolder;
+    protected int counter;
 
-	public DefaultMailboxImporter(
-		Folder destinationFolder,
-		File[] sourceFiles) {
+    public DefaultMailboxImporter(Folder destinationFolder, File[] sourceFiles) {
+        this.destinationFolder = destinationFolder;
+        this.sourceFiles = sourceFiles;
 
-		this.destinationFolder = destinationFolder;
-		this.sourceFiles = sourceFiles;
+        init();
+    }
 
-		init();
-	}
-	
-	/**
-	 * Default constructor
-	 * <p>
-	 * Note that plugins have to use both constructors.
-	 *
-	 */
-	public DefaultMailboxImporter()
-	{
-		
-	}
+    /**
+     * Default constructor
+     * <p>
+     * Note that plugins have to use both constructors.
+     *
+     */
+    public DefaultMailboxImporter() {
+    }
 
-	public void init() {
-		counter = 0;
-		//tempFolder = new TempFolder();
-	}
+    public void init() {
+        counter = 0;
 
-	/*********** overwrite the following methods **************************/
+        //tempFolder = new TempFolder();
+    }
 
-	/**
-	 * overwrite this method to specify type
-	 * the wizard dialog will open the correct file/directory dialog automatically
-	 */
-	public int getType() {
-		return TYPE_FILE;
-	}
+    /*********** overwrite the following methods **************************/
+    /**
+     * overwrite this method to specify type
+     * the wizard dialog will open the correct file/directory dialog automatically
+     */
+    public int getType() {
+        return TYPE_FILE;
+    }
 
-	/**
-	 * this method does all the import work
-	 */
-	public abstract void importMailboxFile(
-		File file,
-		WorkerStatusController worker,
-		Folder destFolder)
-		throws Exception;
+    /**
+     * this method does all the import work
+     */
+    public abstract void importMailboxFile(File file,
+        WorkerStatusController worker, Folder destFolder)
+        throws Exception;
 
-	/**
-	 * enter a description which will be shown
-	 * to the user here
-	 */
-	public String getDescription() {
-		return "";
-	}
+    /**
+     * enter a description which will be shown
+     * to the user here
+     */
+    public String getDescription() {
+        return "";
+    }
 
-	/*********** intern methods (no need to overwrite these) ****************/
+    /*********** intern methods (no need to overwrite these) ****************/
+    public void setSourceFiles(File[] files) {
+        this.sourceFiles = files;
+    }
 
-	public void setSourceFiles(File[] files) {
-		this.sourceFiles = files;
-	}
+    /**
+     * set destination folder
+     */
+    public void setDestinationFolder(Folder folder) {
+        destinationFolder = folder;
+    }
 
-	/**
-	 * set destination folder
-	 */
-	public void setDestinationFolder(Folder folder) {
-		destinationFolder = folder;
-	}
+    /**
+     *  counter for successfully imported messages
+     */
+    public int getCount() {
+        return counter;
+    }
 
-	/**
-	 *  counter for successfully imported messages
-	 */
-	public int getCount() {
-		return counter;
-	}
+    /**
+     *  this method calls your overwritten importMailbox(File)-method
+     *  and handles exceptions
+     */
+    public void run(WorkerStatusController worker) {
+        worker.setDisplayText("Importing messages...");
 
-	/**
-	 *  this method calls your overwritten importMailbox(File)-method
-	 *  and handles exceptions
-	 */
-	public void run(WorkerStatusController worker) {
+        importMailbox(worker);
 
-		worker.setDisplayText("Importing messages...");
+        if (getCount() == 0) {
+            NotifyDialog dialog = new NotifyDialog();
+            dialog.showDialog(
+                "Message import failed! No messages were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
 
-		importMailbox(worker);
+            return;
+        } else if (getCount() > 0) {
+            JOptionPane.showMessageDialog(null,
+                "Message import was successfull!", "Information",
+                JOptionPane.INFORMATION_MESSAGE,
+                ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+        }
+    }
 
-		if (getCount() == 0) {
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"Message import failed! No messages were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
+    /**
+     *
+     * Import all mailbox files in Columba
+     *
+     * This method makes use of the importMailbox method
+     * you have to overwrite and simple iterates over all
+     * given files/directories
+     *
+     *
+     * @param worker
+     */
+    public void importMailbox(WorkerStatusController worker) {
+        File[] listing = getSourceFiles();
 
-			return;
-		} else if (getCount() > 0) {
+        for (int i = 0; i < listing.length; i++) {
+            if (worker.cancelled()) {
+                return;
+            }
 
-			JOptionPane.showMessageDialog(
-				null,
-				"Message import was successfull!",
-				"Information",
-				JOptionPane.INFORMATION_MESSAGE,
-				ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+            try {
+                importMailboxFile(listing[i], worker, getDestinationFolder());
+            } catch (Exception ex) {
+                if (ex instanceof FileNotFoundException) {
+                    NotifyDialog dialog = new NotifyDialog();
+                    dialog.showDialog("Source File not found:");
+                } else {
+                    ExceptionDialog dialog = new ExceptionDialog();
+                    dialog.showDialog(ex);
+                }
+            }
+        }
+    }
 
-		}
+    /**
+     * use this method to save a message to the specified destination folder
+     */
+    protected void saveMessage(String rawString, WorkerStatusController worker,
+        Folder destFolder) throws Exception {
+        destFolder.addMessage(rawString);
 
-	}
+        counter++;
 
-	/**
-	 * 
-	 * Import all mailbox files in Columba
-	 * 
-	 * This method makes use of the importMailbox method
-	 * you have to overwrite and simple iterates over all
-	 * given files/directories
-	 * 
-	 * 
-	 * @param worker
-	 */
-	public void importMailbox(WorkerStatusController worker) {
-		File[] listing = getSourceFiles();
+        worker.setDisplayText("Importing messages: " + getCount());
+    }
 
-		for (int i = 0; i < listing.length; i++) {
-			if (worker.cancelled())
-				return;
+    /**
+     * @return Folder
+     */
+    public Folder getDestinationFolder() {
+        return destinationFolder;
+    }
 
-			try {
-
-				importMailboxFile(listing[i], worker, getDestinationFolder());
-			} catch (Exception ex) {
-				if (ex instanceof FileNotFoundException) {
-					NotifyDialog dialog = new NotifyDialog();
-					dialog.showDialog("Source File not found:");
-				} else {
-					ExceptionDialog dialog = new ExceptionDialog();
-					dialog.showDialog(ex);
-				}
-			}
-
-		}
-	}
-
-	/**
-	 * use this method to save a message to the specified destination folder
-	 */
-	protected void saveMessage(
-		String rawString,
-		WorkerStatusController worker,
-		Folder destFolder)
-		throws Exception {
-		destFolder.addMessage(rawString);
-
-		counter++;
-
-		worker.setDisplayText("Importing messages: " + getCount());
-
-	}
-
-	/**
-	 * @return Folder
-	 */
-	public Folder getDestinationFolder() {
-		return destinationFolder;
-	}
-
-	/**
-	 * @return File[]
-	 */
-	public File[] getSourceFiles() {
-		return sourceFiles;
-	}
-
+    /**
+     * @return File[]
+     */
+    public File[] getSourceFiles() {
+        return sourceFiles;
+    }
 }

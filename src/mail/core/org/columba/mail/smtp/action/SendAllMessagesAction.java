@@ -13,23 +13,24 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.smtp.action;
+
+import org.columba.core.action.FrameAction;
+import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.outbox.OutboxFolder;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.smtp.command.SendAllMessagesCommand;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
 
-import org.columba.core.action.FrameAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.outbox.OutboxFolder;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.smtp.command.SendAllMessagesCommand;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author fdietz
@@ -37,48 +38,44 @@ import org.columba.mail.util.MailResourceLoader;
  * This action is responsible for starting the command
  * which does the actual work.
  * It is visually represented with a menuentry and a toolbar.
- * 
+ *
  */
 public class SendAllMessagesAction extends FrameAction {
+    /**
+     * @param controller
+     */
+    public SendAllMessagesAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_sendunsentmessages"));
 
-	/**
-	 * @param controller
-	 */
-	public SendAllMessagesAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_file_sendunsentmessages"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-                        "menu",
-                        "mainframe",
-                        "menu_file_sendunsentmessages_tooltip").replaceAll("&", ""));
-		
-		// icon
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_sendunsentmessages_tooltip").replaceAll("&", ""));
 
-	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r = new FolderCommandReference[1];
-		
-		// get outbox folder
-		OutboxFolder folder =
-			(OutboxFolder) MailInterface.treeModel.getFolder(103);
+        // icon
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24.png"));
 
-		// create reference 
-		r[0] = new FolderCommandReference(folder);
+        // shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0));
+    }
 
-		// start command
-		SendAllMessagesCommand c =
-			new SendAllMessagesCommand(frameMediator, r);
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = new FolderCommandReference[1];
 
-		MainInterface.processor.addOp(c);		
-	}
+        // get outbox folder
+        OutboxFolder folder = (OutboxFolder) MailInterface.treeModel.getFolder(103);
+
+        // create reference 
+        r[0] = new FolderCommandReference(folder);
+
+        // start command
+        SendAllMessagesCommand c = new SendAllMessagesCommand(frameMediator, r);
+
+        MainInterface.processor.addOp(c);
+    }
 }

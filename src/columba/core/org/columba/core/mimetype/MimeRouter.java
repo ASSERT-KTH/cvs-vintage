@@ -15,13 +15,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.mimetype;
 
 import org.columba.core.config.Config;
 import org.columba.core.config.OptionsXmlConfig;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.ristretto.message.MimeHeader;
+
 
 /**
  * Easy wrapper for handling which external application should
@@ -33,121 +34,117 @@ import org.columba.ristretto.message.MimeHeader;
  * @author fdietz
  */
 public class MimeRouter {
+    static private MimeRouter myInstance;
+    private OptionsXmlConfig config;
 
-	private OptionsXmlConfig config;
+    private MimeRouter() {
+        this.config = Config.getOptionsConfig();
+    }
 
-	static private MimeRouter myInstance;
+    /**
+     * Method getInstance This is instead of a public Constructor to implement
+     * the Singleton-Pattern for the MimeRouter.
+     *
+     * @return MimeRouter
+     */
+    public static MimeRouter getInstance() {
+        if (myInstance == null) {
+            myInstance = new MimeRouter();
+        }
 
-	private MimeRouter() {
-		this.config = Config.getOptionsConfig();
+        return myInstance;
+    }
 
-	}
+    public String getViewer(MimeHeader input) {
+        String output;
 
-	/**
-	 * Method getInstance This is instead of a public Constructor to implement
-	 * the Singleton-Pattern for the MimeRouter.
-	 * 
-	 * @return MimeRouter
-	 */
-	public static MimeRouter getInstance() {
-		if (myInstance == null)
-			myInstance = new MimeRouter();
+        output = getViewer(input.getMimeType().getType(),
+                input.getMimeType().getSubtype());
 
-		return myInstance;
-	}
+        return output;
+    }
 
-	public String getViewer(MimeHeader input) {
-		String output;
+    public void setViewer(MimeHeader input, String viewer) {
+        setViewer(input.getMimeType().getType(),
+            input.getMimeType().getSubtype(), viewer);
+    }
 
-		output =
-			getViewer(
-				input.getMimeType().getType(),
-				input.getMimeType().getSubtype());
+    public String getViewer(String contentType, String subType) {
+        XmlElement mimetype = config.getMimeTypeNode();
 
-		return output;
-	}
+        XmlElement type;
+        XmlElement subtype;
 
-	public void setViewer(MimeHeader input, String viewer) {
+        for (int i = 0; i < mimetype.count(); i++) {
+            type = mimetype.getElement(i);
 
-		setViewer(
-			input.getMimeType().getType(),
-			input.getMimeType().getSubtype(),
-			viewer);
-	}
+            if (type.getAttribute("name").equals(contentType)) {
+                // Search for subtype viewer
+                for (int j = 0; j < type.count(); j++) {
+                    subtype = type.getElement(j);
 
-	public String getViewer(String contentType, String subType) {
+                    if (subtype.getAttribute("name").equals(subType)) {
+                        if (subtype.getAttribute("viewer") != null) {
+                            return subtype.getAttribute("viewer");
+                        }
+                    }
+                }
 
-		XmlElement mimetype = config.getMimeTypeNode();
+                // No subtype viewer found ->return type viewer
+                return type.getAttribute("viewer");
+            }
+        }
 
-		XmlElement type, subtype;
+        return null;
+    }
 
-		for (int i = 0; i < mimetype.count(); i++) {
-			type = mimetype.getElement(i);
-			if (type.getAttribute("name").equals(contentType)) {
-				// Search for subtype viewer
-				for (int j = 0; j < type.count(); j++) {
-					subtype = type.getElement(j);
-					if (subtype.getAttribute("name").equals(subType)) {
-						if (subtype.getAttribute("viewer") != null) {
-							return subtype.getAttribute("viewer");
-						}
-					}
-				}
+    public void setViewer(String contentType, String subType, String value) {
+        XmlElement mimetype = config.getMimeTypeNode();
 
-				// No subtype viewer found ->return type viewer
-				return type.getAttribute("viewer");
-			}
-		}
+        XmlElement type = null;
+        XmlElement subtype = null;
+        XmlElement temp;
 
-		return null;
-	}
+        // Search for contentType node
+        for (int i = 0; i < mimetype.count(); i++) {
+            temp = mimetype.getElement(i);
 
-	public void setViewer(String contentType, String subType, String value) {
-		XmlElement mimetype = config.getMimeTypeNode();
+            if (temp.getAttribute("name").equals(contentType)) {
+                type = temp;
 
-		XmlElement type = null;
-		XmlElement subtype = null;
-		XmlElement temp;
+                break;
+            }
+        }
 
-		// Search for contentType node
-		for (int i = 0; i < mimetype.count(); i++) {
-			temp = mimetype.getElement(i);
-			if (temp.getAttribute("name").equals(contentType)) {
-				type = temp;
-				break;
-			}
-		}
+        // If no node is found create new one
+        if (type == null) {
+            type = new XmlElement("type");
+            type.addAttribute("name", contentType);
+            type.addAttribute("viewer", value);
+            mimetype.addElement(type);
+        }
+        // Set to default viewer for this type if none is present
+        else if (type.getAttribute("viewer") == null) {
+            type.addAttribute("viewer", value);
+        }
 
-		// If no node is found create new one
-		if (type == null) {
-			type = new XmlElement("type");
-			type.addAttribute("name", contentType);
-			type.addAttribute("viewer", value);
-			mimetype.addElement(type);
-		}
-		// Set to default viewer for this type if none is present
-		else if (type.getAttribute("viewer") == null) {
-			type.addAttribute("viewer", value);
-		}
+        // Search for subtype node
+        for (int j = 0; j < type.count(); j++) {
+            temp = type.getElement(j);
 
-		// Search for subtype node
-		for (int j = 0; j < type.count(); j++) {
-			temp = type.getElement(j);
-			if (temp.getAttribute("name").equals(subType)) {
-				subtype = temp;
-			}
-		}
+            if (temp.getAttribute("name").equals(subType)) {
+                subtype = temp;
+            }
+        }
 
-		// No subtype node found -> create one
-		if (subtype == null) {
-			subtype = new XmlElement("subtype");
-			subtype.addAttribute("name", subType);
-			subtype.addAttribute("viewer", value);
-			type.addElement(subtype);
-		} else {
-			subtype.addAttribute("viewer", value);
-		}
-
-	}
-
+        // No subtype node found -> create one
+        if (subtype == null) {
+            subtype = new XmlElement("subtype");
+            subtype.addAttribute("name", subType);
+            subtype.addAttribute("viewer", value);
+            type.addElement(subtype);
+        } else {
+            subtype.addAttribute("viewer", value);
+        }
+    }
 }

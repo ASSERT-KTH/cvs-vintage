@@ -22,6 +22,7 @@ import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.FolderItem;
@@ -34,80 +35,67 @@ import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.HeaderList;
 
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
+    private HeaderList headerList;
+    private Folder folder;
 
-	private HeaderList headerList;
-	private Folder folder;
+    public ViewHeaderListCommand(FrameMediator frame,
+        DefaultCommandReference[] references) {
+        super(frame, references);
 
-	public ViewHeaderListCommand(
-		FrameMediator frame,
-		DefaultCommandReference[] references) {
-		super(frame, references);
+        priority = Command.REALTIME_PRIORITY;
+        commandType = Command.NO_UNDO_OPERATION;
+    }
 
-		priority = Command.REALTIME_PRIORITY;
-		commandType = Command.NO_UNDO_OPERATION;
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        // notify table selection handler 
+        ((TableSelectionHandler) frameMediator.getSelectionManager().getHandler("mail.table")).setFolder(folder);
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
+        // this should be called from TableController instead
+        ((TableViewOwner) frameMediator).getTableController().showHeaderList(folder,
+            headerList);
 
-		// notify table selection handler 
+        MailInterface.treeModel.nodeChanged(folder);
+    }
 
-		(
-			(TableSelectionHandler) frameMediator
-				.getSelectionManager()
-				.getHandler(
-				"mail.table")).setFolder(
-			folder);
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
-		// this should be called from TableController instead
-		((TableViewOwner) frameMediator).getTableController().showHeaderList(
-			folder,
-			headerList);
+        folder = (Folder) r[0].getFolder();
 
-		MailInterface.treeModel.nodeChanged(folder);
+        //		register for status events
+        ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
 
-	}
+        // fetch the headerlist
+        headerList = (folder).getHeaderList();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        // this is a little hack !!
+        // check if this is an imap folder
+        FolderItem folderItem = folder.getFolderItem();
 
-		folder = (Folder) r[0].getFolder();
-		//		register for status events
-		 ((StatusObservableImpl) folder.getObservable()).setWorker(worker);
+        if (folderItem.get("type").equals("IMAPFolder")) {
+            IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
+            AccountItem accountItem = rootFolder.getAccountItem();
+            ImapItem item = accountItem.getImapItem();
 
-		// fetch the headerlist
-		headerList = (folder).getHeaderList();
-		
-		// this is a little hack !!
+            boolean applyFilter = item.getBoolean("automatically_apply_filter",
+                    false);
 
-		// check if this is an imap folder
-		FolderItem folderItem = folder.getFolderItem();
-		if (folderItem.get("type").equals("IMAPFolder")) {
-			IMAPRootFolder rootFolder = (IMAPRootFolder) folder.getRootFolder();
-			AccountItem accountItem = rootFolder.getAccountItem();
-			ImapItem item = accountItem.getImapItem();
-
-			boolean applyFilter =
-				item.getBoolean("automatically_apply_filter", false);
-
-			// if "automatically apply filter" is selected 
-			if (applyFilter == true) {
-				
-				MainInterface.processor.addOp( new ApplyFilterCommand(r));
-				
-			}
-
-		}
-
-	}
+            // if "automatically apply filter" is selected 
+            if (applyFilter == true) {
+                MainInterface.processor.addOp(new ApplyFilterCommand(r));
+            }
+        }
+    }
 }

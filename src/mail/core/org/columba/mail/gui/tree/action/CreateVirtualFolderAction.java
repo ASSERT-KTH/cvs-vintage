@@ -13,19 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
@@ -35,95 +30,81 @@ import org.columba.mail.gui.tree.util.CreateFolderDialog;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class CreateVirtualFolderAction
-	extends FrameAction
-	implements SelectionListener {
+public class CreateVirtualFolderAction extends FrameAction
+    implements SelectionListener {
+    public CreateVirtualFolderAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_newvirtualfolder"));
 
-	public CreateVirtualFolderAction(FrameMediator frameMediator) {
-		super(
-			frameMediator,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_folder_newvirtualfolder"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_newvirtualfolder").replaceAll("&", ""));
 
-		// tooltip text
-		putValue(
-			SHORT_DESCRIPTION,
-			MailResourceLoader
-				.getString("menu", "mainframe", "menu_folder_newvirtualfolder")
-				.replaceAll("&", ""));
+        // icons
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("virtualfolder.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
 
-		// icons
-		putValue(
-			SMALL_ICON,
-			ImageLoader.getSmallImageIcon("virtualfolder.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("virtualfolder.png"));
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
 
-		// shortcut key
-		putValue(
-			ACCELERATOR_KEY,
-			KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.ALT_MASK));
+        setEnabled(false);
 
-		setEnabled(false);
-		
-		((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
-	}
+        ((MailFrameMediator) frameMediator).registerTreeSelectionListener(this);
+    }
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		CreateFolderDialog dialog = new CreateFolderDialog(null);
-		dialog.showDialog();
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        CreateFolderDialog dialog = new CreateFolderDialog(null);
+        dialog.showDialog();
 
-		String name;
+        String name;
 
-		if (dialog.success()) {
-			// ok pressed
-			name = dialog.getName();
+        if (dialog.success()) {
+            // ok pressed
+            name = dialog.getName();
 
-			try {
-				FolderCommandReference[] r =
-					(FolderCommandReference[]) frameMediator
-						.getSelectionManager()
-						.getSelection(
-						"mail.tree");
-				FolderFactory.getInstance().createChild(
-					r[0].getFolder(),
-					name,
-					"VirtualFolder");
+            try {
+                FolderCommandReference[] r = (FolderCommandReference[]) frameMediator.getSelectionManager()
+                                                                                     .getSelection("mail.tree");
+                FolderFactory.getInstance().createChild(r[0].getFolder(), name,
+                    "VirtualFolder");
 
-				FolderCommandReference[] reference =
-					(FolderCommandReference[])
-						((AbstractMailFrameController) getFrameMediator())
-						.getTreeSelection();
-				MailInterface.treeModel.nodeStructureChanged(
-					reference[0].getFolder());
+                FolderCommandReference[] reference = (FolderCommandReference[]) ((AbstractMailFrameController) getFrameMediator()).getTreeSelection();
+                MailInterface.treeModel.nodeStructureChanged(reference[0].getFolder());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            // cancel pressed
+            return;
+        }
+    }
 
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-		} else {
-			// cancel pressed
-			return;
-		}
-	}
-
-	/* (non-Javadoc)
-	     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	     */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-	}
+    /* (non-Javadoc)
+         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+         */
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

@@ -13,8 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.util;
+
+import com.jgoodies.forms.layout.FormLayout;
+
+import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
+
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DefaultFormBuilder;
+import org.columba.core.gui.util.DialogStore;
+
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.main.MailInterface;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -40,197 +51,162 @@ import javax.swing.SwingConstants;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
-
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DefaultFormBuilder;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.main.MailInterface;
-import org.columba.mail.util.MailResourceLoader;
-
-import com.jgoodies.forms.layout.FormLayout;
 
 public class CreateFolderDialog extends JDialog implements ActionListener {
-	protected boolean bool = false;
-	protected JTextField textField;
-	protected JButton okButton;
-	protected JButton cancelButton;
-	protected JButton helpButton;
-	protected JComboBox typeBox;
-	protected JTree tree;
-	protected String name;
-	
-	protected TreePath selected;
-	
-	public CreateFolderDialog(TreePath selected) {
-		super(
-			DialogStore.getOwner(),
-			MailResourceLoader.getString(
-				"dialog",
-				"folder",
-				"edit_name"), true);
-			
-		name = MailResourceLoader.getString(
-				"dialog",
-				"folder",
-				"new_folder_name");
-		
-		this.selected = selected;				
-		
-		initComponents();
-		layoutComponents();		
-	}
+    protected boolean bool = false;
+    protected JTextField textField;
+    protected JButton okButton;
+    protected JButton cancelButton;
+    protected JButton helpButton;
+    protected JComboBox typeBox;
+    protected JTree tree;
+    protected String name;
+    protected TreePath selected;
 
+    public CreateFolderDialog(TreePath selected) {
+        super(DialogStore.getOwner(),
+            MailResourceLoader.getString("dialog", "folder", "edit_name"), true);
 
-	protected void layoutComponents() {
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout());
+        name = MailResourceLoader.getString("dialog", "folder",
+                "new_folder_name");
 
-		// layout center panel
-		
-		FormLayout layout =
-			new FormLayout("left:max(20dlu;pref), 3dlu, 80dlu:grow", 
-			"");
+        this.selected = selected;
 
-		DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+        initComponents();
+        layoutComponents();
+    }
 
-		// create EmptyBorder between components and dialog-frame 
-		builder.setDefaultDialogBorder();
+    protected void layoutComponents() {
+        Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
 
-		// skip the first column
-		//builder.setLeadingColumnOffset(1);
+        // layout center panel
+        FormLayout layout = new FormLayout("left:max(20dlu;pref), 3dlu, 80dlu:grow",
+                "");
 
-		// Add components to the panel:
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-		// TODO: LOCALIZE
+        // create EmptyBorder between components and dialog-frame 
+        builder.setDefaultDialogBorder();
 
-		builder.append(
-			new JLabel(
-				MailResourceLoader.getString("dialog", "folder", "name")));
-		builder.append(textField);
-		builder.nextLine();
+        // skip the first column
+        //builder.setLeadingColumnOffset(1);
+        // Add components to the panel:
+        // TODO: LOCALIZE
+        builder.append(new JLabel(MailResourceLoader.getString("dialog",
+                    "folder", "name")));
+        builder.append(textField);
+        builder.nextLine();
 
-		builder.append(new JLabel("Type:"));
-		builder.append(typeBox);
-		
-		builder.appendRow("3dlu");
-		builder.appendRow("fill:d:grow");
-		builder.nextLine(2);
+        builder.append(new JLabel("Type:"));
+        builder.append(typeBox);
 
-		JScrollPane scrollPane = new JScrollPane(tree);
-		scrollPane.setPreferredSize( new Dimension(200,300));
-		builder.append(scrollPane, 3);
-		
-		contentPane.add( builder.getPanel(), BorderLayout.CENTER);
+        builder.appendRow("3dlu");
+        builder.appendRow("fill:d:grow");
+        builder.nextLine(2);
 
-		// init bottom panel with OK, Cancel buttons
+        JScrollPane scrollPane = new JScrollPane(tree);
+        scrollPane.setPreferredSize(new Dimension(200, 300));
+        builder.append(scrollPane, 3);
 
-		JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
-		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
-		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
+        contentPane.add(builder.getPanel(), BorderLayout.CENTER);
 
-		buttonPanel.add(okButton);
+        // init bottom panel with OK, Cancel buttons
+        JPanel bottomPanel = new JPanel(new BorderLayout(0, 0));
+        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-		buttonPanel.add(cancelButton);
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(11, 11, 11, 11));
 
-		getRootPane().setDefaultButton(okButton);
-		getRootPane().registerKeyboardAction(
-			this,
-			"CANCEL",
-			KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-			JComponent.WHEN_IN_FOCUSED_WINDOW);
-	}
+        buttonPanel.add(okButton);
 
-	protected void initComponents() {
-		// Init components
-		textField = new JTextField(name, 15);
-		textField.setSelectionStart(0);
-		textField.setSelectionEnd(name.length());
-		
-		
-		typeBox = new JComboBox(new String[] { "Standard Mailbox" });
+        buttonPanel.add(cancelButton);
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
-		
+        getRootPane().setDefaultButton(okButton);
+        getRootPane().registerKeyboardAction(this, "CANCEL",
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
 
-		tree = new JTree(MailInterface.treeModel);
-		tree.setCellRenderer(new FolderTreeCellRenderer());
-		tree.setRootVisible(false);
-		tree.getSelectionModel().setSelectionMode(
-			TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.expandRow(0);
-		tree.expandRow(1);
+    protected void initComponents() {
+        // Init components
+        textField = new JTextField(name, 15);
+        textField.setSelectionStart(0);
+        textField.setSelectionEnd(name.length());
 
-		// try to set selection
-		if( selected != null ) {
-			tree.setSelectionPath(selected);
-		}	
+        typeBox = new JComboBox(new String[] { "Standard Mailbox" });
 
-		// button panel
+        tree = new JTree(MailInterface.treeModel);
+        tree.setCellRenderer(new FolderTreeCellRenderer());
+        tree.setRootVisible(false);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.expandRow(0);
+        tree.expandRow(1);
 
-		okButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "ok"));
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
-		cancelButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		helpButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
-		
-	}
+        // try to set selection
+        if (selected != null) {
+            tree.setSelectionPath(selected);
+        }
 
-	public void showDialog() {		
-		pack();
-		setLocationRelativeTo(null);
-		setVisible(true);
-	}
+        // button panel
+        okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "ok"));
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
+        cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "help"));
+        helpButton.setActionCommand("HELP");
+        helpButton.addActionListener(this);
+    }
 
-	public String getName() {
-		return name;
-	}
-	
-	public FolderTreeNode getSelected() {
-		return (FolderTreeNode) tree.getSelectionPath().getLastPathComponent();
-	}
+    public void showDialog() {
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
 
-	public boolean success() {
-		return bool;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
+    public FolderTreeNode getSelected() {
+        return (FolderTreeNode) tree.getSelectionPath().getLastPathComponent();
+    }
 
-		if (action.equals("OK")) {
-			name = textField.getText().trim();
-			// fixing bug with id 553176
-			if (name.indexOf('/') != -1) {
-				// if the character / is found shows the user a error message
-				JOptionPane.showMessageDialog(
-					null,
-					MailResourceLoader.getString(
-						"dialog",
-						"folder",
-						"error_char_text"),
-					MailResourceLoader.getString(
-						"dialog",
-						"folder",
-						"error_char_title"),
-					JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			bool = true;
-			dispose();
-		} else if (action.equals("CANCEL")) {
-			bool = false;
+    public boolean success() {
+        return bool;
+    }
 
-			dispose();
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        if (action.equals("OK")) {
+            name = textField.getText().trim();
+
+            // fixing bug with id 553176
+            if (name.indexOf('/') != -1) {
+                // if the character / is found shows the user a error message
+                JOptionPane.showMessageDialog(null,
+                    MailResourceLoader.getString("dialog", "folder",
+                        "error_char_text"),
+                    MailResourceLoader.getString("dialog", "folder",
+                        "error_char_title"), JOptionPane.ERROR_MESSAGE);
+
+                return;
+            }
+
+            bool = true;
+            dispose();
+        } else if (action.equals("CANCEL")) {
+            bool = false;
+
+            dispose();
+        }
+    }
 }

@@ -6,6 +6,7 @@
  */
 package org.columba.core.charset;
 
+
 /**
  * @author frd
  *
@@ -13,7 +14,7 @@ package org.columba.core.charset;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public interface CharsetOwnerInterface {
+    public abstract CharsetManager getCharsetManager();
 
-	public abstract CharsetManager getCharsetManager();		
-	public abstract void setCharsetManager(CharsetManager manager);
+    public abstract void setCharsetManager(CharsetManager manager);
 }

@@ -13,61 +13,62 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameController;
 import org.columba.addressbook.util.AddressbookResourceLoader;
+
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class RemoveCardAction extends FrameAction {
+    public RemoveCardAction(FrameMediator frameController) {
+        super(frameController,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_remove"));
 
-	public RemoveCardAction(FrameMediator frameController) {
-		super(frameController, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_remove"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, AddressbookResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_file_remove_tooltip").replaceAll("&", ""));
-					
-		putValue(TOOLBAR_NAME, AddressbookResourceLoader.getString(
-			"menu", "mainframe", "menu_file_remove_toolbar"));
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_delete-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_remove_tooltip").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		AddressbookFrameController addressbookFrameController =
-			(AddressbookFrameController) frameMediator;
+        putValue(TOOLBAR_NAME,
+            AddressbookResourceLoader.getString("menu", "mainframe",
+                "menu_file_remove_toolbar"));
 
-		Object[] uids =
-			addressbookFrameController.getTable().getView().getSelectedUids();
-		AddressbookFolder folder =
-			(AddressbookFolder) addressbookFrameController
-				.getTree()
-				.getView()
-				.getSelectedFolder();
+        // icons
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_delete-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_delete.png"));
+    }
 
-		for (int i = 0; i < uids.length; i++) {
-			folder.remove(uids[i]);
-		}
-		addressbookFrameController.getTable().getView().setFolder(folder);
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        AddressbookFrameController addressbookFrameController = (AddressbookFrameController) frameMediator;
+
+        Object[] uids = addressbookFrameController.getTable().getView()
+                                                  .getSelectedUids();
+        AddressbookFolder folder = (AddressbookFolder) addressbookFrameController.getTree()
+                                                                                 .getView()
+                                                                                 .getSelectedFolder();
+
+        for (int i = 0; i < uids.length; i++) {
+            folder.remove(uids[i]);
+        }
+
+        addressbookFrameController.getTable().getView().setFolder(folder);
+    }
 }

@@ -1,4 +1,5 @@
 package org.columba.core.util;
+
 //The contents of this file are subject to the Mozilla Public License Version 1.1
 //(the "License"); you may not use this file except in compliance with the 
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
@@ -14,34 +15,34 @@ package org.columba.core.util;
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 public class StopWatch {
-	
-	long startTime;
-	long endTime;
-	boolean disabled;
-	
-	public StopWatch() {
-		disabled = false;		
-	}
-	
-	public void start() {
-		if( !disabled ) startTime = System.currentTimeMillis();
-	}
-	
-	public void stop() {
-		if( !disabled ) {
-			endTime = System.currentTimeMillis();
-			System.out.println("Time : "+ (endTime - startTime) + "ms");
-		}
-	}
-	
-	public void startstop() {
-		start();
-		stop();
-	}
-	
-	public void disable() {
-		disabled = true;
-	}
+    long startTime;
+    long endTime;
+    boolean disabled;
+
+    public StopWatch() {
+        disabled = false;
+    }
+
+    public void start() {
+        if (!disabled) {
+            startTime = System.currentTimeMillis();
+        }
+    }
+
+    public void stop() {
+        if (!disabled) {
+            endTime = System.currentTimeMillis();
+            System.out.println("Time : " + (endTime - startTime) + "ms");
+        }
+    }
+
+    public void startstop() {
+        start();
+        stop();
+    }
+
+    public void disable() {
+        disabled = true;
+    }
 }

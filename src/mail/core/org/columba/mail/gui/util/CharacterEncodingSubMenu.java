@@ -10,7 +10,9 @@ import org.columba.core.action.IMenu;
 import org.columba.core.charset.CharsetOwnerInterface;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
+
 import org.columba.mail.util.MailResourceLoader;
+
 
 /**
  * @author frd
@@ -19,30 +21,22 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class CharacterEncodingSubMenu extends IMenu {
+    /**
+     * @param controller
+     * @param caption
+     */
+    public CharacterEncodingSubMenu(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_charset"));
 
-	/**
-	 * @param controller
-	 * @param caption
-	 */
-	public CharacterEncodingSubMenu(FrameMediator controller) {
-		super(
-			controller,
-			MailResourceLoader.getString(
-				"menu",
-				"mainframe",
-				"menu_view_charset"));
+        setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
 
-		setIcon(ImageLoader.getImageIcon("stock_font_16.png"));
+        createMenu();
+    }
 
-		createMenu();
-	}
-
-	protected void createMenu() {
-		((CharsetOwnerInterface) controller)
-			.getCharsetManager()
-			.createMenu(
-			this,
-			controller.getMouseTooltipHandler());
-	}
-
+    protected void createMenu() {
+        ((CharsetOwnerInterface) controller).getCharsetManager().createMenu(this,
+            controller.getMouseTooltipHandler());
+    }
 }

@@ -13,8 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.selection;
+
+import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.gui.selection.SelectionHandler;
+import org.columba.core.logging.ColumbaLogger;
+
+import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.folder.FolderTreeNode;
+import org.columba.mail.gui.tree.TreeView;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -23,12 +30,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
-import org.columba.core.command.DefaultCommandReference;
-import org.columba.core.gui.selection.SelectionHandler;
-import org.columba.core.logging.ColumbaLogger;
-import org.columba.mail.command.FolderCommandReference;
-import org.columba.mail.folder.FolderTreeNode;
-import org.columba.mail.gui.tree.TreeView;
 
 /**
  * Handles the tree selection.
@@ -42,84 +43,77 @@ import org.columba.mail.gui.tree.TreeView;
  *
  * @author fdietz, tstich
  */
-public class TreeSelectionHandler
-	extends SelectionHandler
-	implements TreeSelectionListener {
+public class TreeSelectionHandler extends SelectionHandler
+    implements TreeSelectionListener {
+    private final static FolderTreeNode[] folderArray = { null };
+    private TreeView view;
+    private LinkedList selectedFolders;
 
-	private TreeView view;
-	private LinkedList selectedFolders;
+    public TreeSelectionHandler(TreeView view) {
+        super("mail.tree");
+        this.view = view;
+        view.addTreeSelectionListener(this);
+        selectedFolders = new LinkedList();
+    }
 
-	private final static FolderTreeNode[] folderArray = { null };
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionHandler#getSelection()
+     */
+    public DefaultCommandReference[] getSelection() {
+        FolderCommandReference[] references = new FolderCommandReference[selectedFolders.size()];
+        ListIterator it = selectedFolders.listIterator();
+        int i = 0;
 
-	public TreeSelectionHandler(TreeView view) {
-		super("mail.tree");
-		this.view = view;
-		view.addTreeSelectionListener(this);
-		selectedFolders = new LinkedList();
-	}
+        while (it.hasNext()) {
+            references[i++] = new FolderCommandReference((FolderTreeNode) it.next());
+        }
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionHandler#getSelection()
-	 */
-	public DefaultCommandReference[] getSelection() {
-		FolderCommandReference[] references =
-			new FolderCommandReference[selectedFolders.size()];
-		ListIterator it = selectedFolders.listIterator();
-		int i = 0;
-		while (it.hasNext()) {
-			references[i++] = new FolderCommandReference((FolderTreeNode) it.next());
-		}
+        return references;
+    }
 
-		return references;
-	}
+    /* (non-Javadoc)
+     * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
+     */
+    public void valueChanged(TreeSelectionEvent e) {
+        // BUGFIX but don't know why that bug occurs 
+        if (e.getPath() == null) {
+            return;
+        }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.event.TreeSelectionListener#valueChanged(javax.swing.event.TreeSelectionEvent)
-	 */
-	public void valueChanged(TreeSelectionEvent e) {
+        for (int i = 0; i < e.getPaths().length; i++) {
+            if (e.getPaths()[i].getLastPathComponent() instanceof FolderTreeNode) {
+                FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
 
-		// BUGFIX but don't know why that bug occurs 
-		if (e.getPath() == null)
-			return;
-		
+                if (e.isAddedPath(i)) {
+                    ColumbaLogger.log.debug("Folder added to Selection= " +
+                        folder.getName());
+                    selectedFolders.add(folder);
+                } else {
+                    ColumbaLogger.log.debug("Folder removed from Selection= " +
+                        folder.getName());
+                    selectedFolders.remove(folder);
+                }
+            }
+        }
 
-		for (int i = 0; i < e.getPaths().length; i++) {
-			if (e.getPaths()[i].getLastPathComponent() instanceof FolderTreeNode) {
-				FolderTreeNode folder = (FolderTreeNode) e.getPaths()[i].getLastPathComponent();
-				if (e.isAddedPath(i)) {
-					ColumbaLogger.log.debug(
-						"Folder added to Selection= " + folder.getName());
-					selectedFolders.add(folder);
-				} else {
-					ColumbaLogger.log.debug(
-						"Folder removed from Selection= " + folder.getName());
-					selectedFolders.remove(folder);
-				}
-			}
-		}
+        fireSelectionChanged(new TreeSelectionChangedEvent(
+                (FolderTreeNode[]) selectedFolders.toArray(folderArray)));
+    }
 
-		fireSelectionChanged(
-			new TreeSelectionChangedEvent(
-				(FolderTreeNode[]) selectedFolders.toArray(folderArray)));
-	}
+    public void setSelection(DefaultCommandReference[] selection) {
+        view.clearSelection();
+        view.requestFocus();
 
-	public void setSelection(DefaultCommandReference[] selection) {
-		view.clearSelection();
-		view.requestFocus();
+        TreePath[] path = new TreePath[selection.length];
 
-		TreePath path[] = new TreePath[selection.length];
+        for (int i = 0; i < selection.length; i++) {
+            path[i] = ((FolderCommandReference) selection[i]).getFolder()
+                       .getSelectionTreePath();
+            view.setLeadSelectionPath(path[i]);
+            view.setAnchorSelectionPath(path[i]);
+            view.expandPath(path[i]);
+        }
 
-		for (int i = 0; i < selection.length; i++) {
-			path[i] =
-				((FolderCommandReference) selection[i])
-					.getFolder()
-					.getSelectionTreePath();
-			view.setLeadSelectionPath(path[i]);
-			view.setAnchorSelectionPath(path[i]);
-			view.expandPath(path[i]);
-		}
-
-		view.setSelectionPaths(path);
-	}
-
+        view.setSelectionPaths(path);
+    }
 }

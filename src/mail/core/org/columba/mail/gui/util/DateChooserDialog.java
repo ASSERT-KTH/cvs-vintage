@@ -15,10 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.gui.util;
 
+import org.columba.core.gui.util.ButtonWithMnemonic;
+import org.columba.core.gui.util.DialogStore;
+
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,100 +33,93 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.columba.core.gui.util.ButtonWithMnemonic;
-import org.columba.core.gui.util.DialogStore;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class DateChooserDialog implements ActionListener {
-	DateChooser dateChooser;
-	JButton okButton;
-	JButton cancelButton;
+    DateChooser dateChooser;
+    JButton okButton;
+    JButton cancelButton;
+    JPanel panel;
+    boolean success = false;
+    JDialog dialog;
 
-	JPanel panel;
+    public DateChooserDialog() {
+        dialog = DialogStore.getDialog();
 
-	boolean success = false;
+        dialog.setTitle("Choose Date...");
 
-	JDialog dialog;
+        dateChooser = new DateChooser();
 
-	public DateChooserDialog() {
-		dialog = DialogStore.getDialog();
+        panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-		dialog.setTitle("Choose Date...");
+        dialog.getContentPane().add(panel, BorderLayout.CENTER);
 
-		dateChooser = new DateChooser();
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+        panel.add(dateChooser, BorderLayout.CENTER);
 
-		dialog.getContentPane().add(panel, BorderLayout.CENTER);
+        JPanel bottomPanel = new JPanel();
 
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        /*
+        bottomPanel.setBorder(new WizardTopBorder());
+        Border border = bottomPanel.getBorder();
+        Border margin = BorderFactory.createEmptyBorder(15, 10, 10, 10);
+        bottomPanel.setBorder(new CompoundBorder(border, margin));
+        */
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
-		panel.add(dateChooser, BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
+        bottomPanel.add(buttonPanel, BorderLayout.EAST);
 
-		JPanel bottomPanel = new JPanel();
-		/*
-		bottomPanel.setBorder(new WizardTopBorder());
-		Border border = bottomPanel.getBorder();
-		Border margin = BorderFactory.createEmptyBorder(15, 10, 10, 10);
-		bottomPanel.setBorder(new CompoundBorder(border, margin));
-		*/
-		bottomPanel.setLayout(new BorderLayout());
-		bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
+                    "global", "cancel"));
+        cancelButton.setActionCommand("CANCEL");
+        cancelButton.addActionListener(this);
+        okButton = new JButton(MailResourceLoader.getString("global", "ok"));
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(this);
 
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 2, 10, 10));
-		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(okButton);
 
-		cancelButton = new ButtonWithMnemonic(
-				MailResourceLoader.getString("global", "cancel"));
-		cancelButton.setActionCommand("CANCEL");
-		cancelButton.addActionListener(this);
-		okButton = new JButton(
-				MailResourceLoader.getString("global", "ok"));
-		okButton.setActionCommand("OK");
-		okButton.addActionListener(this);
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(okButton);
+        dialog.pack();
+    }
 
-		panel.add(bottomPanel, BorderLayout.SOUTH);
+    public Date getDate() {
+        return dateChooser.getSelectedDate().getTime();
+    }
 
-		dialog.pack();
-	}
+    public void setDate(Date d) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        dateChooser.setSelectedDate(c);
+    }
 
-	public Date getDate() {
-		return dateChooser.getSelectedDate().getTime();
-	}
+    public boolean success() {
+        return success;
+    }
 
-	public void setDate(Date d) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(d);
-		dateChooser.setSelectedDate(c);
-	}
+    public void setVisible(boolean b) {
+        dialog.setVisible(b);
+    }
 
-	public boolean success() {
-		return success;
-	}
+    public void actionPerformed(ActionEvent ev) {
+        String action = ev.getActionCommand();
 
-	public void setVisible(boolean b )
-	{
-		dialog.setVisible(b);
-	}
-	public void actionPerformed(ActionEvent ev) {
-		String action = ev.getActionCommand();
-
-		if (action.equals("OK")) {
-			success = true;
-			dialog.setVisible(false);
-		} else if (action.equals("CANCEL")) {
-			success = false;
-			dialog.setVisible(false);
-		}
-
-	}
+        if (action.equals("OK")) {
+            success = true;
+            dialog.setVisible(false);
+        } else if (action.equals("CANCEL")) {
+            success = false;
+            dialog.setVisible(false);
+        }
+    }
 }

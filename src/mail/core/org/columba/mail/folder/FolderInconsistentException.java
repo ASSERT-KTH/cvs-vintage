@@ -13,11 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.folder;
 
+
 /**
- * Folders throw this exception if they find themselves in 
+ * Folders throw this exception if they find themselves in
  * a non-consistent state.
  * <p>
  * Goal is to make it possible to start an automatic recreation
@@ -26,5 +26,4 @@ package org.columba.mail.folder;
  * @author fdietz
  */
 public class FolderInconsistentException extends Exception {
-
 }

@@ -13,8 +13,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.config.accountwizard;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+import net.javaprog.ui.wizard.DefaultDataLookup;
+
+import org.columba.core.gui.util.LabelWithMnemonic;
+import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.WizardTextField;
+
+import org.columba.mail.util.MailResourceLoader;
 
 import java.lang.reflect.Method;
 
@@ -29,112 +38,113 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-import net.javaprog.ui.wizard.DefaultDataLookup;
-
-import org.columba.core.gui.util.LabelWithMnemonic;
-import org.columba.core.gui.util.MultiLineLabel;
-import org.columba.core.gui.util.WizardTextField;
-import org.columba.mail.util.MailResourceLoader;
 
 class IncomingServerStep extends AbstractStep {
-        protected DataModel data;
-	protected JTextField loginTextField;
-	protected JTextField hostTextField;
-	protected JLabel addressLabel;
-	protected JComboBox typeComboBox;
+    protected DataModel data;
+    protected JTextField loginTextField;
+    protected JTextField hostTextField;
+    protected JLabel addressLabel;
+    protected JComboBox typeComboBox;
 
-	public IncomingServerStep(DataModel data) {
-		super(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "incomingserver"),
-                      MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "incomingserver_description"));
-                this.data = data;
-                setCanGoNext(false);
+    public IncomingServerStep(DataModel data) {
+        super(MailResourceLoader.getString("dialog", "accountwizard",
+                "incomingserver"),
+            MailResourceLoader.getString("dialog", "accountwizard",
+                "incomingserver_description"));
+        this.data = data;
+        setCanGoNext(false);
+    }
+
+    protected JComponent createComponent() {
+        JComponent component = new JPanel();
+        component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
+        component.add(new MultiLineLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "incomingserver_text")));
+        component.add(Box.createVerticalStrut(40));
+
+        WizardTextField middlePanel = new WizardTextField();
+        LabelWithMnemonic nameLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "login"));
+        middlePanel.addLabel(nameLabel);
+        loginTextField = new JTextField();
+
+        Method method = null;
+
+        try {
+            method = loginTextField.getClass().getMethod("getText", null);
+        } catch (NoSuchMethodException nsme) {
         }
-		
-        protected JComponent createComponent() {
-		JComponent component = new JPanel();
-                component.setLayout(new BoxLayout(component, BoxLayout.Y_AXIS));
-                component.add(new MultiLineLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "incomingserver_text")));
-                component.add(Box.createVerticalStrut(40));
-                WizardTextField middlePanel = new WizardTextField();
-		LabelWithMnemonic nameLabel = new LabelWithMnemonic(
-                        MailResourceLoader.getString("dialog", "accountwizard", "login"));
-                middlePanel.addLabel(nameLabel);
-                loginTextField = new JTextField();
-                Method method = null;
-                try {
-                        method = loginTextField.getClass().getMethod("getText", null);
-                } catch (NoSuchMethodException nsme) {}
-                data.registerDataLookup("IncomingServer.login", new DefaultDataLookup(loginTextField, method, null));
-                DocumentListener fieldListener = new DocumentListener() {
-                        public void removeUpdate(DocumentEvent e) {
-                                checkFields();
-                        }
-                        
-                        public void insertUpdate(DocumentEvent e) {
-                                checkFields();
-                        }
-                        
-                        protected void checkFields() {
-                                setCanGoNext(loginTextField.getDocument().getLength() > 0
-                                           && hostTextField.getDocument().getLength() > 0);
-                        }
-                        
-                        public void changedUpdate(DocumentEvent e) {}
-                };
-                loginTextField.getDocument().addDocumentListener(fieldListener);
-                nameLabel.setLabelFor(loginTextField);
-                middlePanel.addTextField(loginTextField);
-                JLabel exampleLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "example") + "billgates");
-                middlePanel.addExample(exampleLabel);
-		addressLabel = new LabelWithMnemonic(
-                        MailResourceLoader.getString("dialog", "accountwizard", "host"));
-                middlePanel.addLabel(addressLabel);
-                hostTextField = new JTextField();
-                data.registerDataLookup("IncomingServer.host", new DefaultDataLookup(hostTextField, method, null));
-                hostTextField.getDocument().addDocumentListener(fieldListener);
-                addressLabel.setLabelFor(hostTextField);
-                middlePanel.addTextField(hostTextField);
-                JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString(
-                                    "dialog",
-                                    "accountwizard",
-                                    "example") + "mail.microsoft.com");
-                middlePanel.addExample(addressExampleLabel);
-		LabelWithMnemonic typeLabel = new LabelWithMnemonic(
-                        MailResourceLoader.getString("dialog", "accountwizard", "type"));
-                middlePanel.addLabel(typeLabel);
-                typeComboBox = new JComboBox();
-                typeLabel.setLabelFor(typeComboBox);
-                typeComboBox.addItem("POP3");
-                typeComboBox.addItem("IMAP");
-                try {
-                        method = typeComboBox.getClass().getMethod("getSelectedItem", null);
-                } catch (NoSuchMethodException nsme) {}
-                data.registerDataLookup("IncomingServer.type", new DefaultDataLookup(typeComboBox, method, null));
-                middlePanel.addTextField(typeComboBox);
-                middlePanel.addEmptyExample();
-                component.add(middlePanel);
-                return component;
+
+        data.registerDataLookup("IncomingServer.login",
+            new DefaultDataLookup(loginTextField, method, null));
+
+        DocumentListener fieldListener = new DocumentListener() {
+                public void removeUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+
+                public void insertUpdate(DocumentEvent e) {
+                    checkFields();
+                }
+
+                protected void checkFields() {
+                    setCanGoNext((loginTextField.getDocument().getLength() > 0) &&
+                        (hostTextField.getDocument().getLength() > 0));
+                }
+
+                public void changedUpdate(DocumentEvent e) {
+                }
+            };
+
+        loginTextField.getDocument().addDocumentListener(fieldListener);
+        nameLabel.setLabelFor(loginTextField);
+        middlePanel.addTextField(loginTextField);
+
+        JLabel exampleLabel = new JLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "example") + "billgates");
+        middlePanel.addExample(exampleLabel);
+        addressLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "host"));
+        middlePanel.addLabel(addressLabel);
+        hostTextField = new JTextField();
+        data.registerDataLookup("IncomingServer.host",
+            new DefaultDataLookup(hostTextField, method, null));
+        hostTextField.getDocument().addDocumentListener(fieldListener);
+        addressLabel.setLabelFor(hostTextField);
+        middlePanel.addTextField(hostTextField);
+
+        JLabel addressExampleLabel = new JLabel(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "example") +
+                "mail.microsoft.com");
+        middlePanel.addExample(addressExampleLabel);
+
+        LabelWithMnemonic typeLabel = new LabelWithMnemonic(MailResourceLoader.getString(
+                    "dialog", "accountwizard", "type"));
+        middlePanel.addLabel(typeLabel);
+        typeComboBox = new JComboBox();
+        typeLabel.setLabelFor(typeComboBox);
+        typeComboBox.addItem("POP3");
+        typeComboBox.addItem("IMAP");
+
+        try {
+            method = typeComboBox.getClass().getMethod("getSelectedItem", null);
+        } catch (NoSuchMethodException nsme) {
         }
-        
-        public void prepareRendering() {
-                SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                                loginTextField.requestFocus();
-                        }
-                });
-        }
+
+        data.registerDataLookup("IncomingServer.type",
+            new DefaultDataLookup(typeComboBox, method, null));
+        middlePanel.addTextField(typeComboBox);
+        middlePanel.addEmptyExample();
+        component.add(middlePanel);
+
+        return component;
+    }
+
+    public void prepareRendering() {
+        SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    loginTextField.requestFocus();
+                }
+            });
+    }
 }

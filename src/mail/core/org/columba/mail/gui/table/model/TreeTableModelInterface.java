@@ -6,12 +6,13 @@
  */
 package org.columba.mail.gui.table.model;
 
+import org.columba.mail.message.HeaderList;
+
 import java.util.Map;
 
 import javax.swing.table.TableModel;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.columba.mail.message.HeaderList;
 
 /**
  * @author frd
@@ -20,16 +21,23 @@ import org.columba.mail.message.HeaderList;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public interface TreeTableModelInterface extends TableModel {
+    public void set(HeaderList list);
 
-	public void set(HeaderList list);
-	public void remove(Object[] uids);
-	public void modify(Object[] uids);
-	public void update();
+    public void remove(Object[] uids);
 
-	public Map getMap();
-	public HeaderList getHeaderList();
-	public MessageNode getRootNode();
-	public int getColumnNumber(String s);
-	public DefaultTreeModel getTreeModel();
-	public void fireTableDataChanged();
+    public void modify(Object[] uids);
+
+    public void update();
+
+    public Map getMap();
+
+    public HeaderList getHeaderList();
+
+    public MessageNode getRootNode();
+
+    public int getColumnNumber(String s);
+
+    public DefaultTreeModel getTreeModel();
+
+    public void fireTableDataChanged();
 }

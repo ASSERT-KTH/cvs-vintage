@@ -15,46 +15,40 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.core.plugin;
-
-import java.util.Iterator;
 
 import org.columba.core.gui.menu.ContextMenu;
 import org.columba.core.gui.menu.Menu;
 import org.columba.core.xml.XmlElement;
 
+import java.util.Iterator;
+
+
 /**
  * A basic core menu is initially created by this plugin-handler.
  * <p>
  * Mail and addressbook components plug themselves in this menu.
- * 
+ *
  * @author fdietz
  */
 public class MenuPluginHandler extends AbstractPluginHandler {
+    public MenuPluginHandler(String handlerName) {
+        super(handlerName, "org/columba/core/plugin/menus.xml");
 
-	public MenuPluginHandler(String handlerName) {
-		super(handlerName, "org/columba/core/plugin/menus.xml");
+        parentNode = new XmlElement("menus");
+    }
 
-		parentNode = new XmlElement("menus");
-	}
+    public void insertPlugins(Menu menu) {
+        for (Iterator it = parentNode.getElements().listIterator();
+                it.hasNext();) {
+            menu.extendMenu((XmlElement) it.next());
+        }
+    }
 
-	public void insertPlugins(Menu menu) {
-		for (Iterator it = parentNode.getElements().listIterator();
-			it.hasNext();
-			) {
-			menu.extendMenu((XmlElement) it.next());
-		}
-	}
-
-	public void insertPlugins(ContextMenu menu) {
-		for (Iterator it = parentNode.getElements().listIterator();
-			it.hasNext();
-			) {
-
-			menu.extendMenu((XmlElement) it.next());
-
-		}
-	}
-
+    public void insertPlugins(ContextMenu menu) {
+        for (Iterator it = parentNode.getElements().listIterator();
+                it.hasNext();) {
+            menu.extendMenu((XmlElement) it.next());
+        }
+    }
 }

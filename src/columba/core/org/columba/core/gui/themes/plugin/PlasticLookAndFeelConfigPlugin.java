@@ -15,8 +15,16 @@
 //All Rights Reserved.
 package org.columba.core.gui.themes.plugin;
 
+import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
+import com.jgoodies.plaf.plastic.PlasticTheme;
+
+import org.columba.core.config.Config;
+import org.columba.core.gui.plugin.AbstractConfigPlugin;
+import org.columba.core.xml.XmlElement;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
+
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
@@ -26,111 +34,98 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-import org.columba.core.config.Config;
-import org.columba.core.gui.plugin.AbstractConfigPlugin;
-import org.columba.core.xml.XmlElement;
-
-import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticTheme;
 
 /**
  * Asks the user which theme he wants to use.
- * 
+ *
  * @author fdietz
  */
 public class PlasticLookAndFeelConfigPlugin extends AbstractConfigPlugin {
+    JList list;
+    XmlElement themeElement;
 
-	JList list;
+    /**
+     *
+     */
+    public PlasticLookAndFeelConfigPlugin() {
+        super();
 
-	XmlElement themeElement;
+        XmlElement options = Config.get("options").getElement("/options");
+        XmlElement gui = options.getElement("gui");
+        themeElement = gui.getElement("theme");
+    }
 
-	/**
-	 * 
-	 */
-	public PlasticLookAndFeelConfigPlugin() {
-		super();
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.plugin.AbstractConfigPlugin#createPanel()
+     */
+    public JPanel createPanel() {
+        list = new JList(computeThemes());
+        list.setCellRenderer(createThemeRenderer());
 
-		XmlElement options = Config.get("options").getElement("/options");
-		XmlElement gui = options.getElement("gui");
-		themeElement = gui.getElement("theme");
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-	}
+        JScrollPane pane = new JScrollPane(list);
+        panel.add(pane, BorderLayout.NORTH);
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.plugin.AbstractConfigPlugin#createPanel()
-	 */
-	public JPanel createPanel() {
+        return panel;
+    }
 
-		list = new JList(computeThemes());
-		list.setCellRenderer(createThemeRenderer());
+    protected PlasticTheme[] computeThemes() {
+        List themes = PlasticLookAndFeel.getInstalledThemes();
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+        return (PlasticTheme[]) themes.toArray(new PlasticTheme[themes.size()]);
+    }
 
-		JScrollPane pane = new JScrollPane(list);
-		panel.add(pane, BorderLayout.NORTH);
+    protected PlasticTheme getTheme(String name) {
+        PlasticTheme[] themes = computeThemes();
 
-		return panel;
-	}
+        for (int i = 0; i < themes.length; i++) {
+            String str = themes[i].getName();
 
-	protected PlasticTheme[] computeThemes() {
-		List themes = PlasticLookAndFeel.getInstalledThemes();
-		return (PlasticTheme[]) themes.toArray(new PlasticTheme[themes.size()]);
-	}
+            if (name.equals(str)) {
+                return themes[i];
+            }
+        }
 
-	protected PlasticTheme getTheme(String name) {
-		PlasticTheme[] themes = computeThemes();
-		for (int i = 0; i < themes.length; i++) {
-			String str = themes[i].getName();
-			if (name.equals(str))
-				return themes[i];
-		}
+        return null;
+    }
 
-		return null;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.plugin.AbstractConfigPlugin#updateComponents(boolean)
+     */
+    public void updateComponents(boolean b) {
+        String theme = themeElement.getAttribute("theme");
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.plugin.AbstractConfigPlugin#updateComponents(boolean)
-	 */
-	public void updateComponents(boolean b) {
-		String theme = themeElement.getAttribute("theme");
+        if (b) {
+            if (theme != null) {
+                PlasticTheme t = getTheme(theme);
 
-		if (b) {
-			if (theme != null) {
-				PlasticTheme t = getTheme(theme);
-				if (t != null)
-					list.setSelectedValue(t, true);
-			}
-		} else {
+                if (t != null) {
+                    list.setSelectedValue(t, true);
+                }
+            }
+        } else {
+            PlasticTheme t = (PlasticTheme) list.getSelectedValue();
 
-			PlasticTheme t = (PlasticTheme) list.getSelectedValue();
-			if (t != null)
-				themeElement.addAttribute("theme", t.getName());
+            if (t != null) {
+                themeElement.addAttribute("theme", t.getName());
+            }
+        }
+    }
 
-		}
+    private ListCellRenderer createThemeRenderer() {
+        return new DefaultListCellRenderer() {
+                public Component getListCellRendererComponent(JList list,
+                    Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+                    JLabel label = (JLabel) super.getListCellRendererComponent(list,
+                            value, index, isSelected, cellHasFocus);
+                    PlasticTheme theme = (PlasticTheme) value;
+                    label.setText(theme.getName());
 
-	}
-
-	private ListCellRenderer createThemeRenderer() {
-		return new DefaultListCellRenderer() {
-			public Component getListCellRendererComponent(
-				JList list,
-				Object value,
-				int index,
-				boolean isSelected,
-				boolean cellHasFocus) {
-				JLabel label =
-					(JLabel) super.getListCellRendererComponent(
-						list,
-						value,
-						index,
-						isSelected,
-						cellHasFocus);
-				PlasticTheme theme = (PlasticTheme) value;
-				label.setText(theme.getName());
-				return label;
-			}
-		};
-	}
-
+                    return label;
+                }
+            };
+    }
 }

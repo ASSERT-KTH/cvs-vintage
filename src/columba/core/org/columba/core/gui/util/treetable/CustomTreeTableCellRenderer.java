@@ -21,40 +21,38 @@ import java.awt.Graphics;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
-public class CustomTreeTableCellRenderer extends Tree implements TableCellRenderer {
 
-	protected int rowToPaint;
-	protected TreeTable table;
-	public CustomTreeTableCellRenderer(TreeTable table) {
-		super();
-		this.table = table;
-	}
+public class CustomTreeTableCellRenderer extends Tree
+    implements TableCellRenderer {
+    protected int rowToPaint;
+    protected TreeTable table;
 
-	// Move and resize the tree to the table position
-	public void setBounds(int x, int y, int w, int h) {
-		super.setBounds(x, 0, w, table.getHeight());
-	}
+    public CustomTreeTableCellRenderer(TreeTable table) {
+        super();
+        this.table = table;
+    }
 
-	// start painting at the rowToPaint
-	public void paint(Graphics g) {
-		g.translate(0, -rowToPaint * getRowHeight());
-		super.paint(g);
-	}
+    // Move and resize the tree to the table position
+    public void setBounds(int x, int y, int w, int h) {
+        super.setBounds(x, 0, w, table.getHeight());
+    }
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+    // start painting at the rowToPaint
+    public void paint(Graphics g) {
+        g.translate(0, -rowToPaint * getRowHeight());
+        super.paint(g);
+    }
 
-		if (isSelected)
-			setBackground(table.getSelectionBackground());
-		else
-			setBackground(table.getBackground());
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (isSelected) {
+            setBackground(table.getSelectionBackground());
+        } else {
+            setBackground(table.getBackground());
+        }
 
-		rowToPaint = row;
-		return this;
-	}
+        rowToPaint = row;
+
+        return this;
+    }
 }

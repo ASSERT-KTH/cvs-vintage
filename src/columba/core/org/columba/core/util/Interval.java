@@ -15,27 +15,28 @@
 //All Rights Reserved.
 package org.columba.core.util;
 
+
 /**
  * @author Timo Stich (tstich@users.sourceforge.net)
- * 
+ *
  */
 public class Interval {
+    public int a;
+    public int b;
 
-	public int a, b;
-	//public int type;
+    //public int type;
+    public Interval(int a, int b) {
+        this.a = a;
+        this.b = b;
+    }
 
-	public Interval(int a, int b) {
-		this.a = a;
-		this.b = b;
-	}
+    public Interval() {
+        a = -1;
+        b = -1;
+    }
 
-	public Interval() {
-		a = -1;
-		b = -1;
-	}
-
-	public void reset() {
-		a = -1;
-		b = -2;
-	}
+    public void reset() {
+        a = -1;
+        b = -2;
+    }
 }

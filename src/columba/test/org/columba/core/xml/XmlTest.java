@@ -11,53 +11,59 @@
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.core.xml;
 
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
+
 public class XmlTest {
-	public XmlTest() {}
-	
-	public static void main(String argv[]) {
-		if (argv.length != 1) {
-			System.err.println("Usage: cmd url");
-			System.exit(1);
-		}
+    public XmlTest() {
+    }
 
-		XmlIO X = new XmlIO();
-		try{
-			X.load(new URL(argv[0]));
-		}catch(MalformedURLException mue){
-			System.err.println("No valid url: \""+argv[0]+"\"");
-			System.exit(1);
-		}
+    public static void main(String[] argv) {
+        if (argv.length != 1) {
+            System.err.println("Usage: cmd url");
+            System.exit(1);
+        }
 
-		XmlElement.printNode(X.getRoot(), "");
+        XmlIO X = new XmlIO();
 
-		System.out.println("---------------------------------------------");
-		XmlElement E = X.getRoot().getElement("options");
-		if (E != null) {
-			System.out.println("options: '" + E.getData() + "'");
-		}
-		E = X.getRoot().getElement("/options/gui/window/width");
-		if (E != null) {
-			System.out.println(
-				"options/gui/window/width: '" + E.getData() + "'");
-		} else {
-			System.out.println(
-				"options/gui/window/width: "
-					+ "**Not found in this XML document**");
-		}
+        try {
+            X.load(new URL(argv[0]));
+        } catch (MalformedURLException mue) {
+            System.err.println("No valid url: \"" + argv[0] + "\"");
+            System.exit(1);
+        }
 
-		System.out.println("---------------------------------------------");
+        XmlElement.printNode(X.getRoot(), "");
 
-		try {
-			X.write(System.out);
-		} catch (IOException e) {
-			System.out.println("Error in write: " + e.toString());
-		}
-	}
+        System.out.println("---------------------------------------------");
+
+        XmlElement E = X.getRoot().getElement("options");
+
+        if (E != null) {
+            System.out.println("options: '" + E.getData() + "'");
+        }
+
+        E = X.getRoot().getElement("/options/gui/window/width");
+
+        if (E != null) {
+            System.out.println("options/gui/window/width: '" + E.getData() +
+                "'");
+        } else {
+            System.out.println("options/gui/window/width: " +
+                "**Not found in this XML document**");
+        }
+
+        System.out.println("---------------------------------------------");
+
+        try {
+            X.write(System.out);
+        } catch (IOException e) {
+            System.out.println("Error in write: " + e.toString());
+        }
+    }
 }

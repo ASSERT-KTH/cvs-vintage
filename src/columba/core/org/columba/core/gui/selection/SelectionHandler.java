@@ -13,14 +13,14 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.selection;
+
+import org.columba.core.command.DefaultCommandReference;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.command.DefaultCommandReference;
 
 /**
  * Handles the selection of a component identified with an id.
@@ -28,76 +28,74 @@ import org.columba.core.command.DefaultCommandReference;
  * We need the id for the {@link SelectionManager} which keeps
  * a map of selection handlers.
  * <p>
- * 
+ *
  *
  * @author fdietz, tstich
  */
 public abstract class SelectionHandler {
+    /**
+     * id of component for later identification
+     */
+    protected String id;
 
-	/**
-	 * id of component for later identification
-	 */
-	protected String id;
-	
-	/**
-	 * list of selection listeners
-	 */
-	protected List selectionListener;
+    /**
+     * list of selection listeners
+     */
+    protected List selectionListener;
 
-	/**
-	 * Default constructor
-	 * 
-	 * @param id		id of component
-	 */
-	public SelectionHandler(String id) {
-		this.id = id;
-		
-		selectionListener = new Vector();
-	}
+    /**
+     * Default constructor
+     *
+     * @param id                id of component
+     */
+    public SelectionHandler(String id) {
+        this.id = id;
 
-	
-	/**
-	 * Get id of component.
-	 * 
-	 * @return String		id of component
-	 */
-	public String getId() {
-		return id;
-	}
-	
-	/**
-	 * Add selection listener.
-	 * 
-	 * @param l		selectionlistener
-	 */
-	public void addSelectionListener(SelectionListener l) {
-		selectionListener.add(l);
-	}
-	
-	/**
-	 * Fire a selection has changed event.
-	 * <p>
-	 * Notify all listeners for a change.
-	 * 
-	 * @param e		change event
-	 */
-	protected void fireSelectionChanged(SelectionChangedEvent e) {
-		for (Iterator it = selectionListener.iterator(); it.hasNext();) {
-			((SelectionListener) it.next()).selectionChanged( e );
-		}
-	}
-	
-	/**
-	 * Get current selection.
-	 * 
-	 * @return		current selection
-	 */
-	public abstract DefaultCommandReference[] getSelection();
+        selectionListener = new Vector();
+    }
 
-	/**
-	 * Set new selection.
-	 * 
-	 * @param selection		new selection
-	 */
-	public abstract void setSelection(DefaultCommandReference[] selection);
+    /**
+     * Get id of component.
+     *
+     * @return String                id of component
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Add selection listener.
+     *
+     * @param l                selectionlistener
+     */
+    public void addSelectionListener(SelectionListener l) {
+        selectionListener.add(l);
+    }
+
+    /**
+     * Fire a selection has changed event.
+     * <p>
+     * Notify all listeners for a change.
+     *
+     * @param e                change event
+     */
+    protected void fireSelectionChanged(SelectionChangedEvent e) {
+        for (Iterator it = selectionListener.iterator(); it.hasNext();) {
+            ((SelectionListener) it.next()).selectionChanged(e);
+        }
+    }
+
+    /**
+     * Get current selection.
+     *
+     * @return                current selection
+     */
+    public abstract DefaultCommandReference[] getSelection();
+
+    /**
+     * Set new selection.
+     *
+     * @param selection                new selection
+     */
+    public abstract void setSelection(DefaultCommandReference[] selection);
 }

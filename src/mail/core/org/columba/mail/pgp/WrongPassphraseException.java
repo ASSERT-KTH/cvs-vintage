@@ -6,6 +6,7 @@
  */
 package org.columba.mail.pgp;
 
+
 /**
  * @author frd
  *
@@ -13,21 +14,17 @@ package org.columba.mail.pgp;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class WrongPassphraseException extends PGPException {
+    /**
+     *
+     */
+    public WrongPassphraseException() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public WrongPassphraseException() {
-		super();
-		
-	}
-
-	/**
-	 * @param arg0
-	 */
-	public WrongPassphraseException(String arg0) {
-		super(arg0);
-		
-	}
-
+    /**
+     * @param arg0
+     */
+    public WrongPassphraseException(String arg0) {
+        super(arg0);
+    }
 }

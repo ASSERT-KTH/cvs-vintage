@@ -13,12 +13,13 @@
 //All Rights Reserved.
 package org.columba.core.plugin;
 
-import java.util.ListIterator;
-
 import org.columba.core.xml.XmlElement;
 
+import java.util.ListIterator;
+
+
 /**
- * 
+ *
  *
  * The PluginHandler is responsible for managing a plugin
  * extension point.
@@ -28,32 +29,30 @@ import org.columba.core.xml.XmlElement;
  * Use the plugin handler to load a plugin.
  * <p>
  * @author fdietz
- * 
+ *
  */
 public interface PluginHandlerInterface {
+    /**
+     * return ID identification string of handler
+     *
+     * @return        <class>String</class> containing ID
+     */
+    public String getId();
 
-	/**
-	 * return ID identification string of handler
-	 * 
-	 * @return	<class>String</class> containing ID
-	 */
-	public String getId();
-	
-	/**
-	 * return top level xml tree node
-	 * <p>
-	 * all plugins are child nodes of this parent node
-	 * 
-	 * @return	<class>XmlElement</class> parent node
-	 */
-	public XmlElement getParent();
-	
-	/**
-	 * 
-	 * return list of external plugins
-	 * 
-	 * @return	<interface>List</interface> containing all external plugins
-	 */
-	public ListIterator getExternalPlugins();
-	
+    /**
+     * return top level xml tree node
+     * <p>
+     * all plugins are child nodes of this parent node
+     *
+     * @return        <class>XmlElement</class> parent node
+     */
+    public XmlElement getParent();
+
+    /**
+     *
+     * return list of external plugins
+     *
+     * @return        <interface>List</interface> containing all external plugins
+     */
+    public ListIterator getExternalPlugins();
 }

@@ -15,15 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.shutdown;
 
-import java.util.Enumeration;
-
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.folder.command.SaveFolderConfigurationCommand;
 import org.columba.mail.main.MailInterface;
+
+import java.util.Enumeration;
+
 
 /**
  * @author freddy
@@ -34,37 +36,32 @@ import org.columba.mail.main.MailInterface;
  * Window>Preferences>Java>Code Generation.
  */
 public class SaveAllFoldersPlugin implements TaskInterface {
+    public void run() {
+        saveAllFolders();
+    }
 
-	public void run() {
-		saveAllFolders();
-	}
+    public void saveAllFolders() {
+        FolderTreeNode rootFolder = (FolderTreeNode) MailInterface.treeModel.getRoot();
 
-	public void saveAllFolders() {
-		FolderTreeNode rootFolder =
-			(FolderTreeNode) MailInterface.treeModel.getRoot();
+        saveFolder(rootFolder);
+    }
 
-		saveFolder(rootFolder);
-	}
+    public void saveFolder(FolderTreeNode parentFolder) {
+        int count = parentFolder.getChildCount();
+        FolderTreeNode child;
+        FolderTreeNode folder;
 
-	public void saveFolder(FolderTreeNode parentFolder) {
+        for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+            child = (FolderTreeNode) e.nextElement();
 
-		int count = parentFolder.getChildCount();
-		FolderTreeNode child;
-		FolderTreeNode folder;
+            FolderCommandReference[] r = new FolderCommandReference[1];
+            r[0] = new FolderCommandReference(child);
 
-		for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
+            ColumbaLogger.log.debug("saving folder: " + child.getName());
 
-			child = (FolderTreeNode) e.nextElement();
+            MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
 
-			FolderCommandReference[] r = new FolderCommandReference[1];
-			r[0] = new FolderCommandReference(child);
-
-			ColumbaLogger.log.debug("saving folder: " + child.getName());
-
-			MainInterface.processor.addOp(new SaveFolderConfigurationCommand(r));
-			
-			saveFolder(child);
-		}
-	}
-
+            saveFolder(child);
+        }
+    }
 }

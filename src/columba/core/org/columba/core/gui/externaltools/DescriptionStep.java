@@ -13,11 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.externaltools;
+
+import net.javaprog.ui.wizard.AbstractStep;
+import net.javaprog.ui.wizard.DataModel;
+
+import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.util.GlobalResourceLoader;
+
+import org.columba.mail.gui.util.URLLabel;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+
 import java.net.URL;
 
 import javax.swing.JComponent;
@@ -28,12 +36,6 @@ import javax.swing.UIManager;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-import net.javaprog.ui.wizard.AbstractStep;
-import net.javaprog.ui.wizard.DataModel;
-
-import org.columba.core.externaltools.AbstractExternalToolsPlugin;
-import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.URLLabel;
 
 /**
  * Presents some information about the external tool which the
@@ -41,80 +43,70 @@ import org.columba.mail.gui.util.URLLabel;
  * <p>
  * Usually this should should include a short explanation about
  * what the tool does, where to download, etc.
- * 
+ *
  * @author fdietz
  */
 class DescriptionStep extends AbstractStep {
+    private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
+    protected DataModel data;
 
-	private static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
-        
-	protected DataModel data;
+    /**
+     * @param arg0
+     * @param arg1
+     */
+    public DescriptionStep(DataModel data) {
+        super(GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "DescriptionStep.title"),
+            GlobalResourceLoader.getString(RESOURCE_PATH, "externaltools",
+                "DescriptionStep.description"));
 
-	/**
-	 * @param arg0
-	 * @param arg1
-	 */
-	public DescriptionStep(DataModel data) {
-		super(GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "DescriptionStep.title"),
-                        GlobalResourceLoader.getString(
-                                RESOURCE_PATH,
-                                "externaltools",
-                                "DescriptionStep.description"));
+        this.data = data;
+    }
 
-		this.data = data;
-	}
+    /* (non-Javadoc)
+     * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
+     */
+    protected JComponent createComponent() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-	/* (non-Javadoc)
-	 * @see net.javaprog.ui.wizard.AbstractStep#createComponent()
-	 */
-	protected JComponent createComponent() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BorderLayout());
+        AbstractExternalToolsPlugin plugin = (AbstractExternalToolsPlugin) data.getData(
+                "Plugin");
 
-		AbstractExternalToolsPlugin plugin =
-			(AbstractExternalToolsPlugin) data.getData("Plugin");
+        Font font = UIManager.getFont("Label.font");
+        String name = font.getName();
+        int size = font.getSize();
 
-		Font font = UIManager.getFont("Label.font");
-		String name = font.getName();
-		int size = font.getSize();
+        JTextPane textPane = new JTextPane();
+        HTMLEditorKit editorKit = new HTMLEditorKit();
+        StyleSheet styles = new StyleSheet();
+        String css = "<style type=\"text/css\"><!--p {font-family:\"" + name +
+            "\"; font-size:\"" + size + "pt\"}--></style>";
+        styles.addRule(css);
+        editorKit.setStyleSheet(styles);
 
-		JTextPane textPane = new JTextPane();
-		HTMLEditorKit editorKit = new HTMLEditorKit();
-		StyleSheet styles = new StyleSheet();
-		String css =
-			"<style type=\"text/css\"><!--p {font-family:\""
-				+ name
-				+ "\"; font-size:\""
-				+ size
-				+ "pt\"}--></style>";
-		styles.addRule(css);
-		editorKit.setStyleSheet(styles);
+        textPane.setEditorKit(editorKit);
 
-		textPane.setEditorKit(editorKit);
+        textPane.setText(plugin.getDescription());
+        textPane.setCaretPosition(0);
+        textPane.setEditable(false);
 
-		textPane.setText(plugin.getDescription());
-		textPane.setCaretPosition(0);
-		textPane.setEditable(false);
+        JScrollPane sp = new JScrollPane(textPane);
 
-		JScrollPane sp = new JScrollPane(textPane);
+        panel.add(sp, BorderLayout.CENTER);
 
-		panel.add(sp, BorderLayout.CENTER);
-                
-                URL url = plugin.getWebsite();
-                if (url != null) {
-                        panel.add(new URLLabel(url), BorderLayout.SOUTH);
-                }
+        URL url = plugin.getWebsite();
 
-		return panel;
-	}
+        if (url != null) {
+            panel.add(new URLLabel(url), BorderLayout.SOUTH);
+        }
 
-	/* (non-Javadoc)
-	 * @see net.javaprog.ui.wizard.Step#prepareRendering()
-	 */
-	public void prepareRendering() {
+        return panel;
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see net.javaprog.ui.wizard.Step#prepareRendering()
+     */
+    public void prepareRendering() {
+    }
 }

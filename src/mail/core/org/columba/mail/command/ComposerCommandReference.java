@@ -19,6 +19,7 @@ import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.message.ColumbaMessage;
 
+
 /**
  * @author freddy
  *
@@ -28,56 +29,53 @@ import org.columba.mail.message.ColumbaMessage;
  * Window>Preferences>Java>Code Generation.
  */
 public class ComposerCommandReference extends FolderCommandReference {
-	
-	protected ComposerController composerController;
+    protected ComposerController composerController;
 
+    /**
+     * Constructor for ComposerCommandReference.
+     * @param folder
+     */
+    public ComposerCommandReference(ComposerController composerController,
+        FolderTreeNode folder) {
+        super(folder);
+        this.composerController = composerController;
+    }
 
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * @param folder
-	 */
-	public ComposerCommandReference(ComposerController composerController, FolderTreeNode folder) {
-		super(folder);
-		this.composerController = composerController;
-	}
+    /**
+     * Constructor for ComposerCommandReference.
+     * @param folder
+     * @param message
+     */
+    public ComposerCommandReference(FolderTreeNode folder,
+        ColumbaMessage message) {
+        super(folder, message);
+    }
 
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * @param folder
-	 * @param message
-	 */
-	public ComposerCommandReference(FolderTreeNode folder, ColumbaMessage message) {
-		super(folder, message);
-	}
+    /**
+     * Constructor for ComposerCommandReference.
+     * @param folder
+     * @param uids
+     */
+    public ComposerCommandReference(FolderTreeNode folder, Object[] uids) {
+        super(folder, uids);
+    }
 
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * @param folder
-	 * @param uids
-	 */
-	public ComposerCommandReference(FolderTreeNode folder, Object[] uids) {
-		super(folder, uids);
-	}
+    /**
+     * Constructor for ComposerCommandReference.
+     * @param folder
+     * @param uids
+     * @param address
+     */
+    public ComposerCommandReference(FolderTreeNode folder, Object[] uids,
+        Integer[] address) {
+        super(folder, uids, address);
+    }
 
-	/**
-	 * Constructor for ComposerCommandReference.
-	 * @param folder
-	 * @param uids
-	 * @param address
-	 */
-	public ComposerCommandReference(
-		FolderTreeNode folder,
-		Object[] uids,
-		Integer[] address) {
-		super(folder, uids, address);
-	}
-
-	/**
-	 * Returns the composerController.
-	 * @return ComposerController
-	 */
-	public ComposerController getComposerController() {
-		return composerController;
-	}
-
+    /**
+     * Returns the composerController.
+     * @return ComposerController
+     */
+    public ComposerController getComposerController() {
+        return composerController;
+    }
 }

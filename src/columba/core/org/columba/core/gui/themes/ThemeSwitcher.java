@@ -13,12 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
 package org.columba.core.gui.themes;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.themes.plugin.AbstractThemePlugin;
@@ -26,57 +21,55 @@ import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.xml.XmlElement;
 
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+
 public class ThemeSwitcher {
-	public static void setTheme() {
-		// get configuration
-		XmlElement themeConfig =
-			Config.get("options").getElement("/options/gui/theme");
+    public static void setTheme() {
+        // get configuration
+        XmlElement themeConfig = Config.get("options").getElement("/options/gui/theme");
 
-		try {
-			// get plugin-handler
-			ThemePluginHandler handler =
-				(ThemePluginHandler) MainInterface.pluginManager.getHandler(
-					"org.columba.core.theme");
-			// if no theme available -> set ThinColumba as default
-			String pluginName = themeConfig.getAttribute("name", "Plastic");
-			if (pluginName == null) {
-				themeConfig.addAttribute("name", "ThinColumba");
-				pluginName = "ThinColumba";
-			}
+        try {
+            // get plugin-handler
+            ThemePluginHandler handler = (ThemePluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.theme");
 
-			AbstractThemePlugin theme = null;
+            // if no theme available -> set ThinColumba as default
+            String pluginName = themeConfig.getAttribute("name", "Plastic");
 
-			// instanciate theme
-			theme = (AbstractThemePlugin) handler.getPlugin(pluginName, null);
+            if (pluginName == null) {
+                themeConfig.addAttribute("name", "ThinColumba");
+                pluginName = "ThinColumba";
+            }
 
-			// apply theme
-			theme.setLookAndFeel();
+            AbstractThemePlugin theme = null;
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+            // instanciate theme
+            theme = (AbstractThemePlugin) handler.getPlugin(pluginName, null);
 
-			try {
+            // apply theme
+            theme.setLookAndFeel();
+        } catch (Exception ex) {
+            ex.printStackTrace();
 
-				// fall-back
-				UIManager.setLookAndFeel(
-					UIManager.getCrossPlatformLookAndFeelClassName());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+            try {
+                // fall-back
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	}
+    public static void updateFrame(JFrame frame) {
+        final JFrame f = frame;
 
-	public static void updateFrame(JFrame frame) {
-		final JFrame f = frame;
-
-		SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
-				SwingUtilities.updateComponentTreeUI(f);
-			}
-		});
-
-	}
-
+        SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    SwingUtilities.updateComponentTreeUI(f);
+                }
+            });
+    }
 }

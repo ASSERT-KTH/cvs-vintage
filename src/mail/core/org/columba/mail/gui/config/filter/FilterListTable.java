@@ -15,57 +15,62 @@
 //All Rights Reserved.
 package org.columba.mail.gui.config.filter;
 
+import org.columba.core.config.Config;
+import org.columba.core.main.MainInterface;
+
+import org.columba.mail.filter.FilterList;
+
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.columba.core.config.Config;
-import org.columba.core.main.MainInterface;
-import org.columba.mail.filter.FilterList;
 
 class FilterListTable extends JTable {
-	private Config config;
+    private Config config;
 
-	public FilterListTable(FilterList filterList, ConfigFrame frame) {
-		super(new FilterListDataModel(filterList));
-		config = MainInterface.config;
-		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		setShowGrid(false);
-		setIntercellSpacing(new java.awt.Dimension(0, 0));
-                TableColumn tc = getColumnModel().getColumn(1);
-                tc.setMaxWidth(80);
-                tc.setMinWidth(80);
-                DefaultTableCellRenderer renderer = 
-                        (DefaultTableCellRenderer)tableHeader.getDefaultRenderer();
-                renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
-	}
+    public FilterListTable(FilterList filterList, ConfigFrame frame) {
+        super(new FilterListDataModel(filterList));
+        config = MainInterface.config;
+        setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        setShowGrid(false);
+        setIntercellSpacing(new java.awt.Dimension(0, 0));
 
-	public void update() {
-		((FilterListDataModel)getModel()).fireTableDataChanged();
-	}
-	
-	/**
-	 * The specified row has been updated and should be repainted.
-	 * @param row the row that has been updated.
-	 */
-	public void update(int row) {
-		((FilterListDataModel)getModel()).fireTableRowsUpdated(row,row);
-	}
-	
-	/**
-	 * Sets the specified row indicies to be selected in the table.
-	 * Note that this clears all previous selections.
-	 * @param selectedRows an array of integers containing the indices of 
-	 * all rows that are to be selected.
-	 */
-	public void setRowSelection(int[] selectedRows) {
-		ListSelectionModel model = getSelectionModel();
-		model.setValueIsAdjusting(true);
-		model.clearSelection();
-		for (int i = 0; i < selectedRows.length; i++) {
-			model.addSelectionInterval(selectedRows[i], selectedRows[i]);
-		}
-		model.setValueIsAdjusting(false);
-	}
+        TableColumn tc = getColumnModel().getColumn(1);
+        tc.setMaxWidth(80);
+        tc.setMinWidth(80);
+
+        DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) tableHeader.getDefaultRenderer();
+        renderer.setHorizontalAlignment(DefaultTableCellRenderer.LEFT);
+    }
+
+    public void update() {
+        ((FilterListDataModel) getModel()).fireTableDataChanged();
+    }
+
+    /**
+     * The specified row has been updated and should be repainted.
+     * @param row the row that has been updated.
+     */
+    public void update(int row) {
+        ((FilterListDataModel) getModel()).fireTableRowsUpdated(row, row);
+    }
+
+    /**
+     * Sets the specified row indicies to be selected in the table.
+     * Note that this clears all previous selections.
+     * @param selectedRows an array of integers containing the indices of
+     * all rows that are to be selected.
+     */
+    public void setRowSelection(int[] selectedRows) {
+        ListSelectionModel model = getSelectionModel();
+        model.setValueIsAdjusting(true);
+        model.clearSelection();
+
+        for (int i = 0; i < selectedRows.length; i++) {
+            model.addSelectionInterval(selectedRows[i], selectedRows[i]);
+        }
+
+        model.setValueIsAdjusting(false);
+    }
 }

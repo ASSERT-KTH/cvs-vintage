@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -25,62 +22,62 @@ import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.command.SaveMessageSourceAsCommand;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * Action for saving message source, i.e. for saving a message
  * as-is incl. all headers.
  * @author Karl Peder Olesen (karlpeder), 20030615
  */
-public class SaveMessageSourceAsAction
-	extends FrameAction
-	implements SelectionListener {
+public class SaveMessageSourceAsAction extends FrameAction
+    implements SelectionListener {
+    public SaveMessageSourceAsAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe", "menu_file_save"));
 
-	public SaveMessageSourceAsAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_file_save"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_file_save_tooltip").replaceAll("&", ""));
-		
-		// icons
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_save_tooltip").replaceAll("&", ""));
 
-		setEnabled(false);
-		((AbstractMailFrameController) frameMediator)
-				.registerTableSelectionListener(this);
-	}
+        // icons
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_save_as-16.png"));
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_save.png"));
 
-	/**
-	 * Executes this action - i.e. saves message source
-	 * by invocing the necessary command.
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+        setEnabled(false);
+        ((AbstractMailFrameController) frameMediator).registerTableSelectionListener(this);
+    }
 
-		ColumbaLogger.log.debug("Save Message Source As... called");
-		SaveMessageSourceAsCommand c =
-			new SaveMessageSourceAsCommand(r);
-			
-		MainInterface.processor.addOp(c);
-	}
+    /**
+     * Executes this action - i.e. saves message source
+     * by invocing the necessary command.
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
 
-	/**
-	 * Handles enabling / disabling of menu/action depending
-	 * on selection
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
-	}
+        ColumbaLogger.log.debug("Save Message Source As... called");
+
+        SaveMessageSourceAsCommand c = new SaveMessageSourceAsCommand(r);
+
+        MainInterface.processor.addOp(c);
+    }
+
+    /**
+     * Handles enabling / disabling of menu/action depending
+     * on selection
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        setEnabled(((TableSelectionChangedEvent) e).getUids().length > 0);
+    }
 }

@@ -23,6 +23,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 
+
 /**
  * @author frd
  *
@@ -31,63 +32,43 @@ import javax.swing.JTable;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class FieldCellEditor extends DefaultCellEditor 
-{
-	JComboBox comboBox;
-	AddressbookTableView table;
-	
-	public FieldCellEditor( JComboBox comboBox, AddressbookTableView table ) {
-		
-		super(comboBox);
-		
-		this.comboBox = (JComboBox) comboBox;
-		this.table = table;
-		
-		
-		editorComponent = comboBox;
-		setClickCountToStart(1); //This is usually 1 or 2.
+public class FieldCellEditor extends DefaultCellEditor {
+    JComboBox comboBox;
+    AddressbookTableView table;
 
+    public FieldCellEditor(JComboBox comboBox, AddressbookTableView table) {
+        super(comboBox);
 
-			
-		//Must do this so that editing stops when appropriate.
-		comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("fieldcelleditor->fireEditingStopped");
-				
-				
-				
-				fireEditingStopped();
-				
-				
-			}
-		});
-		
-	}
-	
-	protected void fireEditingStopped() {
-		super.fireEditingStopped();
-		
-		table.appendRow();
-		
-		
-	}
+        this.comboBox = (JComboBox) comboBox;
+        this.table = table;
 
-	public Object getCellEditorValue() {
-		return comboBox.getSelectedItem();
-	}
+        editorComponent = comboBox;
+        setClickCountToStart(1); //This is usually 1 or 2.
 
-	public Component getTableCellEditorComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		int row,
-		int column) {
-		
-		comboBox.setSelectedItem( value.toString() );
-		
-		return editorComponent;
-	}
-	
-	
+        //Must do this so that editing stops when appropriate.
+        comboBox.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("fieldcelleditor->fireEditingStopped");
 
+                    fireEditingStopped();
+                }
+            });
+    }
+
+    protected void fireEditingStopped() {
+        super.fireEditingStopped();
+
+        table.appendRow();
+    }
+
+    public Object getCellEditorValue() {
+        return comboBox.getSelectedItem();
+    }
+
+    public Component getTableCellEditorComponent(JTable table, Object value,
+        boolean isSelected, int row, int column) {
+        comboBox.setSelectedItem(value.toString());
+
+        return editorComponent;
+    }
 }

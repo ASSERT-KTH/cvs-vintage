@@ -13,120 +13,83 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
-
 package org.columba.addressbook.config;
-
 
 import org.w3c.dom.Document;
 
 
-public class ContactItem extends DefaultItem
-{
-    private AdapterNode address, uid, firstname, lastname, displayName;
-        
-    
-    public ContactItem( Document root)
-    {
-        super( root );
-    
+public class ContactItem extends DefaultItem {
+    private AdapterNode address;
+    private AdapterNode uid;
+    private AdapterNode firstname;
+    private AdapterNode lastname;
+    private AdapterNode displayName;
+
+    public ContactItem(Document root) {
+        super(root);
     }
-    
-    
-        
-    public void setAddressNode( AdapterNode node )
-    {
+
+    public void setAddressNode(AdapterNode node) {
         address = node;
     }
-    
-    public void setUidNode( AdapterNode node )
-    {
+
+    public void setUidNode(AdapterNode node) {
         uid = node;
     }
 
-    public void setFirstNameNode( AdapterNode node )
-    {
+    public void setFirstNameNode(AdapterNode node) {
         firstname = node;
     }
 
-    public void setLastNameNode( AdapterNode node )
-    {
+    public void setLastNameNode(AdapterNode node) {
         lastname = node;
     }
 
-    public void setDisplayNameNode( AdapterNode node )
-    {
+    public void setDisplayNameNode(AdapterNode node) {
         displayName = node;
     }
-    
 
-    
-    public void setUid( int i )
-    {
-        Integer h = new Integer( i );
+    public void setUid(int i) {
+        Integer h = new Integer(i);
 
-        setTextValue( uid, h.toString() );
+        setTextValue(uid, h.toString());
     }
 
-            
-    public void setAddress( String str )
-    {
-        setCDATAValue( address, str );
+    public void setAddress(String str) {
+        setCDATAValue(address, str);
     }
 
-    public void setFirstName( String str )
-    {
-        setTextValue( firstname, str );
+    public void setFirstName(String str) {
+        setTextValue(firstname, str);
     }
 
-    public void setLastName( String str )
-    {
-        setTextValue( lastname, str );
+    public void setLastName(String str) {
+        setTextValue(lastname, str);
     }
 
-    public void setDisplayName( String str )
-    {
-        setTextValue( displayName, str );
-    }
-    
-
-
-    
-
-    
-    
-
-    public String getAddress()
-    {
-        return getCDATAValue( address );
+    public void setDisplayName(String str) {
+        setTextValue(displayName, str);
     }
 
-   
-    public int getUid()
-    {
-        Integer i = new Integer(  getTextValue( uid ) );
-        
+    public String getAddress() {
+        return getCDATAValue(address);
+    }
+
+    public int getUid() {
+        Integer i = new Integer(getTextValue(uid));
+
         return i.intValue();
     }
 
-    public String getFirstName()
-    {
-        return getTextValue( firstname );
+    public String getFirstName() {
+        return getTextValue(firstname);
     }
 
-    public String getLastName()
-    {
-        return getTextValue( lastname );
-    }
-    
-    public String getDisplayName()
-    {
-        return getTextValue( displayName );
+    public String getLastName() {
+        return getTextValue(lastname);
     }
 
-     
+    public String getDisplayName() {
+        return getTextValue(displayName);
+    }
 }
-    
-
-
-

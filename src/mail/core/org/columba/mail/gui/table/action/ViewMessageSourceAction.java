@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,59 +21,61 @@ import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageSourceCommand;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ViewMessageSourceAction
-	extends FrameAction
-	implements SelectionListener {
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-	public ViewMessageSourceAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_view_source"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_view_source_tooltip").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
-			 
-		// short cut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-		
-		setEnabled(false);
-		((AbstractMailFrameController) frameMediator).registerTableSelectionListener(
-			this);
-	}
+import javax.swing.KeyStroke;
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] r =
-			((AbstractMailFrameController) getFrameMediator())
-					.getTableSelection();
 
-		ViewMessageSourceCommand c =
-			new ViewMessageSourceCommand(getFrameMediator(), r);
+public class ViewMessageSourceAction extends FrameAction
+    implements SelectionListener {
+    public ViewMessageSourceAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe", "menu_view_source"));
 
-		MainInterface.processor.addOp(c);
-	}
-        
-	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TableSelectionChangedEvent) e).getUids().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_source_tooltip").replaceAll("&", ""));
+
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("viewsource.png"));
+
+        // short cut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+
+        setEnabled(false);
+        ((AbstractMailFrameController) frameMediator).registerTableSelectionListener(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        FolderCommandReference[] r = ((AbstractMailFrameController) getFrameMediator()).getTableSelection();
+
+        ViewMessageSourceCommand c = new ViewMessageSourceCommand(getFrameMediator(),
+                r);
+
+        MainInterface.processor.addOp(c);
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TableSelectionChangedEvent) e).getUids().length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

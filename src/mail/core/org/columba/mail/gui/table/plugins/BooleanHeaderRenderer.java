@@ -24,41 +24,32 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
+
 public class BooleanHeaderRenderer extends DefaultTableCellRenderer {
+    ImageIcon icon;
 
-	ImageIcon icon;
+    public BooleanHeaderRenderer(ImageIcon icon) {
+        this.icon = icon;
 
-	public BooleanHeaderRenderer(ImageIcon icon) {
+        setHorizontalAlignment(SwingConstants.LEFT);
+    }
 
-		this.icon = icon;
+    public Component getTableCellRendererComponent(JTable table, Object str,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (table != null) {
+            JTableHeader header = table.getTableHeader();
 
-		setHorizontalAlignment(SwingConstants.LEFT);
+            if (header != null) {
+                setForeground(header.getForeground());
+                setBackground(header.getBackground());
+                setFont(header.getFont());
+            }
+        }
 
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
 
-	}
+        setIcon(icon);
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object str,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
-
-		
-		if (table != null) {
-			JTableHeader header = table.getTableHeader();
-			if (header != null) {
-				setForeground(header.getForeground());
-				setBackground(header.getBackground());
-				setFont(header.getFont());
-			}
-		}
-		
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-
-		setIcon(icon);
-		
-		return this;
-	}
+        return this;
+    }
 }

@@ -13,43 +13,35 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder;
 
 import java.util.List;
 import java.util.Vector;
 
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class PropertySet
-{
-	List subkeys;
-	Object value;
+public class PropertySet {
+    List subkeys;
+    Object value;
 
-	public PropertySet()
-	{
-		subkeys = new Vector();
-	}
-	
-	public void addSubkey( Object key )
-	{
-		String  s = (String) key;
-		
-		subkeys.add( s.toLowerCase() );
-	}
-	
-	public void setValue( Object value )
-	{
-		this.value = value;
-	}
-	
-	public Object getValue()
-	{
-		return value;
-	}
-	
-	
+    public PropertySet() {
+        subkeys = new Vector();
+    }
 
+    public void addSubkey(Object key) {
+        String s = (String) key;
+
+        subkeys.add(s.toLowerCase());
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public Object getValue() {
+        return value;
+    }
 }

@@ -15,28 +15,26 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
+
 /**
  * If user cancels login procedure.
- * 
+ *
  * @author fdietz
  */
 public class UserCancelledException extends Exception {
+    /**
+     *
+     */
+    public UserCancelledException() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public UserCancelledException() {
-		super();
-		
-	}
+    /**
+     * @param arg0
+     */
+    public UserCancelledException(String arg0) {
+        super(arg0);
 
-	/**
-	 * @param arg0
-	 */
-	public UserCancelledException(String arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
-	}
-
-
+        // TODO Auto-generated constructor stub
+    }
 }

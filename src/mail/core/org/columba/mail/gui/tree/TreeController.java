@@ -15,16 +15,10 @@
 //All Rights Reserved.
 package org.columba.mail.gui.tree;
 
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeWillExpandListener;
-import javax.swing.tree.ExpandVetoException;
-import javax.swing.tree.TreePath;
-
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -35,161 +29,152 @@ import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 import org.columba.mail.gui.table.dnd.MessageTransferHandler;
 import org.columba.mail.gui.tree.util.FolderTreeCellRenderer;
 
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.ExpandVetoException;
+import javax.swing.tree.TreePath;
+
+
 /**
  * this class shows the the folder hierarchy
  */
-
 public class TreeController implements TreeWillExpandListener {
-	private TreeView folderTree;
-	private boolean b = false;
-	private TreePath treePath;
+    private TreeView folderTree;
+    private boolean b = false;
+    private TreePath treePath;
+    private FolderInfoPanel messageFolderInfoPanel;
+    public JScrollPane scrollPane;
+    private FolderTreeNode oldSelection;
+    private FolderTreeMouseListener mouseListener;
+    private FolderTreeNode selectedFolder;
+    private TreeModel model;
+    private TreeView view;
+    private AbstractMailFrameController mailFrameController;
+    protected TreeMenu menu;
 
-	private FolderInfoPanel messageFolderInfoPanel;
+    public TreeController(AbstractMailFrameController mailFrameController,
+        TreeModel model) {
+        this.model = model;
+        this.mailFrameController = mailFrameController;
 
-	public JScrollPane scrollPane;
+        view = new TreeView(mailFrameController, model);
 
-	private FolderTreeNode oldSelection;
+        view.addTreeWillExpandListener(this);
 
-	private FolderTreeMouseListener mouseListener;
+        mouseListener = new FolderTreeMouseListener(this);
 
-	private FolderTreeNode selectedFolder;
+        view.addMouseListener(mouseListener);
 
-	private TreeModel model;
+        FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
+        view.setCellRenderer(renderer);
 
-	private TreeView view;
+        getView().setTransferHandler(new MessageTransferHandler(
+                ((TableViewOwner) getMailFrameController()).getTableController()));
 
-	private AbstractMailFrameController mailFrameController;
+        /*
+        getView().getInputMap().put(
+                KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
+                "RENAME");
+        RenameFolderAction action = new RenameFolderAction(mailFrameController);
+        getView().getActionMap().put("RENAME", action);
+        */
+    }
 
-	protected TreeMenu menu;
+    public TreeModel getModel() {
+        return model;
+    }
 
-	public TreeController(
-		AbstractMailFrameController mailFrameController,
-		TreeModel model) {
+    public TreeView getView() {
+        return view;
+    }
 
-		this.model = model;
-		this.mailFrameController = mailFrameController;
+    public void setSelected(Folder folder) {
+        view.clearSelection();
 
-		view = new TreeView(mailFrameController, model);
+        TreePath path = folder.getSelectionTreePath();
 
-		view.addTreeWillExpandListener(this);
+        view.requestFocus();
+        view.setLeadSelectionPath(path);
+        view.setAnchorSelectionPath(path);
+        view.expandPath(path);
 
-		mouseListener = new FolderTreeMouseListener(this);
+        this.selectedFolder = folder;
 
-		view.addMouseListener(mouseListener);
+        MainInterface.processor.addOp(new ViewHeaderListCommand(
+                getMailFrameController(),
+                getMailFrameController().getTreeSelection()));
+    }
 
-		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer();
-		view.setCellRenderer(renderer);
+    public void createPopupMenu() {
+        menu = new TreeMenu(mailFrameController);
+    }
 
-		getView().setTransferHandler(
-			new MessageTransferHandler(
-				((TableViewOwner) getMailFrameController()).getTableController()));
+    public JPopupMenu getPopupMenu() {
+        return menu;
+    }
 
-		/*
-		getView().getInputMap().put(
-			KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0),
-			"RENAME");
-		RenameFolderAction action = new RenameFolderAction(mailFrameController);
-		getView().getActionMap().put("RENAME", action);
-		*/
-		
-	}
+    public FolderTreeNode getSelected() {
+        return selectedFolder;
+    }
 
-	public TreeModel getModel() {
-		return model;
-	}
+    /**
+     * Returns the mailFrameController.
+     * @return MailFrameController
+     */
+    public AbstractMailFrameController getMailFrameController() {
+        return mailFrameController;
+    }
 
-	public TreeView getView() {
-		return view;
-	}
+    /******************** TreeWillExpand Interface *******************************/
+    public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
+        ColumbaLogger.log.debug("treeWillExpand=" + e.getPath().toString());
 
-	public void setSelected(Folder folder) {
-		view.clearSelection();
+        FolderTreeNode treeNode = (FolderTreeNode) e.getPath()
+                                                    .getLastPathComponent();
 
-		TreePath path = folder.getSelectionTreePath();
+        if (treeNode == null) {
+            return;
+        }
 
-		view.requestFocus();
-		view.setLeadSelectionPath(path);
-		view.setAnchorSelectionPath(path);
-		view.expandPath(path);
+        /*
+        // fetch new sub folder list
+        // -> this is a hack for imap folder:
+        // -> when expanding the IMAPRootFolder the
+        // -> list of folders gets synchronized
+        FolderCommandReference[] cr = new FolderCommandReference[1];
+        cr[0] = new FolderCommandReference(treeNode);
 
-		this.selectedFolder = folder;
+        MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
+        */
+        // save expanded state
+        saveExpandedState(treeNode, e.getPath());
+    }
 
-		MainInterface.processor.addOp(
-			new ViewHeaderListCommand(
-				getMailFrameController(),
-				getMailFrameController().getTreeSelection()));
+    public void treeWillCollapse(TreeExpansionEvent e) {
+        FolderTreeNode treeNode = (FolderTreeNode) e.getPath()
+                                                    .getLastPathComponent();
 
-	}
+        if (treeNode == null) {
+            return;
+        }
 
-	public void createPopupMenu() {
-		menu = new TreeMenu(mailFrameController);
-	}
+        // save expanded state
+        saveExpandedState(treeNode, e.getPath());
+    }
 
-	public JPopupMenu getPopupMenu() {
+    private void saveExpandedState(FolderTreeNode folder, TreePath path) {
+        FolderItem item = folder.getFolderItem();
 
-		return menu;
-	}
+        XmlElement property = item.getElement("property");
 
-	public FolderTreeNode getSelected() {
-		return selectedFolder;
-	}
-
-	/**
-	 * Returns the mailFrameController.
-	 * @return MailFrameController
-	 */
-	public AbstractMailFrameController getMailFrameController() {
-		return mailFrameController;
-	}
-
-	/******************** TreeWillExpand Interface *******************************/
-
-	public void treeWillExpand(TreeExpansionEvent e)
-		throws ExpandVetoException {
-
-		ColumbaLogger.log.debug("treeWillExpand=" + e.getPath().toString());
-
-		FolderTreeNode treeNode =
-			(FolderTreeNode) e.getPath().getLastPathComponent();
-
-		if (treeNode == null)
-			return;
-
-		/*
-		// fetch new sub folder list
-		// -> this is a hack for imap folder:
-		// -> when expanding the IMAPRootFolder the
-		// -> list of folders gets synchronized 
-		FolderCommandReference[] cr = new FolderCommandReference[1];
-		cr[0] = new FolderCommandReference(treeNode);
-		
-		MainInterface.processor.addOp(new FetchSubFolderListCommand(cr));
-		*/
-
-		// save expanded state
-		saveExpandedState(treeNode, e.getPath());
-	}
-
-	public void treeWillCollapse(TreeExpansionEvent e) {
-		FolderTreeNode treeNode =
-			(FolderTreeNode) e.getPath().getLastPathComponent();
-
-		if (treeNode == null)
-			return;
-
-		// save expanded state
-		saveExpandedState(treeNode, e.getPath());
-	}
-
-	private void saveExpandedState(FolderTreeNode folder, TreePath path) {
-		FolderItem item = folder.getFolderItem();
-
-		XmlElement property = item.getElement("property");
-		// Note: we negate the expanded state because this is 
-		//       a will-expand/collapse listener
-		if (!getView().isExpanded(path))
-			property.addAttribute("expanded", "true");
-		else
-			property.addAttribute("expanded", "false");
-	}
+        // Note: we negate the expanded state because this is 
+        //       a will-expand/collapse listener
+        if (!getView().isExpanded(path)) {
+            property.addAttribute("expanded", "true");
+        } else {
+            property.addAttribute("expanded", "false");
+        }
+    }
 }

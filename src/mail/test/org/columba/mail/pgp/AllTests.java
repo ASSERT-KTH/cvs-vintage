@@ -9,16 +9,18 @@ package org.columba.mail.pgp;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+
 /**
  * @author waffel
  */
 public class AllTests {
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.mail.pgp");
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.mail.pgp");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(PGPControllerTest.class));
-		//$JUnit-END$
-		return suite;
-	}
+        //$JUnit-BEGIN$
+        suite.addTest(new TestSuite(PGPControllerTest.class));
+
+        //$JUnit-END$
+        return suite;
+    }
 }

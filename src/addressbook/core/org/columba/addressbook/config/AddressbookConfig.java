@@ -13,79 +13,71 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.config;
-
-import java.io.File;
 
 import org.columba.core.config.DefaultConfig;
 import org.columba.core.config.DefaultXmlConfig;
 import org.columba.core.xml.XmlElement;
 
+import java.io.File;
+
+
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class AddressbookConfig extends DefaultConfig {
+    public static final String MODULE_NAME = "addressbook";
 
-	public static final String MODULE_NAME = "addressbook";
+    //private static File addressbookFile;
+    private static File addressbookOptionsFile;
+    private static File folderFile;
 
-	//private static File addressbookFile;
-	private static File addressbookOptionsFile;
-	private static File folderFile;
+    /**
+     * @see java.lang.Object#Object()
+     */
+    public AddressbookConfig() {
+        File configDirectory = createConfigDir(MODULE_NAME);
 
-	/**
-	 * @see java.lang.Object#Object()
-	 */
-	public AddressbookConfig() {
+        /*
+        addressbookFile = new File(configDirectory, "addressbook.xml");
+        registerPlugin(
+                addressbookFile.getName(),
+                new DefaultXmlConfig(addressbookFile));
+        */
+        addressbookOptionsFile = new File(configDirectory, "options.xml");
+        registerPlugin(addressbookOptionsFile.getName(),
+            new DefaultXmlConfig(addressbookOptionsFile));
 
-		File configDirectory = createConfigDir(MODULE_NAME);
+        folderFile = new File(configDirectory, "tree.xml");
+        registerPlugin(folderFile.getName(), new DefaultXmlConfig(folderFile));
 
-		/*
-		addressbookFile = new File(configDirectory, "addressbook.xml");
-		registerPlugin(
-			addressbookFile.getName(),
-			new DefaultXmlConfig(addressbookFile));
-		*/
+        File mainToolBarFile = new File(configDirectory, "main_toolbar.xml");
+        registerPlugin(mainToolBarFile.getName(),
+            new DefaultXmlConfig(mainToolBarFile));
+    }
 
-		addressbookOptionsFile = new File(configDirectory, "options.xml");
-		registerPlugin(
-			addressbookOptionsFile.getName(),
-			new DefaultXmlConfig(addressbookOptionsFile));
+    public static XmlElement get(String name) {
+        DefaultXmlConfig xml = getPlugin(name + ".xml");
 
-		folderFile = new File(configDirectory, "tree.xml");
-		registerPlugin(folderFile.getName(), new DefaultXmlConfig(folderFile));
+        return xml.getRoot();
+    }
 
-		File mainToolBarFile = new File(configDirectory, "main_toolbar.xml");
-		registerPlugin(
-			mainToolBarFile.getName(),
-			new DefaultXmlConfig(mainToolBarFile));
+    /**
+     * Method registerPlugin.
+     * @param id
+     * @param plugin
+     */
+    protected static void registerPlugin(String id, DefaultXmlConfig plugin) {
+        DefaultConfig.registerPlugin(MODULE_NAME, id, plugin);
+    }
 
-	}
-
-	public static XmlElement get(String name) {
-		DefaultXmlConfig xml = getPlugin(name + ".xml");
-		return xml.getRoot();
-	}
-
-	/**
-	 * Method registerPlugin.
-	 * @param id
-	 * @param plugin
-	 */
-	protected static void registerPlugin(String id, DefaultXmlConfig plugin) {
-		DefaultConfig.registerPlugin(MODULE_NAME, id, plugin);
-	}
-
-	/**
-	 * Method getPlugin.
-	 * @param id
-	 * @return DefaultXmlConfig
-	 */
-	protected static DefaultXmlConfig getPlugin(String id) {
-		return DefaultConfig.getPlugin(MODULE_NAME, id);
-	}
-
-	
-
+    /**
+     * Method getPlugin.
+     * @param id
+     * @return DefaultXmlConfig
+     */
+    protected static DefaultXmlConfig getPlugin(String id) {
+        return DefaultConfig.getPlugin(MODULE_NAME, id);
+    }
 }

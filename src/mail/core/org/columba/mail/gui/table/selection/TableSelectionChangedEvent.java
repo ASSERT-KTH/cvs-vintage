@@ -13,34 +13,33 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.selection;
 
 import org.columba.core.gui.selection.SelectionChangedEvent;
+
 import org.columba.mail.folder.Folder;
 
+
 public class TableSelectionChangedEvent extends SelectionChangedEvent {
+    private Folder folder;
+    private Object[] uids;
 
-	private Folder folder;
-	private Object[] uids;
+    public TableSelectionChangedEvent(Folder folder, Object[] uids) {
+        this.folder = folder;
+        this.uids = uids;
+    }
 
-	public TableSelectionChangedEvent( Folder folder, Object[] uids) {
-		this.folder = folder;
-		this.uids = uids;
-	}
+    /**
+     * @return Folder
+     */
+    public Folder getFolder() {
+        return folder;
+    }
 
-	/**
-	 * @return Folder
-	 */
-	public Folder getFolder() {
-		return folder;
-	}
-
-	/**
-	 * @return Object[]
-	 */
-	public Object[] getUids() {
-		return uids;
-	}
-
+    /**
+     * @return Object[]
+     */
+    public Object[] getUids() {
+        return uids;
+    }
 }

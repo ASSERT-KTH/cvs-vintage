@@ -15,23 +15,26 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.util;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.Timer;
-
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.util.Observable;
+import java.util.Observer;
+
+import javax.swing.Timer;
+
 
 /**
  * Title:
@@ -44,141 +47,139 @@ import org.columba.mail.gui.table.selection.TableSelectionChangedEvent;
  * @author fdietz, waffel
  * @version 1.0
  */
+public class MarkAsReadTimer implements ActionListener, SelectionListener,
+    Observer {
+    // definition of a second
+    private final static int ONE_SECOND = 1000;
 
-public class MarkAsReadTimer
-	implements ActionListener, SelectionListener, Observer {
-	// timer to use
-	private Timer timer;
-	// definition of a second
-	private final static int ONE_SECOND = 1000;
+    // timer to use
+    private Timer timer;
+    private int value;
+    private int maxValue;
 
-	private int value;
-	private int maxValue;
+    // reference to the message that should be marked
+    private FolderCommandReference message;
 
-	// reference to the message that should be marked
-	private FolderCommandReference message;
-	// the tableController is not used
-	private TableController tableController;
+    // the tableController is not used
+    private TableController tableController;
 
-	/**
-	* Creates a new MarkAsReadTimer. This should be only onced in a Session. The contructor
-	* fetched the time delay that the user configured.
-	*/
-	public MarkAsReadTimer(TableController tableController) {
+    /**
+    * Creates a new MarkAsReadTimer. This should be only onced in a Session. The contructor
+    * fetched the time delay that the user configured.
+    */
+    public MarkAsReadTimer(TableController tableController) {
+        this.tableController = tableController;
 
-		this.tableController = tableController;
-		XmlElement markasread =
-			MailConfig.get("options").getElement("/options/markasread");
+        XmlElement markasread = MailConfig.get("options").getElement("/options/markasread");
 
-		// listen for configuration changes
-		markasread.addObserver(this);
+        // listen for configuration changes
+        markasread.addObserver(this);
 
-		// get interval value
-		String delay = markasread.getAttribute("delay", "2");
-		this.maxValue = Integer.parseInt(delay);
+        // get interval value
+        String delay = markasread.getAttribute("delay", "2");
+        this.maxValue = Integer.parseInt(delay);
 
-		// enable timer
-		String enable = markasread.getAttribute("enabled", "true");
-		if (enable.equals("true")) {
-			timer = new Timer(ONE_SECOND * maxValue, this);
-		}
+        // enable timer
+        String enable = markasread.getAttribute("enabled", "true");
 
-	}
+        if (enable.equals("true")) {
+            timer = new Timer(ONE_SECOND * maxValue, this);
+        }
+    }
 
-	/**
-	* Sets a new maximum interval value for the Timer
-	* and restarts the Timer.
-	* 
-	*/
-	public void setMaxValue(int i) {
-		maxValue = i;
+    /**
+    * Sets a new maximum interval value for the Timer
+    * and restarts the Timer.
+    *
+    */
+    public void setMaxValue(int i) {
+        maxValue = i;
 
-		timer = new Timer(ONE_SECOND * maxValue, this);
+        timer = new Timer(ONE_SECOND * maxValue, this);
 
-		timer.restart();
-	}
+        timer.restart();
+    }
 
-	/**
-	* Stops the timer.
-	*/
-	public synchronized void stopTimer() {
-		value = 0;
+    /**
+    * Stops the timer.
+    */
+    public synchronized void stopTimer() {
+        value = 0;
 
-		ColumbaLogger.log.debug("MarkAsRead-timer stopped");
+        ColumbaLogger.log.debug("MarkAsRead-timer stopped");
 
-		if (timer != null)
-			timer.stop();
-	}
+        if (timer != null) {
+            timer.stop();
+        }
+    }
 
-	/**
-	* Restarts the timer. The given message is used later in the actionPerfomed mathod.
-	* This method is for example used by the ViewMessageCommand to restart the timer if a
-	* message is shown
-	*/
-	public synchronized void restart(FolderCommandReference reference) {
+    /**
+    * Restarts the timer. The given message is used later in the actionPerfomed mathod.
+    * This method is for example used by the ViewMessageCommand to restart the timer if a
+    * message is shown
+    */
+    public synchronized void restart(FolderCommandReference reference) {
+        ColumbaLogger.log.debug("MarkAsRead-timer started");
 
-		ColumbaLogger.log.debug("MarkAsRead-timer started");
+        message = reference;
+        value = 0;
 
-		message = reference;
-		value = 0;
+        if (timer != null) {
+            timer.restart();
+        }
+    }
 
-		if (timer != null)
-			timer.restart();
-	}
+    /**
+    * Stops the timer. Then the message (currently setting is made in restart) is marked as
+    * read. The MarkMessageCommand is called.
+    */
+    public void actionPerformed(ActionEvent e) {
+        ColumbaLogger.log.debug("action perfomed");
+        timer.stop();
 
-	/**
-	* Stops the timer. Then the message (currently setting is made in restart) is marked as
-	* read. The MarkMessageCommand is called.
-	*/
-	public void actionPerformed(ActionEvent e) {
+        FolderCommandReference[] r = new FolderCommandReference[] { message };
 
-		ColumbaLogger.log.debug("action perfomed");
-		timer.stop();
+        if (r[0] == null) {
+            return;
+        }
 
-		FolderCommandReference[] r = new FolderCommandReference[] { message };
-		if (r[0] == null)
-			return;
+        r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
 
-		r[0].setMarkVariant(MarkMessageCommand.MARK_AS_READ);
+        MarkMessageCommand c = new MarkMessageCommand(r);
 
-		MarkMessageCommand c = new MarkMessageCommand(r);
+        MainInterface.processor.addOp(c);
 
-		MainInterface.processor.addOp(c);
+        value++;
+    }
 
-		value++;
-	}
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        // if a selection is changed we stopping the MarkAsReadTimer
+        Object[] uids = ((TableSelectionChangedEvent) e).getUids();
 
-	/* (non-Javadoc)
-	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent e) {
-		// if a selection is changed we stopping the MarkAsReadTimer
-		Object uids[] = ((TableSelectionChangedEvent) e).getUids();
-		if (uids.length > 0) {
-			stopTimer();
-		}
+        if (uids.length > 0) {
+            stopTimer();
+        }
+    }
 
-	}
+    /* (non-Javadoc)
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+     */
+    public void update(Observable arg0, Object arg1) {
+        ColumbaLogger.log.debug("/options/markasread#delay has changed");
 
-	/* (non-Javadoc)
-	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-	 */
-	public void update(Observable arg0, Object arg1) {
-		ColumbaLogger.log.debug("/options/markasread#delay has changed");
+        // configuration has changed
+        XmlElement markasread = MailConfig.get("options").getElement("/options/markasread");
+        String delay = markasread.getAttribute("delay", "2");
 
-		// configuration has changed
-		XmlElement markasread =
-			MailConfig.get("options").getElement("/options/markasread");
-		String delay = markasread.getAttribute("delay", "2");
+        // enable timer
+        String enable = markasread.getAttribute("enabled", "true");
 
-		// enable timer
-		String enable = markasread.getAttribute("enabled", "true");
-
-		if (enable.equals("true")) {
-			// restart Timer with new value
-			setMaxValue(Integer.parseInt(delay));
-		}
-
-	}
-
+        if (enable.equals("true")) {
+            // restart Timer with new value
+            setMaxValue(Integer.parseInt(delay));
+        }
+    }
 }

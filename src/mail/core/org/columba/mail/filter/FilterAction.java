@@ -13,18 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.filter;
 
 import org.columba.core.config.DefaultItem;
 import org.columba.core.xml.XmlElement;
 
+
 /**
- * 
+ *
  * @author frd
  *
  * wrapper class for filter actions
- * 
+ *
  */
 
 // example configuration (tree.xml) 
@@ -32,94 +32,85 @@ import org.columba.core.xml.XmlElement;
 // <actionlist>
 //  <action uid="122" type="Move Message"></action>
 // </actionlist>
-
 public class FilterAction extends DefaultItem {
+    /**
+     * Constructor for FilterAction
+     *
+     * XmlElement root is "actionlist"
+     *
+     * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
+     */
+    public FilterAction(XmlElement root) {
+        super(root);
+    }
 
-	/**
-	 * Constructor for FilterAction
-	 * 
-	 * XmlElement root is "actionlist"
-	 * 
-	 * @see org.columba.core.config.DefaultItem#DefaultItem(XmlElement)
-	 */
-	public FilterAction(XmlElement root) {
-		super(root);
+    /**
+     *
+     * get folder uid
+     *
+     * @return int
+     */
+    public int getUid() {
+        if (contains("uid") == false) {
+            // folder uid doesn't exist 
+            //  -> create default value
+            set("uid", 101);
 
-	}
+            return getInteger("uid");
+        } else {
+            return getInteger("uid");
+        }
+    }
 
-	/**
-	 * 
-	 * get folder uid
-	 * 
-	 * @return int
-	 */
-	public int getUid() {
+    /**
+     * set folder uid
+     *
+     * @param i
+     */
+    public void setUid(int i) {
+        set("uid", i);
+    }
 
-		if (contains("uid") == false) {
+    /**
+     *
+     * get type of action
+     *
+     * @return String
+     */
+    public String getAction() {
+        return get("type");
+    }
 
-			// folder uid doesn't exist 
-			//  -> create default value
-			set("uid", 101);
+    /**
+     *
+     * set type of action
+     *
+     * @param s
+     */
+    public void setAction(String s) {
+        set("type", s);
+    }
 
-			return getInteger("uid");
-		} else
-			return getInteger("uid");
+    /**
+     * Mark message variant can be of value:<br>
+     * <ul>
+     *  <li>read</li>
+     *  <li>unread</li>
+     *  <li>flagged</li>
+     *  <li>not_flagged</li>
+     *  <li>expunged</li>
+     *  <li>not_expunged</li>
+     *  <li>answered</li>
+     *  <li>spam</li>
+     *  <li>no_spam</li>
+     * </ul>
+     * @param s
+     */
+    public void setMarkVariant(String s) {
+        set("markvariant", s);
+    }
 
-	}
-
-	/**
-	 * set folder uid
-	 * 
-	 * @param i
-	 */
-	public void setUid(int i) {
-		set("uid", i);
-
-	}
-
-	/**
-	 * 
-	 * get type of action
-	 * 
-	 * @return String
-	 */
-	public String getAction() {
-
-		return get("type");
-	}
-
-	/**
-	 * 
-	 * set type of action
-	 * 
-	 * @param s
-	 */
-	public void setAction(String s) {
-		set("type", s);
-
-	}
-	
-	/**
-	 * Mark message variant can be of value:<br>
-	 * <ul>
-	 *  <li>read</li>
-	 *  <li>unread</li>
-	 *  <li>flagged</li>
-	 *  <li>not_flagged</li>
-	 *  <li>expunged</li>
-	 *  <li>not_expunged</li>
-	 *  <li>answered</li>
-	 *  <li>spam</li>
-	 *  <li>no_spam</li>
-	 * </ul>
-	 * @param s
-	 */
-	public void setMarkVariant(String s) {
-		set("markvariant", s);
-	}
-	
-	public String getMarkVariant() {
-		return get("markvariant");
-	}
-
+    public String getMarkVariant() {
+        return get("markvariant");
+    }
 }

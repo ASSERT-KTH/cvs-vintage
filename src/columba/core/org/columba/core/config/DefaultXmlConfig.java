@@ -13,30 +13,26 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.config;
-
-import java.io.File;
-import java.net.MalformedURLException;
 
 import org.columba.core.xml.XmlIO;
 
-public class DefaultXmlConfig extends XmlIO{
-	
+import java.io.File;
 
-	public DefaultXmlConfig(File file) {
-		
-		try{	
-			setURL( file.toURL() );
-		}catch(MalformedURLException mue){}
-			
-	}
-	
-	public boolean load()
-	{
-		boolean result = super.load();
-		
-		return result;
-	}
-	
+import java.net.MalformedURLException;
+
+
+public class DefaultXmlConfig extends XmlIO {
+    public DefaultXmlConfig(File file) {
+        try {
+            setURL(file.toURL());
+        } catch (MalformedURLException mue) {
+        }
+    }
+
+    public boolean load() {
+        boolean result = super.load();
+
+        return result;
+    }
 }

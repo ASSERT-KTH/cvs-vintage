@@ -13,72 +13,76 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.util.ListIterator;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.pop3.command.FetchNewMessagesCommand;
 import org.columba.mail.util.MailResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import java.util.ListIterator;
+
+import javax.swing.KeyStroke;
+
+
 public class ReceiveSendAction extends FrameAction {
+    public ReceiveSendAction(FrameMediator controller) {
+        super(controller,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_receivesend"));
 
-	public ReceiveSendAction(FrameMediator controller) {
-		super(controller, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_file_receivesend"));
-					
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_file_receivesend_tooltip").replaceAll("&", ""));
-					
-		// toolbar text
-		putValue(TOOLBAR_NAME, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_file_receivesend_toolbar"));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-receive.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24-receive.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_receivesend_tooltip").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		ListIterator iterator = MailInterface.popServerCollection.getServerIterator(); 
+        // toolbar text
+        putValue(TOOLBAR_NAME,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_file_receivesend_toolbar"));
 
-		while (iterator.hasNext()) {
-			POP3ServerController controller =
-				(POP3ServerController) iterator.next();
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("send-receive.png"));
 
-			boolean excludeFromCheckAll = controller.getAccountItem().getPopItem().getBoolean("exclude_from_checkall",false);
-			
-			if (excludeFromCheckAll) continue;
-						
-			POP3CommandReference[] r = new POP3CommandReference[1];
-			r[0] = new POP3CommandReference(controller);
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("send-24-receive.png"));
 
-			FetchNewMessagesCommand c =
-				new FetchNewMessagesCommand( r);
+        // shortcut key
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
+    }
 
-			MainInterface.processor.addOp(c);
-		}
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        ListIterator iterator = MailInterface.popServerCollection.getServerIterator();
+
+        while (iterator.hasNext()) {
+            POP3ServerController controller = (POP3ServerController) iterator.next();
+
+            boolean excludeFromCheckAll = controller.getAccountItem()
+                                                    .getPopItem().getBoolean("exclude_from_checkall",
+                    false);
+
+            if (excludeFromCheckAll) {
+                continue;
+            }
+
+            POP3CommandReference[] r = new POP3CommandReference[1];
+            r[0] = new POP3CommandReference(controller);
+
+            FetchNewMessagesCommand c = new FetchNewMessagesCommand(r);
+
+            MainInterface.processor.addOp(c);
+        }
+    }
 }

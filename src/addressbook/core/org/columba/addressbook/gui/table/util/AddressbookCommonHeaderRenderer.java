@@ -13,8 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table.util;
+
+import org.columba.core.gui.util.AscendingIcon;
+import org.columba.core.gui.util.DescendingIcon;
 
 //import org.columba.modules.mail.gui.util.*;
 import java.awt.Component;
@@ -26,78 +28,52 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 
-import org.columba.core.gui.util.AscendingIcon;
-import org.columba.core.gui.util.DescendingIcon;
 
-public class AddressbookCommonHeaderRenderer
-	extends JButton
-	implements TableCellRenderer
-{
-	Border unselectedBorder = null;
-	Border selectedBorder = null;
-	boolean isBordered = true;
-	String str, name;
-	private String fontName;
-	private int fontSize;
+public class AddressbookCommonHeaderRenderer extends JButton
+    implements TableCellRenderer {
+    Border unselectedBorder = null;
+    Border selectedBorder = null;
+    boolean isBordered = true;
+    String str;
+    String name;
+    private String fontName;
+    private int fontSize;
+    private TableModelSorter sorter;
 
-	private TableModelSorter sorter;
-	
-	public void updateUI()
-	{
-		super.updateUI();
+    public AddressbookCommonHeaderRenderer(String name, TableModelSorter sorter) {
+        super();
+        this.sorter = sorter;
+        this.name = name;
 
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-	}
+        setHorizontalAlignment(SwingConstants.LEFT);
+        setHorizontalTextPosition(SwingConstants.LEFT);
 
-	public AddressbookCommonHeaderRenderer(String name, TableModelSorter sorter)
-	{
-		super();
-		this.sorter = sorter;
-		this.name = name;
+        setOpaque(true); //MUST do this for background to show up.
 
-		setHorizontalAlignment(SwingConstants.LEFT);
-		setHorizontalTextPosition(SwingConstants.LEFT);
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    }
 
-		setOpaque(true); //MUST do this for background to show up.
+    public void updateUI() {
+        super.updateUI();
 
-		setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+    }
 
-	}
-
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object str,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column)
-	{
-
-
-		
-		
-		if (sorter.getSortingColumn().equals( str ) )
-            {
-
-
-                if ( sorter.getSortingOrder() == true )
-                    setIcon( new AscendingIcon() );
-                else
-                    setIcon( new DescendingIcon() );
-
-            } else
-            {
-
-                setIcon( null );
+    public Component getTableCellRendererComponent(JTable table, Object str,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        if (sorter.getSortingColumn().equals(str)) {
+            if (sorter.getSortingOrder() == true) {
+                setIcon(new AscendingIcon());
+            } else {
+                setIcon(new DescendingIcon());
             }
-         
-            
-		
-		setText(this.name);
+        } else {
+            setIcon(null);
+        }
 
-		
-		//setIcon(null);
+        setText(this.name);
 
-		return this;
-	}
+        //setIcon(null);
+        return this;
+    }
 }

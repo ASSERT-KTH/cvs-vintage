@@ -16,35 +16,36 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.folder.Folder;
+
 import org.columba.core.main.MainInterface;
+
 
 /**
  * @author fdietz
  *
- 
+
  */
 public class FolderFacade {
+    /**
+     *
+     * Return a Folder object
+     *
+     *
+     * @param uid        id of folder
+     * @return                Folder
+     */
+    public static Folder getAddressbook(int uid) {
+        return (Folder) MainInterface.addressbookTreeModel.getFolder(uid);
+    }
 
-	/**
-	 * 
-	 * Return a Folder object
-	 * 
-	 * 
-	 * @param uid	id of folder
-	 * @return		Folder
-	 */
-	public static Folder getAddressbook(int uid) {
-		return (Folder) MainInterface.addressbookTreeModel.getFolder(uid);
-	}
-
-	/**
-	 * 
-	 * Returns a reference to the system addressbook which
-	 * automatically collects addresses
-	 * 
-	 * @return	Folder
-	 */
-	public static Folder getCollectedAddresses() {
-		return (Folder) MainInterface.addressbookTreeModel.getFolder(102);
-	}
+    /**
+     *
+     * Returns a reference to the system addressbook which
+     * automatically collects addresses
+     *
+     * @return        Folder
+     */
+    public static Folder getCollectedAddresses() {
+        return (Folder) MainInterface.addressbookTreeModel.getFolder(102);
+    }
 }

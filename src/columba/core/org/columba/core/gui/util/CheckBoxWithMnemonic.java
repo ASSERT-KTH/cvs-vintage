@@ -17,33 +17,30 @@ package org.columba.core.gui.util;
 
 import javax.swing.JCheckBox;
 
+
 /**
  * Adds additionally a mnemonic to JCheckBox.
  * <p>
- * Mnemonic should be specified in the button text 
+ * Mnemonic should be specified in the button text
  * by using the "&" character.
  *
  * @author fdietz
  */
 public class CheckBoxWithMnemonic extends JCheckBox {
+    /**
+     * default constructor
+     */
+    public CheckBoxWithMnemonic() {
+        super();
+    }
 
-	/**
-	 * default constructor
-	 */
-	public CheckBoxWithMnemonic() {
-		super();
+    /**
+     * @param str        text including a mnemonic
+     */
+    public CheckBoxWithMnemonic(String textWithMnemonic) {
+        super();
 
-	}
-
-	/**
-	 * @param str	text including a mnemonic
-	 */
-	public CheckBoxWithMnemonic(String textWithMnemonic) {
-		super();
-		
-		// set display text - possible with a mnemonic defined using &
-		MnemonicSetter.setTextWithMnemonic(this, textWithMnemonic);
-
-	}
-
+        // set display text - possible with a mnemonic defined using &
+        MnemonicSetter.setTextWithMnemonic(this, textWithMnemonic);
+    }
 }

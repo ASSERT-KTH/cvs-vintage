@@ -16,60 +16,61 @@
 package org.columba.core.print;
 
 import java.awt.Graphics2D;
+
 import java.util.Vector;
 
+
 public class cVGroup extends cPrintObject {
+    Vector members;
 
-	Vector members;
-	
-	public cVGroup() {
-		members = new Vector();	
-	}
+    public cVGroup() {
+        members = new Vector();
+    }
 
-	public void add( cPrintObject po ) {
-		po.setType( cPrintObject.GROUPMEMBER );
-		members.add( po );
-	}
+    public void add(cPrintObject po) {
+        po.setType(cPrintObject.GROUPMEMBER);
+        members.add(po);
+    }
 
-	public void print(Graphics2D g) {
-		cPrintObject act; 
-		
-		computePositionAndSize();
-		
-		cPoint location = getDrawingOrigin();
-		
-		for( int i=0; i<members.size(); i++ ) {
-			act = (cPrintObject) members.get( i );
-			act.setLocation( location );
-			location = location.addHeight( act.getSize(getDrawingSize().getWidth()).getHeight() );
-			
-			act.setPage(page);
-			act.print( g );	
-		}
-	}
+    public void print(Graphics2D g) {
+        cPrintObject act;
 
-	public cSize getSize(cUnit width) {
-		cUnit max = new cCmUnit();
-		cSize act;
-		cUnit maxWidth = new cCmUnit();
+        computePositionAndSize();
 
-		for( int i=0; i<members.size(); i++ ) {
-			act = ((cPrintObject) members.get( i )).getSize( width );	
-			
-			if( act.getWidth().getPoints() > maxWidth.getPoints() ) {
-				maxWidth = act.getWidth();	
-			}	
-											
-			max.addI( act.getHeight() );			
-		}
+        cPoint location = getDrawingOrigin();
 
-		max.addI( topMargin  );
-		max.addI( bottomMargin );
-		
-		maxWidth.addI( leftMargin );
-		maxWidth.addI( rightMargin );
-		
-		return new cSize( maxWidth, max );
-	}
+        for (int i = 0; i < members.size(); i++) {
+            act = (cPrintObject) members.get(i);
+            act.setLocation(location);
+            location = location.addHeight(act.getSize(
+                        getDrawingSize().getWidth()).getHeight());
 
+            act.setPage(page);
+            act.print(g);
+        }
+    }
+
+    public cSize getSize(cUnit width) {
+        cUnit max = new cCmUnit();
+        cSize act;
+        cUnit maxWidth = new cCmUnit();
+
+        for (int i = 0; i < members.size(); i++) {
+            act = ((cPrintObject) members.get(i)).getSize(width);
+
+            if (act.getWidth().getPoints() > maxWidth.getPoints()) {
+                maxWidth = act.getWidth();
+            }
+
+            max.addI(act.getHeight());
+        }
+
+        max.addI(topMargin);
+        max.addI(bottomMargin);
+
+        maxWidth.addI(leftMargin);
+        maxWidth.addI(rightMargin);
+
+        return new cSize(maxWidth, max);
+    }
 }

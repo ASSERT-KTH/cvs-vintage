@@ -17,67 +17,54 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.plugins;
 
+import org.columba.core.gui.util.ImageLoader;
+
+import org.columba.mail.gui.table.model.MessageNode;
+import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.util.MailResourceLoader;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
-import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.gui.table.model.MessageNode;
-import org.columba.mail.message.ColumbaHeader;
-import org.columba.mail.util.MailResourceLoader;
 
 public class FlaggedRenderer extends DefaultLabelRenderer {
+    boolean bool;
+    ImageIcon image1;
 
-	boolean bool;
-	ImageIcon image1;
+    public FlaggedRenderer() {
+        super();
 
-	public FlaggedRenderer() {
-		super();
+        setHorizontalAlignment(SwingConstants.CENTER);
 
-		setHorizontalAlignment(SwingConstants.CENTER);
+        image1 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
+    }
 
-		image1 = ImageLoader.getSmallImageIcon("mark-as-important-16.png");
+    public Component getTableCellRendererComponent(JTable table, Object value,
+        boolean isSelected, boolean hasFocus, int row, int column) {
+        super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+            row, column);
 
-	}
+        if (value == null) {
+            setIcon(null);
 
-	public Component getTableCellRendererComponent(
-		JTable table,
-		Object value,
-		boolean isSelected,
-		boolean hasFocus,
-		int row,
-		int column) {
+            return this;
+        }
 
-		super.getTableCellRendererComponent(
-			table,
-			value,
-			isSelected,
-			hasFocus,
-			row,
-			column);
+        boolean flagged = ((ColumbaHeader) ((MessageNode) value).getHeader()).getFlags()
+                           .getFlagged();
 
-		if (value == null) {
-			setIcon(null);
-			return this;
-		}
+        if (flagged) {
+            setIcon(image1);
 
-		boolean flagged =
-			((ColumbaHeader) ((MessageNode) value).getHeader())
-				.getFlags()
-				.getFlagged();
+            setToolTipText(MailResourceLoader.getString("header", "column",
+                    "flagged"));
+        } else {
+            setIcon(null);
+        }
 
-		if (flagged) {
-			setIcon(image1);
-
-			setToolTipText(
-				MailResourceLoader.getString("header", "column", "flagged"));
-		} else {
-			setIcon(null);
-
-		}
-
-		return this;
-	}
+        return this;
+    }
 }

@@ -15,99 +15,86 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.folder.importfilter;
+
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.Folder;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.Folder;
-import org.columba.addressbook.util.AddressbookResourceLoader;
 
 /**
  * @version 1.0
  * @author
  */
 public class MozillaCSVAddressbookImporter extends DefaultAddressbookImporter {
+    public MozillaCSVAddressbookImporter() {
+        super();
+    }
 
-	public MozillaCSVAddressbookImporter() {
-		super();
-	}
+    public MozillaCSVAddressbookImporter(File sourceFile,
+        Folder destinationFolder) {
+        super(sourceFile, destinationFolder);
+    }
 
-	public MozillaCSVAddressbookImporter(
-		File sourceFile,
-		Folder destinationFolder) {
-		super(sourceFile, destinationFolder);
-	}
+    public void importAddressbook(File file) throws Exception {
+        System.out.println("importing addressbook::::");
 
-	public void importAddressbook(File file) throws Exception {
-		System.out.println("importing addressbook::::");
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String str;
 
-		BufferedReader in = new BufferedReader(new FileReader(file));
-		String str;
+        while ((str = in.readLine()) != null) {
+            // start parsing line
+            int counter = -1;
+            ContactCard card = new ContactCard();
 
-		while ((str = in.readLine()) != null) {
-			// start parsing line
-			int counter = -1;
-			ContactCard card = new ContactCard();
+            StringBuffer token = new StringBuffer();
+            int pos = 0;
 
-			StringBuffer token = new StringBuffer();
-			int pos = 0;
-			while (pos < str.length()) {
-				char ch = str.charAt(pos);
+            while (pos < str.length()) {
+                char ch = str.charAt(pos);
 
-				if (ch == ',') {
-					// found new token
-					counter++;
+                if (ch == ',') {
+                    // found new token
+                    counter++;
 
-					if (counter == 0) {
+                    if (counter == 0) {
+                        card.set("n", "given", token.toString());
+                    } else if (counter == 1) {
+                        card.set("n", "family", token.toString());
+                    } else if (counter == 2) {
+                        card.set("displayname", token.toString());
+                    } else if (counter == 3) {
+                        card.set("nickname", token.toString());
+                    } else if (counter == 4) {
+                        card.set("email", "internet", token.toString());
+                    } else if (counter == 5) {
+                        card.set("email", "x-email2", token.toString());
+                    } else if (counter == 8) {
+                        card.set("tel", "work", token.toString());
+                    } else if (counter == 9) {
+                        card.set("tel", "home", token.toString());
+                    }
 
-						card.set("n", "given", token.toString());
-					} else if (counter == 1) {
+                    token = new StringBuffer();
+                } else {
+                    token.append(ch);
+                }
 
-						card.set("n", "family", token.toString());
-					} else if (counter == 2) {
+                pos++;
+            }
 
-						card.set("displayname", token.toString());
-					} else if (counter == 3) {
-						card.set("nickname", token.toString());
-					} else if (counter == 4) {
+            saveContact(card);
+        }
 
-						card.set("email", "internet", token.toString());
-					} else if (counter == 5) {
+        in.close();
+    }
 
-						card.set("email", "x-email2", token.toString());
-					} else if (counter == 8) {
-
-						card.set("tel", "work", token.toString());
-					} else if (counter == 9) {
-
-						card.set("tel", "home", token.toString());
-					}
-
-					token = new StringBuffer();
-
-				} else {
-					token.append(ch);
-				}
-
-				pos++;
-
-			}
-
-			saveContact(card);
-
-		}
-
-		in.close();
-	}
-
-	public String getDescription() {
-		return AddressbookResourceLoader.getString(
-			"dialog",
-			"addressbookimport",
-			"mozillacsvaddressbook_description");
-	}
+    public String getDescription() {
+        return AddressbookResourceLoader.getString("dialog",
+            "addressbookimport", "mozillacsvaddressbook_description");
+    }
 }

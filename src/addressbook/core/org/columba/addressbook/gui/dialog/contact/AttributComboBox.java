@@ -13,13 +13,17 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.dialog.contact;
+
+import org.columba.addressbook.folder.ContactCard;
+
+import org.columba.core.gui.util.ImageLoader;
 
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -37,224 +41,199 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.core.gui.util.ImageLoader;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
-public class AttributComboBox
-	extends JPanel
-	implements ActionListener, DocumentListener
-{
-	//JLabel label;
-	JButton button;
-	JPopupMenu menu;
+public class AttributComboBox extends JPanel implements ActionListener,
+    DocumentListener {
+    //JLabel label;
+    JButton button;
+    JPopupMenu menu;
+    List list;
+    String selection;
+    Hashtable table;
+    JTextComponent textField;
+    String name;
+    List menuList;
 
-	List list;
-	String selection;
+    public AttributComboBox(String name, List list, JTextComponent textField) {
+        super();
 
-	Hashtable table;
+        this.name = name;
+        this.textField = textField;
+        textField.getDocument().addDocumentListener(this);
 
-	JTextComponent textField;
+        table = new Hashtable();
 
-	String name;
+        this.list = list;
 
-	List menuList;
+        menuList = new Vector();
 
-	public AttributComboBox(String name, List list, JTextComponent textField)
-	{
-		super();
+        initComponents();
+    }
 
-		this.name = name;
-		this.textField = textField;
-		textField.getDocument().addDocumentListener(this);
+    public void setEnabled(boolean b) {
+        button.setEnabled(false);
 
-		table = new Hashtable();
+        //label.setEnabled(false);
+    }
 
-		this.list = list;
+    public Hashtable getResultTable() {
+        return table;
+    }
 
-		menuList = new Vector();
+    public void setResultTable(Hashtable table) {
+        this.table = table;
+    }
 
-		initComponents();
-	}
+    public void updateComponents(ContactCard card, boolean b) {
+        if (b == true) {
+            for (Iterator it = list.iterator(); it.hasNext();) {
+                String str = (String) it.next();
+                table.put(str, card.get(name, str));
+            }
 
-	public void setEnabled(boolean b)
-	{
-		button.setEnabled(false);
-		//label.setEnabled(false);
-	}
+            //			for (int i = 0; i < list.size(); i++)
+            //			{
+            //				String str = (String) list.get(i);
+            //				table.put(str, card.get(name, str));
+            //
+            //			}
+            for (Iterator it = menuList.iterator(); it.hasNext();) {
+                JMenuItem item = (JMenuItem) it.next();
 
-	public Hashtable getResultTable()
-	{
-		return table;
-	}
+                //			for (int i = 0; i < menuList.size(); i++)
+                //			{
+                //				JMenuItem item = (JMenuItem) menuList.get(i);
+                String s = (String) table.get(item.getActionCommand());
 
-	public void setResultTable(Hashtable table)
-	{
-		this.table = table;
-	}
+                if ((s != null)) {
+                    if (s.length() != 0) {
+                        item.setSelected(true);
+                    } else {
+                        item.setSelected(false);
+                    }
+                } else {
+                    item.setSelected(false);
+                }
+            }
 
-	public void updateComponents(ContactCard card, boolean b)
-	{
+            String s = (String) table.get((String) list.get(0));
 
-		if (b == true)
-		{
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				String str = (String) it.next(); 
-				table.put(str, card.get(name, str));
-			}
-//			for (int i = 0; i < list.size(); i++)
-//			{
-//				String str = (String) list.get(i);
-//				table.put(str, card.get(name, str));
-//
-//			}
+            if (s != null) {
+                textField.setText(s);
+            } else {
+                textField.setText(null);
+            }
+        } else {
+            for (Enumeration e = table.keys(); e.hasMoreElements();) {
+                String key = (String) e.nextElement();
+                String value = (String) table.get(key);
+                card.set(name, key, value);
+            }
+        }
+    }
 
-			for (Iterator it = menuList.iterator(); it.hasNext();) {
-				JMenuItem item = (JMenuItem) it.next();
-//			for (int i = 0; i < menuList.size(); i++)
-//			{
-//				JMenuItem item = (JMenuItem) menuList.get(i);
-				String s = (String) table.get(item.getActionCommand());
-				if ((s != null))
-				{
-					if (s.length() != 0)
-						item.setSelected(true);
-					else
-						item.setSelected(false);
-				}
-				else
-					item.setSelected(false);
-			}
+    protected void initComponents() {
+        setLayout(new BorderLayout());
 
-			String s = (String) table.get((String) list.get(0));
-			if (s != null)
-				textField.setText(s);
-			else
-				textField.setText(null);
-		}
-		else
-		{
+        /*
+        label = new JLabel(name + " (" + (String) list.get(0) + ")");
+        add(label, BorderLayout.WEST);
 
-			for (Enumeration e = table.keys(); e.hasMoreElements();)
-			{
-				String key = (String) e.nextElement();
-				String value = (String) table.get(key);
-				card.set(name, key, value);
+        Component box = Box.createHorizontalStrut(20);
+        add(box, BorderLayout.CENTER);
+        */
+        //button = new ArrowButton(0);
+        button = new JButton(name + " (" + (String) list.get(0) + "):",
+                ImageLoader.getSmallImageIcon("stock_down-16.png"));
+        button.setActionCommand("BUTTON");
+        button.setMargin(new Insets(2, 5, 2, 0));
+        button.setHorizontalTextPosition(SwingConstants.LEADING);
 
-			}
-		}
+        //button.setIconTextGap(20);
+        button.addActionListener(this);
+        add(button, BorderLayout.WEST);
 
-	}
+        menu = new JPopupMenu();
 
-	protected void initComponents()
-	{
-		setLayout(new BorderLayout());
+        selection = (String) list.get(0);
 
-		/*
-		label = new JLabel(name + " (" + (String) list.get(0) + ")");
-		add(label, BorderLayout.WEST);
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            String next = (String) it.next();
+            JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(next);
+            menuItem.setActionCommand(next);
 
-		Component box = Box.createHorizontalStrut(20);
-		add(box, BorderLayout.CENTER);
-		*/
+            //		for (int i = 0; i < list.size(); i++)
+            //		{
+            //			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) list.get(i));
+            //			menuItem.setActionCommand((String) list.get(i));
+            menuItem.addActionListener(this);
+            menu.add(menuItem);
+            menuList.add(menuItem);
+        }
+    }
 
-		//button = new ArrowButton(0);
-		button = new JButton( name + " (" + (String) list.get(0) + "):", ImageLoader.getSmallImageIcon("stock_down-16.png") );
-		button.setActionCommand("BUTTON");
-		button.setMargin( new Insets(2,5,2,0) );
-		button.setHorizontalTextPosition( SwingConstants.LEADING );
-		//button.setIconTextGap(20);
-		button.addActionListener(this);
-		add(button, BorderLayout.WEST);
+    public void actionPerformed(ActionEvent event) {
+        String action = event.getActionCommand();
 
-		menu = new JPopupMenu();
+        if (action.equals("BUTTON")) {
+            for (Iterator it = menuList.iterator(); it.hasNext();) {
+                JMenuItem item = (JMenuItem) it.next();
 
-		selection = (String) list.get(0);
+                //			for (int i = 0; i < menuList.size(); i++)
+                //			{
+                //				JMenuItem item = (JMenuItem) menuList.get(i);
+                String s = (String) table.get(item.getActionCommand());
 
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			String next = (String)it.next();
-			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(next);
-			menuItem.setActionCommand(next);
-//		for (int i = 0; i < list.size(); i++)
-//		{
-//			JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem((String) list.get(i));
-//			menuItem.setActionCommand((String) list.get(i));
-			menuItem.addActionListener(this);
-			menu.add(menuItem);
-			menuList.add(menuItem);
-		}
-	}
+                if ((s != null)) {
+                    if (s.length() != 0) {
+                        item.setSelected(true);
+                    } else {
+                        item.setSelected(false);
+                    }
+                } else {
+                    item.setSelected(false);
+                }
+            }
 
-	public void actionPerformed(ActionEvent event)
-	{
-		String action = event.getActionCommand();
+            //menu.show(button, button.getX(), button.getY());
+            menu.show(button, button.getWidth(), 0);
+        } else {
+            button.setText(name + " (" + action + "):");
+            selection = action;
 
-		if (action.equals("BUTTON"))
-		{
-			for (Iterator it= menuList.iterator(); it.hasNext();) {
-				JMenuItem item = (JMenuItem) it.next();
-//			for (int i = 0; i < menuList.size(); i++)
-//			{
-//				JMenuItem item = (JMenuItem) menuList.get(i);
-				String s = (String) table.get(item.getActionCommand());
-				if ((s != null))
-				{
-					if (s.length() != 0)
-						item.setSelected(true);
-					else
-						item.setSelected(false);
-				}
-				else
-					item.setSelected(false);
-			}
-			//menu.show(button, button.getX(), button.getY());
-			menu.show(button, button.getWidth(),0 );
-		}
-		else
-		{
+            String s = (String) table.get(action);
 
-			button.setText(name + " (" + action + "):");
-			selection = action;
+            if (s != null) {
+                textField.setText(s);
+            } else {
+                textField.setText(null);
+            }
+        }
+    }
 
-			String s = (String) table.get(action);
-			if (s != null)
-				textField.setText(s);
-			else
-				textField.setText(null);
-		}
-	}
+    public String getSelected() {
+        return selection;
+    }
 
-	public String getSelected()
-	{
-		return selection;
-	}
+    public void insertUpdate(DocumentEvent e) {
+        updateDoc(e.getDocument());
+    }
 
-	public void insertUpdate(DocumentEvent e)
-	{
-		updateDoc(e.getDocument());
-	}
+    public void removeUpdate(DocumentEvent e) {
+        updateDoc(e.getDocument());
+    }
 
-	public void removeUpdate(DocumentEvent e)
-	{
-		updateDoc(e.getDocument());
-	}
+    public void changedUpdate(DocumentEvent e) {
+        updateDoc(e.getDocument());
+    }
 
-	public void changedUpdate(DocumentEvent e)
-	{
-		updateDoc(e.getDocument());
-	}
+    public void updateDoc(Document doc) {
+        String s = getSelected();
 
-	public void updateDoc(Document doc)
-	{
-		String s = getSelected();
-
-		table.put(s, textField.getText());
-
-	}
-
-	
-
+        table.put(s, textField.getText());
+    }
 }

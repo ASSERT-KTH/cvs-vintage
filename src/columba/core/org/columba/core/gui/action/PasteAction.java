@@ -13,13 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
@@ -27,46 +21,50 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.MainInterface;
 import org.columba.core.util.GlobalResourceLoader;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
+
+
 public class PasteAction extends FrameAction {
+    public PasteAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_edit_paste"));
 
-	public PasteAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_edit_paste"));
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null, "menu_edit_paste_tooltip")
+                                .replaceAll("&", ""));
 
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "menu_edit_paste_tooltip").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_paste-16.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_V, ActionEvent.CTRL_MASK));
-		
-		// disable toolbar text
-		setShowToolBarText(false);
-		
-		setEnabled(false);
-		MainInterface.focusManager.setPasteAction(this);
-	}
+        // small icon for menu
+        putValue(SMALL_ICON, ImageLoader.getImageIcon("stock_paste-16.png"));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		MainInterface.focusManager.paste();
-	}
-	
-	/* (non-Javadoc)
-         * @see org.columba.core.action.FrameAction#isSingleton()
-         */
-        public boolean isSingleton() {
-                return true;
-        }
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_paste.png"));
+
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+
+        // disable toolbar text
+        setShowToolBarText(false);
+
+        setEnabled(false);
+        MainInterface.focusManager.setPasteAction(this);
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        MainInterface.focusManager.paste();
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.action.FrameAction#isSingleton()
+     */
+    public boolean isSingleton() {
+        return true;
+    }
 }

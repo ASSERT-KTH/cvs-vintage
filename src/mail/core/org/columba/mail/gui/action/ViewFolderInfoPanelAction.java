@@ -13,18 +13,19 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.action;
+
+import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
+
+import org.columba.mail.gui.frame.MailFrameView;
+import org.columba.mail.util.MailResourceLoader;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.mail.gui.frame.MailFrameView;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -33,38 +34,34 @@ import org.columba.mail.util.MailResourceLoader;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ViewFolderInfoPanelAction extends CheckBoxAction {
+    /**
+     * @param frameMediator
+     * @param name
+     * @param longDescription
+     * @param actionCommand
+     * @param small_icon
+     * @param big_icon
+     * @param mnemonic
+     * @param keyStroke
+     */
+    public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_view_folderinfopanel"));
+    }
 
-	/**
-	 * @param frameMediator
-	 * @param name
-	 * @param longDescription
-	 * @param actionCommand
-	 * @param small_icon
-	 * @param big_icon
-	 * @param mnemonic
-	 * @param keyStroke
-	 */
-	public ViewFolderInfoPanelAction(FrameMediator frameMediator) {
-		super(
-		frameMediator,
-				MailResourceLoader.getString(
-					"menu", "mainframe", "menu_view_folderinfopanel"));
-	}
+    public void actionPerformed(ActionEvent evt) {
+        ((MailFrameView) frameMediator.getView()).showFolderInfoPanel();
+    }
 
-	public void actionPerformed(ActionEvent evt) {
-		((MailFrameView)frameMediator.getView()).showFolderInfoPanel();
-	}
+    protected boolean getInitState() {
+        return frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL);
+    }
 
-	protected boolean getInitState() {
-		return frameMediator.isToolbarEnabled(MailFrameView.FOLDERINFOPANEL);
-	}
+    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem,
+        AbstractFrameView frameView) {
+        super.setCheckBoxMenuItem(checkBoxMenuItem);
 
-	public void setCheckBoxMenuItem(
-		JCheckBoxMenuItem checkBoxMenuItem,
-		AbstractFrameView frameView) {
-
-		super.setCheckBoxMenuItem(checkBoxMenuItem);
-
-		getCheckBoxMenuItem().setSelected(getInitState());
-	}
+        getCheckBoxMenuItem().setSelected(getInitState());
+    }
 }

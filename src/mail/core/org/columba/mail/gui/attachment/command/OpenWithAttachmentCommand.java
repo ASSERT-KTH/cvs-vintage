@@ -15,23 +15,26 @@
 //All Rights Reserved.
 package org.columba.mail.gui.attachment.command;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 import org.columba.core.command.Command;
 import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.io.TempFileStore;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
+
 import org.columba.ristretto.coder.Base64DecoderInputStream;
 import org.columba.ristretto.coder.QuotedPrintableDecoderInputStream;
 import org.columba.ristretto.message.LocalMimePart;
 import org.columba.ristretto.message.MimeHeader;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 
 /**
  * @author freddy
@@ -42,70 +45,69 @@ import org.columba.ristretto.message.MimeHeader;
  * Window>Preferences>Java>Code Generation.
  */
 public class OpenWithAttachmentCommand extends FolderCommand {
-	LocalMimePart part;
-	File tempFile;
+    LocalMimePart part;
+    File tempFile;
 
-	public OpenWithAttachmentCommand(DefaultCommandReference[] references) {
-		super(references);
+    public OpenWithAttachmentCommand(DefaultCommandReference[] references) {
+        super(references);
 
-		priority = Command.REALTIME_PRIORITY;
-		commandType = Command.NORMAL_OPERATION;
+        priority = Command.REALTIME_PRIORITY;
+        commandType = Command.NORMAL_OPERATION;
+    }
 
-	}
+    /**
+     * @see org.columba.core.command.Command#updateGUI()
+     */
+    public void updateGUI() throws Exception {
+        MimeHeader header = part.getHeader();
 
-	/**
-	 * @see org.columba.core.command.Command#updateGUI()
-	 */
-	public void updateGUI() throws Exception {
-		MimeHeader header = part.getHeader();
+        MimeTypeViewer viewer = new MimeTypeViewer();
+        viewer.openWith(header, tempFile);
+    }
 
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		viewer.openWith(header, tempFile);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        Folder folder = (Folder) r[0].getFolder();
+        Object[] uids = r[0].getUids();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		Folder folder = (Folder) r[0].getFolder();
-		Object[] uids = r[0].getUids();
+        Integer[] address = r[0].getAddress();
 
-		Integer[] address = r[0].getAddress();
+        part = (LocalMimePart) folder.getMimePart(uids[0], address);
 
-		part = (LocalMimePart) folder.getMimePart(uids[0], address);
+        MimeHeader header;
+        tempFile = null;
 
-		MimeHeader header;
-		tempFile = null;
+        header = part.getHeader();
 
-		header = part.getHeader();
+        try {
+            String filename = part.getHeader().getFileName();
 
-		try {
-			String filename = part.getHeader().getFileName();
-			if (filename != null) {
-				tempFile = TempFileStore.createTempFile(filename);
-			} else
-				tempFile = TempFileStore.createTempFile();
+            if (filename != null) {
+                tempFile = TempFileStore.createTempFile(filename);
+            } else {
+                tempFile = TempFileStore.createTempFile();
+            }
 
-			InputStream bodyStream = part.getInputStream();
-			String encoding = header.getContentTransferEncoding();
-			if( encoding != null ) {
-				if( encoding.equals("quoted-printable") ) {
-					bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-				} else if ( encoding.equals("base64")) {
-					bodyStream = new Base64DecoderInputStream( bodyStream );
-				}
-			}
-				
-			// *20031019, karlpeder* Closing output stream after copying
-			FileOutputStream output = new FileOutputStream(tempFile);
-			StreamUtils.streamCopy(bodyStream, output);
-			output.close();
+            InputStream bodyStream = part.getInputStream();
+            String encoding = header.getContentTransferEncoding();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+            if (encoding != null) {
+                if (encoding.equals("quoted-printable")) {
+                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+                } else if (encoding.equals("base64")) {
+                    bodyStream = new Base64DecoderInputStream(bodyStream);
+                }
+            }
 
-		}
-
-	}
+            // *20031019, karlpeder* Closing output stream after copying
+            FileOutputStream output = new FileOutputStream(tempFile);
+            StreamUtils.streamCopy(bodyStream, output);
+            output.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

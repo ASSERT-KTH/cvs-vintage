@@ -13,61 +13,62 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
+
 import org.columba.mail.gui.tree.selection.TreeSelectionChangedEvent;
 import org.columba.mail.util.MailResourceLoader;
+
+import java.awt.event.ActionEvent;
+
 
 /**
  * @author frd
  *
- * To change this generated comment go to 
+ * To change this generated comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class EmptyFolderAction
-	extends FrameAction
-	implements SelectionListener {
+public class EmptyFolderAction extends FrameAction implements SelectionListener {
+    public EmptyFolderAction(FrameMediator frameMediator) {
+        super(frameMediator,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_emptyfolder"));
 
-	public EmptyFolderAction(FrameMediator frameMediator) {
-		super(frameMediator, MailResourceLoader.getString(
-			"menu", "mainframe", "menu_folder_emptyfolder"));
-					
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, MailResourceLoader.getString(
-			"menu",
-                        "mainframe",
-                        "menu_folder_emptyfolder").replaceAll("&", ""));
-		
-		setEnabled(false);
-		// FIXME
-		//  -> uncomment to enable/disable action
-		/*
-		((MailFrameController) frameMediator).registerTreeSelectionListener(
-			this);
-		*/
-	}
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            MailResourceLoader.getString("menu", "mainframe",
+                "menu_folder_emptyfolder").replaceAll("&", ""));
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-                //TODO: implementation
-	}
-        
-	/* (non-Javadoc)
-         * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
-         */
-	public void selectionChanged(SelectionChangedEvent e) {
-		if (((TreeSelectionChangedEvent) e).getSelected().length > 0)
-			setEnabled(true);
-		else
-			setEnabled(false);
-	}
+        setEnabled(false);
+
+        // FIXME
+        //  -> uncomment to enable/disable action
+
+        /*
+        ((MailFrameController) frameMediator).registerTreeSelectionListener(
+                this);
+        */
+    }
+
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        //TODO: implementation
+    }
+
+    /* (non-Javadoc)
+     * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent e) {
+        if (((TreeSelectionChangedEvent) e).getSelected().length > 0) {
+            setEnabled(true);
+        } else {
+            setEnabled(false);
+        }
+    }
 }

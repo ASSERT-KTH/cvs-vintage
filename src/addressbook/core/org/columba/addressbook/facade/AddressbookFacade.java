@@ -16,19 +16,19 @@
 package org.columba.addressbook.facade;
 
 import org.columba.addressbook.config.AddressbookConfig;
+
 import org.columba.core.xml.XmlElement;
+
 
 /**
  * @author fdietz
  *
- 
+
  */
 public class AddressbookFacade {
+    public static XmlElement getConfigElement(String configName) {
+        XmlElement root = AddressbookConfig.get(configName);
 
-	public static XmlElement getConfigElement(String configName) {
-		XmlElement root = AddressbookConfig.get(configName);
-
-		return root;
-	}
-
+        return root;
+    }
 }

@@ -13,61 +13,58 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.plugin;
-import javax.swing.JPanel;
 
 import org.columba.core.plugin.PluginInterface;
+
+import javax.swing.JPanel;
+
 
 /**
  *
  *
  * <class>AbstractConfigPlugin</class> is the abstract class
  * for the org.columba.core.config plugin extension point
- * 
+ *
  *  @author fdietz
- * 
+ *
  */
 public abstract class AbstractConfigPlugin implements PluginInterface {
+    /**
+     * default constructor
+     */
+    public AbstractConfigPlugin() {
+    }
 
-	/**
-	 * default constructor
-	 */
-	public AbstractConfigPlugin() {
+    /********************* abstract methods *********************************/
+    /**
+     *
+     * This method is called when the dialog is viewed the first time.
+     *  updateComponents(true) - initialse the gui elements with the
+     *                           configuration data
+     *
+     * Its also called when pressing the OK button
+     *  updateComponents(false) - update the configuration data in using
+     *                            the gui elements data
+     *
+     *
+     *
+     * @param b        if true, model -> view, otherwise view -> model
+     *
+     */
+    public abstract void updateComponents(boolean b);
 
-	}
+    /**
+     *
+     * Create your configuration <class>JPanel</class> here
+     *
+     * This panel will be automatically plugged in the configuration
+     * dialog.
+     *
+     *
+     * @return        <class>JPanel</class>
+     */
+    public abstract JPanel createPanel();
 
-	/********************* abstract methods *********************************/
-
-	/**
-	 * 
-	 * This method is called when the dialog is viewed the first time.
-	 *  updateComponents(true) - initialse the gui elements with the
-	 *                           configuration data
-	 * 
-	 * Its also called when pressing the OK button
-	 *  updateComponents(false) - update the configuration data in using
-	 *                            the gui elements data
-	 * 
-	 * 
-	 * 
-	 * @param b	if true, model -> view, otherwise view -> model
-	 * 
-	 */
-	public abstract void updateComponents(boolean b);
-
-	/**
-	 * 
-	 * Create your configuration <class>JPanel</class> here
-	 * 
-	 * This panel will be automatically plugged in the configuration
-	 * dialog.
-	 * 
-	 * 
-	 * @return	<class>JPanel</class>
-	 */
-	public abstract JPanel createPanel();
-
-	/******************** internal stuff **********************************/
-
+    /******************** internal stuff **********************************/
 }

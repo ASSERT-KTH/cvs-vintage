@@ -20,149 +20,148 @@ import java.awt.Graphics2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.Printable;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+
 public class cPage implements Printable {
+    public static final int PORTRAIT = 1;
+    public static final int LANDSCAPE = 2;
+    private cUnit leftMargin;
+    private cUnit rightMargin;
+    private cUnit topMargin;
+    private cUnit bottomMargin;
+    private cUnit gutter;
+    private int orientation;
+    private List pageObjects;
+    private cSize pageSize;
+    private cDocument document;
 
-	public static final int PORTRAIT = 1;
-	public static final int LANDSCAPE = 2;
+    public cPage(cDocument d) {
+        pageObjects = new Vector();
 
-	private cUnit leftMargin;
-	private cUnit rightMargin;
-	private cUnit topMargin;
-	private cUnit bottomMargin;
-	private cUnit gutter;
+        leftMargin = new cCmUnit();
+        rightMargin = new cCmUnit();
+        topMargin = new cCmUnit();
+        bottomMargin = new cCmUnit();
+        gutter = new cCmUnit();
 
-	private int orientation;
+        document = d;
+    }
 
-	private List pageObjects;
+    public int countObjects() {
+        return pageObjects.size();
+    }
 
-	private cSize pageSize;
+    public int print(Graphics g, PageFormat pf, int pi) {
+        Graphics2D g2d = (Graphics2D) g;
+        Paper paper = pf.getPaper();
 
-	private cDocument document;
+        leftMargin.setPoints(paper.getImageableX());
+        rightMargin.setPoints(paper.getWidth() -
+            (paper.getImageableX() + paper.getImageableWidth()));
+        bottomMargin.setPoints(paper.getHeight() -
+            (paper.getImageableY() + paper.getImageableHeight()));
+        topMargin.setPoints(paper.getImageableY());
 
-	public cPage(cDocument d) {
-		pageObjects = new Vector();
+        cPointUnit width = new cPointUnit(paper.getImageableWidth());
+        cPointUnit height = new cPointUnit(paper.getImageableHeight());
 
-		leftMargin = new cCmUnit();
-		rightMargin = new cCmUnit();
-		topMargin = new cCmUnit();
-		bottomMargin = new cCmUnit();
-		gutter = new cCmUnit();
+        pageSize = new cSize(width, height);
 
-		document = d;
-	}
-	
-	public int countObjects() {
-		return pageObjects.size();
-	}
+        cPrintObject header = document.getHeader();
 
-	public int print(Graphics g, PageFormat pf, int pi) {
+        if (header != null) {
+            header.setPage(this);
+            header.print(g2d);
+        }
 
-		Graphics2D g2d = (Graphics2D) g;
-		Paper paper = pf.getPaper();
+        for (Iterator it = pageObjects.iterator(); it.hasNext();) {
+            ((cPrintObject) it.next()).print(g2d);
 
-		leftMargin.setPoints(paper.getImageableX());
-		rightMargin.setPoints(
-			paper.getWidth() - (paper.getImageableX() + paper.getImageableWidth()));
-		bottomMargin.setPoints(
-			paper.getHeight() - (paper.getImageableY() + paper.getImageableHeight()));
-		topMargin.setPoints(paper.getImageableY());
+            // for (int i = 0; i < pageObjects.size(); i++) {
+            // ((cPrintObject) pageObjects.get(i)).print(g2d);
+        }
 
-		cPointUnit width = new cPointUnit(paper.getImageableWidth());
-		cPointUnit height = new cPointUnit(paper.getImageableHeight());
+        cPrintObject footer = document.getFooter();
 
-		pageSize = new cSize(width, height);
+        if (footer != null) {
+            footer.setPage(this);
+            footer.print(g2d);
+        }
 
-		cPrintObject header = document.getHeader();
+        return PAGE_EXISTS;
+    }
 
-		if (header != null) {
-			header.setPage( this );
-			header.print(g2d);
-		}
-		for (Iterator it = pageObjects.iterator(); it.hasNext();) {
-			((cPrintObject) it.next()).print(g2d);
-		// for (int i = 0; i < pageObjects.size(); i++) {
-			// ((cPrintObject) pageObjects.get(i)).print(g2d);
-		}
+    public cDocument getDocument() {
+        return document;
+    }
 
-		cPrintObject footer = document.getFooter();
+    public void setDocument(cDocument d) {
+        document = d;
+    }
 
-		if (footer != null) {
-			footer.setPage( this );
-			footer.print(g2d);
-		}
+    public void setLeftMargin(cUnit m) {
+        leftMargin = m;
+    }
 
-		return PAGE_EXISTS;
-	}
+    public void setRightMargin(cUnit m) {
+        rightMargin = m;
+    }
 
-	public cDocument getDocument() {
-		return document;
-	}
+    public void setTopMargin(cUnit m) {
+        topMargin = m;
+    }
 
-	public void setDocument(cDocument d) {
-		document = d;
-	}
+    public void setBottomMargin(cUnit m) {
+        bottomMargin = m;
+    }
 
-	public void setLeftMargin(cUnit m) {
-		leftMargin = m;
-	}
+    public void setGutter(cUnit m) {
+        gutter = m;
+    }
 
-	public void setRightMargin(cUnit m) {
-		rightMargin = m;
-	}
+    public void setOrientation(int o) {
+        orientation = o;
+    }
 
-	public void setTopMargin(cUnit m) {
-		topMargin = m;
-	}
+    public void add(cPrintObject po) {
+        po.setPage(this);
+        pageObjects.add(po);
+    }
 
-	public void setBottomMargin(cUnit m) {
-		bottomMargin = m;
-	}
+    public cPoint getPrintableAreaOrigin() {
+        cPoint origin;
+        cUnit headerMargin = new cCmUnit();
 
-	public void setGutter(cUnit m) {
-		gutter = m;
-	}
+        cPrintObject header = document.getHeader();
 
-	public void setOrientation(int o) {
-		orientation = o;
-	}
+        if (header != null) {
+            headerMargin = header.getSize(pageSize.getWidth()).getHeight();
+        }
 
-	public void add(cPrintObject po) {
-		po.setPage( this );
-		pageObjects.add(po);
-	}
+        origin = new cPoint(leftMargin.add(gutter), topMargin.add(headerMargin));
 
-	public cPoint getPrintableAreaOrigin() {
-		cPoint origin;
-		cUnit headerMargin  = new cCmUnit();
-		
-		cPrintObject header = document.getHeader();
-		if( header!= null ) {
-			headerMargin = header.getSize(pageSize.getWidth()).getHeight();
-		}
-		
-		origin = new cPoint(leftMargin.add(gutter), topMargin.add( headerMargin ));
+        return origin;
+    }
 
-		return origin;
-	}
+    public cSize getPrintableAreaSize() {
+        cUnit headerMargin = new cCmUnit();
 
-	public cSize getPrintableAreaSize() {
-		cUnit headerMargin  = new cCmUnit();
-		
-		cPrintObject header = document.getHeader();
-		if( header!= null ) {
-			headerMargin.addI( header.getSize(pageSize.getWidth()).getHeight() );
-		}
+        cPrintObject header = document.getHeader();
 
-		cPrintObject footer = document.getFooter();
-		if( footer!= null ) {
-			headerMargin.addI( footer.getSize(pageSize.getWidth()).getHeight() );
-		}
-		
-		return pageSize.subHeight( headerMargin );		
-	}
+        if (header != null) {
+            headerMargin.addI(header.getSize(pageSize.getWidth()).getHeight());
+        }
 
+        cPrintObject footer = document.getFooter();
+
+        if (footer != null) {
+            headerMargin.addI(footer.getSize(pageSize.getWidth()).getHeight());
+        }
+
+        return pageSize.subHeight(headerMargin);
+    }
 }

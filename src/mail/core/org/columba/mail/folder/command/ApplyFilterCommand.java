@@ -21,78 +21,81 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.StatusObservableImpl;
 import org.columba.core.command.Worker;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
 
+
 /**
- * 
+ *
  * Apply all filters on this folder.
- * 
+ *
  * @author fdietz
- * 
+ *
  */
-public class ApplyFilterCommand extends Command{
+public class ApplyFilterCommand extends Command {
+    /**
+     * Constructor for ApplyFilterCommand.
+     * @param frameMediator
+     * @param references
+     */
+    public ApplyFilterCommand(DefaultCommandReference[] references) {
+        super(references);
+    }
 
-	/**
-	 * Constructor for ApplyFilterCommand.
-	 * @param frameMediator
-	 * @param references
-	 */
-	public ApplyFilterCommand(
-		
-		DefaultCommandReference[] references) {
-		super( references);
-	}
+    /**
+     * @see org.columba.core.command.Command#execute(Worker)
+     */
+    public void execute(Worker worker) throws Exception {
+        // get references
+        FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
 
+        // get source folder
+        Folder srcFolder = (Folder) r[0].getFolder();
 
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		// get references
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
+        // register for status events
+        ((StatusObservableImpl) srcFolder.getObservable()).setWorker(worker);
 
-		// get source folder
-		Folder srcFolder = (Folder) r[0].getFolder();
-		
-		// register for status events
-		((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
-			 
-		// display status message
-        worker.setDisplayText("Applying filter to "+srcFolder.getName()+"...");
-        
+        // display status message
+        worker.setDisplayText("Applying filter to " + srcFolder.getName() +
+            "...");
+
         // get filter list from folder
-		FilterList list = srcFolder.getFilterList();
-		if ( list == null ) return;
-		
-		// initialize progressbar 
-		worker.setProgressBarMaximum(list.count());
-		
-		// for each filter
-		for (int i = 0; i < list.count(); i++) {
-			// update progressbar
-			worker.setProgressBarValue(i);
-			// get filter
-			Filter filter = list.get(i);
+        FilterList list = srcFolder.getFilterList();
 
-			// search all messages which match this filter
-			Object[] result = srcFolder.searchMessages(filter);
-			if ( result == null ) continue;
-			
-			// if we have a result
-			if (result.length != 0) {
-				// create a Command for every action of this filter
-				// -> create a compound object which encapsulates all commands
-				CompoundCommand command =
-					filter.getCommand(srcFolder, result);
+        if (list == null) {
+            return;
+        }
 
-				// add command to scheduler
-				MainInterface.processor.addOp(command);
-			}
-			
-		}
-	}
+        // initialize progressbar 
+        worker.setProgressBarMaximum(list.count());
 
+        // for each filter
+        for (int i = 0; i < list.count(); i++) {
+            // update progressbar
+            worker.setProgressBarValue(i);
+
+            // get filter
+            Filter filter = list.get(i);
+
+            // search all messages which match this filter
+            Object[] result = srcFolder.searchMessages(filter);
+
+            if (result == null) {
+                continue;
+            }
+
+            // if we have a result
+            if (result.length != 0) {
+                // create a Command for every action of this filter
+                // -> create a compound object which encapsulates all commands
+                CompoundCommand command = filter.getCommand(srcFolder, result);
+
+                // add command to scheduler
+                MainInterface.processor.addOp(command);
+            }
+        }
+    }
 }

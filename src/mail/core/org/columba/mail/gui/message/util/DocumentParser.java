@@ -28,45 +28,40 @@ import java.util.regex.Pattern;
  * Window>Preferences>Java>Code Generation.
  */
 public class DocumentParser {
+    private final static String[] smilyImage = {
+        "face1.png", "face4.png", "face8.png", "face3.png", "face11.png",
+        "face2.png", "face15.png"
+    };
+    private final static Pattern[] smilyPattern = {
+        Pattern.compile(":-\\)"), Pattern.compile(":-\\("),
+        Pattern.compile(":-\\|"), Pattern.compile(";-\\)"),
+        Pattern.compile(":cry:"), Pattern.compile(":o"), Pattern.compile("8\\)"),
+    };
+    private static final Pattern markQuotingsPattern = Pattern.compile("(^(&nbsp;)*&gt;[^\\n]*)|\\n((&nbsp;)*&gt;[^\\n]*)",
+            Pattern.CASE_INSENSITIVE);
 
-	private final static String[] smilyImage =
-		{ "face1.png", "face4.png", "face8.png", "face3.png", "face11.png", "face2.png", "face15.png" };
-		
-	private final static Pattern[] smilyPattern = {
-		Pattern.compile(":-\\)"),
-		Pattern.compile(":-\\("),
-		Pattern.compile(":-\\|"),
-		Pattern.compile(";-\\)"),
-		Pattern.compile(":cry:"),
-		Pattern.compile(":o"),
-		Pattern.compile("8\\)"),
-	};
-		
-	private static final Pattern markQuotingsPattern = Pattern.compile("(^(&nbsp;)*&gt;[^\\n]*)|\\n((&nbsp;)*&gt;[^\\n]*)", Pattern.CASE_INSENSITIVE);
-		
-	public DocumentParser() {
+    public DocumentParser() {
+    }
 
-	}
+    /*
+     *
+     * make quotes font-color darkgray
+     *
+     */
+    public static String markQuotings(String input) throws Exception {
+        Matcher matcher = markQuotingsPattern.matcher(input);
 
-	/*
-	 * 
-	 * make quotes font-color darkgray
-	 *
-	 */
-	public static String markQuotings(String input) throws Exception {
-		Matcher matcher = markQuotingsPattern.matcher(input);
-		return matcher.replaceAll("\n<font class=\"quoting\">$1$3</font>");
-	}
+        return matcher.replaceAll("\n<font class=\"quoting\">$1$3</font>");
+    }
 
-	public static String addSmilies(String input) throws Exception {
-		Matcher matcher;
+    public static String addSmilies(String input) throws Exception {
+        Matcher matcher;
 
-		for (int i = 0; i < smilyPattern.length; i++) {
-			matcher = smilyPattern[i].matcher( input );
-			input = matcher.replaceAll("<IMG SRC=\"" + smilyImage[i] + "\">");
-		}
+        for (int i = 0; i < smilyPattern.length; i++) {
+            matcher = smilyPattern[i].matcher(input);
+            input = matcher.replaceAll("<IMG SRC=\"" + smilyImage[i] + "\">");
+        }
 
-		return input;
-	}
-
+        return input;
+    }
 }

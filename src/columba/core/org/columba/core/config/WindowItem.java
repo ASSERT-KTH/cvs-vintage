@@ -15,33 +15,32 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import org.columba.core.xml.XmlElement;
+
 import java.awt.Dimension;
 import java.awt.Point;
 
-import org.columba.core.xml.XmlElement;
 
 public class WindowItem extends DefaultItem {
+    public WindowItem(XmlElement root) {
+        super(root);
+    }
 
-	public WindowItem(XmlElement root) {
-		super(root);
-	}
+    public Point getPoint() {
+        Point point = new Point();
 
-	public Point getPoint() {
-		Point point = new Point();
+        point.x = getInteger("x");
+        point.y = getInteger("y");
 
-		point.x = getInteger("x");
-		point.y = getInteger("y");
+        return point;
+    }
 
-		return point;
-	}
+    public Dimension getDimension() {
+        Dimension dim = new Dimension();
 
-	public Dimension getDimension() {
-		Dimension dim = new Dimension();
+        dim.width = getInteger("width");
+        dim.height = getInteger("height");
 
-		dim.width = getInteger("width");
-		dim.height = getInteger("height");
-
-		return dim;
-	}
-
+        return dim;
+    }
 }

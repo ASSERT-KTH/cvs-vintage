@@ -13,16 +13,21 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.util;
+
+import org.columba.core.util.GlobalResourceLoader;
+
+import org.columba.mail.gui.util.URLController;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -34,225 +39,203 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.URLController;
 
 public class ExceptionDialog implements ActionListener {
+    public static final String CMD_CLOSE = "CLOSE";
+    public static final String CMD_REPORT_BUG = "REPORT_BUG";
+    private static final String RESOURCE_BUNDLE_PATH = "org.columba.core.i18n.dialog";
+    private JDialog dialog;
+    private boolean bool = false;
+    private JTextField textField;
+    private String stackTrace;
 
-	public static final String CMD_CLOSE = "CLOSE";
-	public static final String CMD_REPORT_BUG = "REPORT_BUG";
-	private static final String RESOURCE_BUNDLE_PATH =
-		"org.columba.core.i18n.dialog";
+    public ExceptionDialog() {
+    }
 
-	private JDialog dialog;
-	private boolean bool = false;
-	private JTextField textField;
-	private String stackTrace;
+    public void showDialog(final Throwable ex) {
+        JLabel topLabel = new JLabel(GlobalResourceLoader.getString(
+                    RESOURCE_BUNDLE_PATH, "exception", "hint"),
+                ImageLoader.getImageIcon("stock_dialog_error_48.png"),
+                SwingConstants.LEFT);
 
-	public ExceptionDialog() {
-	}
+        JLabel label = new JLabel(GlobalResourceLoader.getString(
+                    RESOURCE_BUNDLE_PATH, "exception", "message"));
 
-	public void showDialog(final Throwable ex) {
-		JLabel topLabel =
-			new JLabel(
-				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH,
-					"exception",
-					"hint"),
-				ImageLoader.getImageIcon("stock_dialog_error_48.png"),
-				SwingConstants.LEFT);
+        /*
+        MultiLineLabel mlLabel = new MultiLineLabel( ex.getMessage() );
+        mlLabel.setLineWrap( true );
+        mlLabel.setWrapStyleWord( true );
+        mlLabel.setColumns(70);
+        mlLabel.setRows(3);
+        */
+        JTextArea textArea = new JTextArea(ex.getMessage(), 3, 50);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
 
-		JLabel label =
-			new JLabel(
-				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH,
-					"exception",
-					"message"));
-		/*
-		MultiLineLabel mlLabel = new MultiLineLabel( ex.getMessage() );
-		mlLabel.setLineWrap( true );
-		mlLabel.setWrapStyleWord( true );
-		mlLabel.setColumns(70);
-		mlLabel.setRows(3);
-		*/
+        JScrollPane scrollPane = new JScrollPane(textArea);
 
-		JTextArea textArea = new JTextArea(ex.getMessage(), 3, 50);
-		textArea.setLineWrap(true);
-		textArea.setWrapStyleWord(true);
-		textArea.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(textArea);
+        JLabel label2 = new JLabel(GlobalResourceLoader.getString(
+                    RESOURCE_BUNDLE_PATH, "exception", "stack_trace"));
+        JTextArea textArea2 = new JTextArea(10, 50);
+        StringWriter stringWriter = new StringWriter();
+        ex.printStackTrace(new PrintWriter(stringWriter));
+        stackTrace = stringWriter.toString();
+        textArea2.append(stringWriter.toString());
+        textArea2.setEditable(false);
 
-		JLabel label2 =
-			new JLabel(
-				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH,
-					"exception",
-					"stack_trace"));
-		JTextArea textArea2 = new JTextArea(10, 50);
-		StringWriter stringWriter = new StringWriter();
-		ex.printStackTrace(new PrintWriter(stringWriter));
-		stackTrace = stringWriter.toString();
-		textArea2.append(stringWriter.toString());
-		textArea2.setEditable(false);
-		JScrollPane scrollPane2 = new JScrollPane(textArea2);
+        JScrollPane scrollPane2 = new JScrollPane(textArea2);
 
-		ButtonWithMnemonic closeButton =
-			new ButtonWithMnemonic(
-				GlobalResourceLoader.getString("global", "global", "close"));
-		closeButton.setActionCommand(CMD_CLOSE);
-		closeButton.addActionListener(this);
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "close"));
+        closeButton.setActionCommand(CMD_CLOSE);
+        closeButton.addActionListener(this);
 
-		ButtonWithMnemonic reportBugButton =
-			new ButtonWithMnemonic(
-				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH,
-					"exception",
-					"report_bug"));
+        ButtonWithMnemonic reportBugButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    RESOURCE_BUNDLE_PATH, "exception", "report_bug"));
 
-		reportBugButton.setActionCommand(CMD_REPORT_BUG);
-		reportBugButton.addActionListener(this);
+        reportBugButton.setActionCommand(CMD_REPORT_BUG);
+        reportBugButton.addActionListener(this);
 
-		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
+        GridBagLayout layout = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
 
-		dialog =
-			DialogStore.getDialog(
-				GlobalResourceLoader.getString(
-					RESOURCE_BUNDLE_PATH,
-					"exception",
-					"title"));
-		dialog.getContentPane().setLayout(layout);
-		dialog.getRootPane().setDefaultButton(closeButton);
+        dialog = DialogStore.getDialog(GlobalResourceLoader.getString(
+                    RESOURCE_BUNDLE_PATH, "exception", "title"));
+        dialog.getContentPane().setLayout(layout);
+        dialog.getRootPane().setDefaultButton(closeButton);
 
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.insets = new Insets(10, 10, 0, 10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(topLabel, c);
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(10, 10, 0, 10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(topLabel, c);
 
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.insets = new Insets(10, 10, 0, 10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(label, c);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(10, 10, 0, 10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(label, c);
 
-		c.gridx = 0;
-		c.gridy = 2;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.insets = new Insets(0, 10, 10, 10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(scrollPane, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(0, 10, 10, 10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(scrollPane, c);
 
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth = 1;
-		c.weightx = 1;
-		c.insets = new Insets(10, 10, 0, 10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(label2, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth = 1;
+        c.weightx = 1;
+        c.insets = new Insets(10, 10, 0, 10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(label2, c);
 
-		c.gridx = 0;
-		c.gridy = 4;
-		c.weightx = 1.0;
-		c.gridwidth = 1;
-		//c.gridwidth = GridBagConstraints.RELATIVE;
-		c.insets = new Insets(0, 10, 10, 10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(scrollPane2, c);
+        c.gridx = 0;
+        c.gridy = 4;
+        c.weightx = 1.0;
+        c.gridwidth = 1;
 
-		JPanel panel = new JPanel();
-		panel.add(closeButton);
-		panel.add(reportBugButton);
+        //c.gridwidth = GridBagConstraints.RELATIVE;
+        c.insets = new Insets(0, 10, 10, 10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(scrollPane2, c);
 
-		c.gridx = 0;
-		c.gridy = 5;
-		c.weightx = 1.0;
-		//c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridwidth = 1;
-		c.insets = new Insets(10, 10, 10, 5);
-		c.anchor = GridBagConstraints.SOUTHEAST;
-		layout.setConstraints(panel, c);
+        JPanel panel = new JPanel();
+        panel.add(closeButton);
+        panel.add(reportBugButton);
 
-		/*
-		c.gridx=GridBagConstraints.REMAINDER;
-		c.gridy=4;
-		c.weightx = 1.0;
-		//c.gridwidth = 1;
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.insets = new Insets(10,10,10,10);
-		c.anchor = GridBagConstraints.WEST;
-		layout.setConstraints(buttons[1], c);
-		*/
+        c.gridx = 0;
+        c.gridy = 5;
+        c.weightx = 1.0;
 
-		dialog.getContentPane().add(label);
-		dialog.getContentPane().add(scrollPane);
-		dialog.getContentPane().add(label2);
-		dialog.getContentPane().add(scrollPane2);
-		dialog.getContentPane().add(topLabel);
-		dialog.getContentPane().add(panel);
+        //c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridwidth = 1;
+        c.insets = new Insets(10, 10, 10, 5);
+        c.anchor = GridBagConstraints.SOUTHEAST;
+        layout.setConstraints(panel, c);
 
-		dialog.pack();
-		dialog.setLocationRelativeTo(null);
-		dialog.show();
-	}
+        /*
+        c.gridx=GridBagConstraints.REMAINDER;
+        c.gridy=4;
+        c.weightx = 1.0;
+        //c.gridwidth = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,10,10,10);
+        c.anchor = GridBagConstraints.WEST;
+        layout.setConstraints(buttons[1], c);
+        */
+        dialog.getContentPane().add(label);
+        dialog.getContentPane().add(scrollPane);
+        dialog.getContentPane().add(label2);
+        dialog.getContentPane().add(scrollPane2);
+        dialog.getContentPane().add(topLabel);
+        dialog.getContentPane().add(panel);
 
-	public boolean success() {
-		return bool;
-	}
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.show();
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		String command = e.getActionCommand();
+    public boolean success() {
+        return bool;
+    }
 
-		if (CMD_CLOSE.equals(command)) {
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
 
-			bool = true;
+        if (CMD_CLOSE.equals(command)) {
+            bool = true;
 
-			dialog.dispose();
-		} else if (CMD_REPORT_BUG.equals(command)) {
-			bool = false;
+            dialog.dispose();
+        } else if (CMD_REPORT_BUG.equals(command)) {
+            bool = false;
 
-			URLController c = new URLController();
-			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
-			} catch (MalformedURLException mue) {
-			}
-			/*
-			dialog.dispose();
-					
-			ComposerFrame composer = new ComposerFrame();
-					
-			composer.setSubject("bug report:");
-					
-			composer.setTo("columba-bugs@lists.sourceforge.net");
-					
-			StringBuffer buf = new StringBuffer();
-			StringWriter stringWriter2 = new StringWriter();
-			exception.printStackTrace(
-				new PrintWriter(stringWriter2));
-			String str = new String(stringWriter2.toString());
-			buf.append("\nTrace:\n");
-			buf.append(str);
-			buf.append("\n\n");
-			buf.append("Columba version: "
-				+ org.columba.core.main.MainInterface.version);
-			buf.append("\n");
-			buf.append("JDK version: "
-					+ System.getProperty("java.version"));
-			buf.append("\n");
-			buf.append("JDK vendor: " + System.getProperty("java.vendor"));
-			buf.append("\n");
-			buf.append("OS version: " + System.getProperty("os.name"));
-					
-			composer.setBodyText(buf.toString());
-					
-			//dialog.dispose();
-			*/
-		}
-	}
+            URLController c = new URLController();
+
+            try {
+                c.open(new URL(
+                        "http://columba.sourceforge.net/phpBB2/viewforum.php?f=15"));
+            } catch (MalformedURLException mue) {
+            }
+
+            /*
+            dialog.dispose();
+
+            ComposerFrame composer = new ComposerFrame();
+
+            composer.setSubject("bug report:");
+
+            composer.setTo("columba-bugs@lists.sourceforge.net");
+
+            StringBuffer buf = new StringBuffer();
+            StringWriter stringWriter2 = new StringWriter();
+            exception.printStackTrace(
+                    new PrintWriter(stringWriter2));
+            String str = new String(stringWriter2.toString());
+            buf.append("\nTrace:\n");
+            buf.append(str);
+            buf.append("\n\n");
+            buf.append("Columba version: "
+                    + org.columba.core.main.MainInterface.version);
+            buf.append("\n");
+            buf.append("JDK version: "
+                            + System.getProperty("java.version"));
+            buf.append("\n");
+            buf.append("JDK vendor: " + System.getProperty("java.vendor"));
+            buf.append("\n");
+            buf.append("OS version: " + System.getProperty("os.name"));
+
+            composer.setBodyText(buf.toString());
+
+            //dialog.dispose();
+            */
+        }
+    }
 }

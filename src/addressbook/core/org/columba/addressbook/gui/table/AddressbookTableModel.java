@@ -13,14 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.addressbook.gui.table;
-
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.folder.HeaderItem;
 import org.columba.addressbook.folder.HeaderItemList;
@@ -28,259 +21,244 @@ import org.columba.addressbook.gui.table.util.HeaderColumnInterface;
 import org.columba.addressbook.gui.table.util.TableModelFilteredView;
 import org.columba.addressbook.gui.table.util.TableModelPlugin;
 import org.columba.addressbook.gui.table.util.TableModelSorter;
+
 import org.columba.core.logging.ColumbaLogger;
 
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.table.AbstractTableModel;
+
+
 public class AddressbookTableModel extends AbstractTableModel {
+    private List columns;
+    private Hashtable table;
+    private HeaderItemList rows;
+    private List tableModelPlugins;
+    private HeaderItem selected;
+    public boolean editable = false;
 
-	private List columns;
-	private Hashtable table;
+    public AddressbookTableModel() {
+        super();
 
-	private HeaderItemList rows;
+        rows = new HeaderItemList();
 
-	private List tableModelPlugins;
+        columns = new Vector();
 
-	private HeaderItem selected;
+        tableModelPlugins = new Vector();
+    }
 
-	public boolean editable = false;
+    public void registerPlugin(TableModelPlugin plugin) {
+        tableModelPlugins.add(plugin);
+    }
 
-	public AddressbookTableModel() {
-		super();
+    public int getSize() {
+        return getHeaderList().count();
+    }
 
-		rows = new HeaderItemList();
+    public void removeItem(Object[] items) {
+        for (int i = 0; i < items.length; i++) {
+            getHeaderList().remove((HeaderItem) items[i]);
+        }
 
-		columns = new Vector();
+        // recreate whole tablemodel
+        update();
+    }
 
-		tableModelPlugins = new Vector();
+    public TableModelFilteredView getTableModelFilteredView() {
+        return (TableModelFilteredView) tableModelPlugins.get(0);
+    }
 
-	}
+    public TableModelSorter getTableModelSorter() {
+        return (TableModelSorter) tableModelPlugins.get(1);
+    }
 
-	public void registerPlugin(TableModelPlugin plugin) {
-		tableModelPlugins.add(plugin);
-	}
+    public HeaderItemList getHeaderList() {
+        return rows;
+    }
 
-	public int getSize() {
-		return getHeaderList().count();
-	}
+    public void update() {
+        fireTableDataChanged();
+    }
 
-	public void removeItem(Object[] items) {
+    public HeaderItem getSelectedItem() {
+        return selected;
+    }
 
-		for (int i = 0; i < items.length; i++) {
-			getHeaderList().remove((HeaderItem) items[i]);
-		}
+    public void setSelectedItem(HeaderItem selected) {
+        this.selected = selected;
+    }
 
-		// recreate whole tablemodel
+    public void addItem(HeaderItem item) throws Exception {
+        ColumbaLogger.log.debug("item=" + item.toString());
 
-		update();
+        int count = 0;
 
-	}
+        if (getHeaderList() != null) {
+            count = getHeaderList().count();
+        }
 
-	public TableModelFilteredView getTableModelFilteredView() {
-		return (TableModelFilteredView) tableModelPlugins.get(0);
-	}
+        if (count == 0) {
+            rows = new HeaderItemList();
 
-	public TableModelSorter getTableModelSorter() {
-		return (TableModelSorter) tableModelPlugins.get(1);
-	}
+            // first message
+            getHeaderList().add(item);
 
-	public HeaderItemList getHeaderList() {
-		return rows;
-	}
+            //fireTableRowsInserted(0, 0);
+            update();
+        } else {
+            setSelectedItem(item);
 
-	public void update() {
+            boolean result = true;
 
-		fireTableDataChanged();
+            if (tableModelPlugins.size() != 0) {
+                result = getTableModelFilteredView().manipulateModel(TableModelPlugin.NODES_INSERTED);
+            }
 
-	}
+            if (result == true) {
+                if (tableModelPlugins.size() != 0) {
+                    int index = getTableModelSorter().getInsertionSortIndex(item);
 
-	public HeaderItem getSelectedItem() {
-		return selected;
-	}
+                    getHeaderList().insertElementAt(item, index);
 
-	public void setSelectedItem(HeaderItem selected) {
-		this.selected = selected;
-	}
+                    fireTableRowsInserted(index, index);
+                } else {
+                    getHeaderList().add(item);
 
-	public void addItem(HeaderItem item) throws Exception {
-		ColumbaLogger.log.debug("item="+item.toString());
-		
-		int count = 0;
+                    //fireTableRowsInserted(getRowCount() - 1, getRowCount() - 1);
+                    update();
+                }
+            }
+        }
+    }
 
-		if (getHeaderList() != null)
-			count = getHeaderList().count();
+    public void addColumn(HeaderColumnInterface column) {
+        String name = column.getName();
 
-		if (count == 0) {
-			
+        columns.add(column);
 
-			rows = new HeaderItemList();
+        fireTableStructureChanged();
+    }
 
-			// first message
-			getHeaderList().add(item);
+    public HeaderColumnInterface getHeaderColumn(String name) {
+        int index = getColumnNumber(name);
 
-			//fireTableRowsInserted(0, 0);
-			update();
-		} else {
+        return (HeaderColumnInterface) columns.get(index);
+    }
 
-			setSelectedItem(item);
+    public void setHeaderList(HeaderItemList list) {
+        if (list == null) {
+            ColumbaLogger.log.debug("list == null");
+            rows = new HeaderItemList();
 
-			boolean result = true;
+            fireTableDataChanged();
 
-			if (tableModelPlugins.size() != 0) {
-				result =
-					getTableModelFilteredView().manipulateModel(
-						TableModelPlugin.NODES_INSERTED);
-			}
+            return;
+        }
 
-			if (result == true) {
+        ColumbaLogger.log.debug("list size=" + list.count());
 
-				if (tableModelPlugins.size() != 0) {
-					int index =
-						getTableModelSorter().getInsertionSortIndex(item);
+        List clone = (Vector) ((Vector) list.getVector()).clone();
+        rows = new HeaderItemList(clone);
 
-					getHeaderList().insertElementAt(item, index);
+        if (tableModelPlugins.size() != 0) {
+            getTableModelSorter().manipulateModel(TableModelPlugin.STRUCTURE_CHANGE);
+        }
 
-					fireTableRowsInserted(index, index);
-				} else {
-					getHeaderList().add(item);
-					//fireTableRowsInserted(getRowCount() - 1, getRowCount() - 1);
-					update();
-				}
-			}
+        fireTableDataChanged();
+    }
 
-		}
+    public void setHeaderItem(int row, HeaderItem item) {
+        rows.replace(row, item);
 
-	}
+        //fireTableDataChanged();
+    }
 
-	public void addColumn(HeaderColumnInterface column) {
-		String name = column.getName();
+    public int getColumnCount() {
+        return columns.size();
+    }
 
-		columns.add(column);
+    public int getRowCount() {
+        if (rows == null) {
+            return 0;
+        } else {
+            return rows.count();
+        }
+    }
 
-		fireTableStructureChanged();
+    public String getColumnName(int col) {
+        HeaderColumnInterface column = (HeaderColumnInterface) columns.get(col);
+        String name = column.getName();
 
-	}
+        return name;
+    }
 
+    public int getColumnNumber(String str) {
+        for (int i = 0; i < getColumnCount(); i++) {
+            if (str.equals(getColumnName(i))) {
+                return i;
+            }
+        }
 
-	public HeaderColumnInterface getHeaderColumn(String name) {
-		int index = getColumnNumber(name);
+        return -1;
+    }
 
-		return (HeaderColumnInterface) columns.get(index);
-	}
+    public HeaderItem getHeaderItem(int row) {
+        if (rows == null) {
+            return null;
+        }
 
-	public void setHeaderList(HeaderItemList list) {
-		if (list == null) {
-			ColumbaLogger.log.debug("list == null");
-			rows = new HeaderItemList();
+        HeaderItem item = rows.get(row);
 
-			fireTableDataChanged();
+        return item;
+    }
 
-			return;
-		}
-		
-		ColumbaLogger.log.debug("list size="+list.count());
+    public Object getValueAt(int row, int col) {
+        if (rows == null) {
+            return null;
+        }
 
-		List clone = (Vector) ((Vector)list.getVector()).clone();
-		rows = new HeaderItemList(clone);
+        HeaderItem item = rows.get(row);
 
-		if (tableModelPlugins.size() != 0)
-			getTableModelSorter().manipulateModel(
-				TableModelPlugin.STRUCTURE_CHANGE);
+        HeaderColumnInterface column = (HeaderColumnInterface) columns.get(col);
+        String name = column.getName();
 
-		fireTableDataChanged();
-	}
-	
-	public void setHeaderItem( int row, HeaderItem item )
-	{
-		rows.replace(row, item);
-		
-		//fireTableDataChanged();
-	}
+        Object value = column.getValue(item);
 
-	public int getColumnCount() {
-		return columns.size();
-	}
+        return value;
+    }
 
-	public int getRowCount() {
-		if (rows == null)
-			return 0;
-		else
-			return rows.count();
-	}
+    public Class getColumnClass(int c) {
+        if (rows == null) {
+            return null;
+        }
 
-	public String getColumnName(int col) {
-		HeaderColumnInterface column = (HeaderColumnInterface) columns.get(col);
-		String name = column.getName();
+        return getValueAt(0, c).getClass();
+    }
 
-		return name;
-	}
+    public boolean isCellEditable(int row, int col) {
+        if (editable == false) {
+            return false;
+        }
 
-	public int getColumnNumber(String str) {
-		for (int i = 0; i < getColumnCount(); i++) {
-			if (str.equals(getColumnName(i))) {
-				return i;
-			}
-		}
-		return -1;
-	}
+        if ((col == 0) || (col == 1)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public HeaderItem getHeaderItem(int row) {
-		if (rows == null)
-			return null;
+    public void setValueAt(Object value, int row, int col) {
+        if (col == 1) {
+            HeaderItem item = rows.get(row);
 
-		HeaderItem item = rows.get(row);
-
-		return item;
-	}
-
-	public Object getValueAt(int row, int col) {
-		if (rows == null)
-			return null;
-
-		HeaderItem item = rows.get(row);
-
-		HeaderColumnInterface column = (HeaderColumnInterface) columns.get(col);
-		String name = column.getName();
-
-		Object value = column.getValue(item);
-
-		return value;
-
-	}
-
-	public Class getColumnClass(int c) {
-		if (rows == null)
-			return null;
-
-		return getValueAt(0, c).getClass();
-	}
-
-	public boolean isCellEditable(int row, int col) {
-
-		if (editable == false)
-			return false;
-
-		if ((col == 0) || (col == 1)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public void setValueAt(Object value, int row, int col) {
-
-		if (col == 1) {
-
-			HeaderItem item = rows.get(row);
-
-			item.add("displayname", value);
-			fireTableCellUpdated(row, col);
-
-		}
-		else if ( col == 0 )
-		{
-			HeaderItem item = rows.get(row);
-			item.add("field",value);
-			fireTableCellUpdated(row,col);
-		}
-	}
-
+            item.add("displayname", value);
+            fireTableCellUpdated(row, col);
+        } else if (col == 0) {
+            HeaderItem item = rows.get(row);
+            item.add("field", value);
+            fireTableCellUpdated(row, col);
+        }
+    }
 }

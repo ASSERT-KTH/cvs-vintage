@@ -15,163 +15,165 @@
 //All Rights Reserved.
 package org.columba.mail.gui.util;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.URL;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
 import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
+
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import java.net.URL;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+
 public class URLController implements ActionListener {
+    private String address;
+    private URL link;
 
-	private String address;
-	private URL link;
+    public JPopupMenu createContactMenu(String contact) {
+        JPopupMenu popup = new JPopupMenu();
+        JMenuItem menuItem = new JMenuItem("Add Contact to Addressbook");
+        menuItem.addActionListener(this);
+        menuItem.setActionCommand("CONTACT");
+        popup.add(menuItem);
+        menuItem = new JMenuItem("Compose Message for " + contact);
+        menuItem.setActionCommand("COMPOSE");
+        menuItem.addActionListener(this);
+        popup.add(menuItem);
 
-	public JPopupMenu createContactMenu(String contact) {
-		JPopupMenu popup = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem("Add Contact to Addressbook");
-		menuItem.addActionListener(this);
-		menuItem.setActionCommand("CONTACT");
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Compose Message for " + contact);
-		menuItem.setActionCommand("COMPOSE");
-		menuItem.addActionListener(this);
-		popup.add(menuItem);
+        return popup;
+    }
 
-		return popup;
-	}
+    public JPopupMenu createLinkMenu() {
+        JPopupMenu popup = new JPopupMenu();
+        JMenuItem menuItem = new JMenuItem("Open");
+        menuItem.addActionListener(this);
+        menuItem.setActionCommand("OPEN");
+        popup.add(menuItem);
+        menuItem = new JMenuItem("Open with...");
+        menuItem.setActionCommand("OPEN_WITH");
+        menuItem.addActionListener(this);
+        popup.add(menuItem);
+        popup.addSeparator();
+        menuItem = new JMenuItem("Open with internal browser");
+        menuItem.setActionCommand("OPEN_WITHINTERNALBROWSER");
+        menuItem.addActionListener(this);
+        popup.add(menuItem);
 
-	public JPopupMenu createLinkMenu() {
-		JPopupMenu popup = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem("Open");
-		menuItem.addActionListener(this);
-		menuItem.setActionCommand("OPEN");
-		popup.add(menuItem);
-		menuItem = new JMenuItem("Open with...");
-		menuItem.setActionCommand("OPEN_WITH");
-		menuItem.addActionListener(this);
-		popup.add(menuItem);
-		popup.addSeparator();
-		menuItem = new JMenuItem("Open with internal browser");
-		menuItem.setActionCommand("OPEN_WITHINTERNALBROWSER");
-		menuItem.addActionListener(this);
-		popup.add(menuItem);
+        return popup;
+    }
 
-		return popup;
-	}
+    public void setAddress(String s) {
+        this.address = s;
+    }
 
-	public void setAddress(String s) {
-		this.address = s;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public URL getLink() {
+        return link;
+    }
 
-	public URL getLink() {
-		return link;
-	}
+    public void setLink(URL u) {
+        this.link = u;
+    }
 
-	public void setLink(URL u) {
-		this.link = u;
-	}
+    public void compose(String address) {
+        ComposerModel model = new ComposerModel();
+        model.setTo(address);
 
-	public void compose(String address) {
-		ComposerModel model = new ComposerModel();
-		model.setTo(address);
+        // init model to html or text according to stored option		
+        XmlElement optionsElement = MailConfig.get("composer_options")
+                                              .getElement("/options");
+        XmlElement htmlElement = optionsElement.getElement("html");
 
-		// init model to html or text according to stored option		
-		XmlElement optionsElement =
-			MailConfig.get("composer_options").getElement("/options");
-		XmlElement htmlElement = optionsElement.getElement("html");
-		if (htmlElement == null)
-			htmlElement = optionsElement.addSubElement("html");
-		String enableHtml = htmlElement.getAttribute("enable", "false");
-		model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
-		
-		ComposerController controller = new ComposerController();
-		controller.setComposerModel(model);
-	}
+        if (htmlElement == null) {
+            htmlElement = optionsElement.addSubElement("html");
+        }
 
-	public void contact(String address) {
-		SelectAddressbookFolderDialog dialog =
-			MainInterface
-				.addressbookTreeModel
-				.getSelectAddressbookFolderDialog();
+        String enableHtml = htmlElement.getAttribute("enable", "false");
+        model.setHtml(Boolean.valueOf(enableHtml).booleanValue());
 
-		org.columba.addressbook.folder.Folder selectedFolder =
-			dialog.getSelectedFolder();
+        ComposerController controller = new ComposerController();
+        controller.setComposerModel(model);
+    }
 
-		if (selectedFolder == null)
-			return;
+    public void contact(String address) {
+        SelectAddressbookFolderDialog dialog = MainInterface.addressbookTreeModel.getSelectAddressbookFolderDialog();
 
-		try {
+        org.columba.addressbook.folder.Folder selectedFolder = dialog.getSelectedFolder();
 
-			ContactCard card = new ContactCard();
-			card.set("displayname", address);
-			card.set("email", "internet", address);
+        if (selectedFolder == null) {
+            return;
+        }
 
-			selectedFolder.add(card);
+        try {
+            ContactCard card = new ContactCard();
+            card.set("displayname", address);
+            card.set("email", "internet", address);
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+            selectedFolder.add(card);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	}
+    public JPopupMenu createMenu(URL url) {
+        if (url.getProtocol().equalsIgnoreCase("mailto")) {
+            // found email address
+            setAddress(url.getFile());
 
-	public JPopupMenu createMenu(URL url) {
-		if (url.getProtocol().equalsIgnoreCase("mailto")) {
-			// found email address
+            JPopupMenu menu = createContactMenu(url.getFile());
 
-			setAddress(url.getFile());
-			JPopupMenu menu = createContactMenu(url.getFile());
-			return menu;
+            return menu;
+        } else {
+            setLink(url);
 
-		} else {
+            JPopupMenu menu = createLinkMenu();
 
-			setLink(url);
-			JPopupMenu menu = createLinkMenu();
-			return menu;
-		}
-	}
+            return menu;
+        }
+    }
 
-	public void open(URL url) {
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		viewer.openURL(url);
-	}
+    public void open(URL url) {
+        MimeTypeViewer viewer = new MimeTypeViewer();
+        viewer.openURL(url);
+    }
 
-	public void openWith(URL url) {
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		viewer.openWithURL(url);
-	}
+    public void openWith(URL url) {
+        MimeTypeViewer viewer = new MimeTypeViewer();
+        viewer.openWithURL(url);
+    }
 
-	/*
-	public void openWithBrowser(URL url) {
-		MimeTypeViewer viewer = new MimeTypeViewer();
-		viewer.openWithBrowserURL(url);
-	}
-	*/
-	public void actionPerformed(ActionEvent e) {
-		String action = e.getActionCommand();
-		if (action.equals("COMPOSE")) {
-			compose(getAddress());
-		} else if (action.equals("CONTACT")) {
-			contact(getAddress());
-		} else if (action.equals("OPEN")) {
-			open(getLink());
-		} else if (action.equals("OPEN_WITH")) {
-			openWith(getLink());
-		} else if (action.equals("OPEN_WITHINTERNALBROWSER")) {
-			//openWithBrowser(getLink());
-		}
-	}
+    /*
+    public void openWithBrowser(URL url) {
+            MimeTypeViewer viewer = new MimeTypeViewer();
+            viewer.openWithBrowserURL(url);
+    }
+    */
+    public void actionPerformed(ActionEvent e) {
+        String action = e.getActionCommand();
+
+        if (action.equals("COMPOSE")) {
+            compose(getAddress());
+        } else if (action.equals("CONTACT")) {
+            contact(getAddress());
+        } else if (action.equals("OPEN")) {
+            open(getLink());
+        } else if (action.equals("OPEN_WITH")) {
+            openWith(getLink());
+        } else if (action.equals("OPEN_WITHINTERNALBROWSER")) {
+            //openWithBrowser(getLink());
+        }
+    }
 }

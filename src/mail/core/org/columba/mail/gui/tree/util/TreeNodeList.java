@@ -13,122 +13,128 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.tree.util;
 
 import java.io.File;
+
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.tree.TreePath;
 
+
 public class TreeNodeList {
-	protected List list;
+    protected List list;
 
-	public TreeNodeList() {
-		list = new Vector();
-	}
+    public TreeNodeList() {
+        list = new Vector();
+    }
 
-	public TreeNodeList(Vector v) {
-		list = v;
-	}
+    public TreeNodeList(Vector v) {
+        list = v;
+    }
 
-	public TreeNodeList(String[] str) {
-		for (int i = 0; i < str.length; i++) {
-			list.add(str[i]);
-		}
-	}
+    public TreeNodeList(String[] str) {
+        for (int i = 0; i < str.length; i++) {
+            list.add(str[i]);
+        }
+    }
 
-	public TreeNodeList(String s) {
-		list = new Vector();
+    public TreeNodeList(String s) {
+        list = new Vector();
 
-		StringTokenizer tok = new StringTokenizer(s, "/");
+        StringTokenizer tok = new StringTokenizer(s, "/");
 
-		while (tok.hasMoreTokens()) {
-			String next = tok.nextToken();
+        while (tok.hasMoreTokens()) {
+            String next = tok.nextToken();
 
-			list.add(next);
-		}
-	}
+            list.add(next);
+        }
+    }
 
-	public TreePath getTreePath() {
-		TreePath path = new TreePath(get(0));
+    public TreePath getTreePath() {
+        TreePath path = new TreePath(get(0));
 
-		for (int i = 1; i < count(); i++) {
+        for (int i = 1; i < count(); i++) {
+            Object o = get(i);
+            path = path.pathByAddingChild(o);
+        }
 
-			Object o = get(i);
-			path = path.pathByAddingChild(o);
-		}
+        return path;
+    }
 
-		return path;
-	}
+    public void removeElementAt(int index) {
+        list.remove(index);
+    }
 
-	public void removeElementAt(int index) {
-		list.remove(index);
-	}
+    public List getList() {
+        return list;
+    }
 
-	public List getList() {
-		return list;
-	}
+    public void setElementAt(String s, int i) {
+        list.set(i, s);
+    }
 
-	public void setElementAt(String s, int i) {
-		list.set(i, s);
-	}
+    public void add(String s) {
+        list.add(s);
+    }
 
-	public void add(String s) {
-		list.add(s);
-	}
+    public String get(int i) {
+        if (count() > 0) {
+            return (String) list.get(i);
+        } else {
+            return "";
+        }
+    }
 
-	public String get(int i) {
-		if (count() > 0)
-			return (String) list.get(i);
-		else
-			return "";
-	}
+    public int count() {
+        return list.size();
+    }
 
-	public int count() {
-		return list.size();
-	}
+    public void clear() {
+        list.clear();
+    }
 
-	public void clear() {
-		list.clear();
-	}
+    public String lastElement() {
+        return (String) list.get(list.size() - 1);
+    }
 
-	public String lastElement() {
-		return (String) list.get(list.size()-1);
-	}
+    public void removeLastElement() {
+        list.remove(list.size() - 1);
+    }
 
-	public void removeLastElement() {
-		list.remove(list.size()-1);
-	}
+    public boolean equals(TreeNodeList v) {
+        String s1;
+        String s2;
 
-	public boolean equals(TreeNodeList v) {
-		String s1, s2;
+        if ((count() == 0) && (v.count() == 0)) {
+            return true;
+        }
 
-		if ((count() == 0) && (v.count() == 0))
-			return true;
+        if (count() != v.count()) {
+            return false;
+        }
 
-		if (count() != v.count())
-			return false;
+        for (int i = 0; i < count(); i++) {
+            s1 = get(i);
+            s2 = v.get(i);
 
-		for (int i = 0; i < count(); i++) {
-			s1 = get(i);
-			s2 = v.get(i);
+            if (!s1.equals(s2)) {
+                return false;
+            }
+        }
 
-			if (!s1.equals(s2))
-				return false;
-		}
-		return true;
-	}
+        return true;
+    }
 
-	public File getFile(File programDirectory) {
-		File file = programDirectory;
+    public File getFile(File programDirectory) {
+        File file = programDirectory;
 
-		for (int i = 0; i < count(); i++) {
-			file = new File(file, get(i));
-		}
+        for (int i = 0; i < count(); i++) {
+            file = new File(file, get(i));
+        }
 
-		return file;
-	}
+        return file;
+    }
 }

@@ -13,13 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.table.action;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandAdapter;
 import org.columba.mail.command.FolderCommandReference;
@@ -29,6 +27,9 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.frame.TableViewOwner;
 import org.columba.mail.gui.table.TableController;
 
+import java.awt.event.ActionEvent;
+
+
 /**
  * @author frd
  *
@@ -36,47 +37,47 @@ import org.columba.mail.gui.table.TableController;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class PasteAction extends FrameAction {
+    TableController tableController;
+    AbstractMailFrameController frameController;
 
-	TableController tableController;
-	AbstractMailFrameController frameController;
+    public PasteAction(AbstractMailFrameController frameController) {
+        super(frameController, "PasteAction");
+        this.tableController = ((TableViewOwner) frameController).getTableController();
+        this.frameController = frameController;
+    }
 
-	public PasteAction(AbstractMailFrameController frameController) {
-		super(frameController, "PasteAction");
-		this.tableController =
-			((TableViewOwner) frameController).getTableController();
-		this.frameController = frameController;
-	}
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent arg0) {
+        FolderCommandReference[] ref = new FolderCommandReference[2];
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {	
-		FolderCommandReference[] ref = new FolderCommandReference[2];
+        FolderCommandReference[] source = MainInterface.clipboardManager.getMessageSelection();
 
-		FolderCommandReference[] source =
-			MainInterface.clipboardManager.getMessageSelection();
-		if (source == null)
-			return;
+        if (source == null) {
+            return;
+        }
 
-		ref[0] = source[0];
+        ref[0] = source[0];
 
-		FolderCommandReference[] dest =
-			(FolderCommandReference[]) frameController.getTableSelection();
+        FolderCommandReference[] dest = (FolderCommandReference[]) frameController.getTableSelection();
 
-		FolderCommandAdapter adapter = new FolderCommandAdapter(dest);
+        FolderCommandAdapter adapter = new FolderCommandAdapter(dest);
 
-		ref[1] = adapter.getSourceFolderReferences()[0];
+        ref[1] = adapter.getSourceFolderReferences()[0];
 
-		FolderCommand c = null;
+        FolderCommand c = null;
 
-		if (MainInterface.clipboardManager.isCutAction())
-			c = new MoveMessageCommand(ref);
-		else
-			c = new CopyMessageCommand(ref);
-			
-		if (MainInterface.clipboardManager.isCutAction())
-			MainInterface.clipboardManager.clearMessageSelection();
+        if (MainInterface.clipboardManager.isCutAction()) {
+            c = new MoveMessageCommand(ref);
+        } else {
+            c = new CopyMessageCommand(ref);
+        }
 
-		MainInterface.processor.addOp(c);
-	}
+        if (MainInterface.clipboardManager.isCutAction()) {
+            MainInterface.clipboardManager.clearMessageSelection();
+        }
+
+        MainInterface.processor.addOp(c);
+    }
 }

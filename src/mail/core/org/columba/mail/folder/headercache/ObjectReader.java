@@ -17,84 +17,62 @@
 //All Rights Reserved.
 package org.columba.mail.folder.headercache;
 
+import org.columba.core.gui.util.ColorFactory;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
+
 import java.util.Date;
 
-import org.columba.core.gui.util.ColorFactory;
 
 /**
  * @author fdietz
  */
 public class ObjectReader {
-	protected File file;
-	protected FileInputStream istream;
-	protected ObjectInputStream ois;
+    private static final int NULL = 0;
+    private static final int STRING = 1;
+    private static final int DATE = 2;
+    private static final int BOOLEAN = 3;
+    private static final int INTEGER = 4;
+    private static final int COLOR = 5;
+    private static final int OBJECT = 6;
+    protected File file;
+    protected FileInputStream istream;
+    protected ObjectInputStream ois;
 
-	private static final int NULL = 0;
-	private static final int STRING = 1;
-	private static final int DATE = 2;
-	private static final int BOOLEAN = 3;
-	private static final int INTEGER = 4;
-	private static final int COLOR = 5;
-	private static final int OBJECT = 6;
+    public ObjectReader(File file) throws Exception {
+        this.file = file;
+        istream = new FileInputStream(file.getPath());
+        ois = new ObjectInputStream(new BufferedInputStream(istream));
+    }
 
-	public ObjectReader(File file) throws Exception {
-		this.file = file;
-		istream = new FileInputStream(file.getPath());
-		ois = new ObjectInputStream(new BufferedInputStream(istream));
-	}
+    public Object readObject() throws Exception {
+        int classCode = ois.readInt();
 
-	public Object readObject() throws Exception {
+        switch (classCode) {
+        case NULL:return null;
 
-		int classCode = ois.readInt();
+        case STRING:return ois.readUTF();
 
-		switch (classCode) {
-			case NULL :
-				{
-					return null;
-				}
-			case STRING :
-				{
-					return ois.readUTF();
+        case INTEGER:return new Integer(ois.readInt());
 
-				}
+        case BOOLEAN:return Boolean.valueOf(ois.readBoolean());
 
-			case INTEGER :
-				{
-					return new Integer(ois.readInt());
+        case DATE:return new Date(ois.readLong());
 
-				}
+        case COLOR:// ColorFactory makes sure that only one instance
+            // of the same color exists
+            return ColorFactory.getColor(ois.readInt());
 
-			case BOOLEAN :
-				{
-					return Boolean.valueOf(ois.readBoolean());
+        default:// some unspecified Object
+            return ois.readObject();
+        }
+    }
 
-				}
-
-			case DATE :
-				{
-					return new Date(ois.readLong());
-				}
-			case COLOR :
-				{
-					// ColorFactory makes sure that only one instance
-					// of the same color exists
-					return ColorFactory.getColor(ois.readInt());
-				}
-			default :
-				{
-					// some unspecified Object
-					return ois.readObject();
-				}
-		}
-
-	}
-
-	public void close() throws Exception {
-		ois.close();
-		istream.close();
-	}
+    public void close() throws Exception {
+        ois.close();
+        istream.close();
+    }
 }

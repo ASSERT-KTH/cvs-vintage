@@ -15,6 +15,17 @@
 //All Rights Reserved.
 package org.columba.addressbook.parser;
 
+import org.columba.addressbook.config.AdapterNode;
+import org.columba.addressbook.folder.ContactCard;
+import org.columba.addressbook.folder.GroupListCard;
+
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -27,168 +38,151 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.folder.ContactCard;
-import org.columba.addressbook.folder.GroupListCard;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 /**
- * @version 	1.0
+ * @version         1.0
  * @author
  */
 public class DefaultCardLoader {
-	private Document document;
-	private File file;
+    private Document document;
+    private File file;
 
-	public DefaultCardLoader(File file) {
+    public DefaultCardLoader(File file) {
+        this.file = file;
+    }
 
-		this.file = file;
-	}
+    public ContactCard createContactCard() {
+        return new ContactCard(getDocument(), null);
+    }
 
-	public ContactCard createContactCard() {
-		return new ContactCard(getDocument(), null);
-	}
+    public GroupListCard createGroupListCard() {
+        return new GroupListCard(getDocument(), null);
+    }
 
-	public GroupListCard createGroupListCard() {
-		return new GroupListCard(getDocument(), null);
-	}
+    public boolean isContact() {
+        AdapterNode rootNode = new AdapterNode(getDocument());
 
-	public boolean isContact() {
-		AdapterNode rootNode = new AdapterNode(getDocument());
+        AdapterNode child = rootNode.getChildAt(0);
 
-		AdapterNode child = rootNode.getChildAt(0);
-		if (child != null) {
-			System.out.println("iscontact() ----->" + child.getName());
+        if (child != null) {
+            System.out.println("iscontact() ----->" + child.getName());
 
-			if (child.getName().equals("vcard")) {
-				return true;
-			} else {
-				return false;
-			}
-		} else
-			return false;
-	}
+            if (child.getName().equals("vcard")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
-	public File getFile() {
-		return file;
-	}
+    public File getFile() {
+        return file;
+    }
 
-	public void save() {
-		try {
+    public void save() {
+        try {
+            // Use a Transformer for output
+            TransformerFactory tFactory = TransformerFactory.newInstance();
+            Transformer transformer = tFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
 
-			// Use a Transformer for output
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer = tFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(file);
+            transformer.transform(source, result);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-			DOMSource source = new DOMSource(document);
-			StreamResult result = new StreamResult(file);
-			transformer.transform(source, result);
+    public void load() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
 
-		}
-	}
+            builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
+                    public void fatalError(SAXParseException exception)
+                        throws SAXException {
+                    }
 
-	public void load() {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    public void error(SAXParseException e)
+                        throws SAXParseException {
+                        throw e;
+                    }
 
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
+                    public void warning(SAXParseException err)
+                        throws SAXParseException {
+                        System.out.println("** Warning" + ", line " +
+                            err.getLineNumber() + ", uri " + err.getSystemId());
+                        System.out.println("   " + err.getMessage());
+                    }
+                });
 
-			builder.setErrorHandler(new org.xml.sax.ErrorHandler() {
+            document = builder.parse(file);
+        } catch (SAXParseException spe) {
+            System.out.println("\n** Parsing error" + ", line " +
+                spe.getLineNumber() + ", uri " + spe.getSystemId());
+            System.out.println("   " + spe.getMessage());
 
-				public void fatalError(SAXParseException exception)
-					throws SAXException {
-				}
+            Exception x = spe;
 
-				public void error(SAXParseException e)
-					throws SAXParseException {
-					throw e;
-				}
+            if (spe.getException() != null) {
+                x = spe.getException();
+            }
 
-				public void warning(SAXParseException err)
-					throws SAXParseException {
-					System.out.println(
-						"** Warning"
-							+ ", line "
-							+ err.getLineNumber()
-							+ ", uri "
-							+ err.getSystemId());
-					System.out.println("   " + err.getMessage());
-				}
-			});
+            x.printStackTrace();
+        } catch (SAXException sxe) {
+            Exception x = sxe;
 
-			document = builder.parse(file);
+            if (sxe.getException() != null) {
+                x = sxe.getException();
+            }
 
-		} catch (SAXParseException spe) {
-			System.out.println(
-				"\n** Parsing error"
-					+ ", line "
-					+ spe.getLineNumber()
-					+ ", uri "
-					+ spe.getSystemId());
-			System.out.println("   " + spe.getMessage());
+            x.printStackTrace();
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
-			Exception x = spe;
-			if (spe.getException() != null)
-				x = spe.getException();
-			x.printStackTrace();
+    public Document getDocument() {
+        return document;
+    }
 
-		} catch (SAXException sxe) {
-			Exception x = sxe;
-			if (sxe.getException() != null)
-				x = sxe.getException();
-			x.printStackTrace();
+    public void addElement(Element parent, Element child) {
+        parent.appendChild(child);
+    }
 
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-	}
+    public void addCDATASection(Element parent, CDATASection child) {
+        parent.appendChild(child);
+    }
 
-	public Document getDocument() {
-		return document;
-	}
+    public Element createTextElementNode(String key, String value) {
+        AdapterNode adpNode = new AdapterNode(document);
 
-	public void addElement(Element parent, Element child) {
-		parent.appendChild(child);
-	}
+        Element newElement = (Element) document.createElement(key);
+        newElement.appendChild(document.createTextNode(value));
 
-	public void addCDATASection(Element parent, CDATASection child) {
-		parent.appendChild(child);
-	}
+        return newElement;
+    }
 
-	public Element createTextElementNode(String key, String value) {
-		AdapterNode adpNode = new AdapterNode(document);
+    public CDATASection createCDATAElementNode(String key) {
+        AdapterNode adpNode = new AdapterNode(document);
 
-		Element newElement = (Element) document.createElement(key);
-		newElement.appendChild(document.createTextNode(value));
+        CDATASection newElement = (CDATASection) document.createCDATASection(key);
 
-		return newElement;
-	}
+        return newElement;
+    }
 
-	public CDATASection createCDATAElementNode(String key) {
-		AdapterNode adpNode = new AdapterNode(document);
+    public Element createElementNode(String key) {
+        AdapterNode adpNode = new AdapterNode(document);
 
-		CDATASection newElement =
-			(CDATASection) document.createCDATASection(key);
+        Element newElement = (Element) document.createElement(key);
 
-		return newElement;
-	}
-
-	public Element createElementNode(String key) {
-		AdapterNode adpNode = new AdapterNode(document);
-
-		Element newElement = (Element) document.createElement(key);
-		return newElement;
-	}
-
+        return newElement;
+    }
 }

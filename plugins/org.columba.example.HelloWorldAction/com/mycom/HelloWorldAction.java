@@ -13,27 +13,25 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package com.mycom;
-
-import java.awt.event.ActionEvent;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 
+import java.awt.event.ActionEvent;
+
+
 public class HelloWorldAction extends FrameAction {
+    public HelloWorldAction(FrameMediator controller) {
+        super(controller, "Hello, World!");
 
-	public HelloWorldAction(FrameMediator controller) {
-		super(controller, "Hello, World!");
+        putValue(SHORT_DESCRIPTION, "Show me this tooltip, please");
+    }
 
-		putValue(SHORT_DESCRIPTION, "Show me this tooltip, please");
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent evt) {
-		System.out.println("Hello World!");
-	}
-
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    public void actionPerformed(ActionEvent evt) {
+        System.out.println("Hello World!");
+    }
 }

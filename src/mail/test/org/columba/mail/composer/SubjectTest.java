@@ -19,104 +19,101 @@ package org.columba.mail.composer;
 
 import junit.framework.TestCase;
 
+
 /**
  * Test cases for generating subject lines, when replying and/or forwarding
  * messages
  * <p>
- * 
- * TODO: Re:[columba-devel]test-subject 
- * 
+ *
+ * TODO: Re:[columba-devel]test-subject
+ *
  * @author fdietz
  */
 public class SubjectTest extends TestCase {
+    /**
+     * Check if "Re: " is correctly prepended
+     *
+     */
+    public void testReply() {
+        String s = "Subject";
 
-	/**
-	 * Check if "Re: " is correctly prepended
-	 *  
-	 */
-	public void testReply() {
-		String s = "Subject";
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+        assertEquals("Re: Subject", result);
+    }
 
-		assertEquals("Re: Subject", result);
-	}
+    /**
+     * Check if "Fwd: " is correctly prepended
+     *
+     */
+    public void testForward() {
+        String s = "Subject";
 
-	/**
-	 * Check if "Fwd: " is correctly prepended
-	 *  
-	 */
-	public void testForward() {
-		String s = "Subject";
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+        assertEquals("Fwd: Subject", result);
+    }
 
-		assertEquals("Fwd: Subject", result);
+    /**
+     * Check if "Re: " is only prepended if not already found in string
+     *
+     */
+    public void testReply2() {
+        String s = "Re: Subject";
 
-	}
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-	/**
-	 * Check if "Re: " is only prepended if not already found in string
-	 *  
-	 */
-	public void testReply2() {
-		String s = "Re: Subject";
+        assertEquals("Re: Subject", result);
+    }
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+    /**
+     * Check if "Fwd: " is only prepended if not already found in string
+     *
+     */
+    public void testForward2() {
+        String s = "Fwd: Subject";
 
-		assertEquals("Re: Subject", result);
-	}
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-	/**
-	 * Check if "Fwd: " is only prepended if not already found in string
-	 *  
-	 */
-	public void testForward2() {
-		String s = "Fwd: Subject";
+        assertEquals("Fwd: Subject", result);
+    }
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+    /**
+     * Check if "Re:" is only prepended if not already found in string
+     * <p>
+     * Note, the missing space
+     */
+    public void testReply3() {
+        String s = "Re:Subject";
 
-		assertEquals("Fwd: Subject", result);
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-	}
+        assertEquals("Re:Subject", result);
+    }
 
-	/**
-	 * Check if "Re:" is only prepended if not already found in string
-	 * <p>
-	 * Note, the missing space
-	 */
-	public void testReply3() {
-		String s = "Re:Subject";
+    /**
+     * Check if "Fwd:" is only prepended if not already found in string
+     * <p>
+     * Note, the missing space
+     *
+     */
+    public void testForward3() {
+        String s = "Fwd:Subject";
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+        String result = MessageBuilderHelper.createForwardSubject(s);
 
-		assertEquals("Re:Subject", result);
-	}
+        assertEquals("Fwd:Subject", result);
+    }
 
-	/**
-	 * Check if "Fwd:" is only prepended if not already found in string
-	 * <p>
-	 * Note, the missing space
-	 *  
-	 */
-	public void testForward3() {
-		String s = "Fwd:Subject";
+    /**
+     * Test if string is matched correctly.
+     *
+     */
+    public void testAlreadyInString() {
+        String s = "Test: Hallo";
 
-		String result = MessageBuilderHelper.createForwardSubject(s);
+        boolean result = MessageBuilderHelper.isAlreadyReply(s, "Test:");
 
-		assertEquals("Fwd:Subject", result);
-
-	}
-	
-	/**
-	 * Test if string is matched correctly.
-	 *
-	 */
-	public void testAlreadyInString() {
-		String s = "Test: Hallo";
-		
-		boolean result = MessageBuilderHelper.isAlreadyReply(s, "Test:");
-	
-		assertTrue(result);
-	}
+        assertTrue(result);
+    }
 }

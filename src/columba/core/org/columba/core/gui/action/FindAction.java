@@ -13,45 +13,44 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.core.gui.action;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.GlobalResourceLoader;
 
-public class FindAction extends FrameAction {
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
-	public FindAction(FrameMediator controller) {
-		super(controller, GlobalResourceLoader.getString(
-			null, null, "menu_edit_find"));
-		
-		// tooltip text
-		putValue(SHORT_DESCRIPTION, GlobalResourceLoader.getString(
-			null,
-                        null,
-                        "menu_edit_find_tooltip").replaceAll("&", ""));
-		
-		// small icon for menu
-		putValue(SMALL_ICON, ImageLoader.getSmallImageIcon("stock_search-16.png"));
-		
-		// large icon for toolbar
-		putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_search.png"));
-		
-		// shortcut key
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(
-					KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-		
-		setEnabled(false);
-	}
-        
-        public void actionPerformed(ActionEvent e) {
-                //TODO: implement
-        }
+import javax.swing.KeyStroke;
+
+
+public class FindAction extends FrameAction {
+    public FindAction(FrameMediator controller) {
+        super(controller,
+            GlobalResourceLoader.getString(null, null, "menu_edit_find"));
+
+        // tooltip text
+        putValue(SHORT_DESCRIPTION,
+            GlobalResourceLoader.getString(null, null, "menu_edit_find_tooltip")
+                                .replaceAll("&", ""));
+
+        // small icon for menu
+        putValue(SMALL_ICON,
+            ImageLoader.getSmallImageIcon("stock_search-16.png"));
+
+        // large icon for toolbar
+        putValue(LARGE_ICON, ImageLoader.getImageIcon("stock_search.png"));
+
+        // shortcut key
+        putValue(ACCELERATOR_KEY,
+            KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
+
+        setEnabled(false);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        //TODO: implement
+    }
 }

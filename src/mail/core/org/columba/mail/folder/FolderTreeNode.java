@@ -15,16 +15,18 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
-
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.util.Lock;
 import org.columba.core.xml.XmlElement;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
+
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+
 
 /**
  * Represents a treenode and is the abstract class every folder
@@ -33,263 +35,264 @@ import org.columba.mail.config.FolderItem;
  * In comparison to {@link Folder} it doesn't contain messages.
  * <p>
  * see tree.xml configuration file
- * 
+ *
  * @author fdietz
  */
 public abstract class FolderTreeNode extends DefaultMutableTreeNode {
+    protected final static ImageIcon collapsedIcon = ImageLoader.getSmallImageIcon(
+            "folder-closed.png");
+    protected final static ImageIcon expandedIcon = ImageLoader.getSmallImageIcon(
+            "folder-open.png");
 
-	protected final static ImageIcon collapsedIcon =
-		ImageLoader.getSmallImageIcon("folder-closed.png");
+    // the next new folder will get this UID
+    private static int nextUid = 0;
 
-	protected final static ImageIcon expandedIcon =
-		ImageLoader.getSmallImageIcon("folder-open.png");
+    // folderitem wraps xml configuration from tree.xml
+    protected FolderItem node;
 
-	// folderitem wraps xml configuration from tree.xml
-	protected FolderItem node;
-	
-	// locking mechanism
-	protected Lock myLock;
+    // locking mechanism
+    protected Lock myLock;
 
-	// the next new folder will get this UID
-	private static int nextUid = 0;
+    public FolderTreeNode(String name, String type) {
+        super();
 
-	public FolderTreeNode(String name, String type) {
-		super();
+        XmlElement defaultElement = new XmlElement("folder");
+        defaultElement.addAttribute("type", type);
+        defaultElement.addAttribute("uid", Integer.toString(nextUid++));
+        defaultElement.addElement(new XmlElement("property"));
 
-		XmlElement defaultElement = new XmlElement("folder");
-		defaultElement.addAttribute("type", type);
-		defaultElement.addAttribute("uid", Integer.toString(nextUid++));
-		defaultElement.addElement(new XmlElement("property"));
+        setNode(new FolderItem(defaultElement));
+        setName(name);
 
-		setNode(new FolderItem(defaultElement));
-		setName(name);
+        myLock = new Lock();
+    }
 
-		myLock = new Lock();
-	}
+    public FolderTreeNode() {
+        super();
 
-	public FolderTreeNode() {
-		super();
+        myLock = new Lock();
+    }
 
-		myLock = new Lock();
-	}
+    public FolderTreeNode(FolderItem node) {
+        super();
 
-	public FolderTreeNode(FolderItem node) {
-		super();
-		if (node != null)
-			setNode(node);
-		myLock = new Lock();
-	}
+        if (node != null) {
+            setNode(node);
+        }
 
-	/**
-	 * Method getSelectionTreePath.
-	 * @return TreePath
-	 */
-	public TreePath getSelectionTreePath() {
+        myLock = new Lock();
+    }
 
-		return new TreePath(getPathToRoot(this, 0));
-	}
+    /**
+     * Method getSelectionTreePath.
+     * @return TreePath
+     */
+    public TreePath getSelectionTreePath() {
+        return new TreePath(getPathToRoot(this, 0));
+    }
 
-	public int getUid() {
-		return node.getInteger("uid");
-	}
+    public int getUid() {
+        return node.getInteger("uid");
+    }
 
-	public ImageIcon getCollapsedIcon() {
-		return collapsedIcon;
-	}
+    public ImageIcon getCollapsedIcon() {
+        return collapsedIcon;
+    }
 
-	public ImageIcon getExpandedIcon() {
-		return expandedIcon;
-	}
+    public ImageIcon getExpandedIcon() {
+        return expandedIcon;
+    }
 
-	public XmlElement getNode() {
-		return node.getRoot();
-	}
+    public XmlElement getNode() {
+        return node.getRoot();
+    }
 
-	public FolderItem getFolderItem() {
-		return node;
-	}
+    public FolderItem getFolderItem() {
+        return node;
+    }
 
-	/**
-		 * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
-		 */
-	public String getName() {
-		String name = null;
+    /**
+             * @see org.columba.modules.mail.folder.FolderTreeNode#getName()
+             */
+    public String getName() {
+        String name = null;
 
-		FolderItem item = getFolderItem();
-		name = item.get("property", "name");
+        FolderItem item = getFolderItem();
+        name = item.get("property", "name");
 
-		return name;
-	}
+        return name;
+    }
 
-	/**
-	 * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
-	 */
-	public void setName(String newName) {
+    /**
+     * @see org.columba.modules.mail.folder.FolderTreeNode#setName(String)
+     */
+    public void setName(String newName) {
+        FolderItem item = getFolderItem();
+        item.set("property", "name", newName);
+    }
 
-		FolderItem item = getFolderItem();
-		item.set("property", "name", newName);
+    /**
+     * Method getCommandReference.
+     *
+     * @param r
+     * @return FolderCommandReference[]
+     */
+    public FolderCommandReference[] getCommandReference(
+        FolderCommandReference[] r) {
+        return r;
+    }
 
-	}
+    /********************************** locking mechanism ****************************/
+    public boolean tryToGetLock(Object locker) {
+        return myLock.tryToGetLock(locker);
+    }
 
-	/**
-	 * Method getCommandReference.
-	 * 
-	 * @param r
-	 * @return FolderCommandReference[]
-	 */
-	public FolderCommandReference[] getCommandReference(FolderCommandReference[] r) {
-		return r;
-	}
+    public void releaseLock(Object locker) {
+        myLock.release(locker);
+    }
 
-	/********************************** locking mechanism ****************************/
+    /**************************** treenode management *******************************/
+    public void insert(FolderTreeNode newFolder, int newIndex) {
+        FolderTreeNode oldParent = (FolderTreeNode) newFolder.getParent();
+        int oldIndex = oldParent.getIndex(newFolder);
+        oldParent.remove(oldIndex);
 
-	public boolean tryToGetLock(Object locker) {
-		return myLock.tryToGetLock(locker);
-	}
+        XmlElement oldParentNode = oldParent.getFolderItem().getRoot();
+        XmlElement newChildNode = newFolder.getFolderItem().getRoot();
+        oldParentNode.removeElement(newChildNode);
 
-	public void releaseLock(Object locker) {
-		myLock.release(locker);
-	}
+        newFolder.setParent(this);
+        children.insertElementAt(newFolder, newIndex);
 
-	/**************************** treenode management *******************************/
+        XmlElement newParentNode = getFolderItem().getRoot();
 
-	public void insert(FolderTreeNode newFolder, int newIndex) {
+        int j = -1;
+        boolean inserted = false;
 
-		FolderTreeNode oldParent = (FolderTreeNode) newFolder.getParent();
-		int oldIndex = oldParent.getIndex(newFolder);
-		oldParent.remove(oldIndex);
+        for (int i = 0; i < newParentNode.count(); i++) {
+            XmlElement n = newParentNode.getElement(i);
+            String name = n.getName();
 
-		XmlElement oldParentNode = oldParent.getFolderItem().getRoot();
-		XmlElement newChildNode = newFolder.getFolderItem().getRoot();
-		oldParentNode.removeElement(newChildNode);
+            if (name.equals("folder")) {
+                j++;
+            }
 
-		newFolder.setParent(this);
-		children.insertElementAt(newFolder, newIndex);
+            if (j == newIndex) {
+                newParentNode.insertElement(newChildNode, i);
+                inserted = true;
+                System.out.println("------> adapternode insert correctly");
+            }
+        }
 
-		XmlElement newParentNode = getFolderItem().getRoot();
+        if (inserted == false) {
+            if ((j + 1) == newIndex) {
+                newParentNode.append(newChildNode);
+                System.out.println("------> adapternode appended correctly");
+            }
+        }
+    }
 
-		int j = -1;
-		boolean inserted = false;
-		for (int i = 0; i < newParentNode.count(); i++) {
-			XmlElement n = newParentNode.getElement(i);
-			String name = n.getName();
+    public void removeFolder() throws Exception {
+        // remove XmlElement
+        getFolderItem().getRoot().getParent().removeElement(getFolderItem()
+                                                                .getRoot());
 
-			if (name.equals("folder")) {
-				j++;
-			}
+        // remove DefaultMutableTreeNode
+        removeFromParent();
+    }
 
-			if (j == newIndex) {
-				newParentNode.insertElement(newChildNode, i);
-				inserted = true;
-				System.out.println("------> adapternode insert correctly");
-			}
-		}
+    public void addSubfolder(FolderTreeNode child) throws Exception {
+        add(child);
+        getNode().addElement(child.getNode());
+    }
 
-		if (inserted == false) {
-			if (j + 1 == newIndex) {
-				newParentNode.append(newChildNode);
-				System.out.println("------> adapternode appended correctly");
-			}
-		}
+    public FolderTreeNode findChildWithName(String str, boolean recurse) {
+        for (int i = 0; i < getChildCount(); i++) {
+            FolderTreeNode child = (FolderTreeNode) getChildAt(i);
+            String name = child.getName();
 
-	}
+            if (name.equalsIgnoreCase(str)) {
+                return child;
+            } else if (recurse) {
+                FolderTreeNode subchild = child.findChildWithName(str, true);
 
-	public void removeFolder() throws Exception {
-		// remove XmlElement
-		getFolderItem().getRoot().getParent().removeElement(
-			getFolderItem().getRoot());
+                if (subchild != null) {
+                    return subchild;
+                }
+            }
+        }
 
-		// remove DefaultMutableTreeNode
-		removeFromParent();
-	}
+        return null;
+    }
 
-	public void addSubfolder(FolderTreeNode child) throws Exception {
-		add(child);
-		getNode().addElement(child.getNode());
-	}
+    public FolderTreeNode findChildWithUID(int uid, boolean recurse) {
+        for (int i = 0; i < getChildCount(); i++) {
+            FolderTreeNode child = (Folder) getChildAt(i);
+            int childUid = child.getUid();
 
-	public FolderTreeNode findChildWithName(String str, boolean recurse) {
-		for (int i = 0; i < getChildCount(); i++) {
-			FolderTreeNode child = (FolderTreeNode) getChildAt(i);
-			String name = child.getName();
+            if (uid == childUid) {
+                return child;
+            } else if (recurse) {
+                FolderTreeNode subchild = child.findChildWithUID(uid, true);
 
-			if (name.equalsIgnoreCase(str)) {
-				return child;
-			} else if (recurse) {
-				FolderTreeNode subchild = child.findChildWithName(str, true);
-				if (subchild != null) {
-					return subchild;
-				}
-			}
-		}
-		return null;
-	}
+                if (subchild != null) {
+                    return subchild;
+                }
+            }
+        }
 
-	public FolderTreeNode findChildWithUID(int uid, boolean recurse) {
-		for (int i = 0; i < getChildCount(); i++) {
-			FolderTreeNode child = (Folder) getChildAt(i);
-			int childUid = child.getUid();
+        return null;
+    }
 
-			if (uid == childUid) {
-				return child;
-			} else if (recurse) {
-				FolderTreeNode subchild = child.findChildWithUID(uid, true);
-				if (subchild != null) {
-					return subchild;
-				}
-			}
-		}
-		return null;
-	}
+    /**
+     * Sets the node.
+     * @param node The node to set
+     */
+    public void setNode(FolderItem node) {
+        this.node = node;
 
-	/**
-	 * Sets the node.
-	 * @param node The node to set
-	 */
-	public void setNode(FolderItem node) {
-		this.node = node;
+        try {
+            if (node.getInteger("uid") >= nextUid) {
+                nextUid = node.getInteger("uid") + 1;
+            }
+        } catch (NumberFormatException ex) {
+            node.set("uid", nextUid++);
+        }
+    }
 
-		try {
-			if (node.getInteger("uid") >= nextUid)
-				nextUid = node.getInteger("uid") + 1;
-		} catch (NumberFormatException ex) {
-			node.set("uid", nextUid++);
-		}
-	}
+    /**
+     *
+     * FolderTreeNode wraps XmlElement
+     *
+     * all treenode manipulation is passed to the corresponding XmlElement
+     */
+    public void append(FolderTreeNode child) {
+        ColumbaLogger.log.debug("child=" + child);
 
-	/**
-	 * 
-	 * FolderTreeNode wraps XmlElement
-	 * 
-	 * all treenode manipulation is passed to the corresponding XmlElement
-	 */
-	public void append(FolderTreeNode child) {
-		ColumbaLogger.log.debug("child=" + child);
+        // remove child from parent
+        child.removeFromParent();
 
-		// remove child from parent
-		child.removeFromParent();
-		// do the same for the XmlElement node
-		ColumbaLogger.log.debug(
-			"xmlelement=" + child.getFolderItem().getRoot().getName());
+        // do the same for the XmlElement node
+        ColumbaLogger.log.debug("xmlelement=" +
+            child.getFolderItem().getRoot().getName());
 
-		child.getFolderItem().getRoot().removeFromParent();
+        child.getFolderItem().getRoot().removeFromParent();
 
-		// add child to this node
-		add(child);
-		// do the same for the XmlElement of child
-		getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
+        // add child to this node
+        add(child);
 
-	}
+        // do the same for the XmlElement of child
+        getFolderItem().getRoot().addElement(child.getFolderItem().getRoot());
+    }
 
-	/********************* capabilities **************************************/
-
-	/**
-	 * Does this treenode support adding messages?
-	 * 
-	 * @return	true, if this folder is able to contain messages, false otherwise
-	 * 
-	 */
-	public boolean supportsAddMessage() {
-		return false;
-	}
+    /********************* capabilities **************************************/
+    /**
+     * Does this treenode support adding messages?
+     *
+     * @return        true, if this folder is able to contain messages, false otherwise
+     *
+     */
+    public boolean supportsAddMessage() {
+        return false;
+    }
 }

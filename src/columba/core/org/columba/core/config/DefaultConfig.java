@@ -15,11 +15,13 @@
 //All Rights Reserved.
 package org.columba.core.config;
 
+import org.columba.core.io.DiskIO;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.net.URL;
 
-import org.columba.core.io.DiskIO;
 
 /**
  * You can register xml configuration files at DefaultConfig.
@@ -29,126 +31,117 @@ import org.columba.core.io.DiskIO;
  * for the first time or if the file is missing.
  * <p>
  * It additionally creates the configuration directory.
- * 
+ *
  *
  * @author fdietz
  */
 public class DefaultConfig {
+    /**
+     * @see java.lang.Object#Object()
+     */
+    public DefaultConfig() {
+    }
 
-	/**
-	 * @see java.lang.Object#Object()
-	 */
-	public DefaultConfig() {
+    /**
+     * Method registerPlugin.
+     * @param moduleName
+     * @param id
+     * @param plugin
+     */
+    protected static void registerPlugin(String moduleName, String id,
+        DefaultXmlConfig plugin) {
+        File file = null;
 
-	}
+        if (moduleName.equals("core")) {
+            file = ConfigPath.getConfigDirectory();
+            copy(moduleName, id, file);
+        } else {
+            file = new File(ConfigPath.getConfigDirectory(), moduleName);
 
-	/**
-	 * Method registerPlugin.
-	 * @param moduleName
-	 * @param id
-	 * @param plugin
-	 */
-	protected static void registerPlugin(
-		String moduleName,
-		String id,
-		DefaultXmlConfig plugin) {
-		File file = null;
-		if (moduleName.equals("core")) {
-			file = ConfigPath.getConfigDirectory();
-			copy(moduleName, id, file);
-		} else {
-			file = new File(ConfigPath.getConfigDirectory(), moduleName);
+            //copy("modules/" + moduleName, id, file);
+            copy(moduleName, id, file);
+        }
 
-			//copy("modules/" + moduleName, id, file);
-			copy(moduleName, id, file);
-		}
+        Config.registerPlugin(moduleName, id, plugin);
+    }
 
-		Config.registerPlugin(moduleName, id, plugin);
-	}
-	
-	protected static void registerTemplatePlugin(
-			String moduleName,
-			String id,
-			DefaultXmlConfig plugin) {
-		/*
-			File file = null;
-			
-			if (moduleName.equals("core")) {
-				file = ConfigPath.getConfigDirectory();
-				//copy(moduleName, id, file);
-			} else {
-				file = new File(ConfigPath.getConfigDirectory(), moduleName);
+    protected static void registerTemplatePlugin(String moduleName, String id,
+        DefaultXmlConfig plugin) {
+        /*
+                File file = null;
 
-				//copy("modules/" + moduleName, id, file);
-				//copy(moduleName, id, file);
-			}
-			*/
-			
-			String	hstr = "org/columba/" + moduleName + "/config/" + id;
-			URL url = DiskIO.getResourceURL(hstr);
-			plugin.setURL(url);
-			Config.registerTemplatePlugin(moduleName, id, plugin);
-		}
+                if (moduleName.equals("core")) {
+                        file = ConfigPath.getConfigDirectory();
+                        //copy(moduleName, id, file);
+                } else {
+                        file = new File(ConfigPath.getConfigDirectory(), moduleName);
 
+                        //copy("modules/" + moduleName, id, file);
+                        //copy(moduleName, id, file);
+                }
+                */
+        String hstr = "org/columba/" + moduleName + "/config/" + id;
+        URL url = DiskIO.getResourceURL(hstr);
+        plugin.setURL(url);
+        Config.registerTemplatePlugin(moduleName, id, plugin);
+    }
 
-	/**
-	 * Method getPlugin.
-	 * @param moduleName
-	 * @param id
-	 * @return DefaultXmlConfig
-	 */
-	protected static DefaultXmlConfig getPlugin(String moduleName, String id) {
-		return Config.getPlugin(moduleName, id);
-	}
-	
-	protected static DefaultXmlConfig getTemplatePlugin(String moduleName, String id) {
-			return Config.getTemplatePlugin(moduleName, id);
-		}
+    /**
+     * Method getPlugin.
+     * @param moduleName
+     * @param id
+     * @return DefaultXmlConfig
+     */
+    protected static DefaultXmlConfig getPlugin(String moduleName, String id) {
+        return Config.getPlugin(moduleName, id);
+    }
 
-	/**
-	 * Method createConfigDir.
-	 * @param moduleName
-	 * @return File
-	 */
-	protected File createConfigDir(String moduleName) {
+    protected static DefaultXmlConfig getTemplatePlugin(String moduleName,
+        String id) {
+        return Config.getTemplatePlugin(moduleName, id);
+    }
 
-		File configDirectory =
-			new File(ConfigPath.getConfigDirectory(), moduleName);
+    /**
+     * Method createConfigDir.
+     * @param moduleName
+     * @return File
+     */
+    protected File createConfigDir(String moduleName) {
+        File configDirectory = new File(ConfigPath.getConfigDirectory(),
+                moduleName);
 
-		DiskIO.ensureDirectory(configDirectory);
+        DiskIO.ensureDirectory(configDirectory);
 
-		return configDirectory;
-	}
+        return configDirectory;
+    }
 
-	/**
-	 * Method copy.
-	 * @param module
-	 * @param filename
-	 * @param outputDir
-	 * @return boolean
-	 */
-	/** Copies a columba resource file to the directory specified, if and only if
-	 *  the destination file <b>does not</b> exist already.
-	 */
-	public static boolean copy(
-		String module,
-		String filename,
-		File outputDir) {
-		File destFile;
-		String hstr;
+    /**
+     * Method copy.
+     * @param module
+     * @param filename
+     * @param outputDir
+     * @return boolean
+     */
+    /** Copies a columba resource file to the directory specified, if and only if
+     *  the destination file <b>does not</b> exist already.
+     */
+    public static boolean copy(String module, String filename, File outputDir) {
+        File destFile;
+        String hstr;
 
-		destFile = new File(outputDir, filename);
-		if (destFile.exists())
-			return false;
+        destFile = new File(outputDir, filename);
 
-		hstr = "org/columba/" + module + "/config/" + filename;
+        if (destFile.exists()) {
+            return false;
+        }
 
-		try {
-			return DiskIO.copyResource(hstr, destFile);
-		} catch (IOException e) {
-			return false;
-		}
+        hstr = "org/columba/" + module + "/config/" + filename;
 
-	} // copy
-
+        try {
+            return DiskIO.copyResource(hstr, destFile);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+     // copy
 }

@@ -20,17 +20,19 @@ package org.columba.mail.composer;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+
 /**
  * @author fdietz
  */
 public class AllTests extends TestSuite {
+    public static Test suite() {
+        TestSuite suite = new TestSuite("Test for org.columba.mail.composer");
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.columba.mail.composer");
-		//$JUnit-BEGIN$
-		suite.addTestSuite(SubjectTest.class);
-		suite.addTestSuite(ToTest.class);
-		//$JUnit-END$	
-		return suite;
-	}
+        //$JUnit-BEGIN$
+        suite.addTestSuite(SubjectTest.class);
+        suite.addTestSuite(ToTest.class);
+
+        //$JUnit-END$	
+        return suite;
+    }
 }

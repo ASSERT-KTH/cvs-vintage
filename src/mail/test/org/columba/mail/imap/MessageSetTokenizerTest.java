@@ -15,139 +15,144 @@
 //All Rights Reserved.
 package org.columba.mail.imap;
 
+import junit.framework.TestCase;
+
 import java.util.List;
 
-import junit.framework.TestCase;
 
 /**
  * Boundary testcases.
- * 
+ *
  * @author fdietz
  */
 public class MessageSetTokenizerTest extends TestCase {
+    public void test() {
+        int max = 1000;
 
-	public void test() {
-		int max = 1000;
+        Object[] uids = new Object[max];
 
-		Object[] uids = new Object[max];
-		for (int i = 0; i < max; i++)
-			uids[i] = new Integer(i);
+        for (int i = 0; i < max; i++)
+            uids[i] = new Integer(i);
 
-		int stepSize = 100;
-		MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+        int stepSize = 100;
+        MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
 
-		while (tok.hasNext()) {
-			List sublist = (List) tok.next();
+        while (tok.hasNext()) {
+            List sublist = (List) tok.next();
 
-			System.out.print("start=" + sublist.get(0));
-			System.out.println(" end=" + sublist.get(sublist.size() - 1));
+            System.out.print("start=" + sublist.get(0));
+            System.out.println(" end=" + sublist.get(sublist.size() - 1));
 
-			// if this is the last token, check if the last element
-			// is the same than in the array
-			if (tok.hasNext() == false)
-				assertEquals(
-					sublist.get(sublist.size() - 1),
-					uids[uids.length - 1]);
-		}
-	}
+            // if this is the last token, check if the last element
+            // is the same than in the array
+            if (tok.hasNext() == false) {
+                assertEquals(sublist.get(sublist.size() - 1),
+                    uids[uids.length - 1]);
+            }
+        }
+    }
 
-	public void test2() {
-		int max = 1001;
+    public void test2() {
+        int max = 1001;
 
-		Object[] uids = new Object[max];
-		for (int i = 0; i < max; i++)
-			uids[i] = new Integer(i);
+        Object[] uids = new Object[max];
 
-		int stepSize = 100;
-		MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+        for (int i = 0; i < max; i++)
+            uids[i] = new Integer(i);
 
-		while (tok.hasNext()) {
-			List sublist = (List) tok.next();
+        int stepSize = 100;
+        MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
 
-			System.out.print("start=" + sublist.get(0));
-			System.out.println(" end=" + sublist.get(sublist.size() - 1));
+        while (tok.hasNext()) {
+            List sublist = (List) tok.next();
 
-			// if this is the last token, check if the last element
-			// is the same than in the array
-			if (tok.hasNext() == false)
-				assertEquals(
-					sublist.get(sublist.size() - 1),
-					uids[uids.length - 1]);
-		}
-	}
+            System.out.print("start=" + sublist.get(0));
+            System.out.println(" end=" + sublist.get(sublist.size() - 1));
 
-	public void test3() {
-		int max = 999;
+            // if this is the last token, check if the last element
+            // is the same than in the array
+            if (tok.hasNext() == false) {
+                assertEquals(sublist.get(sublist.size() - 1),
+                    uids[uids.length - 1]);
+            }
+        }
+    }
 
-		Object[] uids = new Object[max];
-		for (int i = 0; i < max; i++)
-			uids[i] = new Integer(i);
+    public void test3() {
+        int max = 999;
 
-		int stepSize = 100;
-		MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+        Object[] uids = new Object[max];
 
-		while (tok.hasNext()) {
-			List sublist = (List) tok.next();
+        for (int i = 0; i < max; i++)
+            uids[i] = new Integer(i);
 
-			System.out.print("start=" + sublist.get(0));
-			System.out.println(" end=" + sublist.get(sublist.size() - 1));
+        int stepSize = 100;
+        MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
 
-			// if this is the last token, check if the last element
-			// is the same than in the array
-			if (tok.hasNext() == false)
-				assertEquals(
-					sublist.get(sublist.size() - 1),
-					uids[uids.length - 1]);
-		}
-	}
+        while (tok.hasNext()) {
+            List sublist = (List) tok.next();
 
-	public void test4() {
-		int max = 99;
+            System.out.print("start=" + sublist.get(0));
+            System.out.println(" end=" + sublist.get(sublist.size() - 1));
 
-		Object[] uids = new Object[max];
-		for (int i = 0; i < max; i++)
-			uids[i] = new Integer(i);
+            // if this is the last token, check if the last element
+            // is the same than in the array
+            if (tok.hasNext() == false) {
+                assertEquals(sublist.get(sublist.size() - 1),
+                    uids[uids.length - 1]);
+            }
+        }
+    }
 
-		int stepSize = 100;
-		MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+    public void test4() {
+        int max = 99;
 
-		while (tok.hasNext()) {
-			List sublist = (List) tok.next();
+        Object[] uids = new Object[max];
 
-			System.out.print("start=" + sublist.get(0));
-			System.out.println(" end=" + sublist.get(sublist.size() - 1));
+        for (int i = 0; i < max; i++)
+            uids[i] = new Integer(i);
 
-			// if this is the last token, check if the last element
-			// is the same than in the array
-			if (tok.hasNext() == false)
-				assertEquals(
-					sublist.get(sublist.size() - 1),
-					uids[uids.length - 1]);
-		}
-	}
+        int stepSize = 100;
+        MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
 
-	public void test5() {
-		int max = 1;
+        while (tok.hasNext()) {
+            List sublist = (List) tok.next();
 
-		Object[] uids = new Object[max];
-		for (int i = 0; i < max; i++)
-			uids[i] = new Integer(i);
+            System.out.print("start=" + sublist.get(0));
+            System.out.println(" end=" + sublist.get(sublist.size() - 1));
 
-		int stepSize = 100;
-		MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+            // if this is the last token, check if the last element
+            // is the same than in the array
+            if (tok.hasNext() == false) {
+                assertEquals(sublist.get(sublist.size() - 1),
+                    uids[uids.length - 1]);
+            }
+        }
+    }
 
-		while (tok.hasNext()) {
-			List sublist = (List) tok.next();
+    public void test5() {
+        int max = 1;
 
-			System.out.print("start=" + sublist.get(0));
-			System.out.println(" end=" + sublist.get(sublist.size() - 1));
+        Object[] uids = new Object[max];
 
-			// if this is the last token, check if the last element
-			// is the same than in the array
-			if (tok.hasNext() == false)
-				assertEquals(
-					sublist.get(sublist.size() - 1),
-					uids[uids.length - 1]);
-		}
-	}
+        for (int i = 0; i < max; i++)
+            uids[i] = new Integer(i);
+
+        int stepSize = 100;
+        MessageSetTokenizer tok = new MessageSetTokenizer(uids, stepSize);
+
+        while (tok.hasNext()) {
+            List sublist = (List) tok.next();
+
+            System.out.print("start=" + sublist.get(0));
+            System.out.println(" end=" + sublist.get(sublist.size() - 1));
+
+            // if this is the last token, check if the last element
+            // is the same than in the array
+            if (tok.hasNext() == false) {
+                assertEquals(sublist.get(sublist.size() - 1),
+                    uids[uids.length - 1]);
+            }
+        }
+    }
 }

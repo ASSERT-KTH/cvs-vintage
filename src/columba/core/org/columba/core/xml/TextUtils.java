@@ -17,34 +17,34 @@
 //All Rights Reserved.
 package org.columba.core.xml;
 
+
 /**
  * @author fdietz
  */
 public class TextUtils {
+    public static String escapeText(String txt) {
+        StringBuffer buffer = new StringBuffer(txt);
 
-	public static String escapeText(String txt) {
-		StringBuffer buffer = new StringBuffer(txt);
+        // Important!!
+        // -> replacing this character must happen first
+        stringReplaceAll(buffer, '&', "&amp;");
 
-		// Important!!
-		// -> replacing this character must happen first
-		stringReplaceAll(buffer, '&', "&amp;");
+        stringReplaceAll(buffer, '<', "&lt;");
+        stringReplaceAll(buffer, '>', "&gt;");
+        stringReplaceAll(buffer, '"', "&quot;"); // *20030621, karlpeder*
+        stringReplaceAll(buffer, '\'', "&apos;");
 
-		stringReplaceAll(buffer, '<', "&lt;");
-		stringReplaceAll(buffer, '>', "&gt;");
-		stringReplaceAll(buffer, '"', "&quot;"); // *20030621, karlpeder*
-		stringReplaceAll(buffer, '\'', "&apos;");
+        return buffer.toString();
+    }
 
-		return buffer.toString();
-	}
+    public static StringBuffer stringReplaceAll(StringBuffer orig, char token,
+        String replacement) {
+        for (int i = 0; i < orig.length(); i++) {
+            if (orig.charAt(i) == token) {
+                orig = orig.replace(i, ++i, replacement);
+            }
+        }
 
-	public static StringBuffer stringReplaceAll(
-		StringBuffer orig,
-		char token,
-		String replacement) {
-		for (int i = 0; i < orig.length(); i++) {
-			if (orig.charAt(i) == token)
-				orig = orig.replace(i, ++i, replacement);
-		}
-		return orig;
-	}
+        return orig;
+    }
 }

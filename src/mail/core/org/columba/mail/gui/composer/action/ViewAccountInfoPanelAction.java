@@ -13,17 +13,18 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.gui.composer.action;
+
+import org.columba.core.action.CheckBoxAction;
+import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.frame.FrameMediator;
+
+import org.columba.mail.gui.composer.ComposerView;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import org.columba.core.action.CheckBoxAction;
-import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.AbstractFrameView;
-import org.columba.mail.gui.composer.ComposerView;
 
 /**
  * @author frd
@@ -32,25 +33,22 @@ import org.columba.mail.gui.composer.ComposerView;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class ViewAccountInfoPanelAction extends CheckBoxAction {
+    public ViewAccountInfoPanelAction(FrameMediator frameMediator) {
+        super(frameMediator, "AccountInfoPanel");
+    }
 
-	public ViewAccountInfoPanelAction(FrameMediator frameMediator) {
-		super(frameMediator, "AccountInfoPanel");
-	}
+    public void actionPerformed(ActionEvent evt) {
+        ((ComposerView) frameMediator.getView()).showAccountInfoPanel();
+    }
 
-	public void actionPerformed(ActionEvent evt) {
-		((ComposerView) frameMediator.getView()).showAccountInfoPanel();
-	}
+    protected boolean getInitState() {
+        return frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
+    }
 
-	protected boolean getInitState() {
-		return frameMediator.isToolbarEnabled(ComposerView.ACCOUNTINFOPANEL);
-	}
+    public void setCheckBoxMenuItem(JCheckBoxMenuItem checkBoxMenuItem,
+        AbstractFrameView frameView) {
+        super.setCheckBoxMenuItem(checkBoxMenuItem);
 
-	public void setCheckBoxMenuItem(
-		JCheckBoxMenuItem checkBoxMenuItem,
-		AbstractFrameView frameView) {
-
-		super.setCheckBoxMenuItem(checkBoxMenuItem);
-
-		getCheckBoxMenuItem().setSelected(getInitState());
-	}
+        getCheckBoxMenuItem().setSelected(getInitState());
+    }
 }

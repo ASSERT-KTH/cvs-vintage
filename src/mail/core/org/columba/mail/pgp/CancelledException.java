@@ -15,27 +15,24 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
+
 /**
  * User cancelled PGP operation.
- * 
+ *
  * @author fdietz
  */
 public class CancelledException extends PGPException {
+    /**
+     *
+     */
+    public CancelledException() {
+        super();
+    }
 
-	/**
-	 * 
-	 */
-	public CancelledException() {
-		super();
-		
-	}
-
-	/**
-	 * @param arg0
-	 */
-	public CancelledException(String arg0) {
-		super(arg0);
-		
-	}
-
+    /**
+     * @param arg0
+     */
+    public CancelledException(String arg0) {
+        super(arg0);
+    }
 }

@@ -17,6 +17,7 @@ package org.columba.core.gui.util.treetable;
 
 import javax.swing.table.AbstractTableModel;
 
+
 /**
  * @author frd
  *
@@ -24,75 +25,72 @@ import javax.swing.table.AbstractTableModel;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class AbstractTreeTableModel extends AbstractTableModel {
+    protected Tree tree;
+    protected String[] columns;
 
-	protected Tree tree;
+    /**
+     *
+     */
+    public AbstractTreeTableModel(String[] columns) {
+        this.columns = columns;
+    }
 
-	protected String[] columns;
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#getRowCount()
+     */
+    public int getRowCount() {
+        return tree.getRowCount();
+    }
 
-	/**
-	 * 
-	 */
-	public AbstractTreeTableModel(String[] columns) {
-		this.columns = columns;
+    /* (non-Javadoc)
+     * @see javax.swing.table.TableModel#getColumnCount()
+     */
+    public int getColumnCount() {
+        return columns.length;
+    }
 
-	}
+    /**
+     * overwrite this method...
+     */
+    public Object getValueAt(int row, int col) {
+        if (col == 0) {
+            return tree;
+        }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableModel#getRowCount()
-	 */
-	public int getRowCount() {
-		return tree.getRowCount();
-	}
+        return null;
+    }
 
-	/* (non-Javadoc)
-	 * @see javax.swing.table.TableModel#getColumnCount()
-	 */
-	public int getColumnCount() {
-		return columns.length;
-	}
+    public String getColumnName(int col) {
+        return columns[col];
+    }
 
-	/**
-	 * overwrite this method...
-	 */
-	public Object getValueAt(int row, int col) {
-		if (col == 0)
-			return tree;
+    public Class getColumnClass(int c) {
+        if (c == 0) {
+            return tree.getClass();
+        }
 
-		return null;
-	}
+        return getValueAt(0, c).getClass();
+    }
 
-	public String getColumnName(int col) {
-		return columns[col];
-	}
+    public boolean isCellEditable(int row, int col) {
+        if (col == 0) {
+            return true;
+        }
 
-	public Class getColumnClass(int c) {
-		if (c == 0)
-			return tree.getClass();
+        return false;
+    }
 
-		return getValueAt(0, c).getClass();
-	}
+    /**
+     * @param tree
+     */
+    public void setTree(Tree tree) {
+        this.tree = tree;
+    }
 
-	public boolean isCellEditable(int row, int col) {
-		if (col == 0)
-			return true;
-
-		return false;
-	}
-
-	/**
-	 * @param tree
-	 */
-	public void setTree(Tree tree) {
-		this.tree = tree;
-		
-		
-	}
-
-	/**
-	 * @return
-	 */
-	public Tree getTree() {
-		return tree;
-	}
-
+    /**
+     * @return
+     */
+    public Tree getTree() {
+        return tree;
+    }
 }

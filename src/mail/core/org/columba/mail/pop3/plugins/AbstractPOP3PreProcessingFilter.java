@@ -9,6 +9,7 @@ package org.columba.mail.pop3.plugins;
 import org.columba.core.plugin.DefaultPlugin;
 import org.columba.core.xml.XmlElement;
 
+
 /**
  * @author frd
  *
@@ -16,21 +17,18 @@ import org.columba.core.xml.XmlElement;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public abstract class AbstractPOP3PreProcessingFilter extends DefaultPlugin {
+    protected XmlElement rootElement;
 
-	protected XmlElement rootElement;
-	
-	public AbstractPOP3PreProcessingFilter( XmlElement rootElement )
-	{
-		this.rootElement = rootElement;
-	}
-	
-	public abstract String modify( String rawString );
+    public AbstractPOP3PreProcessingFilter(XmlElement rootElement) {
+        this.rootElement = rootElement;
+    }
 
-	/**
-	 * @return
-	 */
-	public XmlElement getRootElement() {
-		return rootElement;
-	}
+    public abstract String modify(String rawString);
 
+    /**
+     * @return
+     */
+    public XmlElement getRootElement() {
+        return rootElement;
+    }
 }

@@ -18,6 +18,7 @@ package org.columba.mail.command;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.message.ColumbaMessage;
 
+
 /**
  * @author freddy
  *
@@ -27,44 +28,40 @@ import org.columba.mail.message.ColumbaMessage;
  * Window>Preferences>Java>Code Generation.
  */
 public class SMTPCommandReference extends FolderCommandReference {
+    /**
+     * Constructor for SMTPCommandReference.
+     * @param folder
+     */
+    public SMTPCommandReference(FolderTreeNode folder) {
+        super(folder);
+    }
 
-	/**
-	 * Constructor for SMTPCommandReference.
-	 * @param folder
-	 */
-	public SMTPCommandReference(FolderTreeNode folder) {
-		super(folder);
-	}
+    /**
+     * Constructor for SMTPCommandReference.
+     * @param folder
+     * @param message
+     */
+    public SMTPCommandReference(FolderTreeNode folder, ColumbaMessage message) {
+        super(folder, message);
+    }
 
-	/**
-	 * Constructor for SMTPCommandReference.
-	 * @param folder
-	 * @param message
-	 */
-	public SMTPCommandReference(FolderTreeNode folder, ColumbaMessage message) {
-		super(folder, message);
-	}
+    /**
+     * Constructor for SMTPCommandReference.
+     * @param folder
+     * @param uids
+     */
+    public SMTPCommandReference(FolderTreeNode folder, Object[] uids) {
+        super(folder, uids);
+    }
 
-	/**
-	 * Constructor for SMTPCommandReference.
-	 * @param folder
-	 * @param uids
-	 */
-	public SMTPCommandReference(FolderTreeNode folder, Object[] uids) {
-		super(folder, uids);
-	}
-
-	/**
-	 * Constructor for SMTPCommandReference.
-	 * @param folder
-	 * @param uids
-	 * @param address
-	 */
-	public SMTPCommandReference(
-		FolderTreeNode folder,
-		Object[] uids,
-		Integer[] address) {
-		super(folder, uids, address);
-	}
-
+    /**
+     * Constructor for SMTPCommandReference.
+     * @param folder
+     * @param uids
+     * @param address
+     */
+    public SMTPCommandReference(FolderTreeNode folder, Object[] uids,
+        Integer[] address) {
+        super(folder, uids, address);
+    }
 }
