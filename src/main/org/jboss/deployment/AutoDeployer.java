@@ -58,7 +58,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class AutoDeployer
        extends ServiceMBeanSupport
@@ -260,7 +260,8 @@ public class AutoDeployer
             }
             catch (InterruptedException e)
             {
-               log.debug("interrupted; ignoring", e);
+               if (log.isDebugEnabled())
+                 log.debug("interrupted; ignoring", e);
             }
          }
 
@@ -602,7 +603,8 @@ public class AutoDeployer
    protected void scanWatchedDirectories()
           throws MalformedURLException
    {
-      log.trace("Scanning watched directories");
+      if (log.isTraceEnabled())
+        log.trace("Scanning watched directories");
       
       for (int i = 0; i < watchedDirectories.size(); i++)
       {

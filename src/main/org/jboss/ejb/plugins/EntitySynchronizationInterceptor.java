@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.57 $
+ * @version $Revision: 1.58 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -256,7 +256,7 @@ public class EntitySynchronizationInterceptor
   
       if( log.isTraceEnabled() )
          log.trace("invoke called for ctx "+ctx+", tx="+tx);
-      
+
       //Commit Option D.... 
       if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION && !validContexts.contains(ctx.getId()))
       {
@@ -472,7 +472,8 @@ public class EntitySynchronizationInterceptor
                      }
                      catch (Exception e)
                      {
-                        log.debug(e);
+                        if( log.isDebugEnabled() )
+                          log.debug("Exception releasing context", e);
                      }
                      break;
                   case ConfigurationMetaData.D_COMMIT_OPTION:
@@ -545,14 +546,16 @@ public class EntitySynchronizationInterceptor
          while(true)
          {
             validContexts.clear();
-            log.trace("Flushing the valid contexts");
+            if( log.isTraceEnabled() )
+              log.trace("Flushing the valid contexts");
             try
             {
                Thread.sleep(refreshRate);
             }
             catch(Exception e)
             {
-               log.debug("Interrupted from sleep", e);
+               if( log.isDebugEnabled() )
+                 log.debug("Interrupted from sleep", e);
             }
          }
       }
