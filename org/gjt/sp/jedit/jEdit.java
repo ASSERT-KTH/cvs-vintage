@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.228 2004/05/29 01:55:24 spestov Exp $
+ * @version $Id: jEdit.java,v 1.229 2004/06/08 20:25:26 spestov Exp $
  */
 public class jEdit
 {
@@ -68,7 +68,7 @@ public class jEdit
 	public static String getBuild()
 	{
 		// (major).(minor).(<99 = preX, 99 = final).(bug fix)
-		return "04.02.14.00";
+		return "04.02.15.00";
 	} //}}}
 
 	//{{{ main() method
@@ -1934,10 +1934,7 @@ public class jEdit
 	 */
 	public static Buffer getBuffer(String path)
 	{
-		if(MiscUtilities.isURL(path))
-			return _getBuffer(path);
-		else
-			return _getBuffer(MiscUtilities.resolveSymlinks(path));
+		return _getBuffer(MiscUtilities.resolveSymlinks(path));
 	} //}}}
 
 	//{{{ getBuffers() method
