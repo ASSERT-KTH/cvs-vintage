@@ -18,8 +18,9 @@
 
 package org.columba.mail.gui.composer;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FocusTraversalPolicy;
 import java.awt.event.ContainerListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -37,7 +38,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
-import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.core.charset.CharsetEvent;
 import org.columba.core.charset.CharsetListener;
 import org.columba.core.charset.CharsetOwnerInterface;
@@ -59,12 +59,13 @@ import org.columba.mail.parser.text.HtmlParser;
 import org.frappucino.swing.MultipleTransferHandler;
 
 /**
- * @author frd
  * 
  * controller for message composer dialog
+ * 
+ * @author frd
  */
 public class ComposerController extends AbstractFrameController implements
-		CharsetOwnerInterface, ComponentListener, Observer {
+		CharsetOwnerInterface, Observer {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
@@ -80,12 +81,10 @@ public class ComposerController extends AbstractFrameController implements
 
 	private AccountController accountController;
 
-	//private TextEditorController editorController;
 	private AbstractEditorController editorController;
 
 	private HeaderController headerController;
 
-	//private MessageComposer messageComposer;
 	private ComposerSpellCheck composerSpellCheck;
 
 	private ComposerModel composerModel;
@@ -103,8 +102,11 @@ public class ComposerController extends AbstractFrameController implements
 
 	/**
 	 * Check if data was entered correctly.
+	 * <p>
+	 * This includes currently a test for an empty subject and a valid recipient
+	 * (to/cc/bcc) list.
 	 * 
-	 * @return	true, if data was entered correctly
+	 * @return true, if data was entered correctly
 	 */
 	public boolean checkState() {
 		// update ComposerModel based on user-changes in ComposerView
@@ -125,54 +127,9 @@ public class ComposerController extends AbstractFrameController implements
 		attachmentController.updateComponents(b);
 		headerController.updateComponents(b);
 
-		//headerController.appendRow();
 	}
 
-	protected void initAddressCompletion() {
-		AddressCollector.getInstance().clear();
-
-		AddressCollector.getInstance().addAllContacts(101);
-		AddressCollector.getInstance().addAllContacts(102);
-	
-	}
-
-	/*
-	 * protected void updateAddressbookFrame() {
-	 * 
-	 * if ((view.getLocation().x -
-	 * composerInterface.addressbookFrame.getSize().width < 0) ||
-	 * (view.getLocation().y < 0)) { int x = view.getLocation().x -
-	 * composerInterface.addressbookFrame.getSize().width; int y =
-	 * view.getLocation().y;
-	 * 
-	 * if (x <= 0) x = 0; if (y <= 0) y = 0;
-	 * 
-	 * view.setLocation( x + composerInterface.addressbookFrame.getSize().width,
-	 * y); }
-	 * 
-	 * composerInterface.addressbookFrame.setLocation( view.getLocation().x -
-	 * composerInterface.addressbookFrame.getSize().width,
-	 * view.getLocation().y); }
-	 */
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	public void componentMoved(ComponentEvent e) {
-		/*
-		 * if (composerInterface.addressbookFrame.isVisible()) {
-		 * updateAddressbookFrame(); }
-		 */
-	}
-
-	public void componentResized(ComponentEvent e) {
-	}
-
-	public void componentShown(ComponentEvent e) {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.gui.FrameController#createView()
 	 */
 	protected AbstractView createView() {
@@ -198,7 +155,10 @@ public class ComposerController extends AbstractFrameController implements
 			ex.printStackTrace();
 		}
 
-		setCloseOperations();
+		if (view.getFrame() != null) {
+			view.getFrame()
+					.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		}
 
 		// *20030917, karlpeder* If ContainerListeners are waiting to be
 		// added, add them now.
@@ -215,34 +175,20 @@ public class ComposerController extends AbstractFrameController implements
 
 			containerListenerBuffer = null; // done, the buffer has been emptied
 		}
-
-		headerController.view.initFocus(subjectController.view);
-
-		
-		
 		return view;
-	}
-
-	public void setCloseOperations() {
-		if (getView().getFrame() != null) {
-			getView().getFrame().setDefaultCloseOperation(
-					JFrame.DO_NOTHING_ON_CLOSE);
-			getView().getFrame().addWindowListener(new ComposerWindowAdapter());
-		}
 	}
 
 	public void openView() {
 		super.openView();
-		initAddressCompletion();
-		
-		getHeaderController().getView().initAutocompletion();
-		
-		headerController.view.getToComboBox().requestFocusInWindow();
+
+		getView().getFrame().setFocusTraversalPolicy(
+				new ComposerFocusTraversalPolicy());
+
+		// To: editor should request focus
+		headerController.getView().getToComboBox().requestFocusInWindow();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.gui.FrameController#initInternActions()
 	 */
 	protected void initInternActions() {
@@ -308,9 +254,7 @@ public class ComposerController extends AbstractFrameController implements
 		return subjectController;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/**
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
 	protected void init() {
@@ -374,8 +318,8 @@ public class ComposerController extends AbstractFrameController implements
 		// Setup DnD for the text and attachment list control.
 		ComposerAttachmentTransferHandler dndTransferHandler = new ComposerAttachmentTransferHandler(
 				attachmentController);
-		attachmentController.view.setDragEnabled(true);
-		attachmentController.view.setTransferHandler(dndTransferHandler);
+		attachmentController.getView().setDragEnabled(true);
+		attachmentController.getView().setTransferHandler(dndTransferHandler);
 
 		JEditorPane editorComponent = (JEditorPane) getEditorController()
 				.getComponent();
@@ -630,4 +574,58 @@ public class ComposerController extends AbstractFrameController implements
 		}
 	};
 
+	public class ComposerFocusTraversalPolicy extends FocusTraversalPolicy {
+
+		public Component getComponentAfter(Container focusCycleRoot,
+				Component aComponent) {
+			if ( aComponent.equals(accountController.getView()))
+				return priorityController.getView();
+			else if ( aComponent.equals(priorityController.getView()))
+				return headerController.getView().getToComboBox().getTextEditor();
+			else if (aComponent.equals(headerController.getView().getToComboBox().getTextEditor()))
+				return headerController.getView().getCcComboBox().getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getCcComboBox().getTextEditor()))
+				return headerController.getView().getBccComboBox().getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getBccComboBox().getTextEditor()))
+				return subjectController.getView();
+			else if (aComponent.equals(subjectController.getView()))
+				return editorController.getComponent();
+
+			return headerController.getView().getToComboBox().getTextEditor();
+		}
+
+		public Component getComponentBefore(Container focusCycleRoot,
+				Component aComponent) {
+			if (aComponent.equals(editorController.getComponent()))
+				return subjectController.getView();
+			else if (aComponent.equals(subjectController.getView()))
+				return headerController.getView().getBccComboBox().getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getBccComboBox().getTextEditor()))
+				return headerController.getView().getCcComboBox().getTextEditor();
+			else if (aComponent.equals(headerController.getView()
+					.getCcComboBox().getTextEditor()))
+				return headerController.getView().getToComboBox().getTextEditor();
+			else if ( aComponent.equals(headerController.getView().getToComboBox().getTextEditor()))
+				return priorityController.getView();
+			else if ( aComponent.equals(priorityController.getView()))
+				return accountController.getView();
+
+			return editorController.getComponent();
+		}
+
+		public Component getDefaultComponent(Container focusCycleRoot) {
+			return headerController.getView().getToComboBox().getTextEditor();
+		}
+
+		public Component getLastComponent(Container focusCycleRoot) {
+			return editorController.getComponent();
+		}
+
+		public Component getFirstComponent(Container focusCycleRoot) {
+			return accountController.getView();
+		}
+	}
 }

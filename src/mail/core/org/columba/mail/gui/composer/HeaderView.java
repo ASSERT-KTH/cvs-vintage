@@ -15,7 +15,6 @@
 //All Rights Reserved.ndation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 package org.columba.mail.gui.composer;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,6 +23,7 @@ import javax.swing.JPanel;
 
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.mail.gui.composer.action.AddressbookAction;
+import org.columba.mail.gui.composer.util.FocusAddressComboBox;
 import org.frappucino.addresscombobox.AddressComboBox;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -34,8 +34,8 @@ import com.jgoodies.forms.layout.FormLayout;
  * 
  * @author fdietz
  */
-public class HeaderView extends JPanel implements ActionListener{
-	
+public class HeaderView extends JPanel implements ActionListener {
+
 	private HeaderController controller;
 
 	private JButton toButton;
@@ -55,30 +55,31 @@ public class HeaderView extends JPanel implements ActionListener{
 
 		this.controller = controller;
 
-		
 		initComponents();
 		
 		layoutComponents();
-		
-		layoutComponents();
 	}
-	
+
+	/**
+	 * Init address autocompletion
+	 *  
+	 */
 	public void initAutocompletion() {
+		// pass contact data along to AddressComboBox
 		toComboBox.setItemProvider(AddressCollector.getInstance());
 		ccComboBox.setItemProvider(AddressCollector.getInstance());
 		bccComboBox.setItemProvider(AddressCollector.getInstance());
 	}
-	
+
 	/**
-	 * 
+	 *  
 	 */
 	protected void layoutComponents() {
+
 		// Create a FormLayout instance.
 		FormLayout layout = new FormLayout(
 				"max(50dlu;default), 3dlu, fill:default:grow, 2dlu",
-
-				// 2 columns
-				"fill:default, 3dlu, fill:default, 3dlu, fill:default, 3dlu");
+				"fill:default, 3dlu, fill:default, 3dlu, fill:default");
 
 		// 3 row
 		PanelBuilder builder = new PanelBuilder(this, layout);
@@ -92,31 +93,21 @@ public class HeaderView extends JPanel implements ActionListener{
 
 		builder.add(bccButton, cc.xy(1, 5));
 		builder.add(bccComboBox, cc.xy(3, 5));
+
 	}
 
 	protected void initComponents() {
-		
+
 		toButton = new JButton("To:");
 		toButton.addActionListener(this);
 		ccButton = new JButton("Cc:");
 		ccButton.addActionListener(this);
 		bccButton = new JButton("Bcc:");
 		bccButton.addActionListener(this);
-		
-		toComboBox = new AddressComboBox();
-		ccComboBox = new AddressComboBox();
-		toComboBox.setNextFocusableComponent(ccComboBox);
-		bccComboBox = new AddressComboBox();
-		ccComboBox.setNextFocusableComponent(bccComboBox);
-	}
 
-	/**
-	 * Init focus.
-	 * 
-	 * @param c		subject JTextField component
-	 */
-	public void initFocus(Component c) {
-		bccComboBox.setNextFocusableComponent(c);
+		toComboBox = new FocusAddressComboBox();
+		ccComboBox = new FocusAddressComboBox();
+		bccComboBox = new FocusAddressComboBox();
 	}
 
 	/**
@@ -125,24 +116,27 @@ public class HeaderView extends JPanel implements ActionListener{
 	public AddressComboBox getBccComboBox() {
 		return bccComboBox;
 	}
+
 	/**
 	 * @return Returns the ccComboBox.
 	 */
 	public AddressComboBox getCcComboBox() {
 		return ccComboBox;
 	}
+
 	/**
 	 * @return Returns the toComboBox.
 	 */
 	public AddressComboBox getToComboBox() {
 		return toComboBox;
 	}
-	
+
 	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		new AddressbookAction(controller.getComposerController()).actionPerformed(null);
+		new AddressbookAction(controller.getComposerController())
+				.actionPerformed(null);
 
 	}
 }

@@ -48,7 +48,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 
     private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.composer");
 
-    AttachmentView view;
+    private AttachmentView view;
 
     private ComposerController composerController;
 
@@ -80,7 +80,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 
         installListener();
 
-        view.addListSelectionListener(this);
+        //view.addListSelectionListener(this);
     }
 
     /**
@@ -145,12 +145,8 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
     /**
      * Removes the current selected attachments.
      */
-    public void removeSelected() {
-        Object[] mp = view.getSelectedValues();
-
-        for (int i = 0; i < mp.length; i++) {
-            view.remove((StreamableMimePart) mp[i]);
-        }
+    public void removeSelected() {       
+          view.removeSelected();        
     }
 
     /**
@@ -304,7 +300,7 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
 
     /** {@inheritDoc} */
     public void selectAll() {
-        view.setSelectionInterval(0, view.count() - 1);
+        //view.setSelectionInterval(0, view.count() - 1);
     }
 
     /** {@inheritDoc} */

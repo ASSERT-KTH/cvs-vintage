@@ -19,31 +19,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.swing.JComponent;
-
 import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.parser.ListBuilder;
 import org.columba.addressbook.parser.ListParser;
-import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.gui.util.NotifyDialog;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.util.MailResourceLoader;
 
 /**
- * @author frd
+ * Recipients editor component.
+ * 
+ * @author fdietz
  */
-public class HeaderController implements FocusOwner {
+public class HeaderController {
 
 	/** JDK 1.4+ logging framework logger, used for logging. */
 	private static final Logger LOG = Logger
 			.getLogger("org.columba.mail.gui.composer");
 
-	ComposerController controller;
+	private ComposerController controller;
 
-	HeaderView view;
+	private HeaderView view;
 
 	public HeaderController(ComposerController controller) {
 		this.controller = controller;
@@ -51,8 +49,15 @@ public class HeaderController implements FocusOwner {
 		view = new HeaderView(this);
 
 		//view.getTable().addKeyListener(this);
-		// register at focus manager
-		MainInterface.focusManager.registerComponent(this);
+
+		// clear autocomplete hashmap
+		AddressCollector.getInstance().clear();
+
+		// fill hashmap with all available contacts
+		AddressCollector.getInstance().addAllContacts(101);
+		AddressCollector.getInstance().addAllContacts(102);
+		
+		view.initAutocompletion();
 
 	}
 
@@ -157,8 +162,9 @@ public class HeaderController implements FocusOwner {
 		}
 
 		List l = ListParser.createListFromString(str);
-		if ( l == null) return list;
-		
+		if (l == null)
+			return list;
+
 		Iterator it = l.iterator();
 
 		while (it.hasNext()) {
@@ -168,14 +174,14 @@ public class HeaderController implements FocusOwner {
 				continue;
 
 			HeaderItem item = AddressCollector.getInstance().getHeaderItem(s);
-			if ( item == null) {
+			if (item == null) {
 				item = new ContactItem();
 				item.setDisplayName(s);
 				item.setHeader(header);
 			} else {
 				item.setHeader(header);
 			}
-			
+
 			list.add(item);
 		}
 
@@ -204,78 +210,4 @@ public class HeaderController implements FocusOwner {
 		updateComponents(true);
 	}
 
-	/** *************** FocusOwner implementation ************************** */
-	public void copy() {
-		// not supported by gui component
-	}
-
-	public void cut() {
-		//view.removeSelected();
-	}
-
-	public void delete() {
-		//view.removeSelected();
-	}
-
-	public JComponent getComponent() {
-		return getView();
-	}
-
-	public boolean isCopyActionEnabled() {
-		// not supported by gui component
-		return false;
-	}
-
-	public boolean isCutActionEnabled() {
-		/*
-		 * if (view.getSelectedRowCount() > 0) { return true; }
-		 */
-
-		return false;
-	}
-
-	public boolean isDeleteActionEnabled() {
-		/*
-		 * if (view.getSelectedRowCount() > 0) { return true; }
-		 */
-
-		return false;
-	}
-
-	public boolean isPasteActionEnabled() {
-		// not supported by gui component
-		return false;
-	}
-
-	public boolean isRedoActionEnabled() {
-		// not supported by gui component
-		return false;
-	}
-
-	public boolean isSelectAllActionEnabled() {
-		return true;
-	}
-
-	public boolean isUndoActionEnabled() {
-		// not supported by gui component
-		return false;
-	}
-
-	public void paste() {
-		// not supported by gui component
-	}
-
-	public void redo() {
-		// not supported by gui component
-	}
-
-	public void selectAll() {
-		/*
-		 * view.selectAll();
-		 */
-	}
-
-	public void undo() {
-		// not supported by gui component
-	}
 }

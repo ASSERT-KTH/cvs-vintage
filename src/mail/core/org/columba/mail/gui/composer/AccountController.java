@@ -26,18 +26,15 @@ import javax.swing.JCheckBoxMenuItem;
 
 
 /**
+ * Account chooser component.
+ * 
  * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class AccountController implements ItemListener {
-    AccountView view;
-    ComposerController controller;
-    JCheckBoxMenuItem signMenuItem;
-    JCheckBoxMenuItem encryptMenuItem;
+    private AccountView view;
+    private ComposerController controller;
+    private JCheckBoxMenuItem signMenuItem;
+    private JCheckBoxMenuItem encryptMenuItem;
 
     public AccountController(ComposerController controller) {
         this.controller = controller;
