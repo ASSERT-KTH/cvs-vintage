@@ -301,13 +301,13 @@ public class Http10 {
 	}
 
 	// Perform URL decoding only if necessary
-	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
-	    try {
-		uriMB.unescapeURL();
-	    } catch (Exception e) {
-		return 400;
-	    }
-	}
+	// 	if ((uriMB.indexOf('%') >= 0) || (uriMB.indexOf('+') >= 0)) {
+	// 	    try {
+	// 		uriMB.unescapeURL();
+	// 	    } catch (Exception e) {
+	// 		return 400;
+	// 	    }
+	// 	}
 
 	// XXX what about query strings ?
 	

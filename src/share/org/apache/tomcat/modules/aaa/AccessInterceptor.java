@@ -257,10 +257,6 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	// if we don't have any other constraints, return
 	if( ctxSec==null || ctxSec.patterns==0 ) return 0; // fast exit
 
-	if (reqURIMB.indexOf('%') >= 0 || reqURIMB.indexOf( '+' ) >= 0) {
-	    log("Shouldn't happen - the request is decoded earlier");
-	    reqURIMB.unescapeURL();
-	}
 	String reqURI = req.requestURI().toString();
 	String path=reqURI.substring( ctxPathLen);
 	String method=req.method().toString();
