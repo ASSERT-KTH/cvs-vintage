@@ -22,7 +22,7 @@ import org.jboss.ejb.DeploymentException;
 ' *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author Peter Antman (peter.antman@tim.se)
 
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class MessageDrivenMetaData extends BeanMetaData {
     // Constants -----------------------------------------------------
@@ -80,7 +80,7 @@ public class MessageDrivenMetaData extends BeanMetaData {
 	public void importEjbJarXml(Element element) throws DeploymentException {
 		super.importEjbJarXml(element);
 		
-		messageSelector = getElementContent(getUniqueChild(element, "message-selector"));
+		messageSelector = getElementContent(getOptionalChild(element, "message-selector"));
 
 		// set 
 		Element destination = getUniqueChild(element, "message-driven-destination");
