@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
 import java.awt.BorderLayout;
@@ -20,16 +21,13 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -184,54 +182,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		mainPanel.add(tp, BorderLayout.CENTER);
 
 		dialog.getContentPane().add(mainPanel, BorderLayout.CENTER);
-
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder(new WizardTopBorder());
-		bottomPanel.setLayout(new BorderLayout());
-
-		JPanel buttonPanel = createButtonPanel();
-		bottomPanel.add(buttonPanel, BorderLayout.CENTER);
-
-		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-
-		/*
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new BorderLayout());
-		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
-		
-		//bottom.add( Box.createHorizontalStrut());
-		
-		
-		cancelButton = new JButton(GlobalResourceLoader.getString("dialog", "cancel"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		cancelButton.addActionListener(this);
-		cancelButton.setActionCommand("CANCEL"); //$NON-NLS-1$
-		
-		okButton = new JButton(GlobalResourceLoader.getString("dialog", "ok"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		okButton.addActionListener(this);
-		okButton.setActionCommand("OK"); //$NON-NLS-1$
-		okButton.setDefaultCapable(true);
-		dialog.getRootPane().setDefaultButton(okButton);
-		
-		helpButton = new JButton(GlobalResourceLoader.getString("dialog", "help"));
-		//$NON-NLS-1$ //$NON-NLS-2$
-		
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 10, 0));
-		buttonPanel.add(helpButton);
-		buttonPanel.add(cancelButton);
-		buttonPanel.add(okButton);
-		
-		//bottom.add( Box.createHorizontalGlue() );
-		
-		bottom.add(buttonPanel, BorderLayout.EAST);
-		
-		
-		
-		dialog.getContentPane().add(bottom, BorderLayout.SOUTH);
-		*/
+		dialog.getContentPane().add(createButtonPanel(), BorderLayout.SOUTH);
+                dialog.getRootPane().registerKeyboardAction(this, "CANCEL",
+                                                            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                                            JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
 	/*
@@ -263,7 +217,7 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		//bottom.setLayout( new BoxLayout( bottom, BoxLayout.X_AXIS ) );
-		bottom.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+		bottom.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
 
 		//bottom.add( Box.createHorizontalStrut());
 
@@ -285,10 +239,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		//$NON-NLS-1$ //$NON-NLS-2$
 
 		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new GridLayout(1, 3, 10, 0));
-		buttonPanel.add(helpButton);
-		buttonPanel.add(cancelButton);
+		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
 		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+		buttonPanel.add(helpButton);
 
 		//bottom.add( Box.createHorizontalGlue() );
 
