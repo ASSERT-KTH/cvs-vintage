@@ -5,10 +5,10 @@
 
 #set ($currentIssueModuleId = $currentIssue.ModuleId)
 #set ($currentModule = $currentIssue.Module)
-#set ($currentModuleId = $currentModule.ModuleId)
+#set ($currentModuleId = $scarabR.CrrrentModule.ModuleId)
 #set ($currentModuleName = $currentModule.Name)
 
-#if ($currentIssueModuleId != $currentModuleId)
+#if ($currentIssueModuleId != $scarabR.CurrentModule.ModuleId)
 
 <p><strong class="alert">
 You are viewing an issue in a different Module than is currently selected.
