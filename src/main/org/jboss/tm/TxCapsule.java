@@ -45,7 +45,7 @@ import org.jboss.util.timeout.TimeoutFactory;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *
- *  @version $Revision: 1.22 $
+ *  @version $Revision: 1.23 $
  */
 class TxCapsule implements TimeoutTarget
 {
@@ -1027,7 +1027,7 @@ else {
          resourceState = stat;
 
          Xid[] xids = new Xid[resourceAllocSize];
-         System.arraycopy(resourceXids, 0, xid, 0, resourceCount);
+         System.arraycopy(resourceXids, 0, xids, 0, resourceCount);
          resourceXids = xids;
 
          int[] sameRM = new int[resourceAllocSize];
