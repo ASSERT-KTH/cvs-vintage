@@ -68,7 +68,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivitySet.java,v 1.16 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ActivitySet.java,v 1.17 2004/09/15 14:12:21 legout Exp $
  */
 public class ActivitySet 
     extends BaseActivitySet
@@ -214,10 +214,18 @@ public class ActivitySet
             // add users to cc field of email
             ccUsers = issue.getAllUsersToEmail(AttributePeer.CC_TO);
         }
-        
+
         String[] replyToUser = issue.getModule().getSystemEmail();
 
-        return Email.sendEmail(context, issue.getModule(), getCreator(), 
-            replyToUser, toUsers, ccUsers, template);
+        if(Turbine.getConfiguration().getString("scarab.email.replyto.sender").equals("true"))
+          {
+            return Email.sendEmail(context, issue.getModule(), getCreator(), 
+                                   getCreator(), toUsers, ccUsers, template);
+          } 
+        else 
+          {
+            return Email.sendEmail(context, issue.getModule(), getCreator(), 
+                                   replyToUser, toUsers, ccUsers, template);
+          }
     }
 }
