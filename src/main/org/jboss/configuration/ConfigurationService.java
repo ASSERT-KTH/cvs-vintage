@@ -67,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -249,8 +249,12 @@ implements ConfigurationServiceMBean
                            typeClass = Class.forName(typeName);
                         }
                         PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
-                        editor.setAsText(attributeValue);
-                        Object value = editor.getValue();
+                        Object value = attributeValue;
+                        if( editor != null )
+                        {
+                           editor.setAsText(attributeValue);
+                           value = editor.getValue();
+                        }
                         
                         log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
                         server.setAttribute(objectName, new Attribute(attributeName, value));
