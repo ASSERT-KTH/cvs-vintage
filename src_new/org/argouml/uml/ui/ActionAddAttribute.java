@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.27 2004/04/07 11:19:27 d00mst Exp $
+// $Id: ActionAddAttribute.java,v 1.28 2004/04/07 13:26:27 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,7 +59,8 @@ public class ActionAddAttribute extends UMLChangeAction {
 
 	if (ModelFacade.isAClassifier(target))
 	    cls = target;
-	else if (ModelFacade.isAFeature(target))
+	else if (ModelFacade.isAFeature(target)
+		 && ModelFacade.isAClass(ModelFacade.getOwner(target)))
 	    cls = ModelFacade.getOwner(target);
 	else
 	    return;
@@ -79,6 +80,7 @@ public class ActionAddAttribute extends UMLChangeAction {
 	*/
 	return super.shouldBeEnabled()
 	       && (ModelFacade.isAClass(target)
-		   || ModelFacade.isAFeature(target));
+		   || (ModelFacade.isAFeature(target)
+		       && ModelFacade.isAClass(ModelFacade.getOwner(target))));
     }
 } /* end class ActionAddAttribute */
