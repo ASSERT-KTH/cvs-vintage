@@ -39,8 +39,8 @@ import java.awt.*;
  * This is the main class for Java reverse engineering. It's based
  * on the Antlr Java example.
  *
- * $Revision: 1.5 $
- * $Date: 2001/04/07 08:38:47 $
+ * $Revision: 1.6 $
+ * $Date: 2001/04/30 20:33:26 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -62,12 +62,23 @@ public class JavaImport {
 	    configPanel = new JPanel();
 	    configPanel.setLayout(new GridBagLayout());
 
+	    JLabel attributeLabel = new JLabel("Java attributes modelled as");
+	    configPanel.add(attributeLabel,
+			    new GridBagConstraints(GridBagConstraints.RELATIVE,
+						   GridBagConstraints.RELATIVE,
+						   GridBagConstraints.REMAINDER,
+						   1,
+						   1.0, 0.0,
+						   GridBagConstraints.NORTHWEST,
+						   GridBagConstraints.NONE,
+						   new Insets(5, 5, 0, 5),
+						   0, 0));			    
 	    ButtonGroup group1 = new ButtonGroup();
-	    JRadioButton association =
-		new JRadioButton("Attributes modelled as associations.");
-	    association.setSelected(true);
-	    group1.add(association);
-	    configPanel.add(association,
+	    attribute =
+		new JRadioButton("UML attributes.");
+	    attribute.setSelected(true);
+	    group1.add(attribute);
+	    configPanel.add(attribute,
 		      new GridBagConstraints(GridBagConstraints.RELATIVE,
 					     GridBagConstraints.RELATIVE,
 					     GridBagConstraints.REMAINDER,
@@ -75,12 +86,12 @@ public class JavaImport {
 					     1.0, 0.0,
 					     GridBagConstraints.NORTHWEST,
 					     GridBagConstraints.NONE,
-					     new Insets(5, 5, 0, 5),
+					     new Insets(0, 5, 0, 5),
 					     0, 0));
-	    attribute =
-		new JRadioButton("Attributes modelled as attributes.");
-	    group1.add(attribute);
-	    configPanel.add(attribute,
+	    JRadioButton association =
+		new JRadioButton("UML associations.");
+	    group1.add(association);
+	    configPanel.add(association,
 		      new GridBagConstraints(GridBagConstraints.RELATIVE,
 					     GridBagConstraints.RELATIVE,
 					     GridBagConstraints.REMAINDER,
