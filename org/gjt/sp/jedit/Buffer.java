@@ -55,7 +55,7 @@ import org.gjt.sp.util.*;
  * <li>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.93 2002/06/05 02:59:49 spestov Exp $
+ * @version $Id: Buffer.java,v 1.94 2002/06/06 09:15:52 spestov Exp $
  */
 public class Buffer implements EBComponent
 {
@@ -2463,7 +2463,7 @@ loop:		for(int i = 0; i < seg.count; i++)
 			if(offset == -1)
 			{
 				offset = getLineEndOffset(line) - 1;
-				str = MiscUtilities.createWhiteSpace(total[0],0) + str;
+				str = MiscUtilities.createWhiteSpace(col - total[0],0) + str;
 			}
 			else
 				offset += getLineStartOffset(line);
