@@ -84,7 +84,7 @@ $page.setTitle("Identified as duplicate")
    #foreach ($attr in $attrGroup.Attributes)
       #set ($rma = $module.getRModuleAttribute($att, $issueType))
       #if ($rma.Active)
-        #set ($attVal = $currentIssue.getAttributeValue($attr))
+        #set ($attVal = $issue.getAttributeValue($attr))
         #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
       <td>
         #if ($attVal.Attribute.AttributeType.ValidationKey)
