@@ -117,6 +117,8 @@ public class OutgoingServerPanel
 
 			storePasswordCheckBox.setSelected(item.getBoolean("save_password"));
 
+			secureCheckBox.setSelected(item.getBoolean("enable_ssl", true));
+			
 			if (!item.get("login_method").equals("NONE")) {
 				needAuthCheckBox.setSelected(true);
 
@@ -164,6 +166,8 @@ public class OutgoingServerPanel
 			item.set("port", portTextField.getText());
 
 			item.set("host", hostTextField.getText());
+			
+			item.set("enable_ssl", secureCheckBox.isEnabled());
 
 			if (needAuthCheckBox.isSelected()) {
 
@@ -414,7 +418,6 @@ public class OutgoingServerPanel
 		secureCheckBox = new JCheckBox();
 		secureCheckBox.setText(MailResourceLoader.getString("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
 		secureCheckBox.setMnemonic(MailResourceLoader.getMnemonic("dialog", "account", "use_SSL_for_secure_connection")); //$NON-NLS-1$
-		secureCheckBox.setEnabled(false);
 
 		authenticationLabel =
 			new JLabel(

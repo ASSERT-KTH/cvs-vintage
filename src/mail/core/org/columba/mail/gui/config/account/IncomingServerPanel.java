@@ -141,6 +141,8 @@ public class IncomingServerPanel
 
 			}
 
+			secureCheckBox.setSelected(serverItem.getBoolean("enable_ssl", true));
+			
 			defaultAccountCheckBox.setEnabled(
 				MailConfig.getAccountList().getDefaultAccountUid()
 					== accountItem.getInteger("uid"));
@@ -157,9 +159,11 @@ public class IncomingServerPanel
 			serverItem.set("host", hostTextField.getText());
 			serverItem.set("password", passwordTextField.getText());
 			serverItem.set("port", portTextField.getText());
-
+			
 			serverItem.set("save_password", storePasswordCheckBox.isSelected());
 
+			serverItem.set("enable_ssl", secureCheckBox.isEnabled());
+			
 			if (isPopAccount()) {
 				serverItem.set(
 					"login_method",
@@ -462,7 +466,6 @@ public class IncomingServerPanel
 				"dialog",
 				"account",
 				"use_SSL_for_secure_connection"));
-		secureCheckBox.setEnabled(false);
 		secureCheckBox.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",

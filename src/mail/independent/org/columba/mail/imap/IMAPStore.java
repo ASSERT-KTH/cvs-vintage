@@ -94,7 +94,11 @@ public class IMAPStore {
 
 		this.item = item;
 
-		imap = new IMAPProtocol();
+		imap =
+			new IMAPProtocol(
+				item.get("host"),
+				item.getInteger("port"),
+				item.getBoolean("enable_ssl", true));
 
 		state = 0;
 
@@ -148,18 +152,20 @@ public class IMAPStore {
 		try {
 			portNumber = item.getInteger("port");
 		} catch (NumberFormatException e) {
-			portNumber = -1;
+			// fall back to default IMAP port
+			portNumber = 143;
 		}
 
 		try {
-			printStatusMessage(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "authenticating"), worker);
-			if (portNumber != -1)
-				openport = getProtocol().openPort(item.get("host"), portNumber);
-			else
-				openport = getProtocol().openPort(item.get("host"));
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"authenticating"),
+				worker);
+			
+				openport = getProtocol().openPort();
+			
 		} catch (Exception e) {
 			if (e instanceof SocketException)
 				throw new IMAPException(e.getMessage());
@@ -273,15 +279,17 @@ public class IMAPStore {
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-                ColumbaLogger.log.info("selecting path=" + path);
+		ColumbaLogger.log.info("selecting path=" + path);
 		try {
 
-			printStatusMessage(MessageFormat.format(
-                                MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "select_path"),
-                                        new Object[]{path}), worker);
+			printStatusMessage(
+				MessageFormat.format(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"select_path"),
+					new Object[] { path }),
+				worker);
 			IMAPResponse[] responses = getProtocol().select(path);
 
 			StringBuffer buf = new StringBuffer();
@@ -292,7 +300,7 @@ public class IMAPStore {
 			messageFolderInfo =
 				MessageFolderInfoParser.parseMessageFolderInfo(buf.toString());
 
-                        ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
+			ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
 
 			state = STATE_SELECTED;
 			selectedFolderPath = path;
@@ -359,10 +367,12 @@ public class IMAPStore {
 		isLogin(worker);
 
 		try {
-			printStatusMessage(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "fetch_folder_list"), worker);
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"fetch_folder_list"),
+				worker);
 			IMAPResponse[] responses = getProtocol().lsub(reference, pattern);
 
 			List v = new Vector();
@@ -504,10 +514,12 @@ public class IMAPStore {
 			if (count == 0)
 				return null;
 
-			printStatusMessage(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "fetch_uid_list"), worker);
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"fetch_uid_list"),
+				worker);
 
 			IMAPResponse[] responses = imap.fetchUIDList("1:*", count, worker);
 			return UIDParser.parse(responses);
@@ -577,10 +589,12 @@ public class IMAPStore {
 		isSelected(worker, path);
 
 		try {
-			printStatusMessage(MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "fetch_flags_list"), worker);
+			printStatusMessage(
+				MailResourceLoader.getString(
+					"statusbar",
+					"message",
+					"fetch_flags_list"),
+				worker);
 			IMAPResponse[] responses =
 				imap.fetchFlagsList(
 					"1:*",
@@ -767,7 +781,7 @@ public class IMAPStore {
 		String path)
 		throws Exception {
 
-                ColumbaLogger.log.debug("list-count=" + list.size());
+		ColumbaLogger.log.debug("list-count=" + list.size());
 
 		isLogin(worker);
 		isSelected(worker, path);
@@ -790,9 +804,9 @@ public class IMAPStore {
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
 
-                ColumbaLogger.log.debug("messageSet=" + set.getString());
-                ColumbaLogger.log.debug(
-                            "headerFields=" + headerFields.toString().trim());
+		ColumbaLogger.log.debug("messageSet=" + set.getString());
+		ColumbaLogger.log.debug(
+			"headerFields=" + headerFields.toString().trim());
 
 		try {
 			clientTag =
@@ -849,13 +863,15 @@ public class IMAPStore {
 						i++;
 						if ((worker != null) && (i % 100 == 0))
 							worker.setProgressBarValue(i);
-						printStatusMessage(MessageFormat.format(
-                                                        MailResourceLoader.getString(
-                                                                "statusbar",
-                                                                "message",
-                                                                "fetch_headers"),
-                                                        new Object[]{new Integer(i),
-                                                                new Integer(list.size())}),
+						printStatusMessage(
+							MessageFormat.format(
+								MailResourceLoader.getString(
+									"statusbar",
+									"message",
+									"fetch_headers"),
+								new Object[] {
+									new Integer(i),
+									new Integer(list.size())}),
 							worker);
 					}
 				}
@@ -976,7 +992,7 @@ public class IMAPStore {
 			MessageSet set = new MessageSet(uids);
 
 			String flagsString = FlagsParser.parseVariant(variant);
-                        ColumbaLogger.log.debug("flags=" + flagsString);
+			ColumbaLogger.log.debug("flags=" + flagsString);
 
 			// unset flags command
 			if (variant >= 4) {
@@ -1013,12 +1029,14 @@ public class IMAPStore {
 		isSelected(worker, path);
 
 		try {
-			printStatusMessage(MessageFormat.format(
-                                MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "search_in"),
-                                        new Object[]{path}), worker);
+			printStatusMessage(
+				MessageFormat.format(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"search_in"),
+					new Object[] { path }),
+				worker);
 
 			MessageSet set = new MessageSet(uids);
 
@@ -1086,12 +1104,14 @@ public class IMAPStore {
 
 		try {
 			//MessageSet set = new MessageSet(uids);
-			printStatusMessage(MessageFormat.format(
-                                MailResourceLoader.getString(
-                                        "statusbar",
-                                        "message",
-                                        "search_in"),
-                                        new Object[]{path}), worker);
+			printStatusMessage(
+				MessageFormat.format(
+					MailResourceLoader.getString(
+						"statusbar",
+						"message",
+						"search_in"),
+					new Object[] { path }),
+				worker);
 			SearchRequestBuilder b = new SearchRequestBuilder();
 			b.setCharset("UTF-8");
 			List list = b.generateSearchArguments(filterRule);

@@ -24,9 +24,13 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.columba.core.command.CommandCancelledException;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.mail.ssl.SSLProvider;
 
 public class POP3Protocol {
 	private Socket socket;
@@ -47,17 +51,26 @@ public class POP3Protocol {
 	private String user;
 	private String password;
 	private String server;
+	private int port;
 
 	public static final int DEFAULT_PORT = 110;
 
 	public static final int USER = 1;
 	public static final int APOP = 2;
+	private boolean useSSL;
 
-	public POP3Protocol(String user, String password, String server) {
+	public POP3Protocol(
+		String user,
+		String password,
+		String server,
+		int port,
+		boolean useSSL) {
 		this.user = user;
+		this.port = port;
 		this.password = password;
 		this.server = server;
-
+		this.useSSL = useSSL;
+		
 		logMethod = USER;
 	}
 
@@ -75,7 +88,7 @@ public class POP3Protocol {
 	}
 
 	public void sendString(String s) throws IOException {
-                ColumbaLogger.log.debug("CLIENT:" + s);
+		ColumbaLogger.log.debug("CLIENT:" + s);
 
 		out.print(s + "\r\n");
 		out.flush();
@@ -104,18 +117,32 @@ public class POP3Protocol {
 		ColumbaLogger.log.debug("SERVER:" + answer);
 	}
 
-	/*
-	public boolean openPort(String host) throws IOException {
-		return openPort(host, DEFAULT_PORT);
-	}
-	
-	public boolean openPort() throws IOException {
-		return openPort(server, DEFAULT_PORT);
-	}
-	*/
+	protected void initSSL() throws Exception {
+		sendString("STLS");
 
-	public boolean openPort(String host, int port) throws IOException {
-		socket = new Socket(host, port);
+		// server doesn't seem to support STARTTLS extension
+		if ( getAnswer() == false )
+			return;
+
+		// create SSLSocket using already established socket
+		SSLSocketFactory factory = SSLProvider.createSocketFactory();
+
+		socket = factory.createSocket(socket, server, port, true);
+
+		// handshake (which cyper algorithms are used?)
+		 ((SSLSocket) socket).startHandshake();
+
+		// create streams
+		in =
+			new BufferedReader(
+				new InputStreamReader(socket.getInputStream(), "ISO-8859-1"));
+		out =
+			new PrintWriter(
+				new OutputStreamWriter(socket.getOutputStream(), "ISO-8859-1"));
+	}
+
+	public boolean openPort() throws Exception {
+		socket = new Socket(server, port);
 
 		// All Readers shall use ISO8859_1 Encoding in order to ensure
 		// 1) ASCII Chars represented right to ensure working parsers
@@ -138,6 +165,8 @@ public class POP3Protocol {
 				security = answer.substring(i, answer.indexOf(">") + 1);
 
 			}
+			
+			if ( useSSL ) initSSL();
 
 			return true;
 		} else
@@ -385,7 +414,9 @@ public class POP3Protocol {
 				int space2Pos = answer.indexOf(spacePos + 1, ' ');
 				if (space2Pos != -1) {
 					try {
-						int messageSize = Integer.parseInt(answer.substring(spacePos, space2Pos));
+						int messageSize =
+							Integer.parseInt(
+								answer.substring(spacePos, space2Pos));
 						messageBuffer.ensureCapacity(messageSize);
 					} catch (NumberFormatException e) {
 						e.printStackTrace();

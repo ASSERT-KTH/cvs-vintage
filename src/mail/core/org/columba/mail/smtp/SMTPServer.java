@@ -113,7 +113,7 @@ public class SMTPServer {
 		// find host
 		//setText("Opening Port to " + host);
 		try {
-			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"));
+			smtpProtocol = new SMTPProtocol(host, smtpItem.getInteger("port"), smtpItem.getBoolean("enable_ssl", true));
 
 		} catch (Exception e) {
 			if (e instanceof UnknownHostException) {
@@ -290,9 +290,7 @@ public class SMTPServer {
 
 				POP3Protocol pop3Connection = new POP3Protocol();
 				// open socket, query for host
-				pop3Connection.openPort(
-					item.get("host"),
-					item.getInteger("port"));
+				pop3Connection.openPort();
 
 				pop3Connection.setLoginMethod(method);
 				login = pop3Connection.login(item.get("user"), password);

@@ -26,10 +26,14 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.imap.IMAPResponse;
+import org.columba.mail.ssl.SSLProvider;
 
 /**
  *
@@ -109,24 +113,81 @@ public class IMAPProtocol {
 	 */
 	private String result;
 
+	private String host;
+	private int port;
+	private boolean useSSL;
+
 	/**
 	 * default constructor
 	 * @see java.lang.Object#Object()
 	 */
-	public IMAPProtocol() {
+	public IMAPProtocol(String host, int port, boolean useSSL) {
+		this.host = host;
+		this.port = port;
+		this.useSSL = useSSL;
 
 	}
 
-	/**
-	 * Method openPort with default port
-	 *
-	 *
-	 * @param host
-	 * @return boolean
-	 * @throws IOException
-	 */
-	public boolean openPort(String host) throws IOException {
-		return openPort(host, DEFAULT_PORT);
+	protected void initSSL() throws Exception {
+		sendString("STARTTLS", null);
+
+		IMAPResponse r = getResponse(null);
+
+		// server doesn't seem to support STARTTLS extension
+		if (!r.isOK())
+			return;
+
+		// create SSLSocket using already established socket
+		SSLSocketFactory factory = SSLProvider.createSocketFactory();
+
+		socket = factory.createSocket(socket, host, port, true);
+
+		try {
+			// handshake (which cyper algorithms are used?)
+			 ((SSLSocket) socket).startHandshake();
+		} catch (Exception ex) {
+
+			// handshake failed!
+			// -> server closed 
+			ex.printStackTrace();
+
+			// disable usage of SSL
+			useSSL = false;
+			
+			socket.close();
+			in.close();
+			out.close();
+
+			// restart the whole openPort 
+			socket = new Socket(host, port);
+
+			DebugInputStream debugInputStream =
+				new DebugInputStream(socket.getInputStream(), System.out);
+			in = new IMAPInputStream(debugInputStream);
+
+			DebugOutputStream debugOutputStream =
+				new DebugOutputStream(socket.getOutputStream(), System.out);
+
+			out =
+				new DataOutputStream(
+					new BufferedOutputStream(debugOutputStream));
+
+			argumentWriter = new ArgumentWriter(this);
+
+			answer = in.readResponse(null);
+
+			return;
+		}
+
+		// create streams
+		DebugInputStream debugInputStream =
+			new DebugInputStream(socket.getInputStream(), System.out);
+		in = new IMAPInputStream(debugInputStream);
+
+		DebugOutputStream debugOutputStream =
+			new DebugOutputStream(socket.getOutputStream(), System.out);
+
+		out = new DataOutputStream(new BufferedOutputStream(debugOutputStream));
 	}
 
 	/**
@@ -138,7 +199,7 @@ public class IMAPProtocol {
 	 * @return boolean  true if connection was established correctly
 	 * @throws IOException
 	 */
-	public boolean openPort(String host, int port) throws IOException {
+	public boolean openPort() throws Exception {
 
 		socket = new Socket(host, port);
 
@@ -155,9 +216,12 @@ public class IMAPProtocol {
 
 		answer = in.readResponse(null);
 
-		if (answer.startsWith("*"))
+		if (answer.startsWith("*")) {
+			if (useSSL)
+				initSSL();
+
 			return true;
-		else
+		} else
 			return false;
 	}
 
@@ -437,14 +501,10 @@ public class IMAPProtocol {
 		for (int i = 0; i < responses.length; i++) {
 
 			IMAPResponse r = responses[i];
-			//System.out.println("r-source="+r.getSource());
 
-			//if ( r==null ) System.out.println("response==null");
-
+			// dispatch only untagged responses				
 			if ((r == null) || (r.isTagged()))
 				continue;
-
-			//System.out.println("-> handle response");
 
 			handleResponse(r);
 		}
@@ -1001,12 +1061,14 @@ public class IMAPProtocol {
 		return responses;
 	}
 
-	public IMAPResponse[] searchWithCharsetSupport(String charset, Arguments args)
+	public IMAPResponse[] searchWithCharsetSupport(
+		String charset,
+		Arguments args)
 		throws Exception {
 
 		IMAPResponse[] responses =
 			sendCommand("UID SEARCH CHARSET " + charset + " ALL", args);
-			//sendCommand("UID SEARCH CHARSET " + charset + " ", args);
+		//sendCommand("UID SEARCH CHARSET " + charset + " ", args);
 
 		notifyResponseHandler(responses);
 

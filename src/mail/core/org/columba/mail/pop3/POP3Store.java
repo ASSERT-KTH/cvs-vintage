@@ -68,7 +68,13 @@ public class POP3Store {
 		super();
 		this.popItem = popItem;
 
-		protocol = new POP3Protocol();
+		protocol =
+			new POP3Protocol(
+				popItem.get("user"),
+				popItem.get("password"),
+				popItem.get("host"),
+				popItem.getInteger("port"),
+				popItem.getBoolean("enable_ssl", true));
 
 		try {
 
@@ -235,7 +241,6 @@ public class POP3Store {
 		if (popItem.getBoolean("enable_pop3preprocessingfilter", false))
 			rawString = modifyMessage(rawString);
 
-		
 		int i = rawString.indexOf("\n\n");
 		String headerString = rawString.substring(0, i);
 
@@ -252,7 +257,7 @@ public class POP3Store {
 		h.set("columba.fetchstate", new Boolean(true));
 
 		//h.set("columba.pop3uid", (String) uids.get(number - 1));
-		
+
 		return m;
 	}
 
@@ -291,10 +296,7 @@ public class POP3Store {
 		boolean save = false;
 
 		while (!login) {
-			boolean b =
-				protocol.openPort(
-					popItem.get("host"),
-					popItem.getInteger("port"));
+			boolean b = protocol.openPort();
 			ColumbaLogger.log.debug("open port: " + b);
 
 			ColumbaLogger.log.debug("login==false");
@@ -326,8 +328,8 @@ public class POP3Store {
 			protocol.setLoginMethod(popItem.get("login_method"));
 			ColumbaLogger.log.debug("try to login");
 			login = protocol.login(popItem.get("user"), password);
-			ColumbaLogger.log.debug("login="+login);
-			
+			ColumbaLogger.log.debug("login=" + login);
+
 			if (!login) {
 				String answer = protocol.answer;
 
@@ -339,7 +341,7 @@ public class POP3Store {
 
 				popItem.set("password", "");
 				state = STATE_NONAUTHENTICATE;
-				
+
 			}
 
 		}

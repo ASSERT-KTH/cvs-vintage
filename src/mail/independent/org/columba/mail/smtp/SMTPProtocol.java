@@ -26,9 +26,13 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.coder.Base64Decoder;
 import org.columba.mail.coder.Base64Encoder;
+import org.columba.mail.ssl.SSLProvider;
 import org.columba.mail.util.MailResourceLoader;
 
 public class SMTPProtocol {
@@ -50,6 +54,20 @@ public class SMTPProtocol {
 
 	private boolean isEsmtp;
 
+	private boolean useSSL;
+
+	public SMTPProtocol(String hostName, int portNr, boolean useSSL) {
+		capabilities = new Hashtable();
+
+		decoder = new Base64Decoder();
+		encoder = new Base64Encoder();
+
+		host = hostName;
+		port = portNr;
+
+		this.useSSL = useSSL;
+	}
+
 	public SMTPProtocol(String hostName, int portNr) {
 		capabilities = new Hashtable();
 
@@ -58,10 +76,12 @@ public class SMTPProtocol {
 
 		host = hostName;
 		port = portNr;
+
+		this.useSSL = false;
 	}
 
 	public SMTPProtocol(String hostName) {
-                this(hostName, 25);
+		this(hostName, 25);
 	}
 
 	private void checkAnswer(String answer, String start)
@@ -135,14 +155,42 @@ public class SMTPProtocol {
 		}
 	}
 
+	protected void initSSL() throws Exception {
+		sendString("STARTTLS");
+
+		String answer = in.readLine();
+
+		// server doesn't seem to support STARTTLS extension
+		if ( !answer.startsWith("2")) return;
+		
+		// create SSLSocket using already established socket
+		SSLSocketFactory factory = SSLProvider.createSocketFactory();
+
+		socket = factory.createSocket(socket, host, port, true);
+
+		// handshake (which cyper algorithms are used?)
+		((SSLSocket) socket).startHandshake();
+
+		// create streams
+		out = new DataOutputStream(socket.getOutputStream());
+		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	}
+
 	public int openPort() throws Exception {
 		String answer;
 
 		socket = new Socket(host, port);
+
 		out = new DataOutputStream(socket.getOutputStream());
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+		// read server greeting
 		checkAnswer(in.readLine(), "2");
+
+		if (useSSL) {
+			// use SSL
+			initSSL();
+		}
 
 		// we send a FQDN EHLO/HELO that works
 		// sending the actual hostname could be considered spyware
@@ -209,26 +257,30 @@ public class SMTPProtocol {
 		checkAnswer(in.readLine(), "2");
 		for (Iterator it = to.iterator(); it.hasNext();) {
 			sendString("RCPT TO: " + it.next());
-		// for (int i = 0; i < anzAdresses; i++) {
+			// for (int i = 0; i < anzAdresses; i++) {
 			// sendString("RCPT TO: " + to.get(i));
 
 			checkAnswer(in.readLine(), "2");
 		}
 	}
 
-	public void sendMessage(String message, WorkerStatusController workerStatusController) throws Exception {
+	public void sendMessage(
+		String message,
+		WorkerStatusController workerStatusController)
+		throws Exception {
 		BufferedReader messageReader =
 			new BufferedReader(new StringReader(message));
 		String line;
 
 		int progressCounter = 0;
 
-		workerStatusController.setDisplayText(MailResourceLoader.getString(
-                                "statusbar",
-                                "message",
-                                "send_message"));
-		workerStatusController.setProgressBarMaximum(message.length()/1024);
-		
+		workerStatusController.setDisplayText(
+			MailResourceLoader.getString(
+				"statusbar",
+				"message",
+				"send_message"));
+		workerStatusController.setProgressBarMaximum(message.length() / 1024);
+
 		out.writeBytes("DATA\r\n");
 		out.flush();
 
@@ -238,7 +290,7 @@ public class SMTPProtocol {
 
 		while (line != null) {
 			progressCounter += line.length();
-			if( progressCounter > 1024 ) { 
+			if (progressCounter > 1024) {
 				workerStatusController.incProgressBarValue();
 				progressCounter %= 1024;
 			}
