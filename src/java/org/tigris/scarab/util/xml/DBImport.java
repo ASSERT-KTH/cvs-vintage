@@ -156,7 +156,7 @@ public class DBImport
             dependencyTree.resolveIssueDependencies();
         }
     }
-
+    
     public static void main (String[] args)
     {
         // FIXME: should be a nicer way to accomplish this.
@@ -198,18 +198,20 @@ public class DBImport
             cat.error(USAGE + "\nFile does not exist.");
             return;
         }
-        String state = null;
+        String state = STATE_XML_VALIDATION;
         try
         {
             importer.parse(args[1], STATE_XML_VALIDATION);
             cat.info(STATE_XML_VALIDATION + " is done without any errors found");
             
+            state = STATE_DB_VALIDATION;
             if (args[0].equals(STATE_DB_VALIDATION) || args[0].equals(STATE_DB_INSERTION))
             {
                 importer.parse(args[1], STATE_DB_VALIDATION);
                 cat.info(STATE_DB_VALIDATION + " is done without any errors found");
             }
             
+            state = STATE_DB_INSERTION;
             if (args[0].equals(STATE_DB_INSERTION))
             {
                 importer.parse(args[1], STATE_DB_INSERTION);
@@ -218,7 +220,7 @@ public class DBImport
         }
         catch(Exception e)
         {
-            cat.error("\nThe following error(s) found for " + args[0] + 
+            cat.error("\nThe following error(s) found for " + state + 
                           "\n-------------------------------------------------------------------------\n" +
                           e.getMessage());
         }
