@@ -243,6 +243,7 @@ public class XmlIO extends DefaultHandler {
 		_stringReplaceAll(buffer, '<', "&lt;");
 		_stringReplaceAll(buffer, '>', "&tg;");
 		_stringReplaceAll(buffer, '&', "&amp;");
+		_stringReplaceAll(buffer, '"', "&quot;");	// *20030621, karlpeder*
 		return buffer.toString();
 	}
 	

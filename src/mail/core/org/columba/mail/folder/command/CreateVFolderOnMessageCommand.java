@@ -123,16 +123,6 @@ public class CreateVFolderOnMessageCommand extends FolderCommand {
 			return;
 		}
 		
-		// remove chars, which is not supported in pattern field.
-		StringBuffer buf = new StringBuffer();
-		for (int i=0; i<headerValue.length(); i++) {
-			char c = headerValue.charAt(i);
-			if (c != '"') {
-				buf.append(c);
-			}
-		}
-		headerValue = buf.toString();
-
 		// create virtual folder (is attached to parentFolder)
 		String name = vfolderType + " contains [" + headerValue + "]";
 		vfolder = createVirtualFolder(

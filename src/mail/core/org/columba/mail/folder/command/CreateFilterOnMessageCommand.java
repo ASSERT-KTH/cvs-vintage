@@ -111,16 +111,6 @@ public class CreateFilterOnMessageCommand extends FolderCommand {
 			return;
 		}
 		
-		// remove chars, which is not supported in filter criteria.
-		StringBuffer buf = new StringBuffer();
-		for (int i=0; i<headerValue.length(); i++) {
-			char c = headerValue.charAt(i);
-			if (c != '"') {
-				buf.append(c);
-			}
-		}
-		headerValue = buf.toString();
-
 		// create filter
 		String descr = filterType + " contains [" + headerValue + "]";
 		filter = createFilter(descr, filterType, headerValue);
