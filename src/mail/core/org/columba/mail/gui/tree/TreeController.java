@@ -100,7 +100,7 @@ implements TreeSelectionListener,
 		menu = new FolderTreeMenu(this);
 
 		FolderTreeCellRenderer renderer =
-			new FolderTreeCellRenderer(this, true);
+			new FolderTreeCellRenderer(true);
 		view.setCellRenderer(renderer);
 
 		//MainInterface.focusManager.registerComponent( new TreeFocusOwner(this) );

@@ -38,7 +38,7 @@ public class FolderTreeCellRenderer
 	Border selectedBorder = null;
 	boolean isBordered = true;
 	boolean bool;
-	TreeController treeController;
+	//TreeController treeController;
 
 	private ImageIcon image1,
 		image2,
@@ -53,10 +53,10 @@ public class FolderTreeCellRenderer
 
 	private Font plainFont, boldFont, italicFont;
 
-	public FolderTreeCellRenderer(TreeController treeController, boolean bool) {
+	public FolderTreeCellRenderer( boolean bool) {
 		super();
 
-		this.treeController = treeController;
+		//this.treeController = treeController;
 		
 		this.bool = bool;
 
@@ -87,6 +87,7 @@ public class FolderTreeCellRenderer
 		FolderTreeNode treeNode = (FolderTreeNode) value;
 		TreePath path = treeNode.getSelectionTreePath();
 
+		/*
 		FolderTreeNode selection = treeController.getSelected();
 		if( selection != null )
 		{
@@ -95,7 +96,7 @@ public class FolderTreeCellRenderer
 		else
 			isSelected = false;
 		}
-		
+		*/
 		
 		super.getTreeCellRendererComponent(
 			tree,

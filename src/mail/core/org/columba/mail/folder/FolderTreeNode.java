@@ -29,7 +29,10 @@ public abstract class FolderTreeNode
 	implements TreeNodeInterface {
 
 	protected final static ImageIcon collapsedIcon =
-		ImageLoader.getSmallImageIcon("folder.png");
+		ImageLoader.getSmallImageIcon("folder-closed.png");
+		
+		protected final static ImageIcon expandedIcon =
+				ImageLoader.getSmallImageIcon("folder-open.png");
 
 	protected FolderItem node;
 	protected Lock myLock;
@@ -95,7 +98,7 @@ public abstract class FolderTreeNode
 	}
 
 	public ImageIcon getExpandedIcon() {
-		return collapsedIcon;
+		return expandedIcon;
 	}
 
 	public CapabilityList getSupportedActions() {

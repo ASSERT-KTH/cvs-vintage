@@ -97,11 +97,11 @@ public class SelectFolderDialog
 		tree.setShowsRootHandles(true);
 		tree.setRootVisible(false);
 		tree.addTreeSelectionListener(this);
-		// FIXME
-		/*
+				
 		FolderTreeCellRenderer renderer = new FolderTreeCellRenderer(true);
 		tree.setCellRenderer(renderer);
-		*/
+		
+		
 		centerPanel.add(new JScrollPane(tree), BorderLayout.CENTER);
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 
