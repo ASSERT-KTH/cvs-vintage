@@ -4,7 +4,7 @@
 <!-- jEdit FAQ									                        -->
 <!-- Copyright (C) 2002 John Gellene                    -->
 
-<!-- $Id: faq-items3.xml,v 1.7 2002/02/17 21:43:09 jgellene Exp $
+<!-- $Id: faq-items3.xml,v 1.8 2002/02/18 15:22:26 jgellene Exp $
 -->
 
 <sect1 id="working-files"><title>Working with Files</title>
@@ -187,7 +187,7 @@
         </para></answer>
     </qandaentry>
     <qandaentry>
-      <question><para>
+      <question id="file-euro-char"><para>
         I'm using the iso-8859-1 character encoding.  How do I type and save the
         Euro sign (<quote>&#x20ac;</quote>)?
       </para></question>
