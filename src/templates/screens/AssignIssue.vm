@@ -39,19 +39,17 @@
             #set ($userId = $id)
          #end
       #end
-          <input type=hidden name="temp_user_attr_$userId" value=$attrId>
+          <input type="hidden" name="temp_user_attr_$userId" value="$attrId" />
    #end
 #else
    #foreach( $attval in $issue.UserAttributeValues)
-    <input type=hidden name="temp_user_attr_$attval.UserId" value=$attval.AttributeId>
+    <input type="hidden" name="temp_user_attr_$attval.UserId" value="$attval.AttributeId" />
    #end
 #end 
   
 <div class="functnbar">
 <input type="submit" value="$l10n.Done" name="eventSubmit_doDone" />
 </div>
-
-
 
 ##ASSIGNEE LIST
 ## Determine if there are any users to show up in the added/assigned list
@@ -74,7 +72,8 @@
 
     #if ($noUsers.equals("true"))
      <p class="alert">$l10n.NoneAssigned.</p>
-     <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a> $l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
+     <p><a href="#add">$l10n.ClickHereToSelectUsersPart1</a> 
+        $l10n.format("ClickHereToSelectUsersPart2", $issueListSize)</p>
     #else
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
@@ -91,7 +90,7 @@
     #set ($userId = $attVal.UserId)
     #set ($assignedUser = $scarabR.getUser($userId))
     <tr class="a">
-    <td><input type="checkbox" name="remove_user_$userId" value=$attrId>
+    <td><input type="checkbox" name="remove_user_$userId" value="$attrId" />
     <td><strong>$!assignedUser.Name</strong></td>
     <td><a href="mailto:$assignedUser.Email">$assignedUser.UserName</a></td>
     <td><select name="temp_user_attr_$userId">
@@ -100,7 +99,7 @@
         #if ($attrId.toString().equals($selectUserAttr.AttributeId.toString())) 
             #set ($selected = true)
         #end
-        <option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
+        <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
      #end
        </select></td>
     </tr>
@@ -117,7 +116,7 @@
         #end
 		 #set ($assignedUser = $scarabR.getUser($userId))
 			<tr class="a">
-			<td><input type="checkbox" name="remove_user_$userId" value=$attrId>
+			<td><input type="checkbox" name="remove_user_$userId" value="$attrId" />
 			<td><a href="mailto:$assignedUser.Email"><strong>$!assignedUser.Name</strong></a></td>
 			<td>$assignedUser.UserName</td>
 			<td><select name="finl_user_attr_$userId">
@@ -127,7 +126,7 @@
                     #set ($selected = true)
                 #end
                 #if ($assignedUser.hasPermission($selectUserAttr.Permission, $modules))
-				  <option value="$selectUserAttr.AttributeId" #selected($selected) >$selectUserAttr.Name</option>
+				  <option value="$selectUserAttr.AttributeId" #selected($selected)>$selectUserAttr.Name</option>
                 #end
 			 #end
 			   </select></td>
@@ -171,13 +170,13 @@
 #macro (userSort $shortName $longName)
      #if ($sortColumn.equals($shortName))
         #if ($sortPolarity.equals("desc"))
-           #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+          #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum",$pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("sortPolarity", "asc").setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
           #foreach ($issueId in $issueIdList)
               #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
           #end
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
-           #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
+          #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
           #foreach ($issueId in $issueIdList)
               #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
           #end
@@ -191,7 +190,6 @@
         <a href="$sortLink">$longName</a>
      #end
 #end
-
 
 ## PAGINATION
 ## if results exceed limit, get subset list
@@ -221,7 +219,6 @@
  </p> 
 #end
 
-
 ## USER SEARCH
 
 <a name="add"><h3>$l10n.PossibleUsers</h3></a> 
@@ -230,7 +227,7 @@
   <tr>
    <th>$l10n.FilterString</th>
    <td><input type="text" name="searchString" value="$searchString" />&nbsp;
-     <select name="searchField" >
+     <select name="searchField">
       <option value="First Name" #if($searchField.equals("First Name")) selected="selected"#end>$l10n.FirstName</option>
       <option value="Last Name" #if($searchField.equals("Last Name")) selected="selected"#end>$l10n.LastName</option>
       <option value="Username" #if($searchField.equals("Username")) selected="selected"#end>$l10n.Username</option>
@@ -319,4 +316,3 @@ $intake.declareGroups()
 #end
 </div>
 </form>
-
