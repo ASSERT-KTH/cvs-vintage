@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.78 2002/02/21 22:26:11 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.79 2002/03/08 21:40:51 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -362,7 +362,7 @@ public class ModifyIssue extends RequireLoginFirstAction
                         registerActivity(desc, "Your comment was saved", 
                             issue, user, null, context, data, "", comment); 
                     }
-                    
+                    intake.remove(group);    
                 }
                 else if (type.equals("file"))
                 {
@@ -379,19 +379,12 @@ public class ModifyIssue extends RequireLoginFirstAction
                     registerActivity(desc, "Your file was added", issue, user, 
                                      null, context, data);
                 }
-
-                String template = data.getParameters()
-                                 .getString(ScarabConstants.NEXT_TEMPLATE);
-                setTarget(data, template);            
             } 
             else
             {
                 data.setMessage(ERROR_MESSAGE);
             }
         }
-        String template = data.getParameters()
-                          .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue");
-        setTarget(data, template);            
     } 
 
     private void sendEmail(Transaction transaction, Issue issue, String msg,
@@ -779,99 +772,6 @@ public class ModifyIssue extends RequireLoginFirstAction
         }
     }
 
-
-    /**
-    *  Adds a dependency between this issue and another issue.
-    *  This issue will be the child issue. 
-    */
-    public void doAdddependencyold (RunData data, TemplateContext context)
-        throws Exception
-    {                          
-        String id = data.getParameters().getString("id");
-        Issue issue = Issue.getIssueById(id);
-        ScarabUser user = (ScarabUser)data.getUser();
-        IntakeTool intake = getIntakeTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Depend depend = scarabR.getDepend();
-        Group group = intake.get("Depend", depend.getQueryKey());
-        boolean isValid = true;
-        Issue parentIssue = null;
-
-        // The depend type is required.
-        Field dependTypeId = group.get("TypeId");
-        if (dependTypeId.toString().equals("0"))
-        {
-            dependTypeId.setMessage("Please select a dependency type.");
-            return;
-        }
-
-        // The parent issue id is required, and must be a valid issue.
-        Field observedId = group.get("ObservedId");
-        observedId.setRequired(true);
-        if (!observedId.isValid())
-        {
-            observedId.setMessage("Please enter a valid issue id.");
-        }
-        else
-        {
-            try
-            {
-                parentIssue = getScarabRequestTool(context)
-                               .getIssue(observedId.toString());
-            }
-            catch (Exception e)
-            {
-                observedId.setMessage("The id you entered does " +
-                                      "not correspond to a valid issue.");
-                isValid = false;
-            }
-            Depend prevDepend = parentIssue.getDependency(issue);
-            if (prevDepend != null)
-            {
-                if (prevDepend.getDeleted())
-                {
-                    prevDepend.setDeleted(false);
-                    depend = prevDepend;
-                }
-                else
-                {
-                    observedId.setMessage("This issue already has a dependency" 
-                                      + " on the issue id you entered.");
-                    isValid = false;
-                }
-            }
-            else if (parentIssue.equals(issue))
-            {
-                observedId.setMessage("You cannot add a dependency for an " 
-                                      + "issue on itself.");
-                isValid = false;
-            }
-        }
-
-        
-        if (intake.isAllValid() && isValid)
-        {
-            depend.setObserverId(issue.getIssueId());
-            depend.setObservedId(parentIssue.getIssueId());
-            depend.setTypeId(new NumberKey(dependTypeId.toString()));
-            depend.save();
-
-            // Save transaction record
-            String desc = new StringBuffer("added ")
-                .append(depend.getDependType().getName())
-                .append(" dependency for Issue ")
-                .append(issue.getUniqueId())
-                .append(" on Issue ")
-                .append(parentIssue.getUniqueId())
-                .toString();
-            registerActivity(desc, DEFAULT_MSG, issue, 
-                             user, null, context, data);
-        }
-        else
-        {
-            data.setMessage(ERROR_MESSAGE);
-        }
-    }
 
     /**
      * Redirects to AssignIssue page.
