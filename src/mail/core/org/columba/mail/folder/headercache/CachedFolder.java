@@ -244,9 +244,11 @@ public abstract class CachedFolder extends LocalFolder {
             
             throw e;
         }
-        // We have to use the header from the HeaderCache
-        // get header from cache
+        
+        //We use the attributes and flags from the cache
+        //but the parsed header from the parsed message
         ColumbaHeader header = (ColumbaHeader) getCachedHeaderList().get(uid);
+        header.setHeader(message.getHeader().getHeader());
         message.setHeader( header );
         
         return message;
