@@ -25,6 +25,14 @@ import java.lang.reflect.Proxy;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBLocalObject;
+import javax.ejb.AccessLocalException;
+import java.rmi.AccessException;
+import javax.ejb.NoSuchObjectLocalException;
+import java.rmi.NoSuchObjectException;
+import javax.ejb.TransactionRequiredLocalException;
+import javax.transaction.TransactionRequiredException;
+import javax.ejb.TransactionRolledbackLocalException;
+import javax.transaction.TransactionRolledbackException;
 import javax.naming.Name;
 import javax.naming.InitialContext;
 import javax.naming.Context;
@@ -194,7 +202,24 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       {
          return container.invokeHome(new MethodInvocation(null, m, args, 
             getTransaction(), getPrincipal(), getCredential()));
-      } finally
+      }
+      catch (AccessException ae)
+      {
+         throw new AccessLocalException( ae.getMessage(), ae );
+      }
+      catch (NoSuchObjectException nsoe)
+      {
+         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+      }
+      catch (TransactionRequiredException tre)
+      {
+         throw new TransactionRequiredLocalException( tre.getMessage() );
+      }
+      catch (TransactionRolledbackException trbe)
+      {
+         throw new TransactionRolledbackLocalException( trbe.getMessage(), trbe );
+      }
+      finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
@@ -229,7 +254,7 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
 
    
    /**
-    *  Invoke a Remote interface method.
+    *  Invoke a local interface method.
     */
    public Object invoke(Object id, Method m, Object[] args )
    throws Exception
@@ -242,7 +267,24 @@ public class BaseLocalContainerInvoker implements LocalContainerInvoker
       {
          return container.invoke(new MethodInvocation(id, m, args, getTransaction(), 
             getPrincipal(), getCredential()));
-      } finally
+      }
+      catch (AccessException ae)
+      {
+         throw new AccessLocalException( ae.getMessage(), ae );
+      }
+      catch (NoSuchObjectException nsoe)
+      {
+         throw new NoSuchObjectLocalException( nsoe.getMessage(), nsoe );
+      }
+      catch (TransactionRequiredException tre)
+      {
+         throw new TransactionRequiredLocalException( tre.getMessage() );
+      }
+      catch (TransactionRolledbackException trbe)
+      {
+         throw new TransactionRolledbackLocalException( trbe.getMessage(), trbe );
+      }
+      finally
       {
          Thread.currentThread().setContextClassLoader(oldCl);
       }
