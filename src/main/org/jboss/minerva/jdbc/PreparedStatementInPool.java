@@ -417,8 +417,8 @@ public class PreparedStatementInPool extends StatementInPool implements Prepared
     }
 
     public void close() throws SQLException {
-        super.clearFields();
         con.statementClosed(this);
+        super.clearFields();
         con = null;
         impl = null;
         sql = null;
