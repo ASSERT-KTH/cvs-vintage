@@ -26,7 +26,7 @@
 // File: CrParamTypeNotImported.java
 // Classes: CrParamTypeNotImported
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.3 2002/10/20 21:11:15 linus Exp $
+// $Id: CrParamTypeNotImported.java,v 1.4 2002/10/25 06:10:19 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,15 @@ import org.argouml.cognitive.*;
 import org.argouml.cognitive.critics.*;
 
 /** Well-formedness rule [2] for MBehavioralFeature. See page 28 of UML 1.1
- *  Semantics. OMG document ad/97-08-04. */
+ *  Semantics. OMG document ad/97-08-04. 
+ *  It essentially wants to make sure that every type used by the class is
+ *  imported into its namespace, so that the type can be found.
+ *
+ *  <p>
+ *  This is only a dummy implementation as ArgoUML does not yet support
+ *  proper set up of namespace imports.
+ *  </p>
+ */
 
 public class CrParamTypeNotImported extends CrUML {
 
