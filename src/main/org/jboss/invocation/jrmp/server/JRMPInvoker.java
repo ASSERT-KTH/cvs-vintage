@@ -39,25 +39,19 @@ import javax.management.RuntimeOperationsException;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
-import javax.management.NotificationBroadcasterSupport;
-import javax.management.AttributeChangeNotification;
-
-import org.jboss.metadata.MetaData;
-import org.jboss.deployment.DeploymentException;
 
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.MarshalledInvocation;
-import org.jboss.proxy.TransactionInterceptor;
-import org.jboss.tm.TransactionPropagationContextFactory;
-import org.jboss.tm.TransactionPropagationContextImporter;
-
 import org.jboss.logging.Logger;
-
+import org.jboss.proxy.TransactionInterceptor;
+import org.jboss.security.SecurityDomain;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.tm.TransactionPropagationContextFactory;
+import org.jboss.tm.TransactionPropagationContextImporter;
 
 /**
  * The JRMPInvoker is an RMI implementation that can generate Invocations
@@ -66,15 +60,8 @@ import org.jboss.system.ServiceMBeanSupport;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.18 $
- *
- * <p><b>Revisions:</b><br>
- * <p><b>2002/01/13: Sacha Labourey</b>
- * <ol>
- *   <li>Make the exported RemoteStub available. For the clustering we need to
- *       distribute the stub to the other nodes of the cluster. Sending the 
- *       RemoteServer directly fails.</li>
- * </ol>
+ * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
+ * @version $Revision: 1.19 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -106,7 +93,9 @@ public class JRMPInvoker
 
    /** The address to bind the rmi port on */
    protected String serverAddress;
-   
+   /** The name of the security domain to use with server sockets that support SSL */
+   protected String sslDomain;
+ 
    protected RemoteStub invokerStub;
    
    private static TransactionPropagationContextFactory tpcFactory;
@@ -144,11 +133,13 @@ public class JRMPInvoker
     */
    public String getServerHostName() 
    { 
-      try {
-	 return InetAddress.getLocalHost().getHostName();
+      try
+      {
+         return InetAddress.getLocalHost().getHostName();
       }
-      catch (Exception ignored) {
-	 return null;
+      catch (Exception ignored)
+      {
+         return null;
       }
    }
 
@@ -208,6 +199,21 @@ public class JRMPInvoker
       return serverAddress;
    }
 
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setSecurityDomain(String domainName)
+   {
+      this.sslDomain = domainName;
+   }
+   /**
+    * @jmx:managed-attribute
+    */
+   public String getSecurityDomain()
+   {
+      return sslDomain;
+   }
+
    public RemoteStub getStub() {
       return this.invokerStub;
    }
@@ -218,21 +224,24 @@ public class JRMPInvoker
 
       if (log.isDebugEnabled())
       {
-         log.debug("Container Invoker RMI Port='" + 
+         log.debug("RMI Port='" + 
                    (rmiPort == ANONYMOUS_PORT ? "Anonymous" : 
                     Integer.toString(rmiPort))+"'");
 
-         log.debug("Container Invoker Client SocketFactory='" +
+         log.debug("Client SocketFactory='" +
                    (clientSocketFactory == null ? "Default" : 
                     clientSocketFactory.toString())+"'");
 
-         log.debug("Container Invoker Server SocketFactory='" +
+         log.debug("Server SocketFactory='" +
                    (serverSocketFactory == null ? "Default" : 
                     serverSocketFactory.toString())+"'");
 
-         log.debug("Container Invoker Server SocketAddr='" + 
+         log.debug("Server SocketAddr='" + 
                    (serverAddress == null ? "Default" : 
                     serverAddress)+"'");
+         log.debug("SecurityDomain='" + 
+                   (sslDomain == null ? "Default" : 
+                    sslDomain)+"'");
       }
    }
    
@@ -421,6 +430,27 @@ public class JRMPInvoker
                {
                   log.warn("Failed to setBindAddress="+serverAddress+" on socket factory", e);
                   // Go with default address
+               }
+            }
+            /* See if the server socket supports setSecurityDomain(SecurityDomain)
+            if an sslDomain was specified
+            */
+            if( sslDomain != null )
+            {
+               try
+               {
+                  Class[] parameterTypes = {SecurityDomain.class};
+                  Method m = ssfClass.getMethod("setSecurityDomain", parameterTypes);
+                  Object[] args = {sslDomain};
+                  m.invoke(serverSocketFactory, args);
+               }
+               catch(NoSuchMethodException e)
+               {
+                  log.error("Socket factory does not support setSecurityDomain(SecurityDomain)");
+               }
+               catch(Exception e)
+               {
+                  log.error("Failed to setSecurityDomain="+sslDomain+" on socket factory");
                }
             }
          }
