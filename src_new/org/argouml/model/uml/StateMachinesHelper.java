@@ -1,4 +1,4 @@
-// $Id: StateMachinesHelper.java,v 1.1 2004/11/01 19:55:06 mvw Exp $
+// $Id: StateMachinesHelper.java,v 1.2 2004/12/21 13:25:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -221,8 +221,10 @@ public class StateMachinesHelper {
     }
     
     /**
-     * TODO: (MVW) Since this function is also present in the ModelFacade, 
-     * why is it here?
+     * Get the "top" composite state of a statemachine. <p>
+     * 
+     * The difference with the equally named function in the ModelFacade, 
+     * is that this one swallows null without causing an exception.
      * 
      * @param sm the given statemachine
      * @return the top composite state
