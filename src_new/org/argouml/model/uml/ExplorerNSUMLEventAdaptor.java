@@ -1,4 +1,4 @@
-// $Id: ExplorerNSUMLEventAdaptor.java,v 1.4 2004/06/23 07:02:41 linus Exp $
+// $Id: ExplorerNSUMLEventAdaptor.java,v 1.5 2004/06/27 10:58:52 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,8 @@ import ru.novosoft.uml.MElementListener;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+
+import org.argouml.model.ModelFacade;
 
 /**
  * Event adaptor for the explorer to decouple the explorer from the nsuml model.
@@ -152,10 +154,21 @@ public class ExplorerNSUMLEventAdaptor
      *
      * If a element changes, this will be catched by this method and reflected
      * in the tree.
+     *
+     * TODO: Checking if an extendedElement is being removed from a stereotype
+     * is somewhat bogus since that would break an Explorer view where
+     * extended elements are children of stereotypes. Fortunately there is
+     * none such currently.
+     *
      * @see ru.novosoft.uml.MElementListener#roleRemoved(
      *         ru.novosoft.uml.MElementEvent)
      */
     public void roleRemoved(MElementEvent e) {
+	if (ModelFacade.isAStereotype(e.getSource())
+	    && "extendedElement".equals(e.getName())) {
+	    return;
+	}
+
         if (e.getAddedValue() != null
             || e.getRemovedValue() != null
             || (e.getNewValue() != null
