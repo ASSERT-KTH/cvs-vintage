@@ -59,36 +59,18 @@
   <div class="label"><strong>Scarab</strong></div>
   <div class="body">
  
- <div><a href="#">Defect</a>
+ <div><a href="#">Enter new defect</a></div>
 
- <div><a href="#">Queries</a></div>
+ <div><a href="#">Saved queries</a></div>
  
- <div><a href="#">Enter new</a></div>         
+ <div><a href="#">Templates</a></div>         
  
  <div><a href="#">Reports</a></div>
  
  </div>
  </div> </div>
- <div id="admintools" class="toolgroup">
 
- 
- <div class="label"><strong>Administration</strong></div>
- 
- <div class="body">
- 
- <div><a href="#">Approval queue</a></div>
-    
- <div><a href="#">Global data</a></div>
- 
- <div><a href="#">Project data</a></div>         
-  
- <div><a href="#">Roles</a></div>
- 
- <div><a href="#">Users</a></div>
-   
- </div>
- 
- </div> </div> </div>
+ </div> </div>
 
 
 <div id="helptext" class="toolgroup">
@@ -122,11 +104,6 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
-   	<td id="issueid">
-		<a href="#"><small>All issues</small></a>
-	</td>    	<td id="issueid">
-		<a href="#"><small>My issues</small></a>
-	</td>   
 	<td id="issueid">
 		<form action="/servlets/Scarab/curmodule/5/template/IssueList.vm/action/Search" method="get">
  		<input type="hidden" name="nextTemplate" value="ViewIssue.vm" />
@@ -134,6 +111,19 @@ title="Note: link may open in new window">Get help?</a></div>
     	&#160;<input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />
 		</form>
 	</td>
+	
+	<td>
+		<form action="post" method="get">
+  		<select name="go" tabindex="3" onChange="this.form.submit();">
+    	<option value="#">Defect</option>
+    	<option value="#">Task</option>
+    	<option value="#">Enhancement</option>
+ 	 	</select>
+  		<input type="hidden" value="foo" name="eventSubmit_doSelectquery" />
+  		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
+		</form>
+  	</td>
+
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -170,9 +160,42 @@ title="Note: link may open in new window">Get help?</a></div>
   <input type="hidden" name="id" value="TBNS1" />
 
 <p class="alert"><img src="../csi/images/icon_alertsml.gif" width="16" height="14" alt="Alert notification" border="0" />&nbsp;<small>Values expressed as "---" are different in each of the issues you are currently editing. Selecting/entering a new value will change the data in all issues to that value.</small></p>
+		
+<!-- Scarab - App -->
+	
+	<div class="app" id="div2-6-0">
+		
+		<h3>Bulk editing issues</h3>
+		
+		<table width="100%" border="1" cellspacing="2" cellpadding="3">
+		<tr>
+		<th><a href="#" title="sort">Issue type</a></th>
+		<th><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Issue ID #</th>
+		</tr>
+		
+		<tr class="a">
+		<td>Turbine &gt; defect</td>
+		<td><a href="#"><strong>td20</strong></a></td>
+		</tr>
+		
+		<tr class="b">
+		<td>Turbine &gt; defect</td>
+		<td><a href="#"><strong>td21</strong></a></td>
+		</tr>
+		
+		<tr class="a">
+		<td>Turbine &gt; defect</td>
+		<td><a href="#"><strong>td861</strong></a></td>
+		</tr>
+		
+		<tr class="b">
+		<td>Turbine &gt; defect</td>
+		<td><a href="#"><strong>td921</strong></a></td>
+		</tr>
+		</table>
+		
 
-<h2>Milestone 1 defect: <span class="lastchild">Issues #TBNS1, #TBNS2,  #TBNS6,  #TBNS22</span></h2>
-
+<div>&nbsp;</div>	
 
 <div align="right"><small><a href="#">View as single screen</a></small></div>
 
