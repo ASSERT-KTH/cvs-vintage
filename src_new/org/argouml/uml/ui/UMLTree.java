@@ -22,8 +22,28 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import java.awt.Point;import java.awt.event.MouseEvent;import java.awt.event.MouseListener;import javax.swing.JPopupMenu;import javax.swing.JTree;import javax.swing.event.TreeSelectionEvent;import javax.swing.event.TreeSelectionListener;import javax.swing.tree.TreeModel;import javax.swing.tree.TreePath;import javax.swing.tree.TreeSelectionModel;import org.argouml.ui.targetmanager.TargetManager;import ru.novosoft.uml.MElementEvent;import ru.novosoft.uml.foundation.core.MModelElement;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
+import org.argouml.ui.targetmanager.TargetManager;
+
+import ru.novosoft.uml.MElementEvent;
+import ru.novosoft.uml.foundation.core.MModelElement;
+
+/**
+ * 
+ * @deprecated As of ArgoUml version 0.13.5, 
+ * This class is not used and probably shouldn't be in the future either.
+ */
 public class UMLTree extends JTree implements UMLUserInterfaceComponent, 
       MouseListener, TreeSelectionListener {
 
