@@ -21,6 +21,7 @@ import java.io.PrintWriter;
 import org.columba.core.io.DiskIO;
 import org.columba.core.util.StreamThread;
 import org.columba.mail.config.PGPItem;
+import org.columba.core.logging.ColumbaLogger;
 
 
 public abstract class DefaultUtil
@@ -35,6 +36,7 @@ public abstract class DefaultUtil
 
     protected Process executeCommand( String cmd ) throws Exception
     {
+        ColumbaLogger.log.debug("executeCommand");
         Process p = Runtime.getRuntime().exec( cmd );
 
         return p;
