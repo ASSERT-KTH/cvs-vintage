@@ -19,10 +19,10 @@
     <property name="src.conf.dir" value="${src.dir}/conf"/>
     <property name="www.dir" value="${src.dir}/../www"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
+    <property name="src.dtd.dir" value="${src.dir}/dtd"/>
     <property name="src.i18n.dir" value="${src.dir}/i18n"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
     <property name="src.java.dir.scarab" value="${src.dir}/java"/>
-    <property name="src.resources.dir" value="${src.dir}/resources"/>
     <property name="src.sql.dir" value="${src.dir}/sql"/>
     <property name="src.templates.dir" value="${src.dir}/templates"/>
     <property name="src.test.dir" value="${src.dir}/test"/>
@@ -174,12 +174,16 @@
             </fileset>
         </copy>
 
+        <copy todir="${build.project}/dtd" filtering="yes">
+            <fileset dir="${src.dtd.dir}" defaultexcludes="no">
+                <include name="**/scarab.dtd"/>
+                <include name="**/scarab-settings.dtd"/>
+            </fileset>
+        </copy>
+
         <!-- Conditionally copy templates -->
         <antcall target="copy-templates" />
 
-        <copy todir="${build.project}/resources" filtering="no">
-            <fileset dir="${src.resources.dir}" defaultexcludes="no"/>
-        </copy>
         <copy todir="${build.project.webinf}" filtering="yes">
             <fileset dir="${src.conf.dir}/">
                 <include name="web.xml"/>
