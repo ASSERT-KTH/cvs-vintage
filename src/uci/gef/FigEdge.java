@@ -28,7 +28,7 @@
 // File: FigEdge.java
 // Classes: FigEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigEdge.java,v 1.8 1998/04/18 01:26:14 jrobbins Exp $
+// $Id: FigEdge.java,v 1.9 1998/04/19 06:13:45 jrobbins Exp $
 
 package uci.gef;
 
@@ -245,7 +245,6 @@ public abstract class FigEdge extends Fig implements PropertyChangeListener {
    *  Determines placement and orientation by using
    *  pointAlongPerimeter(). */
   protected void paintArrowHeads(Graphics g) {
-    _arrowHeadStart.setFillColor(Color.white);
     _arrowHeadStart.paint(g, pointAlongPerimeter(5), pointAlongPerimeter(0));
     _arrowHeadEnd.paint(g, pointAlongPerimeter(getPerimeterLength() - 6),
 			pointAlongPerimeter(getPerimeterLength() - 1));
