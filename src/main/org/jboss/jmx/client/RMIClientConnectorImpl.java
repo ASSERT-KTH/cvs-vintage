@@ -112,11 +112,18 @@ public class RMIClientConnectorImpl
 				System.out.println( "RMIClientConnectorImpl.stop(), remove listener: " +
 					lRemoteListener
 				);
-				removeNotificationListener(
-					lRemoteListener.getObjectName(),
-					lRemoteListener.getLocalListener()
-				);
-				i.remove();
+				try {
+					mRemoteConnector.removeNotificationListener(
+						lRemoteListener.getObjectName(),
+						lRemoteListener
+					);
+				}
+				catch( RemoteException re ) {
+					re.printStackTrace();
+				}
+				finally {
+					i.remove();
+				}
 			}
 			catch( Exception e ) {
 				e.printStackTrace();
@@ -527,25 +534,30 @@ public class RMIClientConnectorImpl
 		ListenerNotFoundException
 	{
 		// Lookup if the given listener is registered
-		int lIndex = mListeners.indexOf(
-			new Listener(
-				pListener,
-				null,
-				pName
-			)
-		);
-		// If found then get the remote listener and remove it from the
-		// the Connector
-		if( lIndex >= 0 ) {
-			try {
-				Listener lRemoteListener = (Listener) mListeners.elementAt( lIndex );
-				mRemoteConnector.removeNotificationListener(
-					pName,
-					lRemoteListener
-				);
-				mListeners.removeElementAt( lIndex );
-			}
-			catch( RemoteException re ) {
+		Iterator i = mListeners.iterator();
+		while( i.hasNext() ) {
+			Listener lListener = (Listener) i.next();
+			if(
+				new Listener(
+					pListener,
+					null,
+					pName
+				).equals( lListener )
+			) {
+				// If found then get the remote listener and remove it from the
+				// the Connector
+				try {
+					mRemoteConnector.removeNotificationListener(
+						pName,
+						lListener
+					);
+				}
+				catch( RemoteException re ) {
+					re.printStackTrace();
+				}
+				finally {
+					i.remove();
+				}
 			}
 		}
 	}
@@ -621,6 +633,8 @@ public class RMIClientConnectorImpl
 	}
 
 	// Protected -----------------------------------------------------
+
+	// Private -------------------------------------------------------
 
 	/**
 	* Listener wrapper around the remote RMI Notification Listener
