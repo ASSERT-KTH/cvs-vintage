@@ -1,6 +1,6 @@
 #set ($createNew = $data.Parameters.New)
 
-#if ($createNew)
+#if ($createNew && $createNew.equals("true"))
 $page.setTitle("New Module") 
 #else
 $page.setTitle("Modify Module") 
@@ -23,7 +23,7 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
 <input type="hidden" name="action" value="ModifyModule" /> 
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="SelectModule.vm" /> 
 
-#if ($createNew)
+#if ($createNew && $createNew.equals("true"))
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="true" /> 
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" /> 
@@ -70,8 +70,7 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
      #set ($userModules = $data.User.Modules)
      #foreach ($userModule in $userModules)
         #foreach ($ancestor in $userModule.Ancestors)
-         #set ($canEdit = $security.hasPermission("Module | Edit", $userModule))
-         #if ($canEdit)
+         #if ($security.hasPermission("Module | Edit", $userModule))
            #if ($ancestor.RealName.equals($currentModule.Parent.RealName))
             <option selected="selected" value="$ancestor.ModuleId">$ancestor.RealName</option>
            #else
@@ -92,7 +91,7 @@ module you have <a href="$link.setPage("SelectModule.vm")">currently selected</a
  <tr>
   <td class="firstchild">
    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-#if ($createNew)
+#if ($createNew && $createNew.equals("true"))
    <input type="submit" name="eventSubmit_doCreate" value="Create" />
 #else
    <input type="submit" name="eventSubmit_doUpdate" value="Update" />
