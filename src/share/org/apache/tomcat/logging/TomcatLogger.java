@@ -186,7 +186,8 @@ class LogDaemon extends Thread {
     Runnable flusher = new Runnable() {
 	    public void run() {
 		do {
-		    TomcatLogger.LogEntry logEntry = (TomcatLogger.LogEntry) logQueue.pull();
+		    TomcatLogger.LogEntry logEntry =
+		      (TomcatLogger.LogEntry) LogDaemon.this.logQueue.pull();
 		    Writer writer = logEntry.getWriter();
 		    if (writer != null)
 			try {
@@ -195,7 +196,7 @@ class LogDaemon extends Thread {
 			} catch (Exception ex) { // IOException
 			    ex.printStackTrace();
 			}
-		} while (!logQueue.isEmpty());
+		} while (!LogDaemon.this.logQueue.isEmpty());
 	    }
     };
 
