@@ -78,6 +78,9 @@ import org.apache.tomcat.util.log.*;
  * @author costin@dnt.ro
  */
 public final class DefaultCMSetter extends BaseInterceptor {
+    /** Default work dir, relative to home
+     */
+    public static final String DEFAULT_WORK_DIR="work";
 
     public DefaultCMSetter() {
     }
@@ -130,7 +133,7 @@ public final class DefaultCMSetter extends BaseInterceptor {
 	// Adjust work dir
 	String workDir=cm.getWorkDir();
 	if( workDir==null ) {
-	    workDir= ContextManager.DEFAULT_WORK_DIR;
+	    workDir= DEFAULT_WORK_DIR;
 	}
 
 	if( ! FileUtil.isAbsolute( workDir )) {
