@@ -2062,8 +2062,8 @@ public class IssueSearch
      * @param resultSet The database cursor.
      * @param sortAttrPos The column position into the ResultSet
      * columns which indicates which column you'd like to sort on.
-     * @return 
-     * @exception Exception if an error occurs
+     * @return A single {@link QueryResult} object.
+     * @exception SQLException If a database error occurs.
      */
     private QueryResult buildQueryResult(ResultSet resultSet, int sortAttrPos,
                                          int valueListSize)
@@ -2247,7 +2247,11 @@ public class IssueSearch
         }
     }
 
-    protected class QueryResultList extends AbstractList
+    /**
+     * FIXME: This should be an Iterator or Collection, not a List, as
+     * it does not support true random access.
+     */
+    private class QueryResultList extends AbstractList
     {
         /**
          * The size of our cache of recently created {@link
@@ -2265,6 +2269,13 @@ public class IssueSearch
             new QueryResult[CACHE_SIZE];
         private int nextCreatedIndex = 0;
 
+        /**
+         * Used to assure sequential access of uncached QueryResults,
+         * as non-sequential access would necessitate per-row offset
+         * caching.
+         */
+        private int lastListIndex = -1;
+
         public QueryResultList(ResultSet issues, int sortAttrPos,
                                int valueListSize)
         {
@@ -2273,6 +2284,13 @@ public class IssueSearch
             this.valueListSize = valueListSize;
         }
 
+        /**
+         * Delegates to {@link #buildQueryResult(ResultSet, int,
+         * int)}, and performs caching of most recently created {@link
+         * QueryResult} objects.  Only sequential access is supported!
+         *
+         * @see #buildQueryResult(ResultSet, int, int)
+         */
         public Object get(int index)
         {
             if (index < 0 || index >= size())
@@ -2280,15 +2298,24 @@ public class IssueSearch
                 throw new IndexOutOfBoundsException();
             }
 
-            // java.sql.ResultSet position is 1-based.
-            int position = index + 1;
-
             QueryResult qr = findRecentlyCreated(index);
             if (qr == null)
             {
                 try
                 {
-                    issues.absolute(position);
+                    if (index == 0 &&
+                        issues.getType() == ResultSet.TYPE_SCROLL_INSENSITIVE)
+                    {
+                        issues.first();
+                        lastListIndex = -1;
+                    }
+                    else if (index - 1 != lastListIndex)
+                    {
+                        throw new IllegalArgumentException
+                            ("Non-sequential access of uncached QueryResults "+
+                             "not permitted");
+                    }
+
                     qr = buildQueryResult(issues, sortAttrPos, valueListSize);
                 }
                 catch (SQLException e)
@@ -2308,9 +2335,10 @@ public class IssueSearch
                     {
                         nextCreatedIndex = 0;
                     }
+
+                    lastListIndex++;
                 }
             }
-            //Log.get("org.tigris.scarab").info("qr=" + qr);
 
             return qr;
         }
@@ -2328,22 +2356,22 @@ public class IssueSearch
         }
 
         /**
+         * Delegates to {@link #getIssueCount()}.
+         *
          * @see #getIssueCount()
          */
         public final int size()
         {
             try
             {
-                // TODO: Assure that this method is as performant as
-                // possible.
                 return getIssueCount();
             }
             catch (Exception e)
             {
                 Log.get("org.apache.torque")
-                    .error("Unable to access determine issue count");
-                // HELP: Throw a RuntimeException?
-                return 0;
+                    .error("Unable to determine issue count", e);
+                throw new RuntimeException
+                    ("Unable to determine issue count: " + e.getMessage());
             }
         }
     }
