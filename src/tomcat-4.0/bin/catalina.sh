@@ -12,7 +12,7 @@
 #
 #   JAVA_HOME     Must point at your Java Development Kit installation.
 #
-# $Id: catalina.sh,v 1.2 2001/02/23 21:51:27 jon Exp $
+# $Id: catalina.sh,v 1.3 2001/04/02 02:50:02 jon Exp $
 # -----------------------------------------------------------------------------
 
 
@@ -93,7 +93,10 @@ if [ "$1" = "debug" ] ; then
 elif [ "$1" = "embedded" ] ; then
 
   shift
-  for i in ${CATALINA_HOME}/server/*.jar ; do
+  for i in ${CATALINA_HOME}/server/lib/*.jar ; do
+    CP=$i:${CP}
+  done
+  for i in ${CATALINA_HOME}/common/lib/*.jar ; do
     CP=$i:${CP}
   done
   echo Embedded Classpath: $CP

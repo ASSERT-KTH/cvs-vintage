@@ -12,7 +12,7 @@ rem                 "stop", or "run" command is executed.
 rem
 rem   JAVA_HOME     Must point at your Java Development Kit installation.
 rem
-rem $Id: catalina.bat,v 1.2 2001/02/23 21:51:27 jon Exp $
+rem $Id: catalina.bat,v 1.3 2001/04/02 02:50:02 jon Exp $
 rem ---------------------------------------------------------------------------
 
 

@@ -11,7 +11,7 @@ rem       Java runtime options
 rem   JAVA_HOME     
 rem       Must point at your Java Development Kit installation.
 rem
-rem $Id: jasper.bat,v 1.2 2001/02/23 21:51:27 jon Exp $
+rem $Id: jasper.bat,v 1.3 2001/04/02 02:50:02 jon Exp $
 rem ---------------------------------------------------------------------------
 
 rem ----- Save Environment Variables That May Change --------------------------
@@ -41,6 +41,8 @@ rem FIXME set CLASSPATH=%JASPER_HOME%\dummy
 rem FIXME below
 set CLASSPATH=%JASPER_HOME%\classes
 for %%i in (%JASPER_HOME%\lib\*.jar) do call %JASPER_HOME%\bin\jpappend.bat %%i
+for %%i in (%JASPER_HOME%\jasper\*.jar) do call %JASPER_HOME%\bin\jpappend.bat %%i
+set CLASSPATH=%CLASSPATH%;%JASPER_HOME%\common\lib\servlet.jar
 echo Using CLASSPATH: %CLASSPATH%
 
 rem ----- Execute The Requested Command ---------------------------------------

@@ -13,14 +13,33 @@
 #   JAVA_HOME     
 #       Must point at your Java Development Kit installation.
 #
-# $Id: jasper.sh,v 1.2 2001/02/23 21:51:27 jon Exp $
+# $Id: jasper.sh,v 1.3 2001/04/02 02:50:02 jon Exp $
 # -----------------------------------------------------------------------------
 
 
 # ----- Verify and Set Required Environment Variables -------------------------
 
-if [ "$JASPER_HOME" = "" ] ; then
-  JASPER_HOME=`pwd`
+if [ -z "$JASPER_HOME" ] ; then
+  ## resolve links - $0 may be a link to  home
+  PRG=$0
+  progname=`basename $0`
+  
+  while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '.*/.*' > /dev/null; then
+	PRG="$link"
+    else
+	PRG="`dirname $PRG`/$link"
+    fi
+  done
+  
+  JASPER_HOME_1=`dirname "$PRG"`/..
+  echo "Guessing JASPER_HOME from catalina.sh to ${JASPER_HOME_1}" 
+    if [ -d ${JASPER_HOME_1}/conf ] ; then 
+	JASPER_HOME=${JASPER_HOME_1}
+	echo "Setting JASPER_HOME to $JASPER_HOME"
+    fi
 fi
 
 if [ "$JASPER_OPTS" = "" ] ; then
@@ -37,16 +56,23 @@ fi
 # FIXME CP=$JASPER_HOME/dummy
 # FIXME below
 CP=$CP:$JASPER_HOME/classes
-for i in $JASPER_HOME/lib/*.jar ; do
+for i in $JASPER_HOME/lib/*.jar $JASPER_HOME/jasper/*.jar ; do
   CP=$CP:$i
+CP=$CP:$JASPER_HOME/common/lib/servlet.jar
 done
+
+# convert the existing path to windows
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+   CP=`cygpath --path --windows "$CP"`
+   JASPER_HOME=`cygpath --path --windows "$JASPER_HOME"`
+fi
 
 echo Using CLASSPATH: $CP
 
 
 # ----- Execute The Requested Command -----------------------------------------
 
-if [ "$1" = "debug" ] ; then
+if [ "$1" = "jspc" ] ; then
 
   shift
   java $JASPER_OPTS -classpath $CP \
