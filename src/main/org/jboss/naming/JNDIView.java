@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Iterator;
@@ -34,9 +35,9 @@ Deploy by adding:
 <mbean code="org.jboss.naming.JNDIView" name="JBOSS-SYSTEM:service=JNDIView" />
 to the jboss.jcml file.
 
-@author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
+@author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
 @author Vladimir Blagojevic <vladimir@xisnext.2y.net>
-@version $Revision: 1.10 $
+@version $Revision: 1.11 $
 */
 public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
 {
@@ -316,22 +317,52 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
              while( ne.hasMore() )
              {
                 NameClassPair pair = (NameClassPair) ne.next();
+                String name = pair.getName();
+                String className = pair.getClassName();
                 boolean recursive = false;
                 boolean isLinkRef = false;
+                boolean isProxy = false;
+                Class c = null;
                 try
                 {
-                    Class c = loader.loadClass(pair.getClassName());
+                    c = loader.loadClass(className);
                     if( Context.class.isAssignableFrom(c) )
                         recursive = true;
                     if( LinkRef.class.isAssignableFrom(c) )
                         isLinkRef = true;
+                    isProxy = Proxy.isProxyClass(c);
                 }
                 catch(ClassNotFoundException cnfe)
                 {
+                    // If this is a $Proxy* class its a proxy
+                    if( className.startsWith("$Proxy") )
+                    {
+                        isProxy = true;
+                        // We have to get the class from the binding
+                        try
+                        {
+                            Object p = ctx.lookup(name);
+                            c = p.getClass();
+                        }
+                        catch(NamingException e)
+                        {
+                            Throwable t = e.getRootCause();
+                            if( t instanceof ClassNotFoundException )
+                            {
+                                // Get the class name from the exception msg
+                                String msg = t.getMessage();
+                                if( msg != null )
+                                {
+                                    // Reset the class name to the CNFE class
+                                    className = msg;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                String name = pair.getName();
                 buffer.append(indent +  " +- " + name);
+                // Display link targets
                 if( isLinkRef )
                 {
                     // Get the 
@@ -348,8 +379,32 @@ public class JNDIView extends ServiceMBeanSupport implements JNDIViewMBean
                         buffer.append("[invalid]");
                     }
                 }
-                if( verbose )
+
+                // Display proxy interfaces
+                if( isProxy )
+                {
+                    buffer.append(" (proxy: "+pair.getClassName());
+                    if( c != null )
+                    {
+                        Class[] ifaces = c.getInterfaces();
+                        buffer.append(" implements ");
+                        for(int i = 0; i < ifaces.length; i ++)
+                        {
+                            buffer.append(ifaces[i]);
+                            buffer.append(',');
+                        }
+                        buffer.setCharAt(buffer.length(), ')');
+                    }
+                    else
+                    {
+                        buffer.append(" implements "+className+")");
+                    }
+                }
+                else if( verbose )
+                {
                     buffer.append(" (class: "+pair.getClassName()+")");
+                }
+
                 buffer.append('\n');
                 if( recursive )
                 {
