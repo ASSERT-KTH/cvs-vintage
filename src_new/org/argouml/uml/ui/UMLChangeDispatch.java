@@ -1,4 +1,4 @@
-// $Id: UMLChangeDispatch.java,v 1.20 2004/09/15 19:17:04 mvw Exp $
+// $Id: UMLChangeDispatch.java,v 1.21 2004/10/02 13:03:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -246,7 +246,7 @@ public class UMLChangeDispatch implements Runnable, UMLUserInterfaceComponent {
             	// Jaap Branderhorst
             	// added next statement to prevent PropPanel getting
             	// added again and again to the target's listeners
-		UmlModelEventPump.getPump().addModelEventListener(propPanel,t);
+		UmlModelEventPump.getPump().addModelEventListener(propPanel, t);
             }
             
         }
