@@ -113,10 +113,26 @@ public class FilterList extends DefaultItem {
 
 	}
 
+	/**
+	 * Adds the filter to this list.
+	 * @param f the filter.
+	 */
 	public void add(Filter f) {
-		getRoot().addElement(f.getRoot());
+		if ( f != null ) {
+			getRoot().addElement(f.getRoot());
+		}
 		
 		//list.add(f);
+	}
+	
+	/**
+	 * Remove the <code>Filter</code> from the list.
+	 * @param f the filter to remove.
+	 */
+	public void remove(Filter f) {
+		if ( f != null ) {
+			getRoot().removeElement(f.getRoot());
+		}
 	}
 
 	public int count() {
