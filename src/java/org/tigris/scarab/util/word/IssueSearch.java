@@ -114,7 +114,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.119 2003/11/16 18:55:13 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.120 2003/11/21 09:55:32 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -321,7 +321,25 @@ public class IssueSearch
         throws Exception
     {
         this(issue.getModule(), issue.getIssueType(), searcher);
-        getAttributeValues().addAll(issue.getAttributeValues());
+        
+        //
+        // Make copies of the issue's attribute values so that
+        // we can modify them later without affecting the issue
+        // itself.
+        //
+        // @todo: This section of code is a result of SCB965.
+        // However, I think a more significant problem is that
+        // ReportIssue is modifying the search's attribute values
+        // directly. I believe this breaks some OO principle or
+        // other and should be resolved some time.
+        //
+        List issueAttributes = issue.getAttributeValues();
+        List searchAttributes = this.getAttributeValues();
+        
+        for (Iterator iter = issueAttributes.iterator(); iter.hasNext(); ) {
+            AttributeValue value = (AttributeValue) iter.next();
+            searchAttributes.add(value.copy());
+        }
     }
 
     IssueSearch(Module module, IssueType issueType, ScarabUser searcher)
