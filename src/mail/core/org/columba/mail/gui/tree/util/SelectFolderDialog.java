@@ -56,10 +56,8 @@ import org.frappucino.swing.SortedTreeModelDecorator;
  * 
  * @author fdietz
  */
-public class SelectFolderDialog extends JDialog
-		implements
-			ActionListener,
-			TreeSelectionListener {
+public class SelectFolderDialog extends JDialog implements ActionListener,
+		TreeSelectionListener {
 
 	private String name;
 
@@ -142,25 +140,32 @@ public class SelectFolderDialog extends JDialog
 	}
 
 	protected void initComponents() {
-//	  get global sorting state
-		SortedJTree t = ((TreeViewOwner) mediator).getTreeController()
-				.getView();
-		if (t.getModel() instanceof SortedTreeModelDecorator) {
-			// sorting is enabled
-			SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t
-					.getModel();
-			Comparator c = treemodel.getSortingComparator();
+		// get global sorting state
 
-			tree = new SortedJTree(MailInterface.treeModel);
-			// apply sorting state
-			SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
-					.getModel();
-			m.setSortingComparator(c);
+		// bug #999969 (fdietz): classcast exception
+		// if mediator contains a JTree
+		if (mediator instanceof TreeViewOwner) {
+
+			SortedJTree t = ((TreeViewOwner) mediator).getTreeController()
+					.getView();
+			// if mediator contains a sortable treemodel
+			if (t.getModel() instanceof SortedTreeModelDecorator) {
+				// sorting is enabled
+				SortedTreeModelDecorator treemodel = (SortedTreeModelDecorator) t
+						.getModel();
+				Comparator c = treemodel.getSortingComparator();
+
+				tree = new SortedJTree(MailInterface.treeModel);
+				// apply sorting state
+				SortedTreeModelDecorator m = (SortedTreeModelDecorator) tree
+						.getModel();
+				m.setSortingComparator(c);
+			}
 		} else {
 			// sorting is disabled
 			tree = new SortedJTree(MailInterface.treeModel);
 		}
-		
+
 		tree.expandRow(0);
 		tree.expandRow(1);
 		tree.putClientProperty("JTree.lineStyle", "Angled");
