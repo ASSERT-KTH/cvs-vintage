@@ -1,28 +1,36 @@
-package org.jboss.aspect.internal;
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
+package org.jboss.aspect.spi;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 import org.dom4j.Element;
-import org.dom4j.Namespace;
-import org.dom4j.QName;
 import org.jboss.aspect.AspectInitizationException;
-import org.jboss.aspect.spi.AspectDefinitionConstants;
-import org.jboss.aspect.spi.AspectInterceptor;
 import org.jboss.util.Classes;
 
 /**
- * @author Hiram
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * This class will in the future provide things like method call filtering so that
+ * Interceptors writers do not have to implement it themselfs.
+ * 
+ * The AspectDefinition actually maintains a list of AspectInterceptorHolder objects.
+ * 
+ * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
 final public class AspectInterceptorHolder implements AspectDefinitionConstants, Serializable
 {
-    public final AspectInterceptor interceptor; 
+    public final AspectInterceptor interceptor;
+    
+    
+    public AspectInterceptorHolder(AspectInterceptor interceptor) {
+    	this.interceptor = interceptor;
+    }
 
     public AspectInterceptorHolder(Element xml) throws AspectInitizationException
     {
@@ -40,11 +48,10 @@ final public class AspectInterceptorHolder implements AspectDefinitionConstants,
         interceptor.init(xml);
     }
 
-
-    public Class[] getInterfaces() {
+    public Class[] getInterfaces()
+    {
         return interceptor.getInterfaces();
     }
-
 
     public boolean isIntrestedInMethodCall(Method method)
     {

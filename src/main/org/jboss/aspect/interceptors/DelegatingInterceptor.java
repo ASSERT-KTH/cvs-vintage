@@ -1,9 +1,11 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 package org.jboss.aspect.interceptors;
 
 import java.lang.reflect.Method;
@@ -64,7 +66,7 @@ public class DelegatingInterceptor implements AspectInterceptor
         }
         else
         {
-            Map attachments = invocation.getAttachments();
+            Map attachments = invocation.attachments;
             delegate = attachments.get(this);
             if (delegate == null)
             {
@@ -89,10 +91,8 @@ public class DelegatingInterceptor implements AspectInterceptor
             interfaces = implementingClass.getInterfaces();
             exposedMethods = AspectSupport.getExposedMethods(interfaces);
 
-            String singlton = xml.attribute(ATTR_SIGLETON)==null 
-            	? null 
-            	: xml.attribute(ATTR_SIGLETON).getValue();
-            	
+            String singlton = xml.attribute(ATTR_SIGLETON) == null ? null : xml.attribute(ATTR_SIGLETON).getValue();
+
             if ("true".equals(singlton))
                 singeltonObject = implementingClass.newInstance();
 

@@ -1,9 +1,11 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 package org.jboss.aspect.interceptors;
 
 import java.lang.reflect.Method;
@@ -13,7 +15,6 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.jboss.aspect.AspectInitizationException;
-import org.jboss.aspect.internal.AspectSupport;
 import org.jboss.aspect.spi.AspectInterceptor;
 import org.jboss.aspect.spi.AspectInvocation;
 import org.jboss.util.Classes;
@@ -81,10 +82,10 @@ import org.jboss.util.Classes;
 public class AdaptorInterceptor implements AspectInterceptor
 {
 
-    public static final Namespace NAMESPACE 	= Namespace.get(AdaptorInterceptor.class.getName());
-    public static final QName ATTR_ADAPTOR 	= new QName("adaptor", NAMESPACE);
+    public static final Namespace NAMESPACE = Namespace.get(AdaptorInterceptor.class.getName());
+    public static final QName ATTR_ADAPTOR = new QName("adaptor", NAMESPACE);
     public static final QName ATTR_IMPLEMENTATION = new QName("implementation", NAMESPACE);
-    public static final QName ATTR_SIGLETON 	= new QName("singleton", NAMESPACE);
+    public static final QName ATTR_SIGLETON = new QName("singleton", NAMESPACE);
 
     public Object singeltonObject;
     public Class implementingClass;
@@ -123,7 +124,7 @@ public class AdaptorInterceptor implements AspectInterceptor
         }
         else
         {
-        	Map attachments = invocation.getAttachments();
+            Map attachments = invocation.attachments;
             o = attachments.get(this);
             if (o == null)
             {
@@ -149,9 +150,7 @@ public class AdaptorInterceptor implements AspectInterceptor
             adaptorClass = Classes.loadClass(adaptorName);
             implementingClass = Classes.loadClass(className);
 
-            String singlton = xml.attribute(ATTR_SIGLETON) == null 
-            	? null
-            	: xml.attribute(ATTR_SIGLETON).getValue();
+            String singlton = xml.attribute(ATTR_SIGLETON) == null ? null : xml.attribute(ATTR_SIGLETON).getValue();
             if ("true".equals(singlton))
                 singeltonObject = implementingClass.newInstance();
 

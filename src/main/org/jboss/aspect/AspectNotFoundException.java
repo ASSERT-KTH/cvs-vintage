@@ -1,9 +1,11 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 package org.jboss.aspect;
 
 /**
@@ -17,20 +19,23 @@ package org.jboss.aspect;
  *
  * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
  */
-public class AspectNotFoundException extends ClassNotFoundException {
+public class AspectNotFoundException extends ClassNotFoundException
+{
 
-	/**
-	 * Constructor for AspectNotFoundException.
-	 */
-	public AspectNotFoundException() {
-		super();
-	}
+    /**
+     * Constructor for AspectNotFoundException.
+     */
+    public AspectNotFoundException()
+    {
+        super();
+    }
 
-	/**
-	 * Constructor for AspectNotFoundException.
-	 * @param message
-	 */
-	public AspectNotFoundException(String message) {
-		super(message);
-	}
+    /**
+     * Constructor for AspectNotFoundException.
+     * @param message
+     */
+    public AspectNotFoundException(String message)
+    {
+        super(message);
+    }
 }

@@ -1,15 +1,22 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
+/***************************************
+ *                                     *
+ *  JBoss: The OpenSource J2EE WebOS   *
+ *                                     *
+ *  Distributable under LGPL license.  *
+ *  See terms of license at gnu.org.   *
+ *                                     *
+ ***************************************/
 package org.jboss.aspect.internal;
 
+import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -18,24 +25,14 @@ import org.dom4j.io.SAXReader;
 import org.jboss.aspect.AspectInitizationException;
 import org.jboss.aspect.spi.AspectDefinition;
 import org.jboss.aspect.spi.AspectDefinitionConstants;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.jboss.aspect.spi.AspectInterceptor;
-import org.jboss.aspect.spi.AspectInvocation;
-import org.jboss.aspect.spi.AspectInvocationHandler;
+import org.jboss.aspect.spi.AspectInterceptorHolder;
 
 /**
  *
  * Holds functions that were usefull during the implemenation of
  * the Aspect related classes.
  * 
- * @author <a href="mailto:hchirino@jboss.org">Hiram Chirino</a>
+* @ author < a href = "mailto:hchirino@jboss.org" > Hiram Chirino < / a >
  */
 final public class AspectSupport implements AspectDefinitionConstants {
 	
