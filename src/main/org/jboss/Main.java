@@ -13,8 +13,8 @@ import java.net.URL;
 import javax.management.MBeanException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
+import javax.management.RuntimeOperationsException;
 
-import org.jboss.system.MBeanClassLoader;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.system.UnifiedClassLoader;
 
@@ -29,45 +29,58 @@ import org.jboss.system.ServerConfig;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.68 $
+ * @version $Revision: 1.69 $
  */
 public class Main
    implements Runnable
 {
    private final String[] args;
    
-   public Main(final String[] args) {
+   public Main(final String[] args)
+   {
       this.args = args;
    }
-
-   public void run() {
-      try {
+   
+   public void run()
+   {
+      try
+      {
          boot();
       }
-      catch (MBeanException e) {
+      catch (MBeanException e)
+      {
          e.getTargetException().printStackTrace();
       }
-      catch (RuntimeMBeanException e) {
+      catch (RuntimeMBeanException e)
+      {
          e.getTargetException().printStackTrace();
       }
-      catch (RuntimeErrorException e) {
-	 e.getTargetError().printStackTrace();
+      catch (RuntimeOperationsException e)
+      {
+         e.getTargetException().printStackTrace();
       }
-      catch (Exception e) {
+      catch (RuntimeErrorException e)
+      {
+         e.getTargetError().printStackTrace();
+      }
+      catch (Exception e)
+      {
          e.printStackTrace();
       }
    }
-
-   public void boot() throws Exception {
+   
+   public void boot() throws Exception
+   {
       //
       // Set a jboss.home property from the location of the Main.class jar
       // if the property does not exist.
-      // 
+      //
       // marcf: we don't use this property at all for now
       // it should be used for all the modules that need a file "anchor"
       // it should be moved to an "FileSystemAnchor" MBean
       //
-      if (System.getProperty("jboss.home") == null) {
+      if (System.getProperty("jboss.home") == null)
+      {
          String path = Main.class.getProtectionDomain().getCodeSource().getLocation().getFile();
          File runJar = new File(path);
          // Home dir should be the parent of the dir containing run.jar
@@ -76,49 +89,53 @@ public class Main
       }
       String home = System.getProperty("jboss.home");
       
-      if (System.getProperty("jboss.system.home") == null) {
+      if (System.getProperty("jboss.system.home") == null)
+      {
          // default to jboss.home if jboss.system.home is not set
          System.setProperty("jboss.system.home", home);
       }
       String systemHome = System.getProperty("jboss.system.home");
-
+      
       // Create a new server configuration object.  This object holds all
       // of the required information to get the server up and running.
       ServerConfig config = new ServerConfig(new File(systemHome));
-         
+      
       // set this from a system property or default to jboss
       String programName = System.getProperty("jboss.boot.loader.name", "jboss");
       String sopts = "-:hD:p:n:c:Vj:";
-      LongOpt[] lopts = {
+      LongOpt[] lopts =
+      {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
          new LongOpt("help-examples", LongOpt.NO_ARGUMENT, null, 10),
          new LongOpt("patch-dir", LongOpt.REQUIRED_ARGUMENT, null, 'p'),
          new LongOpt("net-boot", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
          new LongOpt("configuration", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
          new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'V'),
-	 new LongOpt("jaxp", LongOpt.REQUIRED_ARGUMENT, null, 'j'),
+         new LongOpt("jaxp", LongOpt.REQUIRED_ARGUMENT, null, 'j'),
       };
       
       Getopt getopt = new Getopt(programName, args, sopts, lopts);
       int code;
       String arg;
       
-      while ((code = getopt.getopt()) != -1) {
-         switch (code) {
+      while ((code = getopt.getopt()) != -1)
+      {
+         switch (code)
+         {
             case ':':
             case '?':
                // for now both of these should exit with error status
                System.exit(1);
                break; // for completeness
-            
+               
             case 1:
                // this will catch non-option arguments
                // (which we don't currently care about)
                System.err.println(programName +
-                  ": unused non-option argument: " +
-                  getopt.getOptarg());
+               ": unused non-option argument: " +
+               getopt.getOptarg());
                break; // for completeness
-            
+               
             case 'h':
                // show command line help
                System.out.println("usage: " + programName + " [options]");
@@ -133,26 +150,28 @@ public class Main
                System.out.println("    -c, --configuration <name>    Set the server configuration name");
                System.out.println("    -V, --version                 Show version information");
                System.out.println("    -j, --jaxp=<type>             Set the JAXP impl type (ie. crimson)");
-               System.out.println();               
+               System.out.println();
                System.exit(0);
                break; // for completeness
-            
+               
             case 'D':
                // set a system property
                arg = getopt.getOptarg();
                String name, value;
                int i = arg.indexOf("=");
-               if (i == -1) {
+               if (i == -1)
+               {
                   name = arg;
                   value = "true";
                }
-               else {
+               else
+               {
                   name = arg.substring(0, i);
                   value = arg.substring(i + 1, arg.length());
                }
                System.setProperty(name, value);
                break;
-            
+               
             case 10:
                // show help examples
                System.out.println("example: " + programName + " --net-boot http://www.jboss.org/jboss --configuration jboxx --patch-dir /tmp/dir");
@@ -160,13 +179,13 @@ public class Main
                System.out.println();
                System.exit(0);
                break; // for completeness
-            
+               
             case 'p':
                // set the local patch directory
                arg = getopt.getOptarg();
                config.setPatchURL(new URL(arg));
                break;
-            
+               
             case 'n':
                // set the net boot url
                arg = getopt.getOptarg();
@@ -179,7 +198,7 @@ public class Main
                
                config.setInstallURL(new URL(arg));
                break;
-            
+               
             case 'c':
                // set the configuration name
                arg = getopt.getOptarg();
@@ -195,48 +214,51 @@ public class Main
                System.out.println();
                System.exit(0);
                break; // for completness
-
+               
             case 'j':
-	       // set the JAXP impl type
-	       arg = getopt.getOptarg().toLowerCase();
-	       String domFactoryType, saxFactoryType;
-
-	       if (arg.equals("crimson")) {
-		  domFactoryType = "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl";
-		  saxFactoryType = "org.apache.crimson.jaxp.SAXParserFactoryImpl";
-	       }
-	       else if (arg.equals("xerces")) {
-		  domFactoryType = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
-		  saxFactoryType = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
-	       }
-	       else {
-		  System.err.println("Invalid JAXP type: " + arg +
-				     " (Expected 'crimson' or 'xerces')");
-		  // don't continue, user needs to fix this!
-		  System.exit(1);
-
-		  // trick the compiler, so it does not complain that 
-		  // the above variables might not being set
-		  break;
-	       }
-
-	       // set the controlling properties
-	       System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
-				  domFactoryType);
-	       System.setProperty("javax.xml.parsers.SAXParserFactory",
-				  saxFactoryType);
-	       break;
-
+               // set the JAXP impl type
+               arg = getopt.getOptarg().toLowerCase();
+               String domFactoryType, saxFactoryType;
+               
+               if (arg.equals("crimson"))
+               {
+                  domFactoryType = "org.apache.crimson.jaxp.DocumentBuilderFactoryImpl";
+                  saxFactoryType = "org.apache.crimson.jaxp.SAXParserFactoryImpl";
+               }
+               else if (arg.equals("xerces"))
+               {
+                  domFactoryType = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+                  saxFactoryType = "org.apache.xerces.jaxp.SAXParserFactoryImpl";
+               }
+               else
+               {
+                  System.err.println("Invalid JAXP type: " + arg +
+                  " (Expected 'crimson' or 'xerces')");
+                  // don't continue, user needs to fix this!
+                  System.exit(1);
+                  
+                  // trick the compiler, so it does not complain that
+                  // the above variables might not being set
+                  break;
+               }
+               
+               // set the controlling properties
+               System.setProperty("javax.xml.parsers.DocumentBuilderFactory",
+               domFactoryType);
+               System.setProperty("javax.xml.parsers.SAXParserFactory",
+               saxFactoryType);
+               break;
+               
             default:
                // this should not happen,
                // if it does throw an error so we know about it
                throw new Error("unhandled option code: " + code);
          }
       }
-   
+      
       // Make sure that shutdown exits the VM
       config.setExitOnShutdown(true);
-
+      
       // Create & start the server
       Server server = new Server(config);
    }
@@ -249,17 +271,19 @@ public class Main
     *
     * @param args    The command line arguments.
     */
-   public static void main(final String[] args) throws Exception {
+   public static void main(final String[] args) throws Exception
+   {
       ThreadGroup threads = new ThreadGroup("jboss");
       new Thread(threads, new Main(args), "jboss-main").start();
    }
-
+   
    /**
     * This method is here so that if JBoss is running under
-    * Alexandria (An NT Service Installer), Alexandria can shutdown 
+    * Alexandria (An NT Service Installer), Alexandria can shutdown
     * the system down correctly.
     */
-   public static void systemExit(String argv[]) {
+   public static void systemExit(String argv[])
+   {
       System.exit(0);
-   }      
+   }
 }
