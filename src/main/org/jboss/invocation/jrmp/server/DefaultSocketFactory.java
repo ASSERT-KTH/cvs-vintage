@@ -18,12 +18,22 @@ import java.rmi.server.RMIServerSocketFactory;
  * A default socket factory.
  * 
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class DefaultSocketFactory
    implements RMIServerSocketFactory, Serializable
 {
    private transient InetAddress bindAddress;
+
+   private int backlog = 200;
+   public DefaultSocketFactory()
+   {
+   }
+
+   public DefaultSocketFactory(int backlog)
+   {
+      this.backlog = backlog;
+   }
 
    public String getBindAddress()
    {
@@ -51,7 +61,7 @@ public class DefaultSocketFactory
     */
    public ServerSocket createServerSocket(int port) throws IOException
    {
-      ServerSocket activeSocket = new ServerSocket(port, 50, bindAddress);
+      ServerSocket activeSocket = new ServerSocket(port, backlog, bindAddress);
       return activeSocket;
    }
 

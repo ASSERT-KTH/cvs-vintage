@@ -61,7 +61,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -98,6 +98,8 @@ public class JRMPInvoker
  
    protected RemoteStub invokerStub;
    
+   protected int backlog = 200;
+   
    private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
 
@@ -123,6 +125,22 @@ public class JRMPInvoker
 
       // Setup logging from delegate
       log = support.getLog();
+   }
+
+   /**
+    * @jmx:managed-attribute
+    */
+   public int getBacklog()
+   {
+      return backlog;
+   }
+   
+   /**
+    * @jmx:managed-attribute
+    */
+   public void setBacklog(int back)
+   {
+      backlog = back;
    }
 
    /**
@@ -454,7 +472,7 @@ public class JRMPInvoker
          // If a bind address was specified create a DefaultSocketFactory
          else if( serverAddress != null )
          {
-            DefaultSocketFactory defaultFactory = new DefaultSocketFactory();
+            DefaultSocketFactory defaultFactory = new DefaultSocketFactory(backlog);
             serverSocketFactory = defaultFactory;
             try
             {
