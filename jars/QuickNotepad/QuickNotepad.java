@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * $Id: QuickNotepad.java,v 1.7 2004/04/19 04:24:49 spestov Exp $
+ * $Id: QuickNotepad.java,v 1.8 2004/04/30 20:23:08 spestov Exp $
  */
 
 // from Java:
@@ -167,8 +167,8 @@ public class QuickNotepad extends JPanel implements EBComponent, QuickNotepadAct
 		try
 		{
 			FileWriter out = new FileWriter(filename);
-			dos.write(textArea.getText());
-			dos.close();
+			out.write(textArea.getText());
+			out.close();
 		}
 		catch (IOException ioe)
 		{
