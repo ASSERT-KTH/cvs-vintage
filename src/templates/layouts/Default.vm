@@ -9,6 +9,7 @@
   #end
   <style type="text/css">
   @import url($staticLink.setPath("/style/tigris.css"));
+  @import url($staticLink.setPath("/style/inst.css"));
   @import url($staticLink.setPath("/style/scarab.css"));
   </style>
   <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
