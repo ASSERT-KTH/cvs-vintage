@@ -54,7 +54,7 @@ public class ReplyToAllCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		//controller.showComposerWindow();
+		controller.updateComponents(true);
 	}
 
 	/**

@@ -55,7 +55,7 @@ public class ReplyToMailingListCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		//controller.showComposerWindow();
+		controller.updateComponents(true);
 	}
 
 	/**

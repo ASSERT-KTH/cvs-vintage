@@ -51,10 +51,8 @@ public class ForwardCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		// FIXME
-		//  we don't need this here anymore
 		
-		//controller.showComposerWindow();
+		controller.updateComponents(true);
 	}
 
 	/**
