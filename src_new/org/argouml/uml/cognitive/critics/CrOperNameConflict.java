@@ -26,7 +26,7 @@
 // File: CrOperNameConflict.java
 // Classes: CrOperNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOperNameConflict.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrOperNameConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,14 +42,6 @@ public class CrOperNameConflict extends CrUML {
 
   public CrOperNameConflict() {
     setHeadline("Change Names or Signatures in <ocl>self</ocl>");
-    sd("Two operations have the exact same signature.  "+
-       "Operations must have distinct signatures.  A signature is the combination "+
-       "of the operation's name, and parameter types. \n\n"+
-       "Avoiding conflicting siginatures is key to code generation and producing an "+
-       "understandable and maintainable design.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the one of the "+
-       "conflicting operations of this class and change its name or parameters.");
-
     addSupportedDecision(CrUML.decMETHODS);
     addSupportedDecision(CrUML.decNAMING);
     addTrigger("behavioralFeature");

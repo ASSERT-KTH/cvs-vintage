@@ -26,7 +26,7 @@
 // File: CrSignatureConflict.java
 // Classes: CrSignatureConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSignatureConflict.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrSignatureConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,15 +44,6 @@ public class CrSignatureConflict extends CrUML {
 
   public CrSignatureConflict() {
     setHeadline("Resolve Signature Conflict");
-    sd("Two operations of <ocl>self</ocl> have same signature.  A signature "+
-       "consists of the operation's name and the number and types of "+
-       "its parameters.\n\n"+
-       "Operations must have distinct signatures for code generation to "+
-       "produce code that will compile.\n\n" +
-       "To fix this, use the \"Next>\" button, or manually double click on one "+
-       "of the conflicting operations in the navigator pane and use the "+
-       "Properties tab to change this name or parameters.");
-
     addSupportedDecision(CrUML.decMETHODS);
     setKnowledgeTypes(Critic.KT_SYNTAX);
     addTrigger("behavioralFeature");

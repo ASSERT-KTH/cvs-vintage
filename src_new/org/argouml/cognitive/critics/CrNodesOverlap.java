@@ -24,7 +24,7 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.1 2000/09/04 12:50:28 1sturm Exp $
+// $Id: CrNodesOverlap.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -51,14 +51,6 @@ public class CrNodesOverlap extends CrUML {
   public CrNodesOverlap() {
     // needs-more-work: {name} is not expanded for diagram objects
     setHeadline("Clean Up Diagram");
-    sd("Some of the objects in this diagram overlap and obscure each other. "+
-       "This may hide important information and make it difficult for humans "+
-       "to understand. A neat appearance may also make your diagrams more "+
-       "influencial on other designers, implementors, and decision makers.\n\n"+
-       "Constructing an understandable set of class diagrams is an important "+
-       "part of your design. \n\n"+
-       "To fix this, move the highlighted nodes in the digragm.");
-
     addSupportedDecision(CrUML.decCLASS_SELECTION);
     addSupportedDecision(CrUML.decEXPECTED_USAGE);
     addSupportedDecision(CrUML.decSTATE_MACHINES);

@@ -26,7 +26,7 @@
 // File: CrFinalSubclassed.java
 // Classes: CrFinalSubclassed
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrFinalSubclassed.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrFinalSubclassed.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,15 +45,6 @@ public class CrFinalSubclassed extends CrUML {
 
   public CrFinalSubclassed() {
     setHeadline("Remove final keyword or remove subclasses");
-    sd("In Java, the keyword 'final' indicates that a class is not intended "+
-       "to have subclasses.  This class is marked final and has "+
-       "subclasses.\n\n"+
-       "A well thought-out class inheritance hierarchy that conveys and "+
-       "supports intended extensions is an important part of achieving "+
-       "an understandable and maintainable design.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the class and "+
-       "change its base class, or select the base class and use the properties "+
-       "tab to remove the 'final' keyword.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
     setKnowledgeTypes(Critic.KT_SEMANTICS);

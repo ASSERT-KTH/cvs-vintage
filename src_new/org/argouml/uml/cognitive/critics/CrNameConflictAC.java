@@ -26,7 +26,7 @@
 // File: CrNameConflictAC.java
 // Classes: CrNameConflictAC
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflictAC.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNameConflictAC.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,10 +44,6 @@ public class CrNameConflictAC extends CrUML {
 
   public CrNameConflictAC() {
     setHeadline("Role name conflicts with member");
-    sd("MAssociation role names of an MAssociationClass must not conflict \n"+
-       "with the names of structral features (e.g., instance variables) \n"+
-       "of the class.\n");
-
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
   }

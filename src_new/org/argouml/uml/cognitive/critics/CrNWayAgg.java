@@ -26,7 +26,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrNWayAgg.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,12 +46,6 @@ public class CrNWayAgg extends CrUML {
 
   public CrNWayAgg() {
     setHeadline("Aggregate Role in N-way MAssociation");
-    sd("Three-way (or more) Associations can not have aggregate ends.\n\n" +
-       "A clear and consistent is-part-of hierarchy is a key to design clarity, \n"+
-       "managable object storage, and the implementation of recursive methods.\n"+
-       "To fix this, use the \"Next>\" button, or manually select the MAssociation \n"+
-       "and set all of its role aggregations to None.");
-
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SEMANTICS);
     addTrigger("connection");

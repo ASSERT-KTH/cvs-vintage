@@ -26,7 +26,7 @@
 // File: CrIllegalGeneralization.java
 // Classes: CrIllegalGeneralization
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrIllegalGeneralization.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrIllegalGeneralization.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -43,11 +43,6 @@ public class CrIllegalGeneralization extends CrUML {
 
   public CrIllegalGeneralization() {
     setHeadline("Illegal MGeneralization ");
-    sd("MModel elements can only be inherit from others of the same type. \n\n"+
-       "A legal inheritance hierarchy is needed for code generation "+
-       "and the correctness of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the  "+
-       "generalization arrow and remove it.");
 
     addSupportedDecision(CrUML.decINHERITANCE);
     addTrigger("supertype");

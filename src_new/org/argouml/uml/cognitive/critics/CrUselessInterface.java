@@ -26,7 +26,7 @@
 // File: CrUselessInterface.java
 // Classes: CrUselessInterface
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUselessInterface.java,v 1.1 2000/09/04 12:50:26 1sturm Exp $
+// $Id: CrUselessInterface.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,14 +46,6 @@ public class CrUselessInterface extends CrUML {
 
   public CrUselessInterface() {
     setHeadline("Define Class to Implement <ocl>self</ocl>");
-    String s;
-    s = "<ocl>self</ocl> can never be used because "+
-      "no classes implement it.\n\n"+
-      "To fix this problem, press the \"Next>\" button or manually "+
-      "use the toolbar \"Class\" button to define classes and the "+
-      "\"Realizes\" button to make a relationship from the class to "+
-      "the highlighted interface.";
-    setDescription(s);
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedGoal(Goal.UNSPEC);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);

@@ -26,7 +26,7 @@
 // File: CrInterfaceAllPublic.java
 // Classes: CrInterfaceAllPublic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,12 +46,6 @@ public class CrInterfaceAllPublic extends CrUML {
 
   public CrInterfaceAllPublic() {
     setHeadline("Operations in Interfaces must be public");
-    sd("Interfaces are intended to specify the set of operations that "+
-       "other classes must implement.  The must be public. \n\n"+
-       "A well-designed set of interfaces is a good way to define the "+
-       "possible extensions of a class framework. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the operations "+
-       "of the interface and use the Properties tab add them public.");
     addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
     setKnowledgeTypes(Critic.KT_SYNTAX);
     addTrigger("behavioralFeature");

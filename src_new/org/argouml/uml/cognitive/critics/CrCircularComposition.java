@@ -26,7 +26,7 @@
 // File: CrCircularComposition.java
 // Classes: CrCircularComposition
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularComposition.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrCircularComposition.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,13 +46,6 @@ public class CrCircularComposition extends CrUML {
 
   public CrCircularComposition() {
     setHeadline("Remove Circular Composition");
-    sd("Composition relationships (black diamonds) cannot have cycles. \n\n"+
-       "A legal aggregation inheritance hierarchy is needed for code "+
-       "generation and the correctness of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select one of the  "+
-       "associations in the cycle and remove it or change its aggregation "+
-       "to something other than composite.");
-
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SYNTAX);
     // no good trigger

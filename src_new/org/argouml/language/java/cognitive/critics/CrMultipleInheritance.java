@@ -26,7 +26,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.1 2000/09/04 12:50:32 1sturm Exp $
+// $Id: CrMultipleInheritance.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -46,21 +46,10 @@ public class CrMultipleInheritance extends CrUML {
 
   public CrMultipleInheritance() {
     setHeadline("Change Multiple Inheritance to Interfaces");
-    sd("<ocl>self</ocl> has multiple base classes, but Java does not support "+
-       "multiple inheritance.  You must use interfaces instead. \n\n"+
-       "This change is required before you can generate Java code.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually (1) remove one of "+
-       "the base classes and then (2) optionally define a new interface "+
-       "with the same method declarations and (3) add it as an "+
-       "interface of <ocl>self</ocl>, and (4) move the method bodies from the "+
-       "old base class down into <ocl>self</ocl>.");
-
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decCODE_GEN);
     addTrigger("generalization");
   }
-
-  protected void sd(String s) { setDescription(s); }
 
   public boolean predicate2(Object dm, Designer dsgr) {
     if (!(dm instanceof MClassifier)) return NO_PROBLEM;

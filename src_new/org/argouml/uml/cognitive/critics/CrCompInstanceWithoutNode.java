@@ -24,7 +24,7 @@
 // File: CrCompInstanceWithoutNode.java
 // Classes: CrCompInstanceWithoutNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrCompInstanceWithoutNode.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrCompInstanceWithoutNode.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,9 +47,6 @@ public class CrCompInstanceWithoutNode extends CrUML {
 
   public CrCompInstanceWithoutNode() {
     setHeadline("ComponentInstances normally are inside nodes");
-    sd("There are node-instances in the Diagram. So you have got a real\n"+
-         " deployment-diagram, and in deployment-diagrams Component-instances\n"+
-         " normally resides on node-instances.");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

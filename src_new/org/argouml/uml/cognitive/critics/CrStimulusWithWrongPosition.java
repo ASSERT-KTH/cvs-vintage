@@ -26,7 +26,7 @@
 // File: CrStimulusWithWrongPosition.java
 // Classes: CrStimulusWithWrongPosition
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrStimulusWithWrongPosition.java,v 1.2 2001/04/02 14:28:39 5heyden Exp $
+// $Id: CrStimulusWithWrongPosition.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,9 +49,6 @@ public class CrStimulusWithWrongPosition extends CrUML {
 
   public CrStimulusWithWrongPosition() {
     setHeadline("Wrong position of these stimuli");
-    sd("In sequence-diagrams the sender-side oh the communication-connections oh these\n"+
-          "stimuli are connected at the beginning of an activation. To be a sender an object must\n"+
-          "have a focus-of-control first.");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

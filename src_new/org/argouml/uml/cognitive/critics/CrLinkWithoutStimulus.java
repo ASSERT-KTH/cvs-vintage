@@ -26,7 +26,7 @@
 // File: CrLinkWithoutStimulus.java
 // Classes: CrLinkWithoutStimulus
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrLinkWithoutStimulus.java,v 1.1 2000/09/29 16:02:25 boger Exp $
+// $Id: CrLinkWithoutStimulus.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -55,9 +55,6 @@ public class CrLinkWithoutStimulus extends CrUML {
 
   public CrLinkWithoutStimulus() {
     setHeadline("No Stimuli on these links");
-    sd("In sequence-diagrams a sender-object sends stimuli\n"+
-          "to a receiving object over a link. The link is only the communication-\n"+
-          "connection, so a stimulus is needed.");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

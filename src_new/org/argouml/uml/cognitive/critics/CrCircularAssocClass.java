@@ -26,7 +26,7 @@
 // File: CrCircularAssocClass.java
 // Classes: CrCircularAssocClass
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularAssocClass.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrCircularAssocClass.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,8 +44,6 @@ public class CrCircularAssocClass extends CrUML {
 
   public CrCircularAssocClass() {
     setHeadline("Circular MAssociation");
-    sd("AssociationClasses cannot include roles that refer directly "+
-       "back to the MAssociationClass.");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setKnowledgeTypes(Critic.KT_SEMANTICS);

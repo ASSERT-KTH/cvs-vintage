@@ -26,7 +26,7 @@
 // File: CrOppEndConflict.java
 // Classes: CrOppEndConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrOppEndConflict.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrOppEndConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,15 +49,6 @@ public class CrOppEndConflict extends CrUML {
 
   public CrOppEndConflict() {
     setHeadline("Rename MAssociation Roles");
-    sd("Two roles of <ocl>self</ocl> have the same name. "+
-       "Roles must have distinct names.  This may because of an inherited "+
-       "attribute. \n\n"+
-       "Clear and unambiguous names are key to code generation and producing "+
-       "an understandable and maintainable design.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the one of the "+
-       "conflicting roles at the far end of an association from this class "+
-       "and change its name.");
-
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decNAMING);

@@ -26,7 +26,7 @@
 // File: CrSignatureConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.2 2000/09/21 05:48:45 carnold Exp $
+// $Id: CrAttrNameConflict.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,13 +46,6 @@ public class CrAttrNameConflict extends CrUML {
 
   public CrAttrNameConflict() {
     setHeadline("Revise MAttribute Names to Avoid Conflict");
-    sd("Attributes must have distinct names.  This may because of an inherited "+
-       "attribute. \n\n"+
-       "Clear and unambiguous names are key to code generation and producing an "+
-       "understandable and maintainable design.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the one of the "+
-       "conflicting attributes of this class and change its name.");
-
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decSTORAGE);
     addSupportedDecision(CrUML.decNAMING);

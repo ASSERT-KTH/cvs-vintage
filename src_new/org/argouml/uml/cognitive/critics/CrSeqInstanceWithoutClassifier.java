@@ -26,7 +26,7 @@
 // File: CrSeqInstanceWithoutClassifier.java
 // Classes: CrSeqInstanceWithoutClassifier
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrSeqInstanceWithoutClassifier.java,v 1.1 2000/09/29 16:02:25 boger Exp $
+// $Id: CrSeqInstanceWithoutClassifier.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -54,7 +54,6 @@ public class CrSeqInstanceWithoutClassifier extends CrUML {
 
   public CrSeqInstanceWithoutClassifier() {
     setHeadline("Set classifier");
-    sd(" Instances have a classifier");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

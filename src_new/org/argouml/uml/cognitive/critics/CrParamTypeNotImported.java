@@ -26,7 +26,7 @@
 // File: CrParamTypeNotImported.java
 // Classes: CrParamTypeNotImported
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrParamTypeNotImported.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrParamTypeNotImported.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,13 +44,6 @@ public class CrParamTypeNotImported extends CrUML {
 
   public CrParamTypeNotImported() {
     setHeadline("Import MParameter Type into Class");
-    sd("The type of each operation parameter must be visible and imported "+
-       "into the class that owns the operation.\n\n"+
-       "Importing classes is needed for code generation. Good modularization "+
-       "of classes into packages is key to an understandable design.\n\n"+
-       "To fix this, use the \"Next>\" button, or manually add in import to the "+
-       "class that owns this operation.");
-
     addSupportedDecision(CrUML.decCONTAINMENT);
     setKnowledgeTypes(Critic.KT_SYNTAX);
   }

@@ -24,7 +24,7 @@
 // File: CrNodeInsideElement.java
 // Classes: CrNodeInsideElement
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInsideElement.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNodeInsideElement.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,9 +46,6 @@ public class CrNodeInsideElement extends CrUML {
 
   public CrNodeInsideElement() {
     setHeadline("Nodes normally have no enclosers");
-    sd(" Nodes normally are not inside other Elements. They represent\n"+
-          " run-time physical objects with a processing resource, generally having\n"+
-          " at least a memory and often processing capability as well.");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

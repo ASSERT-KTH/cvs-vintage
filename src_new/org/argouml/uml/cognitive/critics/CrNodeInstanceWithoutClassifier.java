@@ -24,7 +24,7 @@
 // File: CrNodeInstanceInsideElement.java
 // Classes: CrNodeInstanceWithoutClassifier
 // Original Author: jrobbins@5eichler@informatik.uni-hamburg.de
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,6 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 
   public CrNodeInstanceWithoutClassifier() {
     setHeadline("Set NodeInstance-Classifier");
-    sd(" In Deployment-Diagrams node-instances normally have a base-node");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

@@ -24,7 +24,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrObjectWithoutClassifier.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrObjectWithoutClassifier.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,6 @@ public class CrObjectWithoutClassifier extends CrUML {
 
   public CrObjectWithoutClassifier() {
     setHeadline("Set Object-classifier");
-    sd(" In Deployment-diagrams objects normally have a base-class");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

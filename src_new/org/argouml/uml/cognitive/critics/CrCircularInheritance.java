@@ -26,7 +26,7 @@
 // File: CrCircularInheritance.java
 // Classes: CrCircularInheritance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCircularInheritance.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrCircularInheritance.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,11 +47,6 @@ public class CrCircularInheritance extends CrUML {
 
   public CrCircularInheritance() {
     setHeadline("Remove <ocl>self</ocl>'s Circular Inheritance");
-    sd("Inheritances relationships cannot have cycles. \n\n"+
-       "A legal class inheritance hierarchy is needed for code generation "+
-       "and the correctness of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select one of the  "+
-       "generalization arrows in the cycle and remove it.");
     setPriority(ToDoItem.HIGH_PRIORITY);
     addSupportedDecision(CrUML.decINHERITANCE);
     setKnowledgeTypes(Critic.KT_SYNTAX);

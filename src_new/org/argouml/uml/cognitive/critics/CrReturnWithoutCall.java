@@ -26,7 +26,7 @@
 // File: CrReturnWithoutCall.java
 // Classes: CrReturnWithoutCall
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrReturnWithoutCall.java,v 1.2 2001/01/03 13:04:25 boger Exp $
+// $Id: CrReturnWithoutCall.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -49,8 +49,6 @@ public class CrReturnWithoutCall extends CrUML {
 
   public CrReturnWithoutCall() {
     setHeadline("Missing call(send)-action");
-    sd("Every return-action requires a call- or send-action,\n"+
-         " but this Link has no corresponding call- or send-action.\n");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

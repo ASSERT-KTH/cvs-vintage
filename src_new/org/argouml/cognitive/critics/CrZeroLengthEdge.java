@@ -24,7 +24,7 @@
 // File: CrZeroLengthEdge.java
 // Classes: CrZeroLengthEdge
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.1 2000/09/04 12:50:28 1sturm Exp $
+// $Id: CrZeroLengthEdge.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.cognitive.critics;
 
@@ -49,16 +49,6 @@ public class CrZeroLengthEdge extends CrUML {
   public CrZeroLengthEdge() {
     // needs-more-work: {name} is not expanded for diagram objects
     setHeadline("Make Edge More Visible");
-    sd("This edge is too small to see easily. "+
-       "This may hide important information and make it difficult for humans "+
-       "to understand. A neat appearance may also make your diagrams more "+
-       "influencial on other designers, implementors, and decision makers.\n\n"+
-       "Constructing an understandable set of diagrams is an important "+
-       "part of your design. \n\n"+
-       "To fix this, move one or more nodes so that the highlighted edges will "+
-       "be longer, or click in the center of the edge and drag to "+
-       "make a new vertex.");
-
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decINHERITANCE);
     addSupportedDecision(CrUML.decSTATE_MACHINES);

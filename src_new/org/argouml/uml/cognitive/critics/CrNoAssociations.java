@@ -24,7 +24,7 @@
 // File: CrNoAssociations.javoa
 // Classes: CrNoAssociations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoAssociations.java,v 1.2 2000/09/21 18:48:15 carnold Exp $
+// $Id: CrNoAssociations.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,14 +45,6 @@ public class CrNoAssociations extends CrUML {
 
   public CrNoAssociations() {
     setHeadline("Add Associations to <ocl>self</ocl>");
-    sd("You have not yet specified any Associations for <ocl>self</ocl>. "+
-       "Normally classes, actors and use cases are associated with others. \n\n"+
-       "Defining the associations between objects an important "+
-       "part of your design. \n\n"+
-       "To fix this, press the \"Next>\" button, or add associations manually "+
-       "by clicking on the association tool in the tool bar and dragging "+
-       "from <ocl>self</ocl> to another node. ");
-
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
     addTrigger("associationEnd");

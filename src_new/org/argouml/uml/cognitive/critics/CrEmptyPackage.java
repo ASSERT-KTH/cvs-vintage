@@ -28,7 +28,7 @@
 // File: CrEmptyPackage.java
 // Classes: CrEmptyPackage
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrEmptyPackage.java,v 1.2 2000/11/29 07:45:16 carnold Exp $
+// $Id: CrEmptyPackage.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,12 +48,6 @@ public class CrEmptyPackage extends CrUML {
 
   public CrEmptyPackage() {
     setHeadline("Add Elements to Package <ocl>self</ocl>");
-    sd("You have not yet put anything in package <ocl>self</ocl>. "+
-       "Normally packages contain groups of related classes.\n\n"+
-       "Defining and using packages is key to making a maintainable "+
-       "design. \n\n"+
-       "To fix this, select package <ocl>self</ocl> in the navigator panel and add  "+
-       "diagrams or model elements such as classes or use cases. ");
        
     addSupportedDecision(CrUML.decMODULARITY);
     addTrigger("ownedElement");

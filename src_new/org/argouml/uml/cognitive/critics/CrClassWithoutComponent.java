@@ -24,7 +24,7 @@
 // File: CrClassWithoutComponent.java
 // Classes: CrClassWithoutComponent
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrClassWithoutComponent.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrClassWithoutComponent.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,6 @@ public class CrClassWithoutComponent extends CrUML {
 
   public CrClassWithoutComponent() {
     setHeadline("Classes normally are inside components");
-    sd(" In Deployment-diagrams classes are normally inside components");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

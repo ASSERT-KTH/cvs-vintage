@@ -24,7 +24,7 @@
 // File: CrTooManyAssoc.java
 // Classes: CrTooManyAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyAssoc.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrTooManyAssoc.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -50,14 +50,6 @@ public class CrTooManyAssoc extends CrUML {
   // constructor
   public CrTooManyAssoc() {
     setHeadline("Reduce Associations on <ocl>self</ocl>");
-    sd("There are too many Associations on class <ocl>self</ocl>.  Whenever one class "+
-       "becomes too central to the design it may become a maintenance "+
-       "bottleneck that must be updated frequently. \n\n"+
-       "Defining the associations between objects is an important "+
-       "part of your design. \n\n"+
-       "To fix this, press the \"Next>\" button, or remove associations manually "+
-       "by clicking on an association in the navigator pane or "+
-       "diagram and presing the \"Del\" key. ");
 
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     setArg(THRESHOLD, new Integer(7));

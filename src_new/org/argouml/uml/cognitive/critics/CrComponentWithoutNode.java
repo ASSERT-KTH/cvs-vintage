@@ -24,7 +24,7 @@
 // File: CrComponentWithoutNode.java
 // Classes: CrComponentWithoutNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrComponentWithoutNode.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrComponentWithoutNode.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -46,9 +46,6 @@ public class CrComponentWithoutNode extends CrUML {
 
   public CrComponentWithoutNode() {
     setHeadline("Components normally are inside nodes");
-    sd("There are nodes in the diagram. So you have got a real\n"+
-         " deployment-diagram, and in deployment-diagrams components\n"+
-         " normally resides on nodes.");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

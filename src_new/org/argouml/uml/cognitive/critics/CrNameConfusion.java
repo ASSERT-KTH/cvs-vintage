@@ -26,7 +26,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNameConfusion.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -51,14 +51,6 @@ public class CrNameConfusion extends CrUML {
 
   public CrNameConfusion() {
     setHeadline("Revise Name to Avoid Confusion");
-    sd("Names should be clearly distinct from each other. These two "+
-       "names are so close to each other that readers might be confused.\n\n"+
-       "Clear and unambiguous naming is key to code generation and "+
-       "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the "+
-       "elements and use the Properties tab to change their names.  Avoid " +
-       "names that differ from other names only in capitalization, or "+
-       "use of underscore characters, or by only one character.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_PRESENTATION);
     setKnowledgeTypes(Critic.KT_SYNTAX);

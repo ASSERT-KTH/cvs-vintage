@@ -24,7 +24,7 @@
 // File: CrNoOperations.javoa
 // Classes: CrNoOperations
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOperations.java,v 1.2 2000/09/21 18:48:15 carnold Exp $
+// $Id: CrNoOperations.java,v 1.3 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,14 +45,6 @@ public class CrNoOperations extends CrUML {
 
   public CrNoOperations() {
     setHeadline("Add Operations to <ocl>self</ocl>");
-    sd("You have not yet specified operations for <ocl>self</ocl>. "+
-       "Normally classes provide operations that define their behavior. \n\n"+
-       "Defining operations is needed to complete the behavioral "+
-       "specification part of your design. \n\n"+
-       "To fix this, press the \"Next>\" button, or add operations manually "+
-       "by clicking on <ocl>self</ocl> in the navigator pane and "+
-       "using the Create menu to make a new operations. ");
-
     addSupportedDecision(CrUML.decBEHAVIOR);
     setKnowledgeTypes(Critic.KT_COMPLETENESS);
     addTrigger("behavioralFeature");

@@ -26,7 +26,7 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNameConflict.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,11 +48,6 @@ public class CrNameConflict extends CrUML {
 
   public CrNameConflict() {
     setHeadline("Revise Name to Avoid Conflict");
-    sd("Every element of a namespace must have a unique name. \n\n"+
-       "Clear and unambiguous naming is key to code generation and "+
-       "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the  "+
-       "elements and use the Properties tab to change their names.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_SYNTAX);
     addTrigger("name");

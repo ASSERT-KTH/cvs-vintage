@@ -24,7 +24,7 @@
 // File: CrInvalidBranch.java
 // Classes: CrInvalidBranch
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInvalidBranch.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrInvalidBranch.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,14 +44,6 @@ public class CrInvalidBranch extends CrUML {
 
   public CrInvalidBranch() {
     setHeadline("Change Branch Transitions");
-    sd("This branch state has an invalid number of transitions. Normally "+
-       "branch states have one incoming and two or more outgoing transitions. \n\n"+
-       "Defining correct state transitions is needed to complete the  "+
-       "behavioral specification part of your design.  \n\n"+
-       "To fix this, press the \"Next>\" button, or remove transitions  "+
-       "manually by clicking on transition in the diagram and pressing the "+
-       "Delete key, or add transitions using the transition tool. ");
-
     addSupportedDecision(CrUML.decSTATE_MACHINES);
     addTrigger("incoming");
   }

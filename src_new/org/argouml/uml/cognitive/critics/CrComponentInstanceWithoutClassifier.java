@@ -24,7 +24,7 @@
 // File: CrCompInstanceWithoutNode.java
 // Classes: CrComponentInstanceWithoutClassifier
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -47,7 +47,6 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 
   public CrComponentInstanceWithoutClassifier() {
     setHeadline("Set ComponentInstance-classifier");
-    sd(" In Deployment-Diagrams component-instances normally have a base-component");
     addSupportedDecision(CrUML.decPATTERNS);
   }
 

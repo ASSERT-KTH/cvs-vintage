@@ -26,7 +26,7 @@
 // File: CrCrossNamespaceAssoc.java
 // Classes: CrCrossNamespaceAssoc
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrCrossNamespaceAssoc.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrCrossNamespaceAssoc.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -44,8 +44,6 @@ public class CrCrossNamespaceAssoc extends CrUML {
 
   public CrCrossNamespaceAssoc() {
     setHeadline("Aggregate Role in N-way MAssociation");
-    sd("Each Class or MInterface involved in an MAssociation should be in "+
-       "the MNamespace of the MAssociation.\n");
 
     addSupportedDecision(CrUML.decMODULARITY);
     setKnowledgeTypes(Critic.KT_SYNTAX);

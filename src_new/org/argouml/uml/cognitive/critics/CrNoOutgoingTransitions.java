@@ -24,7 +24,7 @@
 // File: CrNoOutgoingTransitions.java
 // Classes: CrNoOutgoingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoOutgoingTransitions.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrNoOutgoingTransitions.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -42,15 +42,6 @@ public class CrNoOutgoingTransitions extends CrUML {
 
   public CrNoOutgoingTransitions() {
     setHeadline("Add Outgoing Transitions from <ocl>self</ocl>");
-    sd("MState <ocl>self</ocl> has no Outgoing transitions. "+
-       "Normally states have both incoming and outgoing transitions. \n\n"+
-       "Defining complete state transitions is needed to complete the behavioral "+
-       "specification part of your design.  Without outgoing transitions, "+
-       "this state is a \"dead\" state that can naver be exited.\n\n"+
-       "To fix this, press the \"Next>\" button, or add transitions manually "+
-       "by clicking on transition tool in the tool bar and dragging from "+
-       "another state to <ocl>self</ocl>. ");
-
     addSupportedDecision(CrUML.decSTATE_MACHINES);
     addTrigger("outgoing");
   }

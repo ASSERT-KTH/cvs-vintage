@@ -26,7 +26,7 @@
 // File: CrMissingClassName.java
 // Classes: CrMissingClassName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMissingClassName.java,v 1.1 2000/09/04 12:50:24 1sturm Exp $
+// $Id: CrMissingClassName.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -48,11 +48,6 @@ public class CrMissingClassName extends CrUML {
 
   public CrMissingClassName() {
     setHeadline("Choose a Name");
-    sd("Every class and interface within a package must have a name. \n\n"+
-       "Clear and unambiguous naming is key to code generation and "+
-       "the understandability and maintainability of the design. \n\n"+
-       "To fix this, use the \"Next>\" button, or manually select the "+
-       "class and use the Properties tab to give it a name.");
     addSupportedDecision(CrUML.decNAMING);
     setKnowledgeTypes(Critic.KT_COMPLETENESS, Critic.KT_SYNTAX);
     addTrigger("name");

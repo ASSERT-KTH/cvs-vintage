@@ -24,7 +24,7 @@
 // File: CrSubclassReference.javoa
 // Classes: CrSubclassReference
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrSubclassReference.java,v 1.1 2000/09/04 12:50:25 1sturm Exp $
+// $Id: CrSubclassReference.java,v 1.2 2002/02/25 08:37:50 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -45,16 +45,6 @@ public class CrSubclassReference extends CrUML {
 
   public CrSubclassReference() {
     setHeadline("Remove Reference to Specific Subclass");
-    sd("Class <ocl>self</ocl> has a reference to one of it's subclasses. "+
-       "Normally all subclasses should be treated \"equally\" by "+
-       "the superclass.  This allows for addition of new subclasses "+
-       "without modification to the superclass. \n\n"+
-       "Defining the associations between objects is an important "+
-       "part of your design.  Some patterns of associations are easier to "+
-       "maintain than others, depending on the natre of future changes. \n\n"+
-       "To fix this, press the \"Next>\" button, or remove the association "+
-       " manually by clicking on it in the diagram and pressing Delete. ");
-
     addSupportedDecision(CrUML.decRELATIONSHIPS);
     addSupportedDecision(CrUML.decPLANNED_EXTENSIONS);
     setKnowledgeTypes(Critic.KT_SEMANTICS);
