@@ -104,7 +104,7 @@ maximum configuration for each group of applications.
              "binds" to. Delete it if you want to "bind" to all interfaces.
           -->
         <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.Ajp13Interceptor"
+         className="org.apache.ajp.tomcat33.Ajp13Interceptor"
          address="127.0.0.1"
          port="8009" />
 
