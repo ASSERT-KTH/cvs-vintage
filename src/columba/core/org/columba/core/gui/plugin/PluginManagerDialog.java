@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.plugin;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
@@ -32,13 +33,7 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -48,22 +43,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-
+import javax.swing.filechooser.FileFilter;
 
 /**
  * @author fdietz
@@ -306,9 +289,20 @@ public class PluginManagerDialog extends JDialog implements ActionListener,
             table.removePluginNode(selectedNode);
         } else if (action.equals("INSTALL")) {
             JFileChooser chooser = new JFileChooser();
+            chooser.addChoosableFileFilter(new FileFilter() {
+                public boolean accept(File file) {
+                    return file.isFile() && file.getName().toLowerCase().endsWith(".zip");
+                }
+                
+                public String getDescription() {
+                    //TODO: i18n
+                    return GlobalResourceLoader.getString(
+                            RESOURCE_PATH, "pluginmanager", "filefilter");
+                }
+            });
+            chooser.setAcceptAllFileFilterUsed(false);
 
             int result = chooser.showOpenDialog(this);
-
             if (result == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
 
