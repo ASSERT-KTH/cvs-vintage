@@ -68,7 +68,7 @@ import org.tigris.scarab.util.word.SearchIndex;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: UpdateSearchIndex.java,v 1.8 2002/12/20 21:17:30 jon Exp $
+ * @version $Id: UpdateSearchIndex.java,v 1.9 2002/12/20 21:53:01 jon Exp $
  */
 public class UpdateSearchIndex extends RequireLoginFirstAction
 {
@@ -106,23 +106,25 @@ public class UpdateSearchIndex extends RequireLoginFirstAction
                 catch (Exception e)
                 {
                     reset();
+                    context.put("updateFrequency", "");
                     scarabR.setAlertMessage(e.getMessage());            
                 }
             }
             else if (tg.activeCount() == 0)
             {
                 reset();
+                context.put("updateFrequency", "");
                 scarabR.setConfirmMessage(l10n.get("SearchIndexUpdated"));
             }
             else
             {
                 if (counter > 5)
                 {
-                    seconds = 10;
+                    seconds = 15;
                 }
                 else if (counter > 10)
                 {
-                    seconds = 15;
+                    seconds = 20;
                 }
                 context.put("updateFrequency", inttime.toString());
                 scarabR.setConfirmMessage(l10n.format("SearchIndexDoNoteLeavePage",time));
