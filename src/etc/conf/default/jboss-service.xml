@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.81 2003/05/09 20:49:13 d_jencks Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.82 2003/05/12 21:06:37 ejort Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -18,11 +18,12 @@
    -->
   <classpath codebase="lib" archives="*"/>
 
-  <mbean code="org.jboss.aop.AspectManagerService"
+  <mbean code="org.jboss.aop.deployment.AspectManagerService"
 	 name="jboss.aop:service=AspectManager">
   </mbean>
  
-  <mbean code="org.jboss.aop.AspectDeployer" name="jboss.aop:service=AspectDeployer">
+  <mbean code="org.jboss.aop.deployment.AspectDeployer"
+       name="jboss.aop:service=AspectDeployer">
   </mbean>
 
 
