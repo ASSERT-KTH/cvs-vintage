@@ -11,8 +11,11 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.AttributeChangeNotification;
 import javax.management.MalformedObjectNameException;
 import javax.management.MBeanServer;
+import javax.management.Notification;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
 import javax.management.j2ee.EJB;
@@ -23,13 +26,14 @@ import javax.management.j2ee.JVM;
 import java.security.InvalidParameterException;
 
 import org.jboss.logging.Logger;
+import org.jboss.system.ServiceMBean;
 
 /**
  * Root class of the JBoss JSR-77 implementation of
  * {@link javax.management.j2ee.EJBModule EJBModule}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -49,8 +53,20 @@ public class EjbModule
    // Attributes ----------------------------------------------------
 
    private List mEJBs = new ArrayList();
+   private long mStartTime = -1;
+   private int mState = ServiceMBean.STOPPED;
 
    // Static --------------------------------------------------------
+   
+   private static final String[] sTypes = new String[] {
+                                             "j2ee.object.created",
+                                             "j2ee.object.deleted",
+                                             "state.stopped",
+                                             "state.stopping",
+                                             "state.starting",
+                                             "state.running",
+                                             "state.failed"
+                                          };
    
    public static ObjectName create( MBeanServer pServer, String pApplicationName, String pName, URL pURL ) {
       Logger lLog = Logger.getLogger( EjbModule.class );
@@ -74,7 +90,7 @@ public class EjbModule
          lDD = J2EEDeployedObject.getDeploymentDescriptor( pURL, J2EEDeployedObject.EJB );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
+         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
       try {
@@ -100,7 +116,7 @@ public class EjbModule
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
+         lLog.error( "Could not create JSR-77 EjbModule: " + pApplicationName, e );
          return null;
       }
    }
@@ -112,7 +128,7 @@ public class EjbModule
          pServer.unregisterMBean( new ObjectName( pModuleName ) );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
+         lLog.error( "Could not destory JSR-77 EjbModule: " + pModuleName, e );
       }
    }
    
@@ -177,6 +193,44 @@ public class EjbModule
       }
    }
 
+   // org.jboss.ServiceMBean overrides ------------------------------------
+
+   public void postRegister( Boolean pRegisterationDone ) {
+      super.postRegister( pRegisterationDone );
+      // If set then register for its events
+/*
+      try {
+         getServer().addNotificationListener( mService, new Listener(), null, null );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service is null or
+         //AS ToDo: not found.
+         jme.printStackTrace();
+      }
+*/
+      sendNotification(
+         new Notification(
+            sTypes[ 0 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "EJB Module created"
+         )
+      );
+   }
+
+   public void preDeregister() {
+      sendNotification(
+         new Notification(
+            sTypes[ 1 ],
+            getName(),
+            1,
+            System.currentTimeMillis(),
+            "EJB Module deleted"
+         )
+      );
+   }
+   
    // Object overrides ---------------------------------------------------
    
    public String toString() {
@@ -192,4 +246,34 @@ public class EjbModule
    // Private -------------------------------------------------------
    
    // Inner classes -------------------------------------------------
+   
+   private class Listener implements NotificationListener {
+      
+      public void handleNotification( Notification pNotification, Object pHandback )
+      {
+         if( pNotification instanceof AttributeChangeNotification ) {
+            AttributeChangeNotification lChange = (AttributeChangeNotification) pNotification;
+            if( "State".equals( lChange.getAttributeName() ) )
+            {
+               mState = ( (Integer) lChange.getNewValue() ).intValue();
+               if( mState == ServiceMBean.STARTED ) {
+                  mStartTime = lChange.getTimeStamp();
+               } else {
+                  mStartTime = -1;
+               }
+               // Now send the event to the JSR-77 listeners
+               sendNotification(
+                  new Notification(
+                     sTypes[ getState() + 2 ],
+                     getName(),
+                     1,
+                     System.currentTimeMillis(),
+                     "State changed"
+                  )
+               );
+            }
+         }
+      }
+      
+   }
 }

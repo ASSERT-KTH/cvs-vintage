@@ -67,7 +67,7 @@ import org.jboss.util.jmx.ObjectNameFactory;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -395,9 +395,15 @@ public class EjbModule
             //log.error("unexpected exception destroying Container: " + con.getJmxName(), e);
          } // end of try-catch
       }
+      log.info( "Remove EJB Module: " + getModuleName() );
       if (getModuleName() != null) 
       {
          org.jboss.management.j2ee.EjbModule.destroy(server, getModuleName() );
+      }
+      log.info( "Remove Application: " + getApplicationName() );
+      if( getApplicationName() != null )
+      {
+         org.jboss.management.j2ee.J2EEApplication.destroy( server, getApplicationName() );
       }
    }
 	

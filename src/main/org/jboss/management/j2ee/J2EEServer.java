@@ -19,7 +19,7 @@ import javax.management.ObjectName;
  * J2EEServer}.
  *
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -116,7 +116,10 @@ public class J2EEServer
       String lType = J2EEManagedObject.getType( pChild );
       if(
          "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType )
+         "J2EEModule".equals( lType ) ||
+         "EjbModule".equals( lType ) ||
+         "ConnectorModule".equals( lType ) ||
+         "WebModule".equals( lType )
       ) {
          mDeployedObjects.add( pChild );
       } else if( "Node".equals( lType ) ) {
@@ -140,7 +143,10 @@ public class J2EEServer
       String lType = J2EEManagedObject.getType( pChild );
       if(
          "J2EEApplication".equals( lType ) ||
-         "J2EEModule".equals( lType )
+         "J2EEModule".equals( lType ) ||
+         "EjbModule".equals( lType ) ||
+         "ConnectorModule".equals( lType ) ||
+         "WebModule".equals( lType )
       ) {
          mDeployedObjects.remove( pChild );
       } else if( "Node".equals( lType ) ) {

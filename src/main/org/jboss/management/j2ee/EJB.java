@@ -19,7 +19,7 @@ import org.jboss.metadata.SessionMetaData;
  * {@link javax.management.j2ee.EJB EJB}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -67,7 +67,7 @@ public abstract class EJB
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 EJB: " + pBeanMeta.getJndiName(), e );
+         lLog.error( "Could not create JSR-77 EJB: " + pBeanMeta.getJndiName(), e );
          return null;
       }
    }
@@ -79,7 +79,7 @@ public abstract class EJB
          pServer.unregisterMBean( new ObjectName( pEJBName ) );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destory JSR-77 EJB: " + pEJBName, e );
+         lLog.error( "Could not destory JSR-77 EJB: " + pEJBName, e );
       }
    }
    

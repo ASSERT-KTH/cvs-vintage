@@ -24,7 +24,7 @@ import org.jboss.logging.Logger;
  * {@link javax.management.j2ee.J2EEApplication J2EEApplication}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -83,7 +83,7 @@ public class J2EEApplication
          ).getObjectName();
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
+         lLog.error( "Could not create JSR-77 J2EEApplication: " + pName, e );
          return null;
       }
    }
@@ -91,19 +91,24 @@ public class J2EEApplication
    public static void destroy( MBeanServer pServer, String pName ) {
       Logger lLog = Logger.getLogger( J2EEApplication.class );
       try {
-         // Find the Object to be destroyed
-         ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=J2EEApplication,name=" + pName + ",*"
-         );
-         ObjectName lApplication = (ObjectName) pServer.queryNames(
-            lSearch,
-            null
-         ).iterator().next();
+         ObjectName lApplication;
+         if( pName.indexOf( "type=J2EEApplication" ) >= 0 ) {
+            lApplication = new ObjectName( pName );
+         } else {
+            // Find the Object to be destroyed
+            ObjectName lSearch = new ObjectName(
+               J2EEManagedObject.getDomainName() + ":type=J2EEApplication,name=" + pName + ",*"
+            );
+            lApplication = (ObjectName) pServer.queryNames(
+               lSearch,
+               null
+            ).iterator().next();
+         }
          // Now remove the J2EEApplication
          pServer.unregisterMBean( lApplication );
       }
       catch( Exception e ) {
-//AS         lLog.error( "Could not destroy JSR-77 J2EEApplication: " + pName, e );
+         lLog.error( "Could not destroy JSR-77 J2EEApplication: " + pName, e );
       }
    }
    

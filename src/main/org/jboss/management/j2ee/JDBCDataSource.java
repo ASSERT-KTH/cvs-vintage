@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -63,7 +63,7 @@ public class JDBCDataSource
                                           };
    
    public static ObjectName create( MBeanServer pServer, String pName, ObjectName pService ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBCDataSource.class );
       ObjectName lServer = null;
       try {
          lServer = (ObjectName) pServer.queryNames(
@@ -124,7 +124,7 @@ public class JDBCDataSource
    }
    
    public static void destroy( MBeanServer pServer, String pName ) {
-      Logger lLog = Logger.getLogger( JNDI.class );
+      Logger lLog = Logger.getLogger( JDBCDataSource.class );
       try {
          // Find the Object to be destroyed
          ObjectName lSearch = new ObjectName(
@@ -243,9 +243,10 @@ public class JDBCDataSource
    }
    
    public void preDeregister() {
-      Logger log = getLog();
-      if (log.isInfoEnabled())
-         log.info( "JDBCDataSource.preDeregister(): " + getName() );
+      Logger lLog = getLog();
+      if( lLog.isInfoEnabled() ) {
+         lLog.info( "JDBCDataSource.preDeregister(): " + getName() );
+      }
       sendNotification(
          new Notification(
             sTypes[ 1 ],
