@@ -1,4 +1,4 @@
-// $Id: DnDNavigatorTree.java,v 1.9 2003/10/18 21:18:04 alexb Exp $
+// $Id: DnDNavigatorTree.java,v 1.10 2003/10/19 21:50:34 alexb Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,7 +49,9 @@ import org.argouml.ui.explorer.ExplorerTree;
 /**
  * This class extends the default Argo JTree with Drag and drop capabilities.
  *
- * <p>$Id: DnDNavigatorTree.java,v 1.9 2003/10/18 21:18:04 alexb Exp $
+ * @deprecated replaced with DnDExplorerTree in explorer package.
+ *
+ * <p>$Id: DnDNavigatorTree.java,v 1.10 2003/10/19 21:50:34 alexb Exp $
  *
  * @author  alexb
  * @since Created on 16 April 2003
