@@ -23,5 +23,13 @@
     name="PersistenceManager" class="java.lang.String" 
     displayname="Persistence manager" propertyeditor="org.jboss.ejb.deployment.editors.StatefulSessionPersistenceManagerTypeEditor"/>
 
+  <property 
+    name="AuthenticationModule" class="java.lang.String" 
+    displayname="Authentication Module JNDI Name"/>
+
+  <property 
+    name="RealmManager" class="java.lang.String" 
+    displayname="Realm Manager JNDI Name"/>
+
   <method name="removeConfiguration" displayname="Remove"/>
 </bean>

@@ -18,6 +18,15 @@
   <property 
     name="InstancePool" class="java.lang.String" 
     displayname="Instance pool" propertyeditor="org.jboss.ejb.deployment.editors.StatelessSessionInstancePoolTypeEditor"/>
+
+  <property 
+    name="AuthenticationModule" class="java.lang.String" 
+    displayname="Authentication Module JNDI Name"/>
+
+  <property 
+    name="RealmManager" class="java.lang.String" 
+    displayname="Realm Manager JNDI Name"/>
+
 	 
   <method name="removeConfiguration" displayname="Remove"/>
 </bean>
