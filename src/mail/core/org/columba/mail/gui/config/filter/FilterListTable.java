@@ -46,6 +46,14 @@ class FilterListTable extends JTable {
 	}
 	
 	/**
+	 * The specified row has been updated and should be repainted.
+	 * @param row the row that has been updated.
+	 */
+	public void update(int row) {
+		((FilterListDataModel)getModel()).fireTableRowsUpdated(row,row);
+	}
+	
+	/**
 	 * Sets the specified row indicies to be selected in the table.
 	 * Note that this clears all previous selections.
 	 * @param selectedRows an array of integers containing the indices of 
