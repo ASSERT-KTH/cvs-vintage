@@ -197,19 +197,6 @@ public abstract class AbstractMenuGenerator {
                             menu.add(tmp);
                             lastWasSeparator = false;
                         }
-                        /*
-                    } catch (Exception e) {
-                        NotifyDialog dialog = new NotifyDialog();
-                        dialog.showDialog("Error while loading plugin "
-                                + next.getAttribute("action")
-                                + ". This probably means that the class wasn't found. Compile the plugin to create it.");
-
-                        if (MainInterface.DEBUG) {
-                            LOG.severe(e.getMessage() + ": " + next.getAttribute("action"));
-                            e.printStackTrace();
-                        }
-                    }
-                    */
                 } else if (next.getAttribute("checkboxaction") != null) {
                     try {
                         AbstractSelectableAction action = (AbstractSelectableAction) ((ActionPluginHandler) MainInterface.pluginManager.getHandler(
