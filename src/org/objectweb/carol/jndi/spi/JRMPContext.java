@@ -9,6 +9,7 @@ package org.objectweb.carol.jndi.spi;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Hashtable;
+import java.util.HashMap;
 
 import javax.naming.CompositeName;
 import javax.naming.Context;
@@ -36,19 +37,19 @@ public class JRMPContext implements Context {
 	 * the JRMP JNDI context
 	 * @see #JRMPContext
 	 */
-	private static Context jrmpContext = null;
+	private Context jrmpContext = null;
 
 	/**
-	 * the JRMP Wrapper JNDI context
+	 * the mapping between URL and wrapped context
 	 * @see #JRMPContext
 	 */
-	private static Context single = null;
+    private static HashMap hashMap = new HashMap();
 
 	/**
 	 * the Exported Wrapper Hashtable
 	 *
 	 */
-	private static Hashtable wrapperHash = null;
+	private static Hashtable wrapperHash = new Hashtable();
 
 	/**
 	 * Constructs an JRMP Wrapper context 
@@ -58,7 +59,6 @@ public class JRMPContext implements Context {
 	 */
 	private JRMPContext(Context jrmpCtx) throws NamingException {
 		jrmpContext = jrmpCtx;
-		wrapperHash = new Hashtable();
 	}
 
 	/**
@@ -70,13 +70,20 @@ public class JRMPContext implements Context {
 	*/
 	public static Context getSingleInstance(Hashtable env)
 		throws NamingException {
-		if (single == null) {
+    
+        String key = null;
+        if (env != null) {
+            key = (String) env.get(Context.PROVIDER_URL);
+        }
+        Context ctx = (Context) hashMap.get(key);
+        if (ctx == null) {
 			env.put(
 				"java.naming.factory.initial",
 				"com.sun.jndi.rmi.registry.RegistryContextFactory");
-			single = new JRMPContext(new InitialContext(env));
+			ctx = new JRMPContext(new InitialContext(env));
+            hashMap.put(key, ctx);
 		}
-		return single;
+		return ctx;
 	}
 
 	/**

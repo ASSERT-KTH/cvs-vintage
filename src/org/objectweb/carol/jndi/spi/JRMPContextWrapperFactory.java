@@ -32,7 +32,9 @@ public class JRMPContextWrapperFactory implements InitialContextFactory {
 	 * @throws NamingException if a naming exception is encountered
 	 */
 	public Context getInitialContext(Hashtable env) throws NamingException {
-		boolean localO=new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();					  	
+      
+		boolean localO=new Boolean(System.getProperty(CarolDefaultValues.LOCAL_JRMP_PROPERTY, "false")).booleanValue();				
+	  	
 		if ((JRMPRegistry.isLocal()) && (localO)) {
 			return JRMPLocalContext.getSingleInstance(
 				JRMPRegistry.registry,

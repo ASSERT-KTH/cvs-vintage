@@ -9,7 +9,7 @@ package org.objectweb.carol.jndi.spi;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Hashtable;
-
+import java.util.HashMap;
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -45,13 +45,15 @@ public class IIOPContext implements Context {
 	 * the IIOP Wrapper JNDI context
 	 * @see #IIOPContext
 	 */
-	private static Context single = null;
+
+    private static HashMap hashMap = new HashMap();
 
 	/**
 	 * the Exported Wrapper Hashtable
 	 *
 	 */
-	private static Hashtable wrapperHash = null;
+	private static Hashtable wrapperHash = new Hashtable();
+	
 
 	/**
 	 * Constructs an IIOP Wrapper context 
@@ -61,7 +63,7 @@ public class IIOPContext implements Context {
 	 */
 	private IIOPContext(Context iiopCtx) throws NamingException {
 		iiopContext = iiopCtx;
-		wrapperHash = new Hashtable();
+	
 	}
 
 	/**
@@ -73,13 +75,19 @@ public class IIOPContext implements Context {
 	*/
 	public static Context getSingleInstance(Hashtable env)
 		throws NamingException {
-		if (single == null) {
+    String key = null;
+        if (env != null) {
+            key = (String) env.get(Context.PROVIDER_URL);
+        }
+        Context ctx = (Context) hashMap.get(key);
+        if (ctx == null) {
 			env.put(
 				"java.naming.factory.initial",
 				"com.sun.jndi.cosnaming.CNCtxFactory");
-			single = new IIOPContext(new InitialContext(env));
+			ctx = new IIOPContext(new InitialContext(env));
+            hashMap.put(key, ctx);
 		}
-		return single;
+		return ctx;
 	}
 
 	/** 

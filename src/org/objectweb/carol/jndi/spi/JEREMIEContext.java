@@ -8,7 +8,7 @@ package org.objectweb.carol.jndi.spi;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.util.Hashtable;
-
+import java.util.HashMap;
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -37,16 +37,16 @@ public class JEREMIEContext implements Context {
 	private static Context jeremieContext = null;
 
 	/**
-	 * the JEREMIE Wrapper JNDI context
+	 * the mapping between URL and wrapped context
 	 * @see #JEREMIEContext
 	 */
-	private static Context single = null;
+    private static HashMap hashMap = new HashMap();
 
 	/**
 	 * the Exported Wrapper Hashtable
 	 *
 	 */
-	private static Hashtable wrapperHash = null;
+	private static Hashtable wrapperHash = new Hashtable();
 
 	/**
 	 * Constructs an JEREMIE Wrapper context 
@@ -56,7 +56,7 @@ public class JEREMIEContext implements Context {
 	 */
 	private JEREMIEContext(Context jeremieCtx) throws NamingException {
 		jeremieContext = jeremieCtx;
-		wrapperHash = new Hashtable();
+	
 	}
 
 	/**
@@ -68,13 +68,19 @@ public class JEREMIEContext implements Context {
 	*/
 	public static Context getSingleInstance(Hashtable env)
 		throws NamingException {
-		if (single == null) {
+        String key = null;
+        if (env != null) {
+            key = (String) env.get(Context.PROVIDER_URL);
+        }
+        Context ctx = (Context) hashMap.get(key);
+        if (ctx == null) {
 			env.put(
 				"java.naming.factory.initial",
-				"org.objectweb.jeremie.libs.services.registry.jndi.JRMIInitialContextFactory");
-			single = new JEREMIEContext(new InitialContext(env));
+                "org.objectweb.jeremie.libs.services.registry.jndi.JRMIInitialContextFactory");
+			ctx = new JEREMIEContext(new InitialContext(env));
+            hashMap.put(key, ctx);
 		}
-		return single;
+		return ctx;
 	}
 
 	/**
