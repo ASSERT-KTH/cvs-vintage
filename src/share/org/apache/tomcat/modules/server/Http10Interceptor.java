@@ -156,6 +156,10 @@ public class Http10Interceptor extends PoolTcpConnector
 	    reqA.readNextRequest(resA);
 	    if( secure ) {
 		reqA.scheme().setString( "https" );
+ 
+ 		// Load up the SSLSupport class
+		if(sslImplementation != null)
+		    reqA.setSSLSupport(sslImplementation.getSSLSupport(socket));
 	    }
 	    
 	    cm.service( reqA, resA );
@@ -199,13 +203,47 @@ public class Http10Interceptor extends PoolTcpConnector
 	    catch (IOException e) { /* ignore */ }
         }
     }
+ 
+     /**
+       getInfo calls for SSL data
+ 
+       @return the requested data
+     */
+     public Object getInfo( Context ctx, Request request,
+ 			   int id, String key ) {
+       // The following code explicitly assumes that the only
+       // attributes hand;ed here are HTTP. If you change that
+       // you MUST change the test for sslSupport==null --EKR
+ 
+       HttpRequest httpReq;
+
+       
+       try {
+ 	httpReq=(HttpRequest)request;
+       } catch (ClassCastException e){
+ 	return null;
+       }
+ 
+       if(key!=null && httpReq!=null && httpReq.sslSupport!=null){
+ 	  try {
+ 	      if(key.equals("javax.servlet.request.cipher_suite"))
+ 		  return httpReq.sslSupport.getCipherSuite();
+ 	      if(key.equals("javax.servlet.request.X509Certificate"))
+ 		  return httpReq.sslSupport.getPeerCertificateChain();
+ 	  } catch (Exception e){
+ 	      log("Exception getting SSL attribute " + key,e,Log.WARNING);
+ 	      return null;
+ 	  }
+       }
+       return super.getInfo(ctx,request,id,key);
+     }
 }
 
 class HttpRequest extends Request {
     Http10 http=new Http10();
     private boolean moreRequests = false;
     Socket socket;
-    static CertCompat certcompat = CertCompat.getCertCompat();
+    SSLSupport sslSupport=null;
     
     public HttpRequest() {
         super();
@@ -214,12 +252,6 @@ class HttpRequest extends Request {
         remoteAddrMB.recycle();
         remoteHostMB.recycle();
     }
-    public Object getAttribute(String name) {
-        if (name.equals("javax.servlet.request.X509Certificate")) {
-            return(certcompat.getX509Certificates(socket));
-	}
-        return(super.getAttribute(name));
-    }
 
     public void recycle() {
 	super.recycle();
@@ -227,6 +259,7 @@ class HttpRequest extends Request {
         // recycle these to remove the defaults
         remoteAddrMB.recycle();
         remoteHostMB.recycle();
+	sslSupport=null;
     }
 
     public void setSocket(Socket socket) throws IOException {
@@ -352,6 +385,11 @@ class HttpRequest extends Request {
 	//	log("No server name, defaulting to localhost");
         serverNameMB.setString( getLocalHost() );
     }
+ 
+    void setSSLSupport(SSLSupport s){
+        sslSupport=s;
+    }
+ 
 }
 
 

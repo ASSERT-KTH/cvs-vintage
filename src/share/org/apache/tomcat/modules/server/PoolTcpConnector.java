@@ -88,9 +88,11 @@ public abstract class PoolTcpConnector extends BaseInterceptor
 {
     protected PoolTcpEndpoint ep;
     protected ServerSocketFactory socketFactory;
+    protected SSLImplementation sslImplementation;
     // socket factory attriubtes ( XXX replace with normal setters ) 
     protected Hashtable attributes = new Hashtable();
     protected String socketFactoryName=null;
+    protected String sslImplementationName=null;
     protected boolean secure=false;
 
     public PoolTcpConnector() {
@@ -187,33 +189,39 @@ public abstract class PoolTcpConnector extends BaseInterceptor
      */
     private void checkSocketFactory() throws TomcatException {
 	if(secure) {
-	    if(socketFactoryName == null)
-		socketFactoryName = SSL_FACT;
-	    /* backwards compatibility */
-	    if(SSL_FACT.equals(socketFactoryName)) {
-		try {
-		    Class c1=Class.forName( SSL_CHECK );		    
-		} catch (Exception sslex) {
-		    throw new TomcatException("JSSE not installed.",sslex);
-		}
-		System.getProperties().put("java.protocol.handler.pkgs",
-                        "com.sun.net.ssl.internal.www.protocol");
-	    }
-	}
-	if(socketFactoryName != null) {
-	    try {
-		socketFactory = string2SocketFactory(socketFactoryName);
-		ep.setServerSocketFactory(socketFactory);
-	    } catch(Exception sfex) {
-		throw new TomcatException("Error Loading Socket Factory " +
-					  socketFactoryName,
-					  sfex);
+ 	    try {
+ 		// The SSL setup code has been moved into
+ 		// SSLImplementation since SocketFactory doesn't
+ 		// provide a wide enough interface
+ 		sslImplementation=SSLImplementation.getInstance
+ 		    (sslImplementationName);
+ 		ep.setServerSocketFactory(sslImplementation.
+ 					  getServerSocketFactory());
+ 	    } catch (ClassNotFoundException e){
+ 		throw new TomcatException("Error loading SSLImplementation ",
+ 					  e);
+  	    }
+  	}
+ 	else {
+ 	    if (socketFactoryName != null) {
+ 		try {
+ 		    socketFactory = string2SocketFactory(socketFactoryName);
+ 		    ep.setServerSocketFactory(socketFactory);
+ 		} catch(Exception sfex) {
+ 		    throw new TomcatException("Error Loading Socket Factory " +
+ 					      socketFactoryName,
+ 					      sfex);
+ 		}
 	    }
 	}
     }
     public void setSocketFactory( String valueS ) {
 	socketFactoryName = valueS;
     }
+    public void setSSLImplementation( String valueS) {
+ 	sslImplementationName=valueS;
+    }
+ 	
 
     // -------------------- Socket options --------------------
 
@@ -271,12 +279,6 @@ public abstract class PoolTcpConnector extends BaseInterceptor
     public boolean isClientauthSet() {
         return (attributes.get("clientauth") != null);
     }
-
-    public static final String SSL_CHECK=
-	"javax.net.ssl.SSLServerSocketFactory";
-    public static final String SSL_FACT=
-	"org.apache.tomcat.util.net.SSLSocketFactory";
-
 
     public void setSecure( boolean b ) {
     	secure=b;
