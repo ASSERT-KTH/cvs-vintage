@@ -31,10 +31,14 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
  *
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public final class JDBCCMPFieldMetaData
 {
+   public static final byte CHECK_DIRTY_AFTER_GET_TRUE = 1;
+   public static final byte CHECK_DIRTY_AFTER_GET_FALSE = 2;
+   public static final byte CHECK_DIRTY_AFTER_GET_NOT_PRESENT = 4;
+
    /** The entity on which this field is defined. */
    private final JDBCEntityMetaData entity;
 
@@ -89,6 +93,12 @@ public final class JDBCCMPFieldMetaData
    /** whether this field is a relation table key field*/
    private final boolean relationTableField;
 
+   /** If true, the field should be checked for dirty state after its get method was invoked */
+   private final byte checkDirtyAfterGet;
+
+   /** Fully qualified class name of implementation of CMPFieldStateFactory */
+   private final String stateFactory;
+
    /**
     * This constructor is added especially for unknown primary key field
     */
@@ -109,6 +119,8 @@ public final class JDBCCMPFieldMetaData
       unknownPkField = true;
       autoIncrement = false;
       relationTableField = false;
+      checkDirtyAfterGet = CHECK_DIRTY_AFTER_GET_NOT_PRESENT;
+      stateFactory = null;
    }
 
    /**
@@ -117,8 +129,7 @@ public final class JDBCCMPFieldMetaData
     *
     * @param fieldName name of the field for which the meta data will be loaded
     * @param entity entity on which this field is defined
-    * @throws DeploymentException if data in the entity is inconsistent with
-    * field type
+    * @throws DeploymentException if data in the entity is inconsistent with field type
     */
    public JDBCCMPFieldMetaData(JDBCEntityMetaData entity, String fieldName)
       throws DeploymentException
@@ -190,6 +201,8 @@ public final class JDBCCMPFieldMetaData
       unknownPkField = false;
       autoIncrement = false;
       relationTableField = false;
+      checkDirtyAfterGet = CHECK_DIRTY_AFTER_GET_NOT_PRESENT;
+      stateFactory = null;
    }
 
    public JDBCCMPFieldMetaData(JDBCEntityMetaData entity,
@@ -210,6 +223,8 @@ public final class JDBCCMPFieldMetaData
       autoIncrement = defaultValues.isAutoIncrement();
       genIndex = false; // If <dbindex/> is not given on a field, no index is wanted.
       relationTableField = defaultValues.isRelationTableField();
+      checkDirtyAfterGet = defaultValues.getCheckDirtyAfterGet();
+      stateFactory = defaultValues.getStateFactory();
    }
 
    /**
@@ -339,7 +354,7 @@ public final class JDBCCMPFieldMetaData
       Iterator iterator = MetaData.getChildrenByTagName(element, "property");
       while(iterator.hasNext())
       {
-         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (Element) iterator.next()));
+         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (Element)iterator.next()));
       }
 
       // is the field auto-increment?
@@ -352,7 +367,25 @@ public final class JDBCCMPFieldMetaData
          genIndex = true;
 
       relationTableField = defaultValues.isRelationTableField();
+
+      String dirtyAfterGetStr = MetaData.getOptionalChildContent(element, "check-dirty-after-get");
+      if(dirtyAfterGetStr == null)
+      {
+         checkDirtyAfterGet = defaultValues.getCheckDirtyAfterGet();
+      }
+      else
+      {
+         checkDirtyAfterGet = (Boolean.valueOf(dirtyAfterGetStr).booleanValue() ?
+            CHECK_DIRTY_AFTER_GET_TRUE : CHECK_DIRTY_AFTER_GET_FALSE);
+      }
+
+      String stateFactoryStr = MetaData.getOptionalChildContent(element, "state-factory");
+      if(stateFactoryStr == null)
+         stateFactory = defaultValues.getStateFactory();
+      else
+         stateFactory = stateFactoryStr;
    }
+
 
    /**
     * Constructs cmp field meta data with the data contained in the cmp-field
@@ -422,7 +455,7 @@ public final class JDBCCMPFieldMetaData
       Iterator iterator = MetaData.getChildrenByTagName(element, "property");
       while(iterator.hasNext())
       {
-         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (Element) iterator.next()));
+         propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(this, (Element)iterator.next()));
       }
 
       this.unknownPkField = defaultValues.isUnknownPkField();
@@ -434,6 +467,23 @@ public final class JDBCCMPFieldMetaData
          genIndex = true;
 
       this.relationTableField = relationTableField;
+
+      String dirtyAfterGetStr = MetaData.getOptionalChildContent(element, "check-dirty-after-get");
+      if(dirtyAfterGetStr == null)
+      {
+         checkDirtyAfterGet = defaultValues.getCheckDirtyAfterGet();
+      }
+      else
+      {
+         checkDirtyAfterGet = (Boolean.valueOf(dirtyAfterGetStr).booleanValue() ?
+            CHECK_DIRTY_AFTER_GET_TRUE : CHECK_DIRTY_AFTER_GET_FALSE);
+      }
+
+      String stateFactoryStr = MetaData.getOptionalChildContent(element, "state-factory");
+      if(stateFactoryStr == null)
+         stateFactory = defaultValues.getStateFactory();
+      else
+         stateFactory = stateFactoryStr;
    }
 
    /**
@@ -463,7 +513,7 @@ public final class JDBCCMPFieldMetaData
       for(Iterator i = defaultValues.propertyOverrides.iterator(); i.hasNext();)
       {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
-            this, (JDBCCMPFieldPropertyMetaData) i.next()));
+            this, (JDBCCMPFieldPropertyMetaData)i.next()));
       }
 
       this.unknownPkField = defaultValues.isUnknownPkField();
@@ -471,6 +521,8 @@ public final class JDBCCMPFieldMetaData
       genIndex = false;
 
       this.relationTableField = relationTableField;
+      checkDirtyAfterGet = defaultValues.getCheckDirtyAfterGet();
+      stateFactory = defaultValues.getStateFactory();
    }
 
 
@@ -500,6 +552,8 @@ public final class JDBCCMPFieldMetaData
       autoIncrement = false;
       genIndex = false;
       relationTableField = false;
+      checkDirtyAfterGet = CHECK_DIRTY_AFTER_GET_NOT_PRESENT;
+      stateFactory = null;
    }
 
 
@@ -657,6 +711,16 @@ public final class JDBCCMPFieldMetaData
       return relationTableField;
    }
 
+   public byte getCheckDirtyAfterGet()
+   {
+      return checkDirtyAfterGet;
+   }
+
+   public String getStateFactory()
+   {
+      return stateFactory;
+   }
+
    /**
     * Compares this JDBCCMPFieldMetaData against the specified object. Returns
     * true if the objects are the same. Two JDBCCMPFieldMetaData are the same
@@ -669,7 +733,7 @@ public final class JDBCCMPFieldMetaData
    {
       if(o instanceof JDBCCMPFieldMetaData)
       {
-         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) o;
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)o;
          return fieldName.equals(cmpField.fieldName) &&
             entity.equals(cmpField.entity);
       }

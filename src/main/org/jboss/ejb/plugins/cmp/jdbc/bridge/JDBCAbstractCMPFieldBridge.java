@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  *
  * <p><b>Revisions:</b>
  *
@@ -105,8 +105,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       else
          tableIndex = -1;
 
-      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(fieldType);
-      checkDirtyAfterGet = !JDBCTypeFactory.isDefaultImmutable(fieldType);
+      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(metadata.getStateFactory(), fieldType);
+      checkDirtyAfterGet = JDBCTypeFactory.checkDirtyAfterGet(metadata.getCheckDirtyAfterGet(), fieldType);
 
       this.log = createLogger(manager, fieldName);
    }
@@ -120,7 +120,9 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
                                      Class primaryKeyClass,
                                      Field primaryKeyField,
                                      int jdbcContextIndex,
-                                     int tableIndex)
+                                     int tableIndex,
+                                     boolean checkDirtyAfterGet,
+                                     CMPFieldStateFactory stateFactory)
    {
       this.manager = manager;
       this.fieldName = fieldName;
@@ -134,8 +136,8 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       this.indexed = false;
       this.jdbcContextIndex = jdbcContextIndex;
       this.tableIndex = tableIndex;
-      stateFactory = JDBCTypeFactory.getCMPFieldStateFactory(fieldType);
-      checkDirtyAfterGet = !JDBCTypeFactory.isDefaultImmutable(fieldType);
+      this.stateFactory = stateFactory;
+      this.checkDirtyAfterGet = checkDirtyAfterGet;
       this.log = createLogger(manager, fieldName);
    }
 

@@ -35,7 +35,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public final class JDBCTypeFactory
 {
@@ -188,10 +188,27 @@ public final class JDBCTypeFactory
    // Static
    //
 
-   public static final CMPFieldStateFactory getCMPFieldStateFactory(Class clazz)
+   public static final CMPFieldStateFactory getCMPFieldStateFactory(String implClassName, Class clazz)
+      throws DeploymentException
    {
       CMPFieldStateFactory stateFactory;
-      if(Map.class.isAssignableFrom(clazz))
+      if(implClassName != null)
+      {
+         try
+         {
+            Class implClass = Thread.currentThread().getContextClassLoader().loadClass(implClassName);
+            stateFactory = (CMPFieldStateFactory)implClass.newInstance();
+         }
+         catch(ClassNotFoundException e)
+         {
+            throw new DeploymentException("Could not load state factory class: " + implClassName);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Failed instantiate state factory: " + implClassName);
+         }
+      }
+      else if(Map.class.isAssignableFrom(clazz))
       {
          stateFactory = MAP;
       }
@@ -218,7 +235,21 @@ public final class JDBCTypeFactory
       return stateFactory;
    }
 
-   public static final boolean isDefaultImmutable(Class clazz)
+   public static final boolean checkDirtyAfterGet(byte checkDirtyAfterGet, Class fieldType)
+   {
+      boolean result;
+      if(checkDirtyAfterGet == JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_NOT_PRESENT)
+      {
+         result = !isDefaultImmutable(fieldType);
+      }
+      else
+      {
+         result = checkDirtyAfterGet == JDBCCMPFieldMetaData.CHECK_DIRTY_AFTER_GET_TRUE;
+      }
+      return result;
+   }
+
+   private static final boolean isDefaultImmutable(Class clazz)
    {
       boolean result = false;
       if(clazz.isPrimitive()

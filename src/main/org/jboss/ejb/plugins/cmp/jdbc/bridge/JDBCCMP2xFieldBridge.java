@@ -35,7 +35,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -132,7 +132,9 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
          primaryKeyClass,
          primaryKeyField,
          cmpFieldIAmMappedTo.getFieldIndex(),
-         cmpFieldIAmMappedTo.getTableIndex()
+         cmpFieldIAmMappedTo.getTableIndex(),
+         cmpFieldIAmMappedTo.checkDirtyAfterGet,
+         cmpFieldIAmMappedTo.stateFactory
       );
       this.cmpFieldIAmMappedTo = cmpFieldIAmMappedTo;
       if(myCMRField != null)

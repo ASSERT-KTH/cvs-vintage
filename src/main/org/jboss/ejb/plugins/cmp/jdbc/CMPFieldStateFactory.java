@@ -17,7 +17,7 @@ public interface CMPFieldStateFactory
    /**
     * Calculates and returns an object that represents the state of the field value.
     * The states produced by this method will be used to check whether the field
-    * is dirty at commit time.
+    * is dirty at synchronization time.
     *
     * @param fieldValue  field's value.
     * @return an object representing the field's state.
