@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.gui.util;
 
 import java.awt.Image;
@@ -39,7 +40,6 @@ public class ImageLoader
 {
 	static boolean ICON_SET = false;
 
-	private static Locale currentLocale;
 	private static ResourceBundle bundle;
 	private static Properties properties;
 
@@ -47,12 +47,10 @@ public class ImageLoader
 	
 	private static Hashtable hashtable = new Hashtable();
 
+	/*
 	public ImageLoader()
 	{
-		currentLocale = Locale.getDefault();
 		
-		
-		/*
 		iconset = MainInterface.themeItem.getIconset();
 
 		if (iconset.toLowerCase().equals("default"))
@@ -85,11 +83,11 @@ public class ImageLoader
 				MainInterface.themeItem.setIconset("default");
 			}
 		}
-		*/
 		
 		ICON_SET = false;
 		
 	}  // constructor
+	*/
 
 // ******** FOLLOWS STANDARD RESOURCE RETRIEVAL (file or jar protocol) ***************
 

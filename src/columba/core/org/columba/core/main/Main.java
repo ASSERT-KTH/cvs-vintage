@@ -113,7 +113,7 @@ public class Main {
 
     MainInterface.clipboardManager = new ClipboardManager();
 
-    new ImageLoader();
+    //new ImageLoader();
 
     MainInterface.processor = new DefaultProcessor();
     MainInterface.processor.start();
