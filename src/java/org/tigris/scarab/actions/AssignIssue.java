@@ -87,7 +87,7 @@ import org.tigris.scarab.util.ScarabLink;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: AssignIssue.java,v 1.1 2001/07/21 00:52:50 jmcnally Exp $
+    @version $Id: AssignIssue.java,v 1.2 2001/07/25 23:13:58 jmcnally Exp $
 */
 public class AssignIssue extends TemplateAction
 {
@@ -99,26 +99,25 @@ public class AssignIssue extends TemplateAction
     public void doAdd( RunData data, TemplateContext context ) 
         throws Exception
     {
-        String[] newUserIds = data.getParameters().getStrings(NEW_ASSIGNEES);
-        String[] removedUserIds = 
+        String[] newAssigneeIds = data.getParameters()
+            .getStrings(NEW_ASSIGNEES);
+        String[] eligibleUserIds = 
             data.getParameters().getStrings(ELIGIBLE_USERS);
 
         // check if a user who was added was in the removed
         // list.  if so, remove them from the removal list
-        nullOutDuplicates(newUserIds, removedUserIds);
+        nullOutDuplicates(newAssigneeIds, eligibleUserIds);
         
         // rebuild the action url with the new users added
-        String[] addedUserIds = 
+        String[] assigneeIds = 
             data.getParameters().getStrings(ASSIGNEES);
         ScarabLink actionLink = 
-            getActionLink(data, removedUserIds, addedUserIds);
+            getActionLink(data, eligibleUserIds, assigneeIds);
 
-        populateLink(actionLink, ASSIGNEES, addedUserIds);
-        populateLink(actionLink, ASSIGNEES, newUserIds);
-        addToParameters(data, ASSIGNEES, newUserIds);
-        populateLink(actionLink, ELIGIBLE_USERS, removedUserIds);
+        populateLink(actionLink, ASSIGNEES, newAssigneeIds);
+        addToParameters(data, ASSIGNEES, newAssigneeIds);
         data.getParameters().remove(ELIGIBLE_USERS);
-        addToParameters(data, ELIGIBLE_USERS, removedUserIds);
+        addToParameters(data, ELIGIBLE_USERS, eligibleUserIds);
         context.put("actionLink", actionLink);
 
         data.setMessage(
@@ -128,25 +127,25 @@ public class AssignIssue extends TemplateAction
     public void doRemove( RunData data, TemplateContext context ) 
         throws Exception
     {
-        String[] newUserIds = 
+        String[] newEligibleUserIds = 
             data.getParameters().getStrings(NEW_ELIGIBLE_USERS);
-        String[] addedUserIds = 
+        String[] assigneeIds = 
             data.getParameters().getStrings(ASSIGNEES);
 
         // check if a user who was removed was in the assignee
         // list.  if so, remove them from the assignee list
-        nullOutDuplicates(newUserIds, addedUserIds);
+        nullOutDuplicates(newEligibleUserIds, assigneeIds);
         
         // rebuild the action url with the new users added
         String[] eligibleUsers = 
             data.getParameters().getStrings(ELIGIBLE_USERS);
         ScarabLink actionLink = 
-            getActionLink(data, eligibleUsers, addedUserIds);
+            getActionLink(data, eligibleUsers, assigneeIds);
 
-        populateLink(actionLink, ELIGIBLE_USERS, newUserIds);
-        addToParameters(data, ELIGIBLE_USERS, newUserIds);
+        populateLink(actionLink, ELIGIBLE_USERS, newEligibleUserIds);
+        addToParameters(data, ELIGIBLE_USERS, newEligibleUserIds);
         data.getParameters().remove(ASSIGNEES);
-        addToParameters(data, ASSIGNEES, addedUserIds);
+        addToParameters(data, ASSIGNEES, assigneeIds);
         context.put("actionLink", actionLink);
 
         data.setMessage(
@@ -249,15 +248,24 @@ public class AssignIssue extends TemplateAction
                     List assignees = issue.getAssigneeAttributeValues();
                     String[] newUsernames = 
                         data.getParameters().getStrings(ASSIGNEES);
+                    int newUserLength = 0;
+                    if ( newUsernames != null ) 
+                    {
+                        newUserLength = newUsernames.length;
+                    }
+
                     // take care of users who were removed
+
+                        
+                    
                     Iterator iter = assignees.iterator();
                     while ( iter.hasNext() ) 
                     {
                         AttributeValue oldAV = (AttributeValue)iter.next();
                         boolean deleted = true;
-                        for ( int i=0; i<newUsernames.length; i++ ) 
+                        for ( int i=0; i<newUserLength; i++ ) 
                         {
-                            if ( oldAV.getValue().equals(newUsernames[i]) ) 
+                            if (oldAV.getValue().equals(newUsernames[i])) 
                             {
                                 newUsernames[i] = null;
                                 deleted = false;
@@ -267,7 +275,7 @@ public class AssignIssue extends TemplateAction
                         oldAV.setDeleted(deleted);
                     }
                     // add new values
-                    for ( int i=0; i<newUsernames.length; i++ ) 
+                    for ( int i=0; i<newUserLength; i++ ) 
                     {
                         if ( newUsernames[i] != null ) 
                         {
