@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2001 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,7 +58,7 @@
  * Author:      Henri Gomez <hgomez@slib.fr>                               *
  * Author:      Costin <costin@costin.dnt.ro>                              *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.6 $                                           *
+ * Version:     $Revision: 1.7 $                                           *
  ***************************************************************************/
 
 #include "jk_pool.h"
@@ -75,6 +75,8 @@
 #define DEF_CACHE_SZ            (1)
 #define JK_INTERNAL_ERROR       (-2)
 #define MAX_SEND_BODY_SZ        (DEF_BUFFER_SZ - 6)
+#define AJP13_HEADER_LEN	(4)
+#define AJP13_HEADER_SZ_LEN	(2)
 
 struct ajp13_operation;
 typedef struct ajp13_operation ajp13_operation_t;
@@ -196,6 +198,8 @@ static int connection_tcp_send_message(ajp13_endpoint_t *ep,
 {
     jk_b_end(msg);
     
+    jk_dump_buff(l, JK_LOG_DEBUG, "sending to ajp13", msg);
+
     if(0 > jk_tcp_socket_sendfull(ep->sd, 
                                   jk_b_get_buff(msg),
                                   jk_b_get_len(msg))) {
@@ -209,11 +213,11 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
                                       jk_msg_buf_t *msg, 
                                       jk_logger_t *l) 
 {
-    unsigned char head[4];
+    unsigned char head[AJP13_HEADER_LEN];
     int rc;
     int msglen;
 
-    rc = jk_tcp_socket_recvfull(ep->sd, head, 4);
+    rc = jk_tcp_socket_recvfull(ep->sd, head, AJP13_HEADER_LEN);
 
     if(rc < 0) {
         jk_log(l, JK_LOG_ERROR, 
@@ -246,6 +250,7 @@ static int connection_tcp_get_message(ajp13_endpoint_t *ep,
         return JK_FALSE;
     }
         
+    jk_dump_buff(l, JK_LOG_DEBUG, "received from ajp13", msg);
     return JK_TRUE;
 }
 
@@ -280,8 +285,8 @@ static int read_into_msg_buff(ajp13_endpoint_t *ep,
 
     jk_b_reset(msg);
     
-    read_buf += 4; /* leave some space for the buffer headers */
-    read_buf += 2; /* leave some space for the read length */
+    read_buf += AJP13_HEADER_LEN;    /* leave some space for the buffer headers */
+    read_buf += AJP13_HEADER_SZ_LEN; /* leave some space for the read length */
 
     if(read_fully_from_server(r, read_buf, len) < 0) {
         jk_log(l, JK_LOG_ERROR, 
@@ -564,6 +569,9 @@ static int send_request(jk_endpoint_t *e,
 						ajp13_endpoint_t *p,
 						ajp13_operation_t *op)
 {
+	/* Up to now, we can recover */
+	op->recoverable = JK_TRUE;
+
 	/*
 	 * First try to reuse open connections...
 	*/
@@ -584,7 +592,6 @@ static int send_request(jk_endpoint_t *e,
 		 * After we are connected, each error that we are going to
 		 * have is probably unrecoverable
 		 */
-		op->recoverable = JK_FALSE;
 		if(!connection_tcp_send_message(p, op->request, l)) {
 			jk_log(l, JK_LOG_ERROR, "Error sending request on a fresh connection\n");
 			return JK_FALSE;
@@ -599,21 +606,47 @@ static int send_request(jk_endpoint_t *e,
 	 * From now on an error means that we have an internal server error
 	 * or Tomcat crashed. In any case we cannot recover this.
 	 */
-	op->recoverable = JK_FALSE;
 
-	if(p->left_bytes_to_send > 0) {
-		unsigned len = p->left_bytes_to_send;
-		if(len > MAX_SEND_BODY_SZ) 
-			len = MAX_SEND_BODY_SZ;
-            	if(!read_into_msg_buff(p, s, op->reply, l, len)) 
-			return JK_FALSE;
-		s->content_read = len;
+	jk_log(l, JK_LOG_DEBUG, "send_request 2: request body to send %d - request body to resend %d\n", 
+		p->left_bytes_to_send, jk_b_get_len(op->reply) - AJP13_HEADER_LEN);
+
+	/*
+	 * POST recovery job is done here.
+	 * It's not very fine to have posted data in reply but that's the only easy
+	 * way to do that for now. Sharing the reply is really a bad solution but
+	 * it will works for POST DATA less than 8k.
+	 * We send here the first part of data which was sent previously to the
+	 * remote Tomcat
+	 */
+	if(jk_b_get_len(op->reply) > AJP13_HEADER_LEN) {
 		if(!connection_tcp_send_message(p, op->reply, l)) {
-			jk_log(l, JK_LOG_ERROR, "Error sending request body\n");
+			jk_log(l, JK_LOG_ERROR, "Error resending request body\n");
 			return JK_FALSE;
-		}  
+		}
 	}
-
+	else
+	{
+		/* We never sent any POST data and we check it we have to send at
+		 * least of block of data (max 8k). These data will be kept in reply
+		 * for resend if the remote Tomcat is down, a fact we will learn only
+		 * doing a read (not yet) 
+	 	 */
+		if(p->left_bytes_to_send > 0) {
+			unsigned len = p->left_bytes_to_send;
+			if(len > MAX_SEND_BODY_SZ) 
+				len = MAX_SEND_BODY_SZ;
+            		if(!read_into_msg_buff(p, s, op->reply, l, len)) {
+				/* the browser stop sending data, no need to recover */
+				op->recoverable = JK_FALSE;
+				return JK_FALSE;
+			}
+			s->content_read = len;
+			if(!connection_tcp_send_message(p, op->reply, l)) {
+				jk_log(l, JK_LOG_ERROR, "Error sending request body\n");
+				return JK_FALSE;
+			}  
+		}
+	}
 	return (JK_TRUE);
 }
 
@@ -726,30 +759,39 @@ static int JK_METHOD service(jk_endpoint_t *e,
 			 * if Tomcat is stopped or restarted, we will pass reqmsg
 			 * to next valid tomcat. 
 			 */
-			if (! send_request(e, s, l, p, op)) {
-				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, send_request failed in send loop %d\n", i);
-				continue;
-			}
+			if (send_request(e, s, l, p, op)) {
 
-			/* Up to there we can recover */
-			*is_recoverable_error = JK_TRUE;
-			op->recoverable = JK_TRUE;
+				/* If we have the no recoverable error, it's probably because the sender (browser)
+				 * stop sending data before the end (certainly in a big post)
+				 */
+				if (! op->recoverable) {
+					*is_recoverable_error = JK_FALSE;
+					jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, send_request failed without recovery in send loop %d\n", i);
+					return JK_FALSE;
+				}
 
-			if (get_reply(e, s, l, p, op))
-				return (JK_TRUE);
+				/* Up to there we can recover */
+				*is_recoverable_error = JK_TRUE;
+				op->recoverable = JK_TRUE;
 
-			/* if we can't get reply, check if no recover flag was set 
-			 * if is_recoverable_error is cleared, we have started received 
-			 * upload data and we must consider that operation is no more recoverable
-			 */
-			if (! op->recoverable) {
-				*is_recoverable_error = JK_FALSE;
-				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed without recovery in send loop %d\n", i);
-				return JK_FALSE;
-			}
+				if (get_reply(e, s, l, p, op))
+					return (JK_TRUE);
+
+				/* if we can't get reply, check if no recover flag was set 
+				 * if is_recoverable_error is cleared, we have started received 
+				 * upload data and we must consider that operation is no more recoverable
+				 */
+				if (! op->recoverable) {
+					*is_recoverable_error = JK_FALSE;
+					jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed without recovery in send loop %d\n", i);
+					return JK_FALSE;
+				}
 				
-			jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed in send loop %d\n", i);
-
+				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, get_reply failed in send loop %d\n", i);
+			}
+			else
+				jk_log(l, JK_LOG_ERROR, "In jk_endpoint_t::service, send_request failed in send loop %d\n", i);
+		
 			jk_close_socket(p->sd);
 			p->sd = -1;
 			reuse_connection(p, l);
