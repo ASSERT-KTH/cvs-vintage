@@ -81,7 +81,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.16 2002/01/10 07:10:12 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.17 2002/01/15 21:07:05 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -142,22 +142,22 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     }
     
     /**
-     * Gets a List of all of user Attribute objects.
+     * Gets a List of all of user objects
+     * By attribute Type : either user, or non-user.
      */
     public List getUserAttributes()
         throws Exception
     {
-        List allAttributes =  AttributePeer.getAllAttributes();
-        List userAttributes = new ArrayList();
-        for (int i = 0;i < allAttributes.size(); i++)
-        {
-            Attribute att = (Attribute)allAttributes.get(i);
-            if (att.isUserAttribute())
-            {
-                userAttributes.add(att);
-            }
-        }
-        return userAttributes;
+        return AttributePeer.getAttributes("user");
+    }
+
+    /**
+     * Gets a List of all of user Attribute objects.
+     */
+    public List getAttributes(String attributeType)
+        throws Exception
+    {
+        return AttributePeer.getAttributes(attributeType);
     }
 
     /**
