@@ -1,4 +1,4 @@
-// $Id: Project.java,v 1.115 2004/09/18 17:13:23 mvw Exp $
+// $Id: Project.java,v 1.116 2004/09/29 17:02:53 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -952,7 +952,7 @@ public class Project implements java.io.Serializable, TargetListener {
                 ExplorerEventAdaptor.getInstance().modelElementRemoved(obj);
             }
             if (obj instanceof Fig) {
-                ((Fig) obj).dispose();
+                ((Fig) obj).deleteFromModel();
                 needSave = true;
                 // for explorer deletion:
                 obj = ((Fig) obj).getOwner();

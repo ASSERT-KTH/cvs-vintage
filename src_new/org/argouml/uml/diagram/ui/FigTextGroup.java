@@ -1,4 +1,4 @@
-// $Id: FigTextGroup.java,v 1.10 2004/08/04 20:03:38 mvw Exp $
+// $Id: FigTextGroup.java,v 1.11 2004/09/29 17:02:52 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -113,25 +113,25 @@ public class FigTextGroup extends FigGroup implements MouseListener {
     }   
 
     /**
-     * @see org.tigris.gef.presentation.Fig#delete()
+     * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void delete() {
+    public void removeFromDiagram() {
         Iterator it = getFigs(null).iterator();
         while (it.hasNext()) {
-            ((Fig) it.next()).delete();
+            ((Fig) it.next()).removeFromDiagram();
         }
-        super.delete();
+        super.removeFromDiagram();
     }
 
     /**
-     * @see org.tigris.gef.presentation.Fig#dispose()
+     * @see org.tigris.gef.presentation.Fig#deleteFromModel()
      */
-    public void dispose() {
+    public void deleteFromModel() {
         Iterator it = getFigs(null).iterator();
         while (it.hasNext()) {
-            ((Fig) it.next()).dispose();
+            ((Fig) it.next()).deleteFromModel();
         }
-        super.dispose();
+        super.deleteFromModel();
     }
 
     ////////////////////////////////////////////////////////////////

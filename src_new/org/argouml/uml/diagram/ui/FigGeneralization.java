@@ -1,4 +1,4 @@
-// $Id: FigGeneralization.java,v 1.15 2004/08/12 19:50:11 mvw Exp $
+// $Id: FigGeneralization.java,v 1.16 2004/09/29 17:02:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -162,7 +162,7 @@ public class FigGeneralization extends FigEdgeModelElement {
 	    // happen that there is a generalization without a child
 	    // or parent.
 	    if (subType == null || superType == null) {
-		delete();
+	        removeFromDiagram();
 		return;
 	    }
 	    FigNode subTypeFN = (FigNode) getLayer().presentationFor(subType);

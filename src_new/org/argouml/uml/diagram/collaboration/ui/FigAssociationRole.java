@@ -1,4 +1,4 @@
-// $Id: FigAssociationRole.java,v 1.20 2004/07/26 22:43:06 mvw Exp $
+// $Id: FigAssociationRole.java,v 1.21 2004/09/29 17:02:52 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,11 +102,11 @@ public class FigAssociationRole extends FigAssociation {
     }
 
     /**
-     * @see org.tigris.gef.presentation.Fig#delete()
+     * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */
-    public void delete() {
-        super.delete();
-        messages.delete();
+    public void removeFromDiagram() {
+        super.removeFromDiagram();
+        messages.removeFromDiagram();
     }
 
 } /* end class FigAssociationRole */
@@ -203,36 +203,36 @@ class FigMessageGroup extends FigGroup {
 
 
     /**
-     * @see org.tigris.gef.presentation.Fig#delete()
+     * @see org.tigris.gef.presentation.Fig#removeFromDiagram()
      */ 
-    public void delete() { 
+    public void removeFromDiagram() { 
         Collection figs = getFigs(null);
         if (figs != null) {
             Iterator it = figs.iterator();
             while (it.hasNext()) {
                 Fig fig = (Fig) it.next();
-                fig.delete();
+                fig.removeFromDiagram();
             }
         } 
         removeAll();
-        super.delete();
+        super.removeFromDiagram();
     }
 
 
     /**
-     * @see org.tigris.gef.presentation.Fig#dispose()
+     * @see org.tigris.gef.presentation.Fig#deleteFromModel()
      */
-    public void dispose() {
+    public void deleteFromModel() {
     	Collection figs = getFigs(null);
         if (figs != null) {
 	    Iterator it = figs.iterator();
 	    while (it.hasNext()) {
 		Fig fig = (Fig) it.next();
-		fig.dispose();
+		fig.deleteFromModel();
 	    }
         }
         removeAll();
-        super.dispose();
+        super.deleteFromModel();
     }
 
 }
