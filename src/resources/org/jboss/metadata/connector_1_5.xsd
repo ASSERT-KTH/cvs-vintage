@@ -8,14 +8,14 @@
 	    version="1.5">
   <xsd:annotation>
     <xsd:documentation>
-      @(#)connector_1_5.xsds	1.26 03/21/03
+      @(#)connector_1_5.xsds	1.27 06/17/03
     </xsd:documentation>
   </xsd:annotation>
 
   <xsd:annotation>
     <xsd:documentation>
 
-      Copyright 2002 Sun Microsystems, Inc., 901 San Antonio
+      Copyright 2003 Sun Microsystems, Inc., 901 San Antonio
       Road, Palo Alto, California 94303, U.S.A. All rights
       reserved.
 
@@ -594,7 +594,7 @@
 	<xsd:annotation>
 	  <xsd:documentation>
 
-	    The element version specifies a string-based version
+	    The element resourceadapter-version specifies a string-based version
 	    of the resource adapter from the resource adapter
 	    provider.
 
