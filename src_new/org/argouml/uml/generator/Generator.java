@@ -1,4 +1,4 @@
-// $Id: Generator.java,v 1.32 2003/12/10 12:21:32 mkl Exp $
+// $Id: Generator.java,v 1.33 2004/02/01 13:42:19 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ import ru.novosoft.uml.model_management.MPackage;
  * the UML model that generates strings as it goes.  This framework
  * should probably be redesigned to separate the traversal logic from
  * the generation logic.  See the <a href=
- * "http://hillside.net/patterns/patterns.html">Vistor design
+ * "http://hillside.net/patterns/">Vistor design
  * pattern</a> in "Design Patterns", and the <a href=
  * "http://www.ccs.neu.edu/research/demeter/"> Demeter project</a>. 
  */

@@ -1,4 +1,4 @@
-// $Id: CheckItem.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
+// $Id: CheckItem.java,v 1.4 2004/02/01 13:42:11 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CheckItem.java
 // Classes: CheckItem
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckItem.java,v 1.3 2003/08/30 20:09:52 alexb Exp $
+// $Id: CheckItem.java,v 1.4 2004/02/01 13:42:11 mvw Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -68,7 +68,7 @@ public class CheckItem implements Serializable {
     protected String _description;
 
     /** URL for background (textbook?) knowledge about the domain. */
-    protected String _moreInfoURL = "http://www.ics.uci.edu/pub/arch/argo/";
+    protected String _moreInfoURL = "http://argouml.tigris.org/";
 
     protected Predicate _pred = PredicateTrue.theInstance();
 
