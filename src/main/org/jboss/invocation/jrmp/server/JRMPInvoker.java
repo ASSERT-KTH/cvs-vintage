@@ -52,7 +52,7 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  */
 public class JRMPInvoker
    extends RemoteServer
@@ -303,15 +303,6 @@ public class JRMPInvoker
       // Export CI
       exportCI();
 
-      // Bind the invoker in the JNDI invoker naming space
-      rebind(
-         // The context
-         ctx,
-         // It should look like so "invokers/<name>/jrmp"
-         "invokers/" + InetAddress.getLocalHost().getHostName() + "/jrmp",
-         // The bare invoker
-         delegateInvoker);
-
       log.debug("Bound JRMP invoker for JMX node");
 
       ctx.close();
@@ -324,7 +315,6 @@ public class JRMPInvoker
       try
       {
          unexportCI();
-         ctx.unbind("invokers/"+InetAddress.getLocalHost().getHostName()+"/jrmp");
       }
       finally
       {
