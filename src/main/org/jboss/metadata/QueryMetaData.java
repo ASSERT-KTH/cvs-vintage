@@ -17,7 +17,7 @@ import org.jboss.deployment.DeploymentException;
  * Contains information about ejb-ql queries.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class QueryMetaData extends MetaData {
    public final static String REMOTE = "Remote";
@@ -95,7 +95,12 @@ public class QueryMetaData extends MetaData {
       Iterator iterator = 
             getChildrenByTagName(methodParamsElement, "method-param");        
       while (iterator.hasNext()) {
-         methodParams.add(getElementContent((Element)iterator.next()));
+         final String param = getElementContent((Element)iterator.next());
+         if(param == null || param.trim().length() == 0)
+         {
+            throw new DeploymentException("method-param tag has no value for method: " + methodName);
+         }
+         methodParams.add(param);
       }
 
       // result type mapping
