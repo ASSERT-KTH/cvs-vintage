@@ -103,12 +103,15 @@
 <subsection name="Eclipse Setup Directions">
 <p>
 	By default, Scarab is setup to use Eclipse as it's IDE.  To setup Scarab in Eclipse first run
-	the eclipse plugin to genrate the required files.
+	the eclipse plugin to generate the required files.
 	<source>
 	maven eclipse
 	</source>
 	Then you can open Eclipse and just import the Scarab directory.  The .classpath and .project files
-	will be created for you so you are already.  Do a build in Eclipse to ensure everything compiles.
+	will be created for you so you are ready.  After the import you will need to do an Ant build to
+	generate the Torque objects, to do this look at the section above labeled "Generating Torque Objects"
+	(in the future Maven will be set-up to do this step, but for now you must use Ant).  Do a build in
+	Eclipse to ensure everything compiles.
 </p>		
 <p>	
 	You will then need to download	and install the 

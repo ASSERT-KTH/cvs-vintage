@@ -82,6 +82,11 @@
       <id>vprus</id>
       <email>ghost@cs.msu.su</email>
     </contributor>    
+    <contributor>
+      <name>Richard Dean</name>
+      <id>rdean</id>
+      <email>rdean@rapsg.com</email>
+    </contributor>    
   </contributors>
 
   <dependencies>
