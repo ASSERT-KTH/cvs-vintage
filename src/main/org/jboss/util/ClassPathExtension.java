@@ -12,39 +12,57 @@ import java.net.*;
 import javax.management.*;
 import javax.management.loading.MLet;
 
-import org.jboss.logging.Log;
+import org.jboss.logging.Logger;
+import org.jboss.util.ServiceMBeanSupport;
 
 /**
- *   <description> 
+ *   Add URL's to the MLet classloader
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.4 $
+ *   @version $Revision: 1.5 $
  */
 public class ClassPathExtension
-   implements ClassPathExtensionMBean, MBeanRegistration
+   extends ServiceMBeanSupport
+   implements ClassPathExtensionMBean
 {
    // Constants -----------------------------------------------------
    public static final String OBJECT_NAME = ":service=ClassPathExtension";
     
    // Attributes ----------------------------------------------------
    String url;
-   
-   Log log = new Log("Classpath");
+   String name;
    
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
    public ClassPathExtension(String url)
    {
+      this(url, url);
+   }
+   
+   public ClassPathExtension(String url, String name)
+   {
+      this.name = name;
       this.url = url;
    }
    
    // Public --------------------------------------------------------
-   public ObjectName preRegister(MBeanServer server, ObjectName name)
+   public ObjectName getObjectName(MBeanServer server, ObjectName ojbName)
+      throws javax.management.MalformedObjectNameException
+   {
+      return ojbName == null ? new ObjectName(OBJECT_NAME+",name="+this.name) : ojbName;
+   }
+   
+   public String getName()
+   {
+      return "Classpath extension";
+   }
+   
+   public void initService()
       throws java.lang.Exception
    {
-      MLet mlet = (MLet)getClass().getClassLoader();
+      MLet mlet = (MLet)Thread.currentThread().getContextClassLoader();
       
       if (url.endsWith("/"))
       {
@@ -68,7 +86,7 @@ public class ClassPathExtension
                if (files[i].endsWith(".jar") || files[i].endsWith(".zip"))
                {
                   URL file = new File(dir, files[i]).getCanonicalFile().toURL();
-                  log.debug("Added library:"+file);
+                  Logger.debug("Added library:"+file);
                   mlet.addURL(file);
                   
                   found++;
@@ -82,11 +100,11 @@ public class ClassPathExtension
                {
                   URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
                   mlet.addURL(u);
-                  log.debug("Added directory:"+u);
+                  Logger.debug("Added directory:"+u);
                } catch (MalformedURLException e)
                {
                   mlet.addURL(new File(url).toURL());
-                  log.debug("Added directory:"+url);
+                  Logger.debug("Added directory:"+url);
                }
             }
          } catch (Throwable ex)
@@ -99,28 +117,13 @@ public class ClassPathExtension
          {
             URL u = new URL(getClass().getProtectionDomain().getCodeSource().getLocation(),url);
             mlet.addURL(u);
-            log.debug("Added library:"+u);
+            Logger.debug("Added library:"+u);
          } catch (MalformedURLException e)
          {
             mlet.addURL(new File(url).toURL());
-            log.debug("Added library:"+url);
+            Logger.debug("Added library:"+url);
          }
       }
-      
-      return new ObjectName(OBJECT_NAME+",url="+url);
-   }
-   
-   public void postRegister(java.lang.Boolean registrationDone)
-   {
-   }
-   
-   public void preDeregister()
-      throws java.lang.Exception
-   {
-   }
-   
-   public void postDeregister()
-   {
    }
    // Protected -----------------------------------------------------
 }
