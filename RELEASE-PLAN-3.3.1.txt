@@ -24,13 +24,11 @@ Tomcat 3.3.1 Beta 1 Release:
         1      Must be able to compile and run under JDK 1.1.8
                FIXED
         2      Address Cactus failures running with Tomcat 3.3
-               Tried but not 100% successful yet.
+               Diagnosed as Cactus leaving unread POST data.
+               A configurable delay is available to help ensure
+               Tomcat is able to flush this unread data if necessary.
 
 
-        Bugs to investigate & fix or resolve/leave as LATER:
-        6234   checkError method of Servlet's PrintWriter is unreliable
-
- 
         Addressed
         1657  hyphen character '-' in tag name results in "Invalid expression"
               (port fix from Tomcat 4.x Jasper)
@@ -74,6 +72,9 @@ Tomcat 3.3.1 Beta 1 Release:
               Resolved as FIXED
 
         6004  Cannot configure keystoreType
+              Resolved as FIXED
+
+        6234  checkError method of Servlet's PrintWriter is unreliable
               Resolved as FIXED
 
 
