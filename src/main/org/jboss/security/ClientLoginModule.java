@@ -85,6 +85,8 @@ public class ClientLoginModule implements LoginModule {
     }
 
     public boolean logout() throws LoginException {
+        SecurityAssociation.setPrincipal(null);
+        SecurityAssociation.setCredential(null);
         return true;
     }
 }
