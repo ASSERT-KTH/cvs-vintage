@@ -42,7 +42,7 @@ public class ExternalEditor {
 	public boolean startExternalEditor(AbstractEditorController EditCtrl) {
 		/*
 		 * *20030906, karlpeder* Method signature changed to take
-		 * an AbstractEditorController (instead of an EditorView) as 
+		 * an AbstractEditorController (instead of an TextEditorView) as 
 		 * parameter since the view is no longer directly available
 		 */
 		MimeHeader myHeader = new MimeHeader("text", "plain");

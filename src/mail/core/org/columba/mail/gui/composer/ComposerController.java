@@ -35,6 +35,8 @@ import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.MailConfig;
+import org.columba.mail.gui.composer.html.HtmlEditorController;
+import org.columba.mail.gui.composer.text.*;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
 import org.columba.mail.util.AddressCollector;
 
@@ -52,7 +54,7 @@ public class ComposerController
 	private SubjectController subjectController;
 	private PriorityController priorityController;
 	private AccountController accountController;
-	//private EditorController editorController;
+	//private TextEditorController editorController;
 	private AbstractEditorController editorController;
 	private HeaderController headerController;
 	//private MessageComposer messageComposer;
@@ -257,14 +259,12 @@ public class ComposerController
 	}
 
 	/**
-	 * @return EditorController
+	 * @return TextEditorController
 	 */
 	public AbstractEditorController getEditorController() {
 		/*
 		 * *20030906, karlpeder* Method signature changed to 
-		 * return an AbstractEditorController instead of 
-		 * EditorController. Different controllers will be 
-		 * used when composing plain text and html respectively
+		 * return an AbstractEditorController
 		 */
 		return editorController;
 	}
@@ -301,19 +301,25 @@ public class ComposerController
 	 * @see org.columba.core.gui.FrameController#init()
 	 */
 	protected void init() {
+		// init model (defaults to empty plain text message)
+		composerModel = new ComposerModel();
+		
+		// init controllers for different parts of the composer
 		identityInfoPanel = new IdentityInfoPanel();
 		attachmentController = new AttachmentController(this);
 		headerController = new HeaderController(this);
 		subjectController = new SubjectController(this);
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
-		
-		// TODO: Add for handling of different editor controllers
-		//       when such have been implemented for plain text and html
-		//       respectively.
-		
-		editorController = new EditorController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
+
+		// init controller for the editor depending on message type
+		if (getModel().isHtml())
+			editorController = new HtmlEditorController(this);		
+		else
+			editorController = new TextEditorController(this);
+		
+		// init charset handling
 		XmlElement optionsElement =
 			MailConfig.get("composer_options").getElement("/options");
 		XmlElement charsetElement = optionsElement.getElement("charset");
@@ -325,6 +331,7 @@ public class ComposerController
 		}
 		setCharsetManager(new CharsetManager(charsetElement));
 		getCharsetManager().addCharsetListener(this);
+		
 		// Hack to ensure charset is set correctly at start-up
 		String charset = charsetElement.getAttribute("name");
 		if (charset != null) {
@@ -335,19 +342,41 @@ public class ComposerController
 	}
 
 	/**
-	 * @return
+	 * Returns the composer model
+	 * @return	Composer model
 	 */
 	public ComposerModel getModel() {
-		if (composerModel == null)
-			composerModel = new ComposerModel();
+		//if (composerModel == null) // *20030907, karlpeder* initialized in init
+		//	composerModel = new ComposerModel();
 		return composerModel;
 	}
 
 	/**
-	 * @param model
+	 * Sets the composer model. If the message type of the new 
+	 * model (html / text) is different from the message type of
+	 * the existing, the editor controller is changed and the 
+	 * view is changed accordingly.
+	 * <br>
+	 * Finally the components are updated according to the new model.
+	 * 
+	 * @param 	model	New composer model
 	 */
 	public void setComposerModel(ComposerModel model) {
+		boolean wasHtml = composerModel.isHtml();
 		composerModel = model;
+		
+		if (wasHtml != composerModel.isHtml()) {
+			// new editor controller needed
+			if (composerModel.isHtml())
+				editorController = new HtmlEditorController(this);
+			else
+				editorController = new TextEditorController(this);
+		
+			// an update of the view is also necessary.
+			((ComposerView) getView()).setNewEditorView();
+		}
+		
+		// Update all component according to the new model
 		updateComponents(true);
 	}
 

@@ -49,30 +49,74 @@ public class ComposerModel {
 
 	boolean signMessage;
 	boolean encryptMessage;
+	
+	/** Is the model holding a html message (true) or plain text (false) */
+	private boolean isHtmlMessage;
 
+	/**
+	 * Create a new model with an empty plain text message (default behaviour)
+	 */
 	public ComposerModel() {
+		this(null, false);		// default ~ plain text
+		/*
 		message = new Message();
-
 		toList = new Vector();
 		ccList = new Vector();
 		bccList = new Vector();
-
 		attachments = new Vector();
-
 		charsetName = "auto";
+		*/
 	}
 
+	/**
+	 * Creates a new model with a plain text message
+	 * @param message	Initial message to hold in the model
+	 */
 	public ComposerModel(Message message) {
+		this(message, false);	// default ~ plain text
+		/*
 		this.message = message;
-
 		toList = new Vector();
 		ccList = new Vector();
 		bccList = new Vector();
-
 		attachments = new Vector();
+		charsetName = "auto";
+		*/
+	}
 
+	/**
+	 * Creates a new model with an empty message
+	 * 
+	 * @param html	True for a html message, false for plain text
+	 */
+	public ComposerModel(boolean html) {
+		this(null, html);
+	}
+	
+	/**
+	 * Creates a new model
+	 * 
+	 * @param message	Initial message to hold in the model
+	 * @param html		True for a html message, false for plain text
+	 */
+	public ComposerModel(Message message, boolean html) {
+		// set message
+		if (message == null)
+			this.message = new Message();
+		else
+			this.message = message;
+
+		// set whether the model should handle html or plain text
+		isHtmlMessage = html;
+
+		// more initialization		
+		toList = new Vector();
+		ccList = new Vector();
+		bccList = new Vector();
+		attachments = new Vector();
 		charsetName = "auto";
 	}
+	
 
 	public void setTo(String s) {
 
@@ -277,6 +321,24 @@ public class ComposerModel {
 	public void setPriority(String s) {
 		message.getHeader().set("X-Priority", s);
 	}
+
+	/**
+	 * Returns whether this model holds a html message or plain text
+	 * @return	True for html, false for plain text
+	 */
+	public boolean isHtml() {
+		return isHtmlMessage;
+	}
+	
+	/**
+	 * Sets whether the message hold by the model should be treated as
+	 * html or plain text
+	 * @param	html	True for html, false for plain text
+	 */
+	public void setHtml(boolean html) {
+		isHtmlMessage = html;
+	}
+
 
 	/*
 	public AbstractFrameController createInstance(String id) {

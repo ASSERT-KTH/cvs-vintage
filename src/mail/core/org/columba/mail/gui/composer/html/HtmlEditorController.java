@@ -1,0 +1,365 @@
+//The contents of this file are subject to the Mozilla Public License Version 1.1
+//(the "License"); you may not use this file except in compliance with the 
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//
+//All Rights Reserved.
+
+package org.columba.mail.gui.composer.html;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.html.HTML;
+
+import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.composer.ComposerController;
+
+/**
+ * Controller part of controller-view frame work for composing html messages
+ * 
+ * @author Karl Peder Olesen
+ *
+ */
+public class HtmlEditorController extends AbstractEditorController
+		implements DocumentListener, CaretListener {
+
+	/** Main view (WYSIWYG) */
+	protected HtmlEditorView view;
+
+	/**
+	 * Default constructor.
+	 */
+	public HtmlEditorController(ComposerController controller) {
+		super(controller);
+		
+		// create view (by passing null as document, the view creates it)
+		view = new HtmlEditorView(this, null);
+		
+		MainInterface.focusManager.registerComponent(this);
+		view.addCaretListener(this);
+
+	}
+
+	/**
+	 * Installs this controller as DocumentListener on the view
+	 */
+	public void installListener() {
+		view.installListener(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#updateComponents(boolean)
+	 */
+	public void updateComponents(boolean b) {
+		if (b) {
+			if (this.getController().getModel().getBodyText() != null)
+				view.setText(controller.getModel().getBodyText());
+		} else {
+			if (view.getText() != null)
+				this.getController().getModel().setBodyText(view.getText());
+		}
+	}
+
+
+	/*************** Methods for setting html specific formatting *************/
+	
+	/**
+	 * Toggle bold font in the view on/off
+	 */
+	public void toggleBold() {
+		view.toggleBold();
+	}
+	
+	/**
+	 * Toggle italic font in the view on/off
+	 */
+	public void toggleItalic() {
+		view.toggleItalic();
+	}
+
+	/**
+	 * Toggle underline font in the view on/off
+	 */
+	public void toggleUnderline() {
+		view.toggleUnderline();
+	}
+	
+	
+	/**
+	 * Sets format of selected text to normal paragraph (p tag) 
+	 */
+	public void setFormatNormal() {
+		view.setFormatOfSelectedText(HTML.Tag.P);
+	}
+	
+	/**
+	 * Sets format of selected text to a heading
+	 *  
+	 * @param	level	Legal value are 1, 2 and 3 corresponding to h1, h2
+	 * 					and h3 headings respectively (this is the headings
+	 * 					supported by the view)
+	 */
+	public void setFormatHeading(int level) {
+		switch (level) {
+			case 1:
+				view.setFormatOfSelectedText(HTML.Tag.H1);
+				break;
+			case 2:
+				view.setFormatOfSelectedText(HTML.Tag.H2);
+				break;
+			case 3:
+				view.setFormatOfSelectedText(HTML.Tag.H3);
+				break;
+			default:
+				// unsupported
+				ColumbaLogger.log.error("Heading level " + level +
+						" not supported");
+				break;
+		}
+	}
+	
+	/** 
+	 * Method for inserting a break (BR) element
+	 */
+	public void insertBreak() {
+		view.insertBreak();
+	}
+
+	/****************** FocusOwner implementation *****************************/
+
+	// the following lines add cut/copy/paste/undo/redo/selectall
+	// actions support using the Columba action objects.
+	// 
+	// This means that we only have a single instance of these
+	// specific actions, which is shared by all menuitems and
+	// toolbar buttons.
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isCutActionEnabled()
+	 */
+	public boolean isCutActionEnabled() {
+		if (view.getSelectedText() == null)
+			return false;
+		if (view.getSelectedText().length() > 0)
+			return true;
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isCopyActionEnabled()
+	 */
+	public boolean isCopyActionEnabled() {
+		if (view.getSelectedText() == null)
+			return false;
+		if (view.getSelectedText().length() > 0)
+			return true;
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isPasteActionEnabled()
+	 */
+	public boolean isPasteActionEnabled() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isDeleteActionEnabled()
+	 */
+	public boolean isDeleteActionEnabled() {
+		if (view.getSelectedText() == null)
+			return false;
+		if (view.getSelectedText().length() > 0)
+			return true;
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isSelectAllActionEnabled()
+	 */
+	public boolean isSelectAllActionEnabled() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isRedoActionEnabled()
+	 */
+	public boolean isRedoActionEnabled() {
+		// TODO: Implementation of undo/redo missing
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#isUndoActionEnabled()
+	 */
+	public boolean isUndoActionEnabled() {
+		// TODO: Implementation of undo/redo missing
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#cut()
+	 */
+	public void cut() {
+		view.cut();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#copy()
+	 */
+	public void copy() {
+		view.copy();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#paste()
+	 */
+	public void paste() {
+		view.paste();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#delete()
+	 */
+	public void delete() {
+		view.replaceSelection("");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#redo()
+	 */
+	public void redo() {
+		// TODO: Implementation of undo/redo missing
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#undo()
+	 */
+	public void undo() {
+		// TODO: Implementation of undo/redo missing
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#selectAll()
+	 */
+	public void selectAll() {
+		view.selectAll();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.focus.FocusOwner#getComponent()
+	 */
+	public JComponent getComponent() {
+		return view;
+	}
+
+
+	/***************** Methods necessary to hide view from clients ************/
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewFont()
+	 */
+	public Font getViewFont() {
+		return view.getFont();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewFont(java.awt.Font)
+	 */
+	public void setViewFont(Font f) {
+		view.setFont(f);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewText()
+	 */
+	public String getViewText() {
+		return view.getText();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewText(java.lang.String)
+	 */
+	public void setViewText(String text) {
+		view.setText(text);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewUIComponent()
+	 */
+	public JComponent getViewUIComponent() {
+		// Returns the view encapsulated in a scroll pane. This means
+		// that the caller shouldn't add the scroll pane him self
+		return new JScrollPane(view);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewCharset(java.lang.String)
+	 */
+	public void setViewCharset(String charset) {
+		view.setCharset(charset);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewEnabled(boolean)
+	 */
+	public void setViewEnabled(boolean enabled) {
+		view.setEnabled(enabled);
+	}
+
+
+	/***************** DocumentListener Implementation ************************/
+
+	/* (non-Javadoc)
+	 * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void changedUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+	}
+	/* (non-Javadoc)
+	 * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void insertUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+	}
+	/* (non-Javadoc)
+	 * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
+	 */
+	public void removeUpdate(DocumentEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+
+	/******************* CaretListener Implementation *************************/
+
+	/**
+	 * Used to update actions (cut, copy, etc.) via the focusManager. This is 
+	 * done since charet updates may have coursed text selections etc. to
+	 * change, which in turn should enable/disable cut, copy, etc. actions.
+	 * 
+	 * @see javax.swing.event.CaretListener#caretUpdate(javax.swing.event.CaretEvent)
+	 */
+	public void caretUpdate(CaretEvent e) {
+		MainInterface.focusManager.updateActions();
+	}
+
+}

@@ -14,18 +14,20 @@
 //
 //All Rights Reserved.
 
-package org.columba.mail.gui.composer;
+package org.columba.mail.gui.composer.text;
 
 import java.awt.Font;
 
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.columba.core.gui.focus.FocusOwner;
 import org.columba.core.main.MainInterface;
+import org.columba.mail.gui.composer.AbstractEditorController;
+import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.util.UndoDocument;
 
 /**
@@ -34,7 +36,7 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * @author frd, Karl Peder Olesen (karlpeder)
  *
  */
-public class EditorController extends AbstractEditorController
+public class TextEditorController extends AbstractEditorController
 	implements DocumentListener, CaretListener {
 	
 	/*
@@ -43,21 +45,20 @@ public class EditorController extends AbstractEditorController
 	 * html composing.
 	 */
 	
-	//EditorView view;
 	//ComposerController controller;
 
 	/** The editor view, i.e. the component used for editing text */
-	private EditorView view;
+	private TextEditorView view;
 	/** Document used in the editor view */
 	private UndoDocument document;
 
-	public EditorController(ComposerController controller) {
+	public TextEditorController(ComposerController controller) {
 		super(controller);
 		//this.controller = controller;
 
 		document = new UndoDocument();
 
-		view = new EditorView(this, document);
+		view = new TextEditorView(this, document);
 
 		MainInterface.focusManager.registerComponent(this);
 
@@ -66,7 +67,7 @@ public class EditorController extends AbstractEditorController
 
 	/* *20030906, karlpeder* Removed, use misc. setView* / getView* 
 	 *                       methods instead
-	public EditorView getView() {
+	public TextEditorView getView() {
 		return view;
 	}
 	*/
@@ -131,8 +132,8 @@ public class EditorController extends AbstractEditorController
 	 * @see org.columba.core.gui.focus.FocusOwner#delete()
 	 */
 	public void delete() {
-		view.cut();
-
+		//view.cut(); // This would place text on clipboard
+		view.replaceSelection("");
 	}
 
 	/* (non-Javadoc)
@@ -239,6 +240,15 @@ public class EditorController extends AbstractEditorController
 
 
     /********************** Methods necessary to hide view from clients *******/
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewUIComponent()
+	 */
+	public JComponent getViewUIComponent() {
+		// Returns the view encapsulated in a scroll pane. This means
+		// that the caller shouldn't add the scroll pane him self
+		return new JScrollPane(view);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewFont()

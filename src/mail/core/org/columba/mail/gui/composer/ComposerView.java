@@ -46,6 +46,9 @@ public class ComposerView extends AbstractFrameView {
 	public static final String ACCOUNTINFOPANEL = "accountinfopanel";
 
 	private JSplitPane rightSplitPane;
+	
+	/** Editor viewer resides in this panel */
+	private JPanel editorPanel;
 
 	public ComposerView(AbstractFrameController ctrl) {
 		super(ctrl);
@@ -131,20 +134,17 @@ public class ComposerView extends AbstractFrameView {
 		gridbag.setConstraints(controller.getSubjectController().view, c);
 		topPanel.add(controller.getSubjectController().view);
 
-		JPanel editorPanel = new JPanel();
+		editorPanel = new JPanel();
 		editorPanel.setBorder(null);
 		editorPanel.setLayout(new BorderLayout());
 		
-		// TODO: Add for handling of different editor views
-		//       when such have been implemented for plain text and html
-		//       respectively.
-		
+		// *20030907, karlpeder* getViewUIComponent returns view
+		//            already encapsulated in a scroll pane.
 		//JScrollPane scrollPane =
 		//	new JScrollPane(controller.getEditorController().view);
-		JScrollPane scrollPane =
-			new JScrollPane(controller.getEditorController().getComponent());
-		
-		editorPanel.add(scrollPane, BorderLayout.CENTER);
+		//editorPanel.add(scrollPane, BorderLayout.CENTER);
+		editorPanel.add(
+				controller.getEditorController().getViewUIComponent());
 
 		JPanel centerPanel = new JPanel();
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -164,6 +164,23 @@ public class ComposerView extends AbstractFrameView {
 		pack();
 	}
 
+	/**
+	 * Used to update the panel, that holds the editor viewer. This is 
+	 * necessary e.g. if the ComposerModel is changed to hold another 
+	 * message type (text / html), which the previous editor can not
+	 * handle. If so a new editor controller is created, and thereby
+	 * a new view.
+	 */
+	public void setNewEditorView() {
+		// get reference to composer controller
+		ComposerController controller = (ComposerController) frameController;
+		// update panel
+		editorPanel.removeAll();
+		editorPanel.add(
+				controller.getEditorController().getViewUIComponent());
+		editorPanel.validate();		
+	}
+	
 	public void setRightDividerLocation(int i) {
 		rightSplitPane.setDividerLocation(i);
 	}

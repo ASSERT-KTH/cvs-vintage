@@ -25,6 +25,7 @@ import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.mail.gui.composer.ComposerController;
+import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.util.MailResourceLoader;
 
 public class NewMessageAction extends FrameAction {
@@ -57,6 +58,12 @@ public class NewMessageAction extends FrameAction {
 	public void actionPerformed(ActionEvent evt) {
 		//((MailFrameModel)MainInterface.frameModel).getComposerModel().openView();
 		new ComposerController();
+		
+		// TEST TEST TEST *20030907, karlpeder*
+		//ComposerController ctrl = new ComposerController();
+		//ComposerModel model = new ComposerModel(true);
+		//ctrl.setComposerModel(model);
+		
 		
 		/*
 		ComposerController controller = new ComposerController();

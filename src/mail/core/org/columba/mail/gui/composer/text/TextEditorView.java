@@ -14,7 +14,7 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-package org.columba.mail.gui.composer;
+package org.columba.mail.gui.composer.text;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,12 +33,12 @@ import org.columba.mail.gui.composer.util.UndoDocument;
  * To enable and disable the creation of type comments go to
  * Window>Preferences>Java>Code Generation.
  */
-public class EditorView extends JTextPane  {
+public class TextEditorView extends JTextPane  {
 
-	private EditorController controller;
+	private TextEditorController controller;
 	private UndoDocument message;
 
-	public EditorView(EditorController controller, UndoDocument m) {
+	public TextEditorView(TextEditorController controller, UndoDocument m) {
 		super();
 		
 		this.controller = controller;
@@ -55,7 +55,7 @@ public class EditorView extends JTextPane  {
 		setPreferredSize(new Dimension(300, 200));
 	}
 	
-	public void installListener( EditorController controller )
+	public void installListener( TextEditorController controller )
 	{
 		message.addDocumentListener(controller);
 	}

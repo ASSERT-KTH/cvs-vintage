@@ -24,7 +24,7 @@ import org.columba.core.gui.focus.FocusOwner;
 
 /**
  * This class serves as a common super class for the Editor
- * Controllers used in Composer: EditorController and
+ * Controllers used in Composer: TextEditorController and
  * HtmlEditorController. As such, it defines the common
  * interface needed by mainly the ComposerController.
  * 
@@ -62,6 +62,14 @@ public abstract class AbstractEditorController implements FocusOwner {
 
 	// ********** Methods necessary to hide view from clients ********
 
+	/** 
+	 * Returns the GUI component which should be added to the parent,
+	 * i.e. to the Composer frame.
+	 * 
+	 * @return	GUI component to be added to parent frame
+	 */
+	public abstract JComponent getViewUIComponent();
+	
 	/**
 	 * Enables or disables the editor view.
 	 * 
