@@ -4,6 +4,6 @@
 
   <depends>JBOSS-SYSTEM:service=Naming</depends>
 
-  <mbean code="org.jboss.jmx.connector.rmi.RMIConnectorService" 
+  <mbean code="org.jboss.jmx.adaptor.rmi.RMIAdaptorService" 
 	 name="JMX:name=Connector,type=RMI"/>
 </server>
