@@ -24,7 +24,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.17 2002/11/03 19:39:09 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.18 2002/12/06 10:54:51 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -123,21 +123,9 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     }
 
 
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return (baseClass.equals("ClassifierRole") ||
-                baseClass.equals("Namespace") ||
-                baseClass.equals("GeneralizableElement") ||
-                baseClass.equals("Classifier"));
-    }
     
-    /**
-     * @see org.argouml.model.uml.behavioralelements.collaborations.CollaborationsHelper#getAllClassifierRoles()
-     */
-	protected Vector getGeneralizationChoices() {
-		Vector choices = new Vector();
-		choices.addAll(CollaborationsHelper.getHelper().getAllClassifierRoles());
-		return choices;
-	}
+    
+    
 	
 	public MClassifier getBase() {
 		if (getTarget() != null) {

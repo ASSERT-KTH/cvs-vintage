@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.19 2002/10/10 21:34:30 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.20 2002/12/06 10:54:51 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -311,36 +311,9 @@ public class PropPanelUseCase extends PropPanelClassifier {
     }
 
 
-    /**
-     * <p>A predicate to test if a given base class (below ModelElement) is
-     *   appropriate to us.</p>
-     *
-     * <p>For us this means UseCase, Classifier, Namespace or
-     *   GeneralizableElement.</p>
-     *
-     * @param baseClass  a string with the name of a UML MetaClass (no leading
-     *                   M)
-     *
-     * @return           <code>true</code> if this is a suitable base class for
-     *                   us. <code>false</code> otherwise.
-     */
-
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-
-        return baseClass.equals("UseCase") ||
-            baseClass.equals("Classifier") ||
-            baseClass.equals("GeneralizableElement") ||
-            baseClass.equals("Namespace");
-    }
     
-    /**
-     * @see org.argouml.model.uml.behavioralelements.usecases.UseCasesHelper#getAllUseCases()
-     */
-	protected Vector getGeneralizationChoices() {
-		Vector choices = new Vector();
-		choices.addAll(UseCasesHelper.getHelper().getAllUseCases());
-		return choices;
-	}
+    
+   
 
 
 } /* end class PropPanelUseCase */

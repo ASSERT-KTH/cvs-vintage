@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.49 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigClass.java,v 1.50 2002/12/06 10:54:51 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -1198,8 +1198,10 @@ public class FigClass extends FigNodeModelElement {
      * @see org.argouml.uml.diagram.ui.FigNodeModelElement#renderingChanged()
      */
     public void renderingChanged() {
-        updateAttributes();
-        updateOperations();
+        if (getOwner() != null) {
+            updateAttributes();
+            updateOperations();
+        }
         super.renderingChanged();
     }
 

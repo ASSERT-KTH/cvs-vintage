@@ -23,7 +23,7 @@
 
 // File: FigSeqObject.java
 // Original Author: agauthie@ics.uci.edu
-// $Id: FigSeqObject.java,v 1.7 2002/12/05 21:47:18 kataka Exp $
+// $Id: FigSeqObject.java,v 1.8 2002/12/06 10:54:51 kataka Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -54,6 +54,7 @@ import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.presentation.FigActivation;
 import org.tigris.gef.presentation.FigDynPort;
 import org.tigris.gef.presentation.FigLine;
+import org.tigris.gef.presentation.FigNode;
 import org.tigris.gef.presentation.FigRect;
 import org.tigris.gef.presentation.FigText;
 import ru.novosoft.uml.MElementEvent;

@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.14 2002/10/10 21:34:30 kataka Exp $
+// $Id: PropPanelNode.java,v 1.15 2002/12/06 10:54:51 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -106,23 +106,9 @@ public class PropPanelNode extends PropPanelClassifier {
         }
     }
 
-    protected boolean isAcceptibleBaseMetaClass(String baseClass) {
-        return (baseClass.equals("Node") || 
-                baseClass.equals("Classifier") ||
-                baseClass.equals("GeneralizableElement") ||
-                baseClass.equals("Namespace")
-                );
-    }
     
-    /**
-     * @see org.argouml.model.uml.foundation.core.CoreHelper#getAllNodes()
-     */
-	protected Vector getGeneralizationChoices() {
-		Vector choices = new Vector();
-		choices.addAll(CoreHelper.getHelper().getAllNodes());
-		return choices;
-	}
-
+    
+    
 
 
 } /* end class PropPanelNode */
