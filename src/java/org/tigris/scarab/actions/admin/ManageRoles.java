@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.1 2001/11/28 19:19:20 dr Exp $
+ * @version $Id: ManageRoles.java,v 1.2 2001/11/28 22:11:20 dr Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
@@ -96,7 +96,7 @@ public class ManageRoles extends RequireLoginFirstAction
     {
         setTarget(data, "admin,AddRole.vm");
     }
-
+    
     /**
      * 
      */
@@ -105,7 +105,7 @@ public class ManageRoles extends RequireLoginFirstAction
     {
         setTarget(data, "admin,EditRole.vm");
     }
-
+    
     /**
      * 
      */
@@ -126,30 +126,30 @@ public class ManageRoles extends RequireLoginFirstAction
          */
         String name = data.getParameters().getString("name");
         Role role = TurbineSecurity.getRole(name);
-
+        
         /*
          * Grab the permissions for the role we are
          * dealing with.
          */
         PermissionSet rolePermissions = role.getPermissions();
-
+        
         /*
          * Grab all the permissions.
          */
         Permission[] permissions = TurbineSecurity.getAllPermissions()
             .getPermissionsArray();
-
+        
         String roleName = role.getName();
-
+        
         for (int i = 0; i < permissions.length; i++)
         {
             String permissionName = permissions[i].getName();
             String rolePermission = roleName + permissionName;
-
+            
             String formRolePermission = data.getParameters().getString(rolePermission);
             Permission permission = TurbineSecurity.getPermission(permissionName);
-
-
+            
+            
             if (formRolePermission != null && !rolePermissions.contains(permission))
             {
                 /*
@@ -157,7 +157,7 @@ public class ManageRoles extends RequireLoginFirstAction
                  * contain this permission. So assign the permission to
                  * the role.
                  */
-
+                
                 role.grant(permission);
             }
             else if (formRolePermission == null && rolePermissions.contains(permission))
@@ -170,6 +170,25 @@ public class ManageRoles extends RequireLoginFirstAction
                 role.revoke(permission);
             }
         }
+    }
+    
+    /**
+     * This manages the clicking of the 'Confirm Delete' button and actually
+     * deletes the Role.
+     */
+    public void doDeleterole( RunData data, TemplateContext context )
+        throws Exception
+    {
+        /*
+         * Grab the role we are trying to delete.
+         */
+        String name = data.getParameters().getString("name");
+        Role role = TurbineSecurity.getRole(name);
+        TurbineSecurity.removeRole(role);
+        
+        data.setMessage("SUCCESS: the " + name + " role was deleted.");
+        setTarget(data, data.getParameters()
+                      .getString(ScarabConstants.NEXT_TEMPLATE, "admin,ManageRoles.vm"));
     }
     
     
