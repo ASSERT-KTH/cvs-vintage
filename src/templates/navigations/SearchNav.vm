@@ -24,8 +24,9 @@
      #end
         <input type="text" name="id" size="15" maxlength="255" tabindex="1"/>&#160;
         <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" tabindex="2" />&#160;
+        <input type="submit" value="Issue Id" name="eventSubmit_doGonext" tabindex="2" />&#160;
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+
      <small>
       $link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")&#160;|&#160;
       $link.setPage("Search.vm").setLabel("Custom Query")&#160;|&#160;
