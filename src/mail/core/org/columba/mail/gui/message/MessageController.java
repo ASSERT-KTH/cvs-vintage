@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -199,7 +200,14 @@ public class MessageController
 		}
 
 		if (charsetName != null) {
-			Charset charset = Charset.forName(charsetName);
+			Charset charset;
+			
+			try {
+				charset = Charset.forName(charsetName);
+			} catch ( UnsupportedCharsetException e ) {
+				charset = Charset.forName( System.getProperty("file.encoding"));
+			}
+			
 			bodyStream = new CharsetDecoderInputStream(bodyStream, charset);
 		}
 		boolean hasAttachments = false;
