@@ -281,25 +281,22 @@ public  class AttributeGroup
     }
 
     /**
-     * List of issuetype-attribute mappings in this group.
+     * List of module-attribute mappings in this group. If there
+     * are no attributes, this method returns an empty list.
      */
     public List getRModuleAttributes()
         throws Exception
     {
-       List rmas = null;
-       List attrs = getAttributes();
-       Iterator i = attrs.iterator();
-       if (!attrs.isEmpty())
-       {
-            rmas = new ArrayList(attrs.size());
-            while (i.hasNext()) 
+        List attrs = getAttributes();
+        Iterator i = attrs.iterator();
+        List rmas = new ArrayList(attrs.size());
+        while (i.hasNext()) 
+        {
+            Attribute attr = (Attribute)i.next();
+            RModuleAttribute rma = getModule().getRModuleAttribute(attr, getIssueType());
+            if (rma != null)
             {
-                Attribute attr = (Attribute)i.next();
-                RModuleAttribute rma = getModule().getRModuleAttribute(attr, getIssueType());
-                if (rma != null)
-                {
-                    rmas.add(rma);
-                }
+                rmas.add(rma);
             }
         }
         return rmas;
@@ -308,26 +305,27 @@ public  class AttributeGroup
         
     /**
      * List of global issuetype-attribute mappings in this group.
+     * If there are no attributes in this group, then this returns
+     * an empty list.
      */
     public List getRIssueTypeAttributes()
         throws Exception
     {
-        List rias = null;
         List attrs = getAttributes();
         Iterator i = attrs.iterator();
-        if (!attrs.isEmpty())
+        List rias = new ArrayList(attrs.size());
+        while (i.hasNext()) 
         {
-             rias = new ArrayList(attrs.size());
-             while (i.hasNext()) 
-             {
-                Attribute attr = (Attribute)i.next();
-                RIssueTypeAttribute ria = getIssueType().getRIssueTypeAttribute(attr);
-                if (ria != null)
-                {
-                    rias.add(ria);
-                }
+            Attribute attr = (Attribute)i.next();
+            RIssueTypeAttribute ria =
+                getIssueType().getRIssueTypeAttribute(attr);
+            
+            if (ria != null)
+            {
+                rias.add(ria);
             }
         }
+        
         return rias;
     }
 
