@@ -96,6 +96,14 @@ SOURCE=..\jk\jk_ajp12_worker.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\jk\jk_ajp13.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_ajp13_worker.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\jk\jk_ajp23_worker.c
 # End Source File
 # Begin Source File
@@ -113,6 +121,10 @@ SOURCE=..\jk\jk_lb_worker.c
 # Begin Source File
 
 SOURCE=..\jk\jk_map.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\jk\jk_msg_buff.c
 # End Source File
 # Begin Source File
 

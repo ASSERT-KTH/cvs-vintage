@@ -56,10 +56,11 @@
 /***************************************************************************
  * Description: Workers controller                                         *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.3 $                                               *
+ * Version:     $Revision: 1.4 $                                           *
  ***************************************************************************/
 
 #include "jk_ajp12_worker.h"
+#include "jk_ajp13_worker.h"
 /* #include "jk_ajp23_worker.h" */
 #include "jk_jni_worker.h"
 #include "jk_lb_worker.h"
@@ -76,6 +77,7 @@ static jk_map_t *worker_map;
 
 static worker_factory_record_t worker_factories[] = {
     { JK_AJP12_WORKER_NAME, ajp12_worker_factory},
+    { JK_AJP13_WORKER_NAME, ajp13_worker_factory},
 /*     { JK_AJP23_WORKER_NAME, ajp23_worker_factory}, */
     { JK_JNI_WORKER_NAME, jni_worker_factory},
     { JK_LB_WORKER_NAME, lb_worker_factory},
@@ -182,14 +184,15 @@ int wc_create_worker(const char *name,
             jk_log(l, JK_LOG_ERROR, "wc_create_worker validate failed for %s\n", 
                    name); 
             return JK_FALSE;
-	}
-	if(!w->init(w, init_data, l)) {
+        }
+    
+        if(!w->init(w, init_data, l)) {
             w->destroy(&w, l);
             jk_log(l, JK_LOG_ERROR, "wc_create_worker init failed for %s\n", 
                    name); 
             return JK_FALSE;
         }
-    
+
         *rc = w;
         jk_log(l, JK_LOG_DEBUG, "wc_create_worker, done\n"); 
         return JK_TRUE;

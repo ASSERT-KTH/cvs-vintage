@@ -1,7 +1,7 @@
 ## You need to edit this file - configure later :-)
 
-APACHE_HOME=/usr/local/apache-2.0
-AP20_SRC=/home/costin/src/jakarta/apache-2.0/src
+APACHE_HOME=/home/shachor/jakarta/apache2.0a3
+AP20_SRC=/home/shachor/jakarta/apache_2.0a3/src
 OS=linux
 
 ## I assume this one is set up already
@@ -12,16 +12,13 @@ OS=linux
 AP20_INCL=-I${APACHE_HOME}/include/apr  -I${APACHE_HOME}/include
 JAVA_INCL=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/${OS}
 JAVA_LIB=-L${JAVA_HOME}/jre/lib/${ARCH} -L${JAVA_HOME}/lib/${ARCH}/native_threads
-
-
-## 
 AP20SRC_INCL=-I. -I${AP20_SRC}/modules/standard -I${AP20_SRC} -I${AP20_SRC}/include -I${AP20_SRC}/lib/apr/include -I${AP20_SRC}/os/unix
 
-CFLAGS=-DHAVE_CONFIG_H -g -fpic  -DSHARED_MODULE -O2 -D_REENTRANT -pthread -DLINUX
+CFLAGS=-DHAVE_CONFIG_H -g -fpic  -DSHARED_MODULE -O2 -D_REENTRANT -pthread -DLINUX -Wall
 
-SRCS=jk_ajp12_worker.c jk_connect.c  jk_lb_worker.c  \
-     jk_map.c  jk_pool.c jk_sockbuf.c jk_uri_worker_map.c jk_util.c jk_worker.c \
-     jk_msg_buff.c jk_jni_worker.c
+SRCS=jk_ajp12_worker.c jk_connect.c jk_msg_buff.c jk_util.c jk_ajp13.c \
+     jk_jni_worker.c jk_pool.c jk_worker.c jk_ajp13_worker.c jk_lb_worker.c \
+     jk_sockbuf.c  jk_map.c jk_uri_worker_map.c          
 
 OBJS=${patsubst %.c,%.o,${SRCS}}
 
