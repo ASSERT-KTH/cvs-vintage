@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.11 2000/02/01 21:39:39 costin Exp $
- * $Revision: 1.11 $
- * $Date: 2000/02/01 21:39:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.12 2000/02/03 02:13:13 mandar Exp $
+ * $Revision: 1.12 $
+ * $Date: 2000/02/03 02:13:13 $
  *
  * ====================================================================
  *
@@ -327,6 +327,8 @@ public class ResponseImpl implements Response {
         // Use the setContentType() method so encoding is set properly
         String newType = constructLocalizedContentType(contentType, locale);
         setContentType(newType);
+
+	addHeader("Content-Language", contentLanguage);
     }
 
     /** Utility method for parsing the mime type and setting
@@ -358,6 +360,7 @@ public class ResponseImpl implements Response {
         if (encoding != null) {
 	    characterEncoding = encoding;
         }
+	addHeader("Content-Type", contentType);
     }
 
     public String getContentType() {
@@ -366,6 +369,7 @@ public class ResponseImpl implements Response {
     
     public void setContentLength(int contentLength) {
 	this.contentLength = contentLength;
+	addHeader("Content-Length", (new Integer(contentLength)).toString());
     }
 
     public int getContentLength() {

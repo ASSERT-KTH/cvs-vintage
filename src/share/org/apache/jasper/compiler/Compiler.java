@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.8 2000/01/24 05:54:50 shemnon Exp $
- * $Revision: 1.8 $
- * $Date: 2000/01/24 05:54:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Compiler.java,v 1.9 2000/02/03 02:13:12 mandar Exp $
+ * $Revision: 1.9 $
+ * $Date: 2000/02/03 02:13:12 $
  *
  * ====================================================================
  * 
@@ -60,6 +60,7 @@
  */ 
 package org.apache.jasper.compiler;
 
+import java.util.Hashtable;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.io.PrintWriter;
@@ -69,6 +70,7 @@ import java.io.FileOutputStream;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
+import org.apache.jasper.compiler.ParseException;
 
 /**
  * If you want to customize JSP compilation aspects, this class is
@@ -79,6 +81,7 @@ import org.apache.jasper.JasperException;
  * change. 
  *
  * @author Anil K. Vijendran
+ * @author Mandar Raje
  */
 public abstract class Compiler {
     protected JavaCompiler javac;
@@ -131,6 +134,21 @@ public abstract class Compiler {
 
         String jspEncoding = "8859_1";          // default per JSP spec
         String javaEncoding = "UTF8";           // perhaps debatable?
+
+	// This seems to be a reasonable point to scan the JSP file
+	// for a 'contentType' directive. If it found then the set
+	// the value of 'jspEncoding to reflect the value specified.
+	// Note: if (true) is convenience programming. It can be
+	// taken out once we have a more efficient method.
+
+	if (true) {
+	    JspReader tmpReader = JspReader.createJspReader(
+							    ctxt.getJspFile(),
+							    ctxt,
+							    jspEncoding);
+	    String newEncode = changeEncodingIfNecessary(tmpReader);
+	    if (newEncode != null) jspEncoding = newEncode;
+	}
 
         JspReader reader = JspReader.createJspReader(
             ctxt.getJspFile(),
@@ -256,4 +274,42 @@ public abstract class Compiler {
     public void setMangler(Mangler mangler) {
         this.mangler = mangler;
     }
+
+    /**
+     * Change the encoding for the reader if specified.
+     */
+    public String changeEncodingIfNecessary(JspReader tmpReader) {
+
+	// A lot of code replicated from Parser.java
+	// Main aim is to "get-it-to-work".
+	while (tmpReader.skipUntil("<%@") != null) {
+
+	    tmpReader.skipSpaces();
+
+	    // check if it is a page directive.
+	    if (tmpReader.matches("page")) {
+
+		tmpReader.advance(4);
+		tmpReader.skipSpaces();
+		
+		try {
+		    Hashtable attrs = tmpReader.parseTagAttributes();
+		    String ct = (String) attrs.get("contentType");
+		    if (ct != null) {
+			int loc = ct.indexOf("charset=");
+			if (loc > 0) {
+			    String encoding = ct.substring(loc + 8);
+			    return encoding;
+			}
+		    }
+		} catch (ParseException ex) {
+		    // Ignore the exception here, it will be caught later.
+		    return null;
+		}
+	    }
+	}
+	return null;
+    }
 }
+
+
