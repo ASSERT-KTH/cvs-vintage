@@ -429,6 +429,10 @@
  </p>
 #end
 
+## ---------------------------------------------------------------------------
+## Issue listing and reporting related macros
+## ---------------------------------------------------------------------------
+
 #macro (navigate)
  <p class="paginate">
 #set ($prevIssue=$scarabR.PrevIssue)
@@ -451,14 +455,38 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
  </p>
 #end
 
+#macro (exportFormats $action)
+<select name="format"
+        onchange="javascript:submitFormTo(this.form, '$action');">
+<option value="" selected="selected">$l10n.ExportResultsTo</option>
+<option value="excel">$l10n.Excel</option>
+<option value="tsv">$l10n.TabSeparatedValues</option>
+</select>
+<noscript>
+<input type="submit" name="$action" value="$l10n.Go" />
+</noscript>
+#end
+
+#macro (exportFormatsRow)
+<tr>
+<th>$l10n.Format</th>
+<td>
+ <input type="radio" name="format" value="" checked="checked">$l10n.Web</input>
+ <input type="radio" name="format" value="excel">$l10n.Excel</input>
+ <input type="radio" name="format" value="tsv">$l10n.TabSeparatedValues</input>
+</td>
+</tr>
+#end
 
 
 #macro (textAreaSmall $key $value)
  <textarea cols="30" rows="2" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
+
 #macro (textAreaMedium $key $value)
  <textarea cols="50" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
+
 #macro (textAreaLarge $key $value)
  <textarea cols="90" rows="10" wrap="virtual" name="$key">#if ($value)$value#end</textarea>
 #end
@@ -568,7 +596,7 @@ $scarabR.IssuePosInList of $scarabR.CurrentSearchResultsSize
 #set ($headingType = $data.Parameters.getInt("headingtype", 1))
 
 ## USER SEARCH
-<h3><a name="add">$l10n.Users</a></h3>
+<a name="add"><h3>$l10n.Users</h3></a> 
 <div class="axial">
 
 #if (!$userAttrs || $userAttrs.isEmpty())

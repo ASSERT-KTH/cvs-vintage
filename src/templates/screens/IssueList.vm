@@ -1,18 +1,19 @@
-## Handling for form automatic submittal via drop down value change.
-<script type="text/javascript">
-function submitFormTo(form, name) {
-  ## TODO: Only execute function body if form.format != ''
-  var input = document.createElement('input');
-  input.type = 'hidden';
-  input.name = name;
-  form.appendChild(input);
-  form.submit();
-}
-</script>
+## The functions used to control the current query.
+#macro (queryFunctionBar)
+#if ($queryString)
+<div class="functnbar">
+#if ($searchType == 'advanced' && $scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
+<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
+<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
+#end
+#exportFormats('eventSubmit_doSearch')
+</div>
+#end
+#end
+
 
 <div class="app" id="issuelist">
 #set ($user = $data.User)
-#set ($searchType = $data.Parameters.getString("searchType",""))
 #if (!$queryResults)
    #set ($queryResults = $scarabR.CurrentSearchResults)
 #end
@@ -43,28 +44,16 @@ function submitFormTo(form, name) {
   <p class="alert">$l10n.NoMatchingIssues</p>
 #else
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
+#set ($searchType = $data.Parameters.getString("searchType", ""))
+#if ($searchType)
+  <input type="hidden" name="searchType" value="$searchType" />
+#end
 <input type="hidden" name="pageNum" value="$pageNum" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
 #set ($queryString = $data.User.MostRecentQuery)
 
-#if ($queryString && $searchType.equals("advanced"))
-<div class="functnbar">
-#if ($scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
-<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
-<select name="format"
-        onchange="submitFormTo(this.form, 'eventSubmit_doSearch');">
-<option value="" selected="selected">$l10n.ExportResultsTo</option>
-<option value="excel">$l10n.Excel</option>
-<option value="tsv">$l10n.TabSeparatedValues</option>
-</select>
-<noscript>
-<input type="submit" name="eventSubmit_doSearch" value="$l10n.Go" />
-</noscript>
-#end
-</div>
-#end
+#queryFunctionBar()
 
 <h3>
 #if ($mitlist)
@@ -252,23 +241,7 @@ $link.setPage("ConfigureIssueList.vm").setLabel($l10n.AddRemoreAttributesFromVie
 
 #end
 
-#if ($queryString && $searchType.equals("advanced"))
-<div class="functnbar2">
-#if ($scarabR.hasPermission($scarabG.Permission.USER__EDIT_PREFERENCES))
-<input type="submit" value="$l10n.SaveQuery" name="eventSubmit_doRedirecttosavequery" />&#160;
-<input type="submit" value="$l10n.RefineQuery" name="eventSubmit_doRefinequery" />&#160;
-<select name="format"
-        onchange="submitFormTo(this.form, 'eventSubmit_doSearch');">
-<option value="" selected="selected">$l10n.ExportResultsTo</option>
-<option value="excel">$l10n.Excel</option>
-<option value="tsv">$l10n.TabSeparatedValues</option>
-</select>
-<noscript>
-<input type="submit" name="eventSubmit_doSearch" value="$l10n.Go" />
-</noscript>
-#end
-</div>
-#end
+#queryFunctionBar()
 
 </form>
 </div>

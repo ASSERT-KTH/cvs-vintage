@@ -49,6 +49,7 @@ $data.User.setCurrentMITList($report.getMITList())
      $l10n.Personal
    #end
   </tr>
+  #exportFormatsRow()
  </table>
 </div>
 
