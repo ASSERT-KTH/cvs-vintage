@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.252 2003/01/04 01:00:15 elicia Exp $
+ * @version $Id: Issue.java,v 1.253 2003/01/04 03:50:34 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1910,11 +1910,13 @@ public class Issue
         {
             Criteria crit = new Criteria(2)
                 .add(DependPeer.OBSERVED_ID, getIssueId())        
-                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId());
+                .add(DependPeer.OBSERVER_ID, childIssue.getIssueId())
+                .add(DependPeer.DELETED, false);
             List depends = DependPeer.doSelect(crit);
             Criteria crit2 = new Criteria(2)
-                .add(DependPeer.OBSERVER_ID, getIssueId() )        
-                .add(DependPeer.OBSERVED_ID, childIssue.getIssueId() );
+                .add(DependPeer.OBSERVER_ID, getIssueId())
+                .add(DependPeer.OBSERVED_ID, childIssue.getIssueId())
+                .add(DependPeer.DELETED, false);
             List depends2 = DependPeer.doSelect(crit2);
             if (depends.size() > 0 )
             {
