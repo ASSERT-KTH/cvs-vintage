@@ -1,0 +1,79 @@
+     
+<div class="app" id="div2-1-4-0">
+$page.setTitle("Attribute Editor")
+
+<h2>Manage artifact types (2.1.4)</h2>
+
+#set ($module = $scarabR.CurrentModule)
+#set ($rmits = $module.RModuleIssueTypes)
+
+<form method="get" action="$link.setPage("admin,ManageArtifactTypes.vm")">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="nextTemplate" value="admin,ManageArtifactTypes.vm"/>
+        <div class="functnbar">
+            <table cellpadding="0" cellspacing="0" border="0">
+
+            <tr>
+            <td><strong>Screen options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>Artifact type management options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            </tr>
+
+            <tr>
+            <td><input type="submit" value="submit changes" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new" name="eventSubmit_doGotoartifactselect" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;<input type="submit" value="resort" /></td>
+
+            </tr>
+            </table>
+        </div>
+
+                        
+        <h3>Artifact types</h3>
+        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th nowrap="nowrap">select</th>
+        <th>Artifact type name</th>
+        <th>(in)active</th>
+        <th>Show in left hand nav*</th>
+        <th>sequence #</th>
+        </tr>
+
+        
+#foreach ($rmit in $rmits)
+#set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
+
+        <tr class="a">
+        <td><input type="checkbox" name="delete_$rmit.IssueTypeId"/></td>
+        <td><a href="$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId)">$rmit.IssueType.Name</a></td>
+        <td>#booleanCheckbox ($rmitGroup.Active)</td>
+        <td>#booleanCheckbox ($rmitGroup.Display)</td>
+        <td>#numericSelect( $rmitGroup.Order.Key 1 5 $rmit.Order 1 )</td>
+        </tr>        
+#end
+        
+        </table>
+
+ 
+        <div class="functnbar2">
+            <table cellpadding="0" cellspacing="0" border="0">
+
+            <tr>
+            <td><strong>Screen options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>Artifact type management options:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            </tr>
+
+            <tr>
+            <td><input type="submit" value="submit changes" name="eventSubmit_doManageissuetypes" />&#160;<input type="submit" value="cancel" /></td>
+            <td><input type="submit" value="add new" name="eventSubmit_doGotoartifactselect" />&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;<input type="submit" value="resort" /></td>
+
+            </tr>
+            </table>
+        </div>       
+<p>* Maximum of four Artifact types in left hand navigation (first four selected will appear).</p>
+
+$intake.declareGroups()
+</form>

@@ -1,0 +1,73 @@
+
+$page.setTitle("Artifact Type Select")
+        
+<form action="$link.setPage("admin,ArtifactTypeSelect.vm")" method="get">
+    <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+
+
+        <div class="functnbar">
+            <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+            <td><strong>select items to:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>general functions</strong></td>
+            </tr>
+            <tr>
+            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />&nbsp;</td>
+            <td>
+            #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+               <input type="submit" value="create new" name="eventSubmit_doGotoartifactpage" />
+            #end
+            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
+
+            </tr>
+            </table>
+        </div>
+        
+#set ($issueTypes = $scarabR.CurrentModule.AvailableIssueTypes)
+#if ($issueTypes.isEmpty())
+    <p class="alert">There are no more issue types to add to this module.</p>
+
+#else
+        
+        <h3>Issue Types </h3>
+        
+        <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+        <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow_off.gif" width="13" height="8" alt="sort ascending" border="0" /></a><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></th>
+        <th><a href="#" title="sort">name</a></th>
+        <th><a href="#" title="sort">description</a></th>
+        </tr>
+        
+
+#foreach( $issueType in $issueTypes )
+        #rows()
+        <td><input type="radio" name="issueTypeId" value="$issueType.IssueTypeId" /></td>
+        <td>$issueType.Name</td>
+        <td>$issueType.Description</td>
+        </tr>
+#end
+        </table>
+
+        
+        <div class="functnbar">
+            <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+            <td><strong>select items to:</strong></td>
+            <td rowspan="2"><img src="../csi/images/seperator.gif" width="2" height="35" alt="" border="0" /></td>
+            <td><strong>general functions</strong></td>
+            </tr>
+            <tr>
+            <td><input type="submit" value="add to 'Enter issue page'" name="eventSubmit_doSelectissueType" />&nbsp;</td>
+            <td>
+            #if ($security.hasPermission("Domain | Edit", $scarabR.CurrentModule))
+               <input type="submit" value="create new" name="eventSubmit_doGotoartifactpage"/>
+            #end
+            &nbsp;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></td>
+
+            </tr>
+            </table>
+        </div>
+        
+#end
+    </div>

@@ -1,10 +1,12 @@
   <div class="app" id="div2-1-4-0">
         <h2>Add/Edit attribute group  (2.1.4.1)</h2>
 #set ($groupId = $data.Parameters.getString("groupId"))
-<form method="get" action="$link.setPage("admin,attributegroup.vm")">
-      <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
-      <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm" />
-      <input type="hidden" name="groupId" value="$groupId" />
+
+<form method="get" action="$link.setPage("admin,AttributeGroup.vm")">
+      <input type="hidden" name="action" value="admin.ModifyModuleAttributes">
+      <input type="hidden" name="nextTemplate" value="admin,AttributeGroup.vm"/>
+      <input type="hidden" name="groupId" value="$groupId">
+
 <div class="functnbar"><table cellpadding="4" cellspacing="0" border="1">
  <tr>
   <td class="firstchild"><div>
@@ -15,11 +17,13 @@ Screen options
 <td><div>
 Attribute options
 </div>
-<input type="submit" value="Add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
+<input type="submit" value="Add new"  name="eventSubmit_doGotoattributeselect" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
 </td>
 </table>
 </div>
+
 <h3>Attribute group details</h3>
+
 #set ($group = $scarabR.getAttributeGroup(groupId))
 #set ($agGroup = $intake.AttributeGroup.mapTo($group) )
 <input type="hidden" name="groupid" value="$groupId" />
@@ -84,7 +88,7 @@ Screen options
   <div>
 Attribute options
 </div>
-<input type="submit" value="Add new"  name="eventSubmit_doGotoselectpage" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
+<input type="submit" value="Add new"  name="eventSubmit_doGotoattributeselect" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete"  name="eventSubmit_doDeleteattributes" />&#160;<input type="submit" value="Resort" />
   </td>
   </tr>
   </table>
