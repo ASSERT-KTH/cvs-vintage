@@ -81,7 +81,12 @@
 #set ($groups = $issueType.getAttributeGroups(false))
 
 <h3>$l10n.AttributeGroups</h3>
-#set ($maxNum = $groups.size()+1)
+#set ($maxNum = $groups.size())
+#set ($showDuplicateCheck = ($maxNum >= 2))
+#if ($showDuplicateCheck)
+## The duplicate check gives us an extra sequence to account for.
+#set ($maxNum = $maxNum + 1)
+#end
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 #if (!$groups.isEmpty())
 <tr>
@@ -93,12 +98,13 @@
 
 #set ($issueDedupeSequence = $issueType.DedupeSequence)
 #foreach ($group in $groups)
- #if ($velocityCount == $issueDedupeSequence && $groups.size() > 1)
+ #if ($velocityCount == $issueDedupeSequence && $showDuplicateCheck)
  <tr>
    <td>&#160;</td>
    <td>$l10n.DuplicateCheck</td>
    <td>#booleanCheckbox ($itGroup.Dedupe)</td>
-   <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
+   #set ($deDupeMaxNum = $maxNum - 1)
+   <td>#numericSelect("dupe_order" 2 $deDupeMaxNum $issueDedupeSequence 1)</td>
  </tr>
  #end
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
@@ -106,8 +112,8 @@
   <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
   <td>$link.setPage("admin,GlobalAttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueType.IssueTypeId).setLabel("$group.Name")</td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
-  <td>
-  #numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td> </tr>
+  <td>#numericSelect($agGroup.Order.Key 1 $maxNum $group.Order 1)</td>
+ </tr>
 #end
 #else
 <p><em>$l10n.NoAttributeGroups</em></p>

@@ -69,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.51 2003/06/26 19:29:48 elicia Exp $
+ * @version $Id: IssueType.java,v 1.52 2003/06/27 20:58:01 dlr Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -375,7 +375,7 @@ public  class IssueType
             getMethodResult().put(groups, this, GET_ATTRIBUTE_GROUPS,
                                   module, activeBool);
         }
-        else 
+        else
         {
             groups = (List)obj;
         }
@@ -428,8 +428,8 @@ public  class IssueType
     public int getDedupeSequence()
         throws Exception
     {
-        int sequence = 1;
         List groups = getAttributeGroups(false);
+        int sequence = groups.size() + 1;
         for (int i=1; i<=groups.size(); i++)
         {
             int order;

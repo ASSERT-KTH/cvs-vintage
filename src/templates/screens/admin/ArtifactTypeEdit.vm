@@ -107,7 +107,12 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 ## LIST GROUPS
 
 <h3>$l10n.AttributeGroups</h3>
-#set ($maxNum = $groups.size()+1)
+#set ($maxNum = $groups.size())
+#set ($showDuplicateCheck = ($maxNum >= 2))
+#if ($showDuplicateCheck)
+## The duplicate check gives us an extra sequence to account for.
+#set ($maxNum = $maxNum + 1)
+#end
 #if ($groups.isEmpty())
     <p><em>$l10n.NoAttributeGroups</em></p>
     <div class="functnbar3">
@@ -128,7 +133,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #foreach ($group in $groups)
 ## DEDUPE
 ## Only display dedupe if there are more than one active attribute group
- #if ($velocityCount == $issueDedupeSequence && $module.getAttributeGroups($issueType, false).size() > 1)
+ #if ($velocityCount == $issueDedupeSequence && $showDuplicateCheck )
  <tr>
 #if (!$issueTypeLock)
    <td>&#160;</td>
@@ -139,7 +144,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     #if ($issueTypeLock)
        $issueDedupeSequence
     #else
-       #numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
+       #numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
     #end
  </tr>
  #end
@@ -159,7 +164,21 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     #end
    </td></tr>
 #end
-
+#if ($maxNum == $issueDedupeSequence && $showDuplicateCheck )
+ <tr>
+#if (!$issueTypeLock)
+   <td>&#160;</td>
+#end
+   <td>$l10n.DuplicateCheck</td>
+   <td>#booleanCheckboxLock ($rmitGroup.Dedupe $issueTypeLock)</td>
+   <td>
+    #if ($issueTypeLock)
+       $issueDedupeSequence
+    #else
+       #numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
+    #end
+ </tr>
+#end
 </table>
 
 

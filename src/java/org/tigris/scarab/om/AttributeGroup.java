@@ -340,6 +340,7 @@ public  class AttributeGroup
                 }
                 else
                 {
+                    attrGroups = module.getAttributeGroups(getIssueType(), false);
                     dupeSequence =  module.getDedupeSequence(issueType);
                     // Delete module-attribute mapping
                     Criteria crit  = new Criteria()
@@ -378,7 +379,6 @@ public  class AttributeGroup
                 IssueTypeManager.getManager().refreshedObject(this);
                 
                 // Adjust the orders for the other attribute groups
-                attrGroups = module.getAttributeGroups(getIssueType(), false);
                 for (int i=0; i<attrGroups.size(); i++)
                 {
                     AttributeGroup tempGroup = (AttributeGroup)attrGroups.get(i);

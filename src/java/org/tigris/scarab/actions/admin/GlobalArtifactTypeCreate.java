@@ -73,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.34 2003/03/28 00:12:30 jon Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.35 2003/06/27 20:58:01 dlr Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -169,20 +169,22 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         List attGroups = issueType.getAttributeGroups(false);
+        int nbrAttGroups = attGroups.size();
         String errorMsg = ERROR_MESSAGE;
         boolean isValid = true;
-        boolean areThereDupes = false;
         Field order1 = null;
         Field order2 = null;
         int dupeOrder = 0;
-        // Manage attribute groups
-        // Only have dedupe if there are more than one active group
+
+        // Manage attribute groups, only seeking sequence collisions
+        // when there is more than one active group.
         if (issueType.getAttributeGroups(true).size() > 1)
         {
+            boolean haveSequenceCollisions = false;
             dupeOrder = data.getParameters().getInt("dupe_order");
 
             // Check for duplicate sequence numbers
-            for (int i=0; i<attGroups.size(); i++) 
+            for (int i = 0; i < nbrAttGroups; i++) 
             {
                 AttributeGroup ag1 = (AttributeGroup)attGroups.get(i);
                 Group agGroup1 = intake.get("AttributeGroup", 
@@ -190,11 +192,11 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 order1 = agGroup1.get("Order");
                 if (order1.toString().equals(Integer.toString(dupeOrder)))
                 {
-                    areThereDupes = true;
+                    haveSequenceCollisions = true;
                     break;
                 }
 
-                for (int j=i-1; j>=0; j--) 
+                for (int j = i - 1; j >= 0; j--)
                 {
                     AttributeGroup ag2 = (AttributeGroup)attGroups.get(j);
                     Group agGroup2 = intake.get("AttributeGroup", 
@@ -203,21 +205,21 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 
                     if (order1.toString().equals(order2.toString()))
                     {
-                        areThereDupes = true;
+                        haveSequenceCollisions = true;
                         break;
                     }
                 }
             }
-            if (areThereDupes)
+            if (haveSequenceCollisions)
             {
-               errorMsg= "DuplicateSequenceNumbersForAttributeGroups";
+               errorMsg = "DuplicateSequenceNumbersForAttributeGroups";
                isValid = false;
             }
-  
-            // Check that duplicate check is not at the beginning or end.
-            if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
+
+            // Check that duplicate check is not at the beginning.
+            if (dupeOrder == 1)
             {
-                errorMsg = "DuplicateCheckCannotBeginOrEnd";
+                errorMsg = "CannotPositionDuplicateCheckFirst";
                 isValid = false;
             }
         }
@@ -225,29 +227,23 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         if (intake.isAllValid() && isValid)
         {
             // Set properties for attribute groups
-            for (int i=attGroups.size()-1; i>=0; i--) 
+            for (int i = nbrAttGroups - 1; i >= 0; i--)
             {
                 AttributeGroup attGroup = (AttributeGroup)attGroups.get(i);
                 Group agGroup = intake.get("AttributeGroup", 
                                  attGroup.getQueryKey(), false);
                 agGroup.setProperties(attGroup);
 
-                // If an attribute group falls before the dedupe screen,
-                // Mark it as a dedupe group
-                if (attGroup.getOrder() < dupeOrder)
-                {
-                    if (!attGroup.getAttributes().isEmpty())
-                    {
-                         attGroup.setDedupe(true);
-                    }
-                }
-                else
-                {
-                    attGroup.setDedupe(false);
-                }
+                // If an attribute group falls before the dedupe
+                // screen, mark it as a dedupe group.  Even groups
+                // which are currently empty of attributes should be
+                // marked as such, as attributes may later be added to
+                // them.
+                attGroup.setDedupe(attGroup.getOrder() < dupeOrder);
+
                 attGroup.save();
-                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
                 ScarabCache.clear();
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
             }
         }
         else

@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.50 2003/06/16 04:30:47 irk_tpt Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.51 2003/06/27 20:58:01 dlr Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -218,10 +218,10 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                isValid = false;
             }
   
-            // Check that duplicate check is not at the beginning or end.
-            if (dupeOrder == 1 || dupeOrder == attGroups.size() +1)
+            // Check that duplicate check is not at the beginning.
+            if (dupeOrder == 1)
             {
-                msg = "DuplicateCheckCannotBeginOrEnd";
+                msg = "CannotPositionDuplicateCheckFirst";
                 isValid = false;
             }
         }
