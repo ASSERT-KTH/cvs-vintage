@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -128,13 +128,23 @@ public class JDBCRemoveEntityCommand {
                   (Collection)cmrField.getInstanceValue(context);
             if(!c.isEmpty()) {
                oldRelations.put(cmrField, new ArrayList(c));
-               c.clear();
+
+               // clear unless the related CMR is a foreign key
+               // that is a part of the primary key
+               if(!cmrField.getRelatedCMRField().isFkPartOfPk()) {
+                  c.clear();
+               }
             }
          } else {
             Object o = cmrField.getInstanceValue(context);
             if(o != null) {
                oldRelations.put(cmrField, Collections.singletonList(o));
-               cmrField.setInstanceValue(context, null);
+
+               // set to null unless the related CMR is a foreign key
+               // that is a part of the primary key
+               if(!cmrField.isFkPartOfPk()) {
+                  cmrField.setInstanceValue(context, null);
+               }
             }
          }
       }
