@@ -63,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -385,7 +385,7 @@ public class JDBCCMRFieldBridge2
 
    public boolean isDirty(EntityEnterpriseContext ctx)
    {
-      throw new UnsupportedOperationException();
+      return getFieldState(ctx).isModified();
    }
 
    public void setClean(EntityEnterpriseContext ctx)
@@ -657,6 +657,7 @@ public class JDBCCMRFieldBridge2
       private boolean loaded;
       private Object value;
       private EJBLocalObject localObject;
+      private boolean modified;
 
       public void init()
       {
@@ -736,6 +737,8 @@ public class JDBCCMRFieldBridge2
 
          cacheValue(ctx);
 
+         modified = true;
+
          return true;
       }
 
@@ -751,6 +754,8 @@ public class JDBCCMRFieldBridge2
          loader.addRelatedId(ctx, relatedId);
 
          cacheValue(ctx);
+
+         modified = true;
 
          return true;
       }
@@ -792,6 +797,11 @@ public class JDBCCMRFieldBridge2
          pctx.cacheRelations(cmrIndex, this);
       }
 
+      public boolean isModified()
+      {
+         return modified;
+      }
+
       // Private
 
       private void changeValue(Object newValue)
@@ -827,6 +837,8 @@ public class JDBCCMRFieldBridge2
 
       private Set removedWhileNotLoaded;
       private Set addedWhileNotLoaded;
+
+      private boolean modified;
 
       public void init()
       {
@@ -897,35 +909,41 @@ public class JDBCCMRFieldBridge2
 
       public boolean removeRelatedId(EntityEnterpriseContext ctx, Object relatedId)
       {
-         boolean modified = false;
+         boolean removed = false;
          if(loaded)
          {
             Set value = getLoadedValue(ctx);
             if(!value.isEmpty())
             {
-               modified = value.remove(relatedId);
+               removed = value.remove(relatedId);
             }
          }
          else
          {
-            modified = removeWhileNotLoaded(relatedId);
+            removed = removeWhileNotLoaded(relatedId);
          }
-         return modified;
+
+         modified = true;
+
+         return removed;
       }
 
       public boolean addRelatedId(EntityEnterpriseContext ctx, Object relatedId)
       {
-         boolean modified;
+         boolean added;
          if(loaded)
          {
             Set value = getLoadedValue(ctx);
-            modified = value.add(relatedId);
+            added = value.add(relatedId);
          }
          else
          {
-            modified = addWhileNotLoaded(relatedId);
+            added = addWhileNotLoaded(relatedId);
          }
-         return modified;
+
+         modified = true;
+
+         return added;
       }
 
       public void addLoadedPk(Object pk)
@@ -967,6 +985,11 @@ public class JDBCCMRFieldBridge2
       {
          PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
          pctx.cacheRelations(cmrIndex, this);
+      }
+
+      public boolean isModified()
+      {
+         return modified;
       }
 
       // Private
@@ -1079,6 +1102,8 @@ public class JDBCCMRFieldBridge2
       void addLoadedPk(Object pk);
 
       void cacheValue(EntityEnterpriseContext ctx);
+
+      boolean isModified();
    }
 
    private class RelationTableLoader

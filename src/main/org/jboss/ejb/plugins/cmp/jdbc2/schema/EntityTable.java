@@ -21,8 +21,12 @@ import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanServerLocator;
 import org.jboss.mx.util.MBeanProxyExt;
 import org.jboss.system.ServiceControllerMBean;
+import org.jboss.system.Registry;
 import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.MetaData;
+import org.jboss.metadata.EntityMetaData;
+import org.jboss.cache.invalidation.InvalidationManagerMBean;
+import org.jboss.cache.invalidation.InvalidationGroup;
 import org.w3c.dom.Element;
 
 import javax.naming.InitialContext;
@@ -49,7 +53,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.15 $</tt>
+ * @version <tt>$Revision: 1.16 $</tt>
  */
 public class EntityTable
    implements Table
@@ -90,6 +94,8 @@ public class EntityTable
 
    private ForeignKeyConstraint[] fkConstraints;
 
+   private CacheInvalidator cacheInvalidator;
+
    public EntityTable(JDBCEntityMetaData metadata, JDBCEntityBridge2 entity, Schema schema, int tableId)
       throws DeploymentException
    {
@@ -110,7 +116,8 @@ public class EntityTable
       this.schema = schema;
       this.tableId = tableId;
 
-      final ConfigurationMetaData containerConf = entity.getContainer().getBeanMetaData().getContainerConfiguration();
+      final EntityMetaData entityMetaData = ((EntityMetaData)entity.getContainer().getBeanMetaData());
+      final ConfigurationMetaData containerConf = entityMetaData.getContainerConfiguration();
       dontFlushCreated = containerConf.isInsertAfterEjbPostCreate();
 
       // create cache
@@ -135,20 +142,34 @@ public class EntityTable
       final Element otherConf = cacheConf == null ? null : MetaData.getOptionalChild(cacheConf, "cache-policy-conf-other");
 
       int partitionsTotal;
+      final boolean invalidable;
       final Element batchCommitStrategy;
       if(otherConf != null)
       {
          String str = MetaData.getOptionalChildContent(otherConf, "partitions");
          partitionsTotal = (str == null ? 10 : Integer.parseInt(str));
          batchCommitStrategy = MetaData.getOptionalChild(otherConf, "batch-commit-strategy");
+         invalidable = MetaData.getOptionalChild(otherConf, "invalidable") == null ? false : true;
       }
       else
       {
          partitionsTotal = 10;
          batchCommitStrategy = null;
+         invalidable = false;
       }
 
-      cache = new PartitionedTableCache(minCapacity, maxCapacity, partitionsTotal);
+      cache = cacheConf == null ? Cache.NONE : new PartitionedTableCache(minCapacity, maxCapacity, partitionsTotal);
+
+      if(invalidable)
+      {
+         String groupName = entityMetaData.getDistributedCacheInvalidationConfig().getInvalidationGroupName();
+         String imName = entityMetaData.getDistributedCacheInvalidationConfig().getInvalidationManagerName();
+
+         InvalidationManagerMBean im = (InvalidationManagerMBean) Registry.lookup(imName);
+         InvalidationGroup invalidationGroup = im.getInvalidationGroup(groupName);
+
+         cacheInvalidator = new CacheInvalidator(cache, entity.getContainer().getTransactionManager(), invalidationGroup);
+      }
 
       if(batchCommitStrategy == null)
       {
@@ -164,21 +185,24 @@ public class EntityTable
          updateStrategy = BATCH_UPDATE;
       }
 
-      final MBeanServer server = MBeanServerLocator.locateJBoss();
-      serviceController = (ServiceControllerMBean)
-         MBeanProxyExt.create(ServiceControllerMBean.class,
-            ServiceControllerMBean.OBJECT_NAME,
-            server);
-      try
+      if(cache != Cache.NONE)
       {
-         cacheName =
-            new ObjectName("jboss.cmp:service=tablecache,ejbname=" + metadata.getName() + ",table=" + tableName);
-         server.registerMBean(cache, cacheName);
-         serviceController.create(cacheName);
-      }
-      catch(Exception e)
-      {
-         throw new DeploymentException("Failed to register table cache for " + tableName, e);
+         final MBeanServer server = MBeanServerLocator.locateJBoss();
+         serviceController = (ServiceControllerMBean)
+            MBeanProxyExt.create(ServiceControllerMBean.class,
+               ServiceControllerMBean.OBJECT_NAME,
+               server);
+         try
+         {
+            cacheName =
+               new ObjectName("jboss.cmp:service=tablecache,ejbname=" + metadata.getName() + ",table=" + tableName);
+            server.registerMBean(cache, cacheName);
+            serviceController.create(cacheName);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Failed to register table cache for " + tableName, e);
+         }
       }
    }
 
@@ -297,30 +321,32 @@ public class EntityTable
          log.debug("duplicate pk sql: " + duplicatePkSql);
       }
 
-      try
+      if(cacheName != null)
       {
-         cache.start();
-      }
-      catch(Exception e)
-      {
-         throw new DeploymentException("Failed to start cache", e);
-      }
-
-      try
-      {
-         serviceController.start(cacheName);
-      }
-      catch(Exception e)
-      {
-         throw new DeploymentException("Failed to start table cache.", e);
+         try
+         {
+            serviceController.start(cacheName);
+         }
+         catch(Exception e)
+         {
+            throw new DeploymentException("Failed to start table cache.", e);
+         }
       }
    }
 
    public void stop() throws Exception
    {
-      serviceController.stop(cacheName);
-      serviceController.destroy(cacheName);
-      serviceController.remove(cacheName);
+      if(cacheInvalidator != null)
+      {
+         cacheInvalidator.unregister();
+      }
+
+      if(cacheName != null)
+      {
+         serviceController.stop(cacheName);
+         serviceController.destroy(cacheName);
+         serviceController.remove(cacheName);
+      }
       serviceController = null;
    }
 
@@ -1185,7 +1211,7 @@ public class EntityTable
                         {
                            cache.remove(tx, cursor.pk);
                         }
-                        catch(Exception e)
+                        catch(Cache.RemoveException e)
                         {
                            log.warn(e.getMessage());
                         }

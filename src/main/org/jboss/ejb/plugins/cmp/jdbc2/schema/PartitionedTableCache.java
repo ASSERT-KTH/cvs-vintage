@@ -12,7 +12,7 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class PartitionedTableCache
@@ -164,7 +164,7 @@ public class PartitionedTableCache
       partitions[i].put(tx, pk, fields, relations);
    }
 
-   public void remove(Transaction tx, Object pk) throws Exception
+   public void remove(Transaction tx, Object pk)
    {
       final int i = getPartitionIndex(pk);
       partitions[i].remove(tx, pk);

@@ -11,10 +11,32 @@ import javax.transaction.Transaction;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public interface Cache
 {
+   class RemoveException extends RuntimeException
+   {
+      public RemoveException()
+      {
+      }
+
+      public RemoveException(String message)
+      {
+         super(message);
+      }
+
+      public RemoveException(Throwable cause)
+      {
+         super(cause);
+      }
+
+      public RemoveException(String message, Throwable cause)
+      {
+         super(message, cause);
+      }
+   }
+
    void lock();
 
    void lock(Object key);
@@ -29,17 +51,13 @@ public interface Cache
 
    void put(Transaction tx, Object pk, Object[] fields, Object[] relations);
 
-   void remove(Transaction tx, Object pk) throws Exception;
+   void remove(Transaction tx, Object pk) throws RemoveException;
 
    boolean contains(Transaction tx, Object pk);
 
    void lockForUpdate(Transaction tx, Object pk) throws Exception;
 
    void releaseLock(Transaction tx, Object pk) throws Exception;
-
-   void start() throws Exception;
-
-   void stop() throws Exception;
 
    Cache NONE = new Cache()
    {
@@ -73,7 +91,7 @@ public interface Cache
       {
       }
 
-      public void remove(Transaction tx, Object pk) throws Exception
+      public void remove(Transaction tx, Object pk)
       {
       }
 
@@ -82,24 +100,11 @@ public interface Cache
          return false;
       }
 
-      public int size()
-      {
-         return 0;
-      }
-
       public void lockForUpdate(Transaction tx, Object pk) throws Exception
       {
       }
 
       public void releaseLock(Transaction tx, Object pk) throws Exception
-      {
-      }
-
-      public void start()
-      {
-      }
-
-      public void stop()
       {
       }
    };

@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Simple LRU cache. Items are evicted when maxCapacity is exceeded.
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.8 $</tt>
+ * @version <tt>$Revision: 1.9 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class TableCache
@@ -245,7 +245,7 @@ public class TableCache
       }
    }
 
-   public void remove(Transaction tx, Object pk) throws Exception
+   public void remove(Transaction tx, Object pk)
    {
       CachedRow row = (CachedRow) rowsById.remove(pk);
       if(row == null || row.locker != null && !tx.equals(row.locker))
@@ -256,7 +256,7 @@ public class TableCache
             tx +
             ": " +
             (row == null ? "the entry could not be found" : "the entry is locked for update by " + row.locker);
-         throw new Exception(msg);
+         throw new RemoveException(msg);
       }
 
       dereference(row);

@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class JDBCEntityBridge2
    implements JDBCAbstractEntityBridge
@@ -250,12 +250,32 @@ public class JDBCEntityBridge2
       return fields;
    }
 
-   public boolean isDirty(EntityEnterpriseContext instance)
+   public boolean isStoreRequired(EntityEnterpriseContext instance)
    {
       PersistentContext pctx = (PersistentContext) instance.getPersistenceContext();
       return pctx.isDirty();
    }
 
+   public boolean isModified(EntityEnterpriseContext instance)
+   {
+      PersistentContext pctx = (PersistentContext) instance.getPersistenceContext();
+      boolean modified = pctx.isDirty();
+
+      if(!modified && cmrFields != null)
+      {
+         for(int i = 0; i < cmrFields.length; ++i)
+         {
+            final JDBCCMRFieldBridge2.FieldState cmrState = pctx.getCMRState(i);
+            if(cmrState != null && cmrState.isModified())
+            {
+               modified = true;
+               break;
+            }
+         }
+      }
+      return modified;
+   }
+   
    public Class getPrimaryKeyClass()
    {
       return metadata.getPrimaryKeyClass();
