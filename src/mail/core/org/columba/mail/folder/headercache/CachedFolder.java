@@ -280,7 +280,7 @@ public abstract class CachedFolder extends LocalFolder {
 	 */
 	public Object[] getUids(WorkerStatusController worker) throws Exception {
 		
-		int count = getHeaderCacheInstance().count();
+		int count = getCachedHeaderList(worker).count();
 		Object[] uids = new Object[count];
 		int i = 0;
 		for (Enumeration e = getCachedHeaderList(worker).keys();

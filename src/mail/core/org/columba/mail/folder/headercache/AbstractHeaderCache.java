@@ -22,12 +22,10 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Enumeration;
-import java.util.HashMap;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
-import org.columba.core.util.Mutex;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.FolderInconsistentException;
 import org.columba.mail.folder.MessageFolderInfo;
@@ -50,7 +48,7 @@ public abstract class AbstractHeaderCache {
 	private boolean headerCacheLoaded;
 
 	protected CachedFolder folder;
-	private static HashMap instanceMutexMap = new HashMap(71);
+	
 
 	/**
 	 * @param folder
@@ -60,41 +58,14 @@ public abstract class AbstractHeaderCache {
 
 		headerFile = new File(folder.getDirectoryFile(), ".header");
 
-		synchronized (instanceMutexMap) {
-			Mutex m = (Mutex) instanceMutexMap.get(headerFile);
-			if (m == null) { // not yet created
-				// create Mutex for 'on disk header cache' corresponding to headerFile path
-				instanceMutexMap.put(
-					headerFile,
-					new Mutex(headerFile.toString()));
-			}
-			instanceMutexMap.notifyAll();
-		}
+		
 
 		headerList = new HeaderList();
 
 		headerCacheLoaded = false;
 	}
 
-	/**
-	 * @return
-	 */
-	/** Take a mutex for the header-cache path associated with this object.
-	 * Used to prevent multiple workers from creating or modifying a header cache and its disk file
-	 * @return true the mutex was indeed taken anew, false if calling thread already had mutex.
-	 */
-	public boolean takeMutex() {
-		Mutex m = (Mutex) instanceMutexMap.get(headerFile);
-		return m.getMutex();
-	}
-
-	/**
-	 * 
-	 */
-	public void releaseMutex() {
-		Mutex m = (Mutex) instanceMutexMap.get(headerFile);
-		m.releaseMutex();
-	}
+	
 
 	/**
 	 * @return
@@ -152,11 +123,7 @@ public abstract class AbstractHeaderCache {
 		headerList.add(header, header.get("columba.uid"));
 	}
 
-	/**
-	 * @param worker
-	 * @return
-	 * @throws Exception
-	 */
+	
 	/** Get or (re)create the header cache file.
 	 *
 	 * @param worker
@@ -169,12 +136,7 @@ public abstract class AbstractHeaderCache {
 		// if there exists a ".header" cache-file
 		//  try to load the cache	
 		if (!headerCacheLoaded) {
-			// prevent multiple workers from creating or modifying a header cache and its disk file
-			// needToRelease = takeMutex();
-			// Only one operation is allowed on a folder -> dont need that
-			if (headerCacheLoaded) { // if another thread already loaded it
-				return headerList;
-			}
+			
 
 			if (headerFile.exists()) {
 				try {
