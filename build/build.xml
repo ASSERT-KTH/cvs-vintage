@@ -361,11 +361,11 @@
         <move file="${src.sql.dir}/${project}-schema.sql"
             tofile="${build.sql.scarab}/${scarab.database.type}-${project}.sql"/>
         <move file="${src.sql.dir}/turbine-schema.sql"
-            tofile="${build.sql.scarab}/${scarab.database.type}-turbine.sql"/>
+            tofile="${build.sql.scarab}/turbine.sql"/>
         <move file="${src.sql.dir}/scheduler-schema.sql"
-            tofile="${build.sql.scarab}/${scarab.database.type}-scheduler.sql"/>
+            tofile="${build.sql.scarab}/scheduler.sql"/>
         <move file="${src.sql.dir}/id-table-schema.sql"
-            tofile="${build.sql.scarab}/${scarab.database.type}-id-table.sql"/>
+            tofile="${build.sql.scarab}/id-table.sql"/>
     </target>
 
     <!-- ================================================================== -->
@@ -452,8 +452,7 @@
         <!-- populate with default and sample data -->
         <echo message=
             "Connecting to ${scarab.database.type} at ${scarab.database.url}"/>
-        <property name="file.prefix" 
-            value="${build.sql.scarab}/${scarab.database.type}"/>
+        <property name="file.prefix" value="${build.sql.scarab}/"/>
         <sql
             driver="${scarab.database.jdbc.driver}"
             url="${scarab.database.url}"
@@ -461,16 +460,16 @@
             password="${scarab.database.admin.password}">
             <classpath refid="classpath"/>
 
-            <transaction src="${file.prefix}-scarab.sql"/>
-            <transaction src="${file.prefix}-turbine.sql"/>
-            <transaction src="${file.prefix}-scheduler.sql"/>
-            <transaction src="${file.prefix}-id-table.sql"/>
-            <transaction src="${file.prefix}-turbine-id-table-init.sql"/>
-            <transaction src="${file.prefix}-scarab-id-table-init.sql"/>
-            <transaction src="${file.prefix}-scarab-required-data.sql"/>
-            <transaction src="${file.prefix}-scarab-default-data.sql"/>
-            <transaction src="${file.prefix}-scarab-security.sql"/>
-            <transaction src="${file.prefix}-scarab-sample-data.sql"/>
+            <transaction src="${file.prefix}${scarab.database.type}-${project}.sql"/>
+            <transaction src="${file.prefix}turbine.sql"/>
+            <transaction src="${file.prefix}scheduler.sql"/>
+            <transaction src="${file.prefix}id-table.sql"/>
+            <transaction src="${file.prefix}turbine-id-table-init.sql"/>
+            <transaction src="${file.prefix}scarab-id-table-init.sql"/>
+            <transaction src="${file.prefix}scarab-required-data.sql"/>
+            <transaction src="${file.prefix}scarab-default-data.sql"/>
+            <transaction src="${file.prefix}scarab-security.sql"/>
+            <transaction src="${file.prefix}scarab-sample-data.sql"/>
         </sql>
     </target>
 
