@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.69 2004/12/09 19:09:13 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.70 2004/12/09 21:23:47 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,8 +116,6 @@ public abstract class FigEdgeModelElement
         ITALIC_LABEL_FONT =
             new Font(LABEL_FONT.getFamily(), Font.ITALIC, LABEL_FONT.getSize());
     }
-
-    //public static final int MARGIN = 2;
 
     /**
      * Offset from the end of the set of popup actions at which new items
@@ -624,13 +622,9 @@ public abstract class FigEdgeModelElement
             Object oldOwner = getOwner();
 
             if (org.argouml.model.ModelFacade.isAModelElement(oldOwner)) {
-//                UmlModelEventPump.getPump().removeModelEventListener(this,
-//								     oldOwner);
                 Model.getPump().removeModelEventListener(this, oldOwner);
             }
             if (org.argouml.model.ModelFacade.isAModelElement(newOwner)) {
-//                UmlModelEventPump.getPump().addModelEventListener(this,
-//								  newOwner);
                 Model.getPump().addModelEventListener(this, oldOwner);
                 
                 if (ModelFacade.getUUID(newOwner) == null) {
@@ -642,65 +636,6 @@ public abstract class FigEdgeModelElement
         }
 
     }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#propertySet(ru.novosoft.uml.MElementEvent)
-     */
-//    public void propertySet(MElementEvent mee) {
-//        modelChanged(mee);
-//        damage();
-//    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#listRoleItemSet(ru.novosoft.uml.MElementEvent)
-     */
-//    public void listRoleItemSet(MElementEvent mee) {
-//        
-//        modelChanged(mee);
-//        damage();
-//    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#recovered(ru.novosoft.uml.MElementEvent)
-     */
-//    public void recovered(MElementEvent mee) {
-//        
-//        modelChanged(mee);
-//        damage();
-//    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#removed(ru.novosoft.uml.MElementEvent)
-     */
-//    public void removed(MElementEvent mee) {
-//        
-//        LOG.debug("deleting: " + this + mee);
-//        if (mee.getSource() == getOwner())
-//            this.removeFromDiagram();
-//        else {
-//            modelChanged(mee);
-//            damage();
-//        }
-//
-//    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleAdded(ru.novosoft.uml.MElementEvent)
-     */
-//    public void roleAdded(MElementEvent mee) {
-//        
-//        modelChanged(mee);
-//        damage();
-//    }
-
-    /**
-     * @see ru.novosoft.uml.MElementListener#roleRemoved(ru.novosoft.uml.MElementEvent)
-     */
-//    public void roleRemoved(MElementEvent mee) {
-//        
-//        modelChanged(mee);
-//        damage();
-//    }
 
     /**
      * @see org.tigris.gef.presentation.Fig#deleteFromModel()
@@ -802,7 +737,6 @@ public abstract class FigEdgeModelElement
     public void removeFromDiagram() {
         Object o = getOwner();
         if (ModelFacade.isABase(o)) {
-//            UmlModelEventPump.getPump().removeModelEventListener(this, o);
             Model.getPump().removeModelEventListener(this, o);
         }
         if (this instanceof ArgoEventListener) {
