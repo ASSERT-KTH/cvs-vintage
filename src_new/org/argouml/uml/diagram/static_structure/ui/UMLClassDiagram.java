@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.58 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLClassDiagram.java,v 1.59 2004/10/12 16:02:57 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,6 +23,8 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.diagram.static_structure.ui;
+
+import java.beans.PropertyVetoException;
 
 import javax.swing.Action;
 
@@ -66,8 +68,6 @@ public class UMLClassDiagram extends UMLDiagram {
     private Action actionAttribute;
     private Action actionOperation;
 
-    private static int classDiagramSerial = 1;
-
     /**
      * constructor
      */
@@ -85,11 +85,14 @@ public class UMLClassDiagram extends UMLDiagram {
     }
 
     /**
-     * constructor
+     * The constructor. A default unique diagram name is constructed.
      * @param m the namespace
      */
     public UMLClassDiagram(Object m) {
-        this(getNewDiagramName(), m);
+        super(m);
+        try {
+            setName(getNewDiagramName());
+        } catch (PropertyVetoException pve) { }
     }
 
     /**
@@ -191,10 +194,8 @@ public class UMLClassDiagram extends UMLDiagram {
      * Creates a new diagramname.
      * @return String
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Class Diagram " + classDiagramSerial;
-        classDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Class Diagram " + getNextDiagramSerial();
         if (!ProjectManager.getManager().getCurrentProject()
 	        .isValidDiagramName(name)) {
             name = getNewDiagramName();

@@ -1,4 +1,4 @@
-// $Id: UMLCollaborationDiagram.java,v 1.53 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLCollaborationDiagram.java,v 1.54 2004/10/12 16:02:58 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,6 @@ public class UMLCollaborationDiagram extends UMLDiagram {
 
     ////////////////////////////////////////////////////////////////
     // contructors
-    private static int collaborationDiagramSerial = 1;
 
     /**
      * constructor
@@ -224,10 +223,8 @@ public class UMLCollaborationDiagram extends UMLDiagram {
      * Creates a new diagramname.
      * @return String
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Collaboration Diagram " + collaborationDiagramSerial;
-        collaborationDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Collaboration Diagram " + getNextDiagramSerial();
         if (!ProjectManager.getManager().getCurrentProject()
 	        .isValidDiagramName(name)) {
             name = getNewDiagramName();

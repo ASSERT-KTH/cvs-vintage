@@ -1,4 +1,4 @@
-// $Id: UMLStateDiagram.java,v 1.60 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.61 2004/10/12 16:02:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // Classes: UMLStateDiagram
 // Original Author: your email here
 
-// $Id: UMLStateDiagram.java,v 1.60 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLStateDiagram.java,v 1.61 2004/10/12 16:02:59 mvw Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -75,8 +75,7 @@ public class UMLStateDiagram extends UMLDiagram {
     private Action actionDeepHistoryPseudoState;
     private Action actionTransition;
     private Action actionJunctionPseudoState; 
-    private static int stateDiagramSerial = 1;
-    
+
     ////////////////////////////////////////////////////////////////
     // contructors
 
@@ -109,18 +108,20 @@ public class UMLStateDiagram extends UMLDiagram {
                 namespace = ModelFacade.getOwner(context);
             }
         }
-        if (namespace != null && ModelFacade.getName(namespace) != null) {
-            String name = null, diagramName = ModelFacade.getName(namespace);
-            int number =
-                (ModelFacade.getBehaviors(namespace)) == null
+        if (namespace != null && ModelFacade.getName(namespace) != null)
+            if (ModelFacade.getName(namespace).trim() != "") {
+                String name = null;
+                String diagramName = ModelFacade.getName(namespace);
+                int number =
+                    (ModelFacade.getBehaviors(namespace)) == null
                     ? 0
-                    : ModelFacade.getBehaviors(namespace).size();
-            name = diagramName + " " + (number++);
-            LOG.info("UMLStateDiagram constructor: String name = " + name);
-            try {
-                setName(name);
-            } catch (PropertyVetoException pve) { }
-        }
+                            : ModelFacade.getBehaviors(namespace).size();
+                name = diagramName + " " + (number++);
+                LOG.info("UMLStateDiagram constructor: String name = " + name);
+                try {
+                    setName(name);
+                } catch (PropertyVetoException pve) { }
+            }
         if (namespace != null) {
             setup(namespace, sm);
         }
@@ -254,10 +255,8 @@ public class UMLStateDiagram extends UMLDiagram {
     /** Creates a name for the diagram.
      * @return the new diagram name
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Statechart Diagram " + stateDiagramSerial;
-        stateDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Statechart Diagram " + getNextDiagramSerial();
         if (!ProjectManager.getManager().getCurrentProject()
                  .isValidDiagramName(name)) {
             name = getNewDiagramName();

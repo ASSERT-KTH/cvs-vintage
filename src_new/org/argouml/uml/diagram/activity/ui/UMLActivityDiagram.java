@@ -1,4 +1,4 @@
-// $Id: UMLActivityDiagram.java,v 1.61 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLActivityDiagram.java,v 1.62 2004/10/12 16:02:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,12 +72,6 @@ public class UMLActivityDiagram extends UMLDiagram {
     private Action actionSubactivityState;
 
     /**
-     * The serial number for new activity diagrams. 
-     * Used to create an unique number for the name of the diagram. 
-     */
-    private static int activityDiagramSerial = 1;
-
-    /**
      * Constructor
      */
     public UMLActivityDiagram() {
@@ -117,15 +111,16 @@ public class UMLActivityDiagram extends UMLDiagram {
             || !ModelFacade.isAActivityGraph(agraph))
             throw new IllegalArgumentException();
 
-        if (namespace != null && ModelFacade.getName(namespace) != null) {
-            String name =
-                ModelFacade.getName(namespace)
+        if (namespace != null && ModelFacade.getName(namespace) != null) 
+            if (ModelFacade.getName(namespace).trim() != "") {
+                String name =
+                    ModelFacade.getName(namespace)
                     + " activity "
                     + (ModelFacade.getBehaviors(namespace).size());
-            try {
-                setName(name);
-            } catch (PropertyVetoException pve) { }
-        }
+                try {
+                    setName(name);
+                } catch (PropertyVetoException pve) { }
+            }
         if (namespace != null)
             setup(namespace, agraph);
         else
@@ -246,10 +241,8 @@ public class UMLActivityDiagram extends UMLDiagram {
      *
      * @return String
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Activity Diagram " + activityDiagramSerial;
-        activityDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Activity Diagram " + getNextDiagramSerial();
         if (!ProjectManager.getManager().getCurrentProject()
                  .isValidDiagramName(name)) {
             name = getNewDiagramName();

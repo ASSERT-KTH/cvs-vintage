@@ -1,4 +1,4 @@
-// $Id: UMLSequenceDiagram.java,v 1.34 2004/09/09 18:07:17 mvw Exp $
+// $Id: UMLSequenceDiagram.java,v 1.35 2004/10/12 16:02:59 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,22 +46,6 @@ import org.argouml.uml.diagram.ui.UMLDiagram;
  * @author 5eichler@informatik.uni-hamburg.de originally.
  */
 public class UMLSequenceDiagram extends UMLDiagram {
-
-    /**
-     * This is the default sequence number for newly created anonymous
-     * sequence diagrams.
-     */
-    private static int sequenceDiagramSerial = 1;
-
-    /**
-     * Returns the next available sequence diagram number.
-     *
-     * @return a number.
-     */
-    private static int getNextSequenceDiagramNumber() {
-	return sequenceDiagramSerial++;
-    }
-
 
     private Object[] actions;
 
@@ -114,9 +98,8 @@ public class UMLSequenceDiagram extends UMLDiagram {
      *
      * @return a new unique name.
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Sequence Diagram " + getNextSequenceDiagramNumber();
+    protected String getNewDiagramName() {
+        String name = "Sequence Diagram " + getNextDiagramSerial();
         if (!(ProjectManager.getManager().getCurrentProject()
 	      .isValidDiagramName(name))) {
             name = getNewDiagramName();

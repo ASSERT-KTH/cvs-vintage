@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.46 2004/10/10 14:59:22 mvw Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.47 2004/10/12 16:02:40 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -102,12 +102,6 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     
     private Action actionExtensionPoint;
 
-    /**
-     * A static counter of the use case index (used in constructing a
-     * unique name for each new diagram.<p>
-     */
-    private static int useCaseDiagramSerial = 1;
-
     // constructors
 
     /**
@@ -118,8 +112,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
      * it directly when loading a new diagram, so it must remain
      * public.<p>
      *
-     * A unique name is constructed by using the serial index
-     * {@link #useCaseDiagramSerial}. We allow for the possibility
+     * A unique name is constructed by using the serial index.
+     * We allow for the possibility
      * that setting this may fail, in which case no name is set.<p>
      */
     public UMLUseCaseDiagram() {
@@ -247,10 +241,8 @@ public class UMLUseCaseDiagram extends UMLDiagram {
     /**
      * @return a new unique name for the diagram
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Use Case Diagram " + useCaseDiagramSerial;
-        useCaseDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Use Case Diagram " + getNextDiagramSerial();
         if (!(ProjectManager.getManager().getCurrentProject()
 	          .isValidDiagramName(name))) {
             name = getNewDiagramName();

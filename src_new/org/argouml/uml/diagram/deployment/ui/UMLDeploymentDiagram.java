@@ -1,4 +1,4 @@
-// $Id: UMLDeploymentDiagram.java,v 1.40 2004/10/10 14:59:21 mvw Exp $
+// $Id: UMLDeploymentDiagram.java,v 1.41 2004/10/12 16:02:40 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,7 +80,6 @@ public class UMLDeploymentDiagram extends UMLDiagram {
 
     ////////////////////////////////////////////////////////////////
     // contructors
-    private static int deploymentDiagramSerial = 1;
 
     /**
      * Constructor
@@ -173,10 +172,8 @@ public class UMLDeploymentDiagram extends UMLDiagram {
      * Creates a new diagramname.
      * @return String
      */
-    protected static String getNewDiagramName() {
-        String name = null;
-        name = "Deployment Diagram " + deploymentDiagramSerial;
-        deploymentDiagramSerial++;
+    protected String getNewDiagramName() {
+        String name = "Deployment Diagram " + getNextDiagramSerial();
         if (!ProjectManager.getManager().getCurrentProject()
 	        .isValidDiagramName(name)) {
             name = getNewDiagramName();

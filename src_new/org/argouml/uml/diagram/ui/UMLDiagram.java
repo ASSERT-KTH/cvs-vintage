@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.54 2004/10/11 19:28:13 mvw Exp $
+// $Id: UMLDiagram.java,v 1.55 2004/10/12 16:03:00 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -81,6 +81,12 @@ public abstract class UMLDiagram
 
     private static final Logger LOG = Logger.getLogger(UMLDiagram.class);
 
+    /**
+     * The serial number for new diagrams. 
+     * Used to create an unique number for the name of the diagram. 
+     */
+    private int diagramSerial = 1;
+    
     ////////////////////////////////////////////////////////////////
     // actions for toolbar
     
@@ -586,6 +592,21 @@ public abstract class UMLDiagram
         
         return new RadioAction(
             new ActionAddAssociation(aggregationKind, unidirectional, descr));
+    }
+
+    /**
+     * Reset the diagram serial counter to the initial value. 
+     * This should e.g. be done when the menuitem File->New is activated. 
+     */
+    public void resetDiagramSerial() {
+        diagramSerial = 1;
+    }
+
+    /**
+     * @return Returns the diagramSerial.
+     */
+    protected int getNextDiagramSerial() {
+        return diagramSerial++;
     }
 } /* end class UMLDiagram */
 
