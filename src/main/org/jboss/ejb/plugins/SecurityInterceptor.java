@@ -32,7 +32,7 @@ import java.util.Set;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -160,7 +160,7 @@ public class SecurityInterceptor extends AbstractInterceptor
       boolean trace = log.isInfoEnabled();
 
       // If there is not a security manager then there is no authentication required
-      if (mi.getMethod() == null || securityManager == null)
+      if (mi.getMethod() == null || securityManager == null || container == null)
       {
          // Allow for the progatation of caller info to other beans
          SecurityAssociation.setPrincipal(principal);
