@@ -1,4 +1,4 @@
-// $Id: NSUMLModelFacade.java,v 1.3 2005/02/02 21:18:09 mvw Exp $
+// $Id: NSUMLModelFacade.java,v 1.4 2005/02/05 10:19:42 d00mst Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1410,24 +1410,28 @@ public class NSUMLModelFacade implements Facade {
         MOperation operation = null;
         if (handle instanceof MMethod) {
             operation = ((MMethod) handle).getSpecification();
+            if (operation == null) {
+                // This is not a well formed model in a strict sense. See the
+                // multiplicity in UML 1.3 Figure 2-5.
+                return false;
+            }
         } else if (handle instanceof MOperation) {
             operation = (MOperation) handle;
+        } else {
+            return illegalArgumentBoolean(handle);
         }
+
         Object stereo = null;
-        if (operation != null) {
-            Iterator iter =
-                getStereotypes(operation).iterator();
-            while (iter.hasNext()) {
-                if (nsmodel.getExtensionMechanismsHelper().isStereotypeInh(
-                        stereo,
-                        "create",
-                        "BehavioralFeature")) {
-                    return true;
-                }
+        Iterator iter = getStereotypes(operation).iterator();
+        while (iter.hasNext()) {
+            if (nsmodel.getExtensionMechanismsHelper().isStereotypeInh(
+                    stereo,
+                    "create",
+                    "BehavioralFeature")) {
+                return true;
             }
-            return false;
         }
-	return illegalArgumentBoolean(operation);
+        return false;
     }
 
     /**
