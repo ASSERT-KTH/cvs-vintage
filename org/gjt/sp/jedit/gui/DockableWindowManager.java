@@ -102,7 +102,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.95 2004/03/19 22:42:21 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.96 2004/03/25 23:13:25 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1159,7 +1159,8 @@ public class DockableWindowManager extends JPanel implements EBComponent
 				while(iter.hasNext())
 				{
 					Entry entry = (Entry)iter.next();
-					entry.container.remove(entry);
+					if(entry.container != null)
+						entry.container.remove(entry);
 				}
 			}
 			else if(pmsg.getWhat() == PluginUpdate.UNLOADED)
@@ -1169,9 +1170,12 @@ public class DockableWindowManager extends JPanel implements EBComponent
 				while(iter.hasNext())
 				{
 					Entry entry = (Entry)iter.next();
-					entry.container.unregister(entry);
-					entry.win = null;
-					entry.container = null;
+					if(entry.container != null)
+					{
+						entry.container.unregister(entry);
+						entry.win = null;
+						entry.container = null;
+					}
 				}
 			}
 		}
