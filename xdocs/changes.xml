@@ -7,7 +7,7 @@
 
   <body>
     <release version="b20" date="in dev">
-      <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB759">
+      <action dev="epugh" type="fix" due-to="Anthony Wong" issue-id="SCB759">
         Users without the "Issue | Search" role can still see the search GUI
       </action>         
       <action dev="epugh" type="update">
