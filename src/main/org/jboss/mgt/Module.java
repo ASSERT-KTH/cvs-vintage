@@ -80,7 +80,7 @@ public class Module
     *
     * @param pItem Item to be added
     **/
-   public void addItem( Object pItem ) {
+   public void addItem( Item pItem ) {
       mItems.add( pItem );
    }
       
@@ -89,13 +89,13 @@ public class Module
     *
     * @param pItem Item to be removed
     **/
-   public void removeItem( Object pItem ) {
+   public void removeItem( Item pItem ) {
       mItems.remove( pItem );
    }
 
    /**
     * @return Collection of Items deployed with this application. Each
-    *         item is of type {@link java.lang.Object Object}.
+    *         item is of type {@link org.jboss.mgt.Item Item}.
     **/
    public Collection getItems() {
       return mItems;

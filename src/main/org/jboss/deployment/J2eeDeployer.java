@@ -70,7 +70,7 @@ import org.w3c.dom.Element;
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 *   @author Toby Allsopp (toby.allsopp@peace.com)
-*   @version $Revision: 1.22 $
+*   @version $Revision: 1.23 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -704,31 +704,29 @@ implements J2eeDeployerMBean
       Collection lItems = new ArrayList();
       while( i.hasNext() ) {
          Deployment.Module lModule = (Deployment.Module) i.next();
-         lItems.add( lModule.webContext );
+         // Add a Web Module
+         lModules.add(
+            new Module(
+               lModule.webContext,
+               "DD:FixeLater",
+               null
+            )
+         );
       }
-      // Add Web Module
-      lModules.add(
-         new Module(
-            "WebModule:FixeLater",
-            "DD:FixeLater",
-            lItems
-         )
-      );
       // Go through ejb applications
       i = pDeployment.webModules.iterator();
       lItems = new ArrayList();
       while( i.hasNext() ) {
          Deployment.Module lModule = (Deployment.Module) i.next();
-         lItems.add( ( (URL) lModule.localUrls.firstElement() ).getFile() );
+         // Add an EJB Module
+         lModules.add(
+            new Module(
+               ( (URL) lModule.localUrls.firstElement() ).getFile(),
+               "DD:FixeLater",
+               null
+            )
+         );
       }
-      // Add EJB Module
-      lModules.add(
-         new Module(
-            "EJBModule:FixeLater",
-            "DD:FixeLater",
-            lItems
-         )
-      );
       // Create Applications
       return new Application(
          pId,
