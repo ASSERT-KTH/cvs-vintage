@@ -27,11 +27,12 @@
 // Classes: FigCompartment
 // Original Author: Eric Lefevre
 // NOT RELEVANT:
-// $Id: FigCompartment.java,v 1.1 1999/04/28 23:37:22 jrobbins Exp $
+// $Id: FigCompartment.java,v 1.2 1999/04/29 00:09:58 jrobbins Exp $
 
 package uci.uml.visual;
 
 import java.awt.*;
+import java.awt.event.*;
 import uci.gef.*;
 
 /** A compartment is a FigText that has the capacity to be
@@ -75,6 +76,16 @@ public class FigCompartment extends FigText {
   /** Check if it should be displayed. If yes, call super.paint. Otherwise, does nothing. */
   public void paint(Graphics g) {
     if ( _displayed ) super.paint(g);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // event handlers
+
+
+
+  public void mouseClicked(MouseEvent me) {
+    if (isDisplayed()) super.mouseClicked(me);
+    //do not process events if not displayed
   }
 
 } /* end class FigCompartment */

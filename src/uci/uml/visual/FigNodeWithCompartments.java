@@ -26,7 +26,7 @@
 // File: FigNodeWithCompartments.java
 // Classes: FigNodeWithCompartments
 // Original Author: elefevre
-// $Id: FigNodeWithCompartments.java,v 1.2 1999/04/28 23:45:09 jrobbins Exp $
+// $Id: FigNodeWithCompartments.java,v 1.3 1999/04/29 00:09:59 jrobbins Exp $
 
 package uci.uml.visual;
 
@@ -170,7 +170,7 @@ public abstract class FigNodeWithCompartments extends FigNodeModelElement {
         yAfterRegularFigs = yAfterRegularFigs + height;
       }
       else
-        comp.setBounds(x, yAfterRegularFigs-height, w, height+1);
+        comp.setBounds(x, yAfterRegularFigs-height, 0, height+1);
 // note: this last line is to make sure that FigCompartments
 // that are not displayed are keeping the proper height
     }
