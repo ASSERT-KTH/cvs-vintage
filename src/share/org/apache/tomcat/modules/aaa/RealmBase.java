@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.4 2004/02/25 06:52:40 billbarker Exp $
- * $Revision: 1.4 $
- * $Date: 2004/02/25 06:52:40 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/aaa/RealmBase.java,v 1.5 2004/10/08 02:53:38 billbarker Exp $
+ * $Revision: 1.5 $
+ * $Date: 2004/10/08 02:53:38 $
  *
  *   
  *  Copyright 1999-2004 The Apache Sofware Foundation.
@@ -21,6 +21,7 @@
 
 package org.apache.tomcat.modules.aaa;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.Principal;
 
@@ -68,6 +69,11 @@ public abstract class RealmBase extends BaseInterceptor {
     protected String digest = "No";
 
     /**
+     * The encoding to use for password digesting.
+     */
+    protected String digestEncoding=null;
+
+    /**
      * Gets the digest algorithm used for credentials in the database.
      * Should be a value that MessageDigest accepts for algorithm or "No".
      * "No" is the Default.
@@ -88,18 +94,40 @@ public abstract class RealmBase extends BaseInterceptor {
     }
 
     /**
+     * Get the encoding to use for digesting passwords.
+     * If <code>null</code> then the System encoding is used.
+     */
+    public String getDigestEncoding() {
+	return digestEncoding;
+    }
+
+    /**
+     * Set the encoding to use for digesting passwords.
+     * if <code>null</code> then the System encoding is used.
+     */
+    public void setDigestEncoding(String de) {
+	digestEncoding = de;
+    }
+
+    /**
      * Digest password using the algorithm especificied and
      * convert the result to a corresponding hex string.
      * If exception, the plain credentials string is returned
      * @param credentials Password or other credentials to use in authenticating this username
      * @param algorithm Algorithm used to do the digest
      */
-    public static final String digest(String credentials,String algorithm ) {
+    public static final String digest(String credentials,String algorithm, String encoding ) {
         try {
             // Obtain a new message digest with MD5 encryption
             MessageDigest md = (MessageDigest)MessageDigest.getInstance(algorithm).clone();
             // encode the credentials
-            md.update(credentials.getBytes());
+	    byte [] credBytes = null;
+	    if(encoding != null) {
+		credBytes = credentials.getBytes(encoding);
+	    } else {
+		credBytes = credentials.getBytes();
+	    }
+            md.update(credBytes);
             // obtain the byte array from the digest
             byte[] dig = md.digest();
             // convert the byte array to hex string
@@ -121,7 +149,7 @@ public abstract class RealmBase extends BaseInterceptor {
             if (args[0].equalsIgnoreCase("-a")) {
                 for (int i = 2; i < args.length; i++) {
                     System.out.print(args[i] + ":");
-                    System.out.println(digest(args[i], args[1]));
+                    System.out.println(digest(args[i], args[1], null));
                 }
             }
         }
@@ -135,7 +163,7 @@ public abstract class RealmBase extends BaseInterceptor {
         if( digest.equals("") || digest.equalsIgnoreCase("No")){
             return credentials;
         } else {
-            return digest(credentials,digest);
+            return digest(credentials,digest, digestEncoding);
         }
     }
 
