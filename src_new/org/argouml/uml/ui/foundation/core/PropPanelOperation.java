@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.34 2003/05/10 15:22:40 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.35 2003/05/31 10:28:26 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,7 +62,7 @@ import ru.novosoft.uml.foundation.data_types.MParameterDirectionKind;
 import ru.novosoft.uml.foundation.data_types.MScopeKind;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 
-/**
+/** A property panel for operations.
  * @todo this property panel needs refactoring to remove dependency on
  *       old gui components.
  */
@@ -264,7 +264,7 @@ public class PropPanelOperation extends PropPanelModelElement {
         new PropPanelButton(
             this,
             buttonPanel,
-            _operationIcon,
+            _addOpIcon,
             Argo.localize("UMLMenu", "button.add-new-operation"),
             "buttonAddOperation",
             null);
