@@ -150,6 +150,9 @@ public interface Response {
 
     public void reset() throws IllegalStateException ;
 
+    // Reset the response buffer but not headers and cookies
+    public void resetBuffer() throws IllegalStateException ;
+
     /** Any implementation needs to notify ContextManger
      */
     public void flushBuffer() throws IOException ;

@@ -129,6 +129,9 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 	if (realResponse.isBufferCommitted()) 
 	    throw new IllegalStateException(sm.getString("rdi.forward.ise"));
 
+	// reset the output buffer but not the headers and cookies
+	realResponse.resetBuffer();
+
 	// the strange case in a separate method.
 	if( name!=null) {
 	    forwardNamed( request, response );
