@@ -26,7 +26,7 @@
 // File: CrMultipleRealization.java.java
 // Classes: CrMultipleRealization.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleRealization.java,v 1.1 2002/07/11 05:27:03 mkl Exp $
+// $Id: CrMultipleRealization.java,v 1.2 2002/08/19 08:18:17 kataka Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -36,6 +36,7 @@ import ru.novosoft.uml.foundation.core.*;
 import ru.novosoft.uml.foundation.data_types.*;
 
 import org.argouml.kernel.*;
+import org.argouml.model.uml.UmlHelper;
 import org.argouml.cognitive.*;
 import org.argouml.uml.cognitive.critics.*;
 import org.argouml.uml.MMUtil;
@@ -57,7 +58,7 @@ public class CrMultipleRealization extends CrUML {
     if (!(dm instanceof MInterface)) return NO_PROBLEM;
     MInterface inter = (MInterface) dm;
    
-    Collection realize = MMUtil.SINGLETON.getSpecifications(inter);
+    Collection realize = UmlHelper.getHelper().getCore().getSpecifications(inter);
 
     if (realize != null && realize.size()>0) return PROBLEM_FOUND;
     return NO_PROBLEM;

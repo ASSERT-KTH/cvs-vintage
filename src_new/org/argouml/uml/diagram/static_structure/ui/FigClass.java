@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.26 2002/08/17 12:39:57 d00mst Exp $
+// $Id: FigClass.java,v 1.27 2002/08/19 08:18:17 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Fix for ever
 // increasing vertical size of classes with stereotypes (issue 745).
@@ -57,6 +57,7 @@ import org.argouml.uml.generator.*;
 import org.argouml.uml.diagram.ui.*;
 import org.argouml.ui.*;
 import org.argouml.model.uml.UmlFactory;
+import org.argouml.model.uml.UmlHelper;
 
 /**
  * <p>Class to display graphics for a UML Class in a diagram.</p>
@@ -719,7 +720,7 @@ public class FigClass extends FigNodeModelElement {
     if (cls == null)
       return;
 	int acounter = 1;
-    Collection strs = MMUtil.SINGLETON.getAttributes(cls);
+    Collection strs = UmlHelper.getHelper().getCore().getAttributes(cls);
     if (strs != null) {
 	  Iterator iter = strs.iterator();
       Vector figs = _attrVec.getFigs();
@@ -751,7 +752,7 @@ public class FigClass extends FigNodeModelElement {
 	  }
 	}
 	int ocounter = 1;
-    Collection behs = MMUtil.SINGLETON.getOperations(cls);
+    Collection behs = UmlHelper.getHelper().getCore().getOperations(cls);
     if (behs != null) {
       behs.removeAll(strs);
 	  Iterator iter = behs.iterator();

@@ -24,7 +24,7 @@
 // File: CrUtilityViolated.java
 // Classes: CrUtilityViolated
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUtilityViolated.java,v 1.3 2002/02/25 08:37:50 linus Exp $
+// $Id: CrUtilityViolated.java,v 1.4 2002/08/19 08:18:16 kataka Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,7 +35,7 @@ import ru.novosoft.uml.foundation.data_types.*;
 import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 import org.argouml.cognitive.*;
-import org.argouml.uml.*;
+import org.argouml.model.uml.UmlHelper;import org.argouml.uml.*;
 
 /** A critic to detect when a class can never have instances (of
  *  itself of any subclasses). */
@@ -72,7 +72,7 @@ public class CrUtilityViolated extends CrUML {
 	private Collection getInheritedStructuralFeatures(MClassifier cls,int depth)
 	{     
 		Collection res = new Vector();
-		res.addAll(MMUtil.SINGLETON.getAttributes(cls));
+		res.addAll(UmlHelper.getHelper().getCore().getAttributes(cls));
 
 		Collection inh = cls.getGeneralizations();
 		for (Iterator iter = inh.iterator(); iter.hasNext();) {

@@ -24,7 +24,7 @@
 // File: FigUseCase.java
 // Classes: FigUseCase
 // Original Author: your email address here
-// $Id: FigUseCase.java,v 1.5 2002/06/21 05:23:34 mkl Exp $
+// $Id: FigUseCase.java,v 1.6 2002/08/19 08:18:17 kataka Exp $
 
 // 8 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // the display of extension points.
@@ -46,6 +46,7 @@ import org.tigris.gef.presentation.*;
 import org.tigris.gef.graph.*;
 
 import org.argouml.application.api.*;
+import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.*;
 import org.argouml.uml.*;
 import org.argouml.uml.ui.*;
@@ -1328,7 +1329,7 @@ public class FigUseCase extends FigNodeModelElement {
         // Loop through all the extension points. epCount keeps track of the
         // fig's index as we go through the extension points.
 
-        Collection eps     = MMUtil.SINGLETON.getExtensionPoints(useCase);
+        Collection eps     = UmlHelper.getHelper().getUseCases().getExtensionPoints(useCase);
 	int        epCount = 1;
 
         if (eps != null) {
