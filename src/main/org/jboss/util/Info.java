@@ -6,22 +6,19 @@
  */
 package org.jboss.util;
 
-import java.io.*;
-import java.net.*;
 import java.util.Enumeration;
 
-import javax.management.*;
-import javax.management.loading.MLet;
+import javax.management.MBeanRegistration;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
-import org.jboss.logging.Log;
+import org.apache.log4j.Category;
 
-/**
- *   <description> 
+/** A simple mbean that dumps out info like the system properties, etc.
  *      
- *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.6 $
+ *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ *   @version $Revision: 1.7 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -30,9 +27,8 @@ public class Info
    public static final String OBJECT_NAME = ":service=Info";
     
    // Attributes ----------------------------------------------------
-   
-   Log log = Log.createLog("Info");
-   
+   Category log = Category.getInstance(Info.class);
+
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -42,9 +38,9 @@ public class Info
       throws java.lang.Exception
    {
       // Dump out basic info as INFO priority msgs
-      log.log("Java version: "+System.getProperty("java.version")+","+System.getProperty("java.vendor"));
-      log.log("Java VM: "+System.getProperty("java.vm.name")+" "+System.getProperty("java.vm.version")+","+System.getProperty("java.vm.vendor"));
-      log.log("System: "+System.getProperty("os.name")+" "+System.getProperty("os.version")+","+System.getProperty("os.arch"));
+      log.info("Java version: "+System.getProperty("java.version")+","+System.getProperty("java.vendor"));
+      log.info("Java VM: "+System.getProperty("java.vm.name")+" "+System.getProperty("java.vm.version")+","+System.getProperty("java.vm.vendor"));
+      log.info("System: "+System.getProperty("os.name")+" "+System.getProperty("os.version")+","+System.getProperty("os.arch"));
       // Now dump out the entire System properties as DEBUG priority msgs
       log.debug("+++ Full System Properties Dump");
       Enumeration names = System.getProperties().propertyNames();
