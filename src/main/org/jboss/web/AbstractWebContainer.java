@@ -11,43 +11,25 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
-import javax.naming.Name;
-import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.J2eeApplicationMetaData;
-import org.jboss.deployment.J2eeModuleMetaData;
-import org.jboss.deployment.MainDeployerMBean;
-import org.jboss.deployment.SubDeployer;
 import org.jboss.deployment.SubDeployerSupport;
 import org.jboss.ejb.EjbUtil;
-import org.jboss.metadata.ApplicationMetaData;
-import org.jboss.metadata.BeanMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EnvEntryMetaData;
@@ -55,14 +37,11 @@ import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
 import org.jboss.metadata.WebMetaData;
 import org.jboss.metadata.XmlFileLoader;
-import org.jboss.naming.ENCFactory;
 import org.jboss.util.naming.Util;
+import org.jboss.util.file.JarUtils;
 import org.jboss.security.plugins.NullSecurityManager;
-import org.jboss.system.ServiceMBeanSupport;
-import org.jboss.system.server.ServerConfigLocator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /** A template pattern class for web container integration into JBoss. This class
 should be subclasses by web container providers wishing to integrate their
@@ -160,7 +139,7 @@ in the catalina module.
 @jmx:mbean extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.62 $
+@version $Revision: 1.63 $
 */
 public abstract class AbstractWebContainer 
    extends SubDeployerSupport
@@ -218,29 +197,39 @@ public abstract class AbstractWebContainer
       
       try 
       {
-         // resolve the watch
-         if (di.url.getProtocol().startsWith("http"))
+         if (di.url.getPath().endsWith("/"))
          {
-            // We watch the top only, no directory support
-            di.watch = di.url;
-         }         
-         else if(di.url.getProtocol().startsWith("file"))
-         {
-            File file = new File (di.url.getFile());
-            
-            // If not directory we watch the package
-            if( file.isDirectory() == false )
-            {
-               di.watch = di.url;
-            }
-            // If directory we watch the web.xml descriptor
-            else
-            {
-               di.watch = new URL(di.url, "WEB-INF/web.xml"); 
-            }
+            // the URL is a unpacked collection, watch the deployment descriptor
+            di.watch = new URL(di.url, "WEB-INF/web.xml");
          }
-         // No, we do not want to look into the war
-         // parseWEBINFClasses(di);
+         else
+         {
+            // just watch the original URL
+            di.watch = di.url;
+         }
+
+         // Make sure the war is unpacked
+         File warFile = new File(di.localUrl.getFile());
+         if( warFile.isDirectory() == false )
+         {
+            File tmp = new File(warFile.getAbsolutePath()+".tmp");
+            if( warFile.renameTo(tmp) == false )
+               throw new DeploymentException("Was unable to move war to: "+tmp);
+            if( warFile.mkdir() == false )
+               throw new DeploymentException("Was unable to mkdir: "+warFile);            
+            log.debug("Unpacking war to: "+warFile);
+            FileInputStream fis = new FileInputStream(tmp);
+            JarUtils.unjar(fis, warFile);
+            fis.close();
+            log.debug("Replaced war with unpacked contents");
+            if( tmp.delete() == false )
+               log.debug("Was unable to delete war tmp file");
+            else
+               log.debug("Deleted war archive");
+            // Reset the localUrl to end in a '/'
+            di.localUrl = warFile.toURL();
+         }
+
       }
       catch (Exception e)
       {
@@ -492,7 +481,6 @@ public abstract class AbstractWebContainer
    protected void addEnvEntries(Iterator envEntries, Context envCtx)
       throws ClassNotFoundException, NamingException
    {
-      boolean debug = log.isDebugEnabled();
       while( envEntries.hasNext() )
       {
          EnvEntryMetaData entry = (EnvEntryMetaData) envEntries.next();
@@ -504,9 +492,7 @@ public abstract class AbstractWebContainer
    
    protected void linkResourceEnvRefs(Iterator resourceEnvRefs, Context envCtx)
       throws NamingException
-   {
-      boolean debug = log.isDebugEnabled();
-      
+   {  
       while( resourceEnvRefs.hasNext() )
       {
          ResourceEnvRefMetaData ref = (ResourceEnvRefMetaData) resourceEnvRefs.next();
