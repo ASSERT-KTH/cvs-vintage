@@ -69,7 +69,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.53 2003/06/30 18:11:06 dlr Exp $
+ * @version $Id: IssueType.java,v 1.54 2003/07/17 20:07:36 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -297,20 +297,6 @@ public  class IssueType
             rmit.delete(user);
         }
         ScarabCache.clear();
-    }
-
-    /**
-     * Delete mappings with all issue types
-     */
-    public void deleteIssueTypeMappings(ScarabUser user)
-        throws Exception
-    {
-        List attrGroups = getAttributeGroups(false);
-        for (int i=0; i<attrGroups.size(); i++)
-        {
-            AttributeGroup group = (AttributeGroup)attrGroups.get(i);
-            group.delete(user, group.getModule());
-        }
     }
 
 

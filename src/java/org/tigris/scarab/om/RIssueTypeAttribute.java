@@ -52,6 +52,7 @@ import java.util.ArrayList;
 
 import org.apache.torque.om.Persistent;
 import org.apache.torque.util.Criteria;
+import org.tigris.scarab.util.Log;
 
 /** 
  * You should add additional methods to this class to meet the
@@ -146,9 +147,15 @@ public  class RIssueTypeAttribute
         return isDefault;
     }
 
-    public void delete(ScarabUser user)
+    public void delete()
          throws Exception
-    {                
+    {
+        if (Log.get().isDebugEnabled()) 
+        {
+            Log.get().debug(
+                "Deleting SCARAB_R_ISSUETYPE_ATTRIBUTE where issuetype id=" 
+                + getIssueTypeId() + " and attribute id=" + getAttributeId());
+        }        
         Criteria c = new Criteria()
             .add(RIssueTypeAttributePeer.ISSUE_TYPE_ID, getIssueTypeId())
             .add(RIssueTypeAttributePeer.ATTRIBUTE_ID, getAttributeId());

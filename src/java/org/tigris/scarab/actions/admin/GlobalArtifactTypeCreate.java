@@ -68,12 +68,13 @@ import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.util.Log;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.35 2003/06/27 20:58:01 dlr Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.36 2003/07/17 20:07:36 jmcnally Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -299,33 +300,40 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         List attributeGroups = issueType.getAttributeGroups(false);
 
+        boolean atLeastOne = false;
         for (int i =0; i<keys.length; i++)
         {
             key = keys[i].toString();
             if (key.startsWith("group_action"))
             {
-                try
+                atLeastOne = true;
+                groupId = key.substring(13);
+                AttributeGroup ag = AttributeGroupManager
+                    .getInstance(new NumberKey(groupId), false);
+                if (Log.get().isDebugEnabled()) 
                 {
-                    groupId = key.substring(13);
-                    AttributeGroup ag = AttributeGroupManager
-                       .getInstance(new NumberKey(groupId), false); 
-                    ag.delete(user, scarabR.getCurrentModule());
+                    Log.get().info("Deleting attribute group: " + groupId);
                 }
-                catch (Exception e)
-                {
-                    scarabR.setAlertMessage(
-                        l10n.get(NO_PERMISSION_MESSAGE));
-                }
-                if (attributeGroups.size() -1 < 2)
-                {
-                    // If there are fewer than 2 attribute groups,
-                    // Turn off deduping
-                    issueType.setDedupe(false);
-                    issueType.save();
-                    scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
-                    ScarabCache.clear();
-                }
+                ag.delete();
+                ScarabCache.clear();
             }
+        }
+        if (atLeastOne) 
+        {
+            scarabR.setConfirmMessage(l10n.get("SelectedGroupDeleted"));
+            // TODO: this logic seems off by one to me (jmcnally), need
+            // to document why this is not so, as it seems to work
+            if (attributeGroups.size() -1 < 2)
+            {
+                // If there are fewer than 2 attribute groups,
+                // Turn off deduping
+                issueType.setDedupe(false);
+                issueType.save();
+            }
+        }
+        else 
+        {
+            scarabR.setAlertMessage(l10n.get("NoGroupSelected"));  
         }
     }
 
@@ -394,7 +402,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                    .getRIssueTypeAttribute(attribute);
                try
                {
-                   ria.delete(user);
+                   ria.delete();
                }
                catch (Exception e)
                {

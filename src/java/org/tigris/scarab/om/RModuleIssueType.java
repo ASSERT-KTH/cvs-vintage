@@ -63,7 +63,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * This class represents a RModuleIssueType
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: RModuleIssueType.java,v 1.30 2003/06/25 06:17:03 venkatesh Exp $
+ * @version $Id: RModuleIssueType.java,v 1.31 2003/07/17 20:07:36 jmcnally Exp $
  */
 public  class RModuleIssueType 
     extends org.tigris.scarab.om.BaseRModuleIssueType
@@ -145,7 +145,7 @@ public  class RModuleIssueType
                 // delete attribute-attribute group map
                 AttributeGroup attGroup = 
                               (AttributeGroup)attGroups.get(j);
-                attGroup.delete(user, module);
+                attGroup.delete();
             }
 
             // Delete mappings with user attributes
