@@ -26,7 +26,7 @@ import org.jboss.monitor.client.BeanCacheSnapshot;
  *
  * @see AbstractInstanceCache
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	implements EnterpriseContextCachePolicy, XmlLoadable, Monitorable
@@ -114,6 +114,12 @@ public class LRUEnterpriseContextCachePolicy extends LRUCachePolicy
 	/**
 	 * Reads from the configuration the parameters for this cache policy, that are
 	 * all optionals.
+	 * FIXME 20010626 marcf: 
+	 *  Simone seriously arent' all the options overkill? give it another 6 month .
+	 *	 Remember you are exposing the guts of this to the end user, also provide defaults
+	 *  so that if an entry is not specified you can still work and it looks _much_ better in 
+	 *  the configuration files. 
+	 *
 	 */
 	public void importXml(Element element) throws DeploymentException
 	{
