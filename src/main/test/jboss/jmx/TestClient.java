@@ -7,6 +7,7 @@ package test.jboss.jmx;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
@@ -25,8 +26,9 @@ import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeOperationsException;
 import javax.naming.InitialContext; 
 
-import org.jboss.jmx.interfaces.JMXConnector;
+import org.jboss.jmx.client.ConnectorFactoryImpl;
 import org.jboss.jmx.client.RMIClientConnectorImpl;
+import org.jboss.jmx.interfaces.JMXConnector;
 
 /**
 * Test Client for the JMX Client Connector. It cretes a local MBeanServer and
@@ -83,83 +85,58 @@ public class TestClient {
 			);
 			getUserInput(
 				"\n" +
-				"2. Lookup for all available servers on your network\n" +
+				"2. Lookup for all available connectors with the JNDI defined by jndi.properties\n" +
 				"=> hit any key to proceed"
 			);
-			// Now let's list the available servers, protocols
-			Collection lServers = (Collection) lLocalServer.invoke(
+			// Now let's list the available JMX Connectors
+         InitialContext lContext = null;
+         try {
+            lContext = new InitialContext();
+         }
+         catch( Exception e ) {
+            e.printStackTrace();
+         }
+			Iterator lConnectors = (Iterator) lLocalServer.invoke(
 				lFactoryInstance.getObjectName(),
-				"getServers",
+				"getConnectors",
 				new Object[] {
-					null
+					lContext.getEnvironment(),
+               new ConnectorFactoryImpl.JBossConnectorTester()
 				},
 				new String[] {
-					"java.lang.String"
+					"java.util.Hashtable",
+               "org.jboss.jmx.client.ConnectorFactoryImpl$IConnectorTester"
 				}
 			);
-			Iterator i = lServers.iterator();
 			int lCount = 0;
 			StringBuffer lMessage = new StringBuffer();
-			lMessage.append( "List of all available servers on your net\n" );
+			lMessage.append( "List of all available connectors on your net\n" );
 			lMessage.append( "=========================================\n" );
-			while( i.hasNext() ) {
-				lMessage.append( " - " + ( lCount++ ) + ". server is: " + i.next() + "\n" );
+         Vector lTemp = new Vector();
+			while( lConnectors.hasNext() ) {
+            ConnectorFactoryImpl.ConnectorName lName = (ConnectorFactoryImpl.ConnectorName) lConnectors.next();
+            lTemp.addElement( lName );
+				lMessage.append( " - " + ( lCount++ ) + ". connector is: " + lName + "\n" );
 			}
 			lMessage.append( "\n" );
-			lMessage.append( "3. Select your server by entering its number\n" );
+			lMessage.append( "3. Select your connector by entering its number\n" );
 			lMessage.append( "=> hit any key to proceed" );
 			int lChoice = getUserInput( lMessage.toString() );
-			i = lServers.iterator();
+			Iterator i = lTemp.iterator();
 			lCount = 0;
 			while( i.hasNext() ) {
 				if( ( lCount++ ) == lChoice ) {
 					break;
 				}
 			}
-			final String lServer = i.next() + "";
+			final ConnectorFactoryImpl.ConnectorName lConnectorName = (ConnectorFactoryImpl.ConnectorName) i.next();
 			lMessage.setLength( 0 );
 			lMessage.append(
 				"\n" +
-				"You selected server: " + lServer + "\n\n"
+				"You selected connector: " + lConnectorName + "\n\n"
 			);
-			Collection lProtocols = (Collection) lLocalServer.invoke(
-				lFactoryInstance.getObjectName(),
-				"getProtocols",
-				new String[] {
-					lServer,
-				},
-				new String[] {
-					"java.lang.String"
-				}
-			);
-			i = lProtocols.iterator();
-			lCount = 0;
-			lMessage.append(
-				"List of all available protocols on server: " + lServer+ "\n" +
-				"=====================================================\n"
-			);
-			while( i.hasNext() ) {
-				lMessage.append(
-					" - " + ( lCount++ ) + ". protocol is: " + i.next().toString() + "\n"
-				);
-			}
-			lMessage.append(
-				"\n" +
-				"4. Select your protocol by entering its number\n" +
-				"=> hit any key to proceed"
-			);
-			lChoice = getUserInput( lMessage.toString() );
-			i = lProtocols.iterator();
-			lCount = 0;
-			while( i.hasNext() ) {
-				if( ( lCount++ ) == lChoice ) {
-					break;
-				}
-			}
-			final String lProtocol = i.next().toString();
 			getUserInput(
-				"You selected protocol: " + lProtocol + " on server: " + lServer + "\n\n" +
-				"5. Connect to the given server by the given protocol\n" +
+				"5. Connect to the given connector\n" +
 				"=> hit any key to proceed"
 			);
 			// Take the first server and its first protoccol and create a
@@ -168,12 +145,10 @@ public class TestClient {
 				lFactoryInstance.getObjectName(),
 				"createConnection",
 				new Object[] {
-					lServer,
-					lProtocol
+					lConnectorName
 				},
 				new String[] {
-					"java.lang.String",
-					"java.lang.String"
+					"org.jboss.jmx.client.ConnectorFactoryImpl$ConnectorName"
 				}
 			);
 			getUserInput(
@@ -205,12 +180,10 @@ public class TestClient {
 									lFactoryInstance.getObjectName(),
 									"removeConnection",
 									new Object[] {
-										lServer,
-										lProtocol
+										lConnectorName
 									},
 									new String[] {
-										"java.lang.String",
-										"java.lang.String"
+                              "org.jboss.jmx.client.ConnectorFactoryImpl$ConnectorName"
 									}
 								);
 								System.err.println("Shutting done");
