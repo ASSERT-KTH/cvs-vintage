@@ -16,6 +16,8 @@ $page.setTitle("Scarab Links")
 <li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("nextTemplate", "Links.vm")">Configure Issue List</a></li>
 <li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
 <li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
+<li><a href="$link.setPage("SaveTemplate.vm")">Create Enter Issue Template</a></li>
+<li><a href="$link.setPage("TemplateList.vm")">Enter Issue Template List</a></li>
 <li><a href="$link.setPage("reports,Step1.vm")">Reports (not working)</a></li>
 <li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
 <li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a></li>
@@ -23,6 +25,9 @@ $page.setTitle("Scarab Links")
 
 <h3>Admin Pages</h3>
 <ul>
+<li>
+    <a href="$link.setPage("admin,ArtifactTypeEdit.vm")">admin,ArtifactTypeEdit.vm</a>
+</li>
 <li>
     <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
 </li>
