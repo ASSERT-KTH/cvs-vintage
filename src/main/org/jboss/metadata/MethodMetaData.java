@@ -19,7 +19,7 @@ import org.jboss.ejb.DeploymentException;
  *      
  *   @see <related>
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class MethodMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -77,8 +77,13 @@ public class MethodMetaData extends MetaData {
 	public boolean patternMatches(String name, String[] arg, boolean remote) {
 		
 		// the wildcard matches everything
-		if (getMethodName().equals("*")) return true;
-		
+		if (getMethodName().equals("*"))
+    {
+			if (isIntfGiven() && (isRemoteMethod() != remote))
+        return false;
+      return true;
+    }
+
 		if (! getMethodName().equals(name)) {
 	    	// different names -> no
 			return false;

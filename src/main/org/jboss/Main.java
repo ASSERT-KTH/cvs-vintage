@@ -22,11 +22,14 @@ import java.util.*;
 import javax.management.*;
 import javax.management.loading.*;
 
+import org.jboss.system.SecurityAssociation;
+
 /**
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.7 $
+ *   @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
+ *   @version $Revision: 1.8 $
  */
 public class Main
 {
@@ -62,7 +65,10 @@ public class Main
       
       System.setProperty("java.security.policy", serverPolicy);
       System.setSecurityManager(new SecurityManager());
-      
+
+      // use thread-local principal and credential propagation
+      SecurityAssociation.setServer();
+
       // Start server - Main does not have the proper permissions
       AccessController.doPrivileged(new PrivilegedAction()
       {

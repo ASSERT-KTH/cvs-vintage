@@ -27,7 +27,8 @@ import javax.transaction.Transaction;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.7 $
+ *  @author <a href="mailto:docodan@nycap.rr.com">Daniel O'Connor</a>.
+ *	@version $Revision: 1.8 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Externalizable
@@ -160,6 +161,7 @@ public final class RemoteMethodInvocation
 		out.writeObject(args);
 		out.writeObject(tx);
 		out.writeObject(identity);
+    out.writeObject(credential);
    }
    
    public void readExternal(java.io.ObjectInput in)
@@ -172,6 +174,7 @@ public final class RemoteMethodInvocation
 		
 		tx = (Transaction)in.readObject();
 		identity = (Principal)in.readObject();
+    credential = in.readObject();
    }
 
    // Private -------------------------------------------------------
