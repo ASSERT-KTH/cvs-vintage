@@ -14,8 +14,6 @@ import org.jboss.util.deadlock.Resource;
 import org.jboss.util.deadlock.DeadlockDetector;
 
 import javax.transaction.Transaction;
-import java.util.HashMap;
-import java.util.HashSet;
 
 /**
  * Implementents a non reentrant lock with deadlock detection
@@ -25,14 +23,21 @@ import java.util.HashSet;
  *
  *
  * @author <a href="bill@jboss.org">Bill Burke</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class NonReentrantLock implements Resource
 {
    public static class ReentranceException extends Exception
    {
-   }
+      public ReentranceException()
+      {
+      }
 
+      public ReentranceException(String message)
+      {
+         super(message);
+      }
+   }
 
    protected Thread lockHolder;
    protected Object lock = new Object();
@@ -48,27 +53,31 @@ public class NonReentrantLock implements Resource
    /** Logger instance */
    static Logger log = Logger.getLogger(NonReentrantLock.class);
 
-   public Thread getLockHolder()
-   {
-      return lockHolder;
-   }
-
-   public void acquire(Transaction miTx) throws ApplicationDeadlockException, InterruptedException, ReentranceException
-   {
-      acquire(0, miTx);
-   }
-
-   protected boolean acquire(long waitTime, Transaction miTx) throws ApplicationDeadlockException, InterruptedException, ReentranceException
+   protected boolean acquire(long waitTime, Transaction miTx)
+      throws ApplicationDeadlockException, InterruptedException, ReentranceException
    {
       synchronized (lock)
       {
+         Thread curThread = Thread.currentThread();
          if (lockHolder != null)
          {
-            if (lockHolder == Thread.currentThread()) throw new ReentranceException();
-            if (miTx != null && miTx.equals(holdingTx)) throw new ReentranceException();
+            if (lockHolder == curThread)
+            {
+               throw new ReentranceException("The same thread reentered: thread-holder=" + lockHolder +
+                  ", holding tx=" + holdingTx +
+                  ", current tx=" + miTx);
+            }
+
+            if (miTx != null && miTx.equals(holdingTx))
+            {
+               throw new ReentranceException("The same tx reentered: tx=" + miTx +
+                  ", holding thread=" + lockHolder +
+                  ", current thread=" + curThread
+               );
+            }
 
             // Always upgrade deadlock holder to Tx so that we can detect lock properly
-            Object deadlocker = Thread.currentThread();
+            Object deadlocker = curThread;
             if (miTx != null) deadlocker = miTx;
             try
             {
@@ -94,13 +103,14 @@ public class NonReentrantLock implements Resource
             held--;
             throw new IllegalStateException("Should only be able to acquire lock 1 time");
          }
-         lockHolder = Thread.currentThread();
+         lockHolder = curThread;
          holdingTx = miTx;
       }
       return true;
    }
 
-   public boolean attempt(long waitTime, Transaction miTx) throws ApplicationDeadlockException, InterruptedException, ReentranceException
+   public boolean attempt(long waitTime, Transaction miTx)
+      throws ApplicationDeadlockException, InterruptedException, ReentranceException
    {
       return acquire(waitTime, miTx);
    }
@@ -116,5 +126,4 @@ public class NonReentrantLock implements Resource
          lock.notify();
       }
    }
-
 }
