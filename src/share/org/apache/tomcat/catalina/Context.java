@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/LifecycleException.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Context.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,132 +62,71 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
+
+
+import javax.servlet.ServletContext;
 
 
 /**
- * General purpose exception that is thrown to indicate a lifecycle related
- * problem.  Such exceptions should generally be considered fatal to the
- * operation of the application containing this component.
+ * A <b>Context</b> is a Container that represents a servlet context, and
+ * therefore an individual web applicaiton, in the Tomcat servlet engine.
+ * It is therefore useful in almost every deploymentof Tomcat (even if a
+ * Connector attached to a web server (such as Apache) uses the web server's
+ * facilities to identify the appropriate Wrapper to handle this request.
+ * It also provides a convenient mechanism to use Interceptors that see
+ * every request processed by this particular web application.
  * <p>
- * <b>FIXME:  Consider using the Avalon framework architecture instead.</b>
+ * The parent Container attached to a Context is generally a Host, but may
+ * be some other implementation, or may be omitted if it is not necessary.
+ * <p>
+ * The child containers attached to a Context are generally implementations
+ * of Wrapper (representing individual servlet definitions.
+ * <p>
+ * <b>FIXME:  Context initialization parameters have descriptions in the
+ * deployment descriptor!</b>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public final class LifecycleException extends Exception {
+public interface Context extends Container {
 
 
-    //------------------------------------------------------------ Constructors
+    // ------------------------------------------------------------- Properties
 
 
     /**
-     * Construct a new LifecycleException with no other information.
+     * Return the context configuration definitions for this web application.
      */
-    public LifecycleException() {
-
-	this(null, null);
-
-    }
+    public ContextConfig getConfiguration();
 
 
     /**
-     * Construct a new LifecycleException for the specified message.
+     * Set the context configuration definitions for this web application.
      *
-     * @param message Message describing this exception
+     * @param config The new context configuration definitions
      */
-    public LifecycleException(String message) {
-
-	this(message, null);
-
-    }
+    public void setConfiguration(ContextConfig config);
 
 
     /**
-     * Construct a new LifecycleException for the specified throwable.
+     * Return the servlet context for which this Context is a facade.
+     */
+    public ServletContext getServletContext();
+
+
+    // --------------------------------------------------------- Public Methods
+
+
+    /**
+     * Return the Wrapper associated with the servlet that matches the
+     * specified context-relative URI, if any; otherwise return
+     * <code>null</code>.
      *
-     * @param throwable Throwable that caused this exception
+     * @param uri Context-relative URI, which must start with a "/"
      */
-    public LifecycleException(Throwable throwable) {
-
-	this(null, throwable);
-
-    }
-
-
-    /**
-     * Construct a new LifecycleException for the specified message
-     * and throwable.
-     *
-     * @param message Message describing this exception
-     * @param throwable Throwable that caused this exception
-     */
-    public LifecycleException(String message, Throwable throwable) {
-
-	super();
-	this.message = message;
-	this.throwable = throwable;
-
-    }
-
-
-    //------------------------------------------------------ Instance Variables
-
-
-    /**
-     * The error message passed to our constructor (if any)
-     */
-    protected String message = null;
-
-
-    /**
-     * The underlying exception or error passed to our constructor (if any)
-     */
-    protected Throwable throwable = null;
-
-
-    //---------------------------------------------------------- Public Methods
-
-
-    /**
-     * Returns the message associated with this exception, if any.
-     */
-    public String getMessage() {
-
-	return (message);
-
-    }
-
-
-    /**
-     * Returns the throwable that caused this exception, if any.
-     */
-    public Throwable getThrowable() {
-
-	return (throwable);
-
-    }
-
-
-    /**
-     * Return a formatted string that describes this exception.
-     */
-    public String toString() {
-
-	StringBuffer sb = new StringBuffer("LifecycleException:  ");
-	if (message != null) {
-	    sb.append(message);
-	    if (throwable != null) {
-		sb.append(":  ");
-	    }
-	}
-	if (throwable != null) {
-	    sb.append(throwable.toString());
-	}
-	return (sb.toString());
-
-    }
+    public Wrapper map(String uri);
 
 
 }

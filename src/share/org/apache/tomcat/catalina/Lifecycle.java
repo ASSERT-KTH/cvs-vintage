@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Host.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Lifecycle.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,83 +62,76 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
-import javax.servlet.ServletContext;
+import org.w3c.dom.Node;
 
 
 /**
- * A <b>Host</b> is a Container that represents a virtual host in the
- * Tomcat servlet engine.  It is useful in the following types of scenarios:
- * <ul>
- * <li>You wish to use Interceptors that see every single request processed
- *     by this particular virtual host.
- * <li>You wish to run Tomcat in with a standalone HTTP connector, but still
- *     want support for multiple virtual hosts.
- * </ul>
- * In general, you would not use a Host when deploying Tomcat connected
- * to a web server (such as Apache), because the Connector will have
- * utilized the web server's facilities to determine which Context (or
- * perhaps even which Wrapper) should be utilized to process this request.
+ * Common interface for component life cycle methods.  Tomcat components
+ * may, but are not required to, implement this interface (as well as the
+ * appropriate interface(s) for the functionality they support) in order to
+ * provide a consistent mechanism to configure, start, and stop the component.
  * <p>
- * The parent Container attached to a Host is generally an Engine, but may
- * be some other implementation, or may be omitted if it is not necessary.
- * <p>
- * The child containers attached to a Host are generally implementations
- * of Host (representing a virtual host) or Context (representing individual
- * an individual servlet context), depending upon the Engine implementation.
+ * <b>FIXME:  Consider using the Avalon framework architecture instead.</b>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Host extends Container {
+public interface Lifecycle {
 
 
-    // ------------------------------------------------------------- Properties
+    // --------------------------------------------------------- Public Methods
 
-
-    /**
-     * Return the canonical, fully qualified, name of the virtual host
-     * this Container represents.
-     */
-    public String getHost();
 
 
     /**
-     * Set the canonical, fully qualified, name of the virtual host
-     * this Container represents.
+     * Configure this component, based on the specified configuration
+     * parameters.  This method should be called immediately after the
+     * component instance is created, and before <code>start()</code>
+     * is called.
      *
-     * @param host Virtual host name
-     */
-    public void setHost(String host);
-
-
-    /**
-     * Return the canonical port number to which this virtual host is
-     * connected.
-     */
-    public int getPort();
-
-
-    /**
-     * Set the canonical port number to which this virtual host is
-     * connected.
+     * @param parameters Configuration parameters for this component
+     *  (<B>FIXME: What object type should this really be?)
      *
-     * @param port The port number
+     * @exception IllegalStateException if this component has already been
+     *  configured and/or started
+     * @exception LifecycleException if this component detects a fatal error
+     *  in the configuration parameters it was given
      */
-    public void setPort(int port);
+    public void configure(Node parameters)
+	throws LifecycleException;
 
 
     /**
-     * Return a specialized ServletContext instance that wraps the
-     * resources of the underlying virtual host; or <code>null</code>
-     * if access to these resources is not supported or not allowed.
-     * In general, this method will be used when a servlet calls
-     * <code>ServletContext.getContext("/")</code>.
+     * Prepare for the beginning of active use of the public methods of this
+     * component.  This method should be called after <code>configure()</code>,
+     * and before any of the public methods of the component are utilized.
+     *
+     * @exception IllegalStateException if this component has not yet been
+     *  configured (if required for this component)
+     * @exception IllegalStateException if this component has already been
+     *  started
+     * @exception LifecycleException if this component detects a fatal error
+     *  that prevents this component from being used
      */
-    public ServletContext getRootContext();
+    public void start() throws LifecycleException;
+
+
+    /**
+     * Gracefully terminate the active use of the public methods of this
+     * component.  This method should be the last one called on a given
+     * instance of this component.
+     *
+     * @exception IllegalStateException if this component has not been started
+     * @exception IllegalStateException if this component has already
+     *  been stopped
+     * @exception LifecycleException if this component detects a fatal error
+     *  that needs to be reported
+     */
+    public void stop() throws LifecycleException;
 
 
 }

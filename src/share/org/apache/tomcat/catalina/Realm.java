@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Lifecycle.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Realm.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,76 +62,85 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
-import org.w3c.dom.Node;
+import java.security.Principal;
 
 
 /**
- * Common interface for component life cycle methods.  Tomcat components
- * may, but are not required to, implement this interface (as well as the
- * appropriate interface(s) for the functionality they support) in order to
- * provide a consistent mechanism to configure, start, and stop the component.
- * <p>
- * <b>FIXME:  Consider using the Avalon framework architecture instead.</b>
+ * A <b>Realm</b> is a read-only facade for an underlying security realm
+ * used to authenticate individual users, and identify the security roles
+ * associated with those users.  Realms can be attached at any Container
+ * level, but will typically only be attached to a Context, or higher level,
+ * Container.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Lifecycle {
+public interface Realm {
+
+
+    // ------------------------------------------------------------- Properties
+
+
+    /**
+     * Return the Container with which this Realm has been associated.
+     */
+    public Container getContainer();
+
+
+    /**
+     * Set the Container with which this Realm has been associated.
+     *
+     * @param container The associated Container
+     */
+    public void setContainer(Container container);
+
+
+    /**
+     * Return descriptive information about this Realm implementation and
+     * the corresponding version number, in the format
+     * <code>&lt;description&gt;/&lt;version&gt;</code>.
+     */
+    public String getInfo();
 
 
     // --------------------------------------------------------- Public Methods
 
 
-
     /**
-     * Configure this component, based on the specified configuration
-     * parameters.  This method should be called immediately after the
-     * component instance is created, and before <code>start()</code>
-     * is called.
+     * Return the Principal associated with the specified username and
+     * credentials, if there is one; otherwise return <code>null</code>.
      *
-     * @param parameters Configuration parameters for this component
-     *  (<B>FIXME: What object type should this really be?)
-     *
-     * @exception IllegalStateException if this component has already been
-     *  configured and/or started
-     * @exception LifecycleException if this component detects a fatal error
-     *  in the configuration parameters it was given
+     * @param username Username of the Principal to look up
+     * @param credentials Password or other credentials to use in
+     *  authenticating this username
      */
-    public void configure(Node parameters)
-	throws LifecycleException;
+    public Principal authenticate(String username, String credentials);
 
 
     /**
-     * Prepare for the beginning of active use of the public methods of this
-     * component.  This method should be called after <code>configure()</code>,
-     * and before any of the public methods of the component are utilized.
+     * Return the Principal associated with the specified username and
+     * credentials, if there is one; otherwise return <code>null</code>.
      *
-     * @exception IllegalStateException if this component has not yet been
-     *  configured (if required for this component)
-     * @exception IllegalStateException if this component has already been
-     *  started
-     * @exception LifecycleException if this component detects a fatal error
-     *  that prevents this component from being used
+     * @param username Username of the Principal to look up
+     * @param credentials Password or other credentials to use in
+     *  authenticating this username
      */
-    public void start() throws LifecycleException;
+    public Principal authenticate(String username, byte[] credentials);
 
 
     /**
-     * Gracefully terminate the active use of the public methods of this
-     * component.  This method should be the last one called on a given
-     * instance of this component.
+     * Return <code>true</code> if the specified Principal has the specified
+     * security role, within the context of this Realm; otherwise return
+     * <code>false</code>.
      *
-     * @exception IllegalStateException if this component has not been started
-     * @exception IllegalStateException if this component has already
-     *  been stopped
-     * @exception LifecycleException if this component detects a fatal error
-     *  that needs to be reported
+     * @param principal Principal for whom the role is to be checked
+     * @param role Security role to be checked
      */
-    public void stop() throws LifecycleException;
+    public boolean hasRole(Principal principal, String role);
 
 
 }

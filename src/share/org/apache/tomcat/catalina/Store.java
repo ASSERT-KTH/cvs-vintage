@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/WrapperRole.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Store.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,140 +62,93 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
+
+
+import java.io.IOException;
 
 
 /**
- * Representation of a servlet security role reference, corresponding to a
- * specific <code>&lt;security-role-ref&gt;</code> element from the deployment
- * descriptor of a web application.
+ * A <b>Store</b> is the abstraction of a Tomcat component that provides
+ * persistent storage and loading of Sessions and their associated user data.
+ * Implementations are free to save and load the Sessions to any media they
+ * wish, but it is assumed that saved Sessions are persistent across
+ * server or context restarts.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public final class WrapperRole {
-
-
-
-    // ----------------------------------------------------------- Constructors
-
-
-    /**
-     * Construct a new instance with default parameter values.
-     */
-    public WrapperRole() {
-
-	this(null, null, null);
-
-    }
-
-
-    /**
-     * Construct a new instance with specified parameter values.
-     *
-     * @param name Name of role used within the servlet
-     * @param link Name of the application security role to map to
-     * @param description Role reference description
-     */
-    public WrapperRole(String name, String link, String description) {
-
-	super();
-	setName(name);
-	setLink(link);
-	setDescription(description);
-
-    }
-
-
-    // ----------------------------------------------------- Instance Variables
-
-
-    /**
-     * The role reference description.
-     */
-    private String description = null;
-
-
-    /**
-     * The linked-to name of the application security role.
-     */
-    private String link = null;
-
-
-    /**
-     * The role name used within the servlet.
-     */
-    private String name = null;
+public interface Store {
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the description of this security role reference.
-     */
-    public String getDescription() {
-
-	return (description);
-
-    }
-
-
-    /**
-     * Set the description of this security role reference.
+     * Return the number of Sessions present in this Store.
      *
-     * @param description The new description
+     * @exception IOException if an input/output error occurs
      */
-    public void setDescription(String description) {
-
-	this.description = description;
-
-    }
+    public int getSize() throws IOException;
 
 
     /**
-     * Return the application name of this security role.
+     * Return descriptive information about this Store implementation and
+     * the corresponding version number, in the format
+     * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getLink() {
+    public String getInfo();
 
-	return (link);
 
-    }
+    // --------------------------------------------------------- Public Methods
 
 
     /**
-     * Set the application name of this security role.
+     * Return an array containing the session identifiers of all Sessions
+     * currently saved in this Store.  If there are no such Sessions, a
+     * zero-length array is returned.
      *
-     * @param link The new link
+     * @exception IOException if an input/output error occurred
      */
-    public void setLink(String link) {
-
-	this.link = link;
-
-    }
+    public String[] keys() throws IOException;
 
 
     /**
-     * Return the servlet name of this security role.
-     */
-    public String getName() {
-
-	return (name);
-
-    }
-
-
-    /**
-     * Set the servlet name of this security role.
+     * Load and return the Session associated with the specified session
+     * identifier from this Store, without removing it.  If there is no
+     * such stored Session, return <code>null</code>.
      *
-     * @param name The new name
+     * @param id Session identifier of the session to load
+     *
+     * @exception ClassNotFoundException if a deserialization error occurs
+     * @exception IOException if an input/output error occurs
      */
-    public void setName(String name) {
+    public Session load(String id)
+        throws ClassNotFoundException, IOException;
 
-	this.name = name;
 
-    }
+    /**
+     * Remove the Session with the specified session identifier from
+     * this Store, if present.  If no such Session is present, this method
+     * takes no action.
+     *
+     * @param id Session identifier of the Session to be removed
+     *
+     * @exception IOException if an input/output error occurs
+     */
+    public void remove(String id) throws IOException;
+
+
+    /**
+     * Save the specified Session into this Store.  Any previously saved
+     * information for the associated session identifier is replaced.
+     *
+     * @param session Session to be saved
+     *
+     * @exception IOException if an input/output error occurs
+     */
+    public void save(Session session) throws IOException;
 
 
 }

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Loader.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Engine.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,69 +62,39 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>Loader</b> represents a Java ClassLoader implementation that can
- * be used by a Container to load class files (within a repository associated
- * with the Loader) that are designed to be reloaded upon request, as well as
- * a mechanism to detect whether changes have occurred in the underlying
- * repository.
+ * An <b>Engine</b> is a Container that represents the entire Tomcat servlet
+ * engine.  It is useful in the following types of scenarios:
+ * <ul>
+ * <li>You wish to use Interceptors that see every single request processed
+ *     by the entire engine.
+ * <li>You wish to run Tomcat in with a standalone HTTP connector, but still
+ *     want support for multiple virtual hosts.
+ * </ul>
+ * In general, you would not use an Engine when deploying Tomcat connected
+ * to a web server (such as Apache), because the Connector will have
+ * utilized the web server's facilities to determine which Context (or
+ * perhaps even which Wrapper) should be utilized to process this request.
+ * <p>
+ * The child containers attached to an Engine are generally implementations
+ * of Host (representing a virtual host) or Context (representing individual
+ * an individual servlet context), depending upon the Engine implementation.
+ * <p>
+ * If used, an Engine is always the top level Container in a Tomcat hierarchy.
+ * Therefore, the implementation's <code>setParent()</code> method should
+ * throw <code>IllegalArgumentException</code>.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Loader {
+public interface Engine extends Container {
 
 
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * Return the Java class loader to be used by this Container.
-     */
-    public ClassLoader getClassLoader();
-
-
-    /**
-     * Return the Container with which this Logger has been associated.
-     */
-    public Container getContainer();
-
-
-    /**
-     * Set the Container with which this Logger has been associated.
-     *
-     * @param container The associated Container
-     */
-    public void setContainer(Container container);
-
-
-    /**
-     * Return descriptive information about this Loader implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
-     */
-    public String getInfo();
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Has the internal repository associated with this Loader been modified,
-     * such that the loaded classes should be reloaded?
-     */
-    public boolean modified();
-
-
-    /**
-     * Cause the underlying class loader (and therefore all of the classes
-     * loaded by that class loader) to be thrown away, and creates a new one.
-     */
-    public void reload();
+    // No additional methods are defined
 
 
 }

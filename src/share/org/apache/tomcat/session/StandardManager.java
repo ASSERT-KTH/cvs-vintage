@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.1 2000/01/09 03:23:22 craigmcc Exp $
- * $Revision: 1.1 $
- * $Date: 2000/01/09 03:23:22 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardManager.java,v 1.2 2000/01/26 17:45:10 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/01/26 17:45:10 $
  *
  * ====================================================================
  *
@@ -68,13 +68,9 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import org.apache.tomcat.catalina.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.apache.tomcat.Lifecycle;
-import org.apache.tomcat.LifecycleException;
-import org.apache.tomcat.Manager;
-import org.apache.tomcat.Request;
-import org.apache.tomcat.Session;
 import org.apache.tomcat.util.StringManager;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -107,7 +103,7 @@ import org.w3c.dom.Node;
  * </ul>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:23:22 $
+ * @version $Revision: 1.2 $ $Date: 2000/01/26 17:45:10 $
  */
 
 public final class StandardManager

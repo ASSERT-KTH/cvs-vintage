@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/ContextConfig.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Adapter.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,85 +62,43 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>ContextConfig</b> encapsulates the configuration properties related
- * to a specific <code>&lt;web-app%gt;</code> element from the deployment
- * descriptor of a web application.  As such, implementations of this
- * interface may be used both in the servlet engine itself, and administrative
- * tools used to construct deployment descriptors.
- * <p>
- * <b>FIXME:  Add the missing configuration elements!</b>
+ * An <b>Adapter</b> is a component responsible receiving requests from,
+ * and returning responses to, a client application.  An Adapter performs
+ * the following general logic:
+ * <ul>
+ * <li>Receive a request from the client application.
+ * <li>Create (or allocate from a pool) appropriate Request and Response
+ *     instances, and populate their properties based on the contents of
+ *     the received request.
+ * <li>Identify an appropriate Container to use for processing this request.
+ *     For a stand alone Tomcat installation, this will probably be a
+ *     (singleton) Engine implementation.  For a Connector attaching Tomcat
+ *     to a web server such as Apache, this step could take advantage of
+ *     parsing already performed within the web server to identify the
+ *     Context, and perhaps even the Wrapper, to utilize in satisfying this
+ *     Request.
+ * <li>Call the <code>invoke()</code> method of the selected Container,
+ *     passing the initialized Request and Response instances as arguments.
+ * <li>Return any response created by the Container to the client, or
+ *     return an appropriate error message if an exception of any type
+ *     was thrown.
+ * <li>If utilizing a pool of Request and Response objects, recycle the pair
+ *     of instances that was just used.
+ * </ul>
+ * It is expected that the implementation details of various Adapters will
+ * vary widely, so the logic above should considered typical rather than
+ * normative.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface ContextConfig {
+public interface Adapter {
 
-
-    // ------------------------------------------------------------- Properties
-
-
-    /**
-     * Return the description of this web application.
-     */
-    public String getDescription();
-
-
-    /**
-     * Set the description of this web application.
-     *
-     * @param description The new description
-     */
-    public void setDescription(String description);
-
-
-    /**
-     * Return the display name of this web application.
-     */
-    public String getDisplayName();
-
-
-    /**
-     * Set the display name of this web application.
-     *
-     * @param name The new display name
-     */
-    public void setDisplayName(String name);
-
-
-    /**
-     * Return the path of the large icon file for this web application.
-     */
-    public String getLargeIcon();
-
-
-    /**
-     * Set the path of the large icon file for this web application.
-     *
-     * @param path The new icon path
-     */
-    public void setLargeIcon(String path);
-
-
-    /**
-     * Return the path of the small icon file for this web application.
-     */
-    public String getSmallIcon();
-
-
-    /**
-     * Set the path of the small icon file for this web application.
-     *
-     * @param path The new icon path
-     */
-    public void setSmallIcon(String path);
-
-
-    // --------------------------------------------------------- Public Methods
-
+    // No additional methods defined
 
 }

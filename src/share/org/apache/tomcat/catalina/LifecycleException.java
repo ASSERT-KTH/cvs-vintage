@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Logger.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/LifecycleException.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,85 +62,132 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>Logger</b> is a generic interface for the message and exception
- * logging methods of the ServletContext interface.  Loggers can be
- * attached at any Container level, but will typically only be attached
- * to a Context, or higher level, Container.
+ * General purpose exception that is thrown to indicate a lifecycle related
+ * problem.  Such exceptions should generally be considered fatal to the
+ * operation of the application containing this component.
+ * <p>
+ * <b>FIXME:  Consider using the Avalon framework architecture instead.</b>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Logger {
+public final class LifecycleException extends Exception {
 
 
-    // ------------------------------------------------------------- Properties
+    //------------------------------------------------------------ Constructors
 
 
     /**
-     * Return the Container with which this Logger has been associated.
+     * Construct a new LifecycleException with no other information.
      */
-    public Container getContainer();
+    public LifecycleException() {
+
+	this(null, null);
+
+    }
 
 
     /**
-     * Set the Container with which this Logger has been associated.
+     * Construct a new LifecycleException for the specified message.
      *
-     * @param container The associated Container
+     * @param message Message describing this exception
      */
-    public void setContainer(Container container);
+    public LifecycleException(String message) {
+
+	this(message, null);
+
+    }
 
 
     /**
-     * Return descriptive information about this Logger implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
-     */
-    public String getInfo();
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Writes the specified message to a servlet log file, usually an event
-     * log.  The name and type of the servlet log is specific to the
-     * servlet container.
+     * Construct a new LifecycleException for the specified throwable.
      *
-     * @param msg A <code>String</code> specifying the message to be written
-     *  to the log file
+     * @param throwable Throwable that caused this exception
      */
-    public void log(String msg);
+    public LifecycleException(Throwable throwable) {
+
+	this(null, throwable);
+
+    }
 
 
     /**
-     * Writes the specified exception, and message, to a servlet log file.
-     * The implementation of this method should call
-     * <code>log(msg, exception)</code> instead.  This method is deprecated
-     * in the ServletContext interface, but not deprecated here to avoid
-     * many useless compiler warnings.
+     * Construct a new LifecycleException for the specified message
+     * and throwable.
      *
-     * @param exception An <code>Exception</code> to be reported
-     * @param msg The associated message string
+     * @param message Message describing this exception
+     * @param throwable Throwable that caused this exception
      */
-    public void log(Exception exception, String msg);
+    public LifecycleException(String message, Throwable throwable) {
+
+	super();
+	this.message = message;
+	this.throwable = throwable;
+
+    }
+
+
+    //------------------------------------------------------ Instance Variables
 
 
     /**
-     * Writes an explanatory message and a stack trace for a given
-     * <code>Throwable</code> exception to the servlet log file.  The name
-     * and type of the servlet log file is specific to the servlet container,
-     * usually an event log.
-     *
-     * @param message A <code>String</code> that describes the error or
-     *  exception
-     * @param throwable The <code>Throwable</code> error or exception
+     * The error message passed to our constructor (if any)
      */
-    public void log(String message, Throwable throwable);
+    protected String message = null;
+
+
+    /**
+     * The underlying exception or error passed to our constructor (if any)
+     */
+    protected Throwable throwable = null;
+
+
+    //---------------------------------------------------------- Public Methods
+
+
+    /**
+     * Returns the message associated with this exception, if any.
+     */
+    public String getMessage() {
+
+	return (message);
+
+    }
+
+
+    /**
+     * Returns the throwable that caused this exception, if any.
+     */
+    public Throwable getThrowable() {
+
+	return (throwable);
+
+    }
+
+
+    /**
+     * Return a formatted string that describes this exception.
+     */
+    public String toString() {
+
+	StringBuffer sb = new StringBuffer("LifecycleException:  ");
+	if (message != null) {
+	    sb.append(message);
+	    if (throwable != null) {
+		sb.append(":  ");
+	    }
+	}
+	if (throwable != null) {
+	    sb.append(throwable.toString());
+	}
+	return (sb.toString());
+
+    }
 
 
 }

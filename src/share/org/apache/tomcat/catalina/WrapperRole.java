@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Context.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/WrapperRole.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,71 +62,140 @@
  */ 
 
 
-package org.apache.tomcat;
-
-
-import javax.servlet.ServletContext;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>Context</b> is a Container that represents a servlet context, and
- * therefore an individual web applicaiton, in the Tomcat servlet engine.
- * It is therefore useful in almost every deploymentof Tomcat (even if a
- * Connector attached to a web server (such as Apache) uses the web server's
- * facilities to identify the appropriate Wrapper to handle this request.
- * It also provides a convenient mechanism to use Interceptors that see
- * every request processed by this particular web application.
- * <p>
- * The parent Container attached to a Context is generally a Host, but may
- * be some other implementation, or may be omitted if it is not necessary.
- * <p>
- * The child containers attached to a Context are generally implementations
- * of Wrapper (representing individual servlet definitions.
- * <p>
- * <b>FIXME:  Context initialization parameters have descriptions in the
- * deployment descriptor!</b>
+ * Representation of a servlet security role reference, corresponding to a
+ * specific <code>&lt;security-role-ref&gt;</code> element from the deployment
+ * descriptor of a web application.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Context extends Container {
+public final class WrapperRole {
+
+
+
+    // ----------------------------------------------------------- Constructors
+
+
+    /**
+     * Construct a new instance with default parameter values.
+     */
+    public WrapperRole() {
+
+	this(null, null, null);
+
+    }
+
+
+    /**
+     * Construct a new instance with specified parameter values.
+     *
+     * @param name Name of role used within the servlet
+     * @param link Name of the application security role to map to
+     * @param description Role reference description
+     */
+    public WrapperRole(String name, String link, String description) {
+
+	super();
+	setName(name);
+	setLink(link);
+	setDescription(description);
+
+    }
+
+
+    // ----------------------------------------------------- Instance Variables
+
+
+    /**
+     * The role reference description.
+     */
+    private String description = null;
+
+
+    /**
+     * The linked-to name of the application security role.
+     */
+    private String link = null;
+
+
+    /**
+     * The role name used within the servlet.
+     */
+    private String name = null;
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the context configuration definitions for this web application.
+     * Return the description of this security role reference.
      */
-    public ContextConfig getConfiguration();
+    public String getDescription() {
+
+	return (description);
+
+    }
 
 
     /**
-     * Set the context configuration definitions for this web application.
+     * Set the description of this security role reference.
      *
-     * @param config The new context configuration definitions
+     * @param description The new description
      */
-    public void setConfiguration(ContextConfig config);
+    public void setDescription(String description) {
+
+	this.description = description;
+
+    }
 
 
     /**
-     * Return the servlet context for which this Context is a facade.
+     * Return the application name of this security role.
      */
-    public ServletContext getServletContext();
+    public String getLink() {
 
+	return (link);
 
-    // --------------------------------------------------------- Public Methods
+    }
 
 
     /**
-     * Return the Wrapper associated with the servlet that matches the
-     * specified context-relative URI, if any; otherwise return
-     * <code>null</code>.
+     * Set the application name of this security role.
      *
-     * @param uri Context-relative URI, which must start with a "/"
+     * @param link The new link
      */
-    public Wrapper map(String uri);
+    public void setLink(String link) {
+
+	this.link = link;
+
+    }
+
+
+    /**
+     * Return the servlet name of this security role.
+     */
+    public String getName() {
+
+	return (name);
+
+    }
+
+
+    /**
+     * Set the servlet name of this security role.
+     *
+     * @param name The new name
+     */
+    public void setName(String name) {
+
+	this.name = name;
+
+    }
 
 
 }

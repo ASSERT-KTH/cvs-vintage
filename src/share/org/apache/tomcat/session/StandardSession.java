@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.2 2000/01/10 02:52:38 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/10 02:52:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.3 2000/01/26 17:45:10 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/26 17:45:10 $
  *
  * ====================================================================
  *
@@ -77,8 +77,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
 import javax.servlet.http.HttpSessionContext;
-import org.apache.tomcat.Manager;
-import org.apache.tomcat.Session;
+import org.apache.tomcat.catalina.*;
 import org.apache.tomcat.util.StringManager;
 
 
@@ -94,7 +93,7 @@ import org.apache.tomcat.util.StringManager;
  * HttpSession view of this instance back to a Session view.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/01/10 02:52:38 $
+ * @version $Revision: 1.3 $ $Date: 2000/01/26 17:45:10 $
  */
 
 final class StandardSession

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/ManagerBase.java,v 1.2 2000/01/10 05:02:54 craigmcc Exp $
- * $Revision: 1.2 $
- * $Date: 2000/01/10 05:02:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/ManagerBase.java,v 1.3 2000/01/26 17:45:09 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/01/26 17:45:09 $
  *
  * ====================================================================
  *
@@ -71,10 +71,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
-import org.apache.tomcat.Container;
-import org.apache.tomcat.Manager;
-import org.apache.tomcat.Request;
-import org.apache.tomcat.Session;
+import org.apache.tomcat.catalina.*;
 import org.apache.tomcat.util.SessionUtil;
 
 
@@ -84,7 +81,7 @@ import org.apache.tomcat.util.SessionUtil;
  * be subclassed to create more sophisticated Manager implementations.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.2 $ $Date: 2000/01/10 05:02:54 $
+ * @version $Revision: 1.3 $ $Date: 2000/01/26 17:45:09 $
  */
 
 public abstract class ManagerBase implements Manager {

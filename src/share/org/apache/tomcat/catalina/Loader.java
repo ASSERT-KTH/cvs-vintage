@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Realm.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Loader.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,37 +62,40 @@
  */ 
 
 
-package org.apache.tomcat;
-
-
-import java.security.Principal;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>Realm</b> is a read-only facade for an underlying security realm
- * used to authenticate individual users, and identify the security roles
- * associated with those users.  Realms can be attached at any Container
- * level, but will typically only be attached to a Context, or higher level,
- * Container.
+ * A <b>Loader</b> represents a Java ClassLoader implementation that can
+ * be used by a Container to load class files (within a repository associated
+ * with the Loader) that are designed to be reloaded upon request, as well as
+ * a mechanism to detect whether changes have occurred in the underlying
+ * repository.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Realm {
+public interface Loader {
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the Container with which this Realm has been associated.
+     * Return the Java class loader to be used by this Container.
+     */
+    public ClassLoader getClassLoader();
+
+
+    /**
+     * Return the Container with which this Logger has been associated.
      */
     public Container getContainer();
 
 
     /**
-     * Set the Container with which this Realm has been associated.
+     * Set the Container with which this Logger has been associated.
      *
      * @param container The associated Container
      */
@@ -100,7 +103,7 @@ public interface Realm {
 
 
     /**
-     * Return descriptive information about this Realm implementation and
+     * Return descriptive information about this Loader implementation and
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
@@ -111,36 +114,17 @@ public interface Realm {
 
 
     /**
-     * Return the Principal associated with the specified username and
-     * credentials, if there is one; otherwise return <code>null</code>.
-     *
-     * @param username Username of the Principal to look up
-     * @param credentials Password or other credentials to use in
-     *  authenticating this username
+     * Has the internal repository associated with this Loader been modified,
+     * such that the loaded classes should be reloaded?
      */
-    public Principal authenticate(String username, String credentials);
+    public boolean modified();
 
 
     /**
-     * Return the Principal associated with the specified username and
-     * credentials, if there is one; otherwise return <code>null</code>.
-     *
-     * @param username Username of the Principal to look up
-     * @param credentials Password or other credentials to use in
-     *  authenticating this username
+     * Cause the underlying class loader (and therefore all of the classes
+     * loaded by that class loader) to be thrown away, and creates a new one.
      */
-    public Principal authenticate(String username, byte[] credentials);
-
-
-    /**
-     * Return <code>true</code> if the specified Principal has the specified
-     * security role, within the context of this Realm; otherwise return
-     * <code>false</code>.
-     *
-     * @param principal Principal for whom the role is to be checked
-     * @param role Security role to be checked
-     */
-    public boolean hasRole(Principal principal, String role);
+    public void reload();
 
 
 }

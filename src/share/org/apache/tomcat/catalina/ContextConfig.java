@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Engine.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/ContextConfig.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,39 +62,85 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
 /**
- * An <b>Engine</b> is a Container that represents the entire Tomcat servlet
- * engine.  It is useful in the following types of scenarios:
- * <ul>
- * <li>You wish to use Interceptors that see every single request processed
- *     by the entire engine.
- * <li>You wish to run Tomcat in with a standalone HTTP connector, but still
- *     want support for multiple virtual hosts.
- * </ul>
- * In general, you would not use an Engine when deploying Tomcat connected
- * to a web server (such as Apache), because the Connector will have
- * utilized the web server's facilities to determine which Context (or
- * perhaps even which Wrapper) should be utilized to process this request.
+ * A <b>ContextConfig</b> encapsulates the configuration properties related
+ * to a specific <code>&lt;web-app%gt;</code> element from the deployment
+ * descriptor of a web application.  As such, implementations of this
+ * interface may be used both in the servlet engine itself, and administrative
+ * tools used to construct deployment descriptors.
  * <p>
- * The child containers attached to an Engine are generally implementations
- * of Host (representing a virtual host) or Context (representing individual
- * an individual servlet context), depending upon the Engine implementation.
- * <p>
- * If used, an Engine is always the top level Container in a Tomcat hierarchy.
- * Therefore, the implementation's <code>setParent()</code> method should
- * throw <code>IllegalArgumentException</code>.
+ * <b>FIXME:  Add the missing configuration elements!</b>
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Engine extends Container {
+public interface ContextConfig {
 
 
-    // No additional methods are defined
+    // ------------------------------------------------------------- Properties
+
+
+    /**
+     * Return the description of this web application.
+     */
+    public String getDescription();
+
+
+    /**
+     * Set the description of this web application.
+     *
+     * @param description The new description
+     */
+    public void setDescription(String description);
+
+
+    /**
+     * Return the display name of this web application.
+     */
+    public String getDisplayName();
+
+
+    /**
+     * Set the display name of this web application.
+     *
+     * @param name The new display name
+     */
+    public void setDisplayName(String name);
+
+
+    /**
+     * Return the path of the large icon file for this web application.
+     */
+    public String getLargeIcon();
+
+
+    /**
+     * Set the path of the large icon file for this web application.
+     *
+     * @param path The new icon path
+     */
+    public void setLargeIcon(String path);
+
+
+    /**
+     * Return the path of the small icon file for this web application.
+     */
+    public String getSmallIcon();
+
+
+    /**
+     * Set the path of the small icon file for this web application.
+     *
+     * @param path The new icon path
+     */
+    public void setSmallIcon(String path);
+
+
+    // --------------------------------------------------------- Public Methods
 
 
 }

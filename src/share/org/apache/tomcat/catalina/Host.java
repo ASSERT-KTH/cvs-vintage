@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/WrapperParam.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Host.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,140 +62,83 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
+
+
+import javax.servlet.ServletContext;
 
 
 /**
- * Representation of a servlet initialization parameter, corresponding to a
- * specific <code>&lt;init-param&gt;</code> element from the deployment
- * descriptor of a web application.
+ * A <b>Host</b> is a Container that represents a virtual host in the
+ * Tomcat servlet engine.  It is useful in the following types of scenarios:
+ * <ul>
+ * <li>You wish to use Interceptors that see every single request processed
+ *     by this particular virtual host.
+ * <li>You wish to run Tomcat in with a standalone HTTP connector, but still
+ *     want support for multiple virtual hosts.
+ * </ul>
+ * In general, you would not use a Host when deploying Tomcat connected
+ * to a web server (such as Apache), because the Connector will have
+ * utilized the web server's facilities to determine which Context (or
+ * perhaps even which Wrapper) should be utilized to process this request.
+ * <p>
+ * The parent Container attached to a Host is generally an Engine, but may
+ * be some other implementation, or may be omitted if it is not necessary.
+ * <p>
+ * The child containers attached to a Host are generally implementations
+ * of Host (representing a virtual host) or Context (representing individual
+ * an individual servlet context), depending upon the Engine implementation.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public final class WrapperParam {
-
-
-
-    // ----------------------------------------------------------- Constructors
-
-
-    /**
-     * Construct a new instance with default parameter values.
-     */
-    public WrapperParam() {
-
-	this(null, null, null);
-
-    }
-
-
-    /**
-     * Construct a new instance with specified parameter values.
-     *
-     * @param name Parameter name
-     * @param value Paramater value
-     * @param description Parameter description
-     */
-    public WrapperParam(String name, String value, String description) {
-
-	super();
-	setName(name);
-	setValue(value);
-	setDescription(description);
-
-    }
-
-
-    // ----------------------------------------------------- Instance Variables
-
-
-    /**
-     * The parameter description.
-     */
-    private String description = null;
-
-
-    /**
-     * The parameter name.
-     */
-    private String name = null;
-
-
-    /**
-     * The parameter value.
-     */
-    private String value = null;
+public interface Host extends Container {
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the description of this parameter.
+     * Return the canonical, fully qualified, name of the virtual host
+     * this Container represents.
      */
-    public String getDescription() {
-
-	return (description);
-
-    }
+    public String getHost();
 
 
     /**
-     * Set the description of this parameter.
+     * Set the canonical, fully qualified, name of the virtual host
+     * this Container represents.
      *
-     * @param description The new description
+     * @param host Virtual host name
      */
-    public void setDescription(String description) {
-
-	this.description = description;
-
-    }
+    public void setHost(String host);
 
 
     /**
-     * Return the name of this parameter.
+     * Return the canonical port number to which this virtual host is
+     * connected.
      */
-    public String getName() {
-
-	return (name);
-
-    }
+    public int getPort();
 
 
     /**
-     * Set the name of this parameter.
+     * Set the canonical port number to which this virtual host is
+     * connected.
      *
-     * @param name The new name
+     * @param port The port number
      */
-    public void setName(String name) {
-
-	this.name = name;
-
-    }
+    public void setPort(int port);
 
 
     /**
-     * Return the value of this parameter.
+     * Return a specialized ServletContext instance that wraps the
+     * resources of the underlying virtual host; or <code>null</code>
+     * if access to these resources is not supported or not allowed.
+     * In general, this method will be used when a servlet calls
+     * <code>ServletContext.getContext("/")</code>.
      */
-    public String getValue() {
-
-	return (value);
-
-    }
-
-
-    /**
-     * Set the value of this parameter.
-     *
-     * @param value The new value
-     */
-    public void setValue(String value) {
-
-	this.value = value;
-
-    }
+    public ServletContext getRootContext();
 
 
 }

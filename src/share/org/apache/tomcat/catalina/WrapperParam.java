@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Store.java,v 1.1 2000/01/09 04:54:28 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/WrapperParam.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 04:54:28 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,93 +62,140 @@
  */ 
 
 
-package org.apache.tomcat;
-
-
-import java.io.IOException;
+package org.apache.tomcat.catalina;
 
 
 /**
- * A <b>Store</b> is the abstraction of a Tomcat component that provides
- * persistent storage and loading of Sessions and their associated user data.
- * Implementations are free to save and load the Sessions to any media they
- * wish, but it is assumed that saved Sessions are persistent across
- * server or context restarts.
+ * Representation of a servlet initialization parameter, corresponding to a
+ * specific <code>&lt;init-param&gt;</code> element from the deployment
+ * descriptor of a web application.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 04:54:28 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Store {
+public final class WrapperParam {
+
+
+
+    // ----------------------------------------------------------- Constructors
+
+
+    /**
+     * Construct a new instance with default parameter values.
+     */
+    public WrapperParam() {
+
+	this(null, null, null);
+
+    }
+
+
+    /**
+     * Construct a new instance with specified parameter values.
+     *
+     * @param name Parameter name
+     * @param value Paramater value
+     * @param description Parameter description
+     */
+    public WrapperParam(String name, String value, String description) {
+
+	super();
+	setName(name);
+	setValue(value);
+	setDescription(description);
+
+    }
+
+
+    // ----------------------------------------------------- Instance Variables
+
+
+    /**
+     * The parameter description.
+     */
+    private String description = null;
+
+
+    /**
+     * The parameter name.
+     */
+    private String name = null;
+
+
+    /**
+     * The parameter value.
+     */
+    private String value = null;
 
 
     // ------------------------------------------------------------- Properties
 
 
     /**
-     * Return the number of Sessions present in this Store.
-     *
-     * @exception IOException if an input/output error occurs
+     * Return the description of this parameter.
      */
-    public int getSize() throws IOException;
+    public String getDescription() {
+
+	return (description);
+
+    }
 
 
     /**
-     * Return descriptive information about this Store implementation and
-     * the corresponding version number, in the format
-     * <code>&lt;description&gt;/&lt;version&gt;</code>.
+     * Set the description of this parameter.
+     *
+     * @param description The new description
      */
-    public String getInfo();
+    public void setDescription(String description) {
 
+	this.description = description;
 
-    // --------------------------------------------------------- Public Methods
+    }
 
 
     /**
-     * Return an array containing the session identifiers of all Sessions
-     * currently saved in this Store.  If there are no such Sessions, a
-     * zero-length array is returned.
-     *
-     * @exception IOException if an input/output error occurred
+     * Return the name of this parameter.
      */
-    public String[] keys() throws IOException;
+    public String getName() {
+
+	return (name);
+
+    }
 
 
     /**
-     * Load and return the Session associated with the specified session
-     * identifier from this Store, without removing it.  If there is no
-     * such stored Session, return <code>null</code>.
+     * Set the name of this parameter.
      *
-     * @param id Session identifier of the session to load
-     *
-     * @exception ClassNotFoundException if a deserialization error occurs
-     * @exception IOException if an input/output error occurs
+     * @param name The new name
      */
-    public Session load(String id)
-        throws ClassNotFoundException, IOException;
+    public void setName(String name) {
+
+	this.name = name;
+
+    }
 
 
     /**
-     * Remove the Session with the specified session identifier from
-     * this Store, if present.  If no such Session is present, this method
-     * takes no action.
-     *
-     * @param id Session identifier of the Session to be removed
-     *
-     * @exception IOException if an input/output error occurs
+     * Return the value of this parameter.
      */
-    public void remove(String id) throws IOException;
+    public String getValue() {
+
+	return (value);
+
+    }
 
 
     /**
-     * Save the specified Session into this Store.  Any previously saved
-     * information for the associated session identifier is replaced.
+     * Set the value of this parameter.
      *
-     * @param session Session to be saved
-     *
-     * @exception IOException if an input/output error occurs
+     * @param value The new value
      */
-    public void save(Session session) throws IOException;
+    public void setValue(String value) {
+
+	this.value = value;
+
+    }
 
 
 }

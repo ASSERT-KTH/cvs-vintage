@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/Attic/Adapter.java,v 1.1 2000/01/09 03:20:02 craigmcc Exp $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/catalina/Attic/Logger.java,v 1.1 2000/01/26 17:45:08 costin Exp $
  * $Revision: 1.1 $
- * $Date: 2000/01/09 03:20:02 $
+ * $Date: 2000/01/26 17:45:08 $
  *
  * ====================================================================
  *
@@ -62,43 +62,85 @@
  */ 
 
 
-package org.apache.tomcat;
+package org.apache.tomcat.catalina;
 
 
 /**
- * An <b>Adapter</b> is a component responsible receiving requests from,
- * and returning responses to, a client application.  An Adapter performs
- * the following general logic:
- * <ul>
- * <li>Receive a request from the client application.
- * <li>Create (or allocate from a pool) appropriate Request and Response
- *     instances, and populate their properties based on the contents of
- *     the received request.
- * <li>Identify an appropriate Container to use for processing this request.
- *     For a stand alone Tomcat installation, this will probably be a
- *     (singleton) Engine implementation.  For a Connector attaching Tomcat
- *     to a web server such as Apache, this step could take advantage of
- *     parsing already performed within the web server to identify the
- *     Context, and perhaps even the Wrapper, to utilize in satisfying this
- *     Request.
- * <li>Call the <code>invoke()</code> method of the selected Container,
- *     passing the initialized Request and Response instances as arguments.
- * <li>Return any response created by the Container to the client, or
- *     return an appropriate error message if an exception of any type
- *     was thrown.
- * <li>If utilizing a pool of Request and Response objects, recycle the pair
- *     of instances that was just used.
- * </ul>
- * It is expected that the implementation details of various Adapters will
- * vary widely, so the logic above should considered typical rather than
- * normative.
+ * A <b>Logger</b> is a generic interface for the message and exception
+ * logging methods of the ServletContext interface.  Loggers can be
+ * attached at any Container level, but will typically only be attached
+ * to a Context, or higher level, Container.
  *
  * @author Craig R. McClanahan
- * @version $Revision: 1.1 $ $Date: 2000/01/09 03:20:02 $
+ * @version $Revision: 1.1 $ $Date: 2000/01/26 17:45:08 $
  */
 
-public interface Adapter {
+public interface Logger {
 
-    // No additional methods defined
+
+    // ------------------------------------------------------------- Properties
+
+
+    /**
+     * Return the Container with which this Logger has been associated.
+     */
+    public Container getContainer();
+
+
+    /**
+     * Set the Container with which this Logger has been associated.
+     *
+     * @param container The associated Container
+     */
+    public void setContainer(Container container);
+
+
+    /**
+     * Return descriptive information about this Logger implementation and
+     * the corresponding version number, in the format
+     * <code>&lt;description&gt;/&lt;version&gt;</code>.
+     */
+    public String getInfo();
+
+
+    // --------------------------------------------------------- Public Methods
+
+
+    /**
+     * Writes the specified message to a servlet log file, usually an event
+     * log.  The name and type of the servlet log is specific to the
+     * servlet container.
+     *
+     * @param msg A <code>String</code> specifying the message to be written
+     *  to the log file
+     */
+    public void log(String msg);
+
+
+    /**
+     * Writes the specified exception, and message, to a servlet log file.
+     * The implementation of this method should call
+     * <code>log(msg, exception)</code> instead.  This method is deprecated
+     * in the ServletContext interface, but not deprecated here to avoid
+     * many useless compiler warnings.
+     *
+     * @param exception An <code>Exception</code> to be reported
+     * @param msg The associated message string
+     */
+    public void log(Exception exception, String msg);
+
+
+    /**
+     * Writes an explanatory message and a stack trace for a given
+     * <code>Throwable</code> exception to the servlet log file.  The name
+     * and type of the servlet log file is specific to the servlet container,
+     * usually an event log.
+     *
+     * @param message A <code>String</code> that describes the error or
+     *  exception
+     * @param throwable The <code>Throwable</code> error or exception
+     */
+    public void log(String message, Throwable throwable);
+
 
 }
