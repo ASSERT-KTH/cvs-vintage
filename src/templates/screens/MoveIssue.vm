@@ -46,15 +46,14 @@
  </tr>
 </table>
 
-<h3>Source module</h3>
-<p>
-$issue.Module.Name
-</p>
-
-<h3>Destination module</h3>
-<p>
+<h4>Copy / move information</h4>
+<div class="axial"> <table border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th width="120">Destination module / artifact type</th>
+<td>
+#fieldErrorMsg($moveIssueGroup.ModuleId "")
 <select name="$moveIssueGroup.ModuleId.Key">
- <option>Select Module...</option>
+ <option>Select module...</option>
  #foreach ($module in $user.getModules($scarabG.Permission.ISSUE__ENTER))
   #if ($module.ModuleId.equals($scarabR.CurrentModule.ModuleId))
     <option selected="selected" value="$module.ModuleId">$module.Name</option>
@@ -63,21 +62,26 @@ $issue.Module.Name
   #end
  #end
 </select>
-#fieldErrorMsg($moveIssueGroup.ModuleId "")
-</p>
-
-<h3>Action</h3>
-
+</td>
+</tr>
+<tr>
+<th>Action</th>
 #set ($userAction = $moveIssueGroup.Action)
 #if (!$userAction || $userAction.toString().length() == 0)
    #set ($userAction = 'copy')
 #end
-<p>
-<input type="radio" name="$moveIssueGroup.Action.Key" value="copy" 
-#if ($userAction.toString().equals("copy")) checked="checked" #end /> Copy
-<input type="radio" name="$moveIssueGroup.Action.Key" value="move" 
-#if ($userAction.toString().equals("move")) checked="checked" #end /> Move
-</p>
+<td> <select name="$moveIssueGroup.Action.Key" >
+<option value="copy"
+     #if ($userAction.toString().equals("copy")) selected="selected" #end >Copy</option>
+<option value="move" 
+     #if ($userAction.toString().equals("move")) selected="selected" #end >Move</option>
+</select>
+
+</td>
+</tr>
+</table>
+</div>
+
 
 <div class="functnbar2">
  <table cellpadding="4" cellspacing="0" border="1">
