@@ -1,8 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/ContextManager.java,v 1.7 2000/01/08 23:04:46 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/01/08 23:04:46 $
- *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -86,24 +82,19 @@ import java.util.*;
  * @author Harish Prabandham
  */
 public class ContextManager {
-
     /**
      * The string constants for this ContextManager.
      */
-
-    private StringManager sm =
-        StringManager.getManager(Constants.Package);
+    private StringManager sm =StringManager.getManager("org.apache.tomcat.core");
 
     ContextInterceptor contextInterceptor=new ContextInterceptor( this );
     SessionInterceptor sessionInterceptor=new SessionInterceptor();
     MapperInterceptor mapperInterceptor=new MapperInterceptor();
     
-    
     /**
      * The default Context used to process paths not associated with
      * any other Context.
      */
-
     private Context defaultContext;
 
     /**
@@ -156,15 +147,18 @@ public class ContextManager {
     }
     
 
+    // XXX XXX who calls this ? It should use per context info
+    // Wrong because it's not a property of context manager ( maybe
+    // defaultServerInfo
     /**
      * Gets the server info string for this server
      */
-
+    
     public String getServerInfo() {
-        return serverInfo;
-	// that is the behavior in the current tomcat
-	// return defaultContext.getEngineHeader();
+	if( serverInfo==null) 
+	    serverInfo=getContext("").getEngineHeader();
 
+        return serverInfo;
     }
 
 
@@ -183,9 +177,9 @@ public class ContextManager {
     /**
      * Gets the document base of the default context for this server.
      */
-
+    // XXX wrong - ContextManager has no document base !
     public URL getDocumentBase() {
-	return defaultContext.getDocumentBase();
+	return getContext("").getDocumentBase();
     }
 
 
@@ -196,34 +190,12 @@ public class ContextManager {
      */
 
     public void setDocumentBase(URL docBase) {
-	defaultContext.setDocumentBase(docBase);
+	getContext("").setDocumentBase(docBase);
     }
-
-    
-    /**
-     * Gets the default Context for this server.
-     */
-
-    public Context getDefaultContext() {
-        return defaultContext;
-    }
-
-
-    /**
-     * Sets the default Context for this server.
-     *
-     * @param ctx The new default Context
-     */
-
-    public void setDefaultContext(Context ctx) {
-        defaultContext=ctx;
-    }
-
 
     /**
      * Get the names of all the contexts in this server.
      */
-    
     public Enumeration getContextNames() {
         return contexts.keys();
     }
@@ -252,11 +224,10 @@ public class ContextManager {
      * @param path Path prefix to be processed by this Context
      * @param docBase Document base URL for this Context
      */
-
     public Context addContext(String path, URL docBase) {
+	// assert path!=null
         if (path == null) {
 	    String msg = sm.getString("server.defaultContext.path.npe");
-
 	    throw new NullPointerException(msg);
 	}
 
@@ -293,9 +264,7 @@ public class ContextManager {
 	// check to see if defaultContext
 
 	if (path.length() == 0) {
-	    contexts.put(
-                org.apache.tomcat.core.Constants.Context.Default.Name,
-	        context);
+	    contexts.put("",context);
 	} else {
 	    contexts.put(path, context);
 	    contextMaps.put(path, context);
@@ -313,8 +282,7 @@ public class ContextManager {
      */
     
     public void removeContext(String name) {
-	if (name.equals(
-	    org.apache.tomcat.core.Constants.Context.Default.Name)){
+	if (name.equals("")){
 	    throw new IllegalArgumentException(name);
 	}
 
@@ -333,7 +301,6 @@ public class ContextManager {
      *
      * @param port The new port number
      */
-
     public void setPort(int port) {
 	this.port=port;
     }
@@ -353,7 +320,6 @@ public class ContextManager {
      *
      * @param host The new virtual host name
      */
-
     public void setHostName( String host) {
 	this.hostname=host;
     }

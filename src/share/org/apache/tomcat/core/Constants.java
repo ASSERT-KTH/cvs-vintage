@@ -99,11 +99,6 @@ public class Constants {
             WebInfDir,
             WARInfDir
         };
-
-        public static class Default {
-	    public static final String Name = "default";
-	    public static final String Path = "";
-	}
     }
 
     public static class Property {
