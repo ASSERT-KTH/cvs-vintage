@@ -54,8 +54,10 @@ public class ForwardInlineCommand extends FolderCommand {
 		Message message = new Message();
 		
 
-		ColumbaHeader header = (ColumbaHeader) message.getHeader();
+	ColumbaHeader header = (ColumbaHeader) folder.getMessageHeader(uids[0], worker);
+		message.setHeader(header);
 		MimePartTree mimePartTree = folder.getMimePartTree(uids[0], worker);
+		message.setMimePartTree(mimePartTree);
 		
 	
 
