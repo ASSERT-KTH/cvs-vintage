@@ -30,7 +30,7 @@ import org.jboss.metadata.ApplicationMetaData;
  *      
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
@@ -179,9 +179,9 @@ public class JDBCApplicationMetaData extends MetaData implements XmlLoadable {
 		// get the datasource (optional, but always set in standardjbosscmp-jdbc.xml)
 		String txIsolation = getElementContent(getOptionalChild(element, "transaction-isolation"));
 		if(txIsolation != null) {
-			if(txIsolation.equals("transaction-")) {
+			if(txIsolation.equals("transaction-none")) {
 				transactionIsolation = new Integer(Connection.TRANSACTION_NONE);
-			} else if(txIsolation.equals("transaction-none")) {
+			} else if(txIsolation.equals("transaction-read-committed")) {
 				transactionIsolation = new Integer(Connection.TRANSACTION_READ_COMMITTED);
 			} else if(txIsolation.equals("transaction-read-uncommitted")) {
 				transactionIsolation = new Integer(Connection.TRANSACTION_READ_UNCOMMITTED);
