@@ -117,7 +117,7 @@
 </div>
  
 #if ($canEdit)
-<h4>$l10n.SaveChanges</h4>
+<h3>$l10n.SaveChanges</h3>
 <div class="axial">
    #set ($attCommentGroup = $intake.Attachment.setKey("attCommentKey"))
 <table cellpadding="3" cellspacing="2" border="0">
