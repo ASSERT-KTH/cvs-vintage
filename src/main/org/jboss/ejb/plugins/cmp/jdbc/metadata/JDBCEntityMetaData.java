@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public final class JDBCEntityMetaData {
    /**
@@ -569,13 +569,12 @@ public final class JDBCEntityMetaData {
             JDBCCMPFieldMetaData upkField = 
                new JDBCCMPFieldMetaData( this, upkElement, oldUpkField);
 
-            // update upk field
-            String oldUpkFieldName = oldUpkField.getFieldName();
-            cmpFieldsByName.put( oldUpkFieldName, upkField );
+            // remove old upk field
+            cmpFieldsByName.remove( oldUpkField.getFieldName() );
+            cmpFieldsByName.put( upkField.getFieldName(), upkField );
 
             int oldUpkFieldInd = cmpFields.indexOf( oldUpkField );
-            cmpFields.remove( oldUpkField );
-            cmpFields.add( oldUpkFieldInd, upkField );
+            cmpFields.set( oldUpkFieldInd, upkField );
          }
       }
 
