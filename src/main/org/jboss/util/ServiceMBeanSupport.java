@@ -30,7 +30,7 @@ as approriate.
 
 @author Rickard Öberg (rickard.oberg@telkel.com)
 @author Scott_Stark@displayscape.com
-@version $Revision: 1.12 $
+@version $Revision: 1.13 $
 */
 public abstract class ServiceMBeanSupport
    extends NotificationBroadcasterSupport
@@ -172,8 +172,16 @@ public abstract class ServiceMBeanSupport
 
    public void postRegister(java.lang.Boolean registrationDone)
    {
-      if (!registrationDone.booleanValue())
+      if (!registrationDone.booleanValue()) {
+         if( category == null ) {
+            category = Category.getInstance(getName());
+         }
+         if( log == null ) {
+            log = new LogToCategory(category);
+         }
+         log.log( "Registration is not done -> destroy" );
          destroy();
+      }
    }
    
    public void preDeregister()
