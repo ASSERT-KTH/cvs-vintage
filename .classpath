@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="externals/ow_util_log_wrp_log4j.jar"/>
 	<classpathentry kind="lib" path="externals/junit.jar"/>
 	<classpathentry kind="var" path="ANT_HOME/lib/ant.jar"/>
+	<classpathentry kind="var" path="ANT_HOME/lib/ant-junit.jar"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
