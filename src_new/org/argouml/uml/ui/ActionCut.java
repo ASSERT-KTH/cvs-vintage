@@ -1,4 +1,4 @@
-// $Id: ActionCut.java,v 1.6 2003/05/11 16:53:12 kataka Exp $
+// $Id: ActionCut.java,v 1.7 2003/06/23 03:13:01 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -50,21 +50,24 @@ public class ActionCut extends AbstractAction implements CaretListener {
 
     private static ActionCut _Instance = new ActionCut();
 
+    private static final String LOCALIZE_KEY = "action.cut";
+
     ////////////////////////////////////////////////////////////////
     // constructors
 
     private ActionCut() {
+        super(Translator.localize("CoreMenu", LOCALIZE_KEY));
         Icon icon =
             ResourceLoaderWrapper
                 .getResourceLoaderWrapper()
                 .lookupIconResource(
-                Translator.getImageBinding("action.cut"),
-                Translator.localize("CoreMenu", "action.cut"));
+                Translator.getImageBinding(LOCALIZE_KEY),
+                Translator.localize("CoreMenu", LOCALIZE_KEY));
         if (icon != null)
             putValue(Action.SMALL_ICON, icon);
         putValue(
             Action.SHORT_DESCRIPTION,
-            Translator.localize("CoreMenu", "action.cut") + " ");
+            Translator.localize("CoreMenu", LOCALIZE_KEY) + " ");
     }
 
     public static ActionCut getInstance() {
