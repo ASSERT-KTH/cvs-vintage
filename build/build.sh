@@ -21,11 +21,17 @@ if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
-for i in `find . -name "*.jar" -print` ; do
-   CLASSPATH="$i:$CLASSPATH"
+# order of the for loops matters here
+for i in `find ../src -name "crimson*.jar" -print | tail -1` ; do
+   CLASSPATH="$CLASSPATH:$i"
 done
-for i in `find ../src -name "crimson*.jar" -print` ; do
-   CLASSPATH="$i:$CLASSPATH"
+
+for i in `find . -name "jaxp*.jar" -print` ; do
+   CLASSPATH="$CLASSPATH:$i"
+done
+
+for i in `find . -name "ant*.jar" -print` ; do
+   CLASSPATH="$CLASSPATH:$i"
 done
 
 # convert the unix path to windows
