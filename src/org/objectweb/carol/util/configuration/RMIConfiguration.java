@@ -121,7 +121,7 @@ public class RMIConfiguration {
 	    nameServiceName = rmiProperties.getProperty( rmiPref + "." + CarolDefaultValues.NS_PREFIX ).trim();
 	}	
 
-	// search for the configuration file
+	// search for the jndi configuration file
 	boolean inRmiFile = false;	
 	for (Enumeration e = rmiProperties.propertyNames() ; e.hasMoreElements() ;) {
 	    if (((String)e.nextElement()).startsWith(jndiPref)) {
