@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.33 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: ProjectManager.java,v 1.34 2004/08/16 16:50:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,23 +26,12 @@ package org.argouml.kernel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.swing.event.EventListenerList;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.argouml.cognitive.ProjectMemberTodoList;
-import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.ArgoDiagram;
-import org.argouml.util.FileConstants;
-import org.argouml.xml.argo.ArgoParser;
-import org.argouml.xml.xmi.XMIParser;
-import org.xml.sax.SAXException;
 
 /**
  * This class manages the projects loaded in argouml.
