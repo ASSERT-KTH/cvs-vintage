@@ -103,6 +103,7 @@ public class RModuleOption
     }
 
     public AttributeOption getAttributeOption()
+        throws Exception
     {
         return Attribute.getAttributeForOption(
             getOptionId()).getAttributeOption(getOptionId());

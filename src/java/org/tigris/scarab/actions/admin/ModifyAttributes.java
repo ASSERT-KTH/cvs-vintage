@@ -70,7 +70,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.15 2001/08/09 07:59:52 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.16 2001/08/13 03:55:25 jon Exp $
 */
 public class ModifyAttributes extends RequireLoginFirstAction
 {
@@ -159,7 +159,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
     }
 
     /**
-     * Used on AttributeEditOptions.vm to change the name of an existing
+     * Used on AttributeEdit.vm to change the name of an existing
      * AttributeOption or add a new one if the name doesn't already exist.
      */
     public synchronized void 

@@ -54,6 +54,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.services.intake.model.Group;
+import org.apache.turbine.util.Log;
 import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
@@ -227,15 +228,26 @@ try{
     public ScarabUser getUser()
     {
         if (user == null)
+        {
             this.user = (ScarabUser)data.getUser();
+        }
         return (ScarabUser)data.getUser();
     }
 
     public ScarabUser getUser(String id)
      throws Exception
     {
-        ObjectKey pk = (ObjectKey)new NumberKey(id);
-        return (ScarabUser)ScarabUserImplPeer.retrieveScarabUserImplByPK(pk);
+        ScarabUser su = null;
+        try
+        {
+            ObjectKey pk = (ObjectKey)new NumberKey(id);
+            su = (ScarabUser)ScarabUserImplPeer.retrieveScarabUserImplByPK(pk);
+        }
+        catch (Exception e)
+        {
+            Log.error ("SRT.getUser(id) error: " + e);
+        }
+        return su;
     }
 
     /**
