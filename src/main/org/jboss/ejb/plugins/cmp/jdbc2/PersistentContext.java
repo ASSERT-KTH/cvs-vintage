@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class PersistentContext
 {
@@ -53,7 +53,7 @@ public class PersistentContext
    {
       if(pk == null)
       {
-         throw new IllegalStateException("Primary key is null!");
+         throw new IllegalArgumentException("Primary key is null!");
       }
 
       row.insert(pk);

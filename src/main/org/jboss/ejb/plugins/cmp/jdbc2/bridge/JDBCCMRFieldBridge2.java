@@ -37,6 +37,7 @@ import org.jboss.invocation.InvocationType;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
+import javax.ejb.NoSuchObjectLocalException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.SystemException;
@@ -62,7 +63,7 @@ import java.security.Principal;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.4 $</tt>
+ * @version <tt>$Revision: 1.5 $</tt>
  */
 public class JDBCCMRFieldBridge2
    extends JDBCAbstractCMRFieldBridge
@@ -630,6 +631,29 @@ public class JDBCCMRFieldBridge2
       return relationTable;
    }
 
+   private Object getPrimaryKey(Object o)
+   {
+      if(o == null)
+      {
+         throw new IllegalArgumentException("This implementation does not support null members.");
+      }
+
+      if(!relatedEntity.getLocalInterface().isInstance(o))
+      {
+         throw new IllegalArgumentException("Argument must be of type " + entity.getLocalInterface().getName());
+      }
+
+      EJBLocalObject local = (EJBLocalObject) o;
+      try
+      {
+         return local.getPrimaryKey();
+      }
+      catch(NoSuchObjectLocalException e)
+      {
+         throw new IllegalArgumentException(e.getMessage());
+      }
+   }
+
    // Inner
 
    public class SingleValuedFieldState
@@ -637,6 +661,7 @@ public class JDBCCMRFieldBridge2
    {
       private boolean loaded;
       private Object value;
+      private EJBLocalObject localObject;
 
       public void init()
       {
@@ -645,35 +670,52 @@ public class JDBCCMRFieldBridge2
 
       public Object getValue(EntityEnterpriseContext ctx)
       {
-         // todo: cache this value?
          Object value = getLoadedValue(ctx);
-         return value == null ? null : relatedContainer.getLocalProxyFactory().getEntityEJBLocalObject(value);
+         if(value == null)
+         {
+            localObject = null;
+         }
+         else if(localObject == null)
+         {
+            localObject = relatedContainer.getLocalProxyFactory().getEntityEJBLocalObject(value);
+         }
+         return localObject;
       }
 
       public void setValue(EntityEnterpriseContext ctx, Object value)
       {
          if(value != null)
          {
-            EJBLocalObject localObject = (EJBLocalObject) value;
-            Object relatedId = localObject.getPrimaryKey();
-
+            Object relatedId = getPrimaryKey(value);
             addRelatedId(ctx, relatedId);
             relatedCMRField.invokeAddRelatedId(relatedId, ctx.getId());
+            localObject = (EJBLocalObject) value;
          }
          else
          {
             destroyExistingRelationships(ctx);
          }
-
-         cacheValue(ctx);
       }
 
       public void cascadeDelete(EntityEnterpriseContext ctx) throws RemoveException
       {
-         EJBLocalObject value = (EJBLocalObject) getValue(ctx);
-         if(value != null)
+         if(manager.registerCascadeDelete(ctx.getId(), ctx.getId()))
          {
-            value.remove();
+            EJBLocalObject value = (EJBLocalObject) getValue(ctx);
+            if(value != null)
+            {
+               changeValue(null);
+
+               final Object relatedId = value.getPrimaryKey();
+               final JDBCStoreManager2 relatedManager = (JDBCStoreManager2)relatedEntity.getManager();
+
+               if(!relatedManager.isCascadeDeleted(relatedId))
+               {
+                  value.remove();
+               }
+            }
+
+            manager.unregisterCascadeDelete(ctx.getId());
          }
       }
 
@@ -693,13 +735,11 @@ public class JDBCCMRFieldBridge2
          {
             getLoadedValue(ctx);
          }
-         else
-         {
-            loaded = true;
-         }
 
-         this.value = null;
+         changeValue(null);
          loader.removeRelatedId(ctx, relatedId);
+
+         cacheValue(ctx);
 
          return true;
       }
@@ -712,8 +752,10 @@ public class JDBCCMRFieldBridge2
             relatedCMRField.invokeRemoveRelatedId(value, ctx.getId());
          }
 
-         this.value = relatedId;
+         changeValue(relatedId);
          loader.addRelatedId(ctx, relatedId);
+
+         cacheValue(ctx);
 
          return true;
       }
@@ -732,16 +774,14 @@ public class JDBCCMRFieldBridge2
                + " current value=" + value + ", loaded value=" + pk);
          }
 
-         value = pk;
-         loaded = true;
+         changeValue(pk);
       }
 
       public Object loadFromCache(Object value)
       {
          if(value != null)
          {
-            this.value = (NULL_VALUE == value ? null : value);
-            loaded = true;
+            changeValue(NULL_VALUE == value ? null : value);
          }
          return value;
       }
@@ -758,6 +798,13 @@ public class JDBCCMRFieldBridge2
       }
 
       // Private
+
+      private void changeValue(Object newValue)
+      {
+         this.value = newValue;
+         this.localObject = null;
+         loaded = true;
+      }
 
       private Object getLoadedValue(EntityEnterpriseContext ctx)
       {
@@ -781,6 +828,7 @@ public class JDBCCMRFieldBridge2
    {
       private boolean loaded;
       private Set value;
+      private CMRSet cmrSet;
 
       private Set removedWhileNotLoaded;
       private Set addedWhileNotLoaded;
@@ -793,8 +841,11 @@ public class JDBCCMRFieldBridge2
 
       public Object getValue(EntityEnterpriseContext ctx)
       {
-         // todo: cache this value?
-         return new CMRSet(ctx, this);
+         if(cmrSet == null)
+         {
+            cmrSet = new CMRSet(ctx, this);
+         }
+         return cmrSet;
       }
 
       public void setValue(EntityEnterpriseContext ctx, Object value)
@@ -813,9 +864,7 @@ public class JDBCCMRFieldBridge2
             Set copy = new HashSet(newValue);
             for(Iterator iter = copy.iterator(); iter.hasNext();)
             {
-               EJBLocalObject localObject = (EJBLocalObject) iter.next();
-               Object relatedId = localObject.getPrimaryKey();
-
+               Object relatedId = getPrimaryKey(iter.next());
                addRelatedId(ctx, relatedId);
                relatedCMRField.invokeAddRelatedId(relatedId, ctx.getId());
             }
@@ -942,22 +991,21 @@ public class JDBCCMRFieldBridge2
                }
 
                loader.load(ctx, this);
-
-               if(addedWhileNotLoaded != null)
-               {
-                  value.addAll(addedWhileNotLoaded);
-                  addedWhileNotLoaded = null;
-               }
-
-               if(removedWhileNotLoaded != null)
-               {
-                  value.removeAll(removedWhileNotLoaded);
-                  removedWhileNotLoaded = null;
-               }
+               cacheValue(ctx);
 
                loaded = true;
+            }
 
-               cacheValue(ctx);
+            if(addedWhileNotLoaded != null)
+            {
+               value.addAll(addedWhileNotLoaded);
+               addedWhileNotLoaded = null;
+            }
+
+            if(removedWhileNotLoaded != null)
+            {
+               value.removeAll(removedWhileNotLoaded);
+               removedWhileNotLoaded = null;
             }
          }
          return value;
@@ -1308,7 +1356,7 @@ public class JDBCCMRFieldBridge2
 
          if(fkConstraint != null)
          {
-            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
+            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
             pctx.nullForeignKey(fkConstraint);
          }
       }
@@ -1325,7 +1373,7 @@ public class JDBCCMRFieldBridge2
 
          if(fkConstraint != null)
          {
-            PersistentContext pctx = (PersistentContext)ctx.getPersistenceContext();
+            PersistentContext pctx = (PersistentContext) ctx.getPersistenceContext();
             if(relatedId == null)
             {
                pctx.nullForeignKey(fkConstraint);
@@ -1375,8 +1423,7 @@ public class JDBCCMRFieldBridge2
 
       public boolean add(Object o)
       {
-         EJBLocalObject local = memberArgumentValidation(o);
-         Object relatedId = local.getPrimaryKey();
+         Object relatedId = getPrimaryKey(o);
          boolean modified = addRelatedId(ctx, relatedId);
 
          if(modified)
@@ -1390,14 +1437,13 @@ public class JDBCCMRFieldBridge2
 
       public boolean contains(Object o)
       {
-         EJBLocalObject local = memberArgumentValidation(o);
-         return state.getLoadedValue(ctx).contains(local.getPrimaryKey());
+         Object pk = getPrimaryKey(o);
+         return state.getLoadedValue(ctx).contains(pk);
       }
 
       public boolean remove(Object o)
       {
-         EJBLocalObject local = memberArgumentValidation(o);
-         Object relatedId = local.getPrimaryKey();
+         Object relatedId = getPrimaryKey(o);
          return removeById(relatedId);
       }
 
@@ -1587,25 +1633,10 @@ public class JDBCCMRFieldBridge2
          Set ids = new HashSet();
          for(Iterator iter = c.iterator(); iter.hasNext();)
          {
-            EJBLocalObject local = memberArgumentValidation(iter.next());
-            ids.add(local.getPrimaryKey());
+            Object pk = getPrimaryKey(iter.next());
+            ids.add(pk);
          }
          return ids;
-      }
-
-      private EJBLocalObject memberArgumentValidation(Object o)
-      {
-         if(o == null)
-         {
-            throw new IllegalStateException("This implementation does not support null members.");
-         }
-
-         if(!relatedEntity.getLocalInterface().isInstance(o))
-         {
-            throw new IllegalStateException("Memebers must be of type " + entity.getLocalInterface().getName());
-         }
-
-         return (EJBLocalObject) o;
       }
    }
 

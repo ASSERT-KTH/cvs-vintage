@@ -26,6 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc2.schema.EntityTable;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.tm.TransactionLocal;
 
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
@@ -44,7 +45,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.6 $</tt>
+ * @version <tt>$Revision: 1.7 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -66,6 +67,14 @@ public class JDBCStoreManager2
    private QueryFactory queryFactory;
    private JDBCStartCommand startCmd;
    private JDBCStopCommand stop;
+
+   private final TransactionLocal cascadeDeleteRegistry = new TransactionLocal()
+   {
+      protected Object initialValue()
+      {
+         return new HashMap();
+      }
+   };
 
    // Public
 
@@ -94,6 +103,24 @@ public class JDBCStoreManager2
    public QueryFactory getQueryFactory()
    {
       return queryFactory;
+   }
+
+   public boolean registerCascadeDelete(Object key, Object value)
+   {
+      Map map = (Map)cascadeDeleteRegistry.get();
+      return map.put(key, value) == null;
+   }
+
+   public boolean isCascadeDeleted(Object key)
+   {
+      Map map = (Map)cascadeDeleteRegistry.get();
+      return map.containsKey(key);
+   }
+
+   public void unregisterCascadeDelete(Object key)
+   {
+      Map map = (Map)cascadeDeleteRegistry.get();
+      map.remove(key);
    }
 
    // ContainerPlugin implementation
@@ -320,6 +347,10 @@ public class JDBCStoreManager2
          EntityTable.Row row = entityBridge.getTable().loadRow(ctx.getId());
          PersistentContext pctx = new PersistentContext(entityBridge, row);
          ctx.setPersistenceContext(pctx);
+      }
+      catch(EJBException e)
+      {
+         throw e;
       }
       catch(Exception e)
       {

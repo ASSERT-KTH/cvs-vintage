@@ -7,7 +7,6 @@
 package org.jboss.ejb.plugins.cmp.jdbc2.schema;
 
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
-import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCEntityBridge2;
 import org.jboss.ejb.plugins.cmp.jdbc2.bridge.JDBCCMRFieldBridge2;
 import org.jboss.deployment.DeploymentException;
@@ -19,15 +18,11 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
-import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.5 $</tt>
+ * @version <tt>$Revision: 1.6 $</tt>
  */
 public class Schema
 {

@@ -29,8 +29,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.ejb.DuplicateKeyException;
-import javax.ejb.ObjectNotFoundException;
 import javax.ejb.EJBException;
+import javax.ejb.NoSuchEntityException;
+import javax.ejb.NoSuchObjectLocalException;
 import javax.transaction.Transaction;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -48,7 +49,7 @@ import java.util.List;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.12 $</tt>
+ * @version <tt>$Revision: 1.13 $</tt>
  */
 public class EntityTable
    implements Table
@@ -387,7 +388,7 @@ public class EntityTable
       return getView().hasRow(id);
    }
 
-   public Row loadRow(Object id) throws SQLException, ObjectNotFoundException
+   public Row loadRow(Object id) throws SQLException
    {
       View view = getView();
 
@@ -428,7 +429,7 @@ public class EntityTable
 
          if(!rs.next())
          {
-            throw new ObjectNotFoundException("Row not found: " + id);
+            throw new NoSuchEntityException("Row not found: " + id);
          }
 
          return view.loadRow(rs, id);
@@ -564,7 +565,7 @@ public class EntityTable
             for(int pkInd = 0; pkInd < pkFields.length; ++pkInd)
             {
                JDBCCMPFieldBridge2 pkField = pkFields[pkInd];
-               Object fieldValue = row.getFieldValue(pkField.getRowIndex());
+               Object fieldValue = row.fields[pkField.getRowIndex()];
                paramInd = pkField.setArgumentParameters(ps, paramInd, fieldValue);
             }
 
@@ -626,7 +627,7 @@ public class EntityTable
                JDBCCMPFieldBridge2 field = tableFields[fInd];
                if(!field.isPrimaryKeyMember())
                {
-                  Object fieldValue = row.getFieldValue(field.getRowIndex());
+                  Object fieldValue = row.fields[field.getRowIndex()];
                   paramInd = field.setArgumentParameters(ps, paramInd, fieldValue);
                }
             }
@@ -634,7 +635,7 @@ public class EntityTable
             for(int fInd = 0; fInd < pkFields.length; ++fInd)
             {
                JDBCCMPFieldBridge2 pkField = pkFields[fInd];
-               Object fieldValue = row.getFieldValue(pkField.getRowIndex());
+               Object fieldValue = row.fields[pkField.getRowIndex()];
                paramInd = pkField.setArgumentParameters(ps, paramInd, fieldValue);
             }
 
@@ -642,11 +643,11 @@ public class EntityTable
             if(versionField != null)
             {
                int versionIndex = versionField.getVersionIndex();
-               Object curVersion = row.getFieldValue(versionIndex);
+               Object curVersion = row.fields[versionIndex];
                paramInd = versionField.setArgumentParameters(ps, paramInd, curVersion);
 
-               Object newVersion = row.getFieldValue(versionField.getRowIndex());
-               row.setFieldValue(versionIndex, newVersion);
+               Object newVersion = row.fields[versionField.getRowIndex()];
+               row.fields[versionIndex] = newVersion;
             }
 
             updateStrategy.executeUpdate(ps);
@@ -698,7 +699,7 @@ public class EntityTable
             for(int fInd = 0; fInd < tableFields.length; ++fInd)
             {
                JDBCCMPFieldBridge2 field = tableFields[fInd];
-               Object fieldValue = row.getFieldValue(field.getRowIndex());
+               Object fieldValue = row.fields[field.getRowIndex()];
                paramInd = field.setArgumentParameters(ps, paramInd, fieldValue);
             }
 
@@ -745,6 +746,8 @@ public class EntityTable
       private Row cacheUpdates;
 
       private List rowsWithNullFks;
+
+      private boolean inFlush;
 
       public View(Transaction tx)
       {
@@ -1014,13 +1017,31 @@ public class EntityTable
 
          if(referencedBy != null)
          {
-            for(int i = 0; i < referencedBy.length; ++i)
+            if(inFlush)
             {
-               final Table.View view = views.entityViews[referencedBy[i]];
-               if(view != null)
+               if(log.isTraceEnabled())
                {
-                  view.flushDeleted(views);
+                  log.trace("inFlush, ignoring flushDeleted");
                }
+               return;
+            }
+
+            inFlush = true;
+
+            try
+            {
+               for(int i = 0; i < referencedBy.length; ++i)
+               {
+                  final Table.View view = views.entityViews[referencedBy[i]];
+                  if(view != null)
+                  {
+                     view.flushDeleted(views);
+                  }
+               }
+            }
+            finally
+            {
+               inFlush = false;
             }
          }
 
@@ -1040,13 +1061,34 @@ public class EntityTable
 
          if(references != null)
          {
-            for(int i = 0; i < references.length; ++i)
+            if(inFlush)
             {
-               final Table.View view = views.entityViews[references[i]];
-               if(view != null)
+               if(log.isTraceEnabled())
                {
-                  view.flushCreated(views);
+                  log.trace("inFlush, ignorning flushCreated");
                }
+               return;
+            }
+            else if(log.isTraceEnabled())
+            {
+               log.trace("flushing created references");
+            }
+
+            inFlush = true;
+            try
+            {
+               for(int i = 0; i < references.length; ++i)
+               {
+                  final Table.View view = views.entityViews[references[i]];
+                  if(view != null)
+                  {
+                     view.flushCreated(views);
+                  }
+               }
+            }
+            finally
+            {
+               inFlush = false;
             }
          }
 
@@ -1215,7 +1257,7 @@ public class EntityTable
                         for(int fInd = 0; fInd < pkFields.length; ++fInd)
                         {
                            JDBCCMPFieldBridge2 pkField = pkFields[fInd];
-                           Object fieldValue = row.getFieldValue(pkField.getRowIndex());
+                           Object fieldValue = row.fields[pkField.getRowIndex()];
                            paramInd = pkField.setArgumentParameters(s, paramInd, fieldValue);
                         }
 
@@ -1302,6 +1344,10 @@ public class EntityTable
 
       public Object getFieldValue(int i)
       {
+         if(state == DELETED)
+         {
+            throw new NoSuchObjectLocalException("The instance was removed: " + pk);
+         }
          return fields[i];
       }
 
@@ -1346,13 +1392,10 @@ public class EntityTable
          if(fkUpdates == null)
          {
             fkUpdates = new ForeignKeyConstraint[fkConstraints.length];
-         }
-
-         if(fkUpdates[constraint.index] == null)
-         {
-            fkUpdates[constraint.index] = constraint;
             view.addRowWithNullFk(this);
          }
+
+         fkUpdates[constraint.index] = constraint;
       }
 
       public void nonNullForeignKey(ForeignKeyConstraint constraint)

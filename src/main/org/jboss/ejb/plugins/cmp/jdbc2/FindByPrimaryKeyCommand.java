@@ -24,7 +24,7 @@ import javax.ejb.ObjectNotFoundException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class FindByPrimaryKeyCommand
    extends AbstractQueryCommand
@@ -84,7 +84,7 @@ public class FindByPrimaryKeyCommand
       Object pk = args[0];
       if(pk == null)
       {
-         throw new IllegalStateException("Null argument for findByPrimaryKey");
+         throw new IllegalArgumentException("Null argument for findByPrimaryKey");
       }
 
       Object instance;
