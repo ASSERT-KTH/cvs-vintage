@@ -38,7 +38,10 @@
         #if ($attVal.Attribute.AttributeType.ValidationKey)
              ## TODO not sure what this is
         #elseif ($attVal.Attribute.AttributeType.Name == $scarabG.Constant.DROPDOWN_LIST)
-           $att.getAttributeOption($attrInput.OptionId.toString()).Name
+           #set ($attrOptionIdValue = $attrInput.OptionId.toString())
+           #if ($attrOptionIdValue)
+             $att.getAttributeOption($attrOptionIdValue).Name
+           #end
         #else
              $!attrInput.Value
         #end
@@ -117,9 +120,9 @@
 #end
 </table>
 
-<!-- Removing until the design of voting is discussed further
-<p><input type="submit"  name="eventSubmit_doAddvote" value="Add vote to selected" /></p>
--->
+## Removing until the design of voting is discussed further
+## <p><input type="submit"  name="eventSubmit_doAddvote" value="Add vote to selected" /></p>
+
 #set ($atch = $scarabR.Attachment)
 #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
 
@@ -136,7 +139,6 @@
 </tr>
 </table>
 </div>
-
 
 <div class="functnbar2">
 <input type="submit" name="eventSubmit_doGotowizard3" value="Bypass duplicates" />&#160;
