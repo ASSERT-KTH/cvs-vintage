@@ -69,7 +69,7 @@ import org.tigris.scarab.om.IssueType;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.24 2001/10/18 23:17:40 elicia Exp $
+ * @version $Id: Default.java,v 1.25 2001/10/22 23:58:14 elicia Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -102,9 +102,11 @@ public class Default extends TemplateSecureScreen
         if (template != null)
         {
             template = template.replace('/','.');
+System.out.println(template);
 
             String perm = Turbine.getConfiguration()
                 .getString("scarab.security." + template);
+System.out.println(perm);
 
             ScarabSecurityPull security = 
                 (ScarabSecurityPull)getTemplateContext(data)
@@ -115,10 +117,20 @@ public class Default extends TemplateSecureScreen
 
             ModuleEntity currentModule = scarabR.getCurrentModule();
             IssueType currentIssueType = scarabR.getCurrentIssueType();
-            
             if (perm != null)
             {
-                if (currentModule == null)
+                if (! data.getUser().hasLoggedIn() 
+                    && !security.hasPermission(perm, currentModule))
+                {
+                    data.setMessage("Please log in with an account " +
+                                    "that has permissions to " +
+                                    "access this page.");
+                    setTargetLogin(data);
+                    return false;
+                }
+                else if (currentModule == null 
+                    && template.indexOf("Global") == -1
+                    && !template.equals("Login.vm"))
                 {
                     data.setMessage("Please select the Module " +
                                     "that you would like to work " +
@@ -126,22 +138,14 @@ public class Default extends TemplateSecureScreen
                     setTargetSelectModule(data);
                     return false;
                 }
-                if (currentIssueType == null)
+                else if (currentIssueType == null 
+                   && template.indexOf("Global") == -1
+                    && !template.equals("Login.vm"))
                 {
                     data.setMessage("Please select the Issue Type " +
                                     "that you would like to work " +
                                     "in.");
                     setTargetSelectIssueType(data);
-                    return false;
-                }
-                else if (! data.getUser().hasLoggedIn() &&
-                         ! security
-                           .hasPermission(perm, currentModule))
-                {
-                    data.setMessage("Please log in with an account " +
-                                    "that has permissions to " +
-                                    "access this page.");
-                    setTargetLogin(data);
                     return false;
                 }
             }
