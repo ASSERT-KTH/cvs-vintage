@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.31 2001/09/26 21:47:03 d_jencks Exp $ -->
+<!-- $Id: build.xml,v 1.32 2001/09/27 02:30:39 user57 Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -232,6 +232,15 @@ os.version:      ${os.version}
       </fileset>
     </path>
 
+    <!-- GNU Getopt -->
+    <property name="gnu.getopt.root" value="${project.thirdparty}/gnu/getopt"/>
+    <property name="gnu.getopt.lib" value="${gnu.getopt.root}/lib"/>
+    <path id="gnu.getopt.classpath">
+      <fileset dir="${gnu.getopt.lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
     <!-- JUnit -->
     <property name="junit.junit.root" value="${project.thirdparty}/junit/junit"/>
     <property name="junit.junit.lib" value="${junit.junit.root}/lib"/>
@@ -264,6 +273,7 @@ os.version:      ${os.version}
       <path refid="sun.jts.classpath"/>
       <path refid="apache.log4j.classpath"/>
       <path refid="gjt.jpl-util.classpath"/>
+      <path refid="gnu.getopt.classpath"/>
       <path refid="oswego.concurrent.classpath"/>
       <path refid="junit.junit.classpath"/>
       <path refid="sun.jsr77.classpath"/>
@@ -587,11 +597,14 @@ os.version:      ${os.version}
     </jar>
 
     <!-- Build run.jar -->
+    <!-- should use jlink for this, but jlink sucks -->
+    <unjar src="${gnu.getopt.lib}/getopt.jar" dest="${build.classes}"/> 
     <jar jarfile="${build.lib}/run.jar"
          manifest="${build.etc}/run.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/Main*"/>
         <include name="org/jboss/Version*"/>
+        <include name="gnu/getopt/**"/>
       </fileset>
       <fileset dir="${build.resources}">
         <include name="org/jboss/version.properties"/>

@@ -5,7 +5,7 @@
 ##                                                                          ##
 ### ====================================================================== ###
 
-### $Id: run.sh,v 1.29 2001/09/10 12:40:33 kimptoc Exp $ ###
+### $Id: run.sh,v 1.30 2001/09/27 02:30:40 user57 Exp $ ###
 
 DIRNAME=`dirname $0`
 PROGNAME=`basename $0`
@@ -47,6 +47,9 @@ HAS_HOTSPOT=`$JAVA -version 2>&1 | $GREP HotSpot`
 if [ "x$JAVA_OPTS" = "x" -a "x$HAS_HOTSPOT" != "x" ]; then
     JAVA_OPTS="-server"
 fi
+
+# Setup JBoss sepecific properties
+JAVA_OPTS="$JAVA_OPTS -Djboss.boot.loader.name=$PROGNAME"
 
 # Setup the JAXP parser to use
 if [ "x$JAXP" = "x" ]; then

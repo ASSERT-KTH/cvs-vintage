@@ -4,6 +4,9 @@
 
 set JBOSS_CLASSPATH=%JBOSS_CLASSPATH%;run.jar
 
+REM Setup JBoss sepecific properties
+set JAVA_OPTS="%JAVA_OPTS% -Djboss.boot.loader.name=run.bat"
+
 REM Set the JAXP factory names
 REM Crimson parser JAXP setup(default)
 set JAXP=-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.crimson.jaxp.DocumentBuilderFactoryImpl

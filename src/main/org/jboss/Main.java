@@ -38,18 +38,26 @@ import org.jboss.system.MBeanClassLoader;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.system.URLClassLoader;
 
+import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
+
 /**
  * The main entry point for the JBoss server.
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.50 $
+ * @version $Revision: 1.51 $
  *
  * <b>Revisions:</b>
  * <p>
  * <b>20010830 marcf:</b>
  * <ul>
  *   <li>Initial import, support for net-install
+ * </ul>
+ * <b>20010925 jason:</b>
+ * <ul>
+ *   <li>Replaced custom command line option parsing with gnu.getopt.
+ *   <li>Added -D option to set system properties
  * </ul>
  */
 public class Main
@@ -298,36 +306,113 @@ public class Main
 
       // Given conf name
 
-      for (int a = 0; a < args.length; a++)
-      {
-         if (args[a].endsWith("help"))
-         {
-            System.out.println("Usage: run --patch-dir --net-install --configuration");
-            System.out.println("For example: run.sh --net-install http://www.jboss.org/jboss --configuration jboxx");
-            System.out.println(" will download from the webserver and run the the configuration called jboxx");
-         }
-         if (args[a].startsWith("--patch-dir") ||
-             args[a].startsWith("-p"))
-         {
-            patchDir = args[a + 1];
-         }
+      //
+      // parse command line options
+      //
 
-         else if (args[a].startsWith("--net-install") ||
-                  args[a].startsWith("-n"))
-         {
-            installURL = args[a + 1].startsWith("http://") ? args[a + 1] : "http://" + args[a + 1];
-            if (!installURL.endsWith("/"))
-            {
-               installURL = installURL + "/";
-            }
-         }
-         else if (args[a].startsWith("--configuration") ||
-                  args[a].startsWith("-c"))
-         {
-            configDir = args[a + 1];
+      // set this from a system property or default to jboss
+      String programName = System.getProperty("jboss.boot.loader.name",
+                                              "jboss");
+      String sopts = "-:hD:p:n:c:";
+      LongOpt[] lopts = {
+         new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
+         new LongOpt("help-examples", LongOpt.NO_ARGUMENT, null, 10),
+         new LongOpt("patch-dir", LongOpt.REQUIRED_ARGUMENT, null, 'p'),
+         new LongOpt("net-install", LongOpt.REQUIRED_ARGUMENT, null, 'n'),
+         new LongOpt("configuration", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+      };
+      
+      Getopt getopt = new Getopt(programName, args, sopts, lopts);
+      int code;
+      String arg;
+      
+      while ((code = getopt.getopt()) != -1) {
+         switch (code) {
+            case ':':
+            case '?':
+               // for now both of these should exit with error status
+               System.exit(1);
+               break; // for completeness
+
+            case 1:
+               // this will catch non-option arguments
+               // (which we don't currently care about)
+               System.err.println(programName +
+                                  ": unused non-option argument: " +
+                                  getopt.getOptarg());
+               break; // for completeness
+             
+            case 'h':
+               // show command line help
+               System.out.println("usage: " + programName + " [options]");
+               System.out.println();
+               System.out.println("options:");
+               System.out.println("    -h, --help                    Show this help message");
+               System.out.println("    --help-examples               Show some command line examples");
+               System.out.println("    --                            Stop processing options");
+               System.out.println("    -D<name>[=<value>]            Set a system property");
+               System.out.println("    -p, --patch-dir <dir>         Set the patch directory");
+               System.out.println("    -n, --net-install <url>       Set the network install url");
+               System.out.println("    -c, --configuration <name>    Set the server configuration name");
+               System.out.println();               
+               System.exit(0);
+               break; // for completeness
+
+            case 'D':
+               // set a system property
+               arg = getopt.getOptarg();
+               String name, value;
+               int i = arg.indexOf("=");
+               if (i == -1) {
+                  name = arg;
+                  value = "true";
+               }
+               else {
+                  name = arg.substring(0, i);
+                  value = arg.substring(i + 1, arg.length());
+               }
+               System.setProperty(name, value);
+               break;
+               
+            case 10:
+               // show help examples
+               System.out.println("example: " + programName + " --net-install http://www.jboss.org/jboss --configuration jboxx");
+               System.out.println("will download from the webserver and run the the configuration called jboxx");
+               System.out.println();
+               System.exit(0);
+               break; // for completeness
+
+            case 'p':
+               // set the local patch directory
+               patchDir = getopt.getOptarg();
+               break;
+
+            case 'n':
+               // set the net install url
+               arg = getopt.getOptarg();
+               installURL = arg.startsWith("http://") ? arg : "http://" + arg;
+
+               // make sure there is a trailing '/'
+               if (!installURL.endsWith("/")) installURL += "/";
+               break;
+
+            case 'c':
+               // set the configuration name
+               configDir = getopt.getOptarg();
+               break;
+
+            default:
+               // this should not happen,
+               // if it does throw an error so we know about it
+               throw new Error("unhandled option code: " + code);
          }
       }
 
+      //
+      // setup the boot environment and get things cooking
+      //
+
+      // should really turn these into file:// urls so we don't have to worry about File.sep* fluff
       configDir = installURL + (installURL.startsWith("http:") ? "conf/" + configDir + "/" : "conf" + File.separatorChar + configDir + File.separatorChar);
       String loadDir = installURL + (installURL.startsWith("http:") ? "lib/ext/" : "lib" + File.separatorChar + "ext" + File.separatorChar);
       String spineDir = installURL + (installURL.startsWith("http:") ? "lib/" : "lib" + File.separatorChar);
@@ -349,7 +434,7 @@ public class Main
             }
          });
    }
-
+   
    private void addJars(String directory, ArrayList urls)
           throws Exception
    {
