@@ -24,29 +24,9 @@
 <input type="hidden" name="groupId" value="$groupId">
 <input type="hidden" name="issueTypeId" value="$group.IssueTypeId" />
 
-#macro (AttributeGroupBar $val)
-<div class="functnbar$val">
-<table cellpadding="4" cellspacing="0" border="1">
- <tr>
-  <td class="firstchild"><div>Screen options</div>
-<input type="submit" value="Save" name="eventSubmit_doModifygroup" />&#160;
-<input type="submit" value="Back" name="eventSubmit_doBack"  />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
-</td>
-<td nowrap="nowrap"><div>Attributes</div>
-<input type="submit" value="Add" name="eventSubmit_doGotoothertemplate" />&#160;
-<!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-<input type="submit" value="Delete" name="eventSubmit_doDeleteattributes" />&#160;
-<!-- FIXME: <input type="submit" value="Resort" /> -->
-</td>
-</tr>
-</table>
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
-#end
-
-
-
-#AttributeGroupBar("")
 
 <h3>Attribute group details</h3>
 
@@ -111,7 +91,13 @@
   <p><strong class="alert">Click the Add button to add attributes to this group.</strong></p>
 #end
 
-#AttributeGroupBar("2")
+<div class="functnbar3">
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeleteattributegroup" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute</small>&#160;
+</div>
+
+<div class="functnbar2">
+<input type="submit" value="Done"  name="eventSubmit_doModifygroup" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
 
 $intake.declareGroups()
 </form>

@@ -14,30 +14,6 @@ $page.setTitle("Attribute Editor")
 #set ($rmit= $module.getRModuleIssueType($issueType))
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
 
-#macro (ArtifactTypeEditBar $var)
-<div class="functnbar$var">
-    <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-    <div>Screen options:</div>
-      <input type="submit" value="Save" name="eventSubmit_doModifyissuetype" />&#160;
-      <input type="submit" value="Back" name="eventSubmit_doBack" />&#160;
-      <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />
-    </td>
-#if (!$groups.isEmpty())
-    <td nowrap="nowrap">
-    <div>Attribute group options:</div>
-      <input type="submit" value="Add new" name="eventSubmit_doCreatenewgroup" />&#160;
-      <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-      <input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;
-      <!-- FIXME: <input type="submit" value="Resort" /> -->
-    </td>
-#end
-  </tr>
-  </table>
-</div>
-#end
-
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeEdit.vm")">
 <input type="hidden" name="action" value="admin.ModifyModuleAttributes" />
@@ -46,7 +22,7 @@ $page.setTitle("Attribute Editor")
 <input type="hidden" name="$scarabG.Constant.BACK_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name="issueTypeId" value="$issueTypeId" />
 
-#ArtifactTypeEditBar("")
+<div class="functnbar"><input type="submit" value="Done"  name="eventSubmit_doModifyissuetype" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
 
 <h3>Artifact type details</h3>
 <div class="axial">
@@ -76,29 +52,35 @@ $page.setTitle("Attribute Editor")
    #end
 #else
 
-<h3>Artifact instance "history" and "Comments" display options</h3>
+<h3>Issue view display options</h3>
 
-<p>
-<input type="checkbox" checked="checked" />&#160;Show&#160;
-<select class="select" name="$rmitGroup.Comments.Key">
+<div class="axial">
+<table border="1" cellspacing="2" cellpadding="3">
+<tr>
+<th>Comments</th>
+<td><select class="select" name="$rmitGroup.Comments.Key">
 <option #if ($rmitGroup.Comments.Value == 5) selected="selected" #end>5</option>
 <option #if ($rmitGroup.Comments.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.Comments.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.Comments.Value == 20) selected="selected" #end>20</option>
-</select>
-most recent artifact instance history entries (otherwise, a link will
-appear leading to a seperate page).
-</p>
-<p><input type="checkbox" checked="checked" />&#160;Show&#160;
-<select class="select" name="$rmitGroup.History.Key">
+</select>&nbsp;most recent.
+<p>Full list on seperate screen</p>
+</td>
+</tr>
+
+<tr>
+<th>Change history entries</th>
+<td><select class="select" name="$rmitGroup.History.Key">
 <option #if ($rmitGroup.History.Value == 5) selected="selected" #end>5</option>
 <option #if ($rmitGroup.History.Value == 10) selected="selected" #end>10</option>
 <option #if ($rmitGroup.History.Value == 15) selected="selected" #end>15</option>
 <option #if ($rmitGroup.History.Value == 20) selected="selected" #end>20</option>
-</select>
-most recent artifact instance comments (otherwise, a link will appear to
-a seperate page).
-</p>
+</select>&nbsp;most recent.
+<p>Full list on seperate screen</p>
+</td>
+</tr>
+</table>
+</div>
 
 ## LIST GROUPS
 
@@ -107,9 +89,9 @@ a seperate page).
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th nowrap="nowrap">Select</th>
-<th>Attribute group name</th>
-<th>Active/inactive</th>
-<th>Sequence #</th>
+<th>attribute group name</th>
+<th>active/inactive</th>
+<th>sequence #</th>
 </tr>
 
 #set ($issueDedupeSequence = $issueType.getDedupeSequence($module))
@@ -139,7 +121,10 @@ a seperate page).
 
 #end
 
-#ArtifactTypeEditBar("2")
+<div class="functnbar3"><input type="submit" value="Add new"  name="eventSubmit_doCreatenewgroup" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeletegroup" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute group</small>&#160;
+</div>
+
+<div class="functnbar2"><input type="submit" value="Done"  name="eventSubmit_doModifyissuetype" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;</div>        
 
 $intake.declareGroups()
 </form>

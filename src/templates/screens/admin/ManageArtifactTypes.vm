@@ -7,35 +7,13 @@ $page.setTitle("Manage artifact types")
 <input type="hidden" name=$scarabG.Constant.NEXT_TEMPLATE value="admin,ManageArtifactTypes.vm" />
 <input type="hidden" name=$scarabG.Constant.OTHER_TEMPLATE value="admin,ArtifactTypeSelect.vm" />
 
-#macro (ManageArtifactTypesBar $var)
-<div class="functnbar">
-  <table cellpadding="4" cellspacing="0" border="1">
-    <tr>
-    <td class="firstchild">
-      <input type="submit" value="Save" name="eventSubmit_doManageissuetypes" />&#160;
-      <input type="submit" value="Delete" name="eventSubmit_doDeletemoduleissuetype" />&#160;
-      <input type="submit" value="Cancel" />
-    </td>
-#if (!$issueTypes.isEmpty())
-    <td nowrap="nowrap">
-      <div>Artifact type management:</div>      
-      <input type="submit" value="Add existing" name="eventSubmit_doGotoothertemplate" />&#160;
-      <input type="submit" value="Add new " name="eventSubmit_doCreateartifacttype" />&#160;
-      <!-- FIXME: <input type="submit" value="Copy" />&#160; -->
-      <!-- FIXME: <input type="submit" value="Resort" /> -->
-    </td>
-#end
-    </tr>
-  </table>
-</div>
-#end
-
 <div class="app" id="div2-1-4-0">
 
 <h2>$page.Title</h2>
 
-
-#ManageArtifactTypesBar("")
+<div class="functnbar">
+<input type="submit" value="Save"  name="eventSubmit_doManageissuetypes" />&#160;<input type="submit" value="Cancel" />&#160;<small>changes</small>
+</div>
 
 <h3>Artifact types</h3>
 
@@ -63,10 +41,15 @@ $page.setTitle("Manage artifact types")
 #end
 </table>
 
-#ManageArtifactTypesBar("2")
-        
-<p>* Maximum of five Artifact types in left hand navigation (first five
-selected will appear).</p>
+<div class="functnbar3">
+<input type="submit" value="add new"  name="eventSubmit_doGotoothertemplate"/>&#160;<input type="submit" value="copy" />&#160;<input type="submit" value="delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;<input type="submit" value="resort" />&#160;<small>artifact type(s)</small>		</div>
+
+
+<p>* Maximum of five Artifact types in left hand navigation (first four selected will appear).</p>
+
+<div class="functnbar2">
+<input type="submit" value="Save"  name="eventSubmit_doManageissuetypes" />&#160;<input type="submit" value="Cancel" />&#160;<small>changes</small>
+</div>
 
 $intake.declareGroups()
 </form>

@@ -25,6 +25,10 @@ On this screen, one can modify a module's Attribute information.
 <input type="hidden" name="issueTypeId" value="$data.Parameters.getString("issueTypeId")">
 <input type="hidden" name="att_0id" value="$attribute.AttributeId" />
 
+<div class="functnbar">
+<input type="submit" value="Done"  name="eventSubmit_doModifyattributeoptions" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+</div>
+
 <h3>Attribute Info</h3>
 
 <div class="axial">
@@ -97,14 +101,13 @@ On this screen, one can modify a module's Attribute information.
     </tr>
 #end
 </table>
+
+<div class="functnbar3">
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;<input type="submit" value="Copy" />&#160;<input type="submit" value="Delete" name="eventSubmit_doDeleteattributeoptions" />&#160;<input type="submit" value="Resort" />&#160;<small>attribute</small>&#160;
+</div>
+
 <div class="functnbar2">
-<table cellpadding="4" cellspacing="0" border="1">
-  <tr>
-    <td class="firstchild">
-    <input type="submit" name="eventSubmit_doModifyattributeoptions" value="Save" />&nbsp; <input type="submit" name="eventSubmit_doDeleteattributeoptions" value="Delete" />&nbsp; <input type="submit" name="eventSubmit_doGotoothertemplate" value="Add new" />
-    </td>
-  </tr>
-</table>
+<input type="submit" value="Done"  name="eventSubmit_doModifyattributeoptions" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
 </div>
 
 #end 
