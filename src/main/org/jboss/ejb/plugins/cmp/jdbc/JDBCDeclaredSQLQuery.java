@@ -29,7 +29,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
    
@@ -124,7 +124,9 @@ public class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand {
             sql.append(SQLUtil.getColumnNamesClause(loadFields, alias));
             sql.append(" FROM ");
             sql.append(table).append(" ").append(alias);
-            sql.append(" ").append(from);
+            if(from != null && from.trim().length()>0) {
+               sql.append(" ").append(from);
+            }
          } else if(from != null && from.trim().length()>0) {
             sql.append(SQLUtil.getColumnNamesClause(loadFields, table));
             sql.append(" FROM ").append(table).append(" ").append(from);

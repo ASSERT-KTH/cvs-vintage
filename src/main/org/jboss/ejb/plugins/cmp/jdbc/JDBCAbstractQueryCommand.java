@@ -44,7 +44,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    private JDBCStoreManager manager;
@@ -228,7 +228,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand {
    protected void setPreloadFields(List preloadFields) {
       this.preloadFields = preloadFields;
    }
- 
+
    /**
     * Replaces the parameters in the specifiec sql with question marks, and 
     * initializes the parameter setting code. Parameters are encoded in curly

@@ -9,14 +9,16 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 
 /**
  * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
@@ -48,7 +50,17 @@ public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
       
       // set select object
       if(compiler.isSelectEntity()) {
-         setSelectEntity(compiler.getSelectEntity());
+         JDBCEntityBridge selectEntity = compiler.getSelectEntity();
+
+         // set the select entity
+         setSelectEntity(selectEntity);
+
+         // set the preload fields
+         JDBCReadAheadMetaData readahead = metadata.getReadAhead();
+         if(readahead.isOnFind()) {
+            String eagerLoadGroup = readahead.getEagerLoadGroup();
+            setPreloadFields(selectEntity.getLoadGroup(eagerLoadGroup));
+         }
       } else {
          setSelectField(compiler.getSelectField());
       }
