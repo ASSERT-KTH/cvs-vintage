@@ -44,7 +44,12 @@
      #if($checked) checked="checked"#end />$l10n.AllModulesAndIssueTypes</p>
    #if ($scarabR.CurrentIssueType)
    <p><input type="radio" name="$key" value="oneitallmods"
-     #if($checked2) checked="checked"#end />$l10n.format("CurrentIssueTypeAllModules", $scarabR.CurrentIssueType.Name)</p>
+     #set ($issueTypeName = $scarabR.CurrentIssueType.Name)
+     #set ($displayName = $module.getRModuleIssueType($scarabR.CurrentIssueType).DisplayName)
+     #if (!$displayName.equals($issueTypeName))
+         #set ($issueTypeName = "$displayName ($issueTypeName)")
+     #end
+     #if($checked2) checked="checked"#end />$l10n.format("CurrentIssueTypeAllModules", "$issueTypeName")</p>
    #end
  </div>
 

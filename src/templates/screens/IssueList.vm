@@ -1,4 +1,5 @@
 #set ($mitlist = $user.CurrentMITList)
+#set ($searchType = $data.Parameters.getString("searchType", ""))
 
 <div class="app" id="issuelist">
 #set ($user = $data.User)
@@ -43,7 +44,6 @@
   <p><em>$l10n.NoMatchingIssues</em></p>
 #else
 <form action="$link.setPage("IssueList.vm").setAction("Search")" method="post">
-#set ($searchType = $data.Parameters.getString("searchType", ""))
 #if ($searchType)
   <input type="hidden" name="searchType" value="$searchType" />
 #end
@@ -67,7 +67,7 @@ $l10n.format("IssueListCount", $totalCount)</h3>
   #set ($list = $user.CurrentMITList)
   #if ($list.isModifiable())
     #foreach ($item in $list.ExpandedMITListItems)
-      <div>$item.Module.Name $item.IssueType.Name</div>
+      <div>$item.Module.Name $item.Module.getRModuleIssueType($item.IssueType).DisplayName</div>
     #end
   #else
     <div>$list.Name</div>

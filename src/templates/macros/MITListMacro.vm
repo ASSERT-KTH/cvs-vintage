@@ -5,7 +5,7 @@
   #set ($list = $user.CurrentMITList)
   #if ($list.isModifiable())
     #foreach ($item in $list.ExpandedMITListItems)
-      <div>$item.Module.Name $item.IssueType.Name</div>
+      <div>$item.Module.Name $item.Module.getRModuleIssueType($item.IssueType).DisplayName</div>
     #end
   #else
     <div>$list.Name</div>
@@ -71,7 +71,7 @@ $l10n.NoIssueTypeSelected
     <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
     </td>
     <td>$item.Module.Name</td>
-    <td>$item.IssueType.Name</td>
+    <td>$item.Module.getRModuleIssueType($item.IssueType).DisplayName</td>
     <td>$item.getIssueCount($data.User)</td>
     <td>$item.IssueType.Description</td>
   </tr>        
@@ -162,10 +162,19 @@ $l10n.NoMoreIssueTypes
 #foreach ($rmit in $searchableRMITs)
   #indexedRows($velocityCount)
     <td>
-    <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
+     <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
     </td>
     <td>$rmit.Module.Name</td>
-    <td>$rmit.IssueType.Name</td>
+    <td>
+        #set ($issueTypeName = $rmit.IssueType.Name)  
+        #set ($issueTypeDisplay = $rmit.DisplayName)
+        ##if (!$issueTypeDisplay.toString().equals($issueTypeName.toString()))
+        #if (!$issueTypeDisplay.equals($issueTypeName))
+           $issueTypeDisplay ($issueTypeName)
+        #else
+           $issueTypeName
+        #end
+   </td>
     <td>$rmit.DisplayDescription</td>
   </tr>
 #end
