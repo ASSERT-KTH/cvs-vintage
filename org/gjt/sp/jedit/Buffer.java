@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.201 2003/09/23 18:19:36 spestov Exp $
+ * @version $Id: Buffer.java,v 1.202 2003/10/22 04:38:22 spestov Exp $
  */
 public class Buffer
 {
@@ -2124,6 +2124,8 @@ public class Buffer
 				lineIndex);
 		}
 
+		nextLineRequested = false;
+
 		if(Debug.TOKEN_MARKER_DEBUG)
 			Log.log(Log.DEBUG,this,"tokenize from " + start + " to " + lineIndex);
 		for(int i = start; i <= lineIndex; i++)
@@ -2200,9 +2202,10 @@ public class Buffer
 	 */
 	public boolean isNextLineRequested()
 	{
-		boolean retVal = nextLineRequested;
+		return nextLineRequested;
+		/*boolean retVal = nextLineRequested;
 		nextLineRequested = false;
-		return retVal;
+		return retVal;*/
 	} //}}}
 
 	//}}}

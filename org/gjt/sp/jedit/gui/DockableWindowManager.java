@@ -103,7 +103,7 @@ package org.gjt.sp.jedit.gui;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.86 2003/08/18 18:28:12 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.87 2003/10/22 04:38:22 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel implements EBComponent
@@ -1497,9 +1497,25 @@ public class DockableWindowManager extends JPanel implements EBComponent
 			Dimension size = parent.getSize();
 
 			Dimension _topButtons = topButtons.getPreferredSize();
+			topButtons.setSize(topButtons.getWidth(),
+				_topButtons.height);
+			_topButtons = topButtons.getPreferredSize();
+
 			Dimension _leftButtons = leftButtons.getPreferredSize();
+			leftButtons.setSize(_leftButtons.width,
+				leftButtons.getHeight());
+			_leftButtons = leftButtons.getPreferredSize();
+
 			Dimension _bottomButtons = bottomButtons.getPreferredSize();
+			bottomButtons.setSize(bottomButtons.getWidth(),
+				_bottomButtons.height);
+			_bottomButtons = bottomButtons.getPreferredSize();
+
 			Dimension _rightButtons = rightButtons.getPreferredSize();
+			rightButtons.setSize(_rightButtons.width,
+				rightButtons.getHeight());
+			_rightButtons = rightButtons.getPreferredSize();
+
 			Dimension _topToolbars = (topToolbars == null
 				? new Dimension(0,0)
 				: topToolbars.getPreferredSize());

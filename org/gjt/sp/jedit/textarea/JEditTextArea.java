@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.291 2003/10/21 17:39:30 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.292 2003/10/22 04:38:23 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -304,6 +304,9 @@ public class JEditTextArea extends JComponent
 			displayManager.init();
 
 			maxHorizontalScrollWidth = 0;
+
+			if(!buffer.isLoaded())
+				updateScrollBars();
 
 			repaint();
 
@@ -4255,7 +4258,15 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 						MiscUtilities.getLeadingWhiteSpace(line));
 					loc = s.start + start.length() - 1;
 					buffer.insert(s.start,start + whitespace);
-					buffer.insert(s.end," " + end);
+					if(s.end == buffer.getLineStartOffset(
+						s.endLine))
+					{
+						buffer.insert(s.end,end);
+					}
+					else
+					{
+						buffer.insert(s.end," " + end);
+					}
 				}
 
 				setCaretPosition(loc,false);

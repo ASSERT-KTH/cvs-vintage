@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * Search and replace dialog.
  * @author Slava Pestov
- * @version $Id: SearchDialog.java,v 1.43 2003/09/10 02:23:12 spestov Exp $
+ * @version $Id: SearchDialog.java,v 1.44 2003/10/22 04:38:22 spestov Exp $
  */
 public class SearchDialog extends EnhancedDialog implements EBComponent
 {
@@ -893,6 +893,7 @@ public class SearchDialog extends EnhancedDialog implements EBComponent
 
 				if(!save(false))
 				{
+					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					getToolkit().beep();
 					return;
 				}
