@@ -24,7 +24,7 @@
 // File: CrTooManyOper.java
 // Classes: CrTooManyOper
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyOper.java,v 1.3 2002/10/20 21:11:15 linus Exp $
+// $Id: CrTooManyOper.java,v 1.4 2002/10/28 03:46:05 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -37,8 +37,9 @@ import ru.novosoft.uml.foundation.extension_mechanisms.*;
 
 import org.argouml.cognitive.*;
 
-/** A critic to detect when a class can never have instances (of
- *  itself of any subclasses). */
+/** A critic to detect when a classifier has to many operations). 
+ *  @todo exclude getter and setter operations from count
+ */
 
 public class CrTooManyOper extends CrUML {
 
