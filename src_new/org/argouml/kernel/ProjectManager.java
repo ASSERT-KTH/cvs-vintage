@@ -1,4 +1,4 @@
-// $Id: ProjectManager.java,v 1.35 2004/09/18 17:13:23 mvw Exp $
+// $Id: ProjectManager.java,v 1.36 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Vector;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
+import org.argouml.cognitive.Designer;
 import org.argouml.ui.ArgoDiagram;
 
 /**
@@ -47,7 +48,7 @@ import org.argouml.ui.ArgoDiagram;
  * @author jaap.branderhorst@xs4all.nl
  * @stereotype singleton
  */
-public final class ProjectManager {
+public final class ProjectManager implements PropertyChangeListener {
 
     /**
      * The name of the property that defines the current project.
@@ -244,5 +245,18 @@ public final class ProjectManager {
         }
         
         oldProject.remove();
+    }
+
+    /* react to PropertyChangeEvents, e.g. send by the Designer.
+     * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+     */
+    public void propertyChange(PropertyChangeEvent pce) {
+        if (pce.getPropertyName().equals(Designer.MODEL_TODOITEM_ADDED)) {
+            getCurrentProject().setNeedsSave(true);
+        }
+        else if (pce.getPropertyName().equals(Designer.MODEL_TODOITEM_DISMISSED)) {
+            getCurrentProject().setNeedsSave(true);
+        }
+        
     }
 }

@@ -1,4 +1,4 @@
-// $Id: Main.java,v 1.102 2004/10/16 16:40:50 linus Exp $
+// $Id: Main.java,v 1.103 2004/11/01 10:55:18 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -110,7 +110,9 @@ public class Main {
         org.tigris.gef.base.Globals.setLastDirectory(directory);
 
         // load i18n bundles
+        Translator trans = new org.argouml.i18n.Translator();
         Translator.init();
+        org.argouml.cognitive.Translator.setTranslator(trans);
 
         // then, print out some version info for debuggers...
         org.argouml.util.Tools.logVersionInfo();
@@ -678,7 +680,7 @@ class PreloadClasses implements Runnable {
         c = java.lang.reflect.Modifier.class;
         c = java.util.TooManyListenersException.class;
         c = org.argouml.kernel.DelayedChangeNotify.class;
-        c = org.argouml.kernel.Wizard.class;
+        c = org.argouml.cognitive.ui.Wizard.class;
         c = org.argouml.ui.Clarifier.class;
         c = org.argouml.ui.StylePanelFigNodeModelElement.class;
         c = org.argouml.uml.GenCompositeClasses.class;

@@ -1,4 +1,4 @@
-// $Id: WizManyNames.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
+// $Id: WizManyNames.java,v 1.14 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,7 @@ public class WizManyNames extends UMLWizard {
     /** 
      * Create a new panel for the given step.
      * 
-     * @see org.argouml.kernel.Wizard#makePanel(int)
+     * @see org.argouml.cognitive.ui.Wizard#makePanel(int)
      */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
@@ -94,7 +94,7 @@ public class WizManyNames extends UMLWizard {
      * they do along, as soon as possible, they should not wait until
      * the final step.
      * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
+     * @see org.argouml.cognitive.ui.Wizard#doAction(int)
      */
     public void doAction(int oldStep) {
 	LOG.debug("doAction " + oldStep);

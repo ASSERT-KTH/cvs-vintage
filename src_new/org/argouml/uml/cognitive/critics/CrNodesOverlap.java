@@ -1,4 +1,4 @@
-// $Id: CrNodesOverlap.java,v 1.12 2004/09/21 19:03:31 mvw Exp $
+// $Id: CrNodesOverlap.java,v 1.2 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,15 +25,15 @@
 // File: CrNodesOverlap.java
 // Classes: CrNodesOverlap
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNodesOverlap.java,v 1.12 2004/09/21 19:03:31 mvw Exp $
+// $Id: CrNodesOverlap.java,v 1.2 2004/11/01 10:55:23 mkl Exp $
 
-package org.argouml.cognitive.critics;
+package org.argouml.uml.cognitive.critics;
 
 import java.awt.Rectangle;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.uml.cognitive.critics.CrUML;
+import org.argouml.cognitive.critics.Critic;
 import org.argouml.uml.diagram.deployment.ui.FigObject;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;

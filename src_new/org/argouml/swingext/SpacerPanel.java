@@ -1,4 +1,4 @@
-// $Id: CrZeroLengthEdge.java,v 1.8 2004/09/21 19:03:31 mvw Exp $
+// $Id: SpacerPanel.java,v 1.2 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,53 +22,45 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: CrZeroLengthEdge.java
-// Classes: CrZeroLengthEdge
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrZeroLengthEdge.java,v 1.8 2004/09/21 19:03:31 mvw Exp $
+package org.argouml.swingext;
 
-package org.argouml.cognitive.critics;
+import java.awt.Dimension;
+import javax.swing.JPanel;
 
-import org.argouml.cognitive.Designer;
-import org.argouml.uml.cognitive.critics.CrUML;
-import org.tigris.gef.presentation.FigEdge;
-
-/** A critic to detect when an edge is very short in order to suggest to
- *  improve the layout of the diagram.
+/** A Swing panel that displays nothing, but takes up a specified
+ *  amount of space.  Used to make panels with GridBagLayouts look
+ *  better. 
  */
-public class CrZeroLengthEdge extends CrUML {
-    ////////////////////////////////////////////////////////////////
-    // constants
-    private static final int THRESHOLD = 20;
-
+public class SpacerPanel extends JPanel {
+    
+    private int w = 10, h = 10;
+    
     /**
      * The constructor.
      * 
      */
-    public CrZeroLengthEdge() {
-	// TODO: {name} is not expanded for diagram objects
-	setHeadline("Make Edge More Visible");
-	addSupportedDecision(CrUML.DEC_RELATIONSHIPS);
-	addSupportedDecision(CrUML.DEC_INHERITANCE);
-	addSupportedDecision(CrUML.DEC_STATE_MACHINES);
-	setKnowledgeTypes(Critic.KT_PRESENTATION);    
-    }
-
-    ////////////////////////////////////////////////////////////////
-    // critiquing API
+    public SpacerPanel() { }
     
     /**
-     * @see org.argouml.uml.cognitive.critics.CrUML#predicate2(
-     * java.lang.Object, org.argouml.cognitive.Designer)
+     * The constructor.
+     * 
+     * @param width the width
+     * @param height the height
      */
-    public boolean predicate2(Object dm, Designer dsgr) {
-	if (!(dm instanceof FigEdge)) return NO_PROBLEM;
-	FigEdge fe = (FigEdge) dm;
-	int length = fe.getPerimeterLength();
-	if (length > THRESHOLD) return NO_PROBLEM;
-	return PROBLEM_FOUND;
-    }
-
-
-} /* end class CrZeroLengthEdge */
-
+    public SpacerPanel(int width, int height) { w = width; h = height; }
+    
+    /**
+     * @see java.awt.Component#getMinimumSize()
+     */
+    public Dimension getMinimumSize() { return new Dimension(w, h); }
+    
+    /**
+     * @see java.awt.Component#getPreferredSize()
+     */
+    public Dimension getPreferredSize() { return new Dimension(w, h); }
+    
+    /**
+     * @see java.awt.Component#getSize()
+     */
+    public Dimension getSize() { return new Dimension(w, h); }
+} /* end class SpacerPanel */

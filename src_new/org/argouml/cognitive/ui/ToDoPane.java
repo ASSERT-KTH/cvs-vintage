@@ -1,4 +1,4 @@
-// $Id: ToDoPane.java,v 1.38 2004/09/28 19:45:05 mvw Exp $
+// $Id: ToDoPane.java,v 1.39 2004/11/01 10:55:20 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -57,7 +57,7 @@ import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
 import org.argouml.cognitive.ToDoListEvent;
 import org.argouml.cognitive.ToDoListListener;
-import org.argouml.i18n.Translator;
+import org.argouml.cognitive.Translator;
 import org.argouml.ui.DisplayTextTree;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SplashScreen;
@@ -88,7 +88,7 @@ import org.tigris.gef.ui.ToolBar;
  *  ToDoPerspective skill = new ToDoBySkill();
  *</pre>
 
- * $Id: ToDoPane.java,v 1.38 2004/09/28 19:45:05 mvw Exp $
+ * $Id: ToDoPane.java,v 1.39 2004/11/01 10:55:20 mkl Exp $
  */
 public class ToDoPane extends JPanel
     implements ItemListener,

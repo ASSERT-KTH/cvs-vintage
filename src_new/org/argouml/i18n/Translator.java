@@ -1,4 +1,4 @@
-// $Id: Translator.java,v 1.23 2004/10/19 05:40:06 linus Exp $
+// $Id: Translator.java,v 1.24 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.argouml.cognitive.AbstractCognitiveTranslator;
 import org.tigris.gef.util.Localizer;
 
 /**
@@ -39,7 +40,7 @@ import org.tigris.gef.util.Localizer;
  *
  * @author Jean-Hugues de Raigniac
  */
-public class Translator {
+public class Translator extends AbstractCognitiveTranslator {
     /** logger */
     private static final Logger LOG = Logger.getLogger(Translator.class);
 
@@ -174,7 +175,11 @@ public class Translator {
     public static String localize(String key) {
         return org.workingfrog.i18n.util.Translator.localize(key, key);
     }
-
+    
+    public String i18nlocalize(String key) {
+        return localize(key,key);
+    }
+    
     /**
      * Generates an localized String with arguments.<p>
      *
@@ -193,6 +198,10 @@ public class Translator {
     {
     	MessageFormat msgFmt = new MessageFormat(localize(bundle, key));
 	return msgFmt.format(args);
+    }
+    
+    public String i18nmessageFormat(String key, Object[] args) {
+        return messageFormat(key, args);
     }
 
     /**

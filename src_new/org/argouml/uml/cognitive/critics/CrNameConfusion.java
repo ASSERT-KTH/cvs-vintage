@@ -1,4 +1,4 @@
-// $Id: CrNameConfusion.java,v 1.14 2004/10/21 08:29:46 mkl Exp $
+// $Id: CrNameConfusion.java,v 1.15 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConfusion.java
 // Classes: CrNameConfusion
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConfusion.java,v 1.14 2004/10/21 08:29:46 mkl Exp $
+// $Id: CrNameConfusion.java,v 1.15 2004/11/01 10:55:23 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -38,7 +38,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.kernel.Wizard;
+import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
 /** Well-formedness rule [1] for MNamespace. See page 33 of UML 1.1

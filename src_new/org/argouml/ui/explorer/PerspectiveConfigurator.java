@@ -1,4 +1,4 @@
-// $Id: PerspectiveConfigurator.java,v 1.17 2004/10/30 09:07:28 mvw Exp $
+// $Id: PerspectiveConfigurator.java,v 1.18 2004/11/01 10:55:22 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,8 +55,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
+import org.argouml.swingext.SpacerPanel;
 import org.argouml.ui.ArgoDialog;
-import org.argouml.ui.SpacerPanel;
 import org.argouml.ui.explorer.rules.PerspectiveRule;
 
 /**

@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.16 2004/10/29 15:09:14 mkl Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.17 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,12 +23,6 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 
-
-// File: CrUnconventionalAttrName.java
-// Classes: CrUnconventionalAttrName
-// Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalAttrName.java,v 1.16 2004/10/29 15:09:14 mkl Exp $
-
 package org.argouml.uml.cognitive.critics;
 
 import javax.swing.Icon;
@@ -36,7 +30,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.kernel.Wizard;
+import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
 /** Critic to detect whether an attribute name obeys to certain rules.

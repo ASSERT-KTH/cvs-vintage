@@ -1,4 +1,4 @@
-// $Id: WizDescription.java,v 1.18 2004/09/04 08:54:48 mvw Exp $
+// $Id: WizDescription.java,v 1.19 2004/11/01 10:55:20 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,7 @@ import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Goal;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.i18n.Translator;
+import org.argouml.cognitive.Translator;
 
 
 

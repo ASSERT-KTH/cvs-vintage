@@ -1,4 +1,4 @@
-// $Id: StylePanelFig.java,v 1.24 2004/09/21 19:03:28 mvw Exp $
+// $Id: StylePanelFig.java,v 1.25 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,7 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.swingext.SpacerPanel;
 import org.argouml.uml.diagram.ui.FigEdgeModelElement;
 import org.tigris.gef.ui.ColorRenderer;
 

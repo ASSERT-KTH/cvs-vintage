@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.14 2004/10/23 11:05:44 mvw Exp $
+// $Id: WizNavigable.java,v 1.15 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -21,13 +21,6 @@
 // PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
-
-
-
-// File: WizNavigable.java
-// Classes: WizNavigable
-// Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.14 2004/10/23 11:05:44 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -95,7 +88,7 @@ public class WizNavigable extends UMLWizard {
     /** 
      * Create a new panel for the given step.
      * 
-     * @see org.argouml.kernel.Wizard#makePanel(int)
+     * @see org.argouml.cognitive.ui.Wizard#makePanel(int)
      */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
@@ -116,7 +109,7 @@ public class WizNavigable extends UMLWizard {
      * they do along, as soon as possible, they should not wait until
      * the final step. 
      * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
+     * @see org.argouml.cognitive.ui.Wizard#doAction(int)
      */
     public void doAction(int oldStep) {
 	LOG.debug("doAction " + oldStep);
@@ -143,7 +136,7 @@ public class WizNavigable extends UMLWizard {
     }
  
     /**
-     * @see org.argouml.kernel.Wizard#canFinish()
+     * @see org.argouml.cognitive.ui.Wizard#canFinish()
      */
     public boolean canFinish() {
 	if (!super.canFinish()) return false;

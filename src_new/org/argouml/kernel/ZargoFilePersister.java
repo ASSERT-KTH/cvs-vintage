@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.14 2004/10/03 07:09:35 mvw Exp $
+// $Id: ZargoFilePersister.java,v 1.15 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -41,9 +41,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.ArgoVersion;
-import org.argouml.cognitive.ProjectMemberTodoList;
 import org.argouml.model.uml.UmlHelper;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.uml.cognitive.ProjectMemberTodoList;
 import org.argouml.util.FileConstants;
 import org.argouml.util.SubInputStream;
 import org.argouml.xml.argo.ArgoParser;

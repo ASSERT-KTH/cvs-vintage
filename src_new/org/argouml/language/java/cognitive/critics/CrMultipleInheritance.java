@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.9 2004/10/21 09:51:53 mkl Exp $
+// $Id: CrMultipleInheritance.java,v 1.10 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.9 2004/10/21 09:51:53 mkl Exp $
+// $Id: CrMultipleInheritance.java,v 1.10 2004/11/01 10:55:21 mkl Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -35,7 +35,7 @@ import java.util.Collection;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.kernel.Wizard;
+import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.cognitive.critics.CrUML;
 import org.argouml.uml.cognitive.critics.WizCueCards;

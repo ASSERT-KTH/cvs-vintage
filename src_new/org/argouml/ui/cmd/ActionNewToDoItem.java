@@ -1,4 +1,4 @@
-// $Id: ActionNewToDoItem.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: ActionNewToDoItem.java,v 1.2 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 
 import org.argouml.cognitive.ui.AddToDoItemDialog;
 import org.argouml.uml.ui.UMLAction;
+import org.argouml.uml.ui.UMLListCellRenderer2;
 
 
 
@@ -48,7 +49,7 @@ public class ActionNewToDoItem extends UMLAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {       
-        AddToDoItemDialog dialog = new AddToDoItemDialog();
+        AddToDoItemDialog dialog = new AddToDoItemDialog(new UMLListCellRenderer2(true));
         dialog.show();
     }
 } /* end class ActionNewToDoItem */

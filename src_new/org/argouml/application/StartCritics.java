@@ -1,4 +1,4 @@
-// $Id: StartCritics.java,v 1.16 2004/10/21 20:08:59 mvw Exp $
+// $Id: StartCritics.java,v 1.17 2004/11/01 10:55:19 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -49,6 +49,7 @@ public class StartCritics implements Runnable {
         org.argouml.uml.cognitive.critics.Init.init();
         org.argouml.uml.cognitive.checklist.Init.init();
         Project p = ProjectManager.getManager().getCurrentProject();
+        dsgr.addListener(ProjectManager.getManager());
         // set the icon for this poster
         dsgr.setClarifier(ResourceLoaderWrapper.
             lookupIconResource("PostItD0"));

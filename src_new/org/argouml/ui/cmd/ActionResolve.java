@@ -1,4 +1,4 @@
-// $Id: ActionResolve.java,v 1.1 2004/09/28 19:45:05 mvw Exp $
+// $Id: ActionResolve.java,v 1.2 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.ui.cmd;
 import java.awt.event.ActionEvent;
 
 import org.argouml.cognitive.ui.DismissToDoItemDialog;
+import org.argouml.ui.ProjectBrowser;
 
 /**
  * The action to resolve a todo item.
@@ -45,7 +46,7 @@ public class ActionResolve extends ToDoItemAction {
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     public void actionPerformed(ActionEvent ae) {
-	DismissToDoItemDialog dialog = new DismissToDoItemDialog();
+	DismissToDoItemDialog dialog = new DismissToDoItemDialog(ProjectBrowser.getInstance());
 	dialog.setTarget(getRememberedTarget());
 	dialog.setVisible(true);
     }

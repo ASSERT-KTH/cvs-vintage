@@ -1,4 +1,4 @@
-// $Id: PriorityNode.java,v 1.9 2004/09/03 19:55:28 mvw Exp $
+// $Id: PriorityNode.java,v 1.10 2004/11/01 10:55:20 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@ package org.argouml.cognitive.ui;
 
 import java.util.Vector;
 import org.argouml.cognitive.ToDoItem;
-import org.argouml.i18n.Translator;
+import org.argouml.cognitive.Translator;
 
 /**
  * This class represents a "priority". Which is a classification for critics.

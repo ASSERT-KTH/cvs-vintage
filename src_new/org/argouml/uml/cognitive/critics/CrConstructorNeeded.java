@@ -1,4 +1,4 @@
-// $Id: CrConstructorNeeded.java,v 1.16 2004/10/23 11:05:43 mvw Exp $
+// $Id: CrConstructorNeeded.java,v 1.17 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.kernel.Wizard;
+import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 
 /**

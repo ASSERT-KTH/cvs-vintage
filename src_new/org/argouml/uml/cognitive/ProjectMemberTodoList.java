@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.14 2004/09/13 21:11:30 bobtarling Exp $
+// $Id: ProjectMemberTodoList.java,v 1.2 2004/11/01 10:55:24 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.cognitive;
+package org.argouml.uml.cognitive;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,6 +33,9 @@ import java.io.Writer;
 import java.util.Vector;
 import org.apache.log4j.Logger;
 
+import org.argouml.cognitive.Designer;
+import org.argouml.cognitive.ResolvedCritic;
+import org.argouml.cognitive.ToDoItem;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectMember;
 import org.argouml.kernel.SaveException;

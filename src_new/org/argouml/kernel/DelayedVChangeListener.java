@@ -1,4 +1,4 @@
-// $Id: DelayedVChangeListener.java,v 1.4 2004/09/27 18:31:28 mvw Exp $
+// $Id: DelayedVChangeListener.java,v 1.5 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 package org.argouml.kernel;
 
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
 
 /**
  * This appears to be a gui specific class, therefore it does not belong in

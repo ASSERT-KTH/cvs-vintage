@@ -1,4 +1,4 @@
-// $Id: GoalsDialog.java,v 1.9 2004/09/05 13:18:07 mvw Exp $
+// $Id: GoalsDialog.java,v 1.10 2004/11/01 10:55:20 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ import javax.swing.event.ChangeListener;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
 import org.argouml.cognitive.GoalModel;
-import org.argouml.i18n.Translator;
+import org.argouml.cognitive.Translator;
 import org.argouml.ui.ArgoDialog;
 
 

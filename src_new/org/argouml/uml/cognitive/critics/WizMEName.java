@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.15 2004/10/23 11:05:43 mvw Exp $
+// $Id: WizMEName.java,v 1.16 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,7 @@ public class WizMEName extends UMLWizard {
     /** 
      * Create a new panel for the given step.
      * 
-     * @see org.argouml.kernel.Wizard#makePanel(int)
+     * @see org.argouml.cognitive.ui.Wizard#makePanel(int)
      */
     public JPanel makePanel(int newStep) {
 	switch (newStep) {
@@ -96,7 +96,7 @@ public class WizMEName extends UMLWizard {
      * Return false if the user has not edited the text and they were required
      * to.
      * 
-     * @see org.argouml.kernel.Wizard#canGoNext()
+     * @see org.argouml.cognitive.ui.Wizard#canGoNext()
      */
     public boolean canGoNext() {
 	if (!super.canGoNext()) return false;
@@ -114,7 +114,7 @@ public class WizMEName extends UMLWizard {
      * they do along, as soon as possible, they should not wait until
      * the final step. 
      * 
-     * @see org.argouml.kernel.Wizard#doAction(int)
+     * @see org.argouml.cognitive.ui.Wizard#doAction(int)
      */
     public void doAction(int oldStep) {
 	LOG.debug("doAction " + oldStep);

@@ -1,4 +1,4 @@
-// $Id: FindDialog.java,v 1.29 2004/10/18 17:14:12 mvw Exp $
+// $Id: FindDialog.java,v 1.30 2004/11/01 10:55:21 mkl Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,7 @@ import javax.swing.border.EmptyBorder;
 import org.argouml.i18n.Translator;
 import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
+import org.argouml.swingext.SpacerPanel;
 import org.argouml.uml.PredicateFind;
 import org.argouml.uml.cognitive.ChildGenFind;
 import org.tigris.gef.util.Predicate;

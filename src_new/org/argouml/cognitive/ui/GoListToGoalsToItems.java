@@ -1,4 +1,4 @@
-// $Id: GoListToGoalsToItems.java,v 1.11 2004/10/03 07:07:29 mvw Exp $
+// $Id: GoListToGoalsToItems.java,v 1.12 2004/11/01 10:55:20 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,10 @@ package org.argouml.cognitive.ui;
 
 import java.util.Enumeration;
 import java.util.Vector;
+
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
 import org.argouml.cognitive.ToDoItem;
@@ -39,22 +40,11 @@ import org.argouml.cognitive.ToDoList;
  * Rule for sorting the ToDo list: Goal -> Item.
  *
  */
-public class GoListToGoalsToItems implements TreeModel {
+public class GoListToGoalsToItems extends AbstractGoList {
   
     ////////////////////////////////////////////////////////////////
     // TreeModel implementation
   
-    /**
-     * @see javax.swing.tree.TreeModel#getRoot()
-     */
-    public Object getRoot() {
-	throw new UnsupportedOperationException();
-    } 
-    
-    /**
-     * @param r ignored
-     */
-    public void setRoot(Object r) { }
 
     /**
      * @see javax.swing.tree.TreeModel#getChild(java.lang.Object, int)

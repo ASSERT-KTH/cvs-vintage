@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalOperName.java,v 1.16 2004/10/21 08:29:46 mkl Exp $
+// $Id: CrUnconventionalOperName.java,v 1.17 2004/11/01 10:55:23 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrUnconventionalOperName.java
 // Classes: CrUnconventionalOperName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrUnconventionalOperName.java,v 1.16 2004/10/21 08:29:46 mkl Exp $
+// $Id: CrUnconventionalOperName.java,v 1.17 2004/11/01 10:55:23 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -35,7 +35,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.cognitive.critics.Critic;
-import org.argouml.kernel.Wizard;
+import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.ModelFacade;
 import org.tigris.gef.util.VectorSet;
 
