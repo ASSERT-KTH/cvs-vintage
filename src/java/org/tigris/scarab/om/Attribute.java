@@ -124,6 +124,21 @@ public class Attribute
 
     }
 
+
+    /**
+     * Get options associated with this attribute base on 
+     * specified criteria.
+     *
+     * @param c a <code>Criteria</code> value
+     * @return a <code>Vector</code> value
+     * @exception Exception if an error occurs
+     */
+    public Vector getAttributeOptions(Criteria c)
+        throws Exception
+    {
+        return super.getAttributeOptions(c);
+    }
+
     /**
      * Sorts the options and renumbers any with duplicate numeric values
      */

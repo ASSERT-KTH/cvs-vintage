@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.8 2001/04/17 00:06:08 fedor Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.9 2001/04/18 21:26:33 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -191,7 +191,7 @@
     <!--
         Value that represents the option in the UI.
     -->
-    <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"></column>
+    <column name="DISPLAY_VALUE" required="true" type="VARCHAR" size="255"/>
     <!--
         Value of the atttribute that represents the option.
         Can be used for sorting in UI and computing averages of votes.
@@ -693,11 +693,13 @@
     name. Then, all you need to do is regenerate the OR code to use the new 
     table name.
 -->
-<table name="TURBINE_USER" idMethod="none">
+<table name="TURBINE_USER" javaName="ScarabUser" skipSql="true"
+      baseClass="org.apache.turbine.om.security.TurbineUser"
+      basePeer="org.apache.turbine.om.security.peer.TurbineUserPeer">
     <!--
         Unique identifier.
     -->
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"/>
 </table>
 
 </database>

@@ -46,7 +46,14 @@ package org.tigris.scarab.om;
  * individuals on behalf of Collab.Net.
  */ 
 
-import org.apache.turbine.om.security.peer.TurbineUserPeer;
+import java.util.Vector;
+
+// Village classes
+import com.workingdogs.village.*;
+
+import org.apache.turbine.services.security.TurbineSecurity;
+import org.apache.turbine.om.ObjectKey;
+import org.apache.turbine.util.db.Criteria;
 
 /**
     This class is an abstraction that is currently based around
@@ -55,11 +62,26 @@ import org.apache.turbine.om.security.peer.TurbineUserPeer;
     implementation needs.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabUserPeer.java,v 1.1 2001/03/03 00:07:09 jmcnally Exp $
+    @version $Id: ScarabUserPeer.java,v 1.2 2001/04/18 21:26:32 jmcnally Exp $
 */
-public class ScarabUserPeer extends TurbineUserPeer
+public class ScarabUserPeer extends BaseScarabUserPeer
 {
-    
+    /** 
+     * Overrides torque peer's method.  Does not use the Class argument
+     * as Users need to go through TurbineSecurity
+     */
+    public static ScarabUser row2Object (Record row, 
+                                              int offset, 
+                                              Class cls ) 
+        throws Exception
+    {
+        ScarabUser obj = (ScarabUser)TurbineSecurity.getUserInstance();
+        populateObject(row, offset, obj);
+                    obj.setModified(false);
+                obj.setNew(false);
+
+        return obj;
+    }
 }    
 
 
