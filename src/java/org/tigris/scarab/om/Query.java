@@ -72,8 +72,6 @@ public class Query
     implements Persistent
 {
 
-    public static final NumberKey USER__PK = new NumberKey("1");
-    public static final NumberKey GLOBAL__PK = new NumberKey("2");
 
     /**
      * A new Query object
@@ -90,19 +88,19 @@ public class Query
         ScarabSecurity security = SecurityFactory.getInstance();
         // If it's a global query, user must have Item | Approve 
         //   permission, Or its Approved field gets set to false
-        if (getTypeId().equals(USER__PK))
+        if (getScopeId().equals(Scope.PERSONAL__PK))
         {
             setApproved(true);
         }
         else if (security.hasPermission(ScarabSecurity.ITEM__APPROVE,
-                                               user, module))
+                                        user, module))
         {
             setApproved(true);
         } 
         else
         {
             setApproved(false);
-            setTypeId(USER__PK);
+            setScopeId(Scope.PERSONAL__PK);
 
             // Send Email to module owner to approve new query
             if (context != null)
@@ -141,13 +139,6 @@ public class Query
                     + getValue();
     }
 
-    /**
-     * Returns list of all query types.
-     */
-    public List getAllQueryTypes() throws Exception
-    {
-        return QueryTypePeer.doSelect(new Criteria());
-    }
 
     /**
      * Returns list of all frequency values.
@@ -218,7 +209,7 @@ public class Query
             setApproved(true);
             if (approved)
             {
-                setTypeId(GLOBAL__PK);
+                setScopeId(Scope.GLOBAL__PK);
             }
             save();
         } 
@@ -243,7 +234,7 @@ public class Query
         if (security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
                                    user, module)
           || (user.getUserId().equals(getUserId()) 
-             && getQueryType().equals(USER__PK)))
+             && getScope().equals(Scope.PERSONAL__PK)))
         {
             setDeleted(true);
             save();

@@ -40,7 +40,7 @@ public  class IssueTemplateInfo
 
         // If it's a global template, user must have Item | Approve 
         //   permission, or its Approved field gets set to false
-        if (issue.getTypeId().equals(IssueType.USER_TEMPLATE__PK))
+        if (getScopeId().equals(Scope.PERSONAL__PK))
         {
             setApproved(true);
         }
@@ -52,7 +52,7 @@ public  class IssueTemplateInfo
         else
         {
             setApproved(false);
-            issue.setTypeId(IssueType.USER_TEMPLATE__PK);
+            setScopeId(Scope.PERSONAL__PK);
             issue.save();
 
             // Send Email to module owner to approve new template

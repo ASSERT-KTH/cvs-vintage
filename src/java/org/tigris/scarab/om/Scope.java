@@ -1,6 +1,6 @@
 package org.tigris.scarab.om;
 
-
+import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.UnsecurePersistent;
 
 /** 
@@ -12,4 +12,8 @@ public  class Scope
     extends org.tigris.scarab.om.BaseScope
     implements UnsecurePersistent
 {
+
+    public static final NumberKey PERSONAL__PK = new NumberKey("1");
+    public static final NumberKey GLOBAL__PK = new NumberKey("2");
+
 }

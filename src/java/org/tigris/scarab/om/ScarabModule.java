@@ -88,7 +88,7 @@ import org.tigris.scarab.security.SecurityFactory;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.40 2001/10/16 00:47:31 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.41 2001/10/16 03:45:52 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -307,7 +307,7 @@ public class ScarabModule
             .add(QueryPeer.MODULE_ID, getModuleId())
             .add(QueryPeer.DELETED, 0)
             .add(QueryPeer.USER_ID, user.getUserId())
-            .add(QueryPeer.QUERY_TYPE_ID, Query.USER__PK);
+            .add(QueryPeer.SCOPE_ID, Scope.PERSONAL__PK);
         queries = QueryPeer.doSelect(crit);
         return queries;
     }
@@ -322,7 +322,7 @@ public class ScarabModule
         Criteria crit = new Criteria()
             .add(QueryPeer.MODULE_ID, getModuleId())
             .add(QueryPeer.DELETED, 0)
-            .add(QueryPeer.QUERY_TYPE_ID, Query.GLOBAL__PK);
+            .add(QueryPeer.SCOPE_ID, Scope.GLOBAL__PK);
         queries = QueryPeer.doSelect(crit);
         return queries;
     }
