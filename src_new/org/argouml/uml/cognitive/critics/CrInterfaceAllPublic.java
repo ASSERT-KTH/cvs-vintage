@@ -1,5 +1,5 @@
-// $Id: CrInterfaceAllPublic.java,v 1.8 2003/09/13 18:16:33 alexb Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrInterfaceAllPublic.java,v 1.9 2004/07/20 01:25:20 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CrInterfaceAllPublic.java
 // Classes: CrInterfaceAllPublic
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrInterfaceAllPublic.java,v 1.8 2003/09/13 18:16:33 alexb Exp $
+// $Id: CrInterfaceAllPublic.java,v 1.9 2004/07/20 01:25:20 d00mst Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -53,9 +53,9 @@ public class CrInterfaceAllPublic extends CrUML {
 	Object inf = /*(MInterface)*/ dm;
 	Collection bf = ModelFacade.getFeatures(inf);
 	if (bf == null) return NO_PROBLEM;
-	Iterator enum = bf.iterator();
-	while (enum.hasNext()) {
-	    Object f = /*(MFeature)*/ enum.next();
+	Iterator features = bf.iterator();
+	while (features.hasNext()) {
+	    Object f = /*(MFeature)*/ features.next();
 	    if (ModelFacade.getVisibility(f) == null) return NO_PROBLEM;
 	    if (!ModelFacade.getVisibility(f).equals(ModelFacade.PUBLIC_VISIBILITYKIND))
 		return PROBLEM_FOUND;

@@ -1,4 +1,4 @@
-// $Id: CrOperNameConflict.java,v 1.12 2004/02/29 12:35:42 linus Exp $
+// $Id: CrOperNameConflict.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -117,7 +117,7 @@ public class CrOperNameConflict extends CrUML {
             return NO_PROBLEM;
         }
 
-	Iterator enum = ModelFacade.getOperations(dm).iterator();
+	Iterator ops = ModelFacade.getOperations(dm).iterator();
 
         // Get all the features (giving up if there are none). Then loop
         // through finding all operations. Each time we find one, we compare
@@ -126,9 +126,9 @@ public class CrOperNameConflict extends CrUML {
 
         Vector operSeen = new Vector();
 
-        while (enum.hasNext()) {
+        while (ops.hasNext()) {
 
-	    Object op = enum.next();
+	    Object op = ops.next();
 
             // Compare against all earlier operations. If there's a match we've
             // found the problem

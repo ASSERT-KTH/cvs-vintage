@@ -1,5 +1,5 @@
-// $Id: CrMultipleAgg.java,v 1.12 2004/03/25 22:30:01 mvw Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrMultipleAgg.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.12 2004/03/25 22:30:01 mvw Exp $
+// $Id: CrMultipleAgg.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -139,10 +139,9 @@ public class CrMultipleAgg extends CrUML {
         // Loop through the associations, counting the ends with aggregations
 
         int      aggCount = 0;
-        Iterator enum     = conns.iterator();
-
-        while (enum.hasNext()) {
-            Object  ae = /*(MAssociationEnd)*/ enum.next();
+        Iterator assocEnds = conns.iterator();
+        while (assocEnds.hasNext()) {
+            Object ae = /*(MAssociationEnd)*/ assocEnds.next();
             if (ModelFacade.isAggregate(ae) || ModelFacade.isComposite(ae)) {
                 aggCount++;
             }

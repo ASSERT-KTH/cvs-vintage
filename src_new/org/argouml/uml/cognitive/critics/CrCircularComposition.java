@@ -1,4 +1,4 @@
-// $Id: CrCircularComposition.java,v 1.12 2004/05/20 11:12:21 linus Exp $
+// $Id: CrCircularComposition.java,v 1.13 2004/07/20 01:25:20 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,9 +66,9 @@ public class CrCircularComposition extends CrUML {
     protected VectorSet computeOffenders(Object dm) {
 	VectorSet offs = new VectorSet(dm);
 	VectorSet above = offs.reachable(GenCompositeClasses.SINGLETON);
-	Enumeration enum = above.elements();
-	while (enum.hasMoreElements()) {
-	    Object cls2 = enum.nextElement();
+	Enumeration elems = above.elements();
+	while (elems.hasMoreElements()) {
+	    Object cls2 = elems.nextElement();
 	    VectorSet trans =
 		(new VectorSet(cls2)).reachable(GenCompositeClasses.SINGLETON);
 	    if (trans.contains(dm)) offs.addElement(cls2);

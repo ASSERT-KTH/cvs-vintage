@@ -1,4 +1,4 @@
-// $Id: CrNavFromInterface.java,v 1.9 2004/02/29 12:35:42 linus Exp $
+// $Id: CrNavFromInterface.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -116,16 +116,16 @@ public class CrNavFromInterface extends CrUML {
         // there is an end connected to an Interface and 2) an end other than
         // that end is navigable. 
 
-        Iterator enum = ModelFacade.getConnections(dm).iterator();
+        Iterator assocEnds = ModelFacade.getConnections(dm).iterator();
 
         boolean haveInterfaceEnd  = false;  // End at an Interface?
         boolean otherEndNavigable = false;  // Navigable other end?
 
-        while (enum.hasNext()) {
+        while (assocEnds.hasNext()) {
 
             // The next AssociationEnd
 
-            Object ae = enum.next();
+            Object ae = assocEnds.next();
 
             // If its an interface we have an interface end, otherwise its
             // something else and we should see if it is navigable. We don't

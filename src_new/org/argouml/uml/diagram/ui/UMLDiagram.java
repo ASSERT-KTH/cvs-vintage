@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.46 2004/07/18 18:56:04 kataka Exp $
+// $Id: UMLDiagram.java,v 1.47 2004/07/20 01:25:19 d00mst Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -371,10 +371,10 @@ public abstract class UMLDiagram
      *
      */
     public void removeAsTarget() {
-        Enumeration enum = elements();
+        Enumeration elems = elements();
         UmlModelEventPump pump = UmlModelEventPump.getPump();
-        while (enum.hasMoreElements()) {
-            Object o = enum.nextElement();
+        while (elems.hasMoreElements()) {
+            Object o = elems.nextElement();
             if (ModelFacade.isAElementListener(o)) {
                 MElementListener listener = (MElementListener) o;
                 Fig fig = (Fig) o;
@@ -392,9 +392,9 @@ public abstract class UMLDiagram
      *
      */
     public void setAsTarget() {
-        Enumeration enum = elements();
-        while (enum.hasMoreElements()) {
-            Fig fig = (Fig) enum.nextElement();
+        Enumeration elems = elements();
+        while (elems.hasMoreElements()) {
+            Fig fig = (Fig) elems.nextElement();
             if (org.argouml.model.ModelFacade.isAElementListener(fig)) {
                 Object owner = fig.getOwner();
                 // pump.addModelEventListener((MElementListener)fig, owner);

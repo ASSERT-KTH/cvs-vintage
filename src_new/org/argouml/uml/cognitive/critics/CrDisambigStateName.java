@@ -1,5 +1,5 @@
-// $Id: CrDisambigStateName.java,v 1.9 2003/11/10 12:35:00 jhraigniac Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrDisambigStateName.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CrDisambigStateName.java
 // Classes: CrDisambigStateName
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrDisambigStateName.java,v 1.9 2003/11/10 12:35:00 jhraigniac Exp $
+// $Id: CrDisambigStateName.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -63,9 +63,9 @@ public class CrDisambigStateName extends CrUML {
 	    if (ns == null) return NO_PROBLEM;
 	    Collection oes = ModelFacade.getOwnedElements(ns);
 	    if (oes == null) return NO_PROBLEM;
-	    Iterator enum = oes.iterator();
-	    while (enum.hasNext()) {
-		Object eo = /*(MElementImport)*/ enum.next();
+	    Iterator elems = oes.iterator();
+	    while (elems.hasNext()) {
+		Object eo = /*(MElementImport)*/ elems.next();
 		Object me = /*(MModelElement)*/ ModelFacade.getModelElement(eo);
 		if (!(ModelFacade.isAClassifier(me))) continue;
 		if (me == state) continue;

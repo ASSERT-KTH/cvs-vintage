@@ -1,5 +1,5 @@
-// $Id: CrAttrNameConflict.java,v 1.10 2003/09/17 21:29:02 thierrylach Exp $
-// Copyright (c) 1996-2003 The Regents of the University of California. All
+// $Id: CrAttrNameConflict.java,v 1.11 2004/07/20 01:25:20 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CrAttrNameConflict.java
 // Classes: CrAttrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrAttrNameConflict.java,v 1.10 2003/09/17 21:29:02 thierrylach Exp $
+// $Id: CrAttrNameConflict.java,v 1.11 2004/07/20 01:25:20 d00mst Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -79,9 +79,9 @@ public class CrAttrNameConflict extends CrUML {
 
 	Vector namesSeen = new Vector();
 
-	Iterator enum = ModelFacade.getAttributes(dm).iterator();
-	while (enum.hasNext()) {
-	    String name = ModelFacade.getName(enum.next());
+	Iterator attrs = ModelFacade.getAttributes(dm).iterator();
+	while (attrs.hasNext()) {
+	    String name = ModelFacade.getName(attrs.next());
 	    if (name == null || name.length() == 0) continue;
 
 	    if (namesSeen.contains(name)) return PROBLEM_FOUND;

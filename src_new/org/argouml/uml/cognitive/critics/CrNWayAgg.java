@@ -1,5 +1,5 @@
-// $Id: CrNWayAgg.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
-// Copyright (c) 1996-99 The Regents of the University of California. All
+// $Id: CrNWayAgg.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -27,7 +27,7 @@
 // File: CrNWayAgg.java
 // Classes: CrNWayAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNWayAgg.java,v 1.9 2003/09/11 00:07:16 bobtarling Exp $
+// $Id: CrNWayAgg.java,v 1.10 2004/07/20 01:25:20 d00mst Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -139,10 +139,9 @@ public class CrNWayAgg extends CrUML {
 
         // Loop through the associations, looking for one with aggregation
 
-        Iterator enum = conns.iterator();
-
-        while (enum.hasNext()) {
-            Object  ae = /*(MAssociationEnd)*/ enum.next();
+        Iterator assocEnds = conns.iterator();
+        while (assocEnds.hasNext()) {
+            Object ae = /*(MAssociationEnd)*/ assocEnds.next();
             if (ModelFacade.isAggregate(ae) || ModelFacade.isComposite(ae)) {
                 return PROBLEM_FOUND;
             }
