@@ -173,14 +173,20 @@ public class Activity
             {
                 save(dbCon);
             }
-           try
-           {
-             issue.getActivity(true).add(this);
-           }
-           catch (Exception e)
-           {
+            // Make sure new activity is added to activity cache
+            List activityList = null;
+            try
+            {
+                activityList = issue.getActivity(true);
+            }
+            catch (Exception e)
+            {
                 throw new TorqueException(e);
-           }
+            }
+            if (!activityList.contains(this))
+            {
+                activityList.add(this);
+            }
     }
 
     /**
