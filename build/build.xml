@@ -1624,7 +1624,8 @@ diff -u -r1.5 project.xml
             </classpath>
         </taskdef>
         <checkstyle properties="${basedir}/checkstyle.properties"
-                    failOnViolation="false">
+                    failOnViolation="false"
+                    failureProperty="checkstyle.failure">
             <classpath refid="classpath"/>
             <classpath>
                 <fileset dir="${build.project.webinf.lib}">
@@ -1644,7 +1645,8 @@ diff -u -r1.5 project.xml
             style="${basedir}/checkstyle2txt.xsl"/>
     </target>
 
-    <target name="checkstyle-mail" depends="checkstyle">
+    <target name="checkstyle-mail" depends="checkstyle"
+            if="checkstyle.failure">
         <mail from="${scarab.checkstyle.email.from}"
               tolist="${scarab.checkstyle.email.to}"
               mailhost="${scarab.system.mail.host}"
