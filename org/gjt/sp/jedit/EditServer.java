@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * complicated stuff can be done too.
  *
  * @author Slava Pestov
- * @version $Id: EditServer.java,v 1.6 2002/02/19 02:33:36 spestov Exp $
+ * @version $Id: EditServer.java,v 1.7 2002/03/14 10:20:19 spestov Exp $
  */
 public class EditServer extends Thread
 {
@@ -277,7 +277,8 @@ public class EditServer extends Thread
 			{
 				public void run()
 				{
-					BeanShell.eval(null,script,false);
+					BeanShell.eval(null,BeanShell.getNameSpace(),
+						script);
 				}
 			});
 

@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.15 2002/02/23 08:38:50 spestov Exp $
+ * @version $Id: Macros.java,v 1.16 2002/03/14 10:20:19 spestov Exp $
  */
 public class Macros
 {
@@ -873,7 +873,7 @@ public class Macros
 		//{{{ runMacro() method
 		public void runMacro(View view, Macro macro)
 		{
-			BeanShell.runScript(view,macro.getPath(),true,false);
+			BeanShell.runScript(view,macro.getPath(),null,true);
 		}
 		//}}}
 	}

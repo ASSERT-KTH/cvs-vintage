@@ -33,7 +33,7 @@ import org.gjt.sp.jedit.MiscUtilities;
 /**
  * A regular expression string matcher.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.8 2002/02/27 05:05:32 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.9 2002/03/14 10:20:20 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
@@ -138,7 +138,7 @@ public class RESearchMatcher implements SearchMatcher
 	 * within this matcher performed.
 	 * @param text The text
 	 */
-	public String substitute(String text) throws Exception
+	public String substitute(String text) throws Throwable
 	{
 		REMatch match = re.getMatch(text);
 		if(match == null)

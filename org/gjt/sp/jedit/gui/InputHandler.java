@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.10 2002/02/15 03:03:16 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.11 2002/03/14 10:20:20 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -401,9 +401,10 @@ public abstract class InputHandler extends KeyAdapter
 			{
 				buffer.beginCompoundEdit();
 
-				BeanShell.eval(view,"for(int i = 1; i < "
+				BeanShell.eval(view,BeanShell.getNameSpace(),
+					"for(int i = 1; i < "
 					+ getRepeatCount() + "; i++)\n{\n"
-					+ readNextChar + "\n}",false);
+					+ readNextChar + "\n}");
 			}
 			finally
 			{
@@ -411,7 +412,7 @@ public abstract class InputHandler extends KeyAdapter
 			}
 		}
 		else
-			BeanShell.eval(view,readNextChar,false);
+			BeanShell.eval(view,BeanShell.getNameSpace(),readNextChar);
 
 		readNextChar = null;
 
