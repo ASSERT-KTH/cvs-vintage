@@ -332,7 +332,7 @@ public class SMTPServer {
         String mechanism = null;
 
         for (int i = 0; (i < serverSupported.size()) && (mechanism == null); i++) {
-            if (AuthenticationFactory.getInstance().supports(
+            if (AuthenticationFactory.getInstance().isSupported(
                     (String) serverSupported.get(i))) {
                 mechanism = (String) serverSupported.get(i);
             }
