@@ -52,7 +52,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -311,6 +311,14 @@ public class JDBCEntityBridge implements EntityBridge {
       }
    }
 
+   public boolean isCreated(EntityEnterpriseContext ctx) {
+      return getEntityState(ctx).isCreated();
+   }
+
+   public void setCreated(EntityEnterpriseContext ctx) {
+      getEntityState(ctx).isCreated = true;
+   }
+
    public void setClean(EntityEnterpriseContext ctx) {
       for(int i=0; i<cmpFields.length; i++) {
          cmpFields[i].setClean(ctx);
@@ -387,12 +395,6 @@ public class JDBCEntityBridge implements EntityBridge {
       }
 
       ctx.setPersistenceContext(null);
-   }
-
-   public CMPStoreManager.PersistenceContext getPersistenceContext(
-         EntityEnterpriseContext ctx) {
-
-      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
    }
 
    // JDBC Specific Information
@@ -498,6 +500,29 @@ public class JDBCEntityBridge implements EntityBridge {
       for(int i=0; i<primaryKeyFields.length; i++) {
          Object fieldValue = primaryKeyFields[i].getPrimaryKeyValue(pk);
          primaryKeyFields[i].setInstanceValue(ctx, fieldValue);
+      }
+   }
+
+   private CMPStoreManager.PersistenceContext getPersistenceContext(
+         EntityEnterpriseContext ctx) {
+      return (CMPStoreManager.PersistenceContext)ctx.getPersistenceContext();
+   }
+      
+   public EntityState getEntityState(EntityEnterpriseContext ctx) {
+      Map state = getPersistenceContext(ctx).fieldState;
+      EntityState entityState = (EntityState)state.get(this);
+      if(entityState == null) {
+         entityState = new EntityState();
+         state.put(this, entityState);
+      }
+      return entityState;
+   }
+
+   public static class EntityState {
+      private boolean isCreated = false;
+      
+      public boolean isCreated() {
+         return isCreated;
       }
    }
 }
