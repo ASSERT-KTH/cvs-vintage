@@ -273,7 +273,8 @@ public class ProjectBrowser extends JFrame
     public void setAppName(String n) { _appName = n; }
 
     public void setTarget(Object o) {
-        
+        _editorPane.setTarget(o);
+        setDetailsTarget(o);  
         if (o instanceof MNamespace) {
             ProjectManager.getManager().getCurrentProject().setCurrentNamespace((MNamespace)o);
         } else 
@@ -292,8 +293,7 @@ public class ProjectBrowser extends JFrame
                     ProjectManager.getManager().getCurrentProject().setCurrentNamespace(m);
             }       
         }
-        _editorPane.setTarget(o);
-        setDetailsTarget(o);         
+               
 	Actions.updateAllEnabled();
     }
 
