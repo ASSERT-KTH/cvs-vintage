@@ -41,7 +41,7 @@ import org.jboss.metadata.SecurityRoleRefMetaData;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
- *  @version $Revision: 1.29 $
+ *  @version $Revision: 1.30 $
  */
 public abstract class EnterpriseContext
 {
@@ -180,8 +180,6 @@ public abstract class EnterpriseContext
       implements EJBContext
    {
       /**
-       *
-       *
        * @deprecated
        */
       public Identity getCallerIdentity() 
@@ -257,8 +255,6 @@ public abstract class EnterpriseContext
       }
       
       /**
-       *
-       *
        * @deprecated
        */
       public Properties getEnvironment() 
@@ -289,8 +285,6 @@ public abstract class EnterpriseContext
       }
    
       /**
-       *
-       *
        * @deprecated
        */
       public boolean isCallerInRole(Identity id) 
@@ -309,7 +303,7 @@ public abstract class EnterpriseContext
          // the security role refs in the descriptor but for backward
          // compability we're not enforcing this requirement.
          //
-         // TODO (2.3): add a conditional check using jboss.xml <secure> element
+         // TODO (2.3): add a conditional check using jboss.xml <enforce-ejb-restrictions> element
          //             which will throw an exception in case no matching
          //             security ref is found.           
          Iterator it = getContainer().getBeanMetaData().getSecurityRoleReferences();

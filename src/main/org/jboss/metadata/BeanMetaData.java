@@ -25,7 +25,7 @@ import org.jboss.ejb.DeploymentException;
  *   @author Peter Antman (peter.antman@tim.se)
  *   @author Daniel OConnor (docodan@mvcsoft.com)
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.20 $
+ *   @version $Revision: 1.21 $
  */
 public abstract class BeanMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -136,7 +136,8 @@ public abstract class BeanMetaData extends MetaData {
 	public Iterator getSecurityRoleReferences() { return securityRoleReferences.iterator(); }
 	
 	public Iterator getResourceReferences() { return resourceReferences.values().iterator(); }
-	
+	public Iterator getResourceEnvReferences() { return resourceEnvReferences.values().iterator(); }
+
 	public String getJndiName() { 
 		// jndiName may be set in jboss.xml
 		if (jndiName == null) {
@@ -354,7 +355,7 @@ public abstract class BeanMetaData extends MetaData {
         while( iterator.hasNext() )
         {
 			Element resourceRef = (Element) iterator.next();	
-			String resRefName = getElementContent(getUniqueChild(resourceRef, "res-ref-name"));
+			String resRefName = getElementContent(getUniqueChild(resourceRef, "resource-env-ref-name"));
 			ResourceEnvRefMetaData refMetaData = (ResourceEnvRefMetaData) resourceEnvReferences.get(resRefName);
             if( refMetaData == null)
             {

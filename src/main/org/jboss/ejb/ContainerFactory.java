@@ -83,7 +83,7 @@ import org.jboss.mgt.Module;
 *   @author Peter Antman (peter.antman@tim.se)
 *   @author Scott Stark(Scott_Stark@displayscape.com)
 *
-*   @version $Revision: 1.73 $
+*   @version $Revision: 1.74 $
 */
 public class ContainerFactory
   extends org.jboss.util.ServiceMBeanSupport
@@ -701,7 +701,7 @@ public class ContainerFactory
     throws NamingException, DeploymentException
     {
     // Create classloader for this container
-    // Only used to identify bean. Not really used for class loading!
+    // Only used to unique the bean ENC and does not augment class loading
     container.setClassLoader( new URLClassLoader( new URL[ 0 ], cl ) );
     // Create local classloader for this container
     // For loading resources that must come from the local jar.  Not for loading classes!

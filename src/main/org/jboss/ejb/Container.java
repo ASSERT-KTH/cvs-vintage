@@ -49,6 +49,7 @@ import org.jboss.metadata.EnvEntryMetaData;
 import org.jboss.metadata.EjbRefMetaData;
 import org.jboss.metadata.EjbLocalRefMetaData;
 import org.jboss.metadata.ResourceRefMetaData;
+import org.jboss.metadata.ResourceEnvRefMetaData;
 import org.jboss.metadata.ApplicationMetaData;
 
 import org.jnp.interfaces.Naming;
@@ -71,7 +72,8 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *   @see ContainerFactory
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *   @version $Revision: 1.42 $
+ *   @author Scott_Stark@displayscape.com
+ *   @version $Revision: 1.43 $
  */
 public abstract class Container
 {
@@ -326,7 +328,7 @@ public abstract class Container
       localContainerInvoker.init();
       if (localHomeInterface != null)
          application.addLocalHome(this, localContainerInvoker.getEJBLocalHome() );
-      // Setup "java:" namespace
+      // Setup "java:comp/env" namespace
       setupEnvironment();
    }
 
@@ -401,7 +403,7 @@ public abstract class Container
    * setupEnvironment
    *
    * This method sets up the naming environment of the bean.
-   * We create the java: namespace with properties, EJB-References, and
+   * We create the java:comp/env namespace with properties, EJB-References, and
    * DataSource ressources.
    *
    */
@@ -410,56 +412,36 @@ public abstract class Container
    {
       try
       {
+         BeanMetaData beanMetaData = getBeanMetaData();
+         Logger.debug("Begin java:comp/env for EJB: "+beanMetaData.getEjbName());
+         Logger.debug("TCL: "+Thread.currentThread().getContextClassLoader());
          // Since the BCL is already associated with this thread we can start using the java: namespace directly
          Context ctx = (Context) new InitialContext().lookup("java:comp");
-         ctx = ctx.createSubcontext("env");
+         Context envCtx = ctx.createSubcontext("env");
+         Logger.debug("java:comp/env: "+envCtx);
 
          // Bind environment properties
          {
-            Iterator enum = getBeanMetaData().getEnvironmentEntries();
+            Iterator enum = beanMetaData.getEnvironmentEntries();
             while(enum.hasNext())
             {
                EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
-               if (entry.getType().equals("java.lang.Integer"))
+               try
                {
-                  bind(ctx, entry.getName(), new Integer(entry.getValue()));
+                 Logger.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
+                 EnvEntryMetaData.bindEnvEntry(envCtx, entry);
                }
-               else if (entry.getType().equals("java.lang.Long"))
+               catch(ClassNotFoundException e)
                {
-                  bind(ctx, entry.getName(), new Long(entry.getValue()));
-               }
-               else if (entry.getType().equals("java.lang.Double"))
-               {
-                  bind(ctx, entry.getName(), new Double(entry.getValue()));
-               }
-               else if (entry.getType().equals("java.lang.Float"))
-               {
-                  bind(ctx, entry.getName(), new Float(entry.getValue()));
-               }
-               else if (entry.getType().equals("java.lang.Byte"))
-               {
-                  bind(ctx, entry.getName(), new Byte(entry.getValue()));
-               }
-               else if (entry.getType().equals("java.lang.Short"))
-               {
-                  bind(ctx, entry.getName(), new Short(entry.getValue()));
-               }
-               else if (entry.getType().equals("java.lang.Boolean"))
-               {
-                  bind(ctx, entry.getName(), new Boolean(entry.getValue()));
-               }
-               else
-               {
-                  // Unknown type
-                  // Default is string
-                  bind(ctx, entry.getName(), entry.getValue());
+                 Logger.exception(e);
+                 throw new DeploymentException("Could not set up environment", e);
                }
             }
          }
 
          // Bind EJB references
          {
-            Iterator enum = getBeanMetaData().getEjbReferences();
+            Iterator enum = beanMetaData.getEjbReferences();
             while(enum.hasNext())
             {
 
@@ -470,12 +452,13 @@ public abstract class Container
                {
                   // Internal link
                   Logger.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                  if (getApplication().getContainer(ref.getLink()) == null)
+                  Container refContainer = getApplication().getContainer(ref.getLink());
+                  if (refContainer == null)
                      throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  bind(ctx, ref.getName(), new LinkRef(getApplication().getContainer(ref.getLink()).getBeanMetaData().getJndiName()));
+                  bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
 
-                  //                   bind(ctx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
-                  //                bind(ctx, ref.getName(), new LinkRef(ref.getLink()));
+                  //                   bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
+                  //                bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
                }
                else
                {
@@ -485,14 +468,14 @@ public abstract class Container
                      throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
                   }
                   Logger.debug("Binding "+ref.getName()+" to external JNDI source: "+ref.getJndiName());
-                  bind(ctx, ref.getName(), new LinkRef(ref.getJndiName()));
+                  bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
                }
             }
          }
         
          // Bind Local EJB references
          {
-            Iterator enum = getBeanMetaData().getEjbLocalReferences();
+            Iterator enum = beanMetaData.getEjbLocalReferences();
             // unique key name
             String uniqueKey = Long.toString( (new java.util.Date()).getTime() );
             while(enum.hasNext())
@@ -514,7 +497,7 @@ public abstract class Container
                   StringRefAddr refAddr = new StringRefAddr("nns", uniqueKey+ref.getName() );
                   Reference jndiRef = new Reference(ref.getLocalHome(),
                      refAddr, LocalHomeObjectFactory.class.getName(), null );
-                  bind(ctx, ref.getName(), jndiRef );
+                  bind(envCtx, ref.getName(), jndiRef );
 
                }
                else
@@ -526,10 +509,10 @@ public abstract class Container
 
          // Bind resource references
          {
-            Iterator enum = getBeanMetaData().getResourceReferences();
+            Iterator enum = beanMetaData.getResourceReferences();
 
             // let's play guess the cast game ;)  New metadata should fix this.
-            ApplicationMetaData application = getBeanMetaData().getApplicationMetaData();
+            ApplicationMetaData application = beanMetaData.getApplicationMetaData();
 
             while(enum.hasNext())
             {
@@ -576,8 +559,8 @@ public abstract class Container
                   // URL bindings
                   try
                   {
-                     Logger.debug("Binding URL "+finalName+ " to JDNI ENC " +ref.getRefName());
-                     bind(ctx, ref.getRefName(), new URL(finalName));
+                     Logger.debug("Binding URL: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
+                     bind(envCtx, ref.getRefName(), new URL(finalName));
                   } catch (MalformedURLException e)
                   {
                      throw new NamingException("Malformed URL:"+e.getMessage());
@@ -585,18 +568,36 @@ public abstract class Container
                }
                else
                {
-                  // Resource Manager bindings
-                  Logger.debug("Binding resource manager "+finalName+ " with JDNI ENC " +ref.getRefName());
-                  bind(ctx, ref.getRefName(), new LinkRef(finalName));
+                  // Resource Manager bindings, should validate the type...
+                  Logger.debug("Binding resource manager: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
+                  bind(envCtx, ref.getRefName(), new LinkRef(finalName));
                }
             }
          }
+
+         // Bind resource env references
+         {
+            Iterator enum = beanMetaData.getResourceEnvReferences();
+            while( enum.hasNext() )
+            {
+                ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
+                String encName = resRef.getRefName();
+                String jndiName = resRef.getJndiName();
+                // Should validate the type...
+                Logger.debug("Binding env resource: "+jndiName+ " to JDNI ENC as: " +encName);
+                bind(envCtx, encName, new LinkRef(jndiName));
+            }
+         }
+
+         Logger.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
       } catch (NamingException e)
       {
          Logger.exception(e);
          e.getRootCause().printStackTrace();
          throw new DeploymentException("Could not set up environment", e);
       }
+
+
    }
 
 
