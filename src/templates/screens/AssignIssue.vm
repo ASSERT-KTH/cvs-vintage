@@ -11,6 +11,9 @@ $page.setTitle("Assign users")
 #set ($issueIdList = $data.Parameters.getString("issueIdList"))
 #if ($issueIdList)
  #set ($issueList = $issueIdList)
+ #if ($issueIdList.size() != 1)
+    #set ($multiple = "true")
+ #end
 #else
  #set ($issueList = $issueGroup.Ids.Value)
 #end
@@ -43,18 +46,19 @@ $page.setTitle("Assign users")
     <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
   #end
 #end
-#if ($issueList.size() == 1)
+#if (!$multiple.equals("true"))
   #foreach ($id in $issueList)
   <input type="hidden" name="id" value="$id" />
   #end
 #end
+<input type="hidden" name="multiple" value="$multiple");
   
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
 </form>
 
-<p><a href="$link.setPage("AssignIssue.vm#add")">Click here</a> to select users to associate with this issue</p>
+<p><a href="$link.setPage("AssignIssue.vm")#add.setPathInfo("$issueGroup.Ids.Key" ,"1" )">Click here</a> to select users to associate with this issue</p>
 		
 
 ##ASSIGNEE LIST
@@ -72,6 +76,7 @@ $page.setTitle("Assign users")
 #foreach ($id in $issueGroup.Ids.Value)
   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
 #end
+<input type="hidden" name="multiple" value="$multiple");
 #end
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
@@ -126,7 +131,6 @@ $intake.declareGroups()
 </form>
 #end
 
-
 <form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
 #if ($issueIdList)
@@ -138,12 +142,13 @@ $intake.declareGroups()
    <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
  #end
 #end
-#if ($issueList.size() == 1)
+#if (!$multiple.equals("true"))
   #foreach ($id in $issueList)
   <input type="hidden" name="id" value="$id" />
   #end
 #end
-<div class="functnbar">
+<input type="hidden" name="multiple" value="$multiple");
+<div class="functnbar2">
 <input type="submit" value="Done" name="eventSubmit_doDone" />
 </div>
 </form>
@@ -162,6 +167,12 @@ $intake.declareGroups()
 #foreach ($id in $issueGroup.Ids.Value)
   <input type="hidden" name="$issueGroup.Ids.Key" value="$id" />
 #end
+#if (!$multiple.equals("true"))
+  #foreach ($id in $issueList)
+  <input type="hidden" name="id" value="$id" />
+  #end
+#end
+<input type="hidden" name="multiple" value="$multiple");
 #end
 
 #set ($searchString = $data.Parameters.getString("searchString"))
