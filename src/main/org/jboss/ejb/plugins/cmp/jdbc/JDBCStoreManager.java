@@ -31,6 +31,7 @@ import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
+import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
@@ -58,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -103,22 +104,9 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    private JDBCPassivateEntityCommand passivateEntityCommand;
 
    // commands
-//   private JDBCFindByForeignKeyCommand findByForeignKeyCommand;
    private JDBCLoadRelationCommand loadRelationCommand;
    private JDBCDeleteRelationsCommand deleteRelationsCommand;
    private JDBCInsertRelationsCommand insertRelationsCommand;
-
-   /**
-    * A map of data preloaded within some transaction for some entity. This map
-    * is keyed by Transaction, entityKey and CMP field name
-    * and the data is Object containing the field value.
-    */
-//   private Map preloadedData = new HashMap();
-
-   /**
-    * A set of transactions for which data was preloaded.
-    */
-//   private Set transactions = new HashSet();
 
    /**
     * A Transaction manager so that we can link preloaded data to a transaction
@@ -287,6 +275,14 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       // create the bridge between java land and this engine (sql land)
       entityBridge = new JDBCEntityBridge(metaData, this);
 
+      // add the entity bridge to the catalog
+      Catalog catalog = (Catalog)getApplicationData("CATALOG");
+      if(catalog == null) {
+         catalog = new Catalog();
+         putApplicationData("CATALOG", catalog);
+      }
+      catalog.addEntity(entityBridge);
+
       // create the read ahead cache
       readAheadCache = new ReadAheadCache(this);
       readAheadCache.create();
@@ -402,7 +398,9 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public void loadEntity(EntityEnterpriseContext ctx) {
       // is any on the data already in the entity valid
       if(!ctx.isValid()) {
-         log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
+         if(log.isTraceEnabled()) {
+            log.trace("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
+         }
          entityBridge.resetPersistenceContext(ctx);
       }
 
@@ -462,13 +460,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    //
    // Relationship Commands
    //
-//   public Collection findByForeignKey(
-//         Object foreignKey, 
-//         JDBCCMRFieldBridge cmrField) {
-//
-//      return findByForeignKeyCommand.execute(foreignKey, cmrField);
-//   }
-
    public Collection loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {
       return loadRelationCommand.execute(cmrField, pk);
    }

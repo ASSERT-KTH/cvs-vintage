@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class JDBCStoreEntityCommand {
    private JDBCStoreManager manager;
@@ -51,8 +51,10 @@ public class JDBCStoreEntityCommand {
       List dirtyFields = entity.getDirtyFields(ctx);
          
       if(dirtyFields.isEmpty()) {
-         log.debug("Store command NOT executed. Entity is not dirty: pk=" + 
-               ctx.getId());
+         if(log.isTraceEnabled()) {
+            log.trace("Store command NOT executed. Entity is not dirty: pk=" + 
+                  ctx.getId());
+         }
          return;
       }
 
@@ -71,7 +73,9 @@ public class JDBCStoreEntityCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if(log.isDebugEnabled()) {
+            log.debug("Executing SQL: " + sql);
+         }
          ps = con.prepareStatement(sql.toString());
          
          // set the parameters
@@ -99,7 +103,9 @@ public class JDBCStoreEntityCommand {
                "affected row: rowsAffected=" + rowsAffected +
                "id=" + ctx.getId());
       }
-      log.debug("Create: Rows affected = " + rowsAffected);
+      if(log.isDebugEnabled()) {
+         log.debug("Create: Rows affected = " + rowsAffected);
+      }
 
       // Mark the inserted fields as clean.
       for(Iterator iter = dirtyFields.iterator(); iter.hasNext(); ) {

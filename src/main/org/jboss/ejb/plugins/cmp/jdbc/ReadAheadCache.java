@@ -31,7 +31,7 @@ import org.jboss.util.LRUCachePolicy;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class ReadAheadCache {
    /**
@@ -141,7 +141,9 @@ public class ReadAheadCache {
       iter = dereferencedResults.iterator();
       while(iter.hasNext()) {
          Object obj = iter.next();
-         log.debug("Removing dereferenced finder results: "+obj);
+         if(log.isTraceEnabled()) {
+            log.trace("Removing dereferenced finder results: " + obj);
+         }
          listCache.remove(obj);
       }
    }
@@ -192,17 +194,21 @@ public class ReadAheadCache {
     * @param ctx the context that will be loaded
     */
    public void load(EntityEnterpriseContext ctx) {
-      log.debug("load data:" +
-            " entity="+manager.getEntityBridge().getEntityName()+
-            " pk="+ctx.getId());
+      if(log.isTraceEnabled()) {
+         log.trace("load data:" +
+               " entity="+manager.getEntityBridge().getEntityName()+
+               " pk="+ctx.getId());
+      }
 
       // get the preload data map
       Map preloadDataMap = getPreloadDataMap(ctx.getId(), false);
       if(preloadDataMap == null) {
          // no preloaded data for this entity
-         log.debug("No preload data found:"+
-               " entity="+manager.getEntityBridge().getEntityName()+
-               " pk="+ctx.getId());
+         if(log.isTraceEnabled()) {
+            log.trace("No preload data found:"+
+                  " entity="+manager.getEntityBridge().getEntityName()+
+                  " pk="+ctx.getId());
+         }
          return;
       }
 
@@ -241,10 +247,12 @@ public class ReadAheadCache {
             JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
 
             if(!cmrField.isLoaded(ctx)) {
-               log.debug("Preloading data:" +
-                     " entity="+manager.getEntityBridge().getEntityName()+
-                     " pk="+ctx.getId()+
-                     " cmrField="+cmrField.getFieldName());
+               if(log.isTraceEnabled()) {
+                  log.trace("Preloading data:" +
+                        " entity="+manager.getEntityBridge().getEntityName()+
+                        " pk="+ctx.getId()+
+                        " cmrField="+cmrField.getFieldName());
+               }
      
                // set the value
                cmrField.loadPreloadedValue(ctx, (List)value);
@@ -257,10 +265,12 @@ public class ReadAheadCache {
                relatedReadAheadCache.addFinderResult(new FinderResults(
                      (List)value, cmrField.getReadAhead(), null, null));
             } else {
-               log.debug("CMRField already loaded:" +
-                     " entity="+manager.getEntityBridge().getEntityName()+
-                     " pk="+ctx.getId()+
-                     " cmrField="+cmrField.getFieldName());
+               if(log.isTraceEnabled()) {
+                  log.trace("CMRField already loaded:" +
+                        " entity="+manager.getEntityBridge().getEntityName()+
+                        " pk="+ctx.getId()+
+                        " cmrField="+cmrField.getFieldName());
+               }
             } 
          }
       }
@@ -285,10 +295,12 @@ public class ReadAheadCache {
          }
       }
 
-      log.debug("Add preload data:" +
-            " entity="+manager.getEntityBridge().getEntityName()+
-            " pk="+entityPrimaryKey+
-            " field="+field.getFieldName());
+      if(log.isTraceEnabled()) {
+         log.trace("Add preload data:" +
+               " entity="+manager.getEntityBridge().getEntityName()+
+               " pk="+entityPrimaryKey+
+               " field="+field.getFieldName());
+      }
 
       // convert null values to a null value standing object
       if(fieldValue == null) {
@@ -300,8 +312,10 @@ public class ReadAheadCache {
    }
 
    public synchronized void removeCachedData(Object primaryKey) {
-      log.debug("Removing cached data for "+primaryKey);
-      
+      if(log.isTraceEnabled()) {
+         log.trace("Removing cached data for "+primaryKey);
+      }
+         
       // remove the preloaded data
       manager.removeEntityTxData(new PreloadKey(primaryKey));
 
@@ -324,7 +338,10 @@ public class ReadAheadCache {
       }
 
       // a reference to the old finder set was not found so remove it
-      log.debug("Removing dereferenced finder results: "+oldInfo.finderResults);
+      if(log.isTraceEnabled()) {
+         log.trace("Removing dereferenced finder results: " + 
+               oldInfo.finderResults);
+      }
       listCache.remove(oldInfo.finderResults);
    }
 

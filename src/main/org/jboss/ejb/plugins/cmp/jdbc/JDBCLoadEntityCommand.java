@@ -40,7 +40,7 @@ import org.jboss.ejb.FinderResults;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class JDBCLoadEntityCommand {
    private final JDBCStoreManager manager;
@@ -98,7 +98,9 @@ public class JDBCLoadEntityCommand {
          con = entity.getDataSource().getConnection();
          
          // create the statement
-         log.debug("Executing SQL: " + sql);
+         if(log.isDebugEnabled()) {
+            log.debug("Executing SQL: " + sql);
+         }
          ps = con.prepareStatement(sql);
          
          // set the parameters
@@ -240,7 +242,9 @@ public class JDBCLoadEntityCommand {
       // get the load fields
       ArrayList loadFields = new ArrayList(entity.getFields().size());
       if(requiredField == null) {
-         log.debug("Default eager-load for entity");
+         if(log.isTraceEnabled()) {
+            log.trace("Default eager-load for entity");
+         }
          loadFields.addAll(entity.getEagerLoadFields());
       } else {
          loadFields.add(requiredField);

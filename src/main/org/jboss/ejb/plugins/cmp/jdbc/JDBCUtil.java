@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class JDBCUtil
 {
@@ -132,8 +132,8 @@ public class JDBCUtil
     */
    public static void setParameter(Logger log, PreparedStatement ps, int index, int jdbcType, Object value) throws SQLException
    {
-      if(log.isDebugEnabled()) {
-         log.debug("Set parameter: " +
+      if(log.isTraceEnabled()) {
+         log.trace("Set parameter: " +
                "index=" + index + ", " +
                "jdbcType=" + getJDBCTypeName(jdbcType) + ", " +
                "value=" + ((value == null) ? "NULL" : value));
@@ -193,24 +193,24 @@ public class JDBCUtil
       Object[] returnValue = new Object[1];
       if(getNonBinaryResult(rs, index, destination, returnValue))
       {
-         if(log.isDebugEnabled()) {
-            log.debug("Get result: index=" + index + 
+         if(log.isTraceEnabled()) {
+            log.trace("Get result: index=" + index + 
                   ", javaType=" + destination.getName() + 
                   ", Simple, value=" + returnValue[0]);
          }
          return returnValue[0];
       } else if(getObjectResult(rs, index, destination, returnValue))
       {
-         if(log.isDebugEnabled()) {
-            log.debug("Get result: index=" + index + 
+         if(log.isTraceEnabled()) {
+            log.trace("Get result: index=" + index + 
                   ", javaType=" + destination.getName() + 
                   ", Object, value=" + returnValue[0]);
          }
          return returnValue[0];
       } else if(getBinaryResult(rs, index, destination, returnValue))
       {
-         if(log.isDebugEnabled()) {
-            log.debug("Get result: index=" + index + 
+         if(log.isTraceEnabled()) {
+            log.trace("Get result: index=" + index + 
                   ", javaType=" + destination.getName() + 
                   ", Binary, value=" + returnValue[0]);
          }

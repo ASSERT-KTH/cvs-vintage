@@ -12,13 +12,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 
 /**
  * SQLUtil helps with building sql statements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class SQLUtil {
    // =======================================================================
@@ -303,6 +306,162 @@ public class SQLUtil {
       return buf.toString();
    }   
 
+
+   // =======================================================================
+   //  Is [Not] Null Clause
+   //    columnName0 IS [NOT] NULL [AND columnName1 IS [NOT] NULL [...]]
+   // =======================================================================
+   
+   /**
+    * Returns identifier.columnName0 IS [NOT] NULL 
+    *    [AND identifier.columnName1 IS [NOT] NULL 
+    *    [AND identifier.columnName2 IS [NOT] NULL [...]]] 
+    */
+   public static String getIsNullClause(
+         boolean not, List fields, String identifier) {
+
+      StringBuffer buf = new StringBuffer();
+
+      List types = getJDBCTypes(fields);
+      for(Iterator iter = types.iterator(); iter.hasNext();) {
+         JDBCType type = (JDBCType)iter.next();
+         buf.append(getIsNullClause(not, type, identifier));
+         if(iter.hasNext()) {
+            buf.append(" AND ");
+         }
+      }
+      return buf.toString();
+   }   
+ 
+   /**
+    * Returns identifier.columnName0 IS [NOT] NULL 
+    *    [AND identifier.columnName1 IS [NOT] NULL 
+    *    [AND identifier.columnName2 IS [NOT] NULL [...]]] 
+    */
+   public static String getIsNullClause(
+         boolean not, JDBCFieldBridge field, String identifier) {
+
+      return getIsNullClause(not, field.getJDBCType(), identifier);
+   }
+
+   /**
+    * Returns identifier.columnName0 IS [NOT] NULL 
+    *    [AND identifier.columnName1 IS [NOT] NULL 
+    *    [AND identifier.columnName2 IS [NOT] NULL [...]]] 
+    */
+   public static String getIsNullClause(
+         boolean not, JDBCType type, String identifier) {
+
+      if(identifier.length() > 0) {
+         identifier += ".";
+      }
+
+      String[] columnNames = type.getColumnNames();
+
+      StringBuffer buf = new StringBuffer();
+      for(int i=0; i<columnNames.length; i++) {
+         if(i!=0) {
+            buf.append(" AND ");
+         }
+         buf.append(identifier).append(columnNames[i]);
+         buf.append(" IS");
+         if(not) {
+            buf.append(" NOT");
+         }
+         buf.append(" NULL");
+      }
+      return buf.toString();
+   }   
+
+   // =======================================================================
+   //  Join Clause
+   //    parent.pkColumnName0=child.fkColumnName0 
+   //    [AND parent.pkColumnName1=child.fkColumnName1 
+   //    [AND parent.pkColumnName2=child.fkColumnName2 [...]]] 
+   // =======================================================================
+
+   public static String getJoinClause(
+         JDBCCMRFieldBridge cmrField,
+         String parentAlias,
+         String childAlias) {
+
+      StringBuffer buf = new StringBuffer();
+
+      JDBCEntityBridge parentEntity = cmrField.getEntity();
+      JDBCEntityBridge childEntity = 
+            (JDBCEntityBridge)cmrField.getRelatedEntity();
+
+      JDBCCMPFieldBridge parentField;
+      JDBCCMPFieldBridge childField;
+      
+      if(cmrField.hasForeignKey()) {            
+
+         // parent has the foreign keys
+         List parentFkFields = cmrField.getForeignKeyFields();
+         for(Iterator iter = parentFkFields.iterator(); iter.hasNext(); ) {
+
+            parentField = (JDBCCMPFieldBridge)iter.next();
+            childField = childEntity.getCMPFieldByName(
+                  parentField.getFieldName());
+
+            buf.append(getJoinClause(
+                     parentField, parentAlias, childField, childAlias));
+
+            if(iter.hasNext()) {
+               buf.append(" AND ");
+            }
+         }   
+      } else {
+
+         // child has the foreign keys
+         List childFkFields = 
+               cmrField.getRelatedCMRField().getForeignKeyFields();
+         for(Iterator iter = childFkFields.iterator(); iter.hasNext(); ) {
+
+            childField = (JDBCCMPFieldBridge)iter.next();
+            parentField = parentEntity.getCMPFieldByName(
+                  childField.getFieldName());
+
+            // add the sql
+            buf.append(SQLUtil.getJoinClause(
+                  parentField, parentAlias, childField, childAlias));
+            if(iter.hasNext()) {
+               buf.append(" AND ");
+            }
+         }   
+      }
+      return buf.toString();
+   }
+
+   public static String getRelationTableJoinClause(
+         JDBCCMRFieldBridge cmrField,
+         String parentAlias,
+         String relationTableAlias) {
+
+      StringBuffer buf = new StringBuffer();
+
+      JDBCEntityBridge parentEntity = cmrField.getEntity();
+      JDBCCMPFieldBridge parentField;
+      JDBCCMPFieldBridge relationField;
+      
+      // parent to relation table join
+      List parentFields = cmrField.getTableKeyFields();
+      for(Iterator iter = parentFields.iterator(); iter.hasNext(); ) {
+         
+         relationField = (JDBCCMPFieldBridge)iter.next();
+         parentField = parentEntity.getCMPFieldByName(
+               relationField.getFieldName());
+         
+         buf.append(SQLUtil.getJoinClause(
+               parentField, parentAlias, relationField, relationTableAlias));
+         
+         if(iter.hasNext()) {
+            buf.append(" AND ");
+         }
+      }   
+      return buf.toString();
+   }
+
    /**
     * Returns parent.pkColumnName0=child.fkColumnName0 
     *    [AND parent.pkColumnName1=child.fkColumnName1 
@@ -376,6 +535,13 @@ public class SQLUtil {
       }
       return buf.toString();
    }   
+
+   // =======================================================================
+   //  Self Compare Where Clause
+   //    fromIdentifier.pkColumnName0=toIdentifier.fkColumnName0 
+   //    [AND fromIdentifier.pkColumnName1=toIdentifier.fkColumnName1 
+   //    [AND fromIdentifier.pkColumnName2=toIdentifier.fkColumnName2 [...]]] 
+   // =======================================================================
 
    public static String getSelfCompareWhereClause(
          List fields, String fromIdentifier, String toIdentifier) {
