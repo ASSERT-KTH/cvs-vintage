@@ -1,9 +1,9 @@
 /**
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
 
 
@@ -13,6 +13,7 @@ import javax.transaction.Transaction;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.InstancePool;
+import org.jboss.ejb.BeanLock;
 import org.jboss.metadata.ConfigurationMetaData;
 
 /**
@@ -29,47 +30,71 @@ import org.jboss.metadata.ConfigurationMetaData;
  *    before changing.
  *
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public class EntityMultiInstanceSynchronizationInterceptor
-   extends EntitySynchronizationInterceptor
+        extends EntitySynchronizationInterceptor
 {
    public void create()
-      throws Exception
+           throws Exception
    {
       super.create();
+   }
+
+   public void start()
+   {
+      if (!container.getLockManager().lockClass.equals(org.jboss.ejb.plugins.lock.NoLock.class))
+      {
+         throw new IllegalStateException("the <locking-policy> must be org.jboss.ejb.plugins.lock.NoLock for Instance Per Transaction:"
+                                          + container.getLockManager().lockClass.getName());
+      }
    }
 
    protected Synchronization createSynchronization(Transaction tx, EntityEnterpriseContext ctx)
    {
       return new MultiInstanceSynchronization(tx, ctx);
-   } 
+   }
    // Protected  ----------------------------------------------------
- 
+
    // Inner classes -------------------------------------------------
- 
-   protected class MultiInstanceSynchronization extends EntitySynchronizationInterceptor.InstanceSynchronization
+
+   protected class MultiInstanceSynchronization implements Synchronization
    {
+      /**
+       *  The transaction we follow.
+       */
+      protected Transaction tx;
+
+      /**
+       *  The context we manage.
+       */
+      protected EntityEnterpriseContext ctx;
+
       /**
        *  Create a new instance synchronization instance.
        */
       MultiInstanceSynchronization(Transaction tx, EntityEnterpriseContext ctx)
       {
-         super(tx, ctx);
+         this.tx = tx;
+         this.ctx = ctx;
       }
-  
+
       // Synchronization implementation -----------------------------
-  
+
+      public void beforeCompletion()
+      {
+         //synchronization is handled by GlobalTxEntityMap.
+      }
+
       public void afterCompletion(int status)
       {
          boolean trace = log.isTraceEnabled();
-   
+
          // This is an independent point of entry. We need to make sure the
          // thread is associated with the right context class loader
          ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
          Thread.currentThread().setContextClassLoader(container.getClassLoader());
-   
-         lock.sync();
+
          try
          {
             try
@@ -80,16 +105,16 @@ public class EntityMultiInstanceSynchronizationInterceptor
                   switch (commitOption)
                   {
                      // Keep instance cached after tx commit
-                  case ConfigurationMetaData.A_COMMIT_OPTION:
-                     throw new IllegalStateException("Commit option A not allowed with this Interceptor");
-                     // Keep instance active, but invalidate state
-                  case ConfigurationMetaData.B_COMMIT_OPTION:
-                     break;
-                     // Invalidate everything AND Passivate instance
-                  case ConfigurationMetaData.C_COMMIT_OPTION:
-                     break;
-                  case ConfigurationMetaData.D_COMMIT_OPTION:
-                     throw new IllegalStateException("Commit option A not allowed with this Interceptor");
+                     case ConfigurationMetaData.A_COMMIT_OPTION:
+                        throw new IllegalStateException("Commit option A not allowed with this Interceptor");
+                        // Keep instance active, but invalidate state
+                     case ConfigurationMetaData.B_COMMIT_OPTION:
+                        break;
+                        // Invalidate everything AND Passivate instance
+                     case ConfigurationMetaData.C_COMMIT_OPTION:
+                        break;
+                     case ConfigurationMetaData.D_COMMIT_OPTION:
+                        throw new IllegalStateException("Commit option A not allowed with this Interceptor");
                   }
                }
                try
@@ -97,29 +122,25 @@ public class EntityMultiInstanceSynchronizationInterceptor
                   if (ctx.getId() != null)
                      container.getPersistenceManager().passivateEntity(ctx);
                }
-               catch (Exception ignored) {}
+               catch (Exception ignored)
+               {
+               }
 
                container.getInstancePool().free(ctx);
             }
             finally
             {
-               if( trace )
-                  log.trace("afterCompletion, clear tx for ctx="+ctx+", tx="+tx);
+               if (trace)
+                  log.trace("afterCompletion, clear tx for ctx=" + ctx + ", tx=" + tx);
 
-               lock.endTransaction(tx);
-     
-               if( trace )
-                  log.trace("afterCompletion, sent notify on TxLock for ctx="+ctx);
             }
          } // synchronized(lock)
          finally
          {
-            lock.releaseSync();
-            container.getLockManager().removeLockRef(lock.getId());
-            Thread.currentThread().setContextClassLoader(oldCl);               
+            Thread.currentThread().setContextClassLoader(oldCl);
          }
       }
- 
+
    }
- 
+
 }
