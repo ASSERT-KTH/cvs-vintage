@@ -1,4 +1,4 @@
-// $Id: ArgoDiagram.java,v 1.21 2003/10/27 22:08:55 kataka Exp $
+// $Id: ArgoDiagram.java,v 1.22 2003/10/30 08:07:16 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,9 +48,9 @@ public class ArgoDiagram extends Diagram {
     // constructors
 
     public ArgoDiagram() { 
-  	  super();
-  	  // really dirty hack to remove unwanted listeners
-  	  _lay.getGraphModel().removeGraphEventListener(_lay);    
+        super();
+        // really dirty hack to remove unwanted listeners
+        getLayer().getGraphModel().removeGraphEventListener(getLayer());
     }
 
     public ArgoDiagram(String diagramName ) {
