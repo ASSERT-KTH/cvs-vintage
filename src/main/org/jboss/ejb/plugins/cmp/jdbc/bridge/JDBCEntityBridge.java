@@ -64,7 +64,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.48 $
+ * @version $Revision: 1.49 $
  */
 public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
@@ -924,20 +924,31 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
    {
       // only non pk fields are stored here at first and then later
       // the pk fields are added to the front (makes sql easier to read)
-      List cmpFieldsList = new ArrayList(metadata.getCMPFields().size());
+      List cmpFieldsMD = metadata.getCMPFields();
+      List cmpFieldsList = new ArrayList(cmpFieldsMD.size());
       // primary key cmp fields
-      List pkFieldsList = new ArrayList(metadata.getCMPFields().size());
+      List pkFieldsList = new ArrayList(cmpFieldsMD.size());
 
-      // create each field
-      Iterator iter = metadata.getCMPFields().iterator();
-      while(iter.hasNext())
+      // create pk fields
+      for(int i = 0; i < cmpFieldsMD.size(); ++i)
       {
-         JDBCCMPFieldMetaData cmpFieldMetaData = (JDBCCMPFieldMetaData)iter.next();
-         JDBCCMPFieldBridge cmpField = createCMPField(metadata, cmpFieldMetaData);
-         if(cmpField.isPrimaryKeyMember())
+         JDBCCMPFieldMetaData fieldMD = (JDBCCMPFieldMetaData)cmpFieldsMD.get(i);
+         if(fieldMD.isPrimaryKeyMember())
+         {
+            JDBCCMPFieldBridge cmpField = createCMPField(metadata, fieldMD);
             pkFieldsList.add(cmpField);
-         else
+         }
+      }
+
+      // create non-pk cmp fields
+      for(int i = 0; i < cmpFieldsMD.size(); ++i)
+      {
+         JDBCCMPFieldMetaData fieldMD = (JDBCCMPFieldMetaData)cmpFieldsMD.get(i);
+         if(!fieldMD.isPrimaryKeyMember())
+         {
+            JDBCCMPFieldBridge cmpField = createCMPField(metadata, fieldMD);
             cmpFieldsList.add(cmpField);
+         }
       }
 
       // save the pk fields in the pk field array
@@ -946,7 +957,7 @@ public class JDBCEntityBridge implements JDBCAbstractEntityBridge
          primaryKeyFields[i] = (JDBCCMPFieldBridge)pkFieldsList.get(i);
 
       // add the pk fields to the front of the cmp list, per guarantee above
-      cmpFields = new JDBCCMPFieldBridge[metadata.getCMPFields().size() - primaryKeyFields.length];
+      cmpFields = new JDBCCMPFieldBridge[cmpFieldsMD.size() - primaryKeyFields.length];
       int cmpFieldIndex = 0;
       for(int i = 0; i < cmpFieldsList.size(); ++i)
          cmpFields[cmpFieldIndex++] = (JDBCCMPFieldBridge)cmpFieldsList.get(i);
