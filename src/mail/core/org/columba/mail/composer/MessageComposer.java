@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.columba.addressbook.parser.ListParser;
 import org.columba.core.command.WorkerStatusController;
@@ -54,6 +55,10 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.parser.ParserException;
 
 public class MessageComposer {
+	/** JDK 1.4+ logging framework logger, used for logging. */
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.composer");
+
 	private ComposerModel model;
 
 	private int accountUid;
@@ -248,15 +253,13 @@ public class MessageComposer {
 	 * @author Karl Peder Olesen (karlpeder)
 	 */
 	private StreamableMimePart composeHtmlMimePart() {
+		// Init Mime-Header with Default-Values (text/html)
 		LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text",
 				"html"));
 
-		// Init Mime-Header with Default-Values (text/html)
 		// Set Default Charset or selected
 		String charsetName = model.getCharset().name();
 
-		//String charsetName = model.getCharsetName();
-		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		StringBuffer buf = new StringBuffer();
 		String body = model.getBodyText();
@@ -328,7 +331,16 @@ public class MessageComposer {
 		// add encoding if necessary
 		if (needQPEncoding(body)) {
 			bodyPart.getHeader().setContentTransferEncoding("quoted-printable");
+
+			// check if the charset is US-ASCII then there is something wrong
+			// -> switch to UTF-8 and write to log-file
+			if( charsetName.equalsIgnoreCase("us-ascii")){
+				charsetName = "UTF-8";
+				LOG.info("Charset was US-ASCII but text has 8-bit chars -> switched to UTF-8");
+			}
 		}
+
+		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		// to allow empty messages
 		if (body.length() == 0) {
@@ -351,15 +363,13 @@ public class MessageComposer {
 	 * @return The composed text/plain mime part
 	 */
 	private StreamableMimePart composeTextMimePart() {
+		// Init Mime-Header with Default-Values (text/plain)
 		LocalMimePart bodyPart = new LocalMimePart(new MimeHeader("text",
 				"plain"));
 
-		// Init Mime-Header with Default-Values (text/plain)
 		// Set Default Charset or selected
 		String charsetName = model.getCharset().name();
 
-		//String charsetName = model.getCharsetName();
-		bodyPart.getHeader().putContentParameter("charset", charsetName);
 
 		String body = model.getBodyText();
 
@@ -385,8 +395,18 @@ public class MessageComposer {
 
 		if (needQPEncoding(body)) {
 			bodyPart.getHeader().setContentTransferEncoding("quoted-printable");
+			
+			// check if the charset is US-ASCII then there is something wrong
+			// -> switch to UTF-8 and write to log-file
+			if( charsetName.equalsIgnoreCase("us-ascii")){
+				charsetName = "UTF-8";
+				LOG.info("Charset was US-ASCII but text has 8-bit chars -> switched to UTF-8");
+			}
 		}
-
+		
+		// write charset to header
+		bodyPart.getHeader().putContentParameter("charset", charsetName);
+		
 		// to allow empty messages
 		if (body.length() == 0) {
 			body = " ";
