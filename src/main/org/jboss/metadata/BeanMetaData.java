@@ -8,7 +8,6 @@
 package org.jboss.metadata;
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.invocation.InvocationType;
 import org.jboss.mx.util.ObjectNameFactory;
 import org.jboss.security.AnybodyPrincipal;
@@ -32,7 +31,7 @@ import java.util.*;
  * @author <a href="mailto:criege@riege.com">Christian Riege</a>
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>
  *
- * @version $Revision: 1.60 $
+ * @version $Revision: 1.61 $
  */
 public abstract class BeanMetaData
         extends MetaData
@@ -123,9 +122,6 @@ public abstract class BeanMetaData
    /** Any object names for services the bean depends on */
    private Collection depends = new LinkedList();
 
-   /** contains webservices service-refs */
-   private Object webservicesClient;
-
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -136,12 +132,6 @@ public abstract class BeanMetaData
    }
 
    // Public --------------------------------------------------------
-
-   public Object getWebservicesClient()
-   {
-      return webservicesClient;
-   }
-
 
    public boolean isSession()
    {
@@ -695,10 +685,6 @@ public abstract class BeanMetaData
          refMetaData.importEjbJarXml(resourceRef);
          resourceEnvReferences.put(refMetaData.getRefName(), refMetaData);
       }
-
-      // Parse webservices service-refs
-      WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-      webservicesClient = wscDeployer.createServiceRefs(element, application.getClassLoader());
    }
 
    public void importJbossXml(Element element) throws DeploymentException

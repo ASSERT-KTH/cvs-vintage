@@ -9,7 +9,6 @@ package org.jboss.web;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.deployment.DeploymentInfo;
-import org.jboss.deployment.WebserviceClientDeployer;
 import org.jboss.deployment.J2eeApplicationMetaData;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbUtil;
@@ -141,7 +140,7 @@ thread context ClassLoader as was used to dispatch the http service request.
    extends="org.jboss.deployment.SubDeployerMBean"
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public abstract class AbstractWebDeployer
 {
@@ -466,8 +465,6 @@ public abstract class AbstractWebDeployer
       String securityDomain = metaData.getSecurityDomain();
       log.debug("linkSecurityDomain");
       linkSecurityDomain(securityDomain, envCtx);
-      log.debug("linkWebserviceClients");
-      linkWebserviceClients(envCtx, di);
       log.debug("AbstractWebContainer.parseWebAppDescriptors, End");
    }
 
@@ -659,20 +656,6 @@ public abstract class AbstractWebDeployer
          Util.bind(envCtx, "security/realmMapping", new LinkRef(securityDomain));
          Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
          Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
-      }
-   }
-
-   /** This binds the webservices clients to the ENC. It does this if the deployment contains
-    * a WEB-INF/webservicesclient.xml, see the JSR109 spec for details.
-    */
-   protected void linkWebserviceClients(Context envCtx, DeploymentInfo di) throws NamingException, DeploymentException
-   {
-      // Bind webservice clients
-      WebMetaData metaData = (WebMetaData)di.metaData;
-      if (metaData.getWebservicesClient() != null)
-      {
-         WebserviceClientDeployer wscDeployer = new WebserviceClientDeployer();
-         wscDeployer.setupEnvironment(envCtx, di, metaData.getWebservicesClient());
       }
    }
 

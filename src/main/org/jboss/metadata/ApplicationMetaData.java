@@ -27,7 +27,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -63,8 +63,6 @@ public class ApplicationMetaData
    private String unauthenticatedPrincipal;
 
    private boolean enforceEjbRestrictions;
-   /** ClassLoader is needed for webservices service-ref to lookup wsdl and other required files */
-   private ClassLoader classLoader;
 
    public ApplicationMetaData(URL u)
    {
@@ -74,17 +72,6 @@ public class ApplicationMetaData
    public ApplicationMetaData()
    {
    }
-
-   public ClassLoader getClassLoader()
-   {
-      return classLoader;
-   }
-
-   public void setClassLoader(ClassLoader classLoader)
-   {
-      this.classLoader = classLoader;
-   }
-
 
    public URL getUrl()
    {

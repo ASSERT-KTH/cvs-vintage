@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  @author  Scott.Stark@jboss.org
  @author  Christoph.Jung@infor.de
  @author  Thomas.Diesler@arcor.de
- @version $Revision: 1.80 $
+ @version $Revision: 1.81 $
  */
 public abstract class AbstractWebContainer
    extends SubDeployerSupport
@@ -217,9 +217,9 @@ public abstract class AbstractWebContainer
          }
 
          WebMetaData metaData = new WebMetaData();
-         metaData.setWarClassLoader(di.localCl);
          metaData.setJava2ClassLoadingCompliance(this.java2ClassLoadingCompliance);
          di.metaData = metaData;
+         
          // Check for a loader-repository
          XmlFileLoader xfl = new XmlFileLoader();
          InputStream in = di.localCl.getResourceAsStream("WEB-INF/jboss-web.xml");
@@ -261,21 +261,6 @@ public abstract class AbstractWebContainer
       }
 
       log.debug("End init");
-   }
-
-   /** WARs do not have nested deployments except in the case of JSR109 
-    * metadata
-    * @param di
-    */
-   protected void processNestedDeployments(DeploymentInfo di) throws DeploymentException
-   {
-      // look for web service deployments
-      URL webServiceUrl=di.localCl.getResource("WEB-INF/webservices.xml");
-      if(webServiceUrl!=null) {
-         DeploymentInfo sub=new DeploymentInfo(webServiceUrl,di,getServer());
-         sub.localCl=di.localCl;
-         sub.localUrl=di.localUrl;
-      }   
    }
 
    public void create(DeploymentInfo di) throws DeploymentException

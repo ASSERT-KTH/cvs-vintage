@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.52 $</tt>
+ * @version <tt>$Revision: 1.53 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -410,8 +410,6 @@ public class EJBDeployer
    /**
     * This is here as a reminder that we may not want to allow ejb jars to
     * have arbitrary sub deployments. Currently we do.
-    * It is also here as a temporary solution to get JSR-109 simultaneous
-    * web service deployments going
     * @param di
     * @throws DeploymentException
     */
@@ -419,15 +417,6 @@ public class EJBDeployer
       throws DeploymentException
    {
       super.processNestedDeployments(di);
-
-      // look for web service deployments
-      URL webServiceUrl = di.localCl.getResource("META-INF/webservices.xml");
-      if(webServiceUrl != null)
-      {
-         DeploymentInfo sub = new DeploymentInfo(webServiceUrl,di,getServer());
-         sub.localCl = di.localCl;
-         sub.localUrl = di.localUrl;
-      }
    }
 
    public synchronized void create(DeploymentInfo di)
