@@ -1,5 +1,3 @@
  <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("$l10n.GlobalIssueTypes")</div>
  <div>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("$l10n.GlobalAttributes")</div>
-## the template is not actually viewed, the action resets it. This is a hack 
-## to keep the permission needed at a high level
- <div>$link.setPage("admin,GlobalArtifactTypeShow.vm").setAction("admin.UpdateSearchIndex").setLabel("$l10n.UpdateSearchIndex")</div>
+ <div>$link.setPage("admin,UpdateSearchIndex.vm").setLabel("$l10n.UpdateSearchIndex")</div>

@@ -8,8 +8,9 @@
 #set ($allowMAT = $link.isAllowed("admin,ManageArtifactTypes.vm"))
 #set ($allowMM = $link.isAllowed("admin,ManageModules.vm"))
 #set ($allowCP = $link.isAllowed("ChangePassword.vm"))
+#set ($allowUSI = $link.isAllowed("admin,UpdateSearchIndex.vm"))
 
-#if ($allowMUS || $allowAU || $allowMR || $allowAR || $allowGATS || $allowGAS || $allowMAT || $allowMM || $allowA || $allowCP)
+#if ($allowMUS || $allowAU || $allowMR || $allowAR || $allowGATS || $allowGAS || $allowMAT || $allowMM || $allowA || $allowCP || $allowUSI)
 
 #set ($adminMenu = $data.Parameters.getString($scarabG.Constant.CURRENT_ADMIN_MENU, ""))
 
@@ -18,7 +19,7 @@
  <strong>$link.setPage("admin,AdminIndex.vm").setLabel("$l10n.Admin")</strong></div>
 
 <div class="body">
-#if ($allowGATS || $allowGAS)
+#if ($allowGATS || $allowGAS || $allowUSI)
   #if ($adminMenu.equals("1"))
     <div><strong>$l10n.GlobalData</strong>
     $renderer.render("navigations", "GlobalAdmin.vm")
