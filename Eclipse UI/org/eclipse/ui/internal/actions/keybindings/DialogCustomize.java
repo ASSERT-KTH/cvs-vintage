@@ -4,6 +4,9 @@ All rights reserved.  This program and the accompanying materials
 are made available under the terms of the Common Public License v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/cpl-v10.html
+Contributors:
+Sebastian Davids <sdavids@gmx.de> - Fix for bug 19346 - Dialog font should be
+activated and used by other components.
 */
 
 package org.eclipse.ui.internal.actions.keybindings;
@@ -692,6 +695,7 @@ final class DialogCustomize extends Dialog {
 		GridData gridDataTable = new GridData(GridData.FILL_BOTH);
 		gridDataTable.heightHint = 100;		
 		table.setLayoutData(gridDataTable);
+		table.setFont(font);
 
 		TableColumn tableColumn = new TableColumn(table, SWT.NULL, 0);
 		tableColumn.setResizable(false);
