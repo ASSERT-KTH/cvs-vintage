@@ -69,21 +69,22 @@ public class FullNameDialog extends JDialog implements ActionListener {
         
         pack();
         setLocationRelativeTo(null);
+        updateComponents(true);
     }
     
     public void updateComponents(boolean b) {
         if (b) {
-            titleTextField.setText(contact.get(VCARD.N, VCARD.N_PREFIX));
-            lastnameTextField.setText(contact.get(VCARD.N, VCARD.N_FAMILY));
-            fornameTextField.setText(contact.get(VCARD.N, VCARD.N_GIVEN));
-            middlenameTextField.setText(contact.get(VCARD.N, VCARD.N_MIDDLE));
-            suffixTextField.setText(contact.get(VCARD.N, VCARD.N_SUFFIX));
+            titleTextField.setText(contact.get(VCARD.N_PREFIX));
+            lastnameTextField.setText(contact.get(VCARD.N_FAMILY));
+            fornameTextField.setText(contact.get(VCARD.N_GIVEN));
+            middlenameTextField.setText(contact.get(VCARD.N_MIDDLE));
+            suffixTextField.setText(contact.get(VCARD.N_SUFFIX));
         } else {
-            contact.set(VCARD.N, VCARD.N_PREFIX, titleTextField.getText());
-            contact.set(VCARD.N, VCARD.N_FAMILY, lastnameTextField.getText());
-            contact.set(VCARD.N, VCARD.N_GIVEN, fornameTextField.getText());
-            contact.set(VCARD.N, VCARD.N_MIDDLE, middlenameTextField.getText());
-            contact.set(VCARD.N, VCARD.N_SUFFIX, suffixTextField.getText());
+            contact.set(VCARD.N_PREFIX, titleTextField.getText());
+            contact.set(VCARD.N_FAMILY, lastnameTextField.getText());
+            contact.set(VCARD.N_GIVEN, fornameTextField.getText());
+            contact.set(VCARD.N_MIDDLE, middlenameTextField.getText());
+            contact.set(VCARD.N_SUFFIX, suffixTextField.getText());
         }
     }
     
@@ -166,6 +167,7 @@ public class FullNameDialog extends JDialog implements ActionListener {
         Object source = event.getSource();
         if (source == okButton) {
             setFormattedName();
+            updateComponents(false);
         }
         setVisible(false);
     }

@@ -88,7 +88,7 @@ public class IdentityPanel extends JPanel implements ActionListener {
 
     public void updateComponents(boolean b) {
         emailComboBox.updateComponents(b);
-
+				
         if (b) {
             nameTextField.setText(contact.formatGet(VCARD.FN));
             
