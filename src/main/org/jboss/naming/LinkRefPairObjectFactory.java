@@ -21,7 +21,7 @@ import org.jboss.util.id.GUID;
  * in the local virtual machine versus remote virtual machines
  *  
  * @author Adrian Brock (adrian@jboss.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LinkRefPairObjectFactory implements ObjectFactory
 {
@@ -29,9 +29,6 @@ public class LinkRefPairObjectFactory implements ObjectFactory
 
    /** The logger */
    private static final Logger log = Logger.getLogger(LinkRefPairObjectFactory.class);
-
-   /** Serial version UID */
-   //private static final long serialVersionUID = -5386290613498931298L;
    
    /** Our class name */
    static final String className = LinkRefPairObjectFactory.class.getName();

@@ -19,14 +19,14 @@ import org.jboss.logging.Logger;
  * the other in remote machines. 
  *   
  * @author Adrian Brock (adrian@jboss.com)
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class LinkRefPair extends Reference
 {
    // Constants -----------------------------------------------------
 
    /** Serial version UID */
-   //private static final long serialVersionUID = -5386290613498931298L;
+   private static final long serialVersionUID = 6036946190113161492L;
    
    /** Our class name */
    private static final String linkRefPairClassName = LinkRefPair.class.getName();
