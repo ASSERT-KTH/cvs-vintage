@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.4 2001/08/24 01:15:18 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2001/08/24 01:15:18 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/modules/server/JNIEndpoint.java,v 1.5 2001/08/25 18:15:17 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/08/25 18:15:17 $
  *
  * ====================================================================
  *
@@ -121,6 +121,21 @@ public class JNIEndpoint {
 	return ep;
     }
 
+    public static final int DEFAULT_TIMEOUT=60*1000;
+    
+    public static int getTimeout() {
+	// # 3086
+	String to=System.getProperty("JNIEndpoint.timeout");
+	if( to!=null ) {
+	    try {
+		int i=new Integer( to ).intValue();
+		return i;
+	    } catch( Exception ex ){
+		System.out.println("Invalid timeout " + to );
+	    }
+	}
+	return DEFAULT_TIMEOUT;
+    }
 
     // -------------------- JNI Entry points
 
@@ -154,7 +169,7 @@ public class JNIEndpoint {
 	    System.err.println("Starting up StartupThread");
             startup.start();
             synchronized (this) {
-                wait(60*1000);
+                wait(getTimeout());
             }
 	    System.err.println("End waiting");
         } catch(Throwable t) {
