@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.28 2003/11/11 21:54:08 linus Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.29 2004/04/22 20:43:08 d00mst Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -107,7 +107,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
      */
     public boolean shouldBeEnabled() {
 
-        Object target = TargetManager.getInstance().getTarget();
+        Object target = TargetManager.getInstance().getModelTarget();
         if (org.argouml.model.ModelFacade.isANamespace(target))
             return isValidNamespace(target);
         else
