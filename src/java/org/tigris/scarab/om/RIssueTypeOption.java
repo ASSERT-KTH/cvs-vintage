@@ -90,4 +90,19 @@ public  class RIssueTypeOption
                 //rmos.add(rmo);
             }
     }
+
+    /**
+     * Copies this object's properties.
+     */
+    public RIssueTypeOption copyRio()
+         throws Exception
+    {                
+        RIssueTypeOption rio = new RIssueTypeOption();
+        rio.setIssueTypeId(getIssueTypeId());
+        rio.setOptionId(getOptionId());
+        rio.setActive(getActive());
+        rio.setOrder(getOrder());
+        rio.setWeight(getWeight());
+        return rio;
+    }
 }

@@ -120,4 +120,20 @@ public  class RIssueTypeAttribute
             }
     }
 
+    /**
+     * Copies this object's properties.
+     */
+    public RIssueTypeAttribute copyRia( )
+         throws Exception
+    {                
+        RIssueTypeAttribute ria = new RIssueTypeAttribute(); 
+        ria.setIssueTypeId(getIssueTypeId());
+        ria.setAttributeId(getAttributeId());
+        ria.setActive(getActive());
+        ria.setRequired(getRequired());
+        ria.setOrder(getOrder());
+        ria.setQuickSearch(getQuickSearch());
+        ria.setDefaultTextFlag(getDefaultTextFlag());
+        return ria;
+    }
 }
