@@ -9,3 +9,5 @@ junit*.properties
 .tomcatplugin
 .classpath
 .project
+local-*
+build.properties
