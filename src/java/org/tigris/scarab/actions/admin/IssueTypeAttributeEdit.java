@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.3 2002/09/29 18:57:30 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.4 2002/10/23 21:40:53 jon Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -160,7 +160,6 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
                                          TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         IssueType issueType = scarabR.getIssueType();
 
