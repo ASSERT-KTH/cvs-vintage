@@ -58,7 +58,7 @@ import org.jboss.util.Sync;
  *    
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -72,6 +72,10 @@ import org.jboss.util.Sync;
  * <ol>
  *   <li>Fix a thread starvation problem due to incomplete condition notification
  *   <li>Add support for trace level diagnositics
+ * </ol>
+ * <p><b>2001/07/12: starksm</b>
+ * <ol>
+ *   <li>Handle a race condition when there is no ctx transaction
  * </ol>
 
  */
@@ -148,6 +152,7 @@ public class EntityInstanceInterceptor
 		
       // And it must correspond to the key.
       CacheKey key = (CacheKey) mi.getId();
+      Transaction tx = null;
       boolean trace = log.isTraceEnabled();
       if( trace )
          log.trace("Begin invoke, key="+key);
@@ -161,8 +166,10 @@ public class EntityInstanceInterceptor
          // Is the instance involved with another transaction? if so we implement pessimistic locking
          synchronized(ctx.getTxLock()) 
          {
-            Transaction tx = ctx.getTransaction();
-				
+            tx = ctx.getTransaction();
+            if( trace )
+               log.trace("Checking tx on ctx="+ctx+", tx="+tx);
+
             // Do we have a running transaction with the context?
             if (tx != null &&
                 // And are we trying to enter with another transaction?
@@ -193,19 +200,31 @@ public class EntityInstanceInterceptor
               In future versions we can use copies of the instance per transaction
             */
          }
-			
-         // The next test is the pure serialization from the EJB specification.  
+
+         // The next test is the pure serialization from the EJB specification.
+         // If we are here we either did not have a tx(tx == null) or this is a
+         // recursive call and the current ctx.tx == mi.tx
          synchronized(ctx) 
          {
-            if( trace )
-               log.trace("Begin synchronized(ctx), ctx="+ctx);		
             // synchronized is a time gap, when the thread enters here it can be after "sleep"
             // we need to make sure that stuff is still kosher
-				
-            // Maybe my transaction already expired?
-            if (mi.getTransaction() != null && mi.getTransaction().getStatus() == Status.STATUS_MARKED_ROLLBACK)
+
+            // First make sure another thread who saw a null tx has not already assigned a new tx
+            if( tx == null && ctx.getTransaction() != null )
             {
-               log.error("Saw rolled back tx="+mi.getTransaction());
+               ctx = null;
+               if( trace )
+                  log.trace("End synchronized(ctx), ctx="+ctx+", lost ctx.tx race");		
+               continue;
+            }
+
+            // Maybe my transaction already expired?
+            Transaction miTx = mi.getTransaction();
+            if( trace )
+               log.trace("Begin synchronized(ctx), ctx="+ctx+", mi.tx="+miTx);
+            if (miTx != null && miTx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+            {
+               log.error("Saw rolled back tx="+miTx);
                throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
             }
             // We do not use pools any longer so the only thing that can happen is that 
@@ -271,9 +290,9 @@ public class EntityInstanceInterceptor
             }
 
             // The transaction is associated with the ctx while we own the lock 
-            ctx.setTransaction(mi.getTransaction());
+            ctx.setTransaction(miTx);
             if( trace )
-               log.trace("End synchronized(ctx), ctx="+ctx);		
+               log.trace("End synchronized(ctx), ctx="+ctx+", set tx="+miTx);
 
          }// end sychronized(ctx)
          if( trace )
@@ -285,8 +304,8 @@ public class EntityInstanceInterceptor
 		
       boolean exceptionThrown = false;
 		
-      try {
-			
+      try
+      {	
          // Go on, you won
          if( trace )
             log.trace("Begin next invoker");
@@ -320,9 +339,7 @@ public class EntityInstanceInterceptor
                ctx.unlock();
                if( trace )
                   log.trace("Ending invoke, unlock ctx="+ctx);
-
-               Transaction tx = ctx.getTransaction();
-					
+				
                // If an exception has been thrown, 
                if (exceptionThrown && 					
                    // if tx, the ctx has been registered in an InstanceSynchronization. 
