@@ -8,11 +8,11 @@ REM  the correct version is being used with the correct configuration.
 REM
 REM  ======================================================================
 REM
-REM $Id: build.bat,v 1.2 2001/09/01 15:50:33 slaboure Exp $
+REM $Id: build.bat,v 1.3 2001/09/12 00:49:55 user57 Exp $
 REM
 REM Authors:
 REM     Jason Dillon <jason@planet57.com>
-REM     Sacha Labourey  <sacha.labourey@cogito-info.ch>
+REM     Sacha Labourey <sacha.labourey@cogito-info.ch>
 REM
 
 REM ******************************************************
@@ -27,6 +27,12 @@ SETLOCAL
 
 set CLASSPATH=
 set ANT_HOME=
+set JAXP_DOM_FACTORY=org.apache.crimson.jaxp.DocumentBuilderFactoryImpl
+set JAXP_SAX_FACTORY=org.apache.crimson.jaxp.SAXParserFactoryImpl
+REM set JAXP_DOM_FACTORY=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+REM set JAXP_SAX_FACTORY=org.apache.xerces.jaxp.SAXParserFactoryImpl
+
+set ANT_OPTS=-Djavax.xml.parsers.DocumentBuilderFactory=%JAXP_DOM_FACTORY% -Djavax.xml.parsers.SAXParserFactory=%JAXP_SAX_FACTORY%
 
 REM ******************************************************
 REM - "for" loops have been unrolled for compatibility
@@ -84,3 +90,5 @@ echo Calling %1 %2 %3 %4 %5 %6 %7 %8
 call %1 %2 %3 %4 %5 %6 %7 %8
 
 :end
+
+pause
