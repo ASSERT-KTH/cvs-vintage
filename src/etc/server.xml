@@ -201,7 +201,7 @@
                               by default report Tomcat Web Server ...
                               set an empty string to avoid sending server header 
         -->
-        <!-- Uncomment this if useing a 1.1 JDK
+        <!-- Uncomment this if using a 1.3 or lower JDK
         <Http10Connector   port="8080" 
 			   secure="false"
 			   maxThreads="100"
