@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $header$
+// $Id: ActionAddExtendExtensionPoint.java,v 1.5 2002/12/29 20:33:45 kataka Exp $
 package org.argouml.uml.ui.behavior.use_cases;
 
 import java.util.Vector;
