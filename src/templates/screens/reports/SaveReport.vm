@@ -24,7 +24,7 @@ $page.setTitle("Save Report")
 
 #*
 <p>
-Go to your <a href="$link.setPage("ReportList.vm")">Stored Reports List</a>.
+Go to your $link.setPage("ReportList.vm").setLabel("Stored Reports List").
 </p>
 *#
 

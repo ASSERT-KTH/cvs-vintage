@@ -1,7 +1,7 @@
 #**
 
 @author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
-@version $Id: FluxGroupList.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+@version $Id: FluxGroupList.vm,v 1.2 2002/01/04 23:16:57 jmcnally Exp $
 
 *#
 
@@ -26,7 +26,7 @@ $page.setBgColor($ui.bgcolor)
           </td>
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("group,FluxGroupList.vm")">find</a>
+              $link.setPage("group,FluxGroupList.vm").setLabel("find")
             </font>
           </td>
         </form>
@@ -50,8 +50,8 @@ $page.setBgColor($ui.bgcolor)
           #entryCell ($group.Name)
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("group,FluxGroupForm.vm").addPathInfo("name",$group.Name).addQueryData("mode","modify")">Details</a> &nbsp;
-              <a href="$link.setPage("group,FluxGroupForm.vm").addPathInfo("name",$group.Name).addQueryData("mode","delete")">Remove</a>
+              $link.setPage("group,FluxGroupForm.vm").addPathInfo("name",$group.Name).addQueryData("mode","modify").setLabel("Details") &nbsp;
+              $link.setPage("group,FluxGroupForm.vm").addPathInfo("name",$group.Name).addQueryData("mode","delete").setLabel("Remove")
             </font>
           </td>
         </tr>
@@ -62,7 +62,7 @@ $page.setBgColor($ui.bgcolor)
   <tr>
     <td>
       <font face="$ui.sansSerifFonts">
-        <a href="$link.setPage("group,FluxGroupForm.vm").addQueryData("mode","insert")">Add Group</a>
+        $link.setPage("group,FluxGroupForm.vm").addQueryData("mode","insert").setLabel("Add Group")
       </font>
     <td>
   </tr>

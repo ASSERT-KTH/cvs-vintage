@@ -1,20 +1,20 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
 
-<div><strong><a href="$link.setPage("SelectArtifactType.vm")">Artifact types</a></strong>
+<div><strong>$link.setPage("SelectArtifactType.vm").setLabel("Artifact types")</strong>
 #foreach($issueType in $issueTypes)
   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
   #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><small><strong>$rmit.DisplayText</strong></small>
-    <div><small>#if ($scarabR.CurrentModule.Dedupe)<a href="$link.setPage("entry,Wizard1.vm")">#else<a href="$link.setPage("entry,Wizard3.vm")">#end Enter new</a></small></div>
-##    <div><small><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></small></div>
-##    <div><small><a href="$link.setPage("Search.vm")">Custom Query</a></small></div>
-    <div><small><a href="$link.setPage("QueryList.vm")">Saved queries</a></small></div>
-    <div><small><a href="$link.setPage("TemplateList.vm")">Template list</a></small></div>
-    <div><small><a href="$link.setPage("reports,Step1.vm")">New report</a></small></div>
+    <div><small>#if ($scarabR.CurrentModule.Dedupe)<a href="$link.setPage("entry,Wizard1.vm")">#else$link.setPage("entry,Wizard3.vm").setLabel("#end Enter new")</small></div>
+##    <div><small>$link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")</small></div>
+##    <div><small>$link.setPage("Search.vm").setLabel("Custom Query")</small></div>
+    <div><small>$link.setPage("QueryList.vm").setLabel("Saved queries")</small></div>
+    <div><small>$link.setPage("TemplateList.vm").setLabel("Template list")</small></div>
+    <div><small>$link.setPage("reports,Step1.vm").setLabel("New report")</small></div>
     <div><small>Saved reports</small></div></div>
   #else
-    <div><small><a href="$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId")">$rmit.DisplayText</a></small></div>
+    <div><small>$link.setPage("$scarabR.convertPath($data.Target)").setAction("SelectIssueType").addPathInfo("nextTemplate", $scarabR.convertPath($data.Target)).addPathInfo("newissuetype", "$issueType.IssueTypeId").setLabel("$rmit.DisplayText")</small></div>
   #end
 #end
 </div>

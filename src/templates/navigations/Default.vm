@@ -1,8 +1,8 @@
 <div><strong>
 #if ($data.User.hasLoggedIn())
-    <a href="$link.setPage("SelectModule.vm")">Select Module</a>
+    $link.setPage("SelectModule.vm").setLabel("Select Module")
 #else
-    <a href="$link.setPage("Login.vm")">Login</a>
+    $link.setPage("Login.vm").setLabel("Login")
 #end
 </strong></div>
 
@@ -11,6 +11,6 @@ $renderer.render("navigations", $data, "ArtifactTypes.vm")
 
 <div><strong>
 #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $scarabR.CurrentModule))
-  <a href="$link.setPage("admin,AdminIndex.vm")">Admin</a>
+  $link.setPage("admin,AdminIndex.vm").setLabel("Admin")
 #end
 </strong></div>

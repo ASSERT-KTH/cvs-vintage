@@ -62,7 +62,7 @@
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  #if ($scarabR.hasPermission($scarabG.Permission.DOMAIN__EDIT))
- <td><a href="$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId)">$attribute.Name</a></td>
+ <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
  #else
  <td>$attribute.Name</td>
  #end

@@ -33,7 +33,7 @@ $page.setTitle("Manage artifact types")
 #set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
 #indexedRows($velocityCount)
 <td><input type="checkbox" name="delete_$rmit.IssueTypeId"/></td>
-<td><a href="$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId)">#if ($rmit.DisplayName)${rmit.DisplayName}#else${rmit.IssueType.Name}#end</a></td>
+<td>$link.setPage("admin,ArtifactTypeEdit.vm").addPathInfo("issueTypeId", $rmit.IssueTypeId).setLabel("#if ($rmit.DisplayName)${rmit.DisplayName}#else${rmit.IssueType.Name}#end")</td>
 <td>#booleanCheckbox ($rmitGroup.Active)</td>
 <td>#booleanCheckbox ($rmitGroup.Display)</td>
 <td>#numericSelect( $rmitGroup.Order.Key 1 5 $rmit.Order 1 )</td>

@@ -40,7 +40,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
       #end
     #end
 </td>
-<td><a href="$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id")">$attribute.Name</a></td>
+<td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
 <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
 #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
 <td><a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a></td>

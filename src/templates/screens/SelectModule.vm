@@ -60,7 +60,7 @@ $page.setTitle("Select Module")
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
-<a href="$link.setPage("SelectModule.vm").setAction("SelectModule").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$tmpNext").addPathInfo("newmodule", "$module.ModuleId")">$module.Name</a>
+$link.setPage("SelectModule.vm").setAction("SelectModule").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$tmpNext").addPathInfo("newmodule", "$module.ModuleId").setLabel("$module.Name")
 </td>
 <td>
 $module.Description
@@ -73,7 +73,7 @@ $module.Description
 #else
 <p><strong class="alert">
 Sorry, you do not have access to select any other modules. Please
-<a href="$link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm")">Login</a> with an account that
+$link.setPage("Login.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Login") with an account that
 has permissions to select a Module.
 </strong></p>
 #end

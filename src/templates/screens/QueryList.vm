@@ -10,8 +10,8 @@ $page.setTitle("Stored query list")
 <div class="tabs">
 <table cellpadding="3" cellspacing="0" border="0">
 <tr>
-	<td><a href="$link.setPage("AdvancedQuery.vm")" title="view advanced query">Advanced query</a></td>
-	<td><a href="$link.setPage("Search.vm")" title="view custom search">Custom</a></td>
+	<td>$link.setPage("AdvancedQuery.vm")" title="view advanced query.setLabel("Advanced query")</td>
+	<td>$link.setPage("Search.vm")" title="view custom search.setLabel("Custom")</td>
 	<th>Saved queries</th>
 </tr>
 </table>
@@ -20,7 +20,7 @@ $page.setTitle("Stored query list")
 #if ($module.getAllUserQueries($user, $issueType).isEmpty())
 <h3>Saved queries</h3>
  <p><strong class="alert">There are no stored queries.
- Please go to <a href="$link.setPage("AdvancedQuery.vm")">Advanced query</a>
+ Please go to $link.setPage("AdvancedQuery.vm").setLabel("Advanced query")
  to create a new stored query.</strong></p>
 
 #else

@@ -27,9 +27,9 @@
         <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
         <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
      <small>
-      <a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a>&#160;|&#160;
-      <a href="$link.setPage("Search.vm")">Custom Query</a>&#160;|&#160;
-      <a href="$link.setPage("IssueList.vm")">Issue List</a>
+      $link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")&#160;|&#160;
+      $link.setPage("Search.vm").setLabel("Custom Query")&#160;|&#160;
+      $link.setPage("IssueList.vm").setLabel("Issue List")
      </small>
 </form>
 

@@ -4,11 +4,11 @@
 ## Main menu for the Turbine administration application.
 ## -----------------------------------------------------------------------
 <font size="-1" face="$ui.sansSerifFonts">
-  <a href="$link.setPage("user,FluxUserList.vm")">Users</a>
+  $link.setPage("user,FluxUserList.vm").setLabel("Users")
   |
-  <a href="$link.setPage("group,FluxGroupList.vm")">Groups</a>
+  $link.setPage("group,FluxGroupList.vm").setLabel("Groups")
   |
-  <a href="$link.setPage("role,FluxRoleList.vm")">Roles</a>
+  $link.setPage("role,FluxRoleList.vm").setLabel("Roles")
   |
-  <a href="$link.setPage("permission,FluxPermissionList.vm")">Permissions</a>
+  $link.setPage("permission,FluxPermissionList.vm").setLabel("Permissions")
 </font>

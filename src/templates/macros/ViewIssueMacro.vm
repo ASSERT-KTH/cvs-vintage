@@ -222,12 +222,12 @@
     #foreach ($parent in $currentIssue.Parents)
       #indexedRows($velocityCount)
       <td>
-      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId)">$parent.UniqueId</a>
+      $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")
       </td>
       #set ($parentAttrValues = $parent.AllAttributeValuesMap)
       #set ($attVal = $parentAttrValues.get("SUMMARY"))
       <td>
-      <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId)">$attVal.Value</a>
+      $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$attVal.Value")
       </td>
       <td>
       #if ($canEdit)
@@ -269,12 +269,12 @@
    #foreach ($child in $currentIssue.Children)
     #indexedRows($velocityCount)
     <td>
-    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId)">$child.UniqueId</a>
+    $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")
     </td>
     #set ($childAttrValues = $child.AllAttributeValuesMap)
     #set ($attVal = $childAttrValues.get("SUMMARY"))
     <td>
-    <a href="$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId)">$attVal.Value</a>
+    $link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$attVal.Value")
     </td>
     <td>
     #if ($canEdit)

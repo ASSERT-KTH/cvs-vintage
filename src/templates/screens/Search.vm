@@ -117,7 +117,7 @@ $page.setTitle("Custom Search")
 </div>
 
 #if ($scarabR.hasPermission($scarabG.Permission.MODULE__EDIT, $module))
-<p><a href="$link.setPage("admin,ModuleAttributeEdit.vm")">edit custom search</a></p>
+<p>$link.setPage("admin,ModuleAttributeEdit.vm").setLabel("edit custom search")</p>
 #end
 
 <p class="functnbar2"><input type="submit" value="Search" name="eventSubmit_doSearch" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" /></p>

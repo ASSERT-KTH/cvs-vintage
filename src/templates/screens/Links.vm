@@ -6,44 +6,44 @@ $page.setTitle("Scarab Links")
 
 <h3>Site Pages</h3>
 <ul>
-<li><a href="$link.setPage("Index.vm")">Index.vm</a></li>
-<li><a href="$link.setPage("Register.vm")">Register.vm</a></li>
-<li><a href="$link.setPage("Login.vm")">Login.vm</a></li>
-<li><a href="$link.setPage("ChangePassword.vm")">ChangePassword.vm</a></li>
-<li><a href="$link.setPage("IssueList.vm")">IssueList.vm</a></li>
-<li><a href="$link.setPage("Search.vm")">Custom Query</a></li>
-<li><a href="$link.setPage("AdvancedQuery.vm")">Advanced Query</a></li>
-<li><a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a></li>
-<li><a href="$link.setPage("entry,Wizard3.vm")">Enter Issue (one-step)</a></li>
-<li><a href="$link.setPage("ConfigureIssueList.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Links.vm")">Configure Issue List</a></li>
-<li><a href="$link.setPage("MoveIssue.vm").addPathInfo("id",1)">Move/Copy Issue?id=1</a></li>
-<li><a href="$link.setPage("QueryList.vm")">Stored Query List</a></li>
-<li><a href="$link.setPage("SaveTemplate.vm")">Create Enter Issue Template</a></li>
-<li><a href="$link.setPage("TemplateList.vm")">Enter Issue Template List</a></li>
-<li><a href="$link.setPage("reports,Step1.vm")">Reports</a></li>
-<li><a href="$link.setPage("Approval.vm")">Approval.vm</a></li>
-<li><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", 1)">ViewIssue.vm?id=1</a></li>
+<li>$link.setPage("Index.vm").setLabel("Index.vm")</li>
+<li>$link.setPage("Register.vm").setLabel("Register.vm")</li>
+<li>$link.setPage("Login.vm").setLabel("Login.vm")</li>
+<li>$link.setPage("ChangePassword.vm").setLabel("ChangePassword.vm")</li>
+<li>$link.setPage("IssueList.vm").setLabel("IssueList.vm")</li>
+<li>$link.setPage("Search.vm").setLabel("Custom Query")</li>
+<li>$link.setPage("AdvancedQuery.vm").setLabel("Advanced Query")</li>
+<li>$link.setPage("entry,Wizard1.vm").setLabel("Enter Issue")</li>
+<li>$link.setPage("entry,Wizard3.vm").setLabel("Enter Issue (one-step)")</li>
+<li>$link.setPage("ConfigureIssueList.vm").addPathInfo("$scarabG.Constant.NEXT_TEMPLATE", "Links.vm").setLabel("Configure Issue List")</li>
+<li>$link.setPage("MoveIssue.vm").addPathInfo("id",1).setLabel("Move/Copy Issue?id=1")</li>
+<li>$link.setPage("QueryList.vm").setLabel("Stored Query List")</li>
+<li>$link.setPage("SaveTemplate.vm").setLabel("Create Enter Issue Template")</li>
+<li>$link.setPage("TemplateList.vm").setLabel("Enter Issue Template List")</li>
+<li>$link.setPage("reports,Step1.vm").setLabel("Reports")</li>
+<li>$link.setPage("Approval.vm").setLabel("Approval.vm")</li>
+<li>$link.setPage("ViewIssue.vm").addPathInfo("id", 1).setLabel("ViewIssue.vm?id=1")</li>
 </ul>
 
 <h3>Admin Pages</h3>
 <ul>
 <li>
- <a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">admin,GlobalArtifactTypeShow.vm</a>
+ $link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("admin,GlobalArtifactTypeShow.vm")
 </li>
 <li>
- <a href="$link.setPage("admin,GlobalAttributeShow.vm")">admin,GlobalAttributeShow.vm</a>
+ $link.setPage("admin,GlobalAttributeShow.vm").setLabel("admin,GlobalAttributeShow.vm")
 </li>
 <li>
- <a href="$link.setPage("admin,ManageArtifactTypes.vm")">admin,ManageArtifactTypes.vm</a>
+ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("admin,ManageArtifactTypes.vm")
 </li>
 <li>
- <a href="$link.setPage("admin,ManageModules.vm")">admin,ManageModules.vm</a>
+ $link.setPage("admin,ManageModules.vm").setLabel("admin,ManageModules.vm")
 </li>
 <li>
- <a href="$link.setPage("admin,XMLExportSelect.vm")">admin,XMLExportSelect.vm</a>
+ $link.setPage("admin,XMLExportSelect.vm").setLabel("admin,XMLExportSelect.vm")
 </li>
 <li>
- <a href="$link.setPage("admin,AdminIndex.vm")">New Administrator Piece Index</a> (replacement for Flux)
+ $link.setPage("admin,AdminIndex.vm").setLabel("New Administrator Piece Index") (replacement for Flux)
 </li>
 </ul>
 

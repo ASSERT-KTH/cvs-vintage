@@ -10,7 +10,7 @@ $page.setTitle("Confirm new account information")
 
 <p><strong class="alert">
 There has been an error locating the required information. Please go
-back to the <a href="$link.setPage("Register.vm")">Registration</a> page
+back to the $link.setPage("Register.vm").setLabel("Registration") page
 and try again.</strong>
 </p>
 

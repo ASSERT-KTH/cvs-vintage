@@ -10,7 +10,7 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
 <h2>$page.Title</h2>
 
 #if (!$issueTypeId)
-<p class="alert">Artifact type not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
+<p class="alert">Artifact type not found. Please click $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #else
 #set ($groups = $issueType.getAttributeGroups($module))
 #set ($rmit= $module.getRModuleIssueType($issueType))
@@ -101,7 +101,7 @@ $page.setTitle("Edit Artifact Type '$issueType.Name'")
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
   #indexedRows($velocityCount)
   <td><input type="checkbox" name="delete_group_$group.AttributeGroupId" /></td>
-  <td><a href="$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId)">$group.Name</a></td>
+  <td>$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId).setLabel("$group.Name")</td>
   <td>#booleanCheckbox ($agGroup.Active)</td>
   <td>
   #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)</td> </tr>

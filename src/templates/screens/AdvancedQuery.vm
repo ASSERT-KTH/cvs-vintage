@@ -25,7 +25,7 @@ $page.setTitle("Advanced query")
        #foreach ($query in $globalQueries)
         <option value="$query.QueryId">$query.Name</option>
        #end
-  </select>&#160;<input type="submit" value="select" name="eventSubmit_doRunstoredquery" /> &#160;<a href="$link.setPage("QueryList.vm")">Saved query list</a>
+  </select>&#160;<input type="submit" value="select" name="eventSubmit_doRunstoredquery" /> &#160;$link.setPage("QueryList.vm").setLabel("Saved query list")
 </td>
 </form>
 </tr>

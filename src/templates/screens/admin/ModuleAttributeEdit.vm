@@ -9,7 +9,7 @@ $page.setTitle("Edit Module Attribute '$attribute.Name'")
 <h2>$page.Title</h2>
 
 #if (!$attType)
-<p class="alert">Attribute not found. Please click <a href="$link.setPage("admin,ManageArtifactTypes.vm")">here</a> to proceed.</p>
+<p class="alert">Attribute not found. Please click $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.</p>
 #else
 #set ($groups = $issueType.getAttributeGroups($module))
 

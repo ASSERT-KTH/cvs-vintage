@@ -31,9 +31,9 @@
    #end
    <div>
     #if ($data.User.hasLoggedIn())
-    <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
+    $link.setPage("Login.vm").setAction("Logout").setLabel("Logout")
     #else
-    <a href="$link.setPage("Login.vm")">Login</a>
+    $link.setPage("Login.vm").setLabel("Login")
     #end
    </div>
   </div>
@@ -45,7 +45,7 @@
 #if ($scarabR.CurrentModule)
 <div class="modbar">
   <small><strong>Current Module:
-   <a href="$link.setPage("SelectModule.vm")">$scarabR.CurrentModule.Name</a>
+   $link.setPage("SelectModule.vm").setLabel("$scarabR.CurrentModule.Name")
   </strong></small>
 </div>
 #end

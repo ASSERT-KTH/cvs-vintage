@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: AdminIndex.vm,v 1.10 2001/12/26 23:55:38 elicia Exp $
+@version $Id: AdminIndex.vm,v 1.11 2002/01/04 23:16:59 jmcnally Exp $
 *#
 
 $page.setTitle("Scarab Administration")
@@ -16,7 +16,7 @@ $page.setTitle("Scarab Administration")
 
 <ul>
  <li> <a href="admin,ManageUserSearch.vm">User Management</a> </li>
- <li> <a href="$link.setPage("admin,AddUser.vm").addQueryData("state","showadduser")">Add New User</a> </li>
+ <li> $link.setPage("admin,AddUser.vm").addQueryData("state","showadduser").setLabel("Add New User") </li>
 </ul>
 
 
@@ -33,18 +33,18 @@ $page.setTitle("Scarab Administration")
 
 <h3>Global Data</h3>
 <ul>
- <li><a href="$link.setPage("admin,GlobalArtifactTypeShow.vm")">Global Artifact Types</a></li>
- <li><a href="$link.setPage("admin,GlobalAttributeShow.vm")">Global Attributes</a></li>
+ <li>$link.setPage("admin,GlobalArtifactTypeShow.vm").setLabel("Global Artifact Types")</li>
+ <li>$link.setPage("admin,GlobalAttributeShow.vm").setLabel("Global Attributes")</li>
 </ul>
 
 #end
 
 <h3>Modules</h3>
 <ul>
- <li><a href="$link.setPage("admin,ManageArtifactTypes.vm")">Manage Artifact Types</a></li>
- <li><a href="$link.setPage("admin,ManageModules.vm")">Manage Modules</a></li>
+ <li>$link.setPage("admin,ManageArtifactTypes.vm").setLabel("Manage Artifact Types")</li>
+ <li>$link.setPage("admin,ManageModules.vm").setLabel("Manage Modules")</li>
 #if ($scarabR.hasPermission($scarabG.Permission.ITEM__APPROVE, $scarabR.CurrentModule))
- <li><a href="$link.setPage("admin,Approval.vm")">Approve</a></li>
+ <li>$link.setPage("admin,Approval.vm").setLabel("Approve")</li>
 #end
 </ul>
 

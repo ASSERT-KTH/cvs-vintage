@@ -49,7 +49,7 @@ $page.setTitle("Enter issue")
  #end
       </select> 
       &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
-      &#160;<a href="$link.setPage("TemplateList.vm")">template list</a>
+      &#160;$link.setPage("TemplateList.vm").setLabel("template list")
       </td>
       </tr>
       </table>

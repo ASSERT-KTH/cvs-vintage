@@ -182,7 +182,7 @@
 	#end
   #end
     #if ($canEdit)
-     &#160;<a href="$link.setPage("AssignIssue.vm").addPathInfo("$intake.Attribute.Default.Id.Key", $attribute.AttributeId)">Edit</a>
+     &#160;$link.setPage("AssignIssue.vm").addPathInfo("$intake.Attribute.Default.Id.Key", $attribute.AttributeId).setLabel("Edit")
     #end
 #end
 

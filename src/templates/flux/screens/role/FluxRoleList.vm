@@ -4,7 +4,7 @@ Used to display the roles currently being used in
 the application.
 
 @author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
-@version $Id: FluxRoleList.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+@version $Id: FluxRoleList.vm,v 1.2 2002/01/04 23:16:58 jmcnally Exp $
 
 *#
 
@@ -29,7 +29,7 @@ $page.setBgColor($ui.bgcolor)
           </td>
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("role,FluxRoleList.vm")">find</a>
+              $link.setPage("role,FluxRoleList.vm").setLabel("find")
             </font>
           </td>
         </form>
@@ -53,9 +53,9 @@ $page.setBgColor($ui.bgcolor)
           #entryCell ($role.Name)
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify")">Details</a> &nbsp;
-              <a href="$link.setPage("role,FluxRolePermissionForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify")">Permissions</a> &nbsp;
-              <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete")">Remove</a>
+              $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify").setLabel("Details") &nbsp;
+              $link.setPage("role,FluxRolePermissionForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify").setLabel("Permissions") &nbsp;
+              $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete").setLabel("Remove")
             </font>
           </td>
         </tr>
@@ -67,7 +67,7 @@ $page.setBgColor($ui.bgcolor)
   <tr>
     <td>
       <font face="$ui.sansSerifFonts">
-        <a href="$link.setPage("role,FluxRoleForm.vm").addQueryData("mode","insert")">Add Role</a>
+        $link.setPage("role,FluxRoleForm.vm").addQueryData("mode","insert").setLabel("Add Role")
       </font>
     <td>
   </tr>

@@ -51,7 +51,7 @@ $page.setTitle("Enter New: $scarabR.CurrentIssueType.Name")
 #end
 </select>
       &#160;<input type="submit" value="Select" name="eventSubmit_doUsetemplates" /> 
-      &#160;<a href="$link.setPage("TemplateList.vm")">View all patch templates</a>
+      &#160;$link.setPage("TemplateList.vm").setLabel("View all patch templates")
  </td>
  </tr>
  </table>

@@ -16,7 +16,7 @@ $page.setTitle("Save query")
 <input type="hidden" name="$queryGroup.Value.Key" value="$queryString" />
 
 <p>
-Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
+Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 </p>
 
 <h3>Saved query information</h3>

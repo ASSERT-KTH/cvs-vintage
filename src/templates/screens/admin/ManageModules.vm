@@ -16,7 +16,7 @@ $page.setTitle("Manage Modules ")
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
-<a href="$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId)">$module.Name</a>
+$link.setPage("admin,ModifyModule.vm").addPathInfo("moduleId", $module.ModuleId).setLabel("$module.Name")
 </td>
 <td>
 $module.Description

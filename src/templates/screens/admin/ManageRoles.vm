@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: ManageRoles.vm,v 1.4 2001/12/04 15:59:30 dr Exp $
+@version $Id: ManageRoles.vm,v 1.5 2002/01/04 23:16:59 jmcnally Exp $
 *#
 
 $page.setTitle("Role Administration")
@@ -30,8 +30,8 @@ $page.setTitle("Role Administration")
   </td>
   <!--
   <td>
-      <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify")">Details</a> &nbsp;
-      <a href="$link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete")">Remove</a>
+      $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","modify").setLabel("Details") &nbsp;
+      $link.setPage("role,FluxRoleForm.vm").addPathInfo("name",$role.Name).addQueryData("mode","delete").setLabel("Remove")
   </td>
   -->
 

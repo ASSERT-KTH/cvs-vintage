@@ -1,1 +1,1 @@
-<div><strong><a href="$link.setPage("Register.vm")">Register</a></strong></div>
+<div><strong>$link.setPage("Register.vm").setLabel("Register")</strong></div>

@@ -137,7 +137,7 @@ $page.setTitle("Query Results")
   #paginate ($pageNum $resultsPerPage $searchType "IssueList.vm")
 #end
 
-<p><small>(<a href="$link.setPage("ConfigureIssueList.vm")">add/remove attributes from view</a>)</small></p>
+<p><small>($link.setPage("ConfigureIssueList.vm").setLabel("add/remove attributes from view"))</small></p>
 
 <div class="axial">
   <table cellpadding="3" cellspacing="2" border="0">

@@ -53,23 +53,32 @@ import org.apache.turbine.tool.TemplateLink;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 import org.apache.turbine.Turbine;
+import org.apache.turbine.modules.Module;
 import org.apache.fulcrum.util.parser.ValueParser;
 import org.apache.fulcrum.pool.InitableRecyclable;
 
 // Scarab
 import org.tigris.scarab.pages.ScarabPage;
+import org.tigris.scarab.services.security.ScarabSecurity;
+import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.ScarabUser;
 
 /**
     This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
     into the context to replace the $link that Turbine adds.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabLink.java,v 1.20 2001/12/12 18:48:01 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.21 2002/01/04 23:16:57 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
 {
     private RunData data;
+    private String label;
+    private String attributeText;
+    private String alternateText;
+    private String template;
 
     /**
      * Constructor.
@@ -130,6 +139,7 @@ public class ScarabLink extends TemplateLink
             addPathInfo(ScarabConstants.HISTORY_SCREEN, historyScreen);
         }
         super.setPage(t);
+        template = t;
         return this;
     }
     
@@ -183,18 +193,119 @@ public class ScarabLink extends TemplateLink
     }
 
     /**
+     * Setting the label will cause the link tool to print out the
+     * the text for the anchor tag.  This is useful in that if the link
+     * should not be active for security reasons it can be completely
+     * eliminated.
+     *
+     * @param label a <code>String</code> value
+     * @return a <code>ScarabLink</code> value
+     */
+    public ScarabLink setLabel(String label)
+    {
+        this.label = label;
+        return this;
+    }
+    
+    /**
+     * Allows for setting attributes such as class on an anchor tag
+     * <a class="xxx" href="yyy">label</a>.  Note the complete anchor
+     * tag is only returned from toString, if the lable has been set
+     * so this setter will have no effect unless setLabel is called.
+     *
+     * @param attributeText a <code>String</code> value
+     * @return a <code>ScarabLink</code> value
+     */
+    public ScarabLink setAttributeText(String attributeText)
+    {
+        this.attributeText = attributeText;
+        return this;
+    }
+
+    /**
+     * Text that will be returned from toString if the user did not have
+     * permission to see the link.  The default is the empty string
+     *
+     * @param attributeText a <code>String</code> value
+     * @return a <code>ScarabLink</code> value
+     */
+    public ScarabLink setAlternateText(String alternateText)
+    {
+        this.alternateText = alternateText;
+        return this;
+    }
+
+    /**
      * Prints out the url and resets the relative flag to true.
      *
      * @return a <code>String</code> url
      */
     public String toString()
     {
-        String s = super.toString();
+        System.out.println("called ScarabLink.toString()");
+        String tostring = null;
+        try
+        {
+        String t = template.replace(',','.');
+        String perm = ScarabSecurity.getScreenPermission(t);
+        if (perm != null)
+        {
+            ScarabRequestTool scarabR = 
+                (ScarabRequestTool)Module.getTemplateContext(data)
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL);
+            ModuleEntity currentModule = scarabR.getCurrentModule();
+            ScarabUser user = (ScarabUser)data.getUser();
+            if (! user.hasLoggedIn() 
+                || !user.hasPermission(perm, currentModule))
+            {
+                // reset link
+                super.toString();
+                tostring = (alternateText == null) ? "" : alternateText;
+            }
+            else 
+            {
+                tostring = getLink();
+            }
+        }
+        else 
+        {
+            tostring = getLink();
+        }
         setAbsolute(false);
-        return s;
+        label = null;
+        template = null;
+        attributeText = null;
+        alternateText = null;
+        } catch (Exception e) { e.printStackTrace(); }
+        return tostring;
     }
 
-    /**
+    private String getLink()
+    {
+        String s = null;
+        if ( label != null && label.length() > 0 ) 
+        {
+            StringBuffer sbuf = new StringBuffer(50);
+            sbuf.append("<a ");
+            if ( attributeText != null && attributeText.length() > 0 ) 
+            {
+                sbuf.append(attributeText);
+                sbuf.append(' ');
+            }
+            sbuf.append("href=\"")
+                .append(super.toString())
+                .append("\">")
+                .append(label)
+                .append("</a>");
+            s = sbuf.toString();
+        }
+        else 
+        {
+            s = super.toString();
+        }
+        return s;
+    }
+        /**
      * Give subclasses access to the RunData, so they do not have to 
      * reimplement the pooling code, just to get at it.
      */
@@ -224,7 +335,11 @@ public class ScarabLink extends TemplateLink
      */
     public void dispose()
     {
-        this.data = null;
+        data = null;
+        label = null;
+        attributeText = null;
+        alternateText = null;
+        template = null;    
         disposed = true;
     }
 

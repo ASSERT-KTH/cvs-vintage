@@ -1,7 +1,7 @@
 #**
 
 @author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
-@version $Id: FluxPermissionList.vm,v 1.1 2001/05/24 02:36:19 jmcnally Exp $
+@version $Id: FluxPermissionList.vm,v 1.2 2002/01/04 23:16:58 jmcnally Exp $
 
 *#
 
@@ -27,7 +27,7 @@ $page.setBgColor($ui.bgcolor)
           </td>
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("permission,FluxPermissionList.vm")">find</a>
+              $link.setPage("permission,FluxPermissionList.vm").setLabel("find")
             </face>
           </td>
         </form>
@@ -51,8 +51,8 @@ $page.setBgColor($ui.bgcolor)
           #entryCell ($permission.Name)
           <td>
             <font face="$ui.sansSerifFonts">
-              <a href="$link.setPage("permission,FluxPermissionForm.vm").addPathInfo("name",$permission.Name).addQueryData("mode","modify")">Details</a> &nbsp;
-              <a href="$link.setPage("permission,FluxPermissionForm.vm").addPathInfo("name",$permission.Name).addQueryData("mode","delete")">Remove</a>
+              $link.setPage("permission,FluxPermissionForm.vm").addPathInfo("name",$permission.Name).addQueryData("mode","modify").setLabel("Details") &nbsp;
+              $link.setPage("permission,FluxPermissionForm.vm").addPathInfo("name",$permission.Name).addQueryData("mode","delete").setLabel("Remove")
             </font>
           </td>
         </tr>
@@ -63,7 +63,7 @@ $page.setBgColor($ui.bgcolor)
   <tr>
     <td>
       <font face="$ui.sansSerifFonts">
-        <a href="$link.setPage("permission,FluxPermissionForm.vm").addQueryData("mode","insert")">Add Permission</a>
+        $link.setPage("permission,FluxPermissionForm.vm").addQueryData("mode","insert").setLabel("Add Permission")
       </font>
     <td>
   </tr>

@@ -1,7 +1,7 @@
 #**
 
 @author <a href="mailto:jvanzyl@periapt.com">Jason van Zyl</a>
-@version $Id: FluxIndex.vm,v 1.1 2001/05/24 02:33:31 jmcnally Exp $
+@version $Id: FluxIndex.vm,v 1.2 2002/01/04 23:16:57 jmcnally Exp $
 
 *#
 
@@ -12,12 +12,12 @@ $page.setTitle("Home Page")
 
 This is the administration application.<br>
 
-  <a href="$link.setPage("user,FluxUserList.vm")">Users</a><br>
+  $link.setPage("user,FluxUserList.vm").setLabel("Users")<br>
   
-  <a href="$link.setPage("group,FluxGroupList.vm")">Groups</a><br>
+  $link.setPage("group,FluxGroupList.vm").setLabel("Groups")<br>
   
-  <a href="$link.setPage("role,FluxRoleList.vm")">Roles</a><br>
+  $link.setPage("role,FluxRoleList.vm").setLabel("Roles")<br>
   
-  <a href="$link.setPage("permission,FluxPermissionList.vm")">Permissions</a>
+  $link.setPage("permission,FluxPermissionList.vm").setLabel("Permissions")
 
 </font>

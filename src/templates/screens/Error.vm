@@ -38,7 +38,7 @@ shown here. Please believe me!
  <p>
   Although, one common source of the error could be a result of not being able
   to find the requested template. Please try going back to the
-  <a href="$link.setPage("Start.vm")">Start</a> screen and starting over.
+  $link.setPage("Start.vm").setLabel("Start") screen and starting over.
  </p>
  #end
 #end

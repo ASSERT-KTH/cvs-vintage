@@ -10,7 +10,7 @@ $page.setTitle("Edit query")
 <h2>Edit query</h2>
 
 <p>
-Go to your <a href="$link.setPage("QueryList.vm")">Stored Query List</a>.
+Go to your $link.setPage("QueryList.vm").setLabel("Stored Query List").
 </p>
 
 <h3>Query: $currentQuery.Name</h3>
