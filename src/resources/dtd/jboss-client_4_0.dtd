@@ -4,7 +4,7 @@
 This version applies to the JBoss 4.x releases and the
 j2ee-1.4 application-client_1_4.xsd.
 
-$Id: jboss-client_4_0.dtd,v 1.4 2004/06/19 14:05:16 starksm Exp $
+$Id: jboss-client_4_0.dtd,v 1.5 2004/09/11 16:24:37 starksm Exp $
 
    <!DOCTYPE jboss-client PUBLIC
        "-//JBoss//DTD Application Client 4.0//EN"
@@ -72,7 +72,7 @@ Example:
     </resource-ref>
 
     <resource-ref>
-        <res-ref-name>jdbc/TheDataSource</res-ref-name>
+        <res-ref-name>url/XYZHome</res-ref-name>
         <res-url>http://x.y.z</res-url>
     </resource-ref>
 -->
@@ -99,7 +99,21 @@ resource-env-ref-name element to which this mapping applies.
 -->
 <!ELEMENT resource-env-ref-name (#PCDATA)>
 
-<!-- The res-url element value is a URL string.
+<!-- The res-url element value is a URL string for a resource-ref of
+res-type = java.net.URL. Using a res-url creates a binding of the URL
+instance under the java:comp/env. If you want to link to another binding
+of a URL, you can use the jndi-name to do so.
+
+// Binds the URL(http://x.y.z) under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>http://x.y.z</res-url>
+</resource-ref>
+// Binds a link to urls/XYZHomePage under java:comp/env/jdbc/XYZHome
+<resource-ref>
+    <res-ref-name>jdbc/XYZHome</res-ref-name>
+    <res-url>urls/XYZHomePage</res-url>
+</resource-ref>
 
    Used in: resource-ref
 -->
