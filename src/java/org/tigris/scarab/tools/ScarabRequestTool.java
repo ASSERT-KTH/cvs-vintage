@@ -1283,8 +1283,7 @@ try{
     }
 
     /**
-     * Returns all queries that are global, 
-     * Plus those that are personal and created by logged-in user.
+     * Returns queries that are personal and created by logged-in user.
     */
     public List getPrivateQueries()
         throws Exception
@@ -1295,8 +1294,7 @@ try{
     }
 
     /**
-     * Returns all queries that are global, 
-     * Plus those that are personal and created by logged-in user.
+     * Returns all queries that are global.
     */
     public List getGlobalQueries()
         throws Exception
