@@ -1,4 +1,4 @@
-// $Id: TabDiagram.java,v 1.41 2004/07/31 22:30:22 kataka Exp $
+// $Id: TabDiagram.java,v 1.42 2004/08/09 05:48:36 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,8 +244,8 @@ public class TabDiagram
             ActionCopy.getInstance()
                     .setEnabled(sels != null && !sels.isEmpty());
             /*
-             * ActionPaste.getInstance().setEnabled( Globals.clipBoard != null &&
-             * !Globals.clipBoard.isEmpty());
+             * ActionPaste.getInstance().setEnabled( Globals.clipBoard
+             * != null && !Globals.clipBoard.isEmpty());
              */
             Collection currentSelection = TargetManager.getInstance()
                     .getTargets();
@@ -403,8 +403,10 @@ class ArgoJGraph extends JGraph {
         return false;
     }
 
-    /** Make a new JGraph with a new DefaultGraphModel.
-       * @see uci.graph.DefaultGraphModel */
+    /**
+     * Make a new JGraph with a new DefaultGraphModel.
+     * @see org.tigris.gef.graph.presentation.DefaultGraphModel
+     */
     public ArgoJGraph() {
         this(new DefaultGraphModel());
     }

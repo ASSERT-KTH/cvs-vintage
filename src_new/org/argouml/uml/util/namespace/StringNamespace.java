@@ -1,4 +1,4 @@
-// $Id: StringNamespace.java,v 1.2 2004/05/21 10:11:59 mkl Exp $
+// $Id: StringNamespace.java,v 1.3 2004/08/09 05:48:37 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,6 +93,7 @@ public class StringNamespace implements Namespace, Cloneable {
      */
     public StringNamespace(NamespaceElement[] elements, String token) {
         this(token);
+
         for (int i = 0; i < elements.length; i++) {
             pushNamespaceElement(new StringNamespaceElement(elements[i]
                     .toString()));
@@ -110,7 +111,7 @@ public class StringNamespace implements Namespace, Cloneable {
     }
 
     /**
-     * @see org.argouml.uml.util.namespace.Namespace#addNamespaceElement(org.argouml.model.util.namespace.NamespaceElement)
+     * @see Namespace#pushNamespaceElement(NamespaceElement)
      */
     public void pushNamespaceElement(NamespaceElement element) {
         ns.push(element);
@@ -153,7 +154,8 @@ public class StringNamespace implements Namespace, Cloneable {
     }
 
     /**
-     * @see org.argouml.uml.util.namespace.Namespace#getCommonNamespace(org.argouml.model.util.namespace.Namespace)
+     * @see org.argouml.uml.util.namespace.Namespace#getCommonNamespace(
+     *         org.argouml.uml.util.namespace.Namespace)
      */
     public Namespace getCommonNamespace(Namespace namespace) {
         Iterator i = iterator();

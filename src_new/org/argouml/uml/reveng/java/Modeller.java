@@ -1,4 +1,4 @@
-// $Id: Modeller.java,v 1.90 2004/07/23 17:53:55 linus Exp $
+// $Id: Modeller.java,v 1.91 2004/08/09 05:48:36 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1432,15 +1432,15 @@ public class Modeller
      * This is called from {@link #addDocumentationTag} only.
      *
      * @param me the model element to add to
-     * @sTagName the name of the javadoc tag
-     * @sTagData the contents of the javadoc tag
+     * @param sTagName the name of the javadoc tag
+     * @param sTagData the contents of the javadoc tag
      */
-    private void addJavadocTagContents (Object me,
-					String sTagName,
-					String sTagData) {
-	if ((sTagName.equals ("invariant"))
-	    || (sTagName.equals ("pre-condition"))
-	    || (sTagName.equals ("post-condition"))) {
+    private void addJavadocTagContents(Object me,
+				       String sTagName,
+				       String sTagData) {
+	if ((sTagName.equals("invariant"))
+	    || (sTagName.equals("pre-condition"))
+	    || (sTagName.equals("post-condition"))) {
 
 	    // add as OCL constraint
 	    String sContext = OCLUtil.getContextString(me);
@@ -1483,7 +1483,7 @@ public class Modeller
      *
      * Added 2001-10-05 STEFFEN ZSCHALER.
      *
-     * @param me the model element to which to add the documentation
+     * @param modelElement the model element to which to add the documentation
      * @param sJavaDocs the documentation comment to add ("" or null
      * if no java docs)
      */

@@ -1,5 +1,5 @@
-// $Id: Context.java,v 1.8 2003/06/29 23:53:01 linus Exp $
-// Copyright (c) 1996-2002 The Regents of the University of California. All
+// $Id: Context.java,v 1.9 2004/08/09 05:48:36 linus Exp $
+// Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: Context.java,v 1.8 2003/06/29 23:53:01 linus Exp $
+// $Id: Context.java,v 1.9 2004/08/09 05:48:36 linus Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -55,18 +55,18 @@ abstract class Context
     }
 
     /**
-       Get a classifier from the model. If it is not in the model, try
-       to find it with the CLASSPATH. If found, in the classpath, the
-       classifier is created and added to the model. If not found at
-       all, a datatype is created and added to the model.
-
-       @param className The name of the classifier to find.
-       @return Found classifier.
-    */
-    abstract public Object get(String name)
+     * Get a classifier from the model. If it is not in the model, try
+     * to find it with the CLASSPATH. If found, in the classpath, the
+     * classifier is created and added to the model. If not found at
+     * all, a datatype is created and added to the model.
+     *
+     * @param name The name of the classifier to find.
+     * @return Found classifier.
+     */
+    public abstract Object get(String name)
 	throws ClassifierNotFoundException;
 
-    abstract public Object getInterface(String name)
+    public abstract Object getInterface(String name)
 	throws ClassifierNotFoundException;
 
     /**

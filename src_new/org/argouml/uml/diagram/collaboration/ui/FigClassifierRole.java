@@ -1,4 +1,4 @@
-// $Id: FigClassifierRole.java,v 1.34 2004/08/04 20:54:13 mvw Exp $
+// $Id: FigClassifierRole.java,v 1.35 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -84,7 +84,7 @@ public class FigClassifierRole extends FigNodeModelElement {
 
     /**
      * The fig that is used for the complete classifier role.
-     * Identical in size to {@link FigNodeModelElement#_bigPort}.<p>
+     * Identical in size to {@link FigNodeModelElement#bigPort}.<p>
      */
     private FigRect cover;
 
@@ -102,7 +102,7 @@ public class FigClassifierRole extends FigNodeModelElement {
      * Constructor for a new classifier role.<p>
      *
      * An invisible {@link FigRect} as the point of contact for
-     * connections ({@link FigNodeModelElement#_bigPort}), with
+     * connections ({@link FigNodeModelElement#bigPort}), with
      * matching rectangle providing the graphic rendering ({@link
      * #cover}). Stereotype and name are rendered centrally in the
      * rectangle.<p>

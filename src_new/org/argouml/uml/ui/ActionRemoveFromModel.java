@@ -1,4 +1,4 @@
-// $Id: ActionRemoveFromModel.java,v 1.41 2004/07/26 22:41:43 mkl Exp $
+// $Id: ActionRemoveFromModel.java,v 1.42 2004/08/09 05:48:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -133,7 +133,7 @@ public class ActionRemoveFromModel extends UMLChangeAction {
             targets = getTargets();
         Object target = null;
         Object newTarget = null;
-        for (int i = targets.length-1; i >= 0; i--) {
+        for (int i = targets.length - 1; i >= 0; i--) {
             target = targets[i];
             if (sureRemove(target)) {
                 // remove from the model
@@ -159,9 +159,10 @@ public class ActionRemoveFromModel extends UMLChangeAction {
     }
     
     /**
-     * Gets the object that should be target after the given target is deleted from the model.
+     * Gets the object that should be target after the given target is
+     * deleted from the model.
+     *
      * @param target the target to delete
-     * @param p the current project
      * @return
      */
     private Object getNewTarget(Object target) {

@@ -1,4 +1,4 @@
-// $Id: UMLToDoItem.java,v 1.3 2004/06/24 06:25:41 linus Exp $
+// $Id: UMLToDoItem.java,v 1.4 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -85,7 +85,7 @@ public class UMLToDoItem extends ToDoItem {
      * Action jumps to the diagram containing all or most of the
      * offenders and calls {@link #deselect()}, {@link #select()}
      * around the call to
-     * {@link ProjectManager#jumpToDiagramShowing(VectorSet)}.
+     * {@link ProjectBrowser#jumpToDiagramShowing(VectorSet)}.
      */
     public void action() {
         deselect();

@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.59 2004/07/26 13:33:08 bobtarling Exp $
+// $Id: FigEdgeModelElement.java,v 1.60 2004/08/09 05:48:36 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -899,7 +899,7 @@ public abstract class FigEdgeModelElement
 
     /**
      * Overridden to notify project that save is needed when edge is moved.
-     * @see org.tigris.gef.presentation.FigEdgePoly#setPoint(Hand, int, int)
+     * @see org.tigris.gef.presentation.FigEdgePoly#setPoint(Handle, int, int)
      */
     public void setPoint(Handle h, int x, int y) {
         super.setPoint(h, x, y);

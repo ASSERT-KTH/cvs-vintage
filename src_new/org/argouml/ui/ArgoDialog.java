@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.12 2004/07/17 16:52:03 linus Exp $
+// $Id: ArgoDialog.java,v 1.13 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,7 +48,7 @@ public class ArgoDialog extends Dialog {
     protected static final String MNEMONIC_KEY_SUFFIX = ".mnemonic";
     
     /**
-     * @see Dialog(Frame, String, boolean)
+     * @see Dialog#Dialog(Frame, String, boolean)
      *
      * Creates a new ArgoDialog with the default optionType.
      */
@@ -57,7 +57,7 @@ public class ArgoDialog extends Dialog {
     }
 
     /**
-     * @see Dialog(Frame, String, int, boolean)
+     * @see Dialog#Dialog(Frame, String, int, boolean)
      *
      * Creates a new ArgoDialog with the specified optionType.
      */

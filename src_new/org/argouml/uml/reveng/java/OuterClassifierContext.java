@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.16 2004/06/24 06:25:45 linus Exp $
+// $Id: OuterClassifierContext.java,v 1.17 2004/08/09 05:48:36 linus Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -141,14 +141,14 @@ class OuterClassifierContext extends Context
     }
 
     /**
-       Get a classifier from the model. If it is not in the model, try
-       to find it with the CLASSPATH. If found, in the classpath, the
-       classifier is created and added to the model. If not found at
-       all, a datatype is created and added to the model.
-
-       @param classifierName The name of the classifier to find.
-       @return Found classifier.
-    */
+     * Get a classifier from the model. If it is not in the model, try
+     * to find it with the CLASSPATH. If found, in the classpath, the
+     * classifier is created and added to the model. If not found at
+     * all, a datatype is created and added to the model.
+     *
+     * @param name The name of the classifier to find.
+     * @return Found classifier.
+     */
     public Object get(String name)
 	throws ClassifierNotFoundException
     {

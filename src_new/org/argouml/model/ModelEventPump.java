@@ -1,4 +1,4 @@
-// $Id: ModelEventPump.java,v 1.2 2004/08/08 11:50:00 mvw Exp $
+// $Id: ModelEventPump.java,v 1.3 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,8 @@ import java.beans.PropertyChangeListener;
  * 
  * Neither the registration or unregistration, nor the events themselves
  * contain any reference to the model implementation (NSUML).  Instead they
- * use the {@link PropertyChangeListener}, {@link PropertyChangeEvent} to
+ * use the {@link java.beans.PropertyChangeListener},
+ * {@link java.beans.PropertyChangeEvent} to
  * deliver events.<p>
  * 
  * The reference to the listener is a WeakReference so you don't need to 

@@ -1,4 +1,4 @@
-// $Id: Notation.java,v 1.50 2004/08/08 09:09:36 mvw Exp $
+// $Id: Notation.java,v 1.51 2004/08/09 05:48:34 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -603,7 +603,7 @@ public final class Notation implements PropertyChangeListener {
      * @param o          The object to generate.
      *
      * @param documented  A flag of unknown meaning. Only has any effect for
-     *                    {@link MOperation} and {@link MAttribute}.
+     *                    Operations and Attributes.
      *
      * @return            The generated string.
      */
@@ -631,7 +631,7 @@ public final class Notation implements PropertyChangeListener {
      * @param o          The object to generate.
      *
      * @param documented  A flag of unknown meaning. Only has any effect for
-     *                    {@link MOperation} and {@link MAttribute}.
+     *                    Operations and Attributes.
      *
      * @return            The generated string.
      */

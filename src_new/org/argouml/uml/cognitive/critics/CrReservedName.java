@@ -1,4 +1,4 @@
-// $Id: CrReservedName.java,v 1.16 2004/07/20 01:25:20 d00mst Exp $
+// $Id: CrReservedName.java,v 1.17 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -220,7 +220,7 @@ public class CrReservedName extends CrUML {
     /** Dont critique the built-in java types, they are supposed to
      * have those "reserved" names.
      *
-     * @param the name of the type to test.
+     * @param name The name of the type to test.
      * @return true if it is a builtin.
      */
     private boolean isBuiltin(String name) {

@@ -1,4 +1,4 @@
-// $Id: Generator2.java,v 1.4 2004/07/17 13:10:30 kataka Exp $
+// $Id: Generator2.java,v 1.5 2004/08/09 05:48:36 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,9 +45,6 @@ import org.argouml.model.ModelFacade;
  * "http://hillside.net/patterns/">Visitor design
  * pattern</a> in "Design Patterns", and the <a href=
  * "http://www.ccs.neu.edu/research/demeter/">Demeter project</a>.<p>
- *
- * This is created from the {@link Generator} class and has the exact same
- * functions.
  *
  * @since 0.15.6
  */

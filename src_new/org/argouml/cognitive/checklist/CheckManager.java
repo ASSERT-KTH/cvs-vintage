@@ -1,4 +1,4 @@
-// $Id: CheckManager.java,v 1.7 2004/01/10 14:15:48 linus Exp $
+// $Id: CheckManager.java,v 1.8 2004/08/09 05:48:34 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CheckManager.java
 // Class: CheckManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CheckManager.java,v 1.7 2004/01/10 14:15:48 linus Exp $
+// $Id: CheckManager.java,v 1.8 2004/08/09 05:48:34 linus Exp $
 
 package org.argouml.cognitive.checklist;
 
@@ -60,8 +60,9 @@ public class CheckManager implements Serializable {
      */
     private static Hashtable _Statuses = new Hashtable();
 
-    ////////////////////////////////////////////////////////////////
-    // constructor
+    /**
+     * Constructor.
+     */
     public CheckManager() { }
 
     ////////////////////////////////////////////////////////////////
@@ -94,7 +95,7 @@ public class CheckManager implements Serializable {
      * add the result of the linear search to the hashtable so that the next
      * time we need not do it.
      *
-     * @returns Checklist or null if noone exist.
+     * @return Checklist or null if noone exist.
      * @param cls the class to lookup.
      */
     private static Checklist lookupChecklist(Class cls) {

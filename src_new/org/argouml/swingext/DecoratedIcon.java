@@ -1,5 +1,5 @@
-// $Id: DecoratedIcon.java,v 1.7 2004/01/15 20:36:44 jjones Exp $
-// Copyright (c) 2003 The Regents of the University of California. All
+// $Id: DecoratedIcon.java,v 1.8 2004/08/09 05:48:35 linus Exp $
+// Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -60,7 +60,7 @@ public abstract class DecoratedIcon extends ImageIcon {
     
     /** Construct a decorated icon made up of the given icon and decorated with
      * the icon defined in the descendant class.
-     * @param The icon to decorate
+     * @param imageIcon The icon to decorate
      */        
     DecoratedIcon(ImageIcon imageIcon) {
         _imageIcon = imageIcon;

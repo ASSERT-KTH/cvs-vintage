@@ -1,4 +1,4 @@
-// $Id: UMLRadioButtonPanel.java,v 1.12 2004/07/31 22:30:23 kataka Exp $
+// $Id: UMLRadioButtonPanel.java,v 1.13 2004/08/09 05:48:37 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -129,12 +129,12 @@ public abstract class UMLRadioButtonPanel
 
     /**
      * Initially constructs the buttons.
-     * @param labeltextsActioncommands A map of keys containing the texts for
-     * the buttons and values containing the actioncommand that permits the
-     * setAction to logically recognize the button.
-     * @param setAction the action that should be registred with the buttons and
-     * that's executed when one of the buttons is pressed
-     * @param horizontal when true the buttons should be layed out horizontaly.
+     *
+     * @param labeltextsActioncommands A map of keys containing the
+     * texts for the buttons and values containing the actioncommand
+     * that permits the setAction to logically recognize the button.
+     * @param setAction the action that should be registred with the
+     * buttons and that's executed when one of the buttons is pressed
      */
     private void setButtons(Map labeltextsActioncommands, Action setAction) {
         Enumeration en = _buttonGroup.getElements();

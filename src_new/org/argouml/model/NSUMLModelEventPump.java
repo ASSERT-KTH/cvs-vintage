@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.2 2004/06/23 07:02:40 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.3 2004/08/09 05:48:35 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,8 +93,8 @@ class NSUMLModelEventPump
     }
 
     /**
-     * @param modelEventListeners2
-     * @param object
+     * @param listeners
+     * @param relay
      */
     private void register(Map listeners, NSUMLEventListener relay) {
         PropertyChangeListener listener = relay.getListener();
@@ -141,7 +141,7 @@ class NSUMLModelEventPump
     }
 
     /**
-     * @param modelEventListeners2
+     * @param listeners
      * @param listener
      * @param modelelement
      * @param eventNames
@@ -184,7 +184,7 @@ class NSUMLModelEventPump
     }
 
     /**
-     * @param modelEventListeners2
+     * @param listeners
      * @param relay
      */
     private void unregister(Map listeners, NSUMLEventListener relay) {
