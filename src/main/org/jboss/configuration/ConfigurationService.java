@@ -67,7 +67,7 @@ import org.jboss.util.XmlHelper;
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author  <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  * Revisions:
  *
  * 20010622 scott.stark: Clean up the unsafe downcast of Throwable to Exception
@@ -106,7 +106,7 @@ implements ConfigurationServiceMBean
     */
    static
    {
-      serviceOpMap.put("init", new Integer(0));
+      serviceOpMap.put("create", new Integer(0));
       serviceOpMap.put("start", new Integer(1));
       serviceOpMap.put("destroy", new Integer(2));
       serviceOpMap.put("stop", new Integer(3));
