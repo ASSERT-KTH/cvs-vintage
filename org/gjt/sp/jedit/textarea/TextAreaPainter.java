@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.32 2002/01/17 10:47:27 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.33 2002/01/19 09:44:30 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -600,10 +600,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	 */
 	public void paintComponent(Graphics _gfx)
 	{
-		Buffer buffer = textArea.getBuffer();
-		if(!buffer.isLoaded())
-			return;
-
 		Graphics2D gfx = (Graphics2D)_gfx;
 		gfx.setRenderingHints(renderingHints);
 		fontRenderContext = gfx.getFontRenderContext();
@@ -612,6 +608,10 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		gfx.setColor(getBackground());
 		gfx.fillRect(clipRect.x,clipRect.y,clipRect.width,clipRect.height);
+
+		Buffer buffer = textArea.getBuffer();
+		if(!buffer.isLoaded())
+			return;
 
 		int x = textArea.getHorizontalOffset();
 

@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.68 2002/01/17 10:37:55 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.69 2002/01/19 09:44:30 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4737,6 +4737,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	private int firstLine;
 	private int physFirstLine;
 	private int physLastLine;
+	private int screenLastLine;
 
 	private int visibleLines;
 	private int electricScroll;
@@ -5049,6 +5050,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 		physLastLine = virtualToPhysical(Math.min(
 			getVirtualLineCount() - 1,
 			firstLine + visibleLines));
+
+		screenLastLine = chunkCache.getScreenLineOfOffset(physLastLine,
+			buffer.getLineLength(physLastLine));
 	} //}}}
 
 	//}}}
@@ -5360,10 +5364,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				return;
 
 			// -lineCount because they are removed.
-			// IMPORTANT: call this before recalculateLastPhysicalLine(),
-			// so that we repaint up to the old last physical line;
-			// otherwise, removing text from the end of the buffer
-			// would leave stray junk at the end until the next repaint
 			repaintAndScroll(startLine,-numLines);
 
 			if(numLines != 0 && buffer.getLineCount() - numLines - 1 <= physLastLine)
@@ -5448,7 +5448,8 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 			else
 			{
 				updateScrollBars();
-				invalidateLineRange(startLine,physLastLine);
+				invalidateScreenLineRange(chunkCache.getScreenLineOfOffset(
+					startLine,0),screenLastLine);
 			}
 		} //}}}
 	} //}}}
