@@ -96,7 +96,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.76 2002/01/09 01:55:33 maartenc Exp $
+ * @version $Id: ReportIssue.java,v 1.77 2002/01/09 01:57:28 maartenc Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -514,14 +514,7 @@ public class ReportIssue extends RequireLoginFirstAction
     public void doGotowizard3(RunData data, TemplateContext context)
         throws Exception
     {
-/*        IntakeTool intake = getIntakeTool(context);
-        AttributeValue av = new AttributeValue();
-        Group group = intake.get("AttributeValue", IntakeTool.DEFAULT_KEY);        
-        group.getProperties(av);
-        //sout(av.*/
-        
         setTarget(data, "entry,Wizard3.vm");
-        data.getParameters().add("testje","testjevalue");
     }
 
     public void doUsetemplates(RunData data, TemplateContext context)
