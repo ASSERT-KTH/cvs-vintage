@@ -16,6 +16,7 @@ package org.columba.core.gui.statusbar;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,7 +27,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import org.columba.core.command.TaskManager;
 import org.columba.core.command.Worker;
@@ -45,20 +49,11 @@ public class StatusBar
 	private JLabel label;
 	private JProgressBar progressBar;
 
-	//private JButton left, right;
-
 	private Border border;
-	private JPanel leftPanel;
-	private JPanel rightPanel;
+
 	private JPanel mainRightPanel;
 	private JButton taskButton;
 	private JPanel leftMainPanel;
-	//private JButton progressButton;
-	private JPanel middleRightPanel;
-	private JPanel middleLeftPanel;
-	private JPanel mainMiddlePanel;
-	private JPanel rightRightPanel;
-	//private JButton onlineButton;
 
 	private int displayedWorkerIndex;
 	private int workerListSize;
@@ -66,235 +61,117 @@ public class StatusBar
 
 	private TaskManager taskManager;
 
-    private BasicAction cancelAction;
-    private ImageSequenceTimer imageSequenceTimer;
+	private BasicAction cancelAction;
+	private ImageSequenceTimer imageSequenceTimer;
 
-	public StatusBar(TaskManager tm) 
-	{
+	private JButton onlineButton;
+
+	private boolean online = true;
+
+	public StatusBar(TaskManager tm) {
 		taskManager = tm;
 		tm.addWorkerListChangeListener(this);
 
 		imageSequenceTimer = new ImageSequenceTimer();
+
+		setBorder( BorderFactory.createEmptyBorder(0,2,0,2) );
 		
 		displayedWorkerIndex = 0;
 		workerListSize = 0;
 		label = new JLabel("");
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		/*
-		progressButton = new JButton("");
-		progressButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		progressButton.setRolloverEnabled(true);
-		progressButton.setEnabled(false);
-		progressButton.setToolTipText("Auto Mail Checking Status Notification");
-		*/
-		
-		/*
-		onlineButton = new JButton( ImageLoader.getSmallImageIcon("remotehost.png") );
-		onlineButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		onlineButton = new JButton(ImageLoader.getImageIcon("online.png"));
+		onlineButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 		onlineButton.setRolloverEnabled(true);
-		onlineButton.setEnabled(false);
-		onlineButton.setToolTipText("Currently in ONLINE state");
-		*/
-		
-		/*
-		left = new JButton("<");
-		left.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		left.setRolloverEnabled(true);
-		left.setActionCommand("LEFT");
-		left.setEnabled(false);
+		onlineButton.setFocusable(false);
+		onlineButton.setActionCommand("ONLINE");
+		onlineButton.addActionListener(this);
 
-		right = new JButton(">");
-		right.setEnabled(false);
-		right.setRolloverEnabled(true);
-		right.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-		right.setActionCommand("RIGHT");
-		*/
 		progressBar = new JProgressBar(0, 100);
-		progressBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
+		progressBar.setFocusable(false);
+		//progressBar.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		//progressBar.setAlignmentY(Component.CENTER_ALIGNMENT);
 		progressBar.setStringPainted(false);
 		progressBar.setBorderPainted(false);
 		progressBar.setValue(0);
-		
+
 		taskButton = new JButton("Tasks: 0");
+		//taskButton.setIcon(ImageLoader.getImageIcon("group_small.png"));
 		taskButton.setRolloverEnabled(true);
-		taskButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		taskButton.setFocusable(false);
+		//taskButton.setMargin(new Insets(0, 0, 0, 0));
+		taskButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+		//taskButton.setBorder(null);
 		setLayout(new BorderLayout());
 
-		setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-
-		
 		leftMainPanel = new JPanel();
 		leftMainPanel.setLayout(new BorderLayout());
-		
-		
-		leftPanel = new JPanel();
-		leftPanel.setLayout(new BorderLayout());
-		leftMainPanel.add( leftPanel, BorderLayout.WEST );
-		
-		
-		JPanel taskPanel = new JPanel();
-		taskPanel.setLayout( new BorderLayout() );
-		taskPanel.setBorder(BorderFactory.createEtchedBorder());
-		
-		Border b = taskPanel.getBorder();
-		Border margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		/*
-		Border b = taskPanel.getBorder();
-		Border margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		taskPanel.setBorder( margin );
-		*/
-		
-		taskPanel.add( taskButton, BorderLayout.CENTER );
-		//leftPanel.setBorder(BorderFactory.createEtchedBorder());
-		
-		//leftPanel.add(taskPanel, BorderLayout.WEST);
-		
-		/*
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout( new BorderLayout() );
-		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
-		buttonPanel.add( left, BorderLayout.CENTER );
-		buttonPanel.add( right, BorderLayout.EAST );
-		Border b = buttonPanel.getBorder();
-		Border margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		buttonPanel.setBorder( margin );
 
-		leftPanel.add( buttonPanel, BorderLayout.CENTER );
-		*/
-		
+		JPanel taskPanel = new JPanel();
+		taskPanel.setLayout(new BorderLayout());
+
+		Border border = getDefaultBorder();
+		Border margin = new EmptyBorder(0, 0, 0, 2);
+
+		taskPanel.setBorder(new CompoundBorder(border, margin));
+
+		taskPanel.add(taskButton, BorderLayout.CENTER);
+
 		leftMainPanel.add(taskPanel, BorderLayout.WEST);
 
 		JPanel labelPanel = new JPanel();
-		labelPanel.setLayout( new BorderLayout() );
-		labelPanel.setBorder(BorderFactory.createEtchedBorder());
-		b = labelPanel.getBorder();
-		margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		labelPanel.setBorder( margin );
-		labelPanel.add( label, BorderLayout.CENTER );
-		
-		leftMainPanel.add( labelPanel, BorderLayout.CENTER );
-		
-		add( leftMainPanel, BorderLayout.CENTER );
-		
-		//rightPanel.setBorder(BorderFactory.createEtchedBorder());
+		labelPanel.setLayout(new BorderLayout());
+		margin = new EmptyBorder(0, 2, 0, 2);
+		labelPanel.setBorder(new CompoundBorder(border, margin));
 
-		/*
-		BoxLayout boxLayout = new BoxLayout(rightPanel, BoxLayout.X_AXIS);
-		rightPanel.setLayout(boxLayout);
+		margin = new EmptyBorder(0, 0, 0, 2);
+		labelPanel.add(label, BorderLayout.CENTER);
 
-		rightPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-		rightPanel.add(label);
-
-		rightPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-
-		leftMainPanel.add(rightPanel, BorderLayout.CENTER);
+		leftMainPanel.add(labelPanel, BorderLayout.CENTER);
 
 		add(leftMainPanel, BorderLayout.CENTER);
-		*/
-		
+
 		mainRightPanel = new JPanel();
-		mainRightPanel.setLayout( new BorderLayout() );
-		
-		/*
-		rightPanel = new JPanel();
-		rightPanel.setLayout( new BorderLayout() );
-		rightPanel.setBorder(BorderFactory.createEtchedBorder());
-		rightPanel.add( progressButton, BorderLayout.CENTER );
-		*/
-		//rightPanel.add( onlineButton, BorderLayout.WEST );
-		
-		/*
-		b = rightPanel.getBorder();
-		margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		rightPanel.setBorder( margin );
-		
-		mainRightPanel.add( rightPanel, BorderLayout.CENTER );
-		*/
-		
+		mainRightPanel.setLayout(new BorderLayout());
+
 		JPanel progressPanel = new JPanel();
-		progressPanel.setLayout( new BorderLayout() );
-		progressPanel.setBorder(BorderFactory.createEtchedBorder());
-		b = progressPanel.getBorder();
-		margin = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(0,2,0,0 ),b);
-		progressPanel.setBorder( margin );
-		progressPanel.add( progressBar, BorderLayout.CENTER );
-		
-		//mainRightPanel.add( progressPanel, BorderLayout.WEST );
-		
-		add( progressPanel, BorderLayout.EAST );
-		
-		//mainRightPanel.setLayout(new BoxLayout(mainRightPanel, BoxLayout.X_AXIS));
+		progressPanel.setLayout(new BorderLayout());
+		progressPanel.setBorder(new CompoundBorder(border, margin));
 
-		/*
-		middleLeftPanel = new JPanel();
+		progressPanel.add(progressBar, BorderLayout.CENTER);
 
-		middleLeftPanel.setLayout(new BorderLayout());
-		middleLeftPanel.setBorder(BorderFactory.createEtchedBorder());
+		JPanel rightPanel = new JPanel();
+		rightPanel.setLayout(new BorderLayout());
 
-		middleLeftPanel.add(progressButton, BorderLayout.CENTER);
+		rightPanel.add(progressPanel, BorderLayout.CENTER);
 
-		mainMiddlePanel = new JPanel();
-		BoxLayout boxLayout5 = new BoxLayout(mainMiddlePanel, BoxLayout.X_AXIS);
-		mainMiddlePanel.setLayout(boxLayout5);
+		JPanel onlinePanel = new JPanel();
+		onlinePanel.setLayout(new BorderLayout());
+		onlinePanel.setBorder(new CompoundBorder(border, margin));
 
-		mainMiddlePanel.add(middleLeftPanel);
+		onlinePanel.add(onlineButton, BorderLayout.CENTER);
 
-		middleRightPanel = new JPanel();
+		rightPanel.add(onlinePanel, BorderLayout.EAST);
 
-		middleRightPanel.setLayout(new BorderLayout());
-
-		middleRightPanel.setBorder(BorderFactory.createEtchedBorder());
-
-		middleRightPanel.add(left, BorderLayout.WEST);
-		middleRightPanel.add(
-			Box.createRigidArea(new Dimension(2, 0)),
-			BorderLayout.CENTER);
-		middleRightPanel.add(right, BorderLayout.EAST);
-
-		mainMiddlePanel.add(middleRightPanel);
-
-		mainRightPanel.add(mainMiddlePanel);
-
-		rightRightPanel = new JPanel();
-
-		rightRightPanel.setLayout(new BorderLayout());
-		rightRightPanel.setBorder(BorderFactory.createEtchedBorder());
-
-		rightRightPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-		rightRightPanel.add(progressBar, BorderLayout.CENTER);
-
-		mainRightPanel.add(rightRightPanel);
-
-		add(mainRightPanel, BorderLayout.EAST);
-		*/
+		add(rightPanel, BorderLayout.EAST);
 
 		initActions();
 
 	}
 
-	public void displayTooltipMessage( String message ) {
+	public Border getDefaultBorder() {
 		
+		if (UIManager.getBorder("TableHeader.cellBorder") != null) {
+			return UIManager.getBorder("StatusBar.border");
+		} else
+			return UIManager.getBorder("TableHeader.cellBorder");
+
 	}
 
-	/*
-	public void enableMailCheck(boolean b)
-	{
-		if (b == true)
-		{
-			progressButton.setIcon(ImageLoader.getSmallImageIcon("send-receive.png"));
-			progressButton.setEnabled(true);
-		}
-		else
-		{
-			progressButton.setIcon(ImageLoader.getSmallImageIcon("send-receive.png"));
-			progressButton.setEnabled(false);
-		}
+	public void displayTooltipMessage(String message) {
+
 	}
-	*/
 
 	protected void setTaskCount(int i) {
 		final int n = i;
@@ -302,6 +179,7 @@ public class StatusBar
 		Runnable run = new Runnable() {
 			public void run() {
 				taskButton.setText("Tasks: " + n);
+
 			}
 		};
 		try {
@@ -394,22 +272,21 @@ public class StatusBar
 
 	}
 
-
 	protected void displayWorker(int index) {
 		// set to default state
-		setMaximumAndValue(100,100);
-		setText("");		
-		
+		setMaximumAndValue(100, 100);
+		setText("");
+
 		// now switch to worker
 		Worker w = taskManager.get(index);
 
 		setText(w.getDisplayText());
 		setMaximumAndValue(w.getProgressBarValue(), w.getProgessBarMaximum());
-		
-		if( displayedWorker != null ) {
-			displayedWorker.removeWorkerStatusChangeListener( this );
+
+		if (displayedWorker != null) {
+			displayedWorker.removeWorkerStatusChangeListener(this);
 		}
-		
+
 		w.addWorkerStatusChangeListener(this);
 		displayedWorker = w;
 	}
@@ -422,27 +299,24 @@ public class StatusBar
 			setTaskCount(workerListSize);
 			if (displayedWorkerIndex > workerListSize - 1)
 				displayedWorkerIndex = workerListSize - 1;
-			if( displayedWorkerIndex < 0 )
+			if (displayedWorkerIndex < 0)
 				displayedWorkerIndex = 0;
-			
-			if( (workerListSize > 0) && (e.getOldValue() == 0) ) {
-				displayWorker(0);	
+
+			if ((workerListSize > 0) && (e.getOldValue() == 0)) {
+				displayWorker(0);
 			}
-			
+
 			/*
 			if( (workerListSize > 1) && (e.getOldValue() <= 1) ) {
 				right.setEnabled( true );
 			}
 			*/
-			
-			if( workerListSize > 0 )
-			{
+
+			if (workerListSize > 0) {
 				cancelAction.setEnabled(true);
 				imageSequenceTimer.start();
-			}
-			else
-			{
-				cancelAction.setEnabled(false);			
+			} else {
+				cancelAction.setEnabled(false);
 				imageSequenceTimer.stop();
 			}
 		}
@@ -472,23 +346,41 @@ public class StatusBar
 	}
 
 	protected void initActions() {
-		
-        cancelAction = new BasicAction(
-        	MailResourceLoader.getString("menu","mainframe","menu_file_cancel"),
-            MailResourceLoader.getString("menu","mainframe","menu_file_cancel"),
-            "CANCEL_ACTION",
-            ImageLoader.getSmallImageIcon("stock_stop-16.png"),
-            ImageLoader.getImageIcon("stock_stop.png"),
-            '0',
-            null,false
-            );
 
-        cancelAction.setEnabled( false );
-        cancelAction.addActionListener(this);
+		cancelAction =
+			new BasicAction(
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_cancel"),
+				MailResourceLoader.getString(
+					"menu",
+					"mainframe",
+					"menu_file_cancel"),
+				"CANCEL_ACTION",
+				ImageLoader.getSmallImageIcon("stock_stop-16.png"),
+				ImageLoader.getImageIcon("stock_stop.png"),
+				'0',
+				null,
+				false);
+
+		cancelAction.setEnabled(false);
+		cancelAction.addActionListener(this);
 	}
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
 
+		if (command.equals("ONLINE")) {
+			if (online == false) {
+				onlineButton.setIcon(ImageLoader.getImageIcon("online.png"));
+				onlineButton.setToolTipText("You are in ONLINE state");
+				online = true;
+			} else {
+				onlineButton.setIcon(ImageLoader.getImageIcon("offline.png"));
+				onlineButton.setToolTipText("You are in OFFLINE state");
+				online = false;
+			}
+		}
 		/*
 		if (command.equals(left.getActionCommand())) {
 			displayedWorkerIndex--;
@@ -498,9 +390,9 @@ public class StatusBar
 			if( displayedWorkerIndex < workerListSize-1 ) {
 				right.setEnabled( true );
 			}
-
+		
 			displayWorker(displayedWorkerIndex);
-
+		
 		} else if (command.equals(right.getActionCommand())) {
 			displayedWorkerIndex++;
 			if (displayedWorkerIndex == workerListSize - 1) {
@@ -512,11 +404,9 @@ public class StatusBar
 			displayWorker(displayedWorkerIndex);
 		} else 
 		*/
-		if ( command.equals("CANCEL_ACTION") ) {
+		if (command.equals("CANCEL_ACTION")) {
 			displayedWorker.cancel();
 		}
-		
-		
 
 	}
 	/**
