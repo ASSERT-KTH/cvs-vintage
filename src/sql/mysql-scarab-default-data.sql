@@ -314,6 +314,13 @@ insert into SCARAB_R_OPTION_OPTION values (87, 38, 1, 0);
 insert into SCARAB_R_OPTION_OPTION values (87, 82, 1, 0); 
 insert into SCARAB_R_OPTION_OPTION values (87, 83, 1, 0); 
 
+/*
+ * default attributes to appear on the IssueList screen
+ * if the user is not logged in or has not selected attributes,
+ * these attribute for user id=0 are used.
+ */
+INSERT INTO SCARAB_R_MODULE_USER_ATTRIBUTE VALUES (0,0,11,0);
+INSERT INTO SCARAB_R_MODULE_USER_ATTRIBUTE VALUES (0,0,9,0);
 
 /*
  * Issue Dependencies
