@@ -1,5 +1,5 @@
 Summary: Columba, Java Email Client
-%define version 0.10.1
+%define version 0.12.0
 License: MPL
 Group: EMail
 Name: columba
