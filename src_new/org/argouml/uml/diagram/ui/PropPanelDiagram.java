@@ -1,4 +1,4 @@
-// $Id: PropPanelDiagram.java,v 1.23 2004/11/28 21:48:16 mvw Exp $
+// $Id: PropPanelDiagram.java,v 1.24 2004/11/29 19:57:56 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,30 +47,30 @@ import org.argouml.util.ConfigLoader;
 public class PropPanelDiagram extends PropPanel {
 
     private JTextField field;
-    
+
     /**
      * Constructs a proppanel with a given name.
      * @see org.argouml.ui.TabSpawnable#TabSpawnable(String)
      */
     protected PropPanelDiagram(String diagramName) {
         super(diagramName, ConfigLoader.getTabPropsOrientation());
-        
+
         field = new JTextField();
         field.getDocument().addDocumentListener(new DiagramNameDocument(field));
-        
+
         addField(Translator.localize("label.name"), field);
-        
+
 
         new PropPanelButton(this,
-                ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
-                Translator.localize("button.go-up"), 
+                ResourceLoaderWrapper.lookupIconResource("NavigateUp"),
+                Translator.localize("button.go-up"),
                 new ActionNavigateUpFromDiagram());
         new PropPanelButton(this,
-                ResourceLoaderWrapper.lookupIconResource("Delete"), 
-                Translator.localize("button.delete"), 
-                new ActionRemoveFromModel());       
+                ResourceLoaderWrapper.lookupIconResource("Delete"),
+                Translator.localize("button.delete"),
+                new ActionRemoveFromModel());
     }
-    
+
     /**
      * Default constructor if there is no child of this class that can show the
      * diagram.
@@ -133,4 +133,3 @@ class ActionNavigateUpFromDiagram extends AbstractActionNavigate {
         }
     }
 }
-

@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.9 2004/11/01 19:55:05 mvw Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.10 2004/11/29 19:57:57 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,24 +42,23 @@ import ru.novosoft.uml.foundation.core.MAssociationEnd;
  * @author jaap.branderhorst@xs4all.nl
  */
 public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
-    
+
     private int oldEventPolicy;
     private MAssociationEndRole elem;
     private UMLModelElementListModel2 model;
     private MAssociation baseAssoc;
     private MAssociationEnd baseEnd;
-    private MAssociationRole assocRole; 
-    
+    private MAssociationRole assocRole;
+
     /**
      * Constructor for TestUMLAssociationEndRoleBaseListModel.
      *
      * @param arg0 is the name of the test case.
      */
     public TestUMLAssociationEndRoleBaseListModel(String arg0) {
-        super(arg0);       
+        super(arg0);
     }
 
-    
 
     /**
      * @see junit.framework.TestCase#setUp()
@@ -91,7 +90,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         MFactoryImpl.setEventPolicy(oldEventPolicy);
         model = null;
     }
-    
+
     /**
      * Test setting the Base.
      */
@@ -100,16 +99,20 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         assertEquals(1, model.getSize());
         assertEquals(baseEnd, model.getElementAt(0));
     }
-    
+
+    /**
+     * Testing that we have an empty model to begin with.
+     */
     public void testEmpty() {
         assertEquals(0, model.getSize());
         try {
             model.getElementAt(0);
             fail();
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            // This is what we expect.
         }
-        catch (Exception ex) { };
     }
-    
+
     /**
      * Test removing.
      */
