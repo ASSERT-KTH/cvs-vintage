@@ -77,7 +77,6 @@ import javax.servlet.http.*;
  */
 public final class DefaultServlet extends TomcatInternalServlet {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
-    private static final DateFormat dateFormat = new SimpleDateFormat(datePattern);
 
     ServletContext contextF;
     private Context context;
@@ -123,7 +122,6 @@ public final class DefaultServlet extends TomcatInternalServlet {
             "javax.servlet.include.path_info");
 	String requestURI = (String)request.getAttribute(
             "javax.servlet.include.request_uri");
-
 	if (pathInfo == null) {
 	    pathInfo = request.getPathInfo();
 	}
@@ -250,7 +248,6 @@ public final class DefaultServlet extends TomcatInternalServlet {
     private void serveFile(File file, HttpServletRequest request,
         HttpServletResponse response)
     throws IOException {
-
 	String absPath = file.getAbsolutePath();
 	String canPath = null;
 	try {
@@ -309,8 +306,16 @@ public final class DefaultServlet extends TomcatInternalServlet {
 	response.setContentType(mimeType);
 	response.setContentLength((int)file.length());
 	response.setDateHeader("Last-Modified", file.lastModified());
+  /// XXX can be multiple locale try in order,
+  /// now only the first or default Locale
 
-	FileInputStream in=null;
+/*  if (
+  Enumeration enumLoc=request.getLocales();
+
+  while (enumLoc.hasMoreElements()){
+    (Locale)enumLoc.nextElement();
+  }
+*/	FileInputStream in=null;
 	try {
 	    in = new FileInputStream(file);
 	    serveStream(in, request, response);
@@ -415,7 +420,11 @@ public final class DefaultServlet extends TomcatInternalServlet {
 	// important as we should be able to dive into archives
 	// and get this same kind of information in the furture.
 
+  DateFormat dateFormat = new SimpleDateFormat(datePattern,request.getLocale());
 	boolean shaderow = false;
+   //XXX Take care of the various locale the request can have
+   //
+  StringManager sm=StringManager.getManager("org.apache.tomcat.servlets",request.getLocale());
 
 	// Make sure that we don't let ../'s through
 
@@ -514,14 +523,14 @@ public final class DefaultServlet extends TomcatInternalServlet {
 	    // XXX
 	    // i18n
 
-	    buf.append("<title>Directory Listing for: " + requestURI);
+	    buf.append("<title>"+sm.getString("defaultservlet.directorylistingfor") + requestURI);
 	    buf.append("</title>\r\n</head><body bgcolor=white>\r\n");
 	}
 
 	buf.append("<table width=90% cellspacing=0 ");
 	buf.append("cellpadding=5 align=center>");
 	buf.append("<tr><td colspan=3><font size=+2><strong>");
-	buf.append("Directory Listing for: " + requestURI);
+	buf.append(sm.getString("defaultservlet.directorylistingfor") + requestURI);
 	buf.append("</strong></td></tr>\r\n");
 
 	if (! requestURI.equals("/")) {
@@ -540,13 +549,13 @@ public final class DefaultServlet extends TomcatInternalServlet {
 		toPath = "/";
 	    }
 
-	    buf.append("<a href=\"" + toPath + "\"><tt>Up to: " + toPath);
+	    buf.append("<a href=\"" + toPath + "\"><tt>"+ sm.getString("defaultservlet.upto")+ toPath);
 	    buf.append("</tt></a></td></tr>\r\n");
 	}
 
 	if (dirs.size() > 0) {
 	    buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
-	    buf.append("<font size=+2><strong>Subdirectories:</strong>\r\n");
+	    buf.append("<font size=+2><strong>"+sm.getString("defaultservlet.subdirectories")+"</strong>\r\n");
 	    buf.append("</font></td></tr>\r\n");
 
 	    Enumeration e = dirs.elements();
@@ -571,7 +580,7 @@ public final class DefaultServlet extends TomcatInternalServlet {
                     "</tt>\r\n");
                 buf.append("</td><td><tt>&nbsp;&nbsp;</tt></td>");
                 buf.append("<td align=right><tt>");
-                buf.append(dateFormat.format(new Date(f.lastModified())));
+		            buf.append(dateFormat.format(new Date(f.lastModified())));
                 buf.append("</tt></td></tr>\r\n");
             }
 
@@ -583,7 +592,7 @@ public final class DefaultServlet extends TomcatInternalServlet {
 
 	if (files.size() > 0) {
 	    buf.append("<tr><td colspan=4 bgcolor=#cccccc>");
-	    buf.append("<font size=+2><strong>Files:</strong>");
+	    buf.append("<font size=+2><strong>"+sm.getString("defaultservlet.files")+"</strong>");
 	    buf.append("</font></td></tr>");
 
 	    Enumeration e = files.elements();

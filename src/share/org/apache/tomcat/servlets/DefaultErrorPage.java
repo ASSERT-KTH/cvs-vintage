@@ -86,6 +86,7 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
 			HttpServletResponse responseH)
 	throws ServletException, IOException
     {
+  StringManager sm=StringManager.getManager("org.apache.tomcat.servlets",requestH.getLocale());
 	Request request=facadeM.getRealRequest( requestH );
 	Response response=request.getResponse();
 
@@ -95,39 +96,39 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
 
 	Throwable e= (Throwable)request.getAttribute("tomcat.servlet.error.throwable");
 	if( e!=null ) {
-	    request.getContext().log( exceptionString(e));
-	    sendPrivateError(request, response, 500, exceptionString( e ));
+	    request.getContext().log( exceptionString(e,sm));
+	    sendPrivateError(request, response, 500, exceptionString( e ,sm),sm);
 	    return;
 	}
 
 	if( status==HttpServletResponse.SC_MOVED_TEMPORARILY) {
-	    redirect( request, response, msg);
+	    redirect( request, response, msg,sm);
 	    return;
 	}
 
 	if( status==HttpServletResponse.SC_NOT_FOUND) {
-	    not_found( request, response);
+	    not_found( request, response,sm);
 	    return;
 	}
 
-	sendPrivateError( request, response, status, msg);
+	sendPrivateError( request, response, status, msg,sm);
     }
 
     // -------------------- Default error page --------------------
-    private void sendPrivateError(Request request, Response response, int sc, String msg) throws IOException {
+    private void sendPrivateError(Request request, Response response, int sc, String msg,StringManager sm) throws IOException {
 
 	response.setContentType("text/html");
 
 	response.setStatus( sc );
 	StringBuffer buf = new StringBuffer();
 	if( response.isIncluded() ) {
-	    buf.append("<h1>Included servlet error: " );
+	    buf.append("<h1>"+sm.getString("defaulterrorpage.includedservlet") );
 	}  else {
 	    buf.append("<h1>Error: ");
 	    }
 	buf.append( sc + "</h1>\r\n");
 	// More info - where it happended"
-	buf.append("<h2>Location: " + request.getRequestURI() + "</h2>");
+	buf.append("<h2>"+sm.getString("defaulterrorpage.location") + request.getRequestURI() + "</h2>");
 
 	if( msg!= null ) buf.append(msg + "\r\n");
 
@@ -141,7 +142,7 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
     }
 
     // -------------------- Redirect page --------------------
-    public void redirect(Request request, Response response, String location) throws IOException {
+    public void redirect(Request request, Response response, String location,StringManager sm) throws IOException {
 	Context ctx=request.getContext();
 
         location = makeAbsolute(request, location);
@@ -150,11 +151,11 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
 	response.setHeader("Location", location);
 
 	StringBuffer buf = new StringBuffer();
-	buf.append("<head><title>Document moved</title></head>\r\n");
-	buf.append("<body><h1>Document moved</h1>\r\n");
-	buf.append("This document has moved <a href=\"");
+	buf.append("<head><title>"+sm.getString("defaulterrorpage.documentmoved")+"</title></head>\r\n");
+	buf.append("<body><h1>"+sm.getString("defaulterrorpage.documentmoved")+"</h1>\r\n");
+	buf.append(sm.getString("defaulterrorpage.thisdocumenthasmoved")+" <a href=\"");
 	buf.append(location);
-	buf.append("\">here</a>.<p>\r\n");
+	buf.append("\">"+"here"+"</a>.<p>\r\n");
 	buf.append("</body>\r\n");
 
 	String body = buf.toString();
@@ -172,13 +173,13 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
 	}
     }
 
-    public void not_found(Request request, Response response) throws IOException {
+    public void not_found(Request request, Response response,StringManager sm) throws IOException {
 	response.setContentType("text/html");	// ISO-8859-1 default
 
 	StringBuffer buf = new StringBuffer();
-	buf.append("<head><title>Not Found (404)</title></head>\r\n");
-	buf.append("<body><h1>Not Found (404)</h1>\r\n");
-	buf.append("Original request ").append( request.getRequestURI());
+	buf.append("<head><title>"+sm.getString("defaulterrorpage.notfound404")+"</title></head>\r\n");
+	buf.append("<body><h1>"+sm.getString("defaulterrorpage.notfound404")+"</h1>\r\n");
+	buf.append(sm.getString("defaulterrorpage.originalrequest")).append( request.getRequestURI());
 	buf.append("</body>\r\n");
 
 	String body = buf.toString();
@@ -216,35 +217,35 @@ public final class DefaultErrorPage extends TomcatInternalServlet {
     }
 
     // -------------------- Internal error page  --------------------
-    public String exceptionString( Throwable e) {
+    public String exceptionString( Throwable e,StringManager sm) {
 	StringWriter sw = new StringWriter();
 	PrintWriter pw = new PrintWriter(sw);
-	pw.println("<b>Internal Servlet Error:</b><br>");
+	pw.println("<b>"+sm.getString("defaulterrorpage.internalservleterror")+"</b><br>");
         pw.println("<pre>");
 	if( e != null ) 
 	    e.printStackTrace(pw);
 	pw.println("</pre>");
 
         if (e instanceof ServletException) {
-	    printRootCause((ServletException) e, pw);
+	    printRootCause((ServletException) e, pw,sm);
 	}
 	return sw.toString();
     }
-	
-	
+
+
     /** A bit of recursion - print all traces in the stack
      */
-    void printRootCause(ServletException e, PrintWriter out) {
+    void printRootCause(ServletException e, PrintWriter out,StringManager sm) {
         Throwable cause = e.getRootCause();
 
 	if (cause != null) {
-	    out.println("<b>Root cause:</b>");
+	    out.println("<b>"+sm.getString("defaulterrorpage.rootcause")+"</b>");
 	    out.println("<pre>");
 	    cause.printStackTrace(out);
 	    out.println("</pre>");
 
 	    if (cause instanceof ServletException) {
-		printRootCause((ServletException)cause, out);  // recurse
+		printRootCause((ServletException)cause, out,sm);  // recurse
 	    }
 	}
     }
