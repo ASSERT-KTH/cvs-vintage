@@ -1,4 +1,4 @@
-package org.tigris.scarab.word;
+package org.tigris.scarab.util.word;
 
 /* ================================================================
  * Copyright (c) 2001 Collab.Net.  All rights reserved.
@@ -65,7 +65,7 @@ import org.tigris.scarab.om.*;
  * This class handles vocabulary information for a single issue
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor Karpelevitch</a>
- * @version $Id: Vocabulary.java,v 1.8 2001/04/19 06:28:51 jmcnally Exp $
+ * @version $Id: Vocabulary.java,v 1.1 2001/04/25 00:52:41 jon Exp $
  */
 public class Vocabulary
 {

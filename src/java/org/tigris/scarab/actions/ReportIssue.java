@@ -75,13 +75,13 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
-import org.tigris.scarab.word.Vocabulary;
+import org.tigris.scarab.util.word.Vocabulary;
 
 /**
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.10 2001/04/23 06:40:07 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.11 2001/04/25 00:52:41 jon Exp $
 */
 public class ReportIssue extends VelocityAction
 {
