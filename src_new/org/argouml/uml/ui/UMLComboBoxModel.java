@@ -1,4 +1,4 @@
-// $Id: UMLComboBoxModel.java,v 1.22 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.23 2003/09/04 19:11:17 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLComboBoxModel.java
 // Classes: UMLComboBoxModel
 // Original Author: 
-// $Id: UMLComboBoxModel.java,v 1.22 2003/08/30 13:23:41 bobtarling Exp $
+// $Id: UMLComboBoxModel.java,v 1.23 2003/09/04 19:11:17 thierrylach Exp $
 
 package org.argouml.uml.ui;
 
@@ -1061,7 +1061,7 @@ public class UMLComboBoxModel extends AbstractListModel implements
         // now, because this triggers even when we just show the combo for
         // the first time on selection.
 
-        //Project p = ProjectBrowser.TheInstance.getProject();
+        //Project p = ProjectBrowser.getInstance().getProject();
         //p.setNeedsSave(true);
     }
 

@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.54 2003/08/20 22:27:32 alexb Exp $
+// $Id: CoreFactory.java,v 1.55 2003/09/04 19:11:18 thierrylach Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -952,7 +952,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      */
     public MClass buildClass() {
 	MClass cl = createClass();
-	// cl.setNamespace(ProjectBrowser.TheInstance.getProject().getModel());
+	// cl.setNamespace(ProjectBrowser.getInstance().getProject().getModel());
 	cl.setName("");
 	cl.setStereotype(null);
 	cl.setAbstract(false);
@@ -1012,7 +1012,7 @@ public class CoreFactory extends AbstractUmlModelFactory {
      */
     public Object buildInterface() {
 	MInterface cl = createInterface();
-	// cl.setNamespace(ProjectBrowser.TheInstance.getProject().getModel());
+	// cl.setNamespace(ProjectBrowser.getInstance().getProject().getModel());
 	cl.setName("");
 	cl.setStereotype(null);
 	cl.setAbstract(false);

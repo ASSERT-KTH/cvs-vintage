@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.19 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.20 2003/09/04 19:11:17 thierrylach Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: SequenceDiagramGraphModel.java
 // Classes: SequenceDiagramGraphModel
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: SequenceDiagramGraphModel.java,v 1.19 2003/09/01 17:56:35 bobtarling Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.20 2003/09/04 19:11:17 thierrylach Exp $
 
 package org.argouml.uml.diagram.sequence;
 
@@ -290,7 +290,7 @@ public class SequenceDiagramGraphModel extends UMLMutableGraphSupport
                             //if we want to allow the sequence number to appear
                             /*UMLSequenceDiagram
 			      sd=(UMLSequenceDiagram)
-			      ProjectBrowser.TheInstance.getActiveDiagram();
+			      ProjectBrowser.getInstance().getActiveDiagram();
 			      int num=sd.getNumStimuluss()+1;
 			      stimulus.setName(""+num);*/
                             //otherwise: no sequence number
