@@ -286,7 +286,18 @@ public final class JDBCRealm extends BaseInterceptor {
             // Establish the database connection if necessary
             if ((dbConnection == null) || dbConnection.isClosed()) {
                 log(sm.getString("jdbcRealm.authDBClosed"));
-                dbConnection = DriverManager.getConnection(connectionURL);
+
+                if ((connectionName == null || connectionName.equals("")) &&
+                    (connectionPassword == null || connectionPassword.equals(""))) {
+                      dbConnection = DriverManager.getConnection(connectionURL);
+                } else {
+                     dbConnection = DriverManager.getConnection(connectionURL,
+                                                                connectionName,
+                                                                connectionPassword);
+                }
+
+                //dbConnection = DriverManager.getConnection(connectionURL);
+
                 if( (dbConnection == null) || dbConnection.isClosed() ) {
                     log(sm.getString("jdbcRealm.authDBReOpenFail"));
                     return false;
@@ -355,7 +366,16 @@ public final class JDBCRealm extends BaseInterceptor {
           if( (dbConnection == null) || dbConnection.isClosed() ) {
             log(sm.getString("jdbcRealm.getUserRolesDBClosed"));
 
-            dbConnection = DriverManager.getConnection(connectionURL);
+            if ((connectionName == null || connectionName.equals("")) &&
+                (connectionPassword == null || connectionPassword.equals(""))) {
+                dbConnection = DriverManager.getConnection(connectionURL);
+            } else {
+                dbConnection = DriverManager.getConnection(connectionURL,
+                                                           connectionName,
+                                                           connectionPassword);
+            }
+
+            //dbConnection = DriverManager.getConnection(connectionURL);
 
             if( dbConnection == null || dbConnection.isClosed() ) {
               log(sm.getString("jdbcRealm.getUserRolesDBReOpenFail"));
