@@ -354,7 +354,7 @@ be configured.
 The ejb-relation element contains the configuration of an
 ejb-relation.
 -->
-<!ELEMENT ejb-relation (ejb-relation-name, 
+<!ELEMENT ejb-relation (ejb-relation-name, read-only?,
          (foreign-key-mapping | table-mapping))>
 
 
