@@ -1026,7 +1026,8 @@ public class Context {
     
     ServletClassLoader getLoader() {
 	if(servletLoader == null) {
-	    servletLoader = new ServletClassLoaderImpl(this);
+	    // XXX configurable option !!!
+	    servletLoader = new org.apache.tomcat.loader.ServletClassLoaderImpl(this);
 	}
 	return servletLoader;
     }
