@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/Attic/BodyJspWriterImpl.java,v 1.1 1999/10/09 00:20:39 duncan Exp $
+ * $Id: BodyContentImpl.java,v 1.1 1999/10/14 04:08:19 akv Exp $
  * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:39 $
+ * $Date: 1999/10/14 04:08:19 $
  *
  * ====================================================================
  * 
@@ -68,7 +68,8 @@ import java.io.CharArrayReader;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletResponse;
-import javax.servlet.jsp.tagext.BodyJspWriter;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.BodyContent;
 
 import org.apache.jasper.Constants;
 
@@ -77,25 +78,146 @@ import org.apache.jasper.Constants;
  * to provide for the efficient writing of single characters, arrays,
  * and strings. 
  *
- * Provide support for discarding for the output that has been 
- * buffered. 
+ * Provide support for discarding for the output that has been buffered. 
  *
- * TODO: this needs some serious revisiting!! -akv
- *
- * @author Harish Prabandham
  * @author Rajiv Mordani
  */
-public class BodyJspWriterImpl extends BodyJspWriter {
+public class BodyContentImpl extends BodyContent {
 
-    private DelegateWriter delegate = null;
+    private char[] cb;
+    protected int bufferSize = Constants.DEFAULT_BUFFER_SIZE;
+    private int nextChar;
+    static String lineSeparator = System.getProperty("line.separator");
 
-    public BodyJspWriterImpl(int sz) {
-        super(sz, false);
-        if (sz <= 0)
-            throw new IllegalArgumentException(Constants.getString (
-	    			"jsp.buffer.size.zero"));
-        delegate = new DelegateWriter(sz, false); 
+
+    public BodyContentImpl (JspWriter writer) {
+        super(writer);
+	cb = new char[bufferSize];
+	nextChar = 0;
     }
+
+    /**
+     * Write a single character.
+     *
+     */
+    public void write(int c) throws IOException {
+        synchronized (lock) {
+            if (nextChar >= bufferSize) {
+	        reAllocBuff (0);
+	    }
+            cb[nextChar++] = (char) c;
+        }
+    }
+
+    private void reAllocBuff (int len) {
+        //Need to re-allocate the buffer since it is to be
+	//unbounded according to the updated spec..
+        char[] tmp = new char [bufferSize];
+	System.arraycopy(cb, 0, tmp, 0, cb.length);
+	//XXX Should it be multiple of DEFAULT_BUFFER_SIZE??
+	if (len < Constants.DEFAULT_BUFFER_SIZE) {
+	    cb = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
+	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
+	} else {
+	    cb = new char [bufferSize + len];
+	    bufferSize += len;
+	}
+	System.arraycopy(tmp, 0, cb, 0, tmp.length);
+	tmp = null;
+    }
+
+    /**
+     * Our own little min method, to avoid loading java.lang.Math if we've run
+     * out of file descriptors and we're trying to print a stack trace.
+     */
+    private int min(int a, int b) {
+	if (a < b) return a;
+	return b;
+    }
+
+    /**
+     * Write a portion of an array of characters.
+     *
+     * <p> Ordinarily this method stores characters from the given array into
+     * this stream's buffer, flushing the buffer to the underlying stream as
+     * needed.  If the requested length is at least as large as the buffer,
+     * however, then this method will flush the buffer and write the characters
+     * directly to the underlying stream.  Thus redundant
+     * <code>DiscardableBufferedWriter</code>s will not copy data unnecessarily.
+     *
+     * @param  cbuf  A character array
+     * @param  off   Offset from which to start reading characters
+     * @param  len   Number of characters to write
+     *
+     */
+    public void write(char cbuf[], int off, int len) 
+        throws IOException 
+    {
+        synchronized (lock) {
+
+            if ((off < 0) || (off > cbuf.length) || (len < 0) ||
+                ((off + len) > cbuf.length) || ((off + len) < 0)) {
+                throw new IndexOutOfBoundsException();
+            } else if (len == 0) {
+                return;
+            } 
+
+            if (len >= bufferSize - nextChar) {
+                /* If the request length exceeds the size of the output buffer,
+                   re-allocate atleast the length of the buffer. */
+		   reAllocBuff (len);
+            }
+
+            int b = off, t = off + len;
+            while (b < t) {
+                int d = min(bufferSize - nextChar, t - b);
+                System.arraycopy(cbuf, b, cb, nextChar, d);
+                b += d;
+                nextChar += d;
+                if (nextChar >= bufferSize) 
+		    reAllocBuff(0);
+            }
+        }
+    }
+
+    /**
+     * Write an array of characters.  This method cannot be inherited from the
+     * Writer class because it must suppress I/O exceptions.
+     */
+    public void write(char buf[]) throws IOException {
+	write(buf, 0, buf.length);
+    }
+
+    /**
+     * Write a portion of a String.
+     *
+     * @param  s     String to be written
+     * @param  off   Offset from which to start reading characters
+     * @param  len   Number of characters to be written
+     *
+     */
+    public void write(String s, int off, int len) throws IOException {
+        synchronized (lock) {
+            int b = off, t = off + len;
+            while (b < t) {
+                int d = min(bufferSize - nextChar, t - b);
+                s.getChars(b, b + d, cb, nextChar);
+                b += d;
+                nextChar += d;
+                if (nextChar >= bufferSize) 
+		    reAllocBuff(0);
+            }
+        }
+    }
+
+    /**
+     * Write a string.  This method cannot be inherited from the Writer class
+     * because it must suppress I/O exceptions.
+     */
+    public void write(String s) throws IOException {
+	write(s, 0, s.length());
+    }
+
 
     /**
      * Write a line separator.  The line separator string is defined by the
@@ -106,7 +228,9 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void newLine() throws IOException {
-	delegate.newLine();
+	synchronized (lock) {
+	    write(lineSeparator);
+	}
     }
 
     /**
@@ -121,7 +245,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(boolean b) throws IOException {
-   	delegate.print (b); 
+	write(b ? "true" : "false");
     }
 
     /**
@@ -135,7 +259,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(char c) throws IOException {
-   	delegate.print (c); 
+	write(String.valueOf(c));
     }
 
     /**
@@ -151,7 +275,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(int i) throws IOException {
-   	delegate.print (i); 
+	write(String.valueOf(i));
     }
 
     /**
@@ -167,7 +291,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(long l) throws IOException {
-   	delegate.print (l); 
+	write(String.valueOf(l));
     }
 
     /**
@@ -183,7 +307,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(float f) throws IOException {
-   	delegate.print (f); 
+	write(String.valueOf(f));
     }
 
     /**
@@ -199,7 +323,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(double d) throws IOException {
-   	delegate.print (d); 
+	write(String.valueOf(d));
     }
 
     /**
@@ -215,7 +339,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(char s[]) throws IOException {
-   	delegate.print (s); 
+	write(s);
     }
 
     /**
@@ -230,7 +354,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(String s) throws IOException {
-   	delegate.print (s); 
+	if (s == null) {
+	    s = "null";
+	}
+	write(s);
     }
 
     /**
@@ -246,7 +373,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void print(Object obj) throws IOException {
-   	delegate.print (obj); 
+	write(String.valueOf(obj));
     }
 
     /**
@@ -258,7 +385,7 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println() throws IOException {
-   	delegate.println(); 
+	newLine();
     }
 
     /**
@@ -269,7 +396,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(boolean x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -280,7 +410,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(char x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -291,7 +424,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(int x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -302,7 +438,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(long x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -313,7 +452,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(float x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -324,7 +466,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(double x) throws IOException{
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -335,7 +480,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(char x[]) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -346,7 +494,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(String x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -357,7 +508,10 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void println(Object x) throws IOException {
-   	delegate.println (x); 
+	synchronized (lock) {
+	    print(x);
+	    println();
+	}
     }
 
     /**
@@ -370,7 +524,6 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void clear() throws IOException {
-   	delegate.clear(); 
     }
 
     /**
@@ -383,7 +536,6 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void clearBuffer() throws IOException {
-   	delegate.clearBuffer(); 
     }
 
     /**
@@ -397,7 +549,6 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void flush()  throws IOException {
-        delegate.flush ();
     }
 
     /**
@@ -409,7 +560,6 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public void close() throws IOException {
-   	delegate.close (); 
     }
 
     /**
@@ -417,13 +567,8 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      */
 
     public int getRemaining() {
-    	return delegate.getRemaining ();
+        return bufferSize - nextChar;
     }
-
-    /**
-     * @return if this JspWriter is auto flushing or throwing IOExceptions on 
-     * buffer overflow conditions
-     */
 
     /**
      * Return the value of this BodyJspWriter as a Reader.
@@ -433,7 +578,11 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      * @returns the value of this BodyJspWriter as a Reader
      */
     public Reader getReader() {
-  	return delegate.getReader(); 
+	//XXX need to optimize this
+	    char[] tmp = new char [ nextChar - 1];
+	    for (int i=0; i < tmp.length; i++) 
+	        tmp[i] = cb[i];	
+	    return new CharArrayReader (tmp);
     }
 
     /**
@@ -444,7 +593,11 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      * @returns the value of the BodyJspWriter as a String
      */
     public String getString() {
-   	return delegate.getString (); 
+	//XXX need to optimize this
+	    char[] tmp = new char [ nextChar - 1];
+	    for (int i=0; i < tmp.length; i++) 
+	        tmp[i] = cb[i];	
+	    return new String (tmp);
     }
 	
     /**
@@ -456,78 +609,25 @@ public class BodyJspWriterImpl extends BodyJspWriter {
      * this body evaluation
      */
     public void writeOut(Writer out) {
-   	delegate.writeOut (out); 
+	try {
+            out.write (cb);
+	} catch (IOException ioe) {
+	    //What do we do here???	
+	}
     }
 
-    public void write(char cbuf[], int off, int len) 
-              throws IOException
-    {
-   	delegate.write(cbuf, off, len); 
-    }
-    public void write(int c) throws IOException {
-   	delegate.write (c); 
+    public void clearBody() {
+        nextChar = 0;
+	cb = null;
+	bufferSize = Constants.DEFAULT_BUFFER_SIZE;
     }
 
-    class DelegateWriter extends JspWriterImpl {
-
-        public DelegateWriter(int sz, boolean autoflush) {
-            super(null, sz, autoflush);
-        }
-
-        protected void initOut() {
-        }
-
-        protected void ensureOpen () {
-        }
-        /**
-         * Flush the stream.
-         *
-         */
-        public void flush()  throws IOException {
-            synchronized (lock) {
-                flushBuffer();
-                if (out != null) {
-                    if (!(out instanceof BodyJspWriter))
-                        out.flush();
-	        }
-            }
-        }
-
-        public void clearBody() {
-            try{
-            super.clear();
-            }catch(IOException ioe){}
-        }
-
-        public Reader getReader() {
-	//XXX need to optimize this
-	    char[] tmp = new char [ nextChar - 1];
-	    for (int i=0; i < tmp.length; i++) 
-	        tmp[i] = cb[i];	
-	    return new CharArrayReader (tmp);
-        }
-
-        public String getString() {
-	//XXX need to optimize this
-	    char[] tmp = new char [ nextChar - 1];
-	    for (int i=0; i < tmp.length; i++) 
-	        tmp[i] = cb[i];	
-	    return new String (tmp);
-        }
-
-        public void writeOut(Writer out) {
-            super.out = out;
-            try {
-                this.flush();
-            }catch(IOException ioe) {
-	    }
-        }
-    }
     public static void main (String[] args) throws Exception {
 	char[] buff = {'f','o','o','b','a','r','b','a','z','y'};
-   	BodyJspWriterImpl bodyWriter = new BodyJspWriterImpl(100);
-	bodyWriter.println (buff);
-	System.out.println (bodyWriter.getString ());
-	bodyWriter.writeOut (new PrintWriter (System.out));
+   	BodyContentImpl bodyContent = new BodyContentImpl(new JspWriterImpl(
+							null, 100, false));
+	bodyContent.println (buff);
+	System.out.println (bodyContent.getString ());
+	bodyContent.writeOut (new PrintWriter (System.out));
     }
 }
