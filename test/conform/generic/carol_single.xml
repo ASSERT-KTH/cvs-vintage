@@ -58,14 +58,14 @@
   <path id="test.name.server.classpath">
     <fileset dir="${carol.dist}/lib">
       <include name="**/*.jar"/>
-    </fileset> 
+    </fileset>
+    <fileset dir="${test.externals}">
+      <include name="**/*.jar"/>
+    </fileset>  
     <fileset dir="${test.dist.lib}">
       <include name="**/carol_test.jar"/>
       <include name="**/${stub.jar.name}"/>      
-    </fileset>  
-    <fileset dir="${test.externals}">
-      <include name="**/*.jar"/>
-    </fileset>
+    </fileset> 
   </path>
   
   <target name="all">
@@ -92,19 +92,19 @@
   <!-- test launching --> 
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.single">
-    
-    <condition property="is.jdk.1.4">
-      <equals arg1="${ant.java.version}" arg2="1.4"/>
+      
+    <condition property="is.jvm.1.4">
+      <equals  arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
 
     <parallel>
-      <!-- launch the name server -->
-      <java classname="${name.server.class.name}" fork="true" timeout="20000">
+    
+      <java classname="${name.server.class.name}" fork="true" timeout="30000">
 	<jvmarg value="-Djava.security.policy=${test.ext}/java.policy"/>
 	<arg line="${name.server.option}"/>	
 	<classpath refid="test.name.server.classpath"/>
       </java>
-
+      
       <!-- launch the server -->
       <sequential>
 	<sleep seconds="3"/>
@@ -136,7 +136,7 @@
     <antcall  target="report"/>
   </target> 
   
-  <target name="report" if="is.jdk.1.4" >
+  <target name="report" if="is.jvm.1.4" >
     <junitreport todir="${report.dir}" >
       <fileset dir="${report.dir}">
 	<include name="TEST-*.xml"/>

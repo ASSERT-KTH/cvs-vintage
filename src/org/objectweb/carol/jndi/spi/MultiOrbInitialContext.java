@@ -91,6 +91,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().lookup(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("lookup fail:\n" +
 				      getProperties() 
 				      + e);
@@ -102,6 +103,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().lookup(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("lookup fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -117,6 +119,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("bind fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -132,6 +135,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("bind fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -147,6 +151,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("rebind fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -162,6 +167,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("rebind fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -177,6 +183,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("unbind fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -192,6 +199,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("unbind fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -207,6 +215,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("rename fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -222,6 +231,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("rename fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -232,6 +242,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().list(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("list fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -242,6 +253,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().list(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("list fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -253,6 +265,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().listBindings(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("list fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -264,6 +277,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().listBindings(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException(" listBindings fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -279,6 +293,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    } 
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("destroySubcontext fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -294,6 +309,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    }  
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("destroySubcontext fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -304,6 +320,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("createSubcontext fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -314,6 +331,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().createSubcontext(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("createSubcontext fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -324,6 +342,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().lookupLink(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("lookupLink fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -334,6 +353,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().lookupLink(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("lookupLink fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -344,6 +364,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().getNameParser(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("getNameParser fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -354,6 +375,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().getNameParser(name);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("getNameParser fail:\n" + 
 				      getProperties() 
 				      + e);
@@ -369,6 +391,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return (Name)name.clone();
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("composeName fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -380,6 +403,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().addToEnvironment(propName, propVal);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("addToEnvironment fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -391,6 +415,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().removeFromEnvironment(propName);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("removeFromEnvironment fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -401,6 +426,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().getEnvironment();
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("getEnvironment fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -416,6 +442,7 @@ public class MultiOrbInitialContext implements Context {
 		pcur.setDefault();
 	    } 
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("close fail:\n"  +
 				      getProperties() 
 				      + e);
@@ -426,6 +453,7 @@ public class MultiOrbInitialContext implements Context {
 	try {
 	    return pcur.getCurrentInitialContext().getNameInNamespace();
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new NamingException("getNameInNamespace fail:\n"  +
 				      getProperties() 
 				      + e);

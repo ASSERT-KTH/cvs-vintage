@@ -37,6 +37,7 @@
   <property name="dist.jdoc"  	   value="${dist}/jdoc"/>
   <property name="dist.config"     value="${dist}/config"/>
   <property name="dist.doc"  	   value="${dist}/doc"/> 
+  <property name="tmp"  	   value="${dist}/tmp"/> 
 
   <!-- joanthan jar properties -->
   <property name="jonathan.jar"   value="${externals}/jonathan.jar"/> 
@@ -193,6 +194,7 @@
     </javadoc>
     <antcall target="jdoc.iiop"/>
   </target>
+
   <!-- iiop java doc -->
   <target name="jdoc.iiop" if="interceptor.classes.presents">
     <mkdir dir="${dist.jdoc}"/>
@@ -216,7 +218,10 @@
   <!-- *************************************-->
   <!-- This target simply copy the present in ${doc} directory  -->
   <target name="doc" description="Build carol documentation">
-    <mkdir dir="${dist.doc}"/>
+    <mkdir dir="${dist.doc}/usermanual"/>  
+    <copy todir="${dist.doc}/usermanual">
+      <fileset dir="${doc}/usermanual"/>
+    </copy>
   </target>
 
   <!-- *************************************-->
@@ -238,6 +243,43 @@
     <delete dir="${build}"/>
     <delete dir="${dist}"/>
   </target>
+
+  <!-- ***********************************************-->
+  <!-- *********     PACKAGE (thanks Jef!)      *******-->
+  <!-- ***********************************************-->
+  <target name="packages" depends="clean,package.src,package.jar"
+    if="version"
+    description="--> create two packages (source and binaries)
+    (version is specified by -Dversion=x.y.z)"/>
+  
+  <target name="package.jar" depends="dist" if="version">
+    <mkdir dir="${tmp}" />
+    <copy todir="${tmp}/carol-${version}" includeEmptyDirs="no">
+      <fileset dir="${dist}" />
+    </copy>
+    <tar tarfile="${tmp}/carol-${version}.tar"
+      longfile="gnu"
+      basedir="${tmp}/"
+      includes="carol-${version}/**" />
+    <gzip zipfile="${dist}/../carol-${version}.tgz"
+      src="${tmp}/carol-${version}.tar" />
+    <delete dir="${tmp}"/>
+  </target>
+  
+  <target name="package.src" depends="clean" if="version">
+    <mkdir dir="${tmp}" />
+    <copy todir="${tmp}/carol-${version}-src" includeEmptyDirs="no">
+      <fileset dir="${basedir}" />
+    </copy>
+    <tar tarfile="${tmp}/carol-${version}-src.tar"
+      longfile="gnu"
+      basedir="${tmp}/"
+      includes="carol-${version}-src/**" />
+    <gzip zipfile="${dist}/../carol-${version}-src.tgz"
+      src="${tmp}/carol-${version}-src.tar" />
+    <delete dir="${tmp}"/>
+  </target>
+
 
   <!-- **********************************-->
   <!-- *********     HELP       **********-->

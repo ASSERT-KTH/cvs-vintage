@@ -138,8 +138,8 @@
   <!-- those tests are launch with a parallele task -->
   <target name="launch.test.double">
     
-    <condition property="is.jdk.1.4">
-      <equals arg1="${ant.java.version}" arg2="1.4"/>
+    <condition property="is.jvm.1.4">
+      <equals  arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
 
     <parallel>
@@ -205,7 +205,7 @@
     <antcall  target="report"/>
   </target> 
 
-  <target name="report" if="is.jdk.1.4" >
+  <target name="report" if="is.jvm.1.4" >
     <junitreport todir="${report.dir}">
       <fileset dir="${report.dir}">
 	<include name="TEST-*.xml"/>
