@@ -71,7 +71,6 @@ import java.util.*;
 import java.security.*;
 
 import org.apache.tomcat.logging.*;
-import org.apache.tomcat.loader.*;
 
 /**
  * Set class loader based on WEB-INF/classes, lib.

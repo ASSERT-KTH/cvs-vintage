@@ -746,8 +746,8 @@ public class Context implements LogAware {
      *  is used, you shouldn't cache the result
      */
     public final ClassLoader getClassLoader() {
-	if( servletL!=null) // backward compat
-	    return servletL.getClassLoader();
+	// 	if( servletL!=null) // backward compat
+	// 	    return servletL.getClassLoader();
 	return classLoader;
     }
 
@@ -757,8 +757,8 @@ public class Context implements LogAware {
 
     // temp. properties until reloading is separated.
     public boolean shouldReload() {
-	if( servletL!=null) // backward compat
-	    return servletL.shouldReload();
+	// 	if( servletL!=null) // backward compat
+	// 	    return servletL.shouldReload();
 	if( dependM != null )
 	    return dependM.shouldReload();
 	return reload;
@@ -769,8 +769,8 @@ public class Context implements LogAware {
     }
 
     public void reload() {
-	if( servletL!=null) // backward compat
-	    servletL.reload();
+	// 	if( servletL!=null) // backward compat
+	// 	    servletL.reload();
 	Enumeration sE=servlets.elements();
 	while( sE.hasMoreElements() ) {
 	    try {
@@ -808,17 +808,6 @@ public class Context implements LogAware {
 	return dependM;
     }
     
-    // deprecated
-    private org.apache.tomcat.loader.AdaptiveServletLoader servletL;
-
-    public void setServletLoader(org.apache.tomcat.loader.AdaptiveServletLoader loader ) {
-	this.servletL=loader;
-    }
-
-    private org.apache.tomcat.loader.AdaptiveServletLoader getServletLoader() {
-	return servletL;
-    }
-
     /* -------------------- Utils  -------------------- */
     public void setDebug( int level ) {
 	if (level!=debug)

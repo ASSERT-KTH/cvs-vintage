@@ -340,7 +340,7 @@ public class EmbededTomcat { // extends WebService
 	addContextInterceptor( polI );
 	polI.setDebug(0);
         
-	LoaderInterceptor loadI=new LoaderInterceptor();
+	LoaderInterceptor12 loadI=new LoaderInterceptor12();
 	addContextInterceptor( loadI );
 
 	DefaultCMSetter defaultCMI=new DefaultCMSetter();
