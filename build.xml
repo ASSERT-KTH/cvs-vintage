@@ -71,79 +71,19 @@
   </target>
 
   <target name="dist" depends="main">
-    <mkdir dir="./dist"/>
-    <mkdir dir="./dist/tomcat"/>
-    <mkdir dir="./dist/tomcat/etc"/>
-    <mkdir dir="./dist/tomcat/lib"/>
-
-    <copydir src="src/webpages"
-        dest="./dist/tomcat/webpages"/>
-    <copydir src="src/examples"
-        dest="./dist/tomcat/examples"/>
-    <copydir src="src/share/javax"
-        dest="./dist/tomcat/src/javax"/>
-    <copyfile src="../jakarta-tools/projectx-tr2.jar"
-        dest="./dist/tomcat/lib/xml.jar"/>
-
-    <copyfile src="src/shell/startup.sh"
-        dest="./dist/tomcat/startserver"/>
-    <copyfile src="src/shell/startup.bat"
-        dest="./dist/tomcat/startserver.bat"/>
-    <copyfile src="src/shell/shutdown.sh"
-        dest="./dist/tomcat/stopserver"/>
-    <copyfile src="src/shell/shutdown.bat"
-        dest="./dist/tomcat/stopserver.bat"/>
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-        dest="./dist/tomcat/server.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.xml"
-        dest="./dist/tomcat/etc/server.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/shell/deployment/server.dtd"
-        dest="./dist/tomcat/etc/server.dtd"/>
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.xml"
-        dest="./dist/tomcat/etc/web.xml"/>
-    <copyfile src="src/share/org/apache/tomcat/deployment/web.dtd"
-        dest="./dist/tomcat/etc/web.dtd"/>
-    <copyfile src="src/etc/license.txt"
-        dest="./dist/tomcat/LICENSE"/>
-    <copyfile src="src/etc/readme"
-        dest="./dist/tomcat/README"/>
-    <copyfile src="src/etc/faq"
-        dest="./dist/tomcat/FAQ"/>
-    <copyfile src="src/etc/SimpleStartup.java"
-        dest="./dist/tomcat/etc/SimpleStartup.java"/>
-
-    <javac srcdir="src/webpages/WEB-INF/classes"
-        destdir="${dest}/webpages/WEB-INF/classes"
-        classpath="${dest}/classes"/>
-    <javac srcdir="src/examples/WEB-INF/classes"
-        destdir="./dist/tomcat/examples/WEB-INF/classes"
-        classpath="${dest}/classes"/>
-
-<!-- XXX
-
-     shouldn't this have been picked up by the
-     previous javac
-    <javac srcdir="src/examples/WEB-INF/classes/jsp/beans"
-        destdir="${dest}/examples/WEB-INF/classes/jsp/beans"
-        classpath="${dest}/classes"/>
-
--->
-
-    <javac srcdir="src/examples/jsp/plugin/applet"
-        destdir="./dist/tomcat/examples/jsp/plugin/applet"/>
-
-    <jar jarfile="./dist/tomcat/webserver.jar"
+    <jar jarfile="${dest}/webserver.jar"
         basedir="${dest}/classes"
         items="org/apache/tomcat"/>
-    <jar jarfile="./dist/tomcat/lib/servlet.jar"
+    <jar jarfile="${dest}/lib/servlet.jar"
         basedir="${dest}/classes"
         items="javax/servlet"/>
-    <jar jarfile="./dist/tomcat/lib/jasper.jar"
+    <jar jarfile="${dest}/lib/jasper.jar"
         basedir="${dest}/classes"
         items="org/apache/jasper"/>
+    <deltree dir="${dest}/classes"/> 
   </target>
 
-  <target name="test" depends="dist">
+  <target name="test" depends="main">
     <mkdir dir="./test"/>
     <mkdir dir="./test/tomcat"/>
     <mkdir dir="./test/tomcat/classes"/>
@@ -165,10 +105,10 @@
 
     <javac srcdir="src/tests/share"
         destdir="./test/tomcat/classes"
-        classpath="./dist/tomcat/servlet.jar:./dist/tomcat/webserver.jar:./src/lib/moo.jar"/>
+        classpath="${dest}/classes:${dest}/lib/servlet.jar:${dest}/webserver.jar:../jakarta-tools/moo.jar"/>
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
         destdir="./test/tomcat/webpages/WEB-INF/classes"
-        classpath="./dist/tomcat/lib/servlet.jar"/>
+        classpath="${dest}/classes:${dest}/lib/servlet.jar"/>
   </target>
 
   <target name="servlet">
@@ -186,8 +126,6 @@
 
   <target name="clean">
     <deltree dir="${dest}"/>
-    <deltree dir="./dist/tomcat"/>
-    <deltree dir="./test/tomcat"/>
   </target>
 
     <target name="all" depends="clean,main,dist,test"/>
