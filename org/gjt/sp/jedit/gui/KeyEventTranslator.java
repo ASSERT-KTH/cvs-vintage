@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * warts in the AWT key event API.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventTranslator.java,v 1.5 2003/06/18 19:40:32 spestov Exp $
+ * @version $Id: KeyEventTranslator.java,v 1.6 2003/06/18 19:46:37 spestov Exp $
  */
 public class KeyEventTranslator
 {
@@ -115,7 +115,7 @@ public class KeyEventTranslator
 			return null;
 		}
 
-		Key trans = transMap.get(returnValue);
+		Key trans = (Key)transMap.get(returnValue);
 		if(trans == null)
 			return returnValue;
 		else
