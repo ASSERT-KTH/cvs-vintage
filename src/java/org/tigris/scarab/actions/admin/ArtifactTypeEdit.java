@@ -84,7 +84,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.22 2002/05/03 00:54:13 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.23 2002/05/08 22:32:50 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -139,6 +139,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         {
             dupeOrder = Integer.parseInt(data.getParameters()
                                                  .getString("dupe_order"));
+
             // Check for duplicate sequence numbers
             for (int i=0; i<attGroups.size(); i++) 
             {
@@ -217,7 +218,10 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             }
             else
             {
-                rmit.setDedupe(true);
+                Group rmitGroup = intake.get("RModuleIssueType", 
+                                        rmit.getQueryKey(), false);
+                Field dedupe = rmitGroup.get("Dedupe");
+                dedupe.setProperty(rmit);
             }
             rmit.save();
         }
