@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.12 2005/01/03 15:43:02 bobtarling Exp $
+// $Id: ZargoFilePersister.java,v 1.13 2005/01/03 21:37:30 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,9 +160,9 @@ public class ZargoFilePersister extends UmlFilePersister {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("Saving member: "
                                 + ((ProjectMember) project.getMembers()
-                                        .get(i)).getName());
+                                        .get(i)).getZipName());
                     }
-                    String name = projectMember.getName();
+                    String name = projectMember.getZipName();
                     String originalName = name;
                     while (names.contains(name)) {
                         name = ++counter + originalName;
@@ -192,7 +192,7 @@ public class ZargoFilePersister extends UmlFilePersister {
                                 + ((ProjectMember) project.getMembers()
                                         .get(i)).getType());
                     }
-                    stream.putNextEntry(new ZipEntry(projectMember.getName()));
+                    stream.putNextEntry(new ZipEntry(projectMember.getZipName()));
                     MemberFilePersister persister = null;
                     if (projectMember instanceof ProjectMemberDiagram) {
                         persister = new DiagramMemberFilePersister();
