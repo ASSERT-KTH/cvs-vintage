@@ -25,7 +25,7 @@
 // Classes: FigNodeModelElement
 // Original Author: abonner
 
-// $Id: FigNodeModelElement.java,v 1.41 2002/12/05 21:47:19 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.42 2002/12/12 22:54:59 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -698,6 +698,7 @@ public abstract class FigNodeModelElement
      * Updates the text of the name FigText.     */
     protected void updateNameText() {
         if (_readyToEdit) {
+            if (getOwner() == null) return;
             MModelElement owner = (MModelElement)getOwner();
             String nameStr =
                     Notation.generate(this, ((MModelElement) getOwner()).getName());
