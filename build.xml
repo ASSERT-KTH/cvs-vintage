@@ -3,7 +3,7 @@
 <!-- Emacs indentation & editting support
     <antstructure output="ant.dtd"/>
 -->
-<!DOCTYPE ant SYSTEM "ant.dtd">
+<!-- !DOCTYPE ant SYSTEM "ant.dtd" -->
 
 
 <project name="Tomcat" default="main" basedir=".">
