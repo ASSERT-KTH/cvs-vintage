@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.7 2001/04/11 07:19:34 fedor Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.8 2001/04/17 00:06:08 fedor Exp $ -->
 
 <app-data>
 <database>
@@ -263,7 +263,7 @@
     <!--
         Flag, which marks that dependency has been deleted.
     -->
-    <column name="DELETED" required="false" type="BOOLEANINT" 
+    <column name="DELETED" required="false" type="BOOLEANINT"
         default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_ISSUE">
         <reference local="OBSERVED_ID" foreign="ISSUE_ID"/>
@@ -654,9 +654,9 @@
     <!-- word's rating. The less frequent word has the higher rating. For now rating = 100000 / (total number of occurences) -->
     <column name="RATING" required="true" type="INTEGER"/>
     <!-- set to one to ignore the word when indexing. this should be 1 for words like "is", "it", "on" etc...-->
-    <column name="IGNORE" default="0" type="INTEGER"/>
-    <index name="IX_IGNORE">
-        <index-column name="IGNORE"/>
+    <column name="IGNORED" default="0" type="BOOLEANINT"/>
+    <index name="IX_IGNORED">
+        <index-column name="IGNORED"/>
     </index>
     <unique name="UK_WORD">
         <unique-column name="WORD"/>
