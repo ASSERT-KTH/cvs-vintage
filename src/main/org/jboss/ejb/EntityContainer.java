@@ -25,7 +25,6 @@ import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.FastKey;
 import org.jboss.util.SerializableEnumeration;
 
 /**
@@ -36,7 +35,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.23 $
+*   @version $Revision: 1.24 $
 */
 public class EntityContainer
 extends Container
@@ -306,14 +305,24 @@ implements ContainerInvokerContainer, InstancePoolContainer
     public Object invokeHome(MethodInvocation mi)
     throws Exception
     {
-        return getInterceptor().invokeHome(mi);
+        
+		Logger.log("invokeHome");
+		try { return getInterceptor().invokeHome(mi); }
+		catch (Exception e) {e.printStackTrace(); throw e;}
+		
+	//	return getInterceptor().invokeHome(mi);
+		
     }
     
     public Object invoke(MethodInvocation mi)
     throws Exception
     {
+		try { return getInterceptor().invoke(mi); }
+		catch (Exception e) {e.printStackTrace();throw e;}
+		
+		
         // Invoke through interceptors
-        return getInterceptor().invoke(mi);
+     //   return getInterceptor().invoke(mi);
     }
     
     // EJBObject implementation --------------------------------------
@@ -377,7 +386,9 @@ implements ContainerInvokerContainer, InstancePoolContainer
         {
             // Iterator finder
             Collection c = getPersistenceManager().findEntities(mi.getMethod(), mi.getArguments(), (EntityEnterpriseContext)mi.getEnterpriseContext());
-            Collection ec = containerInvoker.getEntityCollection(c);
+            
+			// Get the EJBObjects with that
+			Collection ec = containerInvoker.getEntityCollection(c);
             
             // BMP entity finder methods are allowed to return java.util.Enumeration.
             // We need a serializable Enumeration, so we can't use Collections.enumeration()
@@ -397,11 +408,11 @@ implements ContainerInvokerContainer, InstancePoolContainer
             
             // Single entity finder
             Object id = getPersistenceManager().findEntity(mi.getMethod(), 
-                mi.getArguments(), 
-                (EntityEnterpriseContext)mi.getEnterpriseContext());    
+                	mi.getArguments(), 
+                	(EntityEnterpriseContext)mi.getEnterpriseContext());    
             
             //create the EJBObject
-            return (EJBObject)containerInvoker.getEntityEJBObject(new FastKey(id));
+            return (EJBObject)containerInvoker.getEntityEJBObject(id);
         }
     }
     
@@ -413,16 +424,18 @@ implements ContainerInvokerContainer, InstancePoolContainer
     *
     */
     
-    public EJBObject createHome(MethodInvocation mi)
-    throws java.rmi.RemoteException, CreateException
-    {
-        
-        getPersistenceManager().createEntity(mi.getMethod(), 
-            mi.getArguments(), 
-            (EntityEnterpriseContext) mi.getEnterpriseContext());
-        return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
-    }
-    
+	public EJBObject createHome(MethodInvocation mi)
+	throws java.rmi.RemoteException, CreateException
+	{
+		
+		// The persistence manager takes care of the wiring and creating the EJBObject
+		getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(), 
+			(EntityEnterpriseContext) mi.getEnterpriseContext());
+			
+		// The context implicitely carries the EJBObject 
+		return ((EntityEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();
+	}
+	
     /**
     * A method for the getEJBObject from the handle
     * 
@@ -431,7 +444,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
     throws java.rmi.RemoteException  {
         
         // All we need is an EJBObject for this Id;
-        return (EJBObject)containerInvoker.getEntityEJBObject(new FastKey(mi.getId()));        
+        return (EJBObject)containerInvoker.getEntityEJBObject(((EntityInstanceCache) instanceCache).createCacheKey(mi.getId()));        
     }
     
     
