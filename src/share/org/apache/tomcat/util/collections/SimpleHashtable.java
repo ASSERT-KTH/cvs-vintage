@@ -57,7 +57,7 @@
  *
  */ 
 
-package org.apache.tomcat.util;
+package org.apache.tomcat.util.collections;
 
 import java.util.*;
 
@@ -97,7 +97,7 @@ import java.util.*;
  * it makes a significant difference when normalizing attributes,
  * which is done for each start-element construct.
  *
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.1 $
  */
 public final class SimpleHashtable implements Enumeration
 {
