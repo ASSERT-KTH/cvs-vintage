@@ -70,7 +70,7 @@ import org.apache.fulcrum.template.TemplateEmail;
 import org.apache.fulcrum.template.DefaultTemplateContext;
 
 // Scarab Stuff
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
+import org.tigris.scarab.actions.base.BaseModifyIssue;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.Issue;
@@ -100,9 +100,9 @@ import org.tigris.scarab.util.Email;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.44 2002/04/19 20:44:29 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.45 2002/04/29 18:56:00 jmcnally Exp $
  */
-public class AssignIssue extends RequireLoginFirstAction
+public class AssignIssue extends BaseModifyIssue
 {
 
     private static final String EMAIL_ERROR = "Your changes were saved, " +
@@ -112,6 +112,11 @@ public class AssignIssue extends RequireLoginFirstAction
     public void doSavevalues(RunData data, TemplateContext context) 
         throws Exception
     {
+        if (isCollision(data, context)) 
+        {
+            return;
+        }
+
         ScarabUser user = (ScarabUser)data.getUser();
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -244,6 +249,11 @@ public class AssignIssue extends RequireLoginFirstAction
     public void doAdd(RunData data, TemplateContext context) 
         throws Exception
     {
+        if (isCollision(data, context)) 
+        {
+            return;
+        }
+
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         List issues = scarabR.getIssues();

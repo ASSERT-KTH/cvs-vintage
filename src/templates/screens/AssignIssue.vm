@@ -7,6 +7,7 @@
 #set ($issueListSize = $scarabG.sizeOfArray($issueList))
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
+#set ($now = $scarabG.Now.Time)
 
 #pagetitle()
 
@@ -19,6 +20,8 @@
  Please select an issue or issues with which to associate users.
  </strong></p>
 #else
+
+#printCollisionInfo()
 
 #if (!$actionLink)
   #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
@@ -56,6 +59,7 @@
 #foreach ($issueId in $issueList)
   <input type="hidden" name="issue_ids" value="$issueId" />
 #end
+<input type="hidden" name="mod_ts" value="$now" />
 
 <h3>Personnel associated with the issue $issue.UniqueId</h3>
 
@@ -202,6 +206,7 @@ $intake.declareGroups()
 #foreach ($issueId in $issueList)
  <input type="hidden" name="issue_ids" value="$issueId" />
 #end
+<input type="hidden" name="mod_ts" value="$now" />
 
 
 <a name="add"><h3>Possible users</h3></a> 

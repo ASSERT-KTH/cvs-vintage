@@ -46,6 +46,7 @@ package org.tigris.scarab.tools;
  * individuals on behalf of Collab.Net.
  */ 
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -83,7 +84,7 @@ import org.apache.torque.util.Criteria;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.28 2002/04/04 22:53:46 jmcnally Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.29 2002/04/29 18:56:01 jmcnally Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -328,6 +329,15 @@ public class ScarabGlobalTool implements ScarabGlobalScope
             userSearchList.add(i, tempUsers[i]);
         }
         return (userSearchList);
+    }
+
+    /**
+     * Get a new Date object initialized to the current time.
+     * @return a <code>Date</code> value
+     */
+    public Date getNow()
+    {
+        return new Date();
     }
 
     /**

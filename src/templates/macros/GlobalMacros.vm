@@ -418,4 +418,26 @@
      #end
 #end
 
+#**
+ * Outputs information about issues that have been modified prior to
+ * the latest suggested changes.  Expects $lastActivities to exist in the
+ * context as given by the BaseModifyIssue action. 
+ *#
+#macro (printCollisionInfo)
+#if ($lastActivities && !$lastActivities.isEmpty())
+  <p class="info">
+  Here is the last activity to occur prior to your suggested changes:
+  </p>
+  <ul class="info">
+  #foreach ($obj in $lastActivities)
+    #set ($issue = $obj.get(0))
+    <p>Issue $issue.UniqueId last modified by 
+    <a href="mailto:$issue.CreatedBy.Email">$issue.CreatedBy.Name</a></p> 
+    #foreach ($activity in $obj.get(1))
+      <li>$activity.Description</li>
+    #end
+  #end
+  </ul>
+#end
+#end
 
