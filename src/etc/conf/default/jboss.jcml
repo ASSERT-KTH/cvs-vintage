@@ -389,6 +389,11 @@
   </mbean>
 
   <!-- ==================================================================== -->
+  <!-- JBoss Server Management                                              -->
+  <!-- ==================================================================== -->
+  <mbean code="org.jboss.mgt.JBossServer" name="Management:service=Service"/>
+
+  <!-- ==================================================================== -->
   <!-- Uncomment to enable JMX monitoring of the bean cache
   <mbean code="org.jboss.monitor.BeanCacheMonitor" name="Monitor:name=BeanCacheMonitor"/>
   -->
