@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class Issue implements java.io.Serializable
 {
-    private static final Log log = LogFactory.getLog(Issue.class);
+    private static final Log LOG = LogFactory.getLog(Issue.class);
 
     private Integer id = null;
     private String artifactType = null;
@@ -71,7 +71,7 @@ public class Issue implements java.io.Serializable
 
     public void setId(Integer id)
     {
-        log.debug("Issue.setId(): " + id);
+        LOG.debug("Issue.setId(): " + id);
         this.id = id;
     }
 

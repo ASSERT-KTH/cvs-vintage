@@ -116,6 +116,11 @@ public class Dependency implements java.io.Serializable
                 type.equals(dependency.getType()));
     }
 
+    public int hashCode()
+    {
+        return id == null ? 0 : id.hashCode();
+    }
+
     public String toString()
     {
         return ("Id: " + id + " Type: " + type + " Parent: " + parent + " Child: " + child);

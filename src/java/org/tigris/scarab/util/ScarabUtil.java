@@ -59,7 +59,7 @@ import org.tigris.scarab.util.IssueIdParser;
  * A Utility class for code that doesn't really go other places.
  *   
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: ScarabUtil.java,v 1.2 2003/02/07 03:35:48 jon Exp $
+ * @version $Id: ScarabUtil.java,v 1.3 2003/03/28 00:02:23 jon Exp $
  */
 public class ScarabUtil
 {
@@ -146,8 +146,8 @@ public class ScarabUtil
                 out.append('%');
                 int low = (int) (toEscape & 0x0f);
                 int high = (int) ((toEscape & 0xf0) >> 4);
-                out.append(hexadecimal[high]);
-                out.append(hexadecimal[low]);
+                out.append(HEXADECIMAL[high]);
+                out.append(HEXADECIMAL[low]);
             }
         }
         return out.toString();
@@ -158,7 +158,7 @@ public class ScarabUtil
     /**
      * Array mapping hexadecimal values to the corresponding ASCII characters.
      */
-    private static final char[] hexadecimal =
+    private static final char[] HEXADECIMAL =
         {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'A', 'B', 'C', 'D', 'E', 'F'
@@ -196,5 +196,4 @@ public class ScarabUtil
         safe['('] = true;
         safe[')'] = true;
     }
-
 }

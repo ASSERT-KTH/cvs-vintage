@@ -56,7 +56,7 @@ import org.apache.tools.ant.BuildException;
  * to make it possible to call this from Ant.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssuesTask.java,v 1.2 2003/03/15 21:56:59 jon Exp $
+ * @version $Id: ImportIssuesTask.java,v 1.3 2003/03/28 00:02:24 jon Exp $
  */
 public class ImportIssuesTask extends MatchingTask
 {
@@ -102,9 +102,9 @@ public class ImportIssuesTask extends MatchingTask
         return importIssues.getConfigFile();
     }
 
-    public void setConfigFile(String CONFIG_PROPS)
+    public void setConfigFile(String configProps)
     {
-        importIssues.setConfigFile(CONFIG_PROPS);
+        importIssues.setConfigFile(configProps);
     }
 
     public String getTurbineResources()
@@ -112,9 +112,9 @@ public class ImportIssuesTask extends MatchingTask
         return importIssues.getTurbineResources();
     }
 
-    public void setTurbineResources(String TR_PROPS)
+    public void setTurbineResources(String trProps)
     {
-        importIssues.setTurbineResources(TR_PROPS);
+        importIssues.setTurbineResources(trProps);
     }
 
     public void execute() 

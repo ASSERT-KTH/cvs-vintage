@@ -56,13 +56,13 @@ package org.tigris.scarab.util;
  * #end
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: OptionModel.java,v 1.3 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: OptionModel.java,v 1.4 2003/03/28 00:02:23 jon Exp $
  */
 public class OptionModel
 {
-    protected String name;
-    protected String value;
-    protected boolean selected;
+    private String name;
+    private String value;
+    private boolean selected;
     
     public OptionModel()
     {
@@ -132,7 +132,7 @@ public class OptionModel
      */
     public boolean isSelected() 
     {
-            return selected;
+        return selected;
     }
     
     /**

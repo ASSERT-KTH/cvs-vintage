@@ -53,16 +53,16 @@ import org.apache.log4j.Logger;
  * org.tigris.scarab category.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Log.java,v 1.5 2003/01/31 17:56:06 jmcnally Exp $
+ * @version $Id: Log.java,v 1.6 2003/03/28 00:02:23 jon Exp $
  */
 public abstract class Log
 {
-    private static final Logger log = 
+    private static final Logger LOG = 
         Logger.getLogger("org.tigris.scarab");
 
     public static final Logger get()
     {
-        return log;
+        return LOG;
     } 
 
     public static final Logger get(String s)

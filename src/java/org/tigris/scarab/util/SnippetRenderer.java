@@ -64,7 +64,7 @@ import org.apache.commons.logging.LogFactory;
 public class SnippetRenderer
     implements SkipFiltering
 {
-    private static final Log log = LogFactory.getLog(SnippetRenderer.class);
+    private static final Log LOG = LogFactory.getLog(SnippetRenderer.class);
     private static final String SNIPPETS = "snippets";
     /**
      * RunData of the request this SnippetRenderer is for.
@@ -92,7 +92,7 @@ public class SnippetRenderer
     public String toString()
     {
         String result = null;
-        log.debug("Rendering snippet " + template);
+        LOG.debug("Rendering snippet " + template);
         try 
         {
             result = Module.handleRequest(
@@ -101,7 +101,7 @@ public class SnippetRenderer
         }
         catch (Exception e)
         {
-            log.error("Error rendering " + template + ". ", e);
+            LOG.error("Error rendering " + template + ". ", e);
             result = "ERROR!";
         }
         return result;

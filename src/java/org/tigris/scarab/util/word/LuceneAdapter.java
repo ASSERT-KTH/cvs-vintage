@@ -57,8 +57,6 @@ import java.util.ArrayList;
 
 // Turbine classes
 import org.apache.turbine.Turbine;
-import org.apache.torque.om.ComboKey;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.util.Criteria;
 import com.workingdogs.village.Record;
 
@@ -85,7 +83,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.25 2003/03/25 16:57:55 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.26 2003/03/28 00:02:23 jon Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex

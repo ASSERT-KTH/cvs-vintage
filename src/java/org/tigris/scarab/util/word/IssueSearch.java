@@ -109,11 +109,13 @@ import org.tigris.scarab.attribute.StringAttribute;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
-
 /** 
  * A utility class to build up and carry out a search for 
  * similar issues.  It subclasses Issue for functionality, it is 
  * not a more specific type of Issue.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: IssueSearch.java,v 1.91 2003/03/28 00:02:23 jon Exp $
  */
 public class IssueSearch 
     extends Issue
@@ -207,15 +209,15 @@ public class IssueSearch
         ACTIVITYALIAS_NEW_USER_ID__EQUALS__USERAVALIAS_USER_ID =
         ACTIVITYALIAS_NEW_USER_ID + "=" + USERAVALIAS + "." + AV_USER_ID;
 
-    private static String WHERE = " WHERE ";
-    private static String FROM = " FROM ";
-    private static String ORDER_BY = " ORDER BY ";
-    private static String BASE_OPTION_SORT_LEFT_JOIN = 
+    private static final String WHERE = " WHERE ";
+    private static final String FROM = " FROM ";
+    private static final String ORDER_BY = " ORDER BY ";
+    private static final String BASE_OPTION_SORT_LEFT_JOIN = 
         " LEFT OUTER JOIN " + RModuleOptionPeer.TABLE_NAME + " sortRMO ON " +
         '(' + IssuePeer.MODULE_ID + "=sortRMO.MODULE_ID AND " +
         IssuePeer.TYPE_ID + "=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
 
-    private static int NO_ATTRIBUTE_SORT = -1;
+    private static final int NO_ATTRIBUTE_SORT = -1;
 
     private static final Integer NUMBERKEY_0 = new Integer(0);
     private static final Integer ALL_TEXT = NUMBERKEY_0;

@@ -57,7 +57,7 @@ import java.util.Date;
  * 
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: TableModel.java,v 1.5 2003/02/04 11:26:03 jon Exp $
+ * @version $Id: TableModel.java,v 1.6 2003/03/28 00:02:23 jon Exp $
  */
 public abstract class TableModel
     // implements Retrievable
@@ -84,8 +84,6 @@ public abstract class TableModel
     public abstract int getRowCount();
     public abstract Object getValueAt(int row, int column)
     throws Exception;
-
-
     
     /**
      * Get the value of headings.
@@ -105,7 +103,6 @@ public abstract class TableModel
         this.headings = v;
     }
     
-    
     /**
      * Get the value of rows.
      * @return value of rows.
@@ -123,7 +120,6 @@ public abstract class TableModel
     {
         this.rows = v;
     }
-
 
     public class ColumnHeading
         extends Heading
@@ -192,8 +188,8 @@ public abstract class TableModel
 
     public class Heading
     {
-        List subHeadings;
-        Object label;
+        private List subHeadings;
+        private Object label;
         
         /**
          * Get the value of rowspan.
@@ -231,7 +227,6 @@ public abstract class TableModel
             this.subHeadings = v;
         }
 
-        
         /**
          * Get the value of label.
          * @return value of label.

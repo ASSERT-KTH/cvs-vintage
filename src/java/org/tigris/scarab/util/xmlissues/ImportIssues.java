@@ -84,22 +84,22 @@ import org.tigris.scarab.util.xmlissues.ScarabIssues;
  * initialized, there is no need to call the init() method.</p>
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.9 2003/03/26 00:24:13 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.10 2003/03/28 00:02:24 jon Exp $
  */
 public class ImportIssues
 {
-    private static final Log log = LogFactory.getLog(ImportIssues.class);
+    private static final Log LOG = LogFactory.getLog(ImportIssues.class);
 
     /** 
      * Name of the TR.props file.
      */
-    private String TR_PROPS = 
+    private String trProps = 
         "/WEB-INF/conf/TurbineResourcesTest.properties";
 
     /** 
      * Name of the xmlimport.properties file used for configuration of log4j.
      */
-    private String CONFIG_PROPS = 
+    private String configProps = 
             "/WEB-INF/conf/xmlimport.properties";
 
     private File configDir = null;
@@ -147,22 +147,22 @@ public class ImportIssues
 
     public String getConfigFile()
     {
-        return this.CONFIG_PROPS;
+        return this.configProps;
     }
 
-    public void setConfigFile(String CONFIG_PROPS)
+    public void setConfigFile(String configProps)
     {
-        this.CONFIG_PROPS = CONFIG_PROPS;
+        this.configProps = configProps;
     }
 
     public String getTurbineResources()
     {
-        return this.TR_PROPS;
+        return this.trProps;
     }
 
-    public void setTurbineResources(String TR_PROPS)
+    public void setTurbineResources(String trProps)
     {
-        this.TR_PROPS = TR_PROPS;
+        this.trProps = trProps;
     }
 
     public void init()
@@ -193,7 +193,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        log.debug("Importing: " + importFile.getAbsolutePath());
+        LOG.debug("Importing: " + importFile.getAbsolutePath());
 
         try
         {
@@ -213,7 +213,7 @@ public class ImportIssues
         }
         catch(Exception e)
         {
-            log.debug("\nThe following error(s) were found: " 
+            LOG.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
@@ -247,7 +247,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        log.debug("Importing: " + importFile.getName());
+        LOG.debug("Importing: " + importFile.getName());
 
         try
         {
@@ -266,7 +266,7 @@ public class ImportIssues
 
         catch(Exception e)
         {
-            log.debug("\nThe following error(s) were found: " 
+            LOG.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
@@ -308,12 +308,12 @@ public class ImportIssues
             }
             else
             {
-                log.error("Found " + importErrors.size() + " errors importing "
+                LOG.error("Found " + importErrors.size() + " errors importing "
                     + ((name != null)? name: "null") + ":");
                 for (Iterator itr = importErrors.iterator(); itr.hasNext();)
                 {
                     String message = (String)itr.next();
-                    log.error(message);
+                    LOG.error(message);
                 }
             }
         }
@@ -341,7 +341,7 @@ public class ImportIssues
         ScarabIssues.setInValidationMode(false);
         ScarabIssues si = (ScarabIssues)reader.parse(is);
         si.doHandleDependencies();
-        log.debug("Successfully imported " + name + "!");
+        LOG.debug("Successfully imported " + name + "!");
         return si;
     }
 
