@@ -27,6 +27,7 @@ import javax.transaction.TransactionManager;
 
 import org.apache.log4j.Category;
 
+import org.jboss.ejb.BeanLockManager;
 import org.jboss.security.EJBSecurityManager;
 import org.jboss.security.RealmMapping;
 
@@ -62,7 +63,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * <p><b>Revisions:</b>
  *
@@ -120,7 +121,7 @@ public abstract class Container
    protected Object securityProxy;
 
    /** This is the bean lock manager that is to be used */
-   protected BeanLockManager lockManager = new BeanLockManager();
+   protected BeanLockManager lockManager;
 
    /** ??? */
    protected LocalContainerInvoker localContainerInvoker = 
@@ -183,6 +184,11 @@ public abstract class Container
    {
       return lockManager;
    }
+	
+	public void setLockManager(BeanLockManager lockManager) 
+	{
+		this.lockManager = lockManager;
+	}
 
    public void setRealmMapping(RealmMapping rm)
    {
