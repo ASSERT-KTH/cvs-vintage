@@ -50,7 +50,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.56 2003/04/08 02:13:24 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.57 2003/06/11 21:15:22 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -412,6 +412,11 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 			int start = textArea.getLineStartOffset(currLine);
 			int dot = textArea.getCaretPosition() - start;
+
+			// see above
+			if(dot < 0)
+				return;
+
 			buffer.getText(start,dot,seg);
 			int virtualPosition = MiscUtilities.getVirtualWidth(seg,
 				buffer.getTabSize());
