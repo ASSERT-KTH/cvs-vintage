@@ -24,20 +24,35 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT, UPDATES,
 // ENHANCEMENTS, OR MODIFICATIONS.
 
-// File: MutableGraphListener.java
-// Interfaces: MutableGraphListener
+// File: GraphEvent.java
+// Interfaces: GraphEvent
 // Original Author: jrobbins@ics.uci.edu
-// $Id: MutableGraphListener.java,v 1.1 1998/02/05 04:03:45 jrobbins Exp $
+// $Id: GraphEvent.java,v 1.1 1998/02/12 02:34:32 jrobbins Exp $
 
 package uci.graph;
 
 import java.util.EventObject;
 import java.util.EventListener;
 
-public interface MutableGraphListener extends EventListener {
-  void nodeAdded(GraphEvent e);
-  void edgeAdded(GraphEvent e);
-  void nodeRemoved(GraphEvent e);
-  void edgeRemoved(GraphEvent e);
-  void graphChanged(GraphEvent e);
-} /* end interface MutableGraphListener */
+/** A notification that a graph has changed.  The source is the object
+ *  that implements GraphModel. The argument is the specific
+ *  node or edge that was involved when a node or edge is added or
+ *  removed. The argument is null if the entire graph changed. */
+
+public class GraphEvent extends EventObject {
+  ////////////////////////////////////////////////////////////////
+  // instance variables
+  /** The specific node, port, or arc that was modified. */
+  protected Object _arg;
+
+  ////////////////////////////////////////////////////////////////
+  // constructors
+  public GraphEvent(Object src) { this(src, null); }
+  public GraphEvent(Object src, Object arg) {
+    super(src);
+    _arg = arg;
+  }
+
+  public Object getArg() { return _arg; }
+
+} /* end class GraphEvent */
