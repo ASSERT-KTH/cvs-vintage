@@ -52,6 +52,10 @@ public abstract class AbstractSearchEngine {
 
 	private int mode;
 
+	protected Folder folder;
+
+	protected static Hashtable filterCache;
+
 	public AbstractSearchEngine(Folder folder) {
 		this.folder = folder;
 
@@ -135,7 +139,7 @@ public abstract class AbstractSearchEngine {
 		return instance.process(attributes, folder, uid, worker);
 	}
 
-	protected LinkedList processCriteria(
+	protected List processCriteria(
 		FilterRule rule,
 		List uids,
 		WorkerStatusController worker)
@@ -257,10 +261,6 @@ public abstract class AbstractSearchEngine {
 
 	}
 
-	protected Folder folder;
-
-	protected static Hashtable filterCache;
-
 	public abstract String[] getCaps();
 
 	protected void divideFilterRule(
@@ -287,12 +287,12 @@ public abstract class AbstractSearchEngine {
 		}
 	}
 
-	protected abstract LinkedList queryEngine(
+	protected abstract List queryEngine(
 		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception;
 
-	protected abstract LinkedList queryEngine(
+	protected abstract List queryEngine(
 		FilterRule filter,
 		Object[] uids,
 		WorkerStatusController worker)
@@ -309,8 +309,8 @@ public abstract class AbstractSearchEngine {
 
 		long startTime = System.currentTimeMillis();
 
-		LinkedList notDefaultEngineResult = null;
-		LinkedList defaultEngineResult = new LinkedList();
+		List notDefaultEngineResult = null;
+		List defaultEngineResult = new LinkedList();
 
 		FilterRule filterRule = filter.getFilterRule();
 
@@ -371,7 +371,6 @@ public abstract class AbstractSearchEngine {
 							Arrays.asList(folder.getUids(worker)),
 							worker);
 				}
-
 			}
 		}
 
@@ -404,5 +403,4 @@ public abstract class AbstractSearchEngine {
 	}
 
 	public abstract void sync(WorkerStatusController wc) throws Exception;
-
 }

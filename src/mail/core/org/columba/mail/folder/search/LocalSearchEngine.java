@@ -13,10 +13,11 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.mail.filter.FilterRule;
@@ -63,7 +64,7 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, org.columba.core.command.WorkerStatusController)
 	 */
-	protected LinkedList queryEngine(
+	protected List queryEngine(
 		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
@@ -71,20 +72,18 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 		Object[] uids = folder.getUids(worker);
 		
 		return processCriteria(filter, Arrays.asList(uids), worker);
-
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.mail.folder.search.AbstractSearchEngine#queryEngine(org.columba.mail.filter.FilterRule, java.lang.Object[], org.columba.core.command.WorkerStatusController)
 	 */
-	protected LinkedList queryEngine(
+	protected List queryEngine(
 		FilterRule filter,
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
 			
 		return processCriteria(filter, Arrays.asList(uids), worker);
-
 	}
 
 	/* (non-Javadoc)
@@ -107,5 +106,4 @@ public class LocalSearchEngine extends AbstractSearchEngine {
 	public void messageRemoved(Object uid) throws Exception {
 
 	}
-
 }

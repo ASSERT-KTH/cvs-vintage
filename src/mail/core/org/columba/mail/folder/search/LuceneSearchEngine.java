@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.folder.search;
 
 import java.io.File;
@@ -273,14 +274,14 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected LinkedList queryEngine(
+	protected List queryEngine(
 		FilterRule filter,
 		WorkerStatusController worker)
 		throws Exception {
 
 		Query query = getLuceneQuery(filter, analyzer);
 
-		LinkedList result = search(query);
+		List result = search(query);
 
 		ListTools.substract(result, deleted);
 
@@ -293,7 +294,7 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected LinkedList search(Query query) throws IOException {
+	protected List search(Query query) throws IOException {
 		boolean needToRelease = false;
 		LinkedList result = new LinkedList();
 		try {
@@ -327,12 +328,12 @@ public class LuceneSearchEngine
 		return result;
 	}
 
-	protected LinkedList queryEngine(
+	protected List queryEngine(
 		FilterRule filter,
 		Object[] uids,
 		WorkerStatusController worker)
 		throws Exception {
-		LinkedList result = queryEngine(filter, worker);
+		List result = queryEngine(filter, worker);
 
 		ListTools.intersect(result, Arrays.asList(uids));
 		return result;
