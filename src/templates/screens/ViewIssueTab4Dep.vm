@@ -19,13 +19,21 @@ $l10n.NoDependencies
   #set ($parent = $scarabR.getIssueByPk($depend.ObservedId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
   #indexedRows($velocityCount)
-#if ($canEdit && !$issueParents.isEmpty())
+#if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
   <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#elseif ($canEdit)
+  <td>&nbsp;</td>
 #end
-<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")</td>
+<td>
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $parent.Module))
+  $link.setPage("ViewIssue.vm").addPathInfo("id", $parent.UniqueId).setLabel("$parent.UniqueId")
+#else
+  $l10n.PrivateIssue
+#end
+</td>
 <td>$l10n.Parent</td>
 <td>
-#if ($canEdit)
+#if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $parent.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
   #foreach ($dependType in $currentIssue.AllDependencyTypes)
     #set ($selected = false)
@@ -47,13 +55,21 @@ $l10n.NoDependencies
   #set ($child = $scarabR.getIssueByPk($depend.ObserverId.toString()))
   #set ($dependGroup = $intake.Depend.mapTo($depend))
   #indexedRows($velocityCount)
-#if ($canEdit && !$issueChildren.isEmpty())
+#if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $child.Module) )
     <td>#booleanCheckbox($dependGroup.Deleted)</td>
+#elseif ($canEdit)
+  <td>&nbsp;</td>
 #end
-<td>$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")</td>
+<td>
+#if ($scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $child.Module))
+$link.setPage("ViewIssue.vm").addPathInfo("id", $child.UniqueId).setLabel("$child.UniqueId")
+#else
+  $l10n.PrivateIssue
+#end
+</td>
 <td>$l10n.Child</td>
 <td> 
-#if ($canEdit)
+#if ( $canEdit && $scarabR.hasPermission($scarabG.Permission.ISSUE__EDIT, $child.Module) )
 <select name="$dependGroup.TypeId.Key" class="select">
 #foreach ($dependType in $currentIssue.AllDependencyTypes)
   #set ($selected = false)

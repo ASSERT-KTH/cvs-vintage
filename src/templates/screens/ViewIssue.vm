@@ -3,17 +3,16 @@
 #set ($currentIssueId = $data.Parameters.getString("id"))
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 
-#if ($currentIssue.Module != $scarabR.CurrentModule)
+#if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
 
-<p class="alert">
-$l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
-</p>
+ #if ($currentIssue.Module != $scarabR.CurrentModule)
+  <p class="alert">
+   $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
+  </p>
+ #end
 
-#end
-
-#printCollisionInfo()
-#if ($currentIssue)
-
+ #printCollisionInfo()
+ 
  #set ($prevNextList = $data.Parameters.getStrings("issueList"))
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
  <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
