@@ -10,8 +10,6 @@ $page.setTitle("Scarab functions index")
 #if (! $data.User.hasLoggedIn())
 
 <td>
-<p><strong>Step 1:</strong></p>
-
 <p>
 Most functions in Scarab require you to <a
 href="$link.setPage("Login.vm")">Login</a> first. In the future, we will
@@ -28,8 +26,6 @@ href="$link.setPage("Register.vm")">create an account</a>.
 #elseif (!$scarabR.CurrentModule)
 
 <td>
-<p><strong>Step 2:</strong></p>
-
 <p>
 <img src="$data.Request.ContextPath/images/module.gif" alt="What is a
 module?" width="260" height="105" /></p> Select a <a
@@ -57,7 +53,6 @@ contact the administrator.
 #else
 
 <td>
-<p><strong>Step 3:</strong></p>
 <p>
 <img src="$data.Request.ContextPath/images/artifact_type.gif" alt="What is an artifact type?" width="260"
 height="105" /></p> Select an <strong>artifact type</strong> from the

@@ -19,7 +19,7 @@ $page.setTitle("Login to Scarab")
 #elseif ($paramNext && $paramNext.trim().length() > 0)
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$paramNext" />
 #else
- <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Index.vm" />
+ <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="SelectModule.vm" />
 #end
 
 #set ($loginGroup = $intake.Login.Default)

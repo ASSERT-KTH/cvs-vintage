@@ -1,8 +1,8 @@
 $page.setTitle("Select Artifact Type")
 
 #set ($nextTemplate = $data.Parameters.getString("nextTemplate"))
-#if (!$nextTemplate)
-   #set ($nextTemplate = "SelectArtifactType.vm")
+#if (!$nextTemplate || $nextTemplate.equals("SelectArtifactType.vm"))
+   #set ($nextTemplate = "entry,Wizard1.vm")
 #end
      <div class="app" id="divselect_module">
         <h3>Artifact types: The '$scarabR.CurrentModule.Name' module</h3>
