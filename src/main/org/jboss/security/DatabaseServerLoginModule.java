@@ -55,7 +55,6 @@ public class DatabaseServerLoginModule implements LoginModule {
      */
     public boolean login() throws LoginException {
         Callback[] callbacks = new Callback[2];
-        String username;
         char[] password;
         char[] tmpPassword;
         InitialContext initial;
