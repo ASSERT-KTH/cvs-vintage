@@ -68,7 +68,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.IssueTemplateInfoPeer;
-import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.Email;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
@@ -78,7 +78,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: Approval.java,v 1.14 2002/03/14 01:13:10 jmcnally Exp $
+    @version $Id: Approval.java,v 1.15 2002/03/19 18:16:54 jon Exp $
 */
 public class Approval extends TemplateAction
 {

@@ -56,7 +56,7 @@ import org.apache.torque.om.NumberKey;
 
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.services.security.ScarabSecurity;
-import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 

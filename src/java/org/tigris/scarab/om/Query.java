@@ -69,7 +69,7 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.Email;
 
 /** 
  * You should add additional methods to this class to meet the

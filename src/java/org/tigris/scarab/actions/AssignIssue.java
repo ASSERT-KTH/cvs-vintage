@@ -94,13 +94,13 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.util.ScarabLink;
-import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.Email;
 
 /**
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.41 2002/03/14 01:13:09 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.42 2002/03/19 18:16:53 jon Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {

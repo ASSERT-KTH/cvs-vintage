@@ -64,7 +64,7 @@ import org.apache.turbine.Log;
 import org.apache.torque.om.Persistent;
 
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.tools.Email;
+import org.tigris.scarab.util.Email;
 import org.tigris.scarab.services.cache.ScarabCache;
 
 /** 
