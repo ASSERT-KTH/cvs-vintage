@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.12 2000/02/29 15:43:42 rubys Exp $
- * $Revision: 1.12 $
- * $Date: 2000/02/29 15:43:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagLibraryInfoImpl.java,v 1.13 2000/03/04 06:29:11 shemnon Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/03/04 06:29:11 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -246,9 +246,13 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    // First copy this file into our work directory! 
 	    {
 		File jspFile = new File(ctxt.getJspFile());
-		String jarFileName = ctxt.getOutputDir()+File.separatorChar+
-		    jspFile.getParent().toString();
-		File jspDir = new File(jarFileName);
+                String parent = jspFile.getParent();
+                String jarFileName = ctxt.getOutputDir();
+                if (parent != null) {
+                   jarFileName = jarFileName + File.separatorChar +
+                       parent;
+                }
+                File jspDir = new File(jarFileName);
 		jspDir.mkdirs();
 	    
 		if (relativeURL)

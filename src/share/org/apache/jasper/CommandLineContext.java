@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.3 2000/02/27 02:01:23 rubys Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/27 02:01:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/CommandLineContext.java,v 1.4 2000/03/04 06:29:10 shemnon Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/03/04 06:29:10 $
  *
  * ====================================================================
  * 
@@ -325,7 +325,7 @@ public class CommandLineContext implements JspCompilationContext {
      * uses current file as the base.
      */
     public String resolveRelativeUri(String uri) {
-        if (uri.charAt(0) == '/') {
+        if (uri.startsWith("/")) {
             return uri;
         } else {
             return uriBase + uri;
@@ -367,8 +367,8 @@ public class CommandLineContext implements JspCompilationContext {
      */
     public String getRealPath(String path) {
         path = resolveRelativeUri(path);
-        if (path.charAt(0) == '/') {
-            path.substring(1);
+        if (path.startsWith("/")) {
+            path = path.substring(1);
         };
         File f = new File(uriRoot, path.replace('/', File.separatorChar));
         return f.getAbsolutePath();
