@@ -1,4 +1,4 @@
-// $Id: ActionSaveGraphics.java,v 1.24 2004/10/16 16:40:49 linus Exp $
+// $Id: ActionSaveGraphics.java,v 1.25 2005/01/04 19:39:51 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,10 +38,10 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.CommandLineInterface;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
+import org.argouml.model.OsUtil;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
-import org.argouml.util.osdep.OsUtil;
 import org.tigris.gef.base.CmdSaveEPS;
 import org.tigris.gef.base.CmdSaveGIF;
 import org.tigris.gef.base.CmdSaveGraphics;

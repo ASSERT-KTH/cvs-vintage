@@ -1,4 +1,4 @@
-// $Id: OsUtil.java,v 1.9 2004/12/05 20:15:16 mvw Exp $
+// $Id: OsUtil.java,v 1.1 2005/01/04 19:39:50 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.util.osdep;
+package org.argouml.model;
 
 import javax.swing.JFileChooser;
 import org.argouml.util.osdep.win32.Win32FileSystemView;

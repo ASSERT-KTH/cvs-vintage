@@ -1,4 +1,4 @@
-// $Id: FileImportSupport.java,v 1.11 2004/12/10 19:48:12 mvw Exp $
+// $Id: FileImportSupport.java,v 1.12 2005/01/04 19:39:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,10 +40,10 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.argouml.application.api.PluggableImport;
 import org.argouml.kernel.Project;
+import org.argouml.model.OsUtil;
 import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
 import org.argouml.uml.diagram.ui.UMLDiagram;
 import org.argouml.util.SuffixFilter;
-import org.argouml.util.osdep.OsUtil;
 import org.argouml.util.osdep.win32.Win32FileSystemView;
 import org.tigris.gef.base.Globals;
 
@@ -55,7 +55,7 @@ import org.tigris.gef.base.Globals;
  * for other input sources.
  *
  * @author Alexander Lepekhine
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public abstract class FileImportSupport implements PluggableImport {
 

@@ -1,4 +1,4 @@
-// $Id: ExitSecurityManager.java,v 1.1 2004/12/28 13:59:02 bobtarling Exp $
+// $Id: ExitSecurityManager.java,v 1.2 2005/01/04 19:39:50 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import java.util.PropertyPermission;
 import java.security.Permission;
 
 import org.apache.log4j.Logger;
-import org.argouml.util.osdep.OsUtil;
 
 /**
  * The Argo custom security manager.

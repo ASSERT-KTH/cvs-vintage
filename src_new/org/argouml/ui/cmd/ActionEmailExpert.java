@@ -1,4 +1,4 @@
-// $Id: ActionEmailExpert.java,v 1.3 2004/12/27 20:16:51 mvw Exp $
+// $Id: ActionEmailExpert.java,v 1.4 2005/01/04 19:39:51 bobtarling Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,8 +29,8 @@ import java.awt.event.ActionEvent;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.OsUtil;
 import org.argouml.ui.EmailExpertDialog;
-import org.argouml.util.osdep.OsUtil;
 
 
 
