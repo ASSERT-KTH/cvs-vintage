@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.220 2002/11/26 23:35:31 elicia Exp $
+ * @version $Id: Issue.java,v 1.221 2002/12/03 21:01:18 elicia Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -1988,25 +1988,45 @@ public class Issue
         // Generate comment to deal with attributes that do not
         // Exist in destination module, as well as the user attributes.
         // Later will find another solution for user attributes.
-        StringBuffer delAttrsBuf = new StringBuffer(reason).append(". ");
+        StringBuffer attachmentBuf = new StringBuffer();
+        StringBuffer delAttrsBuf = new StringBuffer();
+        if (reason != null && reason.length() > 0)
+        {
+            attachmentBuf.append(reason).append(". ");
+        }
         if (commentAttrs.size() > 0)
         {
-            delAttrsBuf.append("Did not copy over the "
-                 + "following attribute info: ");
+            attachmentBuf.append("Did not copy over the "
+                 + "following attribute info: ").append("\n");
             for (int i=0;i<commentAttrs.size();i++)
             {
                 AttributeValue attVal = getAttributeValue((Attribute)commentAttrs.get(i));
                 String field = null;
                 delAttrsBuf.append(attVal.getAttribute().getName());
                 field = attVal.getValue();
-                delAttrsBuf.append("=").append(field).append(". ");
+                delAttrsBuf.append("=").append(field).append(". ").append("\n");
            }
+           String delAttrs = delAttrsBuf.toString();
+           attachmentBuf.append(delAttrs);
+
+           // Also create a regular comment with non-matching attribute info
+           Attachment comment = new Attachment();
+           comment.setTextFields(user, newIssue, Attachment.COMMENT__PK);
+           StringBuffer commentBuf = new StringBuffer("The following attributes and values " + 
+                                                      "were not copied from artifact ");
+           commentBuf.append(getUniqueId()).append(": \n");
+           commentBuf.append(delAttrs);
+           comment.setData(commentBuf.toString());
+           comment.setName("comment");
+           comment.save();
         }
         else
         {
-            delAttrsBuf.append("All attributes were copied.");
+            attachmentBuf.append("All attributes were copied.");
         }
-        attachment.setData(delAttrsBuf.toString()); 
+        attachment.setData(attachmentBuf.toString()); 
+
+        
             
         if (action.equals("move"))
         {
