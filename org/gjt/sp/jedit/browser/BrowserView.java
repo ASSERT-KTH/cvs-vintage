@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.76 2003/09/08 01:24:11 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.77 2003/10/09 00:00:31 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -225,13 +225,14 @@ class BrowserView extends JPanel
 		}
 		else
 		{
-			MiscUtilities.resolveSymlinks(browserDir);
+			symlinkBrowserDir = MiscUtilities.resolveSymlinks(
+				browserDir);
 		}
 
-		if(VFSBrowser.pathsEqual(path,browserDir))
+		if(VFSBrowser.pathsEqual(path,symlinkBrowserDir))
 		{
 			saveExpansionState();
-			loadDirectory(null,path);
+			loadDirectory(null,browserDir);
 		}
 
 		// because this method is called for *every* VFS update,
@@ -248,7 +249,7 @@ class BrowserView extends JPanel
 
 		if(!browserDir.startsWith(FavoritesVFS.PROTOCOL)
 			&& !browserDir.startsWith(FileRootsVFS.PROTOCOL)
-			&& !path.startsWith(browserDir))
+			&& !path.startsWith(symlinkBrowserDir))
 			return;
 
 		if(browserDir.startsWith(FileRootsVFS.PROTOCOL)

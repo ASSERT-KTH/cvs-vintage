@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.289 2003/09/23 18:19:37 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.290 2003/10/09 00:00:32 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4821,7 +4821,7 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ processKeyEvent() method
 	public void processKeyEvent(KeyEvent evt)
 	{
-		view.processKeyEvent(evt,true);
+		view.processKeyEvent(evt,View.TEXT_AREA);
 
 		if(!evt.isConsumed())
 			super.processKeyEvent(evt);

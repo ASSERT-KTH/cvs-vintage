@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.103 2003/08/28 22:05:24 spestov Exp $
+ * @version $Id: View.java,v 1.104 2003/10/09 00:00:30 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {
@@ -432,7 +432,7 @@ public class View extends JFrame implements EBComponent
 	 */
 	public void processKeyEvent(KeyEvent evt)
 	{
-		processKeyEvent(evt,false);
+		processKeyEvent(evt,VIEW);
 	} //}}}
 
 	//{{{ processKeyEvent() method
@@ -443,13 +443,29 @@ public class View extends JFrame implements EBComponent
 	 */
 	public void processKeyEvent(KeyEvent evt, boolean calledFromTextArea)
 	{
-		if(Debug.DUMP_KEY_EVENTS && calledFromTextArea)
+		processKeyEvent(evt,calledFromTextArea
+			? TEXT_AREA
+			: VIEW);
+	} //}}}
+
+	//{{{ processKeyEvent() method
+	public static final int VIEW = 0;
+	public static final int TEXT_AREA = 1;
+	public static final int ACTION_BAR = 2;
+	/**
+	 * Forwards key events directly to the input handler.
+	 * This is slightly faster than using a KeyListener
+	 * because some Swing overhead is avoided.
+	 */
+	public void processKeyEvent(KeyEvent evt, int from)
+	{
+		if(Debug.DUMP_KEY_EVENTS && from != VIEW)
 		{
 			Log.log(Log.DEBUG,this,"Key event: "
 				+ GrabKeyDialog.toString(evt));
 		}
 
-		if(getTextArea().hasFocus() && !calledFromTextArea)
+		if(getTextArea().hasFocus() && from == VIEW)
 			return;
 
 		evt = _preprocessKeyEvent(evt);
@@ -474,9 +490,11 @@ public class View extends JFrame implements EBComponent
 
 			if(keyEventInterceptor != null)
 				keyEventInterceptor.keyTyped(evt);
-			else if(inputHandler.isPrefixActive()
+			else if(from == ACTION_BAR
+				|| inputHandler.isPrefixActive()
 				|| getTextArea().hasFocus())
 			{
+			System.err.println(getFocusOwner());
 				KeyEventTranslator.Key keyStroke
 					= KeyEventTranslator
 					.translateKeyEvent(evt);
