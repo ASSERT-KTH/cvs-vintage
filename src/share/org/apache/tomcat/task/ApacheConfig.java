@@ -68,6 +68,7 @@ import java.util.*;
 // Used to find Ajp12 connector port
 import org.apache.tomcat.service.PoolTcpConnector;
 import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
+import org.apache.tomcat.modules.server.Ajp12Interceptor;
 
 /**
  * Used by ContextManager to generate automatic apache configurations
@@ -140,6 +141,10 @@ public class ApacheConfig  { // implements XXX
 		Object con=ci[i];
 		if( con instanceof  Ajp12ConnectionHandler ) {
 		    PoolTcpConnector tcpCon=(PoolTcpConnector) con;
+		    portInt=tcpCon.getPort();
+		}
+		if( con instanceof  Ajp12Interceptor ) {
+		    Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
 		    portInt=tcpCon.getPort();
 		}
 	    }

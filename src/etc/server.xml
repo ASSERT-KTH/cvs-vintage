@@ -219,7 +219,7 @@
                 port -->
         <!-- Normal HTTP -->
         <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.HttpInterceptor"
+         className="org.apache.tomcat.modules.server.Http10Interceptor"
          port="8080" />
 
         <!--
@@ -240,7 +240,7 @@
          -->
         <!--
         <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.HttpInterceptor"
+         className="org.apache.tomcat.modules.server.Http10Interceptor"
          port="8443" 
          secure="true" />
         -->
@@ -257,7 +257,7 @@
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
           -->
         <RequestInterceptor 
-         className="org.apache.tomcat.modules.server.Ajp12ConnectionHandler"
+         className="org.apache.tomcat.modules.server.Ajp12Interceptor"
          port="8007" />
 
         <!-- ==================== Special webapps ==================== -->

@@ -70,6 +70,7 @@ import java.util.*;
 // Used to stop tomcat
 import org.apache.tomcat.service.PoolTcpConnector;
 import org.apache.tomcat.service.connector.Ajp12ConnectionHandler;
+import org.apache.tomcat.modules.server.Ajp12Interceptor;
 
 /**
  * This task will stop tomcat
@@ -177,6 +178,11 @@ public class StopTomcat {
 	    Object con=ci[i];
 	    if( con instanceof  Ajp12ConnectionHandler ) {
 		PoolTcpConnector tcpCon=(PoolTcpConnector) con;
+		portInt=tcpCon.getPort();
+		address=tcpCon.getAddress();
+	    }
+	    if( con instanceof  Ajp12Interceptor ) {
+		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
 		portInt=tcpCon.getPort();
 		address=tcpCon.getAddress();
 	    }

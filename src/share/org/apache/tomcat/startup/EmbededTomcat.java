@@ -101,7 +101,7 @@ public class EmbededTomcat { // extends WebService
 	if(debug>0) log( "addConnector " + port + " " + addr +
 			 " " + hostname );
 
-	HttpInterceptor sc=new HttpInterceptor();
+	Http10Interceptor sc=new Http10Interceptor();
 	sc.setServer( contextM );
 	sc.setDebug( debug );
 	sc.setPort( port ) ;
@@ -121,7 +121,7 @@ public class EmbededTomcat { // extends WebService
 	if(debug>0) log( "addSecureConnector " + port + " " + addr + " " +
 			 hostname );
 	
-	HttpInterceptor sc=new HttpInterceptor();
+	Http10Interceptor sc=new Http10Interceptor();
 	sc.setServer( contextM );
 	sc.setPort( port ) ;
 	if( addr != null ) sc.setAddress(  addr );
