@@ -386,19 +386,38 @@ public class Issue
     public AttributeValue getAttributeValue(Attribute attribute)
        throws Exception
     {
-        Criteria crit = new Criteria(2)
-            .add(AttributeValuePeer.ISSUE_ID, getIssueId())        
-            .add(AttributeValuePeer.DELETED, false)        
-            .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
-
-        List avals = getAttributeValues(crit);   
-
         AttributeValue aval = null;
-        if ( avals.size() == 1 ) 
+        if ( isNew() ) 
         {
-            aval = (AttributeValue)avals.get(0);
+            List avals = getAttributeValues();
+            if ( avals != null ) 
+            {
+                Iterator i = avals.iterator();
+                while (i.hasNext()) 
+                {
+                    AttributeValue tempAval = (AttributeValue)i.next();
+                    if ( tempAval.getAttribute().equals(attribute)) 
+                    {
+                        aval = tempAval;
+                        break;
+                    }
+                }
+            }
         }
-
+        else 
+        {            
+            Criteria crit = new Criteria(2)
+                .add(AttributeValuePeer.ISSUE_ID, getIssueId())        
+                .add(AttributeValuePeer.DELETED, false)        
+                .add(AttributeValuePeer.ATTRIBUTE_ID, 
+                     attribute.getAttributeId());
+            
+            List avals = getAttributeValues(crit);               
+            if ( avals.size() == 1 ) 
+            {
+                aval = (AttributeValue)avals.get(0);
+            }
+        }
         return aval;
     }
 
@@ -409,6 +428,7 @@ public class Issue
     public List getAttributeValues(Attribute attribute)
        throws Exception
     {
+        // FIXME!  needs a isNew() check for alternative logic.
         Criteria crit = new Criteria(2)
             .add(AttributeValuePeer.DELETED, false)        
             .add(AttributeValuePeer.ATTRIBUTE_ID, attribute.getAttributeId());
@@ -1542,6 +1562,8 @@ public class Issue
             if ( rma.getDefaultTextFlag() ) 
             {
                     attributeId = rma.getAttributeId();
+                    // System.out.println("Default was set in db to " + rma.getAttribute().getName());
+                    
                     break;
             }
         }
@@ -1555,6 +1577,7 @@ public class Issue
                 if ( rma.getAttribute().isTextAttribute() ) 
                 {
                     attributeId = rma.getAttributeId();
+                    // System.out.println("Default is highest text: " + rma.getAttribute().getName());
                     break;
                 }
             }
@@ -1564,6 +1587,7 @@ public class Issue
         if ( attributeId != null ) 
         {
             List avs = getAttributeValues();
+            // System.out.println("Checking values for attribute size=: " + avs.size());
             for ( int i=0; i<avs.size(); i++ ) 
             {
                 AttributeValue testAV = (AttributeValue)avs.get(i);
@@ -1586,12 +1610,7 @@ public class Issue
         if ( emailAV != null ) 
         {
             s = emailAV.getValue();
-        }
-        else 
-        {
-            
-        }
-        
+        }        
         return (s == null ? "" : s);
     }
 
