@@ -418,7 +418,12 @@ public class Request {
     }
 
     public void handleQueryParameters() {
-	params.setEncoding( getCharacterEncoding() );
+	// set the encoding for query parameters.
+	getCharacterEncoding();
+	if( charEncoding  != null ) 
+	    params.setEncoding( getCharacterEncoding() );
+	else
+	    params.setEncoding( DEFAULT_CHARACTER_ENCODING );
 	params.handleQueryParameters();
     }
     
