@@ -53,7 +53,6 @@ import java.util.ArrayList;
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -62,14 +61,13 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.util.ScarabException;
 
 /**
  * Base class for actions which modify issues. Has a method to check
  * for collisions between different changes.
  * 
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: BaseModifyIssue.java,v 1.8 2003/06/27 17:54:19 venkatesh Exp $
+ * @version $Id: BaseModifyIssue.java,v 1.9 2003/07/25 17:33:03 thierrylach Exp $
  */
 public class BaseModifyIssue extends RequireLoginFirstAction
 {
