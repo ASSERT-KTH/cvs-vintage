@@ -15,6 +15,7 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.lang.reflect.InvocationTargetException;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationException;
@@ -25,7 +26,7 @@ import org.jboss.security.SecurityAssociationAuthenticator;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
 */
 public class Util
 {
@@ -53,6 +54,7 @@ public class Util
       {
          // First look for the JDK 1.4 JSSE Https connection
          httpsConnClass = loader.loadClass("javax.net.ssl.HttpsURLConnection");
+         log.debug("httpsConnClass: "+httpsConnClass);
       }
       catch(Exception e)
       {
@@ -60,9 +62,11 @@ public class Util
          try
          {
             httpsConnClass = loader.loadClass("com.sun.net.ssl.HttpsURLConnection");
+            log.debug("httpsConnClass: "+httpsConnClass);
          }
          catch(Exception e2)
          {
+            log.warn("No HttpsURLConnection seen");
          }
       }
    }
@@ -89,15 +93,7 @@ public class Util
        full usage of HTTP 1.1 features, pooling, etc.
        */
       HttpURLConnection conn = (HttpURLConnection) externalURL.openConnection();
-      boolean isAssignable = httpsConnClass.isAssignableFrom(conn.getClass());
-      if( isAssignable )
-      {
-         // See if the org.jboss.security.ignoreHttpsHost property is set
-         if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
-         {
-            AnyhostVerifier.setHostnameVerifier(conn);
-         }
-      }
+      configureHttpsHostVerifier(conn);
       conn.setDoInput(true);
       conn.setDoOutput(true);
       conn.setRequestProperty("ContentType", REQUEST_CONTENT_TYPE);
@@ -131,6 +127,30 @@ public class Util
       }
 
       return value;
+   }
+
+   /** Given an Https URL connection check the org.jboss.security.ignoreHttpsHost
+    * system property and if true, install the AnyhostVerifier as the 
+    * com.sun.net.ssl.HostnameVerifier or javax.net.ssl.HostnameVerifier
+    * depending on the version of JSSE seen. If HttpURLConnection is not a
+    * HttpsURLConnection then nothing is done.
+    *  
+    * @param conn a HttpsURLConnection
+    * @throws InvocationTargetException on failure to set the 
+    * @throws IllegalAccessException
+    */ 
+   public static void configureHttpsHostVerifier(HttpURLConnection conn)
+      throws InvocationTargetException, IllegalAccessException
+   {
+      boolean isAssignable = httpsConnClass.isAssignableFrom(conn.getClass());
+      if( isAssignable )
+      {
+         // See if the org.jboss.security.ignoreHttpsHost property is set
+         if( Boolean.getBoolean("org.jboss.security.ignoreHttpsHost") == true )
+         {
+            AnyhostVerifier.setHostnameVerifier(conn);
+         }
+      }
    }
 
    /** First try to use the externalURLValue as a URL string and if this
