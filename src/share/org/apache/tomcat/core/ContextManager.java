@@ -297,52 +297,6 @@ public class ContextManager implements LogAware {
 
 
     // -------------------- Support functions --------------------
-
-    /**
-     *  Set default settings ( interceptors, connectors, loader, manager )
-     *  It is called from init if no connector is set up  - note that we
-     *  try to avoid any "magic" - you either set up everything ( using
-     *  server.xml or alternatives) or you don't set up and then defaults
-     *  will be used.
-     *
-     *  Set interceptors or call setDefaults before adding contexts.
-     *
-     *  This is mostly used to allow "0 config" case ( you just want the
-     *  reasonable defaults and nothing else ).
-     */
-    public void setDefaults() {
-	if(connectors.size()==0) {
-	    if(debug>5) log("Setting default adapter");
-	    PoolTcpConnector sc=new PoolTcpConnector();
-	    sc.setTcpConnectionHandler( new
-		org.apache.tomcat.service.http.HttpConnectionHandler());
-	    addServerConnector(  sc );
-	}
-
-	if( contextInterceptors.size()==0) {
-	    if(debug>5) log("Setting default context interceptors");
-	    addContextInterceptor(new LogEvents());
-	    addContextInterceptor(new AutoSetup());
-	    //	    addContextInterceptor(new PolicyInterceptor());
-	    addContextInterceptor(new LoaderInterceptor());
-	    addContextInterceptor(new DefaultCMSetter());
-	    addContextInterceptor(new WorkDirInterceptor());
-	    addContextInterceptor( new WebXmlReader());
-	    addContextInterceptor(new LoadOnStartupInterceptor());
-	}
-
-	if( requestInterceptors.size()==0) {
-	    if(debug>5) log("Setting default request interceptors");
-	    addRequestInterceptor(new SessionInterceptor());
-	    SimpleMapper1 smap=new SimpleMapper1();
-	    smap.setContextManager( this );
-	    addRequestInterceptor(smap);
-
-	    addRequestInterceptor(new
-		org.apache.tomcat.session.StandardSessionInterceptor());
-	}
-    }
-
     /** Init() is called after the context manager is set up
      *  and configured. It will init all internal components
      *  to be ready for start.
@@ -352,8 +306,6 @@ public class ContextManager implements LogAware {
      *  may be a better name ? ). ( Initializing is different from starting.)
      */
     public void init()  throws TomcatException {
-	//	log( "Tomcat install = " + getInstallDir());
-	// log( "Tomcat home = " + home);
 	if(debug>0 ) log( "Tomcat classpath = " +
 			     System.getProperty( "java.class.path" ));
 
@@ -628,9 +580,6 @@ public class ContextManager implements LogAware {
 	access
     */
     public ContextInterceptor[] getContextInterceptors() {
-	if( contextInterceptors.size() == 0 ) {
-	    setDefaults();
-	}
 	if( cInterceptors == null ||
 	    cInterceptors.length != contextInterceptors.size())
 	{

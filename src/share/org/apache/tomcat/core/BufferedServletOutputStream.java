@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.15 2000/07/11 03:48:43 alex Exp $
- * $Revision: 1.15 $
- * $Date: 2000/07/11 03:48:43 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.16 2000/07/29 18:34:12 costin Exp $
+ * $Revision: 1.16 $
+ * $Date: 2000/07/29 18:34:12 $
  *
  * ====================================================================
  * 
@@ -113,10 +113,6 @@ public class BufferedServletOutputStream extends ServletOutputStream {
 	setResponse(resA);
     }
 
-//     public void setResponseAdapter( Response resA ) {
-// 	this.resA=resA;
-//     }
-    
     protected void doWrite( byte buffer[], int pos, int count) throws IOException {
 	resA.doWrite( buffer, pos, count);
     }
