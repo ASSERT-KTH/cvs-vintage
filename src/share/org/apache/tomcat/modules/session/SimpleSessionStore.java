@@ -67,8 +67,8 @@ import org.apache.tomcat.core.*;
 import java.util.*;
 import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.log.*;
+import org.apache.tomcat.util.buf.*;
 import java.security.*;
-//import org.apache.tomcat.session.*;
 
 
 /**

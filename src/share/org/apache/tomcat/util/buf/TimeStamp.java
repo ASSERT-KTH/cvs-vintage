@@ -56,7 +56,7 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.util.threads;
+package org.apache.tomcat.util.buf;
 
 import org.apache.tomcat.util.buf.MessageBytes;
 import java.io.IOException;

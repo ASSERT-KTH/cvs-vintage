@@ -69,10 +69,6 @@ import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-// import javax.servlet.ServletException;	// for throwableToString()
-// import org.apache.tomcat.core.TomcatException;	// for throwableToString()
-import org.apache.tomcat.util.FastDateFormat;
-
 /**
  * Interface for a logging object. A logging object provides mechanism
  * for logging errors and messages that are of interest to someone who

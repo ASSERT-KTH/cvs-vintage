@@ -67,8 +67,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.buf.TimeStamp;
 
-import org.apache.tomcat.util.threads.TimeStamp;
 
 /**
  * Server representation of a Session.
