@@ -82,7 +82,7 @@ import org.tigris.scarab.util.ScarabUtil;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.107 2003/02/11 16:16:16 jmcnally Exp $
+ * @version $Id: Search.java,v 1.108 2003/02/11 19:29:33 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -471,6 +471,21 @@ public class Search extends RequireLoginFirstAction
                 data.getParameters().add("user_list", user.getUserId().toString());
             }
         }
+    }
+
+    public void doAdduserlist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        String cancelPage = getCancelTemplate(data, "AdvancedQuery.vm");
+        setTarget(data, cancelPage);
+    }
+
+    public void doCanceluserlist(RunData data, TemplateContext context)
+        throws Exception
+    {
+        data.getParameters().remove("user_list");
+        String cancelPage = getCancelTemplate(data, "AdvancedQuery.vm");
+        setTarget(data, cancelPage);
     }
 
 

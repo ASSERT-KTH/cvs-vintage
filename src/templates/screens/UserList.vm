@@ -2,7 +2,7 @@
 
 ## USER SEARCH
 <form action="$link.setPage("UserList.vm")" method="post">
-<input type="hidden" name="action" value="AssignIssue" />
+<input type="hidden" name="action" value="Search" />
 #set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "AdvancedQuery.vm"))
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 #set ($queryId = $data.Parameters.getString("queryId"))
@@ -17,7 +17,7 @@
 <h3>$l10n.Users</h3>
 
 <div class="functnbar">
-  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancelUserList" />
 </div>
 
 <div class="axial">
@@ -64,11 +64,11 @@
 </table>  
 
 <div class="functnbar3">
- <input type="submit" name="eventSubmit_doCancel" value="$l10n.AssociateSelectedUserWithIssue" />
+ <input type="submit" name="eventSubmit_doAddUserList" value="$l10n.AssociateSelectedUserWithIssue" />
 </div>
 
 <div class="functnbar2">
-  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancel" />
+  <input type="submit" value="$l10n.Cancel" name="eventSubmit_doCancelUserList" />
 </div>
 		
 $intake.declareGroups()
