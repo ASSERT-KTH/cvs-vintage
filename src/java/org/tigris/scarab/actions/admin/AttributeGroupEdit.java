@@ -84,7 +84,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.49 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.50 2003/06/16 04:41:22 irk_tpt Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -311,6 +311,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
             .getInstance(new NumberKey(groupId), false);
+        boolean hasAttributes = false;
 
         if (!user.hasPermission(ScarabSecurity.MODULE__EDIT, module))
         {
@@ -333,12 +334,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("att_delete_"))
             {
+                hasAttributes = true;
                 attributeId = key.substring(11);
                 Attribute attribute = AttributeManager
                    .getInstance(new NumberKey(attributeId), false);
                 RIssueTypeAttribute ria = issueType.getRIssueTypeAttribute(attribute);
                 if (!ag.isGlobal() && ria != null &&  ria.getLocked())
-                { 
+                {
                     lockedAttrs.add(attribute);
                 }
                 else
@@ -347,7 +349,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     {
                         ag.deleteAttribute(attribute, user, module);
                     }
-                    catch (ScarabException e) 
+                    catch (ScarabException e)
                     {
                         scarabR.setAlertMessage(e.getMessage());
                         Log.get().warn(
@@ -356,6 +358,10 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 }
             }
         }
+        if(!hasAttributes)
+        {
+            scarabR.setAlertMessage(l10n.get("NoAttributeSelected"));
+        }
 
         // If there are no attributes in any of the dedupe
         // Attribute groups, turn off deduping in the module
@@ -363,7 +369,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         List attributeGroups = module.getAttributeGroups(issueType);
         if (attributeGroups.size() > 0)
         {
-            for (int j=0; j<attributeGroups.size(); j++) 
+            for (int j=0; j<attributeGroups.size(); j++)
             {
                 AttributeGroup agTemp = (AttributeGroup)attributeGroups.get(j);
                 if (agTemp.getDedupe() && !agTemp.getAttributes().isEmpty())
@@ -393,13 +399,16 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             setLockedMessage(lockedAttrs, context);
         }
         ScarabCache.clear();
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+        if(hasAttributes)
+        {
+            scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+        }
     }
 
     /**
      * This manages clicking the create new button on AttributeSelect.vm
      */
-    public void doCreatenewglobalattribute(RunData data, 
+    public void doCreatenewglobalattribute(RunData data,
                                             TemplateContext context)
         throws Exception
     {
