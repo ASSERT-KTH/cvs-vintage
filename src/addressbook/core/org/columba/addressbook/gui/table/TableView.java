@@ -17,16 +17,14 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.table;
 
-import org.columba.addressbook.config.AdapterNode;
-import org.columba.addressbook.gui.table.renderer.DefaultHeaderRenderer;
-import org.columba.addressbook.gui.table.renderer.TypeRenderer;
-import org.columba.addressbook.util.AddressbookResourceLoader;
-
 import java.awt.Dimension;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+
+import org.columba.addressbook.gui.table.renderer.DefaultHeaderRenderer;
+import org.columba.addressbook.util.AddressbookResourceLoader;
 
 
 /**
@@ -35,7 +33,7 @@ import javax.swing.table.TableModel;
  * @author fdietz
  */
 public class TableView extends JTable {
-    private AdapterNode node;
+   
     private TableController controller;
     private TableModel tableModel;
 

@@ -26,18 +26,17 @@ import java.util.Vector;
 
 import javax.swing.JDialog;
 
-import org.columba.addressbook.config.AdapterNode;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
-import org.columba.mail.folder.MessageFolder;
-import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.FolderFactory;
 import org.columba.mail.folder.HeaderListStorage;
 import org.columba.mail.folder.MailboxInterface;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.folder.headercache.CachedHeaderfields;
 import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.gui.config.search.SearchFrame;

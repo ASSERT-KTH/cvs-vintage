@@ -16,13 +16,9 @@
 
 package org.columba.mail.config;
 
-import org.columba.addressbook.config.AdapterNode;
-
-import org.columba.core.config.DefaultXmlConfig;
-
 import java.io.File;
 
-import java.util.List;
+import org.columba.core.config.DefaultXmlConfig;
 
 public class AccountXmlConfig extends DefaultXmlConfig {
     private AccountList list;
@@ -37,25 +33,5 @@ public class AccountXmlConfig extends DefaultXmlConfig {
         }
 
         return list;
-    }
-
-    // create uid list from all accounts
-    protected void getUids(List v, AdapterNode parent) {
-        int childCount = parent.getChildCount();
-
-        if (childCount > 0) {
-            for (int i = 0; i < childCount; i++) {
-                AdapterNode child = parent.getChild(i);
-
-                //System.out.println("name: "+ child.getName() );
-                if (child.getName().equals("account")) {
-                    AdapterNode uidNode = child.getChild("uid");
-
-                    Integer j = new Integer(uidNode.getValue());
-
-                    v.add(j);
-                }
-            }
-        }
     }
 }

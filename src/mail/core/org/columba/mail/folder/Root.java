@@ -15,10 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
-import org.columba.addressbook.config.AdapterNode;
-
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 
 
