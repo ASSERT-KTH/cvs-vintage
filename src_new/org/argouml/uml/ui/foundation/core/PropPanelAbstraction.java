@@ -1,4 +1,4 @@
-// $Id: PropPanelAbstraction.java,v 1.22 2004/10/13 05:52:11 linus Exp $
+// $Id: PropPanelAbstraction.java,v 1.23 2004/10/14 05:48:19 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,9 +46,6 @@ public class PropPanelAbstraction extends PropPanelDependency {
 
         addField(Translator.localize("label.name"), 
                 getNameTextField());
-        // addField(Translator.localize("label.stereotype"), 
-        // new UMLComboBoxNavigator(this, Translator.localize(
-        // "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Translator.localize("label.stereotype"), 
                 getStereotypeBox());
         addField(Translator.localize("label.namespace"), 

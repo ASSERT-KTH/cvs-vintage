@@ -1,4 +1,4 @@
-// $Id: PropPanelActionState.java,v 1.21 2004/10/13 05:52:30 linus Exp $
+// $Id: PropPanelActionState.java,v 1.22 2004/10/14 05:48:20 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelState.java
 // Classes: PropPanelState
 // Original Author: your email address here
-// $Id: PropPanelActionState.java,v 1.21 2004/10/13 05:52:30 linus Exp $
+// $Id: PropPanelActionState.java,v 1.22 2004/10/14 05:48:20 linus Exp $
 
 package org.argouml.uml.ui.behavior.activity_graphs;
 
@@ -65,11 +65,6 @@ public class PropPanelActionState extends PropPanelState {
 
         addField(Translator.localize("label.name"),
                 getNameTextField());
-        //        addField(Translator.localize("label.stereotype"),
-        //		 new UMLComboBoxNavigator(this,
-        //					  Translator.localize(
-        //						"tooltip.nav-stereo"),
-        //					  getStereotypeBox()));
         addField(Translator.localize("label.stereotype"),
                 getStereotypeBox());
 

@@ -1,4 +1,4 @@
-// $Id: PropPanelSubmachineState.java,v 1.14 2004/10/13 05:52:20 linus Exp $
+// $Id: PropPanelSubmachineState.java,v 1.15 2004/10/14 05:48:19 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,10 +61,6 @@ public class PropPanelSubmachineState extends PropPanelCompositeState {
                 ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("label.name"), 
                 getNameTextField());
-        // addField(Translator.localize("UMLMenu", "label.stereotype"), 
-        // new UMLComboBoxNavigator(this, Translator.localize("UMLMenu", 
-        // "tooltip.nav-stereo"), getStereotypeBox()));
-
         addField(Translator.localize("label.stereotype"), 
                 getStereotypeBox());
         addField(Translator.localize("label.container"), 

@@ -1,4 +1,4 @@
-// $Id: PropPanelModelElement.java,v 1.84 2004/10/13 05:52:18 linus Exp $
+// $Id: PropPanelModelElement.java,v 1.85 2004/10/14 05:48:19 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -292,8 +292,8 @@ public abstract class PropPanelModelElement extends PropPanel {
     protected Box getStereotypeBox() {
         if (stereotypeBox == null) {
             stereotypeBox = new Box(BoxLayout.X_AXIS);
-            stereotypeBox.add(new UMLComboBoxNavigator(this, Translator
-                    .localize("tooltip.nav-stereo"),
+            stereotypeBox.add(new UMLComboBoxNavigator(this,
+                    Translator.localize("label.stereotype.navigate.tooltip"),
                     getStereotypeComboBox()));
             JButton stereoTypeButton = new JButton(new AbstractAction(null,
                     lookupIcon("Stereotype")) {

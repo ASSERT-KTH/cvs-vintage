@@ -1,4 +1,4 @@
-// $Id: PropPanelInstance.java,v 1.33 2004/10/13 05:52:09 linus Exp $
+// $Id: PropPanelInstance.java,v 1.34 2004/10/14 05:48:20 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelInstance.java
 // Classes: PropPanelInstance
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelInstance.java,v 1.33 2004/10/13 05:52:09 linus Exp $
+// $Id: PropPanelInstance.java,v 1.34 2004/10/14 05:48:20 linus Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -70,10 +70,6 @@ public class PropPanelInstance extends PropPanelModelElement {
                 ConfigLoader.getTabPropsOrientation());
         addField(Translator.localize("label.name"),
                 getNameTextField());
-
-        // addField(Translator.localize("label.stereotype"), new
-        // UMLComboBoxNavigator(this, Translator.localize("UMLMenu",
-        // "tooltip.nav-stereo"), getStereotypeBox()));
         addField(Translator.localize("label.stereotype"),
                 getStereotypeBox());
         addField(Translator.localize("label.namespace"),
