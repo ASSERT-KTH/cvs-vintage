@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.161 2003/11/23 10:21:52 mkl Exp $
+// $Id: ModelFacade.java,v 1.162 2003/11/23 23:14:43 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5764,11 +5764,12 @@ public class ModelFacade {
 
     /**
      * Set some parameters kind to 'in'.
-     * @param parameter
+     * @param p is the parameter
      */
     public static void setKindToIn(Object p) {
         if (p != null && p instanceof MParameter) {
-            ((MParameter)p).setKind(MParameterDirectionKind.IN);
+	    ((MParameter) p).setKind(MParameterDirectionKind.IN);
+	    return;
         }
         throw new IllegalArgumentException("Unrecognized object : " + 
             getClassNull(p));
@@ -5776,11 +5777,12 @@ public class ModelFacade {
 
     /**
      * Set some parameters kind to 'in/out'.
-     * @param parameter
+     * @param p is the parameter
      */
     public static void setKindToInOut(Object p) {
         if (p != null && p instanceof MParameter) {
-            ((MParameter)p).setKind(MParameterDirectionKind.INOUT);
+	    ((MParameter) p).setKind(MParameterDirectionKind.INOUT);
+	    return;
         }
         throw new IllegalArgumentException("Unrecognized object : " + 
             getClassNull(p));
@@ -5788,11 +5790,12 @@ public class ModelFacade {
 
     /**
      * Set some parameters kind to 'out'.
-     * @param parameter
+     * @param p is the parameter
      */
     public static void setKindToOut(Object p) {
         if (p != null && p instanceof MParameter) {
-            ((MParameter)p).setKind(MParameterDirectionKind.OUT);
+	    ((MParameter) p).setKind(MParameterDirectionKind.OUT);
+	    return;
         }
         throw new IllegalArgumentException("Unrecognized object : " + 
             getClassNull(p));
@@ -5800,11 +5803,12 @@ public class ModelFacade {
 
     /**
      * Set some parameters kind to 'return'.
-     * @param parameter
+     * @param p is the parameter
      */
     public static void setKindToReturn(Object p) {
         if (p != null && p instanceof MParameter) {
-            ((MParameter)p).setKind(MParameterDirectionKind.RETURN);
+	    ((MParameter) p).setKind(MParameterDirectionKind.RETURN);
+	    return;
         }
         throw new IllegalArgumentException("Unrecognized object : " + 
             getClassNull(p));
