@@ -96,7 +96,7 @@ model/mesh			msh mesh silo
 model/vrml			wrl vrml
 text/css			css
 text/html			html htm
-text/plain			asc txt
+text/plain			asc txt patch
 text/richtext			rtx
 text/rtf			rtf
 text/sgml			sgml sgm
