@@ -40,12 +40,4 @@
     <mbean-ref name="ServiceDeployer">JBOSS-SYSTEM:service=ServiceDeployer</mbean-ref>
   </mbean>
   -->
-  <!-- ==================================================================== -->
-  <!-- RAR deployment                                                      -->
-  <!-- ==================================================================== -->
-
-  <mbean code="org.jboss.resource.RARDeployer" 
-	 name="JCA:service=RARDeployer">
-  </mbean>
-
 </server>
