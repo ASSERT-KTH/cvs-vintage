@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.32 2003/07/09 14:59:34 venkatesh Exp $
+ * @version $Id: MITList.java,v 1.33 2003/07/19 22:55:33 jmcnally Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -988,6 +988,8 @@ public  class MITList
         else if (isAllMITs) 
         {
             crit.addIn(moduleField, getModuleIds());
+            // we do this to avoid including templates in results
+            crit.addIn(issueTypeField, getIssueTypeIds());
         }
         else if (size() > 0) 
         {
