@@ -139,7 +139,7 @@ public  class AttributeGroup
 
 
     /**
-     * List of attributes in this group.
+     * List of Attributes in this group.
      */
     public List getAttributes()
         throws Exception
