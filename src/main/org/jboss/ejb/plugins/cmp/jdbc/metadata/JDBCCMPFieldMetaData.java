@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -106,11 +106,10 @@ public final class JDBCCMPFieldMetaData {
    /**
     * JNDI name of the key factory for this field
     */
-   private final String keyFactory;
+   private final String keyGeneratorFactory;
 
    /**
-    * This constructor added to create an unknown primary key
-    * For now metadata is hardcoded
+    * This constructor is added especially for unknown primary key field
     */
    public JDBCCMPFieldMetaData( JDBCEntityMetaData entity )
    {
@@ -127,7 +126,7 @@ public final class JDBCCMPFieldMetaData {
       primaryKeyField = null;
       unknownPkField = true;
       // here some default factory should be setup
-      keyFactory = null;
+      keyGeneratorFactory = null;
    }
 
    /**
@@ -198,7 +197,7 @@ public final class JDBCCMPFieldMetaData {
 
       // Unknown primary key attributes setup
       unknownPkField = false;
-      keyFactory = null;
+      keyGeneratorFactory = null;
    }
 
    /**
@@ -293,15 +292,15 @@ public final class JDBCCMPFieldMetaData {
       // unknown primary key
       this.unknownPkField = defaultValues.isUnknownPkField();
 
-      // key factory
+      // key generator factory
       // NOTE: even if it's required for unknown-pk it might be absent
       // because this class represents non-pk fields too
-      String keyFactory = MetaData.getOptionalChildContent(
-         element, "key-factory" );
-      if( keyFactory != null )
-         this.keyFactory = keyFactory;
+      String keyGeneratorFactory = MetaData.getOptionalChildContent(
+         element, "key-generator-factory" );
+      if( keyGeneratorFactory != null )
+         this.keyGeneratorFactory = keyGeneratorFactory;
       else
-         this.keyFactory = defaultValues.getKeyFactory();
+         this.keyGeneratorFactory = defaultValues.getKeyGeneratorFactory();
    }
 
    /**
@@ -391,12 +390,12 @@ public final class JDBCCMPFieldMetaData {
       // key factory
       // NOTE: even if it's required for unknown-pk it might be absent
       // because this class represents non-pk fields too
-      String keyFactory = MetaData.getOptionalChildContent(
-         element, "key-factory" );
-      if( keyFactory != null )
-         this.keyFactory = keyFactory;
+      String keyGeneratorFactory = MetaData.getOptionalChildContent(
+         element, "key-generator-factory" );
+      if( keyGeneratorFactory != null )
+         this.keyGeneratorFactory = keyGeneratorFactory;
       else
-         this.keyFactory = defaultValues.getKeyFactory();
+         this.keyGeneratorFactory = defaultValues.getKeyGeneratorFactory();
    }
 
    /**
@@ -472,7 +471,7 @@ public final class JDBCCMPFieldMetaData {
       this.unknownPkField = defaultValues.isUnknownPkField();
 
       // key factory
-      this.keyFactory = defaultValues.getKeyFactory();
+      this.keyGeneratorFactory = defaultValues.getKeyGeneratorFactory();
    }
 
    /**
@@ -594,8 +593,8 @@ public final class JDBCCMPFieldMetaData {
    /**
     * Gets key factory JNDI name
     */
-   public String getKeyFactory() {
-      return keyFactory;
+   public String getKeyGeneratorFactory() {
+      return keyGeneratorFactory;
    }
 
    /**
