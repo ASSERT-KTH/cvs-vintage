@@ -13,14 +13,15 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.config;
 
 import org.columba.core.config.DefaultConfig;
 import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
 import java.io.File;
-
 
 /**
  * @author frd
@@ -126,11 +127,11 @@ public class MailConfig extends DefaultConfig {
      * @return DefaultXmlConfig
      */
     protected static DefaultXmlConfig getPlugin(String id) {
-        return DefaultConfig.getPlugin(MODULE_NAME, id);
+        return MainInterface.config.getPlugin(MODULE_NAME, id);
     }
 
     protected static DefaultXmlConfig getTemplatePlugin(String id) {
-        return DefaultConfig.getTemplatePlugin(MODULE_NAME, id);
+        return MainInterface.config.getTemplatePlugin(MODULE_NAME, id);
     }
 
     /**

@@ -291,7 +291,7 @@ public class Config {
     }
 
     public XmlElement get(String name) {
-        DefaultXmlConfig xml = DefaultConfig.getPlugin("core", name + ".xml");
+        DefaultXmlConfig xml = getPlugin("core", name + ".xml");
 
         return xml.getRoot();
     }
@@ -301,7 +301,7 @@ public class Config {
      * @return OptionsXmlConfig
      */
     public OptionsXmlConfig getOptionsConfig() {
-        return (OptionsXmlConfig) DefaultConfig.getPlugin("core",
+        return (OptionsXmlConfig) getPlugin("core",
             optionsFile.getName());
     }
     

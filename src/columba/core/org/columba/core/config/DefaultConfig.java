@@ -88,21 +88,6 @@ public class DefaultConfig {
     }
 
     /**
-     * Method getPlugin.
-     * @param moduleName
-     * @param id
-     * @return DefaultXmlConfig
-     */
-    protected static DefaultXmlConfig getPlugin(String moduleName, String id) {
-        return MainInterface.config.getPlugin(moduleName, id);
-    }
-
-    protected static DefaultXmlConfig getTemplatePlugin(String moduleName,
-        String id) {
-        return MainInterface.config.getTemplatePlugin(moduleName, id);
-    }
-
-    /**
      * Method createConfigDir.
      * @param moduleName
      * @return File
