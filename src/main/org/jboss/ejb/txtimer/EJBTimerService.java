@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerService.java,v 1.8 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: EJBTimerService.java,v 1.9 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.mx.util.ObjectNameFactory;
@@ -74,5 +74,4 @@ public interface EJBTimerService
     * @param pKey        The rimary key for an instance of a TimedObject, may be null
     */
    void removeTimerService(ObjectName containerId, Object pKey) throws IllegalStateException;
-
 }

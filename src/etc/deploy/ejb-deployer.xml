@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- The JBoss service configuration file for the EJB deployer service.
-$Id: ejb-deployer.xml,v 1.6 2004/09/10 14:05:45 tdiesler Exp $
+$Id: ejb-deployer.xml,v 1.7 2004/09/10 21:51:03 tdiesler Exp $
 -->
 <server>
 
@@ -14,6 +14,7 @@ $Id: ejb-deployer.xml,v 1.6 2004/09/10 14:05:45 tdiesler Exp $
       name="jboss.ejb:service=EJBTimerService">
       <attribute name="RetryPolicy">jboss.ejb:service=EJBTimerService,retryPolicy=fixedDelay</attribute>
       <attribute name="PersistencePolicy">jboss.ejb:service=EJBTimerService,persistencePolicy=database</attribute>
+      <attribute name="TimerIdGeneratorClassName">org.jboss.ejb.txtimer.BigIntegerTimerIdGenerator</attribute>
       <attribute name="TimedObjectInvokerClassName">org.jboss.ejb.txtimer.TimedObjectInvokerImpl</attribute>
    </mbean>
 
@@ -32,7 +33,9 @@ $Id: ejb-deployer.xml,v 1.6 2004/09/10 14:05:45 tdiesler Exp $
      <depends optional-attribute-name="DataSource">jboss.jca:service=DataSourceBinding,name=DefaultDS</depends>
      <!-- table name -->
      <attribute name="TableName">TIMERS</attribute>
-     <!-- Column that contains the target component JMX name -->
+     <!-- Column that contains the timer id -->
+     <attribute name="TimerIdColumn">TIMERID</attribute>
+     <!-- Column that contains the target component id -->
      <attribute name="TargetIdColumn">TARGETID</attribute>
      <!-- Column that contains the initial date value -->
      <attribute name="InitialDateColumn">INITIALDATE</attribute>
@@ -45,12 +48,13 @@ $Id: ejb-deployer.xml,v 1.6 2004/09/10 14:05:45 tdiesler Exp $
      <!-- Create table DDL -->
      <attribute name="CreateTableDDL">
         create table TIMERS (
+           TIMERID varchar(50) not null,
            TARGETID varchar(50) not null,
            INITIALDATE timestamp not null,
            INTERVAL bigint,
            INSTANCEPK other,
            INFO other,
-           constraint timers_pk primary key (TARGETID, INITIALDATE)
+           constraint timers_pk primary key (TIMERID)
         )
      </attribute>
    </mbean>

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: EJBTimerServiceImpl.java,v 1.4 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: EJBTimerServiceImpl.java,v 1.5 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.ejb.Container;
 import org.jboss.logging.Logger;
@@ -48,6 +48,8 @@ public class EJBTimerServiceImpl
    // The object name of the retry policy
    private ObjectName persistencePolicyName;
 
+   // The TimerIdGenerator class name
+   private String timerIdGeneratorClassName;
    // The TimedObjectInvoker class name
    private String timedObjectInvokerClassName;
 
@@ -89,6 +91,26 @@ public class EJBTimerServiceImpl
    public void setPersistencePolicy(ObjectName persistencePolicyName)
    {
       this.persistencePolicyName = persistencePolicyName;
+   }
+
+   /**
+    * Get the TimerIdGenerator class name
+    *
+    * @jmx.managed-attribute
+    */
+   public String getTimerIdGeneratorClassName()
+   {
+      return timerIdGeneratorClassName;
+   }
+
+   /**
+    * Get the TimerIdGenerator class name
+    *
+    * @jmx.managed-attribute
+    */
+   public void setTimerIdGeneratorClassName(String timerIdGeneratorClassName)
+   {
+      this.timerIdGeneratorClassName = timerIdGeneratorClassName;
    }
 
    /**

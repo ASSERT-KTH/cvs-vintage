@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerHandleImpl.java,v 1.8 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: TimerHandleImpl.java,v 1.9 2004/09/10 21:51:04 tdiesler Exp $
 
 import javax.ejb.EJBException;
 import javax.ejb.NoSuchObjectLocalException;
@@ -33,6 +33,7 @@ public class TimerHandleImpl implements TimerHandle
    public static final String DATE_PATTERN = "dd-MMM-yyyy HH:mm:ss.SSS";
 
    // The initial txtimer properties
+   private String timerId;
    private TimedObjectId timedObjectId;
    private Date firstTime;
    private long periode;
@@ -44,6 +45,7 @@ public class TimerHandleImpl implements TimerHandle
     */
    TimerHandleImpl(TimerImpl timer)
    {
+      timerId = timer.getTimerId();
       timedObjectId = timer.getTimedObjectId();
       firstTime = timer.getFirstTime();
       periode = timer.getPeriode();
@@ -53,8 +55,9 @@ public class TimerHandleImpl implements TimerHandle
    /**
     * Construct a handle from individual parameters
     */
-   TimerHandleImpl(TimedObjectId timedObjectId, Date firstTime, long periode, Serializable info)
+   TimerHandleImpl(String timerId, TimedObjectId timedObjectId, Date firstTime, long periode, Serializable info)
    {
+      this.timerId = timerId;
       this.timedObjectId = timedObjectId;
       this.firstTime = firstTime;
       this.periode = periode;
@@ -74,15 +77,18 @@ public class TimerHandleImpl implements TimerHandle
          // take first and last char off
          String inStr = externalForm.substring(1, externalForm.length() - 1);
 
-         if (inStr.startsWith("toid=") == false)
+         if (inStr.startsWith("id=") == false)
             throw new IllegalArgumentException("Cannot parse: " + externalForm);
 
-         inStr = inStr.substring(5);
+         int targetIndex = inStr.indexOf(",target=");
          int firstIndex = inStr.indexOf(",first=");
-         String toidStr = inStr.substring(0, firstIndex);
+
+         String idStr = inStr.substring(3, targetIndex);
+         String targetStr = inStr.substring(targetIndex + 8, firstIndex);
          String restStr = inStr.substring(firstIndex + 1);
 
-         timedObjectId = TimedObjectId.parse(toidStr);
+         timerId = idStr;
+         timedObjectId = TimedObjectId.parse(targetStr);
 
          StringTokenizer st = new StringTokenizer(restStr, ",=");
          if (st.countTokens() % 2 != 0)
@@ -128,7 +134,12 @@ public class TimerHandleImpl implements TimerHandle
    {
       SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
       String firstEvent = sdf.format(firstTime);
-      return "[toid=" + timedObjectId + ",first=" + firstEvent + ",periode=" + periode + "]";
+      return "[id=" + timerId + ",target=" + timedObjectId + ",first=" + firstEvent + ",periode=" + periode + "]";
+   }
+
+   public String getTimerId()
+   {
+      return timerId;
    }
 
    public TimedObjectId getTimedObjectId()

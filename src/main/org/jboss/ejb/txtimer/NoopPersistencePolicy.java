@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: NoopPersistencePolicy.java,v 1.3 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: NoopPersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 
@@ -32,12 +32,13 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
    /**
     * Creates the timer in  persistent storage.
     *
+    * @param timerId       The timer id
     * @param timedObjectId The timed object id
     * @param firstEvent    The point in time at which the first txtimer expiration must occur.
     * @param firstEvent    The point in time at which the first txtimer expiration must occur.
     * @param periode       The number of milliseconds that must elapse between txtimer expiration notifications.
     */
-   public void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info)
+   public void insertTimer(String timerId, TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info)
    {
       log.debug("Noop on createTimer");
    }
@@ -45,10 +46,9 @@ public class NoopPersistencePolicy implements NoopPersistencePolicyMBean
    /**
     * Removes the timer from persistent storage.
     *
-    * @param timedObjectId The timed object id
-    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param timerId The timer id
     */
-   public void deleteTimer(TimedObjectId timedObjectId, Date firstEvent)
+   public void deleteTimer(String timerId)
    {
       log.debug("Noop on destroyTimer");
    }

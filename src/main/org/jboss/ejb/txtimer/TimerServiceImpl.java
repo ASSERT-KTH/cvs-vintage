@@ -1,6 +1,6 @@
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerServiceImpl.java,v 1.10 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: TimerServiceImpl.java,v 1.11 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.jboss.mx.util.MBeanProxy;
@@ -45,7 +45,10 @@ public class TimerServiceImpl implements TimerService
    private TimedObjectId timedObjectId;
    private TimedObjectInvoker timedObjectInvoker;
 
-   // Maps TimerHandles to Timer objects
+   // The shared timerId generator
+   private static TimerIdGenerator timerIdGenerator;
+
+   // Map<TimerHandleImpl,TimerImpl>
    private Map timers = new HashMap();
 
    /**
@@ -56,6 +59,8 @@ public class TimerServiceImpl implements TimerService
       this.timedObjectId = timedObjectId;
       this.timedObjectInvoker = timedObjectInvoker;
 
+      // [todo] refactor dependency injection
+      
       // Get the Tx manager
       try
       {
@@ -79,6 +84,23 @@ public class TimerServiceImpl implements TimerService
       {
          log.warn("Cannot obtain the implementation of a PersistencePolicy: " + e.toString());
          persistencePolicy = new NoopPersistencePolicy();
+      }
+
+      // Get the timerId generator
+      if (timerIdGenerator == null)
+      {
+         try
+         {
+            MBeanServer server = MBeanServerLocator.locateJBoss();
+            String timerIdGeneratorClassName = (String)server.getAttribute(EJBTimerService.OBJECT_NAME, "TimerIdGeneratorClassName");
+            Class timerIdGeneratorClass = getClass().getClassLoader().loadClass(timerIdGeneratorClassName);
+            timerIdGenerator = (TimerIdGenerator)timerIdGeneratorClass.newInstance();
+         }
+         catch (Exception e)
+         {
+            log.warn("Cannot obtain the implementation of a TimerIdGenerator: " + e.toString());
+            timerIdGenerator = new BigIntegerTimerIdGenerator();
+         }
       }
    }
 
@@ -182,8 +204,9 @@ public class TimerServiceImpl implements TimerService
 
       try
       {
-         TimerImpl timer = new TimerImpl(timedObjectId, timedObjectInvoker, info);
-         persistencePolicy.insertTimer(timedObjectId, initialExpiration, intervalDuration, info);
+         String timerId = timerIdGenerator.nextTimerId();
+         TimerImpl timer = new TimerImpl(timerId, timedObjectId, timedObjectInvoker, info);
+         persistencePolicy.insertTimer(timerId, timedObjectId, initialExpiration, intervalDuration, info);
          timer.startTimer(initialExpiration, intervalDuration);
          return timer;
       }
@@ -313,7 +336,7 @@ public class TimerServiceImpl implements TimerService
    {
       synchronized (timers)
       {
-         persistencePolicy.deleteTimer(txtimer.getTimedObjectId(), txtimer.getFirstTime());
+         persistencePolicy.deleteTimer(txtimer.getTimerId());
          timers.remove(new TimerHandleImpl(txtimer));
       }
    }

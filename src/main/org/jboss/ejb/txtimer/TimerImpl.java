@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: TimerImpl.java,v 1.10 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: TimerImpl.java,v 1.11 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.ejb.AllowedOperationsAssociation;
 import org.jboss.logging.Logger;
@@ -69,6 +69,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
                                                  "canceled", "expired", "in_timeout", "retry_timeout"};
 
    // The initial txtimer properties
+   private String timerId;
    private TimedObjectId timedObjectId;
    private TimedObjectInvoker timedObjectInvoker;
    private Date firstTime;
@@ -83,8 +84,9 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    /**
     * Schedules the txtimer for execution at the specified time with a specified periode.
     */
-   TimerImpl(TimedObjectId timedObjectId, TimedObjectInvoker timedObjectInvoker, Serializable info)
+   TimerImpl(String timerId, TimedObjectId timedObjectId, TimedObjectInvoker timedObjectInvoker, Serializable info)
    {
+      this.timerId = timerId;
       this.timedObjectId = timedObjectId;
       this.timedObjectInvoker = timedObjectInvoker;
       this.info = info;
@@ -103,6 +105,11 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
       timerService.addTimer(this);
       registerTimerWithTx();
       startInTx();
+   }
+
+   public String getTimerId()
+   {
+      return timerId;
    }
 
    public TimedObjectId getTimedObjectId()
@@ -266,7 +273,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    {
       if (hashCode == 0)
       {
-         String hash = "[" + timedObjectId + "," + firstTime + "," + periode + "]";
+         String hash = "[" + timerId + "," + timedObjectId + "," + firstTime + "," + periode + "]";
          hashCode = hash.hashCode();
       }
       return hashCode;
@@ -278,7 +285,7 @@ public class TimerImpl implements javax.ejb.Timer, Synchronization
    public String toString()
    {
       long remaining = nextExpire - System.currentTimeMillis();
-      String retStr = "[" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode +
+      String retStr = "[id=" + timerId + "target=" + timedObjectId + ",remaining=" + remaining + ",periode=" + periode +
               "," + TIMER_STATES[timerState] + "]";
       return retStr;
    }

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: DatabasePersistencePolicy.java,v 1.3 2004/09/10 14:05:46 tdiesler Exp $
+// $Id: DatabasePersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
 
 import org.jboss.ejb.ContainerMBean;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
@@ -57,6 +57,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    // The service attributes
    private ObjectName dataSource;
    private String tableName;
+   private String timerIdColumn;
    private String targetIdColumn;
    private String initialDateColumn;
    private String intervalColumn;
@@ -118,17 +119,18 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    /**
     * Creates the timer in  persistent storage.
     *
+    * @param timerId          The timer id
     * @param timedObjectId    The timed object id
     * @param firstEvent       The point in time at which the first txtimer expiration must occur.
     * @param intervalDuration The number of milliseconds that must elapse between txtimer expiration notifications.
     * @param info             A serializable handback object.
     */
-   public void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long intervalDuration, Serializable info)
+   public void insertTimer(String timerId, TimedObjectId timedObjectId, Date firstEvent, long intervalDuration, Serializable info)
    {
       try
       {
          createTableIfNotExists();
-         doInsertTimer(timedObjectId, firstEvent, intervalDuration, info);
+         doInsertTimer(timerId, timedObjectId, firstEvent, intervalDuration, info);
       }
       catch (SQLException e)
       {
@@ -141,15 +143,14 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    /**
     * Removes the timer from persistent storage.
     *
-    * @param timedObjectId The timed object id
-    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param timerId The timer id
     */
-   public void deleteTimer(TimedObjectId timedObjectId, Date firstEvent)
+   public void deleteTimer(String timerId)
    {
       try
       {
          createTableIfNotExists();
-         doDeleteTimer(timedObjectId, firstEvent);
+         doDeleteTimer(timerId);
       }
       catch (SQLException e)
       {
@@ -188,19 +189,20 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          {
             log.info("Restoring " + list.size() + " timer(s)");
 
+            // delete all timers
+            doDeleteAllTimers();
+
+            // recreate the timers
             for (int i = 0; i < list.size(); i++)
             {
                TimerHandleImpl handle = (TimerHandleImpl)list.get(i);
 
                try
                {
-                  TimedObjectId toid = handle.getTimedObjectId();
-                  ObjectName containerName = toid.getContainerId();
+                  TimedObjectId targetId = handle.getTimedObjectId();
+                  ObjectName containerName = targetId.getContainerId();
                   ContainerMBean container = (ContainerMBean)MBeanProxy.get(ContainerMBean.class, containerName, server);
-                  TimerService timerService = container.getTimerService(toid.getInstancePk());
-
-                  doDeleteTimer(toid, handle.getFirstTime());
-
+                  TimerService timerService = container.getTimerService(targetId.getInstancePk());
                   timerService.createTimer(handle.getFirstTime(), handle.getPeriode(), handle.getInfo());
                }
                catch (Exception e)
@@ -223,7 +225,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    {
       try
       {
-         doDeleteTimers();
+         doDeleteAllTimers();
       }
       catch (SQLException e)
       {
@@ -247,6 +249,22 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
    public void setDataSource(ObjectName dataSource)
    {
       this.dataSource = dataSource;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public String getTimerIdColumn()
+   {
+      return timerIdColumn;
+   }
+
+   /**
+    * @jmx.managed-attribute
+    */
+   public void setTimerIdColumn(String timerIdColumn)
+   {
+      this.timerIdColumn = timerIdColumn;
    }
 
    /**
@@ -396,7 +414,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
    }
 
-   private void doInsertTimer(TimedObjectId timedObjectId, Date initialExpiration, long intervalDuration, Serializable info)
+   private void doInsertTimer(String timerId, TimedObjectId timedObjectId, Date initialExpiration, long intervalDuration, Serializable info)
            throws SQLException
    {
       Connection con = null;
@@ -407,15 +425,16 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          con = ds.getConnection();
 
          String sql = "insert into " + tableName + " " +
-                 "(" + targetIdColumn + "," + initialDateColumn + "," + intervalColumn + "," + instancePkColumn + "," + infoColumn + ") " +
-                 "values (?,?,?,?,?)";
+                 "(" + timerIdColumn + "," + targetIdColumn + "," + initialDateColumn + "," + intervalColumn + "," + instancePkColumn + "," + infoColumn + ") " +
+                 "values (?,?,?,?,?,?)";
          st = con.prepareStatement(sql);
 
-         st.setString(1, timedObjectId.toString());
-         st.setTimestamp(2, new Timestamp(initialExpiration.getTime()));
-         st.setLong(3, intervalDuration);
-         st.setObject(4, timedObjectId.getInstancePk());
-         st.setObject(5, info);
+         st.setString(1, timerId);
+         st.setString(2, timedObjectId.toString());
+         st.setTimestamp(3, new Timestamp(initialExpiration.getTime()));
+         st.setLong(4, intervalDuration);
+         st.setObject(5, timedObjectId.getInstancePk());
+         st.setObject(6, info);
 
          int rows = st.executeUpdate();
          if (rows != 1)
@@ -444,14 +463,15 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
          rs = st.executeQuery("select * from " + tableName);
          while (rs.next())
          {
-            TimedObjectId toid = TimedObjectId.parse(rs.getString(targetIdColumn));
+            String timerId = rs.getString(timerIdColumn);
+            TimedObjectId targetId = TimedObjectId.parse(rs.getString(targetIdColumn));
             Date initialDate = rs.getTimestamp(initialDateColumn);
             long interval = rs.getLong(intervalColumn);
             Serializable pKey = (Serializable)rs.getObject(instancePkColumn);
             Serializable info = (Serializable)rs.getObject(infoColumn);
 
-            toid = new TimedObjectId(toid.getContainerId(), pKey);
-            TimerHandleImpl handle = new TimerHandleImpl(toid, initialDate, interval, info);
+            targetId = new TimedObjectId(targetId.getContainerId(), pKey);
+            TimerHandleImpl handle = new TimerHandleImpl(timerId, targetId, initialDate, interval, info);
             list.add(handle);
          }
 
@@ -465,7 +485,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
    }
 
-   private void doDeleteTimer(TimedObjectId timedObjectId, Date initialDate)
+   private void doDeleteTimer(String timerId)
            throws SQLException
    {
       Connection con = null;
@@ -479,15 +499,14 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       {
          con = ds.getConnection();
 
-         String sql = "delete from " + tableName + " where " + targetIdColumn + "=? and " + initialDateColumn + "=?";
+         String sql = "delete from " + tableName + " where " + timerIdColumn + "=?";
          st = con.prepareStatement(sql);
 
-         st.setString(1, timedObjectId.toString());
-         st.setTimestamp(2, new Timestamp(initialDate.getTime()));
+         st.setString(1, timerId);
 
          int rows = st.executeUpdate();
          if (rows != 1)
-            log.warn("Unable to remove timer for: " + timedObjectId);
+            log.warn("Unable to remove timer for: " + timerId);
       }
       finally
       {
@@ -527,7 +546,7 @@ public class DatabasePersistencePolicy extends ServiceMBeanSupport implements No
       }
    }
 
-   private void doDeleteTimers()
+   private void doDeleteAllTimers()
            throws SQLException
    {
       Connection con = null;

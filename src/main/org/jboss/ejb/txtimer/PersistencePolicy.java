@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.txtimer;
 
-// $Id: PersistencePolicy.java,v 1.3 2004/09/10 14:37:16 tdiesler Exp $
+// $Id: PersistencePolicy.java,v 1.4 2004/09/10 21:51:04 tdiesler Exp $
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,20 +26,20 @@ public interface PersistencePolicy
    /**
     * Inserts a timer into persistent storage.
     *
-    * @param timedObjectId The timed object id
-    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
-    * @param periode       The number of milliseconds that must elapse between txtimer expiration notifications.
-    * @param info          A serializable handback object.
+    * @param timerId    The timer id
+    * @param targetId   The timed object id
+    * @param firstEvent The point in time at which the first txtimer expiration must occur.
+    * @param periode    The number of milliseconds that must elapse between txtimer expiration notifications.
+    * @param info       A serializable handback object.
     */
-   void insertTimer(TimedObjectId timedObjectId, Date firstEvent, long periode, Serializable info);
+   void insertTimer(String timerId, TimedObjectId targetId, Date firstEvent, long periode, Serializable info);
 
    /**
     * Deletes a timer from persistent storage.
     *
-    * @param timedObjectId The timed object id
-    * @param firstEvent    The point in time at which the first txtimer expiration must occur.
+    * @param timerId The timer id
     */
-   void deleteTimer(TimedObjectId timedObjectId, Date firstEvent);
+   void deleteTimer(String timerId);
 
    /**
     * Clear the persisted timers
