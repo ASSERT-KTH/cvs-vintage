@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+
+  <title>Custom queries</title>
+ </head>
+
+ <strongody>
+<div class="docs" id="userquerycustom"> 
+  <h2>Custom queries</h2>
+  <div id="toc"> 
+ <ul> 
+<li>Scarab Help 
+  <ul>
+    <li><a href="Introduction.vm">Introduction to Scarab</a></li>
+    <li><a href="UserIssues.vm">Managing Issues</a> </li>
+    <li>Searching the database 
+            <ul>
+              <li><a href="UserQuery.vm">Overview</a></li>
+              <li><a href="UserQueryAdvanced.vm">Advanced queries</a></li>
+              <li><strong>Custom queries</strong></li>
+              <li><a href="UserQuerySaved.vm">Saved queries</a></li>
+            </ul>
+    </li>
+    <li><a href="UserReports.vm">Reports</a></li>
+   
+      <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+      <li><a href="ScarabFaq.vm">FAQ</a></li>
+      <li><a href="ScarabGlossary.vm">Glossary</a></li>
+    </ul></li>
+  </ul>
+  </div>
+  <p>
+  <h3><a id="top" name="top"></a>Custom queries</h3>
+  <p>Custom queries allow you to search the database based on a refined set of 
+    parameters. You can search on any of the text attributes as well as any other 
+    attribute your project owner has included as a quick search parameter.</p>
+  <p>For this section, select the attributes you would like to search against. 
+    The n enter a search string. Each attribute will be searched for every term 
+    that appears in your search string. For instance, the Game project has the 
+    <em>Summary, Description, Story-line</em> and <em>Error message</em> string 
+    attributes. You are interested in any issue that involves the usage of a joystick. 
+    You can select one, some or all of the text attributes and then enter &quot;joystick&quot; 
+    in the search string. Once the search is initiated, all entries in the attributes 
+    you have chosen will be searched for the term &quot;joystick&quot;.</p>
+  <p>You can use this form to determine how you would like the search results 
+    displayed. You can select what attribute you would like the results ordered 
+    by as well as the number of issues you would like to see per page.</p>
+  <p><a href="#Top">Top</a> </p>
+  <div class="courtesylinks"></div>
+</div>
+ </strongody>
+</html>

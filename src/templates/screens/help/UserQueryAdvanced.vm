@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+
+
+  <title>Advanced queries</title>
+ </head>
+
+ <strongody>
+<div class="docs" id="userqueryadvanced"> 
+  <h2>Advanced queries</h2>
+  <div id="toc"> 
+    <ul>
+      <li>Scarab Help 
+        <ul>
+          <li><a href="Introduction.vm">Introduction to Scarab</a></li>
+          <li><a href="UserIssues.vm">Managing Issues</a> </li>
+          <li>Searching the database 
+            <ul>
+              <li><a href="UserQuery.vm">Overview</a></li>
+              <li><strong>Advanced queries</strong> 
+                <ul>
+                  <li><a href="#knowledge">Searching the knowledge base</a></li>
+                  <li><a href="#personnel">Searching by personnel</a></li>
+                  <li><a href="#state">Searching by state change</a></li>
+                </ul>
+              </li>
+              <li><a href="UserQueryCustom.vm">Custom queries</a></li>
+              <li><a href="UserQuerySaved.vm">Saved queries</a></li>
+            </ul>
+          </li>
+          <li><a href="UserReports.vm">Reports</a></li>
+          <li><a href="ScarabBestPractices.vm">Best Practices</a></li>
+          <li><a href="ScarabFaq.vm">FAQ</a></li>
+          <li><a href="ScarabGlossary.vm">Glossary</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <p> 
+  <h3><a id="top" name="top"></a>Advanced queries</h3>
+  <p>The advanced query form provides an interface for you to unambiguously define 
+    your search criteria. You can use this form to enter values for some, all 
+    or none of the attributes available in your issue type. You can further qualify 
+    your search criteria by requesting issues within a particular number range 
+    or date range. Say you want to know all closed issues relating to the AIX 
+    operating system within the last week. You can enter a date range (use the 
+    MM/DD/YYYY format, for instance, 01/01/2002) and define specific values for 
+    the operating system and status attributes. Clicking the <strong>Submit</strong> button 
+    will run the query.</p>
+  <p>You can define values for some, none or all of the attributes. Scarab will 
+    search the knowledge base for issues that contain all of the values you have 
+    specified. The advanced query form allows you to define fine grained search 
+    criteria. There are three types of search criteria available on the advanced 
+    query form:</p>
+  <ul>
+    <li>Search the Knowledge Base </li>
+    <li> Personnel </li>
+    <li>State Change </li>
+  </ul>
+
+  <p>You can use each of these sections individually or a combination to qualify 
+    your searches. If you run a query without defining any attributes all issues 
+    associated with the logged in user id will be returned. </p>
+
+  <h3><a name="knowledge"></a>Search the knowledge base</h3>
+  <p>The <em>Search the knowledge base</em> section provides a space for you to 
+    define values for issue attributes. Each attribute that is available to your 
+    issue type is represented here. You can define values for all, some or none 
+    of the issue attributes. You can also limit your search to a range of issues 
+    or creation dates. </p>
+  <p>Once the issue is submitted, the database will be searched for issues containing 
+    the values for all of the attributes defined in your search criteria. To effectively 
+    find the issues you are most interested in you want to define only the attributes 
+    that will meet your criteria. If you define attributes outside of your requirements 
+    you will be less likely to find any issues that meet your criteria. For instance, 
+    jdoe is looking for issues involving database errors affecting one of the 
+    UNIX operating systems. Rather than defining a value for the operating system, 
+    jdoe can create a search that will search for text strings about the database 
+    errors. If jdoe needs to refine the search criteria further, other attributes 
+    can be defined. When defining your search criteria, you should start with 
+    the smallest set of characteristics relevant to your needs.</p>
+  <h3><a name="personnel"></a>Searching by personnel</h3>
+  <p>The personnel search section allows you to search for issues based on users 
+    associated. Depending on what user attributes have been defined, you can search 
+    by the commitor and/or the assignee. All users that are associated with issues 
+    in the issue can be selected from a user attribute in this section. You can 
+    select as many users as you need.</p>
+  <h3><a name="state"></a>Searching by state change </h3>
+  This field allows you to set an attribute you would like to monitor and the 
+  original value and expected new value. For instance, you may want to know all 
+  issues that have changed from a low severity to a high severity. Additionally, 
+  you can monitor these changes within a date range. For example, you may be interested 
+  in knowing which issues have received more than 2 votes within the last week. 
+  Clicking the "Update options" button saves your changes to the query. You can 
+  also set your results view preferences at this time. You can alter the search 
+  order and the number of issues that appear per page. You can submit your query 
+  at this time or choose the save it. 
+  <div class="courtesylinks"> 
+    <p><a href="#Top">Top</a> 
+  </div>
+</div>
+ </strongody>
+</html>
