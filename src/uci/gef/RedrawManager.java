@@ -19,7 +19,7 @@
 // File: RedrawManager.java
 // Classes: RedrawManager
 // Original Author: jrobbins@ics.uci.edu
-// $Id: RedrawManager.java,v 1.1 1998/01/26 22:19:25 jrobbins Exp $
+// $Id: RedrawManager.java,v 1.2 1998/01/26 23:32:17 abonner Exp $
 
 package uci.gef;
 
@@ -119,10 +119,10 @@ public class RedrawManager implements Runnable {
 
   public static void setFramesPerSecond(float fps) {
     if (fps > 100.0 || fps < 0.5) return;
-    int _timeDelay = (int) 1000/fps;
+    int _timeDelay = (int) (1000/fps);
   }
 
-  public static float getFramesPerSecond() { return 1000.0 / _timeDelay; }
+  public static float getFramesPerSecond() { return (float) (1000.0 / _timeDelay); }
 
   ////////////////////////////////////////////////////////////////
   // managing damage
