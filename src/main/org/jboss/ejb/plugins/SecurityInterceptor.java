@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins;
 
 import java.security.Principal;
 import java.util.Set;
+import java.util.HashSet;
 import javax.ejb.EJBException;
 
 import org.jboss.ejb.Container;
@@ -24,7 +25,7 @@ import org.jboss.security.*;
  * @author <a href="on@ibis.odessa.ua">Oleg Nitz</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
  * @author <a href="mailto:Thomas.Diesler@jboss.org">Thomas Diesler</a>.
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class SecurityInterceptor extends AbstractInterceptor
 {
@@ -61,7 +62,8 @@ public class SecurityInterceptor extends AbstractInterceptor
          {
             String roleName = secMetaData.getRunAsRoleName();
             String principalName = secMetaData.getRunAsPrincipalName();
-            runAsIdentity = new RunAsIdentity(roleName, principalName);
+            String credential = secMetaData.getRunAsCredential();
+            runAsIdentity = new RunAsIdentity(roleName, principalName, credential);
          }
          securityManager = container.getSecurityManager();
          realmMapping = container.getRealmMapping();
@@ -111,7 +113,6 @@ public class SecurityInterceptor extends AbstractInterceptor
        by this bean will have the runAsRole available for declarative
        security checks.
       */
-
       if (runAsIdentity != null)
       {
          SecurityAssociation.pushRunAsIdentity(runAsIdentity);
@@ -160,21 +161,27 @@ public class SecurityInterceptor extends AbstractInterceptor
             new SecurityException("Role mapping manager has not been set"));
       }
 
-      // Check the security info from the method invocation
-      if (securityManager.isValid(principal, credential) == false)
+      // authenticate the current principal
+      RunAsIdentity callerRunAsIdentity = SecurityAssociation.peekRunAsIdentity();
+      boolean isAnonymousRunAsPrincipal = callerRunAsIdentity != null && callerRunAsIdentity.isAnonymousPrincipal();
+      if (isAnonymousRunAsPrincipal == false)
       {
-         String msg = "Authentication exception, principal=" + principal;
-         log.error(msg);
-         SecurityException e = new SecurityException(msg);
-         throw new EJBException("checkSecurityAssociation", e);
-      }
-      else
-      {
-         SecurityAssociation.setPrincipal(principal);
-         SecurityAssociation.setCredential(credential);
-         if (trace)
+         // Check the security info from the method invocation
+         if (securityManager.isValid(principal, credential) == false)
          {
-            log.trace("Authenticated  principal=" + principal);
+            String msg = "Authentication exception, principal=" + principal;
+            log.error(msg);
+            SecurityException e = new SecurityException(msg);
+            throw new EJBException("checkSecurityAssociation", e);
+         }
+         else
+         {
+            SecurityAssociation.setPrincipal(principal);
+            SecurityAssociation.setCredential(credential);
+            if (trace)
+            {
+               log.trace("Authenticated  principal=" + principal);
+            }
          }
       }
 
@@ -195,38 +202,49 @@ public class SecurityInterceptor extends AbstractInterceptor
             + ", requiredRoles=" + methodRoles);
       }
 
-      /* See if there is a runAs role associated with this thread. If there
-          is, this is the security role against which the assigned method
-          permissions must be checked.
-      */
-      RunAsIdentity threadRunAs = SecurityAssociation.peekRunAsIdentity();
-      if (threadRunAs != null)
+      // If the current caller is an anonymous run-as principal, we don't go to the JAASSecurityManager
+      RealmMapping localRealmMapping = (isAnonymousRunAsPrincipal ? new AnonymousRunAsRealmMapping() : realmMapping);
+
+      // Get the current caller's user roles
+      Set userRoles = localRealmMapping.getUserRoles(principal);
+
+      // The caller is using a run-as identity
+      if (callerRunAsIdentity != null)
       {
-         if (trace)
+         // first check that the current run-as principal actually has the run-as role that
+         // he claims to have in the deployment descriptor
+         Principal runAsRole = callerRunAsIdentity.getRunAsRole();
+         if (userRoles.contains(runAsRole) == false)
          {
-            log.trace("Checking runAs: " + threadRunAs);
-         }
-         // Check the runAs role
-         if (methodRoles.contains(threadRunAs.getRunAsRole()) == false &&
-                 methodRoles.contains(AnybodyPrincipal.ANYBODY_PRINCIPAL) == false)
-         {
-            String method = mi.getMethod().getName();
-            String msg = "Insufficient method permissions, runAs=" + threadRunAs
-                    + ", method=" + method + ", interface=" + iface
-                    + ", requiredRoles=" + methodRoles;
+            String msg = "Insufficient role permissions, runAs=" + callerRunAsIdentity
+               + ", currentRoles=" + userRoles;
             log.error(msg);
             SecurityException e = new SecurityException(msg);
             throw new EJBException("checkSecurityAssociation", e);
          }
+
+         /*
+         // Note, this check causes a CTS failure
+         // http://tck1.jboss.com/jira/secure/ViewIssue.jspa?id=10106
+
+         // Check that the run-as role is in the set of method roles
+         if (methodRoles.contains(runAsRole) == false && methodRoles.contains(AnybodyPrincipal.ANYBODY_PRINCIPAL) == false)
+         {
+            String method = mi.getMethod().getName();
+            String msg = "Insufficient method permissions, runAs=" + callerRunAsIdentity
+               + ", method=" + method + ", interface=" + iface
+               + ", requiredRoles=" + methodRoles + ", principalRoles=" + userRoles;
+            log.error(msg);
+            SecurityException e = new SecurityException(msg);
+            throw new EJBException("checkSecurityAssociation", e);
+         }
+         */
       }
 
-      /* If the method has no assigned roles or the user does not have at
-         least one of the roles then access is denied.
-      */
-      else if (realmMapping.doesUserHaveRole(principal, methodRoles) == false)
+      // Now actually check if the current caller has one of the required method roles
+      if (localRealmMapping.doesUserHaveRole(principal, methodRoles) == false)
       {
          String method = mi.getMethod().getName();
-         Set userRoles = realmMapping.getUserRoles(principal);
          String msg = "Insufficient method permissions, principal=" + principal
             + ", method=" + method + ", interface=" + iface
             + ", requiredRoles=" + methodRoles + ", principalRoles=" + userRoles;
@@ -236,17 +254,32 @@ public class SecurityInterceptor extends AbstractInterceptor
       }
    }
 
-   /* Monitorable implementation ------------------------------------
-   public void sample(Object s)
-   {
-     // Just here to because Monitorable request it but will be removed soon
-   }
-   public Map retrieveStatistic()
-   {
-     return null;
-   }
-   public void resetStatistic()
-   {
-   }
+   /**
+    * Implements the realm mapping for the anonymous run-as principal.
     */
+   public static class AnonymousRunAsRealmMapping implements RealmMapping
+   {
+
+      /** Return the given principal */
+      public Principal getPrincipal(Principal principal)
+      {
+         return principal;
+      }
+
+      /** True if the given roles contain the run-as role */
+      public boolean doesUserHaveRole(Principal principal, Set roles)
+      {
+         RunAsIdentity runAs = (RunAsIdentity)principal;
+         return roles.contains(runAs.getRunAsRole());
+      }
+
+      /** Return a set that contains the single run-as role */
+      public Set getUserRoles(Principal principal)
+      {
+         RunAsIdentity runAs = (RunAsIdentity)principal;
+         Set roles = new HashSet();
+         roles.add(runAs.getRunAsRole());
+         return roles;
+      }
+   }
 }
