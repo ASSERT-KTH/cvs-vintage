@@ -96,7 +96,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.56 2003/03/28 00:01:46 jon Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.57 2003/03/28 00:13:03 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -612,7 +612,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      */
     public void log(String s)
     {
-        log.debug(s);
+        LOG.debug(s);
     }
 
     /**
@@ -624,7 +624,7 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      */
     public void log(String category, String s)
     {
-        Category.getInstance(category).debug(s);
+        Logger.getLogger(category).debug(s);
     }
 
     /**
