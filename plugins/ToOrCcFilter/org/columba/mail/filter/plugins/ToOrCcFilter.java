@@ -8,10 +8,10 @@ import org.columba.mail.message.HeaderInterface;
 /**
  * @author freddy
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * This FilterPlugin searches every To and Cc headerfield
+ * of an occurence of a search string and combines the result
+ * with an logical OR operation
+ * 
  */
 public class ToOrCcFilter extends HeaderfieldFilter {
 
@@ -23,6 +23,11 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 	}
 
 	/**
+	 * 
+	 * we need the criteria attribute, which can be "contains" or "contains not"
+	 * 
+	 * "pattern" is our search string
+	 * 
 	 * @see org.columba.mail.filter.plugins.AbstractFilter#getAttributes()
 	 */
 	public Object[] getAttributes() {
@@ -41,18 +46,25 @@ public class ToOrCcFilter extends HeaderfieldFilter {
 		WorkerStatusController worker)
 		throws Exception {
 
+		// get the header of the message
 		HeaderInterface header = folder.getMessageHeader(uid, worker);
-
+		if ( header == null ) return false;
+		
+		// convert the condition string to an int which is easier to handle
 		int condition = FilterCriteria.getCriteria((String) args[0]);
+		// the search pattern
 		String pattern = (String) args[1];
 
+		// get the "To" headerfield from the header
 		String to = (String) header.get("To");
+		// get the "Cc" headerfield from the header
 		String cc = (String) header.get("Cc");
-				
+			
+		// test if our To headerfield contains or contains not the search string	
 		boolean result = match(to, condition, pattern);
-
+		// do the same for the Cc headerfield and OR the results
 		result |= match(cc, condition, pattern);
-
+		// return the result as boolean value true or false
 		return result;
 	}
 
