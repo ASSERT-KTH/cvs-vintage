@@ -38,7 +38,7 @@ import org.jboss.tm.XidFactory;
 /**
  * Implementation of ServerSessionPool.
  *
- * @version <tt>$Revision: 1.21 $</tt>
+ * @version <tt>$Revision: 1.22 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>
  * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
@@ -125,17 +125,7 @@ public class StdServerSessionPool
       executor.setMinimumPoolSize(0);
       executor.setKeepAliveTime(1000 * 30);
       executor.waitWhenBlocked();
-      executor.setThreadFactory(new ThreadFactory()
-         {
-            private volatile int count = 0;
-
-            public Thread newThread(final Runnable command)
-            {
-               return new Thread(threadGroup,
-                                 command,
-                                 "Session Pool Worker-" + count++);
-            }
-         });
+      executor.setThreadFactory(new DefaultThreadFactory());
 
       // finish initializing the session
       create();
@@ -341,6 +331,28 @@ public class StdServerSessionPool
          numServerSessions++;
          if (debug)
             log.debug("added server session to the pool: " + serverSession);
+      }
+   }
+
+   private static class DefaultThreadFactory implements ThreadFactory
+   {
+      private static int count = 0;
+
+      private static synchronized int nextCount()
+      {
+         return count++;
+      }
+
+      /**
+       * Create a new Thread for the given Runnable
+       *
+       * @param command The Runnable to pass to Thread
+       * @return The newly created Thread
+       */
+      public Thread newThread(final Runnable command)
+      {
+         String name = "Session Pool Worker-" + nextCount();
+         return new Thread(threadGroup, command, name);
       }
    }
 }
