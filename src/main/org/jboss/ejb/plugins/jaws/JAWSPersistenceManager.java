@@ -67,7 +67,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceStore
@@ -1314,8 +1314,7 @@ public class JAWSPersistenceManager
       } else
       {
          // Compound key
-         // ***** PROBLEM ***** pk may be null
-         Field[] fields = pk.getClass().getFields();
+         Field[] fields = (value == null) ? null : pk.getClass().getFields();
          try
          {
             for (int i = 0; i < pkInfo.length; i++)
