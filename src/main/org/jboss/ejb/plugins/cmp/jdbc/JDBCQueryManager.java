@@ -19,6 +19,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCAutomaticQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDeclaredQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCDynamicQLQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCJBossQLQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.logging.Logger;
 
@@ -30,7 +32,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class JDBCQueryManager {
    private final Map knownQueries = new HashMap();
@@ -169,7 +171,15 @@ public class JDBCQueryManager {
          JDBCQueryMetaData q = (JDBCQueryMetaData)definedFinders.next();
 
          if(!knownQueries.containsKey(q.getMethod()) ) {
-            if(q instanceof JDBCDeclaredQueryMetaData) {
+            if(q instanceof JDBCJBossQLQueryMetaData) {
+               knownQueries.put(
+                     q.getMethod(), factory.createJBossQLQuery(q));
+                  
+            } else if(q instanceof JDBCDynamicQLQueryMetaData) {
+               knownQueries.put(
+                     q.getMethod(), factory.createDynamicQLQuery(q));
+                  
+            } else if(q instanceof JDBCDeclaredQueryMetaData) {
                knownQueries.put(
                      q.getMethod(), factory.createDeclaredSQLQuery(q));
                   
