@@ -47,6 +47,7 @@ import org.columba.mail.gui.table.MessageSelectionListener;
 import org.columba.mail.gui.util.URLController;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
+import org.columba.mail.message.MimePartTree;
 
 /**
  * this class shows the messagebody
@@ -170,7 +171,10 @@ public class MessageController
 		this.uid = o;
 	}
 
-	public void showMessage(HeaderInterface header, MimePart bodyPart)
+	public void showMessage(
+		HeaderInterface header,
+		MimePart bodyPart,
+		MimePartTree mimePartTree)
 		throws Exception {
 
 		XmlElement html =
@@ -217,14 +221,30 @@ public class MessageController
 			}
 		}
 
-		getView().setDoc(header, decodedBody, htmlViewer);
+		boolean hasAttachments = false;
+
+		
+		if ((mimePartTree.count() > 1)
+			|| (!mimePartTree.get(0).getHeader().contentType.equals("text")))
+			hasAttachments = true;
+
+			getMailFrameController().attachmentController.setMimePartTree(
+							mimePartTree);
+							/*
+		if (hasAttachments)
+			getMailFrameController().attachmentController.setMimePartTree(
+				mimePartTree);
+		else
+			getMailFrameController().attachmentController.setMimePartTree(null);
+		*/
+		getView().setDoc(header, decodedBody, htmlViewer, hasAttachments);
 
 		getView().getVerticalScrollBar().setValue(0);
 
 	}
 
 	public void showMessageSource(String rawText) throws Exception {
-		getView().setDoc(null, rawText, false);
+		getView().setDoc(null, rawText, false, false);
 
 		getView().getVerticalScrollBar().setValue(0);
 
@@ -312,16 +332,19 @@ public class MessageController
 		}
 	}
 
-	public void mouseEntered(MouseEvent event) {}
+	public void mouseEntered(MouseEvent event) {
+	}
 
-	public void mouseExited(MouseEvent event) {}
+	public void mouseExited(MouseEvent event) {
+	}
 
 	public void mouseClicked(MouseEvent event) {
 		if (!SwingUtilities.isLeftMouseButton(event))
 			return;
 
 		URL url = extractURL(event);
-		if (url == null) return;
+		if (url == null)
+			return;
 		URLController c = new URLController();
 		if (url.getProtocol().equalsIgnoreCase("mailto"))
 			c.compose(url.getFile());
@@ -377,12 +400,14 @@ public class MessageController
 		if ( anchor == null )
 			s = getMapHREF(pane, doc, e, a, pane.viewToModel(event.getPoint()), event.getX(), event.getY() );
 		*/
-		if(anchor == null) return null;
-		
+		if (anchor == null)
+			return null;
+
 		URL url = null;
-		try{
+		try {
 			url = new URL((String) anchor.getAttribute(HTML.Attribute.HREF));
-		}catch(MalformedURLException mue){}
+		} catch (MalformedURLException mue) {
+		}
 		return url;
 	}
 

@@ -42,7 +42,7 @@ public class MailFrameView extends FrameView {
 
 	//private StatusBar statusBar;
 	public JSplitPane mainSplitPane;
-	public SplitPane rightSplitPane;
+	public JSplitPane rightSplitPane;
 
 	private JPanel pane;
 
@@ -68,6 +68,7 @@ public class MailFrameView extends FrameView {
 
 	
 
+	/*
 	public void showAttachmentViewer() {
 		rightSplitPane.showAttachmentViewer();
 	}
@@ -75,7 +76,8 @@ public class MailFrameView extends FrameView {
 	public void hideAttachmentViewer() {
 		rightSplitPane.hideAttachmentViewer();
 	}
-
+	*/
+	
 	public void setFolderInfoPanel(FolderInfoPanel f) {
 		this.folderInfoPanel = f;
 	}
@@ -85,7 +87,6 @@ public class MailFrameView extends FrameView {
 		TableView table,
 		FilterToolbar filterToolbar,
 		MessageView message,
-		AttachmentView attachment,
 		StatusBar statusBar) {
 
 		this.filterToolbar = filterToolbar;
@@ -126,11 +127,11 @@ public class MailFrameView extends FrameView {
 		tableScrollPane.getViewport().setBackground(Color.white);
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 		rightSplitPane =
-			new SplitPane(
-				tablePanel,
-				messagePanel,
-				new JScrollPane(attachment));
-
+			new JSplitPane();
+		rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		rightSplitPane.add(tablePanel, JSplitPane.LEFT);
+		rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
+			
 		mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
 
 		pane = new JPanel();

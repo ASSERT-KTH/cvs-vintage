@@ -5,11 +5,12 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.FrameController;
+import org.columba.core.xml.XmlElement;
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.MailFrameController;
-import org.columba.mail.gui.frame.MailFrameView;
 import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
@@ -25,7 +26,6 @@ public class ViewMessageCommand extends FolderCommand {
 	HeaderInterface header;
 	Folder folder;
 	Object uid;
-	
 
 	/**
 	 * Constructor for ViewMessageCommand.
@@ -45,14 +45,14 @@ public class ViewMessageCommand extends FolderCommand {
 		Object uid,
 		WorkerStatusController wsc)
 		throws Exception {
-		
+
 		this.uid = uid;
 		bodyPart = null;
 
 		//AbstractMessage message = srcFolder.getMessage(uid, wsc);
 		//header = message.getHeader();
-		header = srcFolder.getMessageHeader(uid,wsc);
-		
+		header = srcFolder.getMessageHeader(uid, wsc);
+
 		mimePartTree = srcFolder.getMimePartTree(uid, wsc);
 
 		// FIXME
@@ -63,9 +63,15 @@ public class ViewMessageCommand extends FolderCommand {
 				.getWindowItem()
 				.getHtmlViewer();
 		*/
+
 		
-		boolean viewhtml = true;
+		XmlElement html =
+			MailConfig.getMainFrameOptionsConfig().getRoot().getElement(
+				"/options/html");
+		boolean viewhtml =
+			new Boolean(html.getAttribute("prefer")).booleanValue();
 		
+		//boolean viewhtml = true;
 		// Which Bodypart shall be shown? (html/plain)
 
 		if (viewhtml)
@@ -85,47 +91,55 @@ public class ViewMessageCommand extends FolderCommand {
 	 * @see org.columba.core.command.Command#updateGUI()
 	 */
 	public void updateGUI() throws Exception {
-		((MailFrameController) frameController).messageController.showMessage(
-			header, bodyPart);
-
-		if ((mimePartTree.count() > 1)
-			|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
-			(
-				(
-					MailFrameController) frameController)
-						.attachmentController
-						.setMimePartTree(
-				mimePartTree);
-				((MailFrameView)frameController.getView())
-				.showAttachmentViewer();
-		} else
-		((MailFrameView)frameController.getView())
-				.hideAttachmentViewer();
 
 		/*
-		((MailFrameController) frameController)
-			.headerController
-			.getView()
-			.setHeader(
-			header);
+		boolean hasAttachments = false;
+		
+		if ((mimePartTree.count() > 1)
+			|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
+			hasAttachments = true;
 		*/
+			((MailFrameController) frameController)
+						.messageController
+						.showMessage(
+				header,
+				bodyPart,
+				mimePartTree);
 
-		if ( header.getFlags().getSeen() == false )
-		{
-		((MailFrameController) frameController)
-			.tableController
-			.getMarkAsReadTimer()
-			.restart( folder, uid);
+			/*
+			if ((mimePartTree.count() > 1)
+				|| (!mimePartTree.get(0).getHeader().contentType.equals("text"))) {
+				(
+					(
+						MailFrameController) frameController)
+							.attachmentController
+							.setMimePartTree(
+					mimePartTree);
+			
+			} else
+				(
+					(
+						MailFrameController) frameController)
+							.attachmentController
+							.setMimePartTree(
+					null);
+			*/
+			if (header.getFlags().getSeen() == false) {
+				((MailFrameController) frameController)
+					.tableController
+					.getMarkAsReadTimer()
+					.restart(folder, uid);
+			}
+
+		}
+
+		/**
+		 * @see org.columba.core.command.Command#execute(Worker)
+		 */
+		public void execute(Worker worker) throws Exception {
+			FolderCommandReference[] r =
+				(FolderCommandReference[]) getReferences();
+			getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
 		}
 
 	}
-
-	/**
-	 * @see org.columba.core.command.Command#execute(Worker)
-	 */
-	public void execute(Worker worker) throws Exception {
-		FolderCommandReference[] r = (FolderCommandReference[]) getReferences();
-		getData((Folder) r[0].getFolder(), r[0].getUids()[0], worker);
-	}
-
-}

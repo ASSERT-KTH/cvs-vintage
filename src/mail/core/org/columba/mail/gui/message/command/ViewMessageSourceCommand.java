@@ -43,9 +43,7 @@ public class ViewMessageSourceCommand extends FolderCommand {
 					.showMessageSource(
 			source);
 
-		((MailFrameView)frameController.getView())
-			.hideAttachmentViewer();
-
+		
 	}
 
 	/**

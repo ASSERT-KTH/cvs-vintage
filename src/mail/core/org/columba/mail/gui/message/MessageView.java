@@ -67,6 +67,8 @@ public class MessageView extends CScrollPane {
 		
 		panel.add( hv, BorderLayout.NORTH );				
 		panel.add( bodyTextViewer, BorderLayout.CENTER );
+		panel.add( c.getMailFrameController().attachmentController.getView(), BorderLayout.SOUTH );
+		
 		
 	}
 	
@@ -136,11 +138,11 @@ public class MessageView extends CScrollPane {
 		}
 	}
 	
-	public void setDoc( HeaderInterface header, String str, boolean html ) throws Exception
+	public void setDoc( HeaderInterface header, String str, boolean html, boolean hasAttachments ) throws Exception
 	{
 		//switchViewer( html );
 		
-		if ( header != null ) hv.setHeader( header );
+		if ( header != null ) hv.setHeader( header, hasAttachments );
 		
 		//list[active].setDoc( str );
 		bodyTextViewer.setBodyText(str, html);

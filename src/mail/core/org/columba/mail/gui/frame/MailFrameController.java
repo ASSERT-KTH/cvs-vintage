@@ -79,14 +79,16 @@ public class MailFrameController extends FrameController {
 			tableController.getTableSelectionManager());
 		//tableController.setSelectionManager(selectionManager);
 
+		attachmentController = new AttachmentController(this);
+				tableController.getTableSelectionManager().addMessageSelectionListener(
+				attachmentController.getAttachmentSelectionManager());
+				
 		messageController = new MessageController(this);
 		tableController.getTableSelectionManager().addMessageSelectionListener(
 			messageController);
 		//messageController.setSelectionManager( selectionManager);
 
-		attachmentController = new AttachmentController(this);
-		tableController.getTableSelectionManager().addMessageSelectionListener(
-		attachmentController.getAttachmentSelectionManager());
+		
 
 		//attachmentController.setSelectionManager( selectionManager);
 
@@ -107,7 +109,6 @@ public class MailFrameController extends FrameController {
 			tableController.getView(),
 			filterToolbar,
 			messageController.getView(),
-			attachmentController.getView(),
 			statusBar);
 
 		menu = new MailMenu(this);

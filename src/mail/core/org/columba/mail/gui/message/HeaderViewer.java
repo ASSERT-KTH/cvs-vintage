@@ -47,9 +47,9 @@ public class HeaderViewer extends JTextPane {
 		HTMLEditorKit editorKit = new HTMLEditorKit();
 		setEditorKit(editorKit);
 
-		URL baseUrl = DiskIO.getResourceURL( "org/columba/core/images/");
+		URL baseUrl = DiskIO.getResourceURL("org/columba/core/images/");
 		ColumbaLogger.log.debug(baseUrl.toString());
-		((HTMLDocument)getDocument()).setBase(baseUrl);
+		((HTMLDocument) getDocument()).setBase(baseUrl);
 
 		parser = new DocumentParser();
 
@@ -63,11 +63,12 @@ public class HeaderViewer extends JTextPane {
 		keys[6] = "Bcc";
 	}
 
-	void setHeader(HeaderInterface header) throws Exception {
-		// rahmen #949494
+	void setHeader(HeaderInterface header, boolean hasAttachments)
+		throws Exception {
+		// border #949494
 		// background #989898
 		// #a0a0a0
-		// hell #d5d5d5
+		// bright #d5d5d5
 
 		StringBuffer buf = new StringBuffer();
 		buf.append(
@@ -84,17 +85,27 @@ public class HeaderViewer extends JTextPane {
 				continue;
 
 			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
-			buf.append("<B>" + keys[i] + " : </B>");
-			buf.append("</TD><TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			buf.append("<B>" + keys[i] + " : </B></TD>");
+
+			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
 			buf.append(
 				" "
-					+ parser.substituteEmailAddress(
-						(String) header.get(keys[i])));
-			buf.append("</TD></TR>");
+					+ parser.substituteEmailAddress((String) header.get(keys[i]))
+					+ "</TD>");
+
+			buf.append("</TR>");
 		}
-		
+
+		if (hasAttachments) {
+			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
+
+			buf.append("<IMG SRC=\"stock_attach.png\"></TD>");
+
+			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
+			buf.append(" " +   "</TD>");
+		}
+
 		buf.append("</TABLE></BODY></HTML>");
-		
 
 		setText(buf.toString());
 
