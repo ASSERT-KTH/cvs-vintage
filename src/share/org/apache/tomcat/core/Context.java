@@ -180,7 +180,7 @@ public class Context implements LogAware {
     Vector vhostAliases=new Vector();
 
     String facadeClassName;
-    FacadeManager facadeM;
+    //    FacadeManager facadeM;
     
     public Context() {
 	defaultContainer=new Container();
@@ -195,8 +195,8 @@ public class Context implements LogAware {
 	I'm not sure if this method is good - it adds deps to upper layers.
      */
     public Object getFacade() {
-        if(contextFacade==null )
-	    contextFacade = getFacadeManager().createServletContextFacade( this );
+//         if(contextFacade==null )
+// 	    contextFacade = getFacadeManager().createServletContextFacade( this );
 	return contextFacade;
     }
 
@@ -217,15 +217,15 @@ public class Context implements LogAware {
 	contextM=cm;
     }
 
-    public void setFacadeClassName(String s ) {
-	facadeClassName=s;
-    }
+//     public void setFacadeClassName(String s ) {
+// 	facadeClassName=s;
+//     }
 
-    public String getFacadeClassName() {
-	return facadeClassName;
-    }
+//     public String getFacadeClassName() {
+// 	return facadeClassName;
+//     }
 
-    private static final String DEFAULT_FACADE="org.apache.tomcat.facade.Servlet22Manager";
+//     private static final String DEFAULT_FACADE="org.apache.tomcat.facade.Servlet22Interceptor";
 
     /** The servlet API variant that will be used for requests in this
      *  context
@@ -233,28 +233,29 @@ public class Context implements LogAware {
     public void setServletAPI( String s ) {
 	if( s!=null &&
 	    ( s.endsWith("23") || s.endsWith("2.3")) ) {
-	    facadeClassName="org.apache.tomcat.facade23.Servlet23Manager";
+	    //	    facadeClassName="org.apache.tomcat.facade23.Servlet23Manager";
 	} else {
-	    facadeClassName=DEFAULT_FACADE;
+	    // facadeClassName=DEFAULT_FACADE;
 	}
     }
 
-    public FacadeManager getFacadeManager() {
-	if( facadeM==null ) {
-	    if( facadeClassName==null) 
-		facadeClassName=DEFAULT_FACADE;
-	    try {
-		Class facadeMC=Class.forName( facadeClassName );
-		if( facadeMC==null )
-		    facadeMC=Class.forName( DEFAULT_FACADE );
-		Constructor cons=facadeMC.getConstructor( new Class[] { this.getClass() });
-		facadeM=(FacadeManager)cons.newInstance( new Object[] {this });
-	    } catch( Exception ex ) {
-		ex.printStackTrace();
-	    }
-	}
-	return facadeM;
-    }
+//     public FacadeManager getFacadeManager() {
+// 	log( "getFacadeManager called ! " , new Throwable());
+// 	if( facadeM==null ) {
+// 	    if( facadeClassName==null) 
+// 		facadeClassName=DEFAULT_FACADE;
+// 	    try {
+// 		Class facadeMC=Class.forName( facadeClassName );
+// 		if( facadeMC==null )
+// 		    facadeMC=Class.forName( DEFAULT_FACADE );
+// 		Constructor cons=facadeMC.getConstructor( new Class[] { this.getClass() });
+// 		facadeM=(FacadeManager)cons.newInstance( new Object[] {this });
+// 	    } catch( Exception ex ) {
+// 		ex.printStackTrace();
+// 	    }
+// 	}
+// 	return facadeM;
+//     }
 
     /** Base URL for this context
      */
@@ -464,10 +465,10 @@ public class Context implements LogAware {
 		if( ! allowAttribute(name) ) return null;
 		return this;
 	    }
-	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
-		if( ! allowAttribute(name) ) return null;
-		return this.getFacadeManager();
-	    }
+	    // 	    if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
+	    // 		if( ! allowAttribute(name) ) return null;
+	    // 		return this.getFacadeManager();
+	    // 	    }
 	    return null; // org.apache.tomcat namespace is reserved in tomcat
 	} else {
             Object o = attributes.get(name);
@@ -583,10 +584,15 @@ public class Context implements LogAware {
 
     /**
      * Maps a named servlet to a particular path or extension.
-     * If the named servlet is unregistered, it will be added
-     * and subsequently mapped.
      *
-     * Note that the order of resolution to handle a request is:
+     * If the named servlet is unregistered, it will be added
+     * and subsequently mapped. The servlet can be set by intereceptors
+     * during addContainer() hook.
+     *
+     * If the mapping already exists it will be replaced by the new
+     * mapping.
+     *
+     * Note that the servlet 2.2 standard mapings are:
      *
      *    exact mapped servlet (eg /catalog)
      *    prefix mapped servlets (eg /foo/bar/*)
@@ -603,27 +609,38 @@ public class Context implements LogAware {
 	    Container ct=(Container)containers.get( path );
 	    removeContainer( ct );
 	}
-        Handler sw = (Handler)servlets.get(servletName);
+
+	// sw may be null - in wich case interceptors may
+	// set it 
+        Handler sw = getServletByName(servletName);
+	
+	Container map=new Container();
+	map.setContext( this );
+	map.setHandlerName( servletName );
+	map.setHandler( sw );
+	map.setPath( path );
+
+	// callback - hooks are called. 
+	contextM.addContainer( map );
+
+	sw = getServletByName(servletName);
+	
+	
 	if (sw == null) {
-	    // Strict web.xml
-	    throw new TomcatException( "Mapping with invalid servlet name " +
+	    // web.xml validation - a mapping with no servlet
+	    // rollback
+	    contextM.removeContainer( map );
+ 	    throw new TomcatException( "Mapping with invalid servlet name " +
 				       path + " " + servletName );
-	    // Workaround for frequent "bug" in web.xmls
-	    // Declare a default mapping
-	    // log("Mapping with unregistered servlet " + servletName );
-	    // 	    sw = addServlet( servletName, servletName );
 	}
+
+	// override defaultServlet XXX do we need defaultServlet?
 	if( "/".equals(path) )
 	    defaultServlet = sw;
 
+	containers.put( path, map );
 	mappings.put( path, sw );
 
-	Container map=new Container();
-	map.setContext( this );
-	map.setHandler( sw );
-	map.setPath( path );
-	contextM.addContainer( map );
-	containers.put( path, map );
     }
 
     /** Will add a new security constraint:
@@ -698,9 +715,9 @@ public class Context implements LogAware {
 	return (Handler)servlets.get(servletName);
     }
 
-    public Handler createHandler() {
-	return getFacadeManager().createHandler();
-    }
+//     public Handler createHandler() {
+// 	return getFacadeManager().createHandler();
+//     }
     
     /**
      * Add a servlet with the given name to the container. The
@@ -717,7 +734,7 @@ public class Context implements LogAware {
 	//	log("Adding servlet " + name  + " " + wrapper);
 
         // check for duplicates
-        if (servlets.get(name) != null) {
+        if (getServletByName(name) != null) {
 	    log("Removing duplicate servlet " + name  + " " + wrapper);
             removeServletByName(name);
 	    //	    getServletByName(name).destroy();
@@ -1057,7 +1074,7 @@ public class Context implements LogAware {
 	return trusted;
     }
 
-    private boolean allowAttribute( String name ) {
+    boolean allowAttribute( String name ) {
 	// check if we can access this attribute.
 	if( isTrusted() ) return true;
 	log( "Illegal access to internal attribute ", null, Logger.ERROR);

@@ -43,7 +43,7 @@ public class EmbededTomcat { // extends WebService
 	servlet API version. This will change after we
 	finish the FacadeManager implementation
     */
-    FacadeManager facadeM=null;
+    //    FacadeManager facadeM=null;
     Vector connectors=new Vector();
 
     String workDir;
@@ -160,8 +160,9 @@ public class EmbededTomcat { // extends WebService
 	    // XXX if virtual host set it.
 	    ctx.setDocBase( docRoot.getFile());
 	    contextM.addContext( ctx );
-	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
-	    return ctx.getFacade();
+	    // 	    if( facadeM == null ) facadeM=ctx.getFacadeManager();
+	    // 	    return ctx.getFacade();
+	    return ctx;
 	} catch( Exception ex ) {
 	    log("exception adding context " + ctxPath + "/" + docRoot, ex);
 	}
@@ -173,11 +174,13 @@ public class EmbededTomcat { // extends WebService
     public void removeContext( Object sctx ) {
 	if(debug>0) log( "remove context " + sctx );
 	try {
-	    if( facadeM==null ) {
-		log("ERROR removing context " + sctx + ": no facade manager", Logger.ERROR);
-		return;
-	    }
-	    Context ctx=facadeM.getRealContext( sctx );
+// 	    if( facadeM==null ) {
+// 		log("ERROR removing context " +
+// 		    sctx + ": no facade manager", Logger.ERROR);
+// 		return;
+// 	    }
+	    //	    Context ctx=contextM.getRealContext( sctx );
+	    Context ctx=(Context)sctx;
 	    contextM.removeContext( ctx );
 	} catch( Exception ex ) {
 	    log("exception removing context " + sctx, ex);
@@ -201,7 +204,8 @@ public class EmbededTomcat { // extends WebService
 	    }
 	    cp.addElement( cpath );
 	} catch( Exception ex ) {
-	    log("exception adding classpath " + cpath + " to context " + context, ex);
+	    log("exception adding classpath " + cpath +
+		" to context " + context, ex);
 	}
 	
 	// XXX This functionality can be achieved by setting it in the parent
@@ -228,11 +232,12 @@ public class EmbededTomcat { // extends WebService
      */
     public void initContext( Object sctx ) {
 	try {
-	    if( facadeM==null ) {
-		log("XXX ERROR: no facade manager");
-		return;
-	    }
-	    Context ctx=facadeM.getRealContext( sctx );
+// 	    if( facadeM==null ) {
+// 		log("XXX ERROR: no facade manager");
+// 		return;
+// 	    }
+	    Context ctx=(Context)sctx;
+	    //contextM.getRealContext( sctx );
 	    contextM.initContext( ctx );
 
 	    Object pd=ctx.getProtectionDomain();
@@ -329,8 +334,13 @@ public class EmbededTomcat { // extends WebService
 	// no AutoSetup !
 	
 	// set workdir, engine header, auth Servlet, error servlet, loader
-	WebXmlReader webXmlI=new WebXmlReader();
-	webXmlI.setValidate( false );
+
+	// XXX So far Embeded tomcat is specific to Servlet 2.2.
+	// It need a major refactoring to support multiple
+	// interfaces ( I'm not sure it'll be possible to support
+	// multiple APIs at the same time in embeded mode )
+	
+	BaseInterceptor webXmlI= (BaseInterceptor)newObject("org.apache.tomcat.facade.WebXmlReader");
 	addContextInterceptor( webXmlI );
 
 	PolicyInterceptor polI=new PolicyInterceptor();
@@ -424,6 +434,16 @@ public class EmbededTomcat { // extends WebService
 	    // this stack trace is ok, i guess, since it's just a
 	    // sample main
 	    t.printStackTrace();
+	}
+    }
+
+    private Object newObject( String classN ) {
+	try {
+	    Class c=Class.forName( classN );
+	    return c.newInstance();
+	} catch( Exception ex ) {
+	    ex.printStackTrace();
+	    return null;
 	}
     }
 	

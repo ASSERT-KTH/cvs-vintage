@@ -280,6 +280,14 @@ final class RequestDispatcherImpl implements RequestDispatcher {
 	realRequest.setAttribute("javax.servlet.include.query_string",
 				 queryString);
 	
+	if( false ) {
+	    System.out.println("RD: " + old_request_uri + " " +
+			       old_context_path + " " + old_servlet_path +
+			       " " + old_path_info + " " + old_query_string);
+	    System.out.println("NEW: " + context.getPath() + " " + path + " "
+			       + subRequest.getServletPath() + " " +
+			       subRequest.getPathInfo() + " " + queryString);
+	}
 	
 	// Not explicitely stated, but we need to save the old parameters
 	// before adding the new ones

@@ -124,6 +124,7 @@ public class Container implements Cloneable{
     /** The handler associated with this container.
      */
     Handler handler;
+    String handlerName;
     
     /** Security constraints associated with this Container
      */
@@ -262,8 +263,6 @@ public class Container implements Cloneable{
 
     // -------------------- Mapping RHS --------------------
     
-    /** The handler for this container
-     */
     public Handler getHandler() {
 	return handler;
     }
@@ -272,6 +271,24 @@ public class Container implements Cloneable{
      */
     public void setHandler(Handler h) {
 	handler=h;
+    }
+
+    public void setHandlerName(String hn) {
+	handlerName=hn;
+    }
+
+    /** The handler name for this container.
+     *  @return null if no handler is defined for this
+     *          container ( this container defines only
+     *          security or other type of properties, but
+     *          not a handler )
+     */
+    public String getHandlerName() {
+	if( handlerName != null ) 
+	    return handlerName;
+	if( handler != null )
+	    return handler.getName();
+	return null;
     }
 
     /** If not null, this container can only be accessed by users
@@ -359,7 +376,7 @@ public class Container implements Cloneable{
 	"requestMap", "contextMap", "authenticate",
 	"authorize", "preService", "beforeBody",
 	"newSessionRequest", "beforeCommit",
-	"afterBody", "postService",
+	"afterBody", "postService", "postRequest",
 	// special case - all interceptors will be added to the "context"
 	// chain. We plan to use a simpler Event/Listener model for
 	// all context hooks, since they don't have any performance requirement

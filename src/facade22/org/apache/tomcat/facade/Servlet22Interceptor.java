@@ -79,38 +79,66 @@ import javax.servlet.http.*;
  *   everything very often.
  *  
  */
-public final class Servlet22Manager implements FacadeManager {
-    Context ctx;
+public final class Servlet22Interceptor
+    extends BaseInterceptor
+{
+    public static final String SERVLET_STAMP = " ( JSP 1.1; Servlet 2.2 )";
+	
+    public Servlet22Interceptor() {
+    }
 
-    Logger.Helper loghelper = new Logger.Helper("tc_log", this);
+    public Servlet22Interceptor(Context ctx) {
+    }
+
+    // -------------------- implementation
+    private void setEngineHeader(Context ctx) {
+        String engineHeader=ctx.getEngineHeader();
+
+	// EngineHeader can be set as a Context Property!
+	if( engineHeader==null) {
+	    StringBuffer sb=new StringBuffer();
+	    sb.append(ContextManager.TOMCAT_NAME);
+	    sb.append("/");
+	    sb.append(ContextManager.TOMCAT_VERSION );
+	    sb.append(SERVLET_STAMP);
+	    engineHeader=sb.toString();
+	}
+	ctx.setEngineHeader( engineHeader );
+    }
+
+
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
+    {
+	ctx.setFacade(new ServletContextFacade(cm , ctx));
+	setEngineHeader( ctx );
+    }
+
+    public void addContainer( Container ct )
+    	throws TomcatException
+    {
+	String hN=ct.getHandlerName();
+	if( hN == null ) return;
+			     
+	if( ct.getHandler() == null ) {
+	    // we have a container with a valid handler name but without
+	    // a Handler. Create a ServletWrapper
+	    ServletWrapper sw=new ServletWrapper();
+	    sw.setName( hN );
+	    sw.setContext( ct.getContext() );
+	    log( "Create handler ");
+	    ct.setHandler(sw);
+	    ct.getContext().addServlet(  sw );
+	}
+	    
+    }
     
-    private Servlet22Manager() {
-    }
-
-    /** The only way to construct a FacadeManager is if you have a valid
-     *  Context.
-     *  XXX make sure Context can't be constructed without right permission.
-     *  ( all internal tomcat objects have to be revisited ).
-     *
-     * The FacadeManager will work only for the Context used at construction
-     * time.
-     */
-    public Servlet22Manager(Context ctx)  {
-	//	checkAccess();
-	this.ctx=ctx;
-    }
-
-    /** Create a new handler
-     */
-    public Handler createHandler() {
-	return new ServletWrapper();
-    }
-
     public Object createServletContextFacade(Context ctx) {
 	//if( ctx != this.ctx ) return null; // throw
 	return new ServletContextFacade(ctx.getContextManager() , ctx);
     }
-
+    
+    
     public Object createHttpServletRequestFacade(Request req) {
 	Context reqCtx=req.getContext();
 	//	if( reqCtx != ctx && reqCtx != null ) return null; // throw
@@ -123,51 +151,28 @@ public final class Servlet22Manager implements FacadeManager {
 	return new HttpServletResponseFacade(res);
     }
 
-    public void recycle( Request rreq ) {
+    public int postRequest(Request rreq, Response rres ) {
 	//if( rreq.getContext() != ctx ) return; // throw
-	
+
+	log( "Recycling " + rreq );
 	HttpServletRequest req=(HttpServletRequest)rreq.getFacade();
 	if( ! (req instanceof HttpServletRequestFacade))
-	    return;
+	    return 0;
 	
 	((HttpServletRequestFacade)req).recycle();
 
 	// recycle response
-	Response rres=rreq.getResponse();
+	//	Response rres=rreq.getResponse();
 	if( rres== null )
-	    return;
+	    return 0;
 	
 	HttpServletResponse res=(HttpServletResponse)rres.getFacade();
 	if( res!=null) ((HttpServletResponseFacade)res).recycle();
-	
+
 	// recycle output stream
 	// XXX XXX implement it
-    }
 
-    public Request getRealRequest( Object req ) {
-	Request rreq=((HttpServletRequestFacade)req).getRealRequest();
-	if( rreq==null ) {
-	    loghelper.log("XXX XXX null req " + ctx + " " + req , Logger.ERROR);
-	}
-	if( rreq.getContext() == null ) {
-	    // we are in "error" case
-	    // A user can't create HttpServletRequest objects ( I hope )
-	    return rreq;
-	}
-	// 	if( rreq.getContext() != ctx ) {
-	// 	    log("XXX " + ctx.getPath() + " " + rreq.getContext() + " " + rreq);
-	// 	    ctx.log( "Attempt to get the real request from wrong context");
-	// 	    /*DEBUG*/ log("", new Throwable("trace"));
-	// 	    return null;
-	// 	}
-	return rreq;
+	return 0;
     }
-
-    public Context getRealContext( Object sctx ) {
-	Context realSctx=((ServletContextFacade)sctx).getRealContext();
-	//	if( realSctx != ctx ) return null;
-	return realSctx;
-    }
-
 }
     

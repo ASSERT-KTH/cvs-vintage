@@ -84,7 +84,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	Container ct=req.getContainer();
 
 	// 	log( "Ct: " + ct.getHandler() + " " +
-// 	     ct.getPath() + " " + ct.getMapType());
+	// 	     ct.getPath() + " " + ct.getMapType());
 	
 	if(  req.getWrapper()!=null &&
 	     ct!=null &&
@@ -145,15 +145,18 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// it's a much cleaner way to construct the servlet and
 	// make sure all interceptors are up to date.
 	try {
-	    Handler sw=ctx.createHandler();
-	    sw.setContext(ctx);
-	    sw.setServletName(servletName);
+	    ctx.addServletMapping( newServletPath + "/*" ,
+				   servletName );
+	    // The facade should create the servlet name
+	    
+	    Handler sw=ctx.getServletByName( servletName );
+	    // 	    sw.setContext(ctx);
+	    // 	    sw.setServletName(servletName);
+	    //	    ctx.addServlet( sw );
 	    sw.setServletClass( servletName );
 	    sw.setOrigin( Handler.ORIGIN_INVOKER );
 	    wrapper=sw;
-	    ctx.addServlet( sw );
-	    ctx.addServletMapping( newServletPath + "/*" ,
-				   servletName );
+
 	    if( debug > 0)
 		log( "Added mapping " + wrapper +
 		     " path=" + newServletPath + "/*" );

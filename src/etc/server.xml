@@ -105,7 +105,7 @@
         <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
 
         <ContextInterceptor 
-            className="org.apache.tomcat.context.WebXmlReader" />
+            className="org.apache.tomcat.facade.WebXmlReader" />
 
         <!-- Uncomment out if you have JDK1.2 and want to implement
 	     the Java SecurityManager
@@ -216,6 +216,10 @@
         <!-- Loaded last since JSP's that load-on-startup use request handling -->
         <ContextInterceptor 
             className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+
+        <!-- Loaded last since JSP's that load-on-startup use request handling -->
+        <RequestInterceptor 
+            className="org.apache.tomcat.facade.Servlet22Interceptor" />
 
       <!-- ==================== Connectors ==================== -->
 

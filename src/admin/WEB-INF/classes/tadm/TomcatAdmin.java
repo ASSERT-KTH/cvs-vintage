@@ -8,7 +8,6 @@ import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 import org.apache.tomcat.core.Request;
-import org.apache.tomcat.core.FacadeManager;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.core.ContextManager;
 import org.apache.tomcat.helper.RequestUtil;
@@ -22,7 +21,6 @@ public class TomcatAdmin extends TagSupport {
     private ContextManager cm;
     String ctxPathParam;
     String ctxPath;
-    FacadeManager facadeM;
     PageContext pageContext;
     
     public TomcatAdmin() {}
@@ -62,14 +60,13 @@ public class TomcatAdmin extends TagSupport {
     }
 
     private void init(HttpServletRequest request) {
-	facadeM=(FacadeManager)request.
-	    getAttribute( FacadeManager.FACADE_ATTRIBUTE);
-	Request realRequest = facadeM.getRealRequest(request);
+	Request realRequest = (Request)
+	    request.getAttribute( Request.ATTRIB_REAL_REQUEST);
 	cm = realRequest.getContext().getContextManager();
     }
 
     public ContextManager getContextManager(HttpServletRequest request ) {
-	if( facadeM==null ) init( request );
+	if( cm==null ) init( request );
         return cm;
     }
 

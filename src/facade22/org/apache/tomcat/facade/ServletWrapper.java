@@ -398,8 +398,15 @@ public class ServletWrapper extends Handler {
 	// XXX
 	HttpServletRequest reqF= (HttpServletRequest)req.getFacade();
 	HttpServletResponse resF= (HttpServletResponse)res.getFacade();
+	if( reqF == null || resF == null ||
+	    ! (reqF instanceof HttpServletRequestFacade) ) {
+	    reqF=new HttpServletRequestFacade(req);
+	    resF=new HttpServletResponseFacade(res);
+	    req.setFacade( reqF );
+	    res.setFacade( resF );
+	}
+	
 	doService( reqF, resF );
-
     }
 
     protected void doService(HttpServletRequest req, HttpServletResponse res)

@@ -1,4 +1,4 @@
-package org.apache.tomcat.context;
+package org.apache.tomcat.facade;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -19,6 +19,9 @@ import org.w3c.dom.*;
 // XXX XXX Specific to servlet 2.2 
 
 /**
+ * Read a servlet2.2 web.xml file and call the apropriate internal API
+ * to set up the configuration.
+ * 
  * @author costin@dnt.ro
  */
 public class WebXmlReader extends BaseInterceptor {
@@ -38,7 +41,7 @@ public class WebXmlReader extends BaseInterceptor {
     private Handler addServlet( Context ctx, String name, String classN )
 	throws TomcatException
     {
-	Handler sw=ctx.createHandler();
+	Handler sw=new ServletWrapper(); // ctx.createHandler();
 	sw.setContext(ctx);
 	sw.setServletName( name );
 	sw.setServletClass( classN);

@@ -126,15 +126,19 @@ public class Response {
     }
     
     public Object getFacade() {
-        if( responseFacade==null ) {
-	    Context ctx= request.getContext();
-	    if( ctx == null ) {
-		ctx=request.getContextManager().getContext("");
-	    }
-	    responseFacade = ctx.getFacadeManager().
-		createHttpServletResponseFacade(this);
-	}
+//         if( responseFacade==null ) {
+// 	    Context ctx= request.getContext();
+// 	    if( ctx == null ) {
+// 		ctx=request.getContextManager().getContext("");
+// 	    }
+// 	    responseFacade = ctx.getFacadeManager().
+// 		createHttpServletResponseFacade(this);
+// 	}
 	return responseFacade;
+    }
+
+    public void setFacade(Object facade ) {
+	responseFacade=facade;
     }
 
     public void setRequest(Request request) {

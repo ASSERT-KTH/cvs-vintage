@@ -5,7 +5,6 @@ import java.net.URL;
 import javax.servlet.http.*;
 
 import org.apache.tomcat.core.Request;
-import org.apache.tomcat.core.FacadeManager;
 import org.apache.tomcat.core.Context;
 import org.apache.tomcat.core.ContextManager;
 import org.apache.tomcat.helper.RequestUtil;
@@ -42,8 +41,11 @@ public class ContextAdmin {
     }
 
     public void init(HttpServletRequest request) {
-	FacadeManager facadeM=(FacadeManager)request.getAttribute( FacadeManager.FACADE_ATTRIBUTE);
-	realRequest = facadeM.getRealRequest(request);
+	//FacadeManager facadeM=(FacadeManager)request.getAttribute(
+	// FacadeManager.FACADE_ATTRIBUTE);
+	realRequest = (Request)request.
+	    getAttribute( Request.ATTRIB_REAL_REQUEST );
+
 	cm = realRequest.getContext().getContextManager();
     }
 

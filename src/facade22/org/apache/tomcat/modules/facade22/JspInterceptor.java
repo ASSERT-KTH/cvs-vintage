@@ -118,6 +118,9 @@ public class JspInterceptor extends BaseInterceptor {
 
     public int requestMap( Request req ) {
 	Handler wrapper=(Handler)req.getWrapper();
+
+	//	log( "Try: " + req );
+	
 	if( wrapper!=null && ! "jsp".equals( wrapper.getName())
 	    && wrapper.getPath() == null)
 	    return 0;
@@ -149,12 +152,12 @@ public class JspInterceptor extends BaseInterceptor {
 	    
 	    // jump version number - the file needs to
 	    // be recompiled, and we don't want a reload
-	    log( "Before sync block  " + jspInfo );
+	    if( debug > 0 ) log( "Before sync block  " + jspInfo );
 	    synchronized( jspInfo ) {
 		//		if( debug>0 )
 		if( jspInfo.jspSource.lastModified() 
 		    > jspInfo.compileTime ) {
-		    log( "Compiling " + jspInfo );
+		    if( debug > 0 ) log( "Compiling " + jspInfo );
 		
 		    jspInfo.nextVersion();
 		    compile( req, jspInfo );
@@ -188,7 +191,7 @@ public class JspInterceptor extends BaseInterceptor {
 		wrapper=new ServletWrapper();
 		wrapper.setContext(ctx);
 		wrapper.setServletName(servletName);
-		wrapper.setPath(classN);
+		wrapper.setPath( servletPath );
 		wrapper.setOrigin( Handler.ORIGIN_INVOKER );
 		ctx.addServlet( wrapper );
 		
@@ -210,7 +213,7 @@ public class JspInterceptor extends BaseInterceptor {
     /** Convert the .jsp file to a java file, then compile it to class
      */
     void compile(Request req, JspInfo jspInfo ) {
-	log( "Compiling " + jspInfo.realClassPath);
+	if( debug > 0 ) log( "Compiling " + jspInfo.realClassPath);
 	try {
 	    // make sure we have the directories
 	    File dir=new File( jspInfo.outputDir + "/" + jspInfo.pkgDir);
@@ -450,14 +453,15 @@ class JspInfo {
 	    updateVersionedPaths();
 	}
 
-// 	log("uri=" + uri +
-// 			   //" outputDir=" + outputDir +
-// 			   //" jspSource=" + jspSource +
-// 			   " pkgDir=" + pkgDir +
-// 			   " baseClassN=" + baseClassN +
-// 			   " ext=" + ext +
-// 			   " mapPath=" + mapPath +
-// 			   " version=" + version);
+	if( false )
+	    log("uri=" + uri +
+		//" outputDir=" + outputDir +
+		//" jspSource=" + jspSource +
+		" pkgDir=" + pkgDir +
+		" baseClassN=" + baseClassN +
+		" ext=" + ext +
+		" mapPath=" + mapPath +
+		" version=" + version);
 	
 	
     }

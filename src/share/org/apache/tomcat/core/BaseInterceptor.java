@@ -245,6 +245,21 @@ public class BaseInterceptor
 	return 0;
     }
 
+    /** Experimental hook: called after the request is finished,
+	before returning to the caller. This will be called only
+	on the main request, and will give interceptors a chance
+	to clean up - that would be difficult in postService,
+	that is called after included servlets too.
+
+	Don't use this hook until it's marked final, I added it
+	to deal with recycle() in facades - if we find a better
+	solution this can go. ( unless people find it
+	useful
+     */
+    public int postRequest(Request request, Response response) {
+	return 0;
+    }
+
     public String []getMethods()  {
 	return methods;
     }
@@ -270,23 +285,27 @@ public class BaseInterceptor
     {
     }
 
-    /** A new location was added to the server. A location is defined as a
-     *  set of URL patterns with common properties. All servlet mappings
-     *  and security constraints are in this category - with a common
-     *  handler and a common set of authorized roles.
+    /** Notify that certain properties are defined for a URL pattern.
+     *  Properties can be a "handler" that will be called for URLs
+     *  matching the pattern or "security constraints" ( or any other
+     *  properties that can be associated with URL patterns )
      *
-     *  An interceptor interested in mapping  must implement this method
-     *  and construct it's internal representation. The mapper is _required_
-     *  to find the Container associated with a request using the mapping
-     *  rules defined in the Servlet API.
+     *  Interceptors will maintain their own mapping tables if they are
+     *  interested in a certain property. General-purpose mapping
+     *  code is provided in utils.
      *
-     *  The interceptor must also take care of "merging" parent with child
-     *  containers. It is possible that this method will be called several
-     *  times for the same url pattern ( for example to define a handler
-     *  and then security constraints), the interceptor needs to
-     *  merge the 2 containers.
+     *  The method will be called once for every properties associated
+     *  with a URL - it's up to the interceptor to interpret the URL
+     *  and deal with "merging".
      * 
-     *  XXX  define "merging" of containers 
+     *  A Container that defines a servlet mapping ( handler ) will have
+     *  the handlerName set to the name of the handler. The Handler
+     *  ( getHandler) can be null for dynamically added servlets, and
+     *  will be set by a facade interceptor.
+     *
+     *   XXX We use this hook to create ServletWrappers for dynamically
+     *  added servlets in InvokerInterceptor ( JspInterceptor is JDK1.2
+     *  specific ). It may be good to add a new hook specifically for that
      */
     public void addContainer(Container container)
 	throws TomcatException

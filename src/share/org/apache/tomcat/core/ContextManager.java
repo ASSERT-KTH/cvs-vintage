@@ -580,6 +580,7 @@ public final class ContextManager implements LogAware{
 	    handleError( req, res, ex );
 	}
 	finally {
+	    doPostRequest(req, res);
 	    req.recycle();
 	    res.recycle();
 	}
@@ -767,6 +768,15 @@ public final class ContextManager implements LogAware{
 	return 0;
     }
 
+    int doPostRequest( Request req, Response res ) {
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
+
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].postRequest( req, res );
+	}
+	return 0;
+    }
+
     int doNewSessionRequest( Request req, Response res ) {
 	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
@@ -837,6 +847,7 @@ public final class ContextManager implements LogAware{
 	}
 
 	Request lr = new Request();
+	lr.setContextManager( this );
 	lr.setRequestURI( urlPath );
 	lr.setQueryString( queryString );
 	return lr;
@@ -1359,6 +1370,20 @@ public final class ContextManager implements LogAware{
     public void setContainer(Container newDefaultContainer) {
         defaultContainer = newDefaultContainer;
     }
+
+
+    // Do we need that ?
+    
+    //     /** Map the context facade back to the context.
+    // 	This call doesn't involve any security checks, and
+    // 	can be used by internal components (  they
+    // 	already have access to ContextManager ).
+    // 	Servlets need to call getAttribute(), and that
+    // 	will do the required security checks
+    //     */
+    //     public Context getRealContext( Object facade ) {
+    // 	return null;
+    //     }
 
 
 }

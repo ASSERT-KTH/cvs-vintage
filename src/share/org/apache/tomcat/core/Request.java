@@ -80,6 +80,10 @@ import java.util.*;
  * @author Hans Bergsten [hans@gefionsoftware.com]
  */
 public class Request {
+    /** Magic attribute that allows access to the real request from
+     *  facade - for trusted applications
+     */
+    public static final String ATTRIB_REAL_REQUEST="org.apache.tomcat.request";
 
     protected int serverPort;
     protected String remoteAddr;
@@ -408,8 +412,16 @@ public class Request {
     }
 
     public String getServletPath() {
+	// contextM.log( "GetServletPath " + servletPath );
         return servletPath;
     }
+
+    public void setServletPath(String servletPath) {
+	//	contextM.log( "SetServletPath " + servletPath );
+	this.servletPath = servletPath;
+    }
+
+
 
     // End hints
 
@@ -417,17 +429,21 @@ public class Request {
     public Object getFacade() {
 	// some requests are internal, and will never need a
 	// facade - no need to create a new object unless needed.
-        if( requestFacade==null ) {
-	    if( context==null ) {
-		// wrong request
-		// XXX the will go away after we remove the one-one relation between
-		// request and facades ( security, etc)
-		requestFacade = contextM.getContext("" ).getFacadeManager().createHttpServletRequestFacade(this );
-		return requestFacade;
-	    }
-	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
-	}
+//         if( requestFacade==null ) {
+// 	    if( context==null ) {
+// 		// wrong request
+// 		// XXX the will go away after we remove the one-one relation between
+// 		// request and facades ( security, etc)
+// 		requestFacade = contextM.getContext("" ).getFacadeManager().createHttpServletRequestFacade(this );
+// 		return requestFacade;
+// 	    }
+// 	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
+// 	}
 	return requestFacade;
+    }
+
+    public void setFacade(Object facade ) {
+	requestFacade=facade;
     }
 
     public void setResponse(Response response) {
@@ -615,30 +631,33 @@ public class Request {
 	this.queryString = queryString;
     }
 
-    public void setServletPath(String servletPath) {
-	this.servletPath = servletPath;
-    }
-
 
     // XXX
     // the server name should be pulled from a server object of some
     // sort, not just set and got.
 
     // -------------------- Attributes
+    
     public Object getAttribute(String name) {
         Object value=attributes.get(name);
 	if( value != null )
 	    return value;
 
-	// allow access to FacadeManager for servlets
-	// ( this way you don't need to deal with init ).
-	if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
-	    return context.getAttribute( name );
+	// 	// allow access to FacadeManager for servlets
+	// 	// ( this way you don't need to deal with init ).
+	// 	if( name.equals(FacadeManager.FACADE_ATTRIBUTE)) {
+	// 	    return context.getAttribute( name );
+	// 	}
+	if(name.equals(ATTRIB_REAL_REQUEST)) {
+	    if( ! context.allowAttribute(name) ) return null;
+	    return this;
 	}
+
 	return null;
     }
 
     public void setAttribute(String name, Object value) {
+	//	contextM.log( "setAttribure " + name +  " " + value );
 	if(name!=null && value!=null)
 	    attributes.put(name, value);
     }
@@ -719,7 +738,7 @@ public class Request {
     // -------------------- End utils
     public void recycle() {
         if( requestFacade != null && context!=null ) {
-            context.getFacadeManager().recycle(this);
+	    //            context.getFacadeManager().recycle(this);
         }
 
         context = null;
