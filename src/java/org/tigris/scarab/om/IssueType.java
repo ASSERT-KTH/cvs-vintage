@@ -47,6 +47,7 @@ package org.tigris.scarab.om;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
@@ -61,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.12 2002/01/18 22:26:07 jon Exp $
+ * @version $Id: IssueType.java,v 1.13 2002/02/13 20:06:06 elicia Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -73,80 +74,29 @@ public  class IssueType
     public static final NumberKey GLOBAL_TEMPLATE__PK = new NumberKey("3");
 
     /**
-     * List of attribute groups associated with this module and issue type.
+     * Gets the id of the template that corresponds to the issue type.
      */
-    public List getAttributeGroups(ModuleEntity module)
+    public String test(ModuleEntity module)
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(AttributeGroupPeer.MODULE_ID, module.getModuleId())
-            .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
-            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-        return AttributeGroupPeer.doSelect(crit);
+       return module.getName();
     }
 
     /**
-     * List of attribute groups associated with this module and issue type.
-     * 
+     * Gets the id of the template that corresponds to the issue type.
      */
-    public List getDedupeAttributeGroups(ModuleEntity module)
+    public String test(ModuleEntity module, boolean b)
         throws Exception
     {
-        Criteria crit = new Criteria()
-            .add(AttributeGroupPeer.MODULE_ID, module.getModuleId())
-            .add(AttributeGroupPeer.ISSUE_TYPE_ID, getIssueTypeId())
-            .add(AttributeGroupPeer.DEDUPE, true)
-            .addAscendingOrderByColumn(AttributeGroupPeer.PREFERRED_ORDER);
-        return AttributeGroupPeer.doSelect(crit);
-    }
-
-    /**
-     * Creates new attribute group.
-     */
-    public AttributeGroup createNewGroup (ModuleEntity module)
-        throws Exception
-    {
-        List groups = getAttributeGroups(module);
-        AttributeGroup ag = new AttributeGroup();
-
-        // Make default group name 'attribute group x' where x is size + 1
-        ag.setName("attribute group " + Integer.toString(groups.size()+1));
-        ag.setOrder(groups.size() +2);
-        ag.setModuleId(module.getModuleId());
-        ag.setIssueTypeId(getIssueTypeId());
-        ag.save();
-        return ag;
-    }
-
-    /**
-     * Gets the sequence where the dedupe screen fits between groups.
-     */
-    public int getDedupeSequence(ModuleEntity module)
-        throws Exception
-    {
-        int sequence = 1;
-        List groups = getAttributeGroups(module);
-        for (int i=1; i<=groups.size(); i++)
+        if (b)
         {
-            int order;
-            int previousOrder;
-            try
-            {
-                order = ((AttributeGroup)groups.get(i)).getOrder();
-                previousOrder = ((AttributeGroup)groups.get(i-1)).getOrder();
-            }
-            catch (Exception e)
-            {
-                return sequence;
-            }
-            if (order != previousOrder + 1)
-            {
-                sequence = order-1;
-                break;
-            }
+            return "true";
         }
-        return sequence;
-    }    
+        else
+        {
+            return "false";
+         }
+    }
 
     /**
      * Gets the id of the template that corresponds to the issue type.

@@ -109,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.74 2002/02/11 01:57:19 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.75 2002/02/13 20:06:05 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -145,7 +145,7 @@ public class ModifyIssue extends RequireLoginFirstAction
         }
 
         // Set any other required flags
-        Attribute[] requiredAttributes = issue.getModule()
+        List requiredAttributes = issue.getModule()
                                               .getRequiredAttributes(issueType);
         AttributeValue aval = null;
         Group group = null;
@@ -169,10 +169,10 @@ public class ModifyIssue extends RequireLoginFirstAction
                     field = group.get("Value");
                 }
             
-                for (int j=requiredAttributes.length-1; j>=0; j--) 
+                for (int j=requiredAttributes.size()-1; j>=0; j--) 
                 {
                     if (aval.getAttribute().getPrimaryKey().equals(
-                         requiredAttributes[j].getPrimaryKey())) 
+                         ((Attribute)requiredAttributes.get(j)).getPrimaryKey())) 
                     {
                         field.setRequired(true);
                         break;

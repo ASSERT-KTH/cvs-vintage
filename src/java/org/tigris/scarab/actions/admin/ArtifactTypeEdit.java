@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.8 2002/01/30 04:47:55 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.9 2002/02/13 20:06:05 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -100,8 +100,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IssueType issueType = scarabR.getIssueType();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
 
-        List attGroups = issueType.getAttributeGroups(module);
-        List attributeGroups = issueType.getAttributeGroups(module);
+        List attGroups = module.getAttributeGroups(issueType, false);
+        List attributeGroups = module.getAttributeGroups(issueType, false);
 
         boolean isValid = true;
         boolean areThereDupes = false;
@@ -111,7 +111,8 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         boolean areThereDedupeAttrs = false;
 
         // Manage attribute groups
-        if (attributeGroups.size() > 0)
+        // Only have dedupe if there are more than one active group
+        if (module.getAttributeGroups(issueType, true).size() > 1)
         {
             dupeOrder = Integer.parseInt(data.getParameters()
                                                  .getString("dupe_order"));
@@ -192,15 +193,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
 
-/*
             // Set dedupe property for module-issueType
-            Group rmitGroup = intake.get("RModuleIssueType", rmit.getQueryKey(), false);
-            if (!areThereDedupeAttrs)
+            if (!areThereDedupeAttrs || module.getAttributeGroups(issueType).size() < 2)
             {
                 rmit.setDedupe(false);
             }
             rmit.save();
-*/
         }
     }
 
@@ -242,7 +240,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ModuleEntity module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        return issueType.createNewGroup(module);
+        return module.createNewGroup(issueType);
     }
 
     /**
@@ -259,7 +257,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ModuleEntity module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        List attributeGroups = issueType.getAttributeGroups(module);
+        List attributeGroups = module.getAttributeGroups(issueType);
 
         for (int i =0; i<keys.length; i++)
         {

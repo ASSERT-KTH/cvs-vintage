@@ -580,7 +580,7 @@ public class Issue
     public boolean containsMinimumAttributeValues()
         throws Exception
     {
-        Attribute[] attributes = getModule()
+        List attributes = getModule()
             .getRequiredAttributes(getIssueType());
 
         boolean result = true;
@@ -592,10 +592,10 @@ public class Issue
             
             if ( aval.getOptionId() == null && aval.getValue() == null ) 
             {
-                for ( int j=attributes.length-1; j>=0; j-- ) 
+                for ( int j=attributes.size()-1; j>=0; j-- ) 
                 {
                     if ( aval.getAttribute().getPrimaryKey().equals(
-                         attributes[j].getPrimaryKey() )) 
+                         ((Attribute)attributes.get(j)).getPrimaryKey() )) 
                     {
                         result = false;
                         break;
@@ -1613,6 +1613,10 @@ public class Issue
                 if ( attributeId.equals(testAV.getAttributeId()) ) 
                 {
                     av = testAV;
+                    if (!getModule().getAttributeGroup(getIssueType(), av.getAttribute()).getActive())
+                    {
+                        av= null;
+                    }
                     break;
                 }
             }

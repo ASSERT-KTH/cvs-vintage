@@ -98,7 +98,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.112 2002/02/07 01:33:27 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.113 2002/02/13 20:06:05 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -210,7 +210,7 @@ public class ReportIssue extends RequireLoginFirstAction
                                      "Please try again.");
         }
         IssueType issueType = issue.getIssueType();
-        Attribute[] requiredAttributes = issue.getModule()
+        List requiredAttributes = issue.getModule()
             .getRequiredAttributes(issueType);
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
@@ -236,10 +236,10 @@ public class ReportIssue extends RequireLoginFirstAction
                     field = group.get("Value");
                 }
                 
-                for (int j=requiredAttributes.length-1; j>=0; j--) 
+                for (int j=requiredAttributes.size()-1; j>=0; j--) 
                 {
                     if (aval.getAttribute().getPrimaryKey().equals(
-                            requiredAttributes[j].getPrimaryKey())
+                            ((Attribute)requiredAttributes.get(j)).getPrimaryKey())
                         && !aval.isSet())
                     {
                         field.setRequired(true);
@@ -362,77 +362,83 @@ public class ReportIssue extends RequireLoginFirstAction
                     {
                         data.setMessage("Fatal Error: " + se.getMessage() 
                                             + " Please start over.");
-                        setTarget(data, "entry,Wizard1.vm");
+                        //setTarget(data, "entry,Wizard1.vm");
                         return;
                     }
                 }
         
-                // we need to see that the default text was filled out if necessary.  We can
+                // we need to see that the default text was filled out 
+                // if necessary.  We can
                 // only do this after setting the attributes above.
                 boolean saveIssue = true;
                 String summary = issue.getDefaultText();
+                Group commentGroup = intake.get("Attachment", "_1", false);
+                Field commentField = commentGroup.get("DataAsString");
                 if ( summary.length() == 0 ) 
                 {
-                    Group commentGroup = intake.get("Attachment", "_1", false);
-                    Field commentField = commentGroup.get("DataAsString");
                     commentField.setRequired(true);
                     saveIssue = false;
                 }
 
-                if (saveIssue) 
+                // If there is a default text attribute,or if a comment has 
+                // Been provided, proceed.
+                if (commentField.isValid() || saveIssue)
                 {                
                     issue.save();                
-                }
             
-                // save the comment
-                Group commentGroup = intake.get("Attachment", "_1", false);
-                Attachment comment = new Attachment();
-                commentGroup.setProperties(comment);
-                if ( comment.getData() != null 
-                     && comment.getData().length > 0) 
-                {
-                    issue.addComment(comment, (ScarabUser)data.getUser());     
-                }
-                
+                    // save the comment
+                    Attachment comment = new Attachment();
+                    commentField.setProperty(comment);
+                    if ( comment.getData() != null 
+                         && comment.getData().length > 0) 
+                    {
+                        issue.addComment(comment, (ScarabUser)data.getUser());     
+                    }
+                    
 
-                // set the template to the user selected value
-                String template = data.getParameters()
-                    .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
-                if (template != null && template.equals("AssignIssue.vm"))
-                {
-                    data.getParameters().add("issue_ids", 
-                                             issue.getIssueId().toString());
-                }
-                setTarget(data, template);
+                    // set the template to the user selected value
+                    String template = data.getParameters()
+                        .getString(ScarabConstants.NEXT_TEMPLATE, "ViewIssue.vm");
+                    if (template != null && template.equals("AssignIssue.vm"))
+                    {
+                        data.getParameters().add("issue_ids", 
+                                                 issue.getIssueId().toString());
+                    }
+                    setTarget(data, template);
                 
-                // send email
-                if ( summary.length() == 0 ) 
-                {
-                    summary = comment.getDataAsString();
-                }
-                if ( summary.length() > 60 ) 
-                {
-                    summary = summary.substring(0,60) + "...";
-                }                
-                summary = (summary.length() == 0) ? summary : " - " + summary;
-                StringBuffer subj = new StringBuffer("[");
-                subj.append(issue.getModule().getRealName().toUpperCase());
-                subj.append("] Issue #").append(issue.getUniqueId());
-                subj.append(summary);
-            
-                if (!transaction.sendEmail(new ContextAdapter(context), issue, 
-                                      subj.toString(),
-                                      "email/NewIssueNotification.vm"))
-                {
-                    data.setMessage("Your issue was saved, but could not send "
+                    // send email
+                    if ( summary.length() == 0 ) 
+                    {
+                        summary = comment.getDataAsString();
+                    }
+                    if ( summary.length() > 60 ) 
+                    {
+                        summary = summary.substring(0,60) + "...";
+                    }                
+                    summary = (summary.length() == 0) ? summary : " - " + summary;
+                    StringBuffer subj = new StringBuffer("[");
+                    subj.append(issue.getModule().getRealName().toUpperCase());
+                    subj.append("] Issue #").append(issue.getUniqueId());
+                    subj.append(summary);
+                
+                    if (!transaction.sendEmail(new ContextAdapter(context), issue, 
+                                          subj.toString(),
+                                          "email/NewIssueNotification.vm"))
+                    {
+                        data.setMessage("Your issue was saved, but could not send "
                                     + "notification email due to a sendmail error.");
+                    }
+                    cleanup(data, context);
+                    data.getParameters().add("id", issue.getUniqueId().toString());
+                    data.setMessage("Issue " + issue.getUniqueId() +
+                                    " added to module " +
+                                    getScarabRequestTool(context)
+                                    .getCurrentModule().getRealName());
                 }
-                cleanup(data, context);
-                data.getParameters().add("id", issue.getUniqueId().toString());
-                data.setMessage("Issue " + issue.getUniqueId() +
-                                " added to module " +
-                                getScarabRequestTool(context)
-                                .getCurrentModule().getRealName());
+                else
+                {
+                    data.setMessage(ERROR_MESSAGE);
+                }
             }
             else 
             {
