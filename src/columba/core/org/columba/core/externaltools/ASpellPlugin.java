@@ -13,9 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.externaltools;
 
 import java.io.File;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.columba.core.util.OSInfo;
 
@@ -25,9 +29,17 @@ import org.columba.core.util.OSInfo;
  * @author fdietz
  */
 public class ASpellPlugin extends AbstractExternalToolsPlugin {
-	File defaultLinux = new File("/usr/bin/aspell");
-	File defaultLocalLinux = new File("/usr/local/bin/aspell");
-	File defaultWin = new File("C:\\Program Files\\Aspell\\bin\\aspell.exe");
+	protected static File defaultLinux = new File("/usr/bin/aspell");
+	protected static File defaultLocalLinux = new File("/usr/local/bin/aspell");
+	protected static File defaultWin = 
+                new File("C:\\Program Files\\Aspell\\bin\\aspell.exe");
+        protected static URL websiteURL;
+        
+        static {
+            try {
+                websiteURL = new URL("http://aspell.sourceforge.net/");
+            } catch(MalformedURLException mue) {} //does not happen
+        }
 
 	/**
 	 * Construct the default ASpell plugin.
@@ -41,8 +53,8 @@ public class ASpellPlugin extends AbstractExternalToolsPlugin {
 		return "<html><body><p>GNU Aspell is a Free and Open Source spell checker designed to eventually replace Ispell.</p><p>It can either be used as a library or as an independent spell checker. Its main feature is that it does a much better job of coming up with possible suggestions than just about any other spell checker out there for the English language, including Ispell and Microsoft Word.</p></p>It also has many other technical enhancements over Ispell such as using shared memory for dictionaries and intelligently handling personal dictionaries when more than one Aspell process is open at once.</p></body></html>";
 	}
 
-	public String getWebsite() {
-		return "http://aspell.sourceforge.net";
+	public URL getWebsite() {
+		return websiteURL;
 	}
 
 	public File locate() {

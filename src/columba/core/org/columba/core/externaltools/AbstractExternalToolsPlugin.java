@@ -13,9 +13,12 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.externaltools;
 
 import java.io.File;
+
+import java.net.URL;
 
 import org.columba.core.plugin.PluginInterface;
 
@@ -60,6 +63,5 @@ public abstract class AbstractExternalToolsPlugin implements PluginInterface {
 	 * 
 	 * @return	website of this tool
 	 */
-	public abstract String getWebsite();
-	
+	public abstract URL getWebsite();
 }

@@ -18,7 +18,7 @@ package org.columba.core.gui.externaltools;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.net.MalformedURLException;
+
 import java.net.URL;
 
 import javax.swing.JComponent;
@@ -103,13 +103,11 @@ class DescriptionStep extends AbstractStep {
 		JScrollPane sp = new JScrollPane(textPane);
 
 		panel.add(sp, BorderLayout.CENTER);
-
-		try {
-			URLLabel label = new URLLabel(new URL(plugin.getWebsite()));
-			panel.add(label, BorderLayout.SOUTH);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+                
+                URL url = plugin.getWebsite();
+                if (url != null) {
+                        panel.add(new URLLabel(url), BorderLayout.SOUTH);
+                }
 
 		return panel;
 	}

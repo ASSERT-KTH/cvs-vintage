@@ -13,9 +13,13 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.core.externaltools;
 
 import java.io.File;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.columba.core.util.OSInfo;
 
@@ -25,15 +29,22 @@ import org.columba.core.util.OSInfo;
  * @author fdietz
  */
 public class GPGPlugin extends AbstractExternalToolsPlugin {
-	File defaultLinux = new File("/usr/bin/gpg");
-	File defaultLocalLinux = new File("/usr/local/bin/gpg");
+	protected static File defaultLinux = new File("/usr/bin/gpg");
+	protected static File defaultLocalLinux = new File("/usr/local/bin/gpg");
 	
 	/* GPG for windows is an executable-only download, fortunately there is
 	 * a windows registry file included in the download and has this as the
 	 * default installation path in it. While users will probably install GPG
 	 * into many other places, this is atleast a best-guess start. 
 	 */
-	File defaultWin = new File("C:\\GnuPG\\gpg.exe");
+	protected static File defaultWin = new File("C:\\GnuPG\\gpg.exe");
+        protected static URL websiteURL;
+        
+        static {
+            try {
+                websiteURL = new URL("http://www.gnupg.org/");
+            } catch(MalformedURLException mue) {} //does not happen
+        }
 
 	/**
 	 * Construct the default GPG plugin. 
@@ -46,8 +57,8 @@ public class GPGPlugin extends AbstractExternalToolsPlugin {
 		return "<html><body><p>GnuPG is a complete and free replacement for PGP.</p><p>Because it does not use the patented IDEA algorithm, it can be used without any restrictions. GnuPG is a RFC2440 (OpenPGP) compliant application.</p><p>GnuPG itself is a commandline tool without any graphical stuff. It is the real crypto engine which can be used directly from a command prompt, from shell scripts or by other programs. Therefore it can be considered as a backend for other applications.</p></body></html>";
 	}
 
-	public String getWebsite() {
-		return "http://www.gnupg.org";
+	public URL getWebsite() {
+		return websiteURL;
 	}
 
 	public File locate() {
