@@ -104,7 +104,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.109 2002/05/01 00:27:23 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.110 2002/05/01 00:39:38 jon Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -273,6 +273,9 @@ public class ScarabModule
             throw new Exception("Endless parent/child relationship detected!");
         }
         super.setModuleRelatedByParentId((ScarabModule)v);
+        // setting the name to be null so that 
+        // it gets rebuilt with the new information
+        setName(null);
         resetAncestors();
     }
 
@@ -306,7 +309,8 @@ public class ScarabModule
             log().error("Problem checking endless loop", e);
         }
         super.setParentId(id);
-        // FIXME: why are we setting the name to be null? (jss)
+        // setting the name to be null so that 
+        // it gets rebuilt with the new information
         setName(null);
         resetAncestors();
     }
