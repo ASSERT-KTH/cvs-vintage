@@ -5,9 +5,6 @@
  <ul>
   <li>New users, <a href="$link.setPage("Register.vm")">register here</a>.</li>
  </ul>
- #if ($data.getMessage()) 
- <div class="alert">$data.getMessage()</div>
- #end 
  <form action="$link.setPage("Login.vm").addPathInfo($data.Parameters)" method="post" name="login">
   <input type="hidden" name="action" value="Login" /> 
 #if ($nextTemplate && $nextTemplate.length() > 0)
