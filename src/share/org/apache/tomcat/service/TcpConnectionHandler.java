@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnectionHandler.java,v 1.2 1999/10/28 16:57:42 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/28 16:57:42 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpConnectionHandler.java,v 1.3 2000/05/26 17:32:14 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/26 17:32:14 $
  *
  * ====================================================================
  *
@@ -74,9 +74,31 @@ import org.apache.tomcat.util.*;
  * 
  */
 public interface TcpConnectionHandler {
+    /** Add informations about the a "controler" object
+     *  specific to the server. In tomcat it will be a
+     *  ContextManager.
+     */
+    public void setServer(Object manager);
+
+    
+    /** Used to pass config informations to the handler
+     */
     public void setAttribute(String name, Object value );
     
+    /** Called before the call to processConnection.
+     *  If the thread is reused, init() should be called once per thread.
+     *
+     *  It may look strange, but it's a _very_ good way to avoid synchronized
+     *  methods and keep per thread data.
+     *  You are not required to implement it, but if you do - you can save a lot
+     *  in allocation ( since this will be called outside critical path ).
+     */
     public Object[] init( );
 
+    /**
+     *  Assert: connection!=null
+     *  Assert: connection.getSocket() != null
+     *  Assert: thData != null, result of calling init()
+     */
     public void processConnection(TcpConnection connection, Object thData[]);    
 }

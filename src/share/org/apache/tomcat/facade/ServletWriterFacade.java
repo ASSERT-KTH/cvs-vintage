@@ -58,8 +58,9 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.StringManager;
 import java.io.*;
 import javax.servlet.ServletOutputStream;
@@ -76,11 +77,12 @@ import javax.servlet.ServletOutputStream;
  *
  * @author Costin Manolache [costin@eng.sun.com]
  */
-public class ServletWriterFacade extends PrintWriter {
+//XXX
+public final class ServletWriterFacade extends PrintWriter {
     Response resA;
     RequestImpl req;
     
-    protected ServletWriterFacade( Writer w, Response resp ) {
+    public ServletWriterFacade( Writer w, Response resp ) {
 	super( w );
 	this.resA=resp;
 	req=(RequestImpl)resA.getRequest();

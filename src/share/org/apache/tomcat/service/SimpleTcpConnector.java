@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.4 2000/04/06 21:14:46 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/04/06 21:14:46 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/SimpleTcpConnector.java,v 1.5 2000/05/26 17:32:14 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/05/26 17:32:14 $
  *
  * ====================================================================
  *
@@ -133,6 +133,7 @@ public class SimpleTcpConnector  extends TcpEndpointConnector implements ServerC
     	    throw new Exception( "Invalid ConnectionHandler");
 
 	con.setAttribute("context.manager",cm );
+	con.setServer( cm );
     	ep.setPort(port);
 	ep.setAddress( address );
 	if(socketFactory != null) {

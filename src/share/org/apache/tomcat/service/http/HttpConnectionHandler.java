@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.24 2000/05/23 16:56:59 costin Exp $
- * $Revision: 1.24 $
- * $Date: 2000/05/23 16:56:59 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpConnectionHandler.java,v 1.25 2000/05/26 17:32:16 costin Exp $
+ * $Revision: 1.25 $
+ * $Date: 2000/05/26 17:32:16 $
  *
  * ====================================================================
  *
@@ -88,8 +88,8 @@ public class HttpConnectionHandler  implements  TcpConnectionHandler {
 	}
     }
     
-    public void setContextManager( ContextManager contextM ) {
-	this.contextM=contextM;
+    public void setServer( Object  contextM ) {
+	this.contextM=(ContextManager)contextM;
     }
 
     public Object[] init() {

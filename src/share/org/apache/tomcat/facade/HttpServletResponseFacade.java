@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.2 2000/05/24 01:58:16 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/24 01:58:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/facade/Attic/HttpServletResponseFacade.java,v 1.3 2000/05/26 17:32:10 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/26 17:32:10 $
  *
  * ====================================================================
  *
@@ -166,6 +166,7 @@ final class HttpServletResponseFacade  implements HttpServletResponse
 	usingWriter= true ;
 	response.setUsingWriter( true );
 	return response.getWriter();
+	//	return new ServletWriterFacade( coreW, this);
     }
 
     public void sendError(int sc) throws IOException {

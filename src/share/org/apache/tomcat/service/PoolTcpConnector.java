@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.3 2000/04/25 17:54:21 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2000/04/25 17:54:21 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/PoolTcpConnector.java,v 1.4 2000/05/26 17:32:14 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/05/26 17:32:14 $
  *
  * ====================================================================
  *
@@ -120,7 +120,8 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     String handlerClassName;
     PoolTcpEndpoint ep;
     TcpConnectionHandler con;
-
+    
+    Hashtable attributes = new Hashtable();
     ContextManager cm;
 
     private InetAddress address;
@@ -147,7 +148,17 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     	if(con==null)
     	    throw new Exception( "Invalid ConnectionHandler");
 
-	    con.setAttribute("context.manager",cm );
+	con.setServer( cm );
+	con.setAttribute("context.manager",cm ); // old mechanism
+
+	// Pass properties to the handler
+	Enumeration attE=attributes.keys();
+	while( attE.hasMoreElements() ) {
+	    String key=(String)attE.nextElement();
+	    Object v=attributes.get( key );
+	    con.setAttribute( key, v );
+	}
+	
     	ep.setPort(port);
 	ep.setAddress( address );
     	ep.setPoolOn(usePools);
@@ -236,16 +247,18 @@ public class PoolTcpConnector  extends TcpEndpointConnector  implements ServerCo
     // XXX use constants, remove dep on HttpServer
     public void setAttribute( String prop, Object value) {
     	if(VHOST_NAME.equals(prop) ) {
-	        //vhost=(String)value;
-	    } else if(VHOST_PORT.equals(prop) ) {
-	        vport=((Integer)value).intValue();
-	    } else if(VHOST_ADDRESS.equals(prop)) {
-	        address=(InetAddress)value;
-	    } else if(SERVER.equals(prop)) {
+	    //vhost=(String)value;
+	} else if(VHOST_PORT.equals(prop) ) {
+	    vport=((Integer)value).intValue();
+	} else if(VHOST_ADDRESS.equals(prop)) {
+	    address=(InetAddress)value;
+	} else if(SERVER.equals(prop)) {
     	    //server=(HttpServer)value;
-	    } else if(SOCKET_FACTORY.equals(prop)) {
+	} else if(SOCKET_FACTORY.equals(prop)) {
     	    socketFactory=(ServerSocketFactory)value;
-	    }
+	} else {
+	    attributes.put( prop, value );
+	}
     }
 
     public Object getAttribute( String prop ) {

@@ -118,6 +118,8 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
 	bos.write( b, off, len );
     }
 
+    // -------------------- Servlet Output Stream methods --------------------
+    
     /** Alternate implementation for print, using String.getBytes(enc).
 	It seems to be a bit faster for small strings, but it's 10..20% slower
 	for larger texts ( nor very large - 5..10k )
@@ -148,46 +150,6 @@ final class ServletOutputStreamFacade extends ServletOutputStream {
 	
 	write( b );
     } 
-    
-    /** We can use the writer to do the actual writing - that mean tomcat will
-	have a writer and an OutputStream and will use both of them.
-	Externaly ( i.e. at servlet level ) this is forbiden, but
-	internaly it's the best solution to avoid the mess we had in
-	I18N.
-
-	This method is faster than print - but it's harder ( mixing
-	writer/stream, flush issues. We may use it after we figure out the
-	rest of the buffering issues.
-    */
-    private void printFast(String s) throws IOException {
-	if (s==null) s="null";
-
-	if( writer== null ) {
-	    writer=resA.getWriter();
-	    //	 XXX XXX   bos.setDisableFlush( true );
-	    bos.setUsingWriter( true );
-	}
-	
-	writer.write( s );
-	writer.flush(); // the data will be in this buffer -
-
-	// We need to flush so we can mix chars and bytes,
-	// all will end up in our buffer in the right order ).
-
-	// The main problem is that Writer.flushBuffer is not public
-	// nor protected - so we can't use the same trick as in PrintStream.
-	// This method seems to be 10..20% faster than calling
-	// String.getBytes(enc) - but if it'll create problems we can use the
-	// slower method.
-
-	// It works because the writer will call flush on BSOS,
-	// and that is disabled.
-	//
-	// The flush will work fine - if you are using the stream and
-	//  call flush -> realFlush will be called.
-	// If you are using the writer - you don't get here.
-    }
-
 
     /** Will send the buffer to the client.
      */

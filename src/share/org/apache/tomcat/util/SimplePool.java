@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SimplePool.java,v 1.2 2000/05/23 16:57:09 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/05/23 16:57:09 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/SimplePool.java,v 1.3 2000/05/26 17:32:17 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/05/26 17:32:17 $
  *
  * ====================================================================
  *
@@ -131,4 +131,5 @@ public final class SimplePool  {
     public int getMax() {
 	return max;
     }
+
 }

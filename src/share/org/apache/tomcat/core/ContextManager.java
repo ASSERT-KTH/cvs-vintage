@@ -556,7 +556,7 @@ public class ContextManager {
 	req.setResponse( resp );
 	req.setContextManager( this );
     }
-    
+
     /** This is the entry point in tomcat - the connectors ( or any other
      *  component able to generate Request/Response implementations ) will
      *  call this method to get it processed.
@@ -899,10 +899,13 @@ public class ContextManager {
     /** Maximum number of notes supported
      */
     public static final int MAX_NOTES=32;
+    public static final int RESERVED=3; 
 
     public static final int SERVER_NOTE=0;
     public static final int CONTAINER_NOTE=1;
     public static final int REQUEST_NOTE=2;
+
+    public static final int REQ_RE_NOTE=0;
     
     String noteName[][]=new String[3][MAX_NOTES];
 
@@ -935,6 +938,10 @@ public class ContextManager {
 	}
 	
 	if( noteId[noteType] >= MAX_NOTES ) throw new TomcatException( "Too many notes ");
+
+	// make sure the note id is > RESERVED
+	if( noteId[noteType] < RESERVED ) noteId[noteType]=RESERVED;
+
 	noteName[noteType][ noteId[noteType] ]=name;
 	return noteId[noteType]++;
     }

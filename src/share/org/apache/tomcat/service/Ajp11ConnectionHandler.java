@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.18 2000/05/23 20:58:23 costin Exp $
- * $Revision: 1.18 $
- * $Date: 2000/05/23 20:58:23 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/Ajp11ConnectionHandler.java,v 1.19 2000/05/26 17:32:13 costin Exp $
+ * $Revision: 1.19 $
+ * $Date: 2000/05/26 17:32:13 $
  *
  * ====================================================================
  *
@@ -98,8 +98,8 @@ public class Ajp11ConnectionHandler implements  TcpConnectionHandler {
 	}
     }
     
-    public void setContextManager( ContextManager contextM ) {
-	this.contextM=contextM;
+    public void setServer( Object contextM ) {
+	this.contextM=(ContextManager)contextM;
     }
 
     public void processConnection(TcpConnection connection, Object thData[]) {

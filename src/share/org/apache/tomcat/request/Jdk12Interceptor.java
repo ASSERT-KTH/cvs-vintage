@@ -70,9 +70,9 @@ import javax.servlet.http.*;
 /**
  *  JDK1.2 specific options. Fix the class loader, etc.
  */
-public class Jdk12Interceptor extends  BaseInterceptor implements RequestInterceptor {
-    ContextManager cm;
-    int debug=0;
+public final class Jdk12Interceptor extends  BaseInterceptor implements RequestInterceptor {
+    private ContextManager cm;
+    private int debug=0;
 
     public Jdk12Interceptor() {
     }
@@ -88,9 +88,7 @@ public class Jdk12Interceptor extends  BaseInterceptor implements RequestInterce
     public void preServletInit( Context ctx, ServletWrapper sw )
 	throws TomcatException
     {
-	ClassLoader originalCL=null;
-	originalCL = fixJDKContextClassLoader(ctx.getServletLoader().getClassLoader());
-	//	System.out.println("Setting class loader for init()");
+	fixJDKContextClassLoader(ctx.getServletLoader().getClassLoader());
     }
 
     /** Servlet Destroy  notification
@@ -119,13 +117,6 @@ public class Jdk12Interceptor extends  BaseInterceptor implements RequestInterce
 
     
     
-    static boolean haveContextClassLoader=true;
-    static Class noParams[]=new Class[0];
-    static Class clParam[]=new Class[1];
-    static Object noObjs[]=new Object[0];
-    static { clParam[0]=ClassLoader.class; }
-
-
     // Before we do init() or service(), we need to do some tricks
     // with the class loader - see bug #116.
     // some JDK1.2 code will not work without this fix
@@ -134,43 +125,10 @@ public class Jdk12Interceptor extends  BaseInterceptor implements RequestInterce
     // that will set a new (JDK)context class loader, and return the old one
     // if we are in JDK1.2
     // XXX move it to interceptor !!!
-    /** Reflection trick to set the context class loader for JDK1.2, without
-	braking JDK1.1.
-
-	This code can be commented out for 3.1 if it creates any problems -
-	it should work.
-
-	XXX We need to find a better way to do that - maybe make it part of
-	the ServletLoader interface.
-     */
-    ClassLoader fixJDKContextClassLoader( ClassLoader cl ) {
-	if( cl==null ) return null;
-	if( ! haveContextClassLoader ) return null;
-	
+    final private void fixJDKContextClassLoader( ClassLoader cl ) {
+	if( cl==null ) return;
 	Thread t=Thread.currentThread();
-	try {
-	    java.lang.reflect.Method getCCL=t.getClass().getMethod("getContextClassLoader", noParams);
-	    java.lang.reflect.Method setCCL=t.getClass().getMethod("setContextClassLoader", clParam) ;
-	    if( (getCCL==null) || (setCCL==null) ) {
-		haveContextClassLoader=false;
-		return null;
-	    }
-	    ClassLoader old=( ClassLoader)getCCL.invoke( t, noObjs );
-	    Object params[]=new Object[1];
-	    params[0]=cl;
-	    setCCL.invoke( t, params );
-	    // 	    if( context.getDebug() > 5 ) context.log("Setting system loader " + old + " " + cl );
-	    // 	    context.log("Setting system loader " + old + " " + cl );
-	    
-	    return old;
-	} catch (NoSuchMethodException ex ) {
-	    // we don't have the methods, don't try again
-	    haveContextClassLoader=false;
-	} catch( Exception ex ) {
-	    haveContextClassLoader = false;
-	    System.out.println( "Error setting jdk context class loader " + ex );
-	}
-	return null;
+	t.setContextClassLoader( cl );
     }
 
     

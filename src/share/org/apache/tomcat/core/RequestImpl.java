@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.facade.*;
 import org.apache.tomcat.util.*;
+import java.io.IOException;
 import java.io.*;
 import java.net.*;
 import java.security.*;
@@ -150,6 +151,7 @@ public class RequestImpl  implements Request {
     protected int serverPort;
     protected String remoteAddr;
     protected String remoteHost;
+    protected String localHost;
 
     protected static StringManager sm =
         StringManager.getManager("org.apache.tomcat.core");
@@ -202,7 +204,6 @@ public class RequestImpl  implements Request {
     public String getServerName() {
 	if(serverName!=null) return serverName;
 
-	// XXX Move to interceptor!!!
 	String hostHeader = this.getHeader("host");
 	if (hostHeader != null) {
 	    int i = hostHeader.indexOf(':');
@@ -212,10 +213,20 @@ public class RequestImpl  implements Request {
 	    serverName=hostHeader;
 	    return serverName;
 	}
+
+	if( localHost != null ) {
+	    serverName = localHost;
+	    return serverName;
+	}
 	// default to localhost - and warn
 	//	System.out.println("No server name, defaulting to localhost");
 	serverName="localhost";
 	return serverName;
+    }
+
+    /** Virtual host */
+    public void setServerName(String serverName) {
+	this.serverName = serverName;
     }
 
     public String getLookupPath() {
@@ -350,8 +361,9 @@ public class RequestImpl  implements Request {
 	    if( context==null ) {
 		// wrong request
 		// XXX the will go away after we remove the one-one relation between
-		// request and facades ( security, etc) 
-		requestFacade = contextM.getContext("/" ).getFacadeManager().createHttpServletRequestFacade(this );
+		// request and facades ( security, etc)
+		requestFacade = contextM.getContext("" ).getFacadeManager().createHttpServletRequestFacade(this );
+		return requestFacade;
 	    }
 	    requestFacade = context.getFacadeManager().createHttpServletRequestFacade(this);
 	}
@@ -524,11 +536,6 @@ public class RequestImpl  implements Request {
     // the server name should be pulled from a server object of some
     // sort, not just set and got.
 
-    /** Virtual host */
-    public void setServerName(String serverName) {
-	this.serverName = serverName;
-    }
-
     // -------------------- Attributes
     public Object getAttribute(String name) {
         Object value=attributes.get(name);
@@ -628,6 +635,7 @@ public class RequestImpl  implements Request {
 	// about security
 	remoteAddr="127.0.0.1";
 	remoteHost="localhost";
+	localHost="localhost";
 	for( int i=0; i<ACCOUNTS; i++ ) accTable[i]=0;
     }
 
@@ -720,6 +728,15 @@ public class RequestImpl  implements Request {
     public void setRemoteHost(String remoteHost) {
 	this.remoteHost=remoteHost;
     }
+
+    public String getLocalHost() {
+	return localHost;
+    }
+    
+    public void setLocalHost(String host) {
+	this.localHost = host;
+    }
+    
 
     public String toString() {
 	StringBuffer sb=new StringBuffer();

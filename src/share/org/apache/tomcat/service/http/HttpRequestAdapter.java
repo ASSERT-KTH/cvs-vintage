@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.14 2000/05/24 23:31:38 costin Exp $
- * $Revision: 1.14 $
- * $Date: 2000/05/24 23:31:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.15 2000/05/26 17:32:16 costin Exp $
+ * $Revision: 1.15 $
+ * $Date: 2000/05/26 17:32:16 $
  *
  * ====================================================================
  *
@@ -140,6 +140,12 @@ public class HttpRequestAdapter extends RequestImpl {
     }
 
     public void readNextRequest(Response response) throws IOException {
+
+	// Odd, but works: we use the ServletInputStream, which uses doRead.
+	// We do implement doRead in Http protocol to return from the input
+	// stream - it works for the normal body but also for the HTTP
+	// head. The limit is set after ( and if ) we have a content-length.
+	
 	count = in.readLine(buf, 0, buf.length);
 
 	if (count < 0 ) {
@@ -336,7 +342,7 @@ public class HttpRequestAdapter extends RequestImpl {
 	return -1;
     }
 
-    public void processRequestLine(Response response)
+    private void processRequestLine(Response response)
 	throws IOException
     {
 	off=0;

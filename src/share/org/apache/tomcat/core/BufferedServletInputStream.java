@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.7 2000/03/21 23:09:44 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/03/21 23:09:44 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletInputStream.java,v 1.8 2000/05/26 17:32:04 costin Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/05/26 17:32:04 $
  *
  * ====================================================================
  * 
@@ -152,22 +152,22 @@ public class BufferedServletInputStream extends ServletInputStream {
     }
     
 
-    /**
-     * @deprecated Not part of Servlet API, without it we can avoid a lot of GC.
-     */
-    public String readLine() throws IOException {
+//     /**
+//      * @deprecated Not part of Servlet API, without it we can avoid a lot of GC.
+//      */
+//     public String readLine() throws IOException {
 
-	// don't need to do any limit checking here
-	// as the superclasses' readLine(buf, off, len)
-	// method delegates back to our our read() method
-	// which does check for limits.
+// 	// don't need to do any limit checking here
+// 	// as the superclasses' readLine(buf, off, len)
+// 	// method delegates back to our our read() method
+// 	// which does check for limits.
 	
-	byte[] buf = new byte[1024];
-	int count = readLine(buf, 0, buf.length);
-	if (count >= 0) {
-	    return new String(buf, 0, count, Constants.DEFAULT_CHAR_ENCODING);
-	} else {
-	    return ""; 
-	}
-    }
+// 	byte[] buf = new byte[1024];
+// 	int count = readLine(buf, 0, buf.length);
+// 	if (count >= 0) {
+// 	    return new String(buf, 0, count, Constants.DEFAULT_CHAR_ENCODING);
+// 	} else {
+// 	    return ""; 
+// 	}
+//     }
 }

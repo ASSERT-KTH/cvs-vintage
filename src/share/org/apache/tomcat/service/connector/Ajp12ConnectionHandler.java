@@ -104,8 +104,8 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	}
     }
 
-    public void setContextManager( ContextManager contextM ) {
-	this.contextM=contextM;
+    public void setServer( Object contextM ) {
+	this.contextM=(ContextManager )contextM;
     }
 
     public void processConnection(TcpConnection connection, Object[] thData) {
@@ -156,7 +156,7 @@ public class Ajp12ConnectionHandler implements  TcpConnectionHandler {
 	    }
 
 	    // resolve the server that we are for
-	    int contentLength = reqA.getFacade().getIntHeader("content-length");
+	    int contentLength = reqA.getMimeHeaders().getIntHeader("content-length");
 	    if (contentLength != -1) {
 		BufferedServletInputStream sis =
 		    (BufferedServletInputStream)reqA.getInputStream();

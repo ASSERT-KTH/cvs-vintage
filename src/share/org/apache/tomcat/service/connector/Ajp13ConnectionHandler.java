@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.1 2000/05/19 07:14:16 shachor Exp $
- * $Revision: 1.1 $
- * $Date: 2000/05/19 07:14:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/connector/Attic/Ajp13ConnectionHandler.java,v 1.2 2000/05/26 17:32:15 costin Exp $
+ * $Revision: 1.2 $
+ * $Date: 2000/05/26 17:32:15 $
  *
  * ====================================================================
  *
@@ -173,8 +173,8 @@ public class Ajp13ConnectionHandler implements  TcpConnectionHandler
         }
     }
 
-    public void setContextManager(ContextManager contextM)
+    public void setServer(Object contextM)
     {
-        this.contextM=contextM;
+        this.contextM=(ContextManager)contextM;
     }
 }

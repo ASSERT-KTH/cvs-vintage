@@ -62,6 +62,7 @@ package org.apache.tomcat.core;
 
 import org.apache.tomcat.util.*;
 import java.io.*;
+import java.io.IOException;
 import java.net.*;
 import java.security.*;
 import java.util.*;
@@ -77,15 +78,23 @@ public interface Request  {
     // -------------------- Basic Request properties --------------------
     public String getScheme() ;
 
+    public void setScheme( String r ) ;
+
     public String getMethod() ;
 
+    public void setMethod( String s );
+    
     public String getRequestURI() ;
 
-    public void setRequestURI( String r ) ;
+    public void setRequestURI(String s) ;
 
     public String getQueryString() ;
 
+    public void setQueryString(String q) ;
+
     public String getProtocol() ;
+
+    public void setProtocol(String p) ;
 
     // -------------------- Connection information
     public String getServerName() ;
@@ -96,11 +105,19 @@ public interface Request  {
 
     public String getRemoteAddr() ;
 
+    public void setRemoteAddr(String remote) ;
+
     /** Expensive - should be implemented as a callback where
      *  possible!
     */
     public String getRemoteHost() ;
 
+    public void setRemoteHost(String s) ;
+
+    public String getLocalHost() ;
+
+    public void setLocalHost(String host) ;
+    
     // -------------------- Headers --------------------
     public MimeHeaders getMimeHeaders();
 
@@ -220,8 +237,6 @@ public interface Request  {
     // -------------------- Parameters --------------------
     /** Set query string - will be called by forward
      */
-    public void setQueryString(String queryString) ;
-
     public String[] getParameterValues(String name) ;
 
     public Enumeration getParameterNames() ;
@@ -242,6 +257,8 @@ public interface Request  {
 
     public ServletInputStream getInputStream() 	throws IOException;
 
+    public  int doRead( byte b[], int off, int len ) throws IOException;
+    
     // -------------------- Internal methods --------------------
     /** Support for "pools"
      */
@@ -293,4 +310,6 @@ public interface Request  {
     public void setNote( int pos, Object value );
 
     public Object getNote( int pos );
+
+	
 }
