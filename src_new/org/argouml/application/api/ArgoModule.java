@@ -1,4 +1,4 @@
-// $Id: ArgoModule.java,v 1.13 2004/07/18 10:13:11 linus Exp $
+// $Id: ArgoModule.java,v 1.14 2004/08/08 08:22:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,16 @@ import java.util.Vector;
  * @since 0.9.4
  */
 public interface ArgoModule { 
+    /**
+     * External modules are supposed to be located at 
+     * <code>MODULEFILENAME</code>.
+     */
     public static final String MODULEFILENAME = ".argo.modules";
+    
+    /**
+     * Or, alternatively, external modules may be located at 
+     * <code>MODULEFILENAME_ALTERNATE</code>
+     */
     public static final String MODULEFILENAME_ALTERNATE = "argo.modules";
 
     /** 
@@ -101,6 +110,8 @@ public interface ArgoModule {
      * 
      * @param popUpActions Vector of actions
      * @param context which the actions are valid for
+     *
+     * @return Vector containing pop-up actions
      */
     public Vector getModulePopUpActions(Vector popUpActions, Object context);
 
