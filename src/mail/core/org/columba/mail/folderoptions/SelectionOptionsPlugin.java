@@ -1,70 +1,75 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
-//(the "License"); you may not use this file except in compliance with the 
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
 //Software distributed under the License is distributed on an "AS IS" basis,
-//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License 
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
 //for the specific language governing rights and
 //limitations under the License.
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
-//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
 package org.columba.mail.folderoptions;
 
 import org.columba.core.config.DefaultItem;
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
-
-import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.frame.MailFrameMediator;
 import org.columba.mail.gui.frame.TableViewOwner;
-import org.columba.mail.gui.message.command.ViewMessageCommand;
 import org.columba.mail.gui.table.TableController;
 import org.columba.mail.gui.table.TableView;
-
+import org.columba.mail.gui.table.model.MessageNode;
 
 /**
  * Handles selecting message after folder selection changes.
  * <p>
- * This implementation remembers the the selected message, and
- * tries to reselect it again.
- * As default fall back it selects the first or last message,
+ * This implementation remembers the the selected message, and tries to reselect
+ * it again. As default fall back it selects the first or last message,
  * depending on the sorting order.
- *
+ * 
  * @author fdietz, waffel
  */
 public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
+
     /**
- * Constructor
- * @param mediator  mail frame mediator
- */
+     * Constructor
+     * 
+     * @param mediator
+     *            mail frame mediator
+     */
     public SelectionOptionsPlugin(MailFrameMediator mediator) {
         super("selection", "SelectionOptions", mediator);
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
- */
+     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#saveOptionsToXml(org.columba.mail.folder.Folder)
+     */
     public void saveOptionsToXml(MessageFolder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableViewOwner) getMediator())
+                .getTableController();
+
+        MessageNode node = tableController.getView().getSelectedNodes()[0];
+        if (node != null) folder.setLastSelection(node);
     }
 
     /**
- * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
- */
+     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#loadOptionsFromXml(org.columba.mail.folder.Folder)
+     */
     public void loadOptionsFromXml(MessageFolder folder) {
         XmlElement parent = getConfigNode(folder);
         DefaultItem item = new DefaultItem(parent);
 
-        TableController tableController = ((TableViewOwner) getMediator()).getTableController();
+        TableController tableController = ((TableViewOwner) getMediator())
+                .getTableController();
 
         TableView view = tableController.getView();
 
@@ -73,23 +78,20 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
 
         // sorting order
         boolean ascending = tableController.getTableModelSorter()
-                                           .getSortingOrder();
+                .getSortingOrder();
 
         // row count
         int row = view.getTree().getRowCount();
 
         // row count == 0 --> empty table
-        if (row == 0) {
-            return;
-        }
+        if (row == 0) { return; }
 
-        // clear current selection
-        view.clearSelection();
-
-        // if the last selection for the current folder is null, then we show the
+        // if the last selection for the current folder is null, then we show
+        // the
         // first/last message in the table and scroll to it.
         if ((!remember) || (folder.getLastSelection() == null)) {
-            // changing the selection to the first/last row based on ascending state
+            // changing the selection to the first/last row based on ascending
+            // state
             Object uid = null;
 
             if (ascending) {
@@ -99,29 +101,21 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
             }
 
             // no messages in this folder
-            if (uid == null) {
-                return;
-            }
+            if (uid == null) { return; }
 
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(folder, new Object[] { uid });
-
-            // view the message under the new node
-            MainInterface.processor.addOp(new ViewMessageCommand(
-                    getMediator(), refNew));
         } else {
+
             // if a lastSelection for this folder is set
             // getting the last selected uid
-            Object[] lastSelUids = { folder.getLastSelection() };
+            Object[] lastSelUids = { folder.getLastSelection()};
 
             // no messages in this folder
-            if (lastSelUids[0] == null) {
-                return;
-            }
+            if (lastSelUids[0] == null) { return; }
+
+            Object uid = ((MessageNode) lastSelUids[0]).getUid();
 
             // this message doesn't exit in this folder anymore
-            if (tableController.getHeaderTableModel().getMessageNode(lastSelUids[0]) == null) {
-                Object uid = null;
+            if (tableController.getHeaderTableModel().getMessageNode(uid) == null) {
 
                 if (ascending) {
                     uid = view.selectLastRow();
@@ -129,37 +123,18 @@ public class SelectionOptionsPlugin extends AbstractFolderOptionsPlugin {
                     uid = view.selectFirstRow();
                 }
 
-                // no messages in this folder
-                if (uid == null) {
-                    return;
-                }
+            } else {
 
-                // link to the new uid
-                lastSelUids[0] = uid;
+                // selecting the message
+                tableController.setSelected(new Object[] { uid});
             }
 
-            // selecting the message
-            tableController.setSelected(lastSelUids);
-
-            int selRow = view.getSelectedRow();
-
-            // scroll to the position of the selection
-            view.scrollRectToVisible(view.getCellRect(selRow, 0, false));
-            view.requestFocus();
-
-            // create command reference
-            FolderCommandReference[] refNew = new FolderCommandReference[1];
-            refNew[0] = new FolderCommandReference(folder, lastSelUids);
-
-            // view the message under the new node
-            MainInterface.processor.addOp(new ViewMessageCommand(
-                    getMediator(), refNew));
         }
     }
 
     /**
-   * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
-   */
+     * @see org.columba.mail.folderoptions.AbstractFolderOptionsPlugin#createDefaultElement()
+     */
     public XmlElement createDefaultElement(boolean global) {
         XmlElement parent = super.createDefaultElement(global);
         parent.addAttribute("remember_last_selection", "true");

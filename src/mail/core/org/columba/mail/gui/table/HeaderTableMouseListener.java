@@ -74,8 +74,9 @@ public class HeaderTableMouseListener extends MouseAdapter {
         if (event.getClickCount() == 2) {
             processDoubleClick();
         } else {
+            /*
             if (SwingUtilities.isLeftMouseButton(event)) {
-                //if (event.getModifiers() == InputEvent.BUTTON1_MASK) {
+            
                 int row = headerTableViewer.getView().getSelectedRow();
                 MessageNode node = (MessageNode) headerTableViewer.getView()
                                                                   .getValueAt(row,
@@ -86,6 +87,7 @@ public class HeaderTableMouseListener extends MouseAdapter {
                 ((MessageFolder) ref[0].getFolder()).setLastSelection(node.getUid());
                 viewMessageAction.actionPerformed(null);
             }
+            */
         }
     }
 

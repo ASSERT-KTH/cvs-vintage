@@ -17,10 +17,11 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.model;
 
+import java.util.Enumeration;
+import java.util.Iterator;
+
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
-
-import java.util.Enumeration;
 
 public class HeaderTableModel extends BasicHeaderTableModel implements
         TreeTableModelInterface {
@@ -130,4 +131,5 @@ public class HeaderTableModel extends BasicHeaderTableModel implements
 
         update();
     }
+    
 }

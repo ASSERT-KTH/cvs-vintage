@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -46,8 +47,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.tree.TreePath;
 
 /**
- * This widget is a mix between a JTable and a JTree ( we need the JTree for
- * the Threaded viewing of mailing lists )
+ * This widget is a mix between a JTable and a JTree ( we need the JTree for the
+ * Threaded viewing of mailing lists )
  * 
  * @version 0.9.1
  * @author fdietz
@@ -276,6 +277,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
      * @return uid of selected row
      */
     public Object selectFirstRow() {
+
         Object uid = null;
 
         //	if there are entries in the table
@@ -305,6 +307,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
      * @return uid of selected row
      */
     public Object selectLastRow() {
+
         Object uid = null;
 
         //	if there are entries in the table
@@ -355,6 +358,7 @@ public class TableView extends TreeTable implements OptionsSerializer {
      *            row to selected
      */
     public void selectRow(int row) {
+
         if (getRowCount() > 0) {
             if (row < 0) {
                 row = 0;
@@ -458,5 +462,16 @@ public class TableView extends TreeTable implements OptionsSerializer {
         }
 
         return columns;
+    }
+
+    /**
+     * Yes, this was overwritten on purpose. Updating the table-model (swing's
+     * internals - not Columba related ) always triggers an additional call to
+     * clearSelection. This was the easiest place to circumvent this behaviour.
+     * 
+     * @see javax.swing.JTable#clearSelection()
+     */
+    public void clearSelection() {
+        // don't clear selection
     }
 }

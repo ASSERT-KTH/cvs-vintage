@@ -277,6 +277,7 @@ public class MessageBodytextViewer extends JTextPane implements Viewer,
     }
 
     protected void setBodyText(String bodyText, boolean html) {
+        
         if (html) {
             try {
                 // this is a HTML message

@@ -74,6 +74,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
     }
 
     protected void initActions() {
+        /*
         // Register UP key so its easy to move through messages in the list
         tableController.getView().getInputMap().put(KeyStroke.getKeyStroke(
                 KeyEvent.VK_UP, 0), "UP");
@@ -87,7 +88,8 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 
         DownAction downAction = new DownAction(this);
         tableController.getView().getActionMap().put("DOWN", downAction);
-
+        */
+        
         RenameFolderAction renameFolderAction = new RenameFolderAction(this);
 
         // Register F2 hotkey for renaming folder when the message panel has focus
