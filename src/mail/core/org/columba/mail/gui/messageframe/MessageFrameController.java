@@ -17,10 +17,11 @@ import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 
 /**
- * @author frd
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *  Mail frame controller which contains a message viewer only.
+ *
+ *  @author fdietz
+ * 
  */
 public class MessageFrameController extends AbstractMailFrameController {
 

@@ -43,6 +43,10 @@ import org.columba.mail.gui.message.MessageController;
  * have a reference on a mail frame controller class.
  * 
  * So, changing this class will affect every action.
+ * 
+ * For more specific examples:
+ * @see ThreePaneMailFrameController
+ * @see MessageFrameController
  *
  * @author fdietz
  * 

@@ -6,7 +6,6 @@
  */
 package org.columba.mail.gui.frame;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.KeyStroke;
@@ -20,21 +19,19 @@ import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableController;
-import org.columba.mail.gui.table.action.CopyAction;
-import org.columba.mail.gui.table.action.CutAction;
-import org.columba.mail.gui.table.action.DeleteAction;
 import org.columba.mail.gui.table.action.DownAction;
-import org.columba.mail.gui.table.action.PasteAction;
 import org.columba.mail.gui.table.action.UpAction;
 import org.columba.mail.gui.table.selection.TableSelectionHandler;
 import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
 
 /**
- * @author frd
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ *  Mail frame controller which contains a tree, table and a message
+ *  viewer.
+ *
+ *  @author fdietz
+ * 
  */
 public class ThreePaneMailFrameController
 	extends AbstractMailFrameController
