@@ -129,6 +129,24 @@
     </jar>
   </target>
 
+  <target name="stop-tomcat.jar" depends="init">
+    <javac destdir="${tomcat.build}/classes" 
+	   debug="${debug}" 
+	   optimize="${optimize}" 
+	   deprecation="off" 
+	   srcdir="src/share">
+      <!-- no dependencies -->
+      <include name="org/apache/tomcat/startup/StopTomcat.java"/>    
+    </javac>
+    <jar jarfile="${tomcat.build}/lib/stop-tomcat.jar" 
+	 basedir="${tomcat.build}/classes" 
+	 manifest="src/build/manifest.stop-tomcat"> 
+      <include name="org/apache/tomcat/startup/StopTomcat.class"/> 
+      <include name="org/apache/tomcat/util/StringManager.class"/> 
+      <include name="org/apache/tomcat/resources/LocalStrings*"/> 
+    </jar>
+  </target>
+
   <!-- ==================== Tomcat core ==================== -->
 
   <target name="tomcat_core" depends="init">
@@ -238,7 +256,7 @@
     <jar jarfile="${tomcat.build}/lib/jasper.jar" basedir="${tomcat.build}/classes" includes="org/apache/jasper/**"/>
   </target>
 
-  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat_config">
+  <target name="tomcat-jars-new" depends="tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat_config">
   </target>
 
   <!-- ==================== J2EE integration ========== -->
