@@ -54,7 +54,7 @@
  * Author:      Bernard Bernstein <bernard@corp.talkcity.com>                *
  * Updated:     March 1999 Jean-Luc Rochat <jlrochat@jnix.com>               *
  * Description: solved part of fail-over problems & LB improvments           *
- * Version:     $Revision: 1.5 $
+ * Version:     $Revision: 1.6 $
  *****************************************************************************/
 
 #include "jserv.h"
@@ -154,7 +154,7 @@ get_jserv_sessionid(request_rec *r, char *zone)
   char sessionid[256];
 
  /* first JServ 1.1 as it is the production one */
-  strcpy(sessionid, SESSION_IDENTIFIER_JSERV, sizeof(sessionid)-1);
+  strncpy(sessionid, SESSION_IDENTIFIER_JSERV, sizeof(sessionid)-1);
  /* as our strings are defined here we know they are < 256 bytes  */
  /* we check the routing info length */
   if (strlen(zone) < sizeof(sessionid)-strlen(sessionid)) 
