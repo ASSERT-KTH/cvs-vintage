@@ -93,7 +93,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.248 2002/12/21 00:36:40 jon Exp $
+ * @version $Id: Issue.java,v 1.249 2002/12/21 01:54:37 jon Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -506,7 +506,7 @@ public class Issue
         throws Exception
     {
         String comment = attachment.getData();
-        if (comment != null)
+        if (comment == null || comment.length() == 0)
         {
             throw new Exception("There must be data in the comment!");
         }
