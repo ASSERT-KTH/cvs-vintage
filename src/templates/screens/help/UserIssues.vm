@@ -73,7 +73,7 @@
   <p>Before you enter issues for your project, you should familiarize yourself 
     with the available set of issue types. Where you enter an issue will be determined 
     by how your project is organized. Once you have selected the issue type that 
-    best describes your issue, click on the name of the artifact. The <strong>Enter 
+    best describes your issue, click on the name of the issue. The <strong>Enter 
     issue</strong> screen will appear.</p>
   <h3><a name="attributes" id="attributes"></a>Issue Attributes</h3>
   <p> Attributes are the common descriptors for issues. Attributes are used to 

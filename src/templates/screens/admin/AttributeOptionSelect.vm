@@ -32,7 +32,7 @@ associated with this attribute in this module.</p>
 
 #else
 
-<p>The following attributes are available for use in this artifact type.</p>
+<p>The following attributes are available for use in this issue type.</p>
 <h3>Global attribute options</h3>
 
 <table border="1" cellspacing="2" cellpadding="3" width="100%">

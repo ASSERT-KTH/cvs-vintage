@@ -44,7 +44,7 @@
     <li>If you have any saved queries, a drop down box will appear first on this 
       bar. Each of your saved queries appears in this box. You can select the 
       saved query you need and click the <strong>Go</strong> button.</li>
-    <li>The <strong>Artifact Id</strong> form allows you to search the database for a specific 
+    <li>The <strong>Issue Id</strong> form allows you to search the database for a specific 
       issue id.</li>
     <li>The <em>Advanced Query</em> link allows you to specify detailed search criteria.</li>
     <li>The <em>Custom Query</em> link is a text string search feature</li>
@@ -53,7 +53,7 @@
   </ul>
   <h4><a name="issueid" id="issueid">Searching by Issue ID</a></h4>
   <p>To access a specific issue enter the issue number <bo>in</bo> the search 
-    form and click the <strong>Artifact Id</strong> button. If the id you requested is not 
+    form and click the <strong>Issue Id</strong> button. If the id you requested is not 
     found an error message will appear and you can enter a different id.</p>
   <p>Accessing issues across projects requires the following information:</p>
   <ul>
@@ -62,7 +62,7 @@
     <li> issue number</li>
   </ul>
   <p> For instance, jdoe is in the games (gam) project and wants to view an issue 
-    from the interface (int) project. Jdoe can enter INT1 and click the <strong>Artifact 
+    from the interface (int) project. Jdoe can enter INT1 and click the <strong>Issue 
     Id</strong> button to view the first issue in the Interface project.</p>
   <p>If you do not have permission to view issues in the target project you will 
     receive an error message. Likewise, if you enter an invalid project id or 

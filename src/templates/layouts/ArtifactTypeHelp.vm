@@ -15,7 +15,7 @@
         
         <p>Once a user selects an issue type, Scarab's
         navigation will indicate their selection state by dropping down
-        a list of functions within that artifact type, giving authorized
+        a list of functions within that issue type, giving authorized
         user's access to functionality such as:</p>
         
         <ul>
@@ -26,7 +26,7 @@
 
         <p>The user's input remains confined to the selected
         issue type until they select another issue type from the
-        left side-bar navigation, or from the artifact type
+        left side-bar navigation, or from the issue type
         index.</p>
     </div>    
 </td>
