@@ -59,7 +59,7 @@ public class FlagsFilter extends AbstractFilter {
         if (headerField.equalsIgnoreCase("Answered")) {
             result = flags.get(Flags.ANSWERED);
         } else if (headerField.equalsIgnoreCase("Deleted")) {
-            result = flags.get(Flags.EXPUNGED);
+            result = flags.get(Flags.DELETED);
         } else if (headerField.equalsIgnoreCase("Flagged")) {
             result = flags.get(Flags.FLAGGED);
         } else if (headerField.equalsIgnoreCase("Recent")) {

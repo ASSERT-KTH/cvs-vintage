@@ -115,7 +115,7 @@ public class MarkMessageTest extends AbstractFolderTest {
         Flags flags = getSourceFolder().getFlags(uid);
 
         assertEquals("message should be marked as expunged", true, flags
-                .getExpunged());
+                .getDeleted());
 
     }
 

@@ -122,7 +122,7 @@ public class ToggleMarkCommand extends FolderCommand {
                 } else if (markVariant == MarkMessageCommand.MARK_AS_FLAGGED) {
                     if (flags.getFlagged()) result = true;
                 } else if (markVariant == MarkMessageCommand.MARK_AS_EXPUNGED) {
-                    if (flags.getExpunged()) result = true;
+                    if (flags.getDeleted()) result = true;
                 } else if (markVariant == MarkMessageCommand.MARK_AS_ANSWERED) {
                     if (flags.getAnswered()) result = true;
                 }  else if (markVariant == MarkMessageCommand.MARK_AS_DRAFT) {

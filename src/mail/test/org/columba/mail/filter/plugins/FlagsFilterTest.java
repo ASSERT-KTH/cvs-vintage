@@ -90,7 +90,7 @@ public class FlagsFilterTest extends AbstractFilterTestCase {
         Object uid = addMessage();
        
         Flags flags = getSourceFolder().getFlags(uid);
-        flags.setExpunged(true);
+        flags.setDeleted(true);
         
         // create filter configuration
         FilterCriteria criteria = new FilterCriteria(new XmlElement("criteria"));

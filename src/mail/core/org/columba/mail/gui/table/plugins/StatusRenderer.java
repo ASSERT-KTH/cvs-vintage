@@ -85,7 +85,7 @@ public class StatusRenderer extends DefaultLabelRenderer {
         Flags flags = ((ColumbaHeader) ((MessageNode) value).getHeader())
                 .getFlags();
 
-        if (flags.getExpunged()) {
+        if (flags.getDeleted()) {
             setIcon(image3);
 
             setToolTipText(MailResourceLoader.getString("header", "column",

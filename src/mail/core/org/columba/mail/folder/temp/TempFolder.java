@@ -132,7 +132,7 @@ public class TempFolder extends MessageFolder {
     }
 
     /**
-     * @see org.columba.modules.mail.folder.Folder#getMimePartTree(Object,
+     * @see org.columba.modules.mail.folder.Folder#getMimeTree(Object,
      *      WorkerStatusController)
      */
     public MimeTree getMimePartTree(Object uid) throws Exception {

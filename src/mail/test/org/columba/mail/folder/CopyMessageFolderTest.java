@@ -68,7 +68,7 @@ public class CopyMessageFolderTest extends AbstractFolderTest {
         oldFlags.setSeen(false);
         oldFlags.setRecent(false);
         oldFlags.setFlagged(true);        
-        oldFlags.setExpunged(false);
+        oldFlags.setDeleted(false);
 
         // get message source stream
         InputStream is = getSourceFolder().getMessageSourceStream(uid);
@@ -87,7 +87,7 @@ public class CopyMessageFolderTest extends AbstractFolderTest {
         assertEquals("copied message should be marked as flagged", true, flags
                 .getFlagged());
         assertEquals("copied message should be marked as not expunged", false,
-                flags.getExpunged());
+                flags.getDeleted());
         // close streams
         inputStream.close();
 

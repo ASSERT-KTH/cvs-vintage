@@ -424,11 +424,11 @@ public class IMAPFolder extends RemoteFolder {
 	}
 
 	/**
-	 * @see org.columba.mail.folder.Folder#getMimePartTree(java.lang.Object,
+	 * @see org.columba.mail.folder.Folder#getMimeTree(java.lang.Object,
 	 *      org.columba.core.command.WorkerStatusController)
 	 */
 	public MimeTree getMimePartTree(Object uid) throws Exception {
-		return getServer().getMimePartTree(uid, getImapPath());
+		return getServer().getMimeTree(uid, getImapPath());
 	}
 
 	/**

@@ -517,14 +517,14 @@ public abstract class MessageFolder extends AbstractFolder implements
 
                 flags.setSeen(true);
                 flags.setRecent(false);
-                flags.setExpunged(true);
+                flags.setDeleted(true);
 
                 break;
             }
 
         case MarkMessageCommand.MARK_AS_UNEXPUNGED:
             {
-                flags.setExpunged(false);
+                flags.setDeleted(false);
 
                 break;
             }
@@ -603,7 +603,7 @@ public abstract class MessageFolder extends AbstractFolder implements
                 continue;
             }
 
-            if (getFlags(uid).getExpunged()) {
+            if (getFlags(uid).getDeleted()) {
                 // move message to trash if marked as expunged
                 LOG.info("removing uid=" + uid);
 

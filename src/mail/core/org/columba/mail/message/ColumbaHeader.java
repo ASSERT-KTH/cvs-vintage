@@ -177,7 +177,7 @@ public class ColumbaHeader {
             } else if (flag.equals("flagged")) {
                 return Boolean.valueOf(flags.get(Flags.FLAGGED));
             } else if (flag.equals("expunged")) {
-                return Boolean.valueOf(flags.get(Flags.EXPUNGED));
+                return Boolean.valueOf(flags.get(Flags.DELETED));
             }
         }
 
@@ -218,7 +218,7 @@ public class ColumbaHeader {
             }
 
             if (flag.equals("expunged")) {
-                flags.set(Flags.EXPUNGED, value);
+                flags.set(Flags.DELETED, value);
 
                 return;
             }

@@ -60,7 +60,7 @@ public class ExpungeFolderTest extends AbstractFolderTest {
         oldFlags.setSeen(false);
         oldFlags.setRecent(true);
         oldFlags.setFlagged(true);
-        oldFlags.setExpunged(false);
+        oldFlags.setDeleted(false);
 
         getSourceFolder().expungeFolder();
 
@@ -93,7 +93,7 @@ public class ExpungeFolderTest extends AbstractFolderTest {
         oldFlags.setSeen(false);
         oldFlags.setRecent(true);
         oldFlags.setFlagged(true);
-        oldFlags.setExpunged(true);
+        oldFlags.setDeleted(true);
 
         getSourceFolder().expungeFolder();
 
