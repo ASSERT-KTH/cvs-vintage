@@ -12,7 +12,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.71 2002/02/24 10:24:31 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.72 2002/02/27 00:47:04 dsundstrom Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -68,6 +68,10 @@
     <!-- ========= -->
     <!-- Libraries -->
     <!-- ========= -->
+
+    <!-- JavaCC -->
+    <property name="sun.javacc.root" value="${project.thirdparty}/sun/javacc"/>
+    <property name="sun.javacc.lib" value="${sun.javacc.root}/lib"/>
 
     <!-- Java Naming and Directory Interface (JNDI) -->
     <property name="sun.jndi.root" value="${project.thirdparty}/sun/jndi"/>
@@ -242,6 +246,7 @@
     <property name="build.etc" value="${module.output}/etc"/>
     <property name="build.bin" value="${module.output}/bin"/>
     <property name="build.docs" value="${module.output}/docs"/>
+    <property name="build.parsers" value="${module.output}/parsers"/>
     <property name="build.beans" value="${module.output}/beans"/>
     <property name="build.gen-src" value="${module.output}/gen-src"/>
     <property name="build.resources" value="${module.output}/resources"/>
@@ -311,7 +316,8 @@
      |  documentation compiles.
     -->
   <target name="compile" 
-	  depends="compile-bean-sources, 
+	  depends="generate-parsers,
+	                compile-bean-sources, 
                    compile-mbean-sources,
                    compile-classes, 
                    compile-rmi, 
@@ -319,6 +325,37 @@
                    compile-resources, 
                    compile-bin"
 	  description="Compile all source files."/>
+
+  <!-- Generate parsers -->
+  <target name="generate-parsers" depends="init">
+    <mkdir dir="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"/>
+
+    <!--
+       | make sure to generate the JBoss-QL parser first so the node
+       | interface is keyed to JBossQLParserVisitor.
+      -->
+
+    <!-- JBoss-QL parser -->
+    <jjtree
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jjt" 
+	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+	   javacchome="${sun.javacc.lib}"/>
+
+    <javacc
+      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/JBossQLParser.jj"
+	   javacchome="${sun.javacc.lib}"/>
+
+    <!-- EJB-QL parser -->
+    <jjtree
+      target="${source.java}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jjt" 
+	   outputdirectory="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql"
+	   javacchome="${sun.javacc.lib}"/>
+
+    <javacc
+      target="${build.parsers}/org/jboss/ejb/plugins/cmp/ejbql/EJBQLParser.jj" 
+	   javacchome="${sun.javacc.lib}"/>
+
+  </target>
 
   <!-- Compile mbeans with XDoclet -->
   <target name="compile-mbean-sources" depends="init">
@@ -394,6 +431,7 @@
        <classpath refid="javac.classpath"/>
 
        <src path="${source.java}"/>
+       <src path="${build.parsers}"/>
        <src path="${build.beans}"/>
        <src path="${build.gen-src}"/>
 
