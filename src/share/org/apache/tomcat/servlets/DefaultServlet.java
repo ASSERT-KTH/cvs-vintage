@@ -3,7 +3,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -11,7 +11,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -19,15 +19,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,7 +55,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 package org.apache.tomcat.servlets;
 
 import org.apache.tomcat.core.*;
@@ -69,7 +69,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 /**
- * 
+ *
  * @author James Duncan Davidson [duncan@eng.sun.com]
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
@@ -82,11 +82,11 @@ public class DefaultServlet extends HttpServlet {
     private Context context;
     String docBase;
     int debug=0;
-    
+
     public void init() throws ServletException {
 	contextF = getServletContext();
 	context = ((ServletContextFacade)getServletContext()).getRealContext();
-	
+
 	// doesn't change - set it in init!
 	docBase = context.getDocBase();
         if (! docBase.endsWith("/")) {
@@ -94,10 +94,10 @@ public class DefaultServlet extends HttpServlet {
         }
 
 	// ensure docBase relative to home
-	if (!(new File(docBase)).isAbsolute())
+	if (!FileUtil.isAbsolute(docBase))
 	    docBase = context.getContextManager().getHome() + "/" + docBase;
 
-	// debug 
+	// debug
 	String dbg=getServletConfig().getInitParameter("debug");
 	if( dbg!=null) debug=1;
     }
@@ -123,10 +123,10 @@ public class DefaultServlet extends HttpServlet {
 	    requestURI = request.getRequestURI();
 	}
 
-	// Clean up pathInfo 
+	// Clean up pathInfo
 	File file = new File(docBase + pathInfo);
 	String absPath = file.getAbsolutePath();
-	
+
 	if( debug > 0 ) contextF.log( "DefaultServlet: "  + absPath);
 
         // take care of File.getAbsolutePath() troubles on
@@ -145,7 +145,7 @@ public class DefaultServlet extends HttpServlet {
 	    // check for welcome file
 	    String welcomeFile = getWelcomeFile(file);
 	    if( debug > 0 ) contextF.log( "DefaultServlet: welcome file: "  + welcomeFile);
-	    
+
 	    if (welcomeFile != null) {
 	        if (requestURI.endsWith("/")) {
 		    String path = requestURI;
@@ -244,28 +244,28 @@ public class DefaultServlet extends HttpServlet {
         absPath = FileUtil.patch(absPath);
 
         // This absPath/canPath comparison plugs security holes...
-	// On Windows, makes "x.jsp.", "x.Jsp", and "x.jsp%20" 
+	// On Windows, makes "x.jsp.", "x.Jsp", and "x.jsp%20"
         // return 404 instead of the JSP source
 	// On all platforms, makes sure we don't let ../'s through
         // Unfortunately, on Unix, it prevents symlinks from working
 	// So, a check for File.separatorChar='\\' ..... It hopefully
 	// happens on flavors of Windows.
-	if (File.separatorChar  == '\\') { 
+	if (File.separatorChar  == '\\') {
 		// On Windows check ignore case....
 		if(!absPath.equalsIgnoreCase(canPath)) {
 	    	response.sendError(response.SC_NOT_FOUND);
 	    	return;
 		}
 	} else {
-		// The following code on Non Windows disallows ../ 
-		// in the path but also disallows symlinks.... 
-		// 
+		// The following code on Non Windows disallows ../
+		// in the path but also disallows symlinks....
+		//
 		// if(!absPath.equals(canPath)) {
 	    	// response.sendError(response.SC_NOT_FOUND);
 	    	// return;
 		// }
 		// instead lets look for ".." in the absolute path
-		// and disallow only that. 
+		// and disallow only that.
 		// Why should we loose out on symbolic links?
 		//
 
@@ -314,7 +314,7 @@ public class DefaultServlet extends HttpServlet {
     private void serveStream(InputStream in, HttpServletRequest request,
         HttpServletResponse response)
     throws IOException {
-	// XXX		
+	// XXX
 	// ok, here we are trying to figure out if the response has
 	// already been started with a stream or a writer. We really
 	// need to move these flags into the Request and Response objects
@@ -352,7 +352,7 @@ public class DefaultServlet extends HttpServlet {
 	    out.write(buf, 0, read);
 	}
     }
-    
+
     private boolean isFileMasked(String docBase, String requestedFile) {
         for (int i = 0; i < Constants.MASKED_DIR.length; i++) {
             String maskFile = Constants.MASKED_DIR[i];
@@ -390,7 +390,7 @@ public class DefaultServlet extends HttpServlet {
 	// genericize this! put it into another class! especially
 	// important as we should be able to dive into archives
 	// and get this same kind of information in the furture.
-	
+
 	boolean shaderow = false;
 
 	// Make sure that we don't let ../'s through
@@ -403,22 +403,22 @@ public class DefaultServlet extends HttpServlet {
 
         absPath = FileUtil.patch(absPath);
 
-	if (File.separatorChar  == '\\') { 
+	if (File.separatorChar  == '\\') {
 		// On Windows check ignore case....
 		if(!absPath.equalsIgnoreCase(canPath)) {
 		    response.sendError(response.SC_NOT_FOUND);
 		    return;
 		}
 	} else {
-		// The following code on Non Windows disallows ../ 
-		// in the path but also disallows symlinks.... 
-		// 
+		// The following code on Non Windows disallows ../
+		// in the path but also disallows symlinks....
+		//
 		// if(!absPath.equals(canPath)) {
 	    	// response.sendError(response.SC_NOT_FOUND);
 	    	// return;
 		// }
 		// instead lets look for ".." in the absolute path
-		// and disallow only that. 
+		// and disallow only that.
 		// Why should we loose out on symbolic links?
 		//
 
@@ -463,7 +463,7 @@ public class DefaultServlet extends HttpServlet {
 		files.addElement(f);
 	    }
 	}
-	
+
 	// Pre-calculate the request URI for efficiency
 
 	String requestURI = request.getRequestURI();
@@ -526,7 +526,7 @@ public class DefaultServlet extends HttpServlet {
 	    buf.append("<a href=\"" + toPath + "\"><tt>Up to: " + toPath);
 	    buf.append("</tt></a></td></tr>\r\n");
 	}
-	
+
 	if (dirs.size() > 0) {
 	    buf.append("<tr><td colspan=3 bgcolor=#cccccc>");
 	    buf.append("<font size=+2><strong>Subdirectories:</strong>\r\n");

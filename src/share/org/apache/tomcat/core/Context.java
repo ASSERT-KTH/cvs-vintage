@@ -739,7 +739,7 @@ public class Context {
 
 	String realPath= this.getDocBase() + mappedPath;
 
-	if (!(new File(realPath).isAbsolute()))
+	if (!FileUtil.isAbsolute(realPath))
 	    realPath = contextM.getHome() + "/" + realPath;
 
 	// Probably not needed - it will be used on the local FS
@@ -885,7 +885,7 @@ public class Context {
 	if( contextInterceptors.size() == 0 ) {
 	    // this context was not set up with individual interceptors.
 	    // XXX no test done for context-specific interceptors, this will be the normal
-	    // case, we need to find out what is the best behavior and config 
+	    // case, we need to find out what is the best behavior and config
 	    return contextM.getContextInterceptors();
 	}
 	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
@@ -916,7 +916,7 @@ public class Context {
 	if( requestInterceptors.size() == 0 ) {
 	    // this context was not set up with individual interceptors.
 	    // XXX no test done for context-specific interceptors, this will be the normal
-	    // case, we need to find out what is the best behavior and config 
+	    // case, we need to find out what is the best behavior and config
 	    return contextM.getRequestInterceptors();
 	}
 	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
@@ -964,7 +964,6 @@ public class Context {
 	// Used only by startup, will be removed
         this.documentBase=s;
     }
-
 
 
 }
