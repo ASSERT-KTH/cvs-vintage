@@ -65,6 +65,8 @@ public class MailFrameView extends AbstractFrameView implements
 
 	private JPanel tablePanel;
 
+	private JPanel messagePanel;
+
 	FilterToolbar filterToolbar;
 
 	HeaderView header;
@@ -118,7 +120,7 @@ public class MailFrameView extends AbstractFrameView implements
 		// 1));
 		mainSplitPane.add(treeScrollPane, JSplitPane.LEFT);
 
-		JPanel messagePanel = new JPanel();
+		messagePanel = new JPanel();
 		messagePanel.setLayout(new BorderLayout());
 		messagePanel.add(message, BorderLayout.CENTER);
 
@@ -144,10 +146,11 @@ public class MailFrameView extends AbstractFrameView implements
 		tablePanel.add(tableScrollPane, BorderLayout.CENTER);
 
 		//rightSplitPane= new JSplitPane();
-		rightSplitPane = new UIFSplitPane();
+
 		if (viewItem.getBoolean("splitpanes", "header_enabled", true)) {
 			//rightSplitPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0,
 			// 0));
+			rightSplitPane = new UIFSplitPane();
 			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 			rightSplitPane.add(tablePanel, JSplitPane.LEFT);
 			rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
@@ -221,10 +224,12 @@ public class MailFrameView extends AbstractFrameView implements
 
 		// splitpanes
 		viewItem.set("splitpanes", "main", mainSplitPane.getDividerLocation());
-		viewItem.set("splitpanes", "header", rightSplitPane
-				.getDividerLocation());
-		viewItem.set("splitpanes", "header_enabled", rightSplitPane.getDividerLocation() != -1);
-		
+
+		if (rightSplitPane != null)
+			viewItem.set("splitpanes", "header", rightSplitPane
+					.getDividerLocation());
+		viewItem.set("splitpanes", "header_enabled", rightSplitPane != null);
+
 		FolderCommandReference r = ((MailFrameMediator) getViewController())
 				.getTreeSelection();
 
@@ -322,5 +327,44 @@ public class MailFrameView extends AbstractFrameView implements
 	 */
 	public FolderInfoPanel getFolderInfoPanel() {
 		return folderInfoPanel;
+	}
+
+	/**
+	 * Check if message preview window is shown/hidden.
+	 * 
+	 * @return	true, if shown. False, otherwise.
+	 */
+	public boolean isMessagePreviewEnabled() {
+		return rightSplitPane.getDividerLocation() != -1;
+	}
+
+	/**
+	 * Show/Hide message preview panel.
+	 * 
+	 * @param enable		If true, show preview panel. Otherwise, hide.
+	 */
+	public void enableMessagePreview(boolean enable) {
+
+		ViewItem viewItem = getViewController().getViewItem();
+
+		if (enable) {
+			rightSplitPane = new UIFSplitPane();
+			rightSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			rightSplitPane.add(tablePanel, JSplitPane.LEFT);
+			rightSplitPane.add(messagePanel, JSplitPane.RIGHT);
+
+			rightSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+					"header"));
+
+			mainSplitPane.add(rightSplitPane, JSplitPane.RIGHT);
+		} else {
+			mainSplitPane.add(tablePanel, JSplitPane.RIGHT);
+			rightSplitPane = null;
+		}
+
+		mainSplitPane.setDividerLocation(viewItem.getInteger("splitpanes",
+				"main"));
+
+		validate();
 	}
 }
