@@ -48,6 +48,8 @@ public class ViewHeaderListAction extends AbstractColumbaAction {
 		FolderCommandReference references = (FolderCommandReference) getFrameMediator()
 				.getSelectionManager().getSelection("mail.tree");
 
+		if ( references == null ) return;
+		
 		if ((references.getFolder() instanceof MessageFolder)) {
 			// view message list
 			MainInterface.processor.addOp(new ViewHeaderListCommand(
