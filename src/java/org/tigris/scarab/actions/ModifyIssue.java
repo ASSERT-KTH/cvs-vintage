@@ -76,6 +76,7 @@ import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
+import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeOptionPeer;
@@ -93,7 +94,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.29 2001/08/31 01:48:54 jmcnally Exp $
+    @version $Id: ModifyIssue.java,v 1.30 2001/09/06 22:59:28 jmcnally Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -163,7 +164,7 @@ public class ModifyIssue extends TemplateAction
 
         if ( intake.isAllValid() ) 
         {
-            issue.setModifiedBy(user.getUserId());
+            // removeme issue.setModifiedBy(user.getUserId());
             issue.save();
 
             // Save explanatory comment
@@ -178,7 +179,8 @@ public class ModifyIssue extends TemplateAction
 
             // Save transaction record
             Transaction transaction = new Transaction();
-            transaction.create(user, attachment);
+            transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                               user, attachment);
 
             while (iter2.hasNext())
             {
@@ -225,13 +227,6 @@ public class ModifyIssue extends TemplateAction
                         aval.startTransaction(transaction);
                         group.setProperties(aval);
                         aval.save();
-                        // Save activity record
-                        Activity activity = new Activity();
-                        String desc = aval.getActivityDescription();
-                        activity.create(issue, aval.getAttribute(),
-                                        desc, transaction, 
-                                        oldOptionId, newOptionId,
-                                        oldValue, newValue);
                     }
                 } 
             }
@@ -319,7 +314,8 @@ public class ModifyIssue extends TemplateAction
                 if (type.equals("url"))
                 {
                     // Save transaction record
-                    transaction.create(user, attachment);
+                    transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                       user, attachment);
 
                     // Save activity record
                     Activity activity = new Activity();
@@ -332,7 +328,7 @@ public class ModifyIssue extends TemplateAction
                                     null, null, "", "");
                 }
                 intake.remove(group);
-                issue.setModifiedBy(user.getUserId());
+                // removeme issue.setModifiedBy(user.getUserId());
                 issue.save();
                 transaction.sendEmail(new ContextAdapter(context), issue);
 
@@ -377,7 +373,8 @@ public class ModifyIssue extends TemplateAction
 
                // Save transaction record
                Transaction transaction = new Transaction();
-               transaction.create(user, null);
+               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                  user, null);
 
                // Save activity record
                Activity activity = new Activity();
@@ -388,7 +385,7 @@ public class ModifyIssue extends TemplateAction
                String desc = descBuf.toString();
                activity.create(issue, null, desc, transaction,
                                null, null, "", "");
-               issue.setModifiedBy(user.getUserId());
+               // removeme issue.setModifiedBy(user.getUserId());
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
             } 
@@ -444,12 +441,13 @@ public class ModifyIssue extends TemplateAction
                }
 
                depend.save();
-               currentIssue.setModifiedBy(user.getUserId());
+               // removeme currentIssue.setModifiedBy(user.getUserId());
                currentIssue.save();
 
                // Save transaction record
                Transaction transaction = new Transaction();
-               transaction.create(user, null);
+               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                  user, null);
 
                // Save activity record
                Activity activity = new Activity();
@@ -516,7 +514,8 @@ public class ModifyIssue extends TemplateAction
 
                // Save transaction record
                Transaction transaction = new Transaction();
-               transaction.create(user, null);
+               transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                  user, null);
 
                // Save activity record
                Activity activity = new Activity();
@@ -529,7 +528,7 @@ public class ModifyIssue extends TemplateAction
                activity.create(issue, null, desc,
                                transaction, null, null,
                                oldValue, newValue);
-               issue.setModifiedBy(user.getUserId());
+               // removeme issue.setModifiedBy(user.getUserId());
                issue.save();
                transaction.sendEmail(new ContextAdapter(context), issue);
 
@@ -603,7 +602,8 @@ public class ModifyIssue extends TemplateAction
 
             // Save transaction record
             Transaction transaction = new Transaction();
-            transaction.create(user, null);
+            transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                               user, null);
 
             // Save activity record
             Activity activity = new Activity();
@@ -614,7 +614,7 @@ public class ModifyIssue extends TemplateAction
             String desc = descBuf.toString();
             activity.create(issue, null, desc,
                             transaction, null, null, "", "");
-            issue.setModifiedBy(user.getUserId());
+            // removeme issue.setModifiedBy(user.getUserId());
             issue.save();
             transaction.sendEmail(new ContextAdapter(context), issue);
         }

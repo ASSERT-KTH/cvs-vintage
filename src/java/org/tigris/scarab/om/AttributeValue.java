@@ -436,10 +436,15 @@ public abstract class AttributeValue
     public void save(DBConnection dbcon)
         throws Exception
     {
-        
         if ( isModified() ) 
         {
             checkTransaction("Cannot save a value outside a Transaction");
+            // Save activity record
+            Activity activity = new Activity();
+            String desc = getActivityDescription();
+            activity.create(getIssue(), getAttribute(), desc, this.transaction,
+                            oldOptionId, getOptionId(),
+                            oldValue , getValue());
             endTransaction();
         }
         super.save(dbcon);
@@ -448,7 +453,7 @@ public abstract class AttributeValue
     // Not sure it is a good idea to save description in activity record
     // the description can be generated from the other data and it brings
     // up i18n issues.
-    public String getActivityDescription()
+    private String getActivityDescription()
         throws Exception
     {
         String id = getIssue().getFederatedId();
