@@ -59,7 +59,7 @@ import org.tigris.scarab.screens.Default;
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Wizard1.java,v 1.5 2003/06/23 21:46:56 elicia Exp $
+ * @version $Id: Wizard1.java,v 1.6 2003/08/01 20:43:40 parun Exp $
  */
 public class Wizard1 extends Default
 {
@@ -69,7 +69,6 @@ public class Wizard1 extends Default
         throws Exception
     {
         String name = scarabR.getCurrentRModuleIssueType().getDisplayName();
-        String enterNew = l10n.get("EnterNew");
-        return (enterNew + " '" + name + '\'');
+        return l10n.format("EnterNewIssueType", name);
     }
 }

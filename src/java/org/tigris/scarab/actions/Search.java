@@ -89,7 +89,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.136 2003/07/31 03:26:43 kmaples Exp $
+ * @version $Id: Search.java,v 1.137 2003/08/01 20:43:41 parun Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -265,27 +265,27 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         Query query = scarabR.getQuery();
-        Group queryGroup = intake.get("Query", 
+        Group queryGroup = intake.get("Query",
                                       query.getQueryKey());
 
         Field name = queryGroup.get("Name");
         name.setRequired(true);
         data.getParameters().setString("queryString", getQueryString(data));
 
-        if (intake.isAllValid()) 
+        if (intake.isAllValid())
         {
             queryGroup.setProperties(query);
             query.setScarabUser(user);
             MITList currentList = user.getCurrentMITList();
-            if (currentList == null) 
+            if (currentList == null)
             {
-                query.setIssueType(scarabR.getCurrentIssueType());    
+                query.setIssueType(scarabR.getCurrentIssueType());
             }
-            else 
+            else
             {
                 // associate the query with a new list, the current
-                // implementation does not allow for multiple queries to 
-                // work from the same MITList and this guarantees they 
+                // implementation does not allow for multiple queries to
+                // work from the same MITList and this guarantees they
                 // will not accidently be linked.
                 currentList = currentList.copy();
                 if (currentList.isModifiable())
@@ -293,33 +293,41 @@ public class Search extends RequireLoginFirstAction
                     currentList.setName(null);
                 }
                 query.setMITList(currentList);
-                if (!currentList.isSingleModule()) 
+                if (!currentList.isSingleModule())
                 {
                     query.setModule(null);
-                    query.setScopeId(Scope.PERSONAL__PK);                    
+                    query.setScopeId(Scope.PERSONAL__PK);
                 }
             }
-             
-            ScarabUser[] userList = 
+
+            ScarabUser[] userList =
                 module.getUsers(ScarabSecurity.ITEM__APPROVE);
             if (checkForDupes(query, user, module))
             {
                 scarabR.setAlertMessage(l10n.get("DuplicateQueryName"));
             }
-            else if (Scope.MODULE__PK.equals(query.getScopeId()) 
+            else if (Scope.MODULE__PK.equals(query.getScopeId())
                  && user.hasPermission(ScarabSecurity.ITEM__APPROVE, module)
                  && (userList == null || userList.length == 0))
             {
                 scarabR.setAlertMessage(
                     l10n.format("NoApproverAvailable", module.getName()));
             }
-            else 
-            {            
+            else
+            {
                 query.saveAndSendEmail(user, module, context);
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE);
                 scarabR.resetSelectedUsers();
-                setTarget(data, template);            
+                scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
+                if (scarabR.getCurrentIssueType() == null)
+                {
+                    setTarget(data, "home,XModuleList.vm");
+                }
+                else
+                {
+                    setTarget(data, template);
+                }
             }
         }
         else
@@ -332,13 +340,13 @@ public class Search extends RequireLoginFirstAction
         throws Exception
     {
         boolean success = false;
-        IntakeTool intake = getIntakeTool(context);        
+        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         Module module = scarabR.getCurrentModule();
         Query query = getScarabRequestTool(context).getQuery();
-        Group queryGroup = intake.get("Query", 
+        Group queryGroup = intake.get("Query",
                                       query.getQueryKey());
         queryGroup.get("Name").setRequired(true);
         if (intake.isAllValid()) 
@@ -506,7 +514,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Overrides base class.
     */
-    public void doDone(RunData data, TemplateContext context)  
+    public void doDone(RunData data, TemplateContext context)
         throws Exception
     {
         boolean success = doEditqueryinfo(data, context);

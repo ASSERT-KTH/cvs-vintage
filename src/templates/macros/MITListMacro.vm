@@ -68,7 +68,8 @@ $l10n.NoIssueTypeSelected
     <th>$l10n.Description</th>
   </tr>
  #foreach ($item in $mitList.MITListItems)
-  #indexedRows($velocityCount)
+  #if (!$item.IssueType.Deleted)
+   #indexedRows($velocityCount)
     <td>
     <input type="checkbox" name="mitlistitem" value="$item.QueryKey" />
     </td>
@@ -77,18 +78,19 @@ $l10n.NoIssueTypeSelected
     #set ($issuecount = $item.getIssueCount($data.User))
     <td>#if ($issuecount >= 0)$issuecount #else $l10n.Unavailable #end</td>
     <td>$item.IssueType.Description</td>
-  </tr>        
+   </tr>
+  #end
  #end
-</table>  
+</table>
 #end
 
 #if ($mitList && !$mitList.isEmpty())
  <div class="functnbar3">
  #if (!$isEdit)
-  <input type="submit" name="eventSubmit_doStartover" 
+  <input type="submit" name="eventSubmit_doStartover"
      value="$l10n.RemoveAll" />&nbsp;
  #end
-  <input type="submit" name="eventSubmit_doRemoveitemsfromlist" 
+  <input type="submit" name="eventSubmit_doRemoveitemsfromlist"
      value="$l10n.RemoveSelected" />&nbsp;
   <input type="submit" name="eventSubmit_doGotosavelist" value="$l10n.Save" />
  </div>
@@ -119,7 +121,7 @@ $l10n.NoIssueTypeSelected
        <option value="module" #if($searchField.equals("module")) selected="selected"#end>$l10n.Module</option>
        <option value="issuetype" #if($searchField.equals("issuetype")) selected="selected"#end>$l10n.IssueType</option>
      </select>&nbsp;
-     <input type="submit" name="eventSubmit_doRefresh" 
+     <input type="submit" name="eventSubmit_doRefresh"
        value="$l10n.Filter" />
    </td>
   </tr>
@@ -163,13 +165,14 @@ $l10n.NoMoreIssueTypes
     </tr>
 
 #foreach ($rmit in $searchableRMITs)
+ #if (!$rmit.IssueType.Deleted)
   #indexedRows($velocityCount)
     <td>
      <input type="checkbox" name="rmitid" value="$rmit.QueryKey" />
     </td>
     <td>$rmit.Module.Name</td>
     <td>
-        #set ($issueTypeName = $rmit.IssueType.Name)  
+        #set ($issueTypeName = $rmit.IssueType.Name)
         #set ($issueTypeDisplay = $rmit.DisplayName)
         ##if (!$issueTypeDisplay.toString().equals($issueTypeName.toString()))
         #if (!$issueTypeDisplay.equals($issueTypeName))
@@ -180,10 +183,11 @@ $l10n.NoMoreIssueTypes
    </td>
     <td>$rmit.DisplayDescription</td>
   </tr>
+ #end
 #end
-</table>  
+</table>
 </div>
-#end      
+#end
 
 #if ($isAddPagination)
   #paginateXModuleList($screenTemplate)

@@ -74,7 +74,7 @@ import org.tigris.scarab.om.RModuleIssueType;
  * This valve clears any stale data out of the user due to aborted wizards.  
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: FreshenUserValve.java,v 1.23 2003/06/06 05:14:46 dlr Exp $
+ * @version $Id: FreshenUserValve.java,v 1.24 2003/08/01 20:43:41 parun Exp $
  */
 public class FreshenUserValve 
     extends AbstractValve
@@ -265,28 +265,28 @@ public class FreshenUserValve
                 throw new TurbineException(e);
             }
         }
-        else if (parameters.getString("id") != null) 
+        else if (parameters.getString("id") != null)
         {
-            try  
+            try
             {
-                issueType = 
+                issueType =
                     IssueManager.getIssueById(parameters.getString("id")).getIssueType();
-                parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
+                parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE,
                              issueType.getQueryKey());
             }
             catch (Exception e)
             {
                 // ignore
-                Log.get().debug("'id' parameter was available, " 
-                    + parameters.getString("id") + 
+                Log.get().debug("'id' parameter was available, "
+                    + parameters.getString("id") +
                     ", but did not contain enough info to create issue.");
             }
         }
 
         boolean isActive = false;
-        if (issueType != null) 
+        if (issueType != null && !issueType.getDeleted())
         {
-            try 
+            try
             {
                 RModuleIssueType rmit = user.getCurrentModule()
                     .getRModuleIssueType(issueType);
@@ -299,12 +299,12 @@ public class FreshenUserValve
                                e);
             }
         }
-        
+
         if (isActive)
         {
             user.setCurrentIssueType(issueType);
         }
-        else 
+        else
         {
             user.setCurrentIssueType(null);
             Log.get().debug("Set current IssueType to null");

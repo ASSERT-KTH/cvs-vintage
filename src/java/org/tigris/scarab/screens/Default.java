@@ -46,7 +46,11 @@ package org.tigris.scarab.screens;
  * individuals on behalf of Collab.Net.
  */ 
 
-// Turbine Stuff 
+// Java Stuff
+import java.util.List;
+
+// Turbine Stuff
+import org.apache.commons.configuration.Configuration;
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureScreen;
@@ -69,7 +73,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.74 2003/07/31 16:40:43 dlr Exp $
+ * @version $Id: Default.java,v 1.75 2003/08/01 20:43:40 parun Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -90,11 +94,11 @@ public class Default extends TemplateSecureScreen
      * builds up the context for display of variables on the page.
      */
     protected void doBuildTemplate(RunData data, TemplateContext context)
-        throws Exception 
+        throws Exception
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         // This may not be the best location for this, we might need to create
-        // a valve.  
+        // a valve.
         // check that the module exists, it may not have been created yet.
         try
         {
@@ -107,29 +111,62 @@ public class Default extends TemplateSecureScreen
         // add the title text to the context.
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
             context.get("l10n");
-        String title = null;
-        try
+
+        // Determine whether this target requires issue types.
+        String altTarget = getTargetForNoIssueTypes(data);
+        boolean changeTarget = false;
+        if (altTarget != null)
         {
-            title = getTitle(scarabR, l10n, data, context);
+            List issueTypes = scarabR.getCurrentModule().getIssueTypes(true);
+            changeTarget = (issueTypes == null || issueTypes.isEmpty());
         }
-        catch (Exception e)
+
+        if (changeTarget)
         {
-            Log.get().info("Error getting page title for Screen: "
-                           + data.getTarget());
+            // Pass control to the alternate target.
+            scarabR.setAlertMessage(l10n.get("IssueTypeUnavailable"));
+            setTarget(data, altTarget);
         }
-        if (title == null)
+        else
         {
-            title = "Scarab";
+            // Add the title text to the context.
+            String title;
+            try
+            {
+                title = getTitle(scarabR, l10n, data, context);
+            }
+            catch (Exception e)
+            {
+                log.info("Error getting page title for Screen: "
+                         + data.getTarget());
+            }
+            if (title == null)
+            {
+                title = "Scarab";
+            }
+            context.put("title", title);
         }
-        context.put("title", title);
     }
 
-    protected String getTitle(ScarabRequestTool scarabR, 
+    protected String getTitle(ScarabRequestTool scarabR,
                               ScarabLocalizationTool l10n,
                               RunData data, TemplateContext context)
         throws Exception
     {
         return l10n.getTitle();
+    }
+
+    /**
+     * @return The value of the
+     * <code>template.[screen].noIssueTypesForwardsTo</code> property,
+     * or <code>null</code> if not set.
+     *
+     */
+    private String getTargetForNoIssueTypes(RunData data)
+    {
+        String property = "template." +
+            data.getTarget().replace(',', '/') + ".noIssueTypesForwardsTo";
+        return Turbine.getConfiguration().getString(property);
     }
 
     /**
@@ -159,18 +196,18 @@ public class Default extends TemplateSecureScreen
             ScarabUser user = (ScarabUser)data.getUser();
             if (perm != null)
             {
-                if (! user.hasLoggedIn() 
+                if (! user.hasLoggedIn()
                     || !user.hasPermission(perm, currentModule))
                 {
                     scarabR.setInfoMessage(
                         l10n.get("LoginToAccountWithPermissions"));
-                    // it is very common to come from email to view a 
+                    // it is very common to come from email to view a
                     // particular issue.  Until a more general formula for
                     // deciding which requests might be ok to continue after
                     // a login, we will at least allow this one.
-                    if ("ViewIssue.vm".equals(data.getTarget())) 
+                    if ("ViewIssue.vm".equals(data.getTarget()))
                     {
-                        data.getParameters().setString("viewIssueId", 
+                        data.getParameters().setString("viewIssueId",
                                     data.getParameters().getString("id"));
                     }
 
@@ -189,15 +226,15 @@ public class Default extends TemplateSecureScreen
             // does the user at least have a role in the module?
             // we don't check user.hasLoggedIn() here because guest
             // users could have a role in a module.
-            else if (currentModule != null && 
+            else if (currentModule != null &&
                      !user.hasAnyRoleIn(currentModule))
             {
-                if (Log.get().isDebugEnabled()) 
+                if (Log.get().isDebugEnabled())
                 {
-                    Log.get().debug("User (" + user.getUserId() + 
-                        ") did not have any roles in current module" + 
+                    Log.get().debug("User (" + user.getUserId() +
+                        ") did not have any roles in current module" +
                         currentModule.getName());
-                }                
+                }
                 scarabR.setCurrentModule(null);
                 data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
                 scarabR.setAlertMessage(l10n.get("NoPermissionInModule"));
@@ -210,9 +247,9 @@ public class Default extends TemplateSecureScreen
    permissions to each screen so that we can make it so that someone can be
    logged in, but not select a module yet and be shown the select module
    screen. (JSS)
-   
-            else if (currentModule == null && 
-                     user != null && 
+
+            else if (currentModule == null &&
+                     user != null &&
                      user.hasLoggedIn())
             {
                 setTargetSelectModule(data);
@@ -231,14 +268,14 @@ public class Default extends TemplateSecureScreen
                           .getString(ScarabConstants.NEXT_TEMPLATE));
 
         setTarget(data, Turbine.getConfiguration()
-                .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
+                .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));
     }
 
     public static void setTargetLogin(RunData data)
     {
-        getTemplateContext(data).put(ScarabConstants.NEXT_TEMPLATE, 
+        getTemplateContext(data).put(ScarabConstants.NEXT_TEMPLATE,
             data.getParameters().getString("template"));
-        setTarget(data, "Login.vm");        
+        setTarget(data, "Login.vm");
     }
 
     /**
