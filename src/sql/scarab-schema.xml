@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.115 2002/10/18 15:54:39 thierrylach Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.116 2002/11/14 17:28:42 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -768,9 +768,15 @@
         <index-column name="ISSUE_ID"/>
         <index-column name="ATTRIBUTE_ID"/>
      </index>
-     <index name="IX_DELETED_OPTION">
-        <index-column name="DELETED"/>
+     <!-- index which greatly improves searches for issues based on 
+          option_ids (AdvancedQuery.vm). The test showed having deleted as
+          the last key was slightly better than having it as the first
+          key, but the dataset was skewed towards having all deleted=0, so
+          I don't know how it might work with a more even distribution. -->
+     <index name="IX_AV_OPTION_ISSUE_DEL">
         <index-column name="OPTION_ID"/>
+        <index-column name="ISSUE_ID"/>
+        <index-column name="DELETED"/>
      </index>
 </table>
 
