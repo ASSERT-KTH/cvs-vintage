@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<viewlist>
+ <view name="ThreePaneMail" class="org.columba.mail.gui.frame.MailFrameView" />
+ <view name="Composer" class="org.columba.mail.gui.composer.ComposerView" />
+ <view name="MessageFrame" class="org.columba.mail.gui.messageframe.MessageFrameView" />
+ <view name="Addressbook" class="org.columba.addressbook.gui.frame.AddressbookFrameView" />
+</viewlist>
