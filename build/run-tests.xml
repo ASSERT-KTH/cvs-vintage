@@ -125,6 +125,20 @@
     </java>
   </target>
 
+  <target name="test-transaction" depends="compile">
+    <echo>Running Transaction tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.TransactionTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
+
   <target name="test-attachment" depends="compile">
     <echo>Running Activity tests...</echo>
 
