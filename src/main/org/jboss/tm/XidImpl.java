@@ -19,7 +19,7 @@ import javax.transaction.xa.Xid;
  *  @see TransactionImpl
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.11 $
+ *  @version $Revision: 1.12 $
  */
 class XidImpl
    implements Xid, java.io.Serializable
@@ -227,9 +227,9 @@ class XidImpl
     *  returns a reference to the global id byte array that may <em>not</em>
     *  be changed.
     */
-   public byte[] getInternalGlobalTransactionId()
+   byte[] getInternalGlobalTransactionId()
    {
-      return (byte[])globalId.clone();
+      return globalId;
    }
 
    

@@ -31,7 +31,7 @@ import javax.transaction.xa.XAException;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 class TransactionImpl
    implements Transaction
@@ -149,7 +149,7 @@ class TransactionImpl
 
    public int hashCode()
    {
-      return xid.hashCode();
+      return globalId.hashCode();
    }
 
    public String toString()
@@ -160,7 +160,7 @@ class TransactionImpl
    public boolean equals(Object obj)
    {
       if (obj != null && obj instanceof TransactionImpl)
-         return xid.equals(((TransactionImpl)obj).xid);
+         return globalId.equals(((TransactionImpl)obj).globalId);
       return false;
    }
 
