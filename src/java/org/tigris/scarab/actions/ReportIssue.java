@@ -87,7 +87,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.56 2001/10/10 01:26:31 jmcnally Exp $
+ * @version $Id: ReportIssue.java,v 1.57 2001/10/13 12:12:41 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -98,9 +98,17 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue issue = scarabR.getReportingIssue();
 
-        // set any required flags
-        setRequiredFlags(issue, intake);
-        
+        try
+        {
+            // set any required flags
+            setRequiredFlags(issue, intake);
+        }
+        catch (Exception e)
+        {
+            data.setMessage("Error: " + e.getMessage());
+            setTarget(data, "entry, Wizard1.vm");
+            return;
+        }
         if ( intake.isAllValid() ) 
         {
             // set the values entered so far
@@ -182,6 +190,11 @@ public class ReportIssue extends RequireLoginFirstAction
     private void setRequiredFlags(Issue issue, IntakeTool intake)
         throws Exception
     {
+        if (issue == null)
+        {
+            throw new Exception ("The Issue is not valid any longer. " + 
+                "Please try again.");
+        }
         Attribute[] requiredAttributes = issue.getScarabModule()
             .getRequiredAttributes();
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
