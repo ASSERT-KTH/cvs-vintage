@@ -176,6 +176,28 @@ public  class AttributeGroup
     }
 
     /**
+     * Retrieves the attribute in this group with the highest preferred order.
+     */
+    public int getHighestOrderedAttribute ()
+        throws Exception
+    {
+        int highest = 0;
+        Criteria crit = new Criteria()
+            .add(RAttributeAttributeGroupPeer.GROUP_ID, 
+                 getAttributeGroupId())
+            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                       .PREFERRED_ORDER);
+        List raags = RAttributeAttributeGroupPeer.doSelect(crit);
+        if (raags.size() > 0)
+        {
+            RAttributeAttributeGroup raag = (RAttributeAttributeGroup)
+                                             raags.get(raags.size()-1);
+            highest = raag.getOrder();
+        }
+        return highest;
+    }
+       
+    /**
      * Retrieves R_ATTRIBUTE_ATTRIBUTEGROUP mapping object for this group
      * And the given attribute.
      */
