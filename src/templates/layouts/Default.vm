@@ -9,7 +9,15 @@
  </head>
  <body>
    <div id="globalnav">
-    <p><a href="#">globalnav</a> | <a href="#">item1</a> | <a href="#">item2</a></p>
+    <p>
+    #if ($data.User.hasLoggedIn())
+    <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
+    #else
+    <a href="$link.setPage("Login.vm")">Login</a>
+    #end
+  | <a href="$link.setPage("Links.vm")">Links</a> 
+  | <a href="$link.setPage("entry,Wizard1.vm")">Enter Issue</a>
+  </p>
    </div>
    <table border="0" cellspacing="0" cellpadding="0" width="95%">
     <tr>
