@@ -373,6 +373,18 @@ public class Container implements Cloneable{
 	return notes[pos];
     }
 
+    public Object getNote( String name ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.CONTAINER_NOTE, name );
+	return getNote( id );
+    }
+
+    public void setNote( String name, Object value ) throws TomcatException {
+	int id=contextM.getNoteId( ContextManager.CONTAINER_NOTE, name );
+	setNote( id, value );
+    }
+    
+
+
     // -------------------- Interceptors --------------------
     public static final int H_requestMap=0;
     public static final int H_contextMap=1;
