@@ -95,7 +95,7 @@ $l10n.NoIssueTypeSelected
 
 <a name="add"></a>
 
-<h3>$l10n.ModuleIssuesInDomain</h3>
+<h4>$l10n.ModuleIssuesInDomain</h4>
 
 #set ($searchField = $data.Parameters.getString("searchField", ""))
 #set ($searchString = $data.Parameters.getString("searchString", ""))
