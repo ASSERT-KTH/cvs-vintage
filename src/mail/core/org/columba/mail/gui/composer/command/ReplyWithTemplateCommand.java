@@ -29,13 +29,11 @@ import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.mail.gui.config.template.ChooseTemplateDialog;
@@ -53,46 +51,12 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz
  */
-public class ReplyWithTemplateCommand extends FolderCommand {
-    private static final String[] headerfields =
-        new String[] {
-            "Subject",
-            "From",
-            "To",
-            "Reply-To",
-            "Message-ID",
-            "In-Reply-To",
-            "References" };
-    protected ComposerController controller;
-    protected ComposerModel model;
-
+public class ReplyWithTemplateCommand extends ReplyCommand {
     /**
 	 * @param references
 	 */
     public ReplyWithTemplateCommand(DefaultCommandReference[] references) {
         super(references);
-    }
-
-    /**
-	 * @param frame
-	 * @param references
-	 */
-    public ReplyWithTemplateCommand(
-        FrameMediator frame,
-        DefaultCommandReference[] references) {
-        super(frame, references);
-    }
-
-    public void updateGUI() throws Exception {
-        // open composer frame
-        controller = new ComposerController();
-        controller.openView();
-
-        // apply model
-        controller.setComposerModel(model);
-
-        // model->view update
-        controller.updateComponents(true);
     }
 
     public void execute(Worker worker) throws Exception {
@@ -179,72 +143,5 @@ public class ReplyWithTemplateCommand extends FolderCommand {
             templateFolder.getMimePartBodyStream(uid, mp.getAddress());
 
         return StreamUtils.readInString(bodyStream).toString();
-    }
-
-    private String createQuotedBody(
-        Folder folder,
-        Object[] uids,
-        Integer[] address)
-        throws IOException, Exception {
-
-        InputStream  bodyStream = folder.getMimePartBodyStream(uids[0], address);
-        /*
-		 * original message is sent "inline" - model is setup according to the
-		 * type of the original message. NB: If the original message was plain
-		 * text, the message type seen here is always text. If the original
-		 * message contained html, the message type seen here will depend on
-		 * the "prefer html" option.
-		 */
-        if( model.isHtml() ) {
-            // TODO Quote with HTML
-            return StreamUtils.readInString(bodyStream).toString();                        
-        } else {
-            return StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();            
-        }
-    }
-
-    private void initMimeHeader(MimePart bodyPart) {
-        MimeHeader bodyHeader = bodyPart.getHeader();
-        if (bodyHeader.getMimeType().getSubtype().equals("html")) {
-            model.setHtml(true);
-        } else {
-            model.setHtml(false);
-        }
-
-        // Select the charset of the original message
-        String charset = bodyHeader.getContentParameter("charset");
-        if (charset != null) {
-            model.setCharset(Charset.forName(charset));
-        }
-    }
-
-    private void initHeader(Folder folder, Object[] uids) throws Exception {
-        // get headerfields
-        Header header = folder.getHeaderFields(uids[0], headerfields);
-
-        BasicHeader rfcHeader = new BasicHeader(header);
-        // set subject
-        model.setSubject(
-            MessageBuilderHelper.createReplySubject(rfcHeader.getSubject()));
-
-        // Use reply-to field if given, else use from
-        Address[] to = rfcHeader.getReplyTo();
-        if (to.length == 0) {
-            to = new Address[] { rfcHeader.getFrom()};
-        }
-
-        // Add addresses to the addressbook
-        MessageBuilderHelper.addAddressesToAddressbook(to);
-        model.setTo(to);
-
-        // create In-Reply-To:, References: headerfields
-        MessageBuilderHelper.createMailingListHeaderItems(header, model);
-
-        // select the account this mail was received from
-        Integer accountUid =
-            (Integer) folder.getAttribute(uids[0], "columba.accountuid");
-        AccountItem accountItem =
-            MessageBuilderHelper.getAccountItem(accountUid);
-        model.setAccountItem(accountItem);
     }
 }

@@ -51,7 +51,7 @@ import org.columba.ristretto.message.MimeTree;
  * @author fdietz
  */
 public class ReplyCommand extends FolderCommand {
-    private static final String[] headerfields =
+    protected final String[] headerfields =
         new String[] {
             "Subject",
             "From",
@@ -129,7 +129,7 @@ public class ReplyCommand extends FolderCommand {
         }
     }
     
-    private void initMimeHeader(MimePart bodyPart) {
+    protected void initMimeHeader(MimePart bodyPart) {
         MimeHeader bodyHeader = bodyPart.getHeader();
         if (bodyHeader.getMimeType().getSubtype().equals("html")) {
             model.setHtml(true);
@@ -144,7 +144,7 @@ public class ReplyCommand extends FolderCommand {
         }
     }
 
-    private void initHeader(Folder folder, Object[] uids) throws Exception {
+    protected void initHeader(Folder folder, Object[] uids) throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
@@ -174,7 +174,7 @@ public class ReplyCommand extends FolderCommand {
         model.setAccountItem(accountItem);
     }
     
-    private String createQuotedBody(
+    protected String createQuotedBody(
             Folder folder,
 			Object[] uids,
 			Integer[] address)

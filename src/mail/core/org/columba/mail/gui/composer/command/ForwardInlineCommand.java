@@ -27,12 +27,10 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.ristretto.message.BasicHeader;
@@ -47,10 +45,7 @@ import org.columba.ristretto.message.MimeTree;
  *
  * @author fdietz
  */
-public class ForwardInlineCommand extends FolderCommand {
-    protected ComposerController controller;
-    protected ComposerModel model;
-
+public class ForwardInlineCommand extends ForwardCommand {
     /**
      * Constructor for ForwardInlineCommand.
      *
@@ -59,18 +54,6 @@ public class ForwardInlineCommand extends FolderCommand {
      */
     public ForwardInlineCommand(DefaultCommandReference[] references) {
         super(references);
-    }
-
-    public void updateGUI() throws Exception {
-        // open composer frame
-        controller = new ComposerController();
-        controller.openView();
-
-        // apply model
-        controller.setComposerModel(model);
-
-        // model->view update
-        controller.updateComponents(true);
     }
 
     public void execute(Worker worker) throws Exception {

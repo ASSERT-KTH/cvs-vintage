@@ -32,13 +32,11 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.io.StreamUtils;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.composer.MessageBuilderHelper;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.composer.util.QuoteFilterInputStream;
 import org.columba.ristretto.message.Address;
@@ -53,8 +51,8 @@ import org.columba.ristretto.message.MimeTree;
  * 
  * @author fdietz
  */
-public class ReplyToAllCommand extends FolderCommand {
-    private static final String[] headerfields =
+public class ReplyToAllCommand extends ReplyCommand {
+    protected final String[] headerfields =
         new String[] {
             "Subject",
             "From",
@@ -64,8 +62,6 @@ public class ReplyToAllCommand extends FolderCommand {
             "Message-ID",
             "In-Reply-To",
             "References" };
-    protected ComposerController controller;
-    protected ComposerModel model;
 
     /**
 	 * Constructor for ReplyToAllCommand.
@@ -77,77 +73,7 @@ public class ReplyToAllCommand extends FolderCommand {
         super(references);
     }
 
-    public void updateGUI() throws Exception {
-        // open composer frame
-        controller = new ComposerController();
-        controller.openView();
-
-        // apply model
-        controller.setComposerModel(model);
-
-        // model->view update
-        controller.updateComponents(true);
-    }
-
-    public void execute(Worker worker) throws Exception {
-        // create composer model
-        model = new ComposerModel();
-
-        // get selected folder
-        Folder folder =
-        (Folder) ((FolderCommandReference) getReferences()[0]).getFolder();
-
-        // get first selected message
-        Object[] uids = ((FolderCommandReference) getReferences()[0]).getUids();
-
-        // setup to, references and account
-        initHeader(folder, uids);
-
-        // get mimeparts
-        MimeTree mimePartTree = folder.getMimePartTree(uids[0]);
-
-        XmlElement html =
-        MailInterface.config.getMainFrameOptionsConfig().getRoot().getElement(
-        "/options/html");
-
-        // Which Bodypart shall be shown? (html/plain)
-        MimePart bodyPart = null;
-
-        if (Boolean.valueOf(html.getAttribute("prefer")).booleanValue()) {
-            bodyPart = mimePartTree.getFirstTextPart("html");
-        } else {
-            bodyPart = mimePartTree.getFirstTextPart("plain");
-        }
-
-        if (bodyPart != null) {
-            // setup charset and html
-            initMimeHeader(bodyPart);
-
-            StringBuffer bodyText;
-            Integer[] address = bodyPart.getAddress();
-
-            String quotedBodyText = createQuotedBody(folder, uids, address);
-
-            model.setBodyText(quotedBodyText);
-        }
-    }
-    
-    private void initMimeHeader(MimePart bodyPart) {
-        MimeHeader bodyHeader = bodyPart.getHeader();
-        if (bodyHeader.getMimeType().getSubtype().equals("html")) {
-            model.setHtml(true);
-        } else {
-            model.setHtml(false);
-        }
-
-        // Select the charset of the original message
-        String charset = bodyHeader.getContentParameter("charset");
-        if (charset != null) {
-            model.setCharset(Charset.forName(charset));
-        }
-    }
-
-    private void initHeader(Folder folder, Object[] uids) throws Exception {
+    protected void initHeader(Folder folder, Object[] uids) throws Exception {
         // get headerfields
         Header header = folder.getHeaderFields(uids[0], headerfields);
 
@@ -192,27 +118,4 @@ public class ReplyToAllCommand extends FolderCommand {
         MessageBuilderHelper.getAccountItem(accountUid);
         model.setAccountItem(accountItem);
     }
-    
-    private String createQuotedBody(
-            Folder folder,
-			Object[] uids,
-			Integer[] address)
-    throws IOException, Exception {
-
-        InputStream  bodyStream = folder.getMimePartBodyStream(uids[0], address);
-        /*
-         * original message is sent "inline" - model is setup according to the
-         * type of the original message. NB: If the original message was plain
-         * text, the message type seen here is always text. If the original
-         * message contained html, the message type seen here will depend on
-         * the "prefer html" option.
-         */
-        if( model.isHtml() ) {
-            // TODO Quote with HTML
-            return StreamUtils.readInString(bodyStream).toString();                        
-        } else {
-            return StreamUtils.readInString(new QuoteFilterInputStream(bodyStream)).toString();            
-        }
-    }
-    
 }
