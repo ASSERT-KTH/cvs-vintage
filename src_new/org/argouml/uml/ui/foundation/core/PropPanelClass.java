@@ -1,4 +1,4 @@
-// $Id: PropPanelClass.java,v 1.69 2004/12/20 23:15:10 mvw Exp $
+// $Id: PropPanelClass.java,v 1.70 2004/12/23 15:55:31 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,9 +39,6 @@ import org.argouml.util.ConfigLoader;
 
 /**
  * The properties panel for a Class.
- * 
- * TODO: this property panel needs refactoring to remove dependency on old gui
- * components.
  */
 public class PropPanelClass extends PropPanelClassifier {
 
