@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.4 2001/04/21 18:42:51 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2001/04/21 18:42:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.5 2001/08/25 00:59:03 nacho Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/08/25 00:59:03 $
  *
  * ====================================================================
  *
@@ -253,8 +253,8 @@ public class ThreadPool  {
                 try {
                     ((ControlRunnable)(pool.elementAt(i))).terminate();
                 } catch(Throwable t) {
-                    /* 
-		     * Do nothing... The show must go on, we are shutting 
+                    /*
+		     * Do nothing... The show must go on, we are shutting
 		     * down the pool and nothing should stop that.
 		     */
 		    loghelper.log("Ignored exception while shutting down thread pool", t, Log.ERROR);
@@ -267,7 +267,7 @@ public class ThreadPool  {
     }
 
     /**
-     * Called by the monitor thread to harvest idel threads.
+     * Called by the monitor thread to harvest idle threads.
      */
     protected synchronized void checkSpareControllers() {
 
@@ -307,7 +307,7 @@ public class ThreadPool  {
     /**
      * Inform the pool that the specific thread finish.
      *
-     * Called by the ControlRunnable.run() when the runnable 
+     * Called by the ControlRunnable.run() when the runnable
      * throws an exception.
      */
     protected synchronized void notifyThreadEnd(ControlRunnable c) {
@@ -315,7 +315,7 @@ public class ThreadPool  {
         currentThreadCount --;
         notify();
     }
-    
+
 
     /*
      * Checks for problematic configuration and fix it.
@@ -331,7 +331,7 @@ public class ThreadPool  {
             maxSpareThreads = maxThreads;
         }
 
-		if(maxSpareThreads <= 0) {
+        if(maxSpareThreads <= 0) {
             if(1 == maxThreads) {
                 maxSpareThreads = 1;
             } else {
@@ -341,9 +341,9 @@ public class ThreadPool  {
 
         if(minSpareThreads >  maxSpareThreads) {
             minSpareThreads =  maxSpareThreads;
-		}
+        }
 
-		if(minSpareThreads <= 0) {
+        if(minSpareThreads <= 0) {
             if(1 == maxSpareThreads) {
                 minSpareThreads = 1;
             } else {
@@ -475,31 +475,31 @@ public class ThreadPool  {
         }
 
         public void run() {
-            
+
             while(true) {
-                try {                     
+                try {
 		            /* Wait for work. */
                     synchronized(this) {
                         if(!shouldRun && !shouldTerminate) {
                             this.wait();
                         }
                     }
-		            if(toRun == null ) {
-			            if( p.debug>0) p.log( "No toRun ???");
-		            }
+                    if(toRun == null ) {
+                            if( p.debug>0) p.log( "No toRun ???");
+                    }
 
-		            if( shouldTerminate ) {
-			            if( p.debug>0) p.log( "Terminate");
-			            break;
-		            }
+                    if( shouldTerminate ) {
+                            if( p.debug>0) p.log( "Terminate");
+                            break;
+                    }
 
                     /* Check if should execute a runnable.  */
                     try {
-			            if(noThData) {
-			                if(p.debug>0) p.log( "Getting new thread data");
-			                thData=toRun.getInitData();
-			                noThData = false;
-			            }
+                        if(noThData) {
+                            if(p.debug>0) p.log( "Getting new thread data");
+                            thData=toRun.getInitData();
+                            noThData = false;
+                        }
 
                         if(shouldRun) {
                             toRun.runIt(thData);
@@ -545,6 +545,7 @@ public class ThreadPool  {
 		throw new NullPointerException("No Runnable");
 	    }
             this.toRun = toRun;
+            noThData = true;
             shouldRun = true;
             this.notify();
         }
