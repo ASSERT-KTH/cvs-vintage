@@ -32,8 +32,7 @@
         Renaming module code causes multiple issues to have same ID count
       </action>            
       <action dev="epugh" type="fix" due-to="Michael Wever" issue-id="SCB1380">
-        Update to the latest version of Turbine 3.0 that uses XStream to 
-        load the pipeline instead of the old and deprecated commons-xo.
+        oracle-upgrade-1.0b19-workflow-3.sql incorrect syntax
       </action>         
       <action dev="epugh" type="update">
         Update to the latest version of Turbine 3.0 that uses XStream to 
