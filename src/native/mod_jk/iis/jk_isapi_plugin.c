@@ -57,7 +57,7 @@
  * Description: ISAPI plugin for IIS/PWS                                   *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
  * Author:      Ignacio J. Ortega <nacho@apache.org>                       *
- * Version:     $Revision: 1.12 $                                           *
+ * Version:     $Revision: 1.13 $                                           *
  ***************************************************************************/
 
 // This define is needed to include wincrypt,h, needed to get client certificates
@@ -76,7 +76,7 @@
 #include "jk_ajp12_worker.h"
 #include "jk_uri_worker_map.h"
 
-#define VERSION_STRING "Jakarta/ISAPI/1.0b1"
+#define VERSION_STRING "Jakarta/ISAPI/" JK_VERSTRING
 
 /*
  * We use special two headers to pass values from the filter to the 
