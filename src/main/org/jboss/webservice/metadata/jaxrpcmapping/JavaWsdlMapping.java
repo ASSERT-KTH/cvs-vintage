@@ -6,7 +6,9 @@
  */
 package org.jboss.webservice.metadata.jaxrpcmapping;
 
-// $Id: JavaWsdlMapping.java,v 1.7 2004/08/15 22:07:27 tdiesler Exp $
+// $Id: JavaWsdlMapping.java,v 1.8 2004/10/04 23:48:10 tdiesler Exp $
+
+import org.jboss.logging.Logger;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ import java.util.Iterator;
  */
 public class JavaWsdlMapping
 {
+   // provide logging
+   private final Logger log = Logger.getLogger(JavaWsdlMapping.class);
+
    // One or more <package-mapping> elements
    private ArrayList packageMappings = new ArrayList();
    // Zero or more <java-xml-type-mapping> elements
@@ -91,12 +96,24 @@ public class JavaWsdlMapping
       if (typeQName != null)
       {
          Iterator it = javaXmlTypeMappings.iterator();
-         while (it.hasNext())
+         while (typeMapping == null && it.hasNext())
          {
             JavaXmlTypeMapping mapping = (JavaXmlTypeMapping)it.next();
             if (typeQName.equals(mapping.getRootTypeQName()))
                typeMapping = mapping;
+
+            String anonymousMapping = mapping.getAnonymousTypeQName();
+            if (typeMapping == null && anonymousMapping != null)
+            {
+               String nsURI = typeQName.getNamespaceURI();
+               String localPart = typeQName.getLocalPart();
+               if (anonymousMapping.equals(nsURI + ":>" + localPart))
+                  typeMapping = mapping;
+            }
          }
+
+         if (typeMapping == null)
+            log.warn("Cannot find jaxrpc-mapping for type: " + typeQName);
       }
 
       return typeMapping;
