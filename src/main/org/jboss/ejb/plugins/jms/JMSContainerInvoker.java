@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.68 $</tt>
+ * @version <tt>$Revision: 1.69 $</tt>
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JMSContainerInvoker
@@ -205,6 +205,8 @@ public class JMSContainerInvoker
 
    protected boolean deliveryActive = true;
 
+   protected boolean createJBossMQDestination = true;
+
    /**
     * Set the invoker meta data so that the ProxyFactory can initialize
     * properly
@@ -320,6 +322,15 @@ public class JMSContainerInvoker
    public boolean getDeliveryActive()
    {
       return deliveryActive;
+   }
+
+   /**
+    * @return whether we are creating jbossmq destinations
+    * @jmx:managed-attribute
+    */
+   public boolean getCreateJBossMQDestination()
+   {
+      return createJBossMQDestination;
    }
 
    /**
@@ -445,6 +456,17 @@ public class JMSContainerInvoker
     */
    public void importXml(final Element element) throws Exception
    {
+      try
+      {
+         if ("false".equalsIgnoreCase(MetaData.getElementContent(MetaData.getUniqueChild(element, "CreateJBossMQDestination"))))
+         {
+            createJBossMQDestination = false;
+         }
+      }
+      catch (Exception ignore)
+      {
+      }
+      
       try
       {
          String maxMessages = MetaData.getElementContent
@@ -683,88 +705,107 @@ public class JMSContainerInvoker
                + adapter.getTopicFactoryRef());
          }
 
-         // Fix: ClientId must be set as the first method call after connection creation.
-         // Fix: ClientId is necessary for durable subscriptions.
-
-         String clientId = config.getClientId();
-         activationConfig = getActivationConfigProperty("clientID");
-         if (activationConfig != null)
-            clientId = activationConfig;
-
-         log.debug("Using client id: " + clientId);
-         if (clientId != null && clientId.length() > 0)
-            connection.setClientID(clientId);
-
-         // lookup or create the destination topic
-         Topic topic = null;
          try
          {
-            // First we try the specified topic
-            if (destinationJNDI != null)
-               topic = (Topic) context.lookup(destinationJNDI);
-         }
-         catch (NamingException e)
-         {
-            log.warn("Could not find the topic destination-jndi-name=" + destinationJNDI);
-         }
-         catch (ClassCastException e)
-         {
-            throw new DeploymentException("Expected a Topic destination-jndi-name=" + destinationJNDI);
-         }
+            // Fix: ClientId must be set as the first method call after connection creation.
+            // Fix: ClientId is necessary for durable subscriptions.
 
-         // FIXME: This is not portable, only works for JBossMQ
-         if (topic == null)
-            topic = (Topic) createDestination(Topic.class,
-               context,
-               "topic/" + jndiSuffix,
-               jndiSuffix);
-         
-         // set up the server session pool
-         pool = createSessionPool(
-            topic,
-            tConnection,
-            minPoolSize,
-            maxPoolSize,
-            keepAlive,
-            true, // tx
-            acknowledgeMode,
-            new MessageListenerImpl(this));
-
-         int subscriptionDurablity = config.getSubscriptionDurability();
-         activationConfig = getActivationConfigProperty("subscriptionDurability");
-         if (activationConfig != null)
-         {
-            if (activationConfig.equals("Durable"))
-               subscriptionDurablity = MessageDrivenMetaData.DURABLE_SUBSCRIPTION;
-            else
-               subscriptionDurablity = MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION;
-         }
-         // To be no-durable or durable
-         if (subscriptionDurablity != MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
-         {
-            // Create non durable
-            connectionConsumer =
-               tConnection.createConnectionConsumer(topic,
-                  messageSelector,
-                  pool,
-                  maxMessagesNr);
-         }
-         else
-         {
-            // Durable subscription
-            String durableName = config.getSubscriptionId();
-            activationConfig = getActivationConfigProperty("subscriptionName");
+            String clientId = config.getClientId();
+            activationConfig = getActivationConfigProperty("clientID");
             if (activationConfig != null)
-               durableName = activationConfig;
+               clientId = activationConfig;
 
-            connectionConsumer =
-               tConnection.createDurableConnectionConsumer(topic,
-                  durableName,
-                  messageSelector,
-                  pool,
-                  maxMessagesNr);
+            log.debug("Using client id: " + clientId);
+            if (clientId != null && clientId.length() > 0)
+               connection.setClientID(clientId);
+
+            // lookup or create the destination topic
+            Topic topic = null;
+            try
+            {
+               // First we try the specified topic
+               if (destinationJNDI != null)
+                  topic = (Topic) context.lookup(destinationJNDI);
+               else if (createJBossMQDestination == false)
+                  throw new DeploymentException("Unable to determine destination for '" + container.getBeanMetaData().getEjbName()
+                        + "' use destination-jndi-name in jboss.xml, an activation config property or a message-destination-link");
+            }
+            catch (NamingException e)
+            {
+               if (createJBossMQDestination == false)
+                  throw new DeploymentException("Could not find the topic destination-jndi-name=" + destinationJNDI, e);
+               log.warn("Could not find the topic destination-jndi-name=" + destinationJNDI, e);
+            }
+            catch (ClassCastException e)
+            {
+               throw new DeploymentException("Expected a Topic destination-jndi-name=" + destinationJNDI, e);
+            }
+
+            // FIXME: This is not portable, only works for JBossMQ
+            if (topic == null)
+               topic = (Topic) createDestination(Topic.class,
+                  context,
+                  "topic/" + jndiSuffix,
+                  jndiSuffix);
+            
+            // set up the server session pool
+            pool = createSessionPool(
+               topic,
+               tConnection,
+               minPoolSize,
+               maxPoolSize,
+               keepAlive,
+               true, // tx
+               acknowledgeMode,
+               new MessageListenerImpl(this));
+
+            int subscriptionDurablity = config.getSubscriptionDurability();
+            activationConfig = getActivationConfigProperty("subscriptionDurability");
+            if (activationConfig != null)
+            {
+               if (activationConfig.equals("Durable"))
+                  subscriptionDurablity = MessageDrivenMetaData.DURABLE_SUBSCRIPTION;
+               else
+                  subscriptionDurablity = MessageDrivenMetaData.NON_DURABLE_SUBSCRIPTION;
+            }
+            // To be no-durable or durable
+            if (subscriptionDurablity != MessageDrivenMetaData.DURABLE_SUBSCRIPTION)
+            {
+               // Create non durable
+               connectionConsumer =
+                  tConnection.createConnectionConsumer(topic,
+                     messageSelector,
+                     pool,
+                     maxMessagesNr);
+            }
+            else
+            {
+               // Durable subscription
+               String durableName = config.getSubscriptionId();
+               activationConfig = getActivationConfigProperty("subscriptionName");
+               if (activationConfig != null)
+                  durableName = activationConfig;
+
+               connectionConsumer =
+                  tConnection.createDurableConnectionConsumer(topic,
+                     durableName,
+                     messageSelector,
+                     pool,
+                     maxMessagesNr);
+            }
+            log.debug("Topic connectionConsumer set up");
          }
-         log.debug("Topic connectionConsumer set up");
+         catch (Throwable t)
+         {
+            try
+            {
+               tConnection.close();
+            }
+            catch (Throwable ignored)
+            {
+            }
+            DeploymentException.rethrowAsDeploymentException("Error during topic setup", t);
+         }
       }
       else if ("javax.jms.Queue".equals(destinationType))
       {
@@ -783,60 +824,79 @@ public class JMSContainerInvoker
             throw new DeploymentException("Expected a QueueConnection check your provider adaptor: "
                + adapter.getQueueFactoryRef());
          }
-
-         // Set the optional client id
-         String clientId = config.getClientId();
-         activationConfig = getActivationConfigProperty("clientID");
-         if (activationConfig != null)
-            clientId = activationConfig;
          
-         log.debug("Using client id: " + clientId);
-         if (clientId != null && clientId.length() > 0)
-            connection.setClientID(clientId);
-         
-         // lookup or create the destination queue
-         Queue queue = null;
          try
          {
-            // First we try the specified queue
-            if (destinationJNDI != null)
-               queue = (Queue) context.lookup(destinationJNDI);
-         }
-         catch (NamingException e)
-         {
-            log.warn("Could not find the queue destination-jndi-name=" + destinationJNDI);
-         }
-         catch (ClassCastException e)
-         {
-            throw new DeploymentException("Expected a Queue destination-jndi-name=" + destinationJNDI);
-         }
+            // Set the optional client id
+            String clientId = config.getClientId();
+            activationConfig = getActivationConfigProperty("clientID");
+            if (activationConfig != null)
+               clientId = activationConfig;
+            
+            log.debug("Using client id: " + clientId);
+            if (clientId != null && clientId.length() > 0)
+               connection.setClientID(clientId);
+            
+            // lookup or create the destination queue
+            Queue queue = null;
+            try
+            {
+               // First we try the specified queue
+               if (destinationJNDI != null)
+                  queue = (Queue) context.lookup(destinationJNDI);
+               else if (createJBossMQDestination == false)
+                  throw new DeploymentException("Unable to determine destination for '" + container.getBeanMetaData().getEjbName()
+                        + "' use destination-jndi-name in jboss.xml, an activation config property or a message-destination-link");
+            }
+            catch (NamingException e)
+            {
+               if (createJBossMQDestination == false)
+                  throw new DeploymentException("Could not find the queue destination-jndi-name=" + destinationJNDI, e);
+               log.warn("Could not find the queue destination-jndi-name=" + destinationJNDI);
+            }
+            catch (ClassCastException e)
+            {
+               throw new DeploymentException("Expected a Queue destination-jndi-name=" + destinationJNDI);
+            }
 
-         // FIXME: This is not portable, only works for JBossMQ
-         if (queue == null)
-            queue = (Queue) createDestination(Queue.class,
-               context,
-               "queue/" + jndiSuffix,
-               jndiSuffix);
-         
-         // set up the server session pool
-         pool = createSessionPool(
-            queue,
-            qConnection,
-            minPoolSize,
-            maxPoolSize,
-            keepAlive,
-            true, // tx
-            acknowledgeMode,
-            new MessageListenerImpl(this));
-         log.debug("Server session pool: " + pool);
-         
-         // create the connection consumer
-         connectionConsumer =
-            qConnection.createConnectionConsumer(queue,
-               messageSelector,
-               pool,
-               maxMessagesNr);
-         log.debug("Connection consumer: " + connectionConsumer);
+            // FIXME: This is not portable, only works for JBossMQ
+            if (queue == null)
+               queue = (Queue) createDestination(Queue.class,
+                  context,
+                  "queue/" + jndiSuffix,
+                  jndiSuffix);
+            
+            // set up the server session pool
+            pool = createSessionPool(
+               queue,
+               qConnection,
+               minPoolSize,
+               maxPoolSize,
+               keepAlive,
+               true, // tx
+               acknowledgeMode,
+               new MessageListenerImpl(this));
+            log.debug("Server session pool: " + pool);
+            
+            // create the connection consumer
+            connectionConsumer =
+               qConnection.createConnectionConsumer(queue,
+                  messageSelector,
+                  pool,
+                  maxMessagesNr);
+            log.debug("Connection consumer: " + connectionConsumer);
+         }
+         catch (Throwable t)
+         {
+            try
+            {
+               qConnection.close();
+            }
+            catch (Throwable ignored)
+            {
+            }
+            DeploymentException.rethrowAsDeploymentException("Error during queue setup", t);
+         }
       }
       else
          throw new DeploymentException("Unknown destination-type " + destinationType);
@@ -1477,7 +1537,7 @@ public class JMSContainerInvoker
          " }";
    }
 
-   private interface TCLAction
+   interface TCLAction
    {
       class UTIL
       {

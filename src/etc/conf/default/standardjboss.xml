@@ -7,7 +7,7 @@
 <!-- ===================================================================== -->
 <!--  Standard JBoss EJB Configurations                                    -->
 <!-- ===================================================================== -->
-<!-- $Id: standardjboss.xml,v 1.94 2005/02/24 23:40:19 recampbell Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.95 2005/04/05 19:49:02 ejort Exp $ -->
 
 <jboss>
   <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -179,6 +179,7 @@
       <proxy-factory-config>
         <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
         <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+        <CreateJBossMQDestination>true</CreateJBossMQDestination>
         <!-- WARN: Don't set this to zero until a bug in the pooled executor is fixed -->
         <MinimumSize>1</MinimumSize>
         <MaximumSize>15</MaximumSize>
@@ -260,6 +261,7 @@
       <proxy-factory-config>
         <JMSProviderAdapterJNDI>DefaultJMSProvider</JMSProviderAdapterJNDI>
         <ServerSessionPoolFactoryJNDI>StdJMSPool</ServerSessionPoolFactoryJNDI>
+        <CreateJBossMQDestination>true</CreateJBossMQDestination>
         <!-- WARN: Don't set this to zero until a bug in the pooled executor is fixed -->
         <MinimumSize>1</MinimumSize>
         <MaximumSize>1</MaximumSize>

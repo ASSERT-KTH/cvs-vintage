@@ -4,7 +4,7 @@
 This is the XML DTD for the JBoss 4.0 EJB deployment descriptor.
 The DOCTYPE is:
 
-$Id: jboss_4_0.dtd,v 1.26 2005/02/23 20:41:08 ejort Exp $
+$Id: jboss_4_0.dtd,v 1.27 2005/04/05 19:49:05 ejort Exp $
 
   <!DOCTYPE jboss PUBLIC
       "-//JBoss//DTD JBOSS 4.0//EN"
@@ -268,7 +268,8 @@ the ejb container configurations.
 and other configuration options to use for the various EJB proxies.
 -->
 <!ELEMENT proxy-factory-config (client-interceptors?, endpoint-interceptors? , web-class-loader? ,
-activation-config?, JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , MinimumSize? , MaximumSize? ,
+activation-config?, JMSProviderAdapterJNDI? , ServerSessionPoolFactoryJNDI? , 
+CreateJBossMQDestination? , MinimumSize? , MaximumSize? ,
 KeepAliveMillis? , MaxMessages? , MDBConfig? , poa? , register-ejbs-in-jnp-context? , 
 jnp-context? , interface-repository-supported?)>
 
@@ -288,6 +289,13 @@ jnp-context? , interface-repository-supported?)>
   Used in: proxy-factory-config for JMSContainerInvoker
 -->
 <!ELEMENT ServerSessionPoolFactoryJNDI (#PCDATA)>
+<!--
+  Whether to create destinations in JBossMQ if the
+  destination cannot be found.
+
+  Used in: proxy-factory-config for JMSContainerInvoker
+-->
+<!ELEMENT CreateJBossMQDestination (#PCDATA)>
 <!--
   The maximum number of messages parameter for the mdb's
   connection consumer.

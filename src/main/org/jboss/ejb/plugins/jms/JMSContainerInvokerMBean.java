@@ -31,6 +31,8 @@ public interface JMSContainerInvokerMBean extends org.jboss.system.ServiceMBean 
 
   boolean getDeliveryActive() ;
 
+  boolean getCreateJBossMQDestination() ;
+
   void startDelivery() throws java.lang.Exception;
 
   void stopDelivery() throws java.lang.Exception;
