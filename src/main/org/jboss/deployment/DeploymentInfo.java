@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Vector;
@@ -22,25 +23,17 @@ import java.util.Date;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import java.util.Iterator;
-
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.jboss.system.UnifiedClassLoader;
 import org.jboss.system.ServiceLibraries;
 import org.jboss.logging.Logger;
-
-/*
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-*/
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import org.w3c.dom.Document;
+import org.jboss.metadata.ApplicationMetaData;
+import org.jboss.metadata.BeanMetaData;
 
 /**
 * Service Deployment Info .
@@ -54,7 +47,8 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.7 $ <p>
+* @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
+* @version   $Revision: 1.8 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -64,14 +58,9 @@ import org.w3c.dom.Document;
 *      <ul>
 *        <li>Unification of deployers and merge with Jung/Schulze's Deployment.java   
 *      </ul>
-
-*
 */
-
-
 public class DeploymentInfo 
-{
-   
+{   
    // Variables ------------------------------------------------------------
    
    public static HashMap deployments = new HashMap();
@@ -241,12 +230,9 @@ public class DeploymentInfo
          ServiceLibraries.getLibraries().removeClassLoader((UnifiedClassLoader) ucl);
       
       subDeployments.clear();
-      
       mbeans.clear();
-   
    }
-   
-   
+
    private boolean recursiveDelete(File f)
    {
       if (f.isDirectory())
@@ -262,8 +248,46 @@ public class DeploymentInfo
       }
       return f.delete();
    }
-   
-   
+
+   /** A method that walks through the DeploymentInfo hiearchy looking
+    *for the ejb-name that corresponds to the given ejb-link value.
+    *@param ejbLink, the ejb-link value from the ejb-jar.xml or web.xml
+    *descriptor to find. Need to add support for the <path>/ejb.jar#ejb-name style.
+    *@return The deployment JNDI name of the ejb to which the ejbLink
+    *refers if it is found, null if no such ejb exists.
+    */
+   public String findEjbLink(String ejbLink)
+   {
+      // Walk up to the topmost DeploymentInfo
+      DeploymentInfo top = parent;
+      while( top != null && top.parent != null )
+         top = top.parent;
+      if( top == null )
+         return null;
+      // Search from the top for a matching ejb
+      return findEjbLink(top, ejbLink);
+   }
+   private static String findEjbLink(DeploymentInfo parent, String ejbLink)
+   {
+      String ejbName = null;
+      // Search the parent if it has ApplicationMetaData
+      if( parent.metaData instanceof ApplicationMetaData )
+      {
+         ApplicationMetaData appMD = (ApplicationMetaData) parent.metaData;
+         BeanMetaData beanMD = appMD.getBeanByEjbName(ejbLink);
+         if( beanMD != null )
+            return beanMD.getJndiName();
+      }
+      // Search each subcontext
+      Iterator iter = parent.subDeployments.iterator();
+      while( iter.hasNext() && ejbName == null )
+      {
+         DeploymentInfo child = (DeploymentInfo) iter.next();
+         ejbName = findEjbLink(child, ejbLink);
+      }
+      return ejbName;
+   }
+
    public int hashCode() 
    {
       return url.hashCode();
@@ -282,8 +306,4 @@ public class DeploymentInfo
    {
       return "DeploymentInfo:url=" + url;
    }
-      
 }
-
-
-
