@@ -24,7 +24,7 @@
 // File: FigNodeModelElement.java
 // Classes: FigNodeModelElement
 // Original Author: abonner
-// $Id: FigNodeModelElement.java,v 1.30 2002/10/18 07:13:52 mkl Exp $
+// $Id: FigNodeModelElement.java,v 1.31 2002/10/21 10:57:25 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -54,6 +54,7 @@ import org.argouml.kernel.*;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.*;
+import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.cognitive.*;
 import org.argouml.uml.*;
 import org.argouml.uml.ui.*;
@@ -498,6 +499,13 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
       _name.setText(nameStr);
     }
     updateStereotypeText();
+
+    if (ActionAutoResize.isAutoResizable()) {
+        CmdSetPreferredSize cmdSPS = 
+            new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
+        cmdSPS.setFigToResize(this);
+        cmdSPS.doIt();
+    }
   }
 
   protected void createFeatureIn(FigGroup fg, InputEvent me) {

@@ -26,7 +26,7 @@
 // File: FigEdgeModelElement.java
 // Classes: FigEdgeModelElement
 // Original Author: abonner
-// $Id: FigEdgeModelElement.java,v 1.13 2002/10/10 09:53:53 kataka Exp $
+// $Id: FigEdgeModelElement.java,v 1.14 2002/10/21 10:57:25 mkl Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -53,6 +53,7 @@ import org.argouml.kernel.*;
 import org.argouml.model.uml.UmlFactory;
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.*;
+import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.cognitive.*;
 import org.argouml.uml.*;
 import org.argouml.uml.ui.*;
@@ -361,6 +362,13 @@ implements VetoableChangeListener, DelayedVChangeListener, MouseListener, KeyLis
   protected void modelChanged() {
     updateNameText();
     updateStereotypeText();
+
+    if (ActionAutoResize.isAutoResizable()) {
+        CmdSetPreferredSize cmdSPS = 
+            new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
+        cmdSPS.setFigToResize(this);
+        cmdSPS.doIt();
+    }
     if (!updateClassifiers()) return;
   }
 
