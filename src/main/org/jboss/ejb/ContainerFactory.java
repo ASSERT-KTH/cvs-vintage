@@ -66,7 +66,7 @@ import org.jboss.verifier.event.VerificationListener;
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
 *
-*   @version $Revision: 1.25 $
+*   @version $Revision: 1.26 $
 */
 public class ContainerFactory
 	extends org.jboss.util.ServiceMBeanSupport
@@ -225,9 +225,11 @@ public class ContainerFactory
 				undeploy(url);
 
             // Check validity
+            Log.setLog(new Log("Verifier"));
+            
+            // wrapping this into a try - catch block to prevent errors in
+            // verifier from stopping the deployment
             try {
-                // wrapping this into a try - catch block to prevent errors in
-                // verifier from stopping the deployment
                 
                 if (verifyDeployments)
                 {
@@ -237,17 +239,24 @@ public class ContainerFactory
                     {
                        public void beanChecked(VerificationEvent event)
                        {
-                            System.out.println("Got event: " + event.getMessage());
+                            Log.getLog().log(event.getMessage());
                        }
                     });
     
+                    
+                    Log.getLog().log("Verifying " + url);
+                    
                     verifier.verify(url);
                 }
             }
             catch (Throwable t) {
-                System.out.println(t);
+                Log.getLog().exception(t);
             }
-    
+            
+            // unset verifier log
+            Log.unsetLog();
+            
+            
 			app.setURL(url);
 
 			log.log("Deploying:"+url);
