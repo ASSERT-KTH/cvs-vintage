@@ -19,7 +19,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: TransportStruct.java,v 1.1 2004/12/13 16:24:13 benoitf Exp $
+ * $Id: TransportStruct.java,v 1.2 2004/12/15 15:18:44 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.csiv2.struct;
@@ -66,7 +66,7 @@ public class TransportStruct implements Serializable {
         int sslPort = 0;
         try {
             rmiConfig = CarolConfiguration.getDefaultProtocol();
-            sslPort = rmiConfig.getPort();
+            sslPort = rmiConfig.getPort() + 1;
         } catch (RMIConfigurationException rce) {
             TraceCarol.error("Cannot find current rmiconfiguration", rce);
             return null;
