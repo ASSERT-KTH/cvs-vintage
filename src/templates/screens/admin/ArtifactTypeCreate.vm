@@ -6,7 +6,7 @@ $page.setTitle("Create artifact type")
 
 #macro (ArtifactTypeCreateBar $var)
 <div class="functnbar">
-      <input type="submit" value="Create" name="eventSubmit_doCreatenew" />&#160;
+      <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
       <input type="submit" value="Cancel" name="eventSubmit_doCancel"  />&#160;
 </div>
 #end
@@ -16,8 +16,7 @@ $page.setTitle("Create artifact type")
 <h2>$page.Title</h2>
 
 <form method="get" action="$link.setPage("admin,ArtifactTypeCreate.vm")">
-<input type="hidden" name="action" value="admin.GlobalArtifactTypes" />
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,GlobalArtifactTypeShow.vm" />
+<input type="hidden" name="action" value="admin.GlobalArtifactTypeCreate" />
 
 #ArtifactTypeCreateBar("")
 
@@ -34,6 +33,10 @@ $page.setTitle("Create artifact type")
     <td>#textAreaMedium("$group.Description.Key" $group.Description.Value)</td>
     </tr>
   </table>
+</div>
+
+<div class="functnbar3">
+      <input type="submit" value="save" name="eventSubmit_doSave" />&#160;
 </div>
 
 #ArtifactTypeCreateBar("2")
