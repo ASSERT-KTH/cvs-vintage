@@ -19,7 +19,7 @@ import org.jboss.ejb.Container;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public interface StatefulSessionPersistenceManager
    extends ContainerPlugin
@@ -44,6 +44,8 @@ public interface StatefulSessionPersistenceManager
 
    public void removeSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException, RemoveException;
+   
+   public void removePassivated(Object key);
    // Z implementation ----------------------------------------------
     
    // Package protected ---------------------------------------------
