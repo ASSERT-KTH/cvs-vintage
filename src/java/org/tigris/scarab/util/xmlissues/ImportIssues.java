@@ -99,7 +99,7 @@ import org.tigris.scarab.om.Module;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ImportIssues.java,v 1.19 2003/07/27 02:26:15 dlr Exp $
+ * @version $Id: ImportIssues.java,v 1.20 2003/07/28 17:27:52 dlr Exp $
  */
 public class ImportIssues
     implements ErrorHandler
@@ -519,13 +519,11 @@ public class ImportIssues
         ScarabIssues.setInValidationMode(state);
 
         // Setup the XML parser SAX2 features.
-        // http://xml.apache.org/xerces-c/program-sax2.html#validation
 
         // Turn on DTD validation (these are functionally equivalent
         // with Xerces 1.4.4 and likely most other SAX2 impls).
         reader.setValidating(state);
         reader.setFeature("http://xml.org/sax/features/validation", state);
-        LOG.debug("reader.validating=" + reader.getValidating());
 
         // Validate the document only if a grammar is specified
         // (http://xml.org/sax/features/validation must be state).
