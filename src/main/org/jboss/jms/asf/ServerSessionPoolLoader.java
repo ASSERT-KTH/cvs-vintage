@@ -36,7 +36,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class ServerSessionPoolLoader
    extends ServiceMBeanSupport
@@ -137,7 +137,8 @@ public class ServerSessionPoolLoader
       String jndiname = "java:/" + name;
       try {
          org.jboss.naming.Util.bind(ctx, jndiname, poolFactory);
-         log.info("pool factory " + name + " bound to "  + jndiname);
+         if (log.isInfoEnabled())
+            log.info("pool factory " + name + " bound to "  + jndiname);
       }
       finally {
          ctx.close();
@@ -159,7 +160,8 @@ public class ServerSessionPoolLoader
          String jndiname = "java:/" + name;
          
          ctx.unbind(jndiname);
-         log.info("pool factory " + name + " unbound from " + jndiname);
+         if (log.isInfoEnabled())
+            log.info("pool factory " + name + " unbound from " + jndiname);
       }
       catch (NamingException ignore) {}
       finally {

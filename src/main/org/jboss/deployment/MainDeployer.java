@@ -45,7 +45,7 @@ import org.jboss.util.DirectoryBuilder;
  * Takes a series of URL to watch, detects changes and calls the appropriate Deployers 
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public class MainDeployer
    extends ServiceMBeanSupport
@@ -290,7 +290,9 @@ public class MainDeployer
    
    public void undeploy(DeploymentInfo di)
    {
-      log.info("Undeploying "+di.url);
+      boolean infoEnabled = log.isInfoEnabled();
+      if (infoEnabled)
+         log.info("Undeploying "+di.url);
 
       // First remove all sub-deployments
       Iterator subs = di.subDeployments.iterator();
@@ -319,7 +321,8 @@ public class MainDeployer
          // Nuke my stuff, this includes the class loader
          di.cleanup(log);
          
-         log.info("Undeployed "+di.url);
+         if (infoEnabled)
+            log.info("Undeployed "+di.url);
       
       }
       catch (Exception e) { 
@@ -372,7 +375,8 @@ public class MainDeployer
          // If we are already deployed return
          if (deployments.containsKey(deployment.url)) return;
             
-         log.info("Deploying: " + deployment.url.toString());
+         if (log.isInfoEnabled());
+           log.info("Deploying: " + deployment.url.toString());
          
          // Create a local copy of that File, the sdi keeps track of the copy directory
          makeLocalCopy(deployment);

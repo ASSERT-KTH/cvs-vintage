@@ -52,7 +52,7 @@ import org.jboss.jms.jndi.JMSProviderAdapter;
  * Created: Thu Aug 23 21:17:26 2001
  *
  * @author
- * @version $Revision: 1.7 $ $Date: 2002/01/07 20:54:19 $
+ * @version $Revision: 1.8 $ $Date: 2002/02/09 16:09:24 $
  */
 
 public class DLQHandler
@@ -188,8 +188,8 @@ public class DLQHandler
          // if we can't get the id we are basically fucked
          if(id != null && incrementResentCount(id) > maxResent)
          {
-            log.info("Message resent to many time, sending it to DLQ. Id: "
-            + id);
+            if (log.isInfoEnabled())
+               log.info("Message resent too many time, sending it to DLQ. Id: " + id);
             sendMessage(msg);
             deleteFromBuffer(id);
             return true;

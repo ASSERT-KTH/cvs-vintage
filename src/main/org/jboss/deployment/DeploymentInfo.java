@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
 * @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
 * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
-* @version   $Revision: 1.5 $ <p>
+* @version   $Revision: 1.6 $ <p>
 *
 *      <b>20011211 marc fleury:</b>
 *      <ul>
@@ -223,9 +223,11 @@ public class DeploymentInfo
    public void cleanup(Logger log)
    {
       if (!recursiveDelete(new File(localUrl.getFile())))
-         log.info("could not delete directory " + localUrl.toString()+" restart will delete it");
+         if (log.isInfoEnabled())
+            log.info("could not delete directory " + localUrl.toString()+" restart will delete it");
       else 
-         log.info("Cleaned Deployment "+url);
+         if (log.isInfoEnabled())
+           log.info("Cleaned Deployment "+url);
       
       if (!isXML)
          ServiceLibraries.getLibraries().removeClassLoader((UnifiedClassLoader) ucl);

@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.42 $
+ * @version   $Revision: 1.43 $
  */
 public class JMSContainerInvoker
    implements ContainerInvoker, XmlLoadable
@@ -711,7 +711,8 @@ public class JMSContainerInvoker
       }
       if (destType == null)
       {
-         log.info("WARNING Could not determine destination type, defaults to: " + DEFAULT_DESTINATION_TYPE);
+         if (log.isInfoEnabled())
+            log.info("WARNING Could not determine destination type, defaults to: " + DEFAULT_DESTINATION_TYPE);
          destType = DEFAULT_DESTINATION_TYPE;
       }
       return destType;

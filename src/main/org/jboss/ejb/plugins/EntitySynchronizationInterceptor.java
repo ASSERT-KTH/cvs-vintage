@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -98,7 +98,7 @@ public class EntitySynchronizationInterceptor
    extends AbstractInterceptor
 {
    // Constants -----------------------------------------------------
- 
+
    // Attributes ----------------------------------------------------
  
    /**
@@ -153,7 +153,7 @@ public class EntitySynchronizationInterceptor
    
       } catch (Exception e)
       {
-         System.out.println(e.getMessage());
+         log.warn(e.getMessage());
       }
    }
  

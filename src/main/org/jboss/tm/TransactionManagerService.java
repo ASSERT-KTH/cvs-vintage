@@ -38,7 +38,7 @@ import org.jboss.system.ServiceMBeanSupport;
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  *  @author <a href="mailto:toby.allsopp@peace.com">Toby Allsopp</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  */
 public class TransactionManagerService
    extends ServiceMBeanSupport
@@ -79,7 +79,8 @@ public class TransactionManagerService
    {
       // Initialize the Xid constructor.
       if (xidClassName != null) {
-         log.info("Using Xid class '" + xidClassName + "'");
+         if (log.isInfoEnabled())
+            log.info("Using Xid class '" + xidClassName + "'");
          Class cls = Class.forName(xidClassName);
 
          TxCapsule.xidConstructor = cls.getConstructor(

@@ -31,6 +31,7 @@ import javax.jms.JMSException;
 // jboss imports
 import org.jboss.ejb.Container;
 import org.jboss.invocation.Invocation;
+import org.jboss.logging.Logger;
 import org.jboss.monitor.MetricsConstants;
 
 /**
@@ -44,6 +45,10 @@ import org.jboss.monitor.MetricsConstants;
  */
 public class MetricsInterceptor extends AbstractInterceptor
         implements MetricsConstants {
+
+    // Constants -----------------------------------------------------
+
+    private static Logger log = Logger.getLogger(MetricsInterceptor.class);
 
     // Attributes ----------------------------------------------------
     /** The container for this interceptor.             */
@@ -311,11 +316,13 @@ public class MetricsInterceptor extends AbstractInterceptor
                connection.close();
                    
            }
-           catch (NamingException e) {
-               System.out.println(e);
+           catch (NamingException e)
+           {
+               log.warn(e);
            }
-           catch (JMSException e) {
-               System.out.println(e);
+           catch (JMSException e)
+           {
+               log.warn(e);
            }
         }
     }

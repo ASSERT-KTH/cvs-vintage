@@ -49,7 +49,7 @@ import org.jboss.management.j2ee.J2EEApplication;
 /**
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.3 $
+* @version $Revision: 1.4 $
 */
 public class EARDeployer
 extends ServiceMBeanSupport
@@ -97,7 +97,8 @@ implements EARDeployerMBean
    {
       try
       {
-         log.info("Init J2EE application: " + di.url);
+         if (log.isInfoEnabled())
+           log.info("Init J2EE application: " + di.url);
          
          InputStream in = di.localCl.getResourceAsStream("META-INF/application.xml");
          XmlFileLoader xfl = new XmlFileLoader();
@@ -135,7 +136,8 @@ implements EARDeployerMBean
    throws DeploymentException
    {
       // now try to deploy
-      log.info("Deploying J2EE application: " + di.url);
+      if (log.isInfoEnabled())
+        log.info("Deploying J2EE application: " + di.url);
       
       // Create the appropriate JSR-77 instance
       /*  

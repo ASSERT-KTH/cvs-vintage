@@ -23,7 +23,7 @@ import org.jboss.system.ServiceMBeanSupport;
 /** The SecurityConfigMBean implementation. 
  
  @author Scott.Stark@jboss.org
- @version $Revision: 1.1 $
+ @version $Revision: 1.2 $
  */
 public class SecurityConfig extends ServiceMBeanSupport implements SecurityConfigMBean
 {
@@ -77,7 +77,8 @@ public class SecurityConfig extends ServiceMBeanSupport implements SecurityConfi
          if( loginConfig != null )
          {
             System.setProperty("java.security.auth.login.config", loginConfig.toExternalForm());
-            log.info("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
+            if (log.isInfoEnabled())
+               log.info("Using JAAS LoginConfig: "+loginConfig.toExternalForm());
          }
          else
          {

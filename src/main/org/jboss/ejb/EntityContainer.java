@@ -43,6 +43,7 @@ import javax.transaction.Transaction;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
+import org.jboss.logging.Logger;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
 import org.jboss.system.Registry;
@@ -60,7 +61,7 @@ import org.jboss.metadata.EntityMetaData;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.64 $
+* @version $Revision: 1.65 $
 *
 * <p><b>Revisions:</b>
 *
@@ -88,6 +89,8 @@ extends Container
 implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
 {
    // Constants -----------------------------------------------------
+
+   private static Logger log = Logger.getLogger(EntityContainer.class);
    
    // Attributes ----------------------------------------------------
    
@@ -979,7 +982,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
          return new Integer(((EntityCache)instanceCache).getCacheSize());
       }
       else if (actionName.equals("flushCache")) {
-         System.out.println("flushing cache");
+         log.info("flushing cache");
          ((EntityCache)instanceCache).flush();
          return null;
       }

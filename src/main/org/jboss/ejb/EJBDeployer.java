@@ -74,7 +74,7 @@ import org.jboss.management.j2ee.EjbModule;
 * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
 * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
 * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-* @version $Revision: 1.2 $ 
+* @version $Revision: 1.3 $ 
 */
 public class EJBDeployer
 extends ServiceMBeanSupport
@@ -382,7 +382,8 @@ implements EJBDeployerMBean
             BeanVerifier verifier = new BeanVerifier();
             
             verifier.addVerificationListener( new DeployListener ());
-            log.info( "Verifying " + sdi.url );
+            if (log.isInfoEnabled())
+               log.info( "Verifying " + sdi.url );
             verifier.verify( sdi.url, (ApplicationMetaData) sdi.metaData, sdi.ucl );
          }
       }
@@ -411,7 +412,8 @@ implements EJBDeployerMBean
          {
             BeanMetaData bean = (BeanMetaData) beans.next();
             
-            log.info( "Deploying " + bean.getEjbName() );
+            if (log.isInfoEnabled())
+               log.info( "Deploying " + bean.getEjbName() );
             try 
             {
                app.addContainer( createContainer( bean, sdi ) );
@@ -471,7 +473,8 @@ implements EJBDeployerMBean
       }
       
       // Undeploy application
-      log.info( "Undeploying:" + url );
+      if (log.isInfoEnabled())
+         log.info( "Undeploying:" + url );
       app.stop();
       //app.destroy();
       
@@ -491,7 +494,8 @@ implements EJBDeployerMBean
       EjbModule.destroy( getServer(), app.getModuleName() );
       }
       // Done
-      log.info( "Undeployed application: " + app.getName() );
+      if (log.isInfoEnabled())
+         log.info( "Undeployed application: " + app.getName() );
       }
       
       */

@@ -40,7 +40,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class JDBCStartCommand {
 
@@ -128,9 +128,12 @@ public class JDBCStartCommand {
          String tableName,
          String sql) throws DeploymentException {
 
+      boolean infoEnabled = log.isInfoEnabled();
+
       // does this table already exist
       if(tableExists(dataSource, tableName)) {
-         log.info("Table '" + tableName + "' already exists");
+         if (infoEnabled)
+            log.info("Table '" + tableName + "' already exists");
          return;
       }
 
@@ -176,7 +179,8 @@ public class JDBCStartCommand {
          throw new DeploymentException("Error while creating table", e);
       }
       // success
-      log.info("Created table '" + tableName + "' successfully.");
+      if (infoEnabled)
+         log.info("Created table '" + tableName + "' successfully.");
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
       createdTables.add(tableName);
    }
@@ -345,7 +349,8 @@ public class JDBCStartCommand {
          manager.getContainer().getTransactionManager().commit();
 
          // success
-         log.info("Added foreign key constriant to table '" + tableName);
+         if (log.isInfoEnabled())
+            log.info("Added foreign key constriant to table '" + tableName);
       } catch(Exception e) {
          log.debug("Could not add foreign key constriant: table=" + tableName);
          try {

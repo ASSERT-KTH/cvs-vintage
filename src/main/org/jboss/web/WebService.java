@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBeanSupport;
 
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  *   @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
  */
 public class WebService
    extends ServiceMBeanSupport
@@ -102,7 +102,9 @@ public class WebService
    {
       // Start the WebServer running
       server.start();
-      log.info("Started webserver with address: " + server.getBindAddress() + " port: "+server.getPort());
+      boolean infoEnabled = log.isInfoEnabled();
+      if (infoEnabled)
+         log.info("Started webserver with address: " + server.getBindAddress() + " port: "+server.getPort());
 
       // Set the rmi codebase if it is not already set
       String codebase = System.getProperty("java.rmi.server.codebase");
@@ -111,7 +113,8 @@ public class WebService
         codebase = "http://"+host+":"+getPort()+"/";
         System.setProperty("java.rmi.server.codebase", codebase);
       }
-      log.info("Codebase set to: "+codebase);
+      if (infoEnabled)
+         log.info("Codebase set to: "+codebase);
    }
 
    public void stopService()

@@ -33,7 +33,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:david_jencks@earthlink.net">David Jencks</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson</a>
  * 
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * 
  *   <p><b>Revisions:</b>
  *
@@ -137,8 +137,10 @@ public class JDBCInitCommand
          }
 
          // Try to create it
+         boolean infoEnabled = log.isInfoEnabled();
          if(created) {
-             log.info("Table '"+jawsEntity.getTableName()+"' already exists");
+             if (infoEnabled)
+                 log.info("Table '"+jawsEntity.getTableName()+"' already exists");
          } else {
              try
              {
@@ -148,7 +150,8 @@ public class JDBCInitCommand
                 factory.getContainer().getTransactionManager().commit ();
 
                 // Create successful, log this
-                log.info("Created table '"+jawsEntity.getTableName()+"' successfully.");
+                if (infoEnabled)
+                    log.info("Created table '"+jawsEntity.getTableName()+"' successfully.");
 	             if (jawsEntity.getPrimKeyField() != null)
 	               if (debug)
                     log.debug("Primary key of table '"+jawsEntity.getTableName()+"' is '"

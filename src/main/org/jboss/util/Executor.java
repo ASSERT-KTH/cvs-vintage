@@ -19,7 +19,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- *   @version $Revision: 1.8 $
+ *   @version $Revision: 1.9 $
  */
 public class Executor
    implements ExecutorMBean, MBeanRegistration
@@ -43,7 +43,9 @@ public class Executor
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws java.lang.Exception
    {
-      log.info("Execute:"+exec);
+      boolean infoEnabled = log.isInfoEnabled();
+      if (infoEnabled)
+         log.info("Execute:"+exec);
       Process p = Runtime.getRuntime().exec(exec);
       
       p.getErrorStream().close();
@@ -53,7 +55,8 @@ public class Executor
          log.info(line);
       
       p.waitFor();
-      log.info("Done");
+      if (infoEnabled)
+         log.info("Done");
          
       return new ObjectName(OBJECT_NAME);
    }

@@ -31,7 +31,7 @@ import org.jboss.invocation.MarshalledInvocation;
 * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @version $Revision: 1.40 $
+* @version $Revision: 1.41 $
 *
 * <p><b>Revisions</b>
 * <p><b>20010704</b>
@@ -496,6 +496,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
       
       if (homeInterface != null)
       {
+         boolean infoEnabled = log.isInfoEnabled();
+
          Method[] m = homeInterface.getMethods();
          for (int i = 0; i < m.length; i++)
          {
@@ -506,13 +508,16 @@ implements ContainerInvokerContainer, InstancePoolContainer
                      { Invocation.class }));
             } catch (NoSuchMethodException e)
             {
-               log.info(m[i].getName() + " in bean has not been mapped");
+               if (infoEnabled)
+                  log.info(m[i].getName() + " in bean has not been mapped");
             }
          }
       }
       
       if (localHomeInterface != null)
       {
+         boolean infoEnabled = log.isInfoEnabled();
+
          Method[] m = localHomeInterface.getMethods();
          for (int i = 0; i < m.length; i++)
          {
@@ -523,7 +528,8 @@ implements ContainerInvokerContainer, InstancePoolContainer
                      { Invocation.class }));
             } catch (NoSuchMethodException e)
             {
-               log.info(m[i].getName() + " in bean has not been mapped");
+               if (infoEnabled)
+                  log.info(m[i].getName() + " in bean has not been mapped");
             }
          }
       }
@@ -669,37 +675,36 @@ implements ContainerInvokerContainer, InstancePoolContainer
       public Object invokeHome(Invocation mi)
       throws Exception
       {
-         
-         log.info("HOMEMETHOD coming in ");
-         log.info(""+mi.getMethod());
-         log.info("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
-         log.info("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
-         
-         
-         log.info("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
+         boolean debug = log.isDebugEnabled();
+         if (debug)
+         {
+            log.debug("HOMEMETHOD coming in ");
+            log.debug(""+mi.getMethod());
+            log.debug("HOMEMETHOD coming in hashcode"+mi.getMethod().hashCode());
+            log.debug("HOMEMETHOD coming in classloader"+mi.getMethod().getDeclaringClass().getClassLoader().hashCode());
+            log.debug("CONTAINS "+homeMapping.containsKey(mi.getMethod()));
+         }
          
          Method m = (Method)homeMapping.get(mi.getMethod());
          // Invoke and handle exceptions
                   
-         log.info("HOMEMETHOD m "+m);
-//         log.info("MAP "+homeMapping);
-         
-         java.util.Iterator iterator = homeMapping.keySet().iterator();
-         while(iterator.hasNext()) 
+         if (debug)
          {
-            
-            Method me = (Method) iterator.next();
-               
-            if (me.getName().endsWith("create")) 
-            {
-               
-             log.info(me.toString());
-             log.info(""+me.hashCode());
-             log.info(""+me.getDeclaringClass().getClassLoader().hashCode());
-             log.info("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
-            }
-               
+            log.debug("HOMEMETHOD m "+m);
          
+            java.util.Iterator iterator = homeMapping.keySet().iterator();
+            while(iterator.hasNext()) 
+            {
+               Method me = (Method) iterator.next();
+               
+               if (me.getName().endsWith("create")) 
+               {
+                  log.debug(me.toString());
+                  log.debug(""+me.hashCode());
+                  log.debug(""+me.getDeclaringClass().getClassLoader().hashCode());
+                  log.debug("equals "+me.equals(mi.getMethod())+ " "+mi.getMethod().equals(me));
+               }
+            }
          }
          
          try

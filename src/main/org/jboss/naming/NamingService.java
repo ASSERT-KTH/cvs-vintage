@@ -31,7 +31,7 @@ import org.jboss.system.ServiceMBeanSupport;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -193,7 +193,8 @@ public class NamingService
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
       Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
-      log.info("Listening on port "+naming.getPort());
+      if (log.isInfoEnabled())
+         log.info("Listening on port "+naming.getPort());
    }
 
    public void stopService()

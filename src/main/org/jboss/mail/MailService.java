@@ -28,7 +28,7 @@ import org.jboss.naming.NonSerializableFactory;
  * in JNDI under java:/ namespace with the name provided with method {@link #setJNDIName}.
  *
  * @author <a href="mailto:simone.bordet@compaq.com">Simone Bordet</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class MailService
 	extends ServiceMBeanSupport
@@ -135,7 +135,8 @@ public class MailService
 		Reference ref = new Reference(Session.class.getName(), addr, NonSerializableFactory.class.getName(), null);
 		ctx.bind(n.get(0), ref);
 
-		log.info("Mail Service '" + getJNDIName() + "' bound to " + m_bindName);
+            if (log.isInfoEnabled())
+               log.info("Mail Service '" + getJNDIName() + "' bound to " + m_bindName);
 	}
 
 	private void unbind() throws NamingException
@@ -144,7 +145,8 @@ public class MailService
 		{
 			new InitialContext().unbind(m_bindName);
 			NonSerializableFactory.unbind(m_bindName);
-			log.info("Mail service '" + getJNDIName() + "' removed from JNDI");
+                  if (log.isInfoEnabled())
+                     log.info("Mail service '" + getJNDIName() + "' removed from JNDI");
 		}
 	}
 }
