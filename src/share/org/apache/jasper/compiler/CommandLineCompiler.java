@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.3 2000/02/14 06:15:11 shemnon Exp $
- * $Revision: 1.3 $
- * $Date: 2000/02/14 06:15:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CommandLineCompiler.java,v 1.4 2000/02/23 17:47:36 rubys Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/02/23 17:47:36 $
  *
  * The Apache Software License, Version 1.1
  *
@@ -117,7 +117,7 @@ public class CommandLineCompiler extends Compiler implements Mangler {
      * Always outDated.  (Of course we are, this is an explicit invocation
      *@returns true
      */
-    protected boolean isOutDated() {
+    public boolean isOutDated() {
         return true;
     };
 
