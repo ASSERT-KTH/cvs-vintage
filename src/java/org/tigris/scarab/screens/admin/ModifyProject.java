@@ -66,7 +66,7 @@ import org.tigris.scarab.services.module.ModuleManager;
     for the admin,ModifyProject Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyProject.java,v 1.5 2001/05/14 21:43:55 jon Exp $
+    @version $Id: ModifyProject.java,v 1.6 2001/05/15 02:39:48 jon Exp $
 */
 public class ModifyProject extends ScarabContextLoginFirst
 {
@@ -100,7 +100,7 @@ public class ModifyProject extends ScarabContextLoginFirst
         }
         else
         {
-            context.put ("newproject", ModuleManager.getEmptyModule());
+            context.put ("newproject", ModuleManager.getInstance());
             context.put ("newprojectowner", "");
             context.put ("newprojectqaContact", "");            
         }

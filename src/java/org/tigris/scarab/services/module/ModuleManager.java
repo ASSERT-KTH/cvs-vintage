@@ -58,6 +58,12 @@ import org.apache.turbine.util.StringUtils;
 import org.apache.turbine.util.RunData;
 import org.apache.turbine.util.db.Criteria;
 
+/**
+ * This class has static methods for working with a Module object
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: ModuleManager.java,v 1.2 2001/05/15 02:39:48 jon Exp $
+ */
 public abstract class ModuleManager
 {
     /**
@@ -65,17 +71,23 @@ public abstract class ModuleManager
      * TurbineResources.
      *
      * @return an implementation of ModuleService.
+     */
     public static ModuleService getService()
     {
         return (ModuleService)TurbineServices.getInstance().
             getService(ModuleService.SERVICE_NAME);    
     }
 
-    public static ModuleEntity getNewModuleEntity()
+    public static ModuleEntity getInstance()
+        throws Exception
     {
-        getService().getNewModuleEntity();
+        return getService().getInstance();
     }
-     */
+
+    public static Class getModuleClass()
+    {
+        return getService().getModuleClass();
+    }
 
     /**
         gets a single project
@@ -123,7 +135,7 @@ public abstract class ModuleManager
         String name = data.getParameters().getString("project_name",null);
         String desc = data.getParameters().getString("project_description",null);
 
-        Module sm = new Module();
+        Module sm = (Module) getInstance();
         sm.setPrimaryKey(project_id);
         sm.setName( StringUtils.makeString( name ));
         sm.setDescription( StringUtils.makeString( desc ));
@@ -158,7 +170,6 @@ public abstract class ModuleManager
 
     /**
         returns an empty module
-    */
     public static Module getEmptyModule()
     {
         Module sm = new Module();
@@ -167,6 +178,7 @@ public abstract class ModuleManager
         sm.setUrl("");
         return sm;
     }
+    */
     
     /**
         check for a duplicate project name
