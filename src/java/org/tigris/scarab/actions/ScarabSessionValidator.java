@@ -51,17 +51,15 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.actions.TemplateSessionValidator;
 
-import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 
 /**
  * Sets the home page to the current target
  *  
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabSessionValidator.java,v 1.2 2003/04/01 02:50:43 jon Exp $
+ * @version $Id: ScarabSessionValidator.java,v 1.3 2003/04/04 18:09:17 jon Exp $
  */
 public class ScarabSessionValidator extends TemplateSessionValidator
 {

@@ -52,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -90,11 +89,11 @@ import org.tigris.scarab.om.Module;
  * initialized, there is no need to call the init() method.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportIssues.java,v 1.14 2003/04/03 18:02:29 jon Exp $
+ * @version $Id: ImportIssues.java,v 1.15 2003/04/04 18:09:18 jon Exp $
  */
 public class ImportIssues
 {
-    private final static Log log = LogFactory.getLog(ImportIssues.class);
+    private static final Log LOG = LogFactory.getLog(ImportIssues.class);
 
 
     /** 
@@ -218,7 +217,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        log.debug("Importing: " + importFile.getAbsolutePath());
+        LOG.debug("Importing: " + importFile.getAbsolutePath());
 
         try
         {
@@ -239,7 +238,7 @@ public class ImportIssues
 
         catch(Exception e)
         {
-            log.debug("\nThe following error(s) were found: " 
+            LOG.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
@@ -298,7 +297,7 @@ public class ImportIssues
         throws Exception
     {
         List importErrors = null;
-        log.debug("Importing: " + importFile.getName());
+        LOG.debug("Importing: " + importFile.getName());
 
         try
         {
@@ -317,7 +316,7 @@ public class ImportIssues
 
         catch(Exception e)
         {
-            log.debug("\nThe following error(s) were found: " 
+            LOG.debug("\nThe following error(s) were found: " 
                 + "\n------------------------------------------------------\n" 
                 + e.getMessage());
             throw e;
@@ -385,12 +384,12 @@ public class ImportIssues
             }
             else
             {
-                log.error("Found " + importErrors.size() + " errors importing "
+                LOG.error("Found " + importErrors.size() + " errors importing "
                     + ((name != null)? name: "null") + ":");
                 for (Iterator itr = importErrors.iterator(); itr.hasNext();)
                 {
                     String message = (String)itr.next();
-                    log.error(message);
+                    LOG.error(message);
                 }
             }
         }
@@ -418,7 +417,7 @@ public class ImportIssues
         ScarabIssues.setInValidationMode(false);
         ScarabIssues si = (ScarabIssues)reader.parse(is);
         si.doHandleDependencies();
-        log.debug("Successfully imported " + name + "!");
+        LOG.debug("Successfully imported " + name + "!");
         return si;
     }
 

@@ -65,8 +65,6 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.UserPreference;
-import org.tigris.scarab.om.UserPreferenceManager;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
@@ -74,7 +72,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.42 2003/04/04 02:46:43 jon Exp $
+ * @version $Id: Login.java,v 1.43 2003/04/04 18:09:17 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {

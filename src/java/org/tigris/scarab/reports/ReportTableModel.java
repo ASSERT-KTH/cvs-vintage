@@ -54,7 +54,6 @@ import com.workingdogs.village.Record;
 
 // Turbine classes
 import org.apache.torque.util.Criteria;
-import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.MITList;
@@ -67,6 +66,12 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.util.TableModel;
 import org.tigris.scarab.services.security.ScarabSecurity;
 
+/** 
+ * This class represents a ReportTableModel.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
+ * @version $Id: ReportTableModel.java,v 1.5 2003/04/04 18:09:17 jon Exp $
+ */
 public class ReportTableModel 
     extends TableModel
 { 
