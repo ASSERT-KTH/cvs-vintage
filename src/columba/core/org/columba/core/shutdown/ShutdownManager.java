@@ -1,4 +1,5 @@
-//The contents of this file are subject to the Mozilla Public License Version 1.1
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
 //(the "License"); you may not use this file except in compliance with the
 //License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
 //
@@ -9,7 +10,8 @@
 //
 //The Original Code is "The Columba Project"
 //
-//The Initial Developers of the Original Code are Frederik Dietz and Timo Stich.
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
@@ -28,44 +30,45 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-
 /**
- * Manages all tasks which are responsible for doing clean-up work
- * when shutting down Columba.
+ * Manages all tasks which are responsible for doing clean-up work when shutting
+ * down Columba.
  * <p>
  * This includes saving the xml configuration, saving folder data, etc.
  * <p>
  * Tasks use <code>register</code> to the managers shutdown queue.
  * <p>
- * When shutting down Columba, the tasks will be running in the opposite
- * order the have registered at.<br>
- * Currently this is the following:<br>
+ * When shutting down Columba, the tasks will be running in the opposite order
+ * the have registered at. <br>
+ * Currently this is the following: <br>
  * <ul>
- *  <li>addressbook folders header cache</li>
- *  <li>POP3 header cache</li>
- *  <li>email folders header cache</li>
- *  <li>core tasks (no core tasks used currently)!</li>
+ * <li>addressbook folders header cache</li>
+ * <li>POP3 header cache</li>
+ * <li>email folders header cache</li>
+ * <li>core tasks (no core tasks used currently)!</li>
  * <ul>
  * <p>
  * Note, that I used the opposite ordering to make sure that core tasks are
- * executed first. But, currently there are no core tasks available which
- * would demand this behaviour.
+ * executed first. But, currently there are no core tasks available which would
+ * demand this behaviour.
  * <p>
- * Saving email folder header cache is running as a {@link Command}. Its therefore
- * a background thread, where we don't know when its finished. This is the reason
- * why we use <code>MainInterface.processor.getTaskManager().count()</code> to check
- * if no more commands are running.
+ * Saving email folder header cache is running as a {@link Command}. Its
+ * therefore a background thread, where we don't know when its finished. This is
+ * the reason why we use
+ * <code>MainInterface.processor.getTaskManager().count()</code> to check if
+ * no more commands are running.
  * <p>
- * Finally, note that the {@link ColumbaServer} is stopped first, then the
- * background manager, afterwards all registered shutdown tasks and finally
- * the xml configuration is saved. Note, that the xml configuration has to
- * be saved <b>after</b> the email folders where saved.
- *
+ * Finally, note that the {@link ColumbaServer}is stopped first, then the
+ * background manager, afterwards all registered shutdown tasks and finally the
+ * xml configuration is saved. Note, that the xml configuration has to be saved
+ * <b>after </b> the email folders where saved.
+ * 
  * @author fdietz
  */
 public class ShutdownManager {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.core.shutdown");
+    private static final Logger LOG = Logger
+            .getLogger("org.columba.core.shutdown");
 
     protected static final String RESOURCE_PATH = "org.columba.core.i18n.dialog";
 
@@ -75,8 +78,8 @@ public class ShutdownManager {
     private static ShutdownManager instance;
 
     /**
-     * Indicates whether this ShutdownManager instance is registered as a
-     * system shutdown hook.
+     * Indicates whether this ShutdownManager instance is registered as a system
+     * shutdown hook.
      */
     private boolean shutdownHook = false;
 
@@ -91,72 +94,74 @@ public class ShutdownManager {
     protected List list = new LinkedList();
 
     /**
-     * This constructor is only to be accessed by getShutdownManager() and
-     * by subclasses.
+     * This constructor is only to be accessed by getShutdownManager() and by
+     * subclasses.
      */
     protected ShutdownManager() {
         shutdownThread = new Thread(new Runnable() {
-                    public void run() {
-                        // stop background-manager so it doesn't interfere with
-                        // shutdown manager
-                        MainInterface.backgroundTaskManager.stop();
 
-                        while (!isShutdownHook()
-                                && (MainInterface.processor.getTaskManager().count() > 0)) {
-                            // ask user to kill pending running commands or wait
-                            Object[] options = {
-                                GlobalResourceLoader.getString(RESOURCE_PATH,
+            public void run() {
+                // stop background-manager so it doesn't interfere with
+                // shutdown manager
+                MainInterface.backgroundTaskManager.stop();
+
+                while (!isShutdownHook()
+                        && (MainInterface.processor.getTaskManager().count() > 0)) {
+                    // ask user to kill pending running commands or wait
+                    Object[] options = {
+                            GlobalResourceLoader.getString(RESOURCE_PATH,
                                     "session", "tasks_wait"),
-                                GlobalResourceLoader.getString(RESOURCE_PATH,
-                                    "session", "tasks_exit")
-                            };
-                            int n = JOptionPane.showOptionDialog(null,
-                                    GlobalResourceLoader.getString(
-                                        RESOURCE_PATH, "session", "tasks_msg"),
-                                    GlobalResourceLoader.getString(
-                                        RESOURCE_PATH, "session", "tasks_title"),
-                                    JOptionPane.YES_NO_OPTION,
-                                    JOptionPane.QUESTION_MESSAGE, null,
-                                    options, options[0]);
+                            GlobalResourceLoader.getString(RESOURCE_PATH,
+                                    "session", "tasks_exit")};
+                    int n = JOptionPane.showOptionDialog(null,
+                            GlobalResourceLoader.getString(RESOURCE_PATH,
+                                    "session", "tasks_msg"),
+                            GlobalResourceLoader.getString(RESOURCE_PATH,
+                                    "session", "tasks_title"),
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, options,
+                            options[0]);
 
-                            if (n == 0) {
-                                //wait 10 seconds and check for pending commands again
-                                //this is useful if a command causes a deadlock
-                                for (int i = 0; i < 10; i++) {
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException ie) {
-                                    }
-                                }
-                            } else {
-                                //don't wait, just continue shutdown procedure, commands will
-                                //be killed
-                                break;
-                            }
-                        }
-
-                        ShutdownDialog dialog = (ShutdownDialog) openShutdownDialog();
-
-                        Iterator iterator = list.iterator();
-                        Runnable plugin;
-
-                        while (iterator.hasNext()) {
-                            plugin = (Runnable) iterator.next();
-
+                    if (n == 0) {
+                        //wait 10 seconds and check for pending commands again
+                        //this is useful if a command causes a deadlock
+                        for (int i = 0; i < 10; i++) {
                             try {
-                                plugin.run();
-                            } catch (Exception e) {
-                                LOG.severe(e.getMessage());
-
-                                //TODO: better exception handling
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ie) {
                             }
                         }
-
-                        //we don't need to check for running commands here because there aren't
-                        //any, shutdown plugins only use this thread
-                        dialog.close();
+                    } else {
+                        //don't wait, just continue shutdown procedure,
+                        // commands will
+                        //be killed
+                        break;
                     }
-                }, "ShutdownManager");
+                }
+
+                ShutdownDialog dialog = (ShutdownDialog) openShutdownDialog();
+
+                Iterator iterator = list.iterator();
+                Runnable plugin;
+
+                while (iterator.hasNext()) {
+                    plugin = (Runnable) iterator.next();
+
+                    try {
+                        plugin.run();
+                    } catch (Exception e) {
+                        LOG.severe(e.getMessage());
+
+                        //TODO: better exception handling
+                    }
+                }
+
+                //we don't need to check for running commands here because
+                // there aren't
+                //any, shutdown plugins only use this thread
+                dialog.close();
+            }
+        }, "ShutdownManager");
         setShutdownHook(true);
     }
 
@@ -180,9 +185,7 @@ public class ShutdownManager {
      * shutdown hook.
      */
     protected synchronized void setShutdownHook(boolean b) {
-        if (shutdownHook == b) {
-            return;
-        }
+        if (shutdownHook == b) { return; }
 
         if (b) {
             Runtime.getRuntime().addShutdownHook(shutdownThread);
@@ -199,19 +202,24 @@ public class ShutdownManager {
     public synchronized void shutdown(final int status) {
         setShutdownHook(false);
         new Thread(new Runnable() {
-                public void run() {
-                    shutdownThread.run();
-                    System.exit(status);
-                }
-            }, "ShutdownManager").start();
+
+            public void run() {
+                shutdownThread.run();
+                System.exit(status);
+            }
+        }, "ShutdownManager").start();
     }
 
     /**
      * Returns a component notifying the user of the shutdown procedure.
      */
     protected Component openShutdownDialog() {
-        JFrame dialog = new ShutdownDialog();
-
+        JFrame dialog = null;
+        try {
+            dialog = new ShutdownDialog();
+        } catch (Exception e) {
+            if (MainInterface.DEBUG) e.printStackTrace();
+        }
         return dialog;
     }
 

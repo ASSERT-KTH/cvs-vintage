@@ -44,7 +44,7 @@ public class ShutdownDialog extends JFrame implements ActionListener {
     private JProgressBar progressBar;
     private Timer timer;
 
-    public ShutdownDialog() {
+    public ShutdownDialog() throws Exception{
         super(GlobalResourceLoader.getString(RESOURCE_PATH, "session",
                 "exit_title"));
 
