@@ -265,8 +265,10 @@ public class PrintMessageCommand extends FolderCommand {
 
 			for (int i = 0; i < attachments.size(); i++) {
 				StreamableMimePart mp = (StreamableMimePart) attachments.get(i);
-				String contentType = mp.getHeader().getContentType();
-				String contentSubtype = mp.getHeader().getContentSubtype();
+				String contenttype = 
+						mp.getHeader().getMimeType().getType();
+				String contentSubtype = 
+						mp.getHeader().getMimeType().getSubtype();
 
 				if (mp.getHeader().getFileName() != null) {
 					// one line is added to the header for each attachment
@@ -289,7 +291,8 @@ public class PrintMessageCommand extends FolderCommand {
 			}
 
 			// Add body of message to print
-			String mimesubtype = bodyPart.getHeader().getContentSubtype();
+			String mimesubtype = 
+					bodyPart.getHeader().getMimeType().getSubtype();
 			if (mimesubtype.equals("html")) {
 				messageDoc.appendPrintObject(getHTMLBodyPrintObject((StreamableMimePart)bodyPart));
 			} else {

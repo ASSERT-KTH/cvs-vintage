@@ -130,7 +130,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 
 			// determine type of body part
 			boolean ishtml = false;
-			if (bodyPart.getHeader().getContentSubtype().equals("html"))
+			if (bodyPart.getHeader().getMimeType().getSubtype().equals("html"))
 				ishtml = true;
 
 			// setup filters and filename for file chooser dialog
@@ -415,7 +415,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		 * by encapsulating the message body in html tags
 		 */ 
 		String body;
-		if (!bodyPart.getHeader().getContentSubtype().equals("html")) {
+		if (!bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
 			try {
 				// substitute special characters like:  <,>,&,\t,\n		
 				body = HtmlParser.substituteSpecialCharacters(decodedBody);
@@ -425,8 +425,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 				body = HtmlParser.substituteEmailAddress(body);
 
 				// mark quotings with special font
-				DocumentParser parser = new DocumentParser();
-				body = parser.markQuotings(body);
+				body = DocumentParser.markQuotings(body);
 				
 			} catch (Exception e) {
 				ColumbaLogger.log.error("Error parsing body", e);
@@ -561,7 +560,7 @@ public class SaveMessageBodyAsCommand extends FolderCommand {
 		String decodedBody = getDecodedMessageBody(bodyPart);
 		
 		String body;
-		if (bodyPart.getHeader().getContentSubtype().equals("html")) {
+		if (bodyPart.getHeader().getMimeType().getSubtype().equals("html")) {
 			// strip tags
 			//body = parser.stripHTMLTags(decodedBody, true);
 			//body = parser.restoreSpecialCharacters(body);

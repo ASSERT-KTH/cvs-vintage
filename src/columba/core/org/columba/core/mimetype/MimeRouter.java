@@ -96,13 +96,20 @@ public class MimeRouter {
 	public String getViewer(MimeHeader input) {
 		String output;
 
-		output = getViewer(input.getContentType(), input.getContentSubtype());
+		//output = getViewer(input.getContentType(), input.getContentSubtype());
+		output = getViewer(
+					input.getMimeType().getType(),
+					input.getMimeType().getSubtype());
 
 		return output;
 	}
 
 	public void setViewer(MimeHeader input, String viewer) {
-		setViewer(input.getContentType(), input.getContentSubtype(), viewer);
+		//setViewer(input.getContentType(), input.getContentSubtype(), viewer);
+		setViewer(
+				input.getMimeType().getType(),
+				input.getMimeType().getSubtype(),
+				viewer);
 	}
 
 	public String getViewer(String contentType, String subType) {
