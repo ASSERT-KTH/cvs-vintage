@@ -1,9 +1,11 @@
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
 #set ($groupId = $data.Parameters.getString("groupid"))
-
+#set ($immutable = $attribute.SystemDefined)
 <div class="app" id="div3-0-2-0">
-
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedAttribute</strong></p>
+#end
 #if ($deleting)
    <form action="$link.setPage("admin,GlobalAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
@@ -66,6 +68,9 @@
     #if ($types.isEmpty())
       <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId" />
       $attribute.AttributeType.Name <p><em>$l10n.TypeCannotChange</em></p>
+    #elseif ($immutable)
+      <input type="hidden" name="$attgroup.TypeId.Key" value="$attribute.TypeId" />
+      $attribute.AttributeType.Name
     #else
     <select name="$attgroup.TypeId.Key" size="1">
     #foreach ($atype in $types)
@@ -81,7 +86,12 @@
   <th>* $l10n.Name</th>
   <td>
     #fieldErrorMsg($attgroup.Name "")
+    #if(!$immutable)
     <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name" />
+    #else
+    <input type="hidden" name="$attgroup.Name.Key" value="$!attgroup.Name" />
+    $!attgroup.Name
+    #end
   </td>
  </tr>
  <tr>
@@ -104,9 +114,14 @@
   </td>
  </tr>
   #end
+
  <tr>
   <th>$l10n.Deleted</th>
+  #if(!$immutable)
   <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  #else
+  <td>#booleanCheckboxLock ($attgroup.Deleted $immutable)</td>
+  #end
  </tr>
 #end
 </table>
@@ -140,7 +155,11 @@
 #foreach ($pcao in $pcaos)
     #set ($pcaoGroup = $intake.ParentChildAttributeOption.mapTo($pcao))
     #indexedRows($velocityCount)
-     <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
+     #if(!$immutable)
+       <td>#booleanCheckbox ($pcaoGroup.Deleted)</td>
+     #else
+       <td>#booleanCheckboxLock ($pcaoGroup.Deleted $immutable)</td>
+     #end
      <td>
      <select name="$pcaoGroup.ParentId.Key">
      #if ($pcao.ParentId.toString().equals("0"))
@@ -160,7 +179,16 @@
      #end
      </select>
      </td>
-     <td><input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" /></td>
+
+     <td>
+     #if(!$immutable)
+      <input type="text" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" />
+     #else
+       $pcaoGroup.Name
+       <input type="hidden" size="25" name="$pcaoGroup.Name.Key" value="$pcaoGroup.Name" />
+     #end
+     </td>
+
      <td>
         #numericSelect($pcaoGroup.PreferredOrder.Key 1 $maxNum $pcaoGroup.PreferredOrder.Value 1)
      </td>

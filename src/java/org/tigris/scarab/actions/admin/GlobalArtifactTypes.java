@@ -67,7 +67,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: GlobalArtifactTypes.java,v 1.37 2003/03/28 01:20:40 jon Exp $
+ * @version $Id: GlobalArtifactTypes.java,v 1.38 2003/07/26 18:26:57 jmcnally Exp $
  */
 public class GlobalArtifactTypes extends RequireLoginFirstAction
 {
@@ -166,7 +166,7 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
         IssueType issueType = null;
         boolean deleted = false;
         boolean hasIssues = false;
-
+        boolean immutable = false;
         Object[] keys = data.getParameters().getKeys();
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IntakeTool intake = getIntakeTool(context);
@@ -179,14 +179,19 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
                 issueType = IssueTypeManager.getInstance(new Integer(id));
                 if (issueType != null)
                 {
-                    if (issueType.hasIssues())
+                    Group group = intake.get("IssueType", issueType.getQueryKey());
+                    Field field = group.get("Name");
+                    if (issueType.isSystemDefined())
                     {
-                        Group group = intake.get("IssueType", issueType.getQueryKey());
-                        Field field = group.get("Name");
+                        field.setMessage("CannotDeleteSystemSpecifiedIssueType");
+                        immutable = true;
+                    }
+                    else if (issueType.hasIssues())
+                    {
                         field.setMessage("IssueTypeHasIssues");
                         hasIssues = true;
                     }
-                    else 
+                    else
                     {
                         issueType.setDeleted(true);
                         issueType.save();
@@ -196,7 +201,11 @@ public class GlobalArtifactTypes extends RequireLoginFirstAction
             }
         }
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (hasIssues)
+        if (immutable)
+        {
+            scarabR.setAlertMessage(l10n.get("CannotDeleteSystemSpecifiedIssueType"));
+        }
+        else if (hasIssues)
         {
             scarabR.setAlertMessage(l10n.get("CannotDeleteIssueTypesWithIssues"));
         }

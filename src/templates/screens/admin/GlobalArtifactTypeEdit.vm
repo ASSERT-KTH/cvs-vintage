@@ -1,11 +1,15 @@
 #set ($issueType = $scarabR.IssueType)
 #set ($itGroup = $intake.IssueType.mapTo($issueType))
+#set ($immutable = $issueType.SystemDefined)
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedIssueType</strong></p>
+#end
 
 <div class="app" id="div2-1-4-0">
 
 #macro (GlobalArtifactTypeEdit $var)
 <div class="functnbar$var">
-#if (!$createNew)
+#if (!$createNew && !$immutable)
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
@@ -69,11 +73,11 @@
     </tr>
   </table>
 </div>
-
+#if (!$immutable)
 <div class="functnbar3">
       <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
 </div>
-
+#end
 #asterisk()
 
 #if ($createNew.equals(false))
@@ -126,7 +130,7 @@
 <p><em>$l10n.NoAttributeGroups</em></p>
 #end
 </table>
-
+#if (!$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
 #if ($groups.size() > 0)
@@ -134,11 +138,11 @@
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeletegroup" />&#160;
 #end
 </div>
-
+#end
 
 <h3>$l10n.UserAttributes</h3>
 #set ($userAttrs = $issueType.getUserAttributes(false))
-#if ($userAttrs.isEmpty())
+#if ($userAttrs.isEmpty() && !$immutable)
   <p><em>$l10n.NoUserAttributesForType</em></p>
 
 <div class="functnbar3">
@@ -169,13 +173,14 @@
 #end
 
 </table>
-
+#if (!$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
 <input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDeleteuserattribute" />&#160;
 ##<input type="submit" value="$l10n.Resort" name="eventSubmit_doSaveuserattributes" />
 </div>
+#end
 #end
 
 #end

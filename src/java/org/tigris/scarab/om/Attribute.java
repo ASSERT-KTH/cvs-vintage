@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
   * and AttributeOption objects.
   *
   * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-  * @version $Id: Attribute.java,v 1.71 2003/07/22 01:21:12 elicia Exp $
+  * @version $Id: Attribute.java,v 1.72 2003/07/26 18:26:57 jmcnally Exp $
   */
 public class Attribute 
     extends BaseAttribute
@@ -830,7 +830,7 @@ public class Attribute
         }
 
         crit = new Criteria();
-        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID, 
+        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID,
                  getAttributeId());
         List rias = RIssueTypeAttributePeer.doSelect(crit);
         for (Iterator i = rias.iterator(); i.hasNext();)
@@ -840,4 +840,45 @@ public class Attribute
         
         ScarabCache.clear();
     }
+
+    /**
+     * Refers to Global Issue Types
+     * @return A list of global Issue Types, this attribute is associated with.
+     */
+    private List getAssociatedIssueTypes()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RIssueTypeAttributePeer.ATTRIBUTE_ID,
+                 getAttributeId());
+        crit.addJoin(RIssueTypeAttributePeer.ISSUE_TYPE_ID,
+                 IssueTypePeer.ISSUE_TYPE_ID);
+        List issueTypeList = IssueTypePeer.doSelect(crit);
+        return issueTypeList;
+    }
+
+    /**
+     * Checks if this attribute is associated with atleast one of the
+     * global issue types that is system defined.
+     *
+     * @return True if the attribute is associated with a System defined
+     *  global Issue Type.False otherwise.
+     */
+
+    public boolean isSystemDefined()
+        throws Exception
+    {
+        boolean systemDefined = false;
+        List issueTypeList = getAssociatedIssueTypes();
+        for (Iterator i = issueTypeList.iterator(); i.hasNext();)
+        {
+            if (((IssueType)i.next()).isSystemDefined())
+            {
+                systemDefined = true;
+                break;
+            }
+        }
+        return systemDefined;
+    }
+
 }

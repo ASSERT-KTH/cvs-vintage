@@ -5,7 +5,10 @@
 #set ($issueTypeLock = $issueType.Locked)
 #set ($groups = $module.getAttributeGroups($issueType, false))
 #set ($rmit= $module.getRModuleIssueType($issueType))
-
+#set ($immutable = $issueType.SystemDefined)
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedIssueType</strong></p>
+#end
 <div class="app" id="div2-1-4-0">
 
 #if (!$issueTypeId && $issueTypeId.length() == 0)
@@ -30,7 +33,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageArtifactTypes.vm" />
 
 <div class="functnbar">
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
   <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />&#160;
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
@@ -48,7 +51,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
       #else
           #set ($value ="$issueType.Name")
       #end
-      #if ($issueTypeLock)
+      #if ($issueTypeLock || $immutable)
          $value
       #else
          <input type="text" size="25" name="$rmitGroup.DisplayName.Key" value="$value" />
@@ -63,7 +66,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
       #else
          #set ($value = $!issueType.Description)
       #end
-      #if ($issueTypeLock)
+      #if ($issueTypeLock || $immutable)
         $value
       #else
         <textarea cols="55" rows="5" wrap="virtual" name="$rmitGroup.DisplayDesc.Key">$value</textarea>
@@ -73,7 +76,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     </table>
 </div>
 
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveinfo" />
 </div>        
@@ -128,7 +131,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #else
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
   <th nowrap="nowrap">$l10n.Select</th>
 #end
 <th>$l10n.Name</th>
@@ -137,18 +140,19 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </tr>
 
 #set ($issueDedupeSequence = $module.getDedupeSequence($issueType))
+#set ($lockedOrImmutable = $issueTypeLock || $immutable)
 #foreach ($group in $groups)
 ## DEDUPE
 ## Only display dedupe if there are more than one active attribute group
  #if ($velocityCount == $issueDedupeSequence && $showDuplicateCheck )
  <tr>
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
    <td>&#160;</td>
 #end
    <td>$l10n.DuplicateCheck</td>
-   <td>#booleanCheckboxLock ($rmitGroup.Dedupe $issueTypeLock)</td>
+   <td>#booleanCheckboxLock ($rmitGroup.Dedupe $lockedOrImmutable)</td>
    <td>
-    #if ($issueTypeLock)
+    #if ($issueTypeLock || $immutable)
        $issueDedupeSequence
     #else
        #numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
@@ -157,14 +161,15 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
  #end
 
   #set ($agGroup = $intake.AttributeGroup.mapTo($group))
+  #set ($lockedOrImmutable = $issueTypeLock || $immutable)
   #indexedRows($velocityCount)
-  #if (!$issueTypeLock)
+  #if (!$issueTypeLock && !$immutable)
     <td><input type="checkbox" name="group_action_$group.AttributeGroupId" /></td>
   #end
   <td>$link.setPage("admin,AttributeGroupEdit.vm").addPathInfo("groupid", $group.AttributeGroupId).addPathInfo("issueTypeId", $issueTypeId).setLabel("$group.Name")</td>
-  <td>#booleanCheckboxLock ($agGroup.Active $issueTypeLock)</td>
+  <td>#booleanCheckboxLock ($agGroup.Active $lockedOrImmutable)</td>
   <td>
-    #if ($issueTypeLock)
+    #if ($issueTypeLock || $immutable)
       $group.Order
     #else
       #numericSelect($agGroup.Order.Key 1 $maxNum $agGroup.Order.Value 1)
@@ -173,13 +178,13 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #end
 #if ($maxNum == $issueDedupeSequence && $showDuplicateCheck )
  <tr>
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
    <td>&#160;</td>
 #end
    <td>$l10n.DuplicateCheck</td>
    <td>#booleanCheckboxLock ($rmitGroup.Dedupe $issueTypeLock)</td>
    <td>
-    #if ($issueTypeLock)
+    #if ($issueTypeLock || $immutable)
        $issueDedupeSequence
     #else
        #numericSelect("dupe_order" 2 $maxNum $issueDedupeSequence 1)</td>
@@ -189,7 +194,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </table>
 
 
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save"  name="eventSubmit_doSavegroups" />&#160;
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doCreatenewgroup" />&#160;
@@ -204,7 +209,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #set ($userAttrs = $module.getUserAttributes($issueType, false))
 #if ($userAttrs.isEmpty())
   <p><em>$l10n.NoUserAttributesForType</em></p>
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />
 </div>
@@ -226,7 +231,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
    #set ($maxNum = $userAttrs.size())
    #set ($ria = "")
    #set ($ria = $issueType.getRIssueTypeAttribute($userAttr))
-   #set ($locked = ($issueTypeLock) || (!$ria.equals("") && $ria.Locked))
+   #set ($locked = ($issueTypeLock) || (!$ria.equals("") && $ria.Locked) || $immutable)
  #indexedRows($velocityCount)
  <td><input type="checkbox" name="att_delete_$userAttr.AttributeId" #if ($locked) disabled="disabled" #end /></td>
  <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$userAttr.AttributeId").addPathInfo("issueTypeId", $issueTypeId).setLabel("$userAttr.Name").addPathInfo("$scarabG.Constant.CANCEL_TEMPLATE", "admin,ArtifactTypeEdit.vm")</td>
@@ -236,7 +241,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
     #else
           #set ($value="$userAttr.Name")
     #end
-    #if ($locked)
+    #if ($locked || $immutable)
       $value
     #else
       <input type="text" size="15" name="$rmaGroup.DisplayValue.Key" value="$value"/>
@@ -249,7 +254,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 
 </table>
 
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
   <div class="functnbar3">
   <input type="submit" value="$l10n.Save"  name="eventSubmit_doSaveuserattributes" />&#160;
   <input type="submit" value="$l10n.AddNew"  name="eventSubmit_doGotoothertemplate" />&#160;
@@ -261,7 +266,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 #end
 
 <div class="functnbar2">
-#if (!$issueTypeLock)
+#if (!$issueTypeLock && !$immutable)
   <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />

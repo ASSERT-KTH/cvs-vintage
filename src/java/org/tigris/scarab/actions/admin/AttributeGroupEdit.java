@@ -84,7 +84,7 @@ import org.tigris.scarab.util.Log;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.53 2003/07/14 20:26:31 kmaples Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.54 2003/07/26 18:26:57 jmcnally Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -99,6 +99,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return false;
+        }
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
@@ -132,10 +138,15 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         boolean success = true;
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         IssueType issueType = scarabR.getIssueType();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return false;
+        }
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         String msg = DEFAULT_MSG;
 
         if (!ag.isGlobal() && issueType.getLocked())
@@ -249,8 +260,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         AttributeGroup ag = AttributeGroupManager
                             .getInstance(new NumberKey(groupId), false);
         List attributes = ag.getAttributes();
-        IssueType issueType = null;
-        issueType = scarabR.getIssueType();
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return false;
+        }
         if (issueType.getIssueTypeId() == null)
         {
             scarabR.setAlertMessage(l10n.get("IssueTypeNotFound"));
@@ -314,6 +329,11 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         ScarabUser user = (ScarabUser)data.getUser();
         String groupId = data.getParameters().getString("groupId");
         AttributeGroup ag = AttributeGroupManager
@@ -421,6 +441,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(getLocalizationTool(context).get("SystemSpecifiedIssueType"));
+            return;
+        }
         Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
         intake.remove(attGroup);
         scarabR.setAttribute(null);
@@ -436,6 +462,12 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         AttributeGroup ag = scarabR.getAttributeGroup();
 
         if (!ag.isGlobal() && scarabR.getIssueType().getLocked())

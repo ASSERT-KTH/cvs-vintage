@@ -2,7 +2,11 @@
 #set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId"))
 #set ($issueType = $group.IssueType)
-
+#set ($issueTypeLocked = $issueType.Locked)
+#set ($immutable = $issueType.SystemDefined)
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedIssueType</strong></p>
+#end
 <div class="app" id="div2-1-4-0">
 
 #if (!$groupId)
@@ -19,7 +23,7 @@
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ArtifactTypeEdit.vm" />
 
 <div class="functnbar">
-#if (!$issueType.Locked)
+#if (!$issueTypeLocked && !$immutable)
   <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />
@@ -34,7 +38,7 @@
  <th>* $l10n.Name</th>
  <td>
     #fieldErrorMsg($agGroup.Name "")
-    #if ($issueType.Locked)
+    #if ($issueTypeLocked || $immutable)
         $group.Name
     #else
        <input type="text" size="25" name="$agGroup.Name.Key" value="$!agGroup.Name" />
@@ -44,7 +48,7 @@
  <tr>
  <th>$l10n.Description</th>
  <td>
-    #if ($issueType.Locked)
+    #if ($issueTypeLocked || $immutable)
         $!group.Description
     #else
      #textAreaMedium("$agGroup.Description.Key" $agGroup.Description.Value)</td>
@@ -53,7 +57,7 @@
  </table>
 </div>
 
-#if (!$issueType.Locked)
+#if (!$issueTypeLocked && !$immutable)
 <div class="functnbar3">
 <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveinfo" />&#160;
 </div>
@@ -63,7 +67,7 @@
 #if (!$group.Attributes.isEmpty())
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
-#if (!$issueType.Locked)
+#if (!$issueTypeLocked && !$immutable)
   <th>$l10n.Select</th>
 #end
 <th>$l10n.Name</th>
@@ -81,9 +85,9 @@
    #set ($raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag))
    #set ($ria = "")
    #set ($ria = $group.IssueType.getRIssueTypeAttribute($attribute))
-   #set ($locked = ($issueType.Locked) || (!$ria.equals("") && $ria.Locked))
+   #set ($locked = ($issueTypeLocked) || (!$ria.equals("") && $ria.Locked) || $immutable)
  #indexedRows($velocityCount)
- #if (!$issueType.Locked) <td> #if (!$locked) <input type="checkbox" name="att_delete_$attribute.AttributeId" /> #end</td>#end
+ #if (!$issueTypeLocked && !$immutable) <td> #if (!$locked) <input type="checkbox" name="att_delete_$attribute.AttributeId" /> #end</td>#end
  <td>$link.setPage("admin,ModuleAttributeEdit.vm").addPathInfo("att_0id", "$attribute.AttributeId").addPathInfo("key", "groupId").addPathInfo("groupId", $groupId).addPathInfo("issueTypeId", $group.IssueTypeId).setLabel("$attribute.Name")</td>
  <td>
     #if ($rmaGroup.DisplayValue.toString().length() > 0)
@@ -125,7 +129,7 @@
   <p><em>$l10n.ClickAddButton</em></p>
 #end
 
-#if (!$issueType.Locked)
+#if (!$issueTypeLocked && !$immutable)
   <div class="functnbar3">
   #if (!$group.Attributes.isEmpty())
     <input type="submit" value="$l10n.Save" name="eventSubmit_doSaveattributes" />&#160;
@@ -140,7 +144,7 @@
 #end
 
 <div class="functnbar2">
-#if (!$issueType.Locked)
+#if (!$issueTypeLocked && !$immutable)
 <input type="submit" value="$l10n.Done"  name="eventSubmit_doDone" />
 #end
 <input type="submit" value="$l10n.Cancel"  name="eventSubmit_doCancel" />

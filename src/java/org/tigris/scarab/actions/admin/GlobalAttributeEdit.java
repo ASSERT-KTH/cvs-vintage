@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.61 2003/07/25 17:18:00 thierrylach Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.62 2003/07/26 18:26:57 jmcnally Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -182,10 +182,16 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Attribute attr = scarabR.getAttribute();
+        if (attr.isSystemDefined())
+        {
+            scarabR.setAlertMessage(getLocalizationTool(context).get
+	                              ("CannotDeleteSystemSpecifiedAttribute"));
+            return;
+        }
         if (attr.getAttributeId() != null)
         {
             attr.deleteModuleMappings(); 
-            attr.deleteIssueTypeMappings(); 
+            attr.deleteIssueTypeMappings();
             attr.setDeleted(true);
             attr.save();
             scarabR.setConfirmMessage(getLocalizationTool(context).get(DEFAULT_MSG));  
@@ -453,7 +459,7 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
         }
     }
- /*
+    /**
      * manages attribute to module/issue type mapping.
      */
 

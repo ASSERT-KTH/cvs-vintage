@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.53 2003/07/17 20:07:36 jmcnally Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.54 2003/07/26 18:26:57 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -91,6 +91,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return false;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -167,6 +172,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         String msg = DEFAULT_MSG;
 
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return false;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -301,7 +311,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
-
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -343,7 +357,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module module = scarabR.getCurrentModule();
         IssueType issueType = scarabR.getIssueType();
-        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));  
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return null;
+        }
+        scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         return issueType.createNewGroup(module);
     }
 
@@ -357,6 +376,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         boolean noAGSelected = true;
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -418,6 +442,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
         boolean hasAttributes = false;
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));
@@ -467,6 +496,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
     {
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(getLocalizationTool(context).get("SystemSpecifiedIssueType"));
+            return;
+        }
         Group attGroup = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
         intake.remove(attGroup);
         scarabR.setAttribute(null);
@@ -482,6 +517,11 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         if (issueType.getLocked())
         {
             scarabR.setAlertMessage(l10n.get("LockedIssueType"));

@@ -70,7 +70,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: IssueTypeAttributeEdit.java,v 1.11 2003/04/21 18:07:06 elicia Exp $
+ * @version $Id: IssueTypeAttributeEdit.java,v 1.12 2003/07/26 18:26:57 jmcnally Exp $
  */
 public class IssueTypeAttributeEdit extends RequireLoginFirstAction
 {
@@ -83,10 +83,15 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Attribute attribute = scarabR.getAttribute();
-
+        IssueType issueType =  scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(getLocalizationTool(context)
+                                       .get("SystemSpecifiedIssueType"));
+            return;
+        }
         if (intake.isAllValid())
         {
-            IssueType issueType = scarabR.getIssueType();
             List rios = issueType.getRIssueTypeOptions(attribute, false);
             if (rios != null)
             {
@@ -114,6 +119,12 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabUser user = (ScarabUser)data.getUser();
         IssueType issueType = scarabR.getIssueType();
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(getLocalizationTool(context)
+                                       .get("SystemSpecifiedIssueType"));
+            return;
+        }
         ParameterParser params = data.getParameters();
         Object[] keys = params.getKeys();
         String key;
@@ -157,11 +168,15 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
-
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
         String[] optionIds = data.getParameters().getStrings("option_ids");
  
         if (optionIds == null || optionIds.length <= 0)
-        { 
+        {
             scarabR.setAlertMessage(l10n.get("SelectOption"));
             return;
         }
@@ -184,7 +199,24 @@ public class IssueTypeAttributeEdit extends RequireLoginFirstAction
             scarabR.setConfirmMessage(l10n.get(DEFAULT_MSG));
         }
     }
+    /**
+     * Overridden method to check for system defined issue types
+     * and prevent new attributes from being added to them.
+     */
 
-
+    public void doGotoothertemplate(RunData data,
+                                     TemplateContext context)
+        throws Exception
+    {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        IssueType issueType =  scarabR.getIssueType();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        if (issueType.isSystemDefined())
+        {
+            scarabR.setAlertMessage(l10n.get("SystemSpecifiedIssueType"));
+            return;
+        }
+        super.doGotoothertemplate(data,context);
+    }
 
 }

@@ -49,6 +49,9 @@ package org.tigris.scarab.om;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
 
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.Persistent;
@@ -69,7 +72,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: IssueType.java,v 1.55 2003/07/17 21:46:38 elicia Exp $
+ * @version $Id: IssueType.java,v 1.56 2003/07/26 18:26:57 jmcnally Exp $
  */
 public  class IssueType 
     extends org.tigris.scarab.om.BaseIssueType
@@ -92,6 +95,27 @@ public  class IssueType
 
     static final String USER = "user";
     static final String NON_USER = "non-user";
+
+    private static final Properties SYSTEM_CONFIG = new Properties();
+
+    //loads the properties file that specifies system defined issue types
+    static
+    {
+        InputStream in = IssueType.class
+                            .getResourceAsStream("IssueTypeConfig.properties");
+        if (in != null)
+        {
+            try
+            {
+                SYSTEM_CONFIG.load(in);
+            }
+            catch(IOException ioe)
+            {
+                Log.get().warn("Exception while loading the file: IssueTypeConfig.properties", ioe);
+            }
+        }
+    }
+
 
     // this will not change, so only look it up once.
     private IssueType templateIssueType;
@@ -896,9 +920,28 @@ public  class IssueType
             if (!destActiveAttrs.contains(attr))
             {
                 orphanAttributes.add(attr);
-            } 
+            }
         }
         return orphanAttributes;
+    }
+
+    /**
+     * Checks if this Issue Type is system defined.
+     * Such Issue types are specified in "IssueTypeConfig.properties"
+     * file in the format "<SCARAB_ISSUE_TYPE.NAME>=system"
+     *
+     * @return True if this Issue Type is System defined. False otherwise
+     */
+    public boolean isSystemDefined()
+        throws Exception
+    {
+        boolean systemDefined = false;
+        String name = getName();
+        if (name != null)
+        {
+            systemDefined = "system".equalsIgnoreCase(SYSTEM_CONFIG.getProperty(name));
+        }
+        return systemDefined;
     }
 
 }

@@ -1,9 +1,12 @@
 <div class="app" id="div3-0-3-0"">
 #set ($module = $scarabR.CurrentModule)
 #set ($attribute = $scarabR.Attribute)
+#set ($immutable = $attribute.SystemDefined)
 #set ($lastTemplate = $data.Parameters.getString($scarabG.Constant.LAST_TEMPLATE))
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
-
+#if($immutable)
+<p class="infomark"><strong>$l10n.SystemSpecifiedAttribute</strong></p>
+#end
 #if ($deleting)
    <form action="$link.setPage("admin,UserAttributeEdit.vm")" method="post">
    <input type="hidden" name="action" value="admin.GlobalAttributeEdit" />
@@ -59,10 +62,15 @@
 <h3>$l10n.UserAttributeInfo</h3>
 <div class="axial">
 <table width="100%" cellpadding="3" cellspacing="2" border="1"> <tr>
-  <th width="120">* $l10n.Name</th> 
+  <th width="120">* $l10n.Name</th>
   <td class="b">
-    <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name.Value" />
-    #fieldErrorMsg($attgroup.Name "")
+    #if(!$immutable)
+      <input type="text" name="$attgroup.Name.Key" value="$!attgroup.Name.Value" />
+      #fieldErrorMsg($attgroup.Name "")
+    #else
+      <input type="hidden" name="$attgroup.Name.Key" value="$!attgroup.Name.Value" />
+      $!attgroup.Name.Value
+    #end
   </td>
 </tr>
 <tr>
@@ -76,10 +84,16 @@
 <tr>
   <th width="120">$l10n.CreationDate</th> <td class="b">$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
 </tr>
+
  <tr>
   <th>$l10n.Deleted</th>
+  #if(!$immutable)
   <td>#booleanCheckbox ($attgroup.Deleted)</td>
+  #else
+  <td>#booleanCheckboxLock ($attgroup.Deleted $immutable)</td>
+  #end
  </tr>
+
 #end
 </table>
 </div>
