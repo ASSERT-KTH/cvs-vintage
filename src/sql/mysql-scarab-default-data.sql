@@ -398,12 +398,14 @@ insert into SCARAB_QUERY_TYPE(QUERY_TYPE_ID, QUERY_TYPE_NAME)
         values(2, 'All users');
 
 /*
- * Types of saved issue templates.
+ * Types of saved issue and enter issue templates.
  */
-insert into SCARAB_ISSUE_TEMPLATE_TYPE(TEMPLATE_TYPE_ID, TEMPLATE_TYPE_NAME)
-        values(1, 'Personal profile');
-insert into SCARAB_ISSUE_TEMPLATE_TYPE(TEMPLATE_TYPE_ID, TEMPLATE_TYPE_NAME)
-        values(2, 'All users');
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, ISSUE_TYPE_NAME)
+        values(1, 'Issue');
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, ISSUE_TYPE_NAME)
+        values(2, 'Personal profile');
+insert into SCARAB_ISSUE_TYPE(ISSUE_TYPE_ID, ISSUE_TYPE_NAME)
+        values(3, 'All users');
 
 
 /*

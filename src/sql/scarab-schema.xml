@@ -2,7 +2,7 @@
 <!DOCTYPE app-data SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.48 2001/09/25 19:24:23 jon Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.49 2001/09/28 01:33:44 elicia Exp $ -->
 
 <app-data>
 <database>
@@ -403,6 +403,10 @@
     -->
     <column name="ID_DOMAIN"  type="VARCHAR" size="15"/>
     <!--
+        Type : Issue, or Enter Issue Template
+    -->
+    <column name="TYPE_ID"  required="false" type="INTEGER"/>
+    <!--
         Module that issue relates to.
     -->
     <column name="MODULE_ID" required="true" type="INTEGER"></column>
@@ -413,6 +417,9 @@
         default="0" size="1"></column>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    </foreign-key>
+    <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
+        <reference local="TYPE_ID" foreign="ISSUE_TYPE_ID"/>
     </foreign-key>
 </table>
 
@@ -1141,15 +1148,11 @@
 <!--
     A saved user template for entering issues.
 -->
-<table name="SCARAB_ISSUE_TEMPLATE" idMethod="idbroker" javaName="IssueTemplate">
+<table name="SCARAB_ISSUE_TEMPLATE_INFO" idMethod="none" javaName="IssueTemplateInfo">
 
-    <column name="ISSUE_TEMPLATE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Person.
-    -->
-    <column name="USER_ID" required="true" type="INTEGER"></column>
-    <!--
-        The name the template will be saved under.
     -->
     <column name="NAME" required="true" type="VARCHAR" size="255" />
 
@@ -1157,28 +1160,10 @@
         The description of the saved template.
     -->
     <column name="DESCRIPTION" required="false" type="VARCHAR" size="255" />
-    <!--
-        Type.
-    -->
-    <column name="TEMPLATE_TYPE_ID" javaName="TypeId" required="true" type="INTEGER"></column>
-    <!--
-        Module.
-    -->
-    <column name="MODULE_ID" required="false" type="INTEGER"></column>
-    <column name="DELETED" required="false" type="BOOLEANINT" 
-            default="0" size="1"></column>
     <column name="APPROVED" required="false" type="BOOLEANINT"
             default="0" size="1"></column>
-    <column name="CREATED_DATE" required="false" type="TIMESTAMP"></column>
-
-    <foreign-key foreignTable="SCARAB_USER">
-        <reference local="USER_ID" foreign="USER_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ISSUE_TEMPLATE_TYPE">
-        <reference local="TEMPLATE_TYPE_ID" foreign="TEMPLATE_TYPE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_MODULE">
-        <reference local="MODULE_ID" foreign="MODULE_ID"/>
+    <foreign-key foreignTable="SCARAB_ISSUE">
+        <reference local="ISSUE_ID" foreign="ISSUE_ID"/>
     </foreign-key>
 </table>
 
@@ -1186,55 +1171,18 @@
     Possible types of templates.
     Examples: global, personal account level
 -->
-<table name="SCARAB_ISSUE_TEMPLATE_TYPE" idMethod="none" 
-    javaName="IssueTemplateType">
+<table name="SCARAB_ISSUE_TYPE" idMethod="none" 
+    javaName="IssueType">
     <!--
         Unique identifier.
     -->
-    <column name="TEMPLATE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
     <!--
         Name.
     -->
-    <column name="TEMPLATE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <column name="ISSUE_TYPE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
 </table>
 
-<table name="SCARAB_TEMPLATE_ATTRIBUTE_VALUE" idMethod="none" 
-        javaName="TemplateAttributeValue">
-    <!--
-        PK.
-    -->
-    <column name="VALUE_ID" primaryKey="true" required="true" type="INTEGER" />
-    <!--
-        Template.
-    -->
-    <column name="ISSUE_TEMPLATE_ID" required="true" type="INTEGER"></column>
-    <!--
-        Attribute.
-    -->
-    <column name="ATTRIBUTE_ID" required="true" 
-            type="INTEGER" inheritance="single" />
-    <!--
-        Option that is the value of the attribute if attribute is option based.
-    -->
-    <column name="OPTION_ID" required="false" type="INTEGER"></column>
-    <column name="VALUE" required="false" type="VARCHAR" size="255"></column>
-
-    <!-- 
-         some attributes are better saved in numeric format, so this column
-         can be used in place of VALUE 
-    -->
-    <column name="NUMERIC_VALUE" required="false" type="INTEGER" size="11" />
-
-    <foreign-key foreignTable="SCARAB_ISSUE_TEMPLATE">
-        <reference local="ISSUE_TEMPLATE_ID" foreign="ISSUE_TEMPLATE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ATTRIBUTE">
-        <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
-    </foreign-key>
-    <foreign-key foreignTable="SCARAB_ATTRIBUTE_OPTION">
-        <reference local="OPTION_ID" foreign="OPTION_ID"/>
-    </foreign-key>
-</table>
 
 
 </database>
