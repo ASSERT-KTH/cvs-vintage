@@ -1,12 +1,16 @@
 package org.jboss.ejb.plugins.local;
 
+import javax.ejb.EJBObject;
+import javax.ejb.EJBLocalObject;
+import javax.ejb.EJBException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.rmi.RemoteException;
 
 /** The EJBLocal proxy for a stateful session
 
  @author  <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- @version $Revision: 1.5 $
+ @version $Revision: 1.6 $
  */
 class StatefulSessionProxy extends LocalProxy
    implements InvocationHandler
@@ -32,13 +36,28 @@ class StatefulSessionProxy extends LocalProxy
       if (args == null)
          args = EMPTY_ARGS;
 
-      Object retValue = super.invoke( proxy, m, args );
-      if (retValue != null)
-         return retValue;
-      // If not taken care of, go on and call the container
-      else
+      // The object identifier of a session object is, in general, opaque to the client. 
+      // The result of getPrimaryKey() on a session EJBObject reference results in java.rmi.RemoteException.
+      // The result of getPrimaryKey() on a session EJBLocalObject reference results in javax.ejb.EJBException.
+      if (m.equals(GET_PRIMARY_KEY))
       {
-         return factory.invoke(id, m, args);
+         if (proxy instanceof EJBObject)
+         {
+            throw new RemoteException("Call to getPrimaryKey not allowed on session bean");
+         }
+         if (proxy instanceof EJBLocalObject)
+         {
+            throw new EJBException("Call to getPrimaryKey not allowed on session bean");
+         }
       }
+
+      Object retValue = super.invoke( proxy, m, args );
+      if (retValue == null)
+      {
+         // If not taken care of, go on and call the container
+         retValue = factory.invoke(id, m, args);
+      }
+
+      return retValue;
    }
 }
