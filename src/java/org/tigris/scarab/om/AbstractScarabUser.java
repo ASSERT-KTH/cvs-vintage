@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.97 2003/12/09 16:41:16 mpoeschl Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.98 2004/02/01 14:06:36 dep4b Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -752,7 +752,6 @@ public abstract class AbstractScarabUser
      * @see ScarabUser#getHomePage(Module)
      */
     public String getHomePage(Module module)
-        throws TorqueException
     {
         String homePage = null;
         try

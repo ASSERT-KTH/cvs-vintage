@@ -87,7 +87,7 @@ import org.tigris.scarab.util.export.ExportFormat;
 /**
  * This class is responsible for report generation forms
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ConfigureReport.java,v 1.27 2004/01/31 18:51:38 dep4b Exp $
+ * @version $Id: ConfigureReport.java,v 1.28 2004/02/01 14:06:36 dep4b Exp $
  */
 public class ConfigureReport 
     extends RequireLoginFirstAction
@@ -1093,7 +1093,7 @@ public class ConfigureReport
             return;
         }
 
-        ValueParser params = data.getParameters();        
+              
 
         ReportDefinition reportDefn = report.getReportDefinition();
         List axes = reportDefn.getReportAxisList();

@@ -62,7 +62,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.46 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: Activity.java,v 1.47 2004/02/01 14:06:36 dep4b Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -79,7 +79,6 @@ public class Activity
      * any rows selected and returns null in that case.
      */
     public Attachment getAttachment()
-        throws TorqueException
     {
         Attachment attachment = null;
         Object obj = ScarabCache.get(this, GET_ATTACHMENT); 

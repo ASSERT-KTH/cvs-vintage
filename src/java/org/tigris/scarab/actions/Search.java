@@ -92,7 +92,7 @@ import org.tigris.scarab.util.export.ExportFormat;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.148 2004/01/31 18:51:38 dep4b Exp $
+ * @version $Id: Search.java,v 1.149 2004/02/01 14:06:36 dep4b Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -1040,7 +1040,7 @@ public class Search extends RequireLoginFirstAction
         {
             for (int i =0;i<userList.length;i++)
             {
-                String userId = (String)userList[i];
+                String userId = userList[i];
                 String[] attrIds = params.getStrings("user_attr_" + userId);
                 if (attrIds != null) 
                 {

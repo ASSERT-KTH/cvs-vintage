@@ -93,7 +93,7 @@ import org.tigris.scarab.util.Log;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.180 2004/01/31 18:51:38 dep4b Exp $
+ * @version $Id: ModifyIssue.java,v 1.181 2004/02/01 14:06:36 dep4b Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -391,11 +391,10 @@ public class ModifyIssue extends BaseModifyIssue
                 scarabR.setAlertMessage(l10n.get(ERROR_MESSAGE));
                 return;
             }
-            ActivitySet activitySet = null;
+            
             try
             {
-                activitySet = 
-                    issue.addComment(attachment, (ScarabUser)data.getUser());
+                issue.addComment(attachment, (ScarabUser)data.getUser());
             }
             catch(Exception e)
             {
@@ -1072,7 +1071,7 @@ public class ModifyIssue extends BaseModifyIssue
             ((IntakeTool)context.get("intake")).get("MoveIssue")
                 .getDefault().get("Action").init(pp);
             String[] issueIds = pp.getStrings("issue_ids");
-            String currentIssueId = ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId();
+            String currentIssueId = getScarabRequestTool(context).getIssue().getUniqueId();
             if (!ScarabUtil.contains(issueIds, currentIssueId))
             {
                 pp.add("issue_ids", currentIssueId);
@@ -1104,7 +1103,7 @@ public class ModifyIssue extends BaseModifyIssue
         ((IntakeTool)context.get("intake")).get("MoveIssue")
             .getDefault().get("Action").init(pp);
         String[] issueIds = pp.getStrings("issue_ids");
-        String currentIssueId = ((ScarabRequestTool)getScarabRequestTool(context)).getIssue().getUniqueId();
+        String currentIssueId = getScarabRequestTool(context).getIssue().getUniqueId();
         if (!ScarabUtil.contains(issueIds, currentIssueId))
         {
             pp.add("issue_ids", currentIssueId);

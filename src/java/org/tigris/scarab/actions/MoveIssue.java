@@ -70,7 +70,6 @@ import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTypeManager;
-import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
@@ -85,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.66 2004/01/31 18:51:38 dep4b Exp $
+ * @version $Id: MoveIssue.java,v 1.67 2004/02/01 14:06:36 dep4b Exp $
  */
 public class MoveIssue extends BaseModifyIssue
 {
@@ -127,7 +126,7 @@ public class MoveIssue extends BaseModifyIssue
         {
             for (int i= 0; i<issueIds.length; i++)
             {
-                issues.add((Issue)scarabR.getIssue(issueIds[i]));
+                issues.add(scarabR.getIssue(issueIds[i]));
             }
             issue = (Issue)issues.get(0);
         }
@@ -167,8 +166,7 @@ public class MoveIssue extends BaseModifyIssue
         
         Integer newModuleId = null;
         Integer newIssueTypeId = null;
-        Module newModule = null;
-        IssueType newIssueType = null;
+        Module newModule = null;        
         try
         {
             newModuleId = new Integer(modIssueType.
@@ -177,8 +175,7 @@ public class MoveIssue extends BaseModifyIssue
                       substring(modIssueType.indexOf('_')+1, modIssueType.length()));
             newModule = ModuleManager
                                .getInstance(newModuleId);
-            newIssueType = IssueTypeManager
-                               .getInstance(newIssueTypeId);
+
         }
         catch (Exception e)
         {
@@ -262,7 +259,7 @@ public class MoveIssue extends BaseModifyIssue
         {
             for (int i= 0; i<issueIds.length; i++)
             {
-                issues.add((Issue)scarabR.getIssue(issueIds[i]));
+                issues.add(scarabR.getIssue(issueIds[i]));
             }
             issue = (Issue)issues.get(0);
         }
@@ -291,8 +288,7 @@ public class MoveIssue extends BaseModifyIssue
             String key = (String) keys[i];
             if (key.startsWith("comment_attr_ids_"))
             {
-                commentAttrs.add(
-                    (Attribute)scarabR
+                commentAttrs.add(scarabR
                     .getAttribute(new Integer(key.substring(17))));
             }
         }

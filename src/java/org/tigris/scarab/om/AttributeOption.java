@@ -76,7 +76,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * TurbineGlobalCache service.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AttributeOption.java,v 1.41 2003/12/15 15:38:49 thierrylach Exp $
+ * @version $Id: AttributeOption.java,v 1.42 2004/02/01 14:06:36 dep4b Exp $
  */
 public class AttributeOption 
     extends BaseAttributeOption
@@ -481,7 +481,7 @@ public class AttributeOption
             .add(ROptionOptionPeer.OPTION2_ID,
                  super.getOptionId());
        
-        List results = (List)ROptionOptionPeer.doSelect(crit);
+        List results = ROptionOptionPeer.doSelect(crit);
         if (results.size() == 1)
         {
            ROptionOption roo = (ROptionOption)results.get(0);

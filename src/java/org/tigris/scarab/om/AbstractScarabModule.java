@@ -100,7 +100,7 @@ import org.tigris.scarab.reports.ReportBridge;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.115 2003/12/04 14:27:26 mpoeschl Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.116 2004/02/01 14:06:36 dep4b Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
@@ -1836,8 +1836,7 @@ public abstract class AbstractScarabModule
         // Add defaults for issue types and attributes 
         // from parent module
         Module parentModule = ModuleManager.getInstance(getParentId());
-        inheritFromParent(parentModule);
-        List parentIssueTypes = parentModule.getIssueTypes(false);
+        inheritFromParent(parentModule);        
 
         List defaultIssueTypes = IssueTypePeer.getDefaultIssueTypes();
         for (int i=0; i< defaultIssueTypes.size(); i++)

@@ -102,8 +102,7 @@ public class HandleRoleRequests extends RequireLoginFirstAction
                 boolean autoApprove = Arrays.asList(autoRoles).contains(role);
                 if (autoApprove) 
                 {
-                    TurbineSecurity.grant(user, 
-                        (org.apache.fulcrum.security.entity.Group)module, 
+                    TurbineSecurity.grant(user, module, 
                         TurbineSecurity.getRole(role));
                     getScarabRequestTool(context).setConfirmMessage(
                         l10n.get("RoleRequestGranted"));    
