@@ -55,6 +55,7 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.ParameterParser;
 import org.apache.torque.om.NumberKey;
+import org.apache.torque.TorqueException;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
@@ -88,7 +89,7 @@ import org.tigris.scarab.workflow.WorkflowFactory;
  * action methods on RModuleAttribute or RIssueTypeAttribute tables
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.33 2002/09/15 18:48:19 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.34 2002/09/16 19:20:49 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -129,13 +130,13 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
         String msg = DEFAULT_MSG;
         boolean success = true;
         ArrayList lockedAttrs = new ArrayList();
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
 
         if ( intake.isAllValid() )
         {
             if (issueType.getLocked())
             {
-                msg = "Your changes cannot be saved, since this" +
-                      "issue type is locked.";
+                msg = "LockedIssueType";
             }
             else
             {
@@ -150,7 +151,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                     Group rmaGroup = intake.get("RModuleAttribute", 
                                      rma.getQueryKey(), false);
 
-                    // Test to see if any attributes are locked
+                    // Test to see if attribute is locked
                     RModuleAttribute rmaTest = rma.copy();
                     rmaTest.setModified(false);
                     rmaGroup.setProperties(rmaTest);
@@ -191,17 +192,18 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                         try
                         {
                             rma.save();
+                            // Set properties for attribute-attribute group mapping
+                            RAttributeAttributeGroup raag = 
+                                ag.getRAttributeAttributeGroup(attribute);
+                            Group raagGroup = intake.get("RAttributeAttributeGroup", 
+                                             raag.getQueryKey(), false);
+                            raagGroup.setProperties(raag);
+                            raag.save();
                         }
-                        catch (Exception e) 
-                        {}
-
-                        // Set properties for attribute-attribute group mapping
-                        RAttributeAttributeGroup raag = 
-                            ag.getRAttributeAttributeGroup(attribute);
-                        Group raagGroup = intake.get("RAttributeAttributeGroup", 
-                                         raag.getQueryKey(), false);
-                        raagGroup.setProperties(raag);
-                        raag.save();
+                        catch (TorqueException e) 
+                        {
+                            msg = e.getMessage();
+                        }
                     }
                 }
 
@@ -209,7 +211,6 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 if (lockedAttrs.size() > 0)
                 {
                     StringBuffer buf = new StringBuffer();
-                    buf.append("You cannot save the following locked attributes: ");
                     for (int i=0; i<lockedAttrs.size(); i++)
                     {
                         Attribute attr = (Attribute)lockedAttrs.get(i);
@@ -223,10 +224,9 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                             buf.append(",");
                         }
                     }
-                    msg = buf.toString();
+                    scarabR.setAlertMessage(l10n.format("LockedAttributes", buf.toString()));
                 }
             }
-            ScarabLocalizationTool l10n = getLocalizationTool(context);
             scarabR.setConfirmMessage(l10n.get(msg));
             intake.removeAll();
             ScarabCache.clear();

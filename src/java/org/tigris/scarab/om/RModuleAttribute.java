@@ -97,6 +97,7 @@ public class RModuleAttribute
             }
             catch (Exception e)
             {
+                throw new TorqueException("An error has occurred.");
             }
             if (ria != null && ria.getLocked())
             {
