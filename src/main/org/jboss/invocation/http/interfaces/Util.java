@@ -11,11 +11,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamException;
 import java.io.OutputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.lang.reflect.InvocationTargetException;
+import java.security.PrivilegedAction;
+import java.security.AccessController;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationException;
@@ -26,7 +28,7 @@ import org.jboss.security.SecurityAssociationAuthenticator;
 /** Common client utility methods
  *
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
 */
 public class Util
 {
@@ -37,12 +39,23 @@ public class Util
    /** The type of the HTTPS connection class */
    private static Class httpsConnClass;
 
+   static class SetAuthenticator implements PrivilegedAction
+   {
+      public Object run()
+      {
+         Authenticator.setDefault(new SecurityAssociationAuthenticator());
+         return null;
+      }
+      
+   }
+
    static
    {
       // Install the java.net.Authenticator to use
       try
       {
-         Authenticator.setDefault(new SecurityAssociationAuthenticator());
+         SetAuthenticator action = new SetAuthenticator();
+         AccessController.doPrivileged(action);
       }
       catch(Exception e)
       {
@@ -76,7 +89,15 @@ public class Util
     */
    public static void init()
    {
-      Authenticator.setDefault(new SecurityAssociationAuthenticator());
+      try
+      {
+         SetAuthenticator action = new SetAuthenticator();
+         AccessController.doPrivileged(action);
+      }
+      catch(Exception e)
+      {
+         log.warn("Failed to install SecurityAssociationAuthenticator", e);
+      }
    }
 
    /** Post the Invocation as a serialized MarshalledInvocation object. This is
@@ -116,6 +137,8 @@ public class Util
       InputStream is = conn.getInputStream();
       ObjectInputStream ois = new ObjectInputStream(is);
       MarshalledValue mv = (MarshalledValue) ois.readObject();
+      // A hack for jsse connection pooling (see patch ).
+      ois.read();
       ois.close();
       oos.close();
 
