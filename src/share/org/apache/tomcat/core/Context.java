@@ -251,7 +251,7 @@ public final class Context implements LogAware {
     // needs reload
     private boolean reload;
     // Tool used to control reloading
-    private DependManager dependM;
+    private DependManager dependM=new DependManager();
 
     // -------------------- from web.xml --------------------
     // Those properties are not directly used in context

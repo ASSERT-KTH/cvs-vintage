@@ -577,6 +577,9 @@ public class BaseInterceptor
     /** Special method for self-registered hooks, intended to support
      *  a mechanism similar with Apache2.0 and further extensibility
      *  without interface changes.
+     *
+     *  Most modules are added to the Hooks automatically. A module
+     *  overriding this method has full control over this process.
      */
     public int registerHooks(Hooks h) {
 	return DECLINED;
