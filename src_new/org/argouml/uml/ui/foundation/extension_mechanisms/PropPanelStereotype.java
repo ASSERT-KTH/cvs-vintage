@@ -1,4 +1,4 @@
-// $Id: PropPanelStereotype.java,v 1.45 2004/12/18 14:36:59 mvw Exp $
+// $Id: PropPanelStereotype.java,v 1.46 2005/01/02 17:05:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,8 +46,7 @@ import org.argouml.util.ConfigLoader;
 import org.tigris.swidgets.FlexiGridLayout;
 
 /**
- * TODO: this property panel needs refactoring to remove dependency on old gui
- * components.
+ * The properties panel for a Stereotype.
  */
 public class PropPanelStereotype extends PropPanelModelElement {
 
@@ -81,14 +80,13 @@ public class PropPanelStereotype extends PropPanelModelElement {
                  getNamespaceComboBox());
         
 
-        JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 2, 
+        JPanel modifiersPanel = new JPanel(new FlexiGridLayout(0, 3, 
                 FlexiGridLayout.ROWCOLPREFERRED));
         modifiersPanel.setBorder(new TitledBorder(
                 Translator.localize("label.modifiers")));
         modifiersPanel.add(new UMLGeneralizableElementAbstractCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementLeafCheckBox());
         modifiersPanel.add(new UMLGeneralizableElementRootCheckBox());
-
         add(modifiersPanel);
 
         addSeperator();
