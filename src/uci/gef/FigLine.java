@@ -19,7 +19,7 @@
 // File: FigLine.java
 // Classes: FigLine
 // Original Author: ics125b spring 1996
-// $Id: FigLine.java,v 1.3 1998/01/30 04:22:08 abonner Exp $
+// $Id: FigLine.java,v 1.4 1998/02/08 23:42:12 abonner Exp $
 
 package uci.gef;
 
@@ -170,7 +170,6 @@ public class FigLine extends Fig {
     if (_lineWidth > 0) {
       g.setColor(_lineColor);
       g.drawLine(_x1, _y1, _x2, _y2);
-	  drawArrowHead(g);
    }
   }
 
@@ -205,16 +204,6 @@ public class FigLine extends Fig {
     _y2 = snapY;
     calcBounds();
   }
-
-  ArrowHead ArrowHeadStart = new ArrowHeadTriangle();
-  ArrowHead ArrowHeadEnd = new ArrowHeadTriangle();
-
-	protected void drawArrowHead(Graphics g) {
-		ArrowHeadStart.setFillColor(Color.white);
-		//System.out.println("pointalongat0 = " + pointAlongPerimeter(0) + " pointAtEnd = " + getPerimeterLength() + " pointatEnd = " + pointAlongPerimeter(getPerimeterLength()));
-		ArrowHeadStart.paint(g, pointAlongPerimeter(0), pointAlongPerimeter(getPerimeterLength()));
-		ArrowHeadEnd.paint(g, pointAlongPerimeter(getPerimeterLength()), pointAlongPerimeter(0));
-	}
 
 } /* end class FigLine */
 

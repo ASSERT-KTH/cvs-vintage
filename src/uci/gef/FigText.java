@@ -19,7 +19,7 @@
 // File: FigText.java
 // Classes: FigText
 // Original Author: ics125b spring 1996
-// $Id: FigText.java,v 1.1 1998/01/26 22:19:22 jrobbins Exp $
+// $Id: FigText.java,v 1.2 1998/02/08 23:42:13 abonner Exp $
 
 package uci.gef;
 
@@ -97,6 +97,7 @@ public class FigText extends Fig {
     PropCategoryManager.categorizeProperty("Text", "botMargin");
     PropCategoryManager.categorizeProperty("Text", "leftMargin");
     PropCategoryManager.categorizeProperty("Text", "rightMargin");
+    PropCategoryManager.categorizeProperty("Text", "text");
     PropCategoryManager.categorizeProperty("Style", "alignment");
     PropCategoryManager.categorizeProperty("Style", "textFilled");
     PropCategoryManager.categorizeProperty("Style", "textFillColor");

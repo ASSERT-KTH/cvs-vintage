@@ -19,7 +19,7 @@
 // File: FigPoly.java
 // Classes: FigPoly
 // Original Author: jrobbins@ics.uci.edu
-// $Id: FigPoly.java,v 1.3 1998/01/30 04:22:09 abonner Exp $
+// $Id: FigPoly.java,v 1.4 1998/02/08 23:42:12 abonner Exp $
 
 package uci.gef;
 
@@ -328,7 +328,6 @@ public class FigPoly extends Fig {
     if (_lineWidth > 0  && _lineColor != null) {
       g.setColor(_lineColor);
       g.drawPolyline(_xpoints, _ypoints, _npoints);
-      drawArrowHead(g);
     }
   }
 
@@ -438,16 +437,6 @@ public class FigPoly extends Fig {
     _w = polyBounds.width;
     _h = polyBounds.height;
   }
-
-  ArrowHead ArrowHeadStart = new ArrowHeadTriangle();
-  ArrowHead ArrowHeadEnd = new ArrowHeadTriangle();
-
-	protected void drawArrowHead(Graphics g) {
-		ArrowHeadStart.setFillColor(Color.white);
-		//System.out.println("pointalongat0 = " + pointAlongPerimeter(0) + " pointAtEnd = " + getPerimeterLength() + " pointatEnd = " + pointAlongPerimeter(20));
-		ArrowHeadStart.paint(g, pointAlongPerimeter(20), pointAlongPerimeter(0));
-		ArrowHeadEnd.paint(g, pointAlongPerimeter(getPerimeterLength() - 21), pointAlongPerimeter(getPerimeterLength() - 1));
-	}
 
 } /* end class FigPoly */
 
