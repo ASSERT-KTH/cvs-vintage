@@ -119,7 +119,7 @@ public class Ajp12Interceptor extends PoolTcpConnector
 	    if( address==null )
 		stopF.println( "" );
 	    else
-		stopF.println( address.toString() );
+		stopF.println( address.getHostAddress() );
 	    if( secret !=null )
 		stopF.println( secret );
 	    else

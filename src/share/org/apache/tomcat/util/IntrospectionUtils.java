@@ -252,15 +252,31 @@ public final class IntrospectionUtils {
 		    // match - find the type and invoke it
 		    Class paramType=methods[i].getParameterTypes()[0];
 		    Object params[]=new Object[1];
+
+		    // Try a setFoo ( int )
 		    if ("java.lang.Integer".equals( paramType.getName()) ||
 			"int".equals( paramType.getName())) {
 			try {
 			    params[0]=new Integer(value);
 			} catch( NumberFormatException ex ) {ok=false;}
+
+		    // Try a setFoo ( boolean )
 		    } else if ("java.lang.Boolean".
 			       equals( paramType.getName()) ||
 			"boolean".equals( paramType.getName())) {
 			params[0]=new Boolean(value);
+
+		    // Try a setFoo ( InetAddress )
+		    } else if ("java.net.InetAddress".
+				equals( paramType.getName())){
+			try{
+ 			    params[0]= InetAddress.getByName(value);
+ 			}catch(UnknownHostException exc) {
+ 			    d("Unable to resolve host name:" + value);
+ 			    ok=false;
+ 			}
+ 
+ 		    // Unknown type
 		    } else {
 			d("Unknown type " + paramType.getName() );
 		    }

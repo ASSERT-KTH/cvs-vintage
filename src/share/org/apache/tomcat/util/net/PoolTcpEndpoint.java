@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.10 2001/04/21 18:12:19 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2001/04/21 18:12:19 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.11 2001/05/18 19:20:22 larryi Exp $
+ * $Revision: 1.11 $
+ * $Date: 2001/05/18 19:20:22 $
  *
  * ====================================================================
  *
@@ -264,7 +264,12 @@ public class PoolTcpEndpoint { // implements Endpoint {
 	    running = false;
 	    try {
 		// Need to create a connection to unlock the accept();
-		Socket s=new Socket("127.0.0.1", port );
+		Socket s;
+		if (inet == null) {
+		    s=new Socket("127.0.0.1", port );
+		}else{
+		    s=new Socket(inet, port );
+		}
 		s.close();
 		//		System.out.println("Closing socket " + port );
 		serverSocket.close(); // XXX?

@@ -189,15 +189,21 @@
          -->
 
         <!-- Apache AJP12 support. This is also used to shut down tomcat.
+             Parameter "address" defines network interface this Interceptor
+             "binds" to. Delete it if you want to "bind" to all interfaces.
           -->
         <RequestInterceptor 
          className="org.apache.tomcat.modules.server.Ajp12Interceptor"
+         address="127.0.0.1"
          port="8007" />
 
         <!-- Apache AJP13 support (mod_jk)
+             Parameter "address" defines network interface this Interceptor
+             "binds" to. Delete it if you want to "bind" to all interfaces.
           -->
         <RequestInterceptor 
          className="org.apache.tomcat.modules.server.Ajp13Interceptor"
+         address="127.0.0.1"
          port="8009" />
 
       <!-- 
