@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import javax.ejb.EJBObject;
+import javax.ejb.FinderException;
+import javax.ejb.ObjectNotFoundException;
 import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EJBProxyFactory;
@@ -29,7 +31,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * manager.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public final class EntityLifeCycleInterceptor extends AbstractInterceptor
 {
@@ -115,7 +117,15 @@ public final class EntityLifeCycleInterceptor extends AbstractInterceptor
          {
             if(primaryKeys.isEmpty())
             {
-               return new InvocationResponse(null);
+               throw new ObjectNotFoundException();
+            }
+            if(primaryKeys.size() > 1)
+            {
+               throw new FinderException("A single-object" +
+                     " finder may not return more then" +
+                     " one element [EJB 2.1 section" +
+                     " 10.5.6.2]: size=" + 
+                     primaryKeys.size());
             }
 
             // get the sole primary key
