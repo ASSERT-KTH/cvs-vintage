@@ -301,6 +301,13 @@
     </field>
 </group>
 
+<group name="ForgotPassword" key="fgtpwd">
+    <field name="Username" key="u" type="String">
+        <rule name="required" value="true">Please enter an email address</rule>
+        <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+    </field>
+</group>
+
 <group name="Register" key="register" mapToObject="om.ScarabUserImpl">
     <field name="FirstName" key="fn" type="String">
         <rule name="required" value="true">Please enter a first name</rule>
@@ -315,6 +322,9 @@
     <field name="UserName" key="u" type="String" mapToProperty="Email">
         <rule name="required" value="true">Please enter an email address</rule>
         <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
+    </field>
+    <field name="OldPassword" key="op" type="String" mapToProperty="">
+        <rule name="required" value="true">Please enter a password</rule>
     </field>
     <field name="Password" key="p" type="String">
         <rule name="required" value="true">Please enter a password</rule>

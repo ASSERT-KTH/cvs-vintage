@@ -71,14 +71,15 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.25 2001/10/15 18:52:43 jon Exp $
+ * @version $Id: Login.java,v 1.26 2001/10/24 06:05:55 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {
     /**
      * This manages clicking the Login button
      */
-    public void doLogin( RunData data, TemplateContext context ) throws Exception
+    public void doLogin(RunData data, TemplateContext context)
+        throws Exception
     {
         data.setACL(null);
         IntakeTool intake = getIntakeTool(context);
@@ -106,14 +107,14 @@ public class Login extends ScarabTemplateAction
         String username = login.get("Username").toString();
         String password = login.get("Password").toString();
         
-        User user = null;
+        ScarabUser user = null;
         try
         {
             // Authenticate the user and get the object.
-            user = TurbineSecurity
-                .getAuthenticatedUser( username, password );
+            user = (ScarabUser) TurbineSecurity
+                .getAuthenticatedUser(username, password);
         }
-        catch ( TurbineSecurityException e )
+        catch (TurbineSecurityException e)
         {
             data.setMessage("Invalid username or password.");
             Log.error ("Login: ", e);
@@ -128,13 +129,27 @@ public class Login extends ScarabTemplateAction
                 ScarabRequestTool scarabR = getScarabRequestTool(context);
                 if (scarabR != null)
                 {
-                    user = TurbineSecurity.getUserInstance();
+                    user = (ScarabUser) TurbineSecurity.getUserInstance();
                     user.setEmail (username);
-                    scarabR.setUser((ScarabUser)user);
+                    scarabR.setUser(user);
                 }
 
                 data.setMessage("User is not confirmed!");
                 return failAction(data, "Confirm.vm");
+            }
+            // check if the password is expired
+            if (user.isPasswordExpired())
+            {
+                ScarabRequestTool scarabR = getScarabRequestTool(context);
+                if (scarabR != null)
+                {
+                    user = (ScarabUser) TurbineSecurity.getUserInstance();
+                    user.setEmail(username);
+                    scarabR.setUser(user);
+                }
+
+                data.setMessage("Your password has expired.");
+                return failAction(data, "ChangePassword.vm");
             }
 
             // store the user object
@@ -143,6 +158,8 @@ public class Login extends ScarabTemplateAction
             user.setHasLoggedIn(new Boolean(true));
             // set the last_login date in the database
             user.updateLastLogin();
+            // update the password expire
+            user.setPasswordExpire();
             // this only happens if the user is valid
             // otherwise, we will get a valueBound in the User
             // object when we don't want to because the username is
@@ -150,7 +167,7 @@ public class Login extends ScarabTemplateAction
             // save the User object into the session
             data.save();            
         }
-        catch ( TurbineSecurityException e )
+        catch (TurbineSecurityException e)
         {
             data.setMessage(e.getMessage());
             return failAction(data, "Login.vm");
@@ -174,7 +191,7 @@ public class Login extends ScarabTemplateAction
     /**
      * calls doLogin()
      */
-    public void doPerform( RunData data, TemplateContext context )
+    public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
         doLogin(data, context);
