@@ -116,9 +116,6 @@
         </copy>
 
         <!-- things to go into the web-inf directory -->
-        <echo>
-        file://${src.dir}
-        </echo>
         <filter token="ABSOLUTE_PATH" value="file://${src.dir}"/>
         <copy todir="${build.project.webinf}/conf" filtering="yes">
             <fileset dir="${src.conf.dir}/" defaultexcludes="no">
