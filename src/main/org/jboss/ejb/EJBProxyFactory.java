@@ -33,7 +33,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  *
  *<p><b>20011219 marc fleury:</b>
 * <ul>
@@ -113,6 +113,6 @@ extends ContainerPlugin
     * @return        A collection of EJBObjects implementing the remote
     *                interface for this container.
     */
-   Collection getEntityCollection(Collection enum);
+   Collection getEntityCollection(Collection en);
 }
 
