@@ -73,7 +73,6 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.IndexSearcher;
@@ -83,7 +82,7 @@ import org.apache.lucene.search.Hits;
  * Support for searching/indexing text
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: LuceneAdapter.java,v 1.9 2002/03/21 02:14:10 jmcnally Exp $
+ * @version $Id: LuceneAdapter.java,v 1.10 2002/04/15 19:40:19 jmcnally Exp $
  */
 public class LuceneAdapter 
     implements SearchIndex
@@ -129,7 +128,7 @@ public class LuceneAdapter
         {
             Log.info("Creating index at '" + path + '\'');
             IndexWriter indexer = 
-                new IndexWriter(path, new StandardAnalyzer(), true);
+                new IndexWriter(path, new PorterStemAnalyzer(), true);
             indexer.close();   
         }        
 
@@ -196,7 +195,7 @@ public class LuceneAdapter
                 {
                     Log.debug("Querybefore=" + fullQuery);
                     q = QueryParser.parse(fullQuery.toString(), TEXT, 
-                                          new StandardAnalyzer());
+                                          new PorterStemAnalyzer());
                     Log.debug("Queryafter=" + q.toString("text"));
                 }
                 catch (Throwable t)
@@ -284,7 +283,7 @@ public class LuceneAdapter
             */
             IndexSearcher is = new IndexSearcher(path); 
             Query q = QueryParser.parse("+" + VALUE_ID + ":" + valId, TEXT, 
-                                        new StandardAnalyzer());
+                                        new PorterStemAnalyzer());
             Hits hits = is.search(q);
             if ( hits.length() > 0) 
             {
@@ -326,14 +325,14 @@ public class LuceneAdapter
         doc.add(text);
 
         IndexWriter indexer = 
-            new IndexWriter(path, new StandardAnalyzer(), false);
+            new IndexWriter(path, new PorterStemAnalyzer(), false);
         indexer.addDocument(doc);
         indexer.close();
     }
 
 
     /**
-     * Store index information for an AttributeValue
+     * Store index information for an Attachment
      */
     public void index(Attachment attachment)
         throws Exception
@@ -362,7 +361,7 @@ public class LuceneAdapter
         doc.add(text);
 
         IndexWriter indexer = 
-            new IndexWriter(path, new StandardAnalyzer(), false);
+            new IndexWriter(path, new PorterStemAnalyzer(), false);
         indexer.addDocument(doc);
         indexer.close();
     }
