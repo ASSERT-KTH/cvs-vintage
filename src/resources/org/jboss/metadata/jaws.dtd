@@ -38,8 +38,8 @@ This is the XML DTD for the JAWS deployment descriptor.
 
 <!ELEMENT table-name (#PCDATA)>
 
-<!ELEMENT type-mappings (type-mapping*)>
-<!ELEMENT type-mapping-definitions (name, mapping*)>
+<!ELEMENT type-mappings (type-mapping-definition*)>
+<!ELEMENT type-mapping-definition (name, mapping*)>
 <!ELEMENT mapping (java-type, jdbc-type, sql-type)>
 <!ELEMENT java-type (#PCDATA)>
 <!ELEMENT jdbc-type (#PCDATA)>
