@@ -38,6 +38,7 @@ import javax.management.MBeanException;
 import javax.management.JMException;
 import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeErrorException;
 
 import org.jboss.logging.Log;
 import org.jboss.util.MBeanProxy;
@@ -64,7 +65,7 @@ import org.w3c.dom.Element;
 *  (ContainerFactory for JBoss and EmbededTomcatService for Tomcat).
 *
 *   @author <a href="mailto:daniel.schulze@telkel.com">Daniel Schulze</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class J2eeDeployer 
 extends ServiceMBeanSupport
@@ -432,6 +433,11 @@ implements J2eeDeployerMBean
       {
          log.error ("Starting "+m.name+" failed!");
          throw new J2eeDeploymentException ("Error while starting "+m.name+": " + _mbe.getTargetException ().getMessage (), _mbe.getTargetException ());
+      }
+      catch (RuntimeErrorException e)
+      {
+         log.error ("Starting "+m.name+" failed!");
+         throw new J2eeDeploymentException ("Error while starting "+m.name+": " + e.getTargetError ().getMessage (), e.getTargetError ());
       }
       catch (RuntimeMBeanException e)
       {

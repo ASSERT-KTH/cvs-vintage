@@ -10,29 +10,29 @@ package org.jboss.deployment;
  *	<description> 
  *      
  *	@author Daniel Schulze daniel.schulze@telekel.com
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class J2eeDeploymentException 
 	extends Exception
 {
-   Exception exception;
+    Throwable exception;
 
-   // Constructors --------------------------------------------------
-	public J2eeDeploymentException (String message)
-   {
-		super (message);
-	}
-	
-	public J2eeDeploymentException (String message, Exception e)
-   {
-		super (message);
-      this.exception = e;
-	}
-   
-   public Exception getException()
-   {
-      return exception;
-   }
+    // Constructors --------------------------------------------------
+    public J2eeDeploymentException (String message)
+    {
+        super (message);
+    }
+
+    public J2eeDeploymentException (String message, Throwable e)
+    {
+        super (message);
+        this.exception = e;
+    }
+
+    public Throwable getException()
+    {
+        return exception;
+    }
 }
 
 
