@@ -579,15 +579,16 @@ $l10n.NoDependencies
 
      <td>
      #if ($transaction && $transaction.Attachment)
-       #if ($transaction.Attachment.DataAsString)
+       #if ($transaction.Attachment.DataAsString && !$transaction.Attachment.AttachmentType.Name.equals("COMMENT"))
          $transaction.Attachment.DataAsString
        #else Not provided. #end
      #elseif ($act.Attachment)
-       #if ($act.Attachment.DataAsString)
-         $act.Attachment.DataAsString
+       #if ($act.Attachment.DataAsString && !$act.Attachment.AttachmentType.Name.equals("COMMENT"))
+          $act.Attachment.DataAsString 
        #else Not provided. #end     
      #elseif ($transaction && $transaction.TransactionType.Name.equals("Create Issue"))
            $l10n.InitialEntry
+     #else Not provided.
      #end
      </td>
      <td>
