@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.31 2002/06/09 14:48:56 linus Exp $
+// $Id: GeneratorJava.java,v 1.32 2002/07/15 21:03:56 thn Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -59,7 +59,7 @@ import org.argouml.uml.generator.*;
 
 // needs-more-work: always check for null!!!
 
-public class GeneratorJava extends Generator 
+public class GeneratorJava extends Generator
 implements PluggableNotation, FileGenerator {
 
   private static final boolean VERBOSE_DOCS = false; // TODO: make it configurable
@@ -438,7 +438,7 @@ implements PluggableNotation, FileGenerator {
 
     // add attributes
     Collection strs = MMUtil.SINGLETON.getAttributes(cls);
-    if (strs != null) {
+    if (strs != null && !strs.isEmpty()) {
       sb.append ('\n');
       if (VERBOSE_DOCS && cls instanceof MClassImpl) {
         sb.append (INDENT)
@@ -461,7 +461,7 @@ implements PluggableNotation, FileGenerator {
 
     // add attributes implementing associations
     Collection ends = cls.getAssociationEnds();
-    if (ends != null) {
+    if (ends != null && !ends.isEmpty()) {
       sb.append ('\n');
       if (VERBOSE_DOCS && cls instanceof MClassImpl) {
         sb.append (INDENT)
@@ -486,7 +486,7 @@ implements PluggableNotation, FileGenerator {
     // add operations
     // needs-more-work: constructors
     Collection behs = MMUtil.SINGLETON.getOperations(cls);
-    if (behs != null) {
+    if (behs != null && !behs.isEmpty()) {
       sb.append ('\n');
       if (VERBOSE_DOCS) {
         sb.append (INDENT)
