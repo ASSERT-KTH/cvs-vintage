@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.37 2001/10/23 07:10:45 schaefera Exp $ -->
+<!-- $Id: build.xml,v 1.38 2001/11/12 04:24:18 schaefera Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -320,8 +320,12 @@ os.version:      ${os.version}
     <property name="build.etc" value="${module.output}/etc"/>
     <property name="build.bin" value="${module.output}/bin"/>
     <property name="build.docs" value="${module.output}/docs"/>
-    <property name="build.beans" value="${module.output}/beans"/>
-    <property name="build.metadata" value="${module.output}/metadata"/>
+    <property name="build.ejbadaptor" value="${module.output}/ejbadaptor"/>
+    <property name="build.ejbadaptor.beans" value="${build.ejbadaptor}/beans"/>
+    <property name="build.ejbadaptor.metadata" value="${build.ejbadaptor}/metadata"/>
+    <property name="build.mejb" value="${module.output}/mejb"/>
+    <property name="build.mejb.beans" value="${build.mejb}/beans"/>
+    <property name="build.mejb.metadata" value="${build.mejb}/metadata"/>
     <property name="build.resources" value="${module.output}/resources"/>
     <property name="build.reports" value="${module.output}/reports"/>
 
@@ -396,10 +400,10 @@ os.version:      ${os.version}
   <target name="compile-bean-sources" depends="init">
     <taskdef name="xdoclet" classname="xdoclet.ejb.EjbDocletTask"/>
 
-    <mkdir dir="${build.beans}"/>
-    <mkdir dir="${build.metadata}/META-INF"/>
+    <mkdir dir="${build.ejbadaptor.beans}"/>
+    <mkdir dir="${build.ejbadaptor.metadata}/META-INF"/>
     <xdoclet sourcepath="${source.java}"
-	     destdir="${build.beans}"
+	     destdir="${build.ejbadaptor.beans}"
 	     classpath="${xdoclet.task.classpath}"
 	     ejbspec="1.1"
 	     excludedtags="@version,@author">
@@ -410,9 +414,28 @@ os.version:      ${os.version}
       <homeinterface/>
       <session/>
       <deploymentdescriptor xmlencoding ="UTF-8"
-			    destdir="${build.metadata}/META-INF"/>
+			    destdir="${build.ejbadaptor.metadata}/META-INF"/>
       <jboss xmlencoding="UTF-8" 
-	     destdir="${build.metadata}/META-INF"/>
+	     destdir="${build.ejbadaptor.metadata}/META-INF"/>
+    </xdoclet>
+
+    <mkdir dir="${build.mejb.beans}"/>
+    <mkdir dir="${build.mejb.metadata}/META-INF"/>
+    <xdoclet sourcepath="${source.java}"
+	     destdir="${build.mejb.beans}"
+	     classpath="${xdoclet.task.classpath}"
+	     ejbspec="1.1"
+	     excludedtags="@version,@author">
+      <fileset dir="${source.java}">
+        <include name="org/jboss/management/mejb/**" />
+      </fileset>
+      <remoteinterface/>
+      <homeinterface/>
+      <session/>
+      <deploymentdescriptor xmlencoding ="UTF-8"
+			    destdir="${build.mejb.metadata}/META-INF"/>
+      <jboss xmlencoding="UTF-8" 
+	     destdir="${build.mejb.metadata}/META-INF"/>
     </xdoclet>
   </target>
 
@@ -430,7 +453,8 @@ os.version:      ${os.version}
 	   includeJavaRuntime="${javac.include.java.runtime}"
 	   failonerror="${javac.fail.onerror}">
        <src path="${source.java}"/>
-       <src path="${build.beans}"/>
+       <src path="${build.ejbadaptor.beans}"/>
+       <src path="${build.mejb.beans}"/>
        <classpath refid="javac.classpath"/>
        <include name="${javac.includes}"/>
        <exclude name="${javac.excludes}"/>
@@ -649,7 +673,17 @@ os.version:      ${os.version}
         <include name="org/jboss/jmx/adaptor/interfaces/**"/>
         <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
       </fileset>
-      <fileset dir="${build.metadata}">
+      <fileset dir="${build.ejbadaptor.metadata}">
+        <include name="META-INF/*.xml"/>
+      </fileset>
+    </jar>
+
+    <!-- Build ejb-management.jar --> 
+    <jar jarfile="${build.lib}/ejb-management.jar">
+      <fileset dir="${build.classes}">
+        <include name="org/jboss/management/mejb/**"/>
+      </fileset>
+      <fileset dir="${build.mejb.metadata}">
         <include name="META-INF/*.xml"/>
       </fileset>
     </jar>
