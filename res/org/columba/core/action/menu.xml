@@ -40,7 +40,9 @@
 	<menu name="menu_view">	
 		<menuitem action="Cancel"/>
 		<separator/>
+		<!--
 		<menuitem imenu="ChoosePerspectiveSubmenu"/>
+		-->
 		<menu name="menu_view_show_hide">
 			<menuitem checkboxaction="ViewToolbar"/>
 			<menuitem checkboxaction="ViewFolderInfoPanel" />	
