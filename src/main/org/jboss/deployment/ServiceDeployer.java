@@ -49,17 +49,17 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:David.Maplesden@orion.co.nz">David Maplesden</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.15 $ <p>
+ * @version   $Revision: 1.16 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
  *        <li>
  *      </ul>
- *      
+ *
  *      <p><b>20010905 david maplesden:</b>
  *      <ul>
- *      <li>Changed deployment procedure to deploy all listed mbeans, then 
- *      initialise them all before finally starting them all.  Changed services 
+ *      <li>Changed deployment procedure to deploy all listed mbeans, then
+ *      initialise them all before finally starting them all.  Changed services
  *      sets to lists to maintain ordering.
  *      </ul>
  *
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  *        deploy. Made undeploy work, and implemented sar dependency management
  *        and recursive deploy/undeploy.
  *      </ol>
- *      
+ *
  *      <p><b>20010907 david maplesden:</b>
  *      <ul>
  *      <li>Added support for "depends" tag
@@ -136,15 +136,15 @@ public class ServiceDeployer
 
    /**
     * Deploys a package identified by a url string. This stops if a previous
-    * version exists. The package can be a *service.xml file, a sar service 
+    * version exists. The package can be a *service.xml file, a sar service
     * archive, or a plain jar or zip file with no deployment descriptor.
-    * In any case, all classes found in the package or sar subpackages are 
-    * added to the extensible classloader.  If there are classpath elements 
-    * in the configuration file, the named packages are loaded 
-    * (in separate classloaders) unless they have been explicitly undeployed, 
+    * In any case, all classes found in the package or sar subpackages are
+    * added to the extensible classloader.  If there are classpath elements
+    * in the configuration file, the named packages are loaded
+    * (in separate classloaders) unless they have been explicitly undeployed,
     * in which case deployment of this package is suspended until they have been
-    * redeployed.  Then the mbeans named in the configuration file are created 
-    * using the ServiceController.  Dependencies between mbeans are handled by 
+    * redeployed.  Then the mbeans named in the configuration file are created
+    * using the ServiceController.  Dependencies between mbeans are handled by
     * the ServiceController.
     *
     * @param urlString                  The location of the package to deploy
@@ -164,23 +164,23 @@ public class ServiceDeployer
          return sdi;
       }
 
-      if (sdi.state == EMPTY || sdi.state == GHOST) 
+      if (sdi.state == EMPTY || sdi.state == GHOST)
       {
-         deployLocalClasses(url, null, true);              
+         deployLocalClasses(url, null, true);
          //Let others waiting on our classes finish deploying.
          resolveSuspensions(url, sdi);
       } // end of if ()
-      
+
 
       if(sdi.dd != null){
          boolean suspended = deployNeededPackages(url, sdi);
 
          //Copy local directory if local-directory element is present
-         try 
+         try
          {
             NodeList lds = sdi.dd.getElementsByTagName("local-directory");
             log.debug("about to copy " + lds.getLength() + " local directories");
-            for (int i = 0; i< lds.getLength(); i++) 
+            for (int i = 0; i< lds.getLength(); i++)
             {
                 Element ld = (Element)lds.item(i);
                 String path = ld.getAttribute("path");
@@ -194,14 +194,14 @@ public class ServiceDeployer
 
                 inflateJar(localUrl, localBaseDir, path);
             } // end of for ()
-            
 
-         } catch (Exception e) 
+
+         } catch (Exception e)
          {
              log.error("Problem copying local directory", e);
          } // end of try-catch
          //if we are suspended, we must wait till all classes are available.
-         if (!suspended) 
+         if (!suspended)
          {
             addMBeans(url, sdi);
          } // end of if ()
@@ -210,104 +210,114 @@ public class ServiceDeployer
       return sdi;
    }
 
-   private void resolveSuspensions(URL url, SarDeploymentInfo sdi) 
+   private void resolveSuspensions(URL url, SarDeploymentInfo sdi)
        throws DeploymentException
    {
       Iterator suspensions = (sdi.weSupplyClassesTo).iterator();
-      while (suspensions.hasNext()) 
+      while (suspensions.hasNext())
       {
          //check if all suspension dependencies resolved and if so call
          //addMBeans on it.
          URL suspendedUrl = (URL) suspensions.next();
          SarDeploymentInfo suspendedSdi = getSdi(suspendedUrl, false);
-         if (suspendedSdi.state != SUSPENDED) 
+         if (suspendedSdi.state != SUSPENDED)
          {
             throw new DeploymentException("Depending module " + suspendedUrl + " is not marked as suspended when deploying url: " + url);
          } // end of if ()
-         
+
          boolean canDeploySuspended = true;
          Iterator others = suspendedSdi.weNeedClassesFrom.iterator();
-         while (others.hasNext()) 
+         while (others.hasNext())
          {
             URL otherUrl = (URL)others.next();
             SarDeploymentInfo otherSdi = getSdi(otherUrl, false);
             if (otherUrl != url && otherSdi.state != LOCALCLASSESLOADED
                 && otherSdi.state != CLASSESLOADED
-                && otherSdi.state != MBEANSLOADED) 
+                && otherSdi.state != MBEANSLOADED)
             {
                canDeploySuspended = false;
                break;
             } // end of if ()
 
          } // end of while ()
-         if (canDeploySuspended) 
+         if (canDeploySuspended)
          {
-            addMBeans(suspendedUrl, suspendedSdi);        
+            addMBeans(suspendedUrl, suspendedSdi);
          } // end of if ()
       } // end of while ()
    }
-     
 
-   private SarDeploymentInfo deployLocalClasses(URL url, URL needsme, boolean reloadSuspended) 
+
+   private SarDeploymentInfo deployLocalClasses(URL url, URL needsme, boolean reloadSuspended)
         throws DeploymentException
    {
       SarDeploymentInfo sdi = getSdi(url, false);
-      
-      if (reloadSuspended || sdi.state == EMPTY || sdi.state == GHOST) 
+
+      if (reloadSuspended || sdi.state == EMPTY || sdi.state == GHOST)
       {
-         try 
+         try
          {
             log.debug("deploying document " + url);
-            File localCopy = getLocalCopy(url, sdi);
-            URL localUrl = localCopy.toURL();
-            String localName = localCopy.getName();//just the filename, no path
-            extractPackages(localUrl, sdi);
-            log.debug("jars from deployment: " + sdi.getClassUrls());
-            log.debug("xml's from deployment: " + sdi.getXmlUrls());
 
-            //OK, what are we trying to deploy?
-            //A plain xml file with mbean classpath elements and mbean config.
-            if (localName.endsWith("service.xml"))
+            if(url.toString().endsWith("/"))  //adding directory to classpath
             {
-               sdi.dd = getDocument(localUrl);
-               sdi.state = LOCALCLASSESLOADED;
-            }
-            //a service archive with classes, jars, and META-INF/jboss-service.xml 
-            //configuration file
-            else if (localName.endsWith(".sar"))
-            {
-               sdi.createClassLoader();
-            docfound:
-               {
-                  for (Iterator i = sdi.getXmlUrls().iterator(); i.hasNext();) 
-                  {
-                     URL docUrl = (URL)i.next(); 
-                     if (docUrl.getFile().endsWith("META-INF/jboss-service.xml")) 
-                     {
-                        sdi.dd = getDocument(docUrl);
-                        break docfound;
-                     } // end of if ()
-                  
-                  } // end of for ()
-                  throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
-               }
-               sdi.state = LOCALCLASSESLOADED;
-               log.debug("got document jboss-service.xml from cl");
-            }
-
-            //Or maybe its just a jar to be put in the extensible classloader.
-            else if(localName.endsWith(".jar")
-                   || localName.endsWith(".zip"))
-            {
+               sdi.addClassUrl(url);
                sdi.createClassLoader();
                sdi.state = CLASSESLOADED;
             }
-            //Not for us.
             else
             {
-               throw new Exception("not a deployable file type");
+
+               File localCopy = getLocalCopy(url, sdi);
+               URL localUrl = localCopy.toURL();
+               String localName = localCopy.getName();//just the filename, no path
+               extractPackages(localUrl, sdi);
+               log.debug("jars from deployment: " + sdi.getClassUrls());
+               log.debug("xml's from deployment: " + sdi.getXmlUrls());
+
+               //OK, what are we trying to deploy?
+               //A plain xml file with mbean classpath elements and mbean config.
+               if (localName.endsWith("service.xml"))
+               {
+                  sdi.dd = getDocument(localUrl);
+                  sdi.state = LOCALCLASSESLOADED;
+               }
+               //a service archive with classes, jars, and META-INF/jboss-service.xml
+               //configuration file
+               else if (localName.endsWith(".sar"))
+               {
+                  sdi.createClassLoader();
+               docfound:
+                  {
+                     for (Iterator i = sdi.getXmlUrls().iterator(); i.hasNext();)
+                     {
+                        URL docUrl = (URL)i.next();
+                        if (docUrl.getFile().endsWith("META-INF/jboss-service.xml"))
+                        {
+                           sdi.dd = getDocument(docUrl);
+                           break docfound;
+                        } // end of if ()
+
+                     } // end of for ()
+                     throw new DeploymentException("No META-INF/jboss-service.xml found in alleged sar!");
+                  }
+                  sdi.state = LOCALCLASSESLOADED;
+                  log.debug("got document jboss-service.xml from cl");
+               }
+
+               //Or maybe its just a jar to be put in the extensible classloader.
+               else if(localName.endsWith(".jar")
+                      || localName.endsWith(".zip"))
+               {
+                  sdi.createClassLoader();
+                  sdi.state = CLASSESLOADED;
+               }
+               //Not for us.
+               else
+               {
+                  throw new Exception("not a deployable file type");
+               }
             }
-          
          }
          catch (Exception ignored)
          {
@@ -320,9 +330,9 @@ public class ServiceDeployer
       //in any case, we may need to add class dependency info
       if ((needsme != null) && !sdi.weSupplyClassesTo.contains(needsme))
       {
-         sdi.weSupplyClassesTo.add(needsme);   
+         sdi.weSupplyClassesTo.add(needsme);
       } // end of if ()
-      
+
       return sdi;
 
    }
@@ -369,7 +379,7 @@ public class ServiceDeployer
                log.debug("archives are " + archives);
             }
 
-            if (codebase.startsWith("file:") && archives.equals(""))
+            if (codebase.startsWith("file:") && archives.equals("*"))
             {
                try
                {
@@ -408,15 +418,31 @@ public class ServiceDeployer
                }
             }
 
-            // Still no codebase? get the system default
-            else if (codebase.equals(""))
+            else if(codebase.length() > 0 && archives.equals(""))
             {
-               codebase = System.getProperty("jboss.system.libraryDirectory");
+                  try
+                  {
+                     URL u = new URL(codebase);
+                     if (!weNeedClassesFrom.contains(u))
+                     {
+                        weNeedClassesFrom.add(u);
+                     }
+                  }
+                  catch (MalformedURLException mfue)
+                  {
+                     log.error("couldn't resolve package reference: ", mfue);
+                  }
             }
 
             // We have an archive whatever the codebase go ahead and load the libraries
-            if (!archives.equals(""))
+            else if (!archives.equals(""))
             {
+
+               // Still no codebase? get the system default
+               if (codebase.equals(""))
+               {
+                   codebase = System.getProperty("jboss.system.libraryDirectory");
+               }
 
                StringTokenizer st = new StringTokenizer(archives, ",");
                //iterate through the packages in archives
@@ -424,23 +450,23 @@ public class ServiceDeployer
                {
                   String jar = st.nextToken().trim();
                   String urlString = codebase + jar;
-                  try 
+                  try
                   {
                      URL u = new URL(urlString);
-                     if (!weNeedClassesFrom.contains(u)) 
+                     if (!weNeedClassesFrom.contains(u))
                      {
                         weNeedClassesFrom.add(u);
                      } // end of if ()
-                  } catch (MalformedURLException mfue) 
+                  } catch (MalformedURLException mfue)
                   {
                      log.error("couldn't resolve package reference: ", mfue);
                   } // end of try-catch
               }
             }
 
-            else if (codebase.startsWith("http:"))
+            else //codebase is empty and archives is empty
             {
-               throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
+               throw new DeploymentException("Loading from an empty codebase with no jars specified. Please fix jboss-service.xml in your configuration");
             }
          }
          //Ok, now we've found the list of urls we need... deploy their classes.
@@ -449,28 +475,28 @@ public class ServiceDeployer
          URL neededUrl = null;
          while (jars.hasNext())
          {
-             try 
+             try
              {
                 neededUrl = (URL)jars.next();
                 SarDeploymentInfo jarSdi = getSdi(neededUrl, true);
                 //find out if any of these were undeployed... if so we can't deploy them nor our mbeans
                 if (jarSdi.state == GHOST) {
-                   suspended = true;                    
-                   log.debug("did not deploy classes for " + neededUrl + ", it's a ghost, we are suspended"); 
+                   suspended = true;
+                   log.debug("did not deploy classes for " + neededUrl + ", it's a ghost, we are suspended");
                 } // end of if ()
-                else 
+                else
                 {
-                   deployLocalClasses(neededUrl, url, false);          
-                   log.debug("deployed classes for " + neededUrl); 
+                   deployLocalClasses(neededUrl, url, false);
+                   log.debug("deployed classes for " + neededUrl);
 
                 } // end of else
-                
+
              } catch (DeploymentException e) {
                 log.error("problem deploying classes for " + neededUrl, e);
                  //put in list of failures TODO
              } // end of try-catch
-             
-             
+
+
          } // end of while ()
          return suspended;
 
@@ -499,41 +525,41 @@ public class ServiceDeployer
       log.debug("undeploying document " + url);
 
       SarDeploymentInfo sdi = getSdi(url, false);
-      
+
       //first of all, undeploy the depending (via depends tag) packages' mbeans and our mbeans.
       removeMBeans(url, sdi);
 
       //Now undeploy mbeans from packages we supply classes to.
       //Mark them suspended.. they are waiting for our classes to come back.
       Iterator suppliedToPackages = sdi.weSupplyClassesTo.iterator();
-      while (suppliedToPackages.hasNext()) 
+      while (suppliedToPackages.hasNext())
       {
          URL suppliedToPackage = (URL)suppliedToPackages.next();
          SarDeploymentInfo suppliedToSdi = getSdi(suppliedToPackage, false);
-         if (suppliedToSdi.state == MBEANSLOADED) 
+         if (suppliedToSdi.state == MBEANSLOADED)
          {
             removeMBeans(suppliedToPackage, suppliedToSdi);
             suppliedToSdi.state = SUSPENDED;
          } // end of if ()
-         
+
       } // end of while ()
 
-      //Now tell packages we need classes from we are leaving: 
+      //Now tell packages we need classes from we are leaving:
       //if they are ghosts (undeployed but remembering we need them)
       //and we are the last dependency, we can forget about them completely.
-      //if they are not explicitly deployed (use parents isDeployed), 
+      //if they are not explicitly deployed (use parents isDeployed),
       //and we are the last dependency, we can undeploy them also.
       Iterator weNeedClassesFrom = sdi.weNeedClassesFrom.iterator();
-      while (weNeedClassesFrom.hasNext()) 
+      while (weNeedClassesFrom.hasNext())
       {
          URL packageWeUse = (URL)weNeedClassesFrom.next();
          SarDeploymentInfo packageWeUseInfo = getSdi(packageWeUse, false);
          packageWeUseInfo.weSupplyClassesTo.remove(url);
          //if we're the last dependency for that package...
-         if (packageWeUseInfo.weSupplyClassesTo.isEmpty()) 
+         if (packageWeUseInfo.weSupplyClassesTo.isEmpty())
          {
             //and it was undeployed
-            if (packageWeUseInfo.state == GHOST) 
+            if (packageWeUseInfo.state == GHOST)
             {
                //bye bye
                urlToSarDeploymentInfoMap.remove(packageWeUse);
@@ -545,30 +571,30 @@ public class ServiceDeployer
                undeploy(packageWeUse, null);
             } // end of if ()
          } // end of if ()
-         
-         
+
+
       } // end of while ()
-      //Ok, we're done with upwards and downwards dependencies: 
+      //Ok, we're done with upwards and downwards dependencies:
       //we can decide if we're a ghost, and remove our classloader, and maybe ourselves.
       ServiceLibraries.getLibraries().removeClassLoader(sdi.removeClassLoader());
       //delete the copied directories if possible.
       sdi.cleanup(getLog());
 
       //sdi.classloader = null;
-      if (sdi.weSupplyClassesTo.isEmpty()) 
+      if (sdi.weSupplyClassesTo.isEmpty())
       {
          //no one is using us, we can disappear without a trace
          urlToSarDeploymentInfoMap.remove(url);
       } // end of if ()
-      else 
+      else
       {
          //someone is still suspended on us, we turn into a ghost so they
          //can be deployed if we are redeployed.
-         sdi.state = GHOST;         
+         sdi.state = GHOST;
       } // end of else
       //Hey, man, we're all cleaned up!
    }
-      
+
 
    /**
     * MBeanRegistration interface. Get the mbean server.
@@ -606,20 +632,20 @@ public class ServiceDeployer
          getServer().invoke(getServiceControllerName(),
                             "registerAndStartService",
                             new Object[] {objectName, null},
-                            new String[] {"javax.management.ObjectName", 
+                            new String[] {"javax.management.ObjectName",
                                           "java.lang.String"});
       }
       catch (Exception e)
       {
          log.error("Problem postregistering ServiceDeployer", e);
       }
-         
+
    }
 
    protected Document getDocument(URL url)
       throws DeploymentException
    {
-      try 
+      try
       {
          DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
          InputStream stream = url.openStream();
@@ -636,7 +662,7 @@ public class ServiceDeployer
          log.warn("ParserConfigurationException getting document:", pce);
          throw new DeploymentException(pce.getMessage());
       }
-      catch (Exception e) 
+      catch (Exception e)
       {
          log.warn("Exception getting document:", e);
          throw new DeploymentException(e.getMessage());
@@ -716,7 +742,7 @@ public class ServiceDeployer
 
    /* Calls server.invoke, unwraps exceptions, and returns server output
     */
-   private Object invoke(ObjectName name, String method, Object[] args, String[] sig) 
+   private Object invoke(ObjectName name, String method, Object[] args, String[] sig)
    {
       try
       {
@@ -758,9 +784,9 @@ public class ServiceDeployer
          if (createIfMissing)
          {
             sdi = new SarDeploymentInfo(url);
-            urlToSarDeploymentInfoMap.put(url, sdi);          
+            urlToSarDeploymentInfoMap.put(url, sdi);
          } // end of if ()
-         else 
+         else
          {
             throw new DeploymentException(url + " is not deployed as expected");
          } // end of else
