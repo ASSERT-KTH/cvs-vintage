@@ -352,7 +352,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	public void moveTo(AbstractFolder newParent) throws Exception {
+	public void moveTo(AbstractFolder newParent) {
 		// do the same for the XmlElement node
 		getConfiguration().getRoot().removeFromParent();	
 		

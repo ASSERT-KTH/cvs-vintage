@@ -101,7 +101,7 @@ public interface IFolder {
 	 * 
 	 * all treenode manipulation is passed to the corresponding XmlElement
 	 */
-	void append(AbstractFolder child);
+	void moveTo(AbstractFolder child);
 
 	/** ******************* capabilities ************************************* */
 	boolean supportsAddMessage();
