@@ -313,12 +313,13 @@ public class PluginManager {
         // find all possible plugin directories
         File[] pluginFolders = PluginFinder.searchPlugins();
 
-        if (pluginFolders == null) { return; }
-
         folders = new HashMap();
         elements = new HashMap();
         jarFiles = new HashMap();
         ids = new Vector();
+
+        // if no plugin directory exists -> return
+        if (pluginFolders == null) { return; }
 
         // try to load all plugins
         for (int i = 0; i < pluginFolders.length; i++) {
