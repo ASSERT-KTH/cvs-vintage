@@ -1,4 +1,4 @@
-// $Id: UMLToDoItem.java,v 1.8 2005/02/16 23:47:09 bobtarling Exp $
+// $Id: UMLToDoItem.java,v 1.9 2005/02/20 21:55:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,7 +124,7 @@ public class UMLToDoItem extends ToDoItem {
      * Action jumps to the diagram containing all or most of the
      * offenders and calls {@link #deselect()}, {@link #select()}
      * around the call to
-     * {@link ProjectBrowser#jumpToDiagramShowing(VectorSet)}.
+     * {@link ProjectBrowser#jumpToDiagramShowing(ListSet)}.
      */
     public void action() {
         deselect();
@@ -150,14 +150,15 @@ public class UMLToDoItem extends ToDoItem {
 
         while (offs.hasMoreElements()) {
             Object dm =  offs.nextElement();
-            if (dm instanceof Highlightable)
+            if (dm instanceof Highlightable) {
                 ((Highlightable) dm).setHighlight(false);
-            else if (p != null) {
+	    } else if (p != null) {
                 Iterator iterFigs = p.findFigsForMember(dm).iterator();
                 while (iterFigs.hasNext()) {
                     Object f = iterFigs.next();
-                    if (f instanceof Highlightable)
+                    if (f instanceof Highlightable) {
                         ((Highlightable) f).setHighlight(false);
+		    }
                 }
             }
         }
@@ -171,14 +172,15 @@ public class UMLToDoItem extends ToDoItem {
         Project p = ProjectManager.getManager().getCurrentProject();
         while (offs.hasMoreElements()) {
             Object dm = offs.nextElement();
-            if (dm instanceof Highlightable)
+            if (dm instanceof Highlightable) {
                 ((Highlightable) dm).setHighlight(true);
-            else if (p != null) {
+	    } else if (p != null) {
                 Iterator iterFigs = p.findFigsForMember(dm).iterator();
                 while (iterFigs.hasNext()) {
                     Object f = iterFigs.next();
-                    if (f instanceof Highlightable)
+                    if (f instanceof Highlightable) {
                         ((Highlightable) f).setHighlight(true);
+		    }
                 }
             }
         }

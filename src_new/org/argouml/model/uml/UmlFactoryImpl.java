@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.26 2005/02/08 21:02:02 mvw Exp $
+// $Id: UmlFactoryImpl.java,v 1.27 2005/02/20 21:55:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -961,27 +961,27 @@ class UmlFactoryImpl
             factory = fact;
             createMethod = meth;
         }
+
         /**
-         * @return
+         * @return The class.
          */
         public Class getJavaClass() {
             return javaClass;
         }
 
         /**
-         * @return
+         * @return The create method.
          */
         public String getCreateMethod() {
             return createMethod;
         }
 
         /**
-         * @return
+         * @return The factory.
          */
         public Object getFactory() {
             return factory;
         }
-
     }
 
     /**
@@ -996,4 +996,3 @@ class UmlFactoryImpl
         return expression;
     }
 }
-

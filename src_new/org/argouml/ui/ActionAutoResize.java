@@ -1,4 +1,4 @@
-// $Id: ActionAutoResize.java,v 1.13 2005/01/09 14:58:10 linus Exp $
+// $Id: ActionAutoResize.java,v 1.14 2005/02/20 21:55:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,7 +55,8 @@ public class ActionAutoResize extends UMLAction {
     /**
      * Accessor to determine whether the nodes should be resized or not.
      *
-     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(MElementEvent)
+     * @see org.argouml.uml.diagram.ui.FigNodeModelElement#modelChanged(
+     *         java.beans.PropertyChangeEvent)
      */
     public static boolean isAutoResizable() { return autoResize; }
 }

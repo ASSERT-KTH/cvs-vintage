@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.17 2005/01/30 20:48:32 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.18 2005/02/20 21:55:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: SequenceDiagramRenderer.java,v 1.17 2005/01/30 20:48:32 linus Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.18 2005/02/20 21:55:18 linus Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -51,10 +51,11 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
      * Return a Fig that can be used to represent the given node.
      *
      * @see org.tigris.gef.graph.GraphNodeRenderer#getFigNodeFor(
-     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
-     * java.lang.Object)
+     *         org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
+     *         java.lang.Object, java.util.Map)
      */
-    public FigNode getFigNodeFor(GraphModel gm, Layer lay, Object node, Map styleAttributes) {
+    public FigNode getFigNodeFor(GraphModel gm, Layer lay,
+				 Object node, Map styleAttributes) {
         if (Model.getFacade().isAObject(node)) {
             return new FigObject(node);
         }
@@ -68,19 +69,21 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
      * Return a Fig that can be used to represent the given edge.
      *
      * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
-     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
-     * java.lang.Object)
+     *         org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
+     *         java.lang.Object, java.util.Map)
      */
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge, Map styleAttributes) {
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay,
+				 Object edge, Map styleAttributes) {
         if (Model.getFacade().isALink(edge)) {
-            Object stimulus = Model.getFacade().getStimuli(edge).iterator().next();
+            Object stimulus =
+		Model.getFacade().getStimuli(edge).iterator().next();
             Object action = Model.getFacade().getDispatchAction(stimulus);
             if (Model.getFacade().isACallAction(action)) {
                 return new FigCallActionLink(edge);
             } else if (Model.getFacade().isAReturnAction(action)) {
-        	    return new FigReturnActionLink(edge);
-        	} else if (Model.getFacade().isADestroyAction(edge)) {
-        		return new FigDestroyActionLink(edge);
+		return new FigReturnActionLink(edge);
+	    } else if (Model.getFacade().isADestroyAction(edge)) {
+		return new FigDestroyActionLink(edge);
             } else if (Model.getFacade().isACreateAction(edge)) {
                 return new FigCreateActionLink(edge);
             }
@@ -94,15 +97,16 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
      * Return a Fig that can be used to represent the given edge.
      *
      * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
-     * org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
-     * java.lang.Object)
+     *         org.tigris.gef.graph.GraphModel, org.tigris.gef.base.Layer,
+     *         java.lang.Object, java.util.Map)
      */
     public FigEdge getFigEdgeFor(Object edge, Map styleAttributes) {
         if (edge == null) {
             throw new IllegalArgumentException("A model edge must be supplied");
         }
         if (Model.getFacade().isALink(edge)) {
-            Object stimulus = Model.getFacade().getStimuli(edge).iterator().next();
+            Object stimulus =
+		Model.getFacade().getStimuli(edge).iterator().next();
             Object action = Model.getFacade().getDispatchAction(stimulus);
             if (Model.getFacade().isACallAction(action)) {
                 return new FigCallActionLink();
@@ -114,7 +118,8 @@ public class SequenceDiagramRenderer extends UmlDiagramRenderer {
                 return new FigCreateActionLink();
             }
         }
-        throw new IllegalArgumentException("Failed to construct a FigEdge for " + edge);
+        throw new IllegalArgumentException("Failed to construct a FigEdge for "
+					   + edge);
     }
 
 

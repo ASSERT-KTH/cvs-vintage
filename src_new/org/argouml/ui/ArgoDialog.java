@@ -1,4 +1,4 @@
-// $Id: ArgoDialog.java,v 1.16 2005/01/09 14:58:12 linus Exp $
+// $Id: ArgoDialog.java,v 1.17 2005/02/20 21:55:17 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -63,7 +63,7 @@ public class ArgoDialog extends Dialog {
     }
 
     /**
-     * @see org.argouml.swingext.Dialog#nameButtons()
+     * @see org.tigris.swidgets.Dialog#nameButtons()
      */
     protected void nameButtons() {
         nameButton(getOkButton(), "button.ok");

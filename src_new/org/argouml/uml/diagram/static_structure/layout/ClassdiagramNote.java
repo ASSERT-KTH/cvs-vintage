@@ -1,4 +1,4 @@
-// $Id: ClassdiagramNote.java,v 1.2 2005/02/02 18:45:19 mvw Exp $
+// $Id: ClassdiagramNote.java,v 1.3 2005/02/20 21:55:18 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,25 +29,24 @@ import org.tigris.gef.presentation.FigNode;
 /**
  * This class overrides some of the aspects of ClassdiagramNodes to simplify
  * the positioning of notes nearby the commented nodes.
- * 
+ *
  * @author David Gunkel
  */
 public class ClassdiagramNote extends ClassdiagramNode {
-    
-
     /**
      * @param f the fig
      */
     public ClassdiagramNote(FigNode f) {
         super(f);
     }
-    
+
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramNode#getTypeOrderNumer()
      */
     public int getTypeOrderNumer() {
-        return first() == null ? super.getTypeOrderNumer() : first()
-            .getTypeOrderNumer();
+        return first() == null
+	    ? super.getTypeOrderNumer()
+	    : first().getTypeOrderNumer();
     }
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramNode#calculateWeight()
@@ -63,6 +62,7 @@ public class ClassdiagramNote extends ClassdiagramNode {
     public int getRank() {
         return first() == null ? 0 : first().getRank();
     }
+
     /**
      * @see org.argouml.uml.diagram.static_structure.layout.ClassdiagramNode#getWeight()
      */
@@ -76,10 +76,11 @@ public class ClassdiagramNote extends ClassdiagramNode {
     public boolean isStandalone() {
         return first() == null ? true : first().isStandalone();
     }
-    
+
     /**
      * Return the first node to which this note is attached to.
-     * @return
+     *
+     * @return A ClassdiagramNode.
      */
     private ClassdiagramNode first() {
         return getUplinks().isEmpty() ? null : (ClassdiagramNode) getUplinks()

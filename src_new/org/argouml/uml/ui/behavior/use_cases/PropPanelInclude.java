@@ -1,4 +1,4 @@
-// $Id: PropPanelInclude.java,v 1.35 2005/01/30 20:47:47 linus Exp $
+// $Id: PropPanelInclude.java,v 1.36 2005/02/20 21:55:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,7 +79,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         addButton(new PropPanelButton2(new ActionNewStereotype(),
                 lookupIcon("Stereotype")));
         addButton(new PropPanelButton2(new ActionRemoveFromModel(),
-                lookupIcon("Delete")));;
+                lookupIcon("Delete")));
     }
 
 
@@ -94,11 +94,8 @@ public class PropPanelInclude extends PropPanelModelElement {
      * reversing the use of access functions for the "base" and
      * "addition" associations in the code.<p>
      *
-     * @return The {@link ru.novosoft.uml.behavior.use_cases.MUseCase}
-     * that is the base of this include relationship or
-     * <code>null</code> if there is none. Returned as type {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to fit in with the
-     * type specified for the {@link org.argouml.uml.ui.UMLComboBoxModel}.
+     * @return The UseCase that is the base of this include relationship or
+     * <code>null</code> if there is none.
      */
     public Object getBase() {
         Object base   = null;
@@ -124,11 +121,7 @@ public class PropPanelInclude extends PropPanelModelElement {
      * reversing the use of access functions for the "base" and
      * "addition" associations in the code.<p>
      *
-     * @param base The {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to set as the base
-     * of this include relationship. Supplied as type {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to fit in with the
-     * type specified for the {@link org.argouml.uml.ui.UMLComboBoxModel}.
+     * @param base The UseCase to set as the base of this include relationship.
      */
     public void setBase(Object/*MUseCase*/ base) {
         Object target = getTarget();
@@ -146,11 +139,8 @@ public class PropPanelInclude extends PropPanelModelElement {
      * Get the current addition use case of the include relationship.<p>
      *
      *
-     * @return The {@link ru.novosoft.uml.behavior.use_cases.MUseCase}
-     * that is the addition of this include relationship or
-     * <code>null</code> if there is none. Returned as type {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to fit in with the
-     * type specified for the {@link org.argouml.uml.ui.UMLComboBoxModel}.
+     * @return The UseCase that is the addition of this include
+     * relationship or <code>null</code> if there is none.
      */
     public Object getAddition() {
         Object addition   = null;
@@ -167,11 +157,8 @@ public class PropPanelInclude extends PropPanelModelElement {
      * Set the addition use case of the include relationship.<p>
      *
      *
-     * @param addition The {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to set as the
-     * addition of this include relationship. Supplied as type {@link
-     * ru.novosoft.uml.behavior.use_cases.MUseCase} to fit in with the
-     * type specified for the {@link org.argouml.uml.ui.UMLComboBoxModel}.
+     * @param addition The UseCase to set as the addition of this
+     * include relationship.
      */
     public void setAddition(Object/*MUseCase*/ addition) {
         Object target = getTarget();

@@ -1,4 +1,4 @@
-// $Id: AbstractProjectMember.java,v 1.4 2005/01/09 14:58:06 linus Exp $
+// $Id: AbstractProjectMember.java,v 1.5 2005/02/20 21:55:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,9 +54,8 @@ public abstract class AbstractProjectMember implements ProjectMember {
     }
 
     /**
-     * In contrast to {@link #getZipName} returns the member's
-     * name without the prepended name of the project. This is
-     * the name that {@link Project#findMemberByName} goes by.
+     * In contrast to {@link #getZipName()} returns the member's
+     * name without the prepended name of the project.
      *
      * @author Steffen Zschaler
      *
@@ -82,13 +81,15 @@ public abstract class AbstractProjectMember implements ProjectMember {
      * @return the name for zip file storage
      */
     public String getZipName() {
-        if (uniqueName == null)
-            return null;
+        if (uniqueName == null) {
+	    return null;
+	}
 
         String s = project.getBaseName();
 
-        if (uniqueName.length() > 0)
+        if (uniqueName.length() > 0) {
             s += "_" + uniqueName;
+	}
 
         if (!s.endsWith(getZipFileExtension())) {
             s += getZipFileExtension();

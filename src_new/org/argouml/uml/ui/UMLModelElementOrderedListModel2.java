@@ -1,4 +1,4 @@
-// $Id: UMLModelElementOrderedListModel2.java,v 1.4 2005/01/09 14:59:03 linus Exp $
+// $Id: UMLModelElementOrderedListModel2.java,v 1.5 2005/02/20 21:55:19 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,9 +83,11 @@ public abstract class UMLModelElementOrderedListModel2
      * javax.swing.JPopupMenu, int)
      */
     public boolean buildPopup(JPopupMenu popup, int index) {
-        JMenuItem moveUp = new JMenuItem(
+        JMenuItem moveUp =
+	    new JMenuItem(
                 new MoveUpAction(this, index));
-        JMenuItem moveDown = new JMenuItem(
+        JMenuItem moveDown =
+	    new JMenuItem(
                 new MoveDownAction(this, index));
         popup.add(moveUp);
         popup.add(moveDown);
@@ -107,8 +109,6 @@ class MoveUpAction extends UMLAction {
 
     /**
      * The constructor.
-     *
-     * @param name the (to be localized) description of the action
      */
     public MoveUpAction(UMLModelElementOrderedListModel2 theModel,
             int theIndex) {
@@ -143,8 +143,6 @@ class MoveDownAction extends UMLAction {
 
     /**
      * The constructor.
-     *
-     * @param name the (to be localized) description of the action
      */
     public MoveDownAction(UMLModelElementOrderedListModel2 theModel,
             int theIndex) {

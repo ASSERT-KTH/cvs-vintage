@@ -1,4 +1,4 @@
-// $Id: UmlDiagramRenderer.java,v 1.11 2005/02/02 21:18:13 mvw Exp $
+// $Id: UmlDiagramRenderer.java,v 1.12 2005/02/20 21:55:17 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -235,7 +235,7 @@ public abstract class UmlDiagramRenderer
      *
      * @see org.tigris.gef.graph.GraphEdgeRenderer#getFigEdgeFor(
      * org.tigris.gef.graph.GraphModel,
-     * org.tigris.gef.base.Layer, java.lang.Object)
+     * org.tigris.gef.base.Layer, java.lang.Object, java.util.Map)
      */
     public FigEdge getFigEdgeFor(Object edge, Map styleAttributes) {
         if (edge == null) {

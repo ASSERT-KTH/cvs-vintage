@@ -1,4 +1,4 @@
-// $Id: GotoDialog.java,v 1.3 2005/01/09 14:58:13 linus Exp $
+// $Id: GotoDialog.java,v 1.4 2005/02/20 21:55:17 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,14 +91,13 @@ public class GotoDialog extends ArgoDialog {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == getOkButton()) {
             allDiagrams.doDoubleClick();
-        }
-        else {
+        } else {
             super.actionPerformed(e);
         }
     }
 
     /**
-     * @see org.argouml.swingext.Dialog#nameButtons()
+     * @see org.tigris.swidgets.Dialog#nameButtons()
      */
     protected void nameButtons() {
         super.nameButtons();

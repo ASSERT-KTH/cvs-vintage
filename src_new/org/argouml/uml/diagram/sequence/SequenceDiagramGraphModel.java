@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramGraphModel.java,v 1.45 2005/02/03 21:50:39 mvw Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.46 2005/02/20 21:55:18 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -101,21 +101,21 @@ public class SequenceDiagramGraphModel
         }
 
         /**
-         * @return
+         * @return The Fig.
          */
         public Fig getDestFigPort() {
             return destFigPort;
         }
 
         /**
-         * @return
+         * @return The dest object.
          */
         public Object getDestObject() {
             return destObject;
         }
 
         /**
-         * @return
+         * @return The dest port.
          */
         public Object getDestPort() {
             return destPort;
@@ -131,21 +131,21 @@ public class SequenceDiagramGraphModel
         }
 
         /**
-         * @return
+         * @return The source Fig port.
          */
         public Fig getSrcFigPort() {
             return srcFigPort;
         }
 
         /**
-         * @return
+         * @return The source object.
          */
         public Object getSrcObject() {
             return srcObject;
         }
 
         /**
-         * @return
+         * @return The source port.
          */
         public Object getSrcPort() {
             return srcPort;
@@ -376,7 +376,7 @@ public class SequenceDiagramGraphModel
     private Object collaboration;
 
     /**
-     * The interaction that is shown on the sequence diagram
+     * The interaction that is shown on the sequence diagram.
      */
     private Object interaction;
 
@@ -390,7 +390,8 @@ public class SequenceDiagramGraphModel
      */
     public List getNodes() {
         Vector allNodes = new Vector();
-        Collection elements = Model.getFacade().getOwnedElements(collaboration);
+        Collection elements =
+	    Model.getFacade().getOwnedElements(collaboration);
         Iterator it = elements.iterator();
         Collection classifierRoles = new ArrayList();
         while (it.hasNext()) {
@@ -431,7 +432,7 @@ public class SequenceDiagramGraphModel
      */
     public List getEdges() {
         Vector allEdges = new Vector();
-        Iterator it = 
+        Iterator it =
             Model.getFacade().getOwnedElements(collaboration).iterator();
         while (it.hasNext()) {
             Object o = it.next();

@@ -1,4 +1,4 @@
-// $Id: ModelManagementHelperImpl.java,v 1.11 2005/02/20 15:47:14 bobtarling Exp $
+// $Id: ModelManagementHelperImpl.java,v 1.12 2005/02/20 21:55:16 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -248,7 +248,7 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
     }
 
     /**
-     * Helper method for {@link #getAllModelElementsOfKind(Object, Class)}.
+     * Helper method for {@link #getAllModelElementsOfKind(Object, Object)}.
      *
      * @param nsa namespace.
      * @param kind name of class to find, this implementation will add the "M"
@@ -534,4 +534,3 @@ class ModelManagementHelperImpl implements ModelManagementHelper {
         throw new IllegalArgumentException("Not a base");
     }
 }
-
