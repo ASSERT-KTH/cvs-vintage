@@ -1,0 +1,50 @@
+<html>
+<head>
+<title>Scarab - Oracle</title>
+</head>
+
+<body bgcolor="#ffffff">
+
+<h2>Scarab - Oracle</h2>
+<h4>$Id: oracle.html,v 1.1 2002/01/29 23:24:34 jon Exp $</h4>
+
+<p>
+Scarab has been developed with database independence in mind, however
+our primary goal is to make Scarab work with MySQL. Therefore, our
+support for other RDBM's is largely untested. We are relying on the user
+community in order to help us test and develop further support for other
+databases. This document outlines the steps that we think are required
+to get Scarab working with Oracle. <a
+href="mailto:dev@scarab.tigris.org">Community feedback</a> on this
+document will help improve things for others.
+</p>
+
+<p>
+In order to get Torque to generate the right .sql files for Oracle, try
+the following:
+</p>
+
+<ul>
+    <li>Create a scarab/build/build.properties file.</li>
+    <li>In it, fill out the following properties with the right information
+pertaining to Oracle...ie: for database.*.url, create an Oracle JDBC URL.
+For database.type, put 'oracle'. For jdbc.driver, put the Oracle
+one....then, rm the target directory and rebuild.
+</li>
+</ul>
+
+<p>
+scarab.database.host=localhost<br />
+scarab.database.port=<br />
+scarab.database.url=<br />
+scarab.database.admin.url=<br />
+scarab.database.type=oracle<br />
+scarab.database.jdbc.driver=<br />
+scarab.database.username=<br />
+scarab.database.password=<br />
+scarab.database.admin.username=<br />
+scarab.database.admin.password=<br />
+</p>
+
+</body>
+</html>
