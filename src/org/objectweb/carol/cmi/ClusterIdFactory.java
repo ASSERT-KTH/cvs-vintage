@@ -38,7 +38,7 @@ public class ClusterIdFactory {
     private ClusterIdFactory() {
     }
 
-    public static synchronized void generate() throws ClusterException {
+    public static synchronized void start() throws ClusterException {
         startTypeIp();
     }
 
@@ -46,7 +46,10 @@ public class ClusterIdFactory {
      * Generate a cluster id based on a IP address.
      * @param a ip address
      */
-    private static void startTypeIp() throws ClusterException {
+    private static synchronized void startTypeIp() throws ClusterException {
+        if (localIdArray != null) {
+            return;
+        }
         InetAddress a;
         try {
             a = InetAddress.getLocalHost();
@@ -99,9 +102,9 @@ public class ClusterIdFactory {
      * has not been called before.
      * @return the cluster Id
      */
-    public static synchronized ClusterId getLocalId() {
+    public static synchronized ClusterId getLocalId() throws ClusterException {
         if (localIdArray == null) {
-            return null;
+            start();
         }
         if (ss == null) {
             return localId;

@@ -32,6 +32,7 @@ public class ClusterId implements Serializable {
     private static WeakCache wc = new WeakCache();
     private transient byte id[];
     private transient int hash = 0;
+    private transient String str;
 
     private ClusterId() {
     }
@@ -81,6 +82,7 @@ public class ClusterId implements Serializable {
      * @return cluster id in a human readable format
      */
     public String toString() {
+        if (str != null) return str;
         String s = "";
         int i;
         for (i = 0; i < id.length; i++) {
@@ -93,6 +95,7 @@ public class ClusterId implements Serializable {
             }
             s += n;
         }
+        str = s;
         return s;
     }
 
