@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: compcrit.xml,v 1.3 2003/10/12 16:35:36 linus Exp $ -->
+<!-- $Id: compcrit.xml,v 1.4 2003/12/08 20:25:18 linus Exp $ -->
 
 <sect1 id="critics">
       <title>Critics and other cognitive tools</title>
@@ -287,6 +287,43 @@ the critic, but if you change that, you will notice that it doesn't
 have any effect.
 </para>
 </listitem>
+
+	<listitem>
+	  <para>...get my critic to trigger?</para>
+	  <para>
+This is a suggested way to troubleshoot if the critic doesn't trigger.
+</para>
+	  <para>
+<orderedlist>
+	      <listitem>
+		<para>
+Check that the settings for critics are enabled (Toggle Auto Critique)
+</para>
+	      </listitem>
+	      <listitem>
+		<para>
+Check that your critic is registered in 
+<classname>org.argouml.uml.cognitive.critics.Init</classname>
+with the right class 
+(e.g. check inheritance structure against UML spec)
+</para>
+	      </listitem>
+	      <listitem>
+		<para>
+Check that your particular critic is enabled in Browse Critics
+</para>
+	      </listitem>
+	      <listitem>
+		<para>
+(IMPORTANT) Check that the design material is actually found in 
+<classname>org.argouml.uml.cognitive.critics.ChildGenUML</classname>.
+This method is incomplete and might not find all modelelements!
+</para>
+	      </listitem>
+	    </orderedlist>
+</para>
+	</listitem>
+
 </itemizedlist>
 </para> 
 </sect2>
