@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.158 2003/11/12 13:30:59 mkl Exp $
+// $Id: ModelFacade.java,v 1.159 2003/11/18 08:40:31 linus Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4477,18 +4477,22 @@ public class ModelFacade {
     }
 
     /**
-     * Sets an initial value of some attribute.
-     * @param attribute
-     * @param expression
+     * Sets an initial value.
+     *
+     * @param at attribute that we set the initial value of
+     * @param expr that is the value to set
      */
     public static void setInitialValue(Object at, Object expr) {
-        if (at instanceof MAttribute
-            && (expr == null || expr instanceof MExpression)) {
-            ((MAttribute)at).setInitialValue((MExpression)expr);
+        if (at instanceof MAttribute) {
+	    if (expr == null || expr instanceof MExpression) {
+		((MAttribute) at).setInitialValue((MExpression) expr);
+		return;
+	    }
+	    throw new IllegalArgumentException("Unrecognized expression "
+					       + getClassNull(expr));
         }
-        throw new IllegalArgumentException(
-            "Unrecognized object " + getClassNull(at) + " or " + 
-	    getClassNull(expr));
+        throw new IllegalArgumentException("Unrecognized object " 
+					   + getClassNull(at));
     }
 
     public static void setInstance(Object handle, Object inst) {
