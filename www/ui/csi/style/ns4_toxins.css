@@ -163,6 +163,9 @@ ul.tasks li {
 	padding: 5px;
 	border-bottom: 1px solid #999; 
 	}
+.collapsebar {
+	margin-bottom:	.67em;
+	}
 .functnbar {
 	background: #999 url(../images/nw_min.gif) no-repeat top left;
 	}
@@ -173,8 +176,9 @@ ul.tasks li {
 	background: #ccc url(../images/sw_min.gif) no-repeat bottom left;
 	}
 .functnbar, .functnbar2, {
- padding: 2px;
-	margin-top: .67em;
+ padding: 5px;
+	margin-left: 2px;
+	margin-right: 2px;
 	margin-bottom: .67em;
 	}
 .functnbar3 {
