@@ -121,21 +121,130 @@
 	<!-- Scarab - App -->
 	<div class="app" id="div2-1-2">
 		<h2>Enter issue verbose (2.1.2)</h2>
-		
-
-
-		<div class="tabs">
-			<table cellpadding="3" cellspacing="0" border="0">
-			<tr>
-			<td>1: <a href="#">Attribute group 1</a></td>
-			<td>2: <a href="#">Duplicate check</a></td>
-			<th>3: Attribute group 2</th>
-			</tr>
-			</table>
-		</div>
 
 		
 		<p class="functnbar"><input type="submit" value="Submit issue" />&#160;<input type="reset" value="Reset" />&#160;<input type="reset" value="Cancel" /></p>
+
+		<h3>Attribute group I</h3>
+		
+		<div class="axial">
+			<table width="100%" cellspacing="2" cellpadding="3" border="1">
+			<tr>
+			<th width="120">issue summary</th>
+			<td><input type="text" value="" size="" /></td>
+			</tr>
+		
+			<tr>
+			<th width="120">version</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">platform</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">os</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">found during</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">issue type</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">functional area</th>
+			<td><input type="checkbox" /> UI <input type="checkbox" />setup <input type="checkbox" />help</td>
+			</tr>
+	
+			<tr>
+			<th width="120">severity</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+	
+			<tr>
+			<th width="120">priority</th>
+			<td><select>
+			<option>
+			choice 1
+			</option>
+			<option>
+			choice 2
+			</option>
+			<option>
+			choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
 	
 		<h3>Attribute group 2</h3>
 	
@@ -234,11 +343,26 @@
            ></textarea>
       </td>
      </tr>    </table>
-</div>  <div class="functnbar3">
+</div>  
+<div class="functnbar3">
      <input type="submit" value="Add attachment" name="eventSubmit_doSubmiturl"  />
 </div>
-		<div class="axial">
-			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+
+<h4>Submit new issue</h4>
+
+<div class="axial">
+ <table cellpadding="3" cellspacing="2" border="0">
+    
+ <tr>
+   <th>*Reason</th>
+   <td>This text will appear in the subject line of the New issue email, and will be appended to the issues change history
+   
+         <p><textarea rows="4" cols="60" name ="atchattCommentKeydas"></textarea></p>
+   <input type="hidden" name="atchattCommentKeyn" value="comment" />
+   </td>
+ </tr>
+   
+
 			<tr>
 			<th width="120">After submit </th>
 			<td><select>
