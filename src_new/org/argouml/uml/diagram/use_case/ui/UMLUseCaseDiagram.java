@@ -1,4 +1,4 @@
-// $Id: UMLUseCaseDiagram.java,v 1.32 2003/09/14 17:07:32 alexb Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.33 2003/09/19 00:18:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UMLUseCaseDiagram.java
 // Classes: UMLUseCaseDiagram
 // Original Author: your email here
-// $Id: UMLUseCaseDiagram.java,v 1.32 2003/09/14 17:07:32 alexb Exp $
+// $Id: UMLUseCaseDiagram.java,v 1.33 2003/09/19 00:18:13 bobtarling Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity. Default
@@ -259,7 +259,7 @@ public class UMLUseCaseDiagram extends UMLDiagram {
         super.setNamespace(m);
 
         UseCaseDiagramGraphModel gm = new UseCaseDiagramGraphModel();
-        ModelFacade.setNamespace(gm, m);
+        gm.setNamespace(m);
         setGraphModel(gm);
 
         LayerPerspective lay = new LayerPerspectiveMutable(ModelFacade.getName(m), gm);

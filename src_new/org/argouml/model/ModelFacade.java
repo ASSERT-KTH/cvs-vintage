@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.138 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.139 2003/09/19 00:18:13 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -4325,12 +4325,13 @@ public class ModelFacade {
      * @param model element
      * @param namespace
      */
-    public static void setNamespace(Object o, Object ns) {
-        if (o != null
-            && o instanceof MModelElement
-            && (ns == null || ns instanceof MNamespace)) {
-            ((MModelElement) o).setNamespace((MNamespace) ns);
+    public static void setNamespace(Object handle, Object ns) {
+        if (handle instanceof MModelElement && (ns == null || ns instanceof MNamespace)) {
+            ((MModelElement) handle).setNamespace((MNamespace) ns);
+            return;
         }
+        throw new IllegalArgumentException("Unrecognized object " + handle
+					   + " or " + ns);
     }
 
     /**
