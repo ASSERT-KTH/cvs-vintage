@@ -48,6 +48,7 @@ package org.tigris.scarab.util.xmlissues;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.DefaultFileItem;
@@ -65,7 +66,7 @@ import org.tigris.scarab.om.ActivityPeer;
  * A Testing Suite for the ImportIssues class.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ImportIssuesTest.java,v 1.1 2003/04/28 22:33:56 jmcnally Exp $
+ * @version $Id: ImportIssuesTest.java,v 1.2 2003/08/28 02:54:24 jmcnally Exp $
  */
 public class ImportIssuesTest extends BaseTestCase
 {
@@ -114,13 +115,12 @@ public class ImportIssuesTest extends BaseTestCase
                    issuesToImport.getInputStream() != null);
 
         ImportIssues importIssues = new ImportIssues();
-        List importErrors = importIssues.runImport(issuesToImport);
+        Collection importErrors = importIssues.runImport(issuesToImport);
         //ScarabIssues si = importIssues.getScarabIssuesBeanReader();
-        if (importErrors != null)
-        {
-            // probably something better to use here. [fail()?]
-            assertTrue(importErrors.toString(), false);
-        }
+        // looking at current code importErrors will never be null, so
+        // putting in a test to confirm it
+        assertTrue("importErrors should never be null", importErrors != null);
+        assertTrue(importErrors.toString(), importErrors.isEmpty());
     }
 
 
