@@ -66,15 +66,15 @@ public class EmbededTomcat { // extends WebService
 
     /** This is an adapter object that provides callbacks into the
      *  application.
-     *  For tomcat, it will be a RequestInterceptor.
+     *  For tomcat, it will be a BaseInterceptor.
      * 	See the top level documentation
      */
     public void addApplicationAdapter( Object adapter ) {
 	if(requestInt==null)  initDefaultInterceptors();
 
-	// In our case the adapter must be RequestInterceptor.
-	if ( adapter instanceof RequestInterceptor ) {
-	    addRequestInterceptor( (RequestInterceptor)adapter);
+	// In our case the adapter must be BaseInterceptor.
+	if ( adapter instanceof BaseInterceptor ) {
+	    addRequestInterceptor( (BaseInterceptor)adapter);
 	}
     }
 
@@ -284,13 +284,13 @@ public class EmbededTomcat { // extends WebService
     }
     
     // -------------------- Private methods
-    public void addRequestInterceptor( RequestInterceptor ri ) {
+    public void addRequestInterceptor( BaseInterceptor ri ) {
 	if( requestInt == null ) requestInt=new Vector();
 	requestInt.addElement( ri );
 	if( ri instanceof BaseInterceptor )
 	    ((BaseInterceptor)ri).setDebug( debug );
     }
-    public void addContextInterceptor( ContextInterceptor ci ) {
+    public void addContextInterceptor( BaseInterceptor ci ) {
 	if( contextInt == null ) contextInt=new Vector();
 	contextInt.addElement( ci );
 	if( ci instanceof BaseInterceptor )
@@ -303,12 +303,12 @@ public class EmbededTomcat { // extends WebService
 	contextM.setDebug( debug );
 	
 	for( int i=0; i< contextInt.size() ; i++ ) {
-	    contextM.addContextInterceptor( (ContextInterceptor)
+	    contextM.addContextInterceptor( (BaseInterceptor)
 					    contextInt.elementAt( i ) );
 	}
 
 	for( int i=0; i< requestInt.size() ; i++ ) {
-	    contextM.addRequestInterceptor( (RequestInterceptor)
+	    contextM.addRequestInterceptor( (BaseInterceptor)
 					    requestInt.elementAt( i ) );
 	}
 

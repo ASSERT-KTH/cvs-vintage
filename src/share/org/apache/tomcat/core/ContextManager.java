@@ -299,7 +299,7 @@ public final class ContextManager implements LogAware{
 
 	cntr.touchCounter( ACC_INIT_START );
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	BaseInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineInit( this );
 	}
@@ -329,7 +329,7 @@ public final class ContextManager implements LogAware{
 	    removeContext((Context)enum.nextElement());
 	}
 
-	ContextInterceptor cI[]=getContextInterceptors();
+	BaseInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].engineShutdown( this );
 	}
@@ -346,7 +346,7 @@ public final class ContextManager implements LogAware{
      * or after the admin adds a new context.
      */
     public void initContext( Context ctx ) throws TomcatException {
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextInit( ctx );
 	}
@@ -372,7 +372,7 @@ public final class ContextManager implements LogAware{
 	    }
 	}
 
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextShutdown( ctx );
 	}
@@ -417,7 +417,7 @@ public final class ContextManager implements LogAware{
 	// The mapping alghoritm may use more than path and host -
 	// if not now, then in future.
 
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContext( this, ctx );
 	}
@@ -438,7 +438,7 @@ public final class ContextManager implements LogAware{
 
 	log( "Removing context " + context.toString());
 	
-	ContextInterceptor cI[]=getContextInterceptors(context);
+	BaseInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContext( this, context );
 	}
@@ -455,7 +455,7 @@ public final class ContextManager implements LogAware{
 
 	if( debug>0 ) log( "Reloading context " + context.toString());
 
-	ContextInterceptor cI[]=getContextInterceptors(context);
+	BaseInterceptor cI[]=getContextInterceptors(context);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].reload(  req, context );
 	}
@@ -467,7 +467,7 @@ public final class ContextManager implements LogAware{
     public void addContainer( Container container )
     	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(container);
+	BaseInterceptor cI[]=getContextInterceptors(container);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContainer( container);
 	}
@@ -478,7 +478,7 @@ public final class ContextManager implements LogAware{
     public void removeContainer( Container container )
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(container);
+	BaseInterceptor cI[]=getContextInterceptors(container);
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].removeContainer( container);
 	}
@@ -490,7 +490,7 @@ public final class ContextManager implements LogAware{
     // container ( in future we should remove this, and use the
     // right objects )
     
-    public void addRequestInterceptor( RequestInterceptor ri ) {
+    public void addRequestInterceptor( BaseInterceptor ri ) {
         defaultContainer.addRequestInterceptor(ri);
     }
 
@@ -505,46 +505,48 @@ public final class ContextManager implements LogAware{
 	XXX Todo: 
 	Dynamic add of interceptors is not supported.
     */
-    public RequestInterceptor[] getRequestInterceptors( Request req ) {
+    public BaseInterceptor[] getRequestInterceptors( Request req ) {
         Context ctx=req.getContext();
         // if Bad request (ctx == null) only global interceptors are called
         if( ctx == null )
            return getRequestInterceptors();
         Container ct=ctx.getContainer();
-        RequestInterceptor[] ari=ct.getCachedRequestInterceptors();
+        BaseInterceptor[] ari=ct.getCachedRequestInterceptors();
 
 	return ari;
     }
 
-    public RequestInterceptor[] getRequestInterceptorszz( Request req , int hook_id) {
+    public BaseInterceptor[] getRequestInterceptorszz( Request req ,
+						       int hook_id)
+    {
         Context ctx=req.getContext();
         // if Bad request (ctx == null) only global interceptors are called
         if( ctx == null )
            return defaultContainer.getInterceptors(hook_id);
         Container ct=ctx.getContainer();
-        RequestInterceptor[] ari=ct.getInterceptors(hook_id);
+        BaseInterceptor[] ari=ct.getInterceptors(hook_id);
 
 	return ari;
     }
 
-    public RequestInterceptor[] getRequestInterceptors() {
+    public BaseInterceptor[] getRequestInterceptors() {
 	return defaultContainer.getRequestInterceptors();
     }
 
-    public void addContextInterceptor( ContextInterceptor ci) {
+    public void addContextInterceptor( BaseInterceptor ci) {
         defaultContainer.addContextInterceptor(ci);
     }
 
-    public ContextInterceptor[] getContextInterceptors() {
+    public BaseInterceptor[] getContextInterceptors() {
 	return defaultContainer.getContextInterceptors();
     }
 
-    public ContextInterceptor[] getContextInterceptors(Container ct) {
-        ContextInterceptor[] aci=ct.getCachedContextInterceptors();
+    public BaseInterceptor[] getContextInterceptors(Container ct) {
+        BaseInterceptor[] aci=ct.getCachedContextInterceptors();
 	return aci;
     }
 
-    public ContextInterceptor[] getContextInterceptors(Context ctx) {
+    public BaseInterceptor[] getContextInterceptors(Context ctx) {
         return getContextInterceptors(ctx.getContainer());
     }
     // -------------------- Request processing / subRequest ------------------
@@ -707,7 +709,7 @@ public final class ContextManager implements LogAware{
 	those callbacks are called tomcat may send the status and headers
     */
     int doBeforeBody( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].beforeBody( req, res );
@@ -721,7 +723,7 @@ public final class ContextManager implements LogAware{
 	much, we need a review and maybe change in parameters.
     */
     int doBeforeCommit( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].beforeCommit( req, res );
@@ -748,7 +750,7 @@ public final class ContextManager implements LogAware{
     }
     
     int doPreService( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].preService( req, res );
@@ -757,7 +759,7 @@ public final class ContextManager implements LogAware{
     }
 
     int doPostService( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].postService( req, res );
@@ -766,7 +768,7 @@ public final class ContextManager implements LogAware{
     }
 
     int doNewSessionRequest( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].newSessionRequest( req, res );
@@ -779,7 +781,7 @@ public final class ContextManager implements LogAware{
 	can deal with connection reuse or do other actions
     */
     int doAfterBody( Request req, Response res ) {
-	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	BaseInterceptor reqI[]= getRequestInterceptors(req);
 
 	for( int i=0; i< reqI.length; i++ ) {
 	    reqI[i].afterBody( req, res );
@@ -1276,7 +1278,7 @@ public final class ContextManager implements LogAware{
     public void doPreServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].preServletInit( ctx, sw );
@@ -1289,7 +1291,7 @@ public final class ContextManager implements LogAware{
     public void doPostServletInit(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].postServletInit( ctx, sw );
@@ -1302,7 +1304,7 @@ public final class ContextManager implements LogAware{
     public void doPreServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].preServletDestroy( ctx, sw );
@@ -1315,7 +1317,7 @@ public final class ContextManager implements LogAware{
     public void doPostServletDestroy(Context ctx, Handler sw)
 	throws TomcatException
     {
-	ContextInterceptor cI[]=getContextInterceptors(ctx);
+	BaseInterceptor cI[]=getContextInterceptors(ctx);
 	for( int i=0; i< cI.length; i++ ) {
 	    try {
 		cI[i].postServletDestroy( ctx, sw );

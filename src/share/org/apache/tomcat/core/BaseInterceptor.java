@@ -74,13 +74,16 @@ import java.lang.reflect.*;
  *  You can extend this class and implement a number of hooks.
  *
  */
-public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
+public class BaseInterceptor
+{
     protected ContextManager cm;
     protected Container ct;
     protected String methods[]=new String[0];
     protected int debug=0;
     protected String name=null;
 
+    public static final int OK=0;
+    
     //  loghelper will use name of actual impl subclass
     protected Logger.Helper loghelper = new Logger.Helper("tc_log", this);
 

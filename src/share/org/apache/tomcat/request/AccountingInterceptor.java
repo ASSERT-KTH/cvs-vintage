@@ -70,7 +70,7 @@ import java.util.*;
  * Time counting. 
  *
  */
-public class AccountingInterceptor extends  BaseInterceptor implements RequestInterceptor {
+public class AccountingInterceptor extends  BaseInterceptor {
     ContextManager cm;
     int debug=0;
     boolean acc=true;

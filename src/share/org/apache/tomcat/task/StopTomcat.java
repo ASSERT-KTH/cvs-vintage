@@ -173,7 +173,7 @@ public class StopTomcat {
 	// Find Ajp12 connector
 	int portInt=8007;
 	InetAddress address=null;
-	ContextInterceptor ci[]=cm.getContextInterceptors();
+	BaseInterceptor ci[]=cm.getContextInterceptors();
 	for( int i=0; i<ci.length; i++ ) {
 	    Object con=ci[i];
 	    if( con instanceof  Ajp12ConnectionHandler ) {

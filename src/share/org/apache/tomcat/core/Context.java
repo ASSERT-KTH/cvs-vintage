@@ -1064,7 +1064,7 @@ public class Context implements LogAware {
 	return false;
     }
 
-    public void addRequestInterceptor( RequestInterceptor ri ) {
+    public void addRequestInterceptor( BaseInterceptor ri ) {
         defaultContainer.addRequestInterceptor(ri);
     }
 }
