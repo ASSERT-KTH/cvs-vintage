@@ -163,42 +163,6 @@ public class ServerXmlReader extends BaseInterceptor {
         }
     }
 
-    // -------------------- trusted apps --------------------
-
-    public void contextInit(  Context ctx )
-	throws TomcatException
-    {
-	if( ! ctx.isTrusted() ) return;
-
-	// PathSetter is the first module in the chain, we shuld have
-	// a valid path by now 
-	String dir=ctx.getAbsolutePath();
-
-	File f=new File(dir);
-	File modules=new File( f, "WEB-INF" + File.separator +
-			       "interceptors.xml" );
-	if( modules.exists() ) {
-	    ctx.log( "Loading modules from webapp " + modules );
-	} else {
-	    if( debug > 0 )
-		ctx.log( "Can't find " + modules );
-	    return;
-	}
-
-	XmlMapper xh=new XmlMapper();
-	xh.setClassLoader( ctx.getClassLoader());
-	xh.setDebug( debug );
-	xh.addRule( "ContextManager", xh.setProperties() );
-	setPropertiesRules( cm, xh );
-	setTagRules( xh );
-	addDefaultTags(cm, xh);
-	addTagRules( cm, xh );
-	setBackward( xh );
-
-	cm.setNote( "configFile", modules.getAbsolutePath());
-	loadConfigFile(xh,modules,cm);
-    }
-    
     // -------------------- Xml reading details --------------------
 
     public static void loadConfigFile(XmlMapper xh, File f, ContextManager cm)
@@ -231,7 +195,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	}
     }
 
-    public void setPropertiesRules( ContextManager cm, XmlMapper xh )
+    public static void setPropertiesRules( ContextManager cm, XmlMapper xh )
 	throws TomcatException
     {
 	CMPropertySource propS=new CMPropertySource( cm );
@@ -255,7 +219,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	    });
     }
 
-    public void addTagRules( ContextManager cm, XmlMapper xh )
+    public static void addTagRules( ContextManager cm, XmlMapper xh )
 	throws TomcatException
     {
 	Hashtable modules=(Hashtable)cm.getNote("modules");
@@ -266,7 +230,7 @@ public class ServerXmlReader extends BaseInterceptor {
 	    String classN=(String)modules.get( tag );
 
 	    xh.addRule( tag ,
-			 xh.objectCreate( classN, null ));
+			xh.objectCreate( classN, null ));
 	    xh.addRule( tag ,
 			xh.setProperties());
 	    xh.addRule( tag,
@@ -287,6 +251,7 @@ public class ServerXmlReader extends BaseInterceptor {
 		    ContextManager cm=(ContextManager)ctx.currentObject();
 		    Hashtable modules=(Hashtable)cm.getNote("modules");
 		    modules.put( name, classN );
+		    if( ctx.getDebug() > 0 ) ctx.log("Adding " + name + " " + classN );
 		}
 	    });
     }
