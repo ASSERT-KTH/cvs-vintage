@@ -30,7 +30,6 @@ import org.columba.core.config.HeaderTableItem;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.treetable.JTreeTable;
 import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.table.action.ColumbaBasicTableUI;
 import org.columba.mail.gui.table.util.BooleanHeaderRenderer;
 import org.columba.mail.gui.table.util.BooleanRenderer;
 import org.columba.mail.gui.table.util.CommonHeaderRenderer;
@@ -72,12 +71,18 @@ public class TableView extends JTreeTable {
 	protected TableModelThreadedView tableModelThreadedView;
 
 	protected HeaderList headerList;
-
+	
+	
+	
 	public TableView(HeaderTableModel headerTableModel) {
 		super(headerTableModel);
-
+	
+		
+		
+		
 		this.headerTableModel = headerTableModel;
 
+		
 		tableModelFilteredView = new TableModelFilteredView(headerTableModel);
 
 		tableModelSorter = new HeaderTableModelSorter(headerTableModel);
@@ -85,15 +90,17 @@ public class TableView extends JTreeTable {
 			MailConfig.getMainFrameOptionsConfig().getWindowItem());
 
 		tableModelThreadedView = new TableModelThreadedView(headerTableModel);
-
+		
 		//table = new JTreeTable( headerTableModel );
 
-		setUI(new ColumbaBasicTableUI());
-
+		//setUI(new ColumbaBasicTableUI());
+		
+		
 		headerTableModel.registerPlugin(tableModelFilteredView);
 		headerTableModel.registerPlugin(tableModelThreadedView);
 		headerTableModel.registerPlugin(tableModelSorter);
-
+		
+		
 		try {
 			initRenderer(false);
 		} catch (Exception ex) {
@@ -105,6 +112,8 @@ public class TableView extends JTreeTable {
 	}
 
 	protected void addMouseListenerToHeaderInTable() {
+		
+		
 		final JTable tableView = this;
 
 		tableView.setColumnSelectionAllowed(false);
@@ -118,19 +127,18 @@ public class TableView extends JTreeTable {
 				if (e.getClickCount() == 1 && column != -1) {
 					getTableModelSorter().setSortingColumn(column);
 					headerTableModel.update();
-					/*
-					MainInterface.mainFrame.getMenu().updateSortMenu();
-					*/
+					
 				}
 			}
 		};
 
 		JTableHeader th = tableView.getTableHeader();
 		th.addMouseListener(listMouseListener);
+		
 	}
 
 	public void enableThreadedView(boolean b) {
-
+		
 		if (b == true) {
 			//tree.setRootVisible(true);
 
@@ -161,6 +169,7 @@ public class TableView extends JTreeTable {
 					"headerTable->registerRenderer: " + ex.getMessage());
 			}
 		}
+		
 
 	}
 
@@ -172,7 +181,7 @@ public class TableView extends JTreeTable {
 	 */
 
 	protected void initRenderer(boolean b) throws Exception {
-
+		
 		HeaderTableItem v =
 			(HeaderTableItem) MailConfig
 				.getMainFrameOptionsConfig()
@@ -307,7 +316,7 @@ public class TableView extends JTreeTable {
 
 			}
 		}
-
+		
 	}
 
 	public void registerRenderer(
@@ -403,11 +412,12 @@ public class TableView extends JTreeTable {
 	}
 
 	public MessageNode getSelectedNode() {
-
+		
 		MessageNode node =
 			(MessageNode) getTree().getLastSelectedPathComponent();
 
 		return node;
+		
 	}
 
 	/*
@@ -421,7 +431,7 @@ public class TableView extends JTreeTable {
 	}
 	*/
 	public MessageNode[] getSelectedNodes() {
-
+		
 		int[] rows = null;
 		MessageNode[] nodes = null;
 
@@ -435,6 +445,7 @@ public class TableView extends JTreeTable {
 		}
 
 		return nodes;
+		
 	}
 
 }

@@ -14,10 +14,11 @@
 
 package org.columba.mail.gui.table.action;
 
-import org.columba.mail.gui.table.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import java.awt.*;
-import java.awt.event.*;
+import org.columba.mail.gui.table.TableController;
+import org.columba.mail.gui.table.util.MessageNode;
 
 /**
  * Title:
@@ -28,93 +29,68 @@ import java.awt.event.*;
  * @version 1.0
  */
 
-public class HeaderTableMouseListener extends MouseAdapter
-{
-    private TableController headerTableViewer;
+public class HeaderTableMouseListener extends MouseAdapter {
+	private TableController headerTableViewer;
 
-    public HeaderTableMouseListener( TableController headerTableViewer )
-    {
-        super();
+	public HeaderTableMouseListener(TableController headerTableViewer) {
+		super();
 
-        this.headerTableViewer = headerTableViewer;
-    }
+		this.headerTableViewer = headerTableViewer;
+	}
 
-    public void mousePressed( MouseEvent event )
-    {
+	protected void processPopup(MouseEvent event) {
+		MessageNode[] nodes = headerTableViewer.getView().getSelectedNodes();
 
-        if ( event.isPopupTrigger() )
-        {
-        	/*
-            Object uids[] = headerTableViewer.getUids();
-            if ( uids.length > 1 )
-            {
-            }
-            else
-            {
-                headerTableViewer.getHeaderTable().getTable().clearSelection();
-                java.awt.Point point = event.getPoint();
-                int row = headerTableViewer.getHeaderTable().getTable().rowAtPoint( point );
-                headerTableViewer.getHeaderTable().getTable().addRowSelectionInterval( row, row );
-            }
-			*/
-			
-            headerTableViewer.getPopupMenu().show(event.getComponent(),  event.getX(), event.getY());
-        }
-        else
-        {
-        	//headerTableViewer.clearMessageNodeList();
-        }
+		if (nodes.length == 0) {
+			// select node
 
-    }
+			int row =
+				headerTableViewer.getView().getTree().getRowForLocation(
+					event.getX(),
+					event.getY());
+			headerTableViewer.getView().setRowSelectionInterval(row, row);
 
+		} else if (nodes.length == 1) {
+			// select node
+			headerTableViewer.getView().clearSelection();
 
-    public void mouseReleased( MouseEvent event )
-    {
-
-        if ( event.isPopupTrigger() )
-        {
-        	/*
-            Object uids[] = headerTableViewer.getUids();
-            if ( uids.length > 1 )
-            {
-            }
-            else
-            {
-                headerTableViewer.getHeaderTable().getTable().clearSelection();
-                java.awt.Point point = event.getPoint();
-                int row = headerTableViewer.getHeaderTable().getTable().rowAtPoint( point );
-                headerTableViewer.getHeaderTable().getTable().addRowSelectionInterval( row, row );
-            }
-			*/
-			
-            headerTableViewer.getPopupMenu().show(event.getComponent(),  event.getX(), event.getY());
-        }
-        else
-        {
-        	//headerTableViewer.clearMessageNodeList();
-        }
-
-    }
-
-    public void mouseClicked( MouseEvent event )
-    {
-		headerTableViewer.showMessage();
-        if ( (  !event.isAltDown() ) && (  !event.isControlDown() ) &&
-             (  !event.isMetaDown() ) && (  !event.isShiftDown() ) )
-		{
-			//headerTableViewer.clearMessageNodeList();
-			
-            // headerTableViewer.showMessage();
+			int row =
+				headerTableViewer.getView().getTree().getRowForLocation(
+					event.getX(),
+					event.getY());
+			headerTableViewer.getView().setRowSelectionInterval(row, row);
 		}
 
-    }
+		headerTableViewer.getPopupMenu().show(
+			event.getComponent(),
+			event.getX(),
+			event.getY());
+	}
 
+	public void mousePressed(MouseEvent event) {
 
+		if (event.isPopupTrigger()) {
+			processPopup(event);
 
-    private void processDoubleClick()
-    {
+		}
 
-    }
+	}
+
+	public void mouseReleased(MouseEvent event) {
+
+		if (event.isPopupTrigger()) {
+			processPopup(event);
+
+		}
+	}
+
+	public void mouseClicked(MouseEvent event) {
+
+		headerTableViewer.showMessage();
+
+	}
+
+	private void processDoubleClick() {
+
+	}
 }
-
-

@@ -14,9 +14,11 @@
 
 package org.columba.mail.gui.table.util;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Vector;
-import org.columba.mail.message.*;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.columba.mail.message.HeaderInterface;
 
 /**
  * Title:
@@ -27,86 +29,61 @@ import org.columba.mail.message.*;
  * @version 1.0
  */
 
-public class MessageNode extends DefaultMutableTreeNode
-{
-    private Object uid;
-    private String parsedSubject;
+public class MessageNode extends DefaultMutableTreeNode {
+	private Object uid;
+	private String parsedSubject;
 
-    private boolean dummy;
-    //private MessageNode nextNode, childNode, parentNode;
+	//private HeaderInterface header;
 
-  public MessageNode( Object header, Object uid )
-  {
-      super( header );
+	private boolean dummy;
 
-      dummy = false;
+	//private Vector children;
 
-      this.uid = uid;
-  }
+	//private ITreeNode parent;
+	//private MessageNode nextNode, childNode, parentNode;
 
-  /*
-  public MessageNode getNext()
-  {
-    return (MessageNode) getNextSibling();
-  }
+	public MessageNode(Object header, Object uid) {
+		super(header);
 
-  public MessageNode getChild()
-  {
-    return (MessageNode) getChildAt(0);
-  }
+		//dummy = false;
+		//this.header = (HeaderInterface) header;
+		this.uid = uid;
+	}
 
+	/*
+	public void enableDummy( boolean b )
+	{
+	dummy = b;
+	}
+	public boolean isDummy()
+	{
+	return dummy;
+	}
+	
+	
+	*/
 
+	public Vector getVector() {
+		return children;
+	}
 
-  public void setChild( MessageNode node )
-  {
-        insert( node, 0 );
-  }
+	public void setUid(Object uid) {
+		this.uid = uid;
+	}
+	public Object getUid() {
+		return uid;
+	}
 
+	public HeaderInterface getHeader() {
+		return (HeaderInterface) getUserObject();
+	}
 
-  public void setNext( MessageNode node )
-  {
-        getParent().insert( node, getParent().getIndex(this) );
-  }
+	public void setParsedSubject(String s) {
+		parsedSubject = s;
+	}
 
-  */
+	public String getParsedSubject() {
+		return parsedSubject;
+	}
 
-  public void enableDummy( boolean b )
-  {
-    dummy = b;
-  }
-  public boolean isDummy()
-  {
-    return dummy;
-  }
-
-
-
-  public Vector getVector()
-  {
-      return children;
-  }
-
-  public void setUid( Object uid )
-  {
-      this.uid = uid;
-  }
-  public Object getUid()
-  {
-      return uid;
-  }
-
-  public HeaderInterface getHeader()
-  {
-        return (HeaderInterface) getUserObject();
-  }
-
-  public void  setParsedSubject( String s)
-  {
-        parsedSubject = s;
-  }
-
-  public String getParsedSubject()
-  {
-        return parsedSubject;
-  }
 }

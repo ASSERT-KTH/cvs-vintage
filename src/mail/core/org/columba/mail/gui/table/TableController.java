@@ -15,7 +15,10 @@
 package org.columba.mail.gui.table;
 
 import javax.swing.JPopupMenu;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.TableColumn;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.columba.core.config.HeaderTableItem;
 import org.columba.core.gui.util.CScrollPane;
@@ -49,7 +52,7 @@ import org.columba.main.MainInterface;
  */
 
 public class TableController
-	implements  FolderSelectionListener {
+	implements FolderSelectionListener, TreeSelectionListener {
 
 	private HeaderTableMenu menu;
 
@@ -93,7 +96,7 @@ public class TableController
 	protected MailFrameController mailFrameController;
 
 	protected Object[] newUidList;
-	
+
 	protected MarkAsReadTimer markAsReadTimer;
 
 	public TableController(MailFrameController mailFrameController) {
@@ -134,8 +137,9 @@ public class TableController
 			new HeaderItemActionListener(this, headerTableItem);
 		filterActionListener = new FilterActionListener(this);
 
-		markAsReadTimer = new MarkAsReadTimer( this );
-		
+		markAsReadTimer = new MarkAsReadTimer(this);
+
+		view.addTreeSelectionListener(this);
 		/*
 		headerTableActionListener = new HeaderTableActionListener(this);
 		
@@ -195,7 +199,7 @@ public class TableController
 				new ViewHeaderListCommand(
 					mailFrameController,
 					getTableSelectionManager().getSelection()));
-			
+
 		}
 	}
 
@@ -297,33 +301,30 @@ public class TableController
 	 * of every column
 	 */
 
-	
-	public void saveColumnConfig()
-	{
-		HeaderTableItem v = (HeaderTableItem) MailConfig.getMainFrameOptionsConfig().getHeaderTableItem().clone();
+	public void saveColumnConfig() {
+		HeaderTableItem v =
+			(HeaderTableItem) MailConfig
+				.getMainFrameOptionsConfig()
+				.getHeaderTableItem()
+				.clone();
 		v.removeEnabledItem();
-	
-		for (int i = 0; i < v.count(); i++)
-		{
+
+		for (int i = 0; i < v.count(); i++) {
 			String c = (String) v.getName(i);
 			TableColumn tc = getView().getColumn(c);
-	
+
 			v.setSize(i, tc.getWidth());
-	
-			try
-			{
+
+			try {
 				int index = getView().getColumnModel().getColumnIndex(c);
 				v.setPosition(i, index);
-			}
-			catch (IllegalArgumentException ex)
-			{
+			} catch (IllegalArgumentException ex) {
 				ex.printStackTrace();
 			}
-	
+
 		}
-	
+
 	}
-	
 
 	/**
 	 * set folder to show
@@ -399,33 +400,40 @@ public class TableController
 		return filterActionListener;
 	}
 
+	public void valueChanged(TreeSelectionEvent e) {
+		DefaultMutableTreeNode node =
+			(DefaultMutableTreeNode) view.getTree().getLastSelectedPathComponent();
+
+		if (node == null)
+			return;
+			
+		getActionListener().changeMessageActions();
+	}
+
 	/**
 	 * show the message in the messageviewer
 	 */
 
 	public void showMessage() {
-		
 
 		MessageNode[] nodes = getView().getSelectedNodes();
-		if (nodes == null)
-		{
+		if (nodes == null) {
 			return;
 		}
-		
+
 		getActionListener().changeMessageActions();
-		
-		if ( nodes.length == 0 ) return;
+
+		if (nodes.length == 0)
+			return;
 
 		newUidList = new Object[nodes.length];
 		for (int i = 0; i < nodes.length; i++) {
 			newUidList[i] = nodes[i].getUid();
-			System.out.println("node="+newUidList[i]);
+			//System.out.println("node=" + newUidList[i]);
 		}
-		
+
 		getTableSelectionManager().fireMessageSelectionEvent(null, newUidList);
 
-		
-		
 	}
 
 	/**
@@ -444,8 +452,6 @@ public class TableController
 	/**
 	 * MouseListener sorts table when clicking on a column header
 	 */
-
-	
 
 	// method is called when folder data changed
 	// the method updates the model
@@ -496,7 +502,7 @@ public class TableController
 					break;
 				}
 		}
-	
+
 	}
 
 	/**

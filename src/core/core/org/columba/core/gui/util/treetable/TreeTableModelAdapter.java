@@ -12,7 +12,6 @@
  * you entered into with Sun.
  */
 
-
 package org.columba.core.gui.util.treetable;
 
 import javax.swing.JTree;
@@ -35,94 +34,104 @@ import javax.swing.event.TreeModelListener;
  * @author Philip Milne
  * @author Scott Violet
  */
-public class TreeTableModelAdapter extends AbstractTableModel
-{
-    JTree tree;
-    TreeTableModel treeTableModel;
+public class TreeTableModelAdapter extends AbstractTableModel {
+	JTree tree;
+	TreeTableModel treeTableModel;
 
-    public TreeTableModelAdapter(TreeTableModel treeTableModel, JTree tree) {
-        this.tree = tree;
-        this.treeTableModel = treeTableModel;
+	public TreeTableModelAdapter(TreeTableModel treeTableModel, JTree tree) {
+		this.tree = tree;
+		this.treeTableModel = treeTableModel;
 
-	tree.addTreeExpansionListener(new TreeExpansionListener() {
-	    // Don't use fireTableRowsInserted() here; the selection model
-	    // would get updated twice. 
-	    public void treeExpanded(TreeExpansionEvent event) {  
-	      fireTableDataChanged(); 
-	    }
-            public void treeCollapsed(TreeExpansionEvent event) {  
-	      fireTableDataChanged(); 
-	    }
-	});
+		tree.addTreeExpansionListener(new TreeExpansionListener() {
+			// Don't use fireTableRowsInserted() here; the selection model
+			// would get updated twice. 
+			public void treeExpanded(TreeExpansionEvent event) {
+				fireTableDataChanged();
+			}
+			public void treeCollapsed(TreeExpansionEvent event) {
+				fireTableDataChanged();
+			}
+		});
 
-	// Install a TreeModelListener that can update the table when
-	// tree changes. We use delayedFireTableDataChanged as we can
-	// not be guaranteed the tree will have finished processing
-	// the event before us.
-	treeTableModel.addTreeModelListener(new TreeModelListener() {
-	    public void treeNodesChanged(TreeModelEvent e) {
-		delayedFireTableDataChanged();
-	    }
+		
 
-	    public void treeNodesInserted(TreeModelEvent e) {
-		delayedFireTableDataChanged();
-	    }
+		// Install a TreeModelListener that can update the table when
+		// tree changes. We use delayedFireTableDataChanged as we can
+		// not be guaranteed the tree will have finished processing
+		// the event before us.
+		treeTableModel.addTreeModelListener(new TreeModelListener() {
+			public void treeNodesChanged(TreeModelEvent e) {
+				delayedFireTableDataChanged();
+			}
 
-	    public void treeNodesRemoved(TreeModelEvent e) {
-		delayedFireTableDataChanged();
-	    }
+			public void treeNodesInserted(TreeModelEvent e) {
+				delayedFireTableDataChanged();
+			}
 
-	    public void treeStructureChanged(TreeModelEvent e) {
-		delayedFireTableDataChanged();
-	    }
-	});
-    }
+			public void treeNodesRemoved(TreeModelEvent e) {
+				delayedFireTableDataChanged();
+			}
 
-    // Wrappers, implementing TableModel interface. 
+			public void treeStructureChanged(TreeModelEvent e) {
+				delayedFireTableDataChanged();
+			}
+		});
 
-    public int getColumnCount() {
-	return treeTableModel.getColumnCount();
-    }
+	}
 
-    public String getColumnName(int column) {
-	return treeTableModel.getColumnName(column);
-    }
+	
 
-    public Class getColumnClass(int column) {
-	return treeTableModel.getColumnClass(column);
-    }
+	// Wrappers, implementing TableModel interface. 
 
-    public int getRowCount() {
-	return tree.getRowCount();
-    }
+	public int getColumnCount() {
+		return treeTableModel.getColumnCount();
+	}
 
-    protected Object nodeForRow(int row) {
-	TreePath treePath = tree.getPathForRow(row);
-	return treePath.getLastPathComponent();         
-    }
+	public String getColumnName(int column) {
+		return treeTableModel.getColumnName(column);
+	}
 
-    public Object getValueAt(int row, int column) {
-	return treeTableModel.getValueAt(nodeForRow(row), column);
-    }
+	public Class getColumnClass(int column) {
+		return treeTableModel.getColumnClass(column);
+	}
 
-    public boolean isCellEditable(int row, int column) {
-         return treeTableModel.isCellEditable(nodeForRow(row), column); 
-    }
+	public int getRowCount() {
+		return tree.getRowCount();
+	}
 
-    public void setValueAt(Object value, int row, int column) {
-	treeTableModel.setValueAt(value, nodeForRow(row), column);
-    }
+	protected Object nodeForRow(int row) {
+		TreePath treePath = tree.getPathForRow(row);
+		return treePath.getLastPathComponent();
+	}
 
-    /**
-     * Invokes fireTableDataChanged after all the pending events have been
-     * processed. SwingUtilities.invokeLater is used to handle this.
-     */
-    protected void delayedFireTableDataChanged() {
-	SwingUtilities.invokeLater(new Runnable() {
-	    public void run() {
-		fireTableDataChanged();
-	    }
-	});
-    }
+	public Object getValueAt(int row, int column) {
+		return treeTableModel.getValueAt(nodeForRow(row), column);
+	}
+
+	public boolean isCellEditable(int row, int column) {
+		return treeTableModel.isCellEditable(nodeForRow(row), column);
+	}
+
+	public void setValueAt(Object value, int row, int column) {
+		treeTableModel.setValueAt(value, nodeForRow(row), column);
+	}
+
+	/**
+	 * Invokes fireTableDataChanged after all the pending events have been
+	 * processed. SwingUtilities.invokeLater is used to handle this.
+	 */
+	protected void delayedFireTableDataChanged() {
+		final JTree t = tree;
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				int[] rows = tree.getSelectionRows();
+				
+				fireTableDataChanged();
+				
+				tree.setSelectionRows(rows);
+			}
+		});
+
+	}
 }
-
