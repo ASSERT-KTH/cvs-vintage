@@ -101,11 +101,13 @@ public abstract class DefaultUtil {
     return null;
   }
 
-  protected void sendToStdin(Process p, String passphrase) throws Exception {
-    PrintWriter out = new PrintWriter(p.getOutputStream());
-    out.println(passphrase);
-    out.flush();
-    out.close();
+  protected void sendToStdin(Process p, String outStr) throws Exception {
+    p.getOutputStream().write(outStr.getBytes());
+    p.getOutputStream().write(10);
+    //p.getOutputStream().close();
+    //out.println(outStr);
+    //out.flush();
+    //out.close();
   }
 
   /*
@@ -137,31 +139,23 @@ public abstract class DefaultUtil {
   public int verify(String pgpMessage, String signatureString, PGPItem item) throws Exception {
     int exitVal = -1;
 
-    // let us creating a temp file with the signature
-    ColumbaLogger.log.debug(signatureString);
-    this.inputFile = this.createTempFile(signatureString);
-
-    ColumbaLogger.log.debug(
-      "commandstring: " + getCommandString(PGPController.VERIFY_ACTION, item));
+	inputFile = createTempFile(signatureString);
     Process p = executeCommand(getCommandString(PGPController.VERIFY_ACTION, item));
-
     errorStream = new StreamThread(p.getErrorStream(), "ERROR");
     outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
 
-    ColumbaLogger.log.debug("Send to stdin: " + pgpMessage);
-    sendToStdin(p, pgpMessage);
+	p.getOutputStream().write(pgpMessage.getBytes());
+	p.getOutputStream().close();
 
     errorStream.start();
     outputStream.start();
 
     exitVal = p.waitFor();
 
-    ColumbaLogger.log.debug("exitvalue: " + exitVal);
-
     // wait for stream threads to die
     outputStream.join();
     errorStream.join();
-
+	System.out.println("ExitVal: "+exitVal);
     return exitVal;
   }
 
@@ -182,25 +176,25 @@ public abstract class DefaultUtil {
   public int sign(PGPItem item, String input) throws Exception {
     int exitVal = -1;
 
-    //  create inputFile
-    ColumbaLogger.log.debug(input);
+    System.out.println(input);
     // first we must parsing the input and replace all lineendings to <CR><LF>
     // see RFC 3156 Page 4
-    String convInput = convertMessageToCRLF(input);
+    //String convInput = convertMessageToCRLF(input);
     // save the input to File
     // TODO: this is only for debug, change this if the stuff is working to the only sendStdIn() Method
-    this.inputFile = createTempFile(convInput);
-    ColumbaLogger.log.debug("inputfilename: " + this.inputFile.getName());
-
-    ColumbaLogger.log.debug(getCommandString(PGPController.SIGN_ACTION, item));
+    //this.inputFile = createTempFile(convInput);
+    //System.out.println("inputfilename: " + this.inputFile.getName());
 
     Process p = executeCommand(getCommandString(PGPController.SIGN_ACTION, item));
     errorStream = new StreamThread(p.getErrorStream(), "ERROR");
-    outputStream = new StreamThread(p.getInputStream(), "OUTPUT");
+    outputStream = new StreamThread(p.getInputStream(), "OUTPUT"); // output from gpg
 
-    //sendToStdin(p, item.getPassphrase());
+    p.getOutputStream().write(item.getPassphrase().getBytes());
+    p.getOutputStream().write(System.getProperty("line.separator").getBytes()); // send return after passphrase
 
-    //sendToStdin(p, input);
+	p.getOutputStream().write(input.getBytes());
+    p.getOutputStream().close();
+
 
     errorStream.start();
     outputStream.start();
@@ -211,17 +205,16 @@ public abstract class DefaultUtil {
     outputStream.join();
     errorStream.join();
 
-    //outputString = outputStream.getBuffer();
-
-    outputString = "";
+    outputString = outputStream.getBuffer();
+	/*
+    outputString ="";
     FileReader fr = new FileReader("/tmp/columba.sig");
     BufferedReader in = new BufferedReader(fr);
     String line;
     while ((line = in.readLine()) != null) {
       outputString += line + "\n";
     }
-    ColumbaLogger.log.debug(outputString);
-
+    */
     // delete sig-file
     //DiskIO.deleteFile("/tmp/columba.sig");
     return exitVal;

@@ -20,47 +20,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class StreamThread extends Thread
-{
-    InputStream is;
-    String type;
+import org.columba.core.logging.ColumbaLogger;
 
-    StringBuffer buf;
+public class StreamThread extends Thread {
+	InputStream is;
+	String type;
 
-    public StreamThread( InputStream is, String type )
-    {
-        this.is = is;
-        this.type = type;
+	StringBuffer buf;
 
-        buf = new StringBuffer();
-    }
+	public StreamThread(InputStream is, String type) {
+		this.is = is;
+		this.type = type;
 
+		buf = new StringBuffer();
+	}
 
-    public void run()
-       {
+	public void run() {
 
+		try {
+			InputStreamReader isr = new InputStreamReader(is);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				ColumbaLogger.log.debug(type + ">" + line);
+				buf.append(line + "\n");
+			}
 
-	   try
-	       {
-		   InputStreamReader isr = new InputStreamReader(is);
-		   BufferedReader br = new BufferedReader(isr);
-		   String line=null;
-		   while ( (line = br.readLine()) != null)
-                   {
-		       System.out.println(type + ">" + line);
-                       buf.append( line+"\n" );
-                   }
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 
-	       } catch (IOException ioe)
-		   {
-		       ioe.printStackTrace();
-		   }
-       }
-
-
-    public String getBuffer()
-    {
-        return buf.toString();
-    }
+	public String getBuffer() {
+		return buf.toString();
+	}
 
 }
