@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.106 2004/04/17 11:38:57 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.107 2004/04/17 15:38:29 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.106 2004/04/17 11:38:57 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.107 2004/04/17 15:38:29 mvw Exp $
 
 
 
@@ -2029,7 +2029,9 @@ public class ParserDisplay extends Parser {
      *  @param  s        The string to parse.
      */
     public void parseStateBody(Object st, String s) {
-	//remove all old transitions; TODO: this should be done better!!
+	/*remove all old transitions; 
+         * TODO: this should be done better!!
+         * It causes issue 1759 */
 	ModelFacade.setEntry(st, null);
 	ModelFacade.setExit(st, null);
 	ModelFacade.setDoActivity(st, null);
@@ -2188,7 +2190,20 @@ public class ParserDisplay extends Parser {
 						 	.buildCallEvent();
                 if (evt != null) {
                     ModelFacade.setName(evt, trigger);
-                    ModelFacade.setTrigger(trans, /*(MCallEvent)*/ evt);
+                    ModelFacade.setTrigger(trans, evt);
+                    /* The next part is explained by the following 
+                     * quote from the UML spec:
+                     * "The event declaration has scope within 
+                     * the package it appears in and may be used in 
+                     * state diagrams for classes that have visibility 
+                     * inside the package. An event is not local to 
+                     * a single class."
+                     */
+                    Object enclosingPackage = ModelFacade.getStateMachine(trans);
+                    while(! ModelFacade.isAPackage(enclosingPackage)) {
+                        enclosingPackage = ModelFacade.getNamespace(enclosingPackage);
+                    };
+                    ModelFacade.setNamespace(evt, enclosingPackage);
                 }
             } else {
                 // case 2
