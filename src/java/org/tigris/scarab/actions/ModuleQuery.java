@@ -99,7 +99,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * to define a query or running a canned query and listing the results.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ModuleQuery.java,v 1.4 2002/07/11 01:09:16 jon Exp $
+ * @version $Id: ModuleQuery.java,v 1.5 2002/07/19 00:07:25 jmcnally Exp $
  */
 public class ModuleQuery extends RequireLoginFirstAction
 {
@@ -186,7 +186,7 @@ public class ModuleQuery extends RequireLoginFirstAction
                     .append("&user_attr_").append(userId).append("=any")
                     .toString();
             }
-            data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, query);
+            ((ScarabUser)data.getUser()).setMostRecentQuery(query);
             data.getParameters().add("queryString", query);
             List searchResults = null;
             try

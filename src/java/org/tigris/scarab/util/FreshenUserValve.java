@@ -134,7 +134,6 @@ public class FreshenUserValve
             || !xmitScreens.containsKey(data.getTarget()) )
         {
             user.setCurrentMITList(null);
-            user.setThreadKey(null);
         }
 
         // override the current module/issuetype list if one is given

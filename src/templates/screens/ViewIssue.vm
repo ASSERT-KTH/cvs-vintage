@@ -33,13 +33,13 @@ You are viewing an issue in a different module ($currentIssue.Module.Name) than 
 #if ($tab.equals("all"))
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "1").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as tabs</a> 
       | <a href="$scarabR.getCopyableLink($currentIssue)">Copyable link</a></small></div>
-    #if ($scarabR.CurrentQuery && $issueList.equals("true"))
+    #if ($data.User.hasMostRecentQuery() && $issueList.equals("true"))
         #navigate()
     #end
 #elseif (!$multiple.equals("true"))
     <div align="right"><small><a href="$link.setPage("ViewIssue.vm").addPathInfo("id", "$currentIssue.UniqueId").addPathInfo("tab", "all").addPathInfo("action", "ModifyIssue").addPathInfo("eventSubmit_doSetissueview", "foo")">View as single screen</a>
       | <a href="$scarabR.getCopyableLink($currentIssue)">Copyable link</a></small></small></div>
-    #if ($scarabR.CurrentQuery && $issueList.equals("true"))
+    #if ($data.User.hasMostRecentQuery() && $issueList.equals("true"))
         #navigate()
     #end
 

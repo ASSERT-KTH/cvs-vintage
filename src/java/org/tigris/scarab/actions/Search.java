@@ -78,6 +78,7 @@ import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
 import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Scope;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.services.security.ScarabSecurity;
@@ -92,7 +93,7 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.83 2002/07/15 18:36:39 jmcnally Exp $
+ * @version $Id: Search.java,v 1.84 2002/07/19 00:07:25 jmcnally Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
@@ -108,7 +109,7 @@ public class Search extends RequireLoginFirstAction
         throws Exception
     {
         String queryString = getQueryString(data);
-        data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
+        ((ScarabUser)data.getUser()).setMostRecentQuery(queryString);
         data.getParameters().setString("queryString", queryString);
 
         ScarabRequestTool scarabR = getScarabRequestTool(context);
@@ -174,13 +175,13 @@ public class Search extends RequireLoginFirstAction
         {
             queryGroup.setProperties(query);
             query.setScarabUser(user);
-            if (user.getCurrentMITList() == null) 
+            MITList currentList = user.getCurrentMITList();
+            if (currentList == null) 
             {
                 query.setIssueType(scarabR.getCurrentIssueType());    
             }
             else 
             {
-                MITList currentList = user.getCurrentMITList();
                 query.setMITList(currentList);
                 if (!currentList.isSingleModule()) 
                 {
@@ -252,7 +253,7 @@ public class Search extends RequireLoginFirstAction
          throws Exception
     {
         // Set current query to the stored query
-        ((ScarabUser)data.getUser()).setTemp(ScarabConstants.CURRENT_QUERY, 
+        ((ScarabUser)data.getUser()).setMostRecentQuery(
             getScarabRequestTool(context).getQuery().getValue());
         setTarget(data, "IssueList.vm");
     }
@@ -328,36 +329,24 @@ public class Search extends RequireLoginFirstAction
     {
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Module module = null;
-        if (user.getCurrentMITList() != null && 
-            user.getCurrentMITList().isSingleModule())
+        List selectedIds = getSelected(data, context);
+        if (selectedIds.size() > 0)
         {
-            module = user.getCurrentMITList().getModule();
-        }
-        else 
-        {
-            module = scarabR.getCurrentModule();
-        }
-
-        if ((user.getCurrentMITList() == null || 
-             user.getCurrentMITList().isSingleModule()) && 
-             scarabR.hasPermission(ScarabSecurity.ISSUE__ASSIGN, module))
-        { 
-            List selectedIds = getSelected(data, context);
-            if (selectedIds.size() > 0)
+            List modules = ModuleManager.getInstancesFromIssueList(
+                scarabR.getIssues(selectedIds));
+            if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
             {
-                setTarget(data, "AssignIssue.vm");            
+                setTarget(data, "AssignIssue.vm");                    
             }
-            else
+            else 
             {
-                getScarabRequestTool(context).setAlertMessage(
-                    "Please select issues to view.");
-            }
+                scarabR.setAlertMessage(
+                    "Insufficient permissions to assign users to issues.");
+                }
         }
-        else 
+        else
         {
-            scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+            scarabR.setAlertMessage("Please select issues to view.");
         }
     }
 
@@ -369,28 +358,17 @@ public class Search extends RequireLoginFirstAction
     {        
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Module module = null;
-        if (user.getCurrentMITList() != null && 
-            user.getCurrentMITList().isSingleModule())
+        getAllIssueIds(data, context);
+        List modules = ModuleManager.getInstancesFromIssueList(
+            scarabR.getIssues());
+        if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
         {
-            module = user.getCurrentMITList().getModule();
-        }
-        else 
-        {
-            module = scarabR.getCurrentModule();
-        }
-
-        if ((user.getCurrentMITList() == null || 
-             user.getCurrentMITList().isSingleModule()) && 
-             scarabR.hasPermission(ScarabSecurity.ISSUE__ASSIGN, module))
-        { 
-            getAllIssueIds(data, context);
-            data.setTarget("AssignIssue.vm");
+            setTarget(data, "AssignIssue.vm");                    
         }
         else 
         {
             scarabR.setAlertMessage(
-                "Insufficient permissions to assign users.");
+                    "Insufficient permissions to assign users.");
         }
     }
 

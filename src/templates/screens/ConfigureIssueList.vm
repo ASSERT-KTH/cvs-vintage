@@ -2,15 +2,13 @@
 
 #set ($action = $link.setPage("ConfigureIssueList.vm").setAction("ConfigureIssueList"))
 #set ($user = $data.User)
-#set ($module = $scarabR.CurrentModule)
-#set ($issueType = $scarabR.CurrentIssueType)
-#set ($moduleAttributes = $module.getRModuleAttributes($issueType, true))
-#set ($maxNum = $moduleAttributes.size())
+#set ($attributes = $scarabR.ValidIssueListAttributes)
+#set ($maxNum = $attributes.size())
 #set ($usedefaults = $data.Parameters.getString("usedefaults",""))
 
 <form action="$action" method="post">
 <input type="hidden" name="user_id" value="$user.UserId" />
-<input type="hidden" name="module_id" value="$module.ModuleId" />
+<input type="hidden" name="module_id" value="$scarabR.CurrentModule.ModuleId" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="IssueList.vm" />
 
 <div class="functnbar">
@@ -27,10 +25,9 @@
   <th>$l10n.ColumnSequence</th>
  </tr>
 
- #foreach ($moduleAttribute in $moduleAttributes)
+ #foreach ($attribute in $attributes)
   #set ($checked = false)
-  #set ($attribute = $moduleAttribute.Attribute)
-  #set ($userAttribute = $user.getRModuleUserAttribute($module, $attribute, $issueType))
+  #set ($userAttribute = $user.getRModuleUserAttribute($attribute))
 
   #set ($order = 1)
   #foreach ($moduleUserAttribute in $scarabR.RModuleUserAttributes)

@@ -577,10 +577,10 @@ try{
         List result = null;
         try
         {
-            if (user.getCurrentMITList() != null)
+            MITList currentList = user.getCurrentMITList();
+            if (currentList != null)
             {
-                result = user.getCurrentMITList()
-                    .getCommonRModuleUserAttributes();
+                result = currentList.getCommonRModuleUserAttributes();
             }
             else 
             {
@@ -604,6 +604,45 @@ try{
         return result;
     }
     
+
+    public List getValidIssueListAttributes()
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        List result = null;
+        try
+        {
+            MITList currentList = user.getCurrentMITList();
+            if (currentList != null)
+            {
+                result = currentList.getCommonAttributes();
+            }
+            else 
+            {
+                Module module = getCurrentModule();
+                IssueType issueType = getCurrentIssueType();
+                List rmas = module.getRModuleAttributes(issueType, true);
+                if (rmas != null) 
+                {
+                    result = new ArrayList(rmas.size());
+                    Iterator i = rmas.iterator();
+                    if (i.hasNext()) 
+                    {
+                        result.add( ((RModuleAttribute)i.next()).getAttribute() );
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Log.get().error("Could not get list attributes", e);
+        }
+        if (result == null)
+        {
+            result = new ArrayList();
+        }
+        return result;
+    }
+
     /**
      * A Query object for use within the Scarab API.
      */
@@ -1307,7 +1346,7 @@ try{
         else 
         {
             throw new IllegalArgumentException(
-                "issue ids must be Strings or NumberKeys");
+                "issue ids must be Strings or NumberKeys, not " + issueIds.get(0).getClass().getName());
         }
         return issues;
     }
@@ -1372,18 +1411,6 @@ try{
             is = new IssueSearch(mitList);
         }
         return is; 
-    }
-
-    /**
-     * The most recent query entered.
-    */
-    public String getCurrentQuery()
-        throws Exception
-    {
-        String currentQuery = null;
-        currentQuery = (String)((ScarabUser)data.getUser())
-            .getTemp(ScarabConstants.CURRENT_QUERY);
-        return currentQuery;
     }
 
     /**
@@ -1472,7 +1499,7 @@ try{
         throws Exception, ScarabException
     {
         ScarabUser user = (ScarabUser)data.getUser();
-        String currentQueryString = getCurrentQuery();
+        String currentQueryString = user.getMostRecentQuery();
         IssueSearch search = getSearch();
         List matchingIssueIds = new ArrayList();
         boolean searchSuccess = true;
@@ -1682,7 +1709,8 @@ try{
             if (key.startsWith("user_attr_"))
             {
                 Criteria tempCrit = new Criteria();
-                if (loggedInUser.getCurrentMITList() == null) 
+                MITList currentList = loggedInUser.getCurrentMITList();
+                if (currentList == null) 
                 {
                     tempCrit
                         .add(IssuePeer.MODULE_ID, 
@@ -1692,7 +1720,7 @@ try{
                 }
                 else 
                 {
-                    loggedInUser.getCurrentMITList().addToCriteria(tempCrit);
+                    currentList.addToCriteria(tempCrit);
                 }
                 
 
@@ -2285,7 +2313,6 @@ try{
         link.addPathInfo("id", issue.getUniqueId());
         return link.toString();
     }
-
 
     // --------------------
     // template timing methods

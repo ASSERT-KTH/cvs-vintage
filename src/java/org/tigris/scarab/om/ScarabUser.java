@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.72 2002/07/13 00:44:35 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.73 2002/07/19 00:07:25 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -358,6 +358,24 @@ public interface ScarabUser extends User
     public MITList getCurrentMITList();
     public void setCurrentMITList(MITList list);
     public void removeItemsFromCurrentMITList(String[] ids);
+
+    /**
+     * The most recent query entered.  This method has the effect of loading
+     * the MITList used for the query (if one exists) as the CurrentMITList
+     * so it should only be called if the query is to be used.  
+     * Use @see #hasMostRecentQuery() to determine existence.
+     */
+    public String getMostRecentQuery();
+
+    /**
+     * The most recent query entered.
+     */
+    public void setMostRecentQuery(String queryString);
+
+    /**
+     * Check if the user has a previous query
+     */
+    public boolean hasMostRecentQuery();
 
     /**
      * key used to keep concurrent activities by the same

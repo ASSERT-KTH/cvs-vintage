@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.78 2002/07/15 16:33:42 jon Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.79 2002/07/19 00:07:25 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -890,6 +890,31 @@ public class ScarabUserImpl
     public void removeItemsFromCurrentMITList(String[] ids)
     {
         internalUser.removeItemsFromCurrentMITList(ids);
+    }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#getMostRecentQuery()
+     */
+    public String getMostRecentQuery()
+    {
+        return internalUser.getMostRecentQuery();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#setMostRecentQuery(String)
+     */
+    public void setMostRecentQuery(String queryString)
+    {
+        internalUser.setMostRecentQuery(queryString);
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#hasMostRecentQuery()
+     */
+    public boolean hasMostRecentQuery()
+    {
+        return internalUser.hasMostRecentQuery();
     }
 
     /**
