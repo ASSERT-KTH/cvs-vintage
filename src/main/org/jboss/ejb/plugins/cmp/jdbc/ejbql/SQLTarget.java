@@ -23,6 +23,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 
 public class SQLTarget implements DeepCloneable {
 	private final Application application;
@@ -607,4 +609,44 @@ public class SQLTarget implements DeepCloneable {
 		return buf.toString();
 	}
 
+	public String getConcatFunction(String param1, String param2) {
+		String[] args = new String[] {param1, param2};
+	   JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("concat");
+		return function.getFunctionSql(args);
+	}
+	
+	public String getSubstringFunction(String param1, String param2, String param3) {
+		String[] args = new String[] {param1, param2, param3}; 
+		JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("substring");
+		return function.getFunctionSql(args);
+	}
+	
+	public String getLengthFunction(String param) {
+		String[] args = new String[] {param}; 
+		JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("length");
+		return function.getFunctionSql(args);
+	}
+	
+	public String getLocateFunction(String param1, String param2, String param3) {
+		String[] args = new String[] {param1, param2, param3}; 
+		JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("locate");
+		return function.getFunctionSql(args);
+	}
+	
+	public String getAbsFunction(String param) {
+		String[] args = new String[] {param}; 
+		JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("abs");
+		return function.getFunctionSql(args);
+	}
+	
+	public String getSqrtFunction(String param) {
+		String[] args = new String[] {param}; 
+		JDBCFunctionMappingMetaData function = getTypeMappingMetaData().getFunctionMapping("sqrt");
+		return function.getFunctionSql(args);
+	}
+	
+	private JDBCTypeMappingMetaData getTypeMappingMetaData() {
+		JDBCStoreManager manager = (JDBCStoreManager)managerByAbstractSchemaName.values().iterator().next();
+		return manager.getMetaData().getTypeMapping();
+	}
 }

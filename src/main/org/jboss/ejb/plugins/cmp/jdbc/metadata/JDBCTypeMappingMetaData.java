@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public final class JDBCTypeMappingMetaData {
 	
@@ -29,6 +29,8 @@ public final class JDBCTypeMappingMetaData {
 	private final String name;
 	
 	private final HashMap mappings = new HashMap();
+	
+	private final HashMap functionMappings = new HashMap();
 
 	/**
 	 * Constructs a mapping with the data contained in the type-mapping xml element
@@ -46,10 +48,20 @@ public final class JDBCTypeMappingMetaData {
 		// get the mappings
 		Iterator iterator = MetaData.getChildrenByTagName(element, "mapping");
 		
-		while (iterator.hasNext()) {
+		while(iterator.hasNext()) {
 			Element mappingElement = (Element)iterator.next();
 			JDBCMappingMetaData mapping = new JDBCMappingMetaData(mappingElement);
 			mappings.put(mapping.getJavaType(), mapping);
+		}
+
+		addDefaultFunctionMapping();
+		
+		// get the mappings
+		Iterator functions = MetaData.getChildrenByTagName(element, "function-mapping");
+		while(functions.hasNext()) {
+			Element mappingElement = (Element)functions.next();
+			JDBCFunctionMappingMetaData functionMapping = new JDBCFunctionMappingMetaData(mappingElement);
+			functionMappings.put(functionMapping.getFunctionName().toLowerCase(), functionMapping);
 		}
 	}
     	
@@ -122,5 +134,72 @@ public final class JDBCTypeMappingMetaData {
 		}
 		
 		return mapping.getSqlType();
+	}
+	
+	public JDBCFunctionMappingMetaData getFunctionMapping(String name) {
+		return (JDBCFunctionMappingMetaData)functionMappings.get(name.toLowerCase());
+	}
+	
+	private void addDefaultFunctionMapping() {
+		JDBCFunctionMappingMetaData function;
+		
+		// concat
+		function = new JDBCFunctionMappingMetaData("concat",
+					new String[] { 
+							"{fn concat(",
+						   ", ",
+							")}"  
+					},
+					new int[] {0, 1} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
+
+		// substring
+		function = new JDBCFunctionMappingMetaData("substring",
+					new String[] {
+						"{fn substring(",
+						", ",
+						", ",
+						")}"
+					},
+					new int[] {0, 1, 2} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
+
+		// length
+		function = new JDBCFunctionMappingMetaData("length",
+					new String[] {
+						"{fn length(",
+						")}"
+					},
+					new int[] {0} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
+
+		// locate
+		function = new JDBCFunctionMappingMetaData("locate",
+					new String[] {
+						"{fn locate(",
+						", ",
+						", ",
+						")}"
+					},
+					new int[] {0, 1, 2} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
+
+		// abs
+		function = new JDBCFunctionMappingMetaData("abs",
+					new String[] {
+						"{fn abs(",
+						")}"
+					},
+					new int[] {0} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
+
+		// sqrt
+		function = new JDBCFunctionMappingMetaData("sqrt",
+					new String[] {
+						"{fn sqrt(",
+						")}"
+					},
+					new int[] {0} );
+		functionMappings.put(function.getFunctionName().toLowerCase(), function);			
 	}
 }

@@ -816,9 +816,10 @@ public class EJBQLParser {
 			concat.add(new Symbol(")").discard());
 			concat.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
+					SQLTarget target = (SQLTarget)a.getTarget();
 					String param2 = a.pop().toString();
 					String param1 = a.pop().toString();
-					a.push("{fn concat("+param1+", "+param2+")}");
+					a.push(target.getConcatFunction(param1, param2));
 				}
 			});
 			funRetStr.add(concat);
@@ -834,10 +835,11 @@ public class EJBQLParser {
 			substring.add(new Symbol(")").discard());
 			substring.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
+					SQLTarget target = (SQLTarget)a.getTarget();
 					String param3 = a.pop().toString();
 					String param2 = a.pop().toString();
 					String param1 = a.pop().toString();
-					a.push("{fn substring("+param1+", "+param2+", "+param3+")}");
+					a.push(target.getSubstringFunction(param1, param2, param3));
 				}
 			});
 			funRetStr.add(substring);
@@ -864,8 +866,9 @@ public class EJBQLParser {
 			length.add(new Symbol(")").discard());
 			length.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
+					SQLTarget target = (SQLTarget)a.getTarget();
 					String param = a.pop().toString();
-					a.push("{fn length("+param+")}");
+					a.push(target.getLengthFunction(param));
 				}
 			});
 			funRetNum.add(length);
@@ -883,6 +886,7 @@ public class EJBQLParser {
 			locate.add(new Symbol(")").discard());
 			locate.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
+					SQLTarget target = (SQLTarget)a.getTarget();
 					String param3 = a.pop().toString();
 					String param2 = a.pop().toString();
 					String param1 = a.pop().toString();
@@ -893,7 +897,7 @@ public class EJBQLParser {
 					} else {
 						a.pop(); // pop the token "LOCATE"
 					}
-					a.push("{fn locate("+param1+", "+param2+", "+param3+")}");
+					a.push(target.getLocateFunction(param1, param2, param3));
 				}
 			});
 			funRetNum.add(locate);
@@ -906,7 +910,8 @@ public class EJBQLParser {
 			abs.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
 					String param = a.pop().toString();
-					a.push("{fn abs("+param+")}");
+					SQLTarget target = (SQLTarget)a.getTarget();
+					a.push(target.getAbsFunction(param));
 				}
 			});
 			funRetNum.add(abs);
@@ -918,8 +923,9 @@ public class EJBQLParser {
 			sqrt.add(new Symbol(")").discard());
 			sqrt.setAssembler(new Assembler() {
 				public void workOn(Assembly a) {
+					SQLTarget target = (SQLTarget)a.getTarget();
 					String param = a.pop().toString();
-					a.push("{fn sqrt("+param+")}");
+					a.push(target.getSqrtFunction(param));
 				}
 			});
 			funRetNum.add(sqrt);
