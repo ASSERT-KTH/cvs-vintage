@@ -18,7 +18,7 @@ import org.jboss.deployment.DeploymentException;
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  *   @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  *   @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- *   @version $Revision: 1.13 $
+ *   @version $Revision: 1.14 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -40,6 +40,7 @@ public class EntityMetaData extends BeanMetaData {
    private ArrayList cmpFields = new ArrayList();
    private String primKeyField;
    private ArrayList queries = new ArrayList();
+   private boolean readOnly = false;
 
    // Static --------------------------------------------------------
     
@@ -75,6 +76,11 @@ public class EntityMetaData extends BeanMetaData {
 
    public String getAbstractSchemaName() {
       return abstractSchemaName;
+   }
+
+   public boolean isReadOnly()
+   {
+      return readOnly;
    }
 
    /**
@@ -208,7 +214,21 @@ public class EntityMetaData extends BeanMetaData {
       }
    }
 
-
+   public void importJbossXml(Element element) throws DeploymentException
+   {
+      super.importJbossXml(element);
+      // set readonly
+      String readOnlyString = getElementContent(getOptionalChild(element, "read-only"));
+      if (readOnlyString != null)
+      {
+	 readOnly = Boolean.valueOf(readOnlyString).booleanValue();
+	 System.out.println("!!!!!!!!read-only set to " + readOnly);
+      }
+      else
+      {
+	 System.out.println("!!!!!!!!read-only element NOT found");
+      }
+   }
 
    // Package protected ---------------------------------------------
     

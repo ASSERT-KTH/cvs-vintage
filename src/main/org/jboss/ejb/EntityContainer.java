@@ -31,6 +31,7 @@ import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.monitor.StatisticsProvider;
 import org.jboss.util.SerializableEnumeration;
 import org.jboss.system.Registry;
+import org.jboss.metadata.EntityMetaData;
 
 /**
 * This is a Container for EntityBeans (both BMP and CMP).
@@ -44,7 +45,7 @@ import org.jboss.system.Registry;
 * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @version $Revision: 1.61 $
+* @version $Revision: 1.62 $
 *
 * <p><b>Revisions:</b>
 *
@@ -113,6 +114,12 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
    protected long removeCount = 0;
    
    /**
+    * <code>readOnly</code> determines if state can be written to resource manager.
+    *
+    */
+   protected boolean readOnly = false;
+ 
+   /**
    * This provides a way to find the entities that are part of a given
    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
    * manage this instance.
@@ -142,8 +149,7 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
             for (int i = 0; i < entities.length; i++)
             {
                EntityEnterpriseContext ctx = entities[i];
-               EntityContainer container = (EntityContainer)ctx.getContainer();
-               container.storeEntity(ctx);
+	       doStore(ctx);
             }
          }
       }
@@ -153,6 +159,15 @@ implements ContainerInvokerContainer, InstancePoolContainer, StatisticsProvider
       }
    }
    
+   public static void doStore(EntityEnterpriseContext ctx) throws Exception
+   {
+      EntityContainer container = (EntityContainer)ctx.getContainer();
+      if (!((EntityMetaData)container.getBeanMetaData()).isReadOnly())
+      {
+	 container.storeEntity(ctx);
+      }
+   }
+
    // Public --------------------------------------------------------
    
    public void setContainerInvoker(ContainerInvoker ci)

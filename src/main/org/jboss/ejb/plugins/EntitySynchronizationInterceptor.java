@@ -43,7 +43,7 @@ import org.jboss.metadata.ConfigurationMetaData;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.58 $
+ * @version $Revision: 1.59 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -105,7 +105,8 @@ public class EntitySynchronizationInterceptor
     *  The current commit option.
     */
    protected int commitOption;
- 
+
+
    /**
     *  The refresh rate for commit option d
     */
@@ -313,7 +314,8 @@ public class EntitySynchronizationInterceptor
             // And skip reads too ("get" methods)
             if (ctx.getId() != null)
             {
-               container.storeEntity(ctx);
+	       EntityContainer.doStore(ctx);
+               //container.storeEntity(ctx);
             }
     
             return result;
@@ -385,7 +387,8 @@ public class EntitySynchronizationInterceptor
                      log.trace("Checking ctx="+ctx+", for status of tx="+tx);
                   if (tx.getStatus() != Status.STATUS_MARKED_ROLLBACK)
                   {
-                     container.storeEntity(ctx);
+		     EntityContainer.doStore(ctx);
+                     //container.storeEntity(ctx);
 
                      if( trace )
                         log.trace("sync calling store on ctx "+ctx);
