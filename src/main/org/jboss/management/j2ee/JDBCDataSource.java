@@ -24,7 +24,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JDBCDataSource JDBCDataSource}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -285,7 +285,7 @@ public class JDBCDataSource
          );
       }
       catch( JMException jme ) {
-         //AS ToDo: later on we have to define what happens when service could not be started
+         //AS ToDo: later on we have to define what happens when service could not be stopped
          jme.printStackTrace();
       }
    }

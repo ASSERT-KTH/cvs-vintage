@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JavaMail JavaMail}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -95,12 +95,7 @@ public class JavaMail
       Logger lLog = Logger.getLogger( JavaMail.class );
       try {
          // Find the Object to be destroyed
-         System.out.println("JavaMail Destroy : " + J2EEManagedObject.getDomainName() + ":type=JavaMail,name=" + pName + ",*");
-         ObjectName lSearch = new ObjectName(
-            J2EEManagedObject.getDomainName() + ":type=JavaMail,name=" + pName + ",*"
-         );
-         
-         pServer.unregisterMBean( lSearch );
+         pServer.unregisterMBean( new ObjectName( pName ) );
       }
       catch( Exception e ) {
        lLog.error( "Could not destroy JSR-77 JavaMail Resource", e );
@@ -207,6 +202,38 @@ public class JavaMail
       }
       catch( Exception e ) {
          getLog().error( "start failed", e );
+      }
+   }
+   
+   // ServiceMBeanSupport overrides ---------------------------------
+   
+   public void startService() {
+      try {
+         getServer().invoke(
+            mService,
+            "start",
+            new Object[] {},
+            new String[] {}
+         );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be started
+         jme.printStackTrace();
+      }
+   }
+   
+   public void stopService() {
+      try {
+         getServer().invoke(
+            mService,
+            "stop",
+            new Object[] {},
+            new String[] {}
+         );
+      }
+      catch( JMException jme ) {
+         //AS ToDo: later on we have to define what happens when service could not be stopped
+         jme.printStackTrace();
       }
    }
    
