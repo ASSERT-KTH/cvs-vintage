@@ -13,9 +13,6 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-//
-//$Log: IMAPStore.java,v $
-//
 
 package org.columba.mail.imap;
 
@@ -25,40 +22,28 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.text.MessageFormat;
 
 import javax.swing.JOptionPane;
 
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.logging.ColumbaLogger;
+import org.columba.core.main.MainInterface;
 import org.columba.mail.config.ImapItem;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.folder.MessageFolderInfo;
 import org.columba.mail.folder.headercache.CachedHeaderfieldOwner;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.gui.util.PasswordDialog;
-import org.columba.mail.imap.parser.FlagsParser;
-import org.columba.mail.imap.parser.HeaderParser;
-import org.columba.mail.imap.parser.IMAPFlags;
-import org.columba.mail.imap.parser.ListInfo;
-import org.columba.mail.imap.parser.MessageFolderInfoParser;
-import org.columba.mail.imap.parser.MessageSet;
-import org.columba.mail.imap.parser.MessageSourceParser;
-import org.columba.mail.imap.parser.MimePartParser;
-import org.columba.mail.imap.parser.MimePartTreeParser;
-import org.columba.mail.imap.parser.SearchResultParser;
-import org.columba.mail.imap.parser.UIDParser;
-import org.columba.mail.imap.protocol.Arguments;
-import org.columba.mail.imap.protocol.BadCommandException;
-import org.columba.mail.imap.protocol.CommandFailedException;
-import org.columba.mail.imap.protocol.DisconnectedException;
-import org.columba.mail.imap.protocol.IMAPException;
-import org.columba.mail.imap.protocol.IMAPProtocol;
+import org.columba.mail.imap.parser.*;
+import org.columba.mail.imap.protocol.*;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.message.MimePart;
 import org.columba.mail.message.MimePartTree;
 import org.columba.mail.parser.DateParser;
 import org.columba.mail.parser.Rfc822Parser;
+import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author freddy
@@ -100,7 +85,6 @@ public class IMAPStore {
 		state = 0;
 
 		delimiter = "/";
-
 	}
 
 	protected void printStatusMessage(
@@ -154,8 +138,10 @@ public class IMAPStore {
 		}
 
 		try {
-
-			printStatusMessage("Authenticating...", worker);
+			printStatusMessage(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "authenticating"), worker);
 			if (portNumber != -1)
 				openport = getProtocol().openPort(item.get("host"), portNumber);
 			else
@@ -165,13 +151,11 @@ public class IMAPStore {
 				throw new IMAPException(e.getMessage());
 
 			e.printStackTrace();
-		} finally {
-
 		}
 
-		if (openport == true) {
-			while (cancel == false) {
-				if (first == true) {
+		if (openport) {
+			while (!cancel) {
+				if (first) {
 
 					if (item.get("password").length() != 0) {
 						getProtocol().login(
@@ -180,7 +164,6 @@ public class IMAPStore {
 
 						state = STATE_AUTHENTICATE;
 						answer = true;
-						System.out.println("login successful");
 						break;
 					}
 
@@ -195,7 +178,7 @@ public class IMAPStore {
 
 				char[] name;
 
-				if (dialog.success() == true) {
+				if (dialog.success()) {
 					// ok pressed
 					name = dialog.getPassword();
 					String password = new String(name);
@@ -208,7 +191,7 @@ public class IMAPStore {
 
 					state = STATE_AUTHENTICATE;
 
-					if (answer == true) {
+					if (answer) {
 						cancel = true;
 
 						//item.setUser(user);
@@ -217,7 +200,7 @@ public class IMAPStore {
 
 						item.set("save_password", save);
 
-						if (save == true)
+						if (save)
 							item.set("password", password);
 
 					} else
@@ -226,7 +209,6 @@ public class IMAPStore {
 					cancel = true;
 					answer = false;
 					// cancel pressed
-
 				}
 			}
 
@@ -273,20 +255,24 @@ public class IMAPStore {
 
 			return false;
 		}
-
 	}
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-		ColumbaLogger.log.info("selecting path=" + path);
-
-		StringBuffer buf = null;
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.info("selecting path=" + path);
+                }
 		try {
 
-			printStatusMessage("Selecting " + path + " ...", worker);
+			printStatusMessage(MessageFormat.format(
+                                MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "select_path"),
+                                        new Object[]{path}), worker);
 			IMAPResponse[] responses = getProtocol().select(path);
 
-			buf = new StringBuffer();
+			StringBuffer buf = new StringBuffer();
 			for (int i = 0; i < responses.length; i++) {
 				buf.append(responses[i].getSource() + "\n");
 			}
@@ -294,20 +280,18 @@ public class IMAPStore {
 			messageFolderInfo =
 				MessageFolderInfoParser.parseMessageFolderInfo(buf.toString());
 
-			ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.info("exists:" + messageFolderInfo.getExists());
+                        }
 
 			state = STATE_SELECTED;
 			selectedFolderPath = path;
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 			state = STATE_AUTHENTICATE;
 			JOptionPane.showMessageDialog(
 				null,
 				"Error while selecting mailbox: " + path);
 		} catch (CommandFailedException ex) {
-			System.out.println("can't select folder");
-
 			JOptionPane.showMessageDialog(
 				null,
 				"Error while selecting mailbox: " + path + ex.getMessage());
@@ -317,10 +301,7 @@ public class IMAPStore {
 			state = STATE_NONAUTHENTICATE;
 			select(worker, path);
 
-		} finally {
-
 		}
-
 		return true;
 	}
 
@@ -329,7 +310,6 @@ public class IMAPStore {
 	 * @return IMAPProtocol
 	 */
 	protected IMAPProtocol getProtocol() {
-
 		return imap;
 	}
 
@@ -353,14 +333,8 @@ public class IMAPStore {
 
 			return v;
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-		} finally {
-
 		}
-
 		return result;
 	}
 
@@ -375,26 +349,21 @@ public class IMAPStore {
 		isLogin(worker);
 
 		try {
-
-			printStatusMessage("Fetching folder list...", worker);
+			printStatusMessage(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "fetch_folder_list"), worker);
 			IMAPResponse[] responses = getProtocol().lsub(reference, pattern);
-			//System.out.println("response-count="+responses.length);
 
 			List v = new Vector();
 			ListInfo[] list = null;
 			for (int i = 0; i < responses.length - 1; i++) {
-				//System.out.println("responses[i]="+responses[i].getSource());
-
 				if (responses[i] == null) {
-					//System.out.println("response == null");
-
 					continue;
 				}
 
 				ListInfo listInfo = new ListInfo();
 				listInfo.parse(responses[i]);
-				//System.out.println("list-response="+responses[i].getSource());
-
 				v.add(listInfo);
 			}
 
@@ -406,16 +375,10 @@ public class IMAPStore {
 			}
 
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			lsub(reference, pattern, worker);
-
-		} finally {
-
 		}
 
 		return null;
@@ -431,30 +394,19 @@ public class IMAPStore {
 
 		try {
 			getProtocol().append(mailboxName, messageSource);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			append(mailboxName, messageSource, worker);
-
 		}
-
 	}
 
 	public boolean createFolder(String mailboxName) throws Exception {
 		try {
 			getProtocol().create(mailboxName);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 			JOptionPane.showMessageDialog(
 				null,
 				"Error while creating mailbox: "
@@ -464,35 +416,21 @@ public class IMAPStore {
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			createFolder(mailboxName);
-
 		}
-
 		return true;
 	}
 
 	public boolean deleteFolder(String mailboxName) throws Exception {
-
 		// we need to ensure that this folder is closed
-
 		try {
-
 			getProtocol().delete(mailboxName);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-
 			return false;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			deleteFolder(mailboxName);
-
-		} finally {
-
 		}
-
 		return true;
 	}
 
@@ -500,72 +438,41 @@ public class IMAPStore {
 		throws Exception {
 
 		// we need to ensure that this folder is closed
-
 		try {
-
 			getProtocol().rename(oldMailboxName, newMailboxName);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-
 			return false;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			renameFolder(oldMailboxName, newMailboxName);
-
-		} finally {
-
 		}
-
 		return true;
 	}
 
 	public boolean subscribeFolder(String mailboxName) throws Exception {
 		try {
-
 			getProtocol().subscribe(mailboxName);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-
 			return false;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			subscribeFolder(mailboxName);
-
-		} finally {
-
 		}
-
 		return true;
 	}
 
 	public boolean unsubscribeFolder(String mailboxName) throws Exception {
 		try {
-
 			getProtocol().unsubscribe(mailboxName);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
-
 			return false;
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			unsubscribeFolder(mailboxName);
-
-		} finally {
-
 		}
-
 		return true;
 	}
 
@@ -574,11 +481,7 @@ public class IMAPStore {
 	public List fetchUIDList(WorkerStatusController worker, String path)
 		throws Exception {
 
-		List v = new Vector();
-		String buffer = new String();
-
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		// selection of mailbox failed
@@ -587,30 +490,23 @@ public class IMAPStore {
 			return null;
 
 		try {
-
 			int count = messageFolderInfo.getExists();
 			if (count == 0)
 				return null;
 
-			printStatusMessage("Fetching UID list...", worker);
+			printStatusMessage(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "fetch_uid_list"), worker);
 
 			IMAPResponse[] responses = imap.fetchUIDList("1:*", count, worker);
-
-			v = UIDParser.parse(responses);
-
-			return v;
+			return UIDParser.parse(responses);
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			fetchUIDList(worker, path);
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -618,28 +514,20 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
-		Object[] expungedUids = null;
+		//Object[] expungedUids = null;
 		try {
-
 			IMAPResponse[] responses = imap.expunge();
 
 			//expungedUids = FlagsParser.parseFlags(responses);
 
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			expunge(worker, path);
-		} finally {
-
 		}
-
 		return true;
 	}
 
@@ -651,11 +539,10 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
+		//Object[] expungedUids = null;
 		try {
-
 			MessageSet set = new MessageSet(uids);
 
 			IMAPResponse[] responses = imap.copy(set.getString(), destFolder);
@@ -663,17 +550,10 @@ public class IMAPStore {
 			//expungedUids = FlagsParser.parseFlags(responses);
 
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
-
-		} finally {
-
 		}
-
 	}
 
 	public IMAPFlags[] fetchFlagsList(
@@ -682,15 +562,15 @@ public class IMAPStore {
 		throws Exception {
 
 		IMAPFlags[] result = null;
-		String buffer = new String();
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		try {
-
-			printStatusMessage("Fetching FLAGS list...", worker);
+			printStatusMessage(MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "fetch_flags_list"), worker);
 			IMAPResponse[] responses =
 				imap.fetchFlagsList(
 					"1:*",
@@ -698,31 +578,22 @@ public class IMAPStore {
 					worker);
 
 			result = FlagsParser.parseFlags(responses);
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			fetchFlagsList(worker, path);
-		} finally {
-
 		}
-
 		return result;
 	}
 
 	private ColumbaHeader parseMessage(String headerString) {
 
 		Rfc822Parser parser = new Rfc822Parser();
-
 		ColumbaHeader h = parser.parseHeader(headerString.toString());
 
 		/*
 		Message message = new Message(h);
-		
 		
 		h = message.getHeader();
 		*/
@@ -802,13 +673,13 @@ public class IMAPStore {
 
 			if (attachment.indexOf("multipart") != -1) {
 				//message.setAttachment(true);
-				h.set("columba.attachment", new Boolean(true));
+				h.set("columba.attachment", Boolean.TRUE);
 			} else {
-				h.set("columba.attachment", new Boolean(false));
+				h.set("columba.attachment", Boolean.FALSE);
 				//message.setAttachment(false);
 			}
 		} else {
-			h.set("columba.attachment", new Boolean(false));
+			h.set("columba.attachment", Boolean.FALSE);
 			//message.setAttachment(false);
 		}
 
@@ -886,10 +757,11 @@ public class IMAPStore {
 		String path)
 		throws Exception {
 
-		ColumbaLogger.log.debug("list-count=" + list.size());
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("list-count=" + list.size());
+                }
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		worker.setProgressBarMaximum(list.size());
@@ -902,7 +774,6 @@ public class IMAPStore {
 		StringBuffer headerFields = new StringBuffer();
 		String name;
 		for (int j = 0; j < headercacheList.length; j++) {
-
 			name = (String) headercacheList[j];
 			headerFields.append(name + " ");
 		}
@@ -911,9 +782,11 @@ public class IMAPStore {
 		String clientTag = null;
 		IMAPResponse imapResponse = null;
 
-		ColumbaLogger.log.debug("messageSet=" + set.getString());
-		ColumbaLogger.log.debug(
-			"headerFields=" + headerFields.toString().trim());
+		if (MainInterface.DEBUG) {
+                        ColumbaLogger.log.debug("messageSet=" + set.getString());
+                        ColumbaLogger.log.debug(
+                            "headerFields=" + headerFields.toString().trim());
+                }
 
 		try {
 			clientTag =
@@ -927,7 +800,6 @@ public class IMAPStore {
 		} catch (IOException ex) {
 			// disconnect exception
 			ex.printStackTrace();
-
 		}
 
 		int i = 0;
@@ -939,7 +811,6 @@ public class IMAPStore {
 			} catch (IOException ex) {
 				// disconnect exception
 				ex.printStackTrace();
-
 			}
 
 			if (imapResponse.getStatus() == IMAPResponse.STATUS_BYE)
@@ -965,7 +836,6 @@ public class IMAPStore {
 						ColumbaHeader header =
 							parseMessage(HeaderParser.parse(r));
 						if (header != null) {
-
 							header.set("columba.uid", list.get(i));
 							headerList.add(header, list.get(i));
 						}
@@ -973,18 +843,18 @@ public class IMAPStore {
 						i++;
 						if ((worker != null) && (i % 100 == 0))
 							worker.setProgressBarValue(i);
-						printStatusMessage(
-							": Fetching "
-								+ i
-								+ "/"
-								+ list.size()
-								+ " headers...",
+						printStatusMessage(MessageFormat.format(
+                                                        MailResourceLoader.getString(
+                                                                "statusbar",
+                                                                "message",
+                                                                "fetch_headers"),
+                                                        new Object[]{new Integer(i),
+                                                                new Integer(list.size())}),
 							worker);
 					}
 				}
 			}
 		}
-
 	}
 
 	public boolean isLogin(WorkerStatusController worker) throws Exception {
@@ -993,11 +863,9 @@ public class IMAPStore {
 			return true;
 		else {
 			// we are in Imap4.STATE_NONAUTHENTICATE
-
 			login(worker);
 			return false;
 		}
-
 	}
 
 	public MimePartTree getMimePartTree(
@@ -1007,7 +875,6 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 		try {
 
@@ -1020,20 +887,12 @@ public class IMAPStore {
 			aktMimePartTree = mptree;
 
 			return mptree;
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			getMimePartTree(uid, worker, path);
-
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -1045,10 +904,7 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
-
-		String buffer = new String();
 
 		if (!aktMessageUid.equals(uid)) {
 			getMimePartTree(uid, worker, path);
@@ -1057,7 +913,6 @@ public class IMAPStore {
 		MimePart part = aktMimePartTree.getFromAddress(address);
 
 		try {
-
 			IMAPResponse[] responses =
 				getProtocol().fetchMimePart(
 					(String) uid,
@@ -1067,20 +922,12 @@ public class IMAPStore {
 			part.setBody(MimePartParser.parse(responses));
 
 			return part;
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			getMimePart(uid, address, worker, path);
-
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -1091,33 +938,21 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
-		String buffer = new String();
-
 		try {
-
 			IMAPResponse[] responses =
 				getProtocol().fetchMessageSource((String) uid, worker);
 
 			String source = MessageSourceParser.parse(responses);
 
 			return source;
-
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			getMessageSource(uid, worker, path);
-
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -1129,14 +964,15 @@ public class IMAPStore {
 		throws Exception {
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		try {
 			MessageSet set = new MessageSet(uids);
 
 			String flagsString = FlagsParser.parseVariant(variant);
-			ColumbaLogger.log.debug("flags=" + flagsString);
+			if (MainInterface.DEBUG) {
+                                ColumbaLogger.log.debug("flags=" + flagsString);
+                        }
 
 			// unset flags command
 			if (variant >= 4) {
@@ -1154,18 +990,11 @@ public class IMAPStore {
 			}
 
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			markMessage(uids, variant, worker, path);
-
-		} finally {
-
 		}
-
 	}
 
 	public LinkedList search(
@@ -1177,12 +1006,15 @@ public class IMAPStore {
 		LinkedList result = new LinkedList();
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		try {
-
-			printStatusMessage("Searching in " + path + " ...", worker);
+			printStatusMessage(MessageFormat.format(
+                                MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "search_in"),
+                                        new Object[]{path}), worker);
 
 			MessageSet set = new MessageSet(uids);
 
@@ -1197,7 +1029,6 @@ public class IMAPStore {
 			// try to use UTF-8 first
 			// -> fall back to system default charset
 			try {
-
 				responses =
 					imap.searchWithCharsetSupport("UTF-8", searchArguments);
 			} catch (BadCommandException ex) {
@@ -1231,18 +1062,11 @@ public class IMAPStore {
 
 			return result;
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			//search(uids, searchString, path, worker);
-
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -1254,13 +1078,16 @@ public class IMAPStore {
 		LinkedList result = new LinkedList();
 
 		isLogin(worker);
-
 		isSelected(worker, path);
 
 		try {
-
 			//MessageSet set = new MessageSet(uids);
-			printStatusMessage("Searching in " + path + " ...", worker);
+			printStatusMessage(MessageFormat.format(
+                                MailResourceLoader.getString(
+                                        "statusbar",
+                                        "message",
+                                        "search_in"),
+                                        new Object[]{path}), worker);
 			SearchRequestBuilder b = new SearchRequestBuilder();
 			b.setCharset("UTF-8");
 			List list = b.generateSearchArguments(filterRule);
@@ -1272,7 +1099,6 @@ public class IMAPStore {
 			// try to use UTF-8 first
 			// -> fall back to system default charset
 			try {
-
 				responses =
 					imap.searchWithCharsetSupport("UTF-8", searchArguments);
 			} catch (BadCommandException ex) {
@@ -1304,18 +1130,11 @@ public class IMAPStore {
 
 			return result;
 		} catch (BadCommandException ex) {
-			System.out.println("bad command exception");
-			System.out.println("no messages on server");
 		} catch (CommandFailedException ex) {
-			System.out.println("command failed exception");
 		} catch (DisconnectedException ex) {
 			state = STATE_NONAUTHENTICATE;
 			//search(searchString, path, worker);
-
-		} finally {
-
 		}
-
 		return null;
 	}
 
@@ -1328,9 +1147,4 @@ public class IMAPStore {
 		}
 		return true;
 	}
-
 }
-
-///////////////////////////////////////////////////////////////////////////
-// $Log:$
-///////////////////////////////////////////////////////////////////////////
