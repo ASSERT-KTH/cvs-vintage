@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.42 2002/09/13 08:12:59 kataka Exp $
+// $Id: GeneratorJava.java,v 1.43 2002/09/16 15:50:16 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -302,7 +302,18 @@ implements PluggableNotation, FileGenerator {
         // END OLD CODE
 
     MClassifier type = attr.getType();
-    if (type != null) sb.append(generateClassifierRef(type)).append(' ');
+    MMultiplicity multi = attr.getMultiplicity();
+    // handle multiplicity here since we need the type
+    // actually the API of generator is buggy since to generate multiplicity correctly we need the attribute too
+    if (type != null && multi != null) {
+    	if (multi.equals(MMultiplicity.M1_1)) {
+    		sb.append(generateClassifierRef(type)).append(' ');
+    	} else
+    	if (type instanceof MDataType) {
+    		sb.append(generateClassifierRef(type)).append("[] ");
+    	} else
+    	sb.append("java.util.Vector ");
+    } 
 
     sb.append(generateName(attr.getName()));
     MExpression init = attr.getInitialValue();
@@ -1368,7 +1379,9 @@ implements PluggableNotation, FileGenerator {
             return "synchronized ";
         }
         return "";
-    }  public String generateMultiplicity(MMultiplicity m) {
+    }  
+    
+    public String generateMultiplicity(MMultiplicity m) {
     if (m == null) { return ""; }
     if (MMultiplicity.M0_N.equals(m)) return ANY_RANGE;
     Collection v = m.getRanges();
