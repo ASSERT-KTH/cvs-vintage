@@ -98,7 +98,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.39 2003/11/15 21:09:20 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.40 2003/11/16 00:04:08 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -918,8 +918,11 @@ public class PluginJAR
 		}
 		else
 		{
-			Log.log(Log.WARNING,this,getPath() + " has an actions.xml but no plugin core class");
-			actions.setLabel("MISSING PLUGIN CORE CLASS");
+			if(actions.size() != 0)
+			{
+				Log.log(Log.WARNING,this,getPath() + " has an actions.xml but no plugin core class");
+				actions.setLabel("MISSING PLUGIN CORE CLASS");
+			}
 		}
 	} //}}}
 

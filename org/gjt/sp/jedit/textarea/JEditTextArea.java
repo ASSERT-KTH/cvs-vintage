@@ -57,7 +57,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.292 2003/10/22 04:38:23 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.293 2003/11/16 00:04:08 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -2579,7 +2579,19 @@ loop:		for(int i = 0; i < text.length(); i++)
 	{
 		scrollToCaret(false);
 		int magic = getMagicCaretPosition();
-		int caretScreenLine = getScreenLineOfOffset(caret);
+		int caretScreenLine;
+		if(displayManager.isLineVisible(caretLine))
+			caretScreenLine = getScreenLineOfOffset(caret);
+		else if(caretLine < displayManager.getFirstVisibleLine())
+		{
+			caretScreenLine = displayManager.getNextVisibleLine(
+				caretLine);
+		}
+		else
+		{
+			caretScreenLine = displayManager.getPrevVisibleLine(
+				caretLine);
+		}
 
 		scrollDownPage();
 
@@ -2896,7 +2908,19 @@ loop:		for(int i = getCaretPosition() - 1; i >= 0; i--)
 	{
 		scrollToCaret(false);
 		int magic = getMagicCaretPosition();
-		int caretScreenLine = getScreenLineOfOffset(caret);
+		int caretScreenLine;
+		if(displayManager.isLineVisible(caretLine))
+			caretScreenLine = getScreenLineOfOffset(caret);
+		else if(caretLine < displayManager.getFirstVisibleLine())
+		{
+			caretScreenLine = displayManager.getNextVisibleLine(
+				caretLine);
+		}
+		else
+		{
+			caretScreenLine = displayManager.getPrevVisibleLine(
+				caretLine);
+		}
 
 		scrollUpPage();
 
