@@ -313,9 +313,12 @@ public  class AttributeGroup
         Module module = getModule();
 
         // Remove attribute - module mapping
+        List rmas = module.getRModuleAttributes(issueType, false,
+                                                "data");    
         RModuleAttribute rma = module
             .getRModuleAttribute(attribute, issueType);
         rma.delete(user);
+        rmas.remove(rma);
 
         // Remove attribute - module mapping from template type
         IssueType template = IssueTypeManager.getInstance
@@ -323,6 +326,7 @@ public  class AttributeGroup
         RModuleAttribute rma2 = module
             .getRModuleAttribute(attribute, template);
         rma2.delete(user);
+        rmas.remove(rma2);
 
         // Remove attribute - group mapping
         RAttributeAttributeGroup raag = 
