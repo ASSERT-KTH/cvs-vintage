@@ -109,13 +109,10 @@ public abstract class ChangeConnectionHandle extends AbstractHandle {
 		}
 		setPoint(p.x, p.y);
 
-//      cfm1 *******************************************************************      
-        if (target == fOriginalTarget) {
-           p = target.connectorMovedTo(x, y);
-           setPoint(p.x, p.y);
-        }
-//      cfm1 *******************************************************************            
-	
+		if (target == fOriginalTarget) {
+			p = target.connectorMovedTo(x, y);
+			setPoint(p.x, p.y);
+		}
 	}
 
 	/**
@@ -128,14 +125,11 @@ public abstract class ChangeConnectionHandle extends AbstractHandle {
 			target = fOriginalTarget;
 		}
         
-//      cfm1 *******************************************************************
-        if (target == fOriginalTarget) {
-            Point p = target.connectorMovedTo(x, y);
-            x=p.x;
-            y=p.y;
-        }
-//      cfm1 *******************************************************************
-
+		if (target == fOriginalTarget) {
+			Point p = target.connectorMovedTo(x, y);
+			x=p.x;
+			y=p.y;
+		}
 
 		setPoint(x, y);
 		connect(target);
@@ -162,12 +156,9 @@ public abstract class ChangeConnectionHandle extends AbstractHandle {
 	private Connector findConnectionTarget(int x, int y, Drawing drawing) {
 		Figure target = findConnectableFigure(x, y, drawing);
 
-//      cfm1 *******************************************************************
-         if (target == fOriginalTarget.owner() && fOriginalTarget instanceof OffsetConnector)
-              return fOriginalTarget;
-//      cfm1 *******************************************************************
-
-
+		if (target == fOriginalTarget.owner() && fOriginalTarget instanceof OffsetConnector) {
+			return fOriginalTarget;
+		}
 
 		if ((target != null)
 			&& target.canConnect()
