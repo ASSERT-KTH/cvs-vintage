@@ -20,7 +20,7 @@ import javax.management.*;
  *
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.5 $
+ *   @version $Revision: 1.6 $
  */
 public class FileLogging
    implements FileLoggingMBean, MBeanRegistration, NotificationListener
@@ -30,8 +30,7 @@ public class FileLogging
 
    // Attributes ----------------------------------------------------
    PrintStream out, err;
-   DateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd hh.mm");
-   String format = "<{0}><{2}> {4}";
+   String format = "<{0,date,yyyy-MM-dd} {0,time,hh.mm}><{2}> {4}";
    MessageFormat msgFmt = new MessageFormat(format);
 
    boolean verbose = false;
@@ -41,6 +40,7 @@ public class FileLogging
    String filter = "Information,Debug,Warning,Error";
    String logName = "server.log";
    String sources;
+   boolean append;
 
    // Static --------------------------------------------------------
 
@@ -51,17 +51,29 @@ public class FileLogging
 
    public FileLogging(String filter, String format)
    {
+      this(filter, format, Boolean.FALSE);
+   }
+
+   public FileLogging(String filter, String format, Boolean append)
+   {
       this.filter = filter;
       setFormat(format);
+      this.append = (append != null && append.booleanValue());
    }
 
    public FileLogging(String filter, String format, String sources, String fileName)
+   {
+      this(filter, format, sources, fileName, Boolean.FALSE);
+   }
+
+   public FileLogging(String filter, String format, String sources, String fileName, Boolean append)
    {
       this.filter = filter;
       setFormat(format);
 
       this.sources = sources;
       this.logName = fileName;
+      this.append = (append != null && append.booleanValue());
    }
 
    // Public --------------------------------------------------------
@@ -92,8 +104,7 @@ public class FileLogging
       {
          if (filter.indexOf(n.getType()) != -1)
          {
-            //AS FIXME this change is just a hack (dateFmt.format(...))
-            Object[] args = new Object[] { dateFmt.format(new Date(n.getTimeStamp())), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
+            Object[] args = new Object[] { new Date(n.getTimeStamp()), new Long(n.getSequenceNumber()), n.getUserData(), n.getType(), n.getMessage() };
             out.println(msgFmt.format(args));
          }
       }
@@ -136,7 +147,7 @@ public class FileLogging
       File parent = new File(properties.getFile()).getParentFile();
       File logFile = new File(parent, logName);
       try {
-         out = new PrintStream(new FileOutputStream(logFile.getCanonicalPath(), false));
+         out = new PrintStream(new FileOutputStream(logFile.getCanonicalPath(), append));
       } catch (IOException e) {
          throw new FileNotFoundException(e.getMessage());
       }
