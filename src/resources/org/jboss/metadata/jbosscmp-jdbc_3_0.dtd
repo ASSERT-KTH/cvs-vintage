@@ -460,7 +460,7 @@ Contains the known dependent value classes.
 The dependent-value-class element contains the configuration of a
 dependent value class.
 -->
-<!ELEMENT dependent-value-class (description, class, property+)>
+<!ELEMENT dependent-value-class (description?, class, property+)>
 
 
 <!--
