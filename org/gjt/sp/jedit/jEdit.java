@@ -32,6 +32,7 @@ import java.net.*;
 import java.text.MessageFormat;
 import java.util.*;
 import org.gjt.sp.jedit.buffer.BufferIORequest;
+import org.gjt.sp.jedit.buffer.KillRing;
 import org.gjt.sp.jedit.msg.*;
 import org.gjt.sp.jedit.gui.*;
 import org.gjt.sp.jedit.help.HelpViewer;
@@ -45,7 +46,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.166 2003/05/22 21:23:20 spestov Exp $
+ * @version $Id: jEdit.java,v 1.167 2003/05/26 00:15:40 spestov Exp $
  */
 public class jEdit
 {
@@ -875,6 +876,9 @@ public class jEdit
 			buffer.propertiesChanged();
 			buffer = buffer.next;
 		}
+
+		HistoryModel.propertiesChanged();
+		KillRing.propertiesChanged();
 
 		EditBus.send(new PropertiesChanged(null));
 	} //}}}

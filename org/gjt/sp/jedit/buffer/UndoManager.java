@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: UndoManager.java,v 1.16 2003/05/10 00:43:19 spestov Exp $
+ * @version $Id: UndoManager.java,v 1.17 2003/05/26 00:15:41 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class UndoManager
@@ -212,6 +212,8 @@ public class UndoManager
 			compoundEdit.undos.add(rem);
 		else
 			addEdit(rem);
+
+		KillRing.add(rem);
 	} //}}}
 
 	//{{{ bufferSaved() method

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.70 2003/05/23 20:26:39 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.71 2003/05/26 00:15:40 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -269,6 +269,12 @@ class BrowserView extends JPanel
 	public VFSDirectoryEntryTable getTable()
 	{
 		return table;
+	} //}}}
+
+	//{{{ getParentDirectoryList() method
+	public JList getParentDirectoryList()
+	{
+		return parentDirectories;
 	} //}}}
 
 	//{{{ Private members

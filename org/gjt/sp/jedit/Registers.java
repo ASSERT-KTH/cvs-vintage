@@ -55,7 +55,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Registers.java,v 1.16 2003/05/25 21:58:28 spestov Exp $
+ * @version $Id: Registers.java,v 1.17 2003/05/26 00:15:40 spestov Exp $
  */
 public class Registers
 {
@@ -344,6 +344,9 @@ public class Registers
 	 */
 	public static String getRegisterNameString()
 	{
+		if(!loaded)
+			loadRegisters();
+
 		StringBuffer buf = new StringBuffer();
 		for(int i = 0; i < registers.length; i++)
 		{
