@@ -7,13 +7,17 @@
 package org.jboss.metadata;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import org.jboss.deployment.DeploymentException;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /** The configuration information for an EJB container.
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.23 $
+ *   @version $Revision: 1.24 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/08/02: marcf</b>
@@ -23,6 +27,10 @@ import org.jboss.deployment.DeploymentException;
  *  <p><b>2001/10/16: billb</b>
  *  <ol>
  *   <li>Added clustering tags
+ *  </ol>
+ *  <p><b>2002/03/08: billb</b>
+ *  <ol>
+ *   <li>Added client-interceptor config
  *  </ol>
  *
  */
@@ -78,6 +86,8 @@ public class ConfigurationMetaData extends MetaData
    private Element containerPoolConf;
    private Element containerCacheConf;
    private Element containerInterceptorsConf;
+   private Element clientInterceptors;
+   private HashMap clientInterceptorConfs = new HashMap();
 
    // Static --------------------------------------------------------
 
@@ -111,6 +121,10 @@ public class ConfigurationMetaData extends MetaData
    public Element getContainerPoolConf() { return containerPoolConf; }
    public Element getContainerCacheConf() { return containerCacheConf; }
    public Element getContainerInterceptorsConf() { return containerInterceptorsConf; }
+   public Element getClientInterceptorConf(String interceptorName)
+   {
+      return (Element)clientInterceptorConfs.get(interceptorName);
+   }
 
    public boolean getCallLogging() { return callLogging; }
 
@@ -189,6 +203,21 @@ public class ConfigurationMetaData extends MetaData
 
       // The configuration for the container interceptors
       containerInterceptorsConf = getOptionalChild(element, "container-interceptors", containerInterceptorsConf);
+
+      clientInterceptors = getOptionalChild(element, "client-interceptors", clientInterceptors);
+      if (clientInterceptors != null)
+      {
+         NodeList children = clientInterceptors.getChildNodes();
+         for (int i = 0; i < children.getLength(); i++)
+         {
+            Node currentChild = children.item(i);
+            if (currentChild.getNodeType() == Node.ELEMENT_NODE)
+            {
+               Element interceptor = (Element)children.item(i);
+               clientInterceptorConfs.put(interceptor.getTagName(), interceptor);
+            }
+         }
+      }
 
       // configuration for container invoker
       containerInvokerConf = getOptionalChild(element, "container-invoker-conf", containerInvokerConf);

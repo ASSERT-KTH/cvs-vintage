@@ -1,9 +1,9 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.proxy.ejb;
 
 
@@ -34,6 +34,8 @@ import org.jboss.invocation.InvocationContext;
 import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
+import org.jboss.metadata.MetaData;
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.metadata.EntityMetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.naming.Util;
@@ -42,33 +44,42 @@ import org.jboss.ejb.FinderResults;
 import org.jboss.ejb.ListCacheKey;
 
 import org.jboss.logging.Logger;
+import org.w3c.dom.Element;
 
 
 /**
-* As we remove the one one association between container STACK and invoker we keep this around
-* IN the future the creation of proxies is a task done on a container basis but the container
-* as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
-* container stack but an association at the invocation level that points to all metadata for 
-* a given container. 
-*
-* In other words this is here for legacy reason and to not disrupt the container at once
-* In particular we declare that we "implement" the container invoker interface when we are
-* just implementing the Proxy generation calls. Separation of concern. 
-*
-* @todo eliminate this class, at least in its present form.
-*
-*  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @version $Revision: 1.10 $
-*
-*  <p><b>Revisions:</b><br>
-*  <p><b>2001/12/30: billb</b>
-*  <ol>
-*   <li>made home and bean invokers pluggable
-*  </ol>
-*/
+ * As we remove the one one association between container STACK and invoker we keep this around
+ * IN the future the creation of proxies is a task done on a container basis but the container
+ * as a logical representation, in other words, the container "Entity with RMI/IIOP" is not a 
+ * container stack but an association at the invocation level that points to all metadata for 
+ * a given container. 
+ *
+ * In other words this is here for legacy reason and to not disrupt the container at once
+ * In particular we declare that we "implement" the container invoker interface when we are
+ * just implementing the Proxy generation calls. Separation of concern. 
+ *
+ * @todo eliminate this class, at least in its present form.
+ *
+ *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ *  @version $Revision: 1.11 $
+ *
+ *  <p><b>Revisions:</b><br>
+ *  <p><b>2001/12/30: billb</b>
+ *  <ol>
+ *   <li>made home and bean invokers pluggable
+ *  </ol>
+ *  <p><b>2002/03/08: billb</b>
+ *  <ol>
+ *   <li>client interceptors from config.
+ *  </ol>
+ */
 public class ProxyFactory
- implements ContainerInvoker
+   implements ContainerInvoker
 {
+   protected static final String HOME_INTERCEPTOR = "home";
+   protected static final String BEAN_INTERCEPTOR = "bean";
+   protected static final String LIST_ENTITY_INTERCEPTOR = "list-entity";
+
    // Metadata for the proxies
    public EJBMetaData ejbMetaData ;
    
@@ -113,14 +124,14 @@ public class ProxyFactory
       // Create metadata
       
       /**
-      Constructor signature is
+         Constructor signature is
       
-      public EJBMetaDataImpl(Class remote,
-      Class home,
-      Class pkClass,
-      boolean session,
-      boolean statelessSession,
-      HomeHandle homeHandle)
+         public EJBMetaDataImpl(Class remote,
+         Class home,
+         Class pkClass,
+         boolean session,
+         boolean statelessSession,
+         HomeHandle homeHandle)
       */      
 
       boolean isSession = !(container.getBeanMetaData() instanceof EntityMetaData);
@@ -173,8 +184,47 @@ public class ProxyFactory
          throw new RuntimeException("beanInvoker is null: " + oname);
    }
    public void start() {}   
+
+
    /**
-    * The <code>start</code> method creates the home proxy and the bean proxy,
+    * The <code>loadInterceptorChain</code> load an interceptor chain from configuration int the
+    * ClientContainer.
+    *
+    * @exception Exception if an error occurs
+    */
+   protected void loadInterceptorChain(ClientContainer client, Element interceptors)
+   {
+      try
+      {
+         Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
+         ClassLoader loader = container.getClassLoader();
+         Interceptor last = null;
+         while( interceptorElements != null && interceptorElements.hasNext() )
+         {
+            Element ielement = (Element) interceptorElements.next();
+            String className = null;
+            className = MetaData.getElementContent(ielement);
+            Class clazz = loader.loadClass(className);
+            Interceptor interceptor = (Interceptor) clazz.newInstance();
+            if (last == null)
+            {
+               last = interceptor;
+               client.setNext(interceptor);
+            }
+            else
+            {
+               last.setNext(interceptor);
+               last = interceptor;
+            }
+         }
+      }
+      catch (Exception ex)
+      {
+         log.error("failed to load client interceptor chain", ex);
+      }
+   }
+   /**
+    * The <code>bindProxy</code> method creates the home proxy and the bean proxy,
     * and binds them into jndi.
     *
     * @exception Exception if an error occurs
@@ -196,25 +246,19 @@ public class ProxyFactory
          
          ClientContainer client = new ClientContainer(context);
       
-         // FIXME FIXME FIXME move to externalized XML
-         client.setNext(new org.jboss.proxy.ejb.HomeInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.proxy.SecurityInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.proxy.TransactionInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.invocation.InvokerInterceptor());
-         
+         ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+         Element homeInterceptorConf = configMetaData.getClientInterceptorConf(HOME_INTERCEPTOR);
+         loadInterceptorChain(client, homeInterceptorConf);
          
          // Create the EJBHome
          this.home = 
-         (EJBHome)Proxy.newProxyInstance(
-            // Class loader pointing to the right classes from deployment
-            ((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
-            // The classes we want to implement home and handle
-            new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
-            // The home proxy as invocation handler
-            client);
+            (EJBHome)Proxy.newProxyInstance(
+               // Class loader pointing to the right classes from deployment
+               ((ContainerInvokerContainer)container).getHomeClass().getClassLoader(),
+               // The classes we want to implement home and handle
+               new Class[] { ((ContainerInvokerContainer)container).getHomeClass(), Class.forName("javax.ejb.Handle")},
+               // The home proxy as invocation handler
+               client);
             
             
          
@@ -228,30 +272,24 @@ public class ProxyFactory
          
          client = new ClientContainer(context);
       
-         // FIXME FIXME FIXME move to externalized XML
-         client.setNext(new org.jboss.proxy.ejb.StatelessSessionInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.proxy.SecurityInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.proxy.TransactionInterceptor())
-         // FIXME FIXME FIXME move to externalized XML
-         .setNext(new org.jboss.invocation.InvokerInterceptor());
-            
+         configMetaData = container.getBeanMetaData().getContainerConfiguration();
+         Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
+         loadInterceptorChain(client, beanInterceptorConf);
     
          // Create stateless session object
          // Same instance is used for all objects
          if (!(container.getBeanMetaData() instanceof EntityMetaData) &&
-            ((SessionMetaData)container.getBeanMetaData()).isStateless())
+             ((SessionMetaData)container.getBeanMetaData()).isStateless())
          {
             this.statelessObject = 
-            (EJBObject)Proxy.newProxyInstance(
-               // Correct CL         
-               ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-               // Interfaces    
-               new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
-               // SLSB proxy as invocation handler
-               client
-            );
+               (EJBObject)Proxy.newProxyInstance(
+                  // Correct CL         
+                  ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+                  // Interfaces    
+                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() } ,
+                  // SLSB proxy as invocation handler
+                  client
+                  );
          }
          
          // Bind the home in the JNDI naming space
@@ -322,15 +360,10 @@ public class ProxyFactory
       
       ClientContainer client = new ClientContainer(context);
       
-      // FIXME FIXME FIXME move to externalized XML
-      client.setNext(new org.jboss.proxy.ejb.StatefulSessionInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.proxy.SecurityInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.proxy.TransactionInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.invocation.InvokerInterceptor());
-      
+      ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+      Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
+      loadInterceptorChain(client, beanInterceptorConf);
+            
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
          ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
@@ -339,16 +372,6 @@ public class ProxyFactory
          // Proxy as invocation handler
          client);
          
-      /*
-      return (EJBObject)Proxy.newProxyInstance(
-         // Classloaders
-         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-         // Interfaces
-         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-         // Proxy as invocation handler
-         new StatefulSessionProxy(objectName, jndiName, id, beanInvoker));
-   
-      */
    }
    
    public Object getEntityEJBObject(Object id)
@@ -364,15 +387,10 @@ public class ProxyFactory
       
       ClientContainer client = new ClientContainer(context);
       
-      // FIXME FIXME FIXME move to externalized XML
-      client.setNext(new org.jboss.proxy.ejb.EntityInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.proxy.SecurityInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.proxy.TransactionInterceptor())
-      // FIXME FIXME FIXME move to externalized XML
-      .setNext(new org.jboss.invocation.InvokerInterceptor());
-
+      ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+      Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
+      loadInterceptorChain(client, beanInterceptorConf);
+            
       return (EJBObject)Proxy.newProxyInstance(
          // Classloaders
          ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
@@ -383,12 +401,12 @@ public class ProxyFactory
       /*
       // marcf fixme: for the jrmp stuff include this creation on the client side
       return (EJBObject)Proxy.newProxyInstance(
-         // Classloaders
-         ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-         // Interfaces
-         new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-         // Proxy as invocation handler
-         new EntityProxy(objectName, jndiName, id,beanInvoker));
+      // Classloaders
+      ((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
+      // Interfaces
+      new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+      // Proxy as invocation handler
+      new EntityProxy(objectName, jndiName, id,beanInvoker));
       */
    }
    
@@ -415,18 +433,13 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            // FIXME FIXME FIXME move to externalized XML
-            client.setNext(new org.jboss.proxy.ejb.ListEntityInterceptor(list))
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.proxy.SecurityInterceptor())
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.proxy.TransactionInterceptor())
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.invocation.InvokerInterceptor());
+            ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+            Element beanInterceptorConf = configMetaData.getClientInterceptorConf(LIST_ENTITY_INTERCEPTOR);
+            loadInterceptorChain(client, beanInterceptorConf);
             
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
-                  client));
+                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass(), ReadAheadBuffer.class },
+                                            client));
          }
       }
       
@@ -445,18 +458,13 @@ public class ProxyFactory
       
             ClientContainer client = new ClientContainer(context);
       
-            // FIXME FIXME FIXME move to externalized XML
-            client.setNext(new org.jboss.proxy.ejb.EntityInterceptor())
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.proxy.SecurityInterceptor())
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.proxy.TransactionInterceptor())
-            // FIXME FIXME FIXME move to externalized XML
-            .setNext(new org.jboss.invocation.InvokerInterceptor());
+            ConfigurationMetaData configMetaData = container.getBeanMetaData().getContainerConfiguration();
+            Element beanInterceptorConf = configMetaData.getClientInterceptorConf(BEAN_INTERCEPTOR);
+            loadInterceptorChain(client, beanInterceptorConf);
             
             list.add(Proxy.newProxyInstance(((ContainerInvokerContainer)container).getRemoteClass().getClassLoader(),
-                  new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
-                  client));
+                                            new Class[] { ((ContainerInvokerContainer)container).getRemoteClass() },
+                                            client));
          }
       }
       return list;
