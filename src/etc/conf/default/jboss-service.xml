@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.36 2002/03/11 01:34:17 reverbel Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.37 2002/03/15 12:32:46 reverbel Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -124,6 +124,7 @@
          name="jboss:service=CorbaORB">
     <attribute name="ORBClass">org.jacorb.orb.ORB</attribute>
     <attribute name="ORBSingletonClass">org.jacorb.orb.ORBSingleton</attribute>
+    <attribute name="IIOPServerName">JBoss</attribute>
     <attribute name="IIOPPort">5000</attribute>
     <attribute name="PortableInterceptorInitializerClass">org.jboss.ejb.plugins.iiop.server.CodebaseInterceptorInitializer</attribute>
   </mbean>
