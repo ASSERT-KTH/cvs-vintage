@@ -15,17 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.io.InputStream;
+
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-
-import java.io.InputStream;
 
 
 /**
@@ -190,6 +190,16 @@ public interface MailboxInterface {
      */
     public Object addMessage(InputStream in) throws Exception;
 
+	/**
+	 * Adds a message to this Mailbox
+	 *
+	 * @param in The message InputStream
+	 * @param attributes The attributes of the message
+	 * @return The new uid of the added message or null if not defined
+	 * @throws Exception
+	 */
+	public Object addMessage(InputStream in, Attributes attributes) throws Exception;
+
     /**
      * Gets all specified headerfields. An example headerfield might be
      * "Subject" or "From" (take care of lower/uppercaseletters).
@@ -260,6 +270,15 @@ public interface MailboxInterface {
      */
     public Object getAttribute(Object uid, String key)
         throws Exception;
+        
+	/**
+	 * Gets the attributes from the message
+	 *
+	 * @param uid The UID of the message
+	 * @return
+	 * @throws Exception
+	 */
+	public Attributes getAttributes(Object uid) throws Exception;       
 
     /**
      * Set attribute for message with UID.

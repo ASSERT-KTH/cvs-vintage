@@ -11,7 +11,6 @@ import org.columba.core.command.DefaultCommandReference;
 import org.columba.core.command.Worker;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
-
 import org.columba.mail.command.FolderCommand;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.filter.Filter;
@@ -20,8 +19,8 @@ import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.frame.TableUpdater;
 import org.columba.mail.gui.table.model.TableModelChangedEvent;
 import org.columba.mail.main.MailInterface;
-import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
+import org.columba.ristretto.message.io.SourceInputStream;
 
 
 /**
@@ -32,7 +31,6 @@ import org.columba.mail.message.ColumbaMessage;
  */
 public class AddPOP3MessageCommand extends FolderCommand {
     Folder inboxFolder;
-    ColumbaHeader[] headerList;
 
     /**
      * @param references
@@ -63,14 +61,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
         ColumbaMessage message = (ColumbaMessage) r[0].getMessage();
 
         // add message to folder
-        Object uid = inboxFolder.addMessage(message);
-        Object[] uids = new Object[1];
-        uids[0] = uid;
-
-        // generate headerlist we need to update the table viewer
-        headerList = new ColumbaHeader[1];
-        headerList[0] = message.getHeader();
-        headerList[0].set("columba.uid", uid);
+        Object uid = inboxFolder.addMessage(new SourceInputStream(message.getSource()), message.getHeader().getAttributes());
 
         // apply filter on message
         FilterList list = inboxFolder.getFilterList();
@@ -78,7 +69,7 @@ public class AddPOP3MessageCommand extends FolderCommand {
         for (int j = 0; j < list.count(); j++) {
             Filter filter = list.get(j);
 
-            Object[] result = inboxFolder.searchMessages(filter, uids);
+            Object[] result = inboxFolder.searchMessages(filter, new Object[] { uid });
 
             if (result.length != 0) {
                 CompoundCommand command = filter.getCommand(inboxFolder, result);

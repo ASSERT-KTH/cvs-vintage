@@ -88,7 +88,7 @@ public class CachedHeaderfields {
         
 
         // account ID
-        "account.uid"
+        "columba.accountuid"
     };
 
     // these are cached by default

@@ -15,10 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.folder;
 
+import java.io.InputStream;
+
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
@@ -26,7 +27,7 @@ import org.columba.mail.folder.search.DefaultSearchEngine;
 import org.columba.mail.folder.search.LuceneQueryEngine;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
-
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -37,8 +38,6 @@ import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.Source;
 import org.columba.ristretto.message.io.SourceInputStream;
 import org.columba.ristretto.parser.MessageParser;
-
-import java.io.InputStream;
 
 
 /**
@@ -468,7 +467,7 @@ public abstract class LocalFolder extends Folder implements MailboxInterface {
             }
 
             Object destuid = destFolder.addMessage(getMessageSourceStream(
-                        uids[i]));
+                        uids[i]), getAttributes(uids[i]));
             ((LocalFolder) destFolder).setFlags(destuid,
                 (Flags) getFlags(uids[i]).clone());
 

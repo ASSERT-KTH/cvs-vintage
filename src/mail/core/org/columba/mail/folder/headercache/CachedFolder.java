@@ -31,6 +31,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.Message;
@@ -467,7 +468,7 @@ public abstract class CachedFolder extends LocalFolder {
      *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
      */
-    public Object addMessage(InputStream in) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes ) throws Exception {
         // get headerlist before adding a message
         getHeaderList();
 
@@ -485,7 +486,11 @@ public abstract class CachedFolder extends LocalFolder {
 
         Header header = HeaderParser.parse(source);
         ColumbaHeader h = new ColumbaHeader(header);
-        h.getAttributes().put("columba.size", new Integer(size / 1024));
+        if( attributes == null ) {
+        	h.getAttributes().put("columba.size", new Integer(size / 1024));
+        } else {
+        	h.setAttributes((Attributes)attributes.clone());
+        }
 
         // decode all headerfields:
         // remove all unnecessary headerfields which doesn't
@@ -616,4 +621,22 @@ public abstract class CachedFolder extends LocalFolder {
             return null;
         }
     }
+
+	public Attributes getAttributes(Object uid) throws Exception {
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getAttributes();
+		} else {
+			return null;
+		}
+	}
+
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     */
+    public Object addMessage(InputStream in)
+        throws Exception {
+        	
+        return addMessage(in, null);
+    }
+
 }

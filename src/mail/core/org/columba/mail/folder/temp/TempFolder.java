@@ -31,6 +31,7 @@ import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.LocalMimePart;
@@ -282,7 +283,7 @@ public class TempFolder extends Folder {
         }
     }
 
-    public Object addMessage(InputStream in) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes) throws Exception {
         // FIXME: Directly pass the InputStream to the MessageParser,
         // DO NOT READ THE EMAIL INTO A STRING!!!!
         StringBuffer source = StreamUtils.readInString(in);
@@ -293,6 +294,9 @@ public class TempFolder extends Folder {
         ColumbaLogger.log.debug("new UID=" + newUid);
 
         ColumbaHeader h = new ColumbaHeader(message.getHeader());
+        if( attributes != null ) {
+        	h.setAttributes((Attributes) attributes.clone());
+        }
         h.set("columba.uid", newUid);
 
         headerList.add(h, newUid);
@@ -321,6 +325,15 @@ public class TempFolder extends Folder {
     public Flags getFlags(Object uid) throws Exception {
         return ((ColumbaHeader) headerList.get(uid)).getFlags();
     }
+
+	public Attributes getAttributes(Object uid) throws Exception {
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getAttributes();
+		} else {
+			return null;
+		}
+	}
+
 
     /*
      * (non-Javadoc)
@@ -395,4 +408,12 @@ public class TempFolder extends Folder {
 
         header.getAttributes().put(key, value);
     }
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     */
+    public Object addMessage(InputStream in)
+        throws Exception {
+        return null;
+    }
+
 }

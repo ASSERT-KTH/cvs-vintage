@@ -173,8 +173,6 @@ public class POP3Server {
         }
 
         ColumbaHeader header = (ColumbaHeader) message.getHeader();
-        header.set("columba.pop3uid", uid);
-        header.getFlags().setRecent(true);
 
         // set the attachment flag
         String contentType = (String) header.get("Content-Type");
@@ -186,6 +184,8 @@ public class POP3Server {
                 header.set("columba.attachment", Boolean.FALSE);
             }
         }
+		header.getAttributes().put("columba.fetchstate", Boolean.TRUE);
+		header.getAttributes().put("columba.accountuid", new Integer( accountItem.getInteger("uid")));
 
         headerCache.getHeaderList().add(header, uid);
 

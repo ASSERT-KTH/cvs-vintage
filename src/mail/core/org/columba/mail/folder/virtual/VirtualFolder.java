@@ -17,10 +17,18 @@
 //All Rights Reserved.
 package org.columba.mail.folder.virtual;
 
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.xml.XmlElement;
-
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.filter.Filter;
@@ -35,22 +43,11 @@ import org.columba.mail.main.MailInterface;
 import org.columba.mail.message.ColumbaHeader;
 import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
-
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
-import org.columba.ristretto.message.HeaderInterface;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.MimeTree;
-
-import java.io.InputStream;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 
 
 public class VirtualFolder extends Folder {
@@ -712,4 +709,21 @@ public class VirtualFolder extends Folder {
 
         header.getAttributes().put(key, value);
     }
+    
+	public Attributes getAttributes(Object uid) throws Exception {
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getAttributes();
+		} else {
+			return null;
+		}
+	}
+    
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     */
+    public Object addMessage(InputStream in, Attributes attributes)
+        throws Exception {
+        return null;
+    }
+
 }

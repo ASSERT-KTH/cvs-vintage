@@ -51,6 +51,7 @@ import org.columba.mail.message.ColumbaMessage;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.util.MailResourceLoader;
 import org.columba.ristretto.imap.IMAPFlags;
+import org.columba.ristretto.message.Attributes;
 import org.columba.ristretto.message.Flags;
 import org.columba.ristretto.message.Header;
 import org.columba.ristretto.message.MessageFolderInfo;
@@ -830,7 +831,7 @@ public class IMAPFolder extends RemoteFolder {
      *
      * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream)
      */
-    public Object addMessage(InputStream in) throws Exception {
+    public Object addMessage(InputStream in, Attributes attributes) throws Exception {
         StringBuffer stringSource = StreamUtils.readInString(in);
 
         getStore().append(getImapPath(), stringSource.toString());
@@ -865,6 +866,15 @@ public class IMAPFolder extends RemoteFolder {
 
         return header.getFlags();
     }
+    
+	public Attributes getAttributes(Object uid) throws Exception {
+		if (getHeaderList().containsKey(uid)) {
+			return getHeaderList().get(uid).getAttributes();
+		} else {
+			return null;
+		}
+	}
+    
 
     /*
      * (non-Javadoc)
@@ -990,4 +1000,12 @@ public class IMAPFolder extends RemoteFolder {
         // -> has changed. And wouldn't save the changes.
         setChanged(true);
     }
+    /* (non-Javadoc)
+     * @see org.columba.mail.folder.MailboxInterface#addMessage(java.io.InputStream, org.columba.ristretto.message.Attributes)
+     */
+    public Object addMessage(InputStream in)
+        throws Exception {
+        return addMessage(in,null);
+    }
+
 }
