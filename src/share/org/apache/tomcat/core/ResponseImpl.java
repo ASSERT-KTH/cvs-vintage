@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.10 2000/02/01 07:37:36 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/01 07:37:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.11 2000/02/01 21:39:39 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/02/01 21:39:39 $
  *
  * ====================================================================
  *
@@ -85,10 +85,10 @@ public class ResponseImpl implements Response {
     protected Request request;
     protected HttpServletResponseFacade responseFacade;
     protected Vector userCookies = new Vector();
-    protected Vector systemCookies = new Vector();
     protected String contentType = Constants.ContentType.Default;
     protected String contentLanguage = null;
     protected String characterEncoding = Constants.CharacterEncoding.Default;
+    protected String sessionId;
     protected int contentLength = -1;
     protected int status = 200;
     private Locale locale = new Locale(Constants.LOCALE_DEFAULT, "");
@@ -130,7 +130,6 @@ public class ResponseImpl implements Response {
 
     public void recycle() {
 	userCookies.removeAllElements();
-	systemCookies.removeAllElements();
 	contentType = Constants.ContentType.Default;
         locale = new Locale(Constants.LOCALE_DEFAULT, "");
 	characterEncoding = Constants.CharacterEncoding.Default;
@@ -139,6 +138,7 @@ public class ResponseImpl implements Response {
 	headers.clear();
 	usingWriter = false;
 	usingStream = false;
+	sessionId=null;
 	writer=null;
 	out.recycle();
 	started = false;
@@ -300,14 +300,14 @@ public class ResponseImpl implements Response {
 	return userCookies.elements();
     }
 
-    public Enumeration getSystemCookies() {
-	return systemCookies.elements();
+    public void setSessionId( String id ) {
+	sessionId=id;
     }
 
-    public void addSystemCookie(Cookie cookie) {
-	systemCookies.addElement(cookie);
+    public String getSessionId() {
+	return sessionId;
     }
-
+    
     public Locale getLocale() {
         return locale;
     }
@@ -376,26 +376,6 @@ public class ResponseImpl implements Response {
         return status;
     }
 
-    public void sendError(int sc, String msg) throws IOException {
-	this.status = sc;
-	request.setAttribute("javax.servlet.error.status_code",
-			     String.valueOf(sc));
-	request.setAttribute("javax.servlet.error.message", msg);
-
-	// XXX need to customize it
-	Servlet errorP=new org.apache.tomcat.servlets.DefaultErrorPage();
-	try {
-	    errorP.service(request.getFacade(),getFacade());
-	} catch (ServletException ex ) {
-	    // shouldn't happen!
-	    ex.printStackTrace();
-	}
-    }
-
-    public void sendRedirect(String location) throws IOException {
-	sendError(HttpServletResponse.SC_MOVED_TEMPORARILY,
-		  location);
-    }
     
     /** Set the response status 
      */ 

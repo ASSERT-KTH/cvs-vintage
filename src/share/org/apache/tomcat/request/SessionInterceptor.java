@@ -116,6 +116,22 @@ public class SessionInterceptor implements RequestInterceptor {
     }
 
     public int beforeBody( Request rrequest, Response response ) {
+	String reqSessionId = response.getSessionId();
+	if( reqSessionId==null)
+	    return 0;
+	
+	Cookie cookie = new Cookie("JSESSIONID",
+				   reqSessionId);
+	cookie.setMaxAge(-1);
+	cookie.setPath("/");
+	cookie.setVersion(1);
+
+	response.addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
+	cookie.setVersion(0);
+	response.addHeader( CookieTools.getCookieHeaderName(cookie),
+			    CookieTools.getCookieHeaderValue(cookie));
+
 	return 0;
     }
 

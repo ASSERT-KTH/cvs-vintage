@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.5 2000/01/15 23:30:26 costin Exp $
- * $Revision: 1.5 $
- * $Date: 2000/01/15 23:30:26 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.6 2000/02/01 21:39:40 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/02/01 21:39:40 $
  *
  * ====================================================================
  *
@@ -228,7 +228,7 @@ public class HttpRequestAdapter extends RequestImpl {
 
 	if (requestErrorCode != 0) {
             try {
-	        response.sendError(requestErrorCode, msg);
+	        response.getFacade().sendError(requestErrorCode, msg);
 	    } catch (IOException ioe) {
             }
 

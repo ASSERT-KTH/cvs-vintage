@@ -137,13 +137,12 @@ public interface Response {
 
     public void addCookie(Cookie cookie) ;
 
-    public void addSystemCookie(Cookie cookie) ;
-
     public Enumeration getCookies();
 
-    public Enumeration getSystemCookies();
-
     // -------------------- Response properties --------------------
+    // Note: headers are not set when you invoke the methods, but
+    // later, when final fixHeaders happens ( before sending the body )
+    
     public Locale getLocale() ;
 
     public void setLocale(Locale locale) ;
@@ -152,6 +151,8 @@ public interface Response {
      */
     public String getCharacterEncoding() ;
 
+    /** Set content type - this might also set encoding, if specified
+     */
     public void setContentType(String contentType) ;
 
     public String getContentType();
@@ -163,20 +164,30 @@ public interface Response {
     public void setStatus(int status);
 
     public int getStatus() ;
+
+    /** Will set the session id. The session interceptor might
+     *  process it and add a Cookie header, and it can be used to
+     *  rewrite URLs.
+     *  This replace "system cookies" ( it was the only use for them )
+     */
+    public void setSessionId(String sId );
     
-    // -------------------- Error --------------------
-    // XXX, not needed, can be in Facade!!
-    public void sendError(int sc, String msg) throws IOException ;
-
-    public void sendRedirect(String location) throws IOException ;
-
+    public String getSessionId( );
+    
     // -------------------- Internal methods --------------------
+    /** One-to-one with Facade.
+     *  You can use HttpResponseFacade.
+     */
     public HttpServletResponseFacade getFacade() ;
 
+    /** One-to-one relation with Request
+     */
     public void setRequest(Request request) ;
     
     public Request getRequest() ;
 
+    /** Response objects will be pool-able
+     */
     public void recycle() ;
 
 

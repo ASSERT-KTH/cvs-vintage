@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.10 2000/02/01 07:37:36 costin Exp $
- * $Revision: 1.10 $
- * $Date: 2000/02/01 07:37:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestImpl.java,v 1.11 2000/02/01 21:39:38 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/02/01 21:39:38 $
  *
  * ====================================================================
  *
@@ -424,13 +424,8 @@ public class RequestImpl  implements Request {
 	// SessionManager is just a repository and doesn't deal with
 	// request internals.
 	// hardcoded - will change!
-	Cookie cookie = new Cookie(Constants.SESSION_COOKIE_NAME,
-				   reqSessionId);
-	cookie.setMaxAge(-1);
-	cookie.setPath("/");
-	cookie.setVersion(1);
-	response.addSystemCookie(cookie);
-
+	response.setSessionId( reqSessionId );
+	
 	return serverSession;
     }
 

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.2 2000/02/01 07:37:36 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/01 07:37:36 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/HttpServletResponseFacade.java,v 1.3 2000/02/01 21:39:38 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/01 21:39:38 $
  *
  * ====================================================================
  *
@@ -151,11 +151,24 @@ implements HttpServletResponse {
     }
 
     public void sendError(int sc) throws IOException {
-	response.sendError(sc, "No detailed message");
+	sendError(sc, "No detailed message");
     }
     
     public void sendError(int sc, String msg) throws IOException {
-	response.sendError(sc, msg);
+	setStatus( sc );
+	Request request=response.getRequest();
+	request.setAttribute("javax.servlet.error.status_code",
+			     String.valueOf(sc));
+	request.setAttribute("javax.servlet.error.message", msg);
+
+	// XXX need to customize it
+	Servlet errorP=new org.apache.tomcat.servlets.DefaultErrorPage();
+	try {
+	    errorP.service(request.getFacade(),this);
+	} catch (ServletException ex ) {
+	    // shouldn't happen!
+	    ex.printStackTrace();
+	}
     }
 
     public void sendRedirect(String location)
@@ -165,7 +178,8 @@ implements HttpServletResponse {
             String msg = sm.getString("hsrf.redirect.iae");
             throw new IllegalArgumentException(msg);
 	}
-        response.sendRedirect(location);
+	sendError(HttpServletResponse.SC_MOVED_TEMPORARILY,
+		  location);
     }
     
     public void setContentLength(int len) {

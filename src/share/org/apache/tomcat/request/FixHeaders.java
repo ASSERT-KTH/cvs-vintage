@@ -107,25 +107,8 @@ public class FixHeaders implements RequestInterceptor {
             response.setHeader("Content-Length", Integer.toString(contentLength));
         }
 
-        // write cookies
-        Enumeration cookieEnum = null;
-        cookieEnum = response.getSystemCookies();
-        while (cookieEnum.hasMoreElements()) {
-            Cookie c  = (Cookie)cookieEnum.nextElement();
-            response.addHeader( CookieTools.getCookieHeaderName(c),
-			       CookieTools.getCookieHeaderValue(c));
-	    if( c.getVersion() == 1 ) {
-		// add a version 0 header too.
-		// XXX what if the user set both headers??
-		Cookie c0 = (Cookie)c.clone();
-		c0.setVersion(0);
-		response.addHeader( CookieTools.getCookieHeaderName(c0),
-				    CookieTools.getCookieHeaderValue(c0));
-	    }
-        }
-	
 	// XXX duplicated code, ugly
-        cookieEnum = response.getCookies();
+        Enumeration cookieEnum = response.getCookies();
         while (cookieEnum.hasMoreElements()) {
             Cookie c  = (Cookie)cookieEnum.nextElement();
             response.addHeader( CookieTools.getCookieHeaderName(c),
