@@ -1,4 +1,4 @@
-// $Id: TestUMLAction.java,v 1.10 2004/12/26 11:14:48 mvw Exp $
+// $Id: TestUMLAction.java,v 1.11 2004/12/30 17:13:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -95,7 +95,7 @@ public class TestUMLAction extends TestCase {
 	UMLAction to = new UMLAction(new String(), true);
 
 	// to.actionPerformed(new ActionEvent());
-	to.markNeedsSave();
+	// to.markNeedsSave();
 	to.updateEnabled(new Object());
 	to.updateEnabled();
 	to.shouldBeEnabled();

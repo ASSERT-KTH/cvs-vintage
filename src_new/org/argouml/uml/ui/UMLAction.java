@@ -1,4 +1,4 @@
-// $Id: UMLAction.java,v 1.34 2004/12/30 12:34:00 mvw Exp $
+// $Id: UMLAction.java,v 1.35 2004/12/30 17:13:22 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,6 @@ import javax.swing.Icon;
 import org.apache.log4j.Logger;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.ui.Actions;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.StatusBar;
@@ -152,14 +150,6 @@ public class UMLAction extends AbstractAction {
         StatusBar sb = ProjectBrowser.getInstance().getStatusBar();
         sb.doFakeProgress(stripJunk(getValue(Action.NAME).toString()), 100);
         Actions.updateAllEnabled();
-    }
-
-    /**
-     * Call this function when the  project is changed and may need saving.
-     */
-    public void markNeedsSave() {
-        Project p = ProjectManager.getManager().getCurrentProject();
-        p.setNeedsSave(true);
     }
 
     /**

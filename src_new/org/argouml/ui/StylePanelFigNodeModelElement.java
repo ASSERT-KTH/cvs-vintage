@@ -1,4 +1,4 @@
-// $Id: StylePanelFigNodeModelElement.java,v 1.3 2004/09/21 19:03:28 mvw Exp $
+// $Id: StylePanelFigNodeModelElement.java,v 1.4 2004/12/30 17:13:22 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,6 +36,8 @@ import javax.swing.JLabel;
 import javax.swing.text.Document;
 
 import org.argouml.i18n.Translator;
+import org.argouml.kernel.Project;
+import org.argouml.kernel.ProjectManager;
 import org.argouml.uml.diagram.ui.FigNodeModelElement;
 import org.tigris.gef.ui.ColorRenderer;
 
@@ -164,7 +166,10 @@ public class StylePanelFigNodeModelElement extends StylePanelFig implements
         nodeTarget.setShadowSize(i);
         getPanelTarget().endTrans();
         if (i != oldShadowSize) {
-            markNeedsSave();
+            Project p = ProjectManager.getManager().getCurrentProject();
+            if (p != null) {
+                p.setNeedsSave(true);
+            }
         }
     }
 
