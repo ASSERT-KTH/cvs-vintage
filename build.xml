@@ -257,6 +257,9 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				-->
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
 				<exclude name="lib/jcoverage.jar"/>
+				<exclude name="lib/jniwrap-2.4.jar"/>
+				<exclude name="lib/winpack.jar"/>
+				<exclude name="lib/junit.jar"/>
 				<exclude name="plugins/**" />
 				<exclude name="classes/**"/>
 			</zipfileset>
@@ -285,10 +288,12 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				-->
 				<exclude name="lib/checkstyle-all-2.1.jar"/>
 				<exclude name="lib/jcoverage.jar"/>
+				<exclude name="lib/junit.jar"/>
 				<exclude name="plugins/**" />
 				<exclude name="classes/**"/>
 			</zipfileset>
-			<!--<zipfileset dir="." includes="native/win32/launcher/bin/columba.exe" fullpath="columba-win32-${version}-bin/columba.exe"/>-->
+			<zipfileset dir="." includes="native/win32/launcher/Columba.exe" fullpath="columba-win32-${version}-bin/Columba.exe"/>
+			<zipfileset dir="." includes="native/win32/launcher/Columba.lap" fullpath="columba-win32-${version}-bin/Columba.lap"/>
 		</zip>
 	</target>
 
@@ -321,6 +326,8 @@ else echo "cannot find columba.jar in `pwd`"; fi
 				<include name="plugins/**/*.xml"/>
 				<!--<exclude name="plugins/**/*.jar"/>-->
 				<exclude name="columba.jar"/>
+				<exclude name="lib/jniwrap-2.4.jar"/>
+				<exclude name="lib/winpack.jar"/>
 				<exclude name="classes/**"/>
 			</zipfileset>
 		</zip>
