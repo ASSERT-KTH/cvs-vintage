@@ -53,7 +53,7 @@ import org.apache.fulcrum.localization.Localization;
  * A place to put public final static strings and other constants.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabConstants.java,v 1.55 2003/04/21 19:39:15 jackrepenning Exp $
+ * @version $Id: ScarabConstants.java,v 1.56 2003/04/25 20:01:20 jon Exp $
  */
 public interface ScarabConstants
 {
@@ -211,7 +211,7 @@ public interface ScarabConstants
     /** 
      * list of invalid characters when doing searches
      */
-    String INVALID_SEARCH_CHARACTERS = "\"\t(){}[]!,;:?./*-+=+&|<>\\~";
+    String INVALID_SEARCH_CHARACTERS = "\"\t(){}[]!,;:?./*-+=+&|<>\\~^";
 
     /**
      * format for displaying dates
