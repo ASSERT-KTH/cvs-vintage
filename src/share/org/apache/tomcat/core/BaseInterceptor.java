@@ -301,15 +301,25 @@ public class BaseInterceptor
     {
     }
 
-    public void engineStart( ContextManager cm )
-    	throws TomcatException
+    public  void engineStart(ContextManager cm )
+	throws TomcatException
     {
     }
+    
 
     public  void engineStop(ContextManager cm )
 	throws TomcatException
     {
     }
+
+    /** Notifies the module that the server changed it's state.
+     *  XXX this seems more flexible than init/start/stop/shutdown.
+     */
+    public void engineState( ContextManager cm, int state )
+    	throws TomcatException
+    {
+    }
+
 
     // -------------------- Context hooks --------------------
     

@@ -303,6 +303,20 @@ public final class ContextManager implements LogAware{
 	return state;
     }
 
+    /** Change the state, after notifying all modules about the change
+     *  Any error will be propagated - the server will not change the
+     *  state and should fail if any module can't handle that.
+     */
+    public final void setState( int state )
+	throws TomcatException
+    {
+	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
+	for( int i=0; i<existingI.length; i++ ) {
+	    existingI[i].engineState( this, state );
+	}
+	this.state=state;
+    }
+    
     /**
      *  Parent loader is the "base" class loader of the
      *	application that starts tomcat, and includes no
@@ -366,7 +380,7 @@ public final class ContextManager implements LogAware{
 
 	if( state==STATE_CONFIG ) return;
 
-	// we are at least initialized, call engineInit hook
+	// we are at last initialized, call engineInit hook
 	ri.engineInit( this );
 
 	// make sure the interceptor knows about all existing contexts.
@@ -434,12 +448,13 @@ public final class ContextManager implements LogAware{
 	    return;
 	if(debug>0 ) log( "Tomcat init");
 	
+	setState(STATE_INIT);
+	
 	BaseInterceptor existingI[]=defaultContainer.getInterceptors();
 	for( int i=0; i<existingI.length; i++ ) {
 	    existingI[i].engineInit( this );
 	}
 
-	state=STATE_INIT;
     }
 
     /** Will start the connectors and begin serving requests.
@@ -471,13 +486,13 @@ public final class ContextManager implements LogAware{
 	}
 
 	// requests can be processed now
-	state=STATE_START;
+	setState(STATE_START);
     }
 
     /** Will stop all connectors
      */
-    public final void stop() throws Exception {
-	state=STATE_INIT; // initialized, but not accepting connections
+    public final void stop() throws TomcatException {
+	setState(STATE_INIT); // initialized, but not accepting connections
 	
 	BaseInterceptor cI[]=defaultContainer.getInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
