@@ -87,7 +87,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.30 2002/08/12 04:33:07 jon Exp $
+ * @version $Id: Register.java,v 1.31 2002/09/04 23:01:04 jon Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -159,6 +159,7 @@ public class Register extends ScarabTemplateAction
             if (Turbine.getConfiguration()
                     .getBoolean("scarab.register.email.checkValidA", false))
             {
+                // try just the end portion of the domain
                 String domain = getDomain(email);
                 Record[] records = null;
                 if (domain != null)
@@ -166,14 +167,22 @@ public class Register extends ScarabTemplateAction
                     records = dns.getRecords(domain, Type.A);
                     if (records == null || records.length == 0)
                     {
-                        setTarget(data, template);
-                        getScarabRequestTool(context).setAlertMessage(
-                            "Sorry, the domain (" + domain + ") for that email (" + email + ") " + 
-                            "does not have a DNS A record defined. " + 
-                            "It is likely that the domain is invalid and that we cannot send you email. " + 
-                            "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
-                            "Please try another email address or contact your system administrator.");
-                        return;
+                        // now try just the domain after the @
+                        // this is for domains like foo.co.uk
+                        domain = email.substring(email.indexOf('@')+1);
+                        records = dns.getRecords(domain, Type.A);
+                        if (records == null || records.length == 0)
+                        {
+                        
+                            setTarget(data, template);
+                            getScarabRequestTool(context).setAlertMessage(
+                                "Sorry, the domain (" + domain + ") for that email (" + email + ") " + 
+                                "does not have a DNS A record defined. " + 
+                                "It is likely that the domain is invalid and that we cannot send you email. " + 
+                                "Please see ftp://ftp.isi.edu/in-notes/rfc2505.txt for more details. " + 
+                                "Please try another email address or contact your system administrator.");
+                            return;
+                        }
                     }
                 }
             }
