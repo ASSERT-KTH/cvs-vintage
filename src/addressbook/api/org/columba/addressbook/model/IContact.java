@@ -103,6 +103,10 @@ public interface IContact {
 	 */
 	public abstract String get(String key, String prefix);
 
+	public abstract boolean exists(String key, String prefix);
+	
+	public abstract boolean exists(String key);
+	
 	/**
 	 * @return Returns the doc.
 	 */

@@ -62,6 +62,7 @@ public class ExportVCardAction extends DefaultTableAction {
 		// create open file dialog
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setApproveButtonText("Select");
 
 		int returnVal = fc.showOpenDialog(frameMediator.getView().getFrame());
 

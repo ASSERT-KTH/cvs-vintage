@@ -49,7 +49,7 @@ public class Contact implements IContact {
 	 * @param contact
 	 *            top-level xml node
 	 */
-	public Contact(Document doc, Object uid) throws WrongFileFormatException{
+	public Contact(Document doc, Object uid) throws WrongFileFormatException {
 		this.doc = doc;
 		this.uid = uid;
 		this.root = doc.getRootElement();
@@ -246,40 +246,64 @@ public class Contact implements IContact {
 	public Object getUid() {
 		return uid;
 	}
-	
-	public void fillFullName(String fullName)
-	{
-			String[] names = tryBreakName(fullName);
-			set(VCARD.N_GIVEN,names[0]);
-			set(VCARD.N_ADDITIONALNAMES,names[1]);
-			set(VCARD.N_FAMILY,names[2]);
-	}
 
+	public void fillFullName(String fullName) {
+		String[] names = tryBreakName(fullName);
+		set(VCARD.N_GIVEN, names[0]);
+		set(VCARD.N_ADDITIONALNAMES, names[1]);
+		set(VCARD.N_FAMILY, names[2]);
+	}
 
 	/*
-	 * this method tries to break the display name into something meaningful
-	 * to put under Given Name, Family Name and Middle Name.
-	 * It'll miss prefix and suffix!
-	 * */
-	private static String[] tryBreakName(String displayName)
-	{
-	  String[] names = new String[]{"","",""};
-	  int firstName = -1;
-	  if ((firstName = displayName.indexOf(' ')) > 0)
-	  	names[0] = displayName.substring(0,firstName);  
+	 * this method tries to break the display name into something meaningful to
+	 * put under Given Name, Family Name and Middle Name. It'll miss prefix and
+	 * suffix!
+	 */
+	private static String[] tryBreakName(String displayName) {
+		String[] names = new String[] { "", "", "" };
+		int firstName = -1;
+		if ((firstName = displayName.indexOf(' ')) > 0)
+			names[0] = displayName.substring(0, firstName);
 		else
-		  return names; //exit immediately, nothing more to do
-	  
-	  int lastName = -1;
-	  if ((lastName = displayName.lastIndexOf(' ')) >= firstName)
-	    names[2] = displayName.substring(lastName+1);
+			return names; //exit immediately, nothing more to do
+
+		int lastName = -1;
+		if ((lastName = displayName.lastIndexOf(' ')) >= firstName)
+			names[2] = displayName.substring(lastName + 1);
 		else
-		  return names; //exit immediately, nothing more to do
-	  
-	  if (lastName > firstName)
-	    names[1] = displayName.substring(firstName,lastName).trim();
-	  
-	  return names;
+			return names; //exit immediately, nothing more to do
+
+		if (lastName > firstName)
+			names[1] = displayName.substring(firstName, lastName).trim();
+
+		return names;
 	}
-	
+
+	/**
+	 * @see org.columba.addressbook.model.IContact#exists(java.lang.String,
+	 *      java.lang.String)
+	 */
+	public boolean exists(String key, String prefix) {
+		Element child = root.getChild(key);
+		if (child == null)
+			return false;
+
+		Element prefixchild = child.getChild(prefix);
+		if (prefixchild == null)
+			return false;
+
+		return true;
+	}
+
+	/**
+	 * @see org.columba.addressbook.model.IContact#exists(java.lang.String)
+	 */
+	public boolean exists(String key) {
+		Element child = root.getChild(key);
+		if (child == null)
+			return false;
+
+		return true;
+	}
+
 }

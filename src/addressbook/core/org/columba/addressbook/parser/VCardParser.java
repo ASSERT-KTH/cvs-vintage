@@ -67,15 +67,18 @@ public class VCardParser {
 		exportContact.setPersonalIdentity(identity);
 
 		// set sort-string/displayname
-		if (c.get(VCARD.DISPLAYNAME) != null)
+		if (c.exists(VCARD.DISPLAYNAME))
 			identity.setSortString(c.get(VCARD.DISPLAYNAME));
 
 		// set first name
-		identity.setFirstname(c.get(VCARD.N_GIVEN));
+		if (c.exists(VCARD.N_GIVEN))
+			identity.setFirstname(c.get(VCARD.N_GIVEN));
 		// set formatted name
-		identity.setFormattedName(c.formatGet(VCARD.FN));
+		if (c.exists(VCARD.FN))
+			identity.setFormattedName(c.formatGet(VCARD.FN));
 		// set last name
-		identity.setLastname(c.get(VCARD.N_FAMILY));
+		if (c.exists(VCARD.N_FAMILY))
+			identity.setLastname(c.get(VCARD.N_FAMILY));
 
 		// add all additional names (middle names)
 		String[] s = getType(c.get(VCARD.N_ADDITIONALNAMES));
@@ -102,29 +105,37 @@ public class VCardParser {
 		}
 
 		// set website/homepage
-		exportContact.setURL(c.get(VCARD.URL));
+		if (c.exists(VCARD.URL))
+			exportContact.setURL(c.get(VCARD.URL));
 
 		Communications communications = new CommunicationsImpl();
 		exportContact.setCommunications(communications);
 
 		// add email addresses
 		EmailAddress adr = new EmailAddressImpl();
-		adr.setType(EmailAddress.TYPE_INTERNET);
-		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET));
-		communications.addEmailAddress(adr);
-		adr.setType(EmailAddress.TYPE_X400);
-		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400));
-		communications.addEmailAddress(adr);
-		
-		adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF));
-		communications.setPreferredEmailAddress(adr);
+		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET)) {
+			adr.setType(EmailAddress.TYPE_INTERNET);
+			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_INTERNET));
+			communications.addEmailAddress(adr);
+		}
+		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400)) {
+			adr.setType(EmailAddress.TYPE_X400);
+			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_X400));
+			communications.addEmailAddress(adr);
+		}
+
+		if (c.exists(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF)) {
+			adr.setAddress(c.get(VCARD.EMAIL, VCARD.EMAIL_TYPE_PREF));
+			communications.setPreferredEmailAddress(adr);
+		}
 
 		OrganizationalIdentity organizationalIdentity = new OrganizationalIdentityImpl();
 		exportContact.setOrganizationalIdentity(organizationalIdentity);
 		organizationalIdentity.setOrganization(new OrganizationImpl());
 
 		// set name of organization
-		organizationalIdentity.getOrganization().setName(c.get(VCARD.ORG));
+		if (c.exists(VCARD.ORG))
+			organizationalIdentity.getOrganization().setName(c.get(VCARD.ORG));
 
 		// save contact to outputstream
 		marshaller.marshallContact(out, exportContact);

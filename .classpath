@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/columba/core"/>
+	<classpathentry kind="src" path="src/addressbook/test"/>
 	<classpathentry kind="src" path="src/addressbook/core"/>
 	<classpathentry kind="src" path="src/mail/core"/>
 	<classpathentry kind="src" path="src/addressbook/api"/>
@@ -19,11 +20,11 @@
 	<classpathentry kind="lib" path="lib/jniwrap-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/winpack.jar"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="lib" path="lib/jpim.jar"/>
 	<classpathentry kind="lib" path="lib/je.jar"/>
 	<classpathentry kind="lib" path="lib/ristretto-1.0_RC2.jar"/>
 	<classpathentry kind="lib" path="lib/jscf-0.2.jar"/>
 	<classpathentry kind="lib" path="lib/frapuccino-1.0pre1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jpim.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

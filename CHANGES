@@ -33,7 +33,7 @@ New features:
   based approach (fdietz)
 - set Columba to default-email client on win32 using jniwrapper (tstich)  
 - added nice version numbering method for release/build system (tstich)
-- added jpim library for vCard import/export, not complete yet (fdietz)
+- added jpim library for vCard import/export (fdietz)
 - added a debug class for repaintmanager, this way we can easily detect 
   calls to swing components outside the awt-event-dispatcher thread (fdietz)
 - cleanup of xml-based menu/toolbar generation code (fdietz)
