@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.20 $
+*   @version $Revision: 1.21 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -434,7 +434,12 @@ implements EntityPersistenceManager
       // If so we check if the entity is in cache first
       if (finderMethod.getName().equals("findByPrimaryKey"))
       {
-         if (con.getInstanceCache().isActive(args[0]))
+         Object key = ctx.getCacheKey();
+         if (key == null)
+         {
+            key = ((EntityCache)con.getInstanceCache()).createCacheKey(args[0]);
+         }
+         if (con.getInstanceCache().isActive(key))
             return args[0]; // Object is active -> it exists -> no need to call finder
       }
 
