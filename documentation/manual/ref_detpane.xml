@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_detpane.xml,v 1.15 2003/11/01 17:22:37 mvw Exp $ -->
+<!-- $Id: ref_detpane.xml,v 1.16 2003/11/09 09:16:47 mvw Exp $ -->
 
 <!--
 
@@ -446,7 +446,7 @@ Initially this
       (use case diagram (<xref linkend="ch.ref.entusecase"/>,
       class diagram (<xref linkend="ch.ref.entclass"/>,
       sequence diagram (<xref linkend="ch.ref.entseq"/>,
-      state diagram (<xref linkend="ch.ref.entstate"/>,
+      statechart diagram (<xref linkend="ch.ref.entstate"/>,
       collaboration diagram (<xref linkend="ch.ref.entcollab"/>,
       activity diagram (<xref linkend="ch.ref.entactiv"/>,
       deployment diagram (<xref linkend="ch.ref.entdeploy"/>). Property sheets

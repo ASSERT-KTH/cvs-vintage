@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_editpane.xml,v 1.16 2003/11/01 17:22:37 mvw Exp $ -->
+<!-- $Id: ref_editpane.xml,v 1.17 2003/11/09 09:16:47 mvw Exp $ -->
 
 <!--
 
@@ -768,14 +768,14 @@ graphic artifacts to diagrams.</para></listitem>
       </itemizedlist>
     </sect2>
 
-    <!-- Tools for State Diagrams and in many cases for Activity Diagrams -->
+    <!-- Tools for Statechart Diagrams and in many cases for Activity Diagrams -->
 
     <sect2>
-      <title>State Diagram Specific Tools</title>
+      <title>Statechart Diagram Specific Tools</title>
 
       <para>Ten tools are provided specific to UML artifacts on state
         diagrams. The detailed properties of these artifacts are described in
-        the section on state diagram artifacts (see
+        the section on statechart diagram artifacts (see
         <xref linkend="ch.ref.entstate"/>).</para>
 
       <itemizedlist>

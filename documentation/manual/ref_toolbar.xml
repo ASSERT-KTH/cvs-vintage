@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: ref_toolbar.xml,v 1.4 2003/10/21 20:29:00 mvw Exp $ -->
+<!-- $Id: ref_toolbar.xml,v 1.5 2003/11/09 09:16:47 mvw Exp $ -->
 
 <!--
 
@@ -247,7 +247,7 @@ A description of all the toolbar entries
                 </imageobject>
               </inlinemediaobject>
             </guiicon>
-            <literal>State Diagram</literal> See for a full description
+            <literal>Statechart Diagram</literal> See for a full description
             <xref linkend="s2.ref.create.diagram.state_diagram"/>.
           </para>
         </listitem>

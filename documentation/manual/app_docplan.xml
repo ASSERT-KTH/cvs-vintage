@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- $Id: app_docplan.xml,v 1.7 2003/10/15 19:07:40 mvw Exp $ -->
+<!-- $Id: app_docplan.xml,v 1.8 2003/11/09 09:16:46 mvw Exp $ -->
 
 <!--
 
@@ -159,7 +159,7 @@ TODO: Remove this from the user manual.
             <listitem><para>Concept Class Diagrams</para></listitem>
             <listitem><para>System Sequence Charts and Collaboration
               Diagrams</para></listitem>
-            <listitem><para>System State Diagrams</para></listitem>
+            <listitem><para>System Statechart Diagrams</para></listitem>
           </orderedlist>
         </listitem>
 
@@ -170,7 +170,7 @@ TODO: Remove this from the user manual.
             <listitem><para>Class Diagrams for Realisation</para></listitem>
             <listitem><para>Sequence Charts and Collaboration Diagrams for
               Realisation</para></listitem>
-            <listitem><para>State Diagrams for realisation</para></listitem>
+            <listitem><para>Statechart Diagrams for realisation</para></listitem>
             <listitem><para>Package Diagrams</para></listitem>
           </orderedlist>
         </listitem>
