@@ -60,7 +60,8 @@ public final class HtmlParser {
             Pattern.CASE_INSENSITIVE);
     private static final Pattern COMMENTS_REMOVAL_PATTERN = Pattern.compile("<!--[^-]*-->",
             Pattern.CASE_INSENSITIVE);
-    private static final String EMAIL_STR = "\\b([^\\s@]+@[^\\s]+)\\b";
+    private static final String EMAIL_STR = "([a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,4})";
+//do the bug [997599] "\\b([^\\s@]+@[^\\s]+)\\b";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_STR);
     private static final Pattern EMAIL_PATTERN_INC_LINK = Pattern.compile(
             "<a[\\s\\n]*href=(\\\")?(mailto:)" + EMAIL_STR + "[^<]*</a>",
