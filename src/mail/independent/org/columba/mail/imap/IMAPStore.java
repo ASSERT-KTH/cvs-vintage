@@ -231,13 +231,15 @@ public class IMAPStore {
 
 	public boolean select(WorkerStatusController worker, String path)
 		throws Exception {
-		System.out.println("select");
+		//System.out.println("select");
 
-		System.out.println("path=" + path);
+		//System.out.println("path=" + path);
 
 		try {
 
 			getProtocol().select(path);
+			
+			state = STATE_SELECTED;
 		} catch (BadCommandException ex) {
 			System.out.println("bad command exception");
 			System.out.println("no messages on server");
