@@ -7,8 +7,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.2 2004/04/19 15:11:18 ejort Exp $
-$Revision: 1.2 $
+$Id: jboss_3_2.dtd,v 1.3 2004/04/19 15:38:13 ejort Exp $
+$Revision: 1.3 $
 
 Overview of the architecture of jboss.xml
 
@@ -439,6 +439,7 @@ container or ejb depends.
 -->
 <!ELEMENT depends (#PCDATA)>
 
+<!-- The queue/topic jndi name from which we receive messages -->
 <!ELEMENT destination-jndi-name (#PCDATA)>
 
 <!-- The optional user for the jms connection that delivers messages -->
