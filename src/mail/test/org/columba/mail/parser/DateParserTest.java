@@ -7,8 +7,12 @@
 package org.columba.mail.parser;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.columba.core.logging.ColumbaLogger;
 
 /**
  * @author frd
@@ -27,9 +31,20 @@ public class DateParserTest extends TestCase {
 	}
 
 	public void testParseString() {
-		String testData = "datestring";
-		
+//		day, month, year, hour, minute
+		String testData = "Sun, 07 03 2003 19:20";
+
 		Date date = DateParser.parseString(testData);
+		ColumbaLogger.log.debug("date="+date.toString());
+		
+		GregorianCalendar c = new GregorianCalendar();
+		// day, month, year, hour, minute
+		c.set(2003, 7, 3, 19, 20);
+		Date testDate = c.getTime();
+		ColumbaLogger.log.debug("testDate="+testDate.toString());
+		
+		Assert.assertTrue( testDate.equals(date) );
+
 	}
 
 }

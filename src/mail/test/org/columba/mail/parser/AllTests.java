@@ -9,6 +9,8 @@ package org.columba.mail.parser;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.columba.core.main.MainInterface;
+
 /**
  * @author frd
  *
@@ -19,6 +21,9 @@ public class AllTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for org.columba.mail.parser");
+		
+		MainInterface.DEBUG = true;
+		
 		//$JUnit-BEGIN$
 		suite.addTest(new TestSuite(DateParserTest.class));
 		suite.addTest(new TestSuite(MailUrlParserTest.class));

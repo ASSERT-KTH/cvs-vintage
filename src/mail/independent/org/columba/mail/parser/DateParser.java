@@ -38,6 +38,9 @@ public class DateParser {
 				"dd MMM yyyy HH:mm:ss z",
 				new DateFormatSymbols(Locale.US)),
 			new SimpleDateFormat(
+				"dd MMM yyyy HH:mm:ss",
+				new DateFormatSymbols(Locale.US)),
+			new SimpleDateFormat(
 				"EEE MMM dd HH:mm:ss yyyy",
 				new DateFormatSymbols(Locale.US))};
 

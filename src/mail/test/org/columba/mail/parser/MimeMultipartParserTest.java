@@ -29,6 +29,7 @@ public class MimeMultipartParserTest extends TestCase {
 
 	public void testParse() {
 		MimeHeader h = new MimeHeader();
+		
 		String input = "testdata";
 
 		MimePart mp = new MimeMultipartParser().parse(h, input);

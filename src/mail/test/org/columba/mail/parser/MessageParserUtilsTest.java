@@ -6,7 +6,10 @@
  */
 package org.columba.mail.parser;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.columba.core.logging.ColumbaLogger;
 
 /**
  * @author frd
@@ -25,9 +28,16 @@ public class MessageParserUtilsTest extends TestCase {
 	}
 
 	public void testDivideMessage() {
-		String messageSource = "testdata";
-		
-		String[] dividedMessage = MessageParserUtils.divideMessage(messageSource);
+		String messageSource = "header\n\nbody";
+
+		String[] dividedMessage =
+			MessageParserUtils.divideMessage(messageSource);
+
+		ColumbaLogger.log.debug("header:<" + dividedMessage[0] + ">");
+		ColumbaLogger.log.debug("body:<" + dividedMessage[1] + ">");
+
+		Assert.assertTrue(dividedMessage[0].equals("header\n"));
+		Assert.assertTrue(dividedMessage[1].equals("body"));
 	}
 
 }

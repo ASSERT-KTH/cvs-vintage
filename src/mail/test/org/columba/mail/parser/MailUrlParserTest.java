@@ -6,6 +6,7 @@
  */
 package org.columba.mail.parser;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
@@ -23,14 +24,16 @@ public class MailUrlParserTest extends TestCase {
 	public MailUrlParserTest(String arg0) {
 		super(arg0);
 	}
-	
-	public void testParser()
-	{
+
+	public void testParser() {
 		String testData = "mailto:fdietz@users.sourceforge.net";
-		
+
 		MailUrlParser p = new MailUrlParser(testData);
-		
-		
+
+		String adr = (String) p.get("mailto:");
+
+		Assert.assertTrue(adr.equals("fdietz@users.sourceforge.net"));
+
 	}
 
 }
