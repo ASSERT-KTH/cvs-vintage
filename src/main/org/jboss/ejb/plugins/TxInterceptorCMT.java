@@ -6,20 +6,25 @@
  */
 package org.jboss.ejb.plugins;
 
+
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.ejb.EJBException;
 import javax.ejb.TransactionRequiredLocalException;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRequiredException;
-
+import javax.transaction.TransactionRolledbackException;
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
-import org.jboss.metadata.MetaData;
 import org.jboss.metadata.BeanMetaData;
+import org.jboss.metadata.MetaData;
 
 /**
  *  This interceptor handles transactions for CMT beans.
@@ -29,7 +34,7 @@ import org.jboss.metadata.BeanMetaData;
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:akkerman@cs.nyu.edu">Anatoly Akkerman</a>
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.27 $
+ *  @version $Revision: 1.28 $
  */
 public class TxInterceptorCMT
 extends AbstractTxInterceptor
@@ -186,36 +191,12 @@ extends AbstractTxInterceptor
                   // Only do something if we started the transaction
                   if (newTransaction != null)
                   {
-                     // Marked rollback
-                     if (newTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-                     {
-                        newTransaction.rollback();
-                     }
-                     else
-                     {
-                        // Commit tx
-                        // This will happen if
-                        // a) everything goes well
-                        // b) app. exception was thrown
-                        if( trace )
-                           log.trace("TxInterceptorCMT:before commit of " + newTransaction);
-                        newTransaction.commit();
-                        if( trace )
-                           log.trace("TxInterceptorCMT:after commit of " + newTransaction);
-                     }
-                     
-                     // reassociate the oldTransaction with the Invocation (even null)
-                     invocation.setTransaction(oldTransaction);
+                     endTransaction(invocation, newTransaction, oldTransaction);
                   }
-                  // Always drop thread association even if committing or
-                  // rolling back the newTransaction because not all TMs
-                  // will drop thread associations when commit() or rollback()
-                  // are called through tx itself (see JTA spec that seems to
-                  // indicate that thread assoc is required to be dropped only
-                  // when commit() and rollback() are called through TransactionManager
-                  // interface)
-                  tm.suspend();
-                  
+                  else
+                  {
+                     tm.suspend();
+                  } // end of else
                }
             } 
             case MetaData.TX_SUPPORTS:
@@ -258,23 +239,7 @@ extends AbstractTxInterceptor
                finally
                {
                   // We started the transaction for sure so we commit or roll back
-                  
-                  if (newTransaction.getStatus() == Status.STATUS_MARKED_ROLLBACK)
-                  {
-                     newTransaction.rollback();
-                  }
-                  else
-                  {
-                     // Commit tx
-                     // This will happen if
-                     // a) everything goes well
-                     // b) app. exception was thrown
-                     newTransaction.commit();
-                  }
-                  
-                  // set the old transaction back on the method invocation
-                  invocation.setTransaction(oldTransaction);
-                  tm.suspend();
+                  endTransaction(invocation, newTransaction, oldTransaction);
                }
             }
             case MetaData.TX_MANDATORY:
@@ -323,6 +288,61 @@ extends AbstractTxInterceptor
 
       return null;
    }
+
+   private void endTransaction(final Invocation invocation, final Transaction tx, final Transaction oldTx) throws TransactionRolledbackException, SystemException
+   {
+      try 
+      {
+                     
+         // Marked rollback
+         if (tx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+         {
+            tx.rollback();
+         }
+         else
+         {
+            // Commit tx
+            // This will happen if
+            // a) everything goes well
+            // b) app. exception was thrown
+            tx.commit();
+         }
+                     
+                         
+      }
+      catch (RollbackException e)
+      {
+         throw new TransactionRolledbackException(e.getMessage());
+      } // end of try-catch
+      catch (HeuristicMixedException e)
+      {
+         throw new TransactionRolledbackException(e.getMessage());
+      } // end of try-catch
+      catch (HeuristicRollbackException e)
+      {
+         throw new TransactionRolledbackException(e.getMessage());
+      } // end of try-catch
+      catch (SystemException e)
+      {
+         throw new TransactionRolledbackException(e.getMessage());
+      } // end of try-catch
+      finally
+      {
+         // reassociate the oldTransaction with the Invocation (even null)
+         invocation.setTransaction(oldTx);
+         // Always drop thread association even if committing or
+         // rolling back the newTransaction because not all TMs
+         // will drop thread associations when commit() or rollback()
+         // are called through tx itself (see JTA spec that seems to
+         // indicate that thread assoc is required to be dropped only
+         // when commit() and rollback() are called through TransactionManager
+         // interface)
+         //tx has committed, so we can't throw txRolledbackException.
+         tm.suspend();
+      } // end of finally
+                     
+   }
+
    
    // Protected  ----------------------------------------------------
    

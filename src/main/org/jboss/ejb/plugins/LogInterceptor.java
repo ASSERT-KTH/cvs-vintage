@@ -37,7 +37,7 @@ import org.jboss.metadata.BeanMetaData;
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class LogInterceptor extends AbstractInterceptor
 {
@@ -227,11 +227,6 @@ public class LogInterceptor extends AbstractInterceptor
             type == InvocationType.LOCAL ||
             type == InvocationType.LOCALHOME;
       
-      // If we got a RemoteException for a local invocation wrap it
-      // in an EJBException.
-      if (isLocal && e instanceof RemoteException) 
-         e = new EJBException((RemoteException)e);
-
       if (e instanceof TransactionRolledbackLocalException ||
             e instanceof TransactionRolledbackException)
       {
@@ -311,7 +306,8 @@ public class LogInterceptor extends AbstractInterceptor
          }
          return (Exception)e;
       }
-      else if (e instanceof NoSuchEntityException)
+
+      if (e instanceof NoSuchEntityException)
       {
          NoSuchEntityException noSuchEntityException = 
                (NoSuchEntityException) e;
@@ -339,7 +335,8 @@ public class LogInterceptor extends AbstractInterceptor
             return noSuchObjectException;
          }
       }
-      else if (e instanceof EJBException)
+
+      if (e instanceof EJBException)
       {
          EJBException ejbException = (EJBException) e;
          if (ejbException.getCausedByException() != null)
@@ -362,7 +359,8 @@ public class LogInterceptor extends AbstractInterceptor
             return new ServerException("EJBException:", ejbException);
          }
       }
-      else if (e instanceof RuntimeException)
+
+      if (e instanceof RuntimeException)
       {
          RuntimeException runtimeException = (RuntimeException)e;
          log.error("RuntimeException:", runtimeException);
@@ -376,7 +374,7 @@ public class LogInterceptor extends AbstractInterceptor
             return new ServerException("RuntimeException", runtimeException);
          }
       }
-      else if (e instanceof Error)
+      if (e instanceof Error)
       {
          log.error("Unexpected Error:", e);
          if (isLocal) 
@@ -389,7 +387,19 @@ public class LogInterceptor extends AbstractInterceptor
             return new ServerError("Unexpected Error", (Error)e);
          }
       }
-      else if (e instanceof Exception)
+
+      // If we got a RemoteException for a local invocation wrap it
+      // in an EJBException.
+      if (isLocal && e instanceof RemoteException)
+      {
+         if (callLogging)
+         {
+            log.info("Remote Exception", e);
+         }
+         return new EJBException((RemoteException)e);
+      }
+
+      if (e instanceof Exception)
       {
          if (callLogging)
          {
@@ -419,7 +429,10 @@ public class LogInterceptor extends AbstractInterceptor
       PrintWriter pw = new PrintWriter(sw);
       if (msg != null)
          pw.println(msg);
-      t.printStackTrace(pw);
+      if (t != null) 
+      {
+         t.printStackTrace(pw);
+      } // end of if ()
       return sw.toString();
    }
    

@@ -7,31 +7,33 @@
 
 package org.jboss.invocation.jrmp.interfaces;
 
-import java.io.IOException;
+
+
+
+
+
 import java.io.Externalizable;
+import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-
-import java.rmi.ServerException;
-import java.rmi.NoSuchObjectException;
 import java.rmi.MarshalledObject;
-
+import java.rmi.NoSuchObjectException;
+import java.rmi.RemoteException;
+import java.rmi.ServerException;
+import javax.transaction.TransactionRolledbackException;
 import javax.transaction.SystemException;
-
 import org.jboss.invocation.Invocation;
-import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.Invoker;
+import org.jboss.invocation.MarshalledInvocation;
 import org.jboss.invocation.local.LocalInvoker;
-
 import org.jboss.security.SecurityAssociation;
-
 import org.jboss.tm.TransactionPropagationContextFactory;
 
 /**
  * JRMPInvokerProxy, local to the proxy and is capable of delegating to local and JRMP implementations
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  *
  * <p><b>2001/11/19: marcf</b>
  * <ol>
@@ -131,7 +133,20 @@ public class JRMPInvokerProxy
          // a ServerException. We cannot have that if we want
          // to comply with the spec, so we unwrap here.
          if (ex.detail instanceof NoSuchObjectException)
+         {
             throw (NoSuchObjectException) ex.detail;
+         }
+         //likewise
+         if (ex.detail instanceof TransactionRolledbackException)
+         {
+            throw (TransactionRolledbackException) ex.detail;
+         }
+         /* Shouldn't we unwrap _all_ remote exceptions with this code? 
+         if (ex.detail instanceof RemoteException)
+         {
+            throw (RemoteException) ex.detail;
+         }
+         */
          throw ex;
       }  
    }
