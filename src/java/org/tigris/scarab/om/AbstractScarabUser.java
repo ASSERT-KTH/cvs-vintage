@@ -81,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * go here.
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: AbstractScarabUser.java,v 1.4 2001/11/08 20:35:33 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.5 2001/11/16 17:40:01 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -99,6 +99,7 @@ public abstract class AbstractScarabUser
     }
 
     public abstract NumberKey getUserId();
+    public abstract String getEmail();
     public abstract boolean hasPermission(String perm, ModuleEntity module);
 
     /**
@@ -307,6 +308,15 @@ public abstract class AbstractScarabUser
         }
     }
 
+    /**
+     * If user has no default query set, gets a default default query.
+     */
+    public String getDefaultDefaultQuery() throws Exception
+    {
+        StringBuffer buf = new StringBuffer("&searchcb=");
+        buf.append(getEmail());
+        return buf.toString();
+    }
 
     /**
      * @see org.apache.torque.om.Persistent#save()
