@@ -1,4 +1,4 @@
-#set ( $action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm") )
+#set ($action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm"))
 
 #set ($module = $scarabR.CurrentModule)
 
@@ -14,17 +14,20 @@
 
        <table width="100%" border="1" cellspacing="2" cellpadding="3">
         <tr>
-         <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+         <th nowrap="nowrap">
+         <img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
+         <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
+         </th>
 
-         <th><a href="#" title="sort">Query name:</a></th>
+         <th>Query name:</th>
 
-         <th><a href="#" title="sort">Query descr:</a></th>
+         <th>Query descr:</th>
 
-         <th><a href="#" title="sort">Availability:</a></th>
+         <th>Availability:</th>
 
-         <th><a href="#" title="sort">Location:</a> (click to execute)</th>
+         <th>Location: (click to execute)</th>
          
-         <th><a href="#" title="sort">author:</a></th>
+         <th>author:</th>
 
         </tr>
 
@@ -54,7 +57,10 @@
 
        <p>&#171; previous | 1 of 1 | next &#187; </p>
 
-<p class="functnbar"><input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+<p class="functnbar">
+<input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;
+<input type="submit" value="cancel" name="eventSubmit_doCancel" />
+</p>
 
       </div>
      </td>
