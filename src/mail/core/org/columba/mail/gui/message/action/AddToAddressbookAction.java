@@ -16,23 +16,21 @@
 package org.columba.mail.gui.message.action;
 
 import java.awt.event.ActionEvent;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JFrame;
-
+import org.columba.addressbook.facade.ContactFacade;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 import org.columba.addressbook.model.Contact;
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.frame.MessageViewOwner;
 import org.columba.mail.gui.message.URLObservable;
 import org.columba.mail.gui.message.util.ColumbaURL;
 import org.columba.mail.util.MailResourceLoader;
+import org.columba.ristretto.message.Address;
 
 
 /**
@@ -73,15 +71,10 @@ public class AddToAddressbookAction extends AbstractColumbaAction
             return;
         }
 
-        try {
-            Contact card = new Contact();
-            card.set("displayname", url.getSender());
-            card.set("email", "internet", url.getEmailAddress());
-
-            selectedFolder.add(card);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        // create Address from URL
+        Address address = new Address(url.getSender(), url.getEmailAddress());
+        // add contact to addressbook
+        ContactFacade.addContact(selectedFolder.getUid(), address.toString());
     }
 
     /* (non-Javadoc)
