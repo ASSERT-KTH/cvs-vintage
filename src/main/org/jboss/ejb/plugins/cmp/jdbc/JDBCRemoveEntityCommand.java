@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
 import javax.sql.DataSource;
@@ -29,7 +30,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class JDBCRemoveEntityCommand {
    
@@ -52,37 +53,34 @@ public class JDBCRemoveEntityCommand {
       sql.append("DELETE");
       sql.append(" FROM ").append(entity.getTableName());
       sql.append(" WHERE ").append(SQLUtil.getWhereClause(
-               entity.getJDBCPrimaryKeyFields()));
+               entity.getPrimaryKeyFields()));
       
       removeEntitySQL = sql.toString();
-      if (log.isDebugEnabled())
-         log.debug("Remove SQL: " + removeEntitySQL);
+      log.debug("Remove SQL: " + removeEntitySQL);
    }
-
+   
    public void execute(EntityEnterpriseContext context)
          throws RemoveException {
-
+      
       // remove entity from all relations
       HashMap oldRelations = removeFromRelations(context);
 
       // update the related entities (stores the removal from relationships)
-      if(entity.getJDBCCMRFields().length > 0) {
+      if(!entity.getCMRFields().isEmpty()) {
          manager.getContainer().synchronizeEntitiesWithinTransaction(
                context.getTransaction());
       }
-
+      
       Connection con = null;
       PreparedStatement ps = null;
       int rowsAffected = 0;
-      boolean debug = log.isDebugEnabled();
       try {
          // get the connection
          DataSource dataSource = entity.getDataSource();
          con = dataSource.getConnection();
-
+         
          // create the statement
-         if (debug)
-            log.debug("Executing SQL: " + removeEntitySQL);
+         log.debug("Executing SQL: " + removeEntitySQL);
          ps = con.prepareStatement(removeEntitySQL);
          
          // set the parameters
@@ -91,7 +89,7 @@ public class JDBCRemoveEntityCommand {
          // execute statement
          rowsAffected = ps.executeUpdate();
       } catch(Exception e) {
-         log.error(e);
+         log.error("Could not remove " + context.getId(), e);
          throw new RemoveException("Could not remove " + context.getId());
       } finally {
          JDBCUtil.safeClose(ps);
@@ -102,27 +100,31 @@ public class JDBCRemoveEntityCommand {
       if(rowsAffected == 0) {
          throw new RemoveException("Could not remove entity");
       }
-      if (debug)
-         log.debug("Remove: Rows affected = " + rowsAffected);
+      log.debug("Remove: Rows affected = " + rowsAffected);
 
       // cascate-delete to old relations, if relation uses cascade.
       cascadeDelete(oldRelations);
+
+      manager.getReadAheadCache().removeCachedData(context.getId());
    }
 
    private HashMap removeFromRelations(EntityEnterpriseContext context) {
       HashMap oldRelations = new HashMap();
-      JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
       
       // remove entity from all relations before removing from db
-      for(int i=0; i<cmrFields.length; i++) {
-         if(cmrFields[i].isCollectionValued()) {
-            Collection oldValue = (Collection)cmrFields[i].getValue(context);
-            oldRelations.put(cmrFields[i], new HashSet(oldValue));
+      List cmrFields = entity.getCMRFields();
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+
+         if(cmrField.isCollectionValued()) {
+            Collection oldValue = 
+                  (Collection)cmrField.getInstanceValue(context);
+            oldRelations.put(cmrField, new HashSet(oldValue));
             oldValue.clear();
          } else {
-            Object oldValue = cmrFields[i].getValue(context);
-            oldRelations.put(cmrFields[i], oldValue);
-            cmrFields[i].setValue(context, null);
+            Object oldValue = cmrField.getInstanceValue(context);
+            oldRelations.put(cmrField, oldValue);
+            cmrField.setInstanceValue(context, null);
          }
       }
       return oldRelations;
@@ -130,11 +132,13 @@ public class JDBCRemoveEntityCommand {
    
    private void cascadeDelete(HashMap oldRelations) throws RemoveException {
       HashSet deletedEntities = new HashSet();
-      JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
 
-      for(int i=0; i<cmrFields.length; i++) {
-         if(cmrFields[i].getMetaData().getRelatedRole().isCascadeDelete()) {
-            Object oldRelation = oldRelations.get(cmrFields[i]);
+      List cmrFields = entity.getCMRFields();
+      for(Iterator iter = cmrFields.iterator(); iter.hasNext();) { 
+         JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)iter.next();
+
+         if(cmrField.getMetaData().getRelatedRole().isCascadeDelete()) {
+            Object oldRelation = oldRelations.get(cmrField);
             if(oldRelation instanceof Collection) {
                Iterator oldValues = ((Collection)oldRelation).iterator();
                while(oldValues.hasNext()) {
