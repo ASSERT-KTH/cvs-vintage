@@ -448,7 +448,7 @@
   </target>
 
   
-  <target name="all" depends="clean,dist"/>
-  <target name="main" depends="tomcat,webapps,sanity-test"/>
+  <target name="all" depends="clean,dist,dist-new"/>
+  <target name="main" depends="tomcat,webapps,sanity-test,new"/>
     
 </project>
