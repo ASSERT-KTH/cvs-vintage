@@ -1,5 +1,5 @@
 
-// $Id: SequenceDiagramGraphModel.java,v 1.27 2003/12/02 20:46:26 kataka Exp $
+// $Id: SequenceDiagramGraphModel.java,v 1.28 2003/12/05 23:12:04 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -243,6 +243,7 @@ public class SequenceDiagramGraphModel
                 // cannot connect a callaction to a destactivation that allready exists
                 return false;
             }
+           //  if (getSrcFigObject().getPreviousActivation((Node)getSrcPort()).)
             if (getSrcPort() instanceof LinkNode && ((LinkNode)getSrcPort()).isDestroyed()) {
                 // cannot connect a callaction to a sourceActivation that is allready destroyed.
                 return false;
@@ -257,7 +258,7 @@ public class SequenceDiagramGraphModel
             			return false;
             		}
             	}
-            }         
+            }                    
             return true;
         }
 

@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.13 2003/12/02 20:43:38 kataka Exp $
+// $Id: SequenceDiagramLayout.java,v 1.14 2003/12/05 23:12:04 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,6 +92,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
      */
     private void distributeFigObjects(Fig f) {
         int listPosition = _figObjectsX.indexOf(f);
+        if (listPosition < 0) return;
         if (listPosition < _figObjectsX.size() - 1) {
             Fig next = (Fig) _figObjectsX.get(listPosition + 1);
             if (next.getX() < f.getX()) {
@@ -119,6 +120,7 @@ public class SequenceDiagramLayout extends LayerPerspectiveMutable {
                 break;
             }
             fig.setX(positionX);
+            ((FigObject)fig).updateEdges();
             positionX += (fig.getWidth() + OBJECT_DISTANCE);
         }
         if (_heighestObjectHeight < f.getHeight()) {

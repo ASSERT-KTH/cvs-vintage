@@ -1,4 +1,4 @@
-// $Id: FigCallActionLink.java,v 1.2 2003/12/03 08:07:59 kataka Exp $
+// $Id: FigCallActionLink.java,v 1.3 2003/12/05 23:12:04 kataka Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,8 @@
 // Original author: jaap.branderhorst@xs4all.nl
 
 package org.argouml.uml.diagram.sequence.ui;
+
+import java.util.List;
 
 import org.argouml.uml.diagram.sequence.ActivationNode;
 import org.argouml.uml.diagram.sequence.Node;
@@ -58,16 +60,31 @@ public class FigCallActionLink extends FigLink {
      */
     protected void layoutActivations() {
         if (!getSrcFigObject().hasActivations()) {
-            getSrcFigObject().makeActivation(getSrcFigObject().getObjectNode(), (Node)getSrcLinkPort());
-            ((ActivationNode)getSrcLinkPort()).setCutOffBottom(false);
-			((ActivationNode)getSrcLinkPort()).setCutOffTop(false);
+            getSrcFigObject().makeActivation(
+                getSrcFigObject().getObjectNode(),
+                (Node) getSrcLinkPort());
+            ((ActivationNode) getSrcLinkPort()).setCutOffBottom(false);
+            ((ActivationNode) getSrcLinkPort()).setCutOffTop(false);
         } else {
-        }                
+            List activation =
+                getSrcFigObject().getActivationNodes((Node) getDestLinkPort());
+            if (activation.isEmpty()) {
+                List previousActivation =
+                    getSrcFigObject().getPreviousActivation(
+                        (Node) getSrcLinkPort());
+                ((ActivationNode) previousActivation.get(
+                        previousActivation.size())).setEnd(false);
+                ((ActivationNode) getSrcLinkPort()).setEnd(true);
+                ((ActivationNode) getSrcLinkPort()).setCutOffBottom(false);
+                ((ActivationNode) getSrcLinkPort()).setCutOffTop(false);
+            } else {
+            	
+            }
+        }
         getDestFigObject().makeActivation(
             (Node) getDestLinkPort(),
             (Node) getDestLinkPort());
         ((ActivationNode) getDestLinkPort()).setCutOffTop(true);
         ((ActivationNode) getDestLinkPort()).setCutOffBottom(false);
-
     }
 }
