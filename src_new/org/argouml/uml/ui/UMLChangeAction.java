@@ -1,4 +1,4 @@
-// $Id: UMLChangeAction.java,v 1.6 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: UMLChangeAction.java,v 1.7 2004/09/15 19:17:04 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,12 +31,35 @@ import java.awt.event.*;
 
 public class UMLChangeAction extends UMLAction {
 
+    /**
+     * The constructor.
+     * 
+     * @param s the to be localized description string
+     */
     public UMLChangeAction(String s) { super(s, HAS_ICON); }
+    
+    /**
+     * The constructor.
+     * 
+     * @param s the to be localized description string
+     * @param hasIcon true if an icon is to be shown
+     */
     public UMLChangeAction(String s, boolean hasIcon) { super(s, hasIcon); }
+    
+    /**
+     * The constructor.
+     * 
+     * @param s the to be localized description string
+     * @param global
+     * @param hasIcon true if an icon is to be shown
+     */
     protected UMLChangeAction(String s, boolean global, boolean hasIcon) { 
         super(s, global, hasIcon);
     }
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent e) {
 	Project p = ProjectManager.getManager().getCurrentProject();
 	if (p != null) {      

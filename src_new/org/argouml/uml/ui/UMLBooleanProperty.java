@@ -1,4 +1,4 @@
-// $Id: UMLBooleanProperty.java,v 1.11 2004/02/28 12:29:44 linus Exp $
+// $Id: UMLBooleanProperty.java,v 1.12 2004/09/15 19:17:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,24 +40,20 @@ import ru.novosoft.uml.MElementEvent;
  * TODO: What is it replaced by?
  */
 public abstract class UMLBooleanProperty  {
-    /**
-     * @deprecated by Linus Tolke as of 0.15.4. Use your own logger in your
-     * class. This will be removed.
-     */
-    protected static Logger cat = 
-        Logger.getLogger(UMLBooleanProperty.class);
 
     private static final Logger LOG =
 	Logger.getLogger(UMLBooleanProperty.class);
 
-    private String _propertyName;
+    private String propertyName;
     
-    /** Creates new UMLBooleanProperty
-     * @param propertyName name of property monitored, null will cause 
-             component to be updated on any change to monitored model element.
-    */
-    public UMLBooleanProperty(String propertyName) {
-        _propertyName = propertyName;
+    /** 
+     * Creates new UMLBooleanProperty.
+     * 
+     * @param name name of property monitored, null will cause 
+     *        component to be updated on any change to monitored model element
+     */
+    public UMLBooleanProperty(String name) {
+        propertyName = name;
     }
     
     /**
@@ -85,9 +81,9 @@ public abstract class UMLBooleanProperty  {
     public boolean isAffected(MElementEvent event) {
         String propName = event.getName();
 	LOG.debug("eventName: " + propName);
-        if (_propertyName == null
+        if (propertyName == null
 	    || propName == null
-	    || propName.equals(_propertyName)) {
+	    || propName.equals(propertyName)) {
 
             return true;
 
@@ -95,8 +91,11 @@ public abstract class UMLBooleanProperty  {
         return false;
     }
     
+    /**
+     * @return the property name
+     */
     public String getPropertyName() {
-        return _propertyName;
+        return propertyName;
     }
 }
 
