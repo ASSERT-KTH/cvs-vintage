@@ -73,10 +73,10 @@
 <td><a href="$tabLink.addPathInfo("tab", "3")">$l10n.Comments</a></td>
 #end
 #if ($tab.equals("4"))
-<th>$l10n.URLsAttachmentsDependencies</th>
+<th>$l10n.AttachmentsDependenciesURLs</th>
 #else
 #initializeTabLink()
-<td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.URLsAttachmentsDependencies</a></td>
+<td><a href="$tabLink.addPathInfo("tab", "4")">$l10n.AttachmentsDependenciesURLs</a></td>
 #end
 #if ($tab.equals("5"))
 <th>History</th>
