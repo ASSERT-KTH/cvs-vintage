@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.97 2002/05/17 23:05:32 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.98 2002/05/31 01:41:18 elicia Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -856,7 +856,7 @@ public class ModifyIssue extends BaseModifyIssue
         intake.removeAll();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         data.getParameters().add("issue_ids", 
-              scarabR.getIssue().getIssueId().toString());
+              scarabR.getIssue().getUniqueId());
         setTarget(data, "AssignIssue.vm");            
     }
 

@@ -89,7 +89,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.75 2002/05/30 20:27:08 elicia Exp $
+    @version $Id: Search.java,v 1.76 2002/05/31 01:41:18 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -275,8 +275,32 @@ public class Search extends RequireLoginFirstAction
     public void doViewselected(RunData data, TemplateContext context)
          throws Exception
     {        
-        getSelected(data, context);
-        setTarget(data, "ViewIssueLong.vm");            
+        List selectedIds = getSelected(data, context);
+        if (selectedIds.size() > 0)
+        {
+            setTarget(data, "ViewIssueLong.vm");            
+        }
+        else
+        {
+            data.setMessage("Please select issues to view.");
+        }
+    }
+
+    /**
+        Gets selected id's and redirects to AssignIssue.
+    */
+    public void doReassignselected(RunData data, TemplateContext context)
+         throws Exception
+    {
+        List selectedIds = getSelected(data, context);
+        if (selectedIds.size() > 0)
+        {
+            setTarget(data, "AssignIssue.vm");            
+        }
+        else
+        {
+            data.setMessage("Please select issues to view.");
+        }
     }
 
     /**
@@ -289,15 +313,6 @@ public class Search extends RequireLoginFirstAction
         data.setTarget("AssignIssue.vm");
     }
 
-    /**
-        Gets selected id's and redirects to AssignIssue.
-    */
-    public void doReassignselected(RunData data, TemplateContext context)
-         throws Exception
-    {
-        getSelected(data, context);
-        setTarget(data, "AssignIssue.vm");            
-    }
 
     /**
         redirects to AdvancedQuery.
@@ -409,7 +424,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Retrieves list of selected issue id's and puts in the context.
     */
-    private void getSelected(RunData data, TemplateContext context) 
+    private List getSelected(RunData data, TemplateContext context) 
     {
         List newIssueIdList = new ArrayList();
         String key;
@@ -420,13 +435,12 @@ public class Search extends RequireLoginFirstAction
             key = keys[i].toString();
             if (key.startsWith("selected_"))
             {
-                pp.add("issue_ids", key.substring(9).toString());
+                String id = key.substring(9).toString();
+                newIssueIdList.add(id);
+                pp.add("issue_ids", id);
             }
         }
-        if (newIssueIdList.size() < 1)
-        {
-            getAllIssueIds(data, context);
-        }
+        return newIssueIdList;
     }
     
 

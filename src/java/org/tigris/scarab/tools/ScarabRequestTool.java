@@ -1211,8 +1211,9 @@ try{
             issues = new ArrayList(issueIdStrings.length);
             for ( int i=0; i<issueIdStrings.length; i++ ) 
             {
-                issues.add(IssueManager
-                    .getInstance(new NumberKey(issueIdStrings[i]), false));
+                issues.add(getIssue(issueIdStrings[i]));
+                //issues.add(IssueManager
+                //    .getInstance(new NumberKey(issueIdStrings[i]), false));
             }
         }
         return issues;
