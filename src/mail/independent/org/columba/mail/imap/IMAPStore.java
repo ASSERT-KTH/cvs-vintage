@@ -974,8 +974,7 @@ public class IMAPStore {
 						if ((worker != null) && (i % 100 == 0))
 							worker.setProgressBarValue(i);
 						printStatusMessage(
-							item.get("host")
-								+ ": Fetching "
+							": Fetching "
 								+ i
 								+ "/"
 								+ list.size()

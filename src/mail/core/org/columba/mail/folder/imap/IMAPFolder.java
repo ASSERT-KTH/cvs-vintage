@@ -123,9 +123,9 @@ public class IMAPFolder extends RemoteFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
-			return getStore()
-				.search(uids, filter.getFilterRule(), getImapPath(), worker)
-				.toArray();
+		return getStore()
+			.search(uids, filter.getFilterRule(), getImapPath(), worker)
+			.toArray();
 	}
 
 	/**
@@ -136,11 +136,14 @@ public class IMAPFolder extends RemoteFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
-		return getStore()
-			.search(filter.getFilterRule(), getImapPath(), worker)
-			.toArray();
+		List list =
+			getStore().search(filter.getFilterRule(), getImapPath(), worker);
 
-		
+		if (list != null)
+			return list.toArray();
+
+		return null;
+
 	}
 
 	/**

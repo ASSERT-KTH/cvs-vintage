@@ -122,8 +122,6 @@ public class SearchRequestBuilder {
 		if (criteria.getCriteria() == FilterCriteria.CONTAINS_NOT)
 			args.add(new Atom("NOT"));
 
-		args.add(new Atom("FLAGS"));
-
 		String headerField = criteria.getPattern();
 
 		if (headerField.equalsIgnoreCase("Answered")) {
@@ -166,6 +164,8 @@ public class SearchRequestBuilder {
 		throws UnsupportedEncodingException {
 		Arguments args = new Arguments();
 
+		args.add(new Atom("HEADER"));
+		
 		args.add(new Atom("X-Priority"));
 
 		Integer searchPattern = null;
@@ -189,8 +189,6 @@ public class SearchRequestBuilder {
 	protected Arguments createSizeArguments(FilterCriteria criteria)
 		throws UnsupportedEncodingException {
 		Arguments args = new Arguments();
-
-		args.add(new Atom("SIZE"));
 
 		if (criteria.getCriteria() == FilterCriteria.SIZE_BIGGER)
 			args.add(new Atom("LARGER"));
@@ -249,7 +247,7 @@ public class SearchRequestBuilder {
 			//StringBuffer searchString = new StringBuffer();
 			Arguments args = null;
 
-			switch (criteria.getHeaderItem()) {
+			switch (criteria.getTypeItem()) {
 				case FilterCriteria.SUBJECT :
 					{
 						args = createSubjectArguments(criteria);
@@ -356,43 +354,7 @@ public class SearchRequestBuilder {
 		return args;
 	}
 
-	protected String generateSearchString(
-		FilterRule rule,
-		List ruleStringList) {
-		StringBuffer searchString = new StringBuffer();
-
-		if (rule.count() > 1) {
-
-			int condition = rule.getConditionInt();
-			String conditionString;
-			if (condition == FilterRule.MATCH_ALL) {
-				// match all
-				conditionString = "OR";
-
-			} else {
-				// match any
-				conditionString = "AND";
-			}
-
-			// concatenate all criteria together
-			//  -> create one search-request string
-			for (int i = 0; i < rule.count(); i++) {
-
-				if (i != rule.count() - 1)
-					searchString.append(conditionString + " ");
-
-				searchString.append((String) ruleStringList.get(i));
-
-				if (i != rule.count() - 1)
-					searchString.append(" ");
-
-			}
-		} else {
-			searchString.append((String) ruleStringList.get(0));
-		}
-
-		return searchString.toString();
-	}
+	
 
 	protected static boolean isAscii(String s) {
 		int l = s.length();

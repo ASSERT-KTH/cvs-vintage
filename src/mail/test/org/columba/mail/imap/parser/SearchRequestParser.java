@@ -6,11 +6,13 @@
  */
 package org.columba.mail.imap.parser;
 
-import java.io.DataOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.imap.SearchRequestBuilder;
@@ -37,9 +39,9 @@ public class SearchRequestParser extends TestCase {
 		FilterRule rule = new FilterRule();
 		rule.setCondition("matchall");
 		FilterCriteria c = rule.addEmptyCriteria();
-		c.setHeaderItem("Body");
-		c.setCriteria("contains");
-		c.setPattern("Grüsse");
+		c.setHeaderItem("Size");
+		c.setCriteria("smaller");
+		c.setPattern("10");
 		c = rule.addEmptyCriteria();
 		c.setHeaderItem("Body");
 		c.setCriteria("contains");
@@ -51,32 +53,33 @@ public class SearchRequestParser extends TestCase {
 		Arguments args = e.generateSearchArguments(rule, list);
 
 		String str = null;
-		DataOutputStream os = new DataOutputStream(System.out);
-		TestArgumentWriter writer = new TestArgumentWriter(os);
+
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+
+		TestArgumentWriter writer = new TestArgumentWriter(byteStream);
 		writer.write(args);
+
+		String request = byteStream.toString();
+		ColumbaLogger.log.debug("request=" + request);
+		
 	}
 
 }
 
 class TestArgumentWriter extends ArgumentWriter {
 
-	public TestArgumentWriter( DataOutputStream o) {
+	public TestArgumentWriter(OutputStream o) {
 		super(o);
 	}
 
 	protected void writeBytes(byte[] data) throws Exception {
-		output.write('{');
-		output.writeBytes(Integer.toString(data.length));
-		output.writeBytes("}\r\n");
+		output.write(openingCurlyBracket);
+		output.write(Integer.toString(data.length).getBytes("ISO-8859-1"));
+		output.write(closingCurlyBracket);
+		output.write(newline);
+
 		output.flush();
 
-		/*
-		for (;;) {
-			IMAPResponse r = protocol.getResponse(null);
-			if (r.isCONTINUATION())
-				break;
-		}
-		*/
 		output.write(data);
 	}
 }

@@ -15,7 +15,7 @@
 //All Rights Reserved.
 package org.columba.mail.imap.protocol;
 
-import java.io.DataOutputStream;
+import java.io.OutputStream;
 
 import org.columba.mail.imap.IMAPResponse;
 
@@ -58,7 +58,12 @@ import org.columba.mail.imap.IMAPResponse;
  */
 public class ArgumentWriter {
 
-	protected DataOutputStream output;
+	protected final byte[] openingCurlyBracket = { '{' };//new String("{").getBytes("US-ASCII");
+	protected final byte[] closingCurlyBracket = { '}' };
+	
+	protected final byte[] newline = { '\r', '\n' };
+	
+	protected OutputStream output;
 	protected IMAPProtocol protocol;
 	
 	static boolean nested = false; 
@@ -80,7 +85,7 @@ public class ArgumentWriter {
 	 * this is only used by testcases
 	 * 
 	 */
-	public ArgumentWriter( DataOutputStream output )
+	public ArgumentWriter( OutputStream output )
 	{
 		this.output = output;
 		
@@ -233,9 +238,11 @@ public class ArgumentWriter {
 	 * @throws Exception
 	 */
 	protected void writeBytes(byte[] data) throws Exception {
-		output.write('{');
-		output.writeBytes(Integer.toString(data.length));
-		output.writeBytes("}\r\n");
+		output.write(openingCurlyBracket);
+		output.write(Integer.toString(data.length).getBytes("ISO-8859-1"));
+		output.write(closingCurlyBracket);
+		output.write(newline);
+		
 		output.flush();
 
 		for (;;) {
@@ -255,7 +262,7 @@ public class ArgumentWriter {
 	 * @throws Exception
 	 */
 	protected void writeAtom(Atom atom) throws Exception {
-		output.writeBytes(atom.getString());
+		output.write(atom.getString().getBytes("ISO-8859-1"));
 	}
 
 }
