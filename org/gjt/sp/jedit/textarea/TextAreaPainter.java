@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.95 2004/03/28 01:42:45 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.96 2004/04/05 02:21:49 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -883,7 +883,9 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			{
 				Log.log(Log.DEBUG,this,"Not using monospaced font optimization: " + font);
 				Log.log(Log.DEBUG,this,"Minimum width = " + minWidth
-					+ ", maximum width = " + maxWidth);
+					+ ", maximum width = " + maxWidth
+					+ ", width 1 = " + width1
+					+ ", width 2 = " + width2);
 				returnValue = new Integer(0);
 			}
 
