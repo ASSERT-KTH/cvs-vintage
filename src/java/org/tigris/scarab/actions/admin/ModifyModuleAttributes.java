@@ -81,8 +81,8 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 /**
  * action methods on RModuleAttribute table
  *      
- * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModifyModuleAttributes.java,v 1.43 2001/11/10 02:26:47 elicia Exp $
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @version $Id: ModifyModuleAttributes.java,v 1.44 2001/11/17 01:16:14 elicia Exp $
  */
 public class ModifyModuleAttributes extends RequireLoginFirstAction
 {
@@ -136,77 +136,16 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     }
 
     /**
-     * This manages clicking the Add Attribute button.
-     * FIXME: this should be done with a form variable
-     */
-    public void doGotoartifactpage( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTarget(data, "admin,ArtifactTypeEdit.vm");            
-    }
-
-    /**
-     * This manages clicking the Add Issue Type button.
-     * FIXME: this should be done with a form variable
-     */
-    public void doGotoartifactselect( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTarget(data, "admin,ArtifactTypeSelect.vm");            
-    }
-
-    /**
-     * This manages clicking the Add Attribute button.
-     * FIXME: this should be done with a form variable
-     */
-    public void doGotoattributeselect( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        setTarget(data, "admin,AttributeSelect.vm");            
-    }
-
-    /**
-     * Creates default attribute groups.
-     * Must create 2 groups, one for dedupe attributes, one for non-dedupe.
-     */
-    public void doCreatedefaults ( RunData data, TemplateContext context )
-        throws Exception
-    {
-        AttributeGroup ag = doCreatenewgroup(data, context);
-        ag.setOrder(1);
-        ag.save();
-        AttributeGroup ag2 = doCreatenewgroup(data, context);
-        ag2.setOrder(3);
-        ag2.save();
-
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, nextTemplate);            
-    }
-
-    /**
      * Creates new attribute group.
      */
     public AttributeGroup doCreatenewgroup ( RunData data, 
                                              TemplateContext context )
         throws Exception
     {
-        AttributeGroup ag = null;
-    
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        IssueType issueType = getIssueType(data);
-
         ModuleEntity module = scarabR.getCurrentModule();
-        List groups = issueType.getAttributeGroups(module);
-
-        ag = new AttributeGroup();
-        // Make default group name 'attribute group x' where x is size + 1
-        ag.setName("attribute group " + Integer.toString(groups.size()+1));
-        ag.setOrder(groups.size() +2);
-        ag.setModuleId(module.getModuleId());
-        ag.setIssueTypeId(issueType.getIssueTypeId());
-        ag.save();
-        return ag;
+        IssueType issueType = getIssueType(data);
+        return issueType.createNewGroup(module);
     }
 
     /**
@@ -217,13 +156,8 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     {
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         IssueType issueType = getIssueType(data);
-
-        RModuleIssueType rmit = new RModuleIssueType();
-        rmit.setModuleId(scarabR.getCurrentModule().getModuleId());
-        rmit.setIssueTypeId(issueType.getIssueTypeId());
-        rmit.setActive(false);
-        rmit.setDisplay(false);
-        rmit.save();
+        ModuleEntity module = scarabR.getCurrentModule();
+        module.addRModuleIssueType(getIssueType(data));
 
         data.setMessage("The Artifact type has been added to the module.");
         setTarget(data, "admin,ManageArtifactTypes.vm");            
@@ -235,131 +169,58 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     public void doSelectattribute( RunData data, TemplateContext context )
         throws Exception
     {
+        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
+        ModuleEntity module = scarabR.getCurrentModule();
+        IssueType issueType = getIssueType(data);
+        IssueType templateType = 
+            scarabR.getIssueType(issueType.getTemplateId().toString());
+ 
+        if (intake.isAllValid())
+        {        
+            Attribute attribute = scarabR.getAttribute();
+            AttributeGroup attGroup = scarabR.getAttributeGroup();
 
-        String attributeId = data.getParameters().getString("attributeid");
-        String groupId = data.getParameters().getString("groupId");
-        Attribute attribute = Attribute.getInstance(new NumberKey(attributeId));
-        AttributeGroup group = null;
+            // add module-attribute groupings
+            RModuleAttribute rma = module.addRModuleAttribute(issueType, 
+                                                              attGroup);
+            Group rmaGroup = intake.get("RModuleAttribute", 
+                                         IntakeTool.DEFAULT_KEY);
+            rmaGroup.setProperties(rma);
+            rma.setAttributeId(attribute.getAttributeId());
+            rma.save();
 
-        // FIXME: use intake for this stuff...
-        if (groupId == null || groupId.length() == 0)
-        {
-            data.setTarget("AttributeGroup.vm");
-            data.setMessage("Could not get a valid group id.");
-            return;
-        }
-        if (attributeId == null || attributeId.length() == 0)
-        {
-            data.setMessage("Please select an attribute.");
-            return;
-        }
-
-        try
-        {
-            group = (AttributeGroup) AttributeGroupPeer
-                                   .retrieveByPK(new NumberKey(groupId));
-        }
-        catch (Exception e)
-        {
-            data.setTarget("AttributeGroup.vm");
-            data.setMessage("Could not get a valid group id.");
-            return;
-        }
-
-        ModuleEntity module = group.getScarabModule();
-        IssueType issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(group.getIssueTypeId());
-
-
-        // add module-attribute mappings
-        RModuleAttribute rma = new RModuleAttribute();
-        rma.setModuleId(module.getModuleId());
-        rma.setAttributeId(attributeId);
-        rma.setIssueTypeId(issueType.getIssueTypeId());
-        rma.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
-        rma.setOrder(module.getLastAttribute(issueType) + 1);
-        rma.save();
-
-        // add module-attributeoption mappings
-        List options = attribute.getAttributeOptions();
-        for (int i=0;i < options.size();i++)
-        {
-            AttributeOption option = (AttributeOption)options.get(i);
-            RModuleOption rmo = new RModuleOption();
-            rmo.setModuleId(module.getModuleId());
-            rmo.setIssueTypeId(issueType.getIssueTypeId());
-            rmo.setOptionId(option.getOptionId());
-            rmo.setDisplayValue(option.getName());
-            rmo.save();
-            // add module-attributeoption mappings to template type
-            RModuleOption rmo2 = rmo.copy();
-            rmo2.setOptionId(rmo.getOptionId());
-            rmo2.setModuleId(module.getModuleId());
-            rmo2.setIssueTypeId(issueType.getTemplateId());
-            rmo2.save();
-        }
-        
-
-        // add module-attribute mappings to template type
-        RModuleAttribute rma2 = new RModuleAttribute();
-        rma2.setModuleId(module.getModuleId());
-        rma2.setAttributeId(attributeId);
-        rma2.setIssueTypeId(issueType.getTemplateId());
-        rma2.setDedupe(group.getOrder() < issueType.getDedupeSequence(module));
-        rma2.save();
-
-        // attribute group-attribute mapping
-        RAttributeAttributeGroup raag = new RAttributeAttributeGroup();
-        raag.setGroupId(groupId);
-        raag.setAttributeId(attributeId);
-        raag.setOrder(group.getAttributes().size() +1 );
-        raag.save();
-        data.getParameters().add("groupid", groupId);
-        setTarget(data, "admin,AttributeGroup.vm");            
-    }
-
-    private IssueType getIssueType( RunData data )
-        throws Exception
-    {
-        String issueTypeId = data.getParameters().getString("issueTypeId");
-        IssueType issueType = null;
-        if (issueTypeId == null || issueTypeId.length() == 0)
-        {
-            data.setMessage("The artifact type is missing.");
-        } 
-        else
-        {
-            try
+            // add module-attributeoption mappings
+            List options = attribute.getAttributeOptions();
+            for (int i=0;i < options.size();i++)
             {
-                issueType = (IssueType) IssueTypePeer
-                            .retrieveByPK(new NumberKey(issueTypeId));
-            }
-            catch (Exception e)
-            {
-                data.setMessage("The artifact type id was invalid.");
-            }
-        }
-        return issueType;
-   }
-        
-    
-    private Attribute getAttribute( RunData data )
-        throws Exception
-    {
-        Attribute attribute = null;
-        String attributeId = data.getParameters().getString("attributeid");
-        if (attributeId == null || attributeId.length() == 0)
-        {
-            data.setMessage("Attribute id is missing.");
-        } 
-        else
-        {
-            attribute = Attribute.getInstance(new NumberKey(attributeId));
-        } 
-        return attribute;
-    }
+                AttributeOption option = (AttributeOption)options.get(i);
+                RModuleOption rmo = module.addRModuleOption(issueType, option);
+                rmo.save();
 
+                // add module-attributeoption mappings to template type
+                RModuleOption rmo2 = module.
+                     addRModuleOption(templateType, option);
+                rmo2.save();
+            }
+
+            // add module-attribute mappings to template type
+            RModuleAttribute rma2 = module.addRModuleAttribute(templateType,
+                                                               attGroup);
+            rma2.setAttributeId(attribute.getAttributeId());
+            rma2.save();
+
+            // attribute group-attribute mapping
+            RAttributeAttributeGroup raag =  
+                attGroup.addRAttributeAttributeGroup(attribute);
+            raag.save();
+
+            data.getParameters().add("groupid", 
+               attGroup.getAttributeGroupId().toString());
+           setTarget(data, "admin,AttributeGroup.vm");            
+       }      
+
+    }
 
     /**
      * Selects option to add to attribute.
@@ -367,36 +228,29 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
     public void doSelectattributeoption( RunData data, TemplateContext context )
         throws Exception
     {
+        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        String optionId = data.getParameters().getString("optionId");
-        if (optionId == null || optionId.length() == 0)
-        {
-            data.setMessage("Please select an attribute option.");
-            return;
-        } 
-        AttributeOption option = AttributeOption.getInstance(new NumberKey(optionId));
-        IssueType issueType = getIssueType(data);
         ModuleEntity module = scarabR.getCurrentModule();
+        IssueType issueType = getIssueType(data);
+        IssueType templateType = 
+            scarabR.getIssueType(issueType.getTemplateId().toString());
+ 
+        if (intake.isAllValid())
+        {        
+            AttributeOption option = scarabR.getAttributeOption();
+            RModuleOption rmo = module.
+                 addRModuleOption(issueType, option);
+            rmo.save();
 
-        RModuleOption rmo = new RModuleOption();
-        rmo.setModuleId(module.getModuleId());
-        rmo.setIssueTypeId(issueType.getIssueTypeId());
-        rmo.setOptionId(optionId);
-        rmo.setDisplayValue(option.getName());
-        rmo.setOrder(module.getLastAttributeOption(option.getAttribute(),
-                                                            issueType) + 1);
-        rmo.save();
-
-        // add module-attributeoption mappings to template type
-        RModuleOption rmo2 = rmo.copy();
-        rmo2.setOptionId(optionId);
-        rmo2.setModuleId(module.getModuleId());
-        rmo2.setIssueTypeId(issueType.getTemplateId());
-        rmo2.save();
-
-        String nextTemplate = data.getParameters()
-            .getString(ScarabConstants.NEXT_TEMPLATE);
-        setTarget(data, nextTemplate);            
+            // add module-attributeoption mappings to template type
+            RModuleOption rmo2 = module.
+                 addRModuleOption(templateType, option);
+            rmo2.save();
+     
+            String nextTemplate = data.getParameters()
+                .getString(ScarabConstants.NEXT_TEMPLATE);
+            setTarget(data, nextTemplate);            
+        }
     }
 
     /**
@@ -950,6 +804,47 @@ public class ModifyModuleAttributes extends RequireLoginFirstAction
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTarget(data, getNextTemplate(data, 
             "admin,GlobalAttributeShow.vm"));
+    }
+
+    private IssueType getIssueType( RunData data )
+        throws Exception
+    {
+        String issueTypeId = data.getParameters().getString("issueTypeId");
+        IssueType issueType = null;
+        if (issueTypeId == null || issueTypeId.length() == 0)
+        {
+            data.setMessage("The artifact type is missing.");
+        } 
+        else
+        {
+            try
+            {
+                issueType = (IssueType) IssueTypePeer
+                            .retrieveByPK(new NumberKey(issueTypeId));
+            }
+            catch (Exception e)
+            {
+                data.setMessage("The artifact type id was invalid.");
+            }
+        }
+        return issueType;
+   }
+        
+    
+    private Attribute getAttribute( RunData data )
+        throws Exception
+    {
+        Attribute attribute = null;
+        String attributeId = data.getParameters().getString("attributeid");
+        if (attributeId == null || attributeId.length() == 0)
+        {
+            data.setMessage("Attribute id is missing.");
+        } 
+        else
+        {
+            attribute = Attribute.getInstance(new NumberKey(attributeId));
+        } 
+        return attribute;
     }
 
     /**
