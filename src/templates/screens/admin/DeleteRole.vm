@@ -1,0 +1,49 @@
+#**
+@author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+@version $Id: DeleteRole.vm,v 1.1 2001/11/28 22:08:34 dr Exp $
+*#
+
+#set ($state = $data.Parameters.getString("state"))
+#if (!$state)
+  #set ($state = "showdeleteuser")
+#end
+
+$page.setTitle("Role Administration")
+
+<div id="deleteuser" class="app">
+
+<h2>$page.Title</h2>
+
+<h3>Confirm Delete Role</h3>
+
+<form name="EditUserForm" action="admin%2cDeleteRole.vm" method="post">
+  <input type="hidden" name="action" value="admin.ManageRoles" />
+  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="admin,ManageRoles.vm" />
+  <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,ManageRoles.vm" />
+  <input type="hidden" name="name" value="$data.Parameters.getString("name")">
+
+#set ($role = $scarabG.getRoleByName($data.Parameters.getString("name")))
+#set ($roleName = $role.Name)
+
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+ <th>Role</th>
+ <td>$roleName</td>
+</tr>
+</table>
+</div>
+
+<div class="functnbar2">
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+ <input type="submit" name="eventSubmit_doDeleterole" value="Confirm Delete" />
+  </td>
+ </tr>
+</table>
+</div>
+
+</form>
+</div>
