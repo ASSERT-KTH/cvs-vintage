@@ -165,21 +165,21 @@ public class FilterCriteria extends DefaultItem {
 		//return "";
 	}
 	
-	public int getHeaderItem()
+	public int getTypeItem()
 	{
-		String h = getHeaderItemString();
+		String h = getType();
 		int result = -1;
 		if ( h.equalsIgnoreCase("Subject") ) result = SUBJECT;
-		if ( h.equalsIgnoreCase("To") ) result = TO;
-		if ( h.equalsIgnoreCase("From") ) result = FROM;
-		if ( h.equalsIgnoreCase("Cc") ) result = CC;
-		if ( h.equalsIgnoreCase("Bcc") ) result = BCC;
-		if ( h.equalsIgnoreCase("To or Cc") ) result = TO_CC;
-		if ( h.equalsIgnoreCase("Body") ) result = BODY;
-		if ( h.equalsIgnoreCase("Date") ) result = DATE;
-		if ( h.equalsIgnoreCase("Size") ) result = SIZE;
-		if ( h.equalsIgnoreCase("Flags") ) result = FLAGS;
-		if ( h.equalsIgnoreCase("Priority") ) result = PRIORITY;
+		else if ( h.equalsIgnoreCase("To") ) result = TO;
+		else if ( h.equalsIgnoreCase("From") ) result = FROM;
+		else if ( h.equalsIgnoreCase("Cc") ) result = CC;
+		else if ( h.equalsIgnoreCase("Bcc") ) result = BCC;
+		else if ( h.equalsIgnoreCase("To or Cc") ) result = TO_CC;
+		else if ( h.equalsIgnoreCase("Body") ) result = BODY;
+		else if ( h.equalsIgnoreCase("Date") ) result = DATE;
+		else if ( h.equalsIgnoreCase("Size") ) result = SIZE;
+		else if ( h.equalsIgnoreCase("Flags") ) result = FLAGS;
+		else if ( h.equalsIgnoreCase("Priority") ) result = PRIORITY;
 		
 		return result;
 	}
