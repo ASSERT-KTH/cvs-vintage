@@ -92,7 +92,7 @@ import org.apache.commons.lang.Strings;
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: Issue.java,v 1.163 2002/07/02 19:47:20 jon Exp $
+ * @version $Id: Issue.java,v 1.164 2002/07/03 17:10:17 jmcnally Exp $
  */
 public class Issue 
     extends BaseIssue
@@ -544,6 +544,24 @@ public class Issue
         return result;
     }
 
+    /**
+     * The RModuleIssueType related to this issue's module and issue type.
+     *
+     * @return a <code>RModuleIssueType</code> if this issue's module and
+     * issue type are not null, otherwise return null.
+     */
+    public RModuleIssueType getRModuleIssueType()
+        throws Exception
+    {
+        RModuleIssueType rmit = null;
+        Module module = getModule();
+        IssueType issueType = getIssueType();
+        if (module != null && issueType != null) 
+        {
+            rmit = module.getRModuleIssueType(issueType);
+        }
+        return rmit;
+    }
 
 
     /**

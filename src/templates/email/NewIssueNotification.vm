@@ -1,5 +1,5 @@
 #set ($user = $issue.ModifiedBy )
-Bug report '$issue.UniqueId' has just been filed by user '$user.UserName'.
+$issue.RModuleIssueType.DisplayName report '$issue.UniqueId' has just been filed by user '$user.UserName'.
 
 #if ($issue.DefaultTextAttributeValue)
 #set ($attVal = $issue.DefaultTextAttributeValue)
