@@ -1,5 +1,4 @@
 /*
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -573,8 +572,8 @@ public class BodyContentImpl extends BodyContent {
      */
     public void writeOut(Writer out) throws IOException {
         out.write(cb, 0, nextChar);
-	//Flush not called as the writer passed could be a BodyContent and
-	//it doesn't allow to flush.
+	// Flush not called as the writer passed could be a BodyContent and
+	// it doesn't allow to flush.
     }
 
 

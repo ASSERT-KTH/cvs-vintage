@@ -1,10 +1,4 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/HttpJspBase.java,v 1.2 1999/11/10 18:21:20 costin Exp $
- * $Revision: 1.2 $
- * $Date: 1999/11/10 18:21:20 $
- *
- * ====================================================================
- * 
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 1999 The Apache Software Foundation.  All rights 
@@ -118,7 +112,8 @@ public abstract class HttpJspBase
     }
     
     protected ClassLoader getClassLoader() {
-	if(cl==null) return this.getClass().getClassLoader();
+	if (cl == null) 
+            return this.getClass().getClassLoader();
 	return cl;
     }
 

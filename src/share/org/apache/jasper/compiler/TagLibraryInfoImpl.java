@@ -145,51 +145,50 @@ public class TagLibraryInfoImpl extends TagLibraryInfo {
 	    // Parse web.xml.
 	    InputStream is = ctxt.getServletContext().getResourceAsStream(WEBAPP_INF);
 	    
-	    if (is == null) {
-		throw new IOException(Constants.getString("jsp.error.webxml_not_found"));
-	    }
+	    if (is != null) {
 	    
-	    URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
-	    XmlDocument webtld = JspUtil.parseXMLDoc(is, dtdURL,
-						     Constants.WEBAPP_DTD_PUBLIC_ID);
-	    NodeList nList =  webtld.getElementsByTagName("taglib");
+                URL dtdURL =  this.getClass().getResource(Constants.WEBAPP_DTD_RESOURCE);
+                XmlDocument webtld = JspUtil.parseXMLDoc(is, dtdURL,
+                                                         Constants.WEBAPP_DTD_PUBLIC_ID);
+                NodeList nList =  webtld.getElementsByTagName("taglib");
 	    
-	    // Check if a matching "taglib" exists.
-	    // XXX. Some changes that akv recommended.
-	    if (nList.getLength() != 0) {
-		for(int i = 0; i < nList.getLength(); i++) {
-		    Element e = (Element) nList.item(i);
-		    NodeList list = e.getChildNodes();
-		    String tagLoc = null;
-		    boolean match = false;
-		    for(int j = 0; j < list.getLength(); j++) {
-			Element em = (Element) list.item(j);
-			String tname = em.getNodeName();
-			if (tname.equals("taglib-location")) {
-                            Text t = (Text) em.getFirstChild();
-                            if (t != null) {
-                                tagLoc = t.getData();
-                                if (tagLoc != null)
-                                    tagLoc = tagLoc.trim();
-                            }
-			}
-			if (tname.equals("taglib-uri")) {
-                            Text t = (Text) em.getFirstChild();
-                            if (t != null) {
-                                String tmpUri =  t.getData();
-                                if (tmpUri != null) {
-                                    tmpUri = tmpUri.trim();
-                                    if (tmpUri.equals(uriIn))
-                                        match = true;
+                // Check if a matching "taglib" exists.
+                // XXX. Some changes that akv recommended.
+                if (nList.getLength() != 0) {
+                    for(int i = 0; i < nList.getLength(); i++) {
+                        Element e = (Element) nList.item(i);
+                        NodeList list = e.getChildNodes();
+                        String tagLoc = null;
+                        boolean match = false;
+                        for(int j = 0; j < list.getLength(); j++) {
+                            Element em = (Element) list.item(j);
+                            String tname = em.getNodeName();
+                            if (tname.equals("taglib-location")) {
+                                Text t = (Text) em.getFirstChild();
+                                if (t != null) {
+                                    tagLoc = t.getData();
+                                    if (tagLoc != null)
+                                        tagLoc = tagLoc.trim();
                                 }
                             }
-			}
-		    }
-                    if (match == true && tagLoc != null) 
-                        this.uri = tagLoc;
-		}
+                            if (tname.equals("taglib-uri")) {
+                                Text t = (Text) em.getFirstChild();
+                                if (t != null) {
+                                    String tmpUri =  t.getData();
+                                    if (tmpUri != null) {
+                                        tmpUri = tmpUri.trim();
+                                        if (tmpUri.equals(uriIn))
+                                            match = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (match == true && tagLoc != null) 
+                            this.uri = tagLoc;
+                    }
+                }
             }
-	    
+
 	    // "uri" should point to the correct tld location.
 
 	    if (!uri.startsWith("/")) {

@@ -133,45 +133,6 @@ public class BeanGenerator extends GeneratorBase implements ServiceMethodPhase,
 		throw new JasperException (m);
 	    }	     
 	    
-	    // Check if the class exists.
-	    //String className = (clsname == null) ? type : clsname;
-	    //try {
-	    //boolean tmp = beanInfo.ClassFound (className);
-	    //} catch (ClassNotFoundException ex) {
-	    //  String m = Constants.getString(
-	    //	"jsp.error.usebean.class.notfound", 
-	    //	 new Object[] { className });
-	    //throw new JasperException (m, ex);
-	    //}
-	    
-	    // Check if beanName exists.
-	    //if (beanName != null) {
-	    //try {
-	    //  boolean  tmp = beanInfo.beanFound (beanName);
-	    //} catch (ClassNotFoundException ex) {
-	    //      String m = Constants.getString(
-	    //    		"jsp.error.usebean.class.notfound", 
-	    //		new Object[] { beanName });
-	    //    throw new JasperException (m, ex);
-	    //} 
-	    //}
-	    
-	    // class must be assignable to type.
-	    //if (clsname != null && type != null) {
-	    //try {
-	    //    Class tp = beanInfo.getClass (type);
-	    //    Class cl = beanInfo.getClass (clsname);
-	    //    if (!tp.isAssignableFrom(cl)) {
-	    //          String m = Constants.getString("jsp.error.usebean.bad.type.cast",
-	    //				       new Object[] {name, type, clsname});
-	    //	throw new JasperException (m);
-	    //      }
-                    
-	    //} catch (ClassNotFoundException ex) {
-	    //    throw new JasperException (ex);
-	    //}
-	    //}
-
 	    if (clsname == null) clsname = type;
 	    if (scope == null || scope.equals("page")) {
 		beanInfo.addPageBean(name, clsname);
