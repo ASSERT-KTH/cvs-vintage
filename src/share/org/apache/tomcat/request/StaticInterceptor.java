@@ -121,6 +121,7 @@ public class StaticInterceptor extends BaseInterceptor {
 	if( pathInfo==null ) pathInfo="";
 	String absPath=ctx.getRealPath( pathInfo );
 	if( absPath == null ) return 0;
+	String requestURI=req.getRequestURI();
 
 	if( debug > 0 )
 	    log( "Requested: "  + absPath );
@@ -145,57 +146,43 @@ public class StaticInterceptor extends BaseInterceptor {
 	if( debug > 0 )
 	    log( "DefaultServlet: welcome file: "  + welcomeFile);
 
-	boolean inInclude=false;// XXX detect if we are included
-	if( inInclude ) {
-	    // well, we don't have too much choice here 
-	    if( welcomeFile == null ) {
-		// We are in include, need to display
-		// the dir ( XXX do we need that ?? )
-		req.setWrapper( ctx.getServletByName( "tomcat.dirHandler") );
-		if( debug > 0) log( "Dir handler, inInclude");
-		return 0;
-	    } else {
-		if( debug > 0) log( "File handler, inInclude");
-		req.setNote( realFileNote, absPath + "/" + welcomeFile );
-		req.setWrapper( ctx.getServletByName( "tomcat.fileHandler")); 
-		return 0;
-	    }
-	}
-
-	String requestURI=req.getRequestURI();
-
+	// Doesn't matter if we are or not in include
 	if( welcomeFile == null  ) {
 	    // normal dir, no welcome. 
 	    req.setWrapper( ctx.getServletByName( "tomcat.dirHandler"));
 	    if( debug > 0) log( "Dir handler");
 	    return 0;
-	} else {
-	    if(  pathInfo.endsWith("/")) {
-		if( debug > 0) log( "File handler " +
-				    absPath + "/" + welcomeFile);
-		req.setNote( realFileNote, absPath + "/" + welcomeFile );
-		req.setWrapper( ctx.getServletByName( "tomcat.fileHandler"));
-		return 0;
-	    } else {
-		// Send redirect to either the welcome file
-		// or to dir/
-		String redirectURI=requestURI;
-		if( ! requestURI.endsWith("/")) {
-		    redirectURI = redirectURI + "/";
-		}
-		if( welcomeFile != null ) {
-		    if( welcomeFile.startsWith("/")) 
-			welcomeFile=welcomeFile.substring(1);
-		    redirectURI=redirectURI + welcomeFile;
-		}
-		req.setAttribute("javax.servlet.error.message",
-				 redirectURI);
-		if( debug > 0) log( "Redirect " + redirectURI );
-		return 302;
-	    }
 	}
+
+	// Send redirect to the welcome file.
+	// This is consistent with other web servers and avoids
+	// gray areas in the spec - if the welcome file is a jsp,
+	// what will be the requestPath - if it's the dir, then
+	// jasper will not work. The original code created a
+	// RequestDispatcher and the JSP will see an included
+	// request, but that's not a specified behavior
+	String redirectURI=null;
+	redirectURI=concatPath( requestURI, welcomeFile);
+	req.setAttribute("javax.servlet.error.message",
+			 redirectURI);
+	if( debug > 0) log( "Redirect " + redirectURI );
+	return 302;
     }
 
+    private static String concatPath( String s1, String s2 ) {
+	if( s1.endsWith( "/" ) ) {
+	    if( s2.startsWith( "/" ))
+		return s1 + s2.substring(1);
+	    else
+		return s1 + s2;
+	} else {
+	    if( s2.startsWith("/"))
+		return s1 + s2;
+	    else
+		return s1 + "/" + s2;
+	}
+    }
+    
     private String getWelcomeFile(Context context, File dir) {
         Enumeration enum = context.getWelcomeFiles();
 

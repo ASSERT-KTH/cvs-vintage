@@ -1015,7 +1015,7 @@ public class ContextManager {
 	errorServlet.service( req, res );
     }
 
-    public Handler getHandlerForPath( Context ctx, String path ) {
+    public ServletWrapper getHandlerForPath( Context ctx, String path ) {
 	if( ! path.startsWith( "/" ) ) {
 	    return ctx.getServletByName( path );
 	}
