@@ -1,4 +1,4 @@
-// $Id: LanguageChooser.java,v 1.3 2003/09/04 17:38:44 thierrylach Exp $
+// $Id: LanguageChooser.java,v 1.4 2003/11/10 11:39:07 jhraigniac Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,14 +24,14 @@
 
 package org.argouml.ui;
 
-import org.argouml.application.api.Argo;
+import org.apache.log4j.Logger;
 import org.argouml.application.api.PluggableMenu;
 import org.argouml.i18n.Translator;
 import org.argouml.uml.ui.UMLAction;
 
 import org.workingfrog.i18n.swing.I18NJMenu;
 import org.workingfrog.i18n.swing.I18NJMenuItem;
-import org.workingfrog.i18n.util.LocaleEvent;
+//import org.workingfrog.i18n.util.LocaleEvent;
 
 import java.awt.event.ActionEvent;
 
@@ -47,6 +47,9 @@ import javax.swing.JMenuItem;
  * @since  0.11
  */
 public class LanguageChooser extends UMLAction implements PluggableMenu {
+
+    /** logger */
+    private static Logger cat = Logger.getLogger(LanguageChooser.class);
 
     /** A singleton as the only instance of this action. */
     private static LanguageChooser singleton = new LanguageChooser();
@@ -76,14 +79,14 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
 
     public boolean initializeModule() {
         if (((Locale[]) Translator.getLocales()).length < 1) {
-            Argo.log.error ("Unable to launch LanguageChooser plugin!");
+            cat.error ("Unable to launch LanguageChooser plugin!");
 
             return false;
         }
 
-        Argo.log.info ("+---------------------------------+");
-        Argo.log.info ("| LanguageChooser plugin enabled! |");
-        Argo.log.info ("+---------------------------------+");
+        cat.info ("+---------------------------------+");
+        cat.info ("| LanguageChooser plugin enabled! |");
+        cat.info ("+---------------------------------+");
 
         return true;
     }
@@ -142,7 +145,6 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
                 String key = "menu.languages-"
                     + locales[j].toString().toLowerCase();
                 I18NJMenuItem item = new I18NJMenuItem(key);
-                item.setBundle("CoreMenu");
                 item2Locale.put(item, locales[j]);
                 item.addActionListener(this);
                 menuItem.add(item);
@@ -161,8 +163,8 @@ public class LanguageChooser extends UMLAction implements PluggableMenu {
 
         Translator.setLocale(locale);
 
-        LocaleEvent e = new LocaleEvent(this, locale);
 		// TODO Implement this later
+        //LocaleEvent e = new LocaleEvent(this, locale);
         // org.argouml.ui.ProjectBrowser.getInstance().localeChanged(e);
     }
 }
