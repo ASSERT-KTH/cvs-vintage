@@ -50,6 +50,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.commons.collections.ExtendedProperties;
 
@@ -107,7 +109,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.57 2002/01/08 20:54:56 richard Exp $
+    @version $Id: ModifyIssue.java,v 1.58 2002/01/10 20:11:51 elicia Exp $
 */
 public class ModifyIssue extends RequireLoginFirstAction
 {
@@ -766,19 +768,12 @@ public class ModifyIssue extends RequireLoginFirstAction
     public void doEditassignees(RunData data, TemplateContext context)
          throws Exception
     {
+        IntakeTool intake = getIntakeTool(context);
+        intake.removeAll();
+        List issueIdList = new ArrayList();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Attribute attribute = Attribute.getInstance(AttributePeer.ASSIGNED_TO__PK);
-        scarabR.setAttribute(attribute);
-        
-        ParameterParser pp = data.getParameters();
-        String id = pp.getString("id");
-        pp.add("intake-grp", "issue"); 
-        /*
-        pp.add("issue", "_0"); 
-        pp.add("issue_0id", id);
-        pp.add("issue_id", id);
-        pp.add("id", id);
-        */
+        issueIdList.add(scarabR.getIssue().getIssueId());
+        context.put("issueIdList", issueIdList);
         setTarget(data, "AssignIssue.vm");            
     }
 

@@ -58,6 +58,7 @@ import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.turbine.modules.ContextAdapter;
+import org.apache.turbine.ParameterParser;
 
 import org.apache.commons.util.SequencedHashtable;
 
@@ -77,10 +78,12 @@ import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.Transaction;
 import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
@@ -93,225 +96,203 @@ import org.tigris.scarab.util.ScarabLink;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.23 2002/01/10 17:34:43 jmcnally Exp $
+ * @version $Id: AssignIssue.java,v 1.24 2002/01/10 20:11:51 elicia Exp $
  */
 public class AssignIssue extends RequireLoginFirstAction
 {
-    public static final String NEW_ASSIGNEES = "newaddusers";
-    public static final String ASSIGNEES = "addedusers";
-    public static final String NEW_ELIGIBLE_USERS = "newremoveusers";
-    public static final String ELIGIBLE_USERS = "removedusers";
+    private static final String ERROR_MESSAGE = "More information was " +
+                                "required to submit your request. Please " +
+                                "scroll down to see error messages."; 
+
+    public void doSave(RunData data, TemplateContext context) 
+        throws Exception
+    {
+        ScarabUser user = (ScarabUser)data.getUser();
+        IntakeTool intake = getIntakeTool(context);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        String id = data.getParameters().getString("id");
+        Issue issue = scarabR.getIssue(id);
+        boolean isChanged = false;
+
+        if (intake.isAllValid())
+        {
+            List userAttrs = issue.getModule()
+                             .getUserAttributes(issue.getIssueType());
+            for (int i=0; i < userAttrs.size(); i++)
+            {
+                Attribute attribute = (Attribute)userAttrs.get(i);
+                List attVals = issue.getAttributeValues(attribute);
+                for (int j=0; j < attVals.size(); j++)
+                {
+                    AttributeValue attVal = (AttributeValue)attVals.get(j);
+                    Group group = intake.get("AttributeValue", 
+                                             attVal.getQueryKey(), false);
+                    if (group != null)
+                    {
+                        isChanged = false;
+                        String action = null;
+                        String emailAction = null;
+
+                        // Save attachment
+                        Attachment attachment = new Attachment();
+
+                        ScarabUser assignee = scarabR.getUser(attVal.getUserId());
+                        Field deleted = group.get("Deleted");
+                        String oldAttributeId = attVal.getAttributeId().toString();
+                        String newAttributeId = group.get("AttributeId").toString();
+                        Attribute oldAttribute = (Attribute)AttributePeer.
+                                  retrieveByPK(new NumberKey(oldAttributeId));
+                        Attribute newAttribute = (Attribute)AttributePeer.
+                                  retrieveByPK(new NumberKey(newAttributeId));
+
+                        if (deleted.toString().equals("true"))
+                        {
+                            StringBuffer buf1 = new StringBuffer("You have been "
+                                                                 + " removed from ");
+                            buf1.append(oldAttribute.getName()).append(".");
+                            emailAction = buf1.toString();
+                             
+                            StringBuffer buf2 = new StringBuffer("Deleted user ");
+                            buf2.append(assignee.getUserName()).append(" from ");
+                            buf2.append(oldAttribute.getName());
+                            action = buf2.toString();
+                            attachment.setName(action);
+                            isChanged = true;
+                        }
+                        else if (!newAttributeId.equals(oldAttributeId))
+                        {
+                            StringBuffer buf1 = new StringBuffer("You have been "
+                                                                 + " switched from ");
+                            buf1.append(oldAttribute.getName()).append(" to ");
+                            buf1.append(newAttribute.getName()).append(".");
+                            emailAction = buf1.toString();
+
+                            StringBuffer buf2 = new StringBuffer("Switched user");
+                            buf2.append(assignee.getUserName()).append(" from ");
+                            buf2.append(oldAttribute.getName()).append(" to ");
+                            buf2.append(newAttribute.getName());
+                            action = buf2.toString();
+                            attachment.setName(action);
+                            isChanged = true;
+                        }
+         
+                        if (isChanged)
+                        {
+                             attachment.setTextFields(user, issue, 
+                                        Attachment.MODIFICATION__PK);
+                             attachment.save();
+
+                             // Save transaction record
+                             Transaction transaction = new Transaction();
+                             transaction.create(TransactionTypePeer
+                                                .EDIT_ISSUE__PK, 
+                                                user, attachment);
+                             attVal.startTransaction(transaction);
+
+                             // Save assignee value
+                             group.setProperties(attVal);
+                             attVal.save();
+                             data.getParameters().add("isChanged", "true");
+                             emailAssignIssueToUser(scarabR.getIssue(),  
+                                                    assignee, emailAction, context);
+                        }
+                    }
+                }
+           }
+       }
+       else
+       {
+           data.setMessage(ERROR_MESSAGE);
+       }
+    }
 
     public void doAdd(RunData data, TemplateContext context) 
         throws Exception
     {
-        String[] newAssigneeIds = data.getParameters()
-            .getStrings(NEW_ASSIGNEES);
-        String[] eligibleUserIds = 
-            data.getParameters().getStrings(ELIGIBLE_USERS);
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        List issues = scarabR.getIssueList();
+        ParameterParser params = data.getParameters();
+        Object[] keys = params.getKeys();
+        String key;
+        String attributeId;
+        String userId;
+        String action;
+        String emailAction;
 
-        // check if a user who was added was in the removed
-        // list.  if so, remove them from the removal list
-        nullOutDuplicates(newAssigneeIds, eligibleUserIds);
-        
-        // rebuild the action url with the new users added
-        String[] assigneeIds = 
-            data.getParameters().getStrings(ASSIGNEES);
-        ScarabLink actionLink = 
-            getActionLink(data, eligibleUserIds, assigneeIds);
-
-        // re-populate addedusers
-        populateLink(actionLink, ASSIGNEES, newAssigneeIds);
-        addToParameters(data, ASSIGNEES, newAssigneeIds);
-        // remove removedusers
-        data.getParameters().remove(ELIGIBLE_USERS);
-        // re-populate removedusers
-        addToParameters(data, ELIGIBLE_USERS, eligibleUserIds);
-        context.put("actionLink", actionLink);
-        setTarget(data, getCurrentTemplate(data, null));
-    }
-
-    public void doRemove(RunData data, TemplateContext context) 
-        throws Exception
-    {
-        String[] newEligibleUserIds = 
-            data.getParameters().getStrings(NEW_ELIGIBLE_USERS);
-        String[] assigneeIds = 
-            data.getParameters().getStrings(ASSIGNEES);
-
-        // check if a user who was removed was in the assignee
-        // list.  if so, remove them from the assignee list
-        nullOutDuplicates(newEligibleUserIds, assigneeIds);
-        
-        // rebuild the action url with the new users added
-        String[] eligibleUsers = 
-            data.getParameters().getStrings(ELIGIBLE_USERS);
-        ScarabLink actionLink = 
-            getActionLink(data, eligibleUsers, assigneeIds);
-
-        populateLink(actionLink, ELIGIBLE_USERS, newEligibleUserIds);
-        addToParameters(data, ELIGIBLE_USERS, newEligibleUserIds);
-        data.getParameters().remove(ASSIGNEES);
-        addToParameters(data, ASSIGNEES, assigneeIds);
-        context.put("actionLink", actionLink);
-        setTarget(data, getCurrentTemplate(data, null));
-    }
-
-    private ScarabLink getActionLink(RunData data, String[] eligibleUsers, 
-                                     String[] assignees)
-    {
-        ScarabLink actionLink = new ScarabLink();
-        actionLink.init((Object)data);
-        actionLink.addPathInfo("action", "AssignIssue");
-        actionLink.setPage("AssignIssue.vm");
-        populateLink(actionLink, ELIGIBLE_USERS, eligibleUsers);
-        populateLink(actionLink, ASSIGNEES, assignees);
-        
-        return actionLink;
-    }
-
-    /**
-     * if a value is found in both arrays they cancel each other,
-     * so remove the value from both.
-     *
-     * @param s1 a <code>String[]</code> value
-     * @param s2 a <code>String[]</code> value
-     */
-    private void nullOutDuplicates(String[] s1, String[] s2)
-    {
-        if (s1 != null && s2 != null) 
+        for (int i =0; i<keys.length; i++)
         {
-            for (int i=s1.length-1; i>=0; i--) 
+            key = keys[i].toString();
+            if (key.startsWith("add_user"))
             {
-                for (int j=s2.length-1; j>=0; j--) 
+                userId = key.substring(9);
+                ScarabUser user = scarabR.getUser(new NumberKey(userId));
+                attributeId = params.get("user_attr_" + userId);
+              
+                if (attributeId == null)
                 {
-                    if (s1[i].equals(s2[j])) 
+                    data.setMessage("Missing user attribute data.");
+                    return;
+                } 
+                else if (userId == null)
+                {
+                    data.setMessage("Missing user data.");
+                    return;
+                }
+                else
+                {
+                    Attribute attribute = (Attribute)AttributePeer
+                            .retrieveByPK(new NumberKey(attributeId));
+                    action = ("Added user " + user.getUserName()
+                                       + " to " + attribute.getName());
+                    emailAction = ("You have been added to " + attribute.getName());
+
+                    for (int k=0; k < issues.size(); k++)
                     {
-                        s2[j] = null;
+                        UserAttribute attVal = new UserAttribute();
+                        Issue issue = (Issue)issues.get(k);
+                        // Save attachment
+                        Attachment attachment = new Attachment();
+                        attachment.setTextFields(user, issue, 
+                                                 Attachment.MODIFICATION__PK);
+                        attachment.setName(action);
+                        attachment.save();
+
+                        // Save transaction record
+                        Transaction transaction = new Transaction();
+                        transaction.create(TransactionTypePeer.EDIT_ISSUE__PK, 
+                                           user, attachment);
+                        attVal.startTransaction(transaction);
+                
+                        // Save user value
+                        boolean alreadyAssigned = false;
+                        List assignees = issue.getAttributeValues(attribute);
+                        for (int j=0; j < assignees.size(); j++)
+                        {
+                            AttributeValue assigneeAttVal = (AttributeValue)
+                            assignees.get(j);
+                            if (assigneeAttVal.getUserId().toString().equals(userId))
+                            {
+                                alreadyAssigned = true;
+                            }
+                        }
+                        if (!alreadyAssigned)
+                        {
+                            attVal.setIssue(issue);
+                            attVal.setAttributeId(new NumberKey(attributeId));
+                            attVal.setUserId(new NumberKey(userId));
+                            attVal.setValue(user.getUserName());
+                            attVal.save();
+                            data.getParameters().add("isChanged", "true");
+                            emailAssignIssueToUser(scarabR.getIssue(), user,
+                                                   action, context);
+                        }
                     }
                 }
-            }
-        }
-    }
-    
-    private void populateLink(ScarabLink link, String key, String[] ids)
-    {
-        if (ids != null) 
-        {        
-            // quickly remove duplicate ids by sticking in a Map
-            Map idMap = new HashMap(ids.length);
-            for (int i=0; i<ids.length; i++)
-            {
-                idMap.put (ids[i], null);
-            }
-            for (Iterator iterator = 
-                    idMap.keySet().iterator(); iterator.hasNext() ;) 
-            {
-                String id = (String) iterator.next();
-                if (id != null) 
-                {
-                    link.addPathInfo(key, id);
-                }
-            }   
-        }
-    }
-
-    private void addToParameters(RunData data, String key, String[] ids)
-    {
-        if (ids != null) 
-        {
-            // quickly remove duplicate ids by sticking in a Map
-            Map idMap = new HashMap(ids.length);
-            for (int i=0; i<ids.length; i++)
-            {
-                idMap.put (ids[i], null);
-            }
-            for (Iterator iterator = 
-                    idMap.keySet().iterator(); iterator.hasNext() ;) 
-            {
-                String id = (String) iterator.next();
-                if (id != null) 
-                {
-                    data.getParameters().add(key, id);
-                }
-            }
+             }
         }
     }
 
 
-    public void doSubmit(RunData data, TemplateContext context) 
-        throws Exception
-    {
-        IntakeTool intake = getIntakeTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-
-        Attribute attribute = scarabR.getAttribute();
-        Attachment attachment = new Attachment();
-        Group group = intake.get("Attachment", 
-                                     attachment.getQueryKey(), false);
-        Field note = group.get("DataAsString");
-        note.setRequired(true);
-
-        // new assignee list (may contain previously assigned users)
-        String[] newUsernames = 
-           data.getParameters().getStrings(ASSIGNEES);
-        String[] eligibleUsers = 
-           data.getParameters().getStrings(ELIGIBLE_USERS);
-
-        if (note.isValid()) 
-        {
-            // set the comment
-            group.setProperties(attachment);
-            String comment = attachment.getDataAsString();
-            
-            ScarabUser modifyingUser = (ScarabUser)data.getUser();
-            
-
-            List issues = scarabR.getIssues();
-            if (issues == null) 
-            {
-                Issue issue = scarabR.getIssue();
-                List users = UserManager
-                    .getUsers(newUsernames, issue.getIdDomain());
-                issue.assignUsers(users, comment, modifyingUser, attribute);
-                emailAssignIssueToUsers(scarabR.getIssue(), users, 
-                    comment, context);
-
-                data.getParameters().setString("id", issue.getUniqueId());
-                setTarget(data, "ViewIssue.vm");
-            }
-            else 
-            {
-                for (int i=0; i<issues.size(); i++) 
-                {
-                    Issue issue = (Issue)issues.get(i);
-                    List users = UserManager
-                        .getUsers(newUsernames, issue.getIdDomain());
-                    issue.assignUsers(users, comment, modifyingUser, attribute);
-                    emailAssignIssueToUsers((Issue)issues.get(i), users, 
-                        comment, context);
-                }
-                if (issues.size() == 1)
-                {
-                    Issue issue = (Issue)issues.get(0);
-                    data.getParameters().setString("id", issue.getUniqueId());
-                    setTarget(data, "ViewIssue.vm");
-                }
-            }
-
-            data.setMessage("Your changes to the assignee list" +
-                            " have been saved.");
-            String template = data.getParameters()
-               .getString(ScarabConstants.NEXT_TEMPLATE);
-            setTemplate(data, template);            
-        }
-        else 
-        {                
-            context.put("actionLink", 
-                      getActionLink(data, eligibleUsers, newUsernames));
-            data.setMessage("Please add a note before you submit.");
-        }
-    }
 
     /**
      * Takes care of giving an email notice about an issue to a list of users 
@@ -322,60 +303,37 @@ public class AssignIssue extends RequireLoginFirstAction
      * @param comment <code>String</code>
      * @param context <code>TemplateContext</code>
      */
-    private void emailAssignIssueToUsers(Issue issue, List users, 
-                                     String comment, TemplateContext context)
+    private void emailAssignIssueToUser(Issue issue, ScarabUser su,
+                                        String action, TemplateContext context)
         throws Exception
     {
 
-        if (issue == null || users == null)
+        if (issue == null || su == null)
         {
             return;
         }
 
         context.put("issue", issue);
-        context.put("comment", comment);
+        context.put("action", action);
 
-        Iterator iter = users.iterator();
-        while (iter.hasNext())
-        {
-            ScarabUser su = (ScarabUser)iter.next();
-            TemplateEmail te = new TemplateEmail();
-            te.setContext(new ContextAdapter(context));
-            te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
-            te.setFrom(
-                Turbine.getConfiguration()
+        TemplateEmail te = new TemplateEmail();
+        te.setContext(new ContextAdapter(context));
+        te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
+        //te.setCC(su.getFirstName() + " " + su.getLastName(), su.getEmail());
+        te.setFrom(
+            Turbine.getConfiguration()
                     .getString("scarab.email.assignissue.fromName",
                                "Scarab System"),
-                Turbine.getConfiguration()
-                    .getString("scarab.email.assignissue.fromAddress",
+            Turbine.getConfiguration()
+                .getString("scarab.email.assignissue.fromAddress",
                                "help@scarab.tigris.org"));
-            te.setSubject(
-                Turbine.getConfiguration()
-                    .getString("scarab.email.assignissue.subject",
-                               "Assign Issue"));
-            te.setTemplate(
-                Turbine.getConfiguration()
-                    .getString("scarab.email.assignissue.template",
+        te.setSubject("Assign Issue " + "[" + issue.getUniqueId() + "]");
+        te.setTemplate(
+            Turbine.getConfiguration()
+                   .getString("scarab.email.assignissue.template",
                                "email/AssignIssue.vm"));
-            te.send();
-        }
+        te.send();
     }
 
-    /**
-     * This manages clicking the Cancel button
-     */
-    public void doCancel(RunData data, TemplateContext context) throws Exception
-    {
-        String template = Turbine.getConfiguration()
-            .getString("template.homepage", "Index.vm");
-        setTarget(data, template);
-    }
 
-    /**
-     * calls doCancel()
-     */
-    public void doPerform(RunData data, TemplateContext context) throws Exception
-    {
-        doCancel(data, context);
-    }
 }

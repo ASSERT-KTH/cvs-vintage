@@ -84,7 +84,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
 
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.47 2002/01/07 17:07:28 jon Exp $
+    @version $Id: Search.java,v 1.48 2002/01/10 20:11:51 elicia Exp $
 */
 public class Search extends RequireLoginFirstAction
 {
@@ -262,6 +262,14 @@ public class Search extends RequireLoginFirstAction
     public void doReassignall( RunData data, TemplateContext context )
          throws Exception
     {        
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        List issueList = scarabR.getIssueList();
+        List issueIdList = new ArrayList();
+        for (int j=0;j<issueList.size();j++)
+        {
+           issueIdList.add(((Issue)issueList.get(j)).getIssueId());
+        }
+        context.put("issueIdList", issueIdList);
         setTarget(data, "AssignIssue.vm");            
     }
 
@@ -271,10 +279,6 @@ public class Search extends RequireLoginFirstAction
     public void doReassignselected( RunData data, TemplateContext context )
          throws Exception
     {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        Attribute attribute = Attribute.getInstance(AttributePeer.ASSIGNED_TO__PK);
-        scarabR.setAttribute(attribute);
-        
         getSelected(data, context);
         setTarget(data, "AssignIssue.vm");            
     }
