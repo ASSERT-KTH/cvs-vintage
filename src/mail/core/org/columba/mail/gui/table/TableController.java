@@ -31,6 +31,7 @@ import org.columba.core.util.SwingWorker;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.gui.table.action.FilterActionListener;
 import org.columba.mail.gui.table.action.HeaderItemActionListener;
@@ -472,7 +473,7 @@ public class TableController
 	public void tableChanged(TableChangedEvent event) throws Exception {
 		ColumbaLogger.log.info("event="+event);
 		
-		Folder folder = event.getSrcFolder();
+		FolderTreeNode folder = event.getSrcFolder();
 
 		if (folder == null) {
 			if (event.getEventType() == TableChangedEvent.UPDATE)

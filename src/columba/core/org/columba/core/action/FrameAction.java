@@ -89,6 +89,31 @@ public class FrameAction extends BasicAction {
 			
 		this.frameController = frameController;
 	}
+	
+	public FrameAction(
+			FrameController frameController,
+			String name,
+			String longDescription,
+			String tooltip,
+			String actionCommand,
+			ImageIcon small_icon,
+			ImageIcon big_icon,
+			int mnemonic,
+			KeyStroke keyStroke,
+			boolean showToolbarText) {
+			super(
+				name,
+				longDescription,
+				tooltip,
+				actionCommand,
+				small_icon,
+				big_icon,
+				mnemonic,
+				keyStroke,
+				showToolbarText);
+			
+			this.frameController = frameController;
+		}
 
 
 	/**

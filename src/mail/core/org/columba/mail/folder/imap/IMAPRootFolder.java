@@ -125,6 +125,7 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 	/**
 		 * @see org.columba.mail.folder.FolderTreeNode#addFolder(java.lang.String)
 		 */
+	/*
 	public FolderTreeNode addFolder(String name) throws Exception {
 
 		String path = name;
@@ -136,7 +137,8 @@ public class IMAPRootFolder extends Folder //implements ActionListener
 
 		return null;
 	}
-
+	*/
+	
 	// we can't use 
 	//   "folder.addFolder(subchild)"
 	// here

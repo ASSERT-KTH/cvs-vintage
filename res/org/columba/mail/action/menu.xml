@@ -24,5 +24,23 @@
 		<separator/>
 		<menuitem checkboxaction="ThreadedView"/>
 	</menu>
+	
+	<menu name="menu_folder">
+	</menu>
+	
+	<menu name="menu_message">
+		<menuitem action="NewMessage" />
+		<menuitem action="OpenMessageWithComposer" />
+		<menuitem action="SaveMessage" />
+		<separator />
+		<menuitem action="Reply" />
+		<menuitem action="ReplyToAll" />
+		<menuitem action="ReplyToList" />
+		<menuitem action="Forward" />
+		<menuitem action="ForwardInline" />
+	</menu>
+	
+	
+	
 	</menubar>
 		

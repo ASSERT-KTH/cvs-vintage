@@ -59,7 +59,7 @@ public class FrameActionListener implements ActionListener {
 	}
 
 	public void initActions() {
-
+		/*
 		exitAction =
 			new BasicAction(
 				MailResourceLoader.getString(
@@ -131,6 +131,7 @@ public class FrameActionListener implements ActionListener {
 				null);
 
 		findAgainAction.setEnabled(false);
+		*/
 	}
 
 	public void actionPerformed(ActionEvent e) {

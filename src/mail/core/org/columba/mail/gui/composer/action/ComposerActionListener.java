@@ -76,7 +76,7 @@ public class ComposerActionListener implements ActionListener {
 	}
 
 	private void initActions() {
-
+		/*
 		undoAction =
 			new BasicAction(
 				MailResourceLoader.getString(
@@ -640,6 +640,7 @@ public class ComposerActionListener implements ActionListener {
 				null);
 		externEditAction.addActionListener(this);
 		externEditAction.setEnabled(true);
+		*/
 	}
 
 	protected boolean checkInformation() {

@@ -12,4 +12,30 @@
  <action name="SortMessagesMenu" class="org.columba.mail.gui.table.action.SortMessagesMenu"/>
  <action name="ThreadedView" class="org.columba.mail.gui.table.action.ThreadedViewAction"/>
  <action name="ViewMessageSource" class="org.columba.mail.gui.table.action.ViewMessageSourceAction"/>
+ <action name="OpenMessageWithComposer" class="org.columba.mail.gui.table.action.OpenMessageWithComposerAction"/>
+ <action name="SaveMessage" class="org.columba.mail.gui.table.action.SaveMessageAction"/>
+ <action name="Reply" class="org.columba.mail.gui.table.action.ReplyAction"/>
+ <action name="ReplyToList" class="org.columba.mail.gui.table.action.ReplyToListAction"/>
+ <action name="ReplyToAll" class="org.columba.mail.gui.table.action.ReplyToAllAction"/>
+ <action name="Forward" class="org.columba.mail.gui.table.action.ForwardAction"/>
+ <action name="ForwardInline" class="org.columba.mail.gui.table.action.ForwardInlineAction"/>
+ <action name="Bounce" class="org.columba.mail.gui.table.action.BounceAction"/>
+ <action name="MarkAsRead" class="org.columba.mail.gui.table.action.MarkAsReadAction"/>
+ <action name="MarkAsFlagged" class="org.columba.mail.gui.table.action.MarkAsFlaggedAction"/>
+ <action name="MarkAsExpunged" class="org.columba.mail.gui.table.action.MarkAsExpungedAction"/>
+ <action name="CopyMessage" class="org.columba.mail.gui.table.action.CopyMessageAction"/>
+ <action name="MoveMessage" class="org.columba.mail.gui.table.action.MoveMessageAction"/>
+ <action name="DeleteMessage" class="org.columba.mail.gui.table.action.DeleteMessageAction"/>
+ <action name="NextMessage" class="org.columba.mail.gui.table.action.NextMessageAction"/>
+ <action name="PrevMessage" class="org.columba.mail.gui.table.action.PrevMessageAction"/>
+ <action name="NextUnreadMessage" class="org.columba.mail.gui.table.action.NextUnreadMessageAction"/>
+ <action name="PrevUnreadMessage" class="org.columba.mail.gui.table.action.PrevUnreadMessageAction"/>
+ <action name="CreateFilterOnSubject" class="org.columba.mail.gui.table.action.CreateFilterOnSubjectAction"/>
+ <action name="CreateFilterOnFrom" class="org.columba.mail.gui.table.action.CreateFilterOnFromAction"/>
+ <action name="CreateFilterOnTo" class="org.columba.mail.gui.table.action.CreateFilterOnToAction"/>
+ <action name="CreateVFolderOnSubject" class="org.columba.mail.gui.table.action.CreateVFolderOnSubjectAction"/>
+ <action name="CreateVFolderOnFrom" class="org.columba.mail.gui.table.action.CreateVFolderOnFromAction"/>
+ <action name="CreateVFolderOnTo" class="org.columba.mail.gui.table.action.CreateVFolderOnFromTo"/>
+ <action name="AddSenderToAddressbook" class="org.columba.mail.gui.table.action.AddSenderToAddressbookAction"/>
+ <action name="AddAllSendersToAddressbook" class="org.columba.mail.gui.table.action.AddAllSendersToAddressbookAction"/>
 </actionlist>

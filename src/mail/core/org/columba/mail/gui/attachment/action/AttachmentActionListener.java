@@ -55,7 +55,7 @@ public class AttachmentActionListener implements ActionListener {
 	}
 
 	public void initActions() {
-
+		/*
 			openAction = new BasicAction(MailResourceLoader.getString("menu", "mainframe", "attachmentopen"), //$NON-NLS-1$
 		MailResourceLoader.getString("menu", "mainframe", "attachmentopen_tooltip"), //$NON-NLS-1$
 		"OPEN", //$NON-NLS-1$
@@ -87,6 +87,8 @@ public class AttachmentActionListener implements ActionListener {
 	null, null, 0, null);
 
 		viewHeaderAction.addActionListener(this);
+	
+		*/
 	}
 
 	protected int[] getSelection() {

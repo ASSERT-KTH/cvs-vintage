@@ -51,6 +51,7 @@ public class GlobalActionCollection
     {
 		this.frameController = frameController;
 		
+		/*
         cutAction = new BasicAction(
 				    MailResourceLoader.getString("action","mainframe","menu_edit_cut"),
 				    MailResourceLoader.getString("action","mainframe","menu_edit_cut"),
@@ -204,7 +205,7 @@ public class GlobalActionCollection
             KeyStroke.getKeyStroke( KeyEvent.VK_F9, 0 )
             );
 
-
+	*/
 
     }
 

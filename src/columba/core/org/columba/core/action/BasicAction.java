@@ -28,6 +28,9 @@ import javax.swing.KeyStroke;
  * Window>Preferences>Java>Code Generation.
  */
 public class BasicAction extends JAbstractAction {
+
+	boolean showToolbarText = true;
+
 	/**
 	 * Method BasicAction.
 	 * @param name
@@ -40,6 +43,26 @@ public class BasicAction extends JAbstractAction {
 	 * @param keyStroke
 	 * @param showToolbarText
 	 */
+	public BasicAction(
+		String name,
+		String longDescription,
+		String actionCommand,
+		ImageIcon small_icon,
+		ImageIcon big_icon,
+		int mnemonic,
+		KeyStroke keyStroke) {
+		this(
+			name,
+			longDescription,
+			null,
+			actionCommand,
+			small_icon,
+			big_icon,
+			mnemonic,
+			keyStroke);
+
+	}
+
 	public BasicAction(
 		String name,
 		String longDescription,
@@ -62,7 +85,49 @@ public class BasicAction extends JAbstractAction {
 		putValue(Action.MNEMONIC_KEY, new Integer(mnemonic));
 
 		TOOLBAR_NAME = name;
-		
+
+	}
+
+	public BasicAction(
+		String name,
+		String longDescription,
+		String actionCommand,
+		ImageIcon small_icon,
+		ImageIcon big_icon,
+		int mnemonic,
+		KeyStroke keyStroke,
+		boolean showToolbarText) {
+		this(
+			name,
+			longDescription,
+			actionCommand,
+			small_icon,
+			big_icon,
+			mnemonic,
+			keyStroke);
+		this.showToolbarText = showToolbarText;
+	}
+
+	public BasicAction(
+		String name,
+		String longDescription,
+		String tooltip,
+		String actionCommand,
+		ImageIcon small_icon,
+		ImageIcon big_icon,
+		int mnemonic,
+		KeyStroke keyStroke,
+		boolean showToolbarText) {
+		this(
+			name,
+			longDescription,
+			tooltip,
+			actionCommand,
+			small_icon,
+			big_icon,
+			mnemonic,
+			keyStroke);
+		this.showToolbarText = showToolbarText;
 	}
 
 }

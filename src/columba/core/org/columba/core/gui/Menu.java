@@ -189,6 +189,13 @@ public class Menu extends JMenuBar {
 		XmlElement menu, extension;
 		String menuName = menuExtension.getAttribute("name");
 		String extensionName = menuExtension.getAttribute("extensionpoint");
+		if ( extensionName == null )
+		{
+			// new menu
+			menuRoot.insertElement(menuExtension, menuRoot.count()-1);	
+			return;
+		}
+		
 		int insertIndex = 0;
 		
 		while( iterator.hasNext() ) {
@@ -216,6 +223,7 @@ public class Menu extends JMenuBar {
 
 	// create the menu
 	private void init() {
+		/*
 		handler = frameController.getMouseTooltipHandler();
 
 		JMenu menu, subMenu;
@@ -230,13 +238,7 @@ public class Menu extends JMenuBar {
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		add(fileMenu);
 
-		/*
-		menuItem = new CMenuItem("Open New Window..");
-		menuItem.setActionCommand("OPEN_NEW_WINDOW");
-		menuItem.setIcon(ImageLoader.getSmallImageIcon("stock_new-16.png"));
-		menuItem.addActionListener(frameController.getActionListener());
 		
-		fileMenu.add(menuItem);*/
 		//fileMenu.add(new OpenNewWindow(frameController));
 
 		fileMenu.addSeparator();
@@ -258,11 +260,7 @@ public class Menu extends JMenuBar {
 
 		fileMenu.addSeparator();
 
-		/*
-		  JMenuItem item = new JMenuItem("Receive and Send Messages");
-		  item.setActionCommand("RECEIVE_SEND");
-		  item.addActionListener( new FrameActionListener( mainInterface ) );
-		*/
+		
 
 		menuItem =
 			new CMenuItem(
@@ -410,15 +408,7 @@ public class Menu extends JMenuBar {
 
 		editMenu.addSeparator();
 
-		/*
-		menuItem =
-			new JMenuItem(GlobalResourceLoader.getString("menu","mainframe", "menu_edit_preferences"));
-		//ImageLoader.getImageIcon("", "Preferences16" ) );
-		menuItem.setMnemonic(KeyEvent.VK_P);
-		menuItem.setActionCommand("MAIN_PREFERENCES");
-		menuItem.addActionListener(new FrameActionListener(mainInterface));
-		menu.add(menuItem);
-		*/
+		
 
 		menuItem =
 			new CMenuItem(
@@ -484,15 +474,7 @@ public class Menu extends JMenuBar {
 		viewMenu.add(subMenu);
 
 		viewMenu.addSeparator();
-		/*
-		    cbMenuItem = new JCheckBoxMenuItem( frameController.globalActionCollection.useAdvancedViewerAction );
-		    //cbMenuItem.addActionListener( new FrameActionListener( mainInterface ) );
-		    cbMenuItem.setActionCommand("USE_ADVANCEDVIEWER");
-		    if ( MainInterface.mainFrameWindowItem.getAdvancedViewer()  ) cbMenuItem.setSelected( true );
-		    menu.add( cbMenuItem );
 		
-		    menu.addSeparator();
-		*/
 
 		sortSubMenu =
 			new CMenu(
@@ -532,13 +514,7 @@ public class Menu extends JMenuBar {
 					.viewThreadedAction);
 		cbMenuItem.setSelected(true);
 
-		/*
-		frameController
-			.tableController
-			.getActionListener()
-			.viewThreadedAction
-			.addPropertyChangeListener(cbMenuItem);
-		*/
+		
 
 		viewMenu.add(cbMenuItem);
 
@@ -1059,11 +1035,7 @@ public class Menu extends JMenuBar {
 		menuItem.setEnabled(true);
 		utilitiesMenu.add(menuItem);
 
-		/*
-		menu = new JMenu(GlobalResourceLoader.getString("menu","mainframe", "menu_preferences"));
-		menu.setMnemonic('P');
-		add(menu);
-		*/
+	
 
 		//menu.addSeparator();
 
@@ -1159,7 +1131,7 @@ public class Menu extends JMenuBar {
 		menuItem.setEnabled(true);
 		menuItem.addActionListener(frameController.getActionListener());
 		helpMenu.add(menuItem);
-
+		*/
 	}
 
 	public void addMenuEntry(String id, BasicAction action) {

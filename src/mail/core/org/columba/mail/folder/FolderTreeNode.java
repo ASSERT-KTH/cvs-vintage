@@ -258,7 +258,7 @@ public abstract class FolderTreeNode
 
 	public abstract void createChildren(WorkerStatusController worker);
 
-	public void addFolder(String name, String type) throws Exception {
+	public FolderTreeNode addFolder(String name, String type) throws Exception {
 		FolderPluginHandler handler =
 					(FolderPluginHandler) MainInterface.pluginManager.getHandler(
 						"folder");
@@ -289,6 +289,8 @@ public abstract class FolderTreeNode
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		return folder;
 		/*
 		Method m_getDefaultProperties =
 			childClass.getMethod("getDefaultProperties", null);
@@ -307,8 +309,8 @@ public abstract class FolderTreeNode
 		*/
 	}
 
-	public void addFolder(String name) throws Exception {
-		addFolder(name, getDefaultChild());
+	public FolderTreeNode addFolder(String name) throws Exception {
+		return addFolder(name, getDefaultChild());
 	}
 
 	public void addWithXml(FolderTreeNode folder) {
