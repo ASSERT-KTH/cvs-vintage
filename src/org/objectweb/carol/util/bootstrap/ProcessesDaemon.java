@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ProcessesDaemon.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: ProcessesDaemon.java,v 1.5 2005/03/07 15:47:48 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.bootstrap;
@@ -33,6 +33,7 @@ import java.rmi.registry.Registry;
 
 import javax.rmi.PortableRemoteObject;
 
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
@@ -94,14 +95,15 @@ public class ProcessesDaemon {
         // (String), has arguments (boolean),
         //                        description (String), required (boolean), has multiple arguments
         // (boolean)
-        cmdLineOptions.addOption('c', "clean", false, "clean jvm hashtables mode", false, false);
-        cmdLineOptions.addOption('p', "port", true, "daemon rmi port number", false, false);
-        cmdLineOptions.addOption('h', "help", false, "print this message and exit", false, false);
-        cmdLineOptions.addOption('v', "verbose", false, "verbose mode", false, false);
+        cmdLineOptions.addOption("c", "clean", false, "clean jvm hashtables mode");
+        cmdLineOptions.addOption("p", "port", true, "daemon rmi port number");
+        cmdLineOptions.addOption("h", "help", false, "print this message and exit");
+        cmdLineOptions.addOption("v", "verbose", false, "verbose mode");
 
         CommandLine cmd = null;
+        BasicParser cmdParser = new BasicParser();
         try {
-            cmd = cmdLineOptions.parse(args, true);
+            cmd = cmdParser.parse(cmdLineOptions, args, true);
         } catch (ParseException e) {
             System.err.println("\n" + e.getMessage());
             printHelp(cmdLineOptions);

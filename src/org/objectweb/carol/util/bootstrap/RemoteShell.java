@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RemoteShell.java,v 1.5 2005/02/18 08:50:15 benoitf Exp $
+ * $Id: RemoteShell.java,v 1.6 2005/03/07 15:47:48 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.bootstrap;
@@ -40,6 +40,7 @@ import java.util.StringTokenizer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
@@ -93,14 +94,15 @@ public class RemoteShell {
         // (String), has arguments (boolean),
         //                        description (String), required (boolean), has multiple arguments
         // (boolean)
-        cmdLineOptions.addOption('l', "host location", true, "Host location", false, false);
-        cmdLineOptions.addOption('p', "port", true, "daemon rmi port number", false, false);
-        cmdLineOptions.addOption('c', "command", true, "start a command and exit", false, false);
-        cmdLineOptions.addOption('h', "help", false, "print this message and exit", false, false);
+        cmdLineOptions.addOption("l", "host location", true, "Host location");
+        cmdLineOptions.addOption("p", "port", true, "daemon rmi port number");
+        cmdLineOptions.addOption("c", "command", true, "start a command and exit");
+        cmdLineOptions.addOption("h", "help", false, "print this message and exit");
 
         CommandLine cmd = null;
+        BasicParser cmdParser = new BasicParser();
         try {
-            cmd = cmdLineOptions.parse(args, true);
+            cmd = cmdParser.parse(cmdLineOptions, args, true);
         } catch (ParseException e) {
             System.err.println("\n" + e.getMessage());
             printHelp(cmdLineOptions);
