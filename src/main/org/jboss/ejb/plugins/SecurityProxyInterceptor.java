@@ -6,13 +6,13 @@
  */
 package org.jboss.ejb.plugins;
 
+import java.rmi.RemoteException;
 import java.security.Principal;
 import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
 import javax.naming.InitialContext;
 
 import org.jboss.ejb.Container;
-import org.jboss.ejb.EJBProxyFactoryContainer;
+import org.jboss.ejb.ContainerInvokerContainer;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.invocation.Invocation;
 import org.jboss.logging.Logger;
@@ -28,8 +28,8 @@ import org.jboss.security.SecurityProxyFactory;
  * proxy. It is added just before the container interceptor so that the
  * interceptor has access to the EJB instance and context.
  * 
- * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- * @version $Revision: 1.14 $
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @version $Revision: 1.15 $
  */
 public class SecurityProxyInterceptor
    extends AbstractInterceptor
@@ -98,8 +98,8 @@ public class SecurityProxyInterceptor
             // Initialize the securityProxy
             try
             {
-               EJBProxyFactoryContainer ic =
-                  (EJBProxyFactoryContainer)container;
+               ContainerInvokerContainer ic =
+                  (ContainerInvokerContainer)container;
                Class beanHome = ic.getHomeClass();
                Class beanRemote = ic.getRemoteClass();
                securityProxy.init(beanHome, beanRemote, securityManager);
@@ -146,8 +146,7 @@ public class SecurityProxyInterceptor
             Principal principal = mi.getPrincipal();
             String msg = "SecurityProxy.invokeHome exception, principal=" + principal;
             log.error(msg, e);
-            SecurityException se = new SecurityException(msg);
-            throw new EJBException("SecurityProxy.invokeHome failure", se);
+            throw e;
          }
       }
       return getNext().invokeHome(mi);
@@ -171,10 +170,10 @@ public class SecurityProxyInterceptor
             Principal principal = mi.getPrincipal();
             String msg = "SecurityProxy.invoke exception, principal="+principal;
             log.error(msg, e);
-            SecurityException se = new SecurityException(msg);
-            throw new EJBException("SecurityProxy.invoke failure", se);
+            throw e;
          }
       }
       return getNext().invoke(mi);
    }
 }
+
