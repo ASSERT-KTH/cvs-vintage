@@ -13,7 +13,7 @@ package org.jboss.system;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.io.StringWriter;
-import java.io.Writer;   
+import java.io.Writer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ import org.w3c.dom.Text;
 
 /**
  * Service configuration helper.
- * 
+ *
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:hiram@jboss.org">Hiram Chirino</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  *
  * <p><b>20010830 marc fleury:</b>
  * <ul>
@@ -50,7 +50,7 @@ import org.w3c.dom.Text;
  * <p><b>20010831 hiram chirino:</b>
  * <ul>
  *   <li>Added suppport for org.w3c.dom.Element type mbean attributes.
- *      The first child Element of the &lt;attribute ...&gt; is used 
+ *      The first child Element of the &lt;attribute ...&gt; is used
  *      to set the value of the attribute.
  * </ul>
  */
@@ -58,281 +58,305 @@ public class ServiceConfigurator
 {
    /** Primitive type name -> class map. */
    private static Hashtable primitives = new Hashtable();
-	
+   
    /** Setup the primitives map. */
-   static {
+   static
+   {
       primitives.put("int", Integer.TYPE);
       primitives.put("boolean", Boolean.TYPE);
       primitives.put("double", Double.TYPE);
       primitives.put("float", Float.TYPE);
       primitives.put("long", Long.TYPE);
    }
-	
+   
    /** The MBean server which this service is registered in. */
    private MBeanServer server;
-
+   
    /** The instance logger. */
    private static Logger log = Logger.getLogger(ServiceConfigurator.class);
-	
+   
    // Constructors --------------------------------------------------
-	
-   public ServiceConfigurator(final MBeanServer server) 
+   
+   public ServiceConfigurator(final MBeanServer server)
    {
       this.server = server;
    }
    
    // Public  -------------------------------------------------------
-	
+   
    /**
     * Builds a string that consists of the configuration elements of
     * the currently running MBeans registered in the server.
     *
     * @throws Exception    Failed to construct configuration.
     */
-   public String getConfiguration(ObjectName[] objectNames) 
-      throws Exception 
+   public String getConfiguration(ObjectName[] objectNames)
+   throws Exception
    {
       Writer out = new StringWriter();
-		
+      
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder builder = factory.newDocumentBuilder();
       Document doc = builder.newDocument();
-		
+      
       Element serverElement = doc.createElement("server");
-		
+      
       // Store attributes as XML
-      for (int j = 0 ; j<objectNames.length ; j++) 
+      for (int j = 0 ; j<objectNames.length ; j++)
       {
          ObjectInstance instance = server.getObjectInstance(objectNames[j]);
          ObjectName name = (ObjectName)instance.getObjectName();
          Element mbeanElement = doc.createElement("mbean");
          mbeanElement.setAttribute("name", name.toString());
-			
+         
          MBeanInfo info = server.getMBeanInfo(name);
          mbeanElement.setAttribute("code", info.getClassName());
          MBeanAttributeInfo[] attributes = info.getAttributes();
          boolean hasAttributes = true;
-         for (int i = 0; i < attributes.length; i++) {
-            if (attributes[i].isReadable() && isAttributeWriteable(server.getObjectInstance(name).getClassName(), attributes[i].getName(), attributes[i].getType())) {
-               if (!attributes[i].isWritable()) {
+         for (int i = 0; i < attributes.length; i++)
+         {
+            if (attributes[i].isReadable() && isAttributeWriteable(server.getObjectInstance(name).getClassName(), attributes[i].getName(), attributes[i].getType()))
+            {
+               if (!attributes[i].isWritable())
+               {
                   log.debug("Detected JMX Bug: Server reports attribute '"+attributes[i].getName() + "' is not writeable for MBean '" + name.getCanonicalName() + "'");
                }
                Element attributeElement = doc.createElement("attribute");
                Object value = server.getAttribute(name, attributes[i].getName());
-					
+               
                attributeElement.setAttribute("name", attributes[i].getName());
-					
-               if (value != null) {
+               
+               if (value != null)
+               {
                   attributeElement.appendChild(doc.createTextNode(value.toString()));
                }
-					
+               
                mbeanElement.appendChild(attributeElement);
                hasAttributes = true;
             }
          }
-			
-         if (hasAttributes) {
+         
+         if (hasAttributes)
+         {
             serverElement.appendChild(mbeanElement);
          }
       }
-		
+      
       doc.appendChild(serverElement);
-		
+      
       // Write configuration
       (new DOMWriter(out, false)).print(doc, true);
-		
+      
       out.close();
-		
+      
       // Return configuration
       return out.toString();
    }
-	
-	
+   
+   
    // Public -----------------------------------------------------
-	
-    /**
-     * The <code>configure</code> method configures an mbean based on the xml element configuration
-     * passed in.  Three formats are supported:
-     * &lt;attribute name="(name)"&gt;(value)&lt;/attribute&gt;
-     * &lt;mbean-ref name="(name)"&gt;(object name of mbean referenced)&lt;/mbean-ref&gt;
-     * &lt;mbean-ref-list name="(name)"&gt;
-     * [list of]  &lt;/mbean-ref-list-element&gt;(object name)&lt;/mbean-ref-list-element&gt;
-     * &lt;/mbean-ref-list&gt;
-     *
-     * @param mbeanElement an <code>Element</code> value
-     * @return a <code>ArrayList</code> of all the mbeans this one references.
-     * @exception Exception if an error occurs
-     */
-    public ArrayList configure(Element mbeanElement) 
-      throws Exception 
+   
+   /**
+    * The <code>configure</code> method configures an mbean based on the xml element configuration
+    * passed in.  Three formats are supported:
+    * &lt;attribute name="(name)"&gt;(value)&lt;/attribute&gt;
+    * &lt;mbean-ref name="(name)"&gt;(object name of mbean referenced)&lt;/mbean-ref&gt;
+    * &lt;mbean-ref-list name="(name)"&gt;
+    * [list of]  &lt;/mbean-ref-list-element&gt;(object name)&lt;/mbean-ref-list-element&gt;
+    * &lt;/mbean-ref-list&gt;
+    *
+    * @param mbeanElement an <code>Element</code> value
+    * @return a <code>ArrayList</code> of all the mbeans this one references.
+    * @exception Exception if an error occurs
+    */
+   public ArrayList configure(Element mbeanElement)
+   throws Exception
    {
-		
+      
       // Set configuration to MBeans from XML
-		
+      
       // get the name of the mbean
       ObjectName objectName = parseObjectName(mbeanElement);
-		
+      
       MBeanInfo info;
-      try {
+      try
+      {
          info = server.getMBeanInfo(objectName);
-      } catch (InstanceNotFoundException e) {
+      } catch (InstanceNotFoundException e)
+      {
          // The MBean is no longer available
          // It's ok, just return It is ????? Why??  Oh yeah?
          throw new DeploymentException("trying to configure nonexistent mbean: " + objectName);
       }
-		
+      
       // Set attributes
       MBeanAttributeInfo[] attributes = info.getAttributes();
       NodeList attrs = mbeanElement.getElementsByTagName("attribute");
-      for (int j = 0; j < attrs.getLength(); j++) {
+      for (int j = 0; j < attrs.getLength(); j++)
+      {
          Element attributeElement = (Element)attrs.item(j);
          String attributeName = attributeElement.getAttribute("name");
-      attrfound:
-         if (attributeElement.hasChildNodes()) {
-				
-            // Get the attribute value
-            String attributeValue = ((Text)attributeElement.getFirstChild()).getData().trim();
-				
-            for (int k = 0; k < attributes.length; k++) {
-               if (attributeName.equals(attributes[k].getName())) {
-                  String typeName = attributes[k].getType();
-                  Class typeClass;
-                  if (primitives.containsKey(typeName)) {
-                     typeClass = (Class)primitives.get(typeName);
-                  } else {
-                     typeClass = Class.forName(typeName);
-                  }
-						
-                  Object value = null;
-						
-                  // HRC: Is the attribute type a org.w3c.dom.Element??
-                  if (typeClass.equals(Element.class)) {
-                     // Then we can pass the first child Element of this 
-                     // attributeElement
-                     NodeList nl = attributeElement.getChildNodes();
-                     for (int i=0; i < nl.getLength(); i++) {
-                        org.w3c.dom.Node n = nl.item(i);
-                        if (n.getNodeType() == n.ELEMENT_NODE) {
-                           value = (Element)n;
-                           break;
+         attrfound:
+            if (attributeElement.hasChildNodes())
+            {
+               // Get the attribute value
+               String attributeValue = ((Text)attributeElement.getFirstChild()).getData().trim();
+               
+               for (int k = 0; k < attributes.length; k++)
+               {
+                  if (attributeName.equals(attributes[k].getName()))
+                  {
+                     String typeName = attributes[k].getType();
+                     Class typeClass;
+                     if (primitives.containsKey(typeName))
+                     {
+                        typeClass = (Class)primitives.get(typeName);
+                     }
+                     else
+                     {
+                        typeClass = Class.forName(typeName);
+                     }
+                     
+                     Object value = null;
+                     
+                     // HRC: Is the attribute type a org.w3c.dom.Element??
+                     if (typeClass.equals(Element.class))
+                     {
+                        // Then we can pass the first child Element of this
+                        // attributeElement
+                        NodeList nl = attributeElement.getChildNodes();
+                        for (int i=0; i < nl.getLength(); i++)
+                        {
+                           org.w3c.dom.Node n = nl.item(i);
+                           if (n.getNodeType() == n.ELEMENT_NODE)
+                           {
+                              value = (Element)n;
+                              break;
+                           }
                         }
                      }
-                  }
-						
-                  if (value == null) {
-                     PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
-                     editor.setAsText(attributeValue);
-                     value = editor.getValue();
-                  }
-							
-                  log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
-                  server.setAttribute(objectName, new Attribute(attributeName, value));
-						
-                  break attrfound;
-               }//if name matches
-            }//for attr names
-            throw new DeploymentException("No Attribute found with name: " +  attributeName);
-         }//if has children
+                     
+                     if (value == null)
+                     {
+                        PropertyEditor editor = PropertyEditorManager.findEditor(typeClass);
+                        editor.setAsText(attributeValue);
+                        value = editor.getValue();
+                     }
+                     
+                     log.debug(attributeName + " set to " + attributeValue + " in " + objectName);
+                     server.setAttribute(objectName, new Attribute(attributeName, value));
+                     
+                     break attrfound;
+                  }//if name matches
+               }//for attr names
+               throw new DeploymentException("No Attribute found with name: " +  attributeName);
+            }//if has children
       }
       // Set mbean references (object names)
       ArrayList mBeanRefs = new ArrayList();
       NodeList mBeanRefElements = mbeanElement.getElementsByTagName("mbean-ref");
       log.debug("found " + mBeanRefElements.getLength() + " mbean-ref elements");
-      for (int j = 0; j < mBeanRefElements.getLength(); j++) {
+      for (int j = 0; j < mBeanRefElements.getLength(); j++)
+      {
          Element mBeanRefElement = (Element)mBeanRefElements.item(j);
          String mBeanRefName = mBeanRefElement.getAttribute("name");
-         if (!mBeanRefElement.hasChildNodes()) 
+         if (!mBeanRefElement.hasChildNodes())
          {
-            throw new DeploymentException("No ObjectName supplied for mbean-ref " + mBeanRefName);   
-
-         }		
+            throw new DeploymentException("No ObjectName supplied for mbean-ref " + mBeanRefName);
+            
+         }
          // Get the mbeanRef value
          String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
          ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
-         if (!mBeanRefs.contains(mBeanRefObjectName)) 
+         if (!mBeanRefs.contains(mBeanRefObjectName))
          {
             mBeanRefs.add(mBeanRefObjectName);
          } // end of if ()
-      namefound:
-         if (mBeanRefName == null || "".equals(mBeanRefName)) 
-         {
-            log.debug("Anonymous dependency on object name " + mBeanRefObjectName);            
-         } // end of if ()
-         else 
-         {
-            log.debug("considering " + mBeanRefName + " with object name " + mBeanRefObjectName);
-            for (int k = 0; k < attributes.length; k++) {
-               if (mBeanRefName.equals(attributes[k].getName())) {
-                  String typeName = attributes[k].getType();
-                  if (!"javax.management.ObjectName".equals(typeName)) 
+         namefound:
+            if (mBeanRefName == null || "".equals(mBeanRefName))
+            {
+               log.debug("Anonymous dependency on object name " + mBeanRefObjectName);
+            } // end of if ()
+            else
+            {
+               log.debug("considering " + mBeanRefName + " with object name " + mBeanRefObjectName);
+               for (int k = 0; k < attributes.length; k++)
+               {
+                  if (mBeanRefName.equals(attributes[k].getName()))
                   {
-                     throw new DeploymentException("Trying to set " + mBeanRefName + " as an MBeanRef when it is not of type ObjectName");   
-                  } // end of if ()
-
-                  log.debug(mBeanRefName + " set to " + mBeanRefValue + " in " + objectName);
-                  server.setAttribute(objectName, new Attribute(mBeanRefName, mBeanRefObjectName));
-
-                  break namefound;
-               }//name test
-            }//for
-            throw new DeploymentException("No Attribute found with name: " + mBeanRefName);         
-         } // end of else
-         //breaks to here
+                     String typeName = attributes[k].getType();
+                     if (!"javax.management.ObjectName".equals(typeName))
+                     {
+                        throw new DeploymentException("Trying to set " + mBeanRefName + " as an MBeanRef when it is not of type ObjectName");
+                     } // end of if ()
+                     
+                     log.debug(mBeanRefName + " set to " + mBeanRefValue + " in " + objectName);
+                     server.setAttribute(objectName, new Attribute(mBeanRefName, mBeanRefObjectName));
+                     
+                     break namefound;
+                  }//name test
+               }//for
+               throw new DeploymentException("No Attribute found with name: " + mBeanRefName);
+            } // end of else
+            //breaks to here
       }
       // Set lists of mbean references (object names)
-
+      
       NodeList mBeanRefLists = mbeanElement.getElementsByTagName("mbean-ref-list");
-      for (int j = 0; j < mBeanRefLists.getLength(); j++) {
+      for (int j = 0; j < mBeanRefLists.getLength(); j++)
+      {
          Element mBeanRefListElement = (Element)mBeanRefLists.item(j);
          String mBeanRefListName = mBeanRefListElement.getAttribute("name");
          //Make the list of object names, and add them to mbeanRefs.
          NodeList mBeanRefList = mBeanRefListElement.getElementsByTagName("mbean-ref-list-element");
          ArrayList mBeanRefListNames = new ArrayList();
-         for (int l = 0; l < mBeanRefList.getLength(); l++) 
+         for (int l = 0; l < mBeanRefList.getLength(); l++)
          {
             Element mBeanRefElement = (Element)mBeanRefList.item(l);
-            if (!mBeanRefElement.hasChildNodes()) 
+            if (!mBeanRefElement.hasChildNodes())
             {
-               throw new DeploymentException("Empty mbean-ref-list-element!");    
+               throw new DeploymentException("Empty mbean-ref-list-element!");
             } // end of if ()
-
+            
             // Get the mbeanRef value
             String mBeanRefValue = ((Text)mBeanRefElement.getFirstChild()).getData().trim();
             ObjectName mBeanRefObjectName = new ObjectName(mBeanRefValue);
-            if (!mBeanRefListNames.contains(mBeanRefObjectName)) 
+            if (!mBeanRefListNames.contains(mBeanRefObjectName))
             {
                mBeanRefListNames.add(mBeanRefObjectName);
             } // end of if ()
-            if (!mBeanRefs.contains(mBeanRefObjectName)) 
+            if (!mBeanRefs.contains(mBeanRefObjectName))
             {
                mBeanRefs.add(mBeanRefObjectName);
             } // end of if ()
-                  
+            
          } // end of for ()
          //Now look for the name
-      listnamefound:
-         if (mBeanRefListName == null || "".equals(mBeanRefListName)) 
-         {
-            log.debug("Anonymous dependency on list of object names " + mBeanRefListNames);           
-            
-         } // end of if ()
-         else 
-         {
-            for (int k = 0; k < attributes.length; k++) {
-               if (mBeanRefListName.equals(attributes[k].getName())) {
-                  log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
-                  server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
-
-                  break listnamefound;
-               }//if name matches
-            }//for
-            throw new DeploymentException("No Attribute found with name: " + mBeanRefListName);         
-         } // end of else
-         //breaks to here
+         listnamefound:
+            if (mBeanRefListName == null || "".equals(mBeanRefListName))
+            {
+               log.debug("Anonymous dependency on list of object names " + mBeanRefListNames);
+               
+            } // end of if ()
+            else
+            {
+               for (int k = 0; k < attributes.length; k++)
+               {
+                  if (mBeanRefListName.equals(attributes[k].getName()))
+                  {
+                     log.debug(mBeanRefListName + " set to " + mBeanRefListNames + " in " + objectName);
+                     server.setAttribute(objectName, new Attribute(mBeanRefListName, mBeanRefListNames));
+                     
+                     break listnamefound;
+                  }//if name matches
+               }//for
+               throw new DeploymentException("No Attribute found with name: " + mBeanRefListName);
+            } // end of else
+            //breaks to here
       }
       return mBeanRefs;
    }
-	
+   
    /**
     * Parse an object name from the given element attribute 'name'.
     *
@@ -344,17 +368,18 @@ public class ServiceConfigurator
     * @throws MalformedObjectNameException
     */
    private ObjectName parseObjectName(final Element element)
-      throws ConfigurationException, MalformedObjectNameException
+   throws ConfigurationException, MalformedObjectNameException
    {
       String name = element.getAttribute("name");
-      if (name == null || name.trim().equals("")) {
+      if (name == null || name.trim().equals(""))
+      {
          throw new ConfigurationException
-            ("MBean attribute 'name' must be given.");
+         ("MBean attribute 'name' must be given.");
       }
-		
+      
       return new ObjectName(name);
    }
-	
+   
    /**
     * Checks if an attribute of a given class is writtable.
     *
@@ -365,12 +390,13 @@ public class ServiceConfigurator
     * @throws Exception    Unable to determin if attribute is writable.
     */
    private boolean isAttributeWriteable(final String className,
-                                        final String attribute,
-                                        final String type)
+   final String attribute,
+   final String type)
    {
       Class arg = null;
       Class cls = null;
-      try {
+      try
+      {
          if (type.equals("int"))
             arg = Integer.TYPE;
          else if (type.equals("boolean"))
@@ -389,40 +415,48 @@ public class ServiceConfigurator
             arg = Double.TYPE;
          else
             arg = Class.forName(type);
-      } catch (ClassNotFoundException e) {
+      } catch (ClassNotFoundException e)
+      {
          log.error("Unable to check parameter of type '" + type + "'");
          return false;
       }
-		
-      try {
+      
+      try
+      {
          cls = Class.forName(className);
-      } catch (ClassNotFoundException e) {
+      } catch (ClassNotFoundException e)
+      {
          log.error("Unable to check MBean of type '" + className + "'");
          return false;
       }
-		
-      try {
-         Method m = cls.getMethod("set" + attribute, new Class[] { arg });
+      
+      try
+      {
+         Method m = cls.getMethod("set" + attribute, new Class[]
+         { arg });
          return isSetterMethod(m);
-      } catch (NoSuchMethodException ignore) {}
-		
+      } catch (NoSuchMethodException ignore)
+      {}
+      
       return false;
    }
-
+   
    /**
     * Check if the given method is a "setter" method.
     *
     * @param m     The method to check.
     * @return      True if the method is a "setter" method.
     */
-   private boolean isSetterMethod(final Method m) {
-      if (m != null) {
+   private boolean isSetterMethod(final Method m)
+   {
+      if (m != null)
+      {
          return
-            Modifier.isPublic(m.getModifiers()) &&
-            !Modifier.isStatic(m.getModifiers()) &&
-            m.getReturnType().equals(Void.TYPE);
+         Modifier.isPublic(m.getModifiers()) &&
+         !Modifier.isStatic(m.getModifiers()) &&
+         m.getReturnType().equals(Void.TYPE);
       }
-		
+      
       return false;
    }
 }
