@@ -74,9 +74,9 @@ $page.setTitle("Identified as duplicate")
   #set ($issueGroup = $intake.Issue.Default)
   <td>
   #if ($velocityCount == 1)
-    <input type="radio" name="$issueGroup.Id.Key" value="$issue.IssueId" checked="checked" />
+    <input type="radio" name="$issueGroup.Id.Key" value="$issue.UniqueId" checked="checked" />
   #else
-    <input type="radio" name="$issueGroup.Id.Key" value="$issue.IssueId" />
+    <input type="radio" name="$issueGroup.Id.Key" value="$issue.UniqueId" />
   #end
   </td>
   <td><strong>$issue.UniqueId</strong></td>
