@@ -1,13 +1,15 @@
 <div class="app" id="advancedquery">
-<h3>Advanced Query</h3>
+$page.setTitle("Advanced Query")
+
+<h2>$page.Title</h2>
 
 #set ($module = $scarabR.CurrentModule)
 
 #if (!$module)
-<div class="alert">
-The currently selected module is invalid.
-Please select another module.
-</div>
+ <div class="alert">
+ The currently selected module is invalid.
+ Please select another module.
+ </div>
 #else
 
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
@@ -16,22 +18,29 @@ Please select another module.
 <input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="pageNum" value="1" /> 
 
-<p class="functnbar">
-    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" />
-</p>
+<div class="functnbar">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" /></td>
+ </tr>
+</table>
+</div>
 
 <h3>Search the Scarab Knowledge Base</h3>
 
 #advancedQuery()
 
-<p class="functnbar">
-    <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
-    <input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" />
-</p>
-   
+<div class="functnbar2">
+<table cellpadding="0" cellspacing="0" border="0">
+ <tr>
+  <td><input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;</td>
+  <td><input type="submit" name="eventSubmit_doRedirecttosavequery" value="Save this Query" /></td>
+ </tr>
+</table>
+</div>
   
 $intake.declareGroups()
 </form>
