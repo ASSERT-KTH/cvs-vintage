@@ -606,7 +606,11 @@
     <!-- ================================================================== -->
     <!-- Upgrade our version of Tomcat easily                               -->
     <!-- ================================================================== -->
-    <target name="upgrade-tomcat">
+    <target name="upgrade-tomcat-cvs">
+        <echo>
+        Upgrading Tomcat from: ${tomcat.cvs.dir}
+        </echo>
+
         <copy todir="${tomcat.dist.dir}/bin" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/bin"/>
         </copy>
@@ -624,6 +628,37 @@
         </copy>
         <copy todir="${tomcat.dist.dir}/server/lib" filtering="no">
             <fileset dir="${tomcat.cvs.dir}/build/server/lib">
+                <include name="**/servlets-common.jar"/>
+                <include name="**/servlets-default.jar"/>
+                <include name="**/servlets-invoker.jar"/>
+                <include name="**/servlets-manager.jar"/>
+                <include name="**/catalina.jar"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="upgrade-tomcat">
+        <echo>
+        Upgrading Tomcat from: ${tomcat.binary.dir}
+        </echo>
+    
+        <copy todir="${tomcat.dist.dir}/bin" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/bin"/>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/common/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/common/lib">
+                <include name="**/naming-common.jar"/>
+                <include name="**/naming-resources.jar"/>
+                <include name="**/servlet.jar"/>
+            </fileset>
+       </copy>
+       <copy todir="${tomcat.dist.dir}/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/lib">
+                <include name="**/naming-factory.jar"/>
+            </fileset>
+        </copy>
+        <copy todir="${tomcat.dist.dir}/server/lib" filtering="no">
+            <fileset dir="${tomcat.binary.dir}/server/lib">
                 <include name="**/servlets-common.jar"/>
                 <include name="**/servlets-default.jar"/>
                 <include name="**/servlets-invoker.jar"/>
