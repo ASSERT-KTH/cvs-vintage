@@ -56,38 +56,28 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-
-
 package org.apache.tomcat.util;
 
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
-// Added to avoid the conversion of [] to Vector - reduce garbage + cleaner
-// code is similar to VectorEnumeration in java.util.Vector
+public class EmptyEnumeration implements Enumeration {
 
-public class ArrayEnumerator implements Enumeration {
+    static EmptyEnumeration staticInstance=new EmptyEnumeration();
 
-    Object array[];
-    int pos;
-    
-    public ArrayEnumerator( Object array[] ) {
-	this.array=array;
-	pos=0;
+    public EmptyEnumeration() {
+    }
+
+    public static Enumeration getEmptyEnumeration() {
+	return staticInstance;
     }
     
     public Object nextElement( ) {
-	synchronized( array ) {
-	    if( pos < array.length )
-		return array[ pos ++ ];
-	}
-	throw new NoSuchElementException( "No more elements: " +
-					  pos + " / " + array.length);
-	
+	throw new NoSuchElementException( "EmptyEnumeration");
     }
 
     public boolean hasMoreElements() {
-	return pos < array.length;
+	return false;
     }
     
 }

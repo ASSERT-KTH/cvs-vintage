@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.52 2000/06/15 19:34:28 jon Exp $
- * $Revision: 1.52 $
- * $Date: 2000/06/15 19:34:28 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.53 2000/06/16 17:58:56 costin Exp $
+ * $Revision: 1.53 $
+ * $Date: 2000/06/16 17:58:56 $
  *
  * ====================================================================
  *
@@ -306,8 +306,6 @@ public class ServletWrapper {
     }
 
     /** Load and init a the servlet pointed by this wrapper
-     *  @deprecated loadServlet is used with the meaning of initServlet.
-     *    Use the real thing.
      */
     public void loadServlet()
 	throws ClassNotFoundException, InstantiationException,
