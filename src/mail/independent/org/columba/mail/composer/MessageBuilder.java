@@ -539,14 +539,15 @@ public class MessageBuilder {
 	public void createMessageFromTemplate(
 		ColumbaMessage message,
 		ComposerModel model,
-		String templateBody,
+		StreamableMimePart templateBodypart,
 		boolean htmlTemplate)
 		throws IOException {
 
 		ColumbaHeader header = (ColumbaHeader) message.getHeaderInterface();
 
 		MimePart bodyPart = message.getBodyPart();
-
+		String templateBody = createBodyText(templateBodypart);
+		
 		if (bodyPart != null) {
 			String charset =
 				bodyPart.getHeader().getContentParameter("charset");
