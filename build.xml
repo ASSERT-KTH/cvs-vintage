@@ -318,7 +318,7 @@
   <!-- ====================  Jasper ( 1.0 )  ========== -->
   <target name="jasper" depends="init" >
     <javac destdir="${tomcat.build}/classes"
-      srcdir="src/jasper3"
+      srcdir="src/share"
       debug="${debug}" 
       optimize="${optimize}"
       deprecation="off" >
