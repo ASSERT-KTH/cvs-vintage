@@ -1,4 +1,4 @@
-// $Id: ChangeRegistry.java,v 1.6 2003/08/30 20:43:35 alexb Exp $
+// $Id: ChangeRegistry.java,v 1.7 2004/08/25 20:28:29 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChangeRegistry.java
 // Classes: ChangeRegistry
 // Original Author: thorsten Jun 2000
-// $Id: ChangeRegistry.java,v 1.6 2003/08/30 20:43:35 alexb Exp $
+// $Id: ChangeRegistry.java,v 1.7 2004/08/25 20:28:29 mvw Exp $
 
 package org.argouml.util;
 
@@ -34,20 +34,30 @@ import org.argouml.kernel.ProjectManager;
 import org.tigris.gef.graph.GraphEvent;
 import org.tigris.gef.graph.GraphListener;
 
-/** This class holds the information about the saving state of the current project.
- *  The state is changed by every change made to its diagrams.
+/** 
+ * This class holds the information about the "change flag" of 
+ * the current project. Initially, the "change flag" is clear, 
+ * which means that there is nothing in the project to save. 
+ * The "change flag" is set by every change made to its diagrams, 
+ * which means that the project becomes 'dirty', i.e. it needs saving. 
  *
  * @see org.argouml.kernel.Project
  */
-
 public class ChangeRegistry implements GraphListener
 {
-    protected boolean changeFlag;
+    private boolean changeFlag;
 
+    /**
+     * The constructor.
+     * 
+     */
     public ChangeRegistry() { changeFlag = false; }
 
     /**
-     * changes save state / notifies gui.
+     * Changes save state / notifies gui.
+     *
+     * @param newValue true means that the project needs to be saved. 
+     *                 False means that there is nothing to save.
      */
     public void setChangeFlag( boolean newValue ) {
 		
@@ -61,26 +71,44 @@ public class ChangeRegistry implements GraphListener
                 
     }
 
+    /**
+     * @return the change flag aka save state
+     */
     public boolean hasChanged() {
 	return changeFlag;
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#nodeAdded(org.tigris.gef.graph.GraphEvent)
+     */
     public void nodeAdded(GraphEvent e) {
 	setChangeFlag( true );
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#edgeAdded(org.tigris.gef.graph.GraphEvent)
+     */
     public void edgeAdded(GraphEvent e) {
 	setChangeFlag( true );
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#nodeRemoved(org.tigris.gef.graph.GraphEvent)
+     */
     public void nodeRemoved(GraphEvent e) {
 	setChangeFlag( true );
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#edgeRemoved(org.tigris.gef.graph.GraphEvent)
+     */
     public void edgeRemoved(GraphEvent e) {
 	setChangeFlag( true );
     }
 
+    /**
+     * @see org.tigris.gef.graph.GraphListener#graphChanged(org.tigris.gef.graph.GraphEvent)
+     */
     public void graphChanged(GraphEvent e) {
 	setChangeFlag( true );
     }
