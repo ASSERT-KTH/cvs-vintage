@@ -27,7 +27,7 @@ import org.jboss.system.URLClassLoader;
  * @see <related>
  * @author <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.8 $ <p>
+ * @version $Revision: 1.9 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -102,7 +102,7 @@ public class ServiceLibraries
     *  calling the classloaders with locks removed, the
     *  {@link #clToResourceSetMap} and {@link #resources} fields should
     *  <em>only</em> be modified if the classloader used for loading
-    *  the class is still in the {@link #classLoaders] set.
+    *  the class is still in the {@link #classLoaders} set.
     */
    private long clToResourceSetMapVersion = 0;
 
@@ -422,6 +422,7 @@ public class ServiceLibraries
    public void postDeregister()
    {
    }
+   
    // Y overrides ---------------------------------------------------
 
    // Package protected ---------------------------------------------
