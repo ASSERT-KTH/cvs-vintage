@@ -93,6 +93,9 @@ public final class HttpSessionFacade implements HttpSession {
     private static StringManager sm =
         StringManager.getManager("org.apache.tomcat.resources");
     ServerSession realSession;
+    //  We need to keep the Id, since it may change in realSession.
+    private String sessionId;
+    private boolean isValid = false;
     
     HttpSessionFacade() {
     }
@@ -102,18 +105,21 @@ public final class HttpSessionFacade implements HttpSession {
     void setRealSession(ServerSession s) {
  	realSession=s;
 	realSession.setFacade( this );
+	sessionId = realSession.getId().toString();
+	isValid = true;
      }
 
     /** Package-level method - accessible only by core
      */
     void recycle() {
+	isValid = false;
 	//	realSession=null;
     }
 
     // -------------------- public facade --------------------
 
     public String getId() {
-	return realSession.getId().toString();
+	return sessionId;
     }
 
     /**
@@ -301,7 +307,7 @@ public final class HttpSessionFacade implements HttpSession {
 
     // duplicated code, private
     private void checkValid() {
-	if (!realSession.getTimeStamp().isValid()) {
+	if (! (realSession.getTimeStamp().isValid() && isValid )) {
 	    throw new IllegalStateException
 		(sm.getString("standardSession.getAttributeNames.ise"));
 	}

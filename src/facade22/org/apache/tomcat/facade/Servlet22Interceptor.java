@@ -235,6 +235,9 @@ public final class Servlet22Interceptor
 		    sess.removeAttribute( key );
 		}
 	    }
+	    if( httpSess != null && newState==ServerSession.STATE_EXPIRED ) {
+		((HttpSessionFacade)httpSess).recycle();
+	    }
 	} 
 	return 0;
     }
