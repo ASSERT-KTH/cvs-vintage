@@ -111,7 +111,6 @@ public class Context implements LogAware {
     private ContextManager contextM;
     private ServletContext contextFacade;
 
-    private ServletLoader servletL;
     boolean reloadable=true; // XXX change default to false after testing
 
     private Hashtable attributes = new Hashtable();
@@ -657,11 +656,64 @@ public class Context implements LogAware {
     }
 
     // -------------------- Loading and sessions --------------------
+    ClassLoader classLoader;
+    boolean reload;
+    // Vector<URL>, using URLClassLoader conventions
+    Vector classPath=new Vector();
+    
+    
+    /** The current class loader. This value may change if reload
+     *  is used, you shouldn't cache the result
+     */
+    public final ClassLoader getClassLoader() {
+	if( servletL!=null) // backward compat
+	    return servletL.getClassLoader();
+	log( "getClassLoader(): " + classLoader);
+	return classLoader;
+    }
+
+    public final void setClassLoader(ClassLoader cl ) {
+	classLoader=cl;
+    }
+
+    // temp. properties until reloading is separated.
+    public boolean shouldReload() {
+	if( servletL!=null) // backward compat
+	    return servletL.shouldReload();
+	return reload;
+    }
+
+    public void setReload( boolean b ) {
+	reload=b;
+    }
+
+    public void reload() {
+	if( servletL!=null) // backward compat
+	    servletL.reload();
+	// XXX todo
+    }
+
+    public void addClassPath( URL url ) {
+	classPath.addElement( url);
+    }
+
+    public URL[] getClassPath() {
+	if( classPath==null ) return new URL[0];
+	URL urls[]=new URL[classPath.size()];
+	for( int i=0; i<urls.length; i++ ) {
+	    urls[i]=(URL)classPath.elementAt( i );
+	}
+	return urls;
+    }
+	
+    // deprecated
+    private ServletLoader servletL;
+
     public void setServletLoader(ServletLoader loader ) {
 	this.servletL=loader;
     }
 
-    public ServletLoader getServletLoader() {
+    private ServletLoader getServletLoader() {
 	return servletL;
     }
 

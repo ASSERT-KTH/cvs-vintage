@@ -256,8 +256,7 @@ public class ServletWrapper extends Handler {
 		throw new IllegalStateException("Can't happen - classname "
 						+ "is null, who added this ?");
 	    }
-	    ServletLoader loader=context.getServletLoader();
-	    servletClass=loader.loadClass(servletClassName);
+	    servletClass=context.getClassLoader().loadClass(servletClassName);
 	}
 	
 	servlet = (Servlet)servletClass.newInstance();
@@ -384,10 +383,10 @@ public class ServletWrapper extends Handler {
 	// That will be reolved after we reset the context - and many
 	// other conflicts.
 	if( isReloadable ) {// && ! "invoker".equals( getServletName())) {
-	    ServletLoader loader=context.getServletLoader();
-	    if( loader!=null) {
+// 	    ServletLoader loader=context.getServletLoader();
+// 	    if( loader!=null) {
 		// XXX no need to check after we remove the old loader
-		if( loader.shouldReload() ) {
+		if( context.shouldReload() ) {
 		    // workaround for destroy 
 		    try {
 			destroy();
@@ -395,7 +394,7 @@ public class ServletWrapper extends Handler {
 			log( "Error in destroy ", ex );
 		    }
 		    initialized=false;
-		    loader.reload();
+		    context.reload();
 		    
 		    ContextManager cm=context.getContextManager();
 		    cm.doReload( req, context );
@@ -418,7 +417,7 @@ public class ServletWrapper extends Handler {
 		       // XXX shut down context, remove sessions, etc
 		    */
 		}
-	    }
+		//	}
 	}
     }
 

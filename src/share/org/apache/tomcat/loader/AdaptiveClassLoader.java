@@ -118,8 +118,10 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.10 $ $Date: 2000/07/14 19:34:24 $
+ * @version $Revision: 1.11 $ $Date: 2000/07/27 18:47:35 $
  * @see java.lang.ClassLoader
+ * @deprecated will be replaced by AdaptiveClassLoader1 and Depend, or URL
+ *             class loader in jdk1.2
  */
 public class AdaptiveClassLoader extends ClassLoader {
     private static final int debug=0;

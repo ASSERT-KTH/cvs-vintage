@@ -236,8 +236,6 @@ public class EmbededTomcat { // extends WebService
 	    Context ctx=facadeM.getRealContext( sctx );
 	    contextM.initContext( ctx );
 
-	    ServletLoader sl=ctx.getServletLoader();
-	    //	    log("ServletLoader: " + sl );
 	    Object pd=ctx.getProtectionDomain();
 	    //	    log("Ctx.pd " + pd);
 
@@ -246,7 +244,16 @@ public class EmbededTomcat { // extends WebService
 	    if( cp!=null ) {
 		for( int i=0; i<cp.size(); i++ ) {
 		    String cpath=(String)cp.elementAt(i);
-		    sl.addRepository( new File(cpath), pd);
+		    File f=new File( cpath );
+		    String absPath=f.getAbsolutePath();
+		    if( ! absPath.endsWith("/" ) && f.isDirectory() ) {
+			absPath+="/";
+		    }
+		    try {
+			ctx.addClassPath( new URL( "file", null,
+						   absPath ));
+		    } catch( MalformedURLException ex ) {
+		    }
 		}
 	    }
 
@@ -330,7 +337,7 @@ public class EmbededTomcat { // extends WebService
 	PolicyInterceptor polI=new PolicyInterceptor();
 	addContextInterceptor( polI );
 	polI.setDebug(0);
-
+        
 	LoaderInterceptor loadI=new LoaderInterceptor();
 	addContextInterceptor( loadI );
 

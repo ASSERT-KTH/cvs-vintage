@@ -69,6 +69,9 @@ import java.security.*;
 // method in ClassLoader. The alternative is to require a public method with
 // the equivalent functionality
 
+/**
+ * @deprecated No longer needed.
+ */
 public class AdaptiveServletLoader  extends AdaptiveClassLoader
     implements ServletLoader
 {

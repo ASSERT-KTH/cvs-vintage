@@ -64,7 +64,8 @@ import java.io.*;
  * interface.
  *
  * @author <a href="mailto:mjenning@islandnet.com">Mike Jennings</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
+ * @deprecated No longer used, AdaptiveClassLoader1 doesn't need it
  */
 public class SimpleFileFilter implements FilenameFilter {
      private String[] extensions;

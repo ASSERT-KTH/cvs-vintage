@@ -70,6 +70,8 @@ import java.security.*;
 // XXX Should be named DynamicLoader - has nothing specific to servlets
 
 /** Handle servlet and resource reloading
+ *  @deprecated Standard class loaders should be used + external dependency
+ *  manager
  */
 public interface ServletLoader {
 

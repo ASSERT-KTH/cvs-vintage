@@ -62,6 +62,7 @@ import javax.servlet.jsp.JspFactory;
 
 import java.util.*;
 import java.io.*;
+import java.net.*;
 
 import org.apache.jasper.*;
 import org.apache.jasper.Constants;
@@ -93,8 +94,11 @@ public class JspInterceptor extends BaseInterceptor {
 	throws TomcatException 
     {
 	JspFactory.setDefaultFactory(new JspFactoryImpl());
-	ctx.getServletLoader().addRepository( ctx.getWorkDir(),
-					      ctx.getProtectionDomain());
+	try {
+	    ctx.addClassPath( new URL( "file", null,
+					ctx.getWorkDir().getAbsolutePath()));
+	} catch( MalformedURLException ex ) {
+	}
     }
 
     public void preServletInit( Context ctx, ServletWrapper sw )
@@ -105,7 +109,7 @@ public class JspInterceptor extends BaseInterceptor {
 	    if( debug > 0 )
 		log( "PreServletInit: HttpJspBase.setParentClassLoader" + sw );
 	    HttpJspBase h = (HttpJspBase) theServlet;
-	    h.setClassLoader(ctx.getServletLoader().getClassLoader());
+	    h.setClassLoader(ctx.getClassLoader());
 	}
     }
 
@@ -216,6 +220,20 @@ public class JspInterceptor extends BaseInterceptor {
     
     String javaEncoding = "UTF8";           // perhaps debatable?
     static String sep = System.getProperty("path.separator");
+
+    static String getClassPath( Context ctx ) {
+	URL classP[]=ctx.getClassPath();
+	String separator = System.getProperty("path.separator", ":");
+        String cpath = "";
+	
+        for(int i=0; i< classP.length; i++ ) {
+            URL cp = classP[i];
+            File f = new File( cp.getFile());
+            if (cpath.length()>0) cpath += separator;
+            cpath += f;
+        }
+	return cpath;
+    }
     
     /** Compile a java to class. This should be moved to util, togheter
 	with JavaCompiler - it's a general purpose code, no need to
@@ -596,8 +614,8 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public String getClassPath() {
 	log("JspEngineContext1: getClassPath " +
-			   req.getContext().getServletLoader().getClassPath());
-	return req.getContext().getServletLoader().getClassPath();
+	    JspInterceptor.getClassPath(req.getContext()));
+	return JspInterceptor.getClassPath(req.getContext());
     }
     
     /**
@@ -631,7 +649,7 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public ClassLoader getClassLoader() {
 	log("JspEngineContext1: getLoader " + loader );
-        return req.getContext().getServletLoader().getClassLoader();
+        return req.getContext().getClassLoader();
     }
 
     public void addJar( String jar ) throws IOException {

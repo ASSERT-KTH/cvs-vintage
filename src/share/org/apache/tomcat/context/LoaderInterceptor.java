@@ -86,16 +86,10 @@ public class LoaderInterceptor extends BaseInterceptor {
     public LoaderInterceptor() {
     }
 
-    public void contextInit( Context context)
+    public void addContext( ContextManager cm, Context context)
 	throws TomcatException
     {
-        ContextManager cm = context.getContextManager();
-	AdaptiveServletLoader loader=new AdaptiveServletLoader();
-	context.setServletLoader( loader );
-
         String base = context.getDocBase();
-	Object p = context.getPermissions();
-	Object pd=context.getProtectionDomain();
 
 	// Add "WEB-INF/classes"
 	File dir = new File(base + "/WEB-INF/classes");
@@ -104,7 +98,11 @@ public class LoaderInterceptor extends BaseInterceptor {
         // Thanks for Kevin Jones for providing the fix.
         dir = cm.getAbsolute(dir);
 	if( dir.exists() ) {
-	    loader.addRepository( dir, pd );
+	    try {
+		URL url=new URL( "file", null, dir.getAbsolutePath() + "/" );
+		context.addClassPath( url );
+	    } catch( MalformedURLException ex ) {
+	    }
         }
 
         File f = cm.getAbsolute(new File(base + "/WEB-INF/lib"));
@@ -114,8 +112,32 @@ public class LoaderInterceptor extends BaseInterceptor {
 	for(int i=0; i < jars.size(); ++i) {
 	    String jarfile = (String) jars.elementAt(i);
 	    File jarF=new File(f, jarfile );
-	    loader.addRepository( cm.getAbsolute( jarF ), pd );
+	    File jf=cm.getAbsolute( jarF );
+	    String absPath=jf.getAbsolutePath();
+	    try {
+		URL url=new URL( "file", null, absPath );
+		context.addClassPath( url );
+	    } catch( MalformedURLException ex ) {
+	    }
 	}
+    }
+    
+    public void contextInit( Context context)
+	throws TomcatException
+    {
+        ContextManager cm = context.getContextManager();
+	Object pd=context.getProtectionDomain();
+	
+	AdaptiveServletLoader loader=new AdaptiveServletLoader();
+	context.setServletLoader( loader );
+
+	URL classP[]=context.getClassPath();
+	for(int i=0; i<classP.length; i++ ) {
+            URL cp = classP[i];
+            String fName = cp.getFile();
+	    File f=new File(fName);
+	    loader.addRepository( f, pd );
+        }
     }
 
     private void getJars(Vector v, File f) {

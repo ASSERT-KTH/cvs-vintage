@@ -125,7 +125,7 @@ public final class Jdk12Interceptor extends  BaseInterceptor {
     // if we are in JDK1.2
     // XXX move it to interceptor !!!
     final private void fixJDKContextClassLoader( Context ctx ) {
-	final ClassLoader cl=ctx.getServletLoader().getClassLoader();
+	final ClassLoader cl=ctx.getClassLoader();
 	if( cl==null ) {
 	    log("ERROR: Jdk12Interceptor: classloader==null");
 	    return;

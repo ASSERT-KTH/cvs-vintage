@@ -62,6 +62,8 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 
+/** @deprecated Standard class loaders will be used
+ */
 public class ClassRepository {
     private File file;
     private Object protectionDomain;

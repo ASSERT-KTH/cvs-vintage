@@ -64,6 +64,7 @@ import java.util.zip.*;
 import java.security.*;
 
 /** Fixes for 1.2
+ *  @deprecated Will be replaced by the standard URLClassLoader
  */
 public class AdaptiveClassLoader12 extends AdaptiveClassLoader {
     public static int debug=0;

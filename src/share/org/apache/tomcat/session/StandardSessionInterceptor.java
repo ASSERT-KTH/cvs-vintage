@@ -144,7 +144,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     }
     
     public void reload( Request req, Context ctx ) {
-	ClassLoader newLoader = ctx.getServletLoader().getClassLoader();
+	ClassLoader newLoader = ctx.getClassLoader();
 	StandardManager sM = getManager( ctx );    
 	sM.handleReload(req, newLoader);
     }
