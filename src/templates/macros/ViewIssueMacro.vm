@@ -370,15 +370,19 @@
         <th> &nbsp; </th>
         <th>File Name</th>
         <th>File Description</th>
-       </tr>
+       </tr> 
        #foreach ($file in $currentIssue.Attachments)
            #indexedRows($velocityCount)
            #if ($file.TypeId.toString().equals("1"))
                <tr>
                   <td>
-                    <input type="checkbox" name="file_$file.AttachmentId" />
+                    #if ($canEdit)
+                        <input type="checkbox" name="file_delete_$file.AttachmentId" />
+                    #else
+                        &#160;
+                    #end
                   </td>
-                  <td>$file.FileName</td>
+                  <td><a href="$file.FilePath">$file.FileName</a> </td>
                   <td>$file.Name</td>
                 </tr>
             #end
@@ -418,9 +422,9 @@
     </table>
     </div>
     <div class="functnbar3">
-        <input type="submit" value="View file" name="eventSubmit_doViewfile"  />&#160;
         #if ($canEdit)
             <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
+            <input type="submit" value="Delete file" name="eventSubmit_doDeletefile"  />&#160;
         #end
     </div>
     
