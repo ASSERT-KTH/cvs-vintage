@@ -19,6 +19,25 @@ only need to execute [./build.sh prepare].
 If, you make a change to a source file and you don't see that change 
 reflected in what you are doing, make sure to read the note above. :-)
 
+If you delete a src/java or src/template file you will need to delete the 
+corresponding src files as well as any .class files from within the target tree 
+and then re-compile. For example:
+
+Delete:
+scarab/src/java/org/tigris/scarab/screens/Foo.java
+Also Delete:
+scarab/target/webapps/scarab/WEB-INF/src/java/org/tigris/scarab/screens/Foo.java
+scarab/target/webapps/scarab/WEB-INF/classes/org/tigris/scarab/screens/Foo.class
+
+You can make the above procedure easier by simply removing the entire target 
+tree and re-creating it. Next, you are going to ask why the source file is 
+stored in the WEB-INF directory. The reason is because Ant allows us to do 
+String replacement in the source files. So, at some point in the future, we will 
+probably use this functionality to include a version number into one of the 
+source files so that it is possible to see what version of Scarab is running. 
+There are other reasons for doing this as well, but this is an easy example to 
+explain. :-)
+
 At any point, you should be able to build a fresh target tree. This means 
 that you should be able to kill Tomcat, remove the target directory and 
 re-execute the build.sh script.
