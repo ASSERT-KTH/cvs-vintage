@@ -45,7 +45,7 @@ import org.gjt.sp.jedit.*;
  * @see JEditTextArea
  *
  * @author Mike Dillon and Slava Pestov
- * @version $Id: Gutter.java,v 1.43 2003/06/22 01:09:47 spestov Exp $
+ * @version $Id: Gutter.java,v 1.44 2003/06/27 20:02:06 spestov Exp $
  */
 public class Gutter extends JComponent implements SwingConstants
 {
@@ -831,7 +831,8 @@ public class Gutter extends JComponent implements SwingConstants
 				{
 					if(match != null)
 					{
-						//XXX
+						match.matcher.selectMatch(
+							textArea);
 					}
 				}
 				else if(action.equals("narrow-struct"))

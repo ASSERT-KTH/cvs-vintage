@@ -40,7 +40,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: PositionManager.java,v 1.14 2003/06/27 02:24:05 spestov Exp $
+ * @version $Id: PositionManager.java,v 1.15 2003/06/27 20:02:05 spestov Exp $
  * @since jEdit 4.2pre3
  */
 public class PositionManager
@@ -93,6 +93,25 @@ public class PositionManager
 	private synchronized void removePosition(PosBottomHalf bh)
 	{
 		PosBottomHalf r, x = bh.parent;
+
+		bh.defunct = true;
+
+		if(bh.parent != null)
+		{
+			if(bh.parent.defunct)
+			{
+				System.err.println("defunct: " +bh.parent);
+				return;
+			}
+			if(bh.parent.parent != null)
+			{
+				if(bh.parent.parent.defunct)
+				{
+					System.err.println("defunct: " +bh.parent.parent);
+					return;
+				}
+			}
+		}
 
 		// if one of the siblings is null, make &this=non null sibling
 		if(bh.left == null)
@@ -315,6 +334,7 @@ public class PositionManager
 		PosBottomHalf parent;
 		PosBottomHalf left, right;
 		boolean red;
+		boolean defunct;
 
 		//{{{ PosBottomHalf constructor
 		PosBottomHalf(int offset)

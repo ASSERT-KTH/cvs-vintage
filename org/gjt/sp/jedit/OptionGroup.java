@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * option pane instances.
  *
  * @author Mike Dillon
- * @version $Id: OptionGroup.java,v 1.9 2003/06/25 03:38:33 spestov Exp $
+ * @version $Id: OptionGroup.java,v 1.10 2003/06/27 20:02:05 spestov Exp $
  */
 public class OptionGroup
 {
@@ -141,40 +141,54 @@ public class OptionGroup
 		return members.size();
 	} //}}}
 
+	//{{{ setSort() method
+	/**
+	 * Sets if the members of this group should be sorted.
+	 * @since jEdit 4.2pre3
+	 */
+	public void setSort(boolean sort)
+	{
+		this.sort = sort;
+	} //}}}
+
 	//{{{ Private members
 	private String name;
 	private String label;
 	private Vector members;
+	private boolean sort;
 
 	//{{{ insertionSort() method
 	private void insertionSort(String newLabel, Object newObj)
 	{
-		for(int i = 0; i < members.size(); i++)
+		if(sort)
 		{
-			Object obj = members.elementAt(i);
-			String label;
-			if(obj instanceof OptionPane)
+			for(int i = 0; i < members.size(); i++)
 			{
-				String name = ((OptionPane)obj).getName();
-				label = jEdit.getProperty("options."
-					+ name + ".label","NO LABEL PROPERTY: "
-					+ name);
-			}
-			else if(obj instanceof String)
-			{
-				label = jEdit.getProperty("options."
-					+ obj + ".label","NO LABEL PROPERTY: "
-					+ obj);
-			}
-			else if(obj instanceof OptionGroup)
-				label = ((OptionGroup)obj).getLabel();
-			else
-				throw new InternalError();
+				Object obj = members.elementAt(i);
+				String label;
+				if(obj instanceof OptionPane)
+				{
+					String name = ((OptionPane)obj).getName();
+					label = jEdit.getProperty("options."
+						+ name + ".label","NO LABEL PROPERTY: "
+						+ name);
+				}
+				else if(obj instanceof String)
+				{
+					label = jEdit.getProperty("options."
+						+ obj + ".label","NO LABEL PROPERTY: "
+						+ obj);
+				}
+				else if(obj instanceof OptionGroup)
+					label = ((OptionGroup)obj).getLabel();
+				else
+					throw new InternalError();
 
-			if(newLabel.compareTo(label) < 0)
-			{
-				members.insertElementAt(newObj,i);
-				return;
+				if(newLabel.compareTo(label) < 0)
+				{
+					members.insertElementAt(newObj,i);
+					return;
+				}
 			}
 		}
 
