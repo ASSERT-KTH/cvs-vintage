@@ -107,7 +107,7 @@ public class QueryPeer
                 .add(QueryPeer.DELETED, 0);
 
             Criteria.Criterion cGlob = crit.getNewCriterion(
-                QueryPeer.SCOPE_ID, Scope.GLOBAL__PK, 
+                QueryPeer.SCOPE_ID, Scope.MODULE__PK, 
                 Criteria.EQUAL);
             Criteria.Criterion cPriv1 = crit.getNewCriterion(
                 QueryPeer.USER_ID, user.getUserId(), Criteria.EQUAL);

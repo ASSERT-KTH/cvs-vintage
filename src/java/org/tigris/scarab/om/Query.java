@@ -285,7 +285,7 @@ public class Query
             setApproved(true);
             if (approved)
             {
-                setScopeId(Scope.GLOBAL__PK);
+                setScopeId(Scope.MODULE__PK);
             }
             save();
         } 

@@ -53,7 +53,7 @@ public class IssueTemplateInfoPeer
             cPriv1.and( crit.getNewCriterion(TransactionPeer.CREATED_BY, 
                 user.getUserId(),  Criteria.EQUAL));
             Criteria.Criterion cGlob = crit.getNewCriterion(
-                IssueTemplateInfoPeer.SCOPE_ID, Scope.GLOBAL__PK,
+                IssueTemplateInfoPeer.SCOPE_ID, Scope.MODULE__PK,
                 Criteria.EQUAL);
             cGlob.or(cPriv1);
             crit.add(cGlob);

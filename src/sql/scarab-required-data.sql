@@ -109,7 +109,7 @@ insert into SCARAB_FREQUENCY(FREQUENCY_ID, FREQUENCY_NAME)
 insert into SCARAB_SCOPE(SCOPE_ID, SCOPE_NAME)
         values(1, 'personal');
 insert into SCARAB_SCOPE(SCOPE_ID, SCOPE_NAME)
-        values(2, 'global');
+        values(2, 'module');
 
 /*
  * root module

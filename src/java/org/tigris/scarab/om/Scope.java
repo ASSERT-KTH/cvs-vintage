@@ -14,6 +14,6 @@ public  class Scope
 {
 
     public static final NumberKey PERSONAL__PK = new NumberKey("1");
-    public static final NumberKey GLOBAL__PK = new NumberKey("2");
+    public static final NumberKey MODULE__PK = new NumberKey("2");
 
 }
