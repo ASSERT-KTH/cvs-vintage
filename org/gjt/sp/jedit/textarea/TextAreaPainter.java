@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * The text area repaint manager. It performs double buffering and paints
  * lines of text.
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.20 2001/12/28 05:03:58 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.21 2001/12/29 09:35:24 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -800,7 +800,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			TextUtilities.Chunk chunks = lineToChunkList(seg,buffer.markTokens(
 				physicalLine).getFirstToken());
 
-			x += TextUtilities.paintChunkList(chunks,gfx,x,baseLine);
+			if(chunks != null)
+				x += TextUtilities.paintChunkList(chunks,gfx,x,baseLine,false);
 
 			gfx.setFont(defaultFont);
 			gfx.setColor(eolMarkerColor);

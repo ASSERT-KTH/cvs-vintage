@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.54 2001/12/25 08:07:14 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.55 2001/12/29 09:35:24 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -4987,6 +4987,9 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 				break;
 			}
 		}
+
+		// get rid of embedded tabs not removed by trim()
+		text = text.replace('\t',' ');
 
 		view.getStatus().setMessageAndClear(jEdit.getProperty(
 			"view.status.bracket",new String[] { text }));

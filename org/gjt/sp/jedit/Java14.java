@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.2 2001/12/27 00:29:23 spestov Exp $
+ * @version $Id: Java14.java,v 1.3 2001/12/29 09:35:24 spestov Exp $
  */
 public class Java14
 {
@@ -81,13 +81,13 @@ public class Java14
 				Component comp = (Component)evt.getSource();
 				for(;;)
 				{
-					if(comp == null || comp instanceof Dialog)
-						break;
-					else if(comp instanceof View)
+					if(comp instanceof View)
 					{
 						((View)comp).processKeyEvent(evt);
 						return true;
 					}
+					else if(comp == null || comp instanceof Window)
+						break;
 					else
 						comp = comp.getParent();
 				}
