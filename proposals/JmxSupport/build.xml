@@ -1,5 +1,20 @@
 <?xml version="1.0"?> 
-<project name="PasswordPrompter" default="main" basedir=".">
+<!--
+   Copyright 1999-2004 The Apache Software Foundation
+ 
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+ 
+       http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="JMXSupport" default="main" basedir=".">
 
   <!-- Compilation properties -->
 
@@ -20,7 +35,7 @@
 
   <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-jmx.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
-
+  <property name="commons-modeler.jar" location="${commons-modeler.lib}/commons-modeler.jar" />
   <property name="tomcat.classes.dir" location="${tomcat.build}/classes"/>
   <property name="tomcat.classes" value="${tomcat.classes.dir}"/>
 
@@ -62,6 +77,7 @@
        <classpath location="${jmx.jar}"/>
        <classpath location="${jmxtools.jar}"/>
        <classpath location="${commons-logging.jar}"/>
+       <classpath location="${commons-modeler.jar}" />
     </javac>
 
     <mkdir dir="${tomcat.build.modules}/JmxSupport/WEB-INF/lib"/>
@@ -69,7 +85,7 @@
     <copy todir="${tomcat.build.modules}/JmxSupport/WEB-INF/lib" file="${jmx.jar}"/>
     <copy todir="${tomcat.build.modules}/JmxSupport/WEB-INF/lib" file="${jmxtools.jar}"/>
     <copy todir="${tomcat.build.modules}/JmxSupport/WEB-INF/lib" file="${commons-logging.jar}"/>
-
+    <copy todir="${tomcat.build.modules}/JmxSupport/WEB-INF/lib" file="${commons-modeler.jar}"/>
     <jar jarFile="${tomcat.build.modules}/JmxSupport/WEB-INF/lib/JmxSupport.jar"
          basedir="${tomcat.build.modules}/JmxSupport/WEB-INF/classes"/>
 
