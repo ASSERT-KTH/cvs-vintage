@@ -6,16 +6,14 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.9 2004/05/10 16:22:26 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.10 2004/05/12 22:09:54 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
-import org.jboss.webservice.WSDLLocatorImpl;
+import org.jboss.webservice.WSDLDefinitionFactory;
 import org.w3c.dom.Element;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -27,7 +25,7 @@ import java.util.Iterator;
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -135,10 +133,8 @@ public class ServiceRefMetaData implements Serializable
 
       try
       {
-         WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-         WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
          URL wsdlLocation = resourceCL.findResource(wsdlFile);
-         wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
+         wsdlDefinition = WSDLDefinitionFactory.readWSDL(wsdlLocation);
       }
       catch (WSDLException e)
       {
