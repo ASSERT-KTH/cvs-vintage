@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.5 2003/04/21 03:21:36 spestov Exp $
+ * @version $Id: Debug.java,v 1.6 2003/04/24 01:32:28 spestov Exp $
  */
 public class Debug
 {
@@ -42,6 +42,12 @@ public class Debug
 	 * updates.
 	 */
 	public static boolean SCROLL_DEBUG = false;
+
+	/**
+	 * Display an error if the scrolling code detects an inconsistency.
+	 * This kills performance!
+	 */
+	public static boolean VERIFY_FIRST_LINE = false;
 
 	/**
 	 * Print messages when screen line counts change.

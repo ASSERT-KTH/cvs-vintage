@@ -102,7 +102,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.69 2003/04/23 18:52:11 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.70 2003/04/24 01:32:29 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -144,13 +144,13 @@ public class DockableWindowManager extends JPanel
 	//{{{ loadDockableWindows() method
 	/**
 	 * Plugins shouldn't need to call this method.
-	 * @since jEdit 4.0pre1
+	 * @since jEdit 4.2pre1
 	 */
-	public static boolean loadDockableWindows(EditPlugin.JAR plugin, URL uri)
+	public static void loadDockableWindows(EditPlugin.JAR plugin, URL uri)
 	{
 		try
 		{
-			//Log.log(Log.DEBUG,jEdit.class,"Loading dockables from " + path);
+			Log.log(Log.DEBUG,jEdit.class,"Loading dockables from " + uri);
 
 			DockableListHandler dh = new DockableListHandler(uri,plugin);
 			XmlParser parser = new XmlParser();
@@ -158,7 +158,6 @@ public class DockableWindowManager extends JPanel
 			parser.parse(null, null, new BufferedReader(
 				new InputStreamReader(
 				uri.openStream())));
-			return true;
 		}
 		catch(XmlException xe)
 		{
@@ -171,8 +170,6 @@ public class DockableWindowManager extends JPanel
 		{
 			Log.log(Log.ERROR,DockableWindowManager.class,e);
 		}
-
-		return false;
 	} //}}}
 
 	//{{{ unloadDockableWindows() method
