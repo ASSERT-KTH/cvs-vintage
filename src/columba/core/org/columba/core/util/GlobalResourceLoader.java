@@ -63,7 +63,6 @@ public class GlobalResourceLoader {
     protected static ClassLoader classLoader;
     protected static Hashtable htBundles = new Hashtable(80);
     protected static ResourceBundle globalBundle;
-    protected static final String FIX_ME = "FIX ME!";
     private static final String GLOBAL_BUNDLE_PATH = "org.columba.core.i18n.global.global";
 
     static {
@@ -196,7 +195,7 @@ public class GlobalResourceLoader {
 
     /*
             This method returns the translation for the given string identifier. If no translation is found, the default english item is used.
-            Should this fail too, a "Fix me!" (private final static String FIXME) string will be returned.
+            Should this fail too, the sID string will be returned.
 
             Example usage call: getString("org/columba/modules/mail/i18n/", "dialog", "close")
             We'll look for "close" in "org/columba/modules/mail/i18n/dialog/dialog_locale_LOCALE.properties"
@@ -252,20 +251,7 @@ public class GlobalResourceLoader {
             ColumbaLogger.log.severe("'" + sID + "' in '" + sBundlePath +
                 "' could not be found.");
 
-            /*
-             * Replaced FIX_ME string with resource ID here, this makes it
-             * easier to track misspelled sID.
-             *
-             * Also its makes the action plugins extending the menu work
-             * without using a translation infrastructure.
-             *
-             * This infrastructure will be added in the next few weeks,
-             * then this isn't needed anymore.
-             *
-             */
             return sID;
-
-            //return FIX_ME;
         }
     }
 
