@@ -115,7 +115,7 @@ public class AttributeOption
                         .compareTo(opt2.getName()); 
                 }
                 return result;
-            }            
+            }
         };
 
     /**

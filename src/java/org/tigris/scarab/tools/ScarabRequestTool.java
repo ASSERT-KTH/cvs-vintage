@@ -56,7 +56,7 @@ import org.apache.torque.om.ComboKey;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.Module;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.intake.model.Group;
+import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.pool.Recyclable;
 
 // Scarab
@@ -398,37 +398,6 @@ try{
    }
 
     /**
-     * A Module object for use within the Scarab API.
-     */
-    public void setModule(ModuleEntity module)
-    {
-        this.module = module;
-    }
-
-    /**
-     * Get an Module object. 
-     *
-     * @return a <code>ModuleEntity</code> value
-     */
-    public ModuleEntity getModule()
-     throws Exception
-    {
-      try{
-            String modId = getIntakeTool()
-                .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
-            if ( modId == null || modId.length() == 0 )
-            {
-                module = ModuleManager.getInstance();
-            }
-            else 
-            {
-                module = ModuleManager.getInstance(new NumberKey(modId));
-            }
-      }catch(Exception e){e.printStackTrace();}
-        return module;
- 
-   }
-    /**
      * Get an RModuleAttribute object. 
      *
      * @return a <code>Module</code> value
@@ -466,13 +435,55 @@ try{
     }
 
     /**
+     * A Module object for use within the Scarab API.
+     */
+    public void setModule(ModuleEntity module)
+    {
+        this.module = module;
+    }
+
+    /**
+     * Get an Module object. 
+     *
+     * @return a <code>ModuleEntity</code> value
+     */
+    public ModuleEntity getModule()
+     throws Exception
+    {
+      try{
+        String modId = getIntakeTool()
+            .get("Module", IntakeTool.DEFAULT_KEY).get("Id").toString();
+        if ( modId == null || modId.length() == 0 )
+        {
+            module = ModuleManager.getInstance();
+        }
+        else 
+        {
+            module = ModuleManager.getInstance(new NumberKey(modId));
+        }
+      }catch(Exception e){e.printStackTrace();}
+       return module;
+    }
+
+    /**
+     * Gets the ModuleEntity associated with the information
+     * passed around in the query string. Returns null if
+     * the Module could not be found.
+     */
+    public ModuleEntity getCurrentModule()
+    {
+        return getModule(
+            data.getParameters().getString(ScarabConstants.CURRENT_MODULE));
+    }
+
+    /**
      * Get a specific module by key value. Returns null if
      * the Module could not be found
      *
      * @param key a <code>String</code> value
      * @return a <code>Module</code> value
      */
-    public ModuleEntity getModule(String key) throws Exception
+    public ModuleEntity getModule(String key)
     {
         ModuleEntity me = null;
         try

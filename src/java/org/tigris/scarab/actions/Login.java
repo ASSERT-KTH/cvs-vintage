@@ -57,7 +57,7 @@ import org.apache.fulcrum.security.entity.User;
 import org.apache.turbine.services.pull.ApplicationTool;
 import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.intake.model.Group;
+import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.util.UnknownEntityException;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
 
@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.21 2001/08/15 00:12:13 elicia Exp $
+    @version $Id: Login.java,v 1.22 2001/08/28 00:51:54 jon Exp $
 */
 public class Login extends TemplateAction
 {

@@ -53,8 +53,8 @@ import org.apache.turbine.RunData;
 
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.Attribute;
@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.2 2001/08/14 22:35:58 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.3 2001/08/28 00:51:55 jon Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {

@@ -69,7 +69,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.12 2001/08/15 05:17:36 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.13 2001/08/28 00:51:55 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -128,7 +128,14 @@ public interface ScarabRequestScope extends ApplicationTool
      * @param key a <code>String</code> value
      * @return a <code>ModuleEntity</code> value
      */
-    public ModuleEntity getModule(String key) throws Exception;
+    public ModuleEntity getModule(String key);
+
+    /**
+     * Gets the ModuleEntity associated with the information
+     * passed around in the query string. Returns null if
+     * the Module could not be found.
+     */
+    public ModuleEntity getCurrentModule();
 
     /**
      * Get a specific issue by key value.

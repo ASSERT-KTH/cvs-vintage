@@ -2,8 +2,7 @@ $page.setTitle("Attribute Editor")
 
 #set ($attribute = $scarabR.Attribute)
 
-## only get the AttributeOptions that are marked as not being deleted
-#set ($attOptions = $attribute.getAttributeOptions(false))
+#set ($attOptions = $attribute.getAttributeOptions(true))
 
 #set ($attType = $attribute.AttributeType)
 #set ($attgroup = $intake.Attribute.Default )
@@ -40,13 +39,15 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
   <th width="120">attribute name:</th>
   <td>
     <input type="text" name="$attgroup.Name.Key" value="$attribute.Name"/>
+    #fieldErrorMsg($attgroup.Name "")
   </td>
  </tr>
 
  <tr>
   <th width="120">attribute description:</th>
   <td>
-    <textarea rows="4" cols="40" name="$attgroup.Description.Key" class="text">$!attribute.Description</textarea>
+    <textarea rows="4" cols="40" name="$attgroup.Description.Key">$!attribute.Description</textarea>
+    #fieldErrorMsg($attgroup.Description "")
   </td>
  </tr>
 
@@ -54,7 +55,7 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
   <th width="120">created by:</th>
   <td>
   #set ($createdUser = $scarabR.getUser($attribute.CreatedBy) )
-  <a href="mailTo:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
+  <a href="mailto:$createdUser.Email">$createdUser.FirstName $createdUser.LastName</a>
   </td>
  </tr>
 
@@ -69,6 +70,9 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </table>
 </div>
 
+  <input type="submit" name="eventSubmit_doModifyattributedata" 
+        value="Save"/>
+
 #if ( $attType.AttributeClass.Name.equals("select-one") )
 
 #datatitle ( "List options" )
@@ -80,7 +84,7 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 <table width="70%" border="0" cellspacing="2" cellpadding="2">
 <tr>
 #if ( $maxNum > 0 )
- <th>delete:</th>
+ <th>deleted:</th>
  <th>id:</th>
 #else
  <th colspan="2">&nbsp;</th>
@@ -129,10 +133,12 @@ Back to <a href="$link.setPage("admin,AttributeShow.vm")">Attribute Show</a>
 </tr>
 
 </table>
-#end #* if select-one *#
 
   <input type="submit" name="eventSubmit_doAddormodifyattributeoptions" 
         value="Save"/>
+
+#end #* if select-one *#
+
 
 </div>
 </div>

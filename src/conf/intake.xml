@@ -21,8 +21,14 @@
         <field name="TypeId" key="typeid" type="NumberKey">
             <rule name="mask" value="[0-9]+">badIdMessage</rule>
         </field>
-        <field name="Name" key="name" type="String"/> 
-        <field name="Description" key="desc" type="String"/> 
+        <field name="Name" key="name" type="String">
+            <rule name="minLength" value="1">Attribute name is not allowed to be empty</rule>
+            <rule name="maxLength" value="255">Attribute name must be less than 255 characters long</rule>
+        </field>
+        <field name="Description" key="desc" type="String"> 
+            <rule name="minLength" value="1">Attribute description is not allowed to be empty</rule>
+            <rule name="maxLength" value="255">Attribute description must be less than 255 characters long</rule>
+        </field>
         <field name="Deleted" key="del" type="boolean" />
 </group>
 <group name="AttributeOption" key="atto" mapToObject="om.AttributeOption">

@@ -1,7 +1,7 @@
 $page.setTitle("Attribute Editor")
 
 #set ($user = $data.User)
-#set ($module = $scarabR.getModule($data.Parameters.get($scarabG.Constant.CURRENT_MODULE)))
+#set ($module = $scarabR.CurrentModule)
 
 <h1>Module Attributes</h1>
 
@@ -44,8 +44,10 @@ This page is for editing the Attributes which are defined for Module: $module.Na
 </tr>
 
 #set ( $attgroup = $intake.Attribute.Default ) 
+#set ( $rmas = $module.getRModuleAttributes(false) )
 
-#foreach( $attribute in $module.AllAttributes )
+#foreach( $rma in $rmas )
+#set ($attribute = $rma.Attribute)
 #if ( $velocityCount % 2 > 0 )
 <tr class="a">
 #else

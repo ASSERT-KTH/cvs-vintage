@@ -174,17 +174,6 @@ public class Attribute
     }
 
     /**
-     * return the options (for attributes that have them).  They are put
-     * into order by the numeric value.
-     */
-    public List getattributeOptions()
-        throws Exception
-    {
-        // return getAttributeOptions(new Criteria());  
-        return getAttributeOptions(allOptionsCriteria);  
-    }
-
-    /**
      * Gets one of the options belonging to this attribute. if the 
      * PrimaryKey does not belong to an option in this attribute
      * null is returned.
@@ -206,6 +195,16 @@ public class Attribute
         throws Exception
     {
         return getAttributeOption(new NumberKey(optionID));
+    }
+
+    /**
+     * return the options (for attributes that have them).  They are put
+     * into order by the numeric value.
+     */
+    public List getattributeOptions()
+        throws Exception
+    {
+        return super.getAttributeOptions(allOptionsCriteria);  
     }
 
     public List getAttributeOptions(boolean includeDeleted)
@@ -237,23 +236,16 @@ public class Attribute
         {
             // synchronized method due to getattributeOptionsWithDeleted, this needs
             // further investigation !FIXME!
-            List options = getattributeOptions();
-    
-            optionsMap = new HashMap((int)(1.25*options.size()+1));
-            attributeOptionsWithDeleted = new ArrayList(options.size());
-    
-            for ( int i = options.size()-1; i >= 0; i-- ) 
-            {
-                AttributeOption option = (AttributeOption)options.get(i);
-                attributeOptionsWithDeleted.add(option);
-                optionsMap.put(option.getOptionId(), option);
-                optionAttributeMap.put(option.getOptionId(), this);
-            }
+            attributeOptionsWithDeleted = this.getattributeOptions();
+            optionsMap = new HashMap((int)(1.25*attributeOptionsWithDeleted.size()+1));
     
             attributeOptionsWithoutDeleted = new ArrayList(attributeOptionsWithDeleted.size());
             for ( int i=0; i<attributeOptionsWithDeleted.size(); i++ ) 
             {
-                if ( !((AttributeOption)attributeOptionsWithDeleted.get(i)).getDeleted() ) 
+                AttributeOption option = (AttributeOption)attributeOptionsWithDeleted.get(i);
+                optionsMap.put(option.getOptionId(), option);
+                optionAttributeMap.put(option.getOptionId(), this);
+                if ( !option.getDeleted() ) 
                 {
                     attributeOptionsWithoutDeleted.add(attributeOptionsWithDeleted.get(i));
                 }
@@ -286,11 +278,12 @@ public class Attribute
         sortedOptions.add(option);
         option.setAttribute(this);
         sortOptions(sortedOptions);
-
+        buildOptionsMap();
     }
 
     /**
      * Sorts the options and renumbers any with duplicate numeric values
+     * It does not renumber the options which have been marked as deleted.
      */
     public synchronized void sortOptions(Vector v)
         throws Exception
@@ -303,11 +296,15 @@ public class Attribute
         for (int i = 0; i < sortedOptions.size(); i++) 
         {
             AttributeOption opt = (AttributeOption)sortedOptions.get(i);
-            opt.setNumericValue(i+1);
-            opt.save();
+            if (!opt.getDeleted())
+            {
+                opt.setNumericValue(i+1);
+                opt.save();
+            }
         }
 
         collAttributeOptions = sortedOptions;
+        buildOptionsMap();
     }
 
     /**

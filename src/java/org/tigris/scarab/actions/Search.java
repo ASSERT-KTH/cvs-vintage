@@ -58,8 +58,8 @@ import org.apache.turbine.RunData;
 import org.apache.commons.util.SequencedHashtable;
 
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.intake.model.Field;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -75,7 +75,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.25 2001/08/27 23:45:12 elicia Exp $
+    @version $Id: Search.java,v 1.26 2001/08/28 00:51:54 jon Exp $
 */
 public class Search extends TemplateAction
 {

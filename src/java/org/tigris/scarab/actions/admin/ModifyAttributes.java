@@ -54,9 +54,9 @@ import org.apache.turbine.TemplateContext;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.services.intake.model.Group;
-import org.apache.turbine.services.intake.model.Field;
-import org.apache.turbine.services.intake.model.BooleanField;
+import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
+import org.apache.fulcrum.intake.model.BooleanField;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -70,12 +70,12 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class will store the form data for a project modification
         
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ModifyAttributes.java,v 1.16 2001/08/13 03:55:25 jon Exp $
+    @version $Id: ModifyAttributes.java,v 1.17 2001/08/28 00:51:54 jon Exp $
 */
 public class ModifyAttributes extends RequireLoginFirstAction
 {
     /**
-     * On the admin,attribute-show.vm page, when you click the button,
+     * On the admin,AttributeShow.vm page, when you click the button,
      * this will get the right Attribute from the database and put it into
      * the $scarabR tool.
      */
@@ -101,7 +101,6 @@ public class ModifyAttributes extends RequireLoginFirstAction
     /**
      * If someone wants to edit the attributes, handle the clicking
      * of the button.
-     */
     public void doModifyattributeoptions( RunData data, TemplateContext context )
         throws Exception
     {
@@ -112,12 +111,13 @@ public class ModifyAttributes extends RequireLoginFirstAction
 
         setTarget(data, nextTemplate);
     }
+     */
 
     /**
-     * Used on AttributeEdit.vm to change the attribute type for 
-     * an Attribute.
+     * Used on AttributeEdit.vm to modify Attribute Name/Description/Type
+     * Use doAddormodifyattributeoptions to modify the options.
      */
-    public void doModifyattributetype( RunData data, TemplateContext context )
+    public void doModifyattributedata( RunData data, TemplateContext context )
         throws Exception
     {
         IntakeTool intake = (IntakeTool)context
@@ -126,34 +126,17 @@ public class ModifyAttributes extends RequireLoginFirstAction
         if ( intake.isAllValid() )
         {
             Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            String attributeID = attribute.get("Id").toString();
             Group attributeType = intake.get("AttributeType", IntakeTool.DEFAULT_KEY);
+
+            String attributeID = attribute.get("Id").toString();
+            String attributeName = attribute.get("Name").toString();
+            String attributeDesc = attribute.get("Description").toString();
             String attributeTypeID = attributeType.get("AttributeTypeId").toString();
 
             Attribute attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
-            attr.setTypeId(new NumberKey(attributeTypeID));
-            attr.save();
-        }
-    }
-
-    /**
-     * Used on AttributeEdit.vm to change the attribute name for
-     * an Attribute.
-     */
-    public void doModifyattributename( RunData data, TemplateContext context )
-        throws Exception
-    {
-        IntakeTool intake = (IntakeTool)context
-           .get(ScarabConstants.INTAKE_TOOL);
-
-        if ( intake.isAllValid() )
-        {
-            Group attribute = intake.get("Attribute", IntakeTool.DEFAULT_KEY);
-            String attributeID = attribute.get("Id").toString();
-            String attributeName = attribute.get("Name").toString();
-
-            Attribute attr = Attribute.getInstance((ObjectKey)new NumberKey(attributeID));
             attr.setName(attributeName);
+            attr.setDescription(attributeDesc);
+            attr.setTypeId(new NumberKey(attributeTypeID));
             attr.save();
         }
     }
@@ -172,7 +155,8 @@ public class ModifyAttributes extends RequireLoginFirstAction
         if ( intake.isAllValid() ) 
         {
             Attribute attribute = ((ScarabRequestTool)context
-                .get(ScarabConstants.SCARAB_REQUEST_TOOL)).getAttribute();
+                .get(ScarabConstants.SCARAB_REQUEST_TOOL))
+                    .getRModuleAttribute().getAttribute();
 
             AttributeOption option = null;
             Vector attributeOptions = (Vector)attribute
@@ -186,24 +170,37 @@ public class ModifyAttributes extends RequireLoginFirstAction
                 // in case the template is not showing all the options at once
                 if ( group != null ) 
                 {
-                    group.setProperties(option);
+                    // there could be an error with attempting to assign
+                    // an invalid parent attribute option to an attribute
+                    // option.
+                    try
+                    {
+                        group.setProperties(option);
+                    }
+                    catch (Exception se)
+                    {
+                        intake.remove(group);
+                        data.setMessage(se.getMessage());
+                        return;
+                    }
 
-                    // check for a deleted flag.  AttributeOptions are removed
-                    // from the db when deleted.
-                    BooleanField deletedField = 
+                    // check for a deleted flag.  AttributeOptions are marked
+                    // as deleted.
+ /*                   BooleanField deletedField = 
                         (BooleanField)group.get("Deleted");
                     if ( deletedField != null && deletedField.booleanValue() ) 
                     {
                         // remove from the Attribute's list
                         attributeOptions.remove(i);
                     }
+*/
                     option.save();
 
                     // we need this because we are accepting duplicate
                     // numeric values and resorting, so we do not want
                     // to show the actual value entered by the user.
                     intake.remove(group);
-                }                
+                }
             }
             attribute.sortOptions(attributeOptions);
 
@@ -213,7 +210,16 @@ public class ModifyAttributes extends RequireLoginFirstAction
                                      option.getQueryKey());
             if ( group != null ) 
             {
-                group.setProperties(option);
+                try
+                {
+                    group.setProperties(option);
+                }
+                catch (Exception se)
+                {
+                    intake.remove(group);
+                    data.setMessage(se.getMessage());
+                    return;
+                }
                 if ( option.getName() != null 
                      && option.getName().length() != 0 ) 
                 {
@@ -223,8 +229,7 @@ public class ModifyAttributes extends RequireLoginFirstAction
                     }
                     catch (ScarabException se)
                     {
-                        group.get("Name")
-                            .setMessage("Please select a unique name.");
+                        data.setMessage("Please select a unique name.");
                     }
                 }
 
