@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.3 1999/12/29 04:54:15 bergsten Exp $
- * $Revision: 1.3 $
- * $Date: 1999/12/29 04:54:15 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestDispatcherImpl.java,v 1.4 2000/01/07 18:48:34 costin Exp $
+ * $Revision: 1.4 $
+ * $Date: 2000/01/07 18:48:34 $
  *
  * ====================================================================
  *
@@ -84,7 +84,7 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     private StringManager sm =
         StringManager.getManager(Constants.Package);
     private Context context;
-    private LookupResult lookupResult = null;
+    private Request lookupResult = null;
     private String name = null;
     private String urlPath;
     private String queryString;
@@ -112,6 +112,10 @@ public class RequestDispatcherImpl implements RequestDispatcher {
 
 	urlPath = context.getPath() + urlPath;
 
+	// XXX Need to clean up - what's the diff between the lookupResult
+	// ( internal-generated sub-request ) and ForwardedRequest  ?
+	// I think ForwardedRequest can be removed, it's a particular case of
+	// sub-request ( costin )
 	ForwardedRequest fRequest =
 	    new ForwardedRequest(realRequest, urlPath);
 
@@ -129,6 +133,11 @@ public class RequestDispatcherImpl implements RequestDispatcher {
     throws ServletException, IOException {
 	HttpServletRequest req = (HttpServletRequest)request;
 
+	// XXX instead of setting the new parameters and back to original,
+	// it should just use a sub-request ( by cloning the original ) 
+	// That will simplify everything and make the code clear ( costin )
+	
+	// 
         // XXX
         // while this appears to work i believe the code
         // could be streamlined/normalized a bit.

@@ -74,6 +74,7 @@ public class RequestMapper {
     private Hashtable prefixMaps = null;
     private Hashtable extensionMaps = null;
     private Hashtable pathMaps = null;
+
     private String servletPath = null;
     private String mapPath = null;
     private String pathInfo = null;
@@ -95,17 +96,20 @@ public class RequestMapper {
         this.extensionMaps = extensionMaps;
     }
 
-    LookupResult lookupServlet(String path) {
-	LookupResult lookupResult = null;
+    Request lookupServlet(String path) {
+	Request lookupResult = null;
 	ServletWrapper wrapper = getMatch(path);
 
 	if (wrapper != null) {
             this.mapPath = getMapPath(wrapper);
             String resolvedServlet = getResolvedServlet(this.mapPath);
 
-            lookupResult = new LookupResult(wrapper,
-                this.servletPath, this.mapPath, this.pathInfo,
-                resolvedServlet);
+	    lookupResult = new Request();
+	    lookupResult.setWrapper( wrapper );
+	    lookupResult.setServletPath( servletPath );
+	    lookupResult.setMappedPath( mapPath );
+	    lookupResult.setPathInfo(pathInfo);
+	    lookupResult.setResolvedServlet( resolvedServlet );
         }
 
 	return lookupResult;

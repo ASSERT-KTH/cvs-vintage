@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.10 2000/01/04 02:53:06 rubys Exp $
- * $Revision: 1.10 $
- * $Date: 2000/01/04 02:53:06 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Request.java,v 1.11 2000/01/07 18:48:34 costin Exp $
+ * $Revision: 1.11 $
+ * $Date: 2000/01/07 18:48:34 $
  *
  * ====================================================================
  *
@@ -116,11 +116,16 @@ public class Request  {
     protected boolean didCookies;
     // end "Request" variables
 
+    // LookupResult - used by sub-requests and
+    // set by interceptors
+    ServletWrapper wrapper = null;
+    String mappedPath = null;
+    String resolvedServlet = null;
+
     protected StringManager sm =
         StringManager.getManager(Constants.Package);
 
     public Request() {
-        requestFacade = new HttpServletRequestFacade(this);
     }
 
     public void setRequestAdapter( RequestAdapter reqA) {
@@ -298,6 +303,10 @@ public class Request  {
 
     // -------------------- Request methods ( high level )
     public HttpServletRequestFacade getFacade() {
+	// some requests are internal, and will never need a
+	// facade - no need to create a new object unless needed.
+        if( requestFacade==null )
+	    requestFacade = new HttpServletRequestFacade(this);
 	return requestFacade;
     }
 
@@ -396,6 +405,31 @@ public class Request  {
 //  		return null;
 //  	    }
 //  	}
+    }
+
+    // -------------------- LookupResult 
+    String getResolvedServlet() {
+	return resolvedServlet;
+    }
+
+    void setResolvedServlet(String rs ) {
+	resolvedServlet=rs;
+    }
+
+    ServletWrapper getWrapper() {
+	return wrapper;
+    }
+    
+    void setWrapper(ServletWrapper wrapper) {
+	this.wrapper=wrapper;
+    }
+
+    String getMappedPath() {
+	return mappedPath;
+    }
+
+    void setMappedPath( String m ) {
+	mappedPath=m;
     }
 
     // -------------------- Setters

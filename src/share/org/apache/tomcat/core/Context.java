@@ -625,7 +625,9 @@ public class Context {
 
 	request.setServerSession(session);  // may be null
 
-	LookupResult result =
+	// XXX XXX XXX lookupServlet should operate on the original
+	// request, it will change when we introduce the interceptors.
+	Request result =
 	    container.lookupServlet(request.getLookupPath());
 	
 	request.setServletPath(result.getServletPath());

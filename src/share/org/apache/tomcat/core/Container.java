@@ -290,14 +290,14 @@ public class Container {
 	pathMappedServlets.remove(mapping);
     }
 
-    LookupResult lookupServlet(String lookupPath) {
+    Request lookupServlet(String lookupPath) {
         RequestMapper requestMapper = new RequestMapper(this);
 
 	requestMapper.setPathMaps(pathMappedServlets);
 	requestMapper.setPrefixMaps(prefixMappedServlets);
 	requestMapper.setExtensionMaps(extensionMappedServlets);
 
-	LookupResult lookupResult =
+	Request lookupResult =
 	    requestMapper.lookupServlet(lookupPath);
 
         if (lookupResult == null) {
@@ -313,20 +313,24 @@ public class Container {
 	    String servletPath = Constants.Servlet.Default.Map;
             String pathInfo = lookupPath;
 
-	    lookupResult =
-	        new LookupResult(wrapper, servletPath, pathInfo);
+	    lookupResult = new Request();
+	    lookupResult.setWrapper( wrapper );
+	    lookupResult.setServletPath( servletPath );
+	    lookupResult.setPathInfo( pathInfo );
 	}
 
 	return lookupResult;
     }
 
-    LookupResult lookupServletByName(String servletName) {
-        LookupResult lookupResult = null;
+    Request lookupServletByName(String servletName) {
+        Request lookupResult = null;
 
 	ServletWrapper wrapper = (ServletWrapper)servlets.get(servletName);
 
 	if (wrapper != null) {
-	    lookupResult = new LookupResult(wrapper, null, "");
+	    lookupResult = new Request();
+	    lookupResult.setWrapper( wrapper );
+	    lookupResult.setPathInfo("");
 	}
 
         return lookupResult;

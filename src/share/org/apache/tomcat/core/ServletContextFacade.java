@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.5 1999/11/27 06:20:03 craigmcc Exp $
- * $Revision: 1.5 $
- * $Date: 1999/11/27 06:20:03 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletContextFacade.java,v 1.6 2000/01/07 18:48:34 costin Exp $
+ * $Revision: 1.6 $
+ * $Date: 2000/01/07 18:48:34 $
  *
  * ====================================================================
  *
@@ -250,7 +250,7 @@ implements ServletContext {
 	// this could use a once over - after war perhaps
 
         URL docBase = context.getDocumentBase();
-	LookupResult lr =
+	Request lr =
 	    getRealContext().getContainer().lookupServlet(path);
 	String mappedPath = path;
 
