@@ -40,7 +40,7 @@ import antlr.collections.impl.BitSet;
  * 
  * <p>Version tracking now done with following cvs ID:
  *
- * <p>$Id: JavaRecognizer.java,v 1.21 2003/11/10 12:35:02 jhraigniac Exp $
+ * <p>$Id: JavaRecognizer.java,v 1.22 2003/11/13 20:02:37 jjones Exp $
  * 
  * --------- old notes: -------------------------------------------
  * <pre>
@@ -104,7 +104,7 @@ import antlr.collections.impl.BitSet;
  * class Test {
  *   public static void main( String args[] ) {
  *     if (boolean.class.equals(boolean.class)) {
- *       System.out.println("works");
+ *       _cat.info("works");
  *     }
  *   }
  * }

@@ -1,4 +1,4 @@
-// $Id: UmlException.java,v 1.3 2003/06/29 23:46:41 linus Exp $
+// $Id: UmlException.java,v 1.4 2003/11/13 20:02:38 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,11 +30,17 @@
 
 package org.argouml.model.uml;
 
+import org.apache.log4j.Logger;
+
 /**
  *
  * @author  unknown (Bob Tarling?)
  */
 public class UmlException extends Exception {
+
+    private static final Logger _cat = 
+        Logger.getLogger(UmlException.class);
+
     private Throwable cause = null;
 
     public UmlException() {
@@ -56,13 +62,9 @@ public class UmlException extends Exception {
 
     public void printStackTrace() {
 	super.printStackTrace();
-	// No system.out.println() is allowed outside main.java. Use a logger.
-	/*
-	  if (cause != null) {
-	  System.out.println("Caused by:");
-	  cause.printStackTrace();
-	  }
-	*/
+	if (cause != null) {
+	    _cat.error("Caused by:", cause);
+	}
     }
 
     public void printStackTrace(java.io.PrintStream ps)

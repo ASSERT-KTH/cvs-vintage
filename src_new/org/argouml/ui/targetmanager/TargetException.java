@@ -1,4 +1,4 @@
-// $Id: TargetException.java,v 1.4 2003/09/19 21:28:42 d00mst Exp $
+// $Id: TargetException.java,v 1.5 2003/11/13 20:02:38 jjones Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,8 @@ package org.argouml.ui.targetmanager;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author gebruiker
  *
@@ -33,6 +35,9 @@ import java.io.PrintWriter;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class TargetException extends RuntimeException {
+
+    private static final Logger _cat = 
+        Logger.getLogger(TargetException.class);
 
     /** The cause of this exception, or null */
     private Throwable cause;
@@ -78,8 +83,7 @@ public class TargetException extends RuntimeException {
     public void printStackTrace() {
 	super.printStackTrace();
 	if (cause != null) {
-	    System.err.println("Caused by:");
-	    cause.printStackTrace();
+        _cat.error("Caused by:", cause);
 	}
     }
 

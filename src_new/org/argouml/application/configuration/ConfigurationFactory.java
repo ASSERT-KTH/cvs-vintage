@@ -1,4 +1,4 @@
-// $Id: ConfigurationFactory.java,v 1.7 2003/11/10 12:13:13 jhraigniac Exp $
+// $Id: ConfigurationFactory.java,v 1.8 2003/11/13 20:02:37 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,6 +24,8 @@
 
 
 package org.argouml.application.configuration;
+
+import org.apache.log4j.Logger;
 
 /** A factory object that provides configuration information.
  * 
@@ -55,8 +57,9 @@ public class ConfigurationFactory
 		    (ConfigurationFactory) Class.forName(name).newInstance();
             }
 	    catch (Exception e) {
-	        System.out.println ("Can't create configuration factory " +
-	                            name + ", using default factory");
+		Logger.getLogger(ConfigurationFactory.class).
+		    warn("Can't create configuration factory " 
+                    + name + ", using default factory");
             }
 	}
 	if (newFactory == null)

@@ -1,4 +1,4 @@
-// $Id: ConfigurationProperties.java,v 1.10 2003/11/10 12:13:13 jhraigniac Exp $
+// $Id: ConfigurationProperties.java,v 1.11 2003/11/13 20:02:37 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -175,7 +175,7 @@ public class ConfigurationProperties extends ConfigurationHandler {
      * @return true if the save was successful, false if not.
      */
     boolean saveURL(URL url) {
-	// System.out.println ("Configuration saved to " + url + "\n");
+	// cat.info("Configuration saved to " + url + "\n");
 	return false;
     }
 

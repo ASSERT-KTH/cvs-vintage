@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.82 2003/11/11 18:14:14 mkl Exp $
+// $Id: GeneratorJava.java,v 1.83 2003/11/13 20:02:37 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.82 2003/11/11 18:14:14 mkl Exp $
+// $Id: GeneratorJava.java,v 1.83 2003/11/13 20:02:37 jjones Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -99,7 +99,8 @@ public class GeneratorJava
     extends Generator implements FileGenerator {
 
     /** logger */
-    private static Logger cat = Logger.getLogger(GeneratorJava.class);
+    private static final Logger cat = Logger.getLogger(GeneratorJava.class);
+    
     /*
      * 2002-06-09 changed visibility of VERBOSE_DOCS and
      * LF_BEFORE_CURLY to public instead of private
@@ -588,7 +589,7 @@ public class GeneratorJava
         // nsuml: realizations!
         if (org.argouml.model.ModelFacade.isAClass(cls)) {
             String interfaces = generateSpecification((MClass) cls);
-	    System.out.println("Specification: " + interfaces);
+	    cat.debug("Specification: " + interfaces);
             if (!interfaces.equals("")) {
                 sb.append(" ").append("implements ").append(interfaces);
             }
@@ -1509,7 +1510,7 @@ public class GeneratorJava
             ModelFacade.getSpecifications(cls);
         if (realizations == null)
             return "";
-	System.out.println("realizations: " + realizations.size());
+	cat.debug("realizations: " + realizations.size());
         StringBuffer sb = new StringBuffer(80);
         Iterator clsEnum = realizations.iterator();
         while (clsEnum.hasNext()) {

@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.41 2003/11/10 12:34:59 jhraigniac Exp $
+// $Id: UMLDiagram.java,v 1.42 2003/11/13 20:02:38 jjones Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -363,7 +363,7 @@ public abstract class UMLDiagram
      * with the supplied action.
      */
     public void deselectOtherTools(Action otherThanAction) {
-        //System.out.println("Looking for action " + otherThanAction);
+        //cat.debug("Looking for action " + otherThanAction);
         int toolCount = toolBar.getComponentCount();
         for (int i = 0; i < toolCount; ++i) {
             Component c = toolBar.getComponent(i);
@@ -378,7 +378,7 @@ public abstract class UMLDiagram
                     otherAction = ((RadioAction)otherThanAction).getAction();
                 }
                 if (!action.equals(otherAction)) {
-                    //System.out.println("Unselecting " + tb);
+                    //cat.debug("Unselecting " + tb);
                     tb.setSelected(false);
                     ButtonModel bm = tb.getModel();
                     bm.setRollover(false);
@@ -387,7 +387,7 @@ public abstract class UMLDiagram
                     bm.setPressed(false);
                     tb.setBorderPainted(false);
                 } else {
-                    //System.out.println("Selecting " + tb);
+                    //cat.debug("Selecting " + tb);
                     tb.setSelected(true);
                     ButtonModel bm = tb.getModel();
                     bm.setRollover(true);

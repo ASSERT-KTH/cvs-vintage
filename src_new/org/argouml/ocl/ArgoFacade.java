@@ -1,4 +1,4 @@
-// $Id: ArgoFacade.java,v 1.23 2003/10/22 12:52:13 bobtarling Exp $
+// $Id: ArgoFacade.java,v 1.24 2003/11/13 20:02:37 jjones Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -358,7 +358,7 @@ class ArgoAny implements Any, Type2 {
 
         Collection operationParameters = ModelFacade.getParameters(operation);
 	if (!ModelFacade.isReturn(operationParameters.iterator().next())) {
-	    System.err.println(
+	    cat.warn(
                 "ArgoFacade$ArgoAny expects the first operation parameter to be the return type; this isn't the case"
 	    );
 	}

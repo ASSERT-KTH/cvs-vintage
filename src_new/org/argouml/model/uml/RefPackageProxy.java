@@ -1,4 +1,4 @@
-// $Id: RefPackageProxy.java,v 1.2 2003/09/17 21:14:58 thierrylach Exp $
+// $Id: RefPackageProxy.java,v 1.3 2003/11/13 20:02:38 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,11 +38,16 @@ import javax.jmi.reflect.RefObject;
 import javax.jmi.reflect.RefPackage;
 import javax.jmi.reflect.RefStruct;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Thierry
  */
 public class RefPackageProxy extends RefBaseObjectProxy
     implements InvocationHandler, RefPackage {
+
+    private static final Logger _cat = 
+        Logger.getLogger(RefBaseObjectProxy.class);
 
     /**
      * @param object being proxied
@@ -89,7 +94,7 @@ public class RefPackageProxy extends RefBaseObjectProxy
         throws Throwable {
         Object result = null;
 
-        System.out.println("method: " + method.getName());
+        _cat.debug("method: " + method.getName());
 
         if (method.getName().equals("refMetaObject")) {
             result = refMetaObject();

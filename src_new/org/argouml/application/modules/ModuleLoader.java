@@ -1,4 +1,4 @@
-// $Id: ModuleLoader.java,v 1.16 2003/11/10 12:13:13 jhraigniac Exp $
+// $Id: ModuleLoader.java,v 1.17 2003/11/13 20:02:37 jjones Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -462,7 +462,7 @@ public class ModuleLoader {
 		    sClassName = line.substring(equalPos + 1).trim();
 		}
 		catch (Exception e) {
-		    System.err.println ("Unable to process " + filename +
+		    cat.warn ("Unable to process " + filename +
 		                        " at line " + lnr.getLineNumber() +
 					" data = '" + realLine + "'");
 		    continue;

@@ -1,4 +1,4 @@
-// $Id: RefBaseObjectProxy.java,v 1.5 2003/09/17 21:15:15 thierrylach Exp $
+// $Id: RefBaseObjectProxy.java,v 1.6 2003/11/13 20:02:38 jjones Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,6 +34,8 @@ import javax.jmi.reflect.RefBaseObject;
 import javax.jmi.reflect.RefObject;
 import javax.jmi.reflect.RefPackage;
 
+import org.apache.log4j.Logger;
+
 import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.model_management.MPackage;
 
@@ -42,6 +44,9 @@ import ru.novosoft.uml.model_management.MPackage;
  */
 public class RefBaseObjectProxy implements InvocationHandler, RefBaseObject {
 
+    private static final Logger _cat = 
+        Logger.getLogger(RefBaseObjectProxy.class);
+            
     private Object _realObject;
 
     /**
@@ -100,7 +105,7 @@ public class RefBaseObjectProxy implements InvocationHandler, RefBaseObject {
         throws Throwable {
         Object result = null;
 
-        System.out.println("method: " + method.getName());
+        _cat.debug("method: " + method.getName());
 
         if (method.getName().equals("refMetaObject")) {
             result = refMetaObject();
@@ -116,7 +121,7 @@ public class RefBaseObjectProxy implements InvocationHandler, RefBaseObject {
         }
         else {
             try {
-                System.out.println ("Executing " + method.getName());
+                _cat.debug("Executing " + method.getName());
                 result = method.invoke(_realObject, args);
             }
             catch (InvocationTargetException e) {

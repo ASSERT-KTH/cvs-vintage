@@ -76,7 +76,7 @@ import antlr.collections.impl.BitSet;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.11 2003/08/25 23:57:44 bobtarling Exp $
+ * $Id: JavaRecognizer.java,v 1.12 2003/11/13 20:02:37 jjones Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -84,7 +84,7 @@ import antlr.collections.impl.BitSet;
  * class Test {
  *   public static void main( String args[] ) {
  *     if (boolean.class.equals(boolean.class)) {
- *       System.out.println("works");
+ *       _cat.info("works");
  *     }
  *   }
  * }
