@@ -103,6 +103,7 @@ public class JspInterceptor extends BaseInterceptor {
     Properties args=new Properties(); // args for jasper
     boolean useJspServlet=false; 
     String jspServletCN=JSP_SERVLET;
+    String runtimePackage;
     
     // -------------------- Jasper options --------------------
     // Options that affect jasper functionality. Will be set on
@@ -221,6 +222,15 @@ public class JspInterceptor extends BaseInterceptor {
     public void setPageContextPoolSize(int i) {
 	pageContextPoolSize=i;
     }
+
+    /** The generator will produce code using a different
+	runtime ( default is org.apache.jasper.runtime ).
+	The runtime must use the same names for classes as the
+	default one, so the code will compile.
+    */
+    public void setRuntimePackage(String rp ) {
+	runtimePackage=rp;
+    }
     
     // -------------------- Hooks --------------------
 
@@ -230,6 +240,11 @@ public class JspInterceptor extends BaseInterceptor {
     public void addContext(ContextManager cm, Context ctx)
 	throws TomcatException 
     {
+	if( runtimePackage!=null ) {
+	    Constants.JSP_RUNTIME_PACKAGE=runtimePackage;
+	    Constants.JSP_SERVLET_BASE=runtimePackage+".HttpJspBase";
+	}
+
 	JspFactoryImpl factory=new JspFactoryImpl(pageContextPoolSize);
 	
 	JspFactory.setDefaultFactory(factory);
