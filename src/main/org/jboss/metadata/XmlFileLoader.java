@@ -38,7 +38,7 @@ import org.jboss.logging.Logger;
  *   @author <a href="mailto:WolfgangWerner@gmx.net">Wolfgang Werner</a>
  *   @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  *   @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- *   @version $Revision: 1.26 $
+ *   @version $Revision: 1.27 $
  *
  *   Revisions:
  *
@@ -253,13 +253,20 @@ public class XmlFileLoader
          docBuilderFactory.setValidating(validateDTDs);
          DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
          LocalResolver lr = new LocalResolver();
-         ErrorHandler eh = new LocalErrorHandler( inPath, lr );
+         LocalErrorHandler eh = new LocalErrorHandler( inPath, lr );
          docBuilder.setEntityResolver(lr);
          docBuilder.setErrorHandler(eh );
          
          Document doc = docBuilder.parse(is);
+         if(validateDTDs && eh.hadError()) {
+            throw new DeploymentException("Invalid XML: file=" + inPath);
+         }
          return doc;
          
+      }
+      catch (DeploymentException e) 
+      {
+         throw e;
       }
       catch (SAXParseException e)
       {
@@ -379,17 +386,20 @@ public class XmlFileLoader
       // The xml file being parsed
       private String theFileName;
       private LocalResolver localResolver;
+      private boolean error;
       
       public LocalErrorHandler( String inFileName, LocalResolver localResolver )
       {
          this.theFileName = inFileName;
          this.localResolver = localResolver;
+         this.error = false;
       }
       
       public void error(SAXParseException exception)
       {
          if ( localResolver.hasDTD() )
          {
+            this.error = true;
             log.error("XmlFileLoader: File "
             + theFileName
             + " process error. Line: "
@@ -404,6 +414,7 @@ public class XmlFileLoader
       {
          if ( localResolver.hasDTD() )
          {
+            this.error = true;
             log.error("XmlFileLoader: File "
             + theFileName
             + " process fatal error. Line: "
@@ -418,6 +429,7 @@ public class XmlFileLoader
       {
          if ( localResolver.hasDTD() )
          {
+            this.error = true;
             log.error("XmlFileLoader: File "
             + theFileName
             + " process warning. Line: "
@@ -426,6 +438,10 @@ public class XmlFileLoader
             + exception.getMessage()
             );
          }//end if
+      }
+
+      public boolean hadError() {
+         return error;
       }
    }// end class LocalErrorHandler
 }
