@@ -856,7 +856,7 @@ public class ContextManager {
     public static final int CONTAINER_NOTE=1;
     public static final int REQUEST_NOTE=2;
     
-    String noteDescription[][]=new String[3][MAX_NOTES];
+    String noteName[][]=new String[3][MAX_NOTES];
 
     /** used to allow interceptors to set specific per/request, per/container
      * and per/CM informations.
@@ -874,18 +874,25 @@ public class ContextManager {
      *  all notes that it needs. 
      *
      *  Throws exception if too many notes are set ( shouldn't happen in normal use ).
-     *  @param description of the note
+     *  @param noteType The note will be associated with the server, container or request.
+     *  @param name the name of the note.
      */
-    public synchronized int getNoteId( int noteType, String description )
+    public synchronized int getNoteId( int noteType, String name )
 	throws TomcatException
     {
+	// find if we already have a note with this name ( this is in init(), not critical )
+	for( int i=0; i< noteId[noteType] ; i++ ) {
+	    if( noteName[noteType][i].equals( name ) )
+		return i;
+	}
+	
 	if( noteId[noteType] >= MAX_NOTES ) throw new TomcatException( "Too many notes ");
-	noteDescription[noteType][ noteId[noteType] ]=description;
+	noteName[noteType][ noteId[noteType] ]=name;
 	return noteId[noteType]++;
     }
 
-    public String getNoteDescription( int noteType, int noteId ) {
-	return noteDescription[noteType][noteId];
+    public String getNoteName( int noteType, int noteId ) {
+	return noteName[noteType][noteId];
     }
     
     // -------------------- Per-server notes -------------------- 
