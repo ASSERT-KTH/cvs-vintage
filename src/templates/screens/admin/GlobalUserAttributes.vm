@@ -2,6 +2,7 @@ $page.setTitle("User Attributes")
 
 <div class="app" id=""div3-0-0-1"">
 <h2>$page.Title</h2>
+hi
 
 #set ($module = $scarabR.CurrentModule)
 
@@ -18,6 +19,7 @@ $page.setTitle("User Attributes")
 <input type="hidden" name="action" value="admin.GlobalAttributes" />
 <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="admin,UserAttributeEdit.vm" />
 <input type="hidden" name="$scarabG.Constant.LAST_TEMPLATE" value="global" />
+<input type="hidden" name="attributeType" value="user" />
 
 <div class="functnbar">
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;

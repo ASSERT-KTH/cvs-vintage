@@ -61,7 +61,7 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 </tr>
 #foreach ($issueType in $allIssueTypes)
 #indexedRows($velocityCount)
-<td>#booleanCheckbox ($group.Deleted)</td>
+<td><input type="checkbox" name="action_$issueType.IssueTypeId"></td>
 <td><a href="$link.setPage("admin,GlobalArtifactTypeEdit.vm").setPathInfo("issuetypeid", "$issueType.IssueTypeId")">$issueType.Name</a>
 </td>
 <td>$issueType.Description</td>
@@ -71,8 +71,8 @@ This page is for selecting an Issue type to edit which is defined in a global sc
 
 <div class="functnbar3">
 <input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
-<input type="submit" value="Copy" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doSave" />
+<input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDelete" />
 </div>
 
 #if ($paginated)
