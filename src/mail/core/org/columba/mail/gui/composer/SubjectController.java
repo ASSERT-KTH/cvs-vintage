@@ -127,4 +127,8 @@ public class SubjectController implements DocumentListener, Observer {
             ask = false;
         }
     }
+
+    public SubjectView getView() {
+        return view;
+    }
 }

@@ -37,6 +37,7 @@ import org.columba.core.plugin.InterpreterHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
+import org.columba.core.plugin.ViewPluginHandler;
 import org.columba.core.session.ColumbaServer;
 import org.columba.core.session.SessionController;
 import org.columba.core.util.GlobalResourceLoader;
@@ -100,6 +101,8 @@ public class Main {
         MainInterface.pluginManager.registerHandler(new FramePluginHandler());
 
         MainInterface.pluginManager.registerHandler(new ThemePluginHandler());
+
+        MainInterface.pluginManager.registerHandler(new ViewPluginHandler());
 
         MainInterface.backgroundTaskManager = new BackgroundTaskManager();
 

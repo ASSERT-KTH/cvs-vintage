@@ -16,6 +16,7 @@ import org.columba.core.gui.toolbar.ToolBar;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
 import org.columba.mail.gui.menu.MailMenu;
 import org.columba.mail.gui.message.MessageView;
+import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
 
 import java.awt.BorderLayout;
@@ -27,7 +28,8 @@ import java.awt.BorderLayout;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class MessageFrameView extends AbstractFrameView {
+public class MessageFrameView extends AbstractFrameView
+    implements AbstractMessageFrameView {
     private FolderInfoPanel folderInfoPanel;
 
     /**

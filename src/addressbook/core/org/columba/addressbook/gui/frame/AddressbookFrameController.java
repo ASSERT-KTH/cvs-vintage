@@ -22,7 +22,12 @@ import org.columba.addressbook.gui.tree.TreeController;
 
 import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ViewPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionListener;
@@ -34,6 +39,8 @@ import javax.swing.event.TreeSelectionListener;
  */
 public class AddressbookFrameController extends AbstractFrameController
     implements AddressbookFrameMediator {
+    
+    protected AbstractAddressbookView view;
     protected TreeController tree;
     protected TableController table;
 
@@ -48,12 +55,33 @@ public class AddressbookFrameController extends AbstractFrameController
  * @see org.columba.core.gui.FrameController#createView()
  */
     protected AbstractView createView() {
-        AddressbookFrameView view = new AddressbookFrameView(this);
+        //AddressbookFrameView view = new AddressbookFrameView(this);
+        // Load "plugin" view instead
+        ViewPluginHandler handler = null;
+
+        try {
+            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.view");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+
+        // get view using the plugin handler found above
+        Object[] args = {this};
+
+        try {
+            view = (AbstractAddressbookView) handler.getPlugin(
+                getViewItem().getRoot().getAttribute("frame", id), args);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         view.init(tree.getView(), table.getView());
 
-        view.pack();
+        view.getFrame().pack();
 
-        view.setVisible(true);
+        view.getFrame().setVisible(true);
 
         return view;
     }

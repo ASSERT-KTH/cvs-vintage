@@ -19,7 +19,6 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.menu.Menu;
@@ -29,6 +28,7 @@ import org.columba.core.gui.util.LabelWithMnemonic;
 import org.columba.mail.gui.composer.html.HtmlToolbar;
 import org.columba.mail.gui.composer.menu.ComposerMenu;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
+import org.columba.mail.gui.view.AbstractComposerView;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -48,8 +48,9 @@ import javax.swing.JSplitPane;
  *
  * view for message composer dialog
  */
-public class ComposerView extends AbstractFrameView {
-    public static final String ACCOUNTINFOPANEL = "accountinfopanel";
+public class ComposerView extends AbstractFrameView
+    implements AbstractComposerView {
+
     private JSplitPane rightSplitPane;
 
     /** Editor viewer resides in this panel */
@@ -179,7 +180,7 @@ public class ComposerView extends AbstractFrameView {
      * This is used by the ComposerController when adding a listener
      * to that panel.
      */
-    protected JPanel getEditorPanel() {
+    public JPanel getEditorPanel() {
         return editorPanel;
     }
 
@@ -246,7 +247,7 @@ public class ComposerView extends AbstractFrameView {
 
         if (b) {
             toolbarPane.remove(toolbar);
-            ((AbstractFrameController) frameController).enableToolbar(MAIN_TOOLBAR,
+            ((FrameMediator) frameController).enableToolbar(MAIN_TOOLBAR,
                 false);
         } else {
             if (isAccountInfoPanelVisible()) {
@@ -257,7 +258,7 @@ public class ComposerView extends AbstractFrameView {
                 toolbarPane.add(toolbar);
             }
 
-            ((AbstractFrameController) frameController).enableToolbar(MAIN_TOOLBAR,
+            ((FrameMediator) frameController).enableToolbar(MAIN_TOOLBAR,
                 true);
         }
 
@@ -270,12 +271,12 @@ public class ComposerView extends AbstractFrameView {
 
         if (b) {
             toolbarPane.remove(getAccountInfoPanel());
-            ((AbstractFrameController) frameController).enableToolbar(ACCOUNTINFOPANEL,
+            ((FrameMediator) frameController).enableToolbar(ACCOUNTINFOPANEL,
                 false);
         } else {
             toolbarPane.add(getAccountInfoPanel());
 
-            ((AbstractFrameController) frameController).enableToolbar(ACCOUNTINFOPANEL,
+            ((FrameMediator) frameController).enableToolbar(ACCOUNTINFOPANEL,
                 true);
         }
 
@@ -284,6 +285,6 @@ public class ComposerView extends AbstractFrameView {
     }
 
     public boolean isAccountInfoPanelVisible() {
-        return ((AbstractFrameController) frameController).isToolbarEnabled(ACCOUNTINFOPANEL);
+        return ((FrameMediator) frameController).isToolbarEnabled(ACCOUNTINFOPANEL);
     }
 }

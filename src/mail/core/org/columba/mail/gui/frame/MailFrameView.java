@@ -218,8 +218,8 @@ public void showFolderInfo(boolean b) {
         repaint();
     }
 
-    public void saveWindowPosition() {
-        super.saveWindowPosition();
+    public void savePositions() {
+        super.savePositions();
 
         ViewItem viewItem = frameController.getViewItem();
 

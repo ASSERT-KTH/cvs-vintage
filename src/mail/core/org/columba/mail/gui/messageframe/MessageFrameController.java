@@ -1,21 +1,36 @@
-/*
- * Created on 06.04.2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+// The contents of this file are subject to the Mozilla Public License Version
+// 1.1
+//(the "License"); you may not use this file except in compliance with the
+//License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+//
+//Software distributed under the License is distributed on an "AS IS" basis,
+//WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+//for the specific language governing rights and
+//limitations under the License.
+//
+//The Original Code is "The Columba Project"
+//
+//The Initial Developers of the Original Code are Frederik Dietz and Timo
+// Stich.
+//Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
+//
+//All Rights Reserved.
 package org.columba.mail.gui.messageframe;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.AbstractFrameView;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ViewPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.frame.AbstractMailFrameController;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
+import org.columba.mail.gui.view.AbstractMessageFrameView;
 import org.columba.mail.main.MailInterface;
 
 
@@ -30,6 +45,7 @@ public class MessageFrameController extends AbstractMailFrameController {
     FolderCommandReference[] treeReference;
     FolderCommandReference[] tableReference;
     FixedTableSelectionHandler tableSelectionHandler;
+    protected AbstractMessageFrameView view;
 
     /**
      * @param viewItem
@@ -38,9 +54,11 @@ public class MessageFrameController extends AbstractMailFrameController {
         super("MessageFrame",
             new ViewItem(MailInterface.config.get("options").getElement("/options/gui/messageframe/view")));
 
-        getView().loadWindowPosition();
+        getView().loadPositions();
 
-        getView().setVisible(true);
+        if(getView().getFrame() != null) {
+            getView().getFrame().setVisible(true);
+        }
     }
 
     protected void init() {
@@ -91,16 +109,36 @@ public class MessageFrameController extends AbstractMailFrameController {
      * @see org.columba.core.gui.frame.FrameMediator#createView()
      */
     public AbstractView createView() {
-        MessageFrameView view = new MessageFrameView(this);
+        //MessageFrameView view = new MessageFrameView(this);
+        // Load "plugin" view instead
+        ViewPluginHandler handler = null;
+
+        try {
+            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.view");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+
+        // get view using the plugin handler found above
+        Object[] args = {this};
+
+        try {
+            view = (AbstractMessageFrameView) handler.getPlugin(
+                getViewItem().getRoot().getAttribute("frame", id), args);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         /*
         view.setFolderInfoPanel(folderInfoPanel);
         */
         view.init(messageController.getView(), statusBar);
 
-        view.pack();
+        view.getFrame().pack();
 
-        view.setVisible(true);
+        view.getFrame().setVisible(true);
 
         return view;
     }

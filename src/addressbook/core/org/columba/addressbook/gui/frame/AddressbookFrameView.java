@@ -36,7 +36,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 
-public class AddressbookFrameView extends AbstractFrameView {
+public class AddressbookFrameView extends AbstractFrameView
+    implements AbstractAddressbookView {
+    
     public AddressbookFrameView(FrameMediator frameController) {
         super(frameController);
     }

@@ -56,4 +56,8 @@ public class PriorityController implements ItemListener {
             controller.getModel().setPriority((String) view.getSelectedItem());
         }
     }
+    
+    public PriorityView getView() {
+        return view;
+    }
 }

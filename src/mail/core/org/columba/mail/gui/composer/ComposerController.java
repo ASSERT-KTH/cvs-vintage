@@ -28,11 +28,16 @@ import org.columba.core.config.ViewItem;
 import org.columba.core.gui.frame.AbstractFrameController;
 import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.view.AbstractView;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ViewPluginHandler;
 import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.composer.html.HtmlEditorController;
 import org.columba.mail.gui.composer.text.TextEditorController;
 import org.columba.mail.gui.composer.util.IdentityInfoPanel;
+import org.columba.mail.gui.view.AbstractComposerView;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.parser.text.HtmlParser;
 import org.columba.mail.util.AddressCollector;
@@ -196,7 +201,28 @@ public class ComposerController extends AbstractFrameController
      * @see org.columba.core.gui.FrameController#createView()
      */
     protected AbstractView createView() {
-        ComposerView view = new ComposerView(this);
+        //ComposerView view = new ComposerView(this);
+        // Load "plugin" view instead
+        ViewPluginHandler handler = null;
+
+        try {
+            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.view");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+
+        // get view using the plugin handler found above
+        Object[] args = {this};
+
+        try {
+            view = (AbstractView) handler.getPlugin(
+                getViewItem().getRoot().getAttribute("frame", id), args);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
 
         // *20030917, karlpeder* If ContainerListeners are waiting to be
         // added, add them now.
@@ -207,7 +233,7 @@ public class ComposerController extends AbstractFrameController
 
             while (ite.hasNext()) {
                 ContainerListener cl = (ContainerListener) ite.next();
-                view.getEditorPanel().addContainerListener(cl);
+                ((AbstractComposerView)view).getEditorPanel().addContainerListener(cl);
             }
 
             containerListenerBuffer = null; // done, the buffer has been emptied
@@ -441,7 +467,7 @@ public class ComposerController extends AbstractFrameController
         }
 
         // an update of the view is also necessary.
-        ((ComposerView) getView()).setNewEditorView();
+        ((AbstractComposerView) getView()).setNewEditorView();
     }
 
     /**
@@ -457,7 +483,7 @@ public class ComposerController extends AbstractFrameController
     public void addContainerListenerForEditor(ContainerListener cl) {
         if (view != null) {
             // add listener
-            ((ComposerView) view).getEditorPanel().addContainerListener(cl);
+            ((AbstractComposerView) view).getEditorPanel().addContainerListener(cl);
         } else {
             // view not yet created - store listener in buffer
             if (containerListenerBuffer == null) {
@@ -474,7 +500,7 @@ public class ComposerController extends AbstractFrameController
      * addContainListenerForEditor)
      */
     public void removeContainerListenerForEditor(ContainerListener cl) {
-        ((ComposerView) getView()).getEditorPanel().removeContainerListener(cl);
+        ((AbstractComposerView) getView()).getEditorPanel().removeContainerListener(cl);
     }
 
     public Charset getCharset() {

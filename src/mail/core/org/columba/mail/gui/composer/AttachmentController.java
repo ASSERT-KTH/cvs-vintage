@@ -210,6 +210,10 @@ public class AttachmentController implements KeyListener, FocusOwner, ListSelect
             }
         }
     }
+    
+    public AttachmentView getView() {
+        return view;
+    }
 
     /** ***************** KeyListener *************************** */
 

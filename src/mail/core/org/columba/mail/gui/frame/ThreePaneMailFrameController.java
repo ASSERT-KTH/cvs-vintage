@@ -16,9 +16,15 @@
 package org.columba.mail.gui.frame;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.AbstractFrameView;
+//import org.columba.core.gui.frame.AbstractFrameView;
 import org.columba.core.gui.view.AbstractView;
 import org.columba.core.gui.util.DialogStore;
+
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.core.plugin.ViewPluginHandler;
+import org.columba.core.xml.XmlElement;
 
 import org.columba.mail.gui.attachment.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
@@ -32,10 +38,12 @@ import org.columba.mail.gui.tree.TreeController;
 import org.columba.mail.gui.tree.action.ApplyFilterAction;
 import org.columba.mail.gui.tree.action.RenameFolderAction;
 import org.columba.mail.gui.tree.selection.TreeSelectionHandler;
+import org.columba.mail.gui.view.AbstractMailView;
 import org.columba.mail.main.MailInterface;
 
 import java.awt.event.KeyEvent;
 
+import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 
@@ -54,6 +62,7 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
     public HeaderController headerController;
     public FilterToolbar filterToolbar;
     public FolderInfoPanel folderInfoPanel;
+    protected AbstractMailView view;
 
     /**
  * @param viewItem
@@ -106,14 +115,33 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
     }
 
     public AbstractView createView() {
-        MailFrameView view = new MailFrameView(this);
+        //MailFrameView view = new MailFrameView(this);
+        // Load "plugin" view instead
+        ViewPluginHandler handler = null;
+
+        try {
+            handler = (ViewPluginHandler) MainInterface.pluginManager.getHandler(
+                    "org.columba.core.view");
+        } catch (PluginHandlerNotFoundException ex) {
+            NotifyDialog d = new NotifyDialog();
+            d.showDialog(ex);
+        }
+
+        // get view using the plugin handler found above
+        Object[] args = {this};
+
+        try {
+            view = (AbstractMailView) handler.getPlugin(
+                getViewItem().getRoot().getAttribute("frame", id), args);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         view.setFolderInfoPanel(folderInfoPanel);
 
         view.init(treeController.getView(), tableController.getView(),
             filterToolbar, messageController.getView(), statusBar);
 
-        //view.pack();
         return view;
     }
 
