@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: jboss-service.xml,v 1.124 2005/02/01 08:16:58 telrod Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.125 2005/02/11 13:08:54 pilhuhn Exp $ -->
 
 <!-- ===================================================================== -->
 <!--  JBoss Server Configuration                                           -->
@@ -100,7 +100,8 @@
    <!-- ==================================================================== -->
 
    <mbean code="org.jboss.logging.Log4jService"
-      name="jboss.system:type=Log4jService,service=Logging">
+      name="jboss.system:type=Log4jService,service=Logging"
+	  xmbean-dd="resource:xmdesc/Log4jService-xmbean.xml">
       <attribute name="ConfigurationURL">resource:log4j.xml</attribute>
       <!-- Set the org.apache.log4j.helpers.LogLog.setQuiteMode. As of log4j1.2.8
       this needs to be set to avoid a possible deadlock on exception at the
