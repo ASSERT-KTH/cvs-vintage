@@ -105,7 +105,6 @@ public class ForwardCommand extends FolderCommand {
                 .getMessageSourceStream(uids[0]);
         model.addMimePart(new InputStreamMimePart(mimeHeader,
                 messageSourceStream));
-        messageSourceStream.close();
     }
 
     /**
