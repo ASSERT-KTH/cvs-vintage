@@ -5,6 +5,14 @@
 
 #set ($role = $securityAdmin.getRoleByName($data.Parameters.getString("name")))
 
+#if (!$role)
+                                                                                                                                             
+<p class="warningmark"><strong>
+$l10n.ErrorLocatingInfo $link.setPage("admin,ManageRoles.vm").setLabel($l10n.RoleList) $l10n.ErrorLocatingInfo2</strong>
+</p>
+
+#else
+
 <div id="editrole" class="app">
 
 <h3>$l10n.format("EditPermissionsForRole", $role.Name)</h3>
@@ -43,3 +51,5 @@
 
 </form>
 </div>
+
+#end

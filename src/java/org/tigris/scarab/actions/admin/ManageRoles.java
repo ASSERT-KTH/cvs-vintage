@@ -71,13 +71,13 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageRoles.java,v 1.11 2004/02/19 22:20:31 pledbrook Exp $
+ * @version $Id: ManageRoles.java,v 1.12 2004/11/04 17:51:15 dep4b Exp $
  */
 public class ManageRoles extends RequireLoginFirstAction
 {
     
     /**
-     * 
+     * Go to the Add Role page
      */
     public void doGotoaddrole(RunData data, TemplateContext context)
         throws Exception
@@ -86,21 +86,21 @@ public class ManageRoles extends RequireLoginFirstAction
     }
     
     /**
-     * 
+     * Go to the Edit Role page
      */
     public void doGotoeditrole(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, "admin,EditRole.vm");
+        checkParamValidity(data, context, "admin,EditRole.vm");
     }
     
     /**
-     * 
+     * Go to the Delete Role page
      */
     public void doGotodeleterole(RunData data, TemplateContext context)
         throws Exception
     {
-        setTarget(data, "admin,DeleteRole.vm");
+        checkParamValidity(data, context, "admin,DeleteRole.vm");
     }
     
     /** 
@@ -156,6 +156,7 @@ public class ManageRoles extends RequireLoginFirstAction
          * Grab the role we are trying to update.
          */
         String name = data.getParameters().getString("name");
+        checkParamValidity(data, context, null);
         Role role = TurbineSecurity.getRole(name);
         
         /*
@@ -242,5 +243,33 @@ public class ManageRoles extends RequireLoginFirstAction
         throws Exception
     {
         doCancel(data,context);
+    }
+
+    /**
+     * Spit out an error message to the user if the "name" parameter
+     * is null or empty.
+     *
+     * @param target Page to go to if "name" parameter is present. If
+     * null then don't go anywhere.
+     */
+    protected void checkParamValidity(RunData data, TemplateContext context,
+                                      String target)
+    {
+        String name = data.getParameters().getString("name");
+
+        if (name == null || name.length() == 0)
+        {
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            String msg = l10n.get("NoRoleSelected");
+            getScarabRequestTool(context).setConfirmMessage(msg);
+            setTarget(data, "admin,ManageRoles.vm");
+        }
+        else
+        {
+            if (target != null)
+            {
+                setTarget(data, target);
+            }
+        }
     }
 }

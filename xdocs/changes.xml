@@ -7,6 +7,12 @@
 
   <body>
     <release version="b20" date="in dev">
+      <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB1246">
+        EditRole and DeleteRole does not catch the case when 'name' parameter is absent
+      </action>        
+      <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB1245">
+        user's entered data in registration form will be cleaned out in some cases
+      </action>               
       <action dev="epugh" type="update" due-to="Anthony Wong" issue-id="SCB1245">
         user's entered data in registration form will be cleaned out in some cases
       </action>            
