@@ -79,20 +79,6 @@
   <property name="jtc.http11.home" location="${jakarta-tomcat-connectors}/http11"/>
   <property name="jtc.http11.lib" location="${jtc.http11.home}/build/lib"/>
 
-  <!-- A binary copy of commons-logging.jar is checked in j-t-c. 
-       It can be overriden by gump or if you want to build jakarta-commons -->
-  <!--
-  <property name="commons-logging.home"
-            location="${jakarta-commons}/logging"/>
-  <property name="commons-logging.lib"
-            location="${commons-logging.home}/dist"/>
-  <property name="commons-logging.jar"
-            location="${commons-logging.lib}/commons-logging.jar"/>
-  -->
-
-  <property name="commons-logging.jar" 
-            location="${jakarta-tomcat-connectors}/lib/commons-logging.jar"/>
-
   <!-- Binaries checked in ( servlet.jar is not likely to change,
       the 2.2 spec is final -->
   <property name="servlet22.jar" value="bin/servlet22.jar"/>
@@ -124,6 +110,12 @@
                file="${jakarta-tomcat-connectors}" />
   </target>
 
+  <target name="uptodate">
+    <uptodate property="tomcat-util.is.uptodate" targetfile="${tomcat-util.jar}">
+      <srcfiles dir="${jtc.util.home}" includes="java/**,build.xml"/>
+    </uptodate>
+  </target>
+
   <target name="msg.jdk12" if="jdk12.present" >
     <echo message="Detected JDK1.2" />
   </target>
@@ -144,7 +136,12 @@
     <fail message="Jakarta-tomcat-connectors repository is required ${jakarta-tomcat-connectors}"/>
   </target>
 
-  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp,msg.jtc" >
+  <target name="msg.jtc.util" if="tomcat-util.is.uptodate">
+    <echo message="tomcat-util.jar is up to date"/>
+  </target>
+
+  <target name="init"
+          depends="detect,uptodate,msg.jdk12,msg.jsse,msg.puretls,msg.commons-dbcp,msg.jtc,msg.jtc.util" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -239,9 +236,6 @@
     <copy file ="src/build/readme/readme.common"
           tofile="${tomcat.build}/lib/common/README" />
 
-    <copy tofile="${tomcat.build}/lib/common/commons-logging.jar"
-          file="${commons-logging.jar}"/>
-
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
      -->
@@ -257,8 +251,12 @@
     <chmod perm="+x" file="${tomcat.build}/bin/shutdown.sh"/>
   </target>
 
+  <target name="dep.tomcat-util" unless="tomcat-util.is.uptodate"
+          description="Build j-t-c util which we depend on. To be called before main">
+    <ant dir="${jakarta-tomcat-connectors}/util" />
+  </target>
+
   <target name="deps" description="Build repositoried that depends on. To be called before main" >
-        <ant dir="${jakarta-tomcat-connectors}/util" />
         <ant dir="${jakarta-tomcat-connectors}/coyote">
             <property name="tomcat33.home" value="${basedir}/build/tomcat"/>
         </ant>
@@ -307,16 +305,13 @@
       </fileset>
     </jar>
 
-    <!-- J-T-C utils - with tomcat_util.jar name -->
-    <!-- 
-    <jar jarfile="${tomcat.build}/lib/common/tomcat_util.jar">
-      <fileset dir="${jakarta-tomcat-connectors}/util/build/classes">
-        <include name="org/apache/tomcat/util/**"/>
+    <!-- Add jakarta-tomcat-connectors utils -->
+    <!-- Includes the tomcat-utils.jar and common-logging.jar -->
+    <copy todir="${tomcat.build}/lib/common">
+      <fileset dir="${jakarta-tomcat-connectors}/util/build/lib">
+        <include name="*.jar"/>
       </fileset>
-    </jar>
-    --> 
-    <copy file="${jakarta-tomcat-connectors}/util/build/lib/tomcat-util.jar"
-          todir="${tomcat.build}/lib/common" />
+    </copy>
 
     <!-- All tomcat3 specific utils -->
     <jar jarfile="${tomcat.build}/lib/container/container_util.jar" >
@@ -593,7 +588,7 @@
     </jar>
   </target>
 
-  <target name="tomcat-jars" depends="prepare,tomcat_util,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,coyote,tomcat.jar,facade22,tomcat-startup">
+  <target name="tomcat-jars" depends="prepare,dep.tomcat-util,tomcat_util,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,tomcat.jar,facade22,tomcat-startup">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
@@ -794,10 +789,7 @@
 
 
   <!-- ==================== Copy the files to distribution format ======== -->
-  <target name="dist" depends="main,webapps,tomcat-jars,dist.prepare,javadoc,dist.war">
-  </target>
-
-  <target name="dist-gump" depends="main-gump,webapps,tomcat-jars,dist.prepare,javadoc,dist.war">
+  <target name="dist" depends="main,dist.prepare,javadoc,dist.war">
   </target>
 
   <target name="dist.prepare" >
@@ -966,14 +958,13 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
 
-  <target name="main" depends="deps,tomcat,webapps"
-          description="Built tomcat in build/, without packaging. Include all dependent code" >
+  <target name="main.lite" depends="tomcat,webapps"
+          description="Build tomcat in build/, without packaging. Includes only required dependent code" >
   </target>
 
-  <target name="main-gump" depends="tomcat,webapps" 
-          description="Build tomcat but not the code it depends on. For gump use">
+  <target name="main" depends="main.lite,deps,coyote"
+          description="Build tomcat in build/, without packaging. Include coyote" >
   </target>
-
 
   <!-- ==================== Admin & agreagate ==================== -->
 
