@@ -60,10 +60,7 @@ public class MailConfig {
         DiskIO.ensureDirectory(path);
 
         pop3Directory = new File(path, "pop3server");
-
-        if (!pop3Directory.exists() || !pop3Directory.isDirectory()) {
-            pop3Directory.mkdir();
-        }
+        DiskIO.ensureDirectory(pop3Directory);
 
         accountFile = new File(path, "account.xml");
         registerPlugin(accountFile.getName(), new AccountXmlConfig(accountFile));
