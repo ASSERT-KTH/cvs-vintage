@@ -46,7 +46,7 @@ import java.util.HashMap;
  * todo refactor optimistic locking
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.7 $</tt>
+ * @version <tt>$Revision: 1.8 $</tt>
  */
 public class EntityTable
    implements Table
@@ -288,6 +288,8 @@ public class EntityTable
    public void stop() throws Exception
    {
       serviceController.stop(cacheName);
+      serviceController.destroy(cacheName);
+      serviceController.remove(cacheName);
       serviceController = null;
    }
 

@@ -44,7 +44,7 @@ import java.sql.SQLException;
 
 /**
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version <tt>$Revision: 1.3 $</tt>
+ * @version <tt>$Revision: 1.4 $</tt>
  */
 public class JDBCStoreManager2
    implements JDBCEntityPersistenceStore
@@ -180,7 +180,7 @@ public class JDBCStoreManager2
                   i.remove();
                   try
                   {
-                     entityBridge.stop();
+                     manager.entityBridge.stop();
                   }
                   catch(Exception e)
                   {
