@@ -18,11 +18,10 @@ package org.columba.addressbook.gui.frame;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 
 import javax.swing.JSplitPane;
 
+import org.columba.addressbook.gui.menu.AddressbookMenu;
 import org.columba.addressbook.gui.table.AddressbookTable;
 import org.columba.addressbook.gui.tree.AddressbookTree;
 import org.columba.addressbook.main.AddressbookInterface;
@@ -30,7 +29,6 @@ import org.columba.core.gui.FrameController;
 import org.columba.core.gui.FrameView;
 import org.columba.core.gui.ToolBar;
 import org.columba.core.gui.menu.Menu;
-import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.core.main.MainInterface;
 
 public class AddressbookView extends FrameView {
@@ -62,7 +60,7 @@ public class AddressbookView extends FrameView {
 		 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 		 */
 	protected Menu createMenu(FrameController controller) {
-		Menu menu = new Menu("org/columba/core/action/menu.xml", controller);
+		Menu menu = new AddressbookMenu("org/columba/core/action/menu.xml", controller);
 		menu.extendMenuFromFile("org/columba/addressbook/action/menu.xml");
 
 		return menu;

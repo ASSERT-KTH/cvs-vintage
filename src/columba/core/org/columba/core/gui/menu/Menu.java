@@ -28,7 +28,6 @@ import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.pop3.POP3ServerController;
 
 public class Menu extends JMenuBar {
 
@@ -58,20 +57,9 @@ public class Menu extends JMenuBar {
 		this.frameController = frameController;
 
 		menuGenerator =
-			new MenuBarGenerator(
-				frameController,
-				xmlRoot);
-		menuGenerator.createMenuBar(this);
+			createMenuBarGeneratorInstance(xmlRoot, frameController);
 
-		/*
-		XmlIO menuXml = new XmlIO();
-		menuXml.setURL(
-			DiskIO.getResourceURL("org/columba/core/action/menu.xml"));
-		menuXml.load();
-		
-		menuRoot = menuXml.getRoot().getElement("menubar");
-		initFromXML();
-		*/
+		menuGenerator.createMenuBar(this);
 
 		try {
 
@@ -85,6 +73,16 @@ public class Menu extends JMenuBar {
 		}
 	}
 
+	public MenuBarGenerator createMenuBarGeneratorInstance(
+		String xmlRoot,
+		FrameController frameController) {
+		if (menuGenerator == null) {
+			menuGenerator = new MenuBarGenerator(frameController, xmlRoot);
+		}
+
+		return menuGenerator;
+	}
+
 	public void extendMenuFromFile(String path) {
 		menuGenerator.extendMenuFromFile(path);
 		menuGenerator.createMenuBar(this);
@@ -92,26 +90,6 @@ public class Menu extends JMenuBar {
 
 	public void extendMenu(XmlElement menuExtension) {
 		menuGenerator.extendMenu(menuExtension);
-	}
-
-	public void updatePopServerMenu() {
-		CMenuItem menuItem;
-
-		fetchMessageSubmenu.removeAll();
-		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
-			POP3ServerController c = MainInterface.popServerCollection.get(i);
-			c.updateAction();
-			fetchMessageSubmenu.add(new CMenuItem(c.getCheckAction()));
-		}
-
-		manageSubmenu.removeAll();
-		for (int i = 0; i < MainInterface.popServerCollection.count(); i++) {
-			POP3ServerController c = MainInterface.popServerCollection.get(i);
-			c.updateAction();
-			menuItem = new CMenuItem(c.getManageAction());
-			manageSubmenu.add(menuItem);
-		}
-
 	}
 
 	/*
@@ -1211,92 +1189,6 @@ public class Menu extends JMenuBar {
 			}
 		}
 
-	}
-
-	public void updateSortMenu() {
-		//FIXME
-		/*
-		HeaderTableItem v =
-			MailConfig.getMainFrameOptionsConfig().getHeaderTableItem();
-		
-		sortSubMenu.removeAll();
-		
-		ButtonGroup group = new ButtonGroup();
-		JRadioButtonMenuItem menuItem;
-		String c;
-		
-		for (int i = 0; i < v.count(); i++) {
-			c = (String) v.getName(i);
-		
-			boolean enabled = v.getEnabled(i);
-		
-			if (enabled == true) {
-				String str = null;
-				try {
-					str =
-						MailResourceLoader.getString("header", c.toLowerCase());
-				} catch (Exception ex) {
-					//ex.printStackTrace();
-					System.out.println("exeption: " + ex.getMessage());
-					str = c;
-				}
-		
-				menuItem = new JRadioButtonMenuItem(str);
-				menuItem.setActionCommand(c);
-				menuItem.addActionListener(
-					MainInterface
-						.headerTableViewer
-						.getHeaderItemActionListener());
-				if (c
-					.equals(
-						MainInterface
-							.headerTableViewer
-							.getTableModelSorter()
-							.getSortingColumn()))
-					menuItem.setSelected(true);
-		
-				//menuItem.addActionListener( new FrameActionListener( mainInterface ));
-		
-				sortSubMenu.add(menuItem);
-				group.add(menuItem);
-			}
-		
-		}
-		
-		menuItem = new JRadioButtonMenuItem("In Order Received");
-		menuItem.addActionListener(
-			MainInterface.headerTableViewer.getHeaderItemActionListener());
-		sortSubMenu.add(menuItem);
-		group.add(menuItem);
-		
-		sortSubMenu.addSeparator();
-		
-		group = new ButtonGroup();
-		
-		menuItem = new JRadioButtonMenuItem("Ascending");
-		menuItem.addActionListener(
-			MainInterface.headerTableViewer.getHeaderItemActionListener());
-		if (MainInterface
-			.headerTableViewer
-			.getTableModelSorter()
-			.getSortingOrder()
-			== true)
-			menuItem.setSelected(true);
-		
-		sortSubMenu.add(menuItem);
-		group.add(menuItem);
-		menuItem = new JRadioButtonMenuItem("Descending");
-		menuItem.addActionListener(
-			MainInterface.headerTableViewer.getHeaderItemActionListener());
-		if (MainInterface
-			.headerTableViewer
-			.getTableModelSorter()
-			.getSortingOrder()
-			== false)
-			menuItem.setSelected(true);
-		sortSubMenu.add(menuItem);
-		group.add(menuItem);
-		*/
 	}
 
 }

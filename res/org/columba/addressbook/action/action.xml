@@ -8,4 +8,4 @@
  <action name="AddVCard" class="org.columba.addressbook.gui.action.AddVCardAction"/>
  <action name="EditProperties" class="org.columba.addressbook.gui.action.EditPropertiesAction"/>
  <action name="RemoveCard" class="org.columba.addressbook.gui.action.RemoveCardAction"/>
-<actionlist>
+</actionlist>

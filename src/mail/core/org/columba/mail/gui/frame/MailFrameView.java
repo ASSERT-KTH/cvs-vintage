@@ -31,6 +31,7 @@ import org.columba.core.gui.menu.Menu;
 import org.columba.core.gui.statusbar.StatusBar;
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.composer.HeaderView;
+import org.columba.mail.gui.menu.MailMenu;
 import org.columba.mail.gui.message.MessageView;
 import org.columba.mail.gui.table.FilterToolbar;
 import org.columba.mail.gui.table.TableView;
@@ -221,7 +222,7 @@ public class MailFrameView extends FrameView {
 	 * @see org.columba.core.gui.FrameView#createMenu(org.columba.core.gui.FrameController)
 	 */
 	protected Menu createMenu(FrameController controller) {
-		Menu menu = new Menu("org/columba/core/action/menu.xml",controller);
+		Menu menu = new MailMenu("org/columba/core/action/menu.xml",controller);
 		menu.extendMenuFromFile("org/columba/mail/action/menu.xml");
 
 		return menu;

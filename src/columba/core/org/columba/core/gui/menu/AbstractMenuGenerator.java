@@ -16,12 +16,13 @@ import org.columba.core.action.ActionPluginHandler;
 import org.columba.core.action.BasicAction;
 import org.columba.core.action.CheckBoxAction;
 import org.columba.core.gui.FrameController;
+import org.columba.core.gui.util.CMenu;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
 import org.columba.core.xml.XmlIO;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author frd
@@ -31,9 +32,9 @@ import org.columba.mail.util.MailResourceLoader;
  */
 public abstract class AbstractMenuGenerator {
 
-	XmlElement menuRoot;
-	XmlIO xmlFile;
-	FrameController frameController;
+	protected XmlElement menuRoot;
+	protected XmlIO xmlFile;
+	protected FrameController frameController;
 
 	/**
 	 * 
@@ -46,6 +47,10 @@ public abstract class AbstractMenuGenerator {
 		xmlFile = new XmlIO(DiskIO.getResourceURL(path));
 		xmlFile.load();
 
+	}
+
+	public String getString(String sPath, String sName, String sID) {
+		return GlobalResourceLoader.getString(sPath, sName, sID);
 	}
 
 	// XmlIO.getRoot().getElement("menubar");
@@ -115,18 +120,24 @@ public abstract class AbstractMenuGenerator {
 		}
 
 	}
-	
+
 	protected JMenu createMenu(XmlElement menuElement) {
 		List childs = menuElement.getElements();
 		ListIterator it = childs.listIterator();
 
 		JMenu menu =
 			new JMenu(
-				MailResourceLoader.getString(
+				getString(
 					"menu",
 					"mainframe",
 					menuElement.getAttribute("name")));
 
+		createMenuEntries(menu, it);
+
+		return menu;
+	}
+
+	protected void createMenuEntries(JMenu menu, ListIterator it) {
 		while (it.hasNext()) {
 			XmlElement next = (XmlElement) it.next();
 			String name = next.getName();
@@ -189,9 +200,25 @@ public abstract class AbstractMenuGenerator {
 				menu.addSeparator();
 
 			} else if (name.equals("menu")) {
-				menu.add(createMenu(next));
+				menu.add(createSubMenu(next));
 			}
 		}
+	}
+
+	protected JMenu createSubMenu(XmlElement menuElement) {
+		List childs = menuElement.getElements();
+		ListIterator it = childs.listIterator();
+
+		CMenu menu =
+			new CMenu(
+				getString(
+					"menu",
+					"mainframe",
+					menuElement.getAttribute("name")));
+
+		createMenuEntries(menu, it);
+
+		
 
 		return menu;
 	}

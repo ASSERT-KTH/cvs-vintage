@@ -219,8 +219,15 @@ public class Main {
 					new FolderPluginHandler());
 				MainInterface.pluginManager.registerHandler(
 					new ActionPluginHandler());
+
 				MainInterface.pluginManager.registerHandler(
-					new MenuPluginHandler());
+					new MenuPluginHandler("org.columba.core.menu"));
+
+				MainInterface.pluginManager.registerHandler(
+					new MenuPluginHandler("org.columba.mail.menu"));
+				MainInterface.pluginManager.registerHandler(
+					new MenuPluginHandler("org.columba.addressbook.menu"));
+
 				MainInterface.pluginManager.registerHandler(
 					new ImportPluginHandler());
 
@@ -235,6 +242,14 @@ public class Main {
 								.getHandler(
 							"org.columba.core.action")).addActionList(
 						"org/columba/mail/action/action.xml");
+
+					(
+						(
+							ActionPluginHandler) MainInterface
+								.pluginManager
+								.getHandler(
+							"org.columba.core.action")).addActionList(
+						"org/columba/addressbook/action/action.xml");
 				} catch (PluginHandlerNotFoundException ex) {
 
 				}

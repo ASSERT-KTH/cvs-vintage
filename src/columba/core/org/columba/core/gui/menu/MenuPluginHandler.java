@@ -25,8 +25,8 @@ public class MenuPluginHandler extends AbstractPluginHandler {
 
 	Vector menuPlugins;
 
-	public MenuPluginHandler() {
-		super("org.columba.core.menu",null);
+	public MenuPluginHandler( String handlerName ) {
+		super(handlerName,null);
 		
 		menuPlugins=new Vector();
 	}
