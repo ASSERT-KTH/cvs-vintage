@@ -13,6 +13,9 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
+import java.security.PrivilegedExceptionAction;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.transaction.Transaction;
@@ -24,7 +27,6 @@ import org.jboss.invocation.pooled.interfaces.PooledInvokerProxy;
 import org.jboss.invocation.pooled.interfaces.ServerAddress;
 import org.jboss.invocation.jrmp.interfaces.JRMPInvokerProxy;
 import org.jboss.logging.Logger;
-import org.jboss.naming.Util;
 import org.jboss.proxy.TransactionInterceptor;
 import org.jboss.system.Registry;
 import org.jboss.system.ServiceMBeanSupport;
@@ -108,6 +110,8 @@ public class PooledInvoker extends ServiceMBeanSupport
    protected ObjectName transactionManagerService;
 
    protected PooledInvokerProxy optimizedInvokerProxy = null;
+   /** A priviledged actions for MBeanServer.invoke when running with sec mgr */
+   private MBeanServerAction serverAction = new MBeanServerAction();
 
    protected static TransactionPropagationContextFactory tpcFactory;
    protected static TransactionPropagationContextImporter tpcImporter;
@@ -186,10 +190,6 @@ public class PooledInvoker extends ServiceMBeanSupport
       ///////////////////////////////////////////////////////////      
       // Export references to the bean
       jmxBind();
-      // Bind the invoker in the JNDI invoker naming space
-      // It should look like so "invokers/<hostname>/trunk" 
-      Util.rebind(ctx, "invokers/" + clientConnectAddress + "/pooled", optimizedInvokerProxy);
-      
       log.debug("Bound invoker for JMX node");
       ctx.close();
 
@@ -270,8 +270,6 @@ public class PooledInvoker extends ServiceMBeanSupport
     */
    public void stopService() throws Exception
    {
-
-      InitialContext ctx = new InitialContext();
       running = false;
       maxPoolSize = 0; // so ServerThreads don't reinsert themselves
       for (int i = 0; i < acceptThreads.length; i++)
@@ -289,14 +287,6 @@ public class PooledInvoker extends ServiceMBeanSupport
          thread.shutdown();
       }
 
-      try
-      {
-         ctx.unbind("invokers/" + clientConnectAddress + "/pooled");
-      }
-      finally
-      {
-         ctx.close();
-      }
       try
       {
          serverSocket.close();
@@ -329,7 +319,7 @@ public class PooledInvoker extends ServiceMBeanSupport
          ObjectName mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
-         Object obj = getServer().invoke(mbean, "invoke",
+         Object obj = serverAction.invoke(mbean, "invoke",
                new Object[] { invocation }, Invocation.INVOKE_SIGNATURE);
 
          return obj;
@@ -370,7 +360,7 @@ public class PooledInvoker extends ServiceMBeanSupport
    /**
     * Setter for property numAcceptThreads
     *
-    * @param serverBindPort New value of property numAcceptThreads.
+    * @param size New value of property numAcceptThreads.
     * @jmx:managed-attribute
     */
    public void setNumAcceptThreads(int size)
@@ -392,7 +382,7 @@ public class PooledInvoker extends ServiceMBeanSupport
    /**
     * Setter for property maxPoolSize.
     *
-    * @param serverBindPort New value of property serverBindPort.
+    * @param maxPoolSize New value of property serverBindPort.
     * @jmx:managed-attribute
     */
    public void setMaxPoolSize(int maxPoolSize)
@@ -414,7 +404,7 @@ public class PooledInvoker extends ServiceMBeanSupport
    /**
     * Setter for property maxPoolSize.
     *
-    * @param serverBindPort New value of property serverBindPort.
+    * @param clientMaxPoolSize New value of property serverBindPort.
     * @jmx:managed-attribute
     */
    public void setClientMaxPoolSize(int clientMaxPoolSize)
@@ -436,7 +426,7 @@ public class PooledInvoker extends ServiceMBeanSupport
    /**
     * Setter for property timeout
     *
-    * @param serverBindPort New value of property timeout
+    * @param time New value of property timeout
     * @jmx:managed-attribute
     */
    public void setSocketTimeout(int time)
@@ -600,5 +590,58 @@ public class PooledInvoker extends ServiceMBeanSupport
       return optimizedInvokerProxy;
    }
 
+   /** Perform the MBeanServer.invoke op in a PrivilegedExceptionAction if
+    * running with a security manager.
+    */ 
+   class MBeanServerAction implements PrivilegedExceptionAction
+   {
+      private ObjectName target;
+      String method;
+      Object[] args;
+      String[] sig;
+
+      MBeanServerAction()
+      {  
+      }
+      MBeanServerAction(ObjectName target, String method, Object[] args, String[] sig)
+      {
+         this.target = target;
+         this.method = method;
+         this.args = args;
+         this.sig = sig;
+      }
+
+      public Object run() throws Exception
+      {
+         Object rtnValue = server.invoke(target, method, args, sig);
+         return rtnValue;
+      }
+      Object invoke(ObjectName target, String method, Object[] args, String[] sig)
+         throws Exception
+      {
+         SecurityManager sm = System.getSecurityManager();
+         Object rtnValue = null;
+         if( sm == null )
+         {
+            // Direct invocation on MBeanServer
+            rtnValue = server.invoke(target, method, args, sig);
+         }
+         else
+         {
+            try
+            {
+               // Encapsulate the invocation in a PrivilegedExceptionAction
+               MBeanServerAction action = new MBeanServerAction(target, method, args, sig);
+               rtnValue = AccessController.doPrivileged(action);
+            }
+            catch (PrivilegedActionException e)
+            {
+               Exception ex = e.getException();
+               throw ex;
+            }
+         }
+         return rtnValue;
+      }
+   }
 }
 // vim:expandtab:tabstop=3:shiftwidth=3

@@ -59,6 +59,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.security.PrivilegedExceptionAction;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
 
 /**
  * This is the base class for all EJB-containers in JBoss. A Container
@@ -80,7 +83,7 @@ import java.util.Set;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
  * @author <a href="mailto:christoph.jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.158 $
+ * @version $Revision: 1.159 $
  *
  * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -170,13 +173,12 @@ public abstract class Container
    /** Maps for MarshalledInvocation mapping */
    protected Map marshalledInvocationMapping = new HashMap();
 
-   /** This Container's codebase, a sequence of URLs separated by spaces */
-   //protected String codebase = "";
-
    /** ObjectName of Container */
    private ObjectName jmxName;
-
+   /** HashMap<String, EJBProxyFactory> for the invoker bindings */
    protected HashMap proxyFactories = new HashMap();
+   /** A priviledged actions for MBeanServer.invoke when running with sec mgr */
+   private MBeanServerAction serverAction = new MBeanServerAction();
 
    /**
     * The Proxy factory is set in the Invocation.  This TL is used
@@ -670,7 +672,7 @@ public abstract class Container
       {
          ObjectName oname = new ObjectName("jboss:service=EJBTimerService");
          String containerId = getJmxName().getCanonicalName();
-         server.invoke(oname, "removeTimerService",
+         serverAction.invoke(oname, "removeTimerService",
                  new Object[]{containerId, pKey},
                  new String[]{String.class.getName(), Object.class.getName()});
       }
@@ -1359,4 +1361,57 @@ public abstract class Container
       }
    }
 
+   /** Perform the MBeanServer.invoke op in a PrivilegedExceptionAction if
+    * running with a security manager.
+    */ 
+   class MBeanServerAction implements PrivilegedExceptionAction
+   {
+      private ObjectName target;
+      String method;
+      Object[] args;
+      String[] sig;
+
+      MBeanServerAction()
+      {  
+      }
+      MBeanServerAction(ObjectName target, String method, Object[] args, String[] sig)
+      {
+         this.target = target;
+         this.method = method;
+         this.args = args;
+         this.sig = sig;
+      }
+
+      public Object run() throws Exception
+      {
+         Object rtnValue = server.invoke(target, method, args, sig);
+         return rtnValue;
+      }
+      Object invoke(ObjectName target, String method, Object[] args, String[] sig)
+         throws Exception
+      {
+         SecurityManager sm = System.getSecurityManager();
+         Object rtnValue = null;
+         if( sm == null )
+         {
+            // Direct invocation on MBeanServer
+            rtnValue = server.invoke(target, method, args, sig);
+         }
+         else
+         {
+            try
+            {
+               // Encapsulate the invocation in a PrivilegedExceptionAction
+               MBeanServerAction action = new MBeanServerAction(target, method, args, sig);
+               rtnValue = AccessController.doPrivileged(action);
+            }
+            catch (PrivilegedActionException e)
+            {
+               Exception ex = e.getException();
+               throw ex;
+            }
+         }
+         return rtnValue;
+      }
+   }
 }

@@ -19,6 +19,8 @@ import java.rmi.server.RemoteStub;
 import java.rmi.MarshalledObject;
 import java.security.PrivilegedAction;
 import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
 
 import javax.management.ObjectName;
 import javax.management.MBeanRegistration;
@@ -50,50 +52,77 @@ import org.jboss.tm.TransactionPropagationContextImporter;
  * The JRMPInvoker is an RMI implementation that can generate Invocations
  * from RMI/JRMP into the JMX base.
  *
- * @jmx.mbean extends="org.jboss.system.ServiceMBean"
- *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org>Scott Stark</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class JRMPInvoker
    extends RemoteServer
    implements Invoker, JRMPInvokerMBean, MBeanRegistration
 {
-   /** Identifer to instruct the usage of an anonymous port. */
+   /**
+    * Identifer to instruct the usage of an anonymous port.
+    */
    public static final int ANONYMOUS_PORT = 0;
 
-   /** Instance logger. */
+   /**
+    * Instance logger.
+    */
    protected Logger log;
 
-   /** Service MBean support delegate. */
+   /**
+    * Service MBean support delegate.
+    */
    protected ServiceMBeanSupport support;
 
-   /** The port the container will be exported on */
+   /**
+    * The port the container will be exported on
+    */
    protected int rmiPort = ANONYMOUS_PORT;
 
-   /** An optional custom client socket factory */
+   /**
+    * An optional custom client socket factory
+    */
    protected RMIClientSocketFactory clientSocketFactory;
 
-   /** An optional custom server socket factory */
+   /**
+    * An optional custom server socket factory
+    */
    protected RMIServerSocketFactory serverSocketFactory;
 
-   /** The class name of the optional custom client socket factory */
+   /**
+    * The class name of the optional custom client socket factory
+    */
    protected String clientSocketFactoryName;
 
-   /** The class name of the optional custom server socket factory */
+   /**
+    * The class name of the optional custom server socket factory
+    */
    protected String serverSocketFactoryName;
 
-   /** The address to bind the rmi port on */
+   /**
+    * The address to bind the rmi port on
+    */
    protected String serverAddress;
-   /** The name of the security domain to use with server sockets that support SSL */
+   /**
+    * The name of the security domain to use with server sockets that support SSL
+    */
    protected String sslDomain;
 
    protected RemoteStub invokerStub;
-   /** The socket accept backlog */
+   /**
+    * The socket accept backlog
+    */
    protected int backlog = 200;
-   /** A flag to enable caching of classes in the MarshalledValueInputStream */
+   /**
+    * A flag to enable caching of classes in the MarshalledValueInputStream
+    */
    protected boolean enableClassCaching = false;
+   /**
+    * A priviledged actions for MBeanServer.invoke when running with sec mgr
+    */
+   private MBeanServerAction serverAction = new MBeanServerAction();
 
    private static TransactionPropagationContextFactory tpcFactory;
    private static TransactionPropagationContextImporter tpcImporter;
@@ -103,20 +132,21 @@ public class JRMPInvoker
       final JRMPInvoker delegate = this;
 
       // adapt the support delegate to invoke our state methods
-      support = new ServiceMBeanSupport(getClass()) {
-
-            protected void startService() throws Exception {
-               delegate.startService();
-            }
-
-            protected void stopService() throws Exception {
-               delegate.stopService();
-            }
-
-            protected void destroyService() throws Exception {
-               delegate.destroyService();
-            }
-         };
+      support = new ServiceMBeanSupport(getClass())
+      {
+         protected void startService() throws Exception
+         {
+            delegate.startService();
+         }
+         protected void stopService() throws Exception
+         {
+            delegate.stopService();
+         }
+         protected void destroyService() throws Exception
+         {
+            delegate.destroyService();
+         }
+      };
 
       // Setup logging from delegate
       log = support.getLog();
@@ -241,6 +271,7 @@ public class JRMPInvoker
    {
       this.sslDomain = domainName;
    }
+
    /**
     * @jmx.managed-attribute
     */
@@ -261,23 +292,23 @@ public class JRMPInvoker
       if (log.isDebugEnabled())
       {
          log.debug("RMI Port='" +
-                   (rmiPort == ANONYMOUS_PORT ? "Anonymous" :
-                    Integer.toString(rmiPort))+"'");
+            (rmiPort == ANONYMOUS_PORT ? "Anonymous" :
+            Integer.toString(rmiPort)) + "'");
 
          log.debug("Client SocketFactory='" +
-                   (clientSocketFactory == null ? "Default" :
-                    clientSocketFactory.toString())+"'");
+            (clientSocketFactory == null ? "Default" :
+            clientSocketFactory.toString()) + "'");
 
          log.debug("Server SocketFactory='" +
-                   (serverSocketFactory == null ? "Default" :
-                    serverSocketFactory.toString())+"'");
+            (serverSocketFactory == null ? "Default" :
+            serverSocketFactory.toString()) + "'");
 
          log.debug("Server SocketAddr='" +
-                   (serverAddress == null ? "Default" :
-                    serverAddress)+"'");
+            (serverAddress == null ? "Default" :
+            serverAddress) + "'");
          log.debug("SecurityDomain='" +
-                   (sslDomain == null ? "Default" :
-                    sslDomain)+"'");
+            (sslDomain == null ? "Default" :
+            sslDomain) + "'");
       }
 
       InitialContext ctx = new InitialContext();
@@ -294,7 +325,7 @@ public class JRMPInvoker
       // context factory of the GenericProxy class
 
       // FIXME marcf: This should not be here
-      TransactionInterceptor.setTransactionManager((TransactionManager)ctx.lookup("java:/TransactionManager"));
+      TransactionInterceptor.setTransactionManager((TransactionManager) ctx.lookup("java:/TransactionManager"));
       JRMPInvokerProxy.setTPCFactory(tpcFactory);
 
       Invoker delegateInvoker = createDelegateInvoker();
@@ -350,20 +381,20 @@ public class JRMPInvoker
          mbean = (ObjectName) Registry.lookup(invocation.getObjectName());
 
          // The cl on the thread should be set in another interceptor
-         Object obj = support.getServer().invoke(mbean,
-                                                 "invoke",
-                                                 new Object[] {invocation},
-                                                 Invocation.INVOKE_SIGNATURE);
+         Object obj = serverAction.invoke(mbean,
+            "invoke",
+            new Object[]{invocation},
+            Invocation.INVOKE_SIGNATURE);
          return new MarshalledObject(obj);
       }
       catch (Exception e)
       {
          Throwable th = JMXExceptionDecoder.decode(e);
-         if( log.isTraceEnabled() )
-            log.trace("Failed to invoke on mbean: "+mbean, th);
+         if (log.isTraceEnabled())
+            log.trace("Failed to invoke on mbean: " + mbean, th);
 
          if (th instanceof Exception)
-            e = (Exception)th;
+            e = (Exception) th;
 
          throw e;
       }
@@ -381,7 +412,7 @@ public class JRMPInvoker
 
    protected void exportCI() throws Exception
    {
-      this.invokerStub = (RemoteStub)UnicastRemoteObject.exportObject
+      this.invokerStub = (RemoteStub) UnicastRemoteObject.exportObject
          (this, rmiPort, clientSocketFactory, serverSocketFactory);
    }
 
@@ -402,7 +433,7 @@ public class JRMPInvoker
          String ctxName = n.get(0);
          try
          {
-            ctx = (Context)ctx.lookup(ctxName);
+            ctx = (Context) ctx.lookup(ctxName);
          }
          catch (NameNotFoundException e)
          {
@@ -414,17 +445,18 @@ public class JRMPInvoker
       ctx.rebind(n.get(0), val);
    }
 
-   /** Load and instantiate the clientSocketFactory, serverSocketFactory using
-    the TCL and set the bind address and SSL domain if the serverSocketFactory
-    supports it.
-   */
+   /**
+    * Load and instantiate the clientSocketFactory, serverSocketFactory using
+    * the TCL and set the bind address and SSL domain if the serverSocketFactory
+    * supports it.
+    */
    protected void loadCustomSocketFactories()
    {
       ClassLoader loader = TCLAction.UTIL.getContextClassLoader();
 
       try
       {
-         if( clientSocketFactoryName != null )
+         if (clientSocketFactoryName != null)
          {
             Class csfClass = loader.loadClass(clientSocketFactoryName);
             clientSocketFactory = (RMIClientSocketFactory) csfClass.newInstance();
@@ -438,11 +470,11 @@ public class JRMPInvoker
 
       try
       {
-         if( serverSocketFactoryName != null )
+         if (serverSocketFactoryName != null)
          {
             Class ssfClass = loader.loadClass(serverSocketFactoryName);
             serverSocketFactory = (RMIServerSocketFactory) ssfClass.newInstance();
-            if( serverAddress != null )
+            if (serverAddress != null)
             {
                // See if the server socket supports setBindAddress(String)
                try
@@ -459,14 +491,14 @@ public class JRMPInvoker
                }
                catch (Exception e)
                {
-                  log.warn("Failed to setBindAddress="+serverAddress+" on socket factory", e);
+                  log.warn("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
                   // Go with default address
                }
             }
             /* See if the server socket supports setSecurityDomain(SecurityDomain)
             if an sslDomain was specified
             */
-            if( sslDomain != null )
+            if (sslDomain != null)
             {
                try
                {
@@ -477,18 +509,18 @@ public class JRMPInvoker
                   Object[] args = {domain};
                   m.invoke(serverSocketFactory, args);
                }
-               catch(NoSuchMethodException e)
+               catch (NoSuchMethodException e)
                {
                   log.error("Socket factory does not support setSecurityDomain(SecurityDomain)");
                }
-               catch(Exception e)
+               catch (Exception e)
                {
-                  log.error("Failed to setSecurityDomain="+sslDomain+" on socket factory", e);
+                  log.error("Failed to setSecurityDomain=" + sslDomain + " on socket factory", e);
                }
             }
          }
          // If a bind address was specified create a DefaultSocketFactory
-         else if( serverAddress != null )
+         else if (serverAddress != null)
          {
             DefaultSocketFactory defaultFactory = new DefaultSocketFactory(backlog);
             serverSocketFactory = defaultFactory;
@@ -498,7 +530,7 @@ public class JRMPInvoker
             }
             catch (UnknownHostException e)
             {
-               log.error("Failed to setBindAddress="+serverAddress+" on socket factory", e);
+               log.error("Failed to setBindAddress=" + serverAddress + " on socket factory", e);
             }
          }
       }
@@ -570,7 +602,7 @@ public class JRMPInvoker
    {
       support.jbossInternalLifecycle(method);
    }
-   
+
    public ObjectName preRegister(MBeanServer server, ObjectName name)
       throws Exception
    {
@@ -657,12 +689,12 @@ public class JRMPInvoker
 
          public ClassLoader getContextClassLoader()
          {
-            return (ClassLoader)AccessController.doPrivileged(getTCLPrivilegedAction);
+            return (ClassLoader) AccessController.doPrivileged(getTCLPrivilegedAction);
          }
 
          public ClassLoader getContextClassLoader(final Thread thread)
          {
-            return (ClassLoader)AccessController.doPrivileged(new PrivilegedAction()
+            return (ClassLoader) AccessController.doPrivileged(new PrivilegedAction()
             {
                public Object run()
                {
@@ -673,30 +705,26 @@ public class JRMPInvoker
 
          public void setContextClassLoader(final ClassLoader cl)
          {
-            AccessController.doPrivileged(
-               new PrivilegedAction()
+            AccessController.doPrivileged(new PrivilegedAction()
+            {
+               public Object run()
                {
-                  public Object run()
-                  {
-                     Thread.currentThread().setContextClassLoader(cl);
-                     return null;
-                  }
+                  Thread.currentThread().setContextClassLoader(cl);
+                  return null;
                }
-            );
+            });
          }
 
          public void setContextClassLoader(final Thread thread, final ClassLoader cl)
          {
-            AccessController.doPrivileged(
-               new PrivilegedAction()
+            AccessController.doPrivileged(new PrivilegedAction()
+            {
+               public Object run()
                {
-                  public Object run()
-                  {
-                     thread.setContextClassLoader(cl);
-                     return null;
-                  }
+                  thread.setContextClassLoader(cl);
+                  return null;
                }
-            );
+            });
          }
       };
 
@@ -707,5 +735,62 @@ public class JRMPInvoker
       void setContextClassLoader(ClassLoader cl);
 
       void setContextClassLoader(Thread thread, ClassLoader cl);
+   }
+
+   /**
+    * Perform the MBeanServer.invoke op in a PrivilegedExceptionAction if
+    * running with a security manager.
+    */
+   class MBeanServerAction implements PrivilegedExceptionAction
+   {
+      private ObjectName target;
+      String method;
+      Object[] args;
+      String[] sig;
+
+      MBeanServerAction()
+      {
+      }
+
+      MBeanServerAction(ObjectName target, String method, Object[] args, String[] sig)
+      {
+         this.target = target;
+         this.method = method;
+         this.args = args;
+         this.sig = sig;
+      }
+
+      public Object run() throws Exception
+      {
+         Object rtnValue = support.getServer().invoke(target, method, args, sig);
+         return rtnValue;
+      }
+
+      Object invoke(ObjectName target, String method, Object[] args, String[] sig)
+         throws Exception
+      {
+         SecurityManager sm = System.getSecurityManager();
+         Object rtnValue = null;
+         if (sm == null)
+         {
+            // Direct invocation on MBeanServer
+            rtnValue = support.getServer().invoke(target, method, args, sig);
+         }
+         else
+         {
+            try
+            {
+               // Encapsulate the invocation in a PrivilegedExceptionAction
+               MBeanServerAction action = new MBeanServerAction(target, method, args, sig);
+               rtnValue = AccessController.doPrivileged(action);
+            }
+            catch (PrivilegedActionException e)
+            {
+               Exception ex = e.getException();
+               throw ex;
+            }
+         }
+         return rtnValue;
+      }
    }
 }
