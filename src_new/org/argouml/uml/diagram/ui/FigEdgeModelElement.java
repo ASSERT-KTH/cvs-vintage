@@ -1,4 +1,4 @@
-// $Id: FigEdgeModelElement.java,v 1.88 2005/02/16 21:06:47 mvw Exp $
+// $Id: FigEdgeModelElement.java,v 1.89 2005/02/18 21:16:07 mvw Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -581,7 +581,7 @@ public abstract class FigEdgeModelElement
      */
     protected void updateNameText() {
 
-        if (getOwner() == null)
+        if ((getOwner() == null) || (getOwner() instanceof CommentEdge))
             return;
         String nameStr =
 	    Notation.generate(this, Model.getFacade().getName(getOwner()));
@@ -594,7 +594,7 @@ public abstract class FigEdgeModelElement
      * generate the notation for the stereotype and stuff it into the text Fig
      */
     protected void updateStereotypeText() {
-        if (getOwner() == null) {
+        if ((getOwner() == null) || (getOwner() instanceof CommentEdge)) {
             return;
         }
         Object stereotype = null;
