@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
  * called through, implements such protection.
  *
  * @author Slava Pestov
- * @version $Id: OffsetManager.java,v 1.31 2002/12/28 05:04:01 spestov Exp $
+ * @version $Id: OffsetManager.java,v 1.32 2003/02/14 23:09:51 spestov Exp $
  * @since jEdit 4.0pre1
  */
 public class OffsetManager
@@ -498,7 +498,8 @@ public class OffsetManager
 	{
 		lineInfo[line] = ((lineInfo[line] & ~(END_MASK
 			| FOLD_LEVEL_VALID_MASK | CONTEXT_VALID_MASK)) | end);
-		lineContext[line] = null;
+		// what is the point of this
+		//lineContext[line] = null;
 	} //}}}
 
 	//{{{ moveGap() method

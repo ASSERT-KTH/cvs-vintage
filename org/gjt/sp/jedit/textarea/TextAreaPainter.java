@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.59 2003/01/12 03:08:25 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.60 2003/02/14 23:09:52 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -645,6 +645,8 @@ public class TextAreaPainter extends JComponent implements TabExpander
 		// too many lines will always be painted.
 		int lastInvalid = (clipRect.y + clipRect.height - 1) / height;
 
+		if(lastInvalid - firstInvalid > 1)
+			System.err.println("repainting " + (lastInvalid - firstInvalid) + " lines");
 		textArea.chunkCache.updateChunksUpTo(lastInvalid);
 
 		int y = (clipRect.y - clipRect.y % height);
@@ -669,6 +671,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 			if(buffer.isNextLineRequested())
 			{
+				//System.err.println("next line requested");
 				int h = clipRect.y + clipRect.height;
 				textArea.chunkCache.invalidateChunksFrom(lastInvalid + 1);
 				repaint(0,h,getWidth(),getHeight() - h);

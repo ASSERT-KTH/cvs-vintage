@@ -5,7 +5,7 @@
 <!-- :indentSize=1:noTabs=yes:maxLineLen=72:tabSize=2:        -->
 <!--                                                          -->
 <!-- This file covers the chapter "Macro tips and techniques" -->
-<!-- $Id: macro-tips.xml,v 1.14 2003/02/09 05:16:56 spestov Exp $
+<!-- $Id: macro-tips.xml,v 1.15 2003/02/14 23:09:50 spestov Exp $
  -->
 
 <chapter id="macro-tips"><title>Macro Tips and Techniques</title>
@@ -529,7 +529,7 @@ view.getInputHandler().readNextChar("Enter a character",
     jEdit will show an error dialog box and move on to the next
     startup script. If script bugs are causing jEdit to crash or
     hang on startup, you can use the
-    <command>-nostartupscripts</command> command line option to
+    <userinput>-nostartupscripts</userinput> command line option to
     disable them for that editing session.
   </para>
 
@@ -579,7 +579,7 @@ view.getInputHandler().readNextChar("Enter a character",
 Line</title>
 
 <para>
-  The <command>-run</command> command line switch specifies a BeanShell
+  The <userinput>-run</userinput> command line switch specifies a BeanShell
   script to run on startup:
 </para>
 
