@@ -291,7 +291,8 @@ public class ComposerController extends DefaultFrameController implements
 
 		//re-paint composer-view
 		// FIXME showAttachmentPanel validate
-		//getContainer().getFrame().validate();
+		if ( getContainer() != null )
+			getContainer().getFrame().validate();
 
 	}
 
