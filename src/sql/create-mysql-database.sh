@@ -23,31 +23,31 @@ echo "then you need to make sure to re-run the Ant build system."
 echo "-----------------------------------------------------"
 echo ""
 
-# execute the settings file
+# Evaluate the settings file (if we have one)
 if [ -f "${DB_SETTINGS}" ] ; then
     . "./${DB_SETTINGS}"
 fi
 
-# Define these values if you need to
-if [ "$1" != "" ] ; then
-    USER=$1
+# Database connection settings can be defined in the $DB_SETTINGS file
+if [ "$1" != '' ] ; then
+    USER="$1"
 else
     USER=`whoami`
 fi
-if [ "$2" != "" ] ; then
-    PASS=$2
+if [ "$2" != '' ] ; then
+    PASS="$2"
 else
-    PASS=
+    PASS=''
 fi
-if [ "$3" != "" ] ; then
-    DB_NAME=$3
+if [ "$3" != '' ] ; then
+    DB_NAME="$3"
 else
-    DB_NAME=scarab
+    DB_NAME='scarab'
 fi
-if [ "$4" != "" ] ; then
-    LOAD_ORDER=$4
+if [ "$4" != '' ] ; then
+    LOAD_ORDER="$4"
 else
-    LOAD_ORDER=${POPULATION_SCRIPT_DIR}/LoadOrder.lst
+    LOAD_ORDER="${POPULATION_SCRIPT_DIR}/LoadOrder.lst"
 fi
 
 MYSQL=`which mysql`
