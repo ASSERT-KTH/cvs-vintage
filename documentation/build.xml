@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: build.xml,v 1.24 2004/09/28 11:12:18 bobtarling Exp $ -->
+<!-- $Id: build.xml,v 1.25 2004/09/30 20:02:55 bobtarling Exp $ -->
 <!-- ArgoUML Manuals & Documentation Build file                             -->
 <!-- Author: Kunle Odutola  31-March-2001                                   -->
 <!--                                                                        -->
@@ -45,12 +45,12 @@ What tools do I need to use this build file?
        you need also to change those files. This is to be made as part 
        of the deployment of a new version of docbook-xsl.
     -->
-  <property name="docbook-xsl" value="docbook-xsl-1.66.0"/>
+  <property name="docbook-xsl" value="docbook-xsl-1.66.1"/>
 
   <property name="docbook-xsl-root" 
 	    value="${documentation.dir}/docbook-setup/${docbook-xsl}"/>
   <property name="docbook-xsl-source-url"
-            value="http://cesnet.dl.sourceforge.net/sourceforge/docbook/${docbook-xsl}.zip"/>
+            value="http://puzzle.dl.sourceforge.net/sourceforge/docbook/${docbook-xsl}.zip"/>
 
   <path id="saxon.classpath">
     <pathelement location="${saxon.jar.path}" />
