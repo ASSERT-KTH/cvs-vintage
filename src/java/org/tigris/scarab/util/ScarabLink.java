@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.25 2002/01/06 17:20:24 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.26 2002/01/08 01:58:45 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -140,6 +140,14 @@ public class ScarabLink extends TemplateLink
         {
             addPathInfo(ScarabConstants.HISTORY_SCREEN, historyScreen);
         }
+        // if a admin menu is to be passed along, add it
+        String adminMenu = data.getParameters()
+            .getString(ScarabConstants.CURRENT_ADMIN_MENU);
+        if (adminMenu != null && adminMenu.length() > 0)
+        {
+            addPathInfo(ScarabConstants.CURRENT_ADMIN_MENU, adminMenu);
+        }
+        
         super.setPage(t);
         template = t;
         return this;
