@@ -84,37 +84,13 @@ import org.apache.jasper.Constants;
  * @author Rajiv Mordani
  */
 public class JspReader {
-    protected char stream[] = null;
     protected Mark current  = null;
     String master = null;
 
     Vector sourceFiles = new Vector();
-    Stack includeStack;
     int size = 0;
     
     private ServletContext context;
-
-    /**
-     * Keep track of parser before parsing an included file.
-     * This class keeps track of the parser before we switch to parsing an 
-     * included file. In other words, it's the parser's continuation to be
-     * reinstalled after the included file parsing is done.
-     */
-    class IncludeState {
-	Mark current;
-	char stream[] = null;
-
-	void restore() {
-	    JspReader.this.current = current;
-	    JspReader.this.stream = stream;
-	}
-	
-	IncludeState() {
-	    this.current = JspReader.this.current;
-	    this.stream = JspReader.this.stream;
-	}
-
-    }
 
     public String getFile(int fileid) {
 	return (String) sourceFiles.elementAt(fileid);
@@ -195,17 +171,12 @@ public class JspReader {
 	    for (int i = 0 ; (i = reader.read(buf)) != -1 ; )
 		caw.write(buf, 0, i);
 	    caw.close();
-	    IncludeState state = new IncludeState();
-	    //	    System.out.println("Pushing... "+this.current);
-	    this.stream = caw.toCharArray();
-	    this.current = new Mark(this, fileid);
-	    // Prepare a new include state:
-	    if (includeStack == null) {
-		// Initial file, prepare for include files:
-		includeStack = new Stack();
+	    if (current == null) {
+		current = new Mark( this, caw.toCharArray(), fileid, file.getParent(), encoding );
 	    } else {
-		includeStack.push(state);
+		current.pushStream( caw.toCharArray(), fileid, file.getParent(), encoding );
 	    }
+
         } catch (FileNotFoundException fnfe) {
             throw fnfe;
 	} catch (Throwable ex) {
@@ -225,18 +196,13 @@ public class JspReader {
     public boolean popFile() {
 	// Is stack created ? (will happen if the Jsp file we'r looking at is
 	// missing.
-	if(includeStack == null) 
+	if (current == null) 
 		return false;
 
-	// Any thing left ?
-	if ( includeStack.size() == 0 )
-	    return false;
 	// Restore parser state:
 	size--;
-	IncludeState state = (IncludeState) includeStack.pop();
-	//	System.out.println("Popping back... "+state.current);
-	state.restore();
-	return true;
+
+	return current.popStream();
     }
 	
     protected JspReader(String file, ServletContext ctx) 
@@ -253,9 +219,9 @@ public class JspReader {
     }
 
     public boolean hasMoreInput() {
-	if (current.cursor >= stream.length) {
+	if (current.cursor >= current.stream.length) {
 	    while (popFile()) {
-		if (current.cursor < stream.length) return true;
+		if (current.cursor < current.stream.length) return true;
 	    }
 	    return false;
 	}
@@ -266,7 +232,7 @@ public class JspReader {
 	if (!hasMoreInput())
 	    return -1;
 	
-	int ch = stream[current.cursor];
+	int ch = current.stream[current.cursor];
 
 	current.cursor++;
 	
@@ -291,7 +257,7 @@ public class JspReader {
     }
 
     public int peekChar() {
-	return stream[current.cursor];
+	return current.stream[current.cursor];
     }
 
     public Mark mark() {
@@ -319,14 +285,14 @@ public class JspReader {
 
     public boolean matches(String string) {
 	Mark mark = mark();
-	int ch = nextChar();
+	int ch = 0;
 	int i = 0;
 	do {
+	    ch = nextChar();
 	    if (((char) ch) != string.charAt(i++)) {
 		reset(mark);
 		return false;
 	    }
-	    ch = nextChar();
 	} while (i < string.length());
 	reset(mark);
 	return true;

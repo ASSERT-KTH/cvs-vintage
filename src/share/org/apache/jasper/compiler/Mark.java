@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.1 1999/10/09 00:20:37 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:37 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/Mark.java,v 1.2 1999/12/21 13:14:16 rubys Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/12/21 13:14:16 $
  *
  * ====================================================================
  * 
@@ -60,30 +60,137 @@
  */ 
 package org.apache.jasper.compiler;
 
+import java.util.Stack;
+
 /**
  * Mark represents a point in the JSP input. 
  *
  * @author Anil K. Vijendran
  */
 public final class Mark {
-    int cursor, line, col;
-    int fileid;
-    private JspReader reader;
-    
-    Mark(JspReader reader, int fileid) {
+    int cursor, line, col;	// position within current stream
+    int fileid;			// fileid of current stream
+    String baseDir;		// directory of file for current stream
+    char[] stream = null;	// current stream
+    Stack includeStack = null;	// stack of stream and stream state of streams
+				//   that have included current stream
+    String encoding = null;	// encoding of current file
+    private JspReader reader;	// reader that owns this mark 
+				//   (so we can look up fileid's)
+
+
+    /**
+     * Keep track of parser before parsing an included file.
+     * This class keeps track of the parser before we switch to parsing an
+     * included file. In other words, it's the parser's continuation to be
+     * reinstalled after the included file parsing is done.
+     */
+    class IncludeState {
+	int cursor, line, col;
+	int fileid;
+	String baseDir;
+	String encoding;
+	char[] stream = null;
+
+	IncludeState(int inCursor, int inLine, int inCol, int inFileid, 
+		     String inBaseDir, String inEncoding, char[] inStream) 
+	{
+	    cursor = inCursor;
+	    line = inLine;
+	    col = inCol;
+	    fileid = inFileid;
+	    baseDir = inBaseDir;
+	    encoding = inEncoding;
+	    stream = inStream;
+	}
+    }
+
+
+    /**
+    * Creates a new mark
+    * @param inReader JspReader this mark belongs to
+    * @param inStream current stream for this mark
+    * @param inFileid id of requested jsp file
+    * @param inEncoding encoding of current file
+    * @param inBaseDir base directory of requested jsp file
+    */
+    Mark(JspReader reader, char[] inStream, int fileid, String inBaseDir, 
+	 String inEncoding) 
+    {
 	this.reader = reader;
+	this.stream = inStream;
 	this.cursor = this.line = this.col = 0;
 	this.fileid = fileid;
+	this.baseDir = inBaseDir;
+	this.encoding = inEncoding;
+	this.includeStack = new Stack();
     }
 	
     Mark(Mark other) {
 	this.reader = other.reader;
+	this.stream = other.stream;
 	this.fileid = other.fileid;
 	this.cursor = other.cursor;
 	this.line = other.line;
 	this.col = other.col;
+	this.baseDir = other.baseDir;
+	this.encoding = other.encoding;
+
+	// clone includeStack without cloning contents
+	includeStack = new Stack();
+	for ( int i=0; i < other.includeStack.size(); i++ ) {
+  	    includeStack.addElement( other.includeStack.elementAt(i) );
+	}
     }
 	    
+    /** Sets this mark's state to a new stream.
+     * It will store the current stream in it's includeStack.
+     * @param inStream new stream for mark
+     * @param inFileid id of new file from which stream comes from
+     * @param inBaseDir directory of file
+	 * @param inEncoding encoding of new file
+     */
+    public void pushStream(char[] inStream, int inFileid, String inBaseDir, 
+		           String inEncoding) 
+    {
+
+	// store current state in stack
+	includeStack.push(new IncludeState(cursor, line, col, fileid, baseDir, 
+					   encoding, stream) );
+
+	// set new variables
+	cursor = 0;
+	line = 0;
+	col = 0;
+	fileid = inFileid;
+	baseDir = inBaseDir;
+	encoding = inEncoding;
+	stream = inStream;
+    }
+
+
+
+    /** Restores this mark's state to a previously stored stream.
+     */
+    public boolean popStream() {
+	// make sure we have something to pop
+	if ( includeStack.size() <= 0 ) return false;
+
+	// get previous state in stack
+	IncludeState state = (IncludeState) includeStack.pop( );
+
+	// set new variables
+	cursor = state.cursor;
+	line = state.line;
+	col = state.col;
+	fileid = state.fileid;
+	baseDir = state.baseDir;
+	stream = state.stream;
+	return true;
+    }
+
+
+
     public String toString() {
 	return getFile()+"("+line+","+col+")";
     }
