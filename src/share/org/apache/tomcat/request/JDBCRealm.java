@@ -73,7 +73,6 @@ import java.util.Vector;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 import java.sql.*;
 
 
@@ -88,7 +87,7 @@ import java.sql.*;
  *
  * @author Craig R. McClanahan
  * @author Carson McDonald
- * @author Ignacio J. Ortega 
+ * @author Ignacio J. Ortega
  * @author Bip Thelin
  *
  */
@@ -105,6 +104,19 @@ public final class JDBCRealm extends BaseInterceptor {
      * The connection to the database.
      */
     private Connection dbConnection = null;
+
+    /**
+     * The PreparedStatement to use for authenticating users.
+     */
+    private PreparedStatement preparedAuthenticate = null;
+
+
+    /**
+     * The PreparedStatement to use for identifying the roles for
+     * a specified user.
+     */
+    private PreparedStatement preparedRoles = null;
+
 
     /**
      * The connection URL to use when trying to connect to the databse
@@ -267,60 +279,77 @@ public final class JDBCRealm extends BaseInterceptor {
      * @param credentials Password or other credentials to use in
      *  authenticating this username
      */
-    public boolean authenticate(String username, String credentials) {
+    public synchronized boolean authenticate(String username, String credentials) {
         try {
-          if( (dbConnection == null) || dbConnection.isClosed() ) {
-            log(sm.getString("jdbcRealm.authDBClosed"));
 
-            dbConnection = DriverManager.getConnection(connectionURL);
-            if( (dbConnection == null) || dbConnection.isClosed() ) {
-              log(sm.getString("jdbcRealm.authDBReOpenFail"));
-              return false;
+            // Establish the database connection if necessary
+            if ((dbConnection == null) || dbConnection.isClosed()) {
+                log(sm.getString("jdbcRealm.authDBClosed"));
+                dbConnection = DriverManager.getConnection(connectionURL);
+                if( (dbConnection == null) || dbConnection.isClosed() ) {
+                    log(sm.getString("jdbcRealm.authDBReOpenFail"));
+                    return false;
+                }
+                dbConnection.setReadOnly(true);
             }
-          }
 
-          if( debug > 1 ) {
-             log( "JDBCRealm.authenticate: SELECT " + userCredCol +
-                  " FROM " + userTable +
-                  " WHERE " + userNameCol + " = '" + username + "'" );
-          }
-
-          PreparedStatement statement = dbConnection.prepareStatement(
-                   "SELECT " + userCredCol
-                  + " FROM " +  userTable
-                  + " WHERE " +   userNameCol + " = ?");
-          statement.clearParameters();
-          statement.setString(1, username);
-
-          ResultSet rs = statement.executeQuery();
-
-          // If we found a user by this name check the credentials
-          if( rs.next() ) {
-            if( rs.getString(userCredCol).equals(credentials) ) {
-               if (debug > 1)
-                  log(sm.getString("jdbcRealm.authenticateSuccess", username));
-                  // Good to go. Return a Principal.
-                  return true;
+            // Create the authentication search prepared statement if necessary
+            if (preparedAuthenticate == null) {
+                String sql = "SELECT " + userCredCol + " FROM " + userTable +
+                    " WHERE " + userNameCol + " = ?";
+                if (debug >= 1)
+                    log("JDBCRealm.authenticate: " + sql);
+                preparedAuthenticate = dbConnection.prepareStatement(sql);
             }
-          }
+
+            // Perform the authentication search
+            preparedAuthenticate.setString(1, username);
+            ResultSet rs1 = preparedAuthenticate.executeQuery();
+            boolean found = false;
+            if (rs1.next()) {
+                if (credentials.equals(rs1.getString(1))) {
+                    if (debug >= 2)
+                        log(sm.getString("jdbcRealm.authenticateSuccess",
+                                 username));
+                    return true;
+                }
+            }
+            rs1.close();
+            if (debug >= 2)
+                log(sm.getString("jdbcRealm.authenticateFailure",
+                         username));
+
+            return false;
+        } catch( SQLException ex ) {
+
+            // Log the problem for posterity
+            log(sm.getString("jdbcRealm.authenticateSQLException",
+                     username));
+
+            // Clean up the JDBC objects so that they get recreated next time
+            if (preparedAuthenticate != null) {
+            try {
+                preparedAuthenticate.close();
+            } catch (Throwable t) {
+                ;
+            }
+            preparedAuthenticate = null;
+            }
+            if (dbConnection != null) {
+            try {
+                dbConnection.close();
+            } catch (Throwable t) {
+                ;
+            }
+            dbConnection = null;
+            }
+
+            // Return "not authenticated" for this request
+            return false;
         }
-        catch( SQLException ex ) {
-          // Set the connection to null.
-          // Next time we will try to get a new connection.
-          dbConnection = null;
-
-          if (debug > 1)
-            log(sm.getString("jdbcRealm.authenticateSQLException"
-                        ,ex.getMessage()));
-        }
-
-        if (debug > 1)
-             log(sm.getString("jdbcRealm.authenticateFailure", username));
-
-        return false;
     }
 
-    public String[] getUserRoles(String username) {
+    public synchronized String[] getUserRoles(String username) {
         try {
           if( (dbConnection == null) || dbConnection.isClosed() ) {
             log(sm.getString("jdbcRealm.getUserRolesDBClosed"));
@@ -332,44 +361,56 @@ public final class JDBCRealm extends BaseInterceptor {
               return null;
             }
           }
-
-          if( debug > 1 ) {
-              log( "jdbcRealm.getUserRoles:"+
-                  " SELECT "+roleNameCol+
-                  " FROM " + userRoleTable +
-                  " WHERE " + userNameCol + " = '" + username +"'" );
+          if (preparedRoles == null) {
+                String sql = "SELECT " + roleNameCol + " FROM " +
+                    userRoleTable + " WHERE " + userNameCol + " = ?";
+                if (debug >= 1)
+                    log("JDBCRealm.roles: " + sql);
+                preparedRoles = dbConnection.prepareStatement(sql);
           }
 
-          PreparedStatement statement = dbConnection.prepareStatement(
-                    "SELECT "+roleNameCol+
-                    " FROM "+userRoleTable+
-                    " WHERE "+userNameCol+
-                    " = ?");
-          statement.clearParameters();
-          statement.setString(1, username);
+          preparedRoles.clearParameters();
+          preparedRoles.setString(1, username);
 
-          ResultSet rs = statement.executeQuery();
+          ResultSet rs = preparedRoles.executeQuery();
 
           // Next we convert the resultset into a String[]
-              Vector vrol=new Vector();
-              while (rs.next()) {
-                  vrol.addElement(rs.getString(1));
-              }
-              String[] res=new String[vrol.size()];
-              for(int i=0 ; i<vrol.size() ; i++ )
-                  res[i]=(String)vrol.elementAt(i);
-              return res;
+          Vector vrol=new Vector();
+
+          while (rs.next()) {
+              vrol.addElement(rs.getString(1));
+          }
+
+          String[] res=new String[vrol.size()];
+
+          for(int i=0 ; i<vrol.size() ; i++ )
+              res[i]=(String)vrol.elementAt(i);
+
+          return res;
         }
         catch( SQLException ex ) {
           // Set the connection to null.
           // Next time we will try to get a new connection.
-          dbConnection = null;
-
-          if (debug > 1)
-            log(sm.getString("jdbcRealm.getUserRolesSQLException", ex.getMessage()));
+            log(sm.getString("jdbcRealm.getUserRolesSQLException",
+                     username));
+            if (preparedRoles != null) {
+                try {
+                    preparedRoles.close();
+                } catch (Throwable t) {
+                    ;
+            }
+            preparedRoles = null;
+            }
+            if (dbConnection != null) {
+                try {
+                    dbConnection.close();
+                } catch (Throwable t) {
+                    ;
+                }
+            dbConnection = null;
+            }
         }
-
-	      return null;
+	    return null;
     }
 
 
@@ -475,8 +516,6 @@ public final class JDBCRealm extends BaseInterceptor {
         // XXX check transport
     }
 
-
 }
-
 
 
