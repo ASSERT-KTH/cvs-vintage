@@ -7,6 +7,7 @@
 package org.jboss.ejb.plugins.jaws.metadata;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,40 +28,41 @@ import org.jboss.logging.Logger;
 /**
  *	This class holds all the information jaws needs to know about a CMP field
  *  It loads its data from standardjaws.xml and jaws.xml
- *      
+ *
  *	@see <related>
  *	@author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *  @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
- *	@version $Revision: 1.4 $
+ *  @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
+ *	@version $Revision: 1.5 $
  */
 public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 	// Constants -----------------------------------------------------
-    
+
 	// Attributes ----------------------------------------------------
-	
+
 	// the entity this field belongs to
 	private JawsEntityMetaData jawsEntity;
-	
+
 	// name of the field
     private String name;
-	
+
 	// the actual Field in the bean implementation
 	private Field field;
-	
+
 	// the jdbc type (see java.sql.Types), used in PreparedStatement.setParameter
 	private int jdbcType;
 	// true if jdbcType has been initialized
 	private boolean validJdbcType;
-	
-	// the sql type, used for table creation.	
+
+	// the sql type, used for table creation.
 	private String sqlType;
-	
+
 	// the column name in the table
 	private String columnName;
-	
+
 	private boolean isAPrimaryKeyField;
-	
-	
+
+
 	/**
 	 * We need this for nested field retrieval.
 	 */
@@ -78,12 +80,12 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 	private boolean isNested;
 
 	// Static --------------------------------------------------------
-   
+
 	// Constructors --------------------------------------------------
 	public CMPFieldMetaData(String name, JawsEntityMetaData jawsEntity) throws DeploymentException {
 		this.name = name;
 		this.jawsEntity = jawsEntity;
-		
+
 		// save the class name for nested fields
 		ejbClassName = jawsEntity.getEntity().getEjbClass();
 		ejbClassName = jawsEntity.getEntity().getEjbClass();
@@ -91,51 +93,67 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 		try {
 			// save the class for nested fields
 			ejbClass = jawsEntity.getJawsApplication().getClassLoader().loadClass(ejbClassName);
-		    field = ejbClass.getField(name);
+  		    field = ejbClass.getField(name);
 		} catch (ClassNotFoundException e) {
 			throw new DeploymentException("ejb class not found: " + ejbClassName);
 		} catch (NoSuchFieldException e) {
 			// we can't throw an Exception here, because we could have a nested field
 			checkField();
 		}
-		
+
 		// default, may be overridden by importXml
 		columnName = getLastComponent(name);
-		
+
 		// cannot set defaults for jdbctype/sqltype, type mappings are not loaded yet.
 	}
-   
-   
+
+
 	// Public --------------------------------------------------------
 	public String getName() { return name; }
-	
+
 	public Field getField() { return field; }
 
-	public int getJDBCType() { 
+	public int getJDBCType() {
 		if (! validJdbcType) {
 			// set the default
-			jdbcType = jawsEntity.getJawsApplication().getTypeMapping().getJdbcTypeForJavaType(field.getType());
-			validJdbcType = true;
+            if (field!=null)
+    			jdbcType = jawsEntity.getJawsApplication().getTypeMapping().getJdbcTypeForJavaType(field.getType());
+            else{
+                try{
+                   jdbcType = jawsEntity.getJawsApplication().getTypeMapping().getJdbcTypeForJavaType(ValueObjectHelper.getNestedFieldType(ejbClass,name));
+                } catch(NoSuchMethodException e){
+                    Log.getLog().warning("ERROR : Nested Field does not have a get method");
+                }
+            }
+    		validJdbcType = true;
 		}
 		return jdbcType;
 	}
-	
-	public String getSQLType() { 
+
+	public String getSQLType() {
 		if (sqlType == null) {
 			// set the default
-			sqlType = jawsEntity.getJawsApplication().getTypeMapping().getSqlTypeForJavaType(field.getType());
+            if (field!=null)
+    			sqlType = jawsEntity.getJawsApplication().getTypeMapping().getSqlTypeForJavaType(field.getType());
+            else{
+                try{
+                   sqlType = jawsEntity.getJawsApplication().getTypeMapping().getSqlTypeForJavaType(ValueObjectHelper.getNestedFieldType(ejbClass,name));
+                } catch(NoSuchMethodException e){
+                    Log.getLog().warning("ERROR : Nested Field does not have a get method");
+                }
+            }
 		}
 		return sqlType;
 	}
 
 	public String getColumnName() { return columnName; }
-	
+
 	public boolean isEJBReference() { return jdbcType == Types.REF; }
-	
+
 	public boolean isAPrimaryKeyField() { return isAPrimaryKeyField; }
-	
+
 	public JawsEntityMetaData getJawsEntity() { return jawsEntity; }
-		
+
 	/**
 	 * Returns the last component of a composite fieldName. E.g., for "data.categoryPK" it
 	 * will return "categoryPK".
@@ -169,7 +187,7 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 	 * Detects the actual field of a nested field and sets field accordingly.
 	 * If field doesn't exist, throws a DeploymentException.
 	 */
-	private void checkField()	throws DeploymentException {
+	private void checkField() throws DeploymentException {
 		try {
 			field = verifyNestedField();
 		}
@@ -197,13 +215,19 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 
 		while(st.hasMoreTokens()) {
 			fieldName = st.nextToken();
-			try {
+        	try {
 				//debugClass(tmpClass);
 				tmpField = tmpClass.getField(fieldName);
 				tmpClass = tmpField.getType();
+                Log.getLog().debug("(Dependant Object) "+tmpField.getName());
 			}
 			catch (NoSuchFieldException e) {
-				throw new DeploymentException("cmp-field " + name + " is not a field in ejb class " + ejbClassName);
+                // we can have a private attribute, then we will use fieldName
+                // to find the get/set methods, but still have to set jdbcType/SQLType
+                // but can not yet do it sowe have to set field to null so that
+                // getJDBCType will not use the parent Field to find the types
+                field = null;
+                return null;
 			}
 		}
 		return tmpField;
@@ -218,7 +242,7 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 			// The default case as it always was :)
 			return field.getType();
 		}
-				
+
 		// We obviously have a nested field (or an erroneous one)
 		Field tmpField = null;
 		Class tmpClass = ejbClass;
@@ -231,7 +255,15 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 				tmpClass = tmpField.getType();
 			}
 			catch (NoSuchFieldException e) {
-				Log.getLog().warning("!!! Deployment Failure !!!");
+				// Log.getLog().warning("!!! Deployment Failure !!!");
+                // We have a nested Field
+                try{
+                   return ValueObjectHelper.getNestedFieldType(ejbClass,name);
+                }
+                catch (NoSuchMethodException ne){
+                    Log.getLog().warning("A nested field does not have a get method" + ne);
+                    return null;
+                }
 			}
 		}
 		return tmpField.getType();
@@ -246,31 +278,75 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 		Object currentObject = instance;
 		Object oldObject;
 		StringTokenizer st = new StringTokenizer(name, ".");
-
-		try {
-			for (int i = 0; i < st.countTokens() - 1; ++i) {
-				st.hasMoreTokens();
-				fieldName = st.nextToken();
-				tmpField = currentObject.getClass().getField(fieldName);
-				oldObject = currentObject;
-				currentObject = tmpField.get(currentObject);
-				// On our path, we have to instantiate every intermediate object
-				if (currentObject == null) {
-					currentObject = tmpField.getType().newInstance();
-					tmpField.set(oldObject, currentObject);
-				}
-			}
-			Field dataField = currentObject.getClass().getField(getLastComponent(name));
-			dataField.set(currentObject, value);
+      //Log.getLog().debug("set on cmp-field "+name+"="+value);
+      // First we instanciate nested objects if they do not already exist
+      int i=1;
+      int tot=st.countTokens();
+      while (st.hasMoreTokens() && (i < tot) ){
+         i++;
+         fieldName = st.nextToken();
+         //Log.getLog().debug("initialize "+fieldName+ " on "+currentObject.getClass());
+         oldObject = currentObject;
+         try{
+            tmpField = currentObject.getClass().getField(fieldName);
+            currentObject = tmpField.get(currentObject);
+            // On our path, we have to instantiate every intermediate object
+            if (currentObject == null) {
+               currentObject = tmpField.getType().newInstance();
+               tmpField.set(oldObject, currentObject);
+            }
+         }
+         catch (NoSuchFieldException ne){
+            try{
+               currentObject = ValueObjectHelper.getValue(currentObject,fieldName);
+               if (currentObject == null) {
+                  currentObject = ValueObjectHelper.getNestedFieldType(oldObject.getClass(),fieldName).newInstance();
+                  ValueObjectHelper.setValue(oldObject,fieldName,currentObject);
+               }
+            }
+            catch (NoSuchMethodException e){
+               Log.getLog().warning("set method not found for " + fieldName + " on " + oldObject.getClass().getName());
+            }
+            catch (InvocationTargetException e) {
+               Log.getLog().warning("set method not invocable " + fieldName + " on " + currentObject.getClass().getName());
+            }
+            catch (IllegalAccessException e) {
+               Log.getLog().warning("!!! Deployment Failure !!!" + e);
+            }
+            catch (InstantiationException e) {
+               Log.getLog().warning("could not instantiate " + tmpField);
+            }
+         }
+         catch (IllegalAccessException e) {
+            Log.getLog().warning("!!! Deployment Failure !!!" + e);
+         }
+         catch (InstantiationException e) {
+            Log.getLog().warning("could not instantiate " + tmpField);
+         }
+         catch (Exception e) {
+            Log.getLog().warning("Exception " + e);
+         }
+      }
+      //Log.getLog().debug("initialization of nested objects done for "+name);
+      // Now we set the value of the last component into the created object
+      try{
+         try{
+            Field dataField = currentObject.getClass().getField(getLastComponent(name));
+            dataField.set(currentObject, value);
+         }
+         catch (NoSuchFieldException nse){
+            //Log.getLog().debug("set on "+getLastComponent(name)+ " on "+currentObject.getClass()+ "="+value);
+            ValueObjectHelper.setValue(currentObject,getLastComponent(name),value);
+         }
 		}
-		catch (NoSuchFieldException e) {
-			Log.getLog().warning("!!! Deployment Failure !!!");
+      catch (IllegalAccessException e) {
+         Log.getLog().warning("!!! Deployment Failure !!!" + e);
+      }
+		catch (InvocationTargetException e) {
+			Log.getLog().warning("set method not invocable " + getLastComponent(name) + " on " + currentObject.getClass().getName());
 		}
-		catch (IllegalAccessException e) {
-			Log.getLog().warning("!!! Deployment Failure !!!");
-		}
-		catch (InstantiationException e) {
-			Log.getLog().warning("could not instantiate " + tmpField);
+		catch (NoSuchMethodException e) {
+			Log.getLog().warning("set method not found for " + getLastComponent(name) + " on " + currentObject.getClass().getName());
 		}
 	}
 
@@ -291,8 +367,14 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 				StringTokenizer st = new StringTokenizer(name, ".");
 				while(st.hasMoreTokens()) {
 					fieldName = st.nextToken();
-					currentField = currentObject.getClass().getField(fieldName);
-					currentObject = currentField.get(currentObject);
+                    try{
+    					currentField = currentObject.getClass().getField(fieldName);
+    					currentObject = currentField.get(currentObject);
+                    }
+                    catch(NoSuchFieldException e){
+                        currentField = null;
+                        currentObject = ValueObjectHelper.getValue(currentObject,fieldName);
+                    }
 				}
 				return currentObject;
 			}
@@ -302,25 +384,28 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 			// so there is no need to throw an exception here.
 			Log.getLog().warning("!!! CMPFieldMetaData.getValue() ERROR !!! " + e);
 		}
-		catch (NoSuchFieldException e) {
-			// We have already checked the presence of this field in the constructor,
-			// so there is no need to throw an exception here.
+        catch (InvocationTargetException e){
+			Log.getLog().warning("!!! CMPFieldMetaData.getValue() ERROR !!! " + e);
+        }
+		catch (NoSuchMethodException e) {
 			Log.getLog().warning("!!! CMPFieldMetaData.getValue() ERROR !!! " + e);
 		}
 		return null;
 	}
 
-	public boolean isNested() { 
-		return isNested; 
+	public boolean isNested() {
+		return isNested;
 	}
 
 	// XmlLoadable implementation ------------------------------------
 	public void importXml(Element element) throws DeploymentException {
-		
+
 		// column name
 		String columnStr = getElementContent(getOptionalChild(element, "column-name"));
+        // For Netsted Properties, we will have a column name blank which means
+        // the CMPField need to be removed.  It will be reconstrcut and decompose
+        // by Jaws when needed
 		if (columnStr != null) columnName = columnStr;
-
 
 		// jdbc type
 		String jdbcStr = getElementContent(getOptionalChild(element, "jdbc-type"));
@@ -331,17 +416,17 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 
 			sqlType = getElementContent(getUniqueChild(element, "sql-type"));
 		}
-		
+
 	}
-    	
-		
+
+
 	// Package protected ---------------------------------------------
 	void setPrimary() {
 		isAPrimaryKeyField = true;
 	}
-    
+
 	// Protected -----------------------------------------------------
-    
+
 	// Private -------------------------------------------------------
 
 	/**
@@ -353,6 +438,6 @@ public class CMPFieldMetaData extends MetaData implements XmlLoadable {
 		for (int i = 0; i < fields.length; ++i) {
 		}
 	}
-		
+
 	// Inner classes -------------------------------------------------
 }
