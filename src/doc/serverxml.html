@@ -4,7 +4,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <!-- $Id: serverxml.html,v 1.8 2001/10/19 03:16:13 larryi Exp $ -->
+  <!-- $Id: serverxml.html,v 1.9 2001/10/21 15:40:27 larryi Exp $ -->
   <!-- Copyright 1999-2001 Apache Software Foundation -->
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" >
   <link rel="stylesheet" href="style.css">
@@ -32,7 +32,7 @@
 number of settable properties and implements one or more 'hooks', providing a
 piece of functionality.</p>
 
-<p>The modules can be configured and assembled in sevaral ways, but the
+<p>The modules can be configured and assembled in several ways, but the
 default and most flexible mechanism uses XML files. Each module is described
 by an XML element, with attributes used to set module properties. The main
 configuration file is located in <code>TOMCAT_HOME/conf/server.xml</code>, used to
@@ -69,8 +69,8 @@ syntax, or as system properties.</p>
 
 <h2>Configuration Elements</h2>
 
-<p>Server.xml is an XML document. Most elements corespond to tomcat modules,
-with java setters beeing automatically associated with element attributes. The 
+<p>Server.xml is an XML document. Most elements correspond to Tomcat modules,
+with Java setters being automatically associated with element attributes. The 
 javadoc will contain most details, in this document we focus on the common 
 and supported behaviors. </p>
 
@@ -105,8 +105,8 @@ some of the childen it supports:</p>
 <dl>
   <dt>&lt;<i>module_name</i>&gt;</dt>
     <dd>Adds a module to the configuration. Module names are defined in
-	  module.xml, where each tag is associated with a class name that
-	  implements the module. Each element attribute coresponds to a setter
+	  modules.xml, where each tag is associated with a class name that
+	  implements the module. Each element attribute corresponds to a setter
 	  method in the implementing class.</dd>
   <dt>&lt;Context&gt;</dt>
     <dd>Defines a web application. This is a legacy method of specifying a
@@ -654,7 +654,7 @@ To generate the configuration files during normal startup, add:</p>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps ensure that all the
       behavior configured in the web.xml file functions correctly.  If <code>false</code>,
       let Apache serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in Apache.  Review the mod_jk
@@ -996,7 +996,7 @@ error response if not specified.</p>
 
 <h4>Description</h4>
 
-<p>Handles incomming HTTP, or optionally HTTPS, requests.</p>
+<p>Handles incoming HTTP, or optionally HTTPS, requests.</p>
 
 <h4>Attributes</h4>
 
@@ -1182,7 +1182,7 @@ the configuration files during normal startup, add:</p>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps ensure that all the
       behavior configured in the web.xml file functions correctly.  If <code>false</code>,
       let IIS serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in IIS.  Review the configuration
@@ -1327,7 +1327,7 @@ accessed using a JDBC connection.</p>
 
 <h4>Description</h4>
 
-<p>Insures that the proper context classloader is in effect during servlet
+<p>Ensures that the proper context classloader is in effect during servlet
 execution.</p>
 
 <h4>Attributes</h4>
@@ -1449,7 +1449,7 @@ To generate the configuration files during normal startup, add:</p>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps ensure that all the
       behavior configured in the web.xml file functions correctly.  If <code>false</code>,
       let Apache serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in Apache.  Review the tomcat-apache.conf
@@ -1902,7 +1902,7 @@ the configuration files during normal startup, add:</p>
   </tr>
   <tr valign="top">
     <td>forwardAll</td>
-    <td>If <code>true</code>, forward all requests to Tomcat. This helps insure that all the
+    <td>If <code>true</code>, forward all requests to Tomcat. This helps ensure that all the
       behavior configured in the web.xml file functions correctly.  If <code>false</code>,
       let Netscape serve static resources. Warning: When <code>false</code>, some configuration
       in the web.xml may not be duplicated in Netscape.  Review the configuration
@@ -2122,7 +2122,7 @@ Servlet 2.2 specification.</p>
 
 <h4>Description</h4>
 
-<p>Creates new session id's when needed for a request.  If the
+<p>Creates new session IDs when needed for a request.  If the
 <code>randomFile</code> is not available, the class specified by
 <code>randomClass</code> will be used.  In this case, initialization of
 class occurs on the first request requiring a session.</p>
