@@ -97,7 +97,7 @@ import org.apache.fulcrum.security.impl.db.entity
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ScarabModule.java,v 1.70 2001/11/13 06:20:31 jmcnally Exp $
+ * @version $Id: ScarabModule.java,v 1.71 2001/11/17 01:15:20 elicia Exp $
  */
 public class ScarabModule
     extends BaseScarabModule
@@ -487,7 +487,7 @@ public class ScarabModule
     /**
      * FIXME: can this be done more efficently?
      * gets highest sequence number for module-attribute map
-     * so that a new RModuleAttribute can be added at the end.
+     * so that a new RModuleOption can be added at the end.
      */
     public int getLastAttributeOption(Attribute attribute, 
                                       IssueType issueType)
@@ -659,6 +659,36 @@ public class ScarabModule
                !ROOT_ID.equals(prevModule.getModuleId()));
 
         return (Vector) rModAtts;
+    }
+
+    /**
+     * Adds module-attribute mapping to module.
+     */
+    public RModuleAttribute addRModuleAttribute(IssueType issueType, 
+                                                AttributeGroup attGroup)
+        throws Exception
+    {
+        RModuleAttribute rma = new RModuleAttribute();
+        rma.setModuleId(getModuleId());
+        rma.setIssueTypeId(issueType.getIssueTypeId());
+        rma.setDedupe(attGroup.getOrder() < issueType.getDedupeSequence(this));
+        rma.setOrder(getLastAttribute(issueType) + 1);
+        return rma;
+    }
+
+    /**
+     * Adds module-attribute-option mapping to module.
+     */
+    public RModuleOption addRModuleOption(IssueType issueType, 
+                                          AttributeOption option)
+        throws Exception
+    {
+        RModuleOption rmo = new RModuleOption();
+        rmo.setModuleId(getModuleId());
+        rmo.setIssueTypeId(issueType.getIssueTypeId());
+        rmo.setOptionId(option.getOptionId());
+        rmo.setDisplayValue(option.getName());
+        return rmo;
     }
 
     private List superRModuleAttributes(Criteria crit)
@@ -839,14 +869,13 @@ public class ScarabModule
         {
             optIds[i] = ((AttributeOption)options.get(i)).getOptionId();
         }
-
         Criteria crit = new Criteria();
         crit.add(RModuleOptionPeer.ISSUE_TYPE_ID, issueType.getIssueTypeId());
         crit.add(RModuleOptionPeer.MODULE_ID, getModuleId());
         crit.addIn(RModuleOptionPeer.OPTION_ID, optIds);
         crit.addAscendingOrderByColumn(RModuleOptionPeer.PREFERRED_ORDER);
         crit.addAscendingOrderByColumn(RModuleOptionPeer.DISPLAY_VALUE);
-
+      
         List rModOpts = null;
         ScarabModule module = this;
         ScarabModule prevModule = null;
@@ -1059,6 +1088,26 @@ try{
             rmit = (RModuleIssueType)results.get(0);
         }
         return rmit;
+    }
+
+    public void addRModuleIssueType(IssueType issueType)
+        throws Exception
+    {
+        RModuleIssueType rmit = new RModuleIssueType();
+        rmit.setModuleId(getModuleId());
+        rmit.setIssueTypeId(issueType.getIssueTypeId());
+        rmit.setActive(false);
+        rmit.setDisplay(false);
+        rmit.save();
+
+        // Create default groups
+        AttributeGroup ag = issueType.createNewGroup((ModuleEntity)this);
+        ag.setOrder(1);
+        ag.save();
+        AttributeGroup ag2 = issueType.createNewGroup((ModuleEntity)this);
+        ag2.setOrder(3);
+        ag2.save();
+         
     }
 
     public List getTemplateTypes()
