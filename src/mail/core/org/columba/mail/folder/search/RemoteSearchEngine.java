@@ -283,7 +283,6 @@ public class RemoteSearchEngine extends AbstractSearchEngine {
 
 		for (int i = 0; i < rule.count(); i++) {
 			FilterCriteria criteria = rule.get(i);
-			String headerItem;
 			//StringBuffer searchString = new StringBuffer();
 			String searchString = null;
 
