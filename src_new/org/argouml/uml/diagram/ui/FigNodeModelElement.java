@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.110 2004/07/23 17:53:51 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.111 2004/07/26 09:20:41 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -186,6 +186,8 @@ public abstract class FigNodeModelElement
     /**
      * @deprecated 0.15.3 visibility will change use getter/setter.
      * TODO: What is the name of the getter? What is the name of the setter?
+     * MVW: I created: protected FigRect getBigPort() and 
+     * protected void setBigPort(FigRect bp).
      */
     protected FigRect _bigPort;
 
@@ -201,13 +203,15 @@ public abstract class FigNodeModelElement
      * getStereotypeFig() and setStereoTypeFig() to access the Figs.
      * Use getStereotype() and setStereotype() to change stereotype
      * text.
-     * TODO: How shall the calls
+     * TODO: How shall the following calls be converted?
      * _stereo.setJustificationByName("Center");
      * _stereo.setAllowsTab(false);
      * _stereo.setEditable(false);
      * _stereo.setExpandOnly(true);
      * center(getStereotypeFig()); where private void center(FigText figText);
-     * be converted?
+     * 
+     * MVW: Why are the getter/setter not returning a FigText, but a Fig?
+     * I created a new (real) getter: getStereotypeFigText()
      */
     public FigText _stereo; // TODO: - public!! Make private!
 
@@ -287,7 +291,7 @@ public abstract class FigNodeModelElement
 //    }
 // _enclosedFigs, _encloser and _eventSenders may also need to be cloned
 // must check usage
-//
+// MVW: What are these Clone functions used for? Who would want to clone a fig? 
 
 
     /** Reply text to be shown while placing node in diagram */
@@ -1315,6 +1319,14 @@ public abstract class FigNodeModelElement
     }
 
     /**
+     * Get the FigText containing the stereotype
+     * @return the stereotype FigText
+     */
+    protected FigText getStereotypeFigText() {
+        return _stereo;
+    }
+
+    /**
      * Set the text describing the stereotype
      * @param stereotype the stereotype text
      */
@@ -1328,6 +1340,22 @@ public abstract class FigNodeModelElement
      */
     public String getStereotype() {
         return _stereo.getText();
+    }
+    
+    /**
+     * @return FigRect this rectangle marks the whole interface figure; 
+     * everything is inside it
+     */
+    protected FigRect getBigPort() {
+        return _bigPort;
+    }
+    
+    /**
+     * @param bp FigRect this rectangle marks the whole interface figure; 
+     * everything is inside it
+     */
+    protected void setBigPort(FigRect bp) {
+        _bigPort = bp;
     }
 } /* end class FigNodeModelElement */
 
