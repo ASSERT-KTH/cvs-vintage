@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  *            extends="org.jboss.deployment.SubDeployerMBean"
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class EARDeployer
    extends SubDeployerSupport
@@ -216,6 +216,12 @@ public class EARDeployer
    protected void processNestedDeployments(DeploymentInfo di)
    {
       //most of init should be in here...
+   }
+
+   protected boolean isDeployable(String name, URL url) 
+   {
+      return super.isDeployable(name, url) || name.endsWith("-ds.xml") ||
+         name.endsWith("-service.xml");
    }
    
    /**
