@@ -266,6 +266,7 @@
         <filter token="FILE_UPLOAD_PATH" value="${scarab.file.upload.path}"/>
         <filter token="SCARAB_REGISTER_CHECK_VALID_A" value="${scarab.register.email.checkValidA}"/>
         <filter token="SCARAB_REGISTER_BAD_EMAILS" value="${scarab.register.email.badEmails}"/>
+        <filter token="TORQUE_MANAGER_CACHE" value="${scarab.torque.manager.cache}"/>
         <filter token="EXTRA_TR_PROPERTIES" 
             value="${scarab.extra.tr.properties}"/>
         <filter token="TIMEZONE" value="${scarab.timezone}"/>
@@ -331,9 +332,6 @@
 
         <!-- the source code directory -->
         <filter token="OM" value="org.tigris.scarab.om"/>
-        <!-- delete this file because we replace the version tokens in it with a timestamp -->
-        <delete file="${build.src.scarab}/org/tigris/scarab/tools/ScarabRequestTool.java" 
-                quiet="true" />
         <copy todir="${build.src.scarab}/org" filtering="yes">
             <fileset dir="${src.java.dir.scarab}/org" defaultexcludes="no">
                 <include name="**/*.java"/>

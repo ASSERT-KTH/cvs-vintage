@@ -77,6 +77,8 @@ import org.tigris.scarab.workflow.WorkflowFactory;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.TorqueException;
 
+import org.apache.turbine.Turbine;
+
 /**
  * This scope is an object that is made available as a global
  * object within the system.
@@ -89,7 +91,7 @@ import org.apache.torque.TorqueException;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabGlobalTool.java,v 1.32 2002/08/08 01:34:18 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.33 2002/08/20 22:08:46 jon Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -105,7 +107,10 @@ public class ScarabGlobalTool implements ScarabGlobalScope
      * holds the Scarab security permission constants
      */
     private FieldMethodizer security = null;
-    
+
+    private static final String buildVersion = 
+        Turbine.getConfiguration().getString("scarab.build.version");
+
     public void init(Object data)
     {
     }
@@ -120,9 +125,17 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public ScarabGlobalTool()
     {
         constant = new FieldMethodizer(
-                                       "org.tigris.scarab.util.ScarabConstants");
+            "org.tigris.scarab.util.ScarabConstants");
         security = new FieldMethodizer(
-                                       "org.tigris.scarab.services.security.ScarabSecurity");
+            "org.tigris.scarab.services.security.ScarabSecurity");
+    }
+
+    /**
+     * returns Scarab's build version.
+     */
+    public String getBuildVersion()
+    {
+        return buildVersion;
     }
     
     /**
