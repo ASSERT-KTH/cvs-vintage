@@ -260,8 +260,10 @@ public class SecurityCheck extends  BaseInterceptor {
 	    } else {
 		acc= ( acc << 6 ) | v;
 		shift += 6;
-		if ( shift >= 8 ) shift -= 8;
-		sb.append( (char) ((acc >> shift) & 0xff));
+		if ( shift >= 8 ) {
+		    shift -= 8;
+		    sb.append( (char) ((acc >> shift) & 0xff));
+		}
 	    }
 	}
 	return sb.toString();
