@@ -145,6 +145,20 @@ public  class AttributeGroup
     }
 
     /**
+     * Returns order of the attribute in this group with highest sequence #
+     */
+    public int getHighestOrderedAttribute()
+        throws Exception
+    {
+        Criteria crit = new Criteria()
+            .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
+            .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
+                                       .PREFERRED_ORDER);
+        List raags = RAttributeAttributeGroupPeer.doSelect(crit); 
+        return ((RAttributeAttributeGroup)raags.get(raags.size()-1)).getOrder();
+    }
+        
+    /**
      * Retrieves R_ATTRIBUTE_ATTRIBUTEGROUP mapping object for this group
      * And the given attribute.
      */
