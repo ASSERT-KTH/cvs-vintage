@@ -131,7 +131,7 @@ public final class StreamHandlerFactory implements URLStreamHandlerFactory {
 	if(protocolString == System.getProperty(SYS_PROTOCOLS))	
 	    return;
 	String protocolS = System.getProperty(SYS_PROTOCOLS);
-	StringTokenizer tok = new StringTokenizer(protocolString,"|");
+	StringTokenizer tok = new StringTokenizer(protocolS,"|");
 	protocols.clear();
 	while(tok.hasMoreTokens()) {
 	    String protStr = tok.nextToken();
