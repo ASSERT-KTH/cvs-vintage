@@ -35,7 +35,7 @@ import java.awt.Component;
  * actions.xml file.
  *
  * @author Slava Pestov
- * @version $Id: EditAction.java,v 1.13 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: EditAction.java,v 1.14 2003/02/07 21:57:27 spestov Exp $
  */
 public abstract class EditAction
 {
@@ -177,15 +177,13 @@ public abstract class EditAction
 		/**
 		 * Called when the user selects this action from a menu.
 		 * It passes the action through the
-		 * <code>InputHandler.executeAction()</code> method,
-		 * which performs any recording or repeating. It also
-		 * loads the action if necessary.
+		 * {@link org.gjt.sp.jedit.gui.InputHandler#executeAction(EditAction)}
+		 * method, which performs any recording or repeating.
 		 *
 		 * @param evt The action event
 		 */
 		public void actionPerformed(ActionEvent evt)
 		{
-			// Let input handler do recording, repeating, etc
 			jEdit.getActiveView().getInputHandler().invokeAction(action);
 		}
 

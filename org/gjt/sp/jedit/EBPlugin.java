@@ -19,9 +19,11 @@
 
 package org.gjt.sp.jedit;
 
+import org.gjt.sp.util.Log;
+
 /**
  * Plugins extending this class are automatically added to the EditBus.
- * Otherwise, this class is identical to the <code>EditPlugin</code>
+ * Otherwise, this class is identical to the {@link EditPlugin}
  * class.
  *
  * @see org.gjt.sp.jedit.EditBus
@@ -29,7 +31,7 @@ package org.gjt.sp.jedit;
  * @see org.gjt.sp.jedit.EBMessage
  *
  * @author Slava Pestov
- * @version $Id: EBPlugin.java,v 1.4 2003/02/07 20:29:25 spestov Exp $
+ * @version $Id: EBPlugin.java,v 1.5 2003/02/07 21:57:27 spestov Exp $
  */
 public abstract class EBPlugin extends EditPlugin implements EBComponent
 {

@@ -51,7 +51,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.53 2003/02/04 01:19:50 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.54 2003/02/07 21:57:28 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -535,9 +535,9 @@ public class GUIUtilities
 	 * @param view The view
 	 * @param path The initial directory to display. May be null
 	 * @param type The dialog type. One of
-	 * <code>VFSBrowser.OPEN_DIALOG</code>,
-	 * <code>VFSBrowser.SAVE_DIALOG</code>, or
-	 * <code>VFSBrowser.CHOOSE_DIRECTORY_DIALOG</code>.
+	 * {@link org.gjt.sp.jedit.browser.VFSBrowser#OPEN_DIALOG},
+	 * {@link org.gjt.sp.jedit.browser.VFSBrowser#SAVE_DIALOG}, or
+	 * {@link org.gjt.sp.jedit.browser.VFSBrowser#CHOOSE_DIRECTORY_DIALOG}.
 	 * @param multipleSelection True if multiple selection should be allowed
 	 * @return The selected file(s)
 	 * @since jEdit 2.6pre2

@@ -25,16 +25,16 @@ package org.gjt.sp.jedit;
 /**
  * The base class of all EditBus messages.<p>
  *
- * Message classes extending <code>EBMessage</code> typically add
+ * Message classes extending this class typically add
  * other data members and methods to provide subscribers with whatever is
  * needed to handle the message appropriately.<p>
  *
  * Message types sent by jEdit can be found in the
- * <code>org.gjt.sp.jedit.msg</code> package.
+ * {@link org.gjt.sp.jedit.msg} package.
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EBMessage.java,v 1.3 2003/02/07 20:29:25 spestov Exp $
+ * @version $Id: EBMessage.java,v 1.4 2003/02/07 21:57:27 spestov Exp $
  *
  * @since jEdit 2.2pre6
  */

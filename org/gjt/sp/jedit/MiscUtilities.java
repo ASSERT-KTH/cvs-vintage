@@ -37,7 +37,7 @@ import org.gjt.sp.util.Log;
  * Class with several useful miscellaneous functions.
  *
  * @author Slava Pestov
- * @version $Id: MiscUtilities.java,v 1.32 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.33 2003/02/07 21:57:29 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -142,7 +142,7 @@ public class MiscUtilities
 
 	//{{{ concatPath() method
 	/**
-	 * Like constructPath(), except <code>path</code> will be
+	 * Like {@link #constructPath}, except <code>path</code> will be
 	 * appended to <code>parent</code> even if it is absolute.
 	 * @param path
 	 * @param parent

@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.7 2002/12/24 17:35:22 spestov Exp $
+ * @version $Id: Mode.java,v 1.8 2003/02/07 21:57:30 spestov Exp $
  */
 public class Mode
 {
@@ -94,9 +94,7 @@ public class Mode
 
 	//{{{ getTokenMarker() method
 	/**
-	 * Returns the token marker specified with
-	 * <code>setTokenMarker()</code>. Should only be called by
-	 * <code>TokenMarker.getExternalRuleSet()</code>.
+	 * Returns the token marker for this mode.
 	 */
 	public TokenMarker getTokenMarker()
 	{
@@ -106,8 +104,7 @@ public class Mode
 
 	//{{{ setTokenMarker() method
 	/**
-	 * Sets the token marker for this mode. This token marker will be
-	 * cloned to obtain new instances.
+	 * Sets the token marker for this mode.
 	 * @param marker The new token marker
 	 */
 	public void setTokenMarker(TokenMarker marker)

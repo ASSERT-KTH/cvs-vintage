@@ -36,7 +36,7 @@ import java.util.*;
 
 /**
  * The <code>DockableWindowManager</code> keeps track of dockable windows.
- * Each <code>View</code> has an instance of this class.<p>
+ * Each {@link org.gjt.sp.jedit.View} has an instance of this class.<p>
  *
  * When an instance of this class is initialized, it
  * iterates through the list of registered dockable windows (from jEdit itself,
@@ -55,7 +55,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.46 2003/02/07 20:29:26 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.47 2003/02/07 21:57:36 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -651,7 +651,7 @@ public class DockableWindowManager extends JPanel
 	//{{{ getDockable() method
 	/**
 	 * Returns the specified dockable window. For historical reasons, this
-	 * does the same thing as <code>getDockableWindow()</code>.
+	 * does the same thing as {@link #getDockableWindow()}.
 	 * @param name The name of the dockable window
 	 * @since jEdit 4.0pre1
 	 */

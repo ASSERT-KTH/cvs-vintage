@@ -40,13 +40,20 @@ import org.gjt.sp.jedit.textarea.*;
  * <code>editPane</code> variable.<p>
  *
  * This class does not have a public constructor.
- * Edit panes can be created and destroyed using methods in the <code>View</code>
- * class.<p>
+ * Edit panes can be created and destroyed using methods in the
+ * {@link View} class.<p>
  *
  * Each edit pane can edit one buffer at a time.
  *
+ * @see View#splitHorizontally()
+ * @see View#splitVertically()
+ * @see View#unsplitCurrent()
+ * @see View#unsplit()
+ * @see View#getEditPane()
+ * @see View#getEditPanes()
+ *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.33 2003/02/07 17:42:30 spestov Exp $
+ * @version $Id: EditPane.java,v 1.34 2003/02/07 21:57:28 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {

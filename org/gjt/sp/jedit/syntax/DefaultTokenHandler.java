@@ -26,7 +26,7 @@ package org.gjt.sp.jedit.syntax;
  * Builds a linked list of tokens without any additional processing.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.13 2003/01/31 04:49:31 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.14 2003/02/07 21:57:43 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -54,7 +54,7 @@ public class DefaultTokenHandler implements TokenHandler
 	/**
 	 * Called by the token marker when a syntax token has been parsed.
 	 * @param id The token type (one of the constants in the
-	 * <code>Token</code> class).
+	 * {@link Token} class).
 	 * @param offset The start offset of the token
 	 * @param length The number of characters in the token
 	 * @param context The line context

@@ -38,7 +38,7 @@ import org.gjt.sp.jedit.*;
  * to the implementations of this class to do so.
  *
  * @author Slava Pestov
- * @version $Id: InputHandler.java,v 1.12 2003/01/12 03:08:24 spestov Exp $
+ * @version $Id: InputHandler.java,v 1.13 2003/02/07 21:57:37 spestov Exp $
  * @see org.gjt.sp.jedit.gui.DefaultInputHandler
  */
 public abstract class InputHandler extends KeyAdapter
@@ -55,8 +55,8 @@ public abstract class InputHandler extends KeyAdapter
 
 	//{{{ processKeyEvent() method
 	/**
-	 * Utility method, calls one of <code>keyPressed()</code>,
-	 * <code>keyReleased()</code>, or <code>keyTyped()</code>.
+	 * Utility method, calls one of {@link #keyPressed(KeyEvent)},
+	 * {@link #keyReleased(KeyEvent)}, or {@link #keyTyped(KeyEvent)}.
 	 * @since jEdit 4.0pre4
 	 */
 	public void processKeyEvent(KeyEvent evt)

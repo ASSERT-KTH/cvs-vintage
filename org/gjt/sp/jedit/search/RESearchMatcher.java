@@ -31,9 +31,9 @@ import org.gjt.sp.jedit.MiscUtilities;
 //}}}
 
 /**
- * A regular expression string matcher using <code>gnu.regexp</code>.
+ * A regular expression string matcher using {@link gnu.regexp}.
  * @author Slava Pestov
- * @version $Id: RESearchMatcher.java,v 1.18 2003/01/31 04:49:31 spestov Exp $
+ * @version $Id: RESearchMatcher.java,v 1.19 2003/02/07 21:57:41 spestov Exp $
  */
 public class RESearchMatcher implements SearchMatcher
 {
