@@ -1,6 +1,7 @@
 #!/bin/sh
 
-pushd ../src/sql
+BUILD_DIR=`pwd`
+cd ../src/sql
 create-mysql-database.sh scarab scarab scarab-test
-popd
+cd ${BUILD_DIR}
 ant -buildfile run-tests.xml $@
