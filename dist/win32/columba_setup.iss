@@ -3,7 +3,7 @@
 
 [Setup]
 AppName=Columba
-AppVerName=Columba 1.0 Milestone M1
+AppVerName=Columba 1.0 Milestone M2
 AppPublisherURL=http://columba.sourceforge.net/
 AppSupportURL=http://columba.sourceforge.net/
 AppUpdatesURL=http://columba.sourceforge.net/
@@ -25,10 +25,9 @@ Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additi
 
 [Files]
 Source: lib\jargs.jar; DestDir: {app}\lib\
-Source: lib\log4j.jar; DestDir: {app}\lib\
-Source: lib\lucene-1.3-rc1.jar; DestDir: {app}\lib\
+Source: lib\lucene-1.3-final.jar; DestDir: {app}\lib\
 Source: lib\jwizz-0.1.1.jar; DestDir: {app}\lib\
-Source: lib\plastic.jar; DestDir: {app}\lib\
+Source: lib\plastic-1.2.0.jar; DestDir: {app}\lib\
 Source: AUTHORS; DestDir: {app}
 Source: CHANGES; DestDir: {app}
 Source: native\win32\launcher\bin\columba.exe; DestDir: {app}; DestName: columba.exe
@@ -39,7 +38,7 @@ Source: run.bat; DestDir: {app}
 Source: lib\ristretto-1.0pre1.jar; DestDir: {app}\lib\
 Source: lib\jhall.jar; DestDir: {app}\lib\
 Source: lib\usermanual.jar; DestDir: {app}\lib\
-Source: lib\forms.jar; DestDir: {app}\lib\
+Source: lib\forms-1.0.3.jar; DestDir: {app}\lib\
 
 [Icons]
 Name: {group}\Columba; Filename: {app}\columba.exe; IconIndex: 0; WorkingDir: {app}
