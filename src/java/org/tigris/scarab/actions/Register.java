@@ -47,6 +47,8 @@ package org.tigris.scarab.actions;
  */ 
 
 // Turbine Stuff 
+import java.util.Locale;
+
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.Turbine;
@@ -80,7 +82,7 @@ import org.xbill.DNS.Type;
  * Action.
  *   
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Register.java,v 1.40 2003/07/12 05:33:22 dlr Exp $
+ * @version $Id: Register.java,v 1.41 2004/04/07 21:18:33 dabbous Exp $
  */
 public class Register extends ScarabTemplateAction
 {
@@ -129,7 +131,7 @@ public class Register extends ScarabTemplateAction
     public void doRegister(RunData data, TemplateContext context) 
         throws Exception
     {
-        String template = getCurrentTemplate(data, null);
+        String template     = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
 
         IntakeTool intake = getIntakeTool(context);
@@ -186,6 +188,13 @@ public class Register extends ScarabTemplateAction
             }
 
             String email = su.getEmail();
+            if (email == null)
+            {
+                setTarget(data,"Register.vm");
+                scarabR.setAlertMessage(l10n.get("EnterValidEmailAddress"));
+                return;
+            }
+
             // check to see if the email is a valid domain (has A records)
             if (Turbine.getConfiguration()
                     .getBoolean("scarab.register.email.checkRFC2505", false))
@@ -512,8 +521,14 @@ public class Register extends ScarabTemplateAction
     private void sendConfirmationEmail(ScarabUser su, TemplateContext context)
         throws Exception
     {
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
         Email te = new Email();
+
+        // Retrieve the charset to be used for the Email.
+        ScarabLocalizationTool l10n = getLocalizationTool(context);
+        Locale locale = l10n.getPrimaryLocale();
+        String charset = Email.getCharset(locale);
+        te.setCharset(charset);
+
         te.setContext(new ContextAdapter(context));
         te.setTo(su.getFirstName() + " " + su.getLastName(), su.getEmail());
         te.setFrom(

@@ -59,7 +59,7 @@ import org.tigris.scarab.om.Module;
  * of EmailLink.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: EmailLinkFactory.java,v 1.3 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: EmailLinkFactory.java,v 1.4 2004/04/07 21:18:34 dabbous Exp $
  */
 public class EmailLinkFactory
 {
@@ -70,7 +70,7 @@ public class EmailLinkFactory
     static
     {
         String className = Turbine.getConfiguration()
-            .getString(LINK_TOOL_KEY);
+            .getString(LINK_TOOL_KEY, "");
         Class c = null;
         if (StringUtils.isNotEmpty(className))
         {

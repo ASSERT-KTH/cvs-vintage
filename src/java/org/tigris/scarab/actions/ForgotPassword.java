@@ -47,6 +47,7 @@ package org.tigris.scarab.actions;
  */
 
 import java.util.Calendar;
+import java.util.Locale;
 
 // Turbine Stuff
 import org.apache.turbine.Turbine;
@@ -58,12 +59,13 @@ import org.apache.fulcrum.security.TurbineSecurity;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.util.TurbineSecurityException;
-import org.apache.fulcrum.template.TemplateEmail;
 
 import org.apache.commons.lang.RandomStringUtils;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.tools.ScarabLocalizationTool;
+import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
@@ -130,7 +132,15 @@ public class ForgotPassword extends ScarabTemplateAction
             // in the context for use in the email template.
             context.put("password", tempPassword);
 
-            TemplateEmail te = new TemplateEmail();
+            Email te = new Email();
+            
+            // Retrieve the charset to be used for the Email.
+            ScarabLocalizationTool l10n = getLocalizationTool(context);
+            Locale locale = l10n.getPrimaryLocale();
+            String charset = Email.getCharset(locale);
+            te.setCharset(charset);
+            
+            
             te.setContext(new ContextAdapter(context));
             te.setTo(user.getFirstName() + " " + user.getLastName(), user.getEmail());
             te.setFrom(

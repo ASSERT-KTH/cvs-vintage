@@ -56,7 +56,6 @@ import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.fulcrum.ServiceException;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.fulcrum.template.TemplateContext;
@@ -76,7 +75,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.40 2004/02/05 07:33:30 pledbrook Exp $
+ * @version $Id: Email.java,v 1.41 2004/04/07 21:18:34 dabbous Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -86,30 +85,30 @@ public class Email extends TemplateEmail
     /**
      * Sends email to a single recipient. Returns false if it fails
      * to send the email for any reason.
-     */ 
+     */
     public static boolean sendEmail(EmailContext context, Module module,
-                                     Object fromUser, Object replyToUser, 
-                                     ScarabUser toUser, String template)
-        throws Exception
+                                    Object fromUser, Object replyToUser,
+                                    ScarabUser toUser, String template)
+            throws Exception
     {
         Collection toUsers = new ArrayList(2);
         toUsers.add(toUser);
-        return sendEmail(context, module, fromUser, replyToUser, toUsers, 
-                          null, template);
+        return sendEmail(context, module, fromUser, replyToUser, toUsers, null,
+                template);
     }
 
     /** 
      * Sends email to multiple recipients. Returns false if it fails
      * to send the email for any reason.
      */
-    public static boolean sendEmail(EmailContext context, Module module, 
+    public static boolean sendEmail(EmailContext context, Module module,
                                     Object fromUser, Object replyToUser,
                                     Collection toUsers, Collection ccUsers,
-                                    String template)
+                                    String template) 
         throws Exception
     {
-        if (!GlobalParameterManager
-            .getBoolean(GlobalParameter.EMAIL_ENABLED, module))
+        if (!GlobalParameterManager.getBoolean(GlobalParameter.EMAIL_ENABLED,
+                module))
         {
             return true;
         }
@@ -125,12 +124,12 @@ public class Email extends TemplateEmail
         {
             toUsers = new ArrayList();
         }
-        
+
         if (ccUsers == null)
         {
             ccUsers = new ArrayList();
         }
-        
+
         //
         // Remove duplicate addresses from the cc: list
         //
@@ -141,30 +140,29 @@ public class Email extends TemplateEmail
         {
             archiveEmail = null;
         }
-        
-        Map userLocaleMap = groupAddressesByLocale(module, toUsers, 
-                                                   ccUsers, archiveEmail);
-        
-        for (Iterator i = userLocaleMap.keySet().iterator(); i.hasNext();) 
+
+        Map userLocaleMap = groupAddressesByLocale(module, toUsers, ccUsers,
+                archiveEmail);
+
+        for (Iterator i = userLocaleMap.keySet().iterator(); i.hasNext();)
         {
-            Locale locale = (Locale)i.next();
-            List[] toAndCC = (List[])userLocaleMap.get(locale);
+            Locale locale = (Locale) i.next();
+            List[] toAndCC = (List[]) userLocaleMap.get(locale);
             List to = toAndCC[TO];
             List cc = toAndCC[CC];
-            
-            sendEmailInLocale(context, module, fromUser, replyToUser,
-                              to, cc, template, locale);            
+
+            sendEmailInLocale(context, module, fromUser, replyToUser, to, cc,
+                              template, locale);
         }
-                
+
         return success;
     }
 
     /** Sends email in a specific locale. */
-    private static void sendEmailInLocale(EmailContext context, Module module, 
+    private static void sendEmailInLocale(EmailContext context, Module module,
                                           Object fromUser, Object replyToUser,
                                           List toAddresses, List ccAddresses,
-                                          String template,
-                                          Locale locale)
+                                          String template, Locale locale)
         throws Exception
     {
         Log.get().debug("Sending email for locale=" + locale);
@@ -174,21 +172,20 @@ public class Email extends TemplateEmail
         context.setLocalizationTool(l10n);
         l10n.init(locale);
 
-        Email te = getEmail(context, module, fromUser, 
-                            replyToUser, template);
+        Email te = getEmail(context, module, fromUser, replyToUser, template);
         te.setCharset(getCharset(locale));
-       
+
         boolean atLeastOneTo = false;
-        for (Iterator iTo = toAddresses.iterator(); iTo.hasNext();) 
+        for (Iterator iTo = toAddresses.iterator(); iTo.hasNext();)
         {
-            InternetAddress a = (InternetAddress)iTo.next();
+            InternetAddress a = (InternetAddress) iTo.next();
             te.addTo(a.getAddress(), a.getPersonal());
             atLeastOneTo = true;
             Log.get().debug("Added To: " + a.getAddress());
         }
-        for (Iterator iCC = ccAddresses.iterator(); iCC.hasNext();) 
+        for (Iterator iCC = ccAddresses.iterator(); iCC.hasNext();)
         {
-            InternetAddress a = (InternetAddress)iCC.next();
+            InternetAddress a = (InternetAddress) iCC.next();
             String email = a.getAddress();
             String name = a.getPersonal();
 
@@ -196,19 +193,19 @@ public class Email extends TemplateEmail
             // to send emails with only a CC: user, so not sure if this
             // is a bug to be fixed in TemplateEmail.  Might not be good
             // form anyway.  So if there are no To: users, upgrade CC's.
-            if (atLeastOneTo) 
+            if (atLeastOneTo)
             {
                 te.addCc(email, name);
             }
-            else 
-            {                
+            else
+            {
                 te.addTo(email, name);
                 // We've added one To: user and TemplateEmail should be
                 // happy. No need to move all CC: into TO:
                 atLeastOneTo = true;
             }
             Log.get().debug("Added CC: " + email);
-        }                
+        }
         te.sendMultiple();
     }
 
@@ -221,7 +218,7 @@ public class Email extends TemplateEmail
      * <code>userLocaleMap[Locale.FRANCE][TO]</code>. The same applies
      * to "Cc:" addresses, while the archive email address is associated
      * with the default module locale.
-     */ 
+     */
     private static Map groupAddressesByLocale(Module module,
                                               Collection toUsers,
                                               Collection ccUsers,
@@ -229,19 +226,19 @@ public class Email extends TemplateEmail
         throws Exception
     {
         Map result = new HashMap();
-        for (Iterator iter = toUsers.iterator(); iter.hasNext();) 
+        for (Iterator iter = toUsers.iterator(); iter.hasNext();)
         {
-            fileUser(result, (ScarabUser)iter.next(), module, TO);
+            fileUser(result, (ScarabUser) iter.next(), module, TO);
         }
 
-        for (Iterator iter = ccUsers.iterator(); iter.hasNext();) 
+        for (Iterator iter = ccUsers.iterator(); iter.hasNext();)
         {
-            fileUser(result, (ScarabUser)iter.next(), module, CC);
+            fileUser(result, (ScarabUser) iter.next(), module, CC);
         }
         if (archiveEmail != null)
         {
-            fileAddress(result, new InternetAddress(archiveEmail), 
-                        chooseLocale(null, module), CC);
+            fileAddress(result, new InternetAddress(archiveEmail),
+                    chooseLocale(null, module), CC);
         }
         return result;
     }
@@ -249,8 +246,8 @@ public class Email extends TemplateEmail
     private static void fileAddress(Map userLocaleMap, InternetAddress address,
                                     Locale locale, int toOrCC)
     {
-        List[] toAndCC = (List[])userLocaleMap.get(locale);
-        if (toAndCC == null) 
+        List[] toAndCC = (List[]) userLocaleMap.get(locale);
+        if (toAndCC == null)
         {
             toAndCC = new List[2];
             toAndCC[0] = new ArrayList();
@@ -261,12 +258,10 @@ public class Email extends TemplateEmail
     }
 
     private static void fileUser(Map userLocaleMap, ScarabUser user,
-                                 Module module, int toOrCC)
-        throws Exception
+                                 Module module, int toOrCC) throws Exception
     {
-        fileAddress(userLocaleMap,
-                    new InternetAddress(user.getEmail(), user.getName()),
-                    chooseLocale(user, module), toOrCC);
+        fileAddress(userLocaleMap, new InternetAddress(user.getEmail(), user
+                .getName()), chooseLocale(user, module), toOrCC);
     }
 
     /**
@@ -278,15 +273,13 @@ public class Email extends TemplateEmail
      * this method, however, that was discovered after the fact and it
      * also seemed to be a bit more work to change the file extension. 
      */
-    protected String handleRequest()
-        throws ServiceException
+    protected String handleRequest() throws ServiceException
     {
         String result = null;
         try
         {
-            result = VelocityEmail
-                     .handleRequest(new ContextAdapter(getContext()),
-                                    getTemplate());
+            result = VelocityEmail.handleRequest(new ContextAdapter(
+                    getContext()), getTemplate());
         }
         catch (Exception e)
         {
@@ -307,14 +300,13 @@ public class Email extends TemplateEmail
      */
     private static Email getEmail(EmailContext context, Module module,
                                   Object fromUser, Object replyToUser,
-                                  String template)
-        throws Exception
+                                  String template) throws Exception
     {
         Email te = new Email();
-        if (context == null) 
+        if (context == null)
         {
             context = new EmailContext();
-        }        
+        }
         te.setContext(context);
 
         EmailLink el = EmailLinkFactory.getInstance(module);
@@ -325,24 +317,21 @@ public class Email extends TemplateEmail
 
         nameAndAddr = getNameAndAddress(replyToUser);
         te.addReplyTo(nameAndAddr[0], nameAndAddr[1]);
-        
+
         if (template == null)
         {
-            template = Turbine.getConfiguration().
-                getString("scarab.email.default.template");
+            template = Turbine.getConfiguration().getString(
+                    "scarab.email.default.template", "Default.vm");
         }
         te.setTemplate(prependDir(template));
-    
         String subjectTemplate = context.getSubjectTemplate();
-        if (subjectTemplate == null) 
+        if (subjectTemplate == null)
         {
             int templateLength = template.length();
             // The magic number 7 represents "Subject"
-            StringBuffer templateSB = 
-                new StringBuffer(templateLength + 7);
+            StringBuffer templateSB = new StringBuffer(templateLength + 7);
             // The magic number 3 represents ".vm"
-            templateSB.append(
-                template.substring(0, templateLength - 3));
+            templateSB.append(template.substring(0, templateLength - 3));
             subjectTemplate = templateSB.append("Subject.vm").toString();
         }
 
@@ -361,11 +350,11 @@ public class Email extends TemplateEmail
         if (input instanceof ScarabUser)
         {
             ScarabUser u = (ScarabUser) input;
-            nameAndAddr = new String[] { u.getName(), u.getEmail() };
+            nameAndAddr = new String[]{u.getName(), u.getEmail()};
         }
         else if (input instanceof String[])
         {
-            nameAndAddr = (String []) input;
+            nameAndAddr = (String[]) input;
         }
         else
         {
@@ -375,24 +364,16 @@ public class Email extends TemplateEmail
             if (keyBase == null)
             {
                 keyBase = "scarab.email.default";
-            } 
-            nameAndAddr = new String[2];
-            nameAndAddr[0] =
-                Turbine.getConfiguration().getString(keyBase + ".fromName");
-            if (StringUtils.isEmpty(nameAndAddr[0]))
-            {
-                // L10N?
-                nameAndAddr[0] = "Scarab System";
             }
 
-            nameAndAddr[1] =
-                Turbine.getConfiguration().getString(keyBase + ".fromAddress");
-            if (StringUtils.isEmpty(nameAndAddr[1]))
-            {
-                // TODO: Discover a better sending host/domain than
-                // "localhost"
-                nameAndAddr[1] = "help@localhost";
-            }
+            // TODO: Discover a better sending host/domain than
+            // "localhost"
+
+            nameAndAddr = new String[2];
+            nameAndAddr[0] = Turbine.getConfiguration().getString(
+                    keyBase + ".fromName", "Scarab System");
+            nameAndAddr[1] = Turbine.getConfiguration().getString(
+                    keyBase + ".fromAddress", "help@localhost");
         }
         return nameAndAddr;
     }
@@ -404,8 +385,8 @@ public class Email extends TemplateEmail
         try
         {
             // render the template
-            result = VelocityEmail
-                .handleRequest(new ContextAdapter(context), template);
+            result = VelocityEmail.handleRequest(new ContextAdapter(context),
+                    template);
             if (result != null)
             {
                 result = result.trim();
@@ -413,8 +394,8 @@ public class Email extends TemplateEmail
             // in some of the more complicated templates, we set a context
             // variable so that there is not a whole bunch of whitespace
             // that can make it into the subject...
-            String subject = (String)context.get("emailSubject");
-            if (subject != null) 
+            String subject = (String) context.get("emailSubject");
+            if (subject != null)
             {
                 result = subject.trim();
             }
@@ -422,7 +403,7 @@ public class Email extends TemplateEmail
         catch (Exception e)
         {
             Log.get()
-                .error("Error rendering subject for " + template + ". ", e);
+                    .error("Error rendering subject for " + template + ". ", e);
             result = "Scarab System Notification";
         }
         return result;
@@ -431,10 +412,10 @@ public class Email extends TemplateEmail
     private static String prependDir(String template)
     {
         boolean b = false;
-        try 
+        try
         {
-            b = GlobalParameterManager.getBoolean(
-                GlobalParameter.EMAIL_INCLUDE_ISSUE_DETAILS);
+            b = GlobalParameterManager
+                    .getBoolean(GlobalParameter.EMAIL_INCLUDE_ISSUE_DETAILS);
         }
         catch (Exception e)
         {
@@ -456,13 +437,13 @@ public class Email extends TemplateEmail
      * @param locale a <code>Locale</code> value
      * @return a <code>String</code> value
      */
-    private static String getCharset(Locale locale)
+    public static String getCharset(Locale locale)
     {
-        String charset = Turbine.getConfiguration()
-            .getString(ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY, "").trim();
+        String charset = Turbine.getConfiguration().getString(
+                ScarabConstants.DEFAULT_EMAIL_ENCODING_KEY, "").trim();
         if (charset.length() == 0 || "native".equalsIgnoreCase(charset))
         {
-            if ("ja".equals(locale.getLanguage())) 
+            if ("ja".equals(locale.getLanguage()))
             {
                 charset = "ISO-2022-JP";
             }
@@ -478,25 +459,26 @@ public class Email extends TemplateEmail
     private static Locale chooseLocale(ScarabUser user, Module module)
     {
         Locale locale = null;
-        if (user != null) 
+        if (user != null)
         {
-            try 
+            try
             {
                 locale = user.getPreferredLocale();
             }
             catch (Exception e)
             {
-                Log.get().error("Couldn't determine locale for user " 
-                                + user.getUserName(), e);
+                Log.get().error(
+                        "Couldn't determine locale for user " + user
+                                .getUserName(), e);
             }
         }
-        if (locale == null) 
+        if (locale == null)
         {
-            if (module != null && module.getLocale() != null) 
+            if (module != null && module.getLocale() != null)
             {
                 locale = module.getLocale();
             }
-            else 
+            else
             {
                 locale = ScarabConstants.DEFAULT_LOCALE;
             }

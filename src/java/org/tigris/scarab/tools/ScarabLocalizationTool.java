@@ -47,8 +47,7 @@ package org.tigris.scarab.tools;
  */
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -88,18 +87,18 @@ public class ScarabLocalizationTool extends LocalizationTool
      * The Locale to be used, if the Resource could not be found in
      * one of the Locales specified in the Browser's language preferences.
      */
-    private static Locale LAST_RESORT = new Locale("en","");
+    public static Locale        DEFAULT_LOCALE = new Locale("en", "");
 
     /**
      * The portion of a key denoting the default scope 
      * (the default target name).
      */
-    private static final String DEFAULT_SCOPE = "default";
+    private static final String DEFAULT_SCOPE  = "default";
 
     /**
      * The portion of a key denoting the title property.
      */
-    private static final String TITLE_PROP = "title";
+    private static final String TITLE_PROP     = "title";
 
     /**
      * We need to keep a reference to the request's <code>RunData</code> so
@@ -107,15 +106,15 @@ public class ScarabLocalizationTool extends LocalizationTool
      * has run (which may have changed the target from its original value as a
      * sort of internal redirect).
      */
-    private RunData data;
+    private RunData             data;
 
     /**
      * Initialized by <code>init()</code>, 
      * cleared by <code>refresh()</code>.
      */
-    private Configuration properties;
-    private String bundlePrefix;
-    private String oldBundlePrefix;
+    private Configuration       properties;
+    private String              bundlePrefix;
+    private String              oldBundlePrefix;
 
     /**
      * Store the collection of locales to be used for ResourceBundle resolution.
@@ -125,14 +124,14 @@ public class ScarabLocalizationTool extends LocalizationTool
      * just that Locale.
      * 
      */
-    private Collection locales;
+    private List                locales;
 
     /**
      * true: enables cross-site scripting filtering.
      * @see resolveArgumentTemplates 
      * @see format(String, Object[])
      */
-    private boolean filterEnabled = true;
+    private boolean             filterEnabled  = true;
 
     /**
      * Creates a new instance.  Client should 
@@ -162,22 +161,12 @@ public class ScarabLocalizationTool extends LocalizationTool
             }
             if (value == null)
             {
-                // Try to resolve from the LAST_RESORT Locale (en)
-                value = resolveKey(key, LAST_RESORT);
+                //Try to find default.<key> ??? (This seems to be wrong ...[Hussayn])
+                value = super.get(DEFAULT_SCOPE + '.', key);
                 if (value == null)
                 {
-                    //Try with the "Default"-Locale
-                    value = resolveKey(key, null);
-                    if (value == null)
-                    {
-                        //Try to find default.<key> ??? (This seems to be wrong ...[Hussayn])
-                        value = super.get(DEFAULT_SCOPE + '.', key);
-                        if (value == null)
-                        {
-                            // give up
-                            value = createMissingResourceValue(key);
-                        }
-                    }
+                    // give up
+                    value = createMissingResourceValue(key);
                 }
             }
         }
@@ -255,7 +244,7 @@ public class ScarabLocalizationTool extends LocalizationTool
      */
     public String format(String key, List args)
     {
-        Object[] array = (args==null) ? null: args.toArray();
+        Object[] array = (args == null) ? null : args.toArray();
         return format(key, array);
     }
 
@@ -304,28 +293,18 @@ public class ScarabLocalizationTool extends LocalizationTool
             }
             if (value == null)
             {
-                // Try to resolve from the LAST_RESORT Locale (en)
-                value = formatKey(key, args, LAST_RESORT);
-                if (value == null)
+                // try with the "Default"-Scope ??? This may be wrong (Hussayn)
+                String prefix = getPrefix(null);
+                setPrefix(DEFAULT_SCOPE + '.');
+                try
                 {
-                    // try with the "Default"-Locale
-                    value = formatKey(key, args, null);
-                    if (value == null)
-                    {
-                        // try with the "Default"-Scope ??? This may be wrong (Hussayn)
-                        String prefix = getPrefix(null);
-                        setPrefix(DEFAULT_SCOPE + '.');
-                        try
-                        {
-                            value = super.format(key, args);
-                        }
-                        catch (MissingResourceException itsNotThere)
-                        {
-                            value = createMissingResourceValue(key);
-                        }
-                        setPrefix(prefix);
-                    }
+                    value = super.format(key, args);
                 }
+                catch (MissingResourceException itsNotThere)
+                {
+                    value = createMissingResourceValue(key);
+                }
+                setPrefix(prefix);
             }
         }
         catch (Exception e)
@@ -377,13 +356,17 @@ public class ScarabLocalizationTool extends LocalizationTool
         String value = null;
         if (properties != null)
         {
-            String templateName = (useDefaultScope || data == null) ? 
-            DEFAULT_SCOPE : data.getTarget().replace(',', '/');
+            String templateName = (useDefaultScope || data == null) ? DEFAULT_SCOPE
+                    : data.getTarget().replace(',', '/');
             String propName = "template." + templateName + '.' + property;
-            String l10nKey = properties.getString(propName);
+
+            String l10nKey = properties.getString(propName, null);
             Log.get().debug(
-            "ScarabLocalizationTool: Property name '" + propName + 
-            "' -> localization key '" + l10nKey + '\'');
+                    "ScarabLocalizationTool: Property name '" + propName
+                            + "' -> localization key '"
+                            + l10nKey
+                            + '\'');
+
             if (l10nKey != null)
             {
                 String prefix = getPrefix(templateName + '.');
@@ -392,8 +375,9 @@ public class ScarabLocalizationTool extends LocalizationTool
                     l10nKey = prefix + l10nKey;
                 }
                 value = get(l10nKey);
-                Log.get().debug("ScarabLocalizationTool: Localized value is '" + 
-                value + '\'');
+                Log.get().debug( "ScarabLocalizationTool: Localized value is '"
+                      + value
+                      + '\'');
             }
         }
         return value;
@@ -430,16 +414,27 @@ public class ScarabLocalizationTool extends LocalizationTool
 
     /**
      * @deprecated. Gets the current locale.
+     * Please use {@link #getPrimaryLocale()} instead.
      * This method is obsolete 
      * and should be completely removed from this class.
-     * Not sure about the implications though.[HD]
-     * @return The locale currently in use.
+     * @return The locale of highest preferrence.
      */
     public Locale getLocale()
     {
-        return (locales == null || locales.size()==0) 
-        ?  super.getLocale()
-        : (Locale) locales.iterator().next();
+        return getPrimaryLocale();
+    }
+
+    /**
+     * Gets the primary locale.
+     * The primary locale is the locale which will be choosen
+     * at first from the set of Locales which are accepted by the user
+     * as defined on the Browser language preferrences.
+     * @return The primary locale currently in use.
+     */
+    public Locale getPrimaryLocale()
+    {
+        return (locales == null || locales.size() == 0) ? super.getLocale()
+                : (Locale) locales.iterator().next();
     }
 
     // ---- ApplicationTool implementation ----------------------------------
@@ -455,7 +450,7 @@ public class ScarabLocalizationTool extends LocalizationTool
         if (obj instanceof RunData)
         {
             data = (RunData) obj;
-            locales = getBrowserLocales();
+            locales = getPreferredLocales();
         }
         else if (obj instanceof Locale)
         {
@@ -487,12 +482,15 @@ public class ScarabLocalizationTool extends LocalizationTool
 
     /**
      * Utility method: Get a Collection of possible locales 
-     * to be used as specified in the Browser settings.
+     * to be used as specified in the Browser settings. Adds
+     * the DEFAULT_LOCALE as last resort to the list.
+     * Additionally adds a final null to the list. So be prepared
+     * to see a null pointer when you iterate through the list.
      * @return
      */
-    private Collection getBrowserLocales()
+    private List getPreferredLocales()
     {
-        Collection result = new ArrayList(3);
+        List result = new ArrayList(3);
         String localeAsString = getBrowserLocalesAsString();
         LocaleTokenizer localeTokenizer = new LocaleTokenizer(localeAsString);
         while (localeTokenizer.hasNext())
@@ -504,6 +502,8 @@ public class ScarabLocalizationTool extends LocalizationTool
                 result.add(finalLocale);
             }
         }
+        result.add(DEFAULT_LOCALE);
+        result.add(null);
         return result;
     }
 
@@ -512,12 +512,12 @@ public class ScarabLocalizationTool extends LocalizationTool
      * Contains a map of Locales which support given
      * browserLocales.
      */
-    static private Map supportedLocaleMap = new Hashtable();
+    static private Map supportedLocaleMap   = new HashMap();
     /**
      * Contains a map of Locales which do NOT support given
      * browserLocales.
      */
-    static private Map unsupportedLocaleMap = new Hashtable();
+    static private Map unsupportedLocaleMap = new HashMap();
 
     /**
      * Return the locale, which will be used to resolve
@@ -536,8 +536,7 @@ public class ScarabLocalizationTool extends LocalizationTool
             if (unsupportedLocaleMap.get(browserLocale) == null)
             {
                 ResourceBundle bundle = ResourceBundle.getBundle(
-                        getBundleName(), 
-                        browserLocale);
+                        getBundleName(), browserLocale);
                 if (bundle != null)
                 {
                     Locale finalLocale = bundle.getLocale();
@@ -555,12 +554,10 @@ public class ScarabLocalizationTool extends LocalizationTool
                 }
                 else
                 {
-                    Log.get().error(
-                    "ScarabLocalizationTool: ResourceBundle '"
-                    + getBundleName() + 
-                    "' -> not resolved for Locale '"
-                    + browserLocale
-                    + "'. This should never happen.");
+                    Log.get().error("ScarabLocalizationTool: ResourceBundle '" + getBundleName()
+                            + "' -> not resolved for Locale '"
+                            + browserLocale
+                            + "'. This should never happen.");
                 }
             }
         }
@@ -597,8 +594,7 @@ public class ScarabLocalizationTool extends LocalizationTool
         String value;
         try
         {
-            value = Localization
-            .getString(getBundleName(), locale, key);
+            value = Localization.getString(getBundleName(), locale, key);
         }
         catch (MissingResourceException noKey)
         {
@@ -623,8 +619,7 @@ public class ScarabLocalizationTool extends LocalizationTool
         String value;
         try
         {
-            value = Localization.format(getBundleName(), locale, key, 
-            args);
+            value = Localization.format(getBundleName(), locale, key, args);
         }
         catch (MissingResourceException noKey)
         {
@@ -661,12 +656,12 @@ public class ScarabLocalizationTool extends LocalizationTool
                 // the number to a String will cause error
                 if (obj != null)
                 {
-                 if(! (     (obj instanceof SkipFiltering)
-                         || (obj instanceof Number))
-                 )
-                 {
-                    obj = ReferenceInsertionFilter.filter(obj.toString());
-                 }
+                    if (!(    (obj instanceof SkipFiltering) 
+                           || (obj instanceof Number))
+                    )
+                    {
+                        obj = ReferenceInsertionFilter.filter(obj.toString());
+                    }
                 }
                 result[i] = obj;
             }
@@ -687,11 +682,13 @@ public class ScarabLocalizationTool extends LocalizationTool
     private String createMissingResourceValue(String key)
     {
         String value;
-        value = "ERROR! Missing resource (" + key + ")("
-        + Locale.getDefault() + ")";
+        value = "ERROR! Missing resource ("
+                + key
+                + ")("
+                + Locale.getDefault()
+                + ")";
         Log.get().error(
-        "ScarabLocalizationTool: ERROR! Missing resource: "
-        + key);
+                "ScarabLocalizationTool: ERROR! Missing resource: " + key);
         return value;
     }
 
@@ -706,9 +703,8 @@ public class ScarabLocalizationTool extends LocalizationTool
     {
         String value;
         value = "ERROR! Bad resource (" + key + ")";
-        Log.get().error(
-        "ScarabLocalizationTool: ERROR! Bad resource: " + key
-        + ".  See log for details.", e);
+        Log.get().error( "ScarabLocalizationTool: ERROR! Bad resource: " + key
+                + ".  See log for details.", e);
         return value;
     }
 }
