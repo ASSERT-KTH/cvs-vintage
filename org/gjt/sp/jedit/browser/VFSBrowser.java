@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.34 2002/02/12 04:13:52 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.35 2002/02/23 05:26:12 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent
 {
@@ -1142,7 +1142,7 @@ public class VFSBrowser extends JPanel implements EBComponent
 			CommandsMenuButton.this.addMouseListener(new MouseHandler());
 		} //}}}
 
-		JPopupMenu popup;
+		BrowserCommandsMenu popup;
 
 		//{{{ MouseHandler class
 		class MouseHandler extends MouseAdapter
@@ -1151,6 +1151,9 @@ public class VFSBrowser extends JPanel implements EBComponent
 			{
 				if(!popup.isVisible())
 				{
+					// Update 'show hidden files' check box
+					popup.update();
+
 					GUIUtilities.showPopupMenu(
 						popup,CommandsMenuButton.this,0,
 						CommandsMenuButton.this.getHeight());

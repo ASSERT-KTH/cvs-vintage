@@ -35,7 +35,7 @@ import org.gjt.sp.jedit.*;
 //}}}
 
 /**
- * @version $Id: BrowserCommandsMenu.java,v 1.7 2002/02/11 03:15:30 spestov Exp $
+ * @version $Id: BrowserCommandsMenu.java,v 1.8 2002/02/23 05:26:12 spestov Exp $
  * @author Slava Pestov and Jason Ginchereau
  */
 public class BrowserCommandsMenu extends JPopupMenu
@@ -115,7 +115,7 @@ public class BrowserCommandsMenu extends JPopupMenu
 
 		addSeparator();
 
-		JCheckBoxMenuItem showHiddenFiles = new JCheckBoxMenuItem(
+		showHiddenFiles = new JCheckBoxMenuItem(
 			jEdit.getProperty("vfs.browser.commands.show-hidden-files.label"));
 		showHiddenFiles.setActionCommand("show-hidden-files");
 		showHiddenFiles.setSelected(browser.getShowHiddenFiles());
@@ -123,10 +123,17 @@ public class BrowserCommandsMenu extends JPopupMenu
 		add(showHiddenFiles);
 	} //}}}
 
+	//{{{ update() method
+	public void update()
+	{
+		showHiddenFiles.setSelected(browser.getShowHiddenFiles());
+	} //}}}
+
 	//{{{ Private members
 	private VFSBrowser browser;
 	private VFS.DirectoryEntry file;
 	private VFS vfs;
+	private JCheckBoxMenuItem showHiddenFiles;
 
 	//{{{ createMenuItem() method
 	private JMenuItem createMenuItem(String name)

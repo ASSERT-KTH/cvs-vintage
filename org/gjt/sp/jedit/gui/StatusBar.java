@@ -49,7 +49,7 @@ import org.gjt.sp.util.*;
  * <li>And so on
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.21 2002/02/20 04:31:19 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.22 2002/02/23 05:26:12 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -156,13 +156,9 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		// UI hack because BoxLayout does not give all components the
 		// same height
 		dim = memory.getPreferredSize();
-		dim.width += fm.stringWidth("99Mb/999Mb");
+		dim.width += fm.stringWidth("999Mb/999Mb");
 		dim.height = multiSelect.getPreferredSize().height;
 		memory.setPreferredSize(dim);
-
-		// Leave some room for OS X grow box
-		if(OperatingSystem.isMacOS())
-			box.add(Box.createHorizontalStrut(18));
 
 		add(BorderLayout.EAST,box);
 	} //}}}
