@@ -70,7 +70,7 @@ public class SecurityActions
    {
       PrincipalInfoAction PRIVILEGED = new PrincipalInfoAction()
       {
-         public void set(final Principal principal, Object credential)
+         public void set(final Principal principal, final Object credential)
          {
             AccessController.doPrivileged(
                new PrivilegedAction()
@@ -78,7 +78,7 @@ public class SecurityActions
                   public Object run()
                   {
                      SecurityAssociation.setPrincipal(principal);
-                     SecurityAssociation.setCredential(principal);
+                     SecurityAssociation.setCredential(credential);
                      return null;
                   }
                }
