@@ -67,7 +67,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- * @version $Revision: 1.18 $ 
+ * @version $Revision: 1.19 $ 
  */
 public class EJBDeployer
    extends SubDeployerSupport
@@ -346,7 +346,7 @@ public class EJBDeployer
       }
       catch( Throwable t )
       {
-         log.error("Verfiy failed", t );
+         log.error("Verify failed", t );
       }
       
       // unset verifier log
