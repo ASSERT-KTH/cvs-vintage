@@ -1,4 +1,4 @@
-// $Id: GeneratorJava.java,v 1.96 2004/07/17 13:10:25 kataka Exp $
+// $Id: GeneratorJava.java,v 1.97 2004/07/17 16:34:17 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1584,9 +1584,9 @@ public class GeneratorJava
         if (generalizations == null)
             return "";
         Collection classes = new ArrayList();
-        Iterator enum = generalizations.iterator();
-        while (enum.hasNext()) {
-            Object generalization = /*(MGeneralization)*/ enum.next();
+        Iterator it = generalizations.iterator();
+        while (it.hasNext()) {
+            Object generalization = /*(MGeneralization)*/ it.next();
             Object generalizableElement = ModelFacade.getParent(generalization);
             // assert ge != null
             if (generalizableElement != null)
