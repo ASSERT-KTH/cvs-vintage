@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.4 2003/04/30 22:23:08 alexb Exp $
+// $Id: ClassfileImport.java,v 1.5 2003/05/01 14:21:48 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,31 +24,33 @@
 
 package org.argouml.uml.reveng.classfile;
 
-import org.argouml.kernel.*;
-import org.argouml.application.api.*;
-import org.argouml.uml.diagram.ui.*;
-import org.argouml.uml.diagram.static_structure.layout.*;
-import org.argouml.uml.reveng.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
+import org.argouml.application.api.Argo;
+import org.argouml.kernel.Project;
+import org.argouml.uml.diagram.static_structure.layout.ClassdiagramLayouter;
+import org.argouml.uml.diagram.ui.UMLDiagram;
+import org.argouml.uml.reveng.DiagramInterface;
+import org.argouml.uml.reveng.FileImportSupport;
+import org.argouml.uml.reveng.Import;
 import org.argouml.util.FileFilters;
 import org.argouml.util.SuffixFilter;
-import org.argouml.util.ClassFileFilter;
 
-import org.tigris.gef.base.*;
-
-import ru.novosoft.uml.model_management.*;
-
-import java.io.*;
-import java.awt.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
-import javax.swing.*;
+import ru.novosoft.uml.model_management.MModel;
 
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.4 $
- * $Date: 2003/04/30 22:23:08 $
+ * $Revision: 1.5 $
+ * $Date: 2003/05/01 14:21:48 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */

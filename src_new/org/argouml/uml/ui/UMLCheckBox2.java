@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.8 2003/01/11 07:19:35 linus Exp $
+// $Id: UMLCheckBox2.java,v 1.9 2003/05/01 14:19:03 kataka Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -124,13 +124,14 @@ public abstract class UMLCheckBox2
         if (_target instanceof MBase) {
             UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
         }
-        _target = target;
-        if (_target instanceof MBase) {
+       
+        if (target instanceof MBase) {
+            _target = target;
              // UmlModelEventPump.getPump().removeModelEventListener(this, (MBase)_target, _propertySetName);
              UmlModelEventPump.getPump().addModelEventListener(this, (MBase)_target, _propertySetName);
-        }
-        if (_target != null)
             buildModel();
+        }
+            
     }
     
     /**

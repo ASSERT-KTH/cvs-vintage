@@ -47,7 +47,7 @@ import javax.swing.SwingUtilities;
  * <p>Maybe in the future the bottleneck will disappear, then this class
  * can be simplefied back to its original implementation.
  *
- * $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.6 2003/04/08 20:23:16 alexb Exp $
+ * $Id: UMLModelElementNamespaceComboBoxModel.java,v 1.7 2003/05/01 14:19:03 kataka Exp $
  *
  * @since Oct 10, 2002
  * @author jaap.branderhorst@xs4all.nl, alexb
@@ -137,19 +137,25 @@ public class UMLModelElementNamespaceComboBoxModel extends UMLComboBoxModel2 {
             (MBase)_target,
             _propertySetName);
         }
-        _target = target;
-        if (_target instanceof MBase) {
+        
+        if (target instanceof MBase) {
+            _target = target;
             UmlModelEventPump.getPump().addModelEventListener(this,
             (MBase)_target,
             _propertySetName);
+        } else {
+            target = null;
         }
         _fireListEvents = false;
         removeAllElements();
         _fireListEvents = true;
-        buildModelList();
+        if (target != null) {
+            buildModelList();
+            // calculate the new namespaces.
+            theBuilderThread.build();
+        }
         
-        // calculate the new namespaces.
-        theBuilderThread.build();
+       
     }
     
     /**

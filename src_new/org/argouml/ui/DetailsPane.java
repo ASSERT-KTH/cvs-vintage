@@ -69,7 +69,7 @@ import org.argouml.util.ConfigLoader;
  * There are requests to have the cursor automatically
  * be set to the primary field.
  *
- * $Id: DetailsPane.java,v 1.23 2003/05/01 08:49:39 kataka Exp $
+ * $Id: DetailsPane.java,v 1.24 2003/05/01 14:19:02 kataka Exp $
  */
 public class DetailsPane
     extends JPanel
@@ -213,7 +213,8 @@ public class DetailsPane
                 Component tab = _tabs.getComponentAt(i);
                 if (tab instanceof TabTarget) {
                     if (((TabTarget) tab).shouldBeEnabled(target)) {
-                        ((TabTarget) tab).setTarget(target);
+                        if (!(tab instanceof TargetListener))
+                            ((TabTarget) tab).setTarget(target);
                         _tabs.setSelectedIndex(i);
                         tabSelected = true;
                         _lastNonNullTab = i;
@@ -419,13 +420,14 @@ public class DetailsPane
         // update the tab
 
         Object target = TargetManager.getInstance().getTarget();
-
+        
+        if (!(sel instanceof TargetListener)) {
         if (sel instanceof TabToDoTarget)
              ((TabToDoTarget) sel).refresh();
 
         else if (sel instanceof TabTarget)
              ((TabTarget) sel).setTarget(target);
-
+        }
 
         if (target != null
             && ModelFacade.isABase(target)
