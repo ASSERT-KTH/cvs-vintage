@@ -1,7 +1,7 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
 @author <a href="mailto:jon@collab.net">Jon Stevens</a>
-@version $Id: ManageUserSearch.vm,v 1.4 2001/11/27 18:48:12 dr Exp $
+@version $Id: ManageUserSearch.vm,v 1.5 2001/12/12 17:01:15 dr Exp $
 *#
 
 $page.setTitle("User Search")
@@ -64,8 +64,11 @@ Order by: <select name="orderbyField">
 </table>
 
 <p>
-Max results per page: 
-<input type="text" name="resultsPerPage" value="$resultsPerPage" size="4" maxlength="2">
+Results per page: 
+<input type="radio" name="resultsPerPage" value="25" #if ($resultsPerPage == 25) checked #end> 25 &nbsp;
+<input type="radio" name="resultsPerPage" value="50" #if ($resultsPerPage == 50) checked #end> 50 &nbsp;
+<input type="radio" name="resultsPerPage" value="75" #if ($resultsPerPage == 75) checked #end> 75 &nbsp;
+<input type="radio" name="resultsPerPage" value="100" #if ($resultsPerPage == 100) checked #end> 100
 </p>
 
 <div class="functnbar2">
@@ -135,7 +138,7 @@ Max results per page:
 
 #foreach ($user in $userList)
   #indexedRows ($velocityCount)
-   <td width="10"><input type="radio" name="username" value="$!user.UserName"></td>
+   <td width="10"><center><input type="radio" name="username" value="$!user.UserName"></center></td>
    <td>$!user.UserName</td>
    <td>$!user.FirstName $!user.LastName</td>
    <td><a href=mailto:$!user.Email>$!user.Email</a>
