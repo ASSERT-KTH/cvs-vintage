@@ -101,6 +101,7 @@ import org.apache.tomcat.util.SimpleClassLoader;
  */
 public class Main {
     String installDir;
+    String libBase;
     String homeDir;
     static final String DEFAULT_CONFIG="conf/server.xml";
     boolean doStop=false;
@@ -133,9 +134,52 @@ public class Main {
     void log( String s ) {
 	System.out.println("TomcatStartup: " + s );
     }
+
+    // -------------------- Guess tomcat.home --------------------
+
+    public String guessTomcatHome() {
+	// If -Dtomcat.home is used - Great
+	String h=System.getProperty( "tomcat.home" );
+	if( h!=null ) return h;
+
+	// Find the directory where tomcat.jar is located
+	
+	String cpath=System.getProperty( "java.class.path");
+	//	log( "CP=" + cpath );
+	String pathSep=System.getProperty( "path.separator");
+	//	log( "PS=" + pathSep);
+	StringTokenizer st=new StringTokenizer( cpath, pathSep );
+	while( st.hasMoreTokens() ) {
+	    String path=st.nextToken();
+	    //	    log( "path " + path );
+	    if( path.endsWith( "tomcat.jar" ) ) {
+		h=path.substring( 0, path.length() - "tomcat.jar".length() );
+		//		log( "Path1 " + h );
+		try {
+		    File f=new File( h );
+		    File f1=new File ( h, "..");
+		    //    log( "Path2 " + f1 );
+		    h = f1.getCanonicalPath();
+		    //log( "Guessed " + h + " from " + path );
+		    System.setProperty( "tomcat.home", h );
+		    return h;
+		} catch( Exception ex ) {
+		    ex.printStackTrace();
+		}
+	    }
+	    
+	}
+
+	return h;
+
+
+
+
+
+    }
     
-    // -------------------- Command-line args processing --------------------
-    String libBase;
+    
+    // -------------------- Utils --------------------
     
     public void setLibDir( String base ) {
         try {
@@ -162,21 +206,10 @@ public class Main {
         }
     }
 	
-
-    public String getPackageDir() {
-	String tcHome=System.getProperty("tomcat.home");
-	// XXX process args, find if -install is specified
-	
-	if( tcHome==null ) {
-	    log( "No tomcat.home specified, can't run");
-	    return null;
-	}
-	return tcHome;
-    }
-    
     public String getLibDir() {
 	if( libBase!=null ) return libBase;
-	String pkg=getPackageDir();
+
+	String pkg=guessTomcatHome();
 	if( pkg!=null ) setLibDir( pkg + "/lib");
 	else setLibDir("./lib");
 	return libBase;
@@ -204,8 +237,6 @@ public class Main {
     void execute( String args[] ) throws Exception {
 
 	try {
-
-
 	    int jarCount=cpComp.length;
 	    URL urls[]=new URL[jarCount + 1 ];
 	    for( int i=0; i< jarCount ; i++ ) {
@@ -280,6 +311,7 @@ public class Main {
 	return; 
     }
 
+    // -------------------- Command-line args processing --------------------
     /** Read command line arguments and set properties in proxy,
 	using ant-like patterns
     */
