@@ -15,6 +15,7 @@
 //All Rights Reserved.
 package org.columba.core.help;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.net.URL;
 import java.util.Locale;
@@ -111,6 +112,28 @@ public class HelpManager {
 		jh.getContentViewer().setFont(font);
 		jh.getCurrentNavigator().setFont(font);
 
+	}
+
+	/**
+	 * @return
+	 */
+	public static HelpBroker getHelpBroker() {
+		return hb;
+	}
+	
+	/**
+	 * 
+	 * Associate button with topic ID.
+	 * 
+	 * topic ID's are listed in jhelpmap.jhm in package lib/usermanual.jar
+	 * 
+	 * 
+	 * @param c			component 
+	 * @param helpID	helpID 
+	 */
+	public static void enableHelpOnButton(Component c, String helpID)
+	{
+		getHelpBroker().enableHelpOnButton(c, helpID, hs);
 	}
 
 }

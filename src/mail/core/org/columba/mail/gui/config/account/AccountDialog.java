@@ -21,8 +21,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -36,12 +34,12 @@ import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.CTabbedPane;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.IdentityItem;
 import org.columba.mail.config.SmtpItem;
 import org.columba.mail.folder.imap.IMAPRootFolder;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.pop3.POP3ServerController;
 import org.columba.mail.util.MailResourceLoader;
 
@@ -228,10 +226,10 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 		okButton.setDefaultCapable(true);
 		dialog.getRootPane().setDefaultButton(okButton);
 
-		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
-		//$NON-NLS-1$ //$NON-NLS-2$
+		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));		
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");
+
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(1, 3, 5, 0));
@@ -287,12 +285,15 @@ public class AccountDialog implements ActionListener, ListSelectionListener {
 			{
 			dialog.setVisible(false);
 		} else if (action.equals("HELP")) {
+			/*
 			URLController c = new URLController();
 			try {
 				c.open(
 					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
 			} catch (MalformedURLException mue) {
 			}
+			*/
+			
 		}
 
 	}

@@ -21,8 +21,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -42,9 +40,9 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.help.HelpManager;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterRule;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class FilterDialog implements ActionListener {
@@ -213,8 +211,8 @@ public class FilterDialog implements ActionListener {
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "organizing_and_managing_your_email");	
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -278,34 +276,11 @@ public class FilterDialog implements ActionListener {
 			criteriaList.add();
 
 		}
-		/*
-		else if ( action.equals("REMOVE_CRITERION") )
-		{
-		      //System.out.println( "remove" );
 		
-		    criteriaList.remove();
-		
-		}
-		*/
 		else if (action.equals("ADD_ACTION")) {
 			//System.out.println( "add" );
 			actionList.add();
 
-		} else if (action.equals("HELP")) {
-			URLController c = new URLController();
-			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpwiki/index.php/User%20manual#x34.x2e.5"));
-			} catch (MalformedURLException mue) {
-			}
-		}
-		/*
-		else if ( action.equals("REMOVE_ACTION") )
-		{
-		      //System.out.println( "remove" );
-		    actionList.remove();
-		
-		}
-		*/
+		} 
 	}
 }

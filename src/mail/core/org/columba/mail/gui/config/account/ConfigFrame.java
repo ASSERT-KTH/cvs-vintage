@@ -26,8 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,6 +47,7 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
 import org.columba.core.gui.util.DialogStore;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.config.AccountList;
@@ -56,7 +55,6 @@ import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
 import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
 public class ConfigFrame
@@ -301,10 +299,11 @@ public class ConfigFrame
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
 		JButton helpButton =
-			new JButton(MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+			new JButton(MailResourceLoader.getString("global", "help"));		
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(helpButton, "configuring_columba");		
 		buttonPanel.add(helpButton);
+		
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		dialog.getContentPane().add(bottomPanel, BorderLayout.SOUTH);
 		dialog.getRootPane().setDefaultButton(closeButton);
@@ -383,13 +382,6 @@ public class ConfigFrame
 			{
 			showAccountDialog();
 			listView.update();
-		} else if (action.equals("HELP")) {
-			URLController c = new URLController();
-			try {
-				c.open(
-					new URL("http://columba.sourceforge.net/phpwiki/index.php/Configure%20Columba"));
-			} catch (MalformedURLException mue) {
-			}
-		}
+		} 
 	}
 }

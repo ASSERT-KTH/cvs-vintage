@@ -26,8 +26,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -49,14 +47,15 @@ import javax.swing.event.ListSelectionListener;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.config.Config;
+import org.columba.core.help.HelpManager;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterList;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.gui.util.URLController;
 import org.columba.mail.util.MailResourceLoader;
 
-public class ConfigFrame extends JDialog
+public class ConfigFrame
+	extends JDialog
 	implements ListSelectionListener, ActionListener {
 
 	/*
@@ -86,7 +85,13 @@ public class ConfigFrame extends JDialog
 
 	JTextField nameTextField = new JTextField();
 
-	JButton addButton, removeButton, editButton, enableButton, disableButton, moveupButton, movedownButton;
+	JButton addButton,
+		removeButton,
+		editButton,
+		enableButton,
+		disableButton,
+		moveupButton,
+		movedownButton;
 
 	BorderLayout borderLayout3 = new BorderLayout();
 	GridLayout gridLayout1 = new GridLayout();
@@ -123,13 +128,20 @@ public class ConfigFrame extends JDialog
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
 		getContentPane().add(mainPanel);
 
-                addButton = new JButton(MailResourceLoader.getString("dialog", "filter", "add_filter"));
+		addButton =
+			new JButton(
+				MailResourceLoader.getString("dialog", "filter", "add_filter"));
 		addButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "add_filter"));
 		addButton.setActionCommand("ADD");
 		addButton.addActionListener(this);
 
-		removeButton = new JButton(MailResourceLoader.getString("dialog", "filter", "remove_filter"));
+		removeButton =
+			new JButton(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"remove_filter"));
 		removeButton.setMnemonic(
 			MailResourceLoader.getMnemonic(
 				"dialog",
@@ -139,7 +151,12 @@ public class ConfigFrame extends JDialog
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(this);
 
-		editButton = new JButton(MailResourceLoader.getString("dialog", "filter", "edit_filter"));
+		editButton =
+			new JButton(
+				MailResourceLoader.getString(
+					"dialog",
+					"filter",
+					"edit_filter"));
 		editButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "edit_filter"));
 		editButton.setActionCommand("EDIT");
@@ -156,14 +173,18 @@ public class ConfigFrame extends JDialog
 		disableButton.addActionListener( this );
 		*/
 
-		moveupButton = new JButton(MailResourceLoader.getString("dialog", "filter", "moveup"));
+		moveupButton =
+			new JButton(
+				MailResourceLoader.getString("dialog", "filter", "moveup"));
 		moveupButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "moveup"));
 		moveupButton.setActionCommand("MOVEUP");
 		moveupButton.setEnabled(false);
 		moveupButton.addActionListener(this);
 
-		movedownButton = new JButton(MailResourceLoader.getString("dialog", "filter", "movedown"));
+		movedownButton =
+			new JButton(
+				MailResourceLoader.getString("dialog", "filter", "movedown"));
 		movedownButton.setMnemonic(
 			MailResourceLoader.getMnemonic("dialog", "filter", "movedown"));
 		movedownButton.setActionCommand("MOVEDOWN");
@@ -286,14 +307,18 @@ public class ConfigFrame extends JDialog
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 0));
-                buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
-		JButton closeButton = new JButton(MailResourceLoader.getString("global", "close"));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 12, 11, 11));
+		JButton closeButton =
+			new JButton(MailResourceLoader.getString("global", "close"));
 		closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
 		closeButton.addActionListener(this);
 		buttonPanel.add(closeButton);
-		JButton helpButton = new JButton(MailResourceLoader.getString("global", "help"));
-		helpButton.setActionCommand("HELP");
-		helpButton.addActionListener(this);
+		JButton helpButton =
+			new JButton(MailResourceLoader.getString("global", "help"));
+		// associate with JavaHelp
+		HelpManager.enableHelpOnButton(
+			helpButton,
+			"organizing_and_managing_your_email");
 		buttonPanel.add(helpButton);
 		bottomPanel.add(buttonPanel, BorderLayout.EAST);
 		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
@@ -345,7 +370,7 @@ public class ConfigFrame extends JDialog
 	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-                if (action.equals("CLOSE")) {
+		if (action.equals("CLOSE")) {
 			// FIXME
 			//Config.save();
 
@@ -374,11 +399,6 @@ public class ConfigFrame extends JDialog
 			showFilterDialog();
 
 			listView.update();
-		} else if (action.equals("HELP")) {
-			URLController c = new URLController();
-			try {
-				c.open(new URL("http://columba.sourceforge.net/phpwiki/index.php/Using%20Columba#x34.x2e.5"));
-			} catch (MalformedURLException mue) {}
 		}
 	}
 }
