@@ -56,9 +56,9 @@
   
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
   <tr>
-  <th nowrap="nowrap"></th>
-  <th>#sort ("name" "Template name")
-  <th>#sort ("desc" "Template description")</th>
+  <th nowrap="nowrap">Select</th>
+  <th>#sort ("name" "Name")
+  <th>#sort ("desc" "Description")</th>
   <th>#sort ("avail" "Availability")</th>
   <th>#sort ("user" "Author")</th>
   </tr>

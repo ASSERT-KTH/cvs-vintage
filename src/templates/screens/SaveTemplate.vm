@@ -30,19 +30,19 @@
 
 #SaveTemplateBar("")
 
-<h3>Template details</h3>
+<h3>Template information</h3>
 
 <div class="axial">
 <table border="0" cellspacing="2" cellpadding="3">
 <tr>
-  <th>Template name</th>
+  <th>Name</th>
   <td>
   <input type="text" size="25" value="$!templateGroup.Name" name="$templateGroup.Name.Key" />
   #fieldErrorMsg($templateGroup.Name "")
   </td>
 </tr>
 <tr>
-  <th>Template description</th>
+  <th>Description</th>
   <td>
   #textAreaMedium("$templateGroup.Description.Key" $templateGroup.Description)
   </td>
