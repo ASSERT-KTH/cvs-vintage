@@ -24,7 +24,7 @@
 #end
 
 
-#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm"))
+#if ($link.isAllowed("admin,ManageArtifactTypes.vm") || $link.isAllowed("admin,ManageModules.vm") || $link.isAllowed("admin,XMLExportSelect.vm"))
   #if ($adminMenu.equals("3"))
     <div><small><strong>Modules</strong></small>
     $renderer.render("navigations", "ModuleAdmin.vm")
