@@ -69,7 +69,7 @@ import org.tigris.scarab.screens.SelectModule;
  * showing up in the log files.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ReferenceInsertionFilter.java,v 1.13 2002/10/30 00:14:26 jmcnally Exp $
+ * @version $Id: ReferenceInsertionFilter.java,v 1.14 2002/11/07 00:16:52 jmcnally Exp $
  */
 public class ReferenceInsertionFilter
     implements ReferenceInsertionEventHandler, NullSetEventHandler
@@ -110,11 +110,8 @@ public class ReferenceInsertionFilter
                 result = filter((String)value);
             }
         }
-        else if (
-                // don't filter links!
-                ! (value instanceof ScarabLink) &&
-                ! (value instanceof SelectModule.ModuleSwitchingLink)
-                )
+        // don't filter links and some other known to be safe elements
+        else if ( !(value instanceof SkipFiltering) )
         {
             // We convert the object to a string and output the result
             result = filter(value.toString());

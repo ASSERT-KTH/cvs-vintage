@@ -117,6 +117,8 @@ import org.tigris.scarab.tools.SecurityAdminTool;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;  
+import org.tigris.scarab.util.SnippetRenderer;  
+import org.tigris.scarab.util.SimpleSkipFiltering;  
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.SearchIndex;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
@@ -147,7 +149,7 @@ public class ScarabRequestTool
     /**
      * The <code>Alert!</code> message for this request.
      */
-    private String alert = null;
+    private Object alert = null;
 
     /**
      * A Attribute object for use within the Scarab API.
@@ -224,9 +226,9 @@ public class ScarabRequestTool
     private int nextPage = 0;
 
     /* messages usually set in actions */
-    private String confirmMessage;
-    private String infoMessage;
-    private String alertMessage;
+    private Object confirmMessage;
+    private Object infoMessage;
+    private Object alertMessage;
 
     /** The time zone that will be used when formatting dates */
     private final TimeZone timezone;
@@ -286,7 +288,7 @@ public class ScarabRequestTool
      *
      * @param message The alert message to set.
      */
-    public void setAlert(String message)
+    public void setAlert(Object message)
     {
         this.alert = message;
     }
@@ -296,7 +298,7 @@ public class ScarabRequestTool
      *
      * @return The alert message.
      */
-    public String getAlert()
+    public Object getAlert()
     {
         return alert;
     }
@@ -1340,6 +1342,7 @@ try{
         throws Exception
     {
         List issues = null;
+        String invalidIds = null; 
         if (issueIds == null || issueIds.isEmpty()) 
         {
             issues = Collections.EMPTY_LIST;
@@ -1352,8 +1355,26 @@ try{
                 Iterator i = issueIds.iterator();
                 while (i.hasNext()) 
                 {
-                    issues.add(getIssue((String)i.next()));
-                }            
+                    String id = (String)i.next();
+                    Issue issue = getIssue(id);
+                    if (issue == null)
+                    {
+                        if (invalidIds == null) 
+                        {
+                            invalidIds = id;
+                        }
+                        else 
+                        {
+                            invalidIds += " " + id;
+                        }                        
+                    }
+                    else
+                    {
+                        issues.add(issue);   
+                    } 
+                }
+                setAlertMessage( getLocalizationTool()
+                                 .format("SomeIssueIdsNotValid", invalidIds));
             }
             else if (issueIds.get(0) instanceof NumberKey)
             {
@@ -1361,7 +1382,16 @@ try{
                 Iterator i = issueIds.iterator();
                 while (i.hasNext()) 
                 {
-                    issues.add(IssueManager.getInstance((NumberKey)i.next()));
+                    Issue issue = IssueManager.getInstance((NumberKey)i.next());
+                    if (issue == null) 
+                    {
+                        setAlertMessage(getLocalizationTool()
+                                        .get("SomeIssuePKsNotValid"));
+                    }
+                    else 
+                    {
+                        issues.add(issue);   
+                    }                    
                 }
             }
             else 
@@ -1631,7 +1661,9 @@ try{
                 if (queryError.startsWith(SearchIndex.PARSE_ERROR)) 
                 {
                     Log.get().info(queryError);
-                    setAlertMessage(queryError);
+                    setAlertMessage( new SimpleSkipFiltering(
+                        l10n.format("QueryParserError", 
+                            new SnippetRenderer(data, "TextQueryHelp.vm")) ) );
                 }
                 else 
                 {
@@ -2233,18 +2265,28 @@ try{
     public List getUserAttributes(List issues)
         throws Exception
     {        
-        MITList mitList = MITListManager
-            .getInstanceFromIssueList(issues, (ScarabUser)data.getUser());
         List attributes = null;
-        if (mitList.isSingleModuleIssueType()) 
+        if (issues == null || issues.isEmpty()) 
         {
-            attributes = mitList.getModule()
-                .getUserAttributes(mitList.getIssueType());
+            attributes = Collections.EMPTY_LIST;
+            Log.get().warn("ScarabRequestTool.getUserAttributes issue list was"
+                     + (issues == null ? " null" : " empty")) ;
         }
         else 
         {
-            attributes = mitList.getCommonUserAttributes();
+            MITList mitList = MITListManager
+                .getInstanceFromIssueList(issues, (ScarabUser)data.getUser());
+            if (mitList.isSingleModuleIssueType()) 
+            {
+                attributes = mitList.getModule()
+                    .getUserAttributes(mitList.getIssueType());
+            }
+            else 
+            {
+                attributes = mitList.getCommonUserAttributes();
+            }    
         }
+        
         return attributes;
     }
 
@@ -2304,7 +2346,7 @@ try{
      * Get any confirmation message usually set in the action.
      * @return value of confirmMessage.
      */
-    public String getConfirmMessage() 
+    public Object getConfirmMessage() 
     {
         return confirmMessage;
     }
@@ -2313,7 +2355,7 @@ try{
      * Set confirmation message.
      * @param v  Value to assign to confirmMessage.
      */
-    public void setConfirmMessage(String  v) 
+    public void setConfirmMessage(Object  v) 
     {
         this.confirmMessage = v;
     }
@@ -2322,7 +2364,7 @@ try{
      * Get any informational message usually set in the action.
      * @return value of infoMessage.
      */
-    public String getInfoMessage() 
+    public Object getInfoMessage() 
     {
         return infoMessage;
     }
@@ -2331,7 +2373,7 @@ try{
      * Set informational message.
      * @param v  Value to assign to infoMessage.
      */
-    public void setInfoMessage(String  v) 
+    public void setInfoMessage(Object  v) 
     {
         this.infoMessage = v;
     }
@@ -2340,7 +2382,7 @@ try{
      * Get any alert message usually set in the action.
      * @return value of alertMessage.
      */
-    public String getAlertMessage() 
+    public Object getAlertMessage() 
     {
         return alertMessage;
     }
@@ -2349,7 +2391,7 @@ try{
      * Set alert message.
      * @param v  Value to assign to alertMessage.
      */
-    public void setAlertMessage(String  v) 
+    public void setAlertMessage(Object  v) 
     {
         this.alertMessage = v;
     }
@@ -2368,3 +2410,4 @@ try{
         refresh();
     }
 }
+

@@ -57,6 +57,7 @@ import org.apache.turbine.tool.LocalizationTool;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ReferenceInsertionFilter;
 import org.tigris.scarab.util.ScarabLink;
+import org.tigris.scarab.util.SkipFiltering;
 
 /**
  * Scarab-specific localiztion tool.  Uses the following property
@@ -222,8 +223,11 @@ public class ScarabLocalizationTool
         for (int i=0; i<args.length; i++) 
         {
             Object obj = args[i];
+            // we don't filter Number, because these are sometimes passed
+            // to message formatter in order to make a choice.  Converting
+            // the number to a String will cause error
             if (obj != null && 
-                !(obj instanceof ScarabLink) && 
+                !(obj instanceof SkipFiltering) && 
                 !(obj instanceof Number) 
                 ) 
             {

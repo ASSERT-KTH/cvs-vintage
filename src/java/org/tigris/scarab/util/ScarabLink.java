@@ -66,6 +66,7 @@ import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
+import org.tigris.scarab.util.SkipFiltering;
 
 /**
     This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
@@ -74,10 +75,10 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.55 2002/10/24 22:26:53 jon Exp $
+    @version $Id: ScarabLink.java,v 1.56 2002/11/07 00:16:52 jmcnally Exp $
 */
 public class ScarabLink extends TemplateLink
-                        implements InitableRecyclable
+    implements InitableRecyclable, SkipFiltering
 {
     private static final String TEMPLATE_KEY = "template";
     private RunData data;
