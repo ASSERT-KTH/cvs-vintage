@@ -1,4 +1,4 @@
-$Id: ATTRIBUTE_NOTES.txt,v 1.1 2001/08/31 06:59:16 jon Exp $
+$Id: ATTRIBUTE_NOTES.txt,v 1.2 2001/09/01 02:27:21 jon Exp $
 
 TODO: 
     Define Attribute Security:
@@ -72,6 +72,17 @@ this:
           MacOS             2
               MacOS 9       1
               MacOS X       2
+
+This can also be shown like this:
+
+        id  parent
+         1  0       Windows       1
+         2  1       Windows 95    1
+         3  1       Windows 98    2
+         4  1       Windows 2000  3
+         5  0       MacOS         2
+         6  5       MacOS 9       1
+         7  5       MacOS X       2
 
 The UI for entering an Issue does not show the Parent Option because we
 figure that a specific operating system choice is important with regards
