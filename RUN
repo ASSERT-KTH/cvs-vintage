@@ -1,13 +1,8 @@
 start with:
 
-try to use the run.sh script
+try to use the run.sh/run.bat script
 
 watch out: this script has to be made executable with the chmod u+x command...
 
-
-
-or try it manually:
-
-java org.columba.main.Main
 
 
