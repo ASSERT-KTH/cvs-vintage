@@ -1,11 +1,11 @@
 <div class="app" id="loginDONOTCHANGETHISID">
 
-<p>$l10n.NewUsers,
-  <strong>$link.setPage("Register.vm").setLabel("register here")</strong>.</p>
+<p>$l10n.IfYouAreNotRegistered
+  <strong>$link.setPage("Register.vm").setLabel("$l10n.CreateAnAccount")</strong>.</p>
 <p>$l10n.ForgotYourPassword
   <strong>$link.setPage("ForgotPassword.vm").setLabel("click here")</strong>.</p>
 
-<h3>$title</h3>
+<h3>$l10n.Login</h3>
 
 #set ($nextTemplate = $data.Parameters.getString($scarabG.Constant.NEXT_TEMPLATE, ""))
 
