@@ -4,7 +4,7 @@
 elements into a JBoss deployment. This version applies to the JBoss 3.2.x
 releases.
 
-$Id: jboss-web_4_0.dtd,v 1.10 2004/10/14 06:48:29 ejort Exp $
+$Id: jboss-web_4_0.dtd,v 1.11 2005/01/19 19:40:18 starksm Exp $
 
   <!DOCTYPE jboss-web PUBLIC
     "-//JBoss//DTD Web Application 2.4//EN"
@@ -18,7 +18,7 @@ $Id: jboss-web_4_0.dtd,v 1.10 2004/10/14 06:48:29 ejort Exp $
    virtual-host*, use-session-cookies?, replication-config?, resource-env-ref*,
    resource-ref*, security-role*, ejb-ref*, ejb-local-ref*, 
    message-destination-ref*, message-destination*, 
-   service-ref*, webservice-description*, depends*)>
+   service-ref*, webservice-description*, depends*, servlet*)>
 
 <!-- The class-loading element allows one to override the default class
 loading behavior of the web container. You can specify the
@@ -427,3 +427,26 @@ Example :
 
 -->
 <!ELEMENT wsdl-publish-location ( #PCDATA )>
+
+<!-- The servlet element specifies servlet specific bindings. Currently this
+is only the run-as principal identity.
+
+   Used in: jboss-web
+-->
+<!ELEMENT servlet (servlet-name, run-as-principal?)>
+
+<!-- The servlet-name maps from the web.xml servlet/servlet-name to the
+jboss-web/servlet/servlet-name.
+   Used in: servlet
+-->
+<!ELEMENT servlet-name ( #PCDATA )>
+
+<!--
+  The run-as-principal element specifies whether a specific run-as identity is
+  to be used. If there is a run-as role defined for a servlet, there can also
+  be a run-as-principal defined here. If you don't define a run-as principal
+  the callee will see ctx.getUserPrincipal() == 'anonymous'
+
+  Used in: servlet
+-->
+<!ELEMENT run-as-principal ( #PCDATA )>
