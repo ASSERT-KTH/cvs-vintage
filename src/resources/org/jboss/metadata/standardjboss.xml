@@ -16,17 +16,7 @@
 				<Optimized>False</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
-			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
-			  <MinimumCapacity>5</MinimumCapacity>
-			  <MaximumCapacity>200</MaximumCapacity>
-			  <cache-policy-conf>
-				<OveragerPeriod>300</OveragerPeriod>
-				<ResizerPeriod>600</ResizerPeriod>
-				<MaxBeanAge>300</MaxBeanAge>
-				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
-				<MinCacheMissPeriod>1</MinCacheMissPeriod>
-				<CacheLoadFactor>0.7</CacheLoadFactor>
-			  </cache-policy-conf>
+				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
 			</container-cache-conf>
 			<container-pool-conf>
 				<MaximumSize>100</MaximumSize>
@@ -99,17 +89,7 @@
 			<Optimized>False</Optimized>
 			</container-invoker-conf>
 			<container-cache-conf>
-			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
-			  <MinimumCapacity>5</MinimumCapacity>
-			  <MaximumCapacity>200</MaximumCapacity>
-			  <cache-policy-conf>
-				<OveragerPeriod>300</OveragerPeriod>
-				<ResizerPeriod>600</ResizerPeriod>
-				<MaxBeanAge>300</MaxBeanAge>
-				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
-				<MinCacheMissPeriod>1</MinCacheMissPeriod>
-				<CacheLoadFactor>0.8</CacheLoadFactor>
-			  </cache-policy-conf>
+				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
 			</container-cache-conf>
 		</container-configuration>
 				
@@ -136,19 +116,9 @@
 		 	<container-invoker-conf>
 		   		<Optimized>False</Optimized>
 		 	</container-invoker-conf>
-			 <container-cache-conf>
-			  <CachePolicy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</CachePolicy>
-			  <MinimumCapacity>5</MinimumCapacity>
-			  <MaximumCapacity>200</MaximumCapacity>
-			  <cache-policy-conf>
-				<OveragerPeriod>300</OveragerPeriod>
-				<ResizerPeriod>600</ResizerPeriod>
-				<MaxBeanAge>300</MaxBeanAge>
-				<MaxCacheMissPeriod>60</MaxCacheMissPeriod>
-				<MinCacheMissPeriod>1</MinCacheMissPeriod>
-				<CacheLoadFactor>0.7</CacheLoadFactor>
-			  </cache-policy-conf>
-			 </container-cache-conf>	 	
+			<container-cache-conf>
+				<cache-policy>org.jboss.ejb.plugins.NoPassivationCachePolicy</cache-policy>
+			</container-cache-conf>	 	
 			<container-pool-conf>
 		   	<MaximumSize>100</MaximumSize>
 		   	<MinimumSize>10</MinimumSize>
