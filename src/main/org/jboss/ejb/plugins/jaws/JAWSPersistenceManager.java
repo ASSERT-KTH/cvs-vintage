@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.7 $
+ *	@version $Revision: 1.8 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -112,6 +112,7 @@ public class JAWSPersistenceManager
    
    JawsEntity entity;
    String dbName;
+   String tableName;
    
    String createSql;
    String insertSql;
@@ -263,10 +264,12 @@ public class JAWSPersistenceManager
             con = getConnection();
             stmt = con.prepareStatement(createSql);
             stmt.executeQuery();
-            log.debug("Table "+entity.getTableName()+" created");
+            log.debug("Table "+tableName+" created");
          } catch (SQLException e)
          {
-            log.debug("Table "+entity.getTableName()+" exists");
+			// For debug only 
+			// e.printStackTrace();
+			log.debug("Table "+tableName+" exists");
          } finally
          {
             if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
@@ -293,10 +296,10 @@ public class JAWSPersistenceManager
             con = getConnection();
             stmt = con.prepareStatement(dropSql);
             stmt.executeUpdate();
-            log.debug("Table "+entity.getTableName()+" removed");
+            log.debug("Table "+tableName+" removed");
          } catch (SQLException e)
          {
-            log.debug("Table "+entity.getTableName()+" could not be removed");
+            log.debug("Table "+tableName+" could not be removed");
          } finally
          {
             if (rs != null) try { rs.close(); } catch (Exception e) { e.printStackTrace(); }
@@ -456,7 +459,7 @@ public class JAWSPersistenceManager
                String query = MessageFormat.format(f.getQuery(), args);
                
                // Construct SQL
-               String sql = "SELECT "+pkColumnList+(f.getOrder().equals("")?"":","+f.getOrder())+" FROM "+entity.getTableName()+" WHERE "+query;
+               String sql = "SELECT "+pkColumnList+(f.getOrder().equals("")?"":","+f.getOrder())+" FROM "+tableName+" WHERE "+query;
                if (!f.getOrder().equals(""))
                {
                   sql += " ORDER BY "+f.getOrder();
@@ -474,7 +477,7 @@ public class JAWSPersistenceManager
             {
                // Try findAll
                con = getConnection();
-               stmt = con.prepareStatement("SELECT "+pkColumnList+" FROM "+entity.getTableName());
+               stmt = con.prepareStatement("SELECT "+pkColumnList+" FROM "+tableName);
             } else if (finderMethod.getName().startsWith("findBy"))
             {
                // Try findByX
@@ -491,7 +494,7 @@ public class JAWSPersistenceManager
                      // Is reference?
                      if (cmpField.getJdbcType().equals("REF"))
                      {
-                        String sql = "SELECT "+pkColumnList+" FROM "+entity.getTableName()+ " WHERE ";
+                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE ";
                         
                         // TODO: Fix this.. I mean it's already been computed once.. 
                         JawsCMPField[] cmpFields = getPkColumns(cmpField);
@@ -508,7 +511,7 @@ public class JAWSPersistenceManager
                      } else
                      {
                         // Find in db
-                        String sql = "SELECT "+pkColumnList+" FROM "+entity.getTableName()+ " WHERE "+cmpField.getColumnName()+"=?";
+                        String sql = "SELECT "+pkColumnList+" FROM "+tableName+ " WHERE "+cmpField.getColumnName()+"=?";
                         
                         con = getConnection();
                         stmt = con.prepareStatement(sql);
@@ -729,7 +732,7 @@ public class JAWSPersistenceManager
          ejbStore.invoke(ctx.getInstance(), new Object[0]);
 
          // Create tuned update
-         String updateSql = "UPDATE "+entity.getTableName()+" SET ";
+         String updateSql = "UPDATE "+tableName+" SET ";
          Object[] currentState = getState(ctx);
          boolean[] dirtyField = new boolean[currentState.length];
          Object[] oldState = ((PersistenceContext)ctx.getPersistenceContext()).state;
@@ -895,16 +898,19 @@ public class JAWSPersistenceManager
    
    private void makeSql()
    {
+	  // initialize the table name we replace the . by - because some dbs die on it... 
+	  tableName = entity.getTableName().replace('.','_');
+	  
       // Remove SQL
-      removeSql = "DELETE FROM "+entity.getTableName()+" WHERE "+pkColumnWhereList;
+      removeSql = "DELETE FROM "+tableName+" WHERE "+pkColumnWhereList;
       log.debug("Remove:"+removeSql);
       
       // Drop table
-      dropSql   = "DROP TABLE "+entity.getTableName();
+      dropSql   = "DROP TABLE "+tableName;
       log.debug("Drop:"+dropSql);
       
       // Create table
-      createSql = "CREATE TABLE "+entity.getTableName()+" (";
+      createSql = "CREATE TABLE "+tableName+" (";
       
       int refIdx = 0;
       for (int i = 0;i < CMPFields.size(); i++)
@@ -929,7 +935,7 @@ public class JAWSPersistenceManager
       log.debug("Create table:"+createSql);
       
       // Insert SQL fields
-      insertSql = "INSERT INTO "+entity.getTableName();
+      insertSql = "INSERT INTO "+tableName;
       String fieldSql = "";
       String valueSql = "";
       refIdx = 0;
@@ -975,11 +981,11 @@ public class JAWSPersistenceManager
          }
       }
       
-      selectSql += " FROM "+entity.getTableName()+ " WHERE "+pkColumnWhereList;
+      selectSql += " FROM "+tableName+ " WHERE "+pkColumnWhereList;
       log.debug("Select:"+selectSql);
       
 /*      // Update SQL fields
-      updateSql = "UPDATE "+entity.getTableName()+" SET ";
+      updateSql = "UPDATE "+tableName+" SET ";
       fieldSql = "";
       for (int i = 0; i < CMPFields.length; i++)
       {
