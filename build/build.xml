@@ -549,7 +549,7 @@
             <arg line="clean"/>
         </exec>
         <exec executable="ant" dir="${fulcrum.dir}">
-            <arg line="-Dsecurity.database.name=${scarab.database.name} -Dscheduler.database.name=${scarab.database.name} install-jar"/>
+            <arg line="-Dsecurity.database.name=${scarab.database.prop.name} -Dscheduler.database.name=${scarab.database.prop.name} install-jar"/>
         </exec>
     </target>
 
