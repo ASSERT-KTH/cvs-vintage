@@ -13,8 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.transaction.TransactionManager;
 
@@ -32,7 +30,6 @@ import org.jboss.mx.util.ObjectNameConverter;
 import org.jboss.verifier.BeanVerifier;
 import org.jboss.verifier.event.VerificationEvent;
 import org.jboss.verifier.event.VerificationListener;
-import org.jboss.deployment.WebserviceClientDeployer;
 import org.w3c.dom.Element;
 
 /**
@@ -46,7 +43,7 @@ import org.w3c.dom.Element;
  *
  * @see Container
  *
- * @version <tt>$Revision: 1.48 $</tt>
+ * @version <tt>$Revision: 1.49 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:jplindfo@helsinki.fi">Juha Lindfors</a>
@@ -97,12 +94,6 @@ public class EJBDeployer
    public Iterator getDeployedApplications()
    {
       return deployments.values().iterator();
-   }
-
-   protected ObjectName getObjectName(MBeanServer server, ObjectName name)
-      throws MalformedObjectNameException
-   {
-      return name == null ? OBJECT_NAME : name;
    }
 
    /**
@@ -320,7 +311,6 @@ public class EJBDeployer
    }
 
 
-
    public boolean accepts(DeploymentInfo di)
    {
       // To be accepted the deployment's root name must end in jar
@@ -430,11 +420,12 @@ public class EJBDeployer
       super.processNestedDeployments(di);
 
       // look for web service deployments
-      URL webServiceUrl=di.localCl.getResource("META-INF/webservices.xml");
-      if(webServiceUrl!=null) {
-         DeploymentInfo sub=new DeploymentInfo(webServiceUrl,di,getServer());
-         sub.localCl=di.localCl;
-         sub.localUrl=di.localUrl;
+      URL webServiceUrl = di.localCl.getResource("META-INF/webservices.xml");
+      if(webServiceUrl != null)
+      {
+         DeploymentInfo sub = new DeploymentInfo(webServiceUrl,di,getServer());
+         sub.localCl = di.localCl;
+         sub.localUrl = di.localUrl;
       }
    }
 

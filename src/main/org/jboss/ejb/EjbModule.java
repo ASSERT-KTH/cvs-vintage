@@ -18,11 +18,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ListIterator;
+import java.util.Set;
 
 import javax.ejb.EJBLocalHome;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.security.jacc.PolicyConfiguration;
+import javax.security.jacc.PolicyConfigurationFactory;
+import javax.security.jacc.EJBMethodPermission;
+import javax.security.jacc.PolicyContextException;
+import javax.security.jacc.EJBRoleRefPermission;
 import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
@@ -36,6 +42,8 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.SessionMetaData;
 import org.jboss.metadata.XmlLoadable;
+import org.jboss.metadata.MethodMetaData;
+import org.jboss.metadata.SecurityRoleRefMetaData;
 import org.jboss.mx.loading.UnifiedClassLoader;
 import org.jboss.ejb.plugins.SecurityProxyInterceptor;
 import org.jboss.ejb.plugins.StatefulSessionInstancePool;
@@ -67,7 +75,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:reverbel@ime.usp.br">Francisco Reverbel</a>
  * @author <a href="mailto:Adrian.Brock@HappeningTimes.com">Adrian.Brock</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.52 $
+ * @version $Revision: 1.53 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -280,6 +288,11 @@ public class EjbModule
             Container con = createContainer(bean, deploymentInfo);
             con.setDeploymentInfo(deploymentInfo);
             addContainer(con);
+            // Register the permissions with the JACC layer
+            String contextID = bean.getJndiName();
+            PolicyConfigurationFactory pcFactory = PolicyConfigurationFactory.getPolicyConfigurationFactory();
+            PolicyConfiguration pc = pcFactory.getPolicyConfiguration(contextID, true);
+            createPermissions(bean, pc);
          }
 
          //only one iteration should be necessary, but we won't sweat it.
@@ -850,6 +863,48 @@ public class EjbModule
 
       // Finally we add the last interceptor from the container
       container.addInterceptor(container.createContainerInterceptor());
+   }
+
+   private void createPermissions(BeanMetaData bean, PolicyConfiguration pc)
+      throws PolicyContextException
+   {
+      // Process the method-permission MethodMetaData
+      Iterator iter = bean.getPermissionMethods();
+      while( iter.hasNext() )
+      {
+         MethodMetaData mmd = (MethodMetaData) iter.next();
+         EJBMethodPermission p = new EJBMethodPermission(mmd.getEjbName(),
+            mmd.getMethodName(), mmd.getInterfaceType(), mmd.getMethodParams());
+         Set roles = mmd.getRoles();
+         Iterator riter = roles.iterator();
+         while( riter.hasNext() )
+         {
+            String role = (String) riter.next();
+            pc.addToRole(role, p);
+         }
+      }
+      // Process the exclude-list MethodMetaData
+      iter = bean.getExcludedMethods();
+      while( iter.hasNext() )
+      {
+         MethodMetaData mmd = (MethodMetaData) iter.next();
+         EJBMethodPermission p = new EJBMethodPermission(mmd.getEjbName(),
+            mmd.getMethodName(), mmd.getInterfaceType(), mmd.getMethodParams());
+         Set roles = mmd.getRoles();
+         Iterator riter = roles.iterator();
+         while( riter.hasNext() )
+         {
+            pc.addToExcludedPolicy(p);
+         }
+      }
+      // Process the security-role-ref SecurityRoleRefMetaData
+      iter = bean.getSecurityRoleReferences();
+      while( iter.hasNext() )
+      {
+         SecurityRoleRefMetaData srrmd = (SecurityRoleRefMetaData) iter.next();
+         EJBRoleRefPermission p = new EJBRoleRefPermission(bean.getEjbName(), srrmd.getName());
+         pc.addToRole(srrmd.getLink(), p);
+      }
    }
 
    private static String stringTransactionValue(int transType)
