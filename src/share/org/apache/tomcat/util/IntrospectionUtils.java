@@ -80,7 +80,7 @@ public final class IntrospectionUtils {
 	Class c=proxy.getClass();
 	Class params[]=new Class[0];
 	//	params[0]=args.getClass();
-	executeM=c.getMethod( method, params );
+	executeM=findMethod( c, method, params );
 	if( executeM == null ) {
 	    throw new RuntimeException("No execute in " + proxy.getClass() );
 	}
@@ -98,7 +98,7 @@ public final class IntrospectionUtils {
 	Class params[]=new Class[2];
 	params[0]= String.class;
 	params[1]= Object.class;
-	executeM=c.getMethod( "setAttribute", params );
+	executeM=findMethod( c, "setAttribute", params );
 	if( executeM == null ) {
 	    System.out.println("No setAttribute in " + proxy.getClass() );
 	    return;
@@ -119,7 +119,8 @@ public final class IntrospectionUtils {
 	    Class paramT[]=new Class[2];
 	    paramT[0]= urls.getClass();
 	    paramT[1]=ClassLoader.class;
-	    Method m=urlCL.getMethod( "newInstance", paramT);
+	    Method m=findMethod( urlCL, "newInstance", paramT);
+	    if( m==null ) return null;
 	    
 	    ClassLoader cl=(ClassLoader)m.invoke( urlCL,
 						  new Object[] { urls,
@@ -215,7 +216,6 @@ public final class IntrospectionUtils {
 	return null;
     }
 
-
     /** Find a method with the right name
 	If found, call the method ( if param is int or boolean we'll convert
 	value to the right type before) - that means you can have setDebug(1).
@@ -228,7 +228,7 @@ public final class IntrospectionUtils {
 	String setter= "set" +capitalize(name);
 
 	try {
-	    Method methods[]=o.getClass().getMethods();
+	    Method methods[]=findMethods( o.getClass() );
 	    Method setPropertyMethod=null;
 
 	    // First, the ideal case - a setFoo( String ) method
@@ -514,6 +514,128 @@ public final class IntrospectionUtils {
 	}
     }
 
+    // -------------------- other utils  --------------------
+
+    static Hashtable objectMethods=new Hashtable();
+
+    public static Method[] findMethods( Class c ) {
+	Method methods[]= (Method [])objectMethods.get( c );
+	if( methods != null ) return methods;
+	
+	methods=c.getMethods();
+	objectMethods.put( c, methods );
+	return methods;
+    }
+
+    public static Method findMethod( Class c, String name, Class params[] ) {
+	Method methods[] = findMethods( c );
+	if( methods==null ) return null;
+	for (int i = 0; i < methods.length; i++) {
+	    if (methods[i].getName().equals(name) ) {
+		Class methodParams[]=methods[i].getParameterTypes();
+		if( methodParams==null )
+		    if( params==null || params.length==0 )
+			return methods[i];
+		if( params==null )
+		    if( methodParams==null || methodParams.length==0 )
+			return methods[i];
+		if( params.length != methodParams.length )
+		    continue;
+		boolean found=true;
+		for( int j=0; j< params.length; j++ ) {
+		    if( params[j] != methodParams[j] ) {
+			found=false;
+			break;
+		    }
+		}
+		if( found ) return methods[i];
+	    }
+	}
+	return null;
+    }
+    
+    /** Test if the object implements a particular
+     *  method
+     */
+    public static boolean hasHook( Object obj, String methodN ) {
+	try {
+	    Method myMethods[]=findMethods( obj.getClass() );
+	    for( int i=0; i< myMethods.length; i++ ) {
+		if( methodN.equals ( myMethods[i].getName() )) {
+		    // check if it's overriden
+		    Class declaring=myMethods[i].getDeclaringClass();
+		    Class parentOfDeclaring=declaring.getSuperclass();
+		    // this works only if the base class doesn't extend
+		    // another class.
+
+		    // if the method is declared in a top level class
+		    // like BaseInterceptor parent is Object, otherwise
+		    // parent is BaseInterceptor or an intermediate class
+		    if( ! "java.lang.Object".
+			equals(parentOfDeclaring.getName() )) {
+			return true;
+		    }
+		}
+	    }
+	} catch ( Exception ex ) {
+	    ex.printStackTrace();
+	}
+	return false;
+    }
+
+    public static void callMethod1( Object target,
+				    String methodN,
+				    Object param1,
+				    String typeParam1,
+				    ClassLoader cl)
+	throws Exception
+    {
+	if( target==null || param1==null ) {
+	    d("Assert: Illegal params " + target + " " + param1 );
+	}
+	if( dbg > 0 ) d("callMethod1 " + target.getClass().getName() +
+			" " + param1.getClass().getName() +
+			" " + typeParam1 );
+	
+	Class params[]=new Class[1];
+	if( typeParam1==null )
+	    params[0]=param1.getClass();
+	else
+	    params[0]=cl.loadClass( typeParam1 );
+	Method m=findMethod( target.getClass(), methodN, params);
+	if( m==null )
+	    throw new NoSuchMethodException(target.getClass().getName() +
+					    " " + methodN);
+	m.invoke(target,  new Object[] {param1 } );
+    }
+
+    public static void callMethodN( Object target,
+				    String methodN,
+				    Object params[],
+				    Class typeParams[] )
+	throws Exception
+    {
+	Method m=null;
+	m=IntrospectionUtils.findMethod( target.getClass(), methodN, typeParams );
+        if( m== null ) {
+	    d("Can't find method " + methodN + " in " +
+	      target + " CLASS " + target.getClass());
+	    return;
+	}
+	m.invoke( target, params );
+
+	if(dbg > 0 ) {
+	    // debug
+	    StringBuffer sb=new StringBuffer();
+	    sb.append("" + target.getClass().getName() + "." + methodN + "( " );
+	    for(int i=0; i<params.length; i++ ) {
+		if(i>0) sb.append( ", ");
+		sb.append(params[i]);
+	    }
+	    sb.append(")");
+	    d(sb.toString());
+	}
+    }
     
     // -------------------- Get property --------------------
     // This provides a layer of abstraction
