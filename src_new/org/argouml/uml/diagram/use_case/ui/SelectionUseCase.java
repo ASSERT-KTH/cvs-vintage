@@ -1,4 +1,4 @@
-// $Id: SelectionUseCase.java,v 1.21 2005/01/02 16:43:51 linus Exp $
+// $Id: SelectionUseCase.java,v 1.22 2005/01/08 23:27:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -245,9 +245,9 @@ public class SelectionUseCase extends SelectionWButtons {
     protected Object getNewNode(int buttonCode) {
         Object newNode = null;
         if (buttonCode == 10 || buttonCode == 11)
-            newNode = Model.getUmlFactory().getUseCases().createUseCase();
+            newNode = Model.getUseCasesFactory().createUseCase();
         else
-            newNode = Model.getUmlFactory().getUseCases().createActor();
+            newNode = Model.getUseCasesFactory().createActor();
         return newNode;
     }
 

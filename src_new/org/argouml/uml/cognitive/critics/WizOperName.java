@@ -1,4 +1,4 @@
-// $Id: WizOperName.java,v 1.22 2005/01/08 20:46:37 linus Exp $
+// $Id: WizOperName.java,v 1.23 2005/01/08 23:27:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -307,7 +307,7 @@ public class WizOperName extends WizMEName {
                 }
             }
             if (ns == null) {
-                ns = Model.getUmlFactory().getCore().createNamespace();
+                ns = Model.getCoreFactory().createNamespace();
                 ModelFacade.setName(ns, phantomName);
                 ModelFacade.addOwnedElement(targetParentNS, ns);
             }

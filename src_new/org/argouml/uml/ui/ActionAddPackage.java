@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.11 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionAddPackage.java,v 1.12 2005/01/08 23:27:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class ActionAddPackage  extends UMLAction {
         Object namespace =
 	    TargetManager.getInstance().getModelTarget();
         ModelFacade.addOwnedElement(namespace,
-            Model.getUmlFactory().getModelManagement().createPackage());
+            Model.getModelManagementFactory().createPackage());
     }
     
 }

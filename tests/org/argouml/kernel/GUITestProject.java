@@ -1,4 +1,4 @@
-// $Id: GUITestProject.java,v 1.6 2005/01/02 10:08:18 linus Exp $
+// $Id: GUITestProject.java,v 1.7 2005/01/08 23:27:31 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -232,7 +232,7 @@ public class GUITestProject extends TestCase {
         Collection propertyChangeListeners = p.findFigsForMember(aClass);
         Object model = p.getModel();
         Object voidType = p.findType("void");
-        Object oper = Model.getUmlFactory().getCore()
+        Object oper = Model.getCoreFactory()
             .buildOperation(aClass, model, voidType, propertyChangeListeners);
         
         // try with Statediagram

@@ -1,4 +1,4 @@
-// $Id: ActionAddAttribute.java,v 1.14 2005/01/02 16:43:45 linus Exp $
+// $Id: ActionAddAttribute.java,v 1.15 2005/01/08 23:27:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,42 +40,44 @@ import org.argouml.uml.ui.UMLAction;
  * @stereotype singleton
  */
 public class ActionAddAttribute extends UMLAction {
-    
-    private static ActionAddAttribute singleton = new ActionAddAttribute();    
+
+    private static ActionAddAttribute singleton = new ActionAddAttribute();
 
     /**
      * The constructor for this class.
      */
-    public ActionAddAttribute() { 
-        super("button.new-attribute", true, HAS_ICON); 
-    }    
+    public ActionAddAttribute() {
+        super("button.new-attribute", true, HAS_ICON);
+    }
 
     /**
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-    public void actionPerformed(ActionEvent ae) {	
+    public void actionPerformed(ActionEvent ae) {
 	Object target = TargetManager.getInstance().getModelTarget();
 	Object/*MClassifier*/ cls = null;
 
-	if (ModelFacade.isAClassifier(target))
+	if (ModelFacade.isAClassifier(target)) {
 	    cls = target;
-	else if (ModelFacade.isAFeature(target)
-		 && ModelFacade.isAClass(ModelFacade.getOwner(target)))
+	} else if (ModelFacade.isAFeature(target)
+		 && ModelFacade.isAClass(ModelFacade.getOwner(target))) {
 	    cls = ModelFacade.getOwner(target);
-	else
+	} else {
 	    return;
+	}
 
-	Collection propertyChangeListeners = ProjectManager.getManager()
-	    .getCurrentProject().findFigsForMember(cls);
-	Object intType = ProjectManager.getManager()
-	    .getCurrentProject().findType("int");
-	Object model = ProjectManager.getManager()
-	    .getCurrentProject().getModel();
-	Object attr = Model.getUmlFactory().getCore().buildAttribute(
-            cls, 
-            model, 
-            intType, 
-            propertyChangeListeners);
+	Collection propertyChangeListeners =
+	    ProjectManager.getManager()
+	    	.getCurrentProject().findFigsForMember(cls);
+	Object intType =
+	    ProjectManager.getManager()
+	    	.getCurrentProject().findType("int");
+	Object model =
+	    ProjectManager.getManager()
+	    	.getCurrentProject().getModel();
+	Object attr =
+	    Model.getCoreFactory().buildAttribute(cls, model, intType,
+	            propertyChangeListeners);
 	TargetManager.getInstance().setTarget(attr);
 	super.actionPerformed(ae);
     }
@@ -98,7 +100,7 @@ public class ActionAddAttribute extends UMLAction {
     }
     /**
      * @return Returns the singleton.
-     * @deprecated singleton use will be removed in 0.18.0. 
+     * @deprecated singleton use will be removed in 0.18.0.
      * Use the constructor instead.
      */
     public static ActionAddAttribute getSingleton() {

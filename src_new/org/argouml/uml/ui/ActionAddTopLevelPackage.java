@@ -1,4 +1,4 @@
-// $Id: ActionAddTopLevelPackage.java,v 1.15 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionAddTopLevelPackage.java,v 1.16 2005/01/08 23:27:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,7 +66,7 @@ public class ActionAddTopLevelPackage extends UMLAction {
         int numPacks = p.getUserDefinedModels().size();
         String nameStr = "package_" + (numPacks + 1);
         Object/*MModel*/ model =
-	    Model.getUmlFactory().getModelManagement().createModel();
+	    Model.getModelManagementFactory().createModel();
         ModelFacade.setName(model, nameStr);
         p.addMember(model);
         super.actionPerformed(ae);

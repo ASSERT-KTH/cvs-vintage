@@ -1,4 +1,4 @@
-// $Id: PropPanelSignal.java,v 1.51 2005/01/02 16:43:48 linus Exp $
+// $Id: PropPanelSignal.java,v 1.52 2005/01/08 23:27:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -106,7 +106,7 @@ public class PropPanelSignal extends PropPanelModelElement {
             if (ModelFacade.isASignal(target)) {
                 Object ns = ModelFacade.getNamespace(target);
                 if (ns != null) {
-                    Object newSig = Model.getUmlFactory().getCommonBehavior()
+                    Object newSig = Model.getCommonBehaviorFactory()
                         .createSignal(); 
                     ModelFacade.addOwnedElement(ns, newSig);
                     TargetManager.getInstance().setTarget(newSig);

@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.4 2005/01/08 21:39:40 bobtarling Exp $
+// $Id: UmlFactory.java,v 1.5 2005/01/08 23:27:33 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -83,54 +83,6 @@ public interface UmlFactory {
      */
     boolean isConnectionValid(Object connectionType, Object fromElement,
             Object toElement);
-
-    /**
-     * Returns the package factory for the UML
-     * package Foundation::Core.
-     *
-     * @return the Core factory instance.
-     */
-    CoreFactory getCore();
-
-    /**
-     * Returns the package factory for the UML
-     * package BehavioralElements::CommonBehavior.
-     *
-     * @return the CommonBehavior factory instance.
-     */
-    CommonBehaviorFactory getCommonBehavior();
-
-    /**
-     * Returns the package factory for the UML
-     * package BehavioralElements::UseCases.
-     *
-     * @return the UseCases factory instance.
-     */
-    UseCasesFactory getUseCases();
-
-    /**
-     * Returns the package factory for the UML
-     * package BehavioralElements::StateMachines.
-     *
-     * @return the StateMachines factory instance.
-     */
-    StateMachinesFactory getStateMachines();
-
-    /**
-     * Returns the package factory for the UML
-     * package BehavioralElements::Collaborations.
-     *
-     * @return the Collaborations factory instance.
-     */
-    CollaborationsFactory getCollaborations();
-
-    /**
-     * Returns the package factory for the UML
-     * package ModelManagement.
-     *
-     * @return the ModelManagement factory instance.
-     */
-    ModelManagementFactory getModelManagement();
 
     /**
      * Deletes a modelelement. It calls the remove method of the

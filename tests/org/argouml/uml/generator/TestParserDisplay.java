@@ -1,4 +1,4 @@
-// $Id: TestParserDisplay.java,v 1.12 2005/01/04 16:54:38 linus Exp $
+// $Id: TestParserDisplay.java,v 1.13 2005/01/08 23:27:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import junit.framework.TestCase;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
-import ru.novosoft.uml.behavior.collaborations.MClassifierRole;
 import ru.novosoft.uml.foundation.core.MAttribute;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MOperation;
@@ -78,11 +77,11 @@ public class TestParserDisplay extends TestCase {
     public void testClassifierRoleName() {
 	Object cr;
 
-	cr = Model.getUmlFactory().getCollaborations().createClassifierRole();
+	cr = Model.getCollaborationsFactory().createClassifierRole();
 	checkNameClassifierRole(cr, clro01, "roname");
 	checkNameClassifierRole(cr, clro02, "roname2");
 
-	cr = Model.getUmlFactory().getCollaborations().createClassifierRole();
+	cr = Model.getCollaborationsFactory().createClassifierRole();
 	checkNameClassifierRole(cr, clro03, "roname");
     }
 
@@ -101,12 +100,12 @@ public class TestParserDisplay extends TestCase {
 	    "float", "long",
 	};
 
-	cr = Model.getUmlFactory().getCollaborations().createClassifierRole();
+	cr = Model.getCollaborationsFactory().createClassifierRole();
 	checkBases(cr, clro01, res1);
 	checkBases(cr, clro02, res2);
 	checkBases(cr, clro03, res3);
 
-	cr = Model.getUmlFactory().getCollaborations().createClassifierRole();
+	cr = Model.getCollaborationsFactory().createClassifierRole();
 	checkBases(cr, clro03, res3);
     }
 
@@ -116,7 +115,7 @@ public class TestParserDisplay extends TestCase {
     public void testClassifierRoleThrows() {
 	Object cr;
 
-	cr = Model.getUmlFactory().getCollaborations().createClassifierRole();
+	cr = Model.getCollaborationsFactory().createClassifierRole();
 	checkThrowsClassifierRole(cr, nclro01, true, false, false);
 	checkThrowsClassifierRole(cr, nclro02, true, false, false);
 	checkThrowsClassifierRole(cr, nclro03, true, false, false);

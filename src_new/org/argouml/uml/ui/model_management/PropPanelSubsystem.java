@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.24 2005/01/03 09:30:49 mvw Exp $
+// $Id: PropPanelSubsystem.java,v 1.25 2005/01/08 23:27:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -93,7 +93,7 @@ public class PropPanelSubsystem extends PropPanelPackage {
                 Collection pCListeners = p.findFigsForMember(target);
                 Object model = p.getModel();
                 Object voidType = p.findType("void");
-                Object newOper = Model.getUmlFactory().getCore()
+                Object newOper = Model.getCoreFactory()
                     .buildOperation(target, model, voidType, pCListeners);
                 TargetManager.getInstance().setTarget(newOper);
                 super.actionPerformed(e);

@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.75 2005/01/02 16:43:46 linus Exp $
+// $Id: PropPanelOperation.java,v 1.76 2005/01/08 23:27:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -125,7 +125,7 @@ public class PropPanelOperation extends PropPanelFeature {
         Object target = getTarget();
         if (ModelFacade.isAOperation(target)) {
             Object oper = /* (MOperation) */target;
-            Object newSignal = Model.getUmlFactory().getCommonBehavior()
+            Object newSignal = Model.getCommonBehaviorFactory()
                     .createSignal(); 
                     //((MOperation)oper).getFactory().createSignal();
             

@@ -1,4 +1,4 @@
-// $Id: ActionAddPackage.java,v 1.3 2005/01/02 16:43:41 linus Exp $
+// $Id: ActionAddPackage.java,v 1.4 2005/01/08 23:27:26 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,8 +56,8 @@ class ActionAddPackage extends AbstractActionNewModelElement {
     public void actionPerformed(ActionEvent e) {
         Object target = TargetManager.getInstance().getModelTarget();
         if (ModelFacade.isAPackage(target)) {
-            Object newPackage =  Model.getUmlFactory()
-                .getModelManagement().createPackage();
+            Object newPackage =
+                Model.getModelManagementFactory().createPackage();
             ModelFacade.addOwnedElement(target, newPackage);
             TargetManager.getInstance().setTarget(newPackage);
             super.actionPerformed(e);

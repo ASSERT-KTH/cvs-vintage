@@ -1,4 +1,4 @@
-// $Id: TestParseStateBody.java,v 1.5 2005/01/03 09:30:48 mvw Exp $
+// $Id: TestParseStateBody.java,v 1.6 2005/01/08 23:27:27 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -59,18 +59,18 @@ public class TestParseStateBody extends TestCase {
      */
     protected void setUp() {
         Object model =
-            Model.getUmlFactory().getModelManagement().createModel();
+            Model.getModelManagementFactory().createModel();
         Project p = ProjectManager.getManager().getCurrentProject();
-        aClass = Model.getUmlFactory().getCore().buildClass(model);
+        aClass = Model.getCoreFactory().buildClass(model);
         Collection propertyChangeListeners = p.findFigsForMember(aClass);
         Object mdl = p.getModel();
         Object voidType = p.findType("void");
-        aOper = Model.getUmlFactory().getCore().buildOperation(aClass, mdl, 
+        aOper = Model.getCoreFactory().buildOperation(aClass, mdl, 
                 voidType, "myOper", propertyChangeListeners);
-        aStateMachine = Model.getUmlFactory().getStateMachines()
+        aStateMachine = Model.getStateMachinesFactory()
             .buildStateMachine(aClass);
         Object top = ModelFacade.getTop(aStateMachine);
-        aState = Model.getUmlFactory().getStateMachines()
+        aState = Model.getStateMachinesFactory()
             .buildCompositeState(top);
     }
 
@@ -182,7 +182,7 @@ public class TestParseStateBody extends TestCase {
     private Object checkGenerated(Object st, String text, boolean entryAction, 
             boolean exitAction, boolean doAction, 
             int internals, boolean exception) {
-        Object sst = Model.getUmlFactory().getStateMachines()
+        Object sst = Model.getStateMachinesFactory()
             .buildSimpleState(st);
         checkChanged(sst, text, entryAction, exitAction, doAction, 
                 internals, exception);

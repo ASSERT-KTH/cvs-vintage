@@ -1,4 +1,4 @@
-// $Id: WizAddOperation.java,v 1.13 2005/01/02 16:43:51 linus Exp $
+// $Id: WizAddOperation.java,v 1.14 2005/01/08 23:27:27 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,17 +40,19 @@ import org.argouml.model.Model;
  * @since Created on December 4, 2003, 1:55 PM
  */
 public class WizAddOperation extends UMLWizard {
-    
+
     private WizStepTextField step1 = null;
     private String label = Translator.localize("label.name");
     private String instructions =
 	"Please change the name of the offending model element.";
 
-    /** Creates a new instance of WizAddOperation */
+    /**
+     * Creates a new instance of WizAddOperation.
+     */
     public WizAddOperation() {
         super();
     }
-    
+
     /**
      * @see org.argouml.cognitive.ui.Wizard#doAction(int)
      */
@@ -62,43 +64,46 @@ public class WizAddOperation extends UMLWizard {
 		newName = step1.getText();
 	    }
 	    Object me = getModelElement();
-	    Collection propertyChangeListeners = ProjectManager.getManager()
-	        .getCurrentProject().findFigsForMember(me);
-	    Object model = ProjectManager.getManager()
-	        .getCurrentProject().getModel();
-	    Object voidType = ProjectManager.getManager()
-	        .getCurrentProject().findType("void");
-	    Model.getUmlFactory().getCore().buildOperation(me, model, 
+	    Collection propertyChangeListeners =
+	        ProjectManager.getManager()
+	        	.getCurrentProject().findFigsForMember(me);
+	    Object model =
+	        ProjectManager.getManager()
+	        	.getCurrentProject().getModel();
+	    Object voidType =
+	        ProjectManager.getManager()
+	        	.getCurrentProject().findType("void");
+	    Model.getCoreFactory().buildOperation(me, model,
 	            voidType, newName, propertyChangeListeners);
         }
     }
-    
-     
+
+
     /**
      * @param s the new instructions
      */
     public void setInstructions(String s) { instructions = s; }
-    
+
     /**
      * @param b
      */
     //public void setMustEdit(boolean b) { mustEdit = b; }
-    
-    /** 
+
+    /**
      * Create a new panel for the given step.
-     * 
+     *
      * @see org.argouml.cognitive.ui.Wizard#makePanel(int)
      */
     public JPanel makePanel(int newStep) {
         switch (newStep) {
 	case 1:
 	    if (step1 == null) {
-		step1 = new WizStepTextField(this, instructions,
-					      label, getSuggestion());
+		step1 =
+		    new WizStepTextField(this, instructions,
+		            label, getSuggestion());
 	    }
 	    return step1;
         }
         return null;
     }
-    
 }

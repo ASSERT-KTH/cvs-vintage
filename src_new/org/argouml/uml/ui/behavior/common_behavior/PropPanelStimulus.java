@@ -1,4 +1,4 @@
-// $Id: PropPanelStimulus.java,v 1.49 2005/01/02 16:43:49 linus Exp $
+// $Id: PropPanelStimulus.java,v 1.50 2005/01/08 23:27:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -178,7 +178,7 @@ public class PropPanelStimulus extends PropPanelModelElement {
             Object stimulus = /*(MStimulus)*/ target;
             Object link = ModelFacade.getCommunicationLink(stimulus);
             if (link == null) {
-                link = Model.getUmlFactory().getCommonBehavior().createLink();
+                link = Model.getCommonBehaviorFactory().createLink();
                 //((MStimulus)stimulus).getFactory().createLink();
                 if (link != null) {
                     ModelFacade.addStimulus(link, stimulus);

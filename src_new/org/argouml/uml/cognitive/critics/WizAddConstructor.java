@@ -1,4 +1,4 @@
-// $Id: WizAddConstructor.java,v 1.12 2005/01/02 10:08:15 linus Exp $
+// $Id: WizAddConstructor.java,v 1.13 2005/01/08 23:27:27 linus Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,15 +71,18 @@ public class WizAddConstructor extends UMLWizard {
 	    }
 	    Object me = getModelElement();
 	    savedTargets = TargetManager.getInstance().getTargets();
-	    Collection propertyChangeListeners = ProjectManager.getManager()
-	        .getCurrentProject().findFigsForMember(me);
-	    Object model = ProjectManager.getManager().getCurrentProject()
-	        .getModel();
-	    Object voidType = ProjectManager.getManager().getCurrentProject()
-	        .findType("void");
+	    Collection propertyChangeListeners =
+	        ProjectManager.getManager()
+	        	.getCurrentProject().findFigsForMember(me);
+	    Object model =
+	        ProjectManager.getManager().getCurrentProject()
+	        	.getModel();
+	    Object voidType =
+	        ProjectManager.getManager().getCurrentProject()
+	        	.findType("void");
 	    oper =
-	        Model.getUmlFactory().getCore().buildOperation(me, model, 
-	            voidType, newName, propertyChangeListeners);
+	        Model.getCoreFactory().buildOperation(me, model,
+	                voidType, newName, propertyChangeListeners);
 	    ModelFacade.setStereotype(oper, getCreateStereotype(oper));
 	    TargetManager.getInstance().setTargets(savedTargets);
 	}
@@ -134,8 +137,9 @@ public class WizAddConstructor extends UMLWizard {
         switch (newStep) {
 	case 1:
 	    if (step1 == null) {
-		step1 = new WizStepTextField(this, instructions,
-					      label, getSuggestion());
+		step1 =
+		    new WizStepTextField(this, instructions,
+		            		 label, getSuggestion());
 	    }
 	    return step1;
         }

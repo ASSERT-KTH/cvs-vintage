@@ -1,4 +1,4 @@
-// $Id: ActionCollaborationDiagram.java,v 1.40 2005/01/04 18:41:51 mvw Exp $
+// $Id: ActionCollaborationDiagram.java,v 1.41 2005/01/08 23:27:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -64,13 +64,13 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
         Object target = TargetManager.getInstance().getModelTarget();
         Object collaboration = null;
         if (ModelFacade.isAOperation(target)) {
-            collaboration = Model.getUmlFactory().getCollaborations()
+            collaboration = Model.getCollaborationsFactory()
                             .buildCollaboration(namespace, target);
         } else if (ModelFacade.isAClassifier(target)) {
-            collaboration = Model.getUmlFactory().getCollaborations()
+            collaboration = Model.getCollaborationsFactory()
                             .buildCollaboration(namespace, target);
 //        } else if (ModelFacade.isAModel(target)) {
-//            collaboration = Model.getUmlFactory().getCollaborations()
+//            collaboration = Model.getCollaborationsFactory()
 //                            .buildCollaboration(target);
 //        } else if (ModelFacade.isAInteraction(target)) {
 //            collaboration = ModelFacade.getContext(target);
@@ -84,7 +84,7 @@ public class ActionCollaborationDiagram extends ActionAddDiagram {
 //            collaboration = target;
 //        } else {
 //            collaboration =
-//                Model.getUmlFactory().getCollaborations().buildCollaboration(
+//                Model.getCollaborationsFactory().buildCollaboration(
 //                    namespace);
         }
         UMLCollaborationDiagram d = 

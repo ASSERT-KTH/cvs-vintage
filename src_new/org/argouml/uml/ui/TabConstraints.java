@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.43 2005/01/08 20:46:36 linus Exp $
+// $Id: TabConstraints.java,v 1.44 2005/01/08 23:27:29 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -409,7 +409,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
                                 OclTree ocltCurrent = (OclTree) i.next();
 
                                 Object/*MConstraint*/ mc =
-                                    Model.getUmlFactory().getCore()
+                                    Model.getCoreFactory()
 				        .createConstraint();
                                 ModelFacade.setName(mc, ocltCurrent
                                     .getConstraintName());
@@ -517,7 +517,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
                     // Set name
                     Object/*MConstraint*/ mcOld =
-                        Model.getUmlFactory().getCore().createConstraint();
+                        Model.getCoreFactory().createConstraint();
                     ModelFacade.setName(mcOld,
                             ModelFacade.getName(theMMcConstraint));
                     Object constraintBody =

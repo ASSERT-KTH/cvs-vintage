@@ -1,4 +1,4 @@
-// $Id: JavaUML.java,v 1.12 2005/01/08 00:39:40 linus Exp $
+// $Id: JavaUML.java,v 1.13 2005/01/08 23:27:33 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,9 +29,10 @@ import org.argouml.model.CoreFactory;
 import org.argouml.model.Model;
 import org.argouml.model.ModelFacade;
 
-/** A file of information about the Java language.  This is used to
- *  fill in the offered data types in variable and operation
- *  declarations.
+/**
+ * A file of information about the Java language.  This is used to
+ * fill in the offered data types in variable and operation
+ * declarations.
  *
  * In the end, it would be better to have these in XMI files that are
  * loaded at starting time.
@@ -71,20 +72,20 @@ public class JavaUML {
     private static final Object HASHTABLE_CLASS = getCore().createClass();
     private static final Object STACK_CLASS = getCore().createClass();
 
-    /** 
+    /**
      * Get the CoreFactory.
      *
      * @return CoreFactory
      */
     private static CoreFactory getCore() {
-	return Model.getUmlFactory().getCore();
+	return Model.getCoreFactory();
     }
 
     /**
      * This UML Model contains the Java standard elements.
      */
     private static Object javastandards =
-	Model.getUmlFactory().getModelManagement().createModel();
+	Model.getModelManagementFactory().createModel();
 
     static {
         ModelFacade.setName(STRING_CLASS, "String");

@@ -1,4 +1,4 @@
-// $Id: PackageContext.java,v 1.24 2005/01/02 16:43:59 linus Exp $
+// $Id: PackageContext.java,v 1.25 2005/01/08 23:27:32 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -79,7 +79,7 @@ class PackageContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    mInterface =
-			Model.getUmlFactory().getCore()
+			Model.getCoreFactory()
 			    .buildInterface(name, mPackage);
 		    ModelFacade.setTaggedValue(mInterface,
 					       ModelFacade.GENERATED_TAG,
@@ -103,7 +103,7 @@ class PackageContext extends Context
                     }
 		    if (classifier.isInterface()) {
 			mInterface =
-			    Model.getUmlFactory().getCore()
+			    Model.getCoreFactory()
 			        .buildInterface(name, mPackage);
 			ModelFacade.setTaggedValue(mInterface,
 						   ModelFacade.GENERATED_TAG,
@@ -157,12 +157,12 @@ class PackageContext extends Context
 		}
 		if (classifier.isInterface()) {
 		    mClassifier =
-			Model.getUmlFactory().getCore()
+			Model.getCoreFactory()
 			    .buildInterface(name, mPackage);
 		}
 		else {
 		    mClassifier =
-			Model.getUmlFactory().getCore()
+			Model.getCoreFactory()
 			    .buildClass(name, mPackage);
 		}
 		ModelFacade.setTaggedValue(mClassifier,
@@ -187,11 +187,11 @@ class PackageContext extends Context
                     }
 		    if (classifier.isInterface()) {
 			mClassifier =
-			    Model.getUmlFactory().getCore()
+			    Model.getCoreFactory()
 			        .buildInterface(name, mPackage);
 		    } else {
 			mClassifier =
-			    Model.getUmlFactory().getCore()
+			    Model.getCoreFactory()
 			        .buildClass(name, mPackage);
 		    }
 		    ModelFacade.setTaggedValue(mClassifier,
@@ -223,7 +223,7 @@ class PackageContext extends Context
 		    || name.indexOf("[]") != -1)
 		{
 		    mClassifier =
-			Model.getUmlFactory().getCore()
+			Model.getCoreFactory()
 			    .buildDataType(name, mPackage);
 		}
 	    }

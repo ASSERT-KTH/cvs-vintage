@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorFactoryImpl.java,v 1.3 2005/01/07 09:11:00 linus Exp $
+// $Id: CommonBehaviorFactoryImpl.java,v 1.4 2005/01/08 23:27:26 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -394,12 +394,12 @@ public class CommonBehaviorFactoryImpl
      * @return the newly build link
      */
     public Object buildLink(Object fromInstance, Object toInstance) {
-        Object link = nsmodel.getUmlFactory().getCommonBehavior().createLink();
+        Object link = nsmodel.getCommonBehaviorFactory().createLink();
         Object /*MLinkEnd*/ le0 =
-	    nsmodel.getUmlFactory().getCommonBehavior().createLinkEnd();
+	    nsmodel.getCommonBehaviorFactory().createLinkEnd();
         ModelFacade.setInstance(le0, fromInstance);
         Object /*MLinkEnd*/ le1 =
-	    nsmodel.getUmlFactory().getCommonBehavior().createLinkEnd();
+	    nsmodel.getCommonBehaviorFactory().createLinkEnd();
         ModelFacade.setInstance(le1, toInstance);
         ModelFacade.addConnection(link, le0);
         ModelFacade.addConnection(link, le1);

@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifier.java,v 1.54 2005/01/03 09:30:50 mvw Exp $
+// $Id: PropPanelClassifier.java,v 1.55 2005/01/08 23:27:32 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -150,7 +150,7 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
             Object voidType = ProjectManager.getManager()
                 .getCurrentProject().findType("void");
             Object newOper =
-                Model.getUmlFactory().getCore().buildOperation(
+                Model.getCoreFactory().buildOperation(
                     /*(MClassifier)*/ target, model, voidType, 
                     propertyChangeListeners);
             TargetManager.getInstance().setTarget(newOper);
@@ -171,7 +171,7 @@ public abstract class PropPanelClassifier extends PropPanelNamespace {
             Object model = ProjectManager.getManager()
                 .getCurrentProject().getModel();
             Object attr =
-                Model.getUmlFactory().getCore().buildAttribute(cls, model, 
+                Model.getCoreFactory().buildAttribute(cls, model, 
                         intType, propertyChangeListeners);
             TargetManager.getInstance().setTarget(attr);
         }

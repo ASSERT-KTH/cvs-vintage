@@ -1,4 +1,4 @@
-// $Id: TestTabDiagram.java,v 1.12 2005/01/03 09:30:52 mvw Exp $
+// $Id: TestTabDiagram.java,v 1.13 2005/01/08 23:27:28 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,7 @@ public class TestTabDiagram extends TestCase {
                 UMLDiagram[] diagrams = new UMLDiagram[NUMBER_OF_DIAGRAMS];
                 Project project =
                     ProjectManager.getManager().getCurrentProject();
-                Object clazz = Model.getUmlFactory().getCore().buildClass();
+                Object clazz = Model.getCoreFactory().buildClass();
                 for (int i = 0; i < NUMBER_OF_DIAGRAMS; i++) {
                     diagrams[i] = new UMLClassDiagram(project.getRoot());
                     diagrams[i].add(
@@ -149,7 +149,7 @@ public class TestTabDiagram extends TestCase {
                     project.findFigsForMember(clazz);
                 Object model = project.getModel();
                 Object voidType = project.findType("void");
-                Model.getUmlFactory().getCore().buildOperation(clazz, model, 
+                Model.getCoreFactory().buildOperation(clazz, model, 
                         voidType, propertyChangeListeners);
                 System.out.println(
                     "Time needed for adding operation: "
