@@ -28,19 +28,11 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.spi.LoginModule;
 
-
-/**
- * This server login module implements the following simple algorithm:
- *   if password is null, authenticate the user and assign the "guest" role
- *   else if password is equal to the user name, assign both "user" and "guest" roles
- *   else don't authenticate.
- */
 public class DatabaseServerLoginModule implements LoginModule {
     private String _db;
     private String _table;
     private String _nameCol;
     private String _pswCol;
-    private String _rolesCol;
     private Subject _subject;
     private CallbackHandler _callbackHandler;
     private String _username;
@@ -56,7 +48,6 @@ public class DatabaseServerLoginModule implements LoginModule {
         _table = (String) options.get("table");
         _nameCol = (String) options.get("name");
         _pswCol = (String) options.get("password");
-        _rolesCol = (String) options.get("roles");
     }
 
     /**
