@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.75 2002/01/10 05:24:55 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.76 2002/01/10 06:35:16 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -228,6 +228,10 @@
         Description.
     -->
     <column name="DESCRIPTION" javaName="Description" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        For user attributes, whether the user will be emailed, cc'd, or neither.
+    -->
+    <column name="ACTION" required="false" type="VARCHAR" size="255"/>
     <!--
         Person that set value to the column of the table initially.
     -->

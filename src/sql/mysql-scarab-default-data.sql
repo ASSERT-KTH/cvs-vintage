@@ -7,8 +7,8 @@ insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DE
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Description */
         values(1, 'Description', 12, 'Description');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
-       ATTRIBUTE_TYPE_ID, PERMISSION, DESCRIPTION) /* Assigned to */
-       values(2, 'Assigned To', 8, 'Issue | Edit', 'Assigned To');
+       ATTRIBUTE_TYPE_ID, PERMISSION, ACTION, DESCRIPTION) /* Assigned to */
+       values(2, 'Assigned To', 8, 'Issue | Edit', 'to', 'Assigned To');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, ATTRIBUTE_TYPE_ID, DESCRIPTION) /* Status */
         values(3, 'Status', 5, 'Status');
 insert into SCARAB_ATTRIBUTE(ATTRIBUTE_ID, ATTRIBUTE_NAME, 
