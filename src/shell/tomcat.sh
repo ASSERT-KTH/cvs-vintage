@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.26 2001/08/21 05:55:50 costin Exp $
+# $Id: tomcat.sh,v 1.27 2001/08/22 04:55:33 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -122,7 +122,7 @@ export CLASSPATH
 
 ## -------------------- Process options -------------------- 
 # add tomcat.policy - even if we don't use sandbox, it doesn't hurt
-TOMCAT_OPTS="$TOMCAT_OPTS -Djava.security.policy==${TOMCAT_HOME}/lib/tomcat.policy "
+TOMCAT_OPTS="$TOMCAT_OPTS -Djava.security.policy==${TOMCAT_HOME}/conf/tomcat.policy "
 
 
 # We start the server up in the background for a couple of reasons:

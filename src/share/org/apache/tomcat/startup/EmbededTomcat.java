@@ -9,6 +9,7 @@ import org.apache.tomcat.util.compat.*;
 import org.apache.tomcat.util.IntrospectionUtils;
 import java.security.*;
 import java.util.*;
+import java.lang.reflect.*;
 
 /* EmbededTomcat is the bean you use to embed tomcat in your application.
    Main is a wrapper that will guess TOMCAT_HOME and dispatch to 
@@ -409,10 +410,10 @@ public class EmbededTomcat {
 					 modules.elementAt( i ) );
 	    }
 	    contextM.init();
-	} catch( InvocationTargetException rex ) {
-	    debug("exception initializing ContextManager", rex.getTargetException());
-	    throw new TomcatException( "EmbededTomcat.initContextManager", ex.getTargetExeption() );
-	} catch( Exception ex ) {
+	} catch( Throwable ex ) {
+	    if( ex instanceof InvocationTargetException ) {
+		ex=((InvocationTargetException)ex).getTargetException();
+	    }
 	    debug("exception initializing ContextManager", ex);
 	    throw new TomcatException( "EmbededTomcat.initContextManager", ex );
 	}
