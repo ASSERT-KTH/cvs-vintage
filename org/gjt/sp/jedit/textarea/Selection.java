@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.MiscUtilities;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: Selection.java,v 1.21 2003/12/27 22:38:52 spestov Exp $
+ * @version $Id: Selection.java,v 1.22 2004/04/06 19:05:31 spestov Exp $
  * @since jEdit 3.2pre1
  */
 public abstract class Selection implements Cloneable
@@ -581,6 +581,8 @@ public abstract class Selection implements Cloneable
 				{
 					this.startLine = buffer.getLineOfOffset(
 						this.start);
+					this.endLine = buffer.getLineOfOffset(
+						this.end);
 				}
 				return true;
 			}
