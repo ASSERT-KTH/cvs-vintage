@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: RegistryWrapperContext.java,v 1.1 2005/03/10 10:05:02 benoitf Exp $
+ * $Id: RegistryWrapperContext.java,v 1.2 2005/03/10 12:22:02 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.registry;
@@ -76,7 +76,7 @@ public class RegistryWrapperContext implements Context {
      * @param env hashtable used
      */
     public RegistryWrapperContext(Hashtable env) {
-        registry = JRMPRegistry.registry;
+        registry = JRMPRegistry.getRegistry();
         environment = env;
         environment.put(Context.INITIAL_CONTEXT_FACTORY, "org.objectweb.carol.jndi.spi.JRMPContextWrapperFactory");
     }
