@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: MultiProtocolTests.java,v 1.12 2005/03/11 14:07:36 benoitf Exp $
+ * $Id: MultiProtocolTests.java,v 1.13 2005/03/11 14:53:05 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jtests.conform.basic.clients;
@@ -51,6 +51,7 @@ import org.objectweb.carol.jtests.conform.basic.server.BasicObjectItf;
 import org.objectweb.carol.jtests.conform.basic.server.BasicRemoteObject;
 import org.objectweb.carol.jtests.conform.basic.server.BasicSerializableObject;
 import org.objectweb.carol.util.configuration.CarolCurrentConfiguration;
+import org.objectweb.carol.util.configuration.CarolDefaultValues;
 
 /**
  * Class <code>MultiProtocolTests</code> is a Junit BasicTest Test : Test The
@@ -546,7 +547,7 @@ public class MultiProtocolTests extends TestCase {
         assertTrue("Should be the same", bso1.equals(bsoResult1));
 
         // test with adding the JNDI factory now
-        Hashtable testEnv2  = new Hashtable();
+        Hashtable testEnv2 = new Hashtable();
         String initFactory = prop.getProperty(Context.INITIAL_CONTEXT_FACTORY);
         testEnv2.put(Context.PROVIDER_URL, providerURL);
         testEnv2.put(Context.INITIAL_CONTEXT_FACTORY, initFactory);
@@ -585,12 +586,66 @@ public class MultiProtocolTests extends TestCase {
         Hashtable env3 = new Hashtable();
         env3.put(Context.PROVIDER_URL, "dummy://123.123.123.123:9876");
         try {
-             new InitialContext(env3);
-             fail("The context should fail with invalid properties");
+            new InitialContext(env3);
+            fail("The context should fail with invalid properties");
         } catch (NamingException e) {
             // awaited result
             e.printStackTrace();
         }
+
+    }
+
+    /**
+     * Test of environment Method
+     * bug #300979
+     */
+    public void testIctxEnvironment() {
+        Hashtable testEnv = null;
+
+        try {
+            testEnv = ic.getEnvironment();
+        } catch (NamingException e) {
+            e.printStackTrace();
+            fail("Cannot get environment");
+        }
+
+        Context newIctx = null;
+        try {
+            newIctx = new InitialContext(testEnv);
+        } catch (NamingException e) {
+            e.printStackTrace();
+            fail("Cannot get ICTX environment");
+        }
+
+        // test factory is the multi factory
+        try {
+            assertTrue(newIctx.getEnvironment().get(Context.INITIAL_CONTEXT_FACTORY).equals(
+                    CarolDefaultValues.MULTI_JNDI));
+        } catch (NamingException ne) {
+            ne.printStackTrace();
+            fail("Should be able to get the environment : " + ne.getMessage());
+        }
+
+        String id = "testIctxEnvironment";
+        BasicSerializableObject bso1 = new BasicSerializableObject(id);
+        // bind it
+        try {
+            newIctx.bind(id, bso1);
+        } catch (Exception e) {
+            fail("Can't bind object 1: " + e);
+        }
+
+        // lookup
+        BasicSerializableObject bsoResult1 = null;
+        try {
+            bsoResult1 = (BasicSerializableObject) PortableRemoteObject.narrow(newIctx.lookup(id),
+                    BasicSerializableObject.class);
+        } catch (Exception e) {
+            fail("Can't lookup object : " + e);
+        }
+
+        // Now compare objects and they should be the same
+        assertTrue("Should be the same", bso1.equals(bsoResult1));
 
     }
 
@@ -602,8 +657,7 @@ public class MultiProtocolTests extends TestCase {
         return new TestSuite(MultiProtocolTests.class);
         // In case of launching only one test
         /*TestSuite testSuite = new TestSuite();
-        testSuite.addTest(new MultiProtocolTests("testSingleInitialContext"));
+        testSuite.addTest(new MultiProtocolTests("testIctxEnvironment"));
         return testSuite;*/
-
     }
 }
