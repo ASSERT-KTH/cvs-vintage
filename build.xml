@@ -9,7 +9,7 @@
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.11-cvs"/>
 	<property name="dest" value="../columba-${version}"/>
-  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar"/>
+  <property name="ownclasspath" value="${classpath}:${src}/ext/log4j.jar:${src}/ext/jython.jar"/>
 
 	<!-- definition of the task to check the style of the java-code -->
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
@@ -50,6 +50,7 @@
 				<include name="**/*.wav"/>
 				<include name="**/*.properties"/>
 				<include name="**/*.jar"/>
+				<include name="**/*.py"/>
 				<include name="README"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
@@ -61,6 +62,7 @@
 				<include name="run_source.sh"/>
 				<include name="run_source_jdk13.bat"/>
 				<include name="run_source_jdk13.sh"/>
+				<include name="ext/Lib/**"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
 				<exclude name="ext/checkstyle-all-2.1.jar"/>
@@ -95,7 +97,7 @@
       <exclude name="**/*.zip"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
-				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar"/>
+				<attribute name="Class-Path" value="ext/xalan.jar ext/jaxp.jar ext/crimson.jar ext/log4j.jar ext/jython.jar"/>
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
