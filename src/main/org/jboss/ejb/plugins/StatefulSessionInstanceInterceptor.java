@@ -18,6 +18,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.MethodInvocation;
 import org.jboss.logging.Logger;
 import org.jboss.metadata.SessionMetaData;
+import org.jboss.util.Sync;
 import javax.transaction.Transaction;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
@@ -33,7 +34,7 @@ import javax.ejb.EJBObject;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.13 $
+*   @version $Revision: 1.14 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -104,7 +105,7 @@ extends AbstractInterceptor
 			// Still free? Not free if create() was called successfully
 			if (ctx.getId() == null)
 			{
-				container.getInstancePool().free(mi.getEnterpriseContext()); 
+				container.getInstancePool().free(ctx); 
 			} 
 		}
 	}
@@ -139,14 +140,16 @@ extends AbstractInterceptor
 	public Object invoke(MethodInvocation mi)
 	throws Exception
 	{
-		EnterpriseInstanceCache cache = (EnterpriseInstanceCache)container.getInstanceCache();
+		AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
 		Object id = mi.getId();
 		EnterpriseContext ctx = null;
-		Object mutex = cache.getLock(id);
+		Sync mutex = (Sync)cache.getLock(id);
 		
 		// We synchronize the locking logic (so we can be reentrant)
-		synchronized (mutex) 
+		try 
 		{
+			mutex.acquire();
+			
 			// Get context
 			ctx = container.getInstanceCache().get(mi.getId());
 		
@@ -190,7 +193,12 @@ extends AbstractInterceptor
 					ctx.lock();
 				}
 			}
-		} 
+		}
+		catch (InterruptedException ignored) {} 
+		finally 
+		{
+			mutex.release();
+		}
 		
 		try
 		{
@@ -222,8 +230,10 @@ extends AbstractInterceptor
 			if (ctx != null)
 			{
 				// Still a valid instance
-				synchronized (mutex) 
+				try 
 				{
+					mutex.acquire();
+
 					// release it
 					ctx.unlock();
 				
@@ -234,6 +244,8 @@ extends AbstractInterceptor
 						container.getInstanceCache().remove(mi.getId());
 					}
 				}
+				catch (InterruptedException ignored) {}
+				finally {mutex.release();}
 			}
 		}
 	}
