@@ -1,0 +1,47 @@
+<project name="build-site" default="docs" basedir=".">
+
+    <!-- Initialization properties -->
+    <property name="project.name"   value="site"/>
+    <property name="docs.src" value="./xdocs"/>
+    <property name="docs.dest" value="../../www/usemodels/usecases"/>
+    <property name="project.xml" value="../project.xml"/>
+
+    <!-- Build classpath -->
+    <path id="classpath">
+        <fileset dir="../../lib">
+            <include name="**/velocity*.jar"/>
+            <include name="**/xerces*.jar"/>
+        </fileset>
+        <fileset dir="../../build">
+            <include name="**/jdom*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="prepare">    
+        <available classname="org.apache.velocity.anakia.AnakiaTask" 
+            property="AnakiaTask.present">
+            <classpath refid="classpath"/>
+        </available>
+    </target>
+
+    <target depends="prepare" name="prepare-error" unless="AnakiaTask.present">
+        <echo>
+            AnakiaTask is not present! Please check to make sure that 
+            velocity.jar is in your classpath.
+        </echo>
+    </target>
+
+    <target name="docs" depends="prepare-error" if="AnakiaTask.present">
+        <taskdef name="anakia" 
+            classname="org.apache.velocity.anakia.AnakiaTask">
+            <classpath refid="classpath"/>
+        </taskdef>
+        <anakia basedir="${docs.src}" destdir="${docs.dest}/"
+             extension=".html" style="./usecase.vsl"
+             projectFile="${project.xml}"
+             includes="**/*.xml"
+             lastModifiedCheck="true"
+             templatePath=".">
+        </anakia>
+    </target>
+</project>

@@ -1,0 +1,93 @@
+<usecase>
+<number>01</number>
+<title>Entering an Issue</title>
+
+<section>
+<extends>None</extends>
+<description>
+       User enters an issue, duplicates are avoided if possible. The
+       static fields of an issue are entered first along with a short
+       description. This is used to look for duplicate issues. If it is
+       a duplicate, the currently selected issue gains a vote.  If a new
+       issue is entered, it is well specified and actionable.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="QA Manager">wants to avoid duplicate issues.</actor>
+    <actor name="QA Manager">wants enough info to assign issue to proper developer, deadline.</actor>
+    <actor name="QA Manager">wants well-formed, well-written issue reports.</actor>
+    <actor name="Assigned Developer">wants detailed description, steps to reproduce.</actor>
+</stakeholders>
+<prerequirements>
+    <req>Project set up</req>
+    <req>User knows which project to report the issue against</req>
+</prerequirements>
+<result>
+New issue is entered, or matching existing issue has vote increased.
+</result>
+<datasets>
+    <data>Quick fields</data>
+    <data>Yes/No on duplicate candidates</data>
+    <data>Detailed fields</data>
+    <data>Field values based on user profile: e.g., reporter</data>
+</datasets>
+<faq>
+    <item q="Does the user have limited votes?"></item>
+    <item q="Do the forms help users enter good issue reports?"></item>
+    <item q="At what point do users have to log in?">
+       Users need to log in before making modifications
+       to the system. In other words, in order for the system to track 
+       modifications a user makes, the user needs to be logged in.</item>
+</faq>
+<notes>
+    <note>No anonymous users can post issues</note>
+    <note>Admin use case to to put which fields in the NewIssueBox</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: visit <a href="ProjectIssues.html">ProjectIssues</a> for a given project </li>
+        <li>User: log in as non-guest if not already</li>
+        <li>User: enter fields in <a href="ProjectIssues.html#NewIssueBox">NewIssueBox</a>, hit submit
+           <ul>
+            <li>choose type of issue</li>
+            <li>enter summary</li>
+            <li>enter platform, os</li>
+            <li>enter severity, priority (role specific)</li>
+           </ul>
+        </li>
+        <li>Scarab: checks for duplicates</li>
+        <li>If duplicates found:
+           <ol type="a">
+               <li>Scarab: display <a href="Deduplicate.html">Deduplicate</a> Page</li>
+               <li>User: review list of duplicates</li>
+               <li>If dup matches user's issue:
+                    <ul type="a">
+                        <li>User: vote for matching issue</li>
+                    </ul>
+               </li>
+               <li>If no match:
+                   <ul type="a">
+                       <li>User: indicate no match and show the next found potential duplicate issue. If no more 
+                       duplicate issues, then show <a href="NewIssueDetails.html">NewIssueDetails</a> page</li>
+                   </ul>
+               </li>
+           </ol>
+        </li>
+        <li>Scarab: display <a href="NewIssueDetails.html">NewIssueDetails</a> page</li>
+        <li>User: enter fields and hit submit</li>
+        <li>Scarab: validate data and show next screen or bounce back to current screen with previous
+                    information populated again.</li>
+        <li>Scarab: store values in database</li>
+        <li>Scarab: display <a href="NewIssueAddendum.html">NewIssueAddendum</a> page with  
+            <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a></li>
+        <li>User: options to attach a file to issue. Scarab: needs to track and deal with this properly.</li>
+        <li>Scarab: display <a href="ProjectIssues.html">ProjectIssues</a> page 
+                     with <a href="IssueChangedConfirmation.html">IssueChangedConfirmation</a> </li>
+      </ol>
+</scenario>
+</section>
+</usecase>
