@@ -1,4 +1,4 @@
-// $Id: UmlFactoryImpl.java,v 1.12 2005/01/09 16:28:04 bobtarling Exp $
+// $Id: UmlFactoryImpl.java,v 1.13 2005/01/09 16:36:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -160,10 +160,10 @@ public class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactor
      */
     private NSUMLModelImplementation nsmodel;
 
-//    /**
-//     * A map of valid connections keyed by the connection type.
-//     * The constructor builds this from the data in the VALID_CONNECTIONS array
-//     */
+    /**
+     * A map of valid connections keyed by the connection type.
+     * The constructor builds this from the data in the VALID_CONNECTIONS array
+     */
     private Map validConnectionMap = new HashMap();
 
     // TODO: The purpose of the jmiProxy is not understood (Linus January
@@ -272,7 +272,7 @@ public class UmlFactoryImpl extends AbstractUmlModelFactory implements UmlFactor
     UmlFactoryImpl(NSUMLModelImplementation implementation) {
         nsmodel = implementation;
 
-//        buildValidConnectionMap();
+        buildValidConnectionMap();
         initializeFactoryMethods();
     }
 
