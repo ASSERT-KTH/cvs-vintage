@@ -24,7 +24,8 @@
 
 ## the rowspan and colspan stuff below will not work as written.  We must
 ## track which cells to skip.  For now assume rowspan and colspan are always 1.
-#macro ( reportTable $model )
+#macro ( reportTable $model $issueType )
+
     #set ($quote = '"')
     #set ($maxRow = $model.RowCount)
     #set ($maxColumn = $model.ColumnCount)
@@ -41,7 +42,7 @@
                     #if ($model.isDate($cellLabel))
                         #set ($label = "date $format.getDate('MM/dd/yyyy HH:mm', $cellLabel)")
                     #elseif ($cellLabel.isOption($cellLabel.subLabel1))
-                        #set ($label = "$cellLabel.SubLabel1.RModuleAttribute.DisplayValue:$cellLabel.SubLabel1.DisplayValue")
+                        #set ($label = "$cellLabel.SubLabel1.getRModuleAttribute($issueType).DisplayValue:$cellLabel.SubLabel1.DisplayValue")
                     #elseif ($cellLabel.isOptionGroup($cellLabel.subLabel1))
                         #set ($label = "$cellLabel.SubLabel1.DisplayValue")
                     #elseif ($cellLabel.isAttributeAndUser($cellLabel.subLabel1))
@@ -53,7 +54,7 @@
                         #if ($cellLabel.isOptionGroup($cellLabel.SubLabel2))
                             #set ($label = "$label $cellLabel.SubLabel2.DisplayValue")
                         #elseif ($cellLabel.isOption($cellLabel.SubLabel2))
-                            #set ($label = "$label $cellLabel.SubLabel2.RModuleAttribute.DisplayValue:$cellLabel.SubLabel2.DisplayValue")
+                            #set ($label = "$label $cellLabel.SubLabel2.getRModuleAttribute($issueType).DisplayValue:$cellLabel.SubLabel2.DisplayValue")
                         #end
                     #end
                 #end

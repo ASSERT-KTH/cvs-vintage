@@ -35,6 +35,7 @@ column.</p>
   <th>Group name</th>
  </tr>
 #set ($finalCount = 1)
+$report.OptionGroups
 #foreach ( $optionGroup in $report.OptionGroups )
     #set ($intakeOptionGroup = $intake.OptionGroup.mapTo($optionGroup))
  #indexedRows($velocityCount)
@@ -93,7 +94,7 @@ column.</p>
         #end
       </select>
         </td>
-  <td>$attOption.RModuleAttribute.DisplayValue</td>
+  <td>$attOption.getRModuleAttribute($report.IssueType).DisplayValue</td>
   <td>$attOption.DisplayValue</td>
  </tr>
     #end

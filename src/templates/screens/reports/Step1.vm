@@ -20,10 +20,11 @@ $intakeReport.Name
 </select>
 <input type="submit" value="Run" name="eventSubmit_doRunstoredreport"/>
 <input type="submit" value="Edit" name="eventSubmit_doEditstoredreport"/>
+<input type="submit" value="Delete" name="eventSubmit_doDeletestoredreport"/>
 #end
 
 <h3>Summary information</h3>
-<p><strong>Considering saving this report?</strong> If so,  enter the following information (it can be edited later).</p>
+<p><strong>Considering saving this report?</strong> If so, enter the following information (it can be edited later).</p>
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
   <tr>

@@ -39,7 +39,7 @@
     <p>Report Date/Time: $report.GeneratedDate</p>
 #end
 
-#reportTable( $report.Model )
+#reportTable( $report.Model $report.IssueType )
 
 ## <p>page 1 of 1</p>
 <div class="functnbar">

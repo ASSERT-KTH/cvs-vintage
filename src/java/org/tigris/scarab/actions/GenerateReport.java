@@ -94,7 +94,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for report generation forms
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: GenerateReport.java,v 1.8 2001/10/18 21:37:20 jmcnally Exp $
+    @version $Id: GenerateReport.java,v 1.9 2001/10/19 22:11:32 jmcnally Exp $
 */
 public class GenerateReport 
     extends RequireLoginFirstAction
@@ -111,9 +111,7 @@ public class GenerateReport
         }
         else if (report.getType() == 1)
         {
-            // this should go to Step3_2a but that screen currently only
-            // presents one valid option in the select so skip it.
-            setTarget(data, "reports,Step3_2b.vm");
+            setTarget(data, "reports,Step3_2a.vm");
         }
         else if (report.getType() == 0)
         {
@@ -338,8 +336,10 @@ public class GenerateReport
             else 
             {
                 // make sure name is unique
-                if ( data.getParameters().getBoolean("overwrite") ||
-                     !ReportPeer.exists(report.getName()) ) 
+                Report savedReport = ReportPeer
+                    .retrieveByName(report.getName());
+                if (savedReport == null 
+                    || savedReport.getReportId().equals(report.getReportId()))
                 {
                     report.save();
                     data.setMessage("The report has been saved.");
@@ -348,16 +348,14 @@ public class GenerateReport
                 else 
                 {
                     data.setMessage("A report already exists under this name."
-                                    + "if you wish to overwrite the old report"
-                                    + ", click Save.");
+                                    + "Please choose a unique name.");
                     setTarget(data, "reports,SaveReport.vm");
                 }
             }
         }
         else 
         {
-            data.setMessage("An error prevented saving your report.  Please" +
-                            "notify the developers of Scarab.");
+            data.setMessage("An error prevented saving your report.");
         }
     }
 
@@ -382,6 +380,19 @@ public class GenerateReport
     {        
         populateReport("", data, context);
         setTarget(data, "reports,Report_1.vm");
+    }
+
+    public void doDeletereport( RunData data, TemplateContext context )
+        throws Exception
+    {
+        Report report = populateReport("reports,SaveReport.vm", data, context);
+        report.setDeleted(true);
+        report.save();
+        ScarabRequestTool scarabR = getScarabRequestTool(context); 
+        scarabR.setReport(null);
+        Intake intake = getIntakeTool(context);
+        intake.removeAll();
+        setTarget(data, "reports,Step1.vm");
     }
 
 
