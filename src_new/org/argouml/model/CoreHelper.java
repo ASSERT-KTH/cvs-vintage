@@ -1,4 +1,4 @@
-// $Id: CoreHelper.java,v 1.2 2005/01/07 18:45:59 linus Exp $
+// $Id: CoreHelper.java,v 1.3 2005/01/09 02:02:24 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -400,8 +400,6 @@ public interface CoreHelper {
      *
      * This method also works to get the source of a Link.<p>
      *
-     * This method also works for CommentEdge.<p>
-     *
      * TODO: move this method to a generic ModelHelper
      *
      * @param relationship is the relation
@@ -421,8 +419,6 @@ public interface CoreHelper {
      * the connections list.<p>
      *
      * This method also works for links.<p>
-     *
-     * This method also works for CommentEdge<p>
      *
      * TODO: move this method to a generic ModelHelper
      *

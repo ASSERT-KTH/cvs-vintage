@@ -1,4 +1,4 @@
-// $Id: UmlHelperImpl.java,v 1.4 2005/01/09 00:56:37 bobtarling Exp $
+// $Id: UmlHelperImpl.java,v 1.5 2005/01/09 02:02:23 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,7 +42,6 @@ import org.argouml.model.ModelManagementHelper;
 import org.argouml.model.StateMachinesHelper;
 import org.argouml.model.UmlHelper;
 import org.argouml.model.UseCasesHelper;
-import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 import ru.novosoft.uml.MBase;
 

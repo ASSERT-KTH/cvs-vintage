@@ -1,4 +1,4 @@
-// $Id: CoreFactory.java,v 1.5 2005/01/08 22:03:07 bobtarling Exp $
+// $Id: CoreFactory.java,v 1.6 2005/01/09 02:02:24 bobtarling Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,8 +25,6 @@
 package org.argouml.model;
 
 import java.util.Collection;
-
-import org.argouml.application.api.NotationName;
 
 
 /**
@@ -461,24 +459,6 @@ public interface CoreFactory {
      */
     Object buildGeneralization(Object child1, Object parent1);
 
-    /**
-     * Builds a default method belonging to a certain operation. The
-     * language of the body is set to the selected Notation
-     * language. The body of the method is set to an emtpy string.
-     *
-     * @param op is the operation
-     * @return MMethod
-     */
-    Object buildMethod(Object op);
-
-    /**
-     * Builds a method belonging to a certain operation.
-     * @param op The operation this method belongs to
-     * @param notation The notationname (language name) of the body
-     * @param body The actual body of the method
-     * @return MMethod
-     */
-    Object buildMethod(Object op, NotationName notation, String body);
 
     /**
      * Builds a method with a given name.
