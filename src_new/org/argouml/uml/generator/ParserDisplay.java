@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.144 2005/01/09 17:06:40 mvw Exp $
+// $Id: ParserDisplay.java,v 1.145 2005/01/13 05:55:45 d00mst Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -2357,10 +2357,6 @@ public class ParserDisplay extends Parser {
             }
         } catch (NoSuchElementException nsee) {
             throw new ParseException("Unexpected end of attribute", s.length());
-        } catch (ParseException pre) {
-            LOG.error("parseexception", pre);
-
-            throw pre;
         }
 
         if (base != null) {
