@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector.notification;
 
 import java.io.Serializable;
@@ -25,10 +26,17 @@ import javax.management.ReflectionException;
 
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
+import org.jboss.logging.Logger;
+
 /**
-* Basic Local Listener to receive Notification from a remote JMX Agent
-**/
-public abstract class ClientNotificationListener {
+ * Basic Local Listener to receive Notification from a remote JMX Agent
+ *
+ * @version <tt>$Revision: 1.3 $</tt>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ **/
+public abstract class ClientNotificationListener
+{
+   protected Logger log = Logger.getLogger(this.getClass());
 
    private ObjectName               mSender;
    private ObjectName               mRemoteListener;

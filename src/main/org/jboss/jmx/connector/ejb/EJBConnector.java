@@ -10,45 +10,11 @@ package org.jboss.jmx.connector.ejb;
 import org.jboss.jmx.adaptor.interfaces.Adaptor;
 import org.jboss.jmx.adaptor.interfaces.AdaptorHome;
 
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
+
+import java.rmi.RemoteException;
 
 import javax.ejb.CreateException;
-import javax.ejb.FinderException;
-
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.ObjectName;
-import javax.management.QueryExp;
-import javax.management.ObjectInstance;
-import javax.management.Notification;
-import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
-import javax.management.MBeanServer;
-import javax.management.MBeanInfo;
-
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
-import javax.management.InvalidAttributeValueException;
-import javax.management.ListenerNotFoundException;
-import javax.management.MBeanException;
-import javax.management.RuntimeMBeanException;
-import javax.management.MBeanRegistrationException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.OperationsException;
-import javax.management.ReflectionException;
-import javax.management.RuntimeOperationsException;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -57,11 +23,6 @@ import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
 import org.jboss.jmx.connector.RemoteMBeanServer;
-import org.jboss.jmx.connector.notification.ClientNotificationListener;
-import org.jboss.jmx.connector.notification.JMSClientNotificationListener;
-import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
-import org.jboss.jmx.connector.notification.RMIClientNotificationListener;
-import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 
 import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 
@@ -86,7 +47,9 @@ import org.jboss.util.NestedRuntimeException;
  * RuntimeMBeanException taking a RuntimeException and not a Throwable for
  * detail.
  *
- * @version <tt>$Revision: 1.9 $</tt>
+ * @jmx:mbean extends "org.jboss.jmx.connector.RemoteMBeanServer"
+ *
+ * @version <tt>$Revision: 1.10 $</tt>
  * @author  Andreas Schaefer (andreas.schaefer@madplanet.com)
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  **/
@@ -94,12 +57,8 @@ public class EJBConnector
    extends RMIConnectorImpl
    implements RemoteMBeanServer, EJBConnectorMBean
 {
-   // private Adaptor mRemoteAdaptor;
-   // protected Vector mListeners = new Vector();
    protected String mJNDIServer;
    protected String mJNDIName;
-   // protected int mEventType = NOTIFICATION_TYPE_RMI;
-   // protected String[] mOptions = new String[ 0 ];
 
    /**
     * AS For evaluation purposes
@@ -108,18 +67,9 @@ public class EJBConnector
     * @param pAdaptor RMI-Adaptor used to connect to the remote JMX Agent
     **/
    public EJBConnector(AdaptorHome pAdaptorHome)
+      throws CreateException, RemoteException
    {
-      //
-      // jason: should expose the exception thrown from create() instead
-      //        of wrap it in an IAE
-      //
-      
-      try {
-         mRemoteAdaptor = pAdaptorHome.create();
-      }
-      catch( Exception e ) {
-         throw new IllegalArgumentException( "Adaptor could not be created: " + e.getMessage() );
-      }
+      mRemoteAdaptor = pAdaptorHome.create();
    }
 
    /**
@@ -133,7 +83,9 @@ public class EJBConnector
     *                 now only for event type JMS there is the JMS Queue-
     *                 Factory JNDI Name supported.
     **/
-   public EJBConnector( int pType, String[] pOptions ) {
+   public EJBConnector( int pType, String[] pOptions )
+      throws Exception
+   {
       this( pType, pOptions, null, null );
    }
    
@@ -150,7 +102,9 @@ public class EJBConnector
     * @param pJNDIName JNDI Name of the EJB-Adaptor to lookup its Home interface
     *                  and if null then "ejb/jmx/ejb/Adaptor" is used as default
     **/
-   public EJBConnector( int pType, String[] pOptions, String pJNDIName ) {
+   public EJBConnector( int pType, String[] pOptions, String pJNDIName )
+      throws Exception
+   {
       this( pType, pOptions, pJNDIName, null );
    }
    
@@ -171,7 +125,9 @@ public class EJBConnector
     *                    If null then the default specified in the "jndi.properties"
     *                    will be used.
     **/
-   public EJBConnector( int pType, String[] pOptions, String pJNDIName, String pJNDIServer ) {
+   public EJBConnector( int pType, String[] pOptions, String pJNDIName, String pJNDIServer )
+      throws Exception
+   {
       if( pType == NOTIFICATION_TYPE_RMI || pType == NOTIFICATION_TYPE_JMS
          || pType == NOTIFICATION_TYPE_POLLING ) {
          mEventType = pType;
@@ -196,99 +152,44 @@ public class EJBConnector
    // Methods
    // -------------------------------------------------------------------------  
    
-   /**
-    * Describes the instance and its content for debugging purpose
-    *
-    * @return Debugging information about the instance and its content
-    **/
-   /*
-
-   jason: This is pointless
-   
-   public String toString()
-   {
-      return "EJBAdaptorClient [ " + " ]";
-   }
-
-   */
-
-   /**
-    * Checks if the given instance is the same (same address) as
-    * this instance.
-    *
-    * @return The result from the super class equals() method
-    **/
-   /*
-
-   jason: This is pointless
-   
-   public boolean equals( Object pTest )
-   {
-      return super.equals( pTest );
-   }
-   */
-   
-   /**
-    * Returns the hashcode of this instance
-    *
-    * @return Hashcode of its super class
-    **/
-   /*
-
-   jason: This is pointless
-   
-   public int hashCode()
-   {
-      return super.hashCode();
-   }
-   */
-   
-   /**
-    * Creates a SurveyManagement bean.
-    *
-    * @return Returns a SurveyManagement bean for use by the Survey handler.
-    **/
    protected Adaptor getAdaptorBean( String pJNDIName )
       throws NamingException,
              RemoteException,
              CreateException
    {
-      Context lJNDIContext = null;
+      Context ctx = null;
       // The Adaptor can be registered on another JNDI-Server therefore
       // the user can overwrite the Provider URL
       if( mJNDIServer != null ) {
          Hashtable lProperties = new Hashtable();
          lProperties.put( Context.PROVIDER_URL, mJNDIServer );
-         lJNDIContext = new InitialContext( lProperties );
+         ctx = new InitialContext( lProperties );
       }
       else {
-         lJNDIContext = new InitialContext();
+         ctx = new InitialContext();
       }
       
-      Object aEJBRef = lJNDIContext.lookup( pJNDIName );
+      Object aEJBRef = ctx.lookup( pJNDIName );
       AdaptorHome aHome = (AdaptorHome) 
          PortableRemoteObject.narrow( aEJBRef, AdaptorHome.class );
 
+      ctx.close();
+      
       return aHome.create();
    }
 
-   // JMXClientConnector implementation -------------------------------
-   
-   public void start(Object pServer)
-      throws IllegalArgumentException
+   /**
+    * jmx:managed-operation
+    */
+   public void start(Object pServer) throws Exception
    {
-      try {
-         mRemoteAdaptor = getAdaptorBean( mJNDIName );
-      }
-      catch( Exception e ) {
-         //
-         // jason: why does start() only declare a IAE?
-         //
-         throw new NestedRuntimeException(e);
-      }
+      mRemoteAdaptor = getAdaptorBean( mJNDIName );
    }
    
-   public String getServerDescription() {
+   /**
+    * jmx:managed-operation
+    */ 
+  public String getServerDescription() {
       return String.valueOf(mJNDIServer);
    }
 }

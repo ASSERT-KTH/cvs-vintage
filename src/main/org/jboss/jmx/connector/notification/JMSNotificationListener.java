@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector.notification;
 
 import java.io.Serializable;
@@ -26,15 +27,24 @@ import javax.management.NotificationListener;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+
 import javax.rmi.PortableRemoteObject;
 
+import org.jboss.logging.Logger;
+
 /**
-* Remote Listener using JMS to send the event
-**/
+ * Remote Listener using JMS to send the event
+ *
+ * @jmx:mbean extends="org.jboss.jmx.connector.notification.ListenerMBean"
+ * 
+ * @version <tt>$Revision: 1.4 $</tt>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ **/
 public class JMSNotificationListener
    implements JMSNotificationListenerMBean
 {
-
+   private static final Logger log = Logger.getLogger(JMSNotificationListener.class);
+   
    // JMS Queue Session and Sender must be created on the server-side
    // therefore they are transient and created on the first notification
    // call
@@ -53,12 +63,12 @@ public class JMSNotificationListener
    }
 
    /**
-   * Handles the given notification by sending this to the remote
-   * client listener
-   *
-   * @param pNotification				Notification to be send
-   * @param pHandback					Handback object
-   */
+    * Handles the given notification by sending this to the remote
+    * client listener
+    *
+    * @param pNotification    Notification to be send
+    * @param pHandback        Handback object
+    */
    public void handleNotification(
       Notification pNotification,
       Object pHandback
@@ -75,19 +85,18 @@ public class JMSNotificationListener
          mSender.send( lMessage );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         log.error("failed to handle notification", e);
       }
    }
 
    /**
-   * Test if this and the given Object are equal. This is true if the given
-   * object both refer to the same local listener
-   *
-   * @param pTest						Other object to test if equal
-   *
-   * @return							True if both are of same type and
-   *									refer to the same local listener
-   **/
+    * Test if this and the given Object are equal. This is true if the given
+    * object both refer to the same local listener
+    *
+    * @param pTest    Other object to test if equal
+    * @return         True if both are of same type and
+    *                 refer to the same local listener
+    **/
    public boolean equals( Object pTest ) {
       if( pTest instanceof JMSNotificationListener ) {
          try {
@@ -96,24 +105,19 @@ public class JMSNotificationListener
             );
          }
          catch( JMSException je ) {
-            je.printStackTrace();
+            log.error("equality test failed", je);
          }
       }
       return false;
    }
 
    /**
-   * @return							Hashcode of the local listener
-   **/
+    * @return  Hashcode of the local listener
+    **/
    public int hashCode() {
       return mQueue.hashCode();
    }
 
-   /**
-   * Creates a SurveyManagement bean.
-   *
-   * @return Returns a SurveyManagement bean for use by the Survey handler.
-   **/
    private QueueConnection getQueueConnection( String pJNDIName )
       throws NamingException, JMSException
    {

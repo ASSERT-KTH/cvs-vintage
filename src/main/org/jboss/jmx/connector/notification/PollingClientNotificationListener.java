@@ -4,6 +4,7 @@
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.jmx.connector.notification;
 
 import java.io.Serializable;
@@ -19,13 +20,15 @@ import javax.management.ObjectName;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
-* Local Polling Listener to receive the message and send to the listener
-**/
+ * Local Polling Listener to receive the message and send to the listener
+ *
+ * @version <tt>$Revision: 1.5 $</tt>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ **/
 public class PollingClientNotificationListener
    extends ClientNotificationListener
    implements Runnable
 {
-
    private RemoteMBeanServer                mConnector;
    private int                         mSleepingPeriod = 2000;
    
@@ -74,7 +77,7 @@ public class PollingClientNotificationListener
                }
             }
             catch( Exception e ) {
-               System.out.println( "PollingClientNotificationListener.getNotifications() got exception " + e );
+               log.error("operation failed; continuing", e);
             }
             Thread.sleep( mSleepingPeriod );
          }

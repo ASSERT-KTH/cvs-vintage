@@ -30,28 +30,25 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.jmx.connector.ejb.EJBConnector;
 import org.jboss.jmx.connector.rmi.RMIConnectorImpl;
 
+import org.jboss.logging.Logger;
+
 /**
  * Factory delivering a list of servers and its available protocol connectors
  * and after selected to initiate the connection This is just the (incomplete)
  * interface of it
  *
- * @author    <A href="mailto:andreas@jboss.org">Andreas Schaefer</A>
- * @created   May 2, 2001
+ * @created  May 2, 2001
+ * @version <tt>$Revision: 1.6 $</tt>
+ * @author  <A href="mailto:andreas@jboss.org">Andreas Schaefer</A>
  **/
 public class ConnectorFactoryImpl
 {
-   // Constants -----------------------------------------------------
-
-   // Static --------------------------------------------------------
-
-   // Attributes ----------------------------------------------------
+   private static final Logger log = Logger.getLogger(ConnectorFactoryImpl.class);
 
    private MBeanServer mServer;
    private int mNotificationType = RemoteMBeanServer.NOTIFICATION_TYPE_RMI;
    private String mJMSName;
    private String mEJBAdaptorName = "ejb/jmx/ejb/Adaptor";
-
-   // Public --------------------------------------------------------
 
    public ConnectorFactoryImpl(
       MBeanServer pServer,
@@ -111,9 +108,14 @@ public class ConnectorFactoryImpl
                lConnectors.add( lName );
             }
          }
+
+         lNamingServer.close();
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         //
+         // jason: should probably declare this exception and let cleint handle
+         //
+         log.error("operation failed", e);
       }
 
       return lConnectors.iterator();
@@ -144,7 +146,10 @@ public class ConnectorFactoryImpl
             );
          }
          catch( Exception e ) {
-            e.printStackTrace();
+            //
+            // jason: should probably declare this exception and let cleint handle
+            //
+            log.error("operation failed", e);
          }
       }
       else if( pConnector.getProtocol().equals( "ejb" ) ) {
@@ -161,7 +166,10 @@ public class ConnectorFactoryImpl
             );
          }
          catch( Exception e ) {
-            e.printStackTrace();
+            //
+            // jason: should probably declare this exception and let cleint handle
+            //
+            log.error("operation failed", e);
          }
       }
       return lConnector;
@@ -220,7 +228,10 @@ public class ConnectorFactoryImpl
          }
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         //
+         // jason: should probably declare this exception and let cleint handle
+         //
+         log.error("operation failed", e);
       }
    }
 
@@ -240,7 +251,7 @@ public class ConnectorFactoryImpl
        *
        * @return Connector Name instance if valid otherwise null
        **/
-      public ConnectorName check( Context pContext, NameClassPair pPair );
+      ConnectorName check( Context pContext, NameClassPair pPair );
       
    }
 

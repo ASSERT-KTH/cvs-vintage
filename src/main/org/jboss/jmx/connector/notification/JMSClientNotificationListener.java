@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector.notification;
 
 import java.io.Serializable;
@@ -36,8 +37,11 @@ import javax.rmi.PortableRemoteObject;
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
 /**
-* Local JMS Listener to receive the message and send to the listener
-**/
+ * Local JMS Listener to receive the message and send to the listener
+ *
+ * @version <tt>$Revision: 1.5 $</tt>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ **/
 public class JMSClientNotificationListener
    extends ClientNotificationListener
    implements MessageListener
@@ -85,7 +89,7 @@ public class JMSClientNotificationListener
          mClientListener.handleNotification( lNotification, mHandback );
       }
       catch( JMSException je ) {
-         je.printStackTrace();
+         log.error("failed to handle notification", je);
       }
    }
 

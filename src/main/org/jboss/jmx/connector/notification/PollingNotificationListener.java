@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector.notification;
 
 import java.io.Serializable;
@@ -13,13 +14,17 @@ import java.util.List;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-/**
-* Remote Listener using Polling to send the event
-**/
+/** 
+ * Remote Listener using Polling to send the event
+ *
+ * @jmx:mbean extends="org.jboss.jmx.connector.notification.ListenerMBean"
+ * 
+ * @version <tt>$Revision: 1.2 $</tt>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ **/
 public class PollingNotificationListener
    implements PollingNotificationListenerMBean
 {
-
    private List mList;
    private int mMaximumSize = 1000;
    
@@ -40,8 +45,8 @@ public class PollingNotificationListener
    * Handles the given notification by sending this to the remote
    * client listener
    *
-   * @param pNotification				Notification to be send
-   * @param pHandback					Handback object
+   * @param pNotification    Notification to be send
+   * @param pHandback        Handback object
    */
    public void handleNotification(
       Notification pNotification,
@@ -54,10 +59,16 @@ public class PollingNotificationListener
       }
    }
 
+   /**
+    * jmx:managed-operation
+    */
    public List getNotifications() {
       return getNotifications( mMaximumSize );
    }
 
+   /**
+    * jmx:managed-operation
+    */
    public List getNotifications( int pMaxiumSize ) {
       List lReturn = null;
       synchronized( mList ) {
@@ -68,5 +79,4 @@ public class PollingNotificationListener
       
       return lReturn;
    }
-
 }

@@ -77,15 +77,16 @@ import org.jboss.logging.Logger;
 import org.jboss.util.NestedRuntimeException;
 
 /**
- * Implementation of the JMX Connector over the RMI protocol 
+ * Implementation of the JMX Connector over the RMI protocol
  *
- * @version <tt>$Revision: 1.8 $</tt>
+ * @jmx:mbean extends="org.jboss.jmx.connector.RemoteMBeanServer"
+ *
+ * @version <tt>$Revision: 1.9 $</tt>
  * @author  <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author  <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
- * 
  */
 public class RMIConnectorImpl
-   implements RemoteMBeanServer, RMIConnectorImplMBean
+   implements RMIConnectorImplMBean
 {
    protected Logger log = Logger.getLogger(this.getClass());
 
@@ -119,6 +120,7 @@ public class RMIConnectorImpl
    public RMIConnectorImpl(int pNotificationType,
                            String[] pOptions,
                            String pServerName)
+      throws Exception
    {
       mEventType = pNotificationType;
       
@@ -130,42 +132,6 @@ public class RMIConnectorImpl
       
       start( pServerName );
    }
-   
-   /**
-    * Creates a Queue Connection
-    *
-    * @return Returns a QueueConnection if found otherwise null
-    **/
-   /*
-
-   jason: this is not used anywhere
-   
-   protected QueueConnection getQueueConnection( String pJNDIName )
-      throws NamingException, JMSException
-   {
-      Context lJNDIContext = null;
-      if( mOptions.length > 0 && mOptions[ 0 ] != null ) {
-         Hashtable lProperties = new Hashtable();
-         // lProperties.put( Context.PROVIDER_URL, mOptions[ 0 ] );
-         lProperties.put( Context.PROVIDER_URL, (String) mServer );
-         lJNDIContext = new InitialContext( lProperties );
-      }
-      else {
-         lJNDIContext = new InitialContext();
-      }
-      
-      log.debug( "JNDI Environment: " + lJNDIContext.getEnvironment() );
-      log.debug( "Lookup Queue Connection Factory: " + pJNDIName );
-      Object aRef = lJNDIContext.lookup( pJNDIName );
-      log.debug( "Narrow Queue Connection Factory" );
-      QueueConnectionFactory aFactory = (QueueConnectionFactory) 
-         PortableRemoteObject.narrow( aRef, QueueConnectionFactory.class );
-      log.debug( "Narrow Queue Connection" );
-      QueueConnection lConnection = aFactory.createQueueConnection();
-      lConnection.start();
-      return lConnection;
-   }
-   */
    
    // RemoteMBeanServer implementation -------------------------------------
 
@@ -452,12 +418,6 @@ public class RMIConnectorImpl
       }
    }
 
-   /**
-    * Add a notification listener which was previously loaded
-    * as MBean. ATTENTION: note that the both the Notification-
-    * Filter and Handback must be serializable and the class
-    * definition must be available for the RMI-Connector
-    **/
    public void addNotificationListener(ObjectName pName,
                                        ObjectName pListener,
                                        NotificationFilter pFilter,
@@ -602,9 +562,11 @@ public class RMIConnectorImpl
    }
 
    // JMXClientConnector implementation -------------------------------
-   
-   public void start(Object pServer)
-      throws IllegalArgumentException
+
+   /**
+    * @jmx:managed-operation
+    */
+   public void start(Object pServer) throws Exception
    {
       log.debug( "Starting");
       
@@ -613,9 +575,9 @@ public class RMIConnectorImpl
                                              + "To close the connection use stop()" );
       }
 
-      try {
-         InitialContext ctx = new InitialContext();
-         
+      InitialContext ctx = new InitialContext();
+      
+      try {   
          log.debug("Using Naming Context: " + ctx +
                    ", environment: " + ctx.getEnvironment() +
                    ", name in namespace: " + ctx.getNameInNamespace());
@@ -627,14 +589,14 @@ public class RMIConnectorImpl
 
          ctx.close();
       }
-      catch( Exception e ) {
-         //
-         // jason: why does start() only declare a IAE?
-         //
-         throw new NestedRuntimeException(e);
+      finally {
+         ctx.close();
       }
    }
 
+   /**
+    * @jmx:managed-operation
+    */
    public void stop() {
       log.debug( "Stopping");
       
