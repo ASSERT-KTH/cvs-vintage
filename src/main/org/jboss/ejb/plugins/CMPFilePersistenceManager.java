@@ -1,10 +1,10 @@
-
 /*
  * JBoss, the OpenSource J2EE webOS
  *
  * Distributable under LGPL license.
  * See terms of license at gnu.org.
  */
+
 package org.jboss.ejb.plugins;
 
 import java.io.File;
@@ -14,9 +14,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,17 +40,41 @@ import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.metadata.EntityMetaData;
 
+import org.jboss.system.server.ServerConfigLocator;
+import org.jboss.system.ServiceMBeanSupport;
+
+import org.jboss.util.file.FilenameSuffixFilter;
+
 /**
+ * A file-based CMP entity bean persistence manager.
+ *
+ * <p>
+ * Reads and writes entity bean objects to files by using the
+ * standard Java serialization mechanism.
+ * 
+ * <p>
+ * Enitiy state files are stored under:
+ * <tt><em>jboss-server-data-dir</em>/<em>storeDirectoryName</em>/<em>ejb-name</em></tt>.
+ *
+ * <p>
+ * Note, currently the name of the entity must be unique across the server, or
+ * unless the store directory is changed, to avoid data collisions.
+ * 
+ * <p>
+ * jason: disabled because XDoclet can not handle \u0000 right now
+ * _@_jmx:mbean extends="org.jboss.system.ServiceMBean"
+ * 
+ * @version <tt>$Revision: 1.19 $</tt>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.18 $
+ * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * <p><b>20010801 marc fleury:</b>
  * <ul>
  * <li>- insertion in cache upon create in now done in the instance interceptor
  * </ul>
  * <p><b>20011201 Dain Sundstrom:</b>
  * <ul>
- * <li>- added createBeanInstance and initiEntity methods
+ * <li>- added createBeanInstance and initEntity methods
  * </ul>
  * <p><b>20020525 Dain Sundstrom:</b>
  * <ul>
@@ -55,65 +83,176 @@ import org.jboss.metadata.EntityMetaData;
  * </ul>
  */
 public class CMPFilePersistenceManager
-   implements EntityPersistenceStore
+   extends ServiceMBeanSupport
+   implements EntityPersistenceStore /*, CMPFilePersistenceManagerMBean */
 {
-   // Constants -----------------------------------------------------
-    
-   // Attributes ----------------------------------------------------
-   EntityContainer con;
-   File dir;
-   Field idField;
+   /** The default store directory name ("<tt>entities</tt>"). */
+   public static final String DEFAULT_STORE_DIRECTORY_NAME = "entities";
+   
+   /** Our container. */
+   private EntityContainer con;
 
    /**
-    *  Optional isModified method used by storeEntity
+    * The sub-directory name under the server data directory where
+    * entity data is stored.
+    *
+    * @see #DEFAULT_STORE_DIRECTORY_NAME
+    * @see setStoreDirectoryName
     */
-   Method isModified;
-    
-   // Static --------------------------------------------------------
+   private String storeDirName = DEFAULT_STORE_DIRECTORY_NAME;
    
-   // Constructors --------------------------------------------------
+   /** The base directory where bean state will be stored. */
+   private File storeDir;
+
+   /** A reference to the ID field for the entiy bean. */
+   private Field idField;
+
+   /** Optional isModified method used by storeEntity. */
+   private Method isModified;
    
-   // Public --------------------------------------------------------
-   public void setContainer(Container c)
+   /**
+    * Saves a reference to the {@link EntityContainer} for
+    * its bean type.
+    *
+    * @throws ClassCastException  Container is not a EntityContainer.
+    */
+   public void setContainer(final Container c)
    {
       con = (EntityContainer)c;
    }
-   
-   public void create()
-      throws Exception
-   {
-      String ejbName = con.getBeanMetaData().getEjbName();
-      dir = new File(getClass().getResource("/db/"+ejbName+"/db.properties").getFile()).getParentFile();
-      idField = con.getBeanClass().getField("id");
 
+   //
+   // jason: these properties are intended to be used when plugins/interceptors 
+   //        can take configuration values (need to update xml schema and processors).
+   //
+   
+   /**
+    * Set the sub-directory name under the server data directory
+    * where entity data will be stored.
+    *
+    * <p>
+    * This value will be appened to the value of
+    * <tt><em>jboss-server-data-dir</em></tt>.
+    *
+    * <p>
+    * This value is only used during creation and will not dynamically
+    * change the store directory when set after the create step has finished.
+    *
+    * @jmx:managed-attribute
+    *
+    * @param dirName   A sub-directory name.
+    */
+   public void setStoreDirectoryName(final String dirName)
+   {
+      this.storeDirName = dirName;
+   }
+
+   /**
+    * Get the sub-directory name under the server data directory
+    * where entity data is stored.
+    *
+    * @jmx:managed-attibute
+    *
+    * @see #setStoreDirectoryName
+    *
+    * @return A sub-directory name.
+    */
+   public String getStoreDirectoryName()
+   {
+      return storeDirName;
+   }
+
+   /**
+    * Returns the directory used to store entity state files.
+    *
+    * @jmx:managed-attibute
+    * 
+    * @return The directory used to store entity state files.
+    */
+   public File getStoreDirectory()
+   {
+      return storeDir;
+   }
+   
+   protected void createService() throws Exception
+   {
+      boolean debug = log.isDebugEnabled();
+
+      // Initialize the dataStore
+
+      String ejbName = con.getBeanMetaData().getEjbName();
+
+      // Get the system data directory
+      File dir = ServerConfigLocator.locate().getServerDataDir();
+
+      //
+      // jason: may have to use a generated token from container config
+      //        to determine a unique name for this config for the given
+      //        entity name.  it must persist through restarts though...
+      //
+
+      // Setup the reference to the entity data store directory
+      dir = new File(dir, storeDirName);
+      dir = new File(dir, ejbName);
+      storeDir = dir;
+      
+      if (debug) {
+         log.debug("Storing entity state for '" + ejbName + "' in: " + storeDir);
+      }
+
+      // if the directory does not exist then try to create it
+      if (!storeDir.exists()) {
+         if (!storeDir.mkdirs()) {
+            throw new IOException("Failed to create directory: " + storeDir);
+         }
+      }
+      
+      // make sure we have a directory
+      if (!storeDir.isDirectory()) {
+         throw new IOException("File exists where directory expected: " + storeDir);
+      }
+
+      // make sure we can read and write to it
+      if (!storeDir.canWrite() || !storeDir.canRead()) {
+         throw new IOException("Directory must be readable and writable: " + storeDir);
+      }
+
+      // Get the ID field
+      idField = con.getBeanClass().getField("id");
+      if (debug) log.debug("Using id field: " + idField);
+
+      // Lookup the isModified method if it exists
       try
       {
          isModified = con.getBeanClass().getMethod("isModified", new Class[0]);
-         if (!isModified.getReturnType().equals(Boolean.TYPE))
+         if (!isModified.getReturnType().equals(Boolean.TYPE)) {
             isModified = null; // Has to have "boolean" as return type!
+            log.warn("Found isModified method, but return type is not boolean; ignoring");
+         }
+         else {
+            if (debug) log.debug("Using isModified method: " + isModified);
+         }
       }
       catch (NoSuchMethodException ignored) {}
    }
-   
-   public void start()
-   {
-   }
 
-   public void stop()
+   /**
+    * Try to remove the store directory, if we can't then ignore.
+    */
+   protected void destroyService() throws Exception
    {
+      storeDir.delete();
    }
    
-   public void destroy()
+   public Object createBeanClassInstance() throws Exception
    {
-   }
-   
-   public Object createBeanClassInstance() throws Exception {
       return con.getBeanClass().newInstance();
    }
 
    /**
     * Reset all attributes to default value
     *
+    * <p>
     * The EJB 1.1 specification is not entirely clear about this,
     * the EJB 2.0 spec is, see page 169.
     * Robustness is more important than raw speed for most server
@@ -121,7 +260,7 @@ public class CMPFilePersistenceManager
     * *very* weird errors (old states re-appear in different instances and the
     * developer thinks he's on drugs).
     */
-   public void initEntity(EntityEnterpriseContext ctx)
+   public void initEntity(final EntityEnterpriseContext ctx)
    {
       // first get cmp metadata of this entity
       Object instance = ctx.getInstance();
@@ -130,61 +269,58 @@ public class CMPFilePersistenceManager
       Class cmpFieldType;
 
       EntityMetaData metaData = (EntityMetaData)con.getBeanMetaData();
-      Iterator i= metaData.getCMPFields();
+      Iterator i = metaData.getCMPFields();
 
-      while(i.hasNext())
+      while (i.hasNext())
       {
+         // get the field declaration
          try
          {
-            // get the field declaration
-            try
+            cmpField = ejbClass.getField((String)i.next());
+            cmpFieldType = cmpField.getType();
+            // find the type of the field and reset it
+            // to the default value
+            if (cmpFieldType.equals(boolean.class))
             {
-               cmpField = ejbClass.getField((String)i.next());
-               cmpFieldType = cmpField.getType();
-               // find the type of the field and reset it
-               // to the default value
-               if (cmpFieldType.equals(boolean.class))
-               {
-                  cmpField.setBoolean(instance,false);
-               }
-               else if (cmpFieldType.equals(byte.class))
-               {
-                  cmpField.setByte(instance,(byte)0);
-               }
-               else if (cmpFieldType.equals(int.class))
-               {
-                  cmpField.setInt(instance,0);
-               }
-               else if (cmpFieldType.equals(long.class))
-               {
-                  cmpField.setLong(instance,0L);
-               }
-               else if (cmpFieldType.equals(short.class))
-               {
-                  cmpField.setShort(instance,(short)0);
-               }
-               else if (cmpFieldType.equals(char.class))
-               {
-                  cmpField.setChar(instance,'\u0000');
-               }
-               else if (cmpFieldType.equals(double.class))
-               {
-                  cmpField.setDouble(instance,0d);
-               }
-               else if (cmpFieldType.equals(float.class))
-               {
-                  cmpField.setFloat(instance,0f);
-               }
-               else
-               {
-                  cmpField.set(instance,null);
-               }
+               cmpField.setBoolean(instance,false);
             }
-            catch (NoSuchFieldException e)
+            else if (cmpFieldType.equals(byte.class))
             {
-               // will be here with dependant value object's private attributes
-               // should not be a problem
+               cmpField.setByte(instance,(byte)0);
             }
+            else if (cmpFieldType.equals(int.class))
+            {
+               cmpField.setInt(instance,0);
+            }
+            else if (cmpFieldType.equals(long.class))
+            {
+               cmpField.setLong(instance,0L);
+            }
+            else if (cmpFieldType.equals(short.class))
+            {
+               cmpField.setShort(instance,(short)0);
+            }
+            else if (cmpFieldType.equals(char.class))
+            {
+               cmpField.setChar(instance,'\u0000');
+            }
+            else if (cmpFieldType.equals(double.class))
+            {
+               cmpField.setDouble(instance,0d);
+            }
+            else if (cmpFieldType.equals(float.class))
+            {
+               cmpField.setFloat(instance,0f);
+            }
+            else
+            {
+               cmpField.set(instance,null);
+            }
+         }
+         catch (NoSuchFieldException e)
+         {
+            // will be here with dependant value object's private attributes
+            // should not be a problem
          }
          catch (Exception e)
          {
@@ -193,31 +329,32 @@ public class CMPFilePersistenceManager
       }
    }
 
-   public Object createEntity(
-         Method m, Object[] args, EntityEnterpriseContext ctx)
+   public Object createEntity(final Method m,
+                              final Object[] args,
+                              final EntityEnterpriseContext ctx)
       throws Exception
-	{                      
-		try { 
+   {                      
+      try { 
+         Object id = idField.get(ctx.getInstance());
+         
+         // Check exist
+         if (getFile(id).exists())
+            throw new DuplicateKeyException("Already exists: "+id);
+         
+         // Store to file
+         storeEntity(id, ctx.getInstance());
+         
+         return id;
+      } 
+      catch (IllegalAccessException e)
+      {
+         throw new CreateException("Could not create entity: "+e);
+      }
+   }
 
-			Object id = idField.get(ctx.getInstance());
-			
-			// Check exist
-			if (getFile(id).exists())
-				throw new DuplicateKeyException("Already exists:"+id);
-			
-			// Store to file
-			storeEntity(id, ctx.getInstance());
-			
-			return id;
-		} 
-		catch (IllegalAccessException e)
-		{
-			throw new CreateException("Could not create entity:"+e);
-		}
-	}
-
-   public Object findEntity(
-         Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Object findEntity(final Method finderMethod,
+                            final Object[] args,
+                            final EntityEnterpriseContext ctx)
       throws FinderException
    {
       if (finderMethod.getName().equals("findByPrimaryKey"))
@@ -227,55 +364,61 @@ public class CMPFilePersistenceManager
             
          return args[0];
       }
-      else
-         return null;
+
+      return null;
    }
      
-   public Collection findEntities(
-         Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
+   public Collection findEntities(final Method finderMethod,
+                                  final Object[] args,
+                                  final EntityEnterpriseContext ctx)
    {
       if (finderMethod.getName().equals("findAll"))
       {
-         String[] files = dir.list();
-         ArrayList result = new ArrayList();
-         for (int i = 0; i < files.length; i++)
-            if (files[i].endsWith(".ser"))
-            {
-               result.add(files[i].substring(0,files[i].length()-4));
-            }
-            
+         String[] files = storeDir.list(new FilenameSuffixFilter(".ser"));
+         ArrayList result = new ArrayList(files.length);
+         for (int i = 0; i < files.length; i++) {
+            result.add(files[i].substring(0,files[i].length()-4));
+         }
+         
          return result;
-      } else
+      }
+      else
       {
          // we only support find all
          return Collections.EMPTY_LIST;
       }
    }
 
-   public void activateEntity(EntityEnterpriseContext ctx)
+   /**
+    * Non-operation.
+    */
+   public void activateEntity(final EntityEnterpriseContext ctx)
    {
-      //Nothing to do
+      // Nothing to do
    }
    
-   public void loadEntity(EntityEnterpriseContext ctx)
+   public void loadEntity(final EntityEnterpriseContext ctx)
    {
       try
       {
-         // Read fields
-         ObjectInputStream in = new CMPObjectInputStream(
-               new FileInputStream(getFile(ctx.getId())));
-         
          Object obj = ctx.getInstance();
          
-         Field[] f = obj.getClass().getFields();
-         for (int i = 0; i < f.length; i++)
-         {
-            f[i].set(obj, in.readObject());
+         // Read fields
+         ObjectInputStream in = new CMPObjectInputStream
+            (new BufferedInputStream(new FileInputStream(getFile(ctx.getId()))));
+
+         try {
+            Field[] f = obj.getClass().getFields();
+            for (int i = 0; i < f.length; i++)
+            {
+               f[i].set(obj, in.readObject());
+            }
          }
-         
-         in.close();
-         
-      } catch (Exception e)
+         finally {
+            in.close();
+         }
+      }
+      catch (Exception e)
       {
          throw new EJBException("Load failed", e);
       }
@@ -286,78 +429,79 @@ public class CMPFilePersistenceManager
       try
       {
          // Store fields
-         ObjectOutputStream out = new CMPObjectOutputStream(
-               new FileOutputStream(getFile(id)));
-               
-         Field[] f = obj.getClass().getFields();
-         for (int i = 0; i < f.length; i++)
-         {
-            out.writeObject(f[i].get(obj));
-         }
+         ObjectOutputStream out = new CMPObjectOutputStream
+            (new BufferedOutputStream(new FileOutputStream(getFile(id))));
          
-         out.close();
-      } catch (Exception e)
+         try {
+            Field[] f = obj.getClass().getFields();
+            for (int i = 0; i < f.length; i++)
+            {
+               out.writeObject(f[i].get(obj));
+            }
+         }
+         finally {
+            out.close();
+         }
+      }
+      catch (Exception e)
       {
          throw new EJBException("Store failed", e);
       }
    }
 
-   public boolean isModified(EntityEnterpriseContext ctx) throws Exception 
+   public boolean isModified(final EntityEnterpriseContext ctx) throws Exception 
    {
-      if(isModified == null)
+      if (isModified == null)
       {
          return true;
       }
 
-      Object[] args = {};
-      Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), args);
+      Boolean modified = (Boolean) isModified.invoke(ctx.getInstance(), new Object[0]);
       return modified.booleanValue();
    }
   
-   public void storeEntity(EntityEnterpriseContext ctx)
+   public void storeEntity(final EntityEnterpriseContext ctx)
    {
-	   storeEntity(ctx.getId(), ctx.getInstance());
+      storeEntity(ctx.getId(), ctx.getInstance());
    }
 
-   public void passivateEntity(EntityEnterpriseContext ctx)
+   /**
+    * Non-operation.
+    */
+   public void passivateEntity(final EntityEnterpriseContext ctx)
    {
-     // This plugin doesn't do anything specific
-	}
+      // This plugin doesn't do anything specific
+   }
       
-   public void removeEntity(EntityEnterpriseContext ctx)
+   public void removeEntity(final EntityEnterpriseContext ctx)
       throws RemoveException
    {
-      
       // Remove file
-      if (!getFile(ctx.getId()).delete())
-         throw new RemoveException("Could not remove file:" +
-               getFile(ctx.getId()));
+      File file = getFile(ctx.getId());
+      
+      if (!file.delete()) {
+         throw new RemoveException("Could not remove file: " + file);
+      }
    }
    
-   // Z implementation ----------------------------------------------
-    
-   // Package protected ---------------------------------------------
-    
-   // Protected -----------------------------------------------------
-   protected File getFile(Object id)
+   protected File getFile(final Object id)
    {
-      return new File(dir, id+".ser");
+      return new File(storeDir, String.valueOf(id) + ".ser");
    }
     
-   // Private -------------------------------------------------------
-
    // Inner classes -------------------------------------------------
+   
    static class CMPObjectOutputStream
       extends ObjectOutputStream
    {
-      public CMPObjectOutputStream(OutputStream out)
+      public CMPObjectOutputStream(final OutputStream out)
          throws IOException
       {
          super(out);
          enableReplaceObject(true);
       }
       
-      protected Object replaceObject(Object obj)
+      protected Object replaceObject(final Object obj)
          throws IOException
       {
          if (obj instanceof EJBObject)
@@ -370,14 +514,14 @@ public class CMPFilePersistenceManager
    static class CMPObjectInputStream
       extends ObjectInputStream
    {
-      public CMPObjectInputStream(InputStream in)
+      public CMPObjectInputStream(final InputStream in)
          throws IOException
       {
          super(in);
          enableResolveObject(true);
       }
       
-      protected Object resolveObject(Object obj)
+      protected Object resolveObject(final Object obj)
          throws IOException
       {
          if (obj instanceof Handle)
