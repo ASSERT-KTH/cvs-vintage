@@ -40,9 +40,8 @@ $page.setTitle("Add/Edit attribute group")
 
 <h3>Attribute group details</h3>
 
-#set ($group = $scarabR.getAttributeGroup(groupId))
+#set ($group = $scarabR.getAttributeGroup($groupId))
 #set ($agGroup = $intake.AttributeGroup.mapTo($group))
-
 <div class="axial">
  <table border="0" cellspacing="2" cellpadding="3">
  <tr>
