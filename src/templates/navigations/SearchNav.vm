@@ -1,0 +1,26 @@
+<form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
+     #set ($module = $scarabR.CurrentModule)
+     #set ($issuetype = $scarabR.CurrentIssueType)
+     #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
+     #set ($globalQueries = $module.getGlobalQueries($issuetype))
+     #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
+        <select name="queryId">
+       #foreach ($query in $privateQueries)
+        <option value="$query.QueryId">$query.Name</option>
+       #end
+       #foreach ($query in $globalQueries)
+        <option value="$query.QueryId">$query.Name</option>
+       #end
+        </select>
+        <input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>&#160;
+        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     #end
+        <input type="text" name="id" size="15" maxlength="255" />&#160;
+        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
+        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
+        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
+     <small>
+      <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;
+      <a href="$link.setPage("Search.vm")">Custom</a>
+     </small>
+</form>

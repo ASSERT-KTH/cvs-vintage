@@ -29,14 +29,14 @@
     Logged in: <strong class="username">$data.User.FirstName $data.User.LastName</strong>
    </div>
             #end
-<div>
+   <div>
 #if ($scarabR.CurrentModule)
    Current Module:
    <a href="$link.setPage("SelectModule.vm")"><strong>$scarabR.CurrentModule.Name</strong></a>
 #else
    <a href="$link.setPage("SelectModule.vm")"><strong>Select Module</strong></a>
 #end
-</div>
+   </div>
    <div>
     #if ($data.User.hasLoggedIn())
     <a href="$link.setPage("Login.vm").setAction("Logout")">Logout</a>
@@ -50,60 +50,36 @@
   </tr>
   </table>
  </div>
-<table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
+
+ <table border="0" cellspacing="0" cellpadding="8" width="98%" id="main">
  <tr valign="top">
   <td id="leftcol" width="20%">
- <div id="navcolumn">
+  <div id="navcolumn">
 $renderer.render("navigations", $data, $template, "Default.vm")
-</div>
+  </div>
   <div id="helptext">
- <table border="0" cellspacing="0" cellpadding="3" width="100%">
- <tr>
- <th>How do I...?</th>
- </tr>
- <tr>
- <td>
-  <div>Learn
- more about this project? </div> <div>Print this page...</div>
-<div>Troubleshoot...
-</div>
-</td>
-</tr>
-</table>
-</div>
-</td>
-<td width="100%" id="bodycol">
+   <table border="0" cellspacing="0" cellpadding="3" width="100%">
+   <tr>
+   <th>How do I...?</th>
+   </tr>
+   <tr>
+   <td>
+     <div>Learn more about this project? </div> <div>Print this page...</div>
+     <div>Troubleshoot...</div>
+   </td>
+   </tr>
+   </table>
+ </div>
+ </td>
+ <td width="100%" id="bodycol">
  <!-- Scarab - App -->
  <div id="topmodule">
   <table border="0" cellspacing="0" cellpadding="3" width="100%">
   <tr>
    <td nowrap="nowrap">
-    <form action="$link.setPage("IssueList.vm").setAction("Search")" method="get">
-     #set ($module = $scarabR.CurrentModule)
-     #set ($issuetype = $scarabR.CurrentIssueType)
-     #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
-     #set ($globalQueries = $module.getGlobalQueries($issuetype))
-     #if ($privateQueries.size() > 0 || $globalQueries.size() > 0)
-        <select name="queryId">
-       #foreach ($query in $privateQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-       #foreach ($query in $globalQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-        </select>
-        <input type="submit"  value="Go" class="bttn" name="eventSubmit_doRunstoredquery"/>&#160;
-        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     #end
-        <input type="text" name="id" size="15" maxlength="255" />&#160;
-        <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
-        <input type="submit" value="Artifact Id" name="eventSubmit_doGonext" />&#160;
-        <img src="$data.Request.ContextPath/images/seperator2.gif" width="2" height="15" alt="" border="0" />&#160;
-     <small>
-      <a href="$link.setPage("AdvancedQuery.vm")">Advanced</a>&#160;|&#160;
-      <a href="$link.setPage("Search.vm")">Custom</a>
-     </small>
-   </form>
+  <div id="navsearch">
+$renderer.render("navigations", $data, $template, "SearchNav.vm")
+  </div>
    </td>
   </tr>
   </table>
@@ -112,9 +88,9 @@ $renderer.render("navigations", $data, $template, "Default.vm")
 #actionErrorMsg()
 $renderer.render("screens", $data, $template)
 <!-- Structural Elements -->
-</td>
-</tr>
-</table>
+ </td>
+ </tr>
+ </table>
 <!-- Structural Elements -->
 $renderer.render("navigations", $data, "/ScarabBottom.vm")
  </body>
