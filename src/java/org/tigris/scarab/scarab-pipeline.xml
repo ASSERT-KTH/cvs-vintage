@@ -7,7 +7,7 @@
 
     <!-- the following is a copy of conf/turbine-classic-pipeline -->
     <valve className="org.apache.turbine.pipeline.DetermineActionValve"/>
-    <valve className="org.apache.turbine.pipeline.DetermineTargetValve"/>
+    <valve className="org.tigris.scarab.util.DetermineTargetValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultSessionTimeoutValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultLoginValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultSessionValidationValve"/>

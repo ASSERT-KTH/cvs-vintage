@@ -61,6 +61,7 @@ import java.util.Arrays;
 // Turbine
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
+import org.apache.turbine.DynamicURI;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.torque.om.NumberKey;
 import org.apache.torque.om.ObjectKey;
@@ -2267,6 +2268,22 @@ try{
         }
         return attributes;
     }
+
+    /**
+     * Returns a short link for viewing a single issue
+     *
+     * @param issue an <code>Issue</code> value
+     * @return a <code>String</code> value
+     * @exception Exception if an error occurs
+     */
+    public String getCopyableLink(Issue issue)
+        throws Exception
+    {
+        DynamicURI link = new DynamicURI(data);
+        link.addPathInfo("id", issue.getUniqueId());
+        return link.toString();
+    }
+
 
     // --------------------
     // template timing methods

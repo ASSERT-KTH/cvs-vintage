@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
 import org.apache.turbine.RunData;
+import org.apache.turbine.ParameterParser;
 import org.apache.turbine.TurbineException;
 import org.apache.turbine.Valve;
 import org.apache.turbine.pipeline.AbstractValve;
@@ -59,11 +60,13 @@ import org.apache.torque.om.NumberKey;
 import org.apache.torque.TorqueException;
 
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.MITList;
 import org.tigris.scarab.om.MITListManager;
 
@@ -105,8 +108,8 @@ public class FreshenUserValve
         setCurrentIssueType(user, data);
 
         // set the thread key 
-        String key = data.getParameters()
-            .getString(ScarabConstants.THREAD_QUERY_KEY);
+        ParameterParser parameters = data.getParameters();
+        String key = parameters.getString(ScarabConstants.THREAD_QUERY_KEY);
         if (key != null) 
         {
             user.setThreadKey(new Integer(key));
@@ -117,27 +120,25 @@ public class FreshenUserValve
         }
         
         // remove any report that was aborted
-        String reportKey = data.getParameters()
-            .getString(ScarabConstants.REMOVE_CURRENT_REPORT);
+        String reportKey = parameters.getString(ScarabConstants.REMOVE_CURRENT_REPORT);
         if (reportKey != null && reportKey.length() > 0)
         {
             user.setCurrentReport(reportKey, null);
         }
 
         // remove the current module/issuetype list, if needed
-        String removeMitKey = data.getParameters()
-            .getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
+        String removeMitKey = 
+            parameters.getString(ScarabConstants.REMOVE_CURRENT_MITLIST_QKEY);
         if (removeMitKey != null 
             || !xmitScreens.containsKey(data.getTarget()) )
         {
-            user.setThreadKey(null);
             user.setCurrentMITList(null);
+            user.setThreadKey(null);
         }
 
         // override the current module/issuetype list if one is given
         // in the url.
-        String mitid = data.getParameters()
-            .getString(ScarabConstants.CURRENT_MITLIST_ID);
+        String mitid = parameters.getString(ScarabConstants.CURRENT_MITLIST_ID);
         if (mitid != null) 
         {
             MITList mitList = null;
@@ -162,8 +163,8 @@ public class FreshenUserValve
         throws TurbineException
     {
         Module module = null;
-        String key = data.getParameters()
-            .getString(ScarabConstants.CURRENT_MODULE);
+        ParameterParser parameters = data.getParameters();
+        String key = parameters.getString(ScarabConstants.CURRENT_MODULE);
         if (key != null) 
         {
             try
@@ -175,28 +176,60 @@ public class FreshenUserValve
                 throw new TurbineException(e);
             }
         }
+        else if (parameters.getString("id") != null) 
+        {
+            try  
+            {
+                module = Issue.getIssueById(parameters.getString("id")).getModule();
+                parameters.setString(ScarabConstants.CURRENT_MODULE, 
+                             module.getQueryKey());
+            }
+            catch (Exception e)
+            {
+                // ignore
+                Log.get().debug("'id' parameter was available, "
+                    + parameters.getString("id") + 
+                    ", but did not contain enough info to create issue.");
+            }
+        }
         user.setCurrentModule(module);
     }
 
     private void setCurrentIssueType(ScarabUser user, RunData data)
         throws TurbineException
     {
-        IssueType currentIssueType = null;
-        String key = data.getParameters()
-            .getString(ScarabConstants.CURRENT_ISSUE_TYPE);
+        IssueType issueType = null;
+        ParameterParser parameters = data.getParameters();
+        String key = parameters.getString(ScarabConstants.CURRENT_ISSUE_TYPE);
         if (key != null) 
         {
             try
             {
-                currentIssueType = 
-                    IssueTypeManager.getInstance(new NumberKey(key));
+                issueType = IssueTypeManager.getInstance(new NumberKey(key));
             }
             catch (TorqueException e)
             {
                 throw new TurbineException(e);
             }
         }
-        user.setCurrentIssueType(currentIssueType);
+        else if (parameters.getString("id") != null) 
+        {
+            try  
+            {
+                issueType = 
+                    Issue.getIssueById(parameters.getString("id")).getIssueType();
+                parameters.setString(ScarabConstants.CURRENT_ISSUE_TYPE, 
+                             issueType.getQueryKey());
+            }
+            catch (Exception e)
+            {
+                // ignore
+                Log.get().debug("'id' parameter was available, " 
+                    + parameters.getString("id") + 
+                    ", but did not contain enough info to create issue.");
+            }
+        }
+        user.setCurrentIssueType(issueType);
     }
     
 }
