@@ -74,6 +74,7 @@ import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.*;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -83,10 +84,20 @@ import org.tigris.scarab.tools.ScarabRequestTool;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.23 2001/07/06 21:45:38 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.24 2001/07/10 19:14:33 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
+
+    private Field getSummaryField(IntakeTool intake, Issue issue)
+        throws Exception
+    {
+        AttributeValue aval = (AttributeValue)issue
+            .getModuleAttributeValuesMap().get("SUMMARY");
+        Group group = intake.get("AttributeValue", aval.getQueryKey());
+        return group.get("Value");
+    }
+
     public void doSubmitattributes( RunData data, Context context )
         throws Exception
     {
@@ -96,10 +107,7 @@ public class ReportIssue extends VelocityAction
         // Summary is always required (because we are going to search on it.)
         ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = user.getReportingIssue();
-        AttributeValue aval = (AttributeValue)issue
-            .getModuleAttributeValuesMap().get("SUMMARY");
-        Group group = intake.get("AttributeValue", aval.getQueryKey());
-        Field summary = group.get("Value");
+        Field summary = getSummaryField(intake, issue);
         summary.setRequired(true);
 
         // set any other required flags
@@ -109,6 +117,8 @@ public class ReportIssue extends VelocityAction
         Attribute[] requiredAttributes = issue.getModule().getAttributes(crit);
         SequencedHashtable avMap = issue.getModuleAttributeValuesMap(); 
         Iterator iter = avMap.iterator();
+        AttributeValue aval = null;
+        Group group = null;
         while ( iter.hasNext() ) 
         {
             aval = (AttributeValue)avMap.get(iter.next());
@@ -152,39 +162,74 @@ public class ReportIssue extends VelocityAction
                 }                
             }
 
-            // search on the option attributes and keywords
-            IssueSearch search = new IssueSearch();
-            search.setSearchWords(summary.toString());
-
-            search.setModuleCast(user.getCurrentModule());
-            avMap = search.getModuleAttributeValuesMap(); 
-            Iterator i = avMap.iterator();
-            while (i.hasNext()) 
-            {
-                aval = (AttributeValue)avMap.get(i.next());
-                group = intake.get("AttributeValue", aval.getQueryKey(),false);
-                if ( group != null ) 
-                {
-                    group.setProperties(aval);
-                }
-            }
-            
-            List matchingIssues = search.getMatchingIssues(25);
-
-            // set the template to dedupe unless none exist, then skip
-            // to final entry screen
-            String template = null;
-            if ( matchingIssues.size() > 0 )
-            {
-                context.put("issueList", matchingIssues);
-                template = "entry,Wizard2.vm";
-            }
-            else
-            {
-                template = "entry,Wizard3.vm";
-            }
-            setTemplate(data, template);
+            reusedSearchStuff(data, context, "eventSubmit_doSubmitattributes", 
+                              0, "entry,Wizard3.vm");
         }
+
+        // we know we started at Wizard1 if we are here
+        user.setReportingIssueStartPoint("entry,Wizard1.vm");
+    }
+
+    private boolean reusedSearchStuff(RunData data, Context context, 
+                                      String event, int threshold, 
+                                      String nextTemplate)
+        throws Exception
+    {
+        IntakeTool intake = (IntakeTool)context
+            .get(ScarabConstants.INTAKE_TOOL);
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        String query = getSummaryField(intake, 
+                                         user.getReportingIssue()).toString();
+
+        List matchingIssues = searchIssues(query, user.getCurrentModule(), 
+                                           intake, 25);                  
+                
+        // set the template to dedupe unless none exist, then skip
+        // to final entry screen
+        String template = null;
+        boolean beatThreshold = false;
+        if ( matchingIssues.size() > threshold )
+        {
+            context.put("issueList", matchingIssues);
+            template = "entry,Wizard2.vm";
+            // clean out the eventSubmit because we will reuse parameters
+            data.getParameters().remove(event);
+            data.getParameters().remove("nextTemplate");
+            beatThreshold = true;
+        }
+        else
+        {
+            template = nextTemplate;
+        }
+
+        setTemplate(data, template);
+        return beatThreshold;
+    }
+
+    private List searchIssues( String query, ModuleEntity module, 
+                               IntakeTool intake, int maxResults)
+        throws Exception
+    { 
+        // search on the option attributes and keywords
+        IssueSearch search = new IssueSearch();
+        search.setSearchWords(query);
+        
+        search.setModuleCast(module);
+        SequencedHashtable avMap = search.getModuleAttributeValuesMap(); 
+        Iterator i = avMap.iterator();
+        while (i.hasNext()) 
+        {
+            AttributeValue aval = (AttributeValue)avMap.get(i.next());
+            Group group = 
+                intake.get("AttributeValue", aval.getQueryKey(), false);
+            if ( group != null ) 
+            {
+                group.setProperties(aval);
+            }
+        }
+        
+        return search.getMatchingIssues(maxResults);
     }
 
 
@@ -278,7 +323,11 @@ public class ReportIssue extends VelocityAction
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, 
                                "entry,Wizard4.vm");
-                setTemplate(data, template);                
+                setTemplate(data, template);
+                // !FIXME! this should be uncommented to allow jumping 
+                // directly back to entering another issue, but an easy
+                // update of intake is difficult at the moment
+                // intake.removeAll();
             }
             else 
             {
@@ -306,14 +355,30 @@ public class ReportIssue extends VelocityAction
                 group.setProperties(attachment);
                 if ( attachment.getData().length > 0 ) 
                 {
-                    attachment.setIssue(scarabR.getIssue());
+                    Issue issue = scarabR.getIssue();
+                    attachment.setIssue(issue);
                     attachment.setTypeId(Attachment.COMMENT__PK);
                     attachment.setName("");
                     attachment.setMimeType("text/plain");
                     attachment.save();
-                    doCancel(data, context);
+
+                    data.setMessage("Your comment for issue #" + 
+                                    issue.getUniqueId() + 
+                                    " has been added.");
+                    String nextTemplate = TurbineResources
+                        .getString("template.homepage", "Start.vm");
+                    if ( ! reusedSearchStuff(data, context, 
+                             "eventSubmit_doAddnote",1, nextTemplate) ) 
+                    {
+                        scarabR.getUser().setReportingIssue(null);
+                    }
                 }
             }
+        }
+        else 
+        {
+            reusedSearchStuff(data, context, "eventSubmit_doAddnote",
+                              0, "entry,Wizard2.vm");
         }
     }
 
@@ -332,15 +397,31 @@ public class ReportIssue extends VelocityAction
             try
             {
                 issue.addVote((ScarabUser)data.getUser());
-                doCancel(data, context);
+                data.setMessage("Your vote for issue #" + issue.getUniqueId() 
+                                + " has been accepted.");
+                String nextTemplate = TurbineResources
+                    .getString("template.homepage", "Start.vm");
+                if ( ! reusedSearchStuff(data, context, 
+                          "eventSubmit_doAddvote",1, nextTemplate) ) 
+                {
+                    ((ScarabUser)data.getUser()).setReportingIssue(null);
+                }
             }
             catch (ScarabException e)
             {
                 data.setMessage("Vote could not be added.  Reason given: "
                                 + e.getMessage() );
+                reusedSearchStuff(data, context, "eventSubmit_doAddvote",
+                                  0, "entry,Wizard2.vm");
             }
         }
+        else 
+        {
+            reusedSearchStuff(data, context, "eventSubmit_doAddvote",
+                              0, "entry,Wizard2.vm");
+        }
     }
+
 
     public void doGotowizard3( RunData data, Context context )
         throws Exception
