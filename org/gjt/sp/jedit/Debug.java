@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.9 2003/05/02 00:38:20 spestov Exp $
+ * @version $Id: Debug.java,v 1.10 2003/05/14 20:11:57 spestov Exp $
  */
 public class Debug
 {
@@ -63,6 +63,11 @@ public class Debug
 	 * For checking fold level invalidation, etc.
 	 */
 	public static boolean FOLD_DEBUG = false;
+
+	/**
+	 * For checking the line visibility structure..
+	 */
+	public static boolean FOLD_VIS_DEBUG = false;
 
 	/**
 	 * For checking invalidation, etc.
