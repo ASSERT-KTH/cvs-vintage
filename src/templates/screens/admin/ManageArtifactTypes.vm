@@ -11,8 +11,7 @@
 
 <div class="functnbar">
 <input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
-<input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-<small>changes</small>
+<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>
 
 #set ($module = $scarabR.CurrentModule)
@@ -32,11 +31,9 @@
 <th>Select</th>
 <th>Issue type name</th>
 <th>Active</th>
-<th>Show in left hand nav*</th>
+<th>Show in left hand nav</th>
 <th>Sequence #</th>
 </tr>
-
-
 
 #foreach ($rmit in $rmits)
 #set ( $rmitGroup = $intake.RModuleIssueType.mapTo($rmit) )
@@ -50,25 +47,20 @@
 #end
 </table>
 
-
 <div class="functnbar3">
-<input type="submit" value="Save"  name="eventSubmit_doSave"/>&#160;
-<input type="submit" value="Add new"  name="eventSubmit_doGotoothertemplate"/>&#160;
+<input type="submit" value="Save" name="eventSubmit_doSave" />&#160;
+<input type="submit" value="Add new" name="eventSubmit_doGotoothertemplate" />&#160;
 ##<input type="submit" value="Copy" />&#160;
-<input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype"  />&#160;
+<input type="submit" value="Delete selected" name="eventSubmit_doDeletemoduleissuetype" />&#160;
 <input type="submit" value="Resort" name="eventSubmit_doSave" />
-      &#160; <small>issue type(s)</small> </div>
-
-<p>* Maximum of five Issue types in left hand navigation.</p>
+</div>
 
 #end
 <div class="functnbar2">
-<input type="submit" value="Done"  name="eventSubmit_doDone" />&#160;
+<input type="submit" value="Done" name="eventSubmit_doDone" />&#160;
 <input type="submit" value="Cancel" name="eventSubmit_doCancel" />&#160;
-<small>changes</small>
 </div>
 
 $intake.declareGroups()
 </form>
-
 </div>
