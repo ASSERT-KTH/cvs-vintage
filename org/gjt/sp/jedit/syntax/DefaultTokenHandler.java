@@ -26,7 +26,7 @@ package org.gjt.sp.jedit.syntax;
  * Builds a linked list of tokens without any additional processing.
  *
  * @author Slava Pestov
- * @version $Id: DefaultTokenHandler.java,v 1.14 2003/02/07 21:57:43 spestov Exp $
+ * @version $Id: DefaultTokenHandler.java,v 1.15 2003/04/28 01:35:27 spestov Exp $
  * @since jEdit 4.1pre1
  */
 public class DefaultTokenHandler implements TokenHandler
@@ -76,7 +76,7 @@ public class DefaultTokenHandler implements TokenHandler
 	{
 		while(context != null)
 		{
-			if(context.rules.getMode() != null)
+			if(!context.rules.isBuiltIn())
 				return context.rules;
 
 			context = context.parent;

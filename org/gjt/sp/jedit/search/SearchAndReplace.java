@@ -32,6 +32,7 @@ import org.gjt.sp.jedit.*;
 import org.gjt.sp.jedit.io.VFSManager;
 import org.gjt.sp.jedit.msg.SearchSettingsChanged;
 import org.gjt.sp.jedit.textarea.*;
+import org.gjt.sp.util.CharIndexedSegment;
 import org.gjt.sp.util.Log;
 //}}}
 
@@ -59,7 +60,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: SearchAndReplace.java,v 1.46 2003/04/13 00:17:11 spestov Exp $
+ * @version $Id: SearchAndReplace.java,v 1.47 2003/04/28 01:35:27 spestov Exp $
  */
 public class SearchAndReplace
 {

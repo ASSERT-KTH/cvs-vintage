@@ -66,7 +66,7 @@ import org.gjt.sp.util.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: Buffer.java,v 1.161 2003/04/22 19:46:14 spestov Exp $
+ * @version $Id: Buffer.java,v 1.162 2003/04/28 01:35:22 spestov Exp $
  */
 public class Buffer
 {
@@ -1851,7 +1851,8 @@ public class Buffer
 
 		if(value == null)
 		{
-			value = rules.getMode().getProperty(name);
+			value = jEdit.getMode(rules.getModeName())
+				.getProperty(name);
 
 			if(value == null)
 				value = mode.getProperty(name);

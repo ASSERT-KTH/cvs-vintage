@@ -24,7 +24,6 @@ package org.gjt.sp.jedit.syntax;
 
 import javax.swing.text.Segment;
 import java.util.Vector;
-import org.gjt.sp.jedit.TextUtilities;
 
 /**
  * A <code>KeywordMap</code> is similar to a hashtable in that it maps keys
@@ -32,7 +31,7 @@ import org.gjt.sp.jedit.TextUtilities;
  * text substrings without the overhead of creating a new string object.
  *
  * @author Slava Pestov, Mike Dillon
- * @version $Id: KeywordMap.java,v 1.5 2002/06/05 02:13:56 spestov Exp $
+ * @version $Id: KeywordMap.java,v 1.6 2003/04/28 01:35:28 spestov Exp $
  */
 public class KeywordMap
 {
@@ -81,7 +80,7 @@ public class KeywordMap
 				k = k.next;
 				continue;
 			}
-			if(TextUtilities.regionMatches(ignoreCase,text,offset,
+			if(SyntaxUtilities.regionMatches(ignoreCase,text,offset,
 				k.keyword))
 				return k.id;
 			k = k.next;

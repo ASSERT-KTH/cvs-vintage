@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * One instance of this class is created for each supported edit mode.
  *
  * @author Slava Pestov
- * @version $Id: Mode.java,v 1.8 2003/02/07 21:57:30 spestov Exp $
+ * @version $Id: Mode.java,v 1.9 2003/04/28 01:35:23 spestov Exp $
  */
 public class Mode
 {
@@ -217,6 +217,9 @@ public class Mode
 	 */
 	public void setProperties(Hashtable props)
 	{
+		if(props == null)
+			props = new Hashtable();
+
 		// need to carry over file name and first line globs because they are
 		// not given to us by the XMode handler, but instead are filled in by
 		// the catalog loader.

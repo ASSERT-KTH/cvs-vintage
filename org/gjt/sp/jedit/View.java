@@ -57,9 +57,9 @@ import org.gjt.sp.util.Log;
  *
  * <ul>
  * <li>When a view is being created, its initialization routine
- * iterates through the collection of loaded plugins and calls
- * the {@link EditPlugin#createMenuItems(Vector)} method of
- * each plugin core class.</li>
+ * iterates through the collection of loaded plugins and constructs the
+ * <b>Plugins</b> menu using the properties as specified in the
+ * {@link EditPlugin} class.</li>
  * <li>The view also creates and initializes a
  * {@link org.gjt.sp.jedit.gui.DockableWindowManager}
  * object.  This object is
@@ -77,7 +77,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: View.java,v 1.78 2003/04/26 20:05:13 spestov Exp $
+ * @version $Id: View.java,v 1.79 2003/04/28 01:35:24 spestov Exp $
  */
 public class View extends JFrame implements EBComponent
 {

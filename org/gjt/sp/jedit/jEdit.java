@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.139 2003/04/26 20:51:48 spestov Exp $
+ * @version $Id: jEdit.java,v 1.140 2003/04/28 01:35:25 spestov Exp $
  */
 public class jEdit
 {
@@ -2350,29 +2350,51 @@ public class jEdit
 	 */
 	/* package-private */ static void loadMode(Mode mode)
 	{
-		Object fileName = mode.getProperty("file");
+		final String fileName = (String)mode.getProperty("file");
 
 		Log.log(Log.NOTICE,jEdit.class,"Loading edit mode " + fileName);
 
-		XmlParser parser = new XmlParser();
-		XModeHandler xmh = new XModeHandler(parser,mode.getName(),fileName.toString());
+		final XmlParser parser = new XmlParser();
+		XModeHandler xmh = new XModeHandler(mode.getName())
+		{
+			protected void error(String what, Object subst)
+			{
+				int line = parser.getLineNumber();
+				int column = parser.getColumnNumber();
+
+				String msg;
+
+				if(subst == null)
+					msg = jEdit.getProperty("xmode-error." + what);
+				else
+				{
+					msg = jEdit.getProperty("xmode-error." + what,
+						new String[] { subst.toString() });
+					if(subst instanceof Throwable)
+						Log.log(Log.ERROR,this,subst);
+				}
+
+				Object[] args = { fileName, new Integer(line),
+					new Integer(column), msg };
+				GUIUtilities.error(null,"xmode-error",args);
+			}
+
+			protected TokenMarker getTokenMarker(String modeName)
+			{
+				return getMode(modeName).getTokenMarker();
+			}
+		};
+
+		mode.setTokenMarker(xmh.getTokenMarker());
+
 		parser.setHandler(xmh);
 		try
 		{
-			Reader grammar;
-			if(fileName instanceof URL)
-			{
-				grammar = new BufferedReader(
-					new InputStreamReader(
-					((URL)fileName).openStream()));
-			}
-			else
-			{
-				grammar = new BufferedReader(new FileReader(
-					(String)fileName));
-			}
+			Reader grammar = new BufferedReader(new FileReader(fileName));
 
 			parser.parse(null, null, grammar);
+
+			mode.setProperties(xmh.getModeProperties());
 		}
 		catch (Throwable e)
 		{
@@ -2388,11 +2410,6 @@ public class jEdit
 					message };
 				GUIUtilities.error(null,"xmode-error",args);
 			}
-
-			// give it an empty token marker to avoid problems
-			TokenMarker marker = new TokenMarker();
-			marker.addRuleSet("MAIN",new ParserRuleSet("MAIN",mode));
-			mode.setTokenMarker(marker);
 		}
 	} //}}}
 
