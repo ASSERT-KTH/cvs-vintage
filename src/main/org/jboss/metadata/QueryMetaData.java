@@ -17,7 +17,7 @@ import org.jboss.ejb.DeploymentException;
  * Contains information about ejb-ql queries.
  * 
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class QueryMetaData extends MetaData {
 	// Constants -----------------------------------------------------
@@ -81,8 +81,7 @@ public class QueryMetaData extends MetaData {
 		
 		// method interface
 		methodIntf = getElementContent(getOptionalChild(queryMethod, "method-intf"));
-		if(!HOME.equals(methodIntf) &&
-				!LOCAL_HOME.equals(methodIntf)) {
+		if(methodIntf!=null && !HOME.equals(methodIntf) && !LOCAL_HOME.equals(methodIntf)) {
 			throw new DeploymentException("result-type-mapping must be '" + 
 							HOME + "', '" + 
 							LOCAL_HOME + "', if specified");
