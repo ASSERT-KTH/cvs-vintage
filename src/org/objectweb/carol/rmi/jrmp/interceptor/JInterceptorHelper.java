@@ -71,7 +71,7 @@ public abstract class JInterceptorHelper {
     static {
 	try {
 	    spaceID = new UID();
-	    rk = new RemoteKey(spaceID, InetAddress.getLocalHost());
+	    rk = new RemoteKey(spaceID, InetAddress.getLocalHost().getAddress());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

@@ -28,6 +28,7 @@
 package org.objectweb.carol.rmi.jrmp.interceptor;
 
 import java.rmi.server.UID;
+import java.util.Arrays;
 import java.net.InetAddress;
 import java.io.Externalizable;
 import java.io.ObjectInput;
@@ -40,17 +41,17 @@ import java.io.IOException;
  * @author  Guillaume Riviere (Guillaume.Riviere@inrialpes.fr)
  * @version 1.0, 10/03/2003
  */
-public class RemoteKey implements Externalizable {
+public class RemoteKey {
 
     /**
      * remote uid
      */
-    public transient UID uid = null;
+    private UID uid = null;
 
     /**
      * remote inet address
      */
-    public transient InetAddress inetA = null;
+    private byte[] inetA = null;
 
     /**
      * Empty Constructor for externalizabe
@@ -61,7 +62,7 @@ public class RemoteKey implements Externalizable {
     /**
      * Constructor
      */
-    public RemoteKey(UID uid, InetAddress inetA) {
+    public RemoteKey(UID uid, byte[] inetA) {
 	this.uid=uid;
 	this.inetA=inetA;
     }
@@ -72,7 +73,7 @@ public class RemoteKey implements Externalizable {
      * this Remote Key
      */
     public boolean equals(Object obj) {
-	if ( inetA.equals(((RemoteKey)obj).inetA )) {
+	if (Arrays.equals(inetA, ((RemoteKey)obj).inetA )) {
 	    if ( uid.equals(((RemoteKey)obj).uid )) {
 		return true;
 	    } else {
@@ -82,28 +83,18 @@ public class RemoteKey implements Externalizable {
 	    return false;
 	} 
     }
-   
     /**
-     * override readExternal to initialise localRef
-     * We could actually receive anything from the server on lookup
-     * @param in the object input 
-     * @param newFormat the new format boolean 
+     * @return
      */
-    public void readExternal(ObjectInput in) throws IOException,ClassNotFoundException {
-        inetA = (InetAddress)in.readObject();
-        uid = UID.read(in);
+    public byte[] getInetA() {
+        return inetA;
     }
 
     /**
-     * override writeExternal to send spaceID And the interceptor
-     * We could actually send anything to the client on lookup
-     * @param out the object output
-     * @param newFormat the boolean new format
+     * @return
      */
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(inetA);
-        uid.write(out);
-    }    
-	
-}
+    public UID getUid() {
+        return uid;
+    }
 
+}
