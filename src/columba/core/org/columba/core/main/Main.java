@@ -41,8 +41,6 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.plugin.ThemePluginHandler;
 import org.columba.core.session.SessionController;
 
-import org.columba.mail.config.MailConfig;
-import org.columba.mail.gui.config.accountwizard.AccountWizardLauncher;
 import org.columba.mail.main.MailMain;
 
 public class Main {
@@ -122,14 +120,6 @@ public class Main {
         MainInterface.frameModel = new FrameModel();
 
         frame.setVisible(false);
-
-        if (MailConfig.getAccountList().count() == 0) {
-            try {
-                new AccountWizardLauncher().launchWizard();
-            } catch (Exception ex) {
-                ColumbaLogger.log.severe(ex.getMessage());
-            }
-        }
 
         new CmdLineArgumentHandler(cmdLineParser);
     }
