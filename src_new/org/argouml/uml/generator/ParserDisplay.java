@@ -24,7 +24,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.37 2002/09/10 00:21:41 d00mst Exp $
+// $Id: ParserDisplay.java,v 1.38 2002/09/12 13:19:47 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -67,6 +67,7 @@ import org.argouml.application.api.*;
 import org.argouml.util.MyTokenizer;
 import org.argouml.model.uml.foundation.core.*;
 import org.argouml.model.uml.foundation.extensionmechanisms.*;
+import org.argouml.model.uml.modelmanagement.ModelManagementHelper;
 
 /**
  * Interface specifying the operation to take when a PropertySpecialString
@@ -1212,8 +1213,8 @@ protected String parseOutMultiplicity(MAttribute f, String s) {
     if (type == null) { // no type defined yet
 	type = UmlFactory.getFactory().getCore().buildClass(name);                
     }
-    if (type.getNamespace() == null) {
-	type.setNamespace(defaultSpace);
+    if (type.getModel() != p.getModel() && !ModelManagementHelper.getHelper().getAllNamespaces(p.getModel()).contains(type.getNamespace())) {
+    	type.setNamespace(p.getModel());
     }
     return type;
   }
