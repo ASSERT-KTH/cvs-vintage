@@ -56,9 +56,9 @@
  * [Additional notices, if required by prior licensing conditions]
  *
  */ 
-package org.apache.tomcat.core;
+package org.apache.tomcat.facade;
 
-import org.apache.tomcat.facade.*;
+import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.logging.*;
 import java.io.*;
@@ -293,7 +293,7 @@ public class ServletWrapper extends Handler {
     */
     public void init()
     	throws Exception
-    {
+   {
 	// make sure the servlet is loaded before calling preInit
 	// Jsp case - maybe another Jsp engine is used
 	if( servlet==null && path != null &&  servletClassName == null) {
@@ -310,7 +310,13 @@ public class ServletWrapper extends Handler {
 	//}
 	
 	// Call pre, doInit and post
-	super.init();
+	contextM.doPreServletInit( context, this);
+	doInit();
+	
+	// if an exception is thrown in init, no end interceptors will
+	// be called. that was in the origianl code J2EE used
+	
+	contextM.doPostServletInit( context, this);
     }
 
     protected void doInit()

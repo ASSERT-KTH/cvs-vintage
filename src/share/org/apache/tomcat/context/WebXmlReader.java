@@ -4,6 +4,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.logging.*;
+import org.apache.tomcat.facade.ServletWrapper;
 import java.beans.*;
 import java.io.*;
 import java.io.IOException;

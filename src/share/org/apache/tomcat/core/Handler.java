@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.9 2000/08/02 02:17:11 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/08/02 02:17:11 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.10 2000/08/02 03:50:31 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/08/02 03:50:31 $
  *
  * ====================================================================
  *
@@ -213,21 +213,8 @@ public class Handler {
     {
 	try {
 	    if( initialized ) return;
-	    if( ! (this instanceof ServletWrapper) ) {
-		doInit();
-		return;
-	    }
-	    
-	    if( ! internal )
-		contextM.doPreServletInit( context, this);
 	    doInit();
-
-	    // if an exception is thrown in init, no end interceptors will
-	    // be called. that was in the origianl code J2EE used
-
-	    if( ! internal )
-		contextM.doPostServletInit( context, this);
-	    
+	    return;
 	} catch( Exception ex ) {
 	    initialized=false;
 	}

@@ -71,6 +71,7 @@ import org.apache.jasper.compiler.*;
 import org.apache.tomcat.logging.Logger;
 import org.apache.jasper.compiler.Compiler;
 import org.apache.tomcat.core.*;
+import org.apache.tomcat.facade.ServletWrapper;
 
 /**
  * Plug in the JSP engine (a.k.a Jasper)! 
