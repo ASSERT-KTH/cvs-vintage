@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.16 2000/12/08 23:18:53 costin Exp $
- * $Revision: 1.16 $
- * $Date: 2000/12/08 23:18:53 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.17 2000/12/29 00:20:27 costin Exp $
+ * $Revision: 1.17 $
+ * $Date: 2000/12/29 00:20:27 $
  *
  * ====================================================================
  *
@@ -64,8 +64,8 @@
 
 package org.apache.tomcat.util;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.zip.*;
 
 import org.apache.tomcat.util.log.*;
 
@@ -346,6 +346,43 @@ public class FileUtil {
 	    return null;
     }
 
+    public static void expand( String src, String dest)
+	throws IOException
+    {
+	File srcF=new File( src);
+	File dir=new File( dest );
+	
+	ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
+	ZipEntry ze = null;
+	
+	while ((ze = zis.getNextEntry()) != null) {
+	    try {
+		File f = new File(dir, ze.getName());
+		// create intermediary directories - sometimes zip don't add them
+		File dirF=new File(f.getParent());
+		dirF.mkdirs();
+		
+		if (ze.isDirectory()) {
+		    f.mkdirs(); 
+		} else {
+		    byte[] buffer = new byte[1024];
+		    int length = 0;
+		    FileOutputStream fos = new FileOutputStream(f);
+		    
+		    while ((length = zis.read(buffer)) >= 0) {
+			fos.write(buffer, 0, length);
+		    }
+		    
+		    fos.close();
+		}
+	    } catch( FileNotFoundException ex ) {
+		//loghelper.log("FileNotFoundException: " +
+		//   ze.getName(), Logger.ERROR );
+		throw ex;
+	    }
+	}
+
+    }
 
 
 }

@@ -202,8 +202,8 @@ public class Main {
 	    Object proxy=cls.newInstance();
 	    
 	    processArgs( proxy, args );
-	    IntrospectionUtils.setAttribute( proxy,
-					     "parentClassLoader", parentL );
+	    // 	    IntrospectionUtils.setAttribute( proxy,
+	    // 		     "parentClassLoader", parentL );
 	    //	    setAttribute( proxy, "serverClassPath", urls );
 	    IntrospectionUtils.execute(  proxy, "execute" );
 	    return;

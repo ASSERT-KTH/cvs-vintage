@@ -66,8 +66,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import org.apache.tomcat.task.Expand;
-
 /**
  *  Prepare a context manager - expand wars in webapps and
  *  automaticly install contexts
@@ -122,7 +120,7 @@ public class AutoSetup extends BaseInterceptor {
 		    appDir.mkdirs();
 		    // Expand war file
 		    try {
-			expand(home + "/webapps/" + name,
+			FileUtil.expand(home + "/webapps/" + name,
 			       home + "/webapps/" + fname);
 		    } catch( IOException ex) {
 			log("expanding webapp " + name, ex);
@@ -171,43 +169,4 @@ public class AutoSetup extends BaseInterceptor {
             }
 	}
     }
-
-    private void expand( String src, String dest)
-	throws IOException
-    {
-	File srcF=new File( source);
-	File dir=new File( dest );
-	
-	ZipInputStream zis = new ZipInputStream(new FileInputStream(srcF));
-	ZipEntry ze = null;
-	
-	while ((ze = zis.getNextEntry()) != null) {
-	    try {
-		File f = new File(dir, ze.getName());
-		// create intermediary directories - sometimes zip don't add them
-		File dirF=new File(f.getParent());
-		dirF.mkdirs();
-		
-		if (ze.isDirectory()) {
-		    f.mkdirs(); 
-		} else {
-		    byte[] buffer = new byte[1024];
-		    int length = 0;
-		    FileOutputStream fos = new FileOutputStream(f);
-		    
-		    while ((length = zis.read(buffer)) >= 0) {
-			fos.write(buffer, 0, length);
-		    }
-		    
-		    fos.close();
-		}
-	    } catch( FileNotFoundException ex ) {
-		//loghelper.log("FileNotFoundException: " +
-		//   ze.getName(), Logger.ERROR );
-		throw ex;
-	    }
-	}
-
-    }
-
 }

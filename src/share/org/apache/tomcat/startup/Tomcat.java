@@ -51,8 +51,8 @@ public class Tomcat extends Log {
     public void stop() throws Exception {
 	System.out.println(sm.getString("tomcat.stop"));
 	try {
-	    org.apache.tomcat.task.StopTomcat task=
-		new  org.apache.tomcat.task.StopTomcat();
+	    StopTomcat task=
+		new  StopTomcat();
 	    
 	    task.setConfig( configFile );
 	    task.execute();     

@@ -1,0 +1,87 @@
+<?xml version="1.0"?> 
+
+<!-- Emacs indentation & editting support
+    <antstructure output="ant.dtd"/>
+<!DOCTYPE ant SYSTEM "ant.dtd" >
+-->
+
+<project name="Tomcat-test" default="main" basedir=".">
+
+  <!-- Compilation properties -->
+
+  <property name="build.compiler" value="classic"/>
+  <property name="optimize" value="false" />
+  <property name="debug" value="off" />
+
+  <!-- Directories -->
+
+  <property name="tomcat.home" value="../../../build/tomcat"/>
+
+
+  <!-- External packages we depend on -->
+
+  <property name="ant.home" value="../jakarta-ant" />
+  <property name="jaxp" value="../jaxp1.0.1" />
+
+  <!-- set it if not specified as -D or in parent antfile -->
+  <property name="servlet.jar" value="${tomcat.home}/lib/servlet.jar" />
+
+  <!-- ==================== Initialization - guessing config ========== -->
+  <target name="init">
+  </target>
+
+  <!-- ==================== Copy static files ==================== -->
+
+  <target name="prepare" depends="init">
+  </target>
+
+  <!-- ==================== Build the internal test app ================== -->
+  <target name="sanity-test" >
+    <mkdir dir="${tomcat.dist}/lib/test"/>
+    <mkdir dir="${tomcat.dist}/lib/test/Golden"/>
+    <copy todir="${tomcat.dist}/lib/test/Golden">
+            <fileset dir="src/tests/share/tests/jsp/Golden"/>
+    </copy>
+
+      <!-- Test application -->
+    <mkdir dir="${tomcat.build}/webapps/test"/>
+    <copy 
+	  todir="${tomcat.build}/webapps/test">
+            <fileset dir="src/tests/webpages"/>
+    </copy>
+    <javac 
+	   srcdir="src/tests/webpages/WEB-INF/classes" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/test/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes;${servlet22.jar}" />
+    <javac 
+	   srcdir="src/tests/share/gtest" 
+	   optimize="${optimize}" 
+	   destdir="${tomcat.build}/webapps/test/WEB-INF/classes" 
+	   classpath="${tomcat.build}/classes" />
+    <copy 
+	  todir="${tomcat.dist}/webapps/test">
+            <fileset dir="${tomcat.build}/webapps/test"/>
+    </copy>
+
+    <jar 
+	 jarfile="${tomcat.dist}/webapps/test.war" 
+	 basedir="${tomcat.dist}/webapps/test" includes="**"/> 
+    <delete dir="${tomcat.dist}/webapps/test"/>
+  </target>
+
+  <!-- ==================== Admin & agreagate ==================== -->
+   
+  <target name="clean-classes" depends="init">
+    <deltree dir="${tomcat.build}/classes/org"/>
+  </target>
+
+  <target name="clean" depends="init">
+    <deltree dir="${tomcat.build}"/>
+    <deltree dir="${tomcat.home}"/>
+  </target>
+  
+  <target name="all" depends=""/>
+  <target name="main" depends=""/>
+    
+</project>

@@ -67,7 +67,6 @@ import java.util.*;
 
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.task.Expand;
 
 /**
  *
@@ -280,11 +279,9 @@ public class WebAppsConfig extends BaseInterceptor {
 	    // To update you need to "remove" the context first!!!
 	    appDir.mkdirs();
 	    // Expand war file
-	    Expand expand=new Expand();
-	    expand.setSrc( dir.getAbsolutePath() + name );
-	    expand.setDest( dir.getAbsolutePath() + fname);
 	    try {
-		expand.execute();
+		FileUtil.expand(dir.getAbsolutePath() + name,
+				dir.getAbsolutePath() + fname );
 	    } catch( IOException ex) {
 		log("expanding webapp " + name, ex);
 		// do what ?
