@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.80 2003/11/22 20:32:29 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.81 2003/11/26 01:04:34 spestov Exp $
  */
 public class DisplayManager
 {
@@ -951,7 +951,7 @@ loop:		for(;;)
 				+ "," + end + ")");
 		}
 
-		for(int i = start; i < end; i++)
+		for(int i = start; i <= end; i++)
 		{
 			//XXX
 			if(isLineVisible(i))
@@ -1555,6 +1555,21 @@ loop:		for(;;)
 			if(!buffer.isLoaded())
 				return;
 
+			if(textArea.getDisplayManager() == DisplayManager.this)
+			{
+				preContentRemoved(firstLine,startLine,numLines);
+				preContentRemoved(scrollLineCount,startLine,numLines);
+				
+				if(delayedUpdateEnd >= startLine)
+					delayedUpdateEnd -= numLines;
+				delayedUpdate(startLine,startLine);
+			}
+			else
+			{
+				firstLine.callReset = true;
+				scrollLineCount.callReset = true;
+			}
+
 			if(numLines != 0)
 			{
 				delayedMultilineUpdate = true;
@@ -1627,21 +1642,6 @@ loop:		for(;;)
 
 				lastfvmget = -1;
 				fvmdump();
-			}
-
-			if(textArea.getDisplayManager() == DisplayManager.this)
-			{
-				preContentRemoved(firstLine,startLine,numLines);
-				preContentRemoved(scrollLineCount,startLine,numLines);
-				
-				if(delayedUpdateEnd >= startLine)
-					delayedUpdateEnd -= numLines;
-				delayedUpdate(startLine,startLine);
-			}
-			else
-			{
-				firstLine.callReset = true;
-				scrollLineCount.callReset = true;
 			}
 		} //}}}
 
