@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin name="Hippo Look And Feel" description="Hippo Look And Feel" id="org.columba.core.HippoLookAndFeel" version="1.0" category="Look and Feel" enabled="true">
+  <extension name="org.columba.core.theme">
+    <theme name="Hippo" class="HippoLookAndFeelPlugin"></theme>
+  </extension>
+  <runtime jar="HippoLookAndFeel.jar" type="java"></runtime>
+</plugin>
