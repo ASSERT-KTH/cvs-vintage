@@ -53,6 +53,7 @@
 #set ($moduleGroup = $intake.Module.Default)
 <input type="hidden" name="new" value="false" /> 
 <input type="hidden" name="$moduleGroup.Id.Key" value="$moduleId" /> 
+<input type="hidden" name="moduleid" value="$moduleId" /> 
 #end
 
 #set ($moduleGroup = $intake.Module.mapTo($editModule))
