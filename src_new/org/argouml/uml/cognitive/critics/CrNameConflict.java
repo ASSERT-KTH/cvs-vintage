@@ -1,4 +1,4 @@
-// $Id: CrNameConflict.java,v 1.5 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNameConflict.java,v 1.6 2003/11/05 21:58:47 linus Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrNameConflict.java
 // Classes: CrNameConflict
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNameConflict.java,v 1.5 2003/06/29 23:52:58 linus Exp $
+// $Id: CrNameConflict.java,v 1.6 2003/11/05 21:58:47 linus Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -61,6 +61,10 @@ public class CrNameConflict extends CrUML {
             Collection names = new ArrayList(); 
             while (it.hasNext()) {  
                 String name = ModelFacade.getName(it.next());
+		if (name == null)
+		    continue;
+		if ("".equals(name))
+		    continue;
                 if (names.contains(name)) {  
                     problem = PROBLEM_FOUND; 
                     break;   
