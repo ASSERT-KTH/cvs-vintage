@@ -28,6 +28,8 @@ import java.net.URLClassLoader;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -118,6 +120,7 @@ public class Compiler {
             }
             generateClusterConfExample();
         } else {
+            ArrayList generatedFiles = new ArrayList();
             Conf cconf = new Conf(classLoader, classes);
             Iterator i = conf.iterator();
             while (i.hasNext()) {
@@ -131,24 +134,28 @@ public class Compiler {
                 }
                 TemplateCompiler tc =
                     new TemplateCompiler(this, cconf.getClassConf(className));
-                compileAndRemove(tc.genConfig());
-                compileAndRemove(tc.genStub());
-
+                generatedFiles.add(tc.genConfig());
+                generatedFiles.add(tc.genStub());
             }
+
+            compileAndRemove(generatedFiles);
+
         }
     }
 
     public void compileAndRemove(String fileName) throws CompilerException {
+        compileAndRemove(Collections.singleton(fileName));
+    }
+
+    public void compileAndRemove(Collection fileNames)
+        throws CompilerException {
         try {
             if (!noc) {
-                Utils.compileFile(this, fileName);
+                Utils.compileFiles(this, fileNames);
             }
         } finally {
             if (!keep) {
-                File f = new File(fileName);
-                if (f.exists()) {
-                    f.delete();
-                }
+                Utils.deleteFiles(fileNames);
             }
         }
     }

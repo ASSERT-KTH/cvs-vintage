@@ -34,9 +34,14 @@
 package org.objectweb.carol.cmi.compiler;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * This is a utility class containing useful static methods for the stub
@@ -50,6 +55,11 @@ public class Utils {
     private static final String COMPILER_CLASS_NAME = "com.sun.tools.javac.Main";
 
     static void compileFile(Compiler cCtx, String fullFileName) throws CompilerException {
+        compileFiles(cCtx, Collections.singleton(fullFileName));
+    }
+
+    static void compileFiles(Compiler cCtx, Collection fullFileNames)
+        throws CompilerException {
 
         if (cCtx.isInvokeCmd()) {
             String classpath = "";
@@ -59,22 +69,36 @@ public class Utils {
             } else {
                 classpath = System.getProperty("java.class.path", "");
             }
-            String[] args = {"-d", cCtx.getDestDir(), fullFileName, "-classpath", classpath};
+
+            ArrayList args = new ArrayList();
+            args.add("-d");
+            args.add(cCtx.getDestDir());
+            args.add("-classpath");
+            args.add(classpath);
+            args.addAll(fullFileNames);
+
             try {
                 // Use reflection
                 Class c = Class.forName(COMPILER_CLASS_NAME);
                 Object compiler = c.newInstance();
                 java.lang.reflect.Method compile = c.getMethod("compile", new Class[] {(new String[] {}).getClass()});
-                int result = ((Integer) compile.invoke(compiler, new Object[] {args})).intValue();
+                int result = ((Integer) compile.invoke(compiler, new Object[] {args.toArray(new String[]{})})).intValue();
                 if (result != 0) {
-                    throw new CompilerException("Compilation of " + fullFileName + " ended abnormally with code "
+                    throw new CompilerException("Compilation of " + fullFileNames + " ended abnormally with code "
                             + result);
                 }
             } catch (Exception e) {
-                throw new CompilerException("While compiling " + fullFileName, e);
+                throw new CompilerException("While compiling " + fullFileNames, e);
             }
         } else {
-            String command = cCtx.getCompiler() + " -d " + cCtx.getDestDir() + " " + fullFileName;
+            StringBuffer files = new StringBuffer();
+            for (Iterator it = fullFileNames.iterator(); it.hasNext(); ) {
+                String fullFileName = (String) it.next();
+                files.append(fullFileName);
+                files.append(" ");
+            }
+
+            String command = cCtx.getCompiler() + " -d " + cCtx.getDestDir() + " " + files;
 
             String classpath = "";
             if (cCtx.getClassPath() != null) {
@@ -90,7 +114,7 @@ public class Utils {
             try {
                 proc = Runtime.getRuntime().exec(command, env);
             } catch (IOException e) {
-                throw new CompilerException("While compiling " + fullFileName, e);
+                throw new CompilerException("While compiling " + fullFileNames, e);
             }
 
             Thread stdoutThread = new Thread(new RunnableStreamListener(new BufferedReader(new InputStreamReader(proc
@@ -104,14 +128,27 @@ public class Utils {
             try {
                 n = proc.waitFor();
             } catch (InterruptedException e1) {
-                throw new CompilerException("While compiling " + fullFileName, e1);
+                throw new CompilerException("While compiling " + fullFileNames, e1);
             }
             if (n != 0) {
-                throw new CompilerException("Compilation of " + fullFileName + " ended abnormally with code " + n);
+                throw new CompilerException("Compilation of " + fullFileNames + " ended abnormally with code " + n);
             }
         }
     }
 
+    static void deleteFiles(Collection fileNames) {
+        for (Iterator it = fileNames.iterator(); it.hasNext(); ) {
+            deleteFile((String) it.next());
+        }
+    }
+
+    static void deleteFile(String fileName) {
+        if (fileName == null || fileName == "") return;
+        File f = new File(fileName);
+        if (f.exists()) {
+            f.delete();
+        }
+    }
 }
 
 class RunnableStreamListener implements Runnable {
