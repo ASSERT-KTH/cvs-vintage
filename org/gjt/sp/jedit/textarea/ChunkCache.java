@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.71 2003/04/02 03:32:50 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.72 2003/04/02 18:25:27 spestov Exp $
  */
 class ChunkCache
 {
@@ -698,7 +698,7 @@ class ChunkCache
 				{
 					buffer.setScreenLineCount(
 						physicalLine,out.size());
-					if(skew > out.size())
+					if(skew >= out.size())
 					{
 						needFullRepaint = true;
 						lastScreenLine = lineInfo.length - 1;
