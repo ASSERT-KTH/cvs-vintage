@@ -1,4 +1,4 @@
-// $Id: PropPanelClassifierRole.java,v 1.27 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.28 2003/01/29 22:17:23 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.27 2003/01/27 20:06:59 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.28 2003/01/29 22:17:23 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -85,7 +85,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     addField(Argo.localize("UMLMenu", "label.available-features"), 
         new JScrollPane(availableFeaturesList));   
     
-    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);
+    new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
     new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");
     new PropPanelButton(this,buttonPanel,_navForwardIcon, Argo.localize("UMLMenu", "button.go-forward"),"navigateForwardAction","isNavigateForwardEnabled");
     new PropPanelButton(this,buttonPanel,_deleteIcon,localize("Delete"),"removeElement",null);
