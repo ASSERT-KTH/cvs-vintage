@@ -7,6 +7,9 @@
 package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.AbstractFrameController;
@@ -63,9 +66,8 @@ public class DeleteMessageAction
 			"DELETE_MESSAGE",
 			ImageLoader.getSmallImageIcon("stock_delete-16.png"),
 			ImageLoader.getImageIcon("stock_delete.png"),
-			'0',
-			null,
-			false);
+            'D',
+            KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.ALT_MASK));
 		setEnabled(false);
 		((MailFrameController) frameController).registerTableSelectionListener(
 			this);
