@@ -286,8 +286,8 @@ There are no comments in this issue.
      #end
      #if ($canEdit)
      <th>URL</th>
-     #end
      <th>Description</th>
+     #end
    </tr>
    #foreach ($url in $currentIssue.Urls)
     #indexedRows($velocityCount)
@@ -296,17 +296,17 @@ There are no comments in this issue.
        <input type="checkbox" name="url_delete_$url.AttachmentId" />
      </td>
      #end
-     <td><a href="$url.Name">$url.DataAsString</a></td>
-      #set ($urlGroup = $intake.Attachment.mapTo($url))
+     <td><a href="$url.DataAsString">$url.Name</a></td>
      #if ($canEdit)
-         <td><input type="text" size="25" name="$urlGroup.Name.Key" value="$url.Name" />
-         #fieldErrorMsg($urlGroup.Name "")
-         </td>
-         <td><input type="text" size="25" name="$urlGroup.DataAsString.Key" value="$url.DataAsString" />
+      #set ($urlGroup = $intake.Attachment.mapTo($url))
+         <td><input type="text" size="25" name="$urlGroup.DataAsString.Key" 
+                 value="!$urlGroup.DataAsString" />
          #fieldErrorMsg($urlGroup.DataAsString "")
          </td>
-     #else
-         <td>$!url.DataAsString</td>
+         <td><input type="text" size="25" name="$urlGroup.Name.Key" 
+                 value="!$urlGroup.Name" />
+         #fieldErrorMsg($urlGroup.Name "")
+         </td>
      #end
     </tr>
    #end
@@ -318,12 +318,14 @@ There are no comments in this issue.
      #end
      #set ($urlGroup = $intake.Attachment.setKey("urlKey"))
      <td>
-     <input type="text" size="25" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
-     #fieldErrorMsg($urlGroup.Name "")
+     <input type="text" size="25" name="$urlGroup.DataAsString.Key" 
+         value="$!urlGroup.DataAsString" />
+     #fieldErrorMsg($urlGroup.DataAsString "")
      </td>
      <td>
-     <input type="text" size="25" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString" />
-     #fieldErrorMsg($urlGroup.DataAsString "")
+     <input type="text" size="25" name="$urlGroup.Name.Key" 
+         value="$!urlGroup.Name" />
+     #fieldErrorMsg($urlGroup.Name "")
      </td>
    </tr>
    #end
