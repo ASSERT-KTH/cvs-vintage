@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.147 2003/08/27 04:31:52 patriot1burke Exp $ -->
+<!-- $Id: build.xml,v 1.148 2003/11/12 17:34:04 starksm Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -480,6 +480,7 @@
         <include name="org/jboss/ejb/plugins/lock/ApplicationDeadlockException.class"/>
         <include name="org/jboss/monitor/client/*.class"/>
         <include name="org/jboss/naming/*NamingContextFactory*.class"/>
+        <include name="org/jboss/naming/client/**"/>
         <include name="org/jboss/naming/interceptors/*"/>
         <include name="org/jboss/tm/JBossTransactionRolledbackException.class"/>
         <include name="org/jboss/tm/JBossTransactionRolledbackLocalException.class"/>
@@ -511,21 +512,6 @@
         <include name="**/*"/>
       </fileset>
     </jar>
-
-    <!-- jmx-ejb-adaptor.jar
-    <jar jarfile="${build.lib}/jmx-ejb-adaptor.jar"
-         manifest="${build.etc}/default.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/ObjectHandler**"/>
-        <include name="org/jboss/jmx/adaptor/ejb/**"/>
-        <include name="org/jboss/jmx/adaptor/interfaces/**"/>
-        <include name="org/jboss/jmx/connector/RemoteMBeanServer.class"/>
-      </fileset>
-      <fileset dir="${build.beans}/ejbadaptor">
-        <include name="META-INF/**"/>
-      </fileset>
-    </jar>
--->
 
     <!-- jmx-invoker-adaptor-client.jar --> 
     <jar jarfile="${build.lib}/jmx-invoker-adaptor-client.jar"
@@ -606,22 +592,6 @@
     <mkdir dir="${build.gen}/getopt"/>
     <unjar src="${gnu.getopt.lib}/getopt.jar" dest="${build.gen}/getopt"/>
 
-    <!-- Build deployer.jar -->
-    <jar jarfile="${build.lib}/deployer.jar" manifest="${build.etc}/manifest/deployer.mf">
-      <fileset dir="${build.classes}">
-        <include name="org/jboss/jmx/service/RemoteDeployer*.class"/>
-      </fileset>
-      <fileset dir="${build.resources}">
-        <include name="log4j.properties"/>
-        <include name="jndi.properties"/>
-      </fileset>
-
-      <!-- Include getopt -->
-      <fileset dir="${build.gen}/getopt">
-        <include name="**"/>
-      </fileset>
-    </jar>
-
     <!-- Build shutdown.jar -->
     <jar jarfile="${build.lib}/shutdown.jar" manifest="${build.etc}/manifest/shutdown.mf">
       <fileset dir="${build.classes}">
@@ -657,7 +627,12 @@
     </jar>
 
     <!-- SQLException Processor -->
-    <copy todir="${build.lib}" file="${build.resources}/exception-processor/sqlexception-service.xml"/>
+    <copy todir="${build.lib}"
+       file="${build.resources}/exception-processor/sqlexception-service.xml"/>
+
+    <!-- The J2EE client deployer -->
+    <copy todir="${build.lib}"
+      file="${build.resources}/client-deployer/client-deployer-service.xml" />
 
     <!--
        | JBoss/Testsuite Support
