@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.11 $
+ *	@version $Revision: 1.12 $
  */
 public abstract class EnterpriseContext
 {
@@ -131,6 +131,22 @@ public abstract class EnterpriseContext
        
        return locked != 0;
    }
+   
+   /*
+   * clear()
+   *
+   * before reusing this context we clear it of previous state called by pool.free()
+   */
+   public void clear() {
+   
+    this.id = null;
+	this.locked = 0;
+	this.principal = null;
+	this.synch = null;
+	this.transaction = null;
+   
+   }
+	   
     
    // Package protected ---------------------------------------------
     
