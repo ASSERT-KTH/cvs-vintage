@@ -127,10 +127,10 @@
 #end
 
         <select name="headingtype">
-          <option value="0" #if ($selectedType == 0)selected="selected"#end>Attribute(s) / option(s)</option>
-          <option value="1" #if ($selectedType == 1)selected="selected"#end>Users (by user attribute)</option>
+          <option value="0" #if ($selectedType == 0)selected="selected"#end>$l10n.AttributesOrOptions</option>
+          <option value="1" #if ($selectedType == 1)selected="selected"#end>$l10n.UsersByUserAttribute</option>
   #if (!$headings || $singleHeading)
-          <option value="2" #if ($selectedType == 2)selected="selected"#end>Date(s) / date range(s)</option>
+          <option value="2" #if ($selectedType == 2)selected="selected"#end>$l10n.DatesOrDatesRanges</option>
   #end
         </select>
         &nbsp;<input type="submit" name="eventSubmit_doSettype" value="$l10n.Go">
