@@ -45,7 +45,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.155 2003/05/02 21:12:43 spestov Exp $
+ * @version $Id: jEdit.java,v 1.156 2003/05/03 20:34:25 spestov Exp $
  */
 public class jEdit
 {
@@ -77,6 +77,8 @@ public class jEdit
 	 */
 	public static void main(String[] args)
 	{
+		mainThread = Thread.currentThread();
+
 		String javaVersion = System.getProperty("java.version");
 		if(javaVersion.compareTo("1.3") < 0)
 		{
@@ -2127,6 +2129,16 @@ public class jEdit
 
 	//{{{ Miscellaneous methods
 
+	//{{{ isMainThread() method
+	/**
+	 * Returns true if the currently running thread is the main thread.
+	 * @since jEdit 4.2pre1
+	 */
+	public static boolean isMainThread()
+	{
+		return (Thread.currentThread() == mainThread);
+	} //}}}
+
 	//{{{ isBackgroundMode() method
 	/**
 	 * Returns true if jEdit was started with the <code>-background</code>
@@ -2580,6 +2592,8 @@ public class jEdit
 	private static View activeView;
 
 	private static boolean startupDone;
+
+	private static Thread mainThread;
 	//}}}
 
 	private jEdit() {}

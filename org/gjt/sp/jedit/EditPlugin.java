@@ -179,7 +179,7 @@ import org.gjt.sp.jedit.menu.EnhancedMenu;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: EditPlugin.java,v 1.30 2003/05/02 23:14:17 spestov Exp $
+ * @version $Id: EditPlugin.java,v 1.31 2003/05/03 20:34:25 spestov Exp $
  * @since jEdit 2.1pre1
  */
 public abstract class EditPlugin
@@ -203,10 +203,11 @@ public abstract class EditPlugin
 	 * a macro, or a BeanShell snippet in a plugin API XML file.</li>
 	 * </ul>
 	 *
-	 * Note that in the last case, plugin activation can occur in a thread
-	 * other than the AWT event dispatch thread - for example, if another
-	 * plugin spaws a thread which accesses this plugin. So this method
-	 * <b>must</b> be thread-safe.<p>
+	 * Note that this method is always called from the event dispatch
+	 * thread, even if the activation resulted from a class being loaded
+	 * from another thread. A side effect of this is that some of your
+	 * plugin's code might get executed before this method finishes
+	 * running.<p>
 	 *
 	 * When this method is being called for plugins written for jEdit 4.1
 	 * and below, no views or buffers are open. However, this is not the

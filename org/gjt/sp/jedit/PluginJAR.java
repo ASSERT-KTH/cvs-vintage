@@ -23,6 +23,7 @@
 package org.gjt.sp.jedit;
 
 //{{{ Imports
+import javax.swing.SwingUtilities;
 import java.io.*;
 import java.lang.reflect.Modifier;
 import java.net.URL;
@@ -96,7 +97,7 @@ import org.gjt.sp.util.Log;
  * @see org.gjt.sp.jedit.ServiceManager
  *
  * @author Slava Pestov
- * @version $Id: PluginJAR.java,v 1.16 2003/05/02 23:36:00 spestov Exp $
+ * @version $Id: PluginJAR.java,v 1.17 2003/05/03 20:34:25 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class PluginJAR
@@ -194,7 +195,7 @@ public class PluginJAR
 		return browserActions;
 	} //}}}
 
-		//{{{ checkDependencies() method
+	//{{{ checkDependencies() method
 	/**
 	 * Returns true if all dependencies are satisified, false otherwise.
 	 * Also if dependencies are not satisfied, the plugin is marked as
@@ -389,7 +390,16 @@ public class PluginJAR
 			plugin = (EditPlugin)clazz.newInstance();
 			plugin.jar = (EditPlugin.JAR)this;
 
-			plugin.start();
+			if(jEdit.isMainThread()
+				|| SwingUtilities.isEventDispatchThread())
+			{
+				plugin.start();
+			}
+			else
+			{
+				// for thread safety
+				startPluginLater();
+			}
 
 			if(plugin instanceof EBPlugin)
 			{
@@ -901,6 +911,34 @@ public class PluginJAR
 		}
 
 		return cache;
+	} //}}}
+
+	//{{{ startPluginLater() method
+	private void startPluginLater()
+	{
+		SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					plugin.start();
+				}
+				catch(Throwable t)
+				{
+					plugin = new EditPlugin.Broken(
+						plugin.getClassName());
+					plugin.jar = (EditPlugin.JAR)
+						PluginJAR.this;
+
+					Log.log(Log.ERROR,PluginJAR.this,
+						"Error while starting plugin " + plugin.getClassName());
+					Log.log(Log.ERROR,PluginJAR.this,t);
+					String[] args = { t.toString() };
+					jEdit.pluginError(path,"plugin-error.start-error",args);
+				}
+			}
+		});
 	} //}}}
 
 	//}}}

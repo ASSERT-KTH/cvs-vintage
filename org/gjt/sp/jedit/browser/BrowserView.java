@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.66 2003/04/30 05:28:54 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.67 2003/05/03 20:34:26 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -464,7 +464,8 @@ class BrowserView extends JPanel
 					return;
 				}
 
-				table.getSelectionModel().addSelectionInterval(row,row);
+				if(!table.getSelectionModel().isSelectedIndex(row))
+					table.getSelectionModel().setSelectionInterval(row,row);
 
 				if(table.getSelectedRow() == -1)
 					showFilePopup(null,table,evt.getPoint());
