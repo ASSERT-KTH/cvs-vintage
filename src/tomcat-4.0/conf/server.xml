@@ -136,9 +136,7 @@
              document roots in places other than the virtual host's appBase
              directory.  -->
         <!-- Tomcat Root Context -->
-        <Context path="" docBase="scarab">
-            <Manager randomClass="java.util.Random"/>
-        </Context>
+        <Context path="" docBase="scarab"/>
 
       </Host>
 
