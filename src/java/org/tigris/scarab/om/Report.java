@@ -48,13 +48,14 @@ package org.tigris.scarab.om;
 
 
 // JDK classes
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
-
+import java.util.List;
 import java.text.SimpleDateFormat;
+
 import com.workingdogs.village.Record;
 
 // Turbine classes
@@ -372,7 +373,7 @@ public  class Report
         String[] toBeGrouped = getAttributesAndOptionsForGrouping();
         if ( toBeGrouped == null ) 
         {
-            options = new ArrayList(0);
+            options = Collections.EMPTY_LIST;
         }
         else 
         {
@@ -587,7 +588,7 @@ public  class Report
         String[] keys = getAxis1Keys();
         if ( keys == null ) 
         {
-            list = new ArrayList(0);
+            list = Collections.EMPTY_LIST;
         }
         else 
         {
@@ -603,7 +604,7 @@ public  class Report
         String[] keys = getAxis2Keys();
         if ( keys == null ) 
         {
-            list = new ArrayList(0);
+            list = Collections.EMPTY_LIST;
         }
         else 
         {
@@ -843,7 +844,7 @@ public  class Report
         }
         else 
         {
-            options = new ArrayList(0);
+            options = Collections.EMPTY_LIST;
         }
 
         return options;
