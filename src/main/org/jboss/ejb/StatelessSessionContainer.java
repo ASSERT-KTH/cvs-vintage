@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.ejb;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,49 +29,42 @@ import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
 
 /**
-* The container for <em>stateless</em> session beans.
-*
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-* @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @version $Revision: 1.36 $
-* <p><b>2001219 marc fleury</b>
-* <ul>
-* <li> move to the new invocation layer and Invocation object
-* </ul>
-*/
+ * The container for <em>stateless</em> session beans.
+ *
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ * @version $Revision: 1.37 $
+ * 
+ * <p><b>2001219 marc fleury</b>
+ * <ul>
+ * <li> move to the new invocation layer and Invocation object
+ * </ul>
+ */
 public class StatelessSessionContainer
-extends Container
-implements EJBProxyFactoryContainer, InstancePoolContainer
+   extends Container
+   implements EJBProxyFactoryContainer, InstancePoolContainer
 {
-   // Constants -----------------------------------------------------
-   
-   // Attributes ----------------------------------------------------
-   
    /**
-   * These are the mappings between the home interface methods and the
-   * container methods.
-   */
+    * These are the mappings between the home interface methods and the
+    * container methods.
+    */
    protected Map homeMapping;
    
    /**
-   * These are the mappings between the remote interface methods and the
-   * bean methods.
-   */
+    * These are the mappings between the remote interface methods and the
+    * bean methods.
+    */
    protected Map beanMapping;
    
    /** This is the instancepool that is to be used */
    protected InstancePool instancePool;
    
    /**
-   * This is the first interceptor in the chain. The last interceptor must
-   * be provided by the container itself
-   */
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself
+    */
    protected Interceptor interceptor;
-   // Static --------------------------------------------------------
-   // Constructors --------------------------------------------------
-   
-   // Public --------------------------------------------------------
    
    public LocalProxyFactory getLocalProxyFactory()
    {
@@ -123,10 +117,9 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       return remoteInterface;
    }
    
-   
    // Container implementation --------------------------------------
    
-   public void create() throws Exception
+   protected void createService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -139,8 +132,9 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
             homeInterface = classLoader.loadClass(metaData.getHome());
          if (metaData.getRemote() != null)
             remoteInterface = classLoader.loadClass(metaData.getRemote());
+
          // Call default init
-         super.create();
+         super.createService();
 
          // Map the bean methods
          setupBeanMapping();
@@ -178,7 +172,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       }
    }
    
-   public void start() throws Exception
+   protected void startService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -187,7 +181,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       try
       {
          // Call default start
-         super.start();
+         super.startService();
 
          // Start container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -215,7 +209,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       }
    }
    
-   public void stop()
+   protected void stopService() throws Exception 
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -224,7 +218,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       try
       {
          // Call default stop
-         super.stop();
+         super.stopService();
 
          // Stop container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -252,7 +246,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       }
    }
    
-   public void destroy()
+   protected void destroyService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -283,7 +277,7 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
          }
 
          // Call default destroy
-         super.destroy();
+         super.destroyService();
       }
       finally
       {
@@ -294,7 +288,6 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    
    public Object invokeHome(Invocation mi) throws Exception
    {
-      
       return getInterceptor().invokeHome(mi);
    }
    
@@ -306,7 +299,6 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    public Object invoke(Invocation mi)
       throws Exception
    {
-      
       // Invoke through interceptors
       return getInterceptor().invoke(mi);
    }
@@ -314,8 +306,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    // EJBObject implementation --------------------------------------
    
    /**
-   * No-op.
-   */
+    * No-op.
+    */
    public void remove(Invocation mi)
       throws RemoteException, RemoveException
    {
@@ -323,8 +315,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * @return    Always null
-   */
+    * @return    Always null
+    */
    public Handle getHandle(Invocation mi)
       throws RemoteException
    {
@@ -333,8 +325,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * @return    Always null
-   */
+    * @return    Always null
+    */
    public Object getPrimaryKey(Invocation mi)
       throws RemoteException
    {
@@ -353,8 +345,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * @return    Always false
-   */
+    * @return    Always false
+    */
    public boolean isIdentical(Invocation mi)
       throws RemoteException
    {
@@ -379,8 +371,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * No-op.
-   */
+    * No-op.
+    */
    public void removeLocalHome(Object primaryKey)
    {
       // todo
@@ -400,8 +392,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * No-op.
-   */
+    * No-op.
+    */
    public void removeHome(Handle handle)
       throws RemoteException, RemoveException
    {
@@ -409,8 +401,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * No-op.
-   */
+    * No-op.
+    */
    public void removeHome(Object primaryKey)
       throws RemoteException, RemoveException
    {
@@ -418,8 +410,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * @return    Always null.
-   */
+    * @return    Always null.
+    */
    public EJBMetaData getEJBMetaDataHome()
       throws RemoteException
    {
@@ -428,8 +420,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * @return    Always null.
-   */
+    * @return    Always null.
+    */
    public HomeHandle getHomeHandleHome()
       throws RemoteException
    {
@@ -487,8 +479,9 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
             }
             catch (NoSuchMethodException ex)
             {
-               throw new NoSuchMethodException("Method not found in bean class: " + formatMethod(m[i]));
+               throw new org.jboss.util.NoSuchMethodException("Not found in bean class: ", m[i]);
             }
+            
             if (debug)
                log.debug("Mapped "+m[i].getName()+" "+m[i].hashCode()+"to "+map.get(m[i]));
          }
@@ -500,7 +493,8 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
                if (debug)
                   log.debug("Mapped Container method "+m[i].getName() +" HASH "+m[i].hashCode());
                map.put(m[i], getClass().getMethod(m[i].getName(), new Class[] { Invocation.class }));
-            } catch (NoSuchMethodException e)
+            }
+            catch (NoSuchMethodException e)
             {
                log.error(m[i].getName() + " in bean has not been mapped", e);
             }
@@ -527,40 +521,33 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
       beanMapping = map;
    }
    
-   protected void setupMarshalledInvocationMapping() 
+   protected void setupMarshalledInvocationMapping() throws Exception
    {
-      try 
-      {// Create method mappings for container invoker
-         if (homeInterface != null) 
-         {
-            Method [] m = homeInterface.getMethods();
-            for (int i = 0 ; i<m.length ; i++)
-            {
-               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
-            }
-         }
-         
-         if (remoteInterface != null)
-         {
-            Method [] m = remoteInterface.getMethods();
-            for (int j = 0 ; j<m.length ; j++)
-            {
-               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
-            }
-         }
-         
-         // Get the getEJBObjectMethod
-         Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
-         
-         // Hash it
-         marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
-      }
-      catch (Exception e)
+      // Create method mappings for container invoker
+      if (homeInterface != null) 
       {
-         log.error("could not load methods", e);
+         Method [] m = homeInterface.getMethods();
+         for (int i = 0 ; i<m.length ; i++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+         }
       }
+      
+      if (remoteInterface != null)
+      {
+         Method [] m = remoteInterface.getMethods();
+         for (int j = 0 ; j<m.length ; j++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+         }
+      }
+         
+      // Get the getEJBObjectMethod
+      Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
+      
+      // Hash it
+      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
-   
    
    Interceptor createContainerInterceptor()
    {
@@ -568,57 +555,33 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
    }
    
    /**
-   * This is the last step before invocation - all interceptors are done
-   */
+    * This is the last step before invocation - all interceptors are done
+    */
    class ContainerInterceptor
-      implements Interceptor
+      extends AbstractContainerInterceptor
    {
-      public void setContainer(Container con) {}
-      
-      public void setNext(Interceptor interceptor) {}
-      
-      public Interceptor getNext() { return null; }
-      
-      public void create() {}
-      
-      public void start() {}
-      
-      public void stop() {}
-      
-      public void destroy() {}
-      
-      public Object invokeHome(Invocation mi)
-      throws Exception
+      public Object invokeHome(Invocation mi) throws Exception
       {
-         
          Method m = (Method)homeMapping.get(mi.getMethod());
          
          try
          {
             return m.invoke(StatelessSessionContainer.this, mi.getArguments());
-         } catch (IllegalAccessException e)
-         {
-            // Throw this as a bean exception...(?)
-            throw new EJBException(e);
-         } catch (InvocationTargetException e)
-         {
-            Throwable ex = e.getTargetException();
-            if (ex instanceof EJBException)
-               throw (EJBException)ex;
-            else if (ex instanceof RuntimeException)
-               throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-            else if (ex instanceof Exception)
-               throw (Exception)ex;
-            else
-               throw (Error)ex;
          }
+         catch (Exception e)
+         {
+            rethrow(e);
+         }
+         
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();         
       }
       
-      public Object invoke(Invocation mi)
-      throws Exception
+      public Object invoke(Invocation mi) throws Exception
       {
-         //wire the transaction on the context, this is how the instance remember the tx
-         if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null) ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
+         // wire the transaction on the context, this is how the instance remember the tx
+         if (((EnterpriseContext) mi.getEnterpriseContext()).getTransaction() == null)
+            ((EnterpriseContext) mi.getEnterpriseContext()).setTransaction(mi.getTransaction());
             
          // Get method and instance to invoke upon
          Method m = (Method)beanMapping.get(mi.getMethod());
@@ -629,71 +592,27 @@ implements EJBProxyFactoryContainer, InstancePoolContainer
             try
             {
                return m.invoke(StatelessSessionContainer.this, new Object[] { mi });
-            } catch (IllegalAccessException e)
-            {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (EJBException)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
             }
-         } else // we have a method that needs to be done by a bean instance
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+         }
+         else // we have a method that needs to be done by a bean instance
          {
             // Invoke and handle exceptions
             try
             {
                return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
-            } catch (IllegalAccessException e)
+            }
+            catch (Exception e)
             {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (EJBException)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
+               rethrow(e);
             }
          }
-      }
-      // StatisiticsProvider implementation ------------------------------------
-      public Map retrieveStatistic()
-      {
-         return null;
-      }
-      public void resetStatistic()
-      {
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();         
       }
    }
-
-   private StringBuffer formatMethod(Method method)
-   {
-      StringBuffer buffer = new StringBuffer();
-      buffer.append(method.getName()).append("(");
-      Class[] paramTypes = method.getParameterTypes();
-      for (int count = 0; count < paramTypes.length; count++) {
-         if (count > 0) {
-            buffer.append(",");
-         }
-         buffer.
-            append(paramTypes[count].getName().substring(paramTypes[count].getName().lastIndexOf(".")+1));
-      }
-      buffer.append(")");
-
-      return buffer;
-   }
-
 }

@@ -39,7 +39,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public class MessageDrivenContainer
    extends Container
@@ -129,7 +129,7 @@ public class MessageDrivenContainer
 
    // Container implementation - overridden here ----------------------
 
-   public void create() throws Exception
+   protected void createService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -138,7 +138,7 @@ public class MessageDrivenContainer
       try
       {
          // Call default init
-         super.create();
+         super.createService();
 
          // Map the bean methods
          Map map = new HashMap();
@@ -174,7 +174,7 @@ public class MessageDrivenContainer
       }
    }
 
-   public void start() throws Exception
+   protected void startService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -183,7 +183,7 @@ public class MessageDrivenContainer
       try
       {
          // Call default start
-         super.start();
+         super.startService();
 
          // Start container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -211,8 +211,10 @@ public class MessageDrivenContainer
       }
    }
 
-   public void stop()
+   protected void stopService() throws Exception
    {
+      log.info("Stopping");
+      
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -220,7 +222,7 @@ public class MessageDrivenContainer
       try
       {
          // Call default stop
-         super.stop();
+         super.stopService();
 
          // Stop container invoker
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -248,7 +250,7 @@ public class MessageDrivenContainer
       }
    }
 
-   public void destroy()
+   protected void destroyService() throws Exception
    {
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -279,7 +281,7 @@ public class MessageDrivenContainer
          }
 
          // Call default destroy
-         super.destroy();
+         super.destroyService();
       }
       finally
       {
@@ -288,12 +290,13 @@ public class MessageDrivenContainer
       }
    }
 
-
+   /**
+    * @throws Error   Not valid for MDB
+    */
    public Object invokeHome(Invocation mi)
       throws Exception
    {
       throw new Error("invokeHome not valid for MessageDriven beans");
-      //return getInterceptor().invokeHome(mi);
    }
 
    /**
@@ -353,22 +356,16 @@ public class MessageDrivenContainer
       return new ContainerInterceptor();
    }
 
-   // This is the last step before invocation - all interceptors are done
+   /**
+    * This is the last step before invocation - all interceptors are done
+    */
    class ContainerInterceptor
-      implements Interceptor
+      extends AbstractContainerInterceptor
    {
-      public void setContainer(Container con) {}
-
-      public void setNext(Interceptor interceptor) {}
-      public Interceptor getNext() { return null; }
-
-      public void create() {}
-      public void start() {}
-      public void stop() {}
-      public void destroy() {}
-
-      public Object invokeHome(Invocation mi)
-         throws Exception
+      /**
+       * @throws Error   Not valid for MDB
+       */
+      public Object invokeHome(Invocation mi) throws Exception
       {
          throw new Error("invokeHome not valid for MessageDriven beans");
       }
@@ -396,48 +393,12 @@ public class MessageDrivenContainer
          try {
             return m.invoke(ctx.getInstance(), mi.getArguments());
          }
-         catch (IllegalAccessException e) {
-            // Throw this as a bean exception...(?)
-            throw new EJBException(e);
+         catch (Exception e) {
+            rethrow(e);
          }
-         catch (InvocationTargetException e) {
-            Throwable t = e.getTargetException();
-            
-            if (t instanceof RuntimeException) {
-               if (t instanceof EJBException) {
-                  throw (EJBException)t;
-               }
-               else {
-                  // Transform runtime exception into what a bean *should* have thrown
-                  throw new EJBException((RuntimeException)t);
-               }
-            }
-            else if (t instanceof Exception) {
-               throw (Exception)t;
-            }
-            else if (t instanceof Error) {
-               throw (Error)t;
-            }
-            else {
-               throw new org.jboss.util.NestedError("Unexpected Throwable", t);
-            }
-         }
-      }
-      
-      // Monitorable implementation ------------------------------------
-      
-      public void sample(Object s)
-      {
-         // Just here to because Monitorable request it but will be removed soon
-      }
-      
-      public Map retrieveStatistic()
-      {
-         return null;
-      }
-      
-      public void resetStatistic()
-      {
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();         
       }
    }
 }

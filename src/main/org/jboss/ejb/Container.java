@@ -8,14 +8,17 @@
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.MarshalledObject; // tmp
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -34,6 +37,10 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.MalformedObjectNameException;
+
+import javax.ejb.EJBException;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.LinkRef;
@@ -43,14 +50,17 @@ import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
-import javax.transaction.Transaction; // tmp
+
 import javax.transaction.TransactionManager;
+
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.BeanLockManager;
 import org.jboss.ejb.plugins.local.BaseLocalProxyFactory;
+
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.MarshalledInvocation;
+
 import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.metadata.BeanMetaData;
@@ -63,60 +73,60 @@ import org.jboss.naming.Util;
 import org.jboss.naming.ENCThreadLocalKey;
 import org.jboss.security.AuthenticationManager;
 import org.jboss.security.RealmMapping;
+
+import org.jboss.util.NestedError;
 import org.jboss.util.jmx.ObjectNameFactory;
 
+import org.jboss.system.ServiceMBeanSupport;
+
 /**
-* This is the base class for all EJB-containers in JBoss. A Container
-* functions as the central hub of all metadata and plugins. Through this
-* the container plugins can get hold of the other plugins and any metadata
-* they need.
-*
-* <p>The EJBDeployer creates instances of subclasses of this class
-*    and calls the appropriate initialization methods.
-*    
-* <p>A Container does not perform any significant work, but instead delegates
-*    to the plugins to provide for all kinds of algorithmic functionality.
-*
-* @see EJBDeployer
-* 
-* @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
-* @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-* @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
-* @author <a href="bill@burkecentral.com">Bill Burke</a>
-* @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
-* @version $Revision: 1.89 $
-* 
-* <p><b>Revisions:</b>
-*
-* <p><b>2001/07/26 bill burke:</b>
-* <ul>
-* <li> Added BeanLockManager.
-* </ul>
-* <p><b>2001/08/13 scott.stark:</b>
-* <ul>
-* <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
-* </ul>
-* <p><b>2001/12/18 marc fleury:</b>
-* <ul>
-* <li> Moved to new Invocation layer and detached invokers.  
-*  <li> Use the method mappings for MarshalledInvocation.
-* </ul>
-* <p><b>2002/03/10 francisco reverbel:</b>
-* <ul>
-* <li> Added getCodebase/setCodebase methods.
-* </ul>
-*/
-public abstract class Container implements MBeanRegistration, DynamicMBean
+ * This is the base class for all EJB-containers in JBoss. A Container
+ * functions as the central hub of all metadata and plugins. Through this
+ * the container plugins can get hold of the other plugins and any metadata
+ * they need.
+ *
+ * <p>The EJBDeployer creates instances of subclasses of this class
+ *    and calls the appropriate initialization methods.
+ *    
+ * <p>A Container does not perform any significant work, but instead delegates
+ *    to the plugins to provide for all kinds of algorithmic functionality.
+ *
+ * @see EJBDeployer
+ * 
+ * @author <a href="mailto:rickard.oberg@jboss.org">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
+ * @author <a href="bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="mailto:d_jencks@users.sourceforge.net">David Jencks</a>
+ * @version $Revision: 1.90 $
+ * 
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>2001/07/26 bill burke:</b>
+ * <ul>
+ * <li> Added BeanLockManager.
+ * </ul>
+ * <p><b>2001/08/13 scott.stark:</b>
+ * <ul>
+ * <li> Added DynamicMBean support for method invocations and access to EJB interfaces.
+ * </ul>
+ * <p><b>2001/12/18 marc fleury:</b>
+ * <ul>
+ * <li> Moved to new Invocation layer and detached invokers.  
+ *  <li> Use the method mappings for MarshalledInvocation.
+ * </ul>
+ * <p><b>2002/03/10 francisco reverbel:</b>
+ * <ul>
+ * <li> Added getCodebase/setCodebase methods.
+ * </ul>
+ */
+public abstract class Container
+   extends ServiceMBeanSupport
+   implements MBeanRegistration, DynamicMBean
 {
-   // Constants -----------------------------------------------------
    public final static String BASE_EJB_CONTAINER_NAME = "jboss.j2ee:service=EJB";
 
    public final static ObjectName EJB_CONTAINER_QUERY_NAME = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",*");
-   
-   // Attributes ----------------------------------------------------
-   
-   /** Instance logger. */
-   protected Logger log = Logger.getLogger(this.getClass());
    
    /** This is the application that this container is a part of */
    protected EjbModule ejbModule;
@@ -134,6 +144,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * re-deployable
     */
    protected ClassLoader classLoader;
+   
    /** The class loader for remote dynamic classloading */
    protected ClassLoader webClassLoader;
 
@@ -181,7 +192,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    /** This is a cache for method permissions */
    private HashMap methodPermissionsCache = new HashMap();
    
-   
    /** Maps for MarshalledInvocation mapping */
    protected Map marshalledInvocationMapping = new HashMap();
    
@@ -202,14 +212,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     */
    protected ThreadLocal proxyFactoryTL = new ThreadLocal();
 
-   // We need the visibility on the MBeanServer for prototyping, it will be removed in the future FIXME marcf
-   //protected MBeanServer mbeanServer;
-   /**
-    * Describe variable <code>mbeanServer</code> here.
-    * @todo make mbeanServer protected
-    */
-   public MBeanServer mbeanServer;
-
    /**
     * boolean <code>started</code> indicates if this container is currently started.
     * if not, calls to non lifecycle methods will raise exceptions.
@@ -219,45 +221,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    
    // Public --------------------------------------------------------
 
-   // implementation of javax.management.MBeanRegistration interface
-
-   /**
-    *
-    */
-   public void postDeregister()
-   {
-   }
-
-   /**
-    *
-    * @param param1 <description>
-    */
-   public void postRegister(Boolean param1)
-   {
-   }
-
-   /**
-    *
-    * @exception java.lang.Exception <description>
-    */
-   public void preDeregister() throws Exception
-   {
-   }
-
-   /**
-    *
-    * @param param1 <description>
-    * @param param2 <description>
-    * @return <description>
-    * @exception java.lang.Exception <description>
-    */
-   public ObjectName preRegister(MBeanServer server, ObjectName name) throws Exception
-   {
-      this.mbeanServer = server;
-      return name;
-   }
-
-   
    public Class getLocalClass() 
    {
       return localInterface;
@@ -275,7 +238,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     *
     * @param tm
     */
-   public void setTransactionManager(TransactionManager tm)
+   public void setTransactionManager(final TransactionManager tm)
    {
       this.tm = tm;
    }
@@ -305,7 +268,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       return lockManager;
    }
    
-   public void setLockManager(BeanLockManager lockManager) 
+   public void setLockManager(final BeanLockManager lockManager) 
    {
       this.lockManager = lockManager;
       lockManager.setContainer(this);
@@ -316,7 +279,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       proxyFactories.put(invokerBinding, factory);
    }
 
-   public void setRealmMapping(RealmMapping rm)
+   public void setRealmMapping(final RealmMapping rm)
    {
       this.rm = rm;
    }
@@ -365,11 +328,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       ejbModule = app;
    }
    
-   /**
-    * Describe <code>getEjbModule</code> method here.
-    *
-    * @return the <code>EjbModule</code> parent for this Container
-    */
    public EjbModule getEjbModule()
    {
       return ejbModule;
@@ -390,7 +348,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    /**
     * Returns the local classloader for this container.
     *
-    * @return
+    * @return   The local classloader for this container.
     */
    public ClassLoader getLocalClassLoader()
    {
@@ -426,7 +384,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    }
    /** Set the class loader for dynamic class loading via http.
     */
-   public void setWebClassLoader(ClassLoader webClassLoader)
+   public void setWebClassLoader(final ClassLoader webClassLoader)
    {
       this.webClassLoader = webClassLoader;
    }
@@ -437,7 +395,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     *
     * @param metaData
     */
-   public void setBeanMetaData(BeanMetaData metaData)
+   public void setBeanMetaData(final BeanMetaData metaData)
    {
       this.metaData = metaData;
    }
@@ -457,7 +415,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     *
     * @return assemblyDescriptor;
     */
-   public Set getMethodPermissions( Method m, boolean home )
+   public Set getMethodPermissions(Method m, boolean home)
    {
       Set permissions;
       
@@ -471,6 +429,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
             getMethodPermissions(m.getName(), m.getParameterTypes(), !home);
          methodPermissionsCache.put(m, permissions);
       }
+      
       return permissions;
    }
    
@@ -505,7 +464,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * @param   codebase a possibly empty, but non null String with 
     *                   a sequence of URLs separated by spaces
     */
-   public void setCodebase(String codebase) 
+   public void setCodebase(final String codebase) 
    { 
       if (codebase != null) 
          this.codebase = codebase;
@@ -528,11 +487,13 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       if (jndiName == null) 
       {
          throw new IllegalStateException("cannot get Container object name unless jndi name is set!");
-      } // end of if ()
+      }
+      
       if (jmxName == null) 
       {
          jmxName = ObjectNameFactory.create(BASE_EJB_CONTAINER_NAME + ",jndiName=" + jndiName);
-      } // end of if ()
+      }
+      
       return jmxName;
    }
     
@@ -548,7 +509,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     *                      (ClassNotFoundException) or setting up "java:"
     *                      naming environment failed (DeploymentException)
     */
-   public void create() throws Exception
+   protected void createService() throws Exception
    {
       // Acquire classes from CL
       beanClass = classLoader.loadClass(metaData.getEjbClass());
@@ -573,9 +534,10 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     *
     * @todo implement the service lifecycle methods in an xmbean interceptor so 
     * non lifecycle managed ops are blocked when mbean is not started.
+    * 
     * @throws Exception    An exception that occured during start
     */
-   public void start() throws Exception
+   protected void startService() throws Exception
    {
       // Setup "java:comp/env" namespace
       setupEnvironment();
@@ -588,7 +550,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * concrete container classes should override this method to introduce
     * implementation specific stop behaviour.
     */
-   public void stop()
+   protected void stopService() throws Exception
    {
       started = false;
       localProxyFactory.stop();
@@ -599,7 +561,7 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * The concrete container classes should override this method to introduce
     * implementation specific destroy behaviour.
     */
-   public void destroy()
+   protected void destroyService() throws Exception
    {
       localProxyFactory.destroy();
       ejbModule.removeLocalHome( this );
@@ -607,7 +569,8 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       this.webClassLoader = null;
       this.localClassLoader = null;
       this.ejbModule = null;
-      //      this.lockManager = null; Setting this to null causes AbstractCache to fail on undeployment
+      
+      // this.lockManager = null; Setting this to null causes AbstractCache to fail on undeployment
       this.methodPermissionsCache.clear();
    }
 
@@ -639,7 +602,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     */
    public abstract Object invoke(Invocation mi)
       throws Exception;
-   
    
    // DynamicMBean interface implementation ----------------------------------------------
    
@@ -688,9 +650,9 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
       {
          if (!started) 
          {
-            throw new IllegalStateException("container is not started, you cannot invoke ejb methods on it");
-         } // end of if ()
-         
+            throw new IllegalStateException
+               ("container is not started, you cannot invoke ejb methods on it");
+         }
       
          Object value = null;
          Invocation mi = (Invocation)params[0];
@@ -864,36 +826,66 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     */
    public MBeanInfo getMBeanInfo()
    {
-      MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")};
-      MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
-      MBeanConstructorInfo[] ctorInfo = new  MBeanConstructorInfo[] {};
-      MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {};
-      MBeanOperationInfo[] opInfo = {
-         new MBeanOperationInfo("home", "Invoke an EJBHome interface method",
-                                miInfoParams,
-                                "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
-         new MBeanOperationInfo("remote", "Invoke an EJBObject interface method",
-                                miInfoParams,
-                                "java.lang.Object", MBeanOperationInfo.ACTION_INFO),
-         new MBeanOperationInfo("getHome", "Get the EJBHome interface class",
-                                noParams,
-                                "java.lang.Class", MBeanOperationInfo.INFO),
-         new MBeanOperationInfo("getRemote", "Get the EJBObject interface class",
-                                noParams,
-                                "java.lang.Class", MBeanOperationInfo.INFO),
-         new MBeanOperationInfo("create", "create service lifecycle operation",
-                                noParams,
-                                "void", MBeanOperationInfo.ACTION),
-         new MBeanOperationInfo("start", "start service lifecycle operation",
-                                noParams,
-                                "void", MBeanOperationInfo.ACTION),
-         new MBeanOperationInfo("stop", "stop service lifecycle operation",
-                                noParams,
-                                "void", MBeanOperationInfo.ACTION),
-         new MBeanOperationInfo("destroy", "destroy service lifecycle operation",
-                                noParams,
-                                "void", MBeanOperationInfo.ACTION)
+      MBeanParameterInfo[] miInfoParams = new MBeanParameterInfo[] {
+         new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data")
       };
+      
+      MBeanParameterInfo[] noParams = new MBeanParameterInfo[] {};
+      
+      MBeanConstructorInfo[] ctorInfo = new  MBeanConstructorInfo[] {};
+      
+      MBeanAttributeInfo[] attrInfo = new MBeanAttributeInfo[] {};
+      
+      MBeanOperationInfo[] opInfo = {
+         new MBeanOperationInfo("home",
+                                "Invoke an EJBHome interface method",
+                                miInfoParams,
+                                "java.lang.Object",
+                                MBeanOperationInfo.ACTION_INFO),
+         
+         new MBeanOperationInfo("remote",
+                                "Invoke an EJBObject interface method",
+                                miInfoParams,
+                                "java.lang.Object",
+                                MBeanOperationInfo.ACTION_INFO),
+         
+         new MBeanOperationInfo("getHome",
+                                "Get the EJBHome interface class",
+                                noParams,
+                                "java.lang.Class",
+                                MBeanOperationInfo.INFO),
+         
+         new MBeanOperationInfo("getRemote",
+                                "Get the EJBObject interface class",
+                                noParams,
+                                "java.lang.Class",
+                                MBeanOperationInfo.INFO),
+         
+         new MBeanOperationInfo("create",
+                                "create service lifecycle operation",
+                                noParams,
+                                "void",
+                                MBeanOperationInfo.ACTION),
+         
+         new MBeanOperationInfo("start",
+                                "start service lifecycle operation",
+                                noParams,
+                                "void",
+                                MBeanOperationInfo.ACTION),
+         
+         new MBeanOperationInfo("stop",
+                                "stop service lifecycle operation",
+                                noParams,
+                                "void",
+                                MBeanOperationInfo.ACTION),
+         
+         new MBeanOperationInfo("destroy",
+                                "destroy service lifecycle operation",
+                                noParams,
+                                "void",
+                                MBeanOperationInfo.ACTION)
+      };
+      
       MBeanNotificationInfo[] notifyInfo = null;
       return new MBeanInfo(getClass().getName(), 
                            "EJB Container MBean",
@@ -904,8 +896,6 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
    }
    
    // End DynamicMBean interface
-   
-   // Protected -----------------------------------------------------
    
    abstract Interceptor createContainerInterceptor();
    
@@ -918,246 +908,327 @@ public abstract class Container implements MBeanRegistration, DynamicMBean
     * We create the java:comp/env namespace with properties, EJB-References,
     * and DataSource ressources.
     */
-   private void setupEnvironment()
-      throws DeploymentException
+   private void setupEnvironment() throws Exception
    {
       boolean debug = log.isDebugEnabled();
-      try
+      BeanMetaData beanMetaData = getBeanMetaData();
+
+      if (debug)
       {
-         BeanMetaData beanMetaData = getBeanMetaData();
-         if (debug)
-         {
-            log.debug("Begin java:comp/env for EJB: "+beanMetaData.getEjbName());
-            log.debug("TCL: "+Thread.currentThread().getContextClassLoader());
-         }
-         // Since the BCL is already associated with this thread we can start using the java: namespace directly
-         Context ctx = (Context) new InitialContext().lookup("java:comp");
-         Context envCtx = ctx.createSubcontext("env");
+         log.debug("Begin java:comp/env for EJB: "+beanMetaData.getEjbName());
+         log.debug("TCL: "+Thread.currentThread().getContextClassLoader());
+      }
+      
+      // Since the BCL is already associated with this thread we can start
+      // using the java: namespace directly
+      Context ctx = (Context) new InitialContext().lookup("java:comp");
+      Context envCtx = ctx.createSubcontext("env");
          
-         // Bind environment properties
+      // Bind environment properties
+      {
+         Iterator enum = beanMetaData.getEnvironmentEntries();
+         while(enum.hasNext())
          {
-            Iterator enum = beanMetaData.getEnvironmentEntries();
-            while(enum.hasNext())
-            {
-               EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
-               try
-               {
-                  if (debug)
-                     log.debug("Binding env-entry: "+entry.getName()+" of type: "+entry.getType()+" to value:"+entry.getValue());
-                  EnvEntryMetaData.bindEnvEntry(envCtx, entry);
-               }
-               catch(ClassNotFoundException e)
-               {
-                  log.error("Could not set up environment", e);
-                  throw new DeploymentException("Could not set up environment", e);
-               }
+            EnvEntryMetaData entry = (EnvEntryMetaData)enum.next();
+            if (debug) {
+               log.debug("Binding env-entry: "+entry.getName()+" of type: "+
+                         entry.getType()+" to value:"+entry.getValue());
             }
-         }
-         
-         // Bind EJB references
-         {
-            Iterator enum = beanMetaData.getEjbReferences();
-            while(enum.hasNext())
-            {
-               EjbRefMetaData ref = (EjbRefMetaData)enum.next();
-               if (debug)
-                  log.debug("Binding an EJBReference "+ref.getName());
                
-               if (ref.getLink() != null)
-               {
-                  // Internal link
-                  if (debug)
-                     log.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
-                  Container refContainer = ejbModule.findContainer(ref.getLink());
-                  if (refContainer == null)
-                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
-                  
-                  //                   bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
-                  //                bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
+            EnvEntryMetaData.bindEnvEntry(envCtx, entry);
+         }
+      }
+      
+      // Bind EJB references
+      {
+         Iterator enum = beanMetaData.getEjbReferences();
+         while(enum.hasNext())
+         {
+            EjbRefMetaData ref = (EjbRefMetaData)enum.next();
+            if (debug)
+               log.debug("Binding an EJBReference "+ref.getName());
+            
+            if (ref.getLink() != null)
+            {
+               // Internal link
+               if (debug) {
+                  log.debug("Binding "+ref.getName()+" to internal JNDI source: "+ref.getLink());
                }
-               else
+               
+               Container refContainer = ejbModule.findContainer(ref.getLink());
+               if (refContainer == null) {
+                  throw new DeploymentException("Bean "+ref.getLink()+
+                                                " not found within this application.");
+               }
+               
+               Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getJndiName()));
+               
+               // bind(envCtx, ref.getName(), new Reference(ref.getHome(), new StringRefAddr("Container",ref.getLink()), getClass().getName()+".EjbReferenceFactory", null));
+               // bind(envCtx, ref.getName(), new LinkRef(ref.getLink()));
+            }
+            else
+            {
+               Iterator it = beanMetaData.getInvokerBindings();
+               Reference reference = null;
+               while (it.hasNext())
                {
-                  Iterator it = beanMetaData.getInvokerBindings();
-                  Reference reference = null;
-                  while (it.hasNext())
+                  String invokerBinding = (String)it.next();
+                  String name = ref.getInvokerBinding(invokerBinding);
+                  if (name == null) name = ref.getJndiName();
+                  if (name == null) // still null?
                   {
-                     String invokerBinding = (String)it.next();
-                     String name = ref.getInvokerBinding(invokerBinding);
-                     if (name == null) name = ref.getJndiName();
-                     if (name == null) // still null?
-                     {
-                        throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
-                     }
-                     StringRefAddr addr = new StringRefAddr(invokerBinding, name);
-                     log.debug("adding " + invokerBinding + ":" + name + " to Reference");
-                     if (reference == null)
-                     {
-                        reference = new Reference("javax.naming.LinkRef", ENCThreadLocalKey.class.getName(), null);
-                     }
+                     throw new DeploymentException
+                        ("ejb-ref "+ref.getName()+
+                         ", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                  }
+                  
+                  StringRefAddr addr = new StringRefAddr(invokerBinding, name);
+                  log.debug("adding " + invokerBinding + ":" + name + " to Reference");
+                  
+                  if (reference == null)
+                  {
+                     reference = new Reference("javax.naming.LinkRef",
+                                               ENCThreadLocalKey.class.getName(),
+                                               null);
+                  }
+                  reference.add(addr);
+               }
+               if (reference != null)
+               {
+                  if (ref.getJndiName() != null)
+                  {
+                     // Add default
+                     StringRefAddr addr = new StringRefAddr("default", ref.getJndiName());
                      reference.add(addr);
                   }
-                  if (reference != null)
-                  {
-                     if (ref.getJndiName() != null)
-                     {
-                        // Add default
-                        StringRefAddr addr = new StringRefAddr("default", ref.getJndiName());
-                        reference.add(addr);
-                     }
-                     Util.bind(envCtx, ref.getName(), reference);
-                  }
-                  else
-                  {
-                     if (ref.getJndiName() == null)
-                     {
-                        throw new DeploymentException("ejb-ref "+ref.getName()+", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
-                     }
-                     Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
-                  }
-               }
-            }
-         }
-         
-         // Bind Local EJB references
-         {
-            Iterator enum = beanMetaData.getEjbLocalReferences();
-            // unique key name
-            String localJndiName = beanMetaData.getLocalJndiName();
-            while(enum.hasNext())
-            {
-               EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
-               String refName = ref.getName();
-               log.debug("Binding an EJBLocalReference "+ref.getName());
-               
-               if (ref.getLink() != null)
-               {
-                  // Internal link
-                  log.debug("Binding "+refName+" to bean source: "+ref.getLink());
-                  Container refContainer = ejbModule.findContainer(ref.getLink());
-                  if (refContainer == null)
-                  {
-                     throw new DeploymentException ("Bean "+ref.getLink()+" not found within this application.");
-                  }
-
-                  Util.bind(envCtx, ref.getName(), new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
+                  Util.bind(envCtx, ref.getName(), reference);
                }
                else
                {
-                  throw new DeploymentException( "Local references currently require ejb-link" );
+                  if (ref.getJndiName() == null)
+                  {
+                     throw new DeploymentException
+                        ("ejb-ref "+ref.getName()+
+                         ", expected either ejb-link in ejb-jar.xml or jndi-name in jboss.xml");
+                  }
+                  Util.bind(envCtx, ref.getName(), new LinkRef(ref.getJndiName()));
                }
             }
          }
-
-         // Bind resource references
+      }
+         
+      // Bind Local EJB references
+      {
+         Iterator enum = beanMetaData.getEjbLocalReferences();
+         // unique key name
+         String localJndiName = beanMetaData.getLocalJndiName();
+         while(enum.hasNext())
          {
-            Iterator enum = beanMetaData.getResourceReferences();
+            EjbLocalRefMetaData ref = (EjbLocalRefMetaData)enum.next();
+            String refName = ref.getName();
+            log.debug("Binding an EJBLocalReference "+ref.getName());
             
-            // let's play guess the cast game ;)  New metadata should fix this.
-            ApplicationMetaData application = beanMetaData.getApplicationMetaData();
-            
-            while(enum.hasNext())
+            if (ref.getLink() != null)
             {
-               ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
-               
-               String resourceName = ref.getResourceName();
-               String finalName = application.getResourceByName(resourceName);
-               /* If there was no resource-manager specified then an immeadiate
-                  jndi-name or res-url name should have been given */
-               if (finalName == null)
-                  finalName = ref.getJndiName();
-               
-               if (finalName == null)
+               // Internal link
+               log.debug("Binding "+refName+" to bean source: "+ref.getLink());
+               Container refContainer = ejbModule.findContainer(ref.getLink());
+               if (refContainer == null)
                {
-                  // the application assembler did not provide a resource manager
-                  // if the type is javax.sql.Datasoure use the default one
-                  
-                  if (ref.getType().equals("javax.sql.DataSource"))
-                  {
-                     // Go through JNDI and look for DataSource - use the first one
-                     Context dsCtx = new InitialContext();
-                     try
-                     {
-                        // Check if it is available in JNDI
-                        dsCtx.lookup("java:/DefaultDS");
-                        finalName = "java:/DefaultDS";
-                     } catch (Exception e)
-                     {
-                        if (debug)
-                           log.debug("failed to lookup DefaultDS; ignoring", e);
-                     }
-                  }
-                  
-                  // Default failed? Warn user and move on
-                  // POTENTIALLY DANGEROUS: should this be a critical error?
-                  if (finalName == null)
-                  {
-                     log.warn("No resource manager found for "+ref.getResourceName());
-                     continue;
-                  }
+                  throw new DeploymentException("Bean "+ref.getLink()+
+                                                " not found within this application.");
                }
                
-               if (ref.getType().equals("java.net.URL"))
+               Util.bind(envCtx,
+                         ref.getName(),
+                         new LinkRef(refContainer.getBeanMetaData().getLocalJndiName()));
+            }
+            else
+            {
+               throw new DeploymentException( "Local references currently require ejb-link" );
+            }
+         }
+      }
+
+      // Bind resource references
+      {
+         Iterator enum = beanMetaData.getResourceReferences();
+         
+         // let's play guess the cast game ;)  New metadata should fix this.
+         ApplicationMetaData application = beanMetaData.getApplicationMetaData();
+         
+         while(enum.hasNext())
+         {
+            ResourceRefMetaData ref = (ResourceRefMetaData)enum.next();
+            
+            String resourceName = ref.getResourceName();
+            String finalName = application.getResourceByName(resourceName);
+            // If there was no resource-manager specified then an immeadiate
+            // jndi-name or res-url name should have been given
+            if (finalName == null)
+               finalName = ref.getJndiName();
+            
+            if (finalName == null)
+            {
+               // the application assembler did not provide a resource manager
+               // if the type is javax.sql.Datasoure use the default one
+                  
+               if (ref.getType().equals("javax.sql.DataSource"))
                {
-                  // URL bindings
+                  // Go through JNDI and look for DataSource - use the first one
+                  Context dsCtx = new InitialContext();
                   try
                   {
-                     if (debug)
-                        log.debug("Binding URL: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
-                     Util.bind(envCtx, ref.getRefName(), new URL(finalName));
-                  } catch (MalformedURLException e)
+                     // Check if it is available in JNDI
+                     dsCtx.lookup("java:/DefaultDS");
+                     finalName = "java:/DefaultDS";
+                  }
+                  catch (Exception e)
                   {
-                     throw new NamingException("Malformed URL:"+e.getMessage());
+                     if (debug)
+                        log.debug("failed to lookup DefaultDS; ignoring", e);
+                  }
+                  finally {
+                     dsCtx.close();
                   }
                }
-               else
+                  
+               // Default failed? Warn user and move on
+               // POTENTIALLY DANGEROUS: should this be a critical error?
+               if (finalName == null)
                {
-                  // Resource Manager bindings, should validate the type...
-                  if (debug)
-                     log.debug("Binding resource manager: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
-                  Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
+                  log.warn("No resource manager found for "+ref.getResourceName());
+                  continue;
                }
             }
-         }
-         
-         // Bind resource env references
-         {
-            Iterator enum = beanMetaData.getResourceEnvReferences();
-            while( enum.hasNext() )
+            
+            if (ref.getType().equals("java.net.URL"))
             {
-               ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
-               String encName = resRef.getRefName();
-               String jndiName = resRef.getJndiName();
-               // Should validate the type...
+               // URL bindings
                if (debug)
-                  log.debug("Binding env resource: "+jndiName+ " to JDNI ENC as: " +encName);
-               Util.bind(envCtx, encName, new LinkRef(jndiName));
+                  log.debug("Binding URL: "+finalName+ " to JDNI ENC as: " +ref.getRefName());
+               Util.bind(envCtx, ref.getRefName(), new URL(finalName));
+            }
+            else
+            {
+               // Resource Manager bindings, should validate the type...
+               if (debug) {
+                  log.debug("Binding resource manager: "+finalName+
+                            " to JDNI ENC as: " +ref.getRefName());
+               }
+               
+               Util.bind(envCtx, ref.getRefName(), new LinkRef(finalName));
             }
          }
+      }
          
-         /* Create a java:comp/env/security/security-domain link to the container
-            or application security-domain if one exists so that access to the
-            security manager can be made without knowing the global jndi name.
-         */
-         String securityDomain = metaData.getContainerConfiguration().getSecurityDomain();
-         if( securityDomain == null )
-            securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
-         if( securityDomain != null )
+      // Bind resource env references
+      {
+         Iterator enum = beanMetaData.getResourceEnvReferences();
+         while( enum.hasNext() )
          {
+            ResourceEnvRefMetaData resRef = (ResourceEnvRefMetaData) enum.next();
+            String encName = resRef.getRefName();
+            String jndiName = resRef.getJndiName();
+            // Should validate the type...
             if (debug)
-               log.debug("Binding securityDomain: "+securityDomain+ " to JDNI ENC as: security/security-domain");
-            Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
-            Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
+               log.debug("Binding env resource: "+jndiName+ " to JDNI ENC as: " +encName);
+            Util.bind(envCtx, encName, new LinkRef(jndiName));
+         }
+      }
+         
+      // Create a java:comp/env/security/security-domain link to the container
+      // or application security-domain if one exists so that access to the
+      // security manager can be made without knowing the global jndi name.
+
+      String securityDomain = metaData.getContainerConfiguration().getSecurityDomain();
+      if( securityDomain == null )
+         securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
+      if( securityDomain != null )
+      {
+         if (debug) {
+            log.debug("Binding securityDomain: "+securityDomain+
+                      " to JDNI ENC as: security/security-domain");
          }
          
-         if (debug)
-            log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
-      } catch (NamingException e)
-      {
-         log.error("Could not set up environment", e);
-         log.error("root cause", e.getRootCause());
-         throw new DeploymentException("Could not set up environment", e);
+         Util.bind(envCtx, "security/security-domain", new LinkRef(securityDomain));
+         Util.bind(envCtx, "security/subject", new LinkRef(securityDomain+"/subject"));
       }
+      
+      if (debug)
+         log.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
    }
 
+   /**
+    * The base class for container interceptors.
+    * 
+    * <p>
+    * All container interceptors perform the same basic functionality
+    * and only differ slightly.
+    */
+   protected abstract class AbstractContainerInterceptor
+      implements Interceptor
+   {
+      public void setContainer(Container con) {}
+      
+      public void setNext(Interceptor interceptor) {}
+      
+      public Interceptor getNext() { return null; }
+      
+      public void create() {}
+      
+      public void start() {}
+      
+      public void stop() {}
+      
+      public void destroy() {}
+
+      protected void rethrow(Exception e)
+         throws Exception
+      {
+         if (e instanceof IllegalAccessException) {
+            // Throw this as a bean exception...(?)
+            throw new EJBException(e);
+         }
+         else if(e instanceof InvocationTargetException) {
+            Throwable t = ((InvocationTargetException)e).getTargetException();
+
+            if (t instanceof EJBException) {
+               throw (EJBException)t;
+            }
+            else if (t instanceof RuntimeException) {
+               // Transform runtime exception into what a bean *should* have thrown
+               throw new EJBException((RuntimeException)t);
+            }
+            else if (t instanceof Exception) {
+               throw (Exception)t;
+            }
+            else if (t instanceof Error) {
+               throw (Error)t;
+            }
+            else {
+               throw new NestedError("Unexpected Throwable", t);
+            }
+         }
+
+         throw e;
+      }
+
+      // Monitorable implementation ------------------------------------
+      
+      public void sample(Object s)
+      {
+         // Just here to because Monitorable request it but will be removed soon
+      }
+      
+      public Map retrieveStatistic()
+      {
+         return null;
+      }
+      
+      public void resetStatistic()
+      {
+      }
+      
+   }
 }

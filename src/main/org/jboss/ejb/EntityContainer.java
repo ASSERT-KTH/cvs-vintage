@@ -8,7 +8,6 @@
 package org.jboss.ejb;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.HashMap;
@@ -29,6 +28,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+
 import javax.ejb.Handle;
 import javax.ejb.HomeHandle;
 import javax.ejb.EJBObject;
@@ -38,6 +38,7 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.EJBException;
 import javax.ejb.RemoveException;
+
 import javax.management.j2ee.CountStatistic;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionRolledbackException;
@@ -51,69 +52,62 @@ import org.jboss.util.collection.SerializableEnumeration;
 import org.jboss.metadata.EntityMetaData;
 
 /**
-* This is a Container for EntityBeans (both BMP and CMP).
-*
-* @see Container
-* @see EntityEnterpriseContext
-*
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-* @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-* @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
-* @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
-* @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-* @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
-* @version $Revision: 1.78 $
-*
-* <p><b>Revisions:</b>
-*
-* <p><b>20010701 marc fleury:</b>
-* <ul>
-* <li>Transaction to context wiring was moved to the instance interceptor
-* </ul>
-* <p><b>20010718 andreas schaefer:</b>
-* <ul>
-* <li>- Added statistics gathering
-* </ul>
-* <p><b>20010807 bill burke:</b>
-* <ul>
-* <li> Moved storeEntity from EntitySynchronization to here so other classes can use it.
-* <li> Moved synchronizeEntitiesWithinTransaction to here from Application as a static method.
-* </ul>
-
-* <p><b>20011219 marc fleury:</b>
-* <ul>
-* <li> Moved to new invoker scheme, using Invocation and MBean invokers.
-* </ul>
-* <p><b>20020413 dain sundstrom:</b>
-* <ul>
-* <li> Broke cretion into 2 invocations.  The first is through the invokeHome
-* chain, and calls the normal createEntity.  The second is throught the invoke
-* chain, and this call the new postCreateEntity method.  
-* </ul>
-*/
+ * This is a Container for EntityBeans (both BMP and CMP).
+ *
+ * @see Container
+ * @see EntityEnterpriseContext
+ *
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
+ * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
+ * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
+ * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
+ * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @version $Revision: 1.79 $
+ *
+ * <p><b>Revisions:</b>
+ *
+ * <p><b>20010701 marc fleury:</b>
+ * <ul>
+ * <li>Transaction to context wiring was moved to the instance interceptor
+ * </ul>
+ * <p><b>20010718 andreas schaefer:</b>
+ * <ul>
+ * <li>- Added statistics gathering
+ * </ul>
+ * <p><b>20010807 bill burke:</b>
+ * <ul>
+ * <li> Moved storeEntity from EntitySynchronization to here so other classes can use it.
+ * <li> Moved synchronizeEntitiesWithinTransaction to here from Application as a static method. 
+ * </ul>
+ *
+ * <p><b>20011219 marc fleury:</b>
+ * <ul>
+ * <li> Moved to new invoker scheme, using Invocation and MBean invokers.
+ * </ul>
+ * <p><b>20020413 dain sundstrom:</b>
+ * <ul>
+ * <li> Broke cretion into 2 invocations.  The first is through the invokeHome
+ * chain, and calls the normal createEntity.  The second is throught the invoke
+ * chain, and this call the new postCreateEntity method.  
+ * </ul>
+ */
 public class EntityContainer
    extends Container
    implements EJBProxyFactoryContainer, InstancePoolContainer, StatisticsProvider
 {
-   // Constants -----------------------------------------------------
-
-   private static Logger log = Logger.getLogger(EntityContainer.class);
-   
-   // Attributes ----------------------------------------------------
-   
    /**
-   * These are the mappings between the home interface methods and the
-   * container methods.
-   */
+    * These are the mappings between the home interface methods and the
+    * container methods.
+    */
    protected Map homeMapping = new HashMap();
    
    /**
-   * These are the mappings between the remote/local interface methods and the
-   * bean methods.
-   */
+    * These are the mappings between the remote/local interface methods and the
+    * bean methods.
+    */
    protected Map beanMapping = new HashMap();
-   
    
    /** This is the persistence manager for this container */
    protected EntityPersistenceManager persistenceManager;
@@ -127,9 +121,9 @@ public class EntityContainer
    protected TxEntityMap txEntityMap = new TxEntityMap();
    
    /**
-   * This is the first interceptor in the chain. The last interceptor must
-   * be provided by the container itself.
-   */
+    * This is the first interceptor in the chain. The last interceptor must
+    * be provided by the container itself.
+    */
    protected Interceptor interceptor;
    
    // These members contains statistics variable
@@ -137,30 +131,32 @@ public class EntityContainer
    protected long removeCount = 0;
    
    /**
-   * <code>readOnly</code> determines if state can be written to resource manager.
-   *
-   */
+    * <code>readOnly</code> determines if state can be written to resource manager.
+    */
    protected boolean readOnly = false;
    
    /**
-   * This provides a way to find the entities that are part of a given
-   * transaction EntitySynchronizationInterceptor and InstanceSynchronization
-   * manage this instance.
-   */
-   protected static  GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
+    * This provides a way to find the entities that are part of a given
+    * transaction EntitySynchronizationInterceptor and InstanceSynchronization
+    * manage this instance.
+    */
+   protected static GlobalTxEntityMap globalTxEntityMap = new GlobalTxEntityMap();
    
-   
-   public static GlobalTxEntityMap getGlobalTxEntityMap() { return globalTxEntityMap; }
+   public static GlobalTxEntityMap getGlobalTxEntityMap()
+   {
+      return globalTxEntityMap;
+   }
    
    /**
-   * Stores all of the entities associated with the specified transaction.
-   * As per the spec 9.6.4, entities must be synchronized with the datastore
-   * when an ejbFind<METHOD> is called.
-   * Also, all entities within entire transaction should be synchronized before
-   * a remove, otherwise there may be problems with 'cascade delete'.
-   * @param tx the transaction that associated entites will be stored
-   * @throws Exception if an problem occures while storing the entities
-   */
+    * Stores all of the entities associated with the specified transaction.
+    * As per the spec 9.6.4, entities must be synchronized with the datastore
+    * when an ejbFind<METHOD> is called.
+    * Also, all entities within entire transaction should be synchronized before
+    * a remove, otherwise there may be problems with 'cascade delete'.
+    * 
+    * @param tx the transaction that associated entites will be stored
+    * @throws Exception if an problem occures while storing the entities
+    */
    public static void synchronizeEntitiesWithinTransaction(Transaction tx)
       throws TransactionRolledbackException
    {
@@ -170,13 +166,13 @@ public class EntityContainer
 	 getGlobalTxEntityMap().syncEntities(tx);
       }
    }
+   
    // Public --------------------------------------------------------
    
    public boolean isReadOnly()
    {
       return readOnly;
    }
-
 
    public LocalProxyFactory getLocalProxyFactory()
    {
@@ -238,9 +234,8 @@ public class EntityContainer
       }
       else
       {
-         
          Interceptor current = interceptor;
-         while ( current.getNext() != null)
+         while (current.getNext() != null)
          {
             current = current.getNext();
          }
@@ -265,24 +260,23 @@ public class EntityContainer
    }
    
    /**
-   * Returns a new instance of the bean class or a subclass of the bean class.
-   * If this is 1.x cmp, simply return a new instance of the bean class.
-   * If this is 2.x cmp, return a subclass that provides an implementation
-   * of the abstract accessors.
-   *
-   * @see java.lang.Class#newInstance
-   *
-   * @return   The new instance.
-   */
+    * Returns a new instance of the bean class or a subclass of the bean class.
+    * If this is 1.x cmp, simply return a new instance of the bean class.
+    * If this is 2.x cmp, return a subclass that provides an implementation
+    * of the abstract accessors.
+    *
+    * @see java.lang.Class#newInstance
+    *
+    * @return   The new instance.
+    */
    public Object createBeanClassInstance() throws Exception {
       return persistenceManager.createBeanClassInstance();
    }
    
    // Container implementation --------------------------------------
    
-   public void create() throws Exception
+   protected void createService() throws Exception
    {
-      log.trace("Creating");
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -296,7 +290,7 @@ public class EntityContainer
             remoteInterface = classLoader.loadClass(metaData.getRemote());
 
          // Call default init
-         super.create();
+         super.createService();
 
          // Map the bean methods
          setupBeanMapping();
@@ -340,9 +334,8 @@ public class EntityContainer
       }
    }
    
-   public void start() throws Exception
+   protected void startService() throws Exception
    {
-      log.trace("Starting");
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -350,7 +343,7 @@ public class EntityContainer
       try
       {
          // Call default start
-         super.start();
+         super.startService();
 
          // Start container invokers
          for (Iterator it = proxyFactories.keySet().iterator(); it.hasNext(); )
@@ -384,9 +377,8 @@ public class EntityContainer
       }
    }
 
-   public void stop()
+   protected void stopService() throws Exception
    {
-      log.trace("Stopping");
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -423,7 +415,7 @@ public class EntityContainer
          }
 
          // Call default stop
-         super.stop();
+         super.stopService();
       }
       finally
       {
@@ -432,9 +424,8 @@ public class EntityContainer
       }
    }
    
-   public void destroy()
+   protected void destroyService() throws Exception
    {
-      log.trace("Destroying");
       // Associate thread with classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
       Thread.currentThread().setContextClassLoader(getClassLoader());
@@ -471,7 +462,7 @@ public class EntityContainer
          }
 
          // Call default destroy
-         super.destroy();
+         super.destroyService();
       }
       finally
       {
@@ -482,7 +473,6 @@ public class EntityContainer
 
    public Object invokeHome(Invocation mi) throws Exception
    {
-      
       return getInterceptor().invokeHome(mi);
    }
    
@@ -495,7 +485,7 @@ public class EntityContainer
    // EJBObject implementation --------------------------------------
    
    public void remove(Invocation mi)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       // synchronize entities with the datastore before the bean is removed
       // this will write queued updates so datastore will be consistent before removal
@@ -513,30 +503,30 @@ public class EntityContainer
    }
    
    /**
-   * @throws Error    Not yet implemented.
-   */
+    * @throws Error    Not yet implemented.
+    */
    public Handle getHandle(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
    
    /**
-   * @throws Error    Not yet implemented.
-   */
+    * @throws Error    Not yet implemented.
+    */
    public Object getPrimaryKey(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
    
    /**
-   * @throws IllegalStateException     If container invoker is null.
-   */
+    * @throws IllegalStateException     If container invoker is null.
+    */
    public EJBHome getEJBHome(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null) {
@@ -546,34 +536,34 @@ public class EntityContainer
    }
    
    public boolean isIdentical(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       return ((EJBObject)mi.getArguments()[0]).getPrimaryKey().equals(((EnterpriseContext) mi.getEnterpriseContext()).getId());
       // TODO - should also check type
    }
    
    /**
-   * MF FIXME these are implemented on the client
-   */
+    * MF FIXME these are implemented on the client
+    */
    public EJBLocalHome getEJBLocalHome(Invocation mi)
    {
       return localProxyFactory.getEJBLocalHome();
    }
    
    /**
-   * @throws Error    Not yet implemented.
-   */
+    * @throws Error    Not yet implemented.
+    */
    public void removeLocalHome(Invocation mi)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       throw new Error("Not Yet Implemented");
    }
    
    /**
-   * Local home interface implementation
-   */
+    * Local home interface implementation
+    */
    public EJBLocalObject createLocalHome(Invocation mi)
-   throws Exception
+      throws Exception
    {
       // The persistence manager takes care of the wiring and creating the EJBLocalObject
       getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
@@ -585,8 +575,8 @@ public class EntityContainer
    }
      
    /**
-   * Delegates to the persistence manager postCreateEntityMethod.
-   */
+    * Delegates to the persistence manager postCreateEntityMethod.
+    */
    public void postCreateLocalHome(Invocation mi) throws Exception
    {
       // The persistence manager takes care of the post create step
@@ -595,12 +585,12 @@ public class EntityContainer
    }
   
    public Object findLocal(Invocation mi)
-   throws Exception
+      throws Exception
    {
       /**
-      * As per the spec 9.6.4, entities must be synchronized with the datastore
-      * when an ejbFind<METHOD> is called.
-      */
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
       // Multi-finder?
@@ -643,16 +633,16 @@ public class EntityContainer
    // Home interface implementation ---------------------------------
    
    /**
-   * This methods finds the target instances by delegating to the persistence
-   * manager It then manufactures EJBObject for all the involved instances
-   * found.
-   */
+    * This methods finds the target instances by delegating to the persistence
+    * manager It then manufactures EJBObject for all the involved instances
+    * found.
+    */
    public Object find(Invocation mi) throws Exception
    {        
       /**
-      * As per the spec 9.6.4, entities must be synchronized with the datastore
-      * when an ejbFind<METHOD> is called.
-      */
+       * As per the spec 9.6.4, entities must be synchronized with the datastore
+       * when an ejbFind<METHOD> is called.
+       */
       synchronizeEntitiesWithinTransaction(mi.getTransaction());
       
       EJBProxyFactory ci = getProxyFactory();
@@ -697,10 +687,9 @@ public class EntityContainer
       }
    }
    
-   
    /**
-   * store entity
-   */
+    * store entity
+    */
    public void storeEntity(EntityEnterpriseContext ctx) throws Exception
    {
       if (ctx.getId() != null)
@@ -712,8 +701,8 @@ public class EntityContainer
    }
    
    /**
-   * Delegates to the persistence manager postCreateEntityMethod.
-   */
+    * Delegates to the persistence manager postCreateEntityMethod.
+    */
    public void postCreateHome(Invocation mi) throws Exception
    {
       // The persistence manager takes care of the post create step
@@ -722,11 +711,11 @@ public class EntityContainer
    }
  
    /**
-   * This method takes care of the wiring of the "EJBObject" trio
-   * (target, context, proxy).  It delegates to the persistence manager.
-   */
+    * This method takes care of the wiring of the "EJBObject" trio
+    * (target, context, proxy).  It delegates to the persistence manager.
+    */
    public EJBObject createHome(Invocation mi)
-   throws Exception
+      throws Exception
    {
       // The persistence manager takes care of the wiring and creating the EJBObject
       getPersistenceManager().createEntity(mi.getMethod(),mi.getArguments(),
@@ -738,10 +727,10 @@ public class EntityContainer
    }
    
    /**
-   * A method for the getEJBObject from the handle
-   */
+    * A method for the getEJBObject from the handle
+    */
    public EJBObject getEJBObject(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null) {
@@ -754,16 +743,16 @@ public class EntityContainer
    // EJBHome implementation ----------------------------------------
    
    /**
-   * @throws Error    Not yet implemented.
-   */
+    * @throws Error    Not yet implemented.
+    */
    public void removeHome(Invocation mi)
-   throws RemoteException, RemoveException
+      throws RemoteException, RemoveException
    {
       throw new Error("Not yet implemented");
    }
    
    public EJBMetaData getEJBMetaDataHome(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       EJBProxyFactory ci = getProxyFactory();
       if (ci == null) {
@@ -773,16 +762,17 @@ public class EntityContainer
    }
    
    /**
-   * @throws Error    Not yet implemented.
-   */
+    * @throws Error    Not yet implemented.
+    */
    public HomeHandle getHomeHandleHome(Invocation mi)
-   throws RemoteException
+      throws RemoteException
    {
       // TODO
       throw new Error("Not yet implemented");
    }
    
    // StatisticsProvider implementation ------------------------------------
+   
    public Map retrieveStatistic()
    {
       // Loop through all Interceptors and add statistics
@@ -793,17 +783,17 @@ public class EntityContainer
       lStatistics.putAll( lProvider.retrieveStatistic() );
       return lStatistics;
    }
+   
    public void resetStatistic()
    {
    }
    
    // Private -------------------------------------------------------
    
-   private void setupHomeMappingImpl( 
-      Method[] m,
-      String finderName,
-      String append )
-   throws DeploymentException
+   private void setupHomeMappingImpl(Method[] m,
+                                     String finderName,
+                                     String append)
+      throws Exception
    {
       // Adrian Brock: This should go away when we don't support EJB1x
       boolean isEJB1x = metaData.getApplicationMetaData().isEJB1x();
@@ -819,10 +809,9 @@ public class EntityContainer
                homeMapping.put(m[i], beanClass.getMethod(ejbHomeMethodName, m[i].getParameterTypes()));
                
                continue;
-            } catch (NoSuchMethodException e)
-            {
-               // Ignore - just go on with other types of methods
             }
+            catch (NoSuchMethodException ignore) {} // just go on with other types of methods
+
             
             // Implemented by container (in both cases)
             if (methodName.startsWith("find"))
@@ -839,15 +828,15 @@ public class EntityContainer
             {
                homeMapping.put(m[i], this.getClass().getMethod(methodName+append, new Class[] { Invocation.class }));
             }
-         } catch (NoSuchMethodException e)
+         }
+         catch (NoSuchMethodException e)
          {
-            throw new DeploymentException("Could not find matching method for "+m[i]);
+            throw new NoSuchMethodException("Could not find matching method for "+m[i]);
          }
       }
    }
    
-   protected void setupHomeMapping()
-   throws DeploymentException
+   protected void setupHomeMapping() throws Exception
    {
       try {
          if (homeInterface != null)
@@ -872,23 +861,13 @@ public class EntityContainer
          //Just to make sure let's iterate
          for (int j=0; j<handleMethods.length ;j++)
          {
-            
-            try
+            //Get only the one called handle.getEJBObject
+            if (handleMethods[j].getName().equals("getEJBObject"))
             {
-               
-               //Get only the one called handle.getEJBObject
-               if (handleMethods[j].getName().equals("getEJBObject"))
-               {
-                  
-                  //Map it in the home stuff
-                  homeMapping.put(handleMethods[j], this.getClass().getMethod("getEJBObject", new Class[]
-                        {Invocation.class
-                        }));
-               }
-            }
-            catch (NoSuchMethodException e)
-            {
-               throw new DeploymentException("Couldn't find getEJBObject method on container");
+               //Map it in the home stuff
+               homeMapping.put(handleMethods[j],
+                               this.getClass().getMethod("getEJBObject",
+                                                         new Class[] {Invocation.class}));
             }
          }
       }
@@ -898,43 +877,30 @@ public class EntityContainer
          homeMapping.clear();
          beanMapping.clear();
 
-         // DEBUG Logger.exception(e);
-
-         if(e instanceof DeploymentException) {
-            throw (DeploymentException)e;
-         }
-         throw new DeploymentException("Error setting up home mapping", e);
+         throw e;
       }
    }
    
    private void setupBeanMappingImpl( Method[] m, String intfName )
-   throws DeploymentException
+      throws Exception
    {
       for (int i = 0; i < m.length; i++)
       {
-         try
+         if (!m[i].getDeclaringClass().getName().equals(intfName))
          {
-            if (!m[i].getDeclaringClass().getName().equals(intfName))
-            {
-               // Implemented by bean
-               beanMapping.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
-            }
-            else
-            {
-               // Implemented by container
-               beanMapping.put(m[i], getClass().getMethod(m[i].getName(), new Class[]
-                     { Invocation.class
-                     }));
-            }
-         } catch (NoSuchMethodException e)
+            // Implemented by bean
+            beanMapping.put(m[i], beanClass.getMethod(m[i].getName(), m[i].getParameterTypes()));
+         }
+         else
          {
-            throw new DeploymentException("Could not find matching method for "+m[i], e);
+            // Implemented by container
+            beanMapping.put(m[i], getClass().getMethod(m[i].getName(),
+                                                       new Class[] { Invocation.class }));
          }
       }
    }
    
-   protected void setupBeanMapping()
-   throws DeploymentException
+   protected void setupBeanMapping() throws Exception
    {
       try {
          if (remoteInterface != null)
@@ -954,61 +920,53 @@ public class EntityContainer
          homeMapping.clear();
          beanMapping.clear();
 
-         if(e instanceof DeploymentException) {
-            throw (DeploymentException)e;
-         }
-         throw new DeploymentException("Error setting up bean mapping", e);
+         throw e;
       }
    }
    
-   protected void setupMarshalledInvocationMapping() 
+   protected void setupMarshalledInvocationMapping() throws Exception
    {
-      try 
-      {// Create method mappings for container invoker
-         if (homeInterface != null)
-         {
-            Method [] m = homeInterface.getMethods();
-            for (int i = 0 ; i<m.length ; i++)
-            {
-               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
-            }
-         }
-         if (remoteInterface != null)
-         {
-            Method [] m = remoteInterface.getMethods();
-            for (int j = 0 ; j<m.length ; j++)
-            {
-               marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
-            }
-         }
-         
-         // Get the getEJBObjectMethod
-         Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
-         
-         // Hash it
-         marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
-      }
-      catch (Exception e)
+      // Create method mappings for container invoker
+      if (homeInterface != null)
       {
-         log.error("getEJBObject failed", e);
+         Method [] m = homeInterface.getMethods();
+         for (int i = 0 ; i<m.length ; i++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[i])), m[i]);
+         }
       }
+
+      if (remoteInterface != null)
+      {
+         Method [] m = remoteInterface.getMethods();
+         for (int j = 0 ; j<m.length ; j++)
+         {
+            marshalledInvocationMapping.put( new Long(MarshalledInvocation.calculateHash(m[j])), m[j]);
+         }
+      }
+         
+      // Get the getEJBObjectMethod
+      Method getEJBObjectMethod = Class.forName("javax.ejb.Handle").getMethod("getEJBObject", new Class[0]);
+      
+      // Hash it
+      marshalledInvocationMapping.put(new Long(MarshalledInvocation.calculateHash(getEJBObjectMethod)),getEJBObjectMethod);
    }
    
    /**
-   * Build the container MBean information on attributes, contstructors,
-   * operations, and notifications. Currently there are no attributes, no
-   * constructors, no notifications, and the following ops:
-   * <ul>
-   * <li>'home' -> invokeHome(Invocation);</li>
-   * <li>'remote' -> invoke(Invocation);</li>
-   * <li>'localHome' -> not implemented;</li>
-   * <li>'local' -> not implemented;</li>
-   * <li>'getHome' -> return EBJHome interface;</li>
-   * <li>'getRemote' -> return EJBObject interface</li>
-   * <li>'getCacheSize' -> return the entity's cache size</li>
-   * <li>'flushCache' -> flush the entity's cache</li>
-   * </ul>
-   */
+    * Build the container MBean information on attributes, contstructors,
+    * operations, and notifications. Currently there are no attributes, no
+    * constructors, no notifications, and the following ops:
+    * <ul>
+    * <li>'home' -> invokeHome(Invocation);</li>
+    * <li>'remote' -> invoke(Invocation);</li>
+    * <li>'localHome' -> not implemented;</li>
+    * <li>'local' -> not implemented;</li>
+    * <li>'getHome' -> return EBJHome interface;</li>
+    * <li>'getRemote' -> return EJBObject interface</li>
+    * <li>'getCacheSize' -> return the entity's cache size</li>
+    * <li>'flushCache' -> flush the entity's cache</li>
+    * </ul>
+    */
    public MBeanInfo getMBeanInfo()
    {
       MBeanParameterInfo miInfo = new MBeanParameterInfo("method", Invocation.class.getName(), "Invocation data");
@@ -1032,18 +990,17 @@ public class EntityContainer
       return new MBeanInfo(getClass().getName(), 
                            "EJB Entity Container MBean",
                            superInfo.getAttributes(),
-                           superInfo.getConstructors(),                           opInfo,
+                           superInfo.getConstructors(),
+                           opInfo,
                            superInfo.getNotifications());
    }
    
    /**
-   * Handle a operation invocation.
-   */
+    * Handle a operation invocation.
+    */
    public Object invoke(String actionName, Object[] params, String[] signature)
-   throws MBeanException, ReflectionException
+      throws MBeanException, ReflectionException
    {
-      
-      
       if( params != null && params.length == 1 && (params[0] instanceof Invocation) == false )
          throw new MBeanException(new IllegalArgumentException("Expected zero or single Invocation argument"));
       
@@ -1067,8 +1024,6 @@ public class EntityContainer
       else return super.invoke(actionName, params, signature);
    }
    
-   
-   
    Interceptor createContainerInterceptor()
    {
       return new ContainerInterceptor();
@@ -1076,42 +1031,13 @@ public class EntityContainer
    
    // Inner classes -------------------------------------------------
    
-   // This is the last step before invocation - all interceptors are done
-   
+   /**
+    * This is the last step before invocation - all interceptors are done
+    */
    class ContainerInterceptor
-   implements Interceptor
+      extends AbstractContainerInterceptor
    {
-      public void setContainer(Container con)
-      {
-      }
-      
-      public void setNext(Interceptor interceptor)
-      {
-      }
-      
-      public Interceptor getNext()
-      {
-         return null;
-      }
-      
-      public void create()
-      {
-      }
-      
-      public void start()
-      {
-      }
-      
-      public void stop()
-      {
-      }
-      
-      public void destroy()
-      {
-      }
-      
-      public Object invokeHome(Invocation mi)
-      throws Exception
+      public Object invokeHome(Invocation mi) throws Exception
       {
          // Invoke and handle exceptions
          Method m = (Method)homeMapping.get(mi.getMethod());
@@ -1121,48 +1047,29 @@ public class EntityContainer
             try
             {
                return m.invoke(EntityContainer.this, new Object[] { mi });
-            } catch (IllegalAccessException e)
-            {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (Exception)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
             }
-         } else // Home method
+            catch (Exception e)
+            {
+               rethrow(e);
+            }
+         }
+         else // Home method
          {
             try
             {
                return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
-            } catch (IllegalAccessException e)
+            }
+            catch (Exception e)
             {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (Exception)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
+               rethrow(e);
             }
          }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();         
       }
       
-      public Object invoke(Invocation mi)
-      throws Exception
+      public Object invoke(Invocation mi) throws Exception
       {
          // Get method
          Method m = (Method)beanMapping.get(mi.getMethod());
@@ -1174,21 +1081,10 @@ public class EntityContainer
             try
             {
                return m.invoke(EntityContainer.this, new Object[]{ mi });
-            } catch (IllegalAccessException e)
+            }
+            catch (Exception e)
             {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (EJBException)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
+               rethrow(e);
             }
          }
          else
@@ -1197,23 +1093,15 @@ public class EntityContainer
             try
             {
                return m.invoke(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), mi.getArguments());
-            } catch (IllegalAccessException e)
+            }
+            catch (Exception e)
             {
-               // Throw this as a bean exception...(?)
-               throw new EJBException(e);
-            } catch (InvocationTargetException e)
-            {
-               Throwable ex = e.getTargetException();
-               if (ex instanceof EJBException)
-                  throw (EJBException)ex;
-               else if (ex instanceof RuntimeException)
-                  throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
-               else if (ex instanceof Exception)
-                  throw (Exception)ex;
-               else
-                  throw (Error)ex;
+               rethrow(e);
             }
          }
+
+         // We will never get this far, but the compiler does not know that
+         throw new org.jboss.util.UnreachableStatementException();
       }
    }
 }
