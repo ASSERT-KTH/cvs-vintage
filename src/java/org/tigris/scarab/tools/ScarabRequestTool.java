@@ -575,6 +575,12 @@ try{
         return attributeOption;
     }
 
+    public AttributeOption getAttributeOption(String key)
+         throws Exception
+        {
+            return getAttributeOption(new NumberKey(key));
+        }    
+
     /**
      * First attempts to get the RModuleUserAttributes from the user.
      * If it is empty, then it will try to get the defaults from the module.
