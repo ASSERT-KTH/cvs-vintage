@@ -248,7 +248,7 @@ public class SessionId extends  BaseInterceptor
         // Do this only if request is over SSL
         if(checkSSLSessionId && sess != null && request.isSecure() ){
           // SSL session ID from session and request - they have to be equal!
-          String ids=(String)sess.getAttribute("javax.servlet.request.ssl_session"),
+          String ids=(String)sess.getAttribute("javax.servlet.session.ssl_session"),
                  idr=(String)request.getAttribute("javax.servlet.request.ssl_session");
 
           if(debug>0) cm.log("Request SSL ID="+idr+", Session SSL ID="+ids);
@@ -261,7 +261,7 @@ public class SessionId extends  BaseInterceptor
                        " doesn't match Tomcat session "+sessionId+"!");
               }
             } else { // First time, save the SSL session ID
-              sess.setAttribute("javax.servlet.request.ssl_session",idr);
+              sess.setAttribute("javax.servlet.session.ssl_session",idr);
             }
           }
         }
