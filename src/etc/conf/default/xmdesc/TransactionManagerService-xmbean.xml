@@ -3,7 +3,7 @@
    "-//JBoss//DTD JBOSS XMBEAN 1.1//EN"
    "http://www.jboss.org/j2ee/dtd/jboss_xmbean_1_1.dtd">
 
-<!-- $Id: TransactionManagerService-xmbean.xml,v 1.1 2003/11/12 22:36:55 pilhuhn Exp $ -->
+<!-- $Id: TransactionManagerService-xmbean.xml,v 1.2 2003/11/15 17:02:49 pilhuhn Exp $ -->
 <mbean>
 	 <description>TransactionManager Service.</description>
 	 <class>org.jboss.tm.TransactionManagerService</class>
@@ -59,8 +59,8 @@
 		 <name>unregisterXAExceptionFormatter</name>
 		 <parameter>
 			 <description>The class of the formatter</description>
-			 <name>class</name>
-			 <type>Class</type>
+			 <name>clazz</name>
+			 <type>java.lang.Class</type>
 		 </parameter>
 		 <return-type>void</return-type>
 	 </operation>
