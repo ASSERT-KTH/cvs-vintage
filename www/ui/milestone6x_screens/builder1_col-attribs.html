@@ -108,28 +108,30 @@
 	<div class="app" id="div2-4-1-step1">
   	<form method="post" action="#">
 
-		<h2>Report builder (2.4.1) Select/add row content</h2>
+		<h2>Report builder (2.4.1) Select/add column content</h2>
 	
 		<div class="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
 <td><a href="builder1_confine.html" title="Dataset">Confine dataset</a></td>
-<td><a href="builder1_dataset.html" title="Dataset">Define data groups</a></td>			<th>Row content</th>
-<td><a href="builder1_col.html" title="builder1_col">Column content</a></td>
+<td><a href="builder1_dataset.html" title="Dataset">Define data groups</a></td>
+<td><a href="builder1_row.html" title="builder1_row">Row content</a></td>
+<th>Column content</th>
 			</tr>
 			</table>
 		</div>
 
 <div class="functnbar"><input type="submit" value="Recalculate output" /></div>
 				
-		<h3>Row criteria</h3>	  
+		<h3>Column criteria</h3>	  
 		
 		<div class="axial">
 			<table width="100%" cellpadding="3" cellspacing="2" border="1">			
 			<tr>
 			<th width="120">select content type</th>
          <td><select>
-<option>Users / user attributes</option>
+<option>Date(s) / Date range(s)</option>
+<option>Users</option>
 <option>Attributes/options</option>
 </select>&nbsp;<input type="submit" value="go">
 
@@ -139,114 +141,187 @@
 			</table>
 		</div>
 
-		<p>
-		<a href="#add">Click here</a> to add users to this reports row content
-		</p>
+	
+		<h3>Define / select column content</h3>
+		<h4>Attibute group 1</h4>
 
-		<h3>Selected users</h3>
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap">Select</th>
-		<th>Name</th>
-		<th>User attribute</th>
-		</tr>
-
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><strong>Alan Smith</strong></td>
-		<td>Assigned to:</td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><strong>Barbara Skoppke</strong></td>
-		<td>Assigned to:</td>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><strong>Barbara Skoppke</strong></td>
-		<td>CC:</td>
-		</tr>	     
-   </table>  
-
-<div class="functnbar3">
- <input type="submit" value="Remove selected user from list" />
-</div>
-
-<div class="functnbar2"><input type="submit" value="Recalculate output" /></div>
-
-<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
-
-		<h3>User</h3>
-<div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>Filter string</th>
-   <td><input type="text" value="j" />&nbsp;<select name="#"
-   size=""><option value="">Name</option>
-            <option value="18">Email</option>
-            </select>&nbsp;<input type="submit" value="filter" /></td>
-  </tr>
- <tr>
-</table>
-</div>
-
-
-
-
-		
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th>Select</th>
-		<th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Name</th>
-		<th>User attribute</th>
-		</tr>
-		
-		<tr class="a">
-		<td><input type="checkbox" /></td>
-		<td><strong>Jane Smith</strong></td>
-		<td><select>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+					
+			<tr>
+			<th width="120">version</th>
+			<td><select multiple size="5">
 			<option>
-			Assigned to:
+			version
 			</option>
 			<option>
-			CC:
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
 			</option>
 			</select></td>
-		</tr>
-		
-		<tr class="b">
-		<td><input type="checkbox" /></td>
-		<td><strong>Jon Dowe</strong></td>
-		<td><select>
+			</tr>
+			
+			<tr>
+			<th width="120">platform</th>
+			<td><select multiple size="5">
 			<option>
-			Assigned to:
+			platform
 			</option>
 			<option>
-			CC:
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
 			</option>
 			</select></td>
-		</tr>
-      
-   </table>  
-<div class="functnbar3">
- <input type="submit" value="Add selected user to list" />
-</div>
+			</tr>
+			
+			<tr>
+			<th width="120">os</th>
+			<td><select multiple size="5">
+			<option>
+			os
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">found during</th>
+			<td><select multiple size="5">
+			<option>
+			found during
+			</option>
+			<option>
+			&nbsp;&nbsp;normal use
+			</option>
+			<option>
+			&nbsp;&nbsp;QA
+			</option>
+			<option>
+			&nbsp;&nbsp;Beta
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
 
-	</div>
+		<h4>Attibute group 2</h4>
+		<div class="axial">
+			<table width="100%" cellpadding="3" cellspacing="2" border="1">
+			
+			<tr>
+			<th width="120">issue type</th>
+			<td><select multiple size="5">
+			<option>
+			issue type
+			</option>
+			<option>
+			&nbsp;&nbsp;change requirements
+			</option>
+			<option>
+			&nbsp;&nbsp;bug
+			</option>
+			<option>
+			&nbsp;&nbsp;enhancement
+			</option>
+			<option>
+			&nbsp;&nbsp;documentation change
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">functional area</th>
+			<td><input type="checkbox" /> UI <input type="checkbox" />setup <input type="checkbox" />help</td>
+			</tr>
+			
+			<tr>
+			<th width="120">severity</th>
+			<td><select multiple size="5">
+			<option>
+			severity
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
+			</option>
+			</select></td>
+			</tr>
+			
+			<tr>
+			<th width="120">priority</th>
+			<td><select multiple size="5">
+			<option>
+			priority
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 1
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 2
+			</option>
+			<option>
+			&nbsp;&nbsp;choice 3
+			</option>
+			</select></td>
+			</tr>
+			</table>
+		</div>
+
+		</div>
+		<div class="functnbar3"><input type="submit" value="Save" /></div>
+
+		<div class="functnbar2"><input type="submit" value="Recalculate output" /></div>
 
 	</div>
 	<!-- Scarab - App -->
+
+</form>
 
 <!-- Structural Elements -->
 </td>
 </tr>
 </table>
-
-</form>
-
 <!-- Structural Elements -->
 
 	<!-- SourceCast -->
