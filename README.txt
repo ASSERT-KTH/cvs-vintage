@@ -1,4 +1,4 @@
-$Id: README.txt,v 1.39 2002/06/03 17:15:16 jon Exp $
+$Id: README.txt,v 1.40 2002/07/18 00:55:54 jon Exp $
 
 Welcome to Scarab!
 
@@ -339,6 +339,12 @@ bin\startup.bat <-- Win32
 
 Then, in your web browser, go to:
 
+    <http://localhost:8080/issues>
+
+The following URL's also work the same by default:
+
+    <http://localhost:8080/s>
+    <http://localhost:8080/issue>
     <http://localhost:8080/scarab/servlet/scarab>
 
 NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are 
@@ -348,6 +354,8 @@ NOTE: Make sure that your TOMCAT_HOME is defined correctly. If you are
 NOTE: Substitute 'localhost' for the DNS name that the server is running
       on.
 
+NOTE: You can define your own URL by editing src/conf/web.xml and defining
+      a different servlet mapping and then rebuilding.
 
 -------------------------------------------------------------------------
 | Q U E S T I O N S  /  P R O B L E M S                                 |
