@@ -25,6 +25,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Log: XmlElement.java,v $
+// Revision 1.6  2003/03/11 18:50:31  tstich
+// [intern]new menus can be added through extension
+//
 // Revision 1.5  2003/03/11 15:01:42  tstich
 // [intern]new action/menu/toolbar structure
 //
@@ -226,8 +229,9 @@ public class XmlElement {
 	public void removeFromParent()
 	{
 		XmlElement parent = getParent();
-		ColumbaLogger.log.debug("element="+parent.getName());
+		if( parent == null) return;
 		
+		ColumbaLogger.log.debug("element="+parent.getName());
 		parent.removeElement(this);
 	}
 	

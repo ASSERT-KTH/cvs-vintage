@@ -185,16 +185,17 @@ public class Menu extends JMenuBar {
 	}
 
 	public void extendMenu( XmlElement menuExtension ) {
-		ListIterator iterator = menuRoot.getElements().listIterator();
 		XmlElement menu, extension;
 		String menuName = menuExtension.getAttribute("name");
 		String extensionName = menuExtension.getAttribute("extensionpoint");
 		if ( extensionName == null )
 		{
 			// new menu
-			menuRoot.insertElement(menuExtension, menuRoot.count()-1);	
+			menuRoot.insertElement((XmlElement)menuExtension.clone(), menuRoot.count()-1);	
 			return;
 		}
+
+		ListIterator iterator = menuRoot.getElements().listIterator();
 		
 		int insertIndex = 0;
 		
