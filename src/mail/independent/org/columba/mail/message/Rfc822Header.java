@@ -59,6 +59,12 @@ public class Rfc822Header implements HeaderInterface {
 	public Flags getFlags() {
 		return new Flags(this);
 	}
+	
+	public int count()
+	{
+		return hashTable.size();
+		
+	}
 
 	// returns the header as given from mailserver
 	// the items are split by \n

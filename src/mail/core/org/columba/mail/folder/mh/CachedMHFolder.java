@@ -28,6 +28,7 @@ import org.columba.mail.folder.command.MarkMessageCommand;
 import org.columba.mail.folder.headercache.LocalHeaderCache;
 import org.columba.mail.message.AbstractMessage;
 import org.columba.mail.message.ColumbaHeader;
+import org.columba.mail.message.HeaderInterface;
 import org.columba.mail.message.HeaderList;
 import org.columba.mail.parser.Rfc822Parser;
 
@@ -68,7 +69,15 @@ public class CachedMHFolder extends MHFolder {
 		WorkerStatusController worker)
 		throws Exception {
 
-		return (ColumbaHeader) cache.getHeaderList(worker).get(uid);
+		AbstractMessage message = getMessage(uid, worker);
+		int size = message.getHeader().count();
+		
+		HeaderInterface h = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
+		int cachedSize = h.count();
+		
+		if ( size > cachedSize ) return (ColumbaHeader) message.getHeader();
+		
+		return (ColumbaHeader) h;
 	}
 
 	public AbstractMessage getMessage(
@@ -85,7 +94,7 @@ public class CachedMHFolder extends MHFolder {
 		}
 
 		String source = getMessageSource(uid, worker);
-		ColumbaHeader header = getMessageHeader(uid, worker);
+		ColumbaHeader header = (ColumbaHeader) cache.getHeaderList(worker).get(uid);
 
 		AbstractMessage message =
 			new Rfc822Parser().parse(source, true, header, 0);

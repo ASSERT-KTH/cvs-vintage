@@ -18,6 +18,8 @@ package org.columba.mail.gui.message;
 import java.awt.Font;
 import java.awt.Insets;
 import java.net.URL;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 import javax.swing.JTextPane;
 import javax.swing.text.html.HTMLDocument;
@@ -27,6 +29,7 @@ import org.columba.core.config.Config;
 import org.columba.core.io.DiskIO;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
+import org.columba.mail.config.MailConfig;
 import org.columba.mail.gui.message.util.DocumentParser;
 import org.columba.mail.message.HeaderInterface;
 
@@ -56,7 +59,7 @@ public class HeaderViewer extends JTextPane {
 	private String css = "";
 
 	// contains headerfields which are to be displayed
-	String[] keys;
+	Vector keys;
 
 	//	parser to transform text to html
 	DocumentParser parser;
@@ -79,20 +82,38 @@ public class HeaderViewer extends JTextPane {
 		parser = new DocumentParser();
 
 		// add headerfields which are about to show up
-		keys = new String[7];
-		keys[0] = "Subject";
-		keys[1] = "Date";
-		keys[2] = "Reply-To";
-		keys[3] = "From";
-		keys[4] = "To";
-		keys[5] = "Cc";
-		keys[6] = "Bcc";
+		initHeaderFields();
 
 		initStyleSheet();
 
 	}
-	
-	
+
+	protected void initHeaderFields() {
+		// add headerfields which are about to show up
+
+		XmlElement headerviewerElement =
+			MailConfig.get("options").getElement("/options/headerviewer");
+		String list = headerviewerElement.getAttribute("headerfields");
+
+		StringTokenizer tok = new StringTokenizer(list, " ");
+		keys = new Vector();
+		while (tok.hasMoreTokens()) {
+			String key = (String) tok.nextToken();
+			keys.add(key);
+		}
+
+		/*
+				keys = new String[7];
+				keys[0] = "Subject";
+				keys[1] = "Date";
+				keys[2] = "Reply-To";
+				keys[3] = "From";
+				keys[4] = "To";
+				keys[5] = "Cc";
+				keys[6] = "Bcc";
+				*/
+	}
+
 	/**
 	* 
 	* read text-properties from configuration and 
@@ -126,7 +147,7 @@ public class HeaderViewer extends JTextPane {
 		// bright #d5d5d5
 
 		StringBuffer buf = new StringBuffer();
-		
+
 		// prepend HTML-code
 		buf.append(
 			"<HTML><HEAD>"
@@ -134,47 +155,48 @@ public class HeaderViewer extends JTextPane {
 				+ "</HEAD><BODY ><TABLE "
 				+ OUTTER_TABLE_PROPERTIES
 				+ ">");
-				
+
 		// for every existing headerfield 
-		for (int i = 0; i < keys.length; i++) {
+		for (int i = 0; i < keys.size(); i++) {
+			String key = (String) keys.get(i);
+			if (key == null)
+				continue;
+
 			// message doesn't contain this headerfield
-			if (header.get(keys[i]) == null)
+			if (header.get(key) == null)
 				continue;
 
 			// headerfield is empty
-			if (((String) header.get(keys[i])).length() == 0)
+			if (((String) header.get(key)).length() == 0)
 				continue;
 
 			// create left column
 			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
-			
+
 			// set left column text
-			buf.append("<B>" + keys[i] + " : </B></TD>");
+			buf.append("<B>" + key + " : </B></TD>");
 
 			// create right column
 			buf.append("<TD " + RIGHT_COLUMN_PROPERTIES + ">");
-			
+
 			// set right column text
-			String str = (String) header.get(keys[i]);
-			
+			String str = (String) header.get(key);
+
 			// substitute special characters like:
 			//  <,>,&,\t,\n
 			str = parser.substituteSpecialCharactersInHeaderfields(str);
-			
+
 			// parse for email addresses and substite with HTML-code
 			str = parser.substituteEmailAddress(str);
-			
+
 			// append HTML-code
-			buf.append(
-				" "
-					+ str
-					+ "</TD>");
+			buf.append(" " + str + "</TD>");
 
 			buf.append("</TR>");
 		}
 
 		if (hasAttachments) {
-			
+
 			// email has attachments 
 			//  -> display attachment icon
 			buf.append("<TR><TD " + LEFT_COLUMN_PROPERTIES + ">");
