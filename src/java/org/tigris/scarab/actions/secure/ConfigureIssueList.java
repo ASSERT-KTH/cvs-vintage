@@ -1,4 +1,4 @@
-package org.tigris.scarab.actions;
+package org.tigris.scarab.actions.secure;
 
 /* ================================================================
  * Copyright (c) 2000 Collab.Net.  All rights reserved.
@@ -70,7 +70,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.1 2001/08/14 22:24:41 elicia Exp $
+    @version $Id: ConfigureIssueList.java,v 1.2 2001/08/14 22:35:58 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
