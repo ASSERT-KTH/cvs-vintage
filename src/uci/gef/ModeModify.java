@@ -27,7 +27,7 @@
 // File: ModeModify.java
 // Classes: ModeModify
 // Original Author: ics125 spring 1996
-// $Id: ModeModify.java,v 1.21 1999/03/17 21:26:26 jrobbins Exp $
+// $Id: ModeModify.java,v 1.22 1999/03/17 23:46:17 jrobbins Exp $
 
 package uci.gef;
 
@@ -120,10 +120,10 @@ public class ModeModify extends Mode {
    *  handle around the drawing area and the Fig reacts to that.  */
   public void mouseDragged(MouseEvent me) {
     if (me.isConsumed()) return;
-    if ((me.getModifiers() & InputEvent.BUTTON1_MASK) == 0) {
-      //System.out.println("wrong button in ModeModify mouseDragged");
-      return;
-    }
+//     if ((me.getModifiers() & InputEvent.BUTTON1_MASK) == 0) {
+//       //System.out.println("wrong button in ModeModify mouseDragged");
+//       return;
+//     }
     int x = me.getX(), y = me.getY();
     int dx, dy, snapX, snapY;
     if (!checkMinDelta(x, y)) { me.consume(); return; }
