@@ -1,17 +1,17 @@
-#if ($action.equals("copy"))
-  #set ($actionWord = "copied")
+#if ($action.equals("$l10n.copy"))
+  #set ($actionWord = "$l10n.copied")
 #else
-  #set ($actionWord = "moved")
+  #set ($actionWord = "$l10n.moved")
 #end
 
 #set ($user = $issue.ModifiedBy)
-Issue '$issue.UniqueId' has just been $actionWord from '$oldModule' to 
-'$newModule' by user '$user.UserName'.
 
-You can view the issue detail at the following URL:
+$l10n.format("IssueMoved", $issue.UniqueId, $actionWord,) $l10n.format("IssueMoved2", $oldModule, $newModule, $user.UserName) 
+
+$l10n.YouCanViewIssue
 
     <$link.getIssueIdAbsoluteLink($issue)>
 
 #if ($attachment.DataAsString)
-Comment:  $attachment.DataAsString
+$l10n.Comment  $attachment.DataAsString
 #end
