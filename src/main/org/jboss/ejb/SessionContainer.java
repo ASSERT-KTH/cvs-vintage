@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.9 2004/06/22 12:10:18 ejort Exp $
+// $Id: SessionContainer.java,v 1.10 2004/06/22 22:36:55 ejort Exp $
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
@@ -38,7 +38,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -597,14 +597,6 @@ public abstract class SessionContainer extends Container
       Method method = mi.getMethod();
       if (method != null && method.getName().equals("remove"))
       {
-         // Map to EJBHome.remove(Object) to EJBObject.remove()
-         InvocationType type = mi.getType(); 
-         if (type == InvocationType.HOME)
-            mi.setType(InvocationType.REMOTE);
-         else if (type == InvocationType.LOCALHOME)
-            mi.setType(InvocationType.LOCAL);
-         mi.setMethod(EJBOBJECT_REMOVE);
-
          // Handle or primary key?
          Object arg = mi.getArguments()[0];
          if (arg instanceof Handle)
@@ -613,13 +605,11 @@ public abstract class SessionContainer extends Container
                throw new RemoteException("Null handle");
             Handle handle = (Handle) arg;
             EJBObject ejbObject = handle.getEJBObject();
-            mi.setId(ejbObject.getPrimaryKey());
+            ejbObject.remove();
+            return null;
          }
          else
             throw new RemoveException("EJBHome.remove(Object) not allowed for session beans");
-
-         mi.setArguments(new Object[0]);
-         return getInterceptor().invoke(mi);
       }
       return getInterceptor().invokeHome(mi);
    }
