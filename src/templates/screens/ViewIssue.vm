@@ -3,6 +3,10 @@
 #set ($currentIssueId = $data.Parameters.getString("id"))
 #set ($currentIssue = $scarabR.getIssue($currentIssueId))
 
+#if ($collisionDetectedOnMoveAttempt)
+  #printCollisionInfo()
+#end
+
 #if ($currentIssue && $scarabR.hasPermission($scarabG.Permission.ISSUE__VIEW, $currentIssue.Module))
 
  #if ($currentIssue.Module != $scarabR.CurrentModule)
@@ -10,9 +14,11 @@
    $l10n.format("ViewIssueInDifferentModule", $currentIssue.Module.Name)
   </em></p>
  #end
+##Do not call printCollisionInfo() again if $collisionDetectedOnMoveAttempt were true
+ #if (!$collisionDetectedOnMoveAttempt)
+  #printCollisionInfo()
+ #end
 
- #printCollisionInfo()
- 
  #set ($prevNextList = $data.Parameters.getStrings("issueList"))
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
  <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm")">
@@ -105,12 +111,12 @@ $renderer.render("viewIssue", "ViewIssueBody.vm")
     <p><em>
     $l10n.NoPermissionToViewIssue
     </em></p>
-#else
+#elseif (!$collisionDetectedOnMoveAttempt)
 <h3>$l10n.IssueSearchResults</h3>
 
   #if ($currentIssueId && $currentIssueId.length() > 0)
     <p><em>
-    $l10n.format("IssueIdNotValid", $currentIssueId) $l10n.PleaseEnterNewIssueId 
+    $l10n.format("IssueIdNotValid", $currentIssueId) $l10n.PleaseEnterNewIssueId
     </em></p>
   #else
     <p><em>
