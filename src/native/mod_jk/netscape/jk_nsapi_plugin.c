@@ -56,7 +56,7 @@
 /***************************************************************************
  * Description: NSAPI plugin for Netscape servers                          *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.5 $                                               *
+ * Version:     $Revision: 1.6 $                                               *
  ***************************************************************************/
 
 
@@ -471,7 +471,7 @@ static int init_ws_service(nsapi_private_data_t *private_data,
 static int setup_http_headers(nsapi_private_data_t *private_data,
                               jk_ws_service_t *s) 
 {
-    int need_content_length_header = (s->content_length == 0);
+    int need_content_length_header = (s->content_length == 0) ? JK_TRUE : JK_FALSE; 
 
     pblock *headers_jar = private_data->rq->headers;
     int cnt;
