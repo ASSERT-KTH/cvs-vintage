@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 | PostgreSQL  N O T E S                                                      |
 ------------------------------------------------------------------------------
-$Id: PostgreSQL.txt,v 1.1 2004/03/10 17:20:34 pledbrook Exp $
+$Id: PostgreSQL.txt,v 1.2 2004/03/13 15:54:24 pledbrook Exp $
 
 Creating and populating the database
 ====================================
@@ -21,19 +21,22 @@ are the steps you should follow:
 
 3. 'cd' to <install dir>/src/sql.
 
-4. Run 'create-db.sh', passing the details of the target database as parameters.
-   For example,
+4. Assuming that you have set these build properties correctly:
+     ${scarab.database.name},
+     ${scarab.database.admin.username},
+     ${scarab.database.host}, and
+     ${scarab.database.port},
    
-     create-db.sh --host monkey --port 5432 --username pgsql --password --name scarab_test
+   run 'create-db.sh', or 'create-db.sh --password' if your admin user requires
+   a password. This will create the database using the information you supplied
+   as ant build properties.
    
-   will create a database called "scarab_test" on the database server "monkey:5432",
-   connecting as the user "pgsql". The "--password" option indicates that the script
-   should ask for a password when required.
-   
-   More details about the various options can be found by running 'createdb.sh --help'.
+   You can also override the default connection values using the command line
+   arguments. More details about the various options can be found by running
+   'createdb.sh --help'.
 
-Once you complete these steps, you'll be able to run Scarab against the newly created
-database.
+Once you complete these steps, you'll be able to run Scarab against the newly
+created database.
 
 
 Database permissions

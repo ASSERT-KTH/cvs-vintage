@@ -102,6 +102,38 @@
 |
 +-------------------------------------------------------------
         </echo>
+        
+        <!--
+          Copy the appropriate build properties to the runtime
+          properties area. The template file "settings.tmpl"
+          can be copied with a filter to produce something suitable
+          for inclusion in Scarab's runtime configuration.
+        -->
+        <filter token="DB_NAME" value="${scarab.database.name}"/>
+        <filter token="DB_TYPE" value="${scarab.database.type}"/>
+        <filter token="DB_VALIDATION_QUERY" value="${scarab.database.validationQuery}"/>
+        <filter token="DB_DRIVER_CLASS" value="${scarab.database.jdbc.driver}"/>
+        <filter token="DB_CONNECTION_URL" value="${scarab.database.url}"/>
+        <filter token="DB_USER" value="${scarab.database.username}"/>
+        <filter token="DB_PASSWORD" value="${scarab.database.password}"/>
+        
+        <copy tofile="${src.conf.dir}/conf/ant-generated.properties"
+              file="settings.tmpl"
+              filtering="yes"
+              overwrite="yes" />
+        
+        <!--
+          This filtered copy ensures that the default db connection
+          information in the database creation shell script is correct.
+        -->
+        <filter token="DB_HOST" value="${scarab.database.host}"/>
+        <filter token="DB_PORT" value="${scarab.database.port}"/>
+        <filter token="DB_ADMIN_USER" value="${scarab.database.admin.username}"/>
+        
+        <copy tofile="${src.sql.dir}/create-db.sh"
+              file="create-db.sh.tmpl"
+              filtering="yes"
+              overwrite="yes" />
 
         <!-- things to go into the project directory -->      
         <copy todir="${build.project}" filtering="no">
@@ -170,7 +202,6 @@
         <!-- Name of the initial Scarab Administrator user -->
         <!-- Name of the Scarab database instance          -->
         <filter token="ADMIN_USERNAME" value="${scarab.user.username}"/>
-        <filter token="DATABASE_NAME" value="${scarab.database.name}"/>
        
         <!-- the SQL data population scripts directory -->
         <copy todir="${build.sql.scarab}" filtering="yes">
@@ -344,7 +375,7 @@
     <!-- Generate SQL from Torque for the database type set in the build    -->
     <!-- property "scarab.database.type".                                   -->
     <!-- ================================================================== -->
-    <target name="sql-current-db">
+    <target name="sql-current-db" depends="prepare">
         <!-- Generate the Torque files for the specified database type -->
         <antcall target="sql-specific-db">
             <param name="generatesql.database.type"

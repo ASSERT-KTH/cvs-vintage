@@ -1,3 +1,3 @@
-drop database if exists @DATABASE_NAME@;
-create database @DATABASE_NAME@;
+drop database if exists @DB_NAME@;
+create database @DB_NAME@;
 
