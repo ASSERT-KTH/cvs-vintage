@@ -93,7 +93,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.14 2001/11/13 22:57:42 elicia Exp $
+ * @version $Id: MoveIssue.java,v 1.15 2001/11/20 00:55:34 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -134,13 +134,11 @@ public class MoveIssue extends RequireLoginFirstAction
 
         Group moveIssue = intake.get("MoveIssue",
                                 IntakeTool.DEFAULT_KEY, false);
-        NumberKey issueId = ((NumberKey) moveIssue.get("IssueId").
-            getValue());
         NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
             getValue());
         String selectAction = moveIssue.get("Action").toString();
 
-        Issue issue = (Issue)IssuePeer.retrieveByPK(issueId);
+        Issue issue = getScarabRequestTool(context).getIssue();
         ModuleEntity oldModule = issue.getModule();
         ScarabUser user = (ScarabUser)data.getUser();
 
