@@ -484,6 +484,7 @@ class NotFoundHandler extends Handler {
     public void doService(Request req, Response res)
 	throws Exception
     {
+	String msg=(String)req.getAttribute("javax.servlet.error.message");
 	res.setContentType("text/html");	// ISO-8859-1 default
 
 	// "javax.servlet.include.request_uri" is set to this handler
@@ -524,6 +525,12 @@ class NotFoundHandler extends Handler {
 		.append( HttpMessages.filter( requestURI ) )
 		.append("\r\n");
 	}
+
+	if (msg != null){
+            buf.append("<br><br>\r\n<b>")
+                .append(msg)
+                .append("</b><br>\r\n");
+        }
 
 	// only add </body> if reset was successful
 	if ( needsHead )
