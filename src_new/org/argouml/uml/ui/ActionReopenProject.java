@@ -1,4 +1,4 @@
-// $Id: ActionReopenProject.java,v 1.13 2005/01/16 02:06:42 bobtarling Exp $
+// $Id: ActionReopenProject.java,v 1.14 2005/01/16 22:18:45 mvw Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -80,6 +80,6 @@ public class ActionReopenProject extends ActionFileOperations {
         File toOpen = new File(filename);;
         // load of the new project
         // just reuse of the ActionOpen object
-        loadProject(toOpen);
+        loadProject(toOpen, true);
     }
 }
