@@ -30,6 +30,11 @@ import org.columba.ristretto.log.RistrettoLogger;
  * in MainInterface.DEBUG) the logger will either show all debug messages
  * or just severe errors. Logging information is passed to a log file and
  * to the console.
+ * <p>
+ * Note, that ColumbaLogger must not be called before MainInterface.DEBUG,
+ * was set. Otherwise, the logger won't show the correct debug level.
+ * 
+ * @see org.columba.core.main.Main 
  */
 public class ColumbaLogger {
     
