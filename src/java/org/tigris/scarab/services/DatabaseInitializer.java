@@ -66,7 +66,7 @@ import org.tigris.scarab.util.Log;
  * respective localized values upon initial startup of Fulcrum.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: DatabaseInitializer.java,v 1.10 2003/04/03 04:07:39 dlr Exp $
+ * @version $Id: DatabaseInitializer.java,v 1.11 2003/04/07 16:51:30 jmcnally Exp $
  */
 public class DatabaseInitializer
     extends BaseService
@@ -119,7 +119,8 @@ public class DatabaseInitializer
         catch (Exception e)
         {
             e.printStackTrace();
-            throw new InitializationException("Can't initialize Torque!", e);
+            throw new InitializationException(
+                "Failed to localize default data!", e);
         }
 
         // indicate that the service initialized correctly
