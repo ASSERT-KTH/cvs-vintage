@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.2 2000/12/27 19:52:56 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/12/27 19:52:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/Base64.java,v 1.3 2000/12/27 21:00:31 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/12/27 21:00:31 $
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ package org.apache.tomcat.util;
  * This class is used by XML Schema binary format validation
  *
  * @author Jeffrey Rodriguez
- * @version $Revision: 1.2 $ $Date: 2000/12/27 19:52:56 $
+ * @version $Revision: 1.3 $ $Date: 2000/12/27 21:00:31 $
  */
 
 public final class Base64 {
@@ -261,7 +261,7 @@ public final class Base64 {
 
     }
 
-    static int base64[]= {
+    static final int base64[]= {
 	64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 	    64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 62, 64, 64, 64, 63,
