@@ -10,6 +10,8 @@ package org.jboss.invocation.local;
 import java.net.InetAddress;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.security.PrivilegedActionException;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
@@ -26,13 +28,16 @@ import org.jboss.system.ServiceMBeanSupport;
  * The Invoker is a local gate in the JMX system.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.14 $
+ * @author Scott.Stark@jboss.org
+ * @version $Revision: 1.15 $
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
 public class LocalInvoker
    extends ServiceMBeanSupport
    implements Invoker, LocalInvokerMBean
 {
+   private MBeanServerAction serverAction = new MBeanServerAction();
+
    protected void createService() throws Exception
    {
       // note on design: We need to call it ourselves as opposed to 
@@ -95,11 +100,10 @@ public class LocalInvoker
       ObjectName mbean = (ObjectName) Registry.lookup((Integer) invocation.getObjectName());
       try
       {
-
-         return server.invoke(mbean,
-            "invoke",
-            new Object[]{invocation},
+         Object[] args = {invocation};
+         Object rtnValue = serverAction.invoke(mbean, "invoke", args,
             Invocation.INVOKE_SIGNATURE);
+         return rtnValue;
       }
       catch (Exception e)
       {
@@ -111,6 +115,60 @@ public class LocalInvoker
       finally
       {
          TCLAction.UTIL.setContextClassLoader(oldCl);
+      }
+   }
+
+   /** Perform the MBeanServer.invoke op in a PrivilegedExceptionAction if
+    * running with a security manager.
+    */ 
+   class MBeanServerAction implements PrivilegedExceptionAction
+   {
+      private ObjectName target;
+      String method;
+      Object[] args;
+      String[] sig;
+
+      MBeanServerAction()
+      {  
+      }
+      MBeanServerAction(ObjectName target, String method, Object[] args, String[] sig)
+      {
+         this.target = target;
+         this.method = method;
+         this.args = args;
+         this.sig = sig;
+      }
+
+      public Object run() throws Exception
+      {
+         Object rtnValue = server.invoke(target, method, args, sig);
+         return rtnValue;
+      }
+      Object invoke(ObjectName target, String method, Object[] args, String[] sig)
+         throws Exception
+      {
+         SecurityManager sm = System.getSecurityManager();
+         Object rtnValue = null;
+         if( sm == null )
+         {
+            // Direct invocation on MBeanServer
+            rtnValue = server.invoke(target, method, args, sig);
+         }
+         else
+         {
+            try
+            {
+               // Encapsulate the invocation in a PrivilegedExceptionAction
+               MBeanServerAction action = new MBeanServerAction(target, method, args, sig);
+               rtnValue = AccessController.doPrivileged(action);
+            }
+            catch (PrivilegedActionException e)
+            {
+               Exception ex = e.getException();
+               throw ex;
+            }
+         }
+         return rtnValue;
       }
    }
 
