@@ -80,7 +80,7 @@ import org.tigris.scarab.util.EmailContext;
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.96 2003/05/13 23:43:57 elicia Exp $
+ * @version $Id: AssignIssue.java,v 1.97 2003/05/14 21:43:54 elicia Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {
@@ -221,7 +221,7 @@ public class AssignIssue extends BaseModifyIssue
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         List issues = null;
-        String singleIssueId = data.getParameters().getString("issueId");
+        String singleIssueId = data.getParameters().getString("id");
         if (singleIssueId != null)
         {
             Issue issue = scarabR.getIssue(singleIssueId);

@@ -66,11 +66,10 @@
 #set ($assoUsers =  $data.User.AssociatedUsersMap)
 #set ($issueList = $scarabR.AssignIssuesList)
 #set ($issueListSize = $issueList.size())
-#set ($singleIssueId = $data.Parameters.getString("issueId"))
+#set ($singleIssueId = $data.Parameters.getString("id"))
 #if ($singleIssueId)
   #set ($singleIssue = $scarabR.getIssue($singleIssueId))
   #set ($issueListSize = 1)
-  <input type="hidden" name="issueId" value="$singleIssueId" />
 #end
 #set ($userAttrs = $scarabR.getUserAttributes($issueList)) 
 #set ($reason = $data.Parameters.getString("reason" , ""))
@@ -90,7 +89,7 @@
 <input type="hidden" name="action" value="AssignIssue" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "ViewIssue.vm")" />
 #if ($singleIssue)
-  <input type="hidden" name="issueId" value="$singleIssueId" />
+  <input type="hidden" name="id" value="$singleIssueId" />
 #end
 #foreach ($issue in $issueList)
   <input type="hidden" name="issue_ids" value="$issue.UniqueId" />
