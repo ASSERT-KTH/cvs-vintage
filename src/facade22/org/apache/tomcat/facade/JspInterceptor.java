@@ -276,7 +276,20 @@ public class JspInterceptor extends BaseInterceptor {
 		if( debug > 9 ) log( "Added to classpath: " + url );
 	    } catch( MalformedURLException ex ) {
 	    }
-	}
+	} else if( !ctx.isTrusted() ) {
+            try {
+                File f=new File( cm.getInstallDir(), "lib/container/jasper.jar" );
+                URL url=new URL( "file", null,
+                        f.getAbsolutePath().replace('\\','/') );
+                ctx.addClassPath( url );
+                if( debug > 9 ) log( "Added to classpath: " + url );
+                url=new URL( "file", "" ,
+                        System.getProperty( "java.home" ) + "/../lib/tools.jar");
+                ctx.addClassPath( url );
+                if( debug > 9 ) log( "Added to classpath: " + url );
+	    } catch( MalformedURLException ex ) {
+	    }
+        }
     }
 
     /** Do the needed initialization if jspServlet is used.
