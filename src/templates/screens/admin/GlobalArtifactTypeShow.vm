@@ -62,7 +62,7 @@
 <input type="submit" value="$l10n.AddNew" name="eventSubmit_doGotoothertemplate" />&#160;
 #if (!$allIssueTypes.isEmpty())
 <!-- not implemented yet <input type="submit" value="$l10n.CopySelected" name="eventSubmit_doCopy" />&#160; -->
-<input type="submit" value="$l10n.DeleteSelected" name="eventSubmit_doDelete" />
+<input type="submit" value="$l10n.DeleteUndeleteSelected" name="eventSubmit_doDelete" />
 #end
 </div>
 
