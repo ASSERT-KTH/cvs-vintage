@@ -621,34 +621,60 @@ default if metricsEnabled is not explicitly given.
       org.jboss.metadata.XmlLoadable) for it to load its parameters.
       
       The default instance pools, EntityInstancePool and 
-      StatelessSessionInstancePool, both accept the following MaximumSize
-      configuration.
+      StatelessSessionInstancePool, both accept the following configuration.
 
       Used in: container-configuration
       -->
-<!ELEMENT container-pool-conf (MaximumSize , MinimumSize)>
+<!ELEMENT container-pool-conf (feeder-policy , feeder-policy-conf)>
 
 <!-- 
         This element is only valid if the instance pool is a subclass of
         AbstractInstancePool.
 
-        The MaximumSize element gives the maximum number of instance to
-        keep in the pool. Its value must be an integer.
+        The feeder-policy element gives the Class that implements InstancePoolFeeder
+        and is responsible to feed the pool with new instances of bean.
+        If not present, no thread are started and the pool will have a size of 1.
+        
+        TimedInstancePoolFeeder is the first implementation available.
 
         Used in: container-pool-conf for AbstractInstancePool subclasses
         -->
-<!ELEMENT MaximumSize (#PCDATA)>
+<!ELEMENT feeder-policy (#PCDATA)>
 
-<!-- 
-        This element is only valid if the instance pool is a subclass of
-        AbstractInstancePool.
-
-        The MinimumSize element gives the minimum number of instance to
-        keep in the pool. Its value must be an integer.
-
-        Used in: container-pool-conf for AbstractInstancePool subclasses
+<!--
+        This element describes properties that the InstancePoolFeeder implementation
+        will read to configure itself (XmlLoadable).
+        
+        Note: the 3 attributes are hardcoded here for TimedInstancePoolFeeder.
+        
+        Used in: container-pool-conf for InstancePoolFeeder implementations
         -->
-<!ELEMENT MinimumSize (#PCDATA)>
+<!ELEMENT feeder-policy-conf (capacity , increment , period)>
+
+<!--
+        The capacity of the Pool.  The pool feeder will feed the pool with new
+        instances, the pool size being limited by this value.
+        
+        Used in: feeder-policy-conf
+        -->
+<!ELEMENT capacity (#PCDATA)>
+
+<!--
+        The pool feeder will feed the pool with this number of new instances at 
+        a regular period.
+        
+        Used in: feeder-policy-conf
+        -->
+<!ELEMENT increment (#PCDATA)>
+
+<!--
+        The interval of time (in milliseconds) the pool feeder look if the pool 
+        has come to its maximum size (capacity) and if not, will feed it with 
+        a particular number of new instances (increment).
+        
+        Used in: feeder-policy-conf
+        -->
+<!ELEMENT period (#PCDATA)>
 
 <!--
       This option is only used for entity container configurations.

@@ -6,8 +6,6 @@
  */
 package org.jboss.ejb.plugins;
 
-
-
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
 
@@ -19,18 +17,23 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
- *	@version $Revision: 1.16 $
+ *	@version $Revision: 1.17 $
  *      
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added statistics gathering
  * </ul>
-*  <p><b>20010920 Sacha Labourey:</b>
-*  <ul>
-*  <li>- Moved "reclaim" flag (set by Bill Burke) to the AbstractInstancePool level.
-*        It can now be used for SLSB and MDB (pooling activated)
-*  </ul>
+ *  <p><b>20010920 Sacha Labourey:</b>
+ *  <ul>
+ *  <li>- Moved "reclaim" flag (set by Bill Burke) to the AbstractInstancePool level.
+ *        It can now be used for SLSB and MDB (pooling activated)
+ *  </ul>
+ *  <p><b>20011208 Vincent Harcq:</b>
+ *  <ul>
+ *  <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
+ *       and will populate the pool with new instances at a regular period.
+ *  </ul>
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -57,10 +60,13 @@ public class EntityInstancePool
    public synchronized void free(EnterpriseContext ctx)
    {
        // If transaction still present don't do anything (let the instance be GC)
-       if (ctx.getTransaction() != null) return ;
-        
-       // To simplify design we don't reuse the ctx. 
-       if (reclaim) super.free(ctx);
+       if (ctx.getTransaction() != null)
+       {
+          // log.debug("Can Not FREE Entity Context because a Transaction exists.");
+          return ;
+       }
+
+       super.free(ctx);
    }
    
    // Z implementation ----------------------------------------------

@@ -1,166 +1,200 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
 package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.rmi.ServerException;
+import java.util.Stack;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Stack;
-
+import java.lang.reflect.Constructor;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.EnterpriseContext;
+import org.jboss.ejb.InstancePoolFeeder;
 
-import org.w3c.dom.Element;
 import org.jboss.deployment.DeploymentException;
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.XmlLoadable;
-
+import org.jboss.logging.Logger;
 import org.jboss.management.j2ee.CountStatistic;
 
+import org.w3c.dom.Element;
 
 /**
-*  <review>
-*   Abstract Instance Pool class containing the basic logic to create
-*  an EJB Instance Pool.
-*  </review>
-*
-*   @see <related>
-*   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-*   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
-*  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
-*   
-*  @version $Revision: 1.20 $
-*
-*  <p><b>Revisions:</b>
-*  <p><b>20010704 marcf:</b>
-*  <ul>
-*  <li>- Pools if used, do not reuse but restock the pile with fresh instances
-*  </ul>
-*  <p><b>20010709 andreas schaefer:</b>
-*  <ul>
-*  <li>- Added statistics gathering
-*  </ul>
-*  <p><b>20010920 Sacha Labourey:</b>
-*  <ul>
-*  <li>- Pooling made optional and only activated in concrete subclasses for SLSB and MDB
-*  </ul>
-*/
+ *  <review>
+ *   Abstract Instance Pool class containing the basic logic to create
+ *  an EJB Instance Pool.
+ *  </review>
+ *
+ *  @see <related>
+ *
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
+ *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
+ *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
+ *
+ *  @version $Revision: 1.21 $
+ *
+ *  <p><b>Revisions:</b>
+ *  <p><b>20010704 marcf:</b>
+ *  <ul>
+ *  <li>- Pools if used, do not reuse but restock the pile with fresh instances
+ *  </ul>
+ *  <p><b>20010709 andreas schaefer:</b>
+ *  <ul>
+ *  <li>- Added statistics gathering
+ *  </ul>
+ *  <p><b>20010920 Sacha Labourey:</b>
+ *  <ul>
+ *  <li>- Pooling made optional and only activated in concrete subclasses for SLSB and MDB
+ *  </ul>
+ *  <p><b>20011208 Vincent Harcq:</b>
+ *  <ul>
+ *  <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
+ *       and will populate the pool with new instances at a regular period.
+ *  </ul>
+ */
 public abstract class AbstractInstancePool
 implements InstancePool, XmlLoadable
 {
-    // Constants -----------------------------------------------------
-    
-    // Attributes ----------------------------------------------------
-    private Container container;
-    
-    Stack pool = new Stack();
-    int maxSize = 30;
-    
+   // Constants -----------------------------------------------------
+
+   // Attributes ----------------------------------------------------
+
+   protected Logger log = Logger.getLogger(AbstractInstancePool.class);
+
+   protected Container container;
+
+   protected Stack pool = new Stack();
+
+   /** determine if we reuse EnterpriseContext objects i.e. if we actually do pooling */
+   protected boolean reclaim = false;
+
+   protected InstancePoolFeeder poolFeeder;
+   protected boolean useFeeder = false;
    /** Counter of all the Bean instantiated within the Pool **/
    protected CountStatistic mInstantiate = new CountStatistic( "Instantiation", "", "Beans instantiated in Pool" );
    /** Counter of all the Bean destroyed within the Pool **/
    protected CountStatistic mDestroy = new CountStatistic( "Destroy", "", "Beans destroyed in Pool" );
    /** Counter of all the ready Beans within the Pool (which are not used now) **/
    protected CountStatistic mReadyBean = new CountStatistic( "ReadyBean", "", "Numbers of ready Bean Pool" );
-   
-   // determine if we reuse EnterpriseContext objects i.e. if we actually do pooling
-   protected boolean reclaim = false;
-   
-    // Static --------------------------------------------------------
-    
-    // Constructors --------------------------------------------------
-    
-    // Public --------------------------------------------------------
-    
-    /**
+
+
+   // Static --------------------------------------------------------
+
+   // Constructors --------------------------------------------------
+
+   // Public --------------------------------------------------------
+
+   /**
     *   Set the callback to the container. This is for initialization.
     *   The IM may extract the configuration from the container.
     *
     * @param   c
     */
-    public void setContainer(Container c)
-    {
-        this.container = c;
-    }
-    
+   public void setContainer(Container c)
+   {
+      this.container = c;
+   }
+
    /**
-   * <review>
-   * @return Callback to the container which can be null if not set proviously
-   * </review>
-   **/
-    public Container getContainer()
-    {
-        return container;
-    }
+    * <review>
+    * @return Callback to the container which can be null if not set proviously
+    * </review>
+    */
+   public Container getContainer()
+   {
+      return container;
+   }
     
-    public void create()
-    throws Exception
-    {
-    }
-    
-    public void start()
-    throws Exception
-    {
-    }
-    
-    public void stop()
-    {
-    }
-    
-    public void destroy()
-    {
-    }
+   public void create()
+   throws Exception
+   {
+   }
 
-    public boolean getReclaim()
-    {
-       return reclaim;
-    }
+   public void start()
+   throws Exception
+   {
+   }
 
-    public void setReclaim(boolean reclaim)
-    {
-       this.reclaim = reclaim;
-    }
-    
-    /**
+   public void stop()
+   {
+     if (useFeeder && poolFeeder.isStarted()) poolFeeder.stop();
+     freeAll();
+   }
+
+   public void destroy()
+   {
+     if (useFeeder && poolFeeder.isStarted()) poolFeeder.stop();
+     freeAll();
+   }
+
+   /**
+    * A pool is reclaim if it push back its dirty instances in its stack.
+    */
+   public boolean getReclaim()
+   {
+      return reclaim;
+   }
+
+   public void setReclaim(boolean reclaim)
+   {
+      this.reclaim = reclaim;
+   }
+
+   /**
+    * Add a instance in the pool
+    */
+   public void add()
+   throws Exception
+   {
+      this.pool.push(create(container.createBeanClassInstance()));
+   }
+
+   /**
     *   Get an instance without identity.
     *   Can be used by finders,create-methods, and activation
     *
     * @return     Context /w instance
     * @exception   RemoteException
     */
-    public synchronized EnterpriseContext get()
-    throws Exception
-    {
-        //DEBUG      Logger.debug("Get instance "+this);
-        
-        if (!pool.empty())
-        {
+   public synchronized EnterpriseContext get()
+   throws Exception
+   {
+      //Logger.debug("Get instance "+this+"#"+pool.empty()+"#"+getContainer().getBeanClass());
+
+      if (!pool.empty())
+      {
          mReadyBean.remove();
-            return (EnterpriseContext)pool.pop();
-        } else
-        {
-            try
-            {
-                return create(container.createBeanClassInstance());
-            } catch (InstantiationException e)
-            {
-                throw new ServerException("Could not instantiate bean", e);
-            } catch (IllegalAccessException e)
-            {
-                throw new ServerException("Could not instantiate bean", e);
-            }
-        }
-    }
-    
-    /**
+         return (EnterpriseContext)pool.pop();
+      }
+      // The Pool feeder should avoid this
+      else
+      {
+         if (useFeeder && poolFeeder.isStarted() && log.isDebugEnabled()) log.debug("The Pool for " + container.getBeanClass().getName()
+               + " has been overloaded.  You should change pool parameters.");
+         try
+         {
+            if (useFeeder && ! poolFeeder.isStarted()) poolFeeder.start();
+            return create(container.createBeanClassInstance());
+         } catch (InstantiationException e)
+         {
+            throw new ServerException("Could not instantiate bean", e);
+         } catch (IllegalAccessException e)
+         {
+            throw new ServerException("Could not instantiate bean", e);
+         }
+      }
+   }
+
+   /**
     *   Return an instance after invocation.
     *
     *   Called in 2 cases:
@@ -169,60 +203,72 @@ implements InstancePool, XmlLoadable
     *
     * @param   ctx
     */
-    public synchronized void free(EnterpriseContext ctx)
-    {
-        // Pool it
-        //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
-        ctx.clear();
-        
-        if (pool.size() < maxSize)
-        {
-            
-            // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
-            try {
-                mReadyBean.add();
-                if (this.reclaim)
-                {
-                   pool.push(ctx);                  
-                }
-                else
-                {
-                   discard (ctx);
-                   pool.push(create(container.createBeanClassInstance()));                  
-                }
-            } catch (Exception ignored) {}          
-            //pool.push(ctx);
-        } else
-        {
-            discard(ctx);
-        }
-    }
-    
-    public void discard(EnterpriseContext ctx)
-    {
-        // Throw away
-        try
-        {
+   public synchronized void free(EnterpriseContext ctx)
+   {
+      // Pool it
+      //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
+      ctx.clear();
+
+      // If (!reclaim), we do not reuse but create a brand new instance simplifies the design
+      try {
+         mReadyBean.add();
+         if (this.reclaim)
+         {
+            pool.push(ctx);
+         }
+         else
+         {
+            discard (ctx);
+         }
+      } catch (Exception ignored) {}
+   }
+
+   public void discard(EnterpriseContext ctx)
+   {
+      // Throw away, unsetContext()
+      try
+      {
          mDestroy.add();
-            ctx.discard();
-        } catch (RemoteException e)
-        {
-            // DEBUG Logger.exception(e);
-        }
-    }
-    
-    // Z implementation ----------------------------------------------
-    
-    // XmlLoadable implementation
-    public void importXml(Element element) throws DeploymentException {
-        String maximumSize = MetaData.getElementContent(MetaData.getUniqueChild(element, "MaximumSize"));
-        try {
-            maxSize = Integer.parseInt(maximumSize);
-        } catch (NumberFormatException e) {
-            throw new DeploymentException("Invalid MaximumSize value for instance pool configuration");
-        }
-    }
-    
+         ctx.discard();
+      } catch (RemoteException e)
+      {
+         // DEBUG Logger.exception(e);
+      }
+   }
+
+   public int getCurrentSize()
+   {
+      return this.pool.size();
+   }
+
+   // Z implementation ----------------------------------------------
+
+   /**
+    * XmlLoadable implementation
+    */
+   public void importXml(Element element) throws DeploymentException {
+      String feederPolicy = MetaData.getElementContent(MetaData.getOptionalChild(element, "feeder-policy"));
+      if (feederPolicy != null)
+      {
+         useFeeder = true;
+         try
+         {
+            Class cls = Thread.currentThread().getContextClassLoader().loadClass(feederPolicy);
+            Constructor ctor = cls.getConstructor(new Class[] {});
+            this.poolFeeder = (InstancePoolFeeder)ctor.newInstance(new Class[] {});
+            this.poolFeeder.setInstancePool(this);
+            this.poolFeeder.importXml(element);
+         } catch (Exception x)
+         {
+            throw new DeploymentException("Can't create instance pool feeder", x);
+         }
+      }
+      else
+      {
+         useFeeder = false;
+      }
+   }
+
    public Map retrieveStatistic()
    {
       Map lStatistics = new HashMap();
@@ -231,6 +277,7 @@ implements InstancePool, XmlLoadable
       lStatistics.put( "ReadyBeanCount", mReadyBean );
       return lStatistics;
    }
+
    public void resetStatistic()
    {
       mInstantiate.reset();
@@ -238,15 +285,30 @@ implements InstancePool, XmlLoadable
       mReadyBean.reset();
    }
 
-    // Package protected ---------------------------------------------
-    
-    // Protected -----------------------------------------------------
-    protected abstract EnterpriseContext create(Object instance)
-    throws Exception;
-    
-    // Private -------------------------------------------------------
-    
-    // Inner classes -------------------------------------------------
+   // Package protected ---------------------------------------------
+
+   // Protected -----------------------------------------------------
+   protected abstract EnterpriseContext create(Object instance)
+   throws Exception;
+
+   // Private -------------------------------------------------------
+
+   /**
+    * At undeployment we want to free completely the pool.
+    */
+   private void freeAll()
+   {
+      Iterator i = this.pool.iterator();
+      while (i.hasNext())
+      {
+         EnterpriseContext ec = (EnterpriseContext)i.next();
+         // Clear TX so that still TX entity pools get killed as well
+         ec.clear();
+         discard(ec);
+      }
+   }
+
+   // Inner classes -------------------------------------------------
 
 }
 

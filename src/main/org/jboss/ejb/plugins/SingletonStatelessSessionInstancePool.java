@@ -29,13 +29,18 @@ import org.jboss.management.j2ee.CountStatistic;
  *
  *  @see <related>
  *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- *  @version $Revision: 1.15 $
+ *  @version $Revision: 1.16 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010718 andreas schaefer:</b>
  * <ul>
  * <li>- Added Statistics Gathering
  * </ul>
+ *  <p><b>20011208 Vincent Harcq:</b>
+ *  <ul>
+ *  <li>- A TimedInstancePoolFeeder thread is started at first use of the pool
+ *       and will populate the pool with new instances at a regular period.
+ *  </ul>
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -166,6 +171,20 @@ public class SingletonStatelessSessionInstancePool
       this.notifyAll();
    }
 
+   /**
+    * Add a instance in the pool
+    */
+   public void add()
+      throws Exception
+   {
+      // Empty
+   }
+
+   public int getCurrentSize()
+   {
+      return 1;
+   }
+
    public Map retrieveStatistic()
    {
       Map lStatistics = new HashMap();
@@ -187,7 +206,7 @@ public class SingletonStatelessSessionInstancePool
     public void importXml(Element element) throws DeploymentException {
         isSynchronized = Boolean.valueOf(MetaData.getElementContent(MetaData.getUniqueChild(element, "Synchronized"))).booleanValue();
     }
-    
+
    // Package protected ---------------------------------------------
 
    // Protected -----------------------------------------------------

@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.28 2001/12/18 22:02:04 mnf999 Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.29 2001/12/23 19:50:47 vharcq Exp $ -->
 
 <jboss>
    <enforce-ejb-restrictions>false</enforce-ejb-restrictions>
@@ -50,10 +50,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>B</commit-option>
       </container-configuration>
 
@@ -92,10 +96,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>A</commit-option>
       </container-configuration>
 
@@ -136,10 +144,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>B</commit-option>
       </container-configuration>
 
@@ -178,10 +190,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>B</commit-option>
       </container-configuration>
 
@@ -220,10 +236,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>A</commit-option>
       </container-configuration>
 
@@ -251,10 +271,14 @@
 	    <RMIObjectPort>4444</RMIObjectPort>
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -281,10 +305,14 @@
 	    <RMIObjectPort>4444</RMIObjectPort>
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -311,10 +339,14 @@
 	    <RMIObjectPort>4444</RMIObjectPort>
 	    <Optimized>True</Optimized>
 	 </container-invoker-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -355,6 +387,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -395,6 +435,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -436,6 +484,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
       <container-configuration>
@@ -473,10 +529,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>A</commit-option>
       </container-configuration>
 
@@ -515,10 +575,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>B</commit-option>
       </container-configuration>
 
@@ -557,10 +621,14 @@
 	       <cache-load-factor>0.75</cache-load-factor>
 	    </cache-policy-conf>
 	 </container-cache-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
 	 <commit-option>A</commit-option>
       </container-configuration>
 
@@ -599,10 +667,14 @@
                 </DLQConfig>
             </MDBConfig>
 	 </container-invoker-conf>
-	 <container-pool-conf>
-	    <MaximumSize>100</MaximumSize>
-	    <MinimumSize>10</MinimumSize>
-	 </container-pool-conf>
+     <container-pool-conf>
+        <feeder-policy>org.jboss.ejb.plugins.TimedInstancePoolFeeder</feeder-policy>
+            <feeder-policy-conf>
+                <capacity>100</capacity>
+                <increment>10</increment>
+                <period>500</period>
+            </feeder-policy-conf>
+     </container-pool-conf>
       </container-configuration>
 
    </container-configurations>
