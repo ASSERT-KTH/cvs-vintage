@@ -63,7 +63,31 @@ import org.apache.commons.collections.SequencedHashMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.tigris.scarab.om.*;
+import org.apache.fulcrum.localization.Localization;
+import org.tigris.scarab.om.Activity;
+import org.tigris.scarab.om.ActivityManager;
+import org.tigris.scarab.om.ActivitySet;
+import org.tigris.scarab.om.ActivitySetManager;
+import org.tigris.scarab.om.ActivitySetType;
+import org.tigris.scarab.om.ActivitySetTypeManager;
+import org.tigris.scarab.om.ActivitySetTypePeer;
+import org.tigris.scarab.om.Attachment;
+import org.tigris.scarab.om.AttachmentManager;
+import org.tigris.scarab.om.AttachmentType;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.Depend;
+import org.tigris.scarab.om.DependManager;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssueManager;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.RModuleOptionManager;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.util.ScarabConstants;
 
 /**
@@ -92,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.47 2003/08/02 02:48:50 elicia Exp $
+ * @version $Id: ScarabIssues.java,v 1.48 2003/08/04 17:05:54 thierrylach Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
