@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.1 1999/10/09 00:20:38 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:20:38 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagBeginGenerator.java,v 1.2 1999/10/14 04:07:10 akv Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/14 04:07:10 $
  *
  * ====================================================================
  * 
@@ -210,7 +210,7 @@ public class TagBeginGenerator
 	writer.pushIndent();
 	
 	writer.println("out = pageContext.pushBody();");
-	writer.println(thVarName+".setBodyOut((BodyJspWriter) out);");
+	writer.println(thVarName+".setBodyOut((BodyContent) out);");
 	writer.println("do {");
 	writer.pushIndent();
         // Need to declare and update NESTED variables here
