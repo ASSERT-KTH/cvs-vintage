@@ -14,12 +14,12 @@
         <li><small>a set of permissions per role, per artifact type</small></li>
         </ul>
         
-        <p>Scarab uses the generic term "module" instead of the more
+        <p><small>Scarab uses the generic term "module" instead of the more
         common term, "project", in order to avoid defining the
         application as simply a "per project-issue management tool".
         Scarab can be configured to manage cross-project data such as
         milestones, technical requirements, marketing data, or human
-        resources information. </p>
+        resources information.</small></p>
         
         <p><small>If you are a registered user, but do not have access
         to any modules, contact the administrator.</small></p>
