@@ -45,7 +45,11 @@ $l10n.NoComments
    </div>
       #elseif ($canEditComments && !$comments.isEmpty())
          <div align="right"><small>
-         $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssue.UniqueId).setLabel("$l10n.EditComment").addPathInfo("edit_comments", true).addPathInfo("fullcomments", $fullComments)
+         #set ($editCommentsLink = $link.setPage("$template").addPathInfo("id", $currentIssue.UniqueId).addPathInfo("edit_comments", true).addPathInfo("fullcomments", $fullComments))
+         #foreach ($issueId in $data.Parameters.getStrings("issue_ids"))
+           #set ($editCommentsLink = $editCommentsLink.addPathInfo("issue_ids", $issueId))
+         #end
+         <p><a href="$editCommentsLink">$l10n.EditComment</a></p>
          </small></div>
   #end
 
