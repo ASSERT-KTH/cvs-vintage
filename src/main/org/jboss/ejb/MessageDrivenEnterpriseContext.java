@@ -11,17 +11,16 @@ import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
 import java.security.Principal;
+import java.security.Identity;
 
 import java.rmi.RemoteException;
+import java.util.Properties;
+import java.util.Date;
+import java.util.Collection;
+import java.io.Serializable;
 
-import javax.ejb.EJBContext;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBObject;
-import javax.ejb.MessageDrivenContext;
-import javax.ejb.MessageDrivenBean;
-import javax.ejb.SessionContext;
-import javax.ejb.EJBException;
+import javax.ejb.*;
+import javax.transaction.UserTransaction;
 
 import org.jboss.metadata.MetaData;
 import org.jboss.metadata.MessageDrivenMetaData;
@@ -29,7 +28,7 @@ import org.jboss.metadata.MessageDrivenMetaData;
 /**
  * Context for message driven beans.
  * 
- * @version <tt>$Revision: 1.21 $</tt>
+ * @version <tt>$Revision: 1.22 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -117,46 +116,45 @@ public class MessageDrivenEnterpriseContext
       extends EJBContextImpl
       implements MessageDrivenContext
    {
-      /**
-       * Not allowed for MDB.
-       *
-       * @throws IllegalStateException  Always
-       */
+
       public EJBHome getEJBHome()
       {
-         throw new IllegalStateException
-            ("MDB must not call getEJBHome (EJB 2.0 15.4.3)");
+         throw new IllegalStateException("getEJBHome should not be access from a message driven bean");
       }
 
-      /**
-       * Not allowed for MDB.
-       *
-       * @throws IllegalStateException  Always
-       */
       public EJBLocalHome getEJBLocalHome()
       {
-         throw new IllegalStateException
-            ("MDB must not call getEJBLocalHome (EJB 2.0 15.4.3)");
+         throw new IllegalStateException("getEJBHome should not be access from a message driven bean");
       }
 
-      /**
-       * Not allowed for MDB.
-       *
-       * @throws IllegalStateException  Always
-       */
+      public TimerService getTimerService() throws IllegalStateException
+      {
+         assertAllowedIn("getTimerService", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return new TimerServiceWrapper(this, super.getTimerService());
+      }
+
+      public Principal getCallerPrincipal()
+      {
+         assertAllowedIn("getCallerPrincipal", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
+         return super.getCallerPrincipal();
+      }
+
       public boolean isCallerInRole(String id)
       {
-         throw new IllegalStateException
-            ("MDB must not call isCallerInRole (EJB 2.0 15.4.3)");
+         throw new IllegalStateException("isCallerInRole should not be access from a message driven bean");
       }
 
-      /** Helper to check if the tx type is TX_REQUIRED. */
-      private boolean isTxRequired()
+      public UserTransaction getUserTransaction()
       {
-         MessageDrivenMetaData md = (MessageDrivenMetaData)con.getBeanMetaData();
-         return md.getMethodTransactionType() == MetaData.TX_REQUIRED;
+         if (isContainerManagedTx())
+            throw new IllegalStateException("getUserTransaction should not be access for container managed Tx");
+
+         assertAllowedIn("getUserTransaction", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
+         return super.getUserTransaction();
       }
-      
+
       /**
        * If transaction type is not Container or there is no transaction
        * then throw an exception.
@@ -166,10 +164,10 @@ public class MessageDrivenEnterpriseContext
        */
       public boolean getRollbackOnly()
       {
-         if (!isContainerManagedTx()) {
-            throw new IllegalStateException
-               ("Bean managed MDB are not allowed getRollbackOnly (EJB 2.0 - 15.4.3)");
-         }
+         if (isUserManagedTx())
+            throw new IllegalStateException("getRollbackOnly should not be access for user managed Tx");
+
+         assertAllowedIn("getRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
 
          //
          // jason: I think this is lame... but the spec says this is how it is.
@@ -194,10 +192,10 @@ public class MessageDrivenEnterpriseContext
        */
       public void setRollbackOnly()
       {
-         if (!isContainerManagedTx()) {
-            throw new IllegalStateException
-               ("Bean managed MDB are not allowed setRollbackOnly (EJB 2.0 - 15.4.3)");
-         }
+         if (isUserManagedTx())
+            throw new IllegalStateException("setRollbackOnly should not be access for user managed Tx");
+
+         assertAllowedIn("getRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
 
          if (!isTxRequired()) {
             throw new IllegalStateException
@@ -205,6 +203,64 @@ public class MessageDrivenEnterpriseContext
          }
 
          super.setRollbackOnly();
+      }
+
+      /** Helper to check if the tx type is TX_REQUIRED. */
+      private boolean isTxRequired()
+      {
+         MessageDrivenMetaData md = (MessageDrivenMetaData)con.getBeanMetaData();
+         return md.getMethodTransactionType() == MetaData.TX_REQUIRED;
+      }
+   }
+
+   /**
+    * Delegates to the underlying TimerService, after checking access
+    */
+   public class TimerServiceWrapper implements TimerService
+   {
+
+      private EnterpriseContext.EJBContextImpl context;
+      private TimerService timerService;
+
+      public TimerServiceWrapper(EnterpriseContext.EJBContextImpl ctx, TimerService timerService)
+      {
+         this.context = ctx;
+         this.timerService = timerService;
+      }
+
+      public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(duration, info);
+      }
+
+      public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialDuration, intervalDuration, info);
+      }
+
+      public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(expiration, info);
+      }
+
+      public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialExpiration, intervalDuration, info);
+      }
+
+      public Collection getTimers() throws IllegalStateException, EJBException
+      {
+         assertAllowedIn("getTimers");
+         return timerService.getTimers();
+      }
+
+      private void assertAllowedIn(String timerMethod)
+      {
+         context.assertAllowedIn(timerMethod, IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
       }
    }
 }

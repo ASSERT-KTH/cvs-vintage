@@ -9,15 +9,17 @@ package org.jboss.ejb;
 import org.jboss.ejb.plugins.lock.NonReentrantLock;
 
 import java.rmi.RemoteException;
+import java.security.Identity;
+import java.security.Principal;
+import java.util.Properties;
+import java.util.Date;
+import java.util.Collection;
+import java.io.Serializable;
 
-import javax.ejb.EJBContext;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
-import javax.ejb.EntityBean;
-import javax.ejb.EntityContext;
-import javax.ejb.TimerService;
+import javax.ejb.*;
+import javax.transaction.UserTransaction;
 
 
 /**
@@ -29,7 +31,7 @@ import javax.ejb.TimerService;
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard �berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.38 $
+ * @version $Revision: 1.39 $
  */
 public class EntityEnterpriseContext extends EnterpriseContext
 {
@@ -71,7 +73,15 @@ public class EntityEnterpriseContext extends EnterpriseContext
    {
       super(instance, con);
       ctx = new EntityContextImpl();
-      ((EntityBean)instance).setEntityContext(ctx);
+      try
+      {
+         pushInMethodFlag(IN_SET_ENTITY_CONTEXT);
+         ((EntityBean)instance).setEntityContext(ctx);
+      }
+      finally
+      {
+         popInMethodFlag();
+      }
    }
 	
    /**
@@ -187,8 +197,80 @@ public class EntityEnterpriseContext extends EnterpriseContext
       extends EJBContextImpl
       implements EntityContext
    {
+      public EJBHome getEJBHome()
+      {
+         assertAllowedIn("getEJBHome",
+                 IN_SET_ENTITY_CONTEXT | IN_UNSET_ENTITY_CONTEXT |
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         return super.getEJBHome();
+      }
+
+      public EJBLocalHome getEJBLocalHome()
+      {
+         assertAllowedIn("getEJBLocalHome",
+                 IN_SET_ENTITY_CONTEXT | IN_UNSET_ENTITY_CONTEXT |
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         return super.getEJBLocalHome();
+      }
+
+      public Principal getCallerPrincipal()
+      {
+         assertAllowedIn("getCallerPrincipal",
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         return super.getCallerPrincipal();
+      }
+
+      public boolean getRollbackOnly()
+      {
+         assertAllowedIn("getRollbackOnly",
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         return super.getRollbackOnly();
+      }
+
+      public void setRollbackOnly()
+      {
+         assertAllowedIn("setRollbackOnly",
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         super.setRollbackOnly();
+      }
+
+      public boolean isCallerInRole(String id)
+      {
+         assertAllowedIn("getCallerInRole",
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_FIND | IN_EJB_HOME |
+                 IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+         return super.isCallerInRole(id);
+      }
+
+      public UserTransaction getUserTransaction()
+      {
+         assertAllowedIn("getUserTransaction", NOT_ALLOWED);
+         return super.getUserTransaction();
+      }
+
       public EJBObject getEJBObject()
       {
+         assertAllowedIn("getEJBObject",
+                 IN_EJB_POST_CREATE | IN_EJB_REMOVE |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
          if(((EntityContainer)con).getRemoteClass() == null)
          {
             throw new IllegalStateException( "No remote interface defined." );
@@ -213,6 +295,11 @@ public class EntityEnterpriseContext extends EnterpriseContext
 		
       public EJBLocalObject getEJBLocalObject()
       {
+         assertAllowedIn("getEJBLocalObject",
+                 IN_EJB_POST_CREATE | IN_EJB_REMOVE |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
          if (con.getLocalHomeClass()==null)
             throw new IllegalStateException( "No local interface for bean." );
          
@@ -226,15 +313,73 @@ public class EntityEnterpriseContext extends EnterpriseContext
 		
       public Object getPrimaryKey()
       {
-         if (inMethodFlag == IN_EJB_CREATE)
-            throw new IllegalStateException("Cannot be invoked from ejbCreate");
-         
+         assertAllowedIn("getPrimaryKey",
+                 IN_EJB_POST_CREATE | IN_EJB_REMOVE |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
          return id;
       }
 
       public TimerService getTimerService() throws IllegalStateException
       {
-         return getContainer().getTimerService( id );
+         assertAllowedIn("getTimerService",
+                 IN_EJB_CREATE | IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_HOME |
+                 IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD |
+                 IN_EJB_TIMEOUT);
+
+         return new TimerServiceWrapper(this, getContainer().getTimerService(id));
+      }
+   }
+
+   /**
+    * Delegates to the underlying TimerService, after checking access
+    */
+   public class TimerServiceWrapper implements TimerService
+   {
+
+      private EnterpriseContext.EJBContextImpl context;
+      private TimerService timerService;
+
+      public TimerServiceWrapper(EnterpriseContext.EJBContextImpl ctx, TimerService timerService)
+      {
+         this.context = ctx;
+         this.timerService = timerService;
+      }
+
+      public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(duration, info);
+      }
+
+      public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialDuration, intervalDuration, info);
+      }
+
+      public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(expiration, info);
+      }
+
+      public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialExpiration, intervalDuration, info);
+      }
+
+      public Collection getTimers() throws IllegalStateException, EJBException
+      {
+         assertAllowedIn("getTimers");
+         return timerService.getTimers();
+      }
+
+      private void assertAllowedIn(String timerMethod)
+      {
+         context.assertAllowedIn(timerMethod, IN_EJB_POST_CREATE | IN_EJB_REMOVE | IN_EJB_LOAD | IN_EJB_STORE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
       }
    }
 }

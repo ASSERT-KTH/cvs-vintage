@@ -49,7 +49,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.104 $
+ * @version $Revision: 1.105 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -1058,13 +1058,18 @@ public class EntityContainer
          }
          else // Home method
          {
+            EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
             try
             {
-               return mi.performCall(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), m, mi.getArguments());
+               ctx.pushInMethodFlag(EnterpriseContext.IN_EJB_HOME);
+               return mi.performCall(ctx.getInstance(), m, mi.getArguments());
             }
             catch (Exception e)
             {
                rethrow(e);
+            }
+            finally{
+               ctx.popInMethodFlag();
             }
          }
 
@@ -1087,7 +1092,7 @@ public class EntityContainer
          // Select instance to invoke (container or bean)
          if (m.getDeclaringClass().equals(EntityContainer.class))
          {
-            // Invoke and handle exceptions
+            // Invoke container
             try
             {
                return mi.performCall(EntityContainer.this, m, new Object[]{ mi });
@@ -1099,10 +1104,20 @@ public class EntityContainer
          }
          else
          {
-            // Invoke and handle exceptions
+            // Invoke bean instance
             try
             {
-               return mi.performCall(((EnterpriseContext) mi.getEnterpriseContext()).getInstance(), m, mi.getArguments());
+               EnterpriseContext ctx = (EnterpriseContext) mi.getEnterpriseContext();
+               Object instance = ctx.getInstance();
+               try
+               {
+                  ctx.pushInMethodFlag(EnterpriseContext.IN_BUSINESS_METHOD);
+                  return mi.performCall(instance, m, mi.getArguments());
+               }
+               finally
+               {
+                  ctx.popInMethodFlag();
+               }
             }
             catch (Exception e)
             {

@@ -15,19 +15,15 @@ import org.jboss.security.RealmMapping;
 import org.jboss.security.SimplePrincipal;
 import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
 
-import javax.ejb.EJBContext;
-import javax.ejb.EJBException;
-import javax.ejb.EJBHome;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.TimerService;
+import javax.ejb.*;
+import javax.ejb.Timer;
 import javax.transaction.*;
 import java.rmi.RemoteException;
 import java.security.Identity;
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 import java.lang.reflect.Proxy;
+import java.io.Serializable;
 
 /**
  * The EnterpriseContext is used to associate EJB instances with
@@ -43,7 +39,7 @@ import java.lang.reflect.Proxy;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -54,22 +50,51 @@ public abstract class EnterpriseContext
 {
    // Constants -----------------------------------------------------
 
-   /** These constants are used to validate method access */
-   public static final Integer IN_EJB_ACTIVATE = new Integer(100);
-   public static final Integer IN_EJB_PASSIVATE = new Integer(101);
-   public static final Integer IN_EJB_REMOVE = new Integer(102);
-   public static final Integer IN_EJB_CREATE = new Integer(103);
-   public static final Integer IN_EJB_POST_CREATE = new Integer(104);
-   public static final Integer IN_EJB_HOME = new Integer(105);
-   public static final Integer IN_EJB_TIMEOUT = new Integer(106);
+   /** These constants are used to validate method access,
+    *  make sure they are OR-able */
+   public static final int NOT_ALLOWED = 0;
+   public static final int IN_INTERCEPTOR_METHOD = 1;
+   public static final int IN_EJB_ACTIVATE = 2;
+   public static final int IN_EJB_PASSIVATE = 4;
+   public static final int IN_EJB_REMOVE = 8;
+   public static final int IN_EJB_CREATE = 16;
+   public static final int IN_EJB_POST_CREATE = 32;
+   public static final int IN_EJB_FIND = 64;
+   public static final int IN_EJB_HOME = 128;
+   public static final int IN_EJB_TIMEOUT = 256;
+   public static final int IN_EJB_LOAD = 512;
+   public static final int IN_EJB_STORE = 1024;
+   public static final int IN_SET_ENTITY_CONTEXT = 2048;
+   public static final int IN_UNSET_ENTITY_CONTEXT = 4096;
+   public static final int IN_SET_SESSION_CONTEXT = 8192;
+   public static final int IN_SET_MESSAGE_DRIVEN_CONTEXT = 16384;
+   public static final int IN_AFTER_BEGIN = 32768;
+   public static final int IN_BEFORE_COMPLETION = 65536;
+   public static final int IN_AFTER_COMPLETION = 131072;
+   public static final int IN_BUSINESS_METHOD = 262144;
 
-   public static final Integer IN_EJB_LOAD = new Integer(200);
-   public static final Integer IN_EJB_STORE = new Integer(201);
-   public static final Integer IN_SET_ENTITY_CONTEXT = new Integer(202);
-   public static final Integer IN_UNSET_ENTITY_CONTEXT = new Integer(203);
-
-   public static final Integer IN_SET_SESSION_CONTEXT = new Integer(300);
-   public static final Integer IN_SET_MESSAGE_DRIVEN_CONTEXT = new Integer(400);
+   private static HashMap methodMap = new LinkedHashMap();
+   static {
+      methodMap.put(new Integer(IN_INTERCEPTOR_METHOD), "IN_INTERCEPTOR_METHOD");
+      methodMap.put(new Integer(IN_EJB_ACTIVATE), "IN_EJB_ACTIVATE");
+      methodMap.put(new Integer(IN_EJB_PASSIVATE), "IN_EJB_PASSIVATE");
+      methodMap.put(new Integer(IN_EJB_REMOVE), "IN_EJB_REMOVE");
+      methodMap.put(new Integer(IN_EJB_CREATE), "IN_EJB_CREATE");
+      methodMap.put(new Integer(IN_EJB_POST_CREATE), "IN_EJB_POST_CREATE");
+      methodMap.put(new Integer(IN_EJB_FIND), "IN_EJB_FIND");
+      methodMap.put(new Integer(IN_EJB_HOME), "IN_EJB_HOME");
+      methodMap.put(new Integer(IN_EJB_TIMEOUT), "IN_EJB_TIMEOUT");
+      methodMap.put(new Integer(IN_EJB_LOAD), "IN_EJB_LOAD");
+      methodMap.put(new Integer(IN_EJB_STORE), "IN_EJB_STORE");
+      methodMap.put(new Integer(IN_SET_ENTITY_CONTEXT), "IN_SET_ENTITY_CONTEXT");
+      methodMap.put(new Integer(IN_UNSET_ENTITY_CONTEXT), "IN_UNSET_ENTITY_CONTEXT");
+      methodMap.put(new Integer(IN_SET_SESSION_CONTEXT), "IN_SET_SESSION_CONTEXT");
+      methodMap.put(new Integer(IN_SET_MESSAGE_DRIVEN_CONTEXT), "IN_SET_MESSAGE_DRIVEN_CONTEXT");
+      methodMap.put(new Integer(IN_AFTER_BEGIN), "IN_AFTER_BEGIN");
+      methodMap.put(new Integer(IN_BEFORE_COMPLETION), "IN_BEFORE_COMPLETION");
+      methodMap.put(new Integer(IN_AFTER_COMPLETION), "IN_AFTER_COMPLETION");
+      methodMap.put(new Integer(IN_BUSINESS_METHOD), "IN_BUSINESS_METHOD");
+   }
 
    // Attributes ----------------------------------------------------
 
@@ -105,6 +130,13 @@ public abstract class EnterpriseContext
 	
    /** The instance is used in a transaction, synchronized methods on the tx */
    Object txLock = new Object();
+
+   /**
+    * Holds one of the IN_METHOD constants, to indicate that we are in an ejb method
+    * According to the EJB2.1 spec not all context methods can be accessed at all times
+    * For example ctx.getPrimaryKey() should throw an IllegalStateException when called from within ejbCreate()
+    */
+   private Stack inMethodStack = new Stack();
 
    // Static --------------------------------------------------------
    //Registration for CachedConnectionManager so our UserTx can notify
@@ -218,6 +250,24 @@ public abstract class EnterpriseContext
       this.beanPrincipal = null;
       this.synch = null;
       this.transaction = null;
+      this.inMethodStack.clear();
+   }
+
+   /**
+    * Set when the instance enters an ejb method, reset on exit
+    * @param inMethodFlag one of the IN_METHOD contants or null
+    */
+   public void pushInMethodFlag(int inMethodFlag)
+   {
+      this.inMethodStack.push(new Integer(inMethodFlag));
+   }
+
+   /**
+    * Reset when the instance exits an ejb method
+    */
+   public void popInMethodFlag()
+   {
+      this.inMethodStack.pop();
    }
 
    // Package protected ---------------------------------------------
@@ -229,8 +279,13 @@ public abstract class EnterpriseContext
       BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
       return md.isContainerManagedTx();
    }
-      
-   
+
+   protected boolean isUserManagedTx()
+   {
+      BeanMetaData md = (BeanMetaData)con.getBeanMetaData();
+      return md.isContainerManagedTx() == false;
+   }
+
    // Private -------------------------------------------------------
 
    // Inner classes -------------------------------------------------
@@ -245,19 +300,47 @@ public abstract class EnterpriseContext
       private UserTransactionImpl userTransaction = null;
 
       /**
-       * Holds one of the IN_METHOD constants, to indicate that we are in an ejb method
-       * According to the EJB2.1 spec not all context methods can be accessed at all times
-       * For example ctx.getPrimaryKey() should throw an IllegalStateException when called from within ejbCreate()
+       * Throw an IllegalStateException if the current inMethodFlag
+       * does not match the given flags
        */
-      protected Integer inMethodFlag;
+      protected void assertAllowedIn(String ctxMethod, int flags) {
 
-      /**
-       * Set when the instance enters an ejb method, reset on exit
-       * @param inMethodFlag one of the IN_METHOD contants or null
-       */
-      void setInMethodFlag(Integer inMethodFlag)
+         // Strict validation, the caller MUST set the in method flag
+         if (inMethodStack.empty())
+         {
+            throw new IllegalStateException("Cannot obtain inMethodFlag for: " + ctxMethod);
+         }
+
+         // The container should push a method flag into the context just before
+         // a call to the instance method
+         if (inMethodStack.empty() == false)
+         {
+            // Check if the given ctxMethod can be called from the ejb instance
+            // this relies on the inMethodFlag being pushed prior to the call to the ejb method
+            Integer inMethodFlag = ((Integer) inMethodStack.peek());
+            if ((inMethodFlag.intValue() & flags) == 0  && inMethodFlag.intValue() != IN_INTERCEPTOR_METHOD)
+            {
+               String message = ctxMethod + " should not be access from this bean method: " + methodMap.get(inMethodFlag);
+               IllegalStateException ex = new IllegalStateException(message);
+               log.error(message + ", allowed is " + getAllowedMethodList(flags), ex);
+               throw ex;
+            }
+         }
+      }
+
+      /** Get a list of strings corresponding to the given method flags */
+      private List getAllowedMethodList(int flags)
       {
-         this.inMethodFlag = inMethodFlag;
+         ArrayList allowed = new ArrayList();
+         Iterator it = methodMap.entrySet().iterator();
+         while (it.hasNext())
+         {
+            Map.Entry entry = (Map.Entry) it.next();
+            Integer flag = (Integer) entry.getKey();
+            if ((flag.intValue() & flags) > 0)
+               allowed.add(entry.getValue());
+         }
+         return allowed;
       }
 
       /**
@@ -272,11 +355,13 @@ public abstract class EnterpriseContext
       {
          return getContainer().getTimerService( null );
       }
+
       /** Get the Principal for the current caller. This method
           cannot return null according to the ejb-spec.
       */
       public Principal getCallerPrincipal() 
       { 
+
          if( beanPrincipal == null )
          {
             RealmMapping rm = con.getRealmMapping();           
@@ -305,20 +390,20 @@ public abstract class EnterpriseContext
       }
       
       public EJBHome getEJBHome()
-      { 
+      {
          if (con instanceof EntityContainer)
          {
             if (((EntityContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome)((EntityContainer)con).getProxyFactory().getEJBHome(); 
-         } 
+            return (EJBHome)((EntityContainer)con).getProxyFactory().getEJBHome();
+         }
          else if (con instanceof StatelessSessionContainer)
          {
             if (((StatelessSessionContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
-            return (EJBHome) ((StatelessSessionContainer)con).getProxyFactory().getEJBHome(); 
-         } 
-         else if (con instanceof StatefulSessionContainer) 
+            return (EJBHome) ((StatelessSessionContainer)con).getProxyFactory().getEJBHome();
+         }
+         else if (con instanceof StatefulSessionContainer)
          {
             if (((StatefulSessionContainer)con).getProxyFactory()==null)
                throw new IllegalStateException( "No remote home defined." );
@@ -330,20 +415,20 @@ public abstract class EnterpriseContext
       }
 
       public EJBLocalHome getEJBLocalHome()
-      { 
+      {
          if (con instanceof EntityContainer)
          {
             if (((EntityContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );
-            return ((EntityContainer)con).getLocalProxyFactory().getEJBLocalHome(); 
-         } 
+            return ((EntityContainer)con).getLocalProxyFactory().getEJBLocalHome();
+         }
          else if (con instanceof StatelessSessionContainer)
          {
             if (((StatelessSessionContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );
-            return ((StatelessSessionContainer)con).getLocalProxyFactory().getEJBLocalHome(); 
-         } 
-         else if (con instanceof StatefulSessionContainer) 
+            return ((StatelessSessionContainer)con).getLocalProxyFactory().getEJBLocalHome();
+         }
+         else if (con instanceof StatefulSessionContainer)
          {
             if (((StatefulSessionContainer)con).getLocalHomeClass()==null)
                throw new IllegalStateException( "No local home defined." );

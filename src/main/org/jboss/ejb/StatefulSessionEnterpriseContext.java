@@ -12,13 +12,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.rmi.RemoteException;
+import java.security.Principal;
 
-import javax.ejb.EJBContext;
 import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import javax.ejb.*;
+import javax.transaction.UserTransaction;
 
 
 /**
@@ -26,7 +24,7 @@ import javax.ejb.SessionContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -48,7 +46,15 @@ public class StatefulSessionEnterpriseContext
    {
       super(instance, con);
       ctx = new StatefulSessionContextImpl();
-      ((SessionBean)instance).setSessionContext(ctx);
+      try
+      {
+         pushInMethodFlag(IN_SET_SESSION_CONTEXT);
+         ((SessionBean)instance).setSessionContext(ctx);
+      }
+      finally
+      {
+         popInMethodFlag();
+      }
    }
 
    // Public --------------------------------------------------------
@@ -125,8 +131,54 @@ public class StatefulSessionEnterpriseContext
       extends EJBContextImpl
       implements SessionContext
    {
+
+      public EJBHome getEJBHome()
+      {
+         assertAllowedIn("getEJBHome",
+                 IN_SET_SESSION_CONTEXT |
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
+         return super.getEJBHome();
+      }
+
+      public EJBLocalHome getEJBLocalHome()
+      {
+         assertAllowedIn("getEJBLocalHome",
+                 IN_SET_SESSION_CONTEXT |
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
+         return super.getEJBLocalHome();
+      }
+
+      /** Get the Principal for the current caller. This method
+       cannot return null according to the ejb-spec.
+       */
+      public Principal getCallerPrincipal()
+      {
+         assertAllowedIn("getCallerPrincipal",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
+         return super.getCallerPrincipal();
+      }
+
+      public boolean isCallerInRole(String id)
+      {
+         assertAllowedIn("isCallerInRole",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
+         return super.isCallerInRole(id);
+      }
+
       public EJBObject getEJBObject()
       {
+         assertAllowedIn("getEJBObject",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
          if (((StatefulSessionContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
 
@@ -139,6 +191,10 @@ public class StatefulSessionEnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
+         assertAllowedIn("getEJBLocalObject",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD |
+                 IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
          if (con.getLocalHomeClass()==null)
             throw new IllegalStateException( "No local interface for bean." );
          if (ejbLocalObject == null)
@@ -146,6 +202,35 @@ public class StatefulSessionEnterpriseContext
             ejbLocalObject = ((StatefulSessionContainer)con).getLocalProxyFactory().getStatefulSessionEJBLocalObject(id);
          }
          return ejbLocalObject;
+      }
+
+      public boolean getRollbackOnly()
+      {
+         assertAllowedIn("getRollbackOnly",
+                 IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION | IN_AFTER_COMPLETION);
+
+         return super.getRollbackOnly();
+      }
+
+      public void setRollbackOnly()
+      {
+         assertAllowedIn("setRollbackOnly",
+                 IN_BUSINESS_METHOD | IN_AFTER_BEGIN | IN_BEFORE_COMPLETION);
+
+         super.setRollbackOnly();
+      }
+
+      public UserTransaction getUserTransaction()
+      {
+         assertAllowedIn("getUserTransaction",
+                 IN_EJB_CREATE | IN_EJB_REMOVE | IN_EJB_ACTIVATE | IN_EJB_PASSIVATE | IN_BUSINESS_METHOD);
+
+         return super.getUserTransaction();
+      }
+
+      public TimerService getTimerService() throws IllegalStateException
+      {
+         throw new IllegalStateException("getTimerService should not be access from a stateful session bean");
       }
 
       public Object getPrimaryKey()

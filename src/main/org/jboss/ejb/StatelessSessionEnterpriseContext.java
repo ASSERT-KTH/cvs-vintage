@@ -9,19 +9,21 @@ package org.jboss.ejb;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
-import javax.ejb.EJBContext;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.EJBObject;
-import javax.ejb.SessionContext;
-import javax.ejb.SessionBean;
-import javax.ejb.EJBException;
+import java.security.Principal;
+import java.security.Identity;
+import java.util.Properties;
+import java.util.Date;
+import java.util.Collection;
+import java.io.Serializable;
+import javax.ejb.*;
+import javax.transaction.UserTransaction;
 
 /**
  * The enterprise context for stateless session beans.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -43,11 +45,20 @@ public class StatelessSessionEnterpriseContext
    {
       super(instance, con);
       ctx = new SessionContextImpl();
-      
-      ((SessionBean)instance).setSessionContext(ctx);
-      
+
       try
       {
+         pushInMethodFlag(IN_SET_SESSION_CONTEXT);
+         ((SessionBean)instance).setSessionContext(ctx);
+      }
+      finally
+      {
+         popInMethodFlag();
+      }
+
+      try
+      {
+         pushInMethodFlag(IN_EJB_CREATE);
          Method ejbCreate = instance.getClass().getMethod("ejbCreate", new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
       } catch (InvocationTargetException e) 
@@ -61,6 +72,10 @@ public class StatelessSessionEnterpriseContext
             throw (Exception)ex;
          else
             throw (Error)ex;
+      }
+      finally
+      {
+         popInMethodFlag();
       }
    }
    
@@ -110,8 +125,26 @@ public class StatelessSessionEnterpriseContext
       extends EJBContextImpl
       implements SessionContext
    {
+      public EJBHome getEJBHome()
+      {
+         assertAllowedIn("getEJBHome",
+                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
+         return super.getEJBHome();
+      }
+
+      public EJBLocalHome getEJBLocalHome()
+      {
+         assertAllowedIn("getEJBLocalHome",
+                 IN_SET_SESSION_CONTEXT | IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
+         return super.getEJBLocalHome();
+      }
+
       public EJBObject getEJBObject()
       {
+         assertAllowedIn("getEJBObject", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
          if (((StatelessSessionContainer)con).getProxyFactory()==null)
             throw new IllegalStateException( "No remote interface defined." );
          
@@ -125,12 +158,101 @@ public class StatelessSessionEnterpriseContext
 
       public EJBLocalObject getEJBLocalObject()
       {
+         assertAllowedIn("getEJBLocalObject", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+
          if (con.getLocalHomeClass()==null)
             throw new IllegalStateException( "No local interface for bean." );
          if (ejbLocalObject == null) {
             ejbLocalObject = ((StatelessSessionContainer)con).getLocalProxyFactory().getStatelessSessionEJBLocalObject(); 
          }
          return ejbLocalObject;
+      }
+
+      public TimerService getTimerService() throws IllegalStateException
+      {
+         assertAllowedIn("getTimerService", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return new TimerServiceWrapper(this, super.getTimerService());
+      }
+
+      public Principal getCallerPrincipal()
+      {
+         assertAllowedIn("getCallerPrincipal", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return super.getCallerPrincipal();
+      }
+
+      public boolean getRollbackOnly()
+      {
+         assertAllowedIn("getRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return super.getRollbackOnly();
+      }
+
+      public void setRollbackOnly()
+      {
+         assertAllowedIn("setRollbackOnly", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         super.setRollbackOnly();
+      }
+
+      public boolean isCallerInRole(String id)
+      {
+         assertAllowedIn("isCallerInRole", IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return super.isCallerInRole(id);
+      }
+
+      public UserTransaction getUserTransaction()
+      {
+         assertAllowedIn("getUserTransaction", IN_EJB_CREATE | IN_EJB_REMOVE | IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
+         return super.getUserTransaction();
+      }
+   }
+
+   /**
+    * Delegates to the underlying TimerService, after checking access
+    */
+   public class TimerServiceWrapper implements TimerService
+   {
+
+      private EnterpriseContext.EJBContextImpl context;
+      private TimerService timerService;
+
+      public TimerServiceWrapper(EnterpriseContext.EJBContextImpl ctx, TimerService timerService)
+      {
+         this.context = ctx;
+         this.timerService = timerService;
+      }
+
+      public Timer createTimer(long duration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(duration, info);
+      }
+
+      public Timer createTimer(long initialDuration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialDuration, intervalDuration, info);
+      }
+
+      public Timer createTimer(Date expiration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(expiration, info);
+      }
+
+      public Timer createTimer(Date initialExpiration, long intervalDuration, Serializable info) throws IllegalArgumentException, IllegalStateException, EJBException
+      {
+         assertAllowedIn("createTimer");
+         return timerService.createTimer(initialExpiration, intervalDuration, info);
+      }
+
+      public Collection getTimers() throws IllegalStateException, EJBException
+      {
+         assertAllowedIn("getTimers");
+         return timerService.getTimers();
+      }
+
+      private void assertAllowedIn(String timerMethod)
+      {
+         context.assertAllowedIn(timerMethod, IN_BUSINESS_METHOD | IN_EJB_TIMEOUT);
       }
    }
 }
