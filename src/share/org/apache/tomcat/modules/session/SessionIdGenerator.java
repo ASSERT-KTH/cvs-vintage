@@ -153,10 +153,16 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 
     //--------------------  Tomcat context events --------------------
 
+    private Object accessControlContext=null;
 
     /** Init session management stuff for this context. 
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	try {
+	    accessControlContext=jdk11Compat.getAccessControlContext();
+	} catch(Exception ex) {
+	    ex.printStackTrace();// shouldn't happen
+	}
     }
     
 
@@ -178,7 +184,7 @@ public final class SessionIdGenerator  extends BaseInterceptor {
 	// We're in a sandbox...
 	PriviledgedIdGenerator di = new PriviledgedIdGenerator(this, jsIdent);
 	try {
-	    newId= (String)jdk11Compat.doPrivileged(di, jdk11Compat.getAccessControlContext());
+	    newId= (String)jdk11Compat.doPrivileged(di, accessControlContext);
 	} catch( Exception ex ) {
 	    newId=null;
 	}
