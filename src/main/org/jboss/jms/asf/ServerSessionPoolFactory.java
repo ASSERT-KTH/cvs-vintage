@@ -11,6 +11,8 @@ import javax.jms.JMSException;
 import javax.jms.MessageListener;
 import javax.jms.ServerSessionPool;
 
+
+import org.jboss.tm.XidFactoryMBean;
 /**
  * Defines the model for creating <tt>ServerSessionPoolFactory</tt> objects. <p>
  *
@@ -18,7 +20,7 @@ import javax.jms.ServerSessionPool;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.4 $
+ * @version   $Revision: 1.5 $
  */
 public interface ServerSessionPoolFactory
 {
@@ -35,6 +37,22 @@ public interface ServerSessionPoolFactory
     * @return   The name of the factory.
     */
    String getName();
+
+   /**
+    * The <code>setXidFactory</code> method supplies the XidFactory that 
+    * server sessions will use to get Xids to control local transactions.
+    *
+    * @param xidFactory a <code>XidFactoryMBean</code> value
+    */
+   void setXidFactory(XidFactoryMBean xidFactory);
+
+   /**
+    * The <code>getXidFactory</code> method returns the XidFactory that 
+    * server sessions will use to get xids..
+    *
+    * @return a <code>XidFactoryMBean</code> value
+    */
+   XidFactoryMBean getXidFactory();
 
    /**
     * Create a new <tt>ServerSessionPool</tt> .

@@ -12,6 +12,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageListener;
 
 import javax.jms.ServerSessionPool;
+import org.jboss.tm.XidFactoryMBean;
 
 /**
  * An implementation of ServerSessionPoolFactory. <p>
@@ -20,7 +21,7 @@ import javax.jms.ServerSessionPool;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.7 $
+ * @version   $Revision: 1.8 $
  */
 public class StdServerSessionPoolFactory
        implements ServerSessionPoolFactory, Serializable
@@ -29,6 +30,8 @@ public class StdServerSessionPoolFactory
     * The name of this factory.
     */
    private String name;
+
+   private XidFactoryMBean xidFactory;
 
    /**
     * Construct a <tt>StdServerSessionPoolFactory</tt> .
@@ -59,6 +62,28 @@ public class StdServerSessionPoolFactory
    }
 
    /**
+    * The <code>setXidFactory</code> method supplies the XidFactory that 
+    * server sessions will use to get Xids to control local transactions.
+    *
+    * @param xidFactory a <code>XidFactoryMBean</code> value
+    */
+   public void setXidFactory(final XidFactoryMBean xidFactory)
+   {
+      this.xidFactory = xidFactory;
+   }
+
+   /**
+    * The <code>getXidFactory</code> method returns the XidFactory that 
+    * server sessions will use to get xids..
+    *
+    * @return a <code>XidFactoryMBean</code> value
+    */
+   public XidFactoryMBean getXidFactory()
+   {
+      return xidFactory;
+   }
+
+   /**
     * Create a new <tt>ServerSessionPool</tt> .
     *
     * @param con
@@ -73,7 +98,7 @@ public class StdServerSessionPoolFactory
     */
    public javax.jms.ServerSessionPool getServerSessionPool(javax.jms.Connection con, int maxSession, boolean isTransacted, int ack, boolean useLocalTX, javax.jms.MessageListener listener) throws javax.jms.JMSException
    {
-      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(con, isTransacted, ack, useLocalTX, listener, maxSession);
+      ServerSessionPool pool = (ServerSessionPool)new StdServerSessionPool(con, isTransacted, ack, useLocalTX, listener, maxSession, xidFactory);
       return pool;
    }
 }

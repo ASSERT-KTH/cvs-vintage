@@ -21,7 +21,7 @@ import javax.transaction.xa.Xid;
 
 import org.jboss.logging.Logger;
 import org.jboss.tm.TransactionManagerService;
-import org.jboss.tm.XidImpl;
+import org.jboss.tm.XidFactoryMBean;
 
 /**
  * An implementation of ServerSession. <p>
@@ -31,7 +31,7 @@ import org.jboss.tm.XidImpl;
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.12 $
+ * @version   $Revision: 1.13 $
  */
 public class StdServerSession
    implements Runnable, ServerSession, MessageListener
@@ -72,6 +72,8 @@ public class StdServerSession
     * The listener to delegate calls, to. In our case the container invoker.
     */
    private MessageListener delegateListener;
+
+   private XidFactoryMBean xidFactory;
    
    /**
     * Create a <tt>StdServerSession</tt> .
@@ -85,10 +87,11 @@ public class StdServerSession
     * @exception JMSException  Description of Exception
     */
    StdServerSession(final StdServerSessionPool pool,
-      final Session session,
-      final XASession xaSession,
-      final MessageListener delegateListener,
-      boolean useLocalTX)
+                    final Session session,
+                    final XASession xaSession,
+                    final MessageListener delegateListener,
+                    boolean useLocalTX,
+                    final XidFactoryMBean xidFactory)
       throws JMSException
    {
       // assert pool != null
@@ -101,6 +104,7 @@ public class StdServerSession
       if( xaSession == null )
          useLocalTX = false;
       this.useLocalTX = useLocalTX;
+      this.xidFactory = xidFactory;
 
       if (log.isDebugEnabled())
          log.debug("initializing (pool, session, xaSession, useLocalTX): " +
@@ -204,7 +208,7 @@ public class StdServerSession
          if (useLocalTX)
          {
             // Use JBossMQ One Phase Commit to commit the TX
-            localXid = new XidImpl();
+            localXid = xidFactory.newXid();//new XidImpl();
             XAResource res = xaSession.getXAResource();
             res.start(localXid, XAResource.TMNOFLAGS);
             

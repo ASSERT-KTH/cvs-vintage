@@ -17,17 +17,20 @@
  */
 package org.jboss.jms.asf;
 
-import javax.management.ObjectName;
+
+
+
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
-
+import javax.management.ObjectName;
 import javax.naming.Context;
-import javax.naming.Name;
 import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.naming.Name;
 import javax.naming.NameNotFoundException;
-
+import javax.naming.NamingException;
+import org.jboss.naming.NonSerializableFactory;
 import org.jboss.system.ServiceMBeanSupport;
+import org.jboss.tm.XidFactoryMBean;
 
 /**
  * A loader for <tt>ServerSessionPools</tt>.
@@ -36,7 +39,9 @@ import org.jboss.system.ServiceMBeanSupport;
  *
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
+ *
+ * @jmx.mbean extends="org.jboss.system.ServiceMBean"
  */
 public class ServerSessionPoolLoader
    extends ServiceMBeanSupport
@@ -51,10 +56,14 @@ public class ServerSessionPoolLoader
    /** The type of pool factory to use. */
    private String poolFactoryClass;
 
+   private ObjectName xidFactory;
+
    /**
     * Set the pool name.
     *
     * @param name    The pool name.
+    *
+    * @jmx:managed-attribute
     */
    public void setPoolName(final String name)
    {
@@ -65,6 +74,8 @@ public class ServerSessionPoolLoader
     * Get the pool name.
     *
     * @return    The pool name.
+    *
+    * @jmx:managed-attribute
     */
    public String getPoolName()
    {
@@ -75,6 +86,8 @@ public class ServerSessionPoolLoader
     * Set the classname of pool factory to use.
     *
     * @param classname    The name of the pool factory class.
+    *
+    * @jmx:managed-attribute
     */
    public void setPoolFactoryClass(final String classname)
    {
@@ -85,36 +98,41 @@ public class ServerSessionPoolLoader
     * Get the classname of pool factory to use.
     *
     * @return    The name of the pool factory class.
+    *
+    * @jmx:managed-attribute
     */
    public String getPoolFactoryClass()
    {
       return poolFactoryClass;
    }
 
+   
+   
    /**
-    * Get the JMX object name for this MBean.
+    * mbean get-set pair for field xidFactory
+    * Get the value of xidFactory
+    * @return value of xidFactory
     *
-    * @param server    The server which this bean is loaded.
-    * @param name      The user specified name.
-    *
-    * @throws MalformedObjectNameException
+    * @jmx:managed-attribute
     */
-   public ObjectName getObjectName(final MBeanServer server,
-                                   final ObjectName name)
-      throws MalformedObjectNameException
+   public ObjectName getXidFactory()
    {
-      return (name == null) ? OBJECT_NAME : name;
+      return xidFactory;
    }
-
+   
+   
    /**
-    * Get the name of this service.
+    * Set the value of xidFactory
+    * @param xidFactory  Value to assign to xidFactory
     *
-    * @return   The pool name.
+    * @jmx:managed-attribute
     */
-   public String getName()
+   public void setXidFactory(final ObjectName xidFactory)
    {
-      return name;
+      this.xidFactory = xidFactory;
    }
+   
+   
 
 
    /**
@@ -126,9 +144,12 @@ public class ServerSessionPoolLoader
     */
    protected void startService() throws Exception
    {
+      XidFactoryMBean xidFactoryObj = (XidFactoryMBean)getServer().getAttribute(xidFactory, "Instance");
+
       Class cls = Class.forName(poolFactoryClass);
       poolFactory = (ServerSessionPoolFactory)cls.newInstance();
       poolFactory.setName(name);
+      poolFactory.setXidFactory(xidFactoryObj);
 
       if (log.isDebugEnabled())
          log.debug("initialized with pool factory: " + poolFactory);
@@ -136,7 +157,7 @@ public class ServerSessionPoolLoader
       String name = poolFactory.getName();
       String jndiname = "java:/" + name;
       try {
-         org.jboss.naming.Util.bind(ctx, jndiname, poolFactory);
+         NonSerializableFactory.rebind(ctx, jndiname, poolFactory);
          if (log.isInfoEnabled())
             log.info("pool factory " + name + " bound to "  + jndiname);
       }
@@ -160,6 +181,7 @@ public class ServerSessionPoolLoader
          String jndiname = "java:/" + name;
          
          ctx.unbind(jndiname);
+         NonSerializableFactory.unbind(jndiname);
          if (log.isInfoEnabled())
             log.info("pool factory " + name + " unbound from " + jndiname);
       }

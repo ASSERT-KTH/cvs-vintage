@@ -20,6 +20,7 @@
   <!-- The server session pool for Message Driven Beans -->
   <mbean code="org.jboss.jms.asf.ServerSessionPoolLoader"
 	 name="jboss.mq:service=ServerSessionPoolMBean,name=StdJMSPool">
+    <depends optional-attribute-name="XidFactory">jboss:service=XidFactory</depends>
     <attribute name="PoolName">StdJMSPool</attribute>
     <attribute name="PoolFactoryClass">
       org.jboss.jms.asf.StdServerSessionPoolFactory

@@ -29,6 +29,7 @@ import javax.jms.XATopicConnection;
 import javax.jms.XATopicSession;
 
 import org.jboss.logging.Logger;
+import org.jboss.tm.XidFactoryMBean;
 
 /**
  * Implementation of ServerSessionPool. <p>
@@ -37,7 +38,7 @@ import org.jboss.logging.Logger;
  *
  * @author    <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author    <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a> .
- * @version   $Revision: 1.18 $
+ * @version   $Revision: 1.19 $
  */
 public class StdServerSessionPool
        implements ServerSessionPool
@@ -109,6 +110,8 @@ public class StdServerSessionPool
     */
    private int numServerSessions = 0;
 
+   private XidFactoryMBean xidFactory;
+
    /**
     * Construct a <tt>StdServerSessionPool</tt> using the default pool size.
     *
@@ -121,12 +124,13 @@ public class StdServerSessionPool
     * @exception JMSException    Description of Exception
     */
    public StdServerSessionPool(final Connection con,
-         final boolean transacted,
-         final int ack,
-         final boolean useLocalTX,
-         final MessageListener listener,
-         final int maxSession)
-         throws JMSException
+                               final boolean transacted,
+                               final int ack,
+                               final boolean useLocalTX,
+                               final MessageListener listener,
+                               final int maxSession,
+                               final XidFactoryMBean xidFactory)
+      throws JMSException
    {
       this.con = con;
       this.ack = ack;
@@ -135,7 +139,7 @@ public class StdServerSessionPool
       this.poolSize = maxSession;
       this.sessionPool = new ArrayList(maxSession);
       this.useLocalTX = useLocalTX;
-
+      this.xidFactory = xidFactory;
       // setup the worker pool
       executor = new PooledExecutor(poolSize);
       executor.setMinimumPoolSize(0);
@@ -367,7 +371,7 @@ public class StdServerSessionPool
 
          // create the server session and add it to the pool - it is up to the
          // server session to set the listener
-         StdServerSession serverSession = new StdServerSession(this, ses, xaSes, listener, useLocalTX);
+         StdServerSession serverSession = new StdServerSession(this, ses, xaSes, listener, useLocalTX, xidFactory);
 
          sessionPool.add(serverSession);
          numServerSessions++;
