@@ -78,16 +78,16 @@ import org.tigris.scarab.om.IssueTypePeer;
 import org.tigris.scarab.services.module.ModuleEntity;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.12 2002/02/21 01:06:07 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.13 2002/02/21 02:28:15 jmcnally Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
-
     /**
      * Adds or modifies an issue type's properties.
      */
@@ -204,6 +204,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         {
             data.setMessage(ERROR_MESSAGE);
         }
+        ScarabCache.clear();
     }
 
     /**
