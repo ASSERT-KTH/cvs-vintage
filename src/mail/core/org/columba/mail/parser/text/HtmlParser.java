@@ -284,6 +284,12 @@ prot + "://  protocol and ://
 
         return restoreSpecialCharacters(text);
     }
+    public static String htmlToText(String html, boolean saveNewlines) {
+        // stripHtmlTags called with true ~ p & br => newlines
+        String text = stripHtmlTags(html, saveNewlines);
+
+        return restoreSpecialCharacters(text);
+    }
 
     /**
      * Replaces special chars - <,>,&,\t,\n," - with the special
