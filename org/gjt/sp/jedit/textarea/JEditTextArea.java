@@ -46,7 +46,7 @@ import org.gjt.sp.util.Log;
  * jEdit's text component.
  *
  * @author Slava Pestov
- * @version $Id: JEditTextArea.java,v 1.32 2001/11/23 09:11:31 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.33 2001/11/23 09:28:33 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -3687,7 +3687,7 @@ loop:		for(int i = caretLine + 1; i < getLineCount(); i++)
 			getToolkit().beep();
 			return;
 		}
-		int maxLineLength = (buffer.getIntegerProperty("maxLineLen",0);
+		int maxLineLength = buffer.getIntegerProperty("maxLineLen",0);
 		if(maxLineLength <= 0)
 		{
 			getToolkit().beep();

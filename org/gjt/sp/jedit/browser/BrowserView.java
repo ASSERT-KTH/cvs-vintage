@@ -28,7 +28,9 @@ import javax.swing.tree.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 import org.gjt.sp.jedit.io.*;
 import org.gjt.sp.jedit.*;
 //}}}
@@ -36,7 +38,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.8 2001/11/23 09:08:48 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.9 2001/11/23 09:28:33 spestov Exp $
  */
 public class BrowserView extends JPanel
 {
