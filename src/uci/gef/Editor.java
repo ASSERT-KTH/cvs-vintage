@@ -27,7 +27,7 @@
 // File: Editor.java
 // Classes: Editor
 // Original Author: ics125 spring 1996
-// $Id: Editor.java,v 1.12 1998/06/11 21:07:54 jrobbins Exp $
+// $Id: Editor.java,v 1.13 1998/06/29 02:42:49 jrobbins Exp $
 
 package uci.gef;
 
@@ -435,6 +435,8 @@ implements Serializable, MouseListener, MouseMotionListener, KeyListener {
   /** Get the graphics context object that this editor should draw on. */
   public Graphics getGraphics() {
     if (_awt_component == null) return null;
+//     if (_awt_component instanceof JGraphInternalPane)
+//       return ((JGraphInternalPane) _awt_component).getGraphicsCounted();
     return _awt_component.getGraphics();
   }
 
