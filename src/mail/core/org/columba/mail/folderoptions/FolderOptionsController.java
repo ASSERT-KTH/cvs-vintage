@@ -268,19 +268,22 @@ public class FolderOptionsController {
      * Save global settings.
      * <p>
      * Method is called when shutting down Columba. Note, that
-     * when a folder is selected which overwrites options, calling
-     * save() will make his settings global. Which is wrong.
+     * when a folder is selected which overwrites options, only 
+     * his options are saved.
      *
      * @param folder                selected folder
      */
+    /*
     public void saveGlobalSettings(AbstractFolder folder) {
         if (folder instanceof MessageFolder) {
             if (isOverwritingDefaults((MessageFolder) folder)) {
-                // restore global settings in ui
-                load(STATE_BEFORE);
+                
+            	save((MessageFolder)folder);
+            } else {
+            	save(null);
             }
         }
 
-        save(null);
-    }
+        
+    }*/
 }

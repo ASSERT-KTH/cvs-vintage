@@ -443,18 +443,6 @@ public class TableController implements FocusOwner, ListSelectionListener,
 	}
 
 	/**
-	 * Save folder properties of currently selected folder.
-	 *  
-	 */
-	public void saveProperties() {
-		if (previouslySelectedFolder != null) {
-			((MailFrameMediator) getFrameController())
-					.getFolderOptionsController()
-					.save(previouslySelectedFolder);
-		}
-	}
-
-	/**
 	 * Show the headerlist of currently selected folder.
 	 * <p>
 	 * Additionally, implements folderoptions plugin entrypoint.

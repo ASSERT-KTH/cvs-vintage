@@ -142,7 +142,7 @@ public abstract class AbstractFolderOptionsPlugin implements Plugin {
             parent.addElement(child);
         }
 
-        //      check if this folder is overwriting global options
+        // check if this folder is overwriting global options
         if (child.getAttribute("overwrite").equals("true")) {
             // use folder-based options
             return child;

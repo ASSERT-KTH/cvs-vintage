@@ -29,7 +29,6 @@ import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 
 import org.columba.core.config.ViewItem;
-import org.columba.core.gui.frame.Container;
 import org.columba.core.gui.frame.ContentPane;
 import org.columba.core.gui.selection.SelectionChangedEvent;
 import org.columba.core.gui.selection.SelectionListener;
@@ -39,6 +38,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.pluginhandler.MenuPluginHandler;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.AbstractFolder;
+import org.columba.mail.folder.MessageFolder;
 import org.columba.mail.gui.attachment.selection.AttachmentSelectionHandler;
 import org.columba.mail.gui.composer.HeaderController;
 import org.columba.mail.gui.infopanel.FolderInfoPanel;
@@ -319,7 +319,9 @@ public class ThreePaneMailFrameController extends AbstractMailFrameController
 			AbstractFolder folder = r.getFolder();
 
 			// folder-based configuration
-			getFolderOptionsController().saveGlobalSettings(folder);
+			
+			 if (folder instanceof MessageFolder) 
+			 	getFolderOptionsController().save((MessageFolder)folder);
 		}
 	}
 

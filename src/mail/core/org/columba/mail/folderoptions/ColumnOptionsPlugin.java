@@ -133,6 +133,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
     public void loadOptionsFromXml(MessageFolder folder) {
         XmlElement columns = getConfigNode(folder);
 
+        /*
         if ( columns.count() == 0) {
             // no columns specified 
             // -> create new default columns
@@ -142,6 +143,7 @@ public class ColumnOptionsPlugin extends AbstractFolderOptionsPlugin {
             parent.addElement(columns);
            
         }
+        */
         
         TableController tableController = ((TableViewOwner) getMediator()).getTableController();
         TableView view = tableController.getView();
