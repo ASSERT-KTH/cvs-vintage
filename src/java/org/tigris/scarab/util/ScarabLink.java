@@ -74,7 +74,7 @@ import org.tigris.scarab.util.Log;
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
     @author <a href="mailto:jmcnally@collab.net">John McNally</a>
     @author <a href="mailto:maartenc@tigris.org">Maarten Coene</a>
-    @version $Id: ScarabLink.java,v 1.50 2002/07/31 21:42:49 jmcnally Exp $
+    @version $Id: ScarabLink.java,v 1.51 2002/08/01 16:41:51 jon Exp $
 */
 public class ScarabLink extends TemplateLink
                         implements InitableRecyclable
@@ -403,36 +403,21 @@ public class ScarabLink extends TemplateLink
     /**
      * Check if the user has the permission to see the template t. If the user
      * has the permission(s), <code>true</code> is returned. If template t is
-     * null, this method returns false.
+     * null, this method returns false. If there is 'id' in the query data or
+     * path info, then set the next template to be "ViewIssue.vm" so that we 
+     * can special case a short url. FIXME: This mapping should probably be done 
+     * in a more generic fashion by configuring it in a properties file...
+     * scarab.parameter.id = ViewIssue.vm so that more than one short url
+     * can be defined or it can be modified outside of recompiling this class.
      */
     public boolean isAllowed(String t)
     {
         if (t == null) 
         {
-            //check pathinfo for "id"
-            final int count = pathInfo.size();
-            for (int i = 0; i < count; i++)
+            //check query data/path info for "id"
+            if (data.getParameters().getString("id") != null)
             {
-                Object[] pair = (Object[]) pathInfo.get(i);
-                if ("id".equals(pair[0])) 
-                {
-                    t = "ViewIssue.vm";
-                    break;
-                }
-            }
-        }
-        if (t == null) 
-        {
-            //check querydata for "id"
-            final int count = queryData.size();
-            for (int i = 0; i < count; i++)
-            {
-                Object[] pair = (Object[]) queryData.get(i);
-                if ("id".equals(pair[0])) 
-                {
-                    t = "ViewIssue.vm";
-                    break;
-                }
+                t = "ViewIssue.vm";
             }
         }
         if (t == null)
