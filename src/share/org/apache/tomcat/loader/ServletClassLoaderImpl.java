@@ -114,7 +114,7 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
         for(Enumeration e = context.getLibPaths();
             e.hasMoreElements(); ) {
             String libpath = (String) e.nextElement();
-            File f =  new File(basepath + libpath + "/");
+            File f =  new File(basepath + "/" + libpath + "/");
             Vector jars = new Vector();
             getJars(jars, f);
             
@@ -122,7 +122,7 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
                 try {
                     String jarfile = (String) jars.elementAt(i);
                     URL jarURL = new URL(protocol,hostname,port,
-                                         basepath + jarfile);
+                                         basepath + "/" + libpath + "/" + jarfile);
                     addURL(jarURL);
                 }catch(MalformedURLException mue) {
                 }
