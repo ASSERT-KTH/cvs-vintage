@@ -125,8 +125,8 @@ public class Container implements Cloneable {
     /** Per/container interceptors.
 	XXX Not implemented, it's easy to wire it in ( 2-3 h).
      */
-    Vector contextInterceptors = new Vector();
-    Vector requestInterceptors = new Vector();
+    Vector contextInterceptors;
+    Vector requestInterceptors;
     // interceptor cache - avoid Vector enumeration
     ContextInterceptor cInterceptors[];
     RequestInterceptor rInterceptors[];
@@ -148,8 +148,8 @@ public class Container implements Cloneable {
      */
     public ContextManager getContextManager() {
 	if( contextM==null ) {
-	    /* assert */ throw new RuntimeException( "Assert: container.contextM==null" );
-	    //if(context!=null) contextM=context.getContextManager();
+	    /* assert */
+	    throw new RuntimeException( "Assert: container.contextM==null" );
 	}
 	return contextM;
     }
@@ -274,10 +274,6 @@ public class Container implements Cloneable {
     /** The handler for this container
      */
     public ServletWrapper getHandler() {
-	//         if (handler == null) {
-	// 	    ///* assert */ throw new RuntimeException( "Assert: container.getHandler==null");
-	// 	    handler=context.getDefaultServlet();
-	// 	}
 	return handler;
     }
 
@@ -301,6 +297,8 @@ public class Container implements Cloneable {
 	this.roles=roles;
     }
 
+    // -------------------- Per-container interceptors
+    
     /** Add a per/container context interceptor. It will be notified
      *  of all context events happening inside this container.
      *   XXX incomplete implementation
@@ -309,7 +307,6 @@ public class Container implements Cloneable {
 	contextInterceptors.addElement( ci );
     }
 
-
     /** Return the context interceptors as an array.
      *	For performance reasons we use an array instead of
      *  returning the vector - the interceptors will not change at
@@ -317,10 +314,12 @@ public class Container implements Cloneable {
      *	access
      */
     public ContextInterceptor[] getContextInterceptors() {
-	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
+	if( cInterceptors == null ||
+	    cInterceptors.length != contextInterceptors.size()) {
 	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
 	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
+		cInterceptors[i]=(ContextInterceptor)contextInterceptors.
+		    elementAt(i);
 	    }
 	}
 	return cInterceptors;
@@ -342,10 +341,13 @@ public class Container implements Cloneable {
 	access
     */
     public RequestInterceptor[] getRequestInterceptors() {
-	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
+	if( rInterceptors == null ||
+	    rInterceptors.length != requestInterceptors.size())
+	{
 	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
 	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
+		rInterceptors[i]=(RequestInterceptor)requestInterceptors.
+		    elementAt(i);
 	    }
 	}
 	return rInterceptors;

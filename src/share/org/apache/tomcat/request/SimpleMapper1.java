@@ -71,25 +71,26 @@ import java.util.*;
  *  alghoritm and use it to extract the path components from the request URI.
  *
  *  The interceptor will be called in standalone case, for "integrated" mode
- *  we should have all the data from the web server - that means the performance
- *  of this code is not relevant for production mode if a web server is used.
+ *  we should have all the data from the web server - that means the
+ * performance of this code is not relevant for production mode if a web
+ * server is used.
  * 
  *  This particular implementation does the following:
- *  - extract the information that is relevant to matching from the Request object.
- *    The current implementation deals with the Host header and the request URI.
+ *  - extract the information that is relevant to matching from the Request
+ *   object. The current implementation deals with the Host header and the
+ *   request URI.
  *  - Use an external mapper to find the best match.
  *  - Adjust the request paths
  * 
- *  The execution time is proportional with the number of hosts, number of context, number of
- *  mappings and with the length of the request.
+ *  The execution time is proportional with the number of hosts, number of
+ *  context, number of mappings and with the length of the request.
  *
  *  Security mappings are more complex ( method, transport are also part of the
- *  matching ). We can share the same mapping alghoritm or even the mapper - but
- *  until security code will be stable it's better to keep it separated.
+ *  matching ). We can share the same mapping alghoritm or even the mapper -
+ *  but until security code will be stable it's better to keep it separated.
  *  
  */
 public class SimpleMapper1 extends  BaseInterceptor  {
-    int debug=0;
     ContextManager cm;
 
     PrefixMapper map;
@@ -105,11 +106,6 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     }
 
     /* -------------------- Support functions -------------------- */
-    public void setDebug( int level ) {
-	if(level!=0) log("SM: SimpleMapper - set debug " + level);
-	debug=level;
-    }
-
     /** Allow the mapper to cache mapping results - resulting in a
      *  faster match for frequent requests. ( treat this as experimental)
      */
@@ -128,12 +124,15 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     {
 	this.cm=cm;
 	// set-up a per/container note for maps
-	ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE, "map.extension");
+	ctExtMapNote = cm.getNoteId( ContextManager.CONTAINER_NOTE,
+				     "map.extension");
+	debug=0;
     }
 
     /** Called when a context is added.
      */
-    public void addContext( ContextManager cm, Context ctx ) throws TomcatException
+    public void addContext( ContextManager cm, Context ctx )
+	throws TomcatException
     {
 	map.addMapping( ctx.getHost(), ctx.getPath(), ctx.getContainer());
     }
@@ -141,11 +140,13 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     /** Called when a context is removed from a CM - we must ask the mapper to
 	remove all the maps related with this context
      */
-    public void removeContext( ContextManager cm, Context ctx ) throws TomcatException
+    public void removeContext( ContextManager cm, Context ctx )
+	throws TomcatException
     {
 	if(debug>0) log( "Removed from maps ");
 	map.removeAllMappings( ctx.getHost(), ctx.getPath());
-	// extension mappings are local to ctx, no need to do something about that
+	// extension mappings are local to ctx, no need to do something
+	// about that
     }
     
 
@@ -178,8 +179,11 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    // cut /* ( no need to do a string concat for every match )
 	    // workaround for frequent bug in web.xml ( backw. compat )
 	    if( ! path.startsWith( "/" ) ) path="/" + path;
-	    map.addMapping( vhost, ctxP + path.substring( 0, path.length()-2 ), ct);
-	    if( debug>0 ) log("SM: prefix map " + vhost + ":" +  ctxP + path + " -> " + ct + " " );
+	    map.addMapping( vhost,
+			    ctxP + path.substring( 0, path.length()-2 ), ct);
+	    if( debug>0 )
+		log("SM: prefix map " + vhost + ":" +  ctxP +
+		    path + " -> " + ct + " " );
 	    break;
 	case Container.EXTENSION_MAP:
 	    // Add it per/defaultContainer - as spec require ( it may also be
@@ -195,13 +199,17 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	    }
 	    // add it to the Container local maps
 	    eM.put( path.substring( 1 ), ct );
-	    if(debug>0) log( "SM: extension map " + ctxP + "/" + path + " " + ct + " " );
+	    if(debug>0)
+		log( "SM: extension map " + ctxP + "/" +
+		     path + " " + ct + " " );
 	    break;
 	case Container.PATH_MAP:
 	    // workaround for frequent bug in web.xml
 	    if( ! path.startsWith( "/" ) ) path="/" + path;
 	    map.addExactMapping( vhost, ctxP + path, ct);
-	    if( debug>0 ) log("SM: exact map " + vhost + ":" + ctxP + path + " -> " + ct + " " );
+	    if( debug>0 )
+		log("SM: exact map " + vhost + ":" + ctxP +
+		    path + " -> " + ct + " " );
 	    break;
 	}
     }
@@ -287,14 +295,14 @@ public class SimpleMapper1 extends  BaseInterceptor  {
      *  
      */
     public int requestMap(Request req) {
-	// No op. All mapping is done in the first step - it's better because the
-	// alghoritm is more efficient. The only case where those 2 are not called togheter
-	// is in getContext( "path" ). 
+	// No op. All mapping is done in the first step - it's better because
+	// the alghoritm is more efficient. The only case where those 2 are
+	// not called togheter is in getContext( "path" ). 
 	// 
-	// We can split it again later if that creates problems - but right now it's important
-	// to have a clear alghoritm.
-	// Note that requestMap is _allways_ called after contextMap ( it was asserted in
-	//  all implementations).
+	// We can split it again later if that creates problems - but right
+	// now it's important to have a clear alghoritm. Note that requestMap
+	// is _allways_ called after contextMap ( it was asserted in  all
+	// implementations).
 	
 	return OK;
     }
@@ -302,9 +310,10 @@ public class SimpleMapper1 extends  BaseInterceptor  {
     // -------------------- Implementation methods --------------------
     
     /** Will match an extension - note that Servlet API use special rules
-     *  for mapping extension, different from what is used in existing web servers.
-     *  That makes this code very easy ( only need to deal with the last component
-     *  of the name ), but it's hard to integrate and you have no way to use pathInfo.
+     *  for mapping extension, different from what is used in existing web
+     * servers. That makes this code very easy ( only need to deal with
+     * the last component of the name ), but it's hard to integrate and you
+     * have no way to use pathInfo.
      */
     Container matchExtension( Request req ) {
 	Context ctx=req.getContext();
@@ -316,10 +325,13 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	String extension=URLUtil.getExtension( path );
 	if( extension == null ) return null;
 
-	if(debug>0) cm.log("SM: Extension match " + ctxP +  " " + path + " " + extension );
+	if(debug>0)
+	    cm.log("SM: Extension match " + ctxP +  " " +
+		   path + " " + extension );
 
 	// Find extension maps for the context
-	SimpleHashtable extM=(SimpleHashtable)ctx.getContainer().getNote( ctExtMapNote );
+	SimpleHashtable extM=(SimpleHashtable)ctx.
+	    getContainer().getNote( ctExtMapNote );
 	if( extM==null ) return null;
 	
 	// Find the container associated with that extension
@@ -353,13 +365,18 @@ public class SimpleMapper1 extends  BaseInterceptor  {
 	case  Container.PREFIX_MAP: 
 	    s=s.substring( 0, sLen -2 );
 	    pathI= path.substring( ctxPLen + sLen - 2, pathLen);
+	    if( debug>0 ) log( "Adjust for prefix map " + s + " " + pathI );
 	    break;
 	case Container.DEFAULT_MAP:
 	    s="/";
 	    pathI= path.substring( ctxPLen ) ;
 	    break;
 	case Container.PATH_MAP:
-	    pathI= path.substring( ctxPLen + sLen, pathLen);
+	    pathI= null;
+	    // For exact matching - can't have path info ( or it's 
+	    // a prefix map )
+	    //path.substring( ctxPLen + sLen , pathLen);
+	    if( debug>0 ) log( "Adjust for path map " + s + " " + pathI );
 	    break; // keep the path
 	case Container.EXTENSION_MAP:
 	    /*  adjust paths */

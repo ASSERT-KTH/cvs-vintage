@@ -111,7 +111,8 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 	return 0;
     }
 
-    public int authorize(Request request, Response response) {
+    public int authorize(Request request, Response response,
+			 String reqRoles[]) {
 	return 0;
     }
 

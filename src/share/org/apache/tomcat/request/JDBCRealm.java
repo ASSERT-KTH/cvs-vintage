@@ -429,10 +429,23 @@ public final class JDBCRealm extends BaseInterceptor {
       }
     }
 
-    public int authorize( Request req, Response response )
-    {
-        String roles[]=(String[]) req.getNote( reqRolesNote );
+    public int authenticate( Request req, Response response ) {
+        // Extract the credentials
+        Hashtable cred=new Hashtable();
+        SecurityTools.credentials( req, cred );
+        // This realm will use only username and password callbacks
+        String user=(String)cred.get("username");
+        String password=(String)cred.get("password");
+	
+	if( authenticate( user, password ) ) {
+     	    if( debug > 0 ) log( "Auth ok, user=" + user );
+	    req.setRemoteUser( user );
+	}
+	return 0;
+    }
 
+    public int authorize( Request req, Response response, String roles[] )
+    {
         if( roles==null ) {
             // request doesn't need authentication
             return 0;
@@ -440,28 +453,18 @@ public final class JDBCRealm extends BaseInterceptor {
 
         Context ctx=req.getContext();
 
-        // Extract the credentials
-        Hashtable cred=new Hashtable();
-        SecurityTools.credentials( req, cred );
-        // This realm will use only username and password callbacks
-        String user=(String)cred.get("username");
-        String password=(String)cred.get("password");
         String userRoles[]=null;
-        if( debug > 0 )
+
+	String user=req.getRemoteUser();
+	if( user==null ) 
+            return HttpServletResponse.SC_UNAUTHORIZED;
+	
+	if( debug > 0 )
             log( "Controled access for " + user + " " + req + " "
                  + req.getContainer() );
-
-        if( authenticate( user, password ) ) {
-            req.setRemoteUser( user );
-            userRoles = getUserRoles( user );
-            req.setUserRoles( userRoles );
-            // else - don't set it
-        } else {
-            // not authorized - this request needs a specific role,
-            // and we can't authorize
-            return HttpServletResponse.SC_UNAUTHORIZED;
-        }
-
+	
+	userRoles = getUserRoles( user );
+	req.setUserRoles( userRoles );
 
         if( debug > 0 ) log( "Auth ok, first role=" + userRoles[0] );
 
@@ -469,12 +472,12 @@ public final class JDBCRealm extends BaseInterceptor {
             return 0;
 
         if( debug > 0 ) log( "UnAuthorized " + roles[0] );
-            return HttpServletResponse.SC_UNAUTHORIZED;
+	return HttpServletResponse.SC_UNAUTHORIZED;
         // XXX check transport
     }
 
 
-    }
+}
 
 
 

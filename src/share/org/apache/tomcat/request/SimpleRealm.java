@@ -120,46 +120,49 @@ public class SimpleRealm extends  BaseInterceptor {
 	}
     }
 	    
-    public int authorize( Request req, Response response )
+    public int authenticate( Request req, Response response )
     {
-	String roles[]=(String[]) req.getNote( reqRolesNote );
+	// Extract the credentials
+	Hashtable cred=new Hashtable();
+	SecurityTools.credentials( req, cred );
 
-	if( roles==null ) {
+	// This realm will use only username and password callbacks
+	String user=(String)cred.get("username");
+	String password=(String)cred.get("password");
+
+	if( debug > 0 ) log( "Verify user=" + user + " pass=" + password );
+	if( memoryRealm.checkPassword( user, password ) ) {
+	    req.setRemoteUser( user );
+	    if( debug > 0 ) log( "Auth ok, user=" + user );
+	}
+	return 0;
+    }
+    
+    public int authorize( Request req, Response response, String roles[] )
+    {
+	if( roles==null || roles.length==0 ) {
 	    // request doesn't need authentication
 	    return 0;
 	}
 	
 	Context ctx=req.getContext();
 
-	// Extract the credentials
-	Hashtable cred=new Hashtable();
-	SecurityTools.credentials( req, cred );
-	// This realm will use only username and password callbacks
-	String user=(String)cred.get("username");
-	String password=(String)cred.get("password");
 	String userRoles[]=null;
+	String user=req.getRemoteUser(); 
+	if( user==null )
+	    return HttpServletResponse.SC_UNAUTHORIZED;
+
 	if( debug > 0 ) log( "Controled access for " + user + " " +
 			     req + " " + req.getContainer() );
 
-	if( memoryRealm.checkPassword( user, password ) ) {
-	    req.setRemoteUser( user );
-	    userRoles = memoryRealm.getUserRoles( user );
-	    req.setUserRoles( userRoles );
-	    // else - don't set it
-	} else {
-	    // not authorized - this request needs a specific role,
-	    // and we can't authorize
-	    return HttpServletResponse.SC_UNAUTHORIZED;
-	}
-
-	if( debug > 0 ) log( "Auth ok, first role=" + userRoles[0] );
+	userRoles = memoryRealm.getUserRoles( user );
+	req.setUserRoles( userRoles );
 
 	if( SecurityTools.haveRole( userRoles, roles ))
 	    return 0;
 	
 	if( debug > 0 ) log( "UnAuthorized " + roles[0] );
  	return HttpServletResponse.SC_UNAUTHORIZED;
-	// XXX check transport
     }
 }
 

@@ -72,6 +72,8 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.apache.tomcat.service.PoolTcpConnector;
+
 //import java.security.*;
 
 /* XXX The main function of CM is to serve as an entry point into
@@ -172,8 +174,7 @@ public class ContextManager {
     public ContextManager() {
     }
 
-    // -------------------- setable properties: tomcat directories  --------------------
-
+    // -------------------- setable properties: tomcat directories  ---
     /** 
      *  The home of the tomcat instance - you can have multiple
      *  users running tomcat, with a shared install directory.
@@ -218,7 +219,8 @@ public class ContextManager {
 	home=FileUtil.getCanonicalPath( System.getProperty("tomcat.home") );	
 	if(home!=null) return home;
 	
-	home=FileUtil.getCanonicalPath( "." ); // try current dir - we should throw an exception
+	home=FileUtil.getCanonicalPath( "." );
+	// try current dir - we should throw an exception
 	return home;
     }
 
@@ -311,8 +313,9 @@ public class ContextManager {
     public void setDefaults() {
 	if(connectors.size()==0) {
 	    if(debug>5) logInt("Setting default adapter");
-	    org.apache.tomcat.service.PoolTcpConnector sc=new org.apache.tomcat.service.PoolTcpConnector();
-	    sc.setTcpConnectionHandler( new org.apache.tomcat.service.http.HttpConnectionHandler());
+	    PoolTcpConnector sc=new PoolTcpConnector();
+	    sc.setTcpConnectionHandler( new
+		org.apache.tomcat.service.http.HttpConnectionHandler());
 	    addServerConnector(  sc );
 	}
 	
@@ -335,7 +338,8 @@ public class ContextManager {
 	    smap.setContextManager( this );
 	    addRequestInterceptor(smap);
 
-	    addRequestInterceptor(new org.apache.tomcat.session.StandardSessionInterceptor());
+	    addRequestInterceptor(new
+		org.apache.tomcat.session.StandardSessionInterceptor());
 	}
     }
      
@@ -350,7 +354,8 @@ public class ContextManager {
     public void init()  throws TomcatException {
 	//	logInt( "Tomcat install = " + getInstallDir());
 	// logInt( "Tomcat home = " + home);
-	if(debug>0 ) logInt( "Tomcat classpath = " +  System.getProperty( "java.class.path" ));
+	if(debug>0 ) logInt( "Tomcat classpath = " +
+			     System.getProperty( "java.class.path" ));
 
 	setAccount( ACC_INIT_START, System.currentTimeMillis());
 	
@@ -551,7 +556,8 @@ public class ContextManager {
      * @param con The new server connector
      */
     public synchronized void addServerConnector( ServerConnector con ) {
-	if(debug>0) logInt("Add connector javaClass=\"" + con.getClass().getName() + "\"");
+	if(debug>0) logInt("Add connector javaClass=\"" +
+			   con.getClass().getName() + "\"");
 	con.setServer( this );
 	connectors.addElement( con );
     }
@@ -561,15 +567,30 @@ public class ContextManager {
     }
     
     public void addRequestInterceptor( RequestInterceptor ri ) {
-	if(debug>0) logInt("Add requestInterceptor javaClass=\"" + ri.getClass().getName() + "\" ");
-	// XXX for programatic access, it'll go away after the interceptor is fixed.
-	if( ri instanceof BaseInterceptor ) ((BaseInterceptor)ri).setContextManager( this );
+	if(debug>0) logInt("Add requestInterceptor javaClass=\"" +
+			   ri.getClass().getName() + "\" ");
 	requestInterceptors.addElement( ri );
 	if( ri instanceof ContextInterceptor )
 	    contextInterceptors.addElement( ri );
-	// XXX XXX use getMethods() to find what notifications are needed by interceptor
-	// ( instead of calling all interceptors )
-	// No API change - can be done later.
+    }
+
+    /** Return all the interceptors associated with a request.
+	That includes global ( context manager ) interceptors,
+	webapp ( Context ) interceptors and possibly interceptors
+	associated with containers ( urls inside the web app ).
+	
+	For performance reasons we use arrays and cache the result inside
+	containers.
+
+	XXX Todo: container-level interceptors are not supported.
+	Dynamic add of interceptors is not supported.
+    */
+    public RequestInterceptor[] getRequestInterceptors( Request req ) {
+	// 	Container ct=req.getContext().getContainer();
+	// 	return ct.getRequestInterceptors();
+
+	// just global interceptors
+	return getRequestInterceptors();
     }
 
     /** Return the context interceptors as an array.
@@ -579,18 +600,21 @@ public class ContextManager {
 	access
     */
     public RequestInterceptor[] getRequestInterceptors() {
-	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
+	if( rInterceptors == null ||
+	    rInterceptors.length != requestInterceptors.size())
+	{
 	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
 	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
+		rInterceptors[i]=(RequestInterceptor)
+		    requestInterceptors.elementAt(i);
 	    }
 	}
 	return rInterceptors;
     }
 
     public void addContextInterceptor( ContextInterceptor ci) {
-	if(debug>0) logInt("Add contextInterceptor javaClass=\"" + ci.getClass().getName() + "\" ");
-	if( ci instanceof BaseInterceptor ) ((BaseInterceptor)ci).setContextManager( this );
+	if(debug>0) logInt("Add contextInterceptor javaClass=\"" +
+			   ci.getClass().getName() + "\" ");
 	contextInterceptors.addElement( ci );
     }
 
@@ -605,16 +629,19 @@ public class ContextManager {
 	if( contextInterceptors.size() == 0 ) {
 	    setDefaults();
 	}
-	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
+	if( cInterceptors == null ||
+	    cInterceptors.length != contextInterceptors.size())
+	{
 	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
 	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
+		cInterceptors[i]=(ContextInterceptor)contextInterceptors.
+		    elementAt(i);
 	    }
 	}
 	return cInterceptors;
     }
-    // -------------------- Request processing / subRequest --------------------
-    // -------------------- Main request processing methods -------------------- 
+    // -------------------- Request processing / subRequest ------------------
+    // -------------------- Main request processing methods ------------------ 
 
     /** Prepare the req/resp pair for use in tomcat.
      *  Call it after you create the request/response objects
@@ -634,46 +661,71 @@ public class ContextManager {
      *  call this method to get it processed.
      *  XXX make sure the alghoritm is right, deal with response codes
      */
-    public void service( Request rrequest, Response rresponse ) {
+    public void service( Request req, Response res ) {
+	internalService( req, res );
+		// clean up
 	try {
-	    /* assert rrequest/rresponse are set up
-	       corectly - have cm, and one-one relation
-	    */
-	    // wront request - parsing error
-	    int status=rresponse.getStatus();
-
-	    if( status < 400 )
-		status= processRequest( rrequest );
-	    
-	    if(status==0)
-		status=authenticate( rrequest, rresponse );
-	    if(status == 0)
-		status=authorize( rrequest, rresponse );
-	    if ( status==0 && rrequest.getWrapper() == null )
-		status = 404;
-
-	    if( status == 0 ) {
-		rrequest.getWrapper().service(rrequest, rresponse);
-	    } else {
-		// something went wrong
-		handleStatus( rrequest, rresponse, status );
-	    }
-	} catch (Throwable t) {
-	    handleError( rrequest, rresponse, t );
-	}
-	try {
-	    rresponse.finish();
-	    rrequest.recycle();
-	    rresponse.recycle();
+	    res.finish();
+	    req.recycle();
+	    res.recycle();
 	} catch( Throwable ex ) {
-	    if(debug>0) logInt( "Error closing request " + ex);
+	    handleError( req, res, ex );
 	}
 	return;
     }
 
+    // Request processing steps and behavior
+    private void internalService( Request req, Response res ) {
+	try {
+	    /* assert req/res are set up
+	       corectly - have cm, and one-one relation
+	    */
+	    // wront request - parsing error
+	    int status=res.getStatus();
+
+	    if( status >= 400 ) {
+		if( debug > 0)
+		    log( "Error reading request " + req + " " + status);
+		handleStatus( req, res, status );
+		return;
+	    }
+
+	    status= processRequest( req );
+	    if( status != 0 ) {
+		if( debug > 0)
+		    log("Error mapping the request " + req + " " + status);
+		handleStatus( req, res, status );
+		return;
+	    }
+
+	    if( req.getWrapper() == null ) {
+		status=404;
+		if( debug > 0)
+		    log("No handler for request " + req + " " + status);
+		handleStatus( req, res, status );
+		return;
+	    }
+	    
+	    String roles[]=req.getRequiredRoles();
+	    if(roles != null )
+		status=doAuthorize( req, res, roles );
+	    if( status > 200 ) {
+		if( debug > 0)
+		    log("Authorize error " + req + " " + status);
+		handleStatus( req, res, status );
+		return;
+	    }
+
+	    req.getWrapper().service(req, res);
+
+	} catch (Throwable t) {
+	    handleError( req, res, t );
+	}
+    }
+
     /** Will find the ServletWrapper for a servlet, assuming we already have
-     *  the Context. This is also used by Dispatcher and getResource - where the Context
-     *  is already known. 
+     *  the Context. This is also used by Dispatcher and getResource -
+     *  where the Context is already known. 
      */
     public int processRequest( Request req ) {
 	if(debug>9) logInt("ProcessRequest: "+req.toString());
@@ -699,9 +751,16 @@ public class ContextManager {
     /** Call all authentication callbacks. If any of them is able to
 	identify the user it will set the principal in req.
      */
-    public int authenticate( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).authenticate( req, res );
+    public int doAuthenticate( Request req, Response res ) {
+	int status=0;
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    status=reqI[i].authenticate( req, res );
+	    if ( status != 0 ) {
+		if( debug>0) logInt( "Authenticate status " + status );
+		return status;
+	    }
 	}
 	return 0;
     }
@@ -710,26 +769,29 @@ public class ContextManager {
 	are probably set during the mapping stage ( for efficiency), but it
 	can be done here too.
      */
-    int authorize( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    int err = ((RequestInterceptor)requestInterceptors.elementAt(i)
-		       ).authorize( req, res );
-	    if ( err != 0 ) {
-		if( debug>0) logInt( "Authorize result " + err );
-		return err;
+    public int doAuthorize( Request req, Response res, String roles[] ) {
+	int status=0;
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    status = reqI[i].authorize( req, res, roles );
+	    if ( status != 0 ) {
+		if( debug>0) logInt( "Authorize status " + status );
+		return status;
 	    }
 	}
 	return 0;
     }
 
-    /** Call beforeBody callbacks. Before body allows you do do various actions before
-	the first byte of the response is sent. After all those callbacks are called
-	tomcat may send the status and headers
+    /** Call beforeBody callbacks. Before body allows you do do various
+	actions before the first byte of the response is sent. After all
+	those callbacks are called tomcat may send the status and headers
     */
     int doBeforeBody( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)
-	     ).beforeBody( req, res );
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].beforeBody( req, res );
 	}
 	return 0;
     }
@@ -740,26 +802,50 @@ public class ContextManager {
 	much, we need a review and maybe change in parameters.
     */
     int doBeforeCommit( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).beforeCommit( req, res );
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].beforeCommit( req, res );
+	}
+	return 0;
+    }
+    
+    int doPreService( Request req, Response res ) {
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].preService( req, res );
+	}
+	return 0;
+    }
+    
+    int doPostService( Request req, Response res ) {
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].postService( req, res );
 	}
 	return 0;
     }
     
     int doNewSessionRequest( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).newSessionRequest( req, res );
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].newSessionRequest( req, res );
 	}
 	return 0;
     }
 
-    /** Call afterBody callbacks. It is called after the servlet finished sending the
-	response ( either closeing the stream or ending ). You can deal with connection
-	reuse or do other actions
+    /** Call afterBody callbacks. It is called after the servlet finished
+	sending the response ( either closeing the stream or ending ). You
+	can deal with connection reuse or do other actions
     */
     int doAfterBody( Request req, Response res ) {
-	for( int i=0; i< requestInterceptors.size(); i++ ) {
-	    ((RequestInterceptor)requestInterceptors.elementAt(i)).afterBody( req, res );
+	RequestInterceptor reqI[]= getRequestInterceptors(req);
+	
+	for( int i=0; i< reqI.length; i++ ) {
+	    reqI[i].afterBody( req, res );
 	}
 	return 0;
     }
@@ -768,7 +854,8 @@ public class ContextManager {
 
     /** Create a new sub-request in a given context, set the context "hint"
      *  This is a particular case of sub-request that can't get out of
-     *  a context ( and we know the context before - so no need to compute it again)
+     *  a context ( and we know the context before - so no need to compute it
+     *  again)
      *
      *  Note that session and all stuff will still be computed.
      */
@@ -849,7 +936,9 @@ public class ContextManager {
 	if( errorPath != null ) {
 	    errorServlet=getHandlerForPath( ctx, errorPath );
 	}
-
+	if( debug>-1 )
+	    ctx.log( "Handler " + errorServlet + " " + errorPath);
+	
 	if( errorServlet==null )
 	    errorServlet=ctx.getServletByName( "tomcat.statusHandler");
 
@@ -890,7 +979,7 @@ public class ContextManager {
 	} else {
 	    ctx.log("Exception in: " + req , t );
 	}
-	
+
 	if(null!=req.getAttribute("tomcat.servlet.error.defaultHandler")){
 	    // we are in handleRequest for the "default" error handler
 	    System.out.println("ERROR: can't find default error handler "+
@@ -992,20 +1081,24 @@ public class ContextManager {
     /** Create a new note id. Interceptors will get an Id at init time for
      *  all notes that it needs. 
      *
-     *  Throws exception if too many notes are set ( shouldn't happen in normal use ).
-     *  @param noteType The note will be associated with the server, container or request.
+     *  Throws exception if too many notes are set ( shouldn't happen in
+     *  normal use ).
+     *  @param noteType The note will be associated with the server,
+     *   container or request.
      *  @param name the name of the note.
      */
     public synchronized int getNoteId( int noteType, String name )
 	throws TomcatException
     {
-	// find if we already have a note with this name ( this is in init(), not critical )
+	// find if we already have a note with this name
+	// ( this is in init(), not critical )
 	for( int i=0; i< noteId[noteType] ; i++ ) {
 	    if( name.equals( noteName[noteType][i] ) )
 		return i;
 	}
 	
-	if( noteId[noteType] >= MAX_NOTES ) throw new TomcatException( "Too many notes ");
+	if( noteId[noteType] >= MAX_NOTES )
+	    throw new TomcatException( "Too many notes ");
 
 	// make sure the note id is > RESERVED
 	if( noteId[noteType] < RESERVED ) noteId[noteType]=RESERVED;
@@ -1205,7 +1298,6 @@ public class ContextManager {
      * @deprecated Use removeContext( Context ).
      */
     public void removeContext(String name) throws TomcatException {
-	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	Context context = (Context)contexts.get(name);
 	log( "Removing context " + context.toString());
 
@@ -1220,17 +1312,67 @@ public class ContextManager {
 	}
     }
 
+    public void doPreServletInit(Context ctx, ServletWrapper sw)
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].preServletInit( ctx, sw );
+	    } catch( TomcatException ex) {
+		ex.printStackTrace();
+	    }
+	}
+    }
+
+    public void doPostServletInit(Context ctx, ServletWrapper sw)
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].postServletInit( ctx, sw );
+	    } catch( TomcatException ex) {
+		ex.printStackTrace();
+	    }
+	}
+    }
+
+    public void doPreServletDestroy(Context ctx, ServletWrapper sw)
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].preServletDestroy( ctx, sw );
+	    } catch( TomcatException ex) {
+		ex.printStackTrace();
+	    }
+	}
+    }
+
+    public void doPostServletDestroy(Context ctx, ServletWrapper sw)
+	throws TomcatException
+    {
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    try {
+		cI[i].postServletDestroy( ctx, sw );
+	    } catch( TomcatException ex) {
+		ex.printStackTrace();
+	    }
+	}
+    }
+
     /** @deprecated
      */
     public void setTomcatHome( String s ) {
-	//	/*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	setInstallDir( s );
     }
 
     /** @deprecated
      */
     public String getTomcatHome() {
-	///*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
 	return getInstallDir();
     }
 
@@ -1238,7 +1380,8 @@ public class ContextManager {
      */
     public File getAbsolute(File f) {
         if (!f.isAbsolute()) {
-            // evaluate repository path relative to the context's home directory
+            // evaluate repository path relative to the context's home
+	    // directory
 	    return new File(getHome(), f.getPath());
         }
         return f;

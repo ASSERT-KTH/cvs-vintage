@@ -234,9 +234,9 @@ public class EmbededTomcat { // extends WebService
 	    contextM.initContext( ctx );
 
 	    ServletLoader sl=ctx.getServletLoader();
-	    System.out.println("ServletLoader: " + sl );
+	    //	    System.out.println("ServletLoader: " + sl );
 	    Object pd=ctx.getProtectionDomain();
-	    System.out.println("Ctx.pd " + pd);
+	    //	    System.out.println("Ctx.pd " + pd);
 
 	    // Add any extra cpaths
 	    Vector cp=(Vector)extraClassPaths.get( sctx );
@@ -289,7 +289,6 @@ public class EmbededTomcat { // extends WebService
     private void initContextManager() {
 	if(requestInt==null)  initDefaultInterceptors();
 	contextM=new ContextManager();
-	debug=0;
 	contextM.setDebug( debug );
 	
 	for( int i=0; i< contextInt.size() ; i++ ) {
@@ -364,7 +363,7 @@ public class EmbededTomcat { // extends WebService
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
 	addRequestInterceptor( accessI );
-	accessI.setDebug(0);
+	accessI.setDebug(20);
 
 	// set context class loader
 	Jdk12Interceptor jdk12I=new Jdk12Interceptor();

@@ -79,15 +79,31 @@ import org.apache.tomcat.logging.*;
  * @author costin@dnt.ro
  */
 public class StaticInterceptor extends BaseInterceptor {
+    int realFileNote=-1;
+
     public StaticInterceptor() {
     }
 
+    public void engineInit(ContextManager cm) throws TomcatException {
+	super.engineInit( cm );
+	
+	try {
+	    realFileNote = cm.getNoteId( ContextManager.REQUEST_NOTE,
+				       "static.realFile");
+	} catch( TomcatException ex ) {
+	    ex.printStackTrace();
+	    throw new RuntimeException( "Invalid state ");
+	}
+    }
+    
     public void contextInit( Context ctx)
 	throws TomcatException
     {
 	FileHandler fileHandler=new FileHandler();
 	DirHandler dirHandler=new DirHandler();
-    
+	fileHandler.setNoteId( realFileNote );
+	dirHandler.setNoteId( realFileNote );
+	debug=0;
 	ctx.addServlet( fileHandler );
 	ctx.addServlet( dirHandler);
 	fileHandler.setDebug( debug );
@@ -102,7 +118,9 @@ public class StaticInterceptor extends BaseInterceptor {
 
 	// will call getRealPath(), all path normalization
 	// and a number of checks
-	String absPath=req.getPathTranslated();
+	String pathInfo=req.getPathInfo();
+	if( pathInfo==null ) pathInfo="";
+	String absPath=ctx.getRealPath( pathInfo );
 	if( absPath == null ) return 0;
 
 	if( debug > 0 )
@@ -138,7 +156,7 @@ public class StaticInterceptor extends BaseInterceptor {
 		return 0;
 	    } else {
 		if( debug > 0) log( "File handler, inInclude");
-		req.setPathTranslated( absPath + "/" + welcomeFile );
+		req.setNote( realFileNote, absPath + "/" + welcomeFile );
 		req.setWrapper( ctx.getServletByName( "tomcat.fileHandler")); 
 		return 0;
 	    }
@@ -152,10 +170,10 @@ public class StaticInterceptor extends BaseInterceptor {
 	    if( debug > 0) log( "Dir handler");
 	    return 0;
 	} else {
-	    if(  requestURI.endsWith("/")) {
-		if( debug > 0) log( "File handler, inInclude " +
+	    if(  pathInfo.endsWith("/")) {
+		if( debug > 0) log( "File handler " +
 				    absPath + "/" + welcomeFile);
-		req.setPathTranslated( absPath + "/" + welcomeFile );
+		req.setNote( realFileNote, absPath + "/" + welcomeFile );
 		req.setWrapper( ctx.getServletByName( "tomcat.fileHandler"));
 		return 0;
 	    } else {
@@ -176,46 +194,6 @@ public class StaticInterceptor extends BaseInterceptor {
 		return 302;
 	    }
 	}
-    }
-
-    /** All path checks that were part of DefaultServlet
-     */
-    String patch( String base, String pathInfo ) {
-	// Extra checks
-// 	String base = ctx.getAbsolutePath();
-// 	String pathInfo = req.getPathInfo();
-	
-
-	String origAbsPath = base + pathInfo ;
-	String absPath=origAbsPath;
-	
-	absPath=FileUtil.safePath(base, pathInfo);
-	if( absPath == null ) {
-	    log( "SafePath returns null ");
-	    return null;
-	}
-	
-	// Extra safe 
-	if (absPath.endsWith("/") ||
-	    absPath.endsWith("\\") ||
-	    absPath.endsWith(".")) {
-	    log("EndsWith \\/.");
-	    return null;
-	}
-
-	String relPath=absPath.substring( base.length());
-	log( "RelPath = " + relPath );
-
-	String relPathU=relPath.toUpperCase();
-        if ( relPathU.startsWith("WEB-INF") ||
-	     relPathU.startsWith("META-INF")) {
-	    return null;
-        }
-
-	if( debug > 0 && ! origAbsPath.equals(absPath)  )
-	    log( "Path required .. patch " + origAbsPath + " " +absPath );
-
-	return absPath;
     }
 
     private String getWelcomeFile(Context context, File dir) {
@@ -240,11 +218,16 @@ public class StaticInterceptor extends BaseInterceptor {
  *
  */
 class FileHandler extends ServletWrapper  {
+    int realFileNote;
     
     FileHandler() {
 	initialized=true;
 	internal=true;
 	name="tomcat.fileHandler";
+    }
+
+    public void setNoteId( int n ) {
+	realFileNote=n;
     }
 
     public void doService(Request req, Response res)
@@ -257,7 +240,18 @@ class FileHandler extends ServletWrapper  {
 	    subReq=req.getChild();
 
 	Context ctx=subReq.getContext();
-	String absPath = subReq.getPathTranslated();
+	String pathInfo=req.getPathInfo();
+	String absPath = (String)req.getNote( realFileNote );
+	if( absPath==null ) 
+	    absPath=ctx.getRealPath( pathInfo );
+
+	String base = ctx.getAbsolutePath();
+	absPath = extraCheck( base, absPath );
+	if( absPath==null ) {
+	    context.getContextManager().handleStatus( req, res, 404);
+	    return;
+	}
+
 	File file = new File( absPath );
 	
         String mimeType=ctx.getMimeMap().getContentTypeFor(absPath);
@@ -312,6 +306,31 @@ class FileHandler extends ServletWrapper  {
 	headerF.setName( name );
 	headerF.setDateValue( value );
     }
+
+    /** All path checks that were part of DefaultServlet
+     */
+    String extraCheck( String base, String absPath ) {
+	// Extra safe 
+	if (absPath.endsWith("/") ||
+	    absPath.endsWith("\\") ||
+	    absPath.endsWith(".")) {
+	    log("EndsWith \\/.");
+	    return null;
+	}
+
+	String relPath=absPath.substring( base.length());
+	log( "RelPath = " + relPath );
+
+	String relPathU=relPath.toUpperCase();
+        if ( relPathU.startsWith("WEB-INF") ||
+	     relPathU.startsWith("META-INF")) {
+	    return null;
+        }
+
+	return absPath;
+    }
+
+
 }
 
 // -------------------- Directory --------------------
@@ -321,11 +340,16 @@ class FileHandler extends ServletWrapper  {
  */
 class DirHandler extends ServletWrapper  {
     private static final String datePattern = "EEE, dd MMM yyyyy HH:mm z";
+    int realFileNote;
     
     DirHandler() {
 	initialized=true;
 	internal=true;
 	name="tomcat.dirHandler";
+    }
+
+    public void setNoteId( int n ) {
+	realFileNote=n;
     }
 
     public void doService(Request req, Response res)
@@ -342,11 +366,12 @@ class DirHandler extends ServletWrapper  {
 	boolean inInclude=req.getChild()!=null;
 	Request subReq=req;
 	if( inInclude ) subReq = req.getChild();
-	
-	String absPath = subReq.getPathTranslated();
+	Context ctx=req.getContext();
+	String pathInfo=req.getPathInfo();
+	if( pathInfo == null ) pathInfo="";
+	String absPath=ctx.getRealPath( pathInfo );
 	File file = new File( absPath );
 	String requestURI=subReq.getRequestURI();
-	String pathInfo=subReq.getPathInfo(); 
 	
 	StringBuffer buf = new StringBuffer();
 	

@@ -108,11 +108,13 @@ public class RequestImpl  implements Request {
     protected String contentType = null;
     protected String charEncoding = null;
     protected String authType;
+    boolean notAuthenticated=true;
     protected String remoteUser;
 
     protected Principal principal;
     // active roles for the current user
     protected String userRoles[];
+    protected String reqRoles[];
     
     // Request
     protected Response response;
@@ -299,6 +301,10 @@ public class RequestImpl  implements Request {
 	pathTranslatedIsSet=true;
     }
 
+    /** Not so usefull - it return the path translated for a
+	URL relative the the context, i.e. different from
+	what PATH_TRANSLATED does. Avoid using it.
+    */
     public String getPathTranslated() {
 	if( pathTranslatedIsSet ) return pathTranslated;
 
@@ -323,9 +329,17 @@ public class RequestImpl  implements Request {
     
     public void setRemoteUser(String s) {
 	remoteUser=s;
+	// this is set by an auth module
+	// 	context.log("Set user " + s );
+	notAuthenticated=false;
     }
 
     public String getRemoteUser() {
+	if( notAuthenticated ) {
+	    notAuthenticated=false;
+	    contextM.doAuthenticate(this, response);
+	    // 	    context.log("Auth " + remoteUser );
+	}
 	return remoteUser;
     }
 
@@ -348,6 +362,14 @@ public class RequestImpl  implements Request {
 	return principal; 
     }
 
+    public void setRequiredRoles( String roles[] ) {
+	reqRoles=roles;
+    }
+
+    public String[] getRequiredRoles( ) {
+	return reqRoles;
+    }
+
     public void setUserRoles( String roles[] ) {
 	userRoles=roles;
     }
@@ -357,11 +379,14 @@ public class RequestImpl  implements Request {
     }
 
     public boolean isUserInRole(String role) {
-	if (userRoles != null) {
-	    if( SecurityTools.haveRole( role, userRoles ))
-		return true;
-	}
-	return false;
+	// 	if (userRoles != null) {
+	// 	    if( SecurityTools.haveRole( role, userRoles ))
+	// 		return true;
+	// 	}
+	String checkRoles[]=new String[1];
+	checkRoles[0]=role;
+	int status=contextM.doAuthorize(this, response, checkRoles);
+	return status==200;
     }
 
     public String getServletPath() {
@@ -706,6 +731,9 @@ public class RequestImpl  implements Request {
 	parent=null;
 	child=null;
 	top=null;
+        notAuthenticated=true;
+	userRoles=null;
+	reqRoles=null;
     }
 
     public MimeHeaders getMimeHeaders() {

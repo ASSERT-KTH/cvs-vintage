@@ -198,10 +198,21 @@ public interface Request  {
 
     boolean isSecure() ;
 
+    // XXX remove - not needed
     public void setUserRoles( String roles[] );
 
     public String[] getUserRoles( );
+
+    /** If this request is subject to a security constraint.
+	A better way would be to have a "merge" mechanism to
+	add all properties to the container ( like in Apache),
+	but until this is implemented we'll just keep the
+	fields in request. 
+     */
+    public String[] getRequiredRoles( );
     
+    public void setRequiredRoles( String roles[] );
+
     /**
      */
      Principal getUserPrincipal() ;

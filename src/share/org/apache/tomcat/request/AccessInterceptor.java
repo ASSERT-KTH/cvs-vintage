@@ -102,7 +102,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
      */
     public void engineInit(ContextManager cm) throws TomcatException {
 	
-	super.setContextManager( cm );
+	super.engineInit( cm );
 	
 	this.cm=cm;
 	// set-up a per/container note for maps
@@ -171,7 +171,9 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	    ctx.setFormLoginPage( page );
 	    ctx.setFormErrorPage( errorPage );
 
-	    ctx.addServlet( new FormAuthHandler() );
+	    FormAuthHandler formH=new FormAuthHandler();
+	    formH.setDebug(20);
+	    ctx.addServlet( formH );
 	    ctx.addServlet( new FormSecurityCheckHandler() );
 	    ctx.addErrorPage( "401", "tomcat.formAuthHandler");
 
@@ -216,10 +218,6 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	if( ctxSecurityC==null)
 	    ctxCt.setNote( secMapNote, new SecurityConstraints() );
 
-// 	log( "addContainer() " + ctx.getHost() + " " +
-// 	     ctx.getPath() + " " +
-// 	     ct.getPath() );
-	
 	if( ct.getRoles()!=null || ct.getTransport()!=null ) {
 	    if( debug > 0 )
 		log( "addContainer() " + ctx.getHost() + " " +
@@ -245,7 +243,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 	String path=reqURI.substring( ctxPath.length());
 	String method=req.getMethod();
 	
-	if( debug > 1 ) log( "ACCESS: checking " + path );
+	if( debug > 1 ) log( "checking " + path );
 	
 	for( int i=0; i< ctxSec.patterns ; i++ ) {
 	    Container ct=ctxSec.securityPatterns[i];
@@ -254,7 +252,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 		String methods[]=ct.getMethods();
 		String transport=ct.getTransport();
 		if( debug>0) {
-		    StringBuffer sb=new StringBuffer("ACCESS: matched ");
+		    StringBuffer sb=new StringBuffer("matched ");
 		    sb.append(ct.getPath()).append(" ");
 		    if(methods!=null)
 			for( int j=0; j< methods.length; j++ )
@@ -272,7 +270,7 @@ public class AccessInterceptor extends  BaseInterceptor  {
 		
 		// roles will be checked by a different interceptor
 		if( roles!= null  && roles.length > 0) 
-		    req.setNote( reqRolesNote, roles );
+		    req.setRequiredRoles( roles );
 	    }
 	}
  	return 0;
@@ -342,7 +340,7 @@ class BasicAuthHandler extends ServletWrapper {
 	Context ctx=req.getContext();
 	String realm=ctx.getRealmName();
 	if(realm==null) realm="default";
-
+	res.setStatus( 401 );
 	res.setHeader( "WWW-Authenticate",
 		       "Basic realm=\"" + realm + "\"");
     }
@@ -377,6 +375,8 @@ class FormAuthHandler extends ServletWrapper {
 
 	session=req.getSession( true );
 	String username=(String)session.getAttribute( "j_username" );
+
+	if( debug>0) log( "Username = " + username);
 	if( username != null ) {
 	    // 401 with existing j_username - that means wrong credentials.
 	    // Next time we'll have a fresh start

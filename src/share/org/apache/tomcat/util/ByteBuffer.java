@@ -218,6 +218,15 @@ public class ByteBuffer {
 	    count = 0;
         }
     }
+
+//     public void close() {
+// 	// a write with count=0 will make sure
+// 	// the listeners are at least once called.
+// 	// we need to add a close() notification
+// 	System.out.println("Buffer.close()");
+// 	doWrite( buf, 0, count);
+// 	count=0;
+//     }
     
     // -------------------- Extracting from buffer --------------------
     // Like BufferedInputStream, without sync and without mark

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.4 2000/06/22 00:15:00 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/06/22 00:15:00 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Handler.java,v 1.5 2000/06/22 19:49:35 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/06/22 19:49:35 $
  *
  * ====================================================================
  *
@@ -179,28 +179,15 @@ public class Handler {
 	if ( ! initialized ) return;// already destroyed or not init.
 	initialized=false;
 
-	ContextInterceptor cI[]=context.getContextInterceptors();
-	for( int i=0; i<cI.length; i++ ) {
-	    try {
-		cI[i].preServletDestroy( context, null);// this );
-		// ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		context.log( "Error in preServletDestroy " + cI, ex );
-	    }
-	}
+	if( ! internal )
+	    contextM.doPreServletDestroy( context, (ServletWrapper)this);
 	
 	// XXX post will not be called if any error happens in destroy.
 	// That's how tomcat worked before - I think it's a bug !
 	doDestroy();
-	
-	for( int i=cI.length-1; i>=0; i-- ) {
-	    try {
-		cI[i].postServletDestroy( context, null); //this );
-		// ignore the error - like in the original code
-	    } catch( TomcatException ex) {
-		context.log( "Error in postServletDestroy " + cI, ex );
-	    }
-	}
+
+	if( ! internal )
+	    contextM.doPostServletDestroy( context, (ServletWrapper)this);
     }
 
     /** Initialize the handler. Handler can override this
@@ -209,7 +196,7 @@ public class Handler {
      */
     protected void doInit() throws Exception
     {
-
+	
     }
 
     /** Call the init method, and notify all interested listeners.
@@ -224,34 +211,17 @@ public class Handler {
 		return;
 	    }
 	    
-	    ContextInterceptor cI[]=context.getContextInterceptors();
-	    for( int i=0; i<cI.length; i++ ) {
-		try {
-		    cI[i].preServletInit( context, (ServletWrapper)this );
-		    // ignore the error - like in the original code
-		} catch( TomcatException ex) {
-		    ex.printStackTrace();
-		    if( ex.getRootCause() != null ) {
-			System.out.println("Original error " );
-			ex.getRootCause().printStackTrace();
-		    }
-		}
-	    }
+	    if( ! internal )
+		contextM.doPreServletInit( context, (ServletWrapper)this);
 
 	    doInit();
 
 	    // if an exception is thrown in init, no end interceptors will
 	    // be called. that was in the origianl code J2EE used
-		
-	    for( int i=cI.length-1; i>=0; i-- ) {
-		try {
-		    cI[i].postServletInit( context, (ServletWrapper)this);
-		    // ignore the error - like in the original code
-		} catch( TomcatException ex) {
-		    ex.printStackTrace();
-		}
-	    }
 
+	    if( ! internal )
+		contextM.doPostServletInit( context, (ServletWrapper)this);
+	    
 	} catch( Exception ex ) {
 	    initialized=false;
 	}
@@ -284,15 +254,9 @@ public class Handler {
 		return;
 	    }
 	}
-	
-	// We are initialized and fine
-	RequestInterceptor cI[]=context.getRequestInterceptors();
-	if( ! internal ) {
-	    for( int i=0; i<cI.length; i++ ) {
-		cI[i].preService( req, res );
-		// ignore the error - like in the original code
-	    }
-	}
+
+	if( ! internal )
+	    contextM.doPreService( req, res );
 	
 	Throwable t=null;
 	try {
@@ -302,12 +266,8 @@ public class Handler {
 	}
 	
 	// continue with the postService
-	if( ! internal ) {
-	    for( int i=cI.length-1; i>=0; i-- ) {
-		cI[i].postService( req , res );
-		// ignore the error - like in the original code
-	    }
-	}
+	if( ! internal )
+	    contextM.doPostService( req, res );
 
 	if( t==null ) return;
 	contextM.handleError( req, res, t );

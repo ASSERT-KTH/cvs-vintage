@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.30 2000/06/19 21:53:12 costin Exp $
- * $Revision: 1.30 $
- * $Date: 2000/06/19 21:53:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ResponseImpl.java,v 1.31 2000/06/22 19:49:36 costin Exp $
+ * $Revision: 1.31 $
+ * $Date: 2000/06/22 19:49:36 $
  *
  * ====================================================================
  *
@@ -183,29 +183,18 @@ public class ResponseImpl implements Response {
     }
 
     public void finish() throws IOException {
-	try {
-	    if (usingWriter && (writer != null)) {
-	        writer.flush();
-		writer.close();
-	    }
-	    if( bBuffer != null) {
-		bBuffer.flush();
-		request.getContextManager().doAfterBody(request, this);
-		return;
-	    }
-	    out.reallyFlush();
-	    request.getContextManager().doAfterBody(request, this);
-	    out.close();
-	} catch (SocketException e) {
-	    if(request!=null) request.getContext().log("Socket Exception" + request.getRequestURI());	    	    
-	    return;  // munch
-	} catch (IOException ex) {
-	    if( "Broken pipe".equals(ex.getMessage())) {
-		//		if(request!=null) request.getContext().log("Broken pipe " + request.getRequestURI());
-		return;
-	    }
-	    throw ex;
+	if (usingWriter && (writer != null)) {
+	    writer.flush();
+	    writer.close();
 	}
+	if( bBuffer != null) {
+	    bBuffer.flush();
+	    request.getContextManager().doAfterBody(request, this);
+	    return;
+	}
+	out.reallyFlush();
+	request.getContextManager().doAfterBody(request, this);
+	out.close();
     }
 
     public boolean containsHeader(String name) {
@@ -427,6 +416,7 @@ public class ResponseImpl implements Response {
      *  interceptors to fix headers.
      */
     public void notifyEndHeaders() throws IOException {
+	//	System.out.println("End headers " + request.getProtocol());
 	if(request.getProtocol()==null) // HTTP/0.9 
 	    return;
 

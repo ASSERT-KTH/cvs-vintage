@@ -124,9 +124,6 @@ public class Context {
  
     //    private RequestSecurityProvider rsProvider;
 
-    private Vector contextInterceptors = new Vector();
-    private Vector requestInterceptors = new Vector();
-
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
 
@@ -792,6 +789,7 @@ public class Context {
      */
     public String getRealPath( String path) {
 	String base=getAbsolutePath();
+	if( path==null ) path="";
 
 	String realPath=FileUtil.safePath( base, path );
 	// No need for a sub-request, that's a great simplification
@@ -928,91 +926,26 @@ public class Context {
     /**  @deprecated
      */
     public void addContextInterceptor( ContextInterceptor ci) {
-	contextInterceptors.addElement( ci );
+	getContainer().addContextInterceptor(ci);
     }
 
-    ContextInterceptor cInterceptors[];
-
-    /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-	@deprecated
-    */
-    public ContextInterceptor[] getContextInterceptors() {
-	if( contextInterceptors.size() == 0 ) {
-	    // this context was not set up with individual interceptors.
-	    // XXX no test done for context-specific interceptors, this will be the normal
-	    // case, we need to find out what is the best behavior and config
-	    return contextM.getContextInterceptors();
-	}
-	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
-	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
-	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
-	    }
-	}
-	return cInterceptors;
-    }
+    /** @deprecated
+     */
+     public ContextInterceptor[] getContextInterceptors() {
+	 return getContainer().getContextInterceptors();
+     }
 
     /**  @deprecated
      */
     public void addRequestInterceptor( RequestInterceptor ci) {
-	requestInterceptors.addElement( ci );
+	getContainer().addRequestInterceptor(ci);
     }
 
-    RequestInterceptor rInterceptors[];
-
-    /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-	@deprecated
-    */
+    /** @deprecated
+     */
     public RequestInterceptor[] getRequestInterceptors() {
-	if( requestInterceptors.size() == 0 ) {
-	    // this context was not set up with individual interceptors.
-	    // XXX no test done for context-specific interceptors, this will be the normal
-	    // case, we need to find out what is the best behavior and config
-	    return contextM.getRequestInterceptors();
-	}
-	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
-	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
-	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
-	    }
-	}
-	return rInterceptors;
+	return getContainer().getRequestInterceptors();
     }
-
-//      /**
-//       * Adds a Permission to a Permissions object which will be used as
-//       * the Permissions for this Context.  These are the Permissions
-//       * set using the <Permission> element within the <Context> server.xml element.
-//       */
-//      public void setPermission(String className, String attr, String value) {
-//          try {
-//              if( perms == null )
-//                  perms = new Permissions();
-//              Class c=Class.forName(className);
-//              Constructor con=c.getConstructor(new Class[]{String.class,String.class});
-//              Object [] args=new Object[2];
-//              args[0] = attr;
-//              args[1] = value;
-//              Permission p = (Permission)con.newInstance(args);
-//              ((Permissions)perms).add(p);
-//          } catch( ClassNotFoundException ex ) {
-//              System.out.println("SecurityManager Class not found: " + className);
-//              System.exit(1);
-//          } catch( Exception ex ) {
-//              System.out.println("SecurityManager Class could not be loaded: " + className);
-//              ex.printStackTrace();
-//              System.exit(1);
-//          }
-//          System.out.println("SecurityManager, " + className + ", \"" + attr + "\", \"" + value + "\" added");
-//      }  
  
      /**
       * Get the SecurityManager Permissions for this Context.

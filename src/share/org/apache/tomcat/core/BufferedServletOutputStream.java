@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.12 2000/05/30 06:16:45 costin Exp $
- * $Revision: 1.12 $
- * $Date: 2000/05/30 06:16:45 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/BufferedServletOutputStream.java,v 1.13 2000/06/22 19:49:32 costin Exp $
+ * $Revision: 1.13 $
+ * $Date: 2000/06/22 19:49:32 $
  *
  * ====================================================================
  * 
@@ -231,10 +231,8 @@ public class BufferedServletOutputStream extends ServletOutputStream {
     }
 
     public void reallyFlush() throws IOException {
-	// 	System.out.println("x " + bufferCount+ " " + closed);
 	try {
 	    if (!resA.isBufferCommitted()) {
-		//	        response.writeHeaders(out);
 		sendHeaders();
 	        resA.setBufferCommitted(true);
 	    }
