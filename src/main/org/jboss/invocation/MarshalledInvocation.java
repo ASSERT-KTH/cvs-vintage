@@ -34,7 +34,7 @@ import javax.transaction.Transaction;
  * @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
  * @author Bill.Burke@jboss.org
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public class MarshalledInvocation
         extends Invocation
@@ -44,8 +44,10 @@ public class MarshalledInvocation
 
    /** Serial Version Identifier. */
    static final long serialVersionUID = -718723094688127810L;
-   /** A flag indicating if the */
-   static boolean useFullHashMode = false;
+   /** A flag indicating if the full hash format that includes the interface
+    * should be used
+    */
+   static boolean useFullHashMode = true;
    /** WeakHashMap<Class, HashMap<String, Long>> of declaring class to hashes */
    static Map hashMap = new WeakHashMap();
 
@@ -88,7 +90,7 @@ public class MarshalledInvocation
     * different interfaces.
     *
     * @param intf - the class/interface to calculate method hashes for.
-    * @return Map<Long, Method> mapping of method hash to the Method object.
+    * @return Map<String, Long> mapping of method string to method desc hash
     */
    public static Map getInterfaceHashes(Class intf)
    {
@@ -143,7 +145,7 @@ public class MarshalledInvocation
     * modifiers, return type, declaring class, name, parameters and exceptions. 
     *
     * @param intf - the class/interface to calculate method hashes for.
-    * @return Map<Long, Method> mapping of method hash to the Method object.
+    * @return Map<String, Long> mapping of method string to method desc hash
     */
    public static Map getFullInterfaceHashes(Class intf)
    {
@@ -225,7 +227,7 @@ public class MarshalledInvocation
             byte abyte0[] = messagedigest.digest();
             for (int j = 0; j < Math.min(8, abyte0.length); j++)
                hash += (long) (abyte0[j] & 0xff) << j * 8;
-            map.put(methodDesc, new Long(hash));
+            map.put(new Long(hash), method);
          }
          catch (Exception e)
          {
