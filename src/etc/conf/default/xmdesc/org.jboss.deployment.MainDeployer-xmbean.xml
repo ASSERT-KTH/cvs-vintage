@@ -27,14 +27,6 @@
       <name>ServiceName</name>
       <type>javax.management.ObjectName</type>
    </attribute>
-   <attribute access='read-write' setMethod='setSuffixOrder' getMethod='getSuffixOrder'>
-      <description></description>
-      <name>SuffixOrder</name>
-      <type>[Ljava.lang.String;</type>
-      <descriptors>
-         <value value="deployer,deployer.xml,sar,rar,ds.xml,service.xml,har,jar,war,wsr,ear,zip,bsh,last"/>
-      </descriptors>
-   </attribute>
    <attribute access='read-only' getMethod='getSuffixOrder'>
       <description></description>
       <name>SuffixOrder</name>
