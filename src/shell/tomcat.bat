@@ -22,7 +22,7 @@ rem                implementation, and the "tools.jar" from the JDK.
 rem
 rem   JAVA_HOME    Must point at your Java Development Kit installation.
 rem
-rem $Id: tomcat.bat,v 1.34 2001/02/06 17:58:21 nacho Exp $
+rem $Id: tomcat.bat,v 1.35 2001/07/17 03:46:05 costin Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -97,39 +97,39 @@ goto finish
 :startServer
 echo Starting Tomcat in new window
 if "%2" == "-security" goto startSecure
-%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
+%_STARTJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :startSecure
 echo Starting Tomcat with a SecurityManager
-%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
+%_SECSTARTJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runServer
 rem Running Tomcat in this window
 if "%2" == "-security" goto runSecure
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runSecure
 rem Running Tomcat with a SecurityManager
-%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Djava.security.manager -Djava.security.policy=="%TOMCAT_HOME%/conf/tomcat.policy" -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :stopServer
 rem Stopping the Tomcat Server
-%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Main -stop %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %TOMCAT_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.tomcat.startup.Main -stop %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runAnt
 rem Run ANT in Tomcat's Environment
 set CP=%CP%;%TOMCAT_HOME%\lib\ant.jar
-%_RUNJAVA% %ANT_OPTS% -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %ANT_OPTS% -Dant.home=%TOMCAT_HOME% -Dtomcat.home=%TOMCAT_HOME% org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 :runJspc
 rem Run JSPC in Tomcat's Environment
-%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
+%_RUNJAVA% %JSPC_OPTS% -Dtomcat.home=%TOMCAT_HOME% org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
 goto cleanup
 
 
