@@ -88,6 +88,8 @@ public class MultiProtocolTests extends TestCase {
      * Setup Method
      */
     public void setUp() throws Exception {
+        super.setUp();
+
         org.objectweb.carol.util.configuration.CarolConfiguration.init();
 
         ic = new InitialContext();
