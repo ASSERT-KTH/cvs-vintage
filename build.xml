@@ -403,18 +403,7 @@
     <zip zipfile="${Name}-${version}.zip" basedir="${tomcat.dist}" includes="**"/>
   </target>
   
-  <target name="dist-new">
-    <mkdir dir="${tomcat.dist}/lib/shared"/>
-    <mkdir dir="${tomcat.dist}/lib/common"/>
-    <copy file ="${tomcat.dist}/lib/servlet.jar"
-        todir="${tomcat.dist}/lib/common" />
-    <copy file ="${tomcat.dist}/lib/jasper.jar"
-        todir="${tomcat.dist}/lib/shared" />
-    <copy file ="${tomcat.dist}/lib/tomcat_util.jar"
-        todir="${tomcat.dist}/lib/shared" />
-  </target>
-
-  <target name="new">
+  <target name="main" depends="old-main">
     <mkdir dir="${tomcat.build}/lib/shared"/>
     <mkdir dir="${tomcat.build}/lib/common"/>
     <copy file ="${tomcat.build}/lib/servlet.jar"
@@ -448,7 +437,7 @@
   </target>
 
   
-  <target name="all" depends="clean,dist,dist-new"/>
-  <target name="main" depends="tomcat,webapps,sanity-test,new"/>
+  <target name="all" depends="clean,dist"/>
+  <target name="old-main" depends="tomcat,webapps,sanity-test"/>
     
 </project>

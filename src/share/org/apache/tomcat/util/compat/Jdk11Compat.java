@@ -117,7 +117,7 @@ public class Jdk11Compat {
     }
     public URL[] getParentURLs(ClassLoader cl){
         SimpleClassLoader scl=(SimpleClassLoader)cl;
-        return ((SimpleClassLoader)cl.getParent()).getURLs();
+        return ((SimpleClassLoader)scl.getParent()).getURLs();
     }
     // Other methods, as needed
         

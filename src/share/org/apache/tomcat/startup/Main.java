@@ -178,12 +178,14 @@ public class Main {
             // the server classloader loads from classes dir too and from tools.jar
             Vector urlV=new Vector();
             urlV.addElement( getURL(  getServerDir() ,"../classes/" ));
-            urlV.addAll(getClassPathA(getServerDir()));
+            Vector serverUrlV =getClassPathV(getServerDir());
+            for(int i=0; i < serverUrlV.size();i++)
+                urlV.addElement(serverUrlV.elementAt(i));
 	    urlV.addElement( new URL( "file", null , System.getProperty( "java.home" ) +"/../lib/tools.jar"));
             URL[] serverClassPath=getURLs(urlV);
             // ClassLoader for webapps it uses a shared dir as repository, distinct from lib
-            URL[] sharedClassPath=getURLs(getClassPathA(getSharedDir()));
-            URL[] commonClassPath=getURLs(getClassPathA(getCommonDir()));
+            URL[] sharedClassPath=getURLs(getClassPathV(getSharedDir()));
+            URL[] commonClassPath=getURLs(getClassPathV(getCommonDir()));
             ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
 	    ClassLoader sharedCl= IntrospectionUtils.getURLClassLoader(sharedClassPath , commonCl );
             ClassLoader serverCl= IntrospectionUtils.getURLClassLoader(serverClassPath , commonCl );
@@ -268,7 +270,7 @@ public class Main {
 	return names;
     }
 
-    Vector getClassPathA(String p0) throws Exception {
+    Vector getClassPathV(String p0) throws Exception {
         Vector urlV=new Vector();
         try{
             String cpComp[]=getJarFiles(p0);

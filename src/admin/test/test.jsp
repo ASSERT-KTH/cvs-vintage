@@ -16,16 +16,13 @@ You can see the context log <a href="/test/context_log.txt">here</a>
    // Keep in mind this is just a way to jump-start testing, not a 
    // production-quality test runner.
 %>
-<!-- trozo  -->
 <% out.flush(); 
    if( request.getParameter("target") == null ) return;
 %>
-<!-- trozo  -->
 <adm:admin ctxPath="/test" 
 	   action="setLogger" 
 	   value="webapps/test/context_log.txt" />
 
-<!-- trozo 1 -->
 <ant:gtest />
 
 <ant:ant>
@@ -44,7 +41,6 @@ You can see the context log <a href="/test/context_log.txt">here</a>
   <ant:property name="host" param="host" />
 </ant:ant>
 
-<!-- trozo 1 -->
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill
    // it's done ), use 'html' for "interactive" results
