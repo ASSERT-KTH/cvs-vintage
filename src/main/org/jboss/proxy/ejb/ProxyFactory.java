@@ -40,6 +40,7 @@ import org.jboss.metadata.BeanMetaData;
 import org.jboss.naming.Util;
 import org.jboss.proxy.Interceptor;
 import org.jboss.proxy.ClientContainer;
+import org.jboss.proxy.IClientContainer;
 import org.jboss.proxy.ejb.handle.HomeHandleImpl;
 import org.jboss.system.Registry;
 import org.jboss.util.NestedRuntimeException;
@@ -67,7 +68,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.39 $
+ * @version $Revision: 1.40 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -303,7 +304,6 @@ public class ProxyFactory
    {
       Iterator interceptorElements = MetaData.getChildrenByTagName(interceptors, "interceptor");
       ClassLoader loader = container.getClassLoader();
-      BeanMetaData beanMetaData = container.getBeanMetaData();
       while(interceptorElements != null && interceptorElements.hasNext())
       {
          Element ielement = (Element) interceptorElements.next();
@@ -381,14 +381,15 @@ public class ProxyFactory
 
          EJBProxyFactoryContainer pfc = (EJBProxyFactoryContainer) container;
          // Create the EJBHome
+         Class[] ifaces = {IClientContainer.class, pfc.getHomeClass(),
+                           Class.forName("javax.ejb.Handle")};
          this.home = (EJBHome) Proxy.newProxyInstance(
-            // Class loader pointing to the right classes from deployment
-            pfc.getHomeClass().getClassLoader(),
-            // The classes we want to implement home and handle
-            new Class[]{pfc.getHomeClass(), Class.forName("javax.ejb.Handle")},
-            // The home proxy as invocation handler
-            client
-         );
+               // Class loader pointing to the right classes from deployment
+               pfc.getHomeClass().getClassLoader(),
+               // The classes we want to implement home and handle
+               ifaces,
+               // The home proxy as invocation handler
+               client);
 
          // Create stateless session object
          // Same instance is used for all objects
@@ -408,12 +409,14 @@ public class ProxyFactory
 
             loadInterceptorChain(beanInterceptorClasses, client);
 
-            this.statelessObject =
-               (EJBObject) Proxy.newProxyInstance(
+            Class[] ssifaces = {IClientContainer.class, pfc.getRemoteClass()};
+
+            this.statelessObject = 
+               (EJBObject)Proxy.newProxyInstance(
                   // Correct CL
                   pfc.getRemoteClass().getClassLoader(),
-                  // Interfaces    
-                  new Class[]{pfc.getRemoteClass()},
+                  // Interfaces
+                  ssifaces,
                   // SLSB proxy as invocation handler
                   client
                );
@@ -421,7 +424,7 @@ public class ProxyFactory
          else
          {
             // this is faster than newProxyInstance
-            Class[] intfs = {pfc.getRemoteClass()};
+            Class[] intfs = {IClientContainer.class, pfc.getRemoteClass()};
             Class proxyClass = Proxy.getProxyClass(pfc.getRemoteClass().getClassLoader(), intfs);
             final Class[] constructorParams =
                {InvocationHandler.class};

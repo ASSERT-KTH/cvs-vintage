@@ -15,22 +15,22 @@ import java.io.ObjectOutput;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationHandler;
+import java.util.ArrayList;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
 import org.jboss.invocation.PayloadKey;
-import org.jboss.invocation.MarshalledValue;
 
 /**
  * An invocation handler whichs sets up the client invocation and
  * starts the invocation interceptor call chain.
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public class ClientContainer
-   implements Externalizable, InvocationHandler
+   implements IClientContainer, Externalizable, InvocationHandler
 {
    /** The serialVersionUID. @since 1.5 */
    private static final long serialVersionUID = -4061374432170701306L;
@@ -68,7 +68,12 @@ public class ClientContainer
       // Isn't this a bug in the proxy call??
       if (args == null)
          args = EMPTY_ARGS;
-        
+
+      if( m.getDeclaringClass() == IClientContainer.class )
+      {
+         return m.invoke(this, args);
+      }
+
       // Create the invocation object
       Invocation invocation = new Invocation();
       
@@ -86,7 +91,36 @@ public class ClientContainer
       Object obj = next.invoke(invocation);
       return obj;
    }
-   
+
+   public InvocationContext getInvocationContext()
+   {
+      return this.context;
+   }
+   public ArrayList getInterceptors()
+   {
+      ArrayList tmp = new ArrayList();
+      Interceptor inext = next;
+      while( inext != null )
+      {
+         tmp.add(inext);
+         inext = inext.nextInterceptor;
+      }
+      return tmp;
+   }
+   public void setInterceptors(ArrayList interceptors)
+   {
+      if( interceptors.size() == 0 )
+         return;
+      next = (Interceptor) interceptors.get(0);
+      Interceptor i = next;
+      for(int n = 1; n < interceptors.size(); n ++)
+      {
+         Interceptor inext = (Interceptor) interceptors.get(n);
+         i.setNext(inext);
+         i = inext;
+      }
+   }
+
    public Interceptor setNext(Interceptor interceptor) 
    {
       next = interceptor;

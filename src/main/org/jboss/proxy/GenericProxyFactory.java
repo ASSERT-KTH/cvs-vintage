@@ -11,6 +11,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Arrays;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invoker;
@@ -27,7 +28,7 @@ import org.jboss.util.NestedRuntimeException;
  *
  * @todo generalize the proxy/invoker factory object
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public class GenericProxyFactory
 {
@@ -111,11 +112,15 @@ public class GenericProxyFactory
          throw new NestedRuntimeException("Failed to load interceptor chain", e);
       }
 
+      ArrayList tmp = new ArrayList(Arrays.asList(ifaces));
+      tmp.add(IClientContainer.class);
+      Class[] ifaces2 = new Class[tmp.size()];
+      tmp.toArray(ifaces2);
       return Proxy.newProxyInstance(
          // Classloaders
          loader,
          // Interfaces
-         ifaces,
+         ifaces2,
          // Client container as invocation handler
          client);
    }
