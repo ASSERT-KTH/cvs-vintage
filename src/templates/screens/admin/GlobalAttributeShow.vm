@@ -51,8 +51,7 @@ This page is for selecting an Attribute to edit which is defined in a global sca
 $intake.declareGroups()
 
 <div class="functnbar3">
-<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doDeleteaelecteda
-ttributes" />&#160;<small>attribute</small>&#160;
+<input type="submit" value="create new"  name="eventSubmit_doCreatenew" />&#160;<input type="submit" value="copy selected" />&#160;<input type="submit" value="delete selected"  name="eventSubmit_doDeleteselectedattributes" />&#160;<small>attribute</small>&#160;
 </div>
 
 <div class="functnbar2">

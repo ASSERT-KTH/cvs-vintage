@@ -71,7 +71,7 @@ Back to <a href="$link.setPage("admin,GlobalAttributeShow.vm")">Attribute Select
 </div>
 
 <div class="functnbar3">
-<input type="submit" value="save"  name="eventSubmit__doModifyattributedata" />
+<input type="submit" value="save"  name="eventSubmit_doModifyattributedata" />
 </div>
 
 $intake.declareGroups()
