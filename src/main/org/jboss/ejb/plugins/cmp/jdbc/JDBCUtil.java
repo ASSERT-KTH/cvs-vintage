@@ -37,6 +37,7 @@ import java.util.HashMap;
 import javax.ejb.EJBObject;
 import javax.ejb.Handle;
 
+import org.jboss.invocation.MarshalledValue;
 import org.jboss.logging.Logger;
 
 /**
@@ -45,7 +46,7 @@ import org.jboss.logging.Logger;
  * parameters and loading query results.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCUtil
 {
@@ -454,9 +455,12 @@ public final class JDBCUtil
          }
          
          // oops got the wrong type - nothing we can do
-         throw new SQLException("Got a " + value.getClass().getName() + 
-               ": '" + value + "' while looking for a " + 
-               destination.getName());
+         throw new SQLException("Got a " + value.getClass().getName() + "[cl=" +
+               System.identityHashCode(value.getClass().getClassLoader()) +
+               ", value=" + value + "] while looking for a " + 
+               destination.getName() + "[cl=" +
+               System.identityHashCode(destination) + "]");
+               
 
       } catch (RemoteException e)
       {
@@ -544,12 +548,13 @@ public final class JDBCUtil
             value = ((EJBObject)value).getHandle();
          }
          
+         // Marshall the object using MashalledValue to handle classloaders 
+         value = new MarshalledValue(value);
+         
          // return the serialize the value
          baos = new ByteArrayOutputStream();
          oos = new ObjectOutputStream(baos);
-         
-         // Marshall the object and write it
-         oos.writeObject(new MarshalledObject(value));
+         oos.writeObject(value);
          return baos.toByteArray();
       } catch(RemoteException e)
       {
@@ -585,8 +590,12 @@ public final class JDBCUtil
          ois = new ObjectInputStream(bais);
          value = ois.readObject();
          
-         // de-marshall value
-         value = ((MarshalledObject)value).get();
+         // de-marshall value if possible
+         if(value instanceof MarshalledValue)  {
+            value = ((MarshalledValue)value).get();
+         } else if(value instanceof MarshalledObject) {
+            value = ((MarshalledObject)value).get();
+         }
          
          // ejb-reference: get the object back from the handle
          if(value instanceof Handle)
