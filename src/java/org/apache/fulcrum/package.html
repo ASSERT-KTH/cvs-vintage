@@ -1,0 +1,61 @@
+<html>
+<head>
+<!-- head part is ignored -->
+</head>
+
+<body>
+Contains the Service framework for Turbine.
+<!-- description that appears in API overview and at the top of package overview -->
+<!-- it is terminated by the first '.' in the body part -->
+<p>
+Services are singletons that have pluggable implementation
+and can participate in Turbine startup and shutdown.
+<p>
+<table><tr><td width="100%">
+
+<h3>What is a service?</h3>
+<ul>
+<li> Is a singleton -  there is only one instance of it in the system 
+     i.e. memory or connections are allocated once only, and the internal
+     state is common to all requesting clients.
+<li> Has pluggable implementation - you can use your own implementation
+     if you need, just change  an entry in Fulcrum.properties,
+     and there you go.
+<li> Can initialize itself (allocate memory, make connctions)
+     just before the client requests it for the first time. Services that
+     are never used by the application will not allocate resources.
+<li> Can execute some action upon system shutdown e.g. close the 
+     opened connections.
+</ul>		  
+<h3>The life cycle of a Service</h3>
+<p>
+A Service is not supposed to do much in it's constructor. Especialy it 
+should not allocate any costly resources like large memory structures, 
+DB or network connections and the like. It may well happen that the Service
+is sitting in the config file, but the application does not 
+need it, so allocating all resources at system startup might
+be a loss.
+<p>
+Better explanation of early initialization. WebMacro is no longer
+a service and what was currently here is misleading.
+<p>
+Late initialization happens when the Service is requested by the
+application for the first time. It should allocate any resources
+needed and chnge the state so that getInit() returns true.
+If getInit() returns false after init() is executed, the Service 
+has malfunctioned.
+<p>
+After late initialization, the Service is ready to perform actions
+on behalf of the application.
+<p>
+When the Service is no longer needed (this usually happens when 
+system is shutting down), the shutdown() method is called.
+shutdown() should deallocate all resources. If any error conditions
+occur they are ignored.
+</td>
+</tr>
+</table>
+<br>
+<font size="-2">$Id: package.html,v 1.1 2004/10/24 22:12:30 dep4b Exp $</font>
+</body>
+</html>
