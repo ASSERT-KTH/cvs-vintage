@@ -3,7 +3,7 @@
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
- * Copyright (C) 2000, 2003 Slava Pestov
+ * Copyright (C) 2000, 2004 Slava Pestov
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@ import org.gjt.sp.jedit.Debug;
  * across Java implementations.
  *
  * @author Slava Pestov
- * @version $Id: KeyEventWorkaround.java,v 1.37 2004/04/21 23:56:39 spestov Exp $
+ * @version $Id: KeyEventWorkaround.java,v 1.38 2004/04/22 19:09:24 spestov Exp $
  */
 public class KeyEventWorkaround
 {
@@ -239,9 +239,13 @@ public class KeyEventWorkaround
 				return null;
 			case KeyEvent.VK_LEFT:
 			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_UP:
+			case KeyEvent.VK_DOWN:
 			case KeyEvent.VK_PAGE_UP:
 			case KeyEvent.VK_PAGE_DOWN:
-				/* workaround for A+LEFT/RIGHT producing
+			case KeyEvent.VK_END:
+			case KeyEvent.VK_HOME:
+				/* workaround for A+keys producing
 				 * garbage on Windows */
 				if(modifiers == InputEvent.ALT_MASK)
 					last = LAST_ALT;
