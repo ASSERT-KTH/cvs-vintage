@@ -1,6 +1,6 @@
 <% 
         response.setContentType("text/plain");
-        PrintWriter outW = response.getWriter();
+        java.io.PrintWriter outW = response.getWriter();
 
 	// No parameter is read 
 

@@ -1,5 +1,6 @@
 <html>
 <%@ page import="java.util.Hashtable" %>
+<%@ page import="java.util.Vector" %>
   <body>
 <% 
     Hashtable hash = new Hashtable();
