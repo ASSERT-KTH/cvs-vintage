@@ -25,7 +25,7 @@
 // File: GeneratorJava.java
 // Classes: GeneratorJava
 // Original Author:
-// $Id: GeneratorJava.java,v 1.40 2002/08/30 22:44:15 BobTarling Exp $
+// $Id: GeneratorJava.java,v 1.41 2002/09/02 09:36:17 kataka Exp $
 
 // 12 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support
 // extension points.
@@ -1200,6 +1200,7 @@ implements PluggableNotation, FileGenerator {
 
   public String generateAssociationEnd(MAssociationEnd ae) {
     if (!ae.isNavigable()) return "";
+    if (ae.getAssociation().isAbstract()) return "";
     //String s = INDENT + "protected ";
     // must be public or generate public navigation method!
     //String s = INDENT + "public ";
