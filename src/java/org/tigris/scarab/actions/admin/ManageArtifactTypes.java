@@ -73,7 +73,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ManageArtifactTypes.java,v 1.12 2002/04/25 22:50:07 elicia Exp $
+ * @version $Id: ManageArtifactTypes.java,v 1.13 2002/05/31 21:45:47 elicia Exp $
  */
 public class ManageArtifactTypes extends RequireLoginFirstAction
 {
@@ -216,6 +216,7 @@ public class ManageArtifactTypes extends RequireLoginFirstAction
                             scarabR.setConfirmMessage(
                                 "The selected issue Types have"
                                 + " been removed from the module.");
+                           module.getNavIssueTypes().remove(issueType);
                         }
                     }
                     catch (Exception e)
