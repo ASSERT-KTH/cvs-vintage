@@ -1,4 +1,4 @@
-// $Id: PropPanelOperation.java,v 1.42 2003/09/04 08:04:55 bobtarling Exp $
+// $Id: PropPanelOperation.java,v 1.43 2003/09/07 18:03:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,6 @@
 package org.argouml.uml.ui.foundation.core;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -371,12 +370,8 @@ public class PropPanelOperation extends PropPanelModelElement {
 
     public void setParameters(Collection newParams) {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAOperation(target)) {
-            if (newParams instanceof java.util.List) {
-                ((MOperation) target).setParameters((java.util.List) newParams);
-            } else {
-                ((MOperation) target).setParameters(new ArrayList(newParams));
-            }
+        if (ModelFacade.isAOperation(target)) {
+            ModelFacade.setParameters(target, newParams);
         }
     }
 

@@ -1,4 +1,4 @@
-// $Id: ParserDisplay.java,v 1.73 2003/09/06 15:24:39 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.74 2003/09/07 18:03:14 bobtarling Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ParserDisplay.java
 // Classes: ParserDisplay
 // Original Author:
-// $Id: ParserDisplay.java,v 1.73 2003/09/06 15:24:39 bobtarling Exp $
+// $Id: ParserDisplay.java,v 1.74 2003/09/07 18:03:14 bobtarling Exp $
 
 
 
@@ -237,7 +237,7 @@ public class ParserDisplay extends Parser {
 			    MCallConcurrencyKind kind =
 				MCallConcurrencyKind.SEQUENTIAL;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setConcurrency(kind);
+				ModelFacade.setConcurrency(element, kind);
 			}
 		    });
 	_operationSpecialStrings[1] =
@@ -250,7 +250,7 @@ public class ParserDisplay extends Parser {
 			    if (value != null && value.equalsIgnoreCase("false"))
 				kind = MCallConcurrencyKind.SEQUENTIAL;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setConcurrency(kind);
+				ModelFacade.setConcurrency(element, kind);
 			}
 		    });
 	_operationSpecialStrings[2] =
@@ -263,7 +263,7 @@ public class ParserDisplay extends Parser {
 			    if (value != null && value.equalsIgnoreCase("false"))
 				kind = MCallConcurrencyKind.SEQUENTIAL;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setConcurrency(kind);
+				ModelFacade.setConcurrency(element, kind);
 			}
 		    });
 	_operationSpecialStrings[3] =
@@ -277,7 +277,7 @@ public class ParserDisplay extends Parser {
 			    else if ("concurrent".equalsIgnoreCase(value))
 				kind = MCallConcurrencyKind.CONCURRENT;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setConcurrency(kind);
+				ModelFacade.setConcurrency(element, kind);
 			}
 		    });
 	_operationSpecialStrings[4] =
@@ -299,7 +299,7 @@ public class ParserDisplay extends Parser {
 			    if (value != null && value.equalsIgnoreCase("false"))
 				isLeaf = false;
 			    if (ModelFacade.isAOperation(element))
-				((MOperation) element).setLeaf(isLeaf);
+				ModelFacade.setLeaf(element, isLeaf);
 			}
 		    });
 	_operationSpecialStrings[6] =

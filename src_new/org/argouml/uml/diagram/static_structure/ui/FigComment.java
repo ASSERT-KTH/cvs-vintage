@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.18 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: FigComment.java,v 1.19 2003/09/07 18:03:14 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.18 2003/09/04 20:18:11 thierrylach Exp $
+// $Id: FigComment.java,v 1.19 2003/09/07 18:03:14 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -413,7 +413,7 @@ public class FigComment
      */
     public final void storeNote(String note) {
         if (getOwner() != null)
-             ((MModelElement) getOwner()).setName(note);
+             ModelFacade.setName(getOwner(), note);
     }
 
     /**

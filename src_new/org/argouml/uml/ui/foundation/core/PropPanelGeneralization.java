@@ -1,4 +1,4 @@
-// $Id: PropPanelGeneralization.java,v 1.32 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: PropPanelGeneralization.java,v 1.33 2003/09/07 18:03:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -153,7 +153,7 @@ public class PropPanelGeneralization extends PropPanelModelElement {
             //   can't do immediate circular generalization
             //
             if (parent != child && parent != oldParent) {
-                ((MGeneralization)generalization).setParent(parent);
+                ModelFacade.setParent(generalization, parent);
             } else {
                 //
                 //   force a refresh of the panel

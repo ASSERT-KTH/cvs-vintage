@@ -1,6 +1,4 @@
-
-
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.5 2003/09/07 18:03:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,13 +22,11 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.4 2003/08/25 19:15:52 bobtarling Exp $
+// $Id: ActionSetStructuralFeatureMultiplicity.java,v 1.5 2003/09/07 18:03:13 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.ActionSetMultiplicity;
-
-import ru.novosoft.uml.foundation.core.MStructuralFeature;
-import ru.novosoft.uml.foundation.data_types.MMultiplicity;
 
 /**
  * Action to set the multiplicity of a structural feature.
@@ -56,10 +52,9 @@ public class ActionSetStructuralFeatureMultiplicity
     public void setSelectedItem(Object item, Object target) {
         if (target != null && org.argouml.model.ModelFacade.isAStructuralFeature(target)) {
             if (org.argouml.model.ModelFacade.isAMultiplicity(item)) {
-                ((MStructuralFeature) target).setMultiplicity(
-                    (MMultiplicity) item);
+                ModelFacade.setMultiplicity(target, item);
             } else
-                 ((MStructuralFeature) target).setMultiplicity(null);
+                 ModelFacade.setMultiplicity(target, null);
 
         }
     }

@@ -1,4 +1,4 @@
-// $Id: UMLExtensionPointLocationDocument.java,v 1.6 2003/09/01 17:56:34 bobtarling Exp $
+// $Id: UMLExtensionPointLocationDocument.java,v 1.7 2003/09/07 18:03:13 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,8 +28,6 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLPlainTextDocument;
 
-import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
-
 /**
  * @since Oct 6, 2002
  * @author jaap.branderhorst@xs4all.nl
@@ -49,7 +47,7 @@ public class UMLExtensionPointLocationDocument extends UMLPlainTextDocument {
      * @see org.argouml.uml.ui.UMLPlainTextDocument#setProperty(java.lang.String)
      */
     protected void setProperty(String text) {
-        ((MExtensionPoint) getTarget()).setLocation(text);
+        ModelFacade.setLocation(getTarget(), text);
     }
 
     /**

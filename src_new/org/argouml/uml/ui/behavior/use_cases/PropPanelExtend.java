@@ -1,4 +1,4 @@
-// $Id: PropPanelExtend.java,v 1.23 2003/09/01 11:51:08 bobtarling Exp $
+// $Id: PropPanelExtend.java,v 1.24 2003/09/07 18:03:13 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -174,7 +174,7 @@ public class PropPanelExtend extends PropPanelModelElement {
 
         // Set the condition body.
 
-        ((MExtend) target).setCondition(UmlFactory.getFactory().getDataTypes().createBooleanExpression(null, condBody));
+        ModelFacade.setCondition(target, UmlFactory.getFactory().getDataTypes().createBooleanExpression(null,condBody));
     }
 
 
