@@ -55,6 +55,11 @@ ID_CODE, not the primary key column.
                 <child>TBNS203</child>
             </dependency>
 
+            <dependency>
+                <type>blocking</type>
+                <child>TBNS304</child>
+            </dependency>
+
             <attachment>
                 <name>My cool file</name>
                 <type>ATTACHMENT</type>
@@ -113,5 +118,44 @@ ID_CODE, not the primary key column.
                 <parent>TBNS101</parent>
             </dependency>
         </issue>
+         <issue id="304">
+            <artifact-type>Defect</artifact-type>
+            <committed-by>jon@latchkey.com</committed-by>
+            <issue-attribute>
+                <name>Status</name>
+                <value>Closed</value>
+                <type>combo-box</type>
+            </issue-attribute>
+            <issue-attribute>
+                <name>Resolution</name>
+                <value>Fixed</value>
+                <type>combo-box</type>
+            </issue-attribute>
+            <dependency>
+                <type>blocking</type>
+                <parent>TBNS101</parent>
+            </dependency>
+            <dependency>
+                <type>blocking</type>
+                <parent>TBNS405</parent>
+            </dependency>
+        </issue>
+         <issue id="405">
+            <artifact-type>Defect</artifact-type>
+            <committed-by>jon@latchkey.com</committed-by>
+            <issue-attribute>
+                <name>Status</name>
+                <value>Closed</value>
+                <type>combo-box</type>
+            </issue-attribute>
+            <dependency>
+                <type>blocking</type>
+                <child>TBNS304</child>
+            </dependency>
+
+        </issue>
+
     </module>
 </scarab>
+
+
