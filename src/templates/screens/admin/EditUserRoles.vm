@@ -36,6 +36,8 @@ Modifying roles for <b><a href="mailto:$user.Email">$!user.Name</a></b>
 
   <form method="post" action="admin,EditUserRoles.vm">
     <input type="hidden" name="action" value="admin.ManageUser" />
+    <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="admin,EditUser.vm" />
+    <input type="hidden" name="state" value="showedituser" />
 
   #foreach ($group in $securityAdmin.Groups)
   #indexedRows ($velocityCount)
