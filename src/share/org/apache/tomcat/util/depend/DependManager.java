@@ -88,6 +88,17 @@ public class DependManager {
     public DependManager() {
     }
 
+    /** Reset the depend manager - all dependencies are reset too.
+	This will be called after a reload
+    */
+    public void reset() {
+	expired=false;
+	for( int i=0; i<depsCount; i++ ) {
+	    Dependency d=deps[i];
+	    d.reset();
+	}
+    }
+    
     public void setDelay( int d ) {
 	delay=d;
     }

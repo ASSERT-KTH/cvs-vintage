@@ -94,6 +94,11 @@ public final class Dependency {
 	return lastModified;
     }
 
+    public void reset() {
+	expired=false;
+	lastModified=origin.lastModified();
+    }
+    
     /**
      * If set, the dependency will be "local", i.e. will be marked as
      * expired but the DependManager will not triger an expire at a higher
