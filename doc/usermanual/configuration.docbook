@@ -79,7 +79,7 @@
 		<entry>No</entry>
 	      </row>
 	      <row>
-		<entry>carol.jvm.java.naming.factory.url.pkgs</entry>
+		<entry>carol.jvm.java.naming .factory.url.pkgs</entry>
 		<entry>'pkgs value'</entry>
 		<entry>Set the jndi pkgs property. Note that this property can not be configured by carol.jndi.XXX. property</entry>
 		<entry>No</entry>
@@ -108,13 +108,13 @@
 		<entry>No, There is a default for each rmi provided by carol.</entry>
 	      </row>
 	      <row>
-		<entry>carol.rmi.XXX.NameServiceClass</entry>
+		<entry>carol.rmi.XXX .NameServiceClass</entry>
 		<entry>'XXX carol Name Service class name'</entry>
 		<entry>The Name Service class name for this RMI (CAROL provide implementation of those classes for RMI JRMP, RMI IIOP and JEREMIE, see below).</entry>
 		<entry>No, this property is only necessary for automatically start a Name Service for this protocol and there is a default for each rmi provided by carol.</entry>
 	      </row>
 	      <row>
-		<entry>carol.jndi.XXX.'property-name'</entry>
+		<entry>carol.jndi.XXX. 'property-name'</entry>
 		<entry>'property-value'</entry>
 		<entry>All jndi properties needed for XXX name service configuration. This is equivalent to put 'property-name'='property-value' in the jndi.properties file</entry>
 		<entry>No, there is defaults for each rmi provided by carol.</entry>
@@ -133,6 +133,9 @@
 &jrmpcarol.properties;
 	</screen>
 	<para>In the file above we see a JRMP standard configuration, note that nothing is needed except custom interceptors configuration. You can customized your configuration with:
+        </para>
+      </example>
+      <para>
 	<table>
 	  <title>Carol RMI JRMP specifics properties</title>
 	  <tgroup cols="4">
@@ -146,31 +149,31 @@
 	    </thead>
 	    <tbody>
 	      <row>
-		<entry>carol.rmi.jrmp.PortableRemoteObjectClass</entry>
+		<entry>carol.rmi.jrmp. PortableRemoteObjectClass</entry>
 		<entry>'JRMP portable remote object class name'</entry>
 		<entry>JRMP implementation of the Portable Remote Object class name</entry>
 		<entry>No, there is a default for JRMP</entry>
 	      </row>
 	      <row>
-		<entry>carol.rmi.jrmp.NameServiceClass</entry>
+		<entry>carol.rmi.jrmp. NameServiceClass</entry>
 		<entry>'JRMP carol Name Service class name'</entry>
 		<entry>JRMP implementation of the Carol name service</entry>
 		<entry>No, there is a default for JRMP based on the registry</entry>
 	      </row>
 	      <row>
-		<entry>carol.jndi.jrmp.'jndi property-name'</entry>
+		<entry>carol.jndi.jrmp. 'jndi property-name'</entry>
 		<entry>'jndi property-value'</entry>
 		<entry></entry>
 		<entry>No, there is defaults for JRMP</entry>
 	      </row>
 	      <row>
-		<entry>carol.jvm.jrmp.server.portnumber</entry>
+		<entry>carol.jvm.jrmp. server.portnumber</entry>
 		<entry>'jrmp port number'</entry>
 		<entry>All jndi properties needed for XXX name service configuration. This is equivalent to put 'property-name'='property-value' in the jndi.properties file</entry>
 		<entry>No, there is a default for JRMP (0)</entry>
 	      </row>
 	      <row>
-		<entry>carol.jvm.org.objectweb.PortableInterceptor.JRMPInitializerClass.'jrmp initializer name'</entry>
+		<entry>carol.jvm.org. objectweb. PortableInterceptor. JRMPInitializerClass. 'jrmp initializer name'</entry>
 		<entry>'' (empty)</entry>
 		<entry>Initializer for JRMP inteceptors</entry>
 		<entry>No, there is defaults for JRMP. If there is a multi protocol configuration, CAROL automaticaly put interceptors for multi protocol management</entry>
@@ -178,8 +181,7 @@
 	    </tbody>
 	  </tgroup>
 	</table>  
-	</para>
-      </example>
+      </para>
     </sect2>
     <sect2>
       <title>RMI IIOP configuration</title>
@@ -190,6 +192,9 @@
 &iiopcarol.properties;
 	</screen>
 	<para>In the file above we see a IIOP standard configuration, note that nothing is needed except custom interceptors configuration. You can customized your configuration with:
+        </para>
+      </example>
+        <para>
 	<table>
 	  <title>Carol RMI IIOP specifics properties</title>
 	  <tgroup cols="4">
@@ -203,25 +208,25 @@
 	    </thead>
 	    <tbody>
 	      <row>
-		<entry>carol.rmi.iiop.PortableRemoteObjectClass</entry>
+		<entry>carol.rmi.iiop. PortableRemoteObjectClass</entry>
 		<entry>'IIOP portable remote object class name'</entry>
 		<entry>IIOP implementation of the Portable Remote Object class name</entry>
 		<entry>No, there is a default for IIOP</entry>
 	      </row>
 	      <row>
-		<entry>carol.rmi.iiop.NameServiceClass</entry>
+		<entry>carol.rmi.iiop. NameServiceClass</entry>
 		<entry>'IIOP carol Name Service class name'</entry>
 		<entry>IIOP implementation of the Carol name service</entry>
 		<entry>No, there is a default for IIOP based on the tnameserv CosNaming</entry>
 	      </row>
 	      <row>
-		<entry>carol.jndi.iiop.'jndi property-name'</entry>
+		<entry>carol.jndi.iiop. 'jndi property-name'</entry>
 		<entry>'jndi property-value'</entry>
 		<entry></entry>
 		<entry>No, there is defaults for IIOP</entry>
 	      </row>
 	      <row>
-		<entry>carol.jvm.org.objectweb.PortableInterceptor.IIOPInitializerClass.'iiop initializer name'</entry>
+		<entry>carol.jvm.org.objectweb. PortableInterceptor. IIOPInitializerClass. 'iiop initializer name'</entry>
 		<entry>'' (empty)</entry>
 		<entry>Initializer for IIOP inteceptors</entry>
 		<entry>No, there is defaults for IIOP. If there is a multi protocol configuration, CAROL automaticaly put interceptors for multi protocol management</entry>
@@ -229,8 +234,7 @@
 	    </tbody>
 	  </tgroup>
 	</table>  
-	</para>
-      </example>
+      </para>
     </sect2>
     <sect2>
       <title>RMI JEREMIE personality configuration</title>
@@ -248,6 +252,9 @@
 &jeremiecarol.properties;
 	</screen>
         <para>In the file above we see a JEREMIE standard configuration, note that nothing is needed except custom interceptors configuration. You can customized your configuration with:
+        </para>
+      </example>
+       <para>
 	<table>
 	  <title>Carol RMI JEREMIE specifics properties</title>
 	  <tgroup cols="4">
@@ -261,19 +268,19 @@
 	    </thead>
 	    <tbody>
 	      <row>
-		<entry>carol.rmi.jeremie.PortableRemoteObjectClass</entry>
+		<entry>carol.rmi.jeremie. PortableRemoteObjectClass</entry>
 		<entry>'JEREMIE portable remote object class name'</entry>
 		<entry>JEREMIE implementation of the Portable Remote Object class name</entry>
 		<entry>No, there is a default for JEREMIE</entry>
 	      </row>
 	      <row>
-		<entry>carol.rmi.jeremie.NameServiceClass</entry>
+		<entry>carol.rmi.jeremie. NameServiceClass</entry>
 		<entry>'JEREMIE carol Name Service class name'</entry>
 		<entry>JEREMIE implementation of the Carol name service</entry>
 		<entry>No, there is a default for JEREMIE based on the jeremie registry</entry>
 	      </row>
 	      <row>
-		<entry>carol.jndi.jeremie.'jndi property-name'</entry>
+		<entry>carol.jndi.jeremie. 'jndi property-name'</entry>
 		<entry>'jndi property-value'</entry>
 		<entry></entry>
 		<entry>No, there is defaults for JEREMIE</entry>
@@ -281,8 +288,7 @@
 	    </tbody>
 	  </tgroup>
 	</table>  
-	</para>
-      </example>
+      </para>
     </sect2>    
     <sect2>
       <title>LMI personality configuration</title>
@@ -294,6 +300,9 @@
 &lmicarol.properties;
 	</screen>
         <para>In the file above we see a LMI standard configuration, note that nothing is needed. You can customized your configuration with:
+        </para>
+      </example>
+      <para>
 	<table>
 	  <title>Carol RMI LMI specifics properties</title>
 	  <tgroup cols="4">
@@ -307,19 +316,19 @@
 	    </thead>
 	    <tbody>
 	      <row>
-		<entry>carol.rmi.lmi.PortableRemoteObjectClass</entry>
+		<entry>carol.rmi.lmi. PortableRemoteObjectClass</entry>
 		<entry>'LMI portable remote object class name'</entry>
 		<entry>LMI implementation of the Portable Remote Object class name</entry>
 		<entry>No, there is a default for LMI</entry>
 	      </row>
 	      <row>
-		<entry>carol.rmi.lmi.NameServiceClass</entry>
+		<entry>carol.rmi.lmi. NameServiceClass</entry>
 		<entry>'LMI carol Name Service class name'</entry>
 		<entry>LMI implementation of the Carol name service (fake)</entry>
 		<entry>No, there is a default for LMI based on a fake registry service</entry>
 	      </row>
 	      <row>
-		<entry>carol.jndi.lmi.'jndi property-name'</entry>
+		<entry>carol.jndi.lmi. 'jndi property-name'</entry>
 		<entry>'jndi property-value'</entry>
 		<entry></entry>
 		<entry>No, there is defaults for LMI</entry>
@@ -327,8 +336,7 @@
 	    </tbody>
 	  </tgroup>
 	</table>  
-	</para>
-      </example>
+      </para>
     </sect2>
     <sect2>
       <title>MULTI RMI configuration</title>
