@@ -98,6 +98,8 @@
     <ContextManager debug="0" workDir="work" >
 
       <!-- ==================== Interceptors ==================== -->
+        <ContextInterceptor 
+            className="org.apache.tomcat.context.DefaultCMSetter" />
 
         <!-- 
          ContextInterceptor className="org.apache.tomcat.context.LogEvents" 
@@ -122,8 +124,6 @@
         <ContextInterceptor 
             className="org.apache.tomcat.context.LoaderInterceptor11" />
 
-        <ContextInterceptor 
-            className="org.apache.tomcat.context.DefaultCMSetter" />
         <ContextInterceptor 
             className="org.apache.tomcat.context.WorkDirInterceptor" />
 
