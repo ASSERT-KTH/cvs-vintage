@@ -328,6 +328,17 @@ public abstract class AttributeValue
         if ( optionId != null && optionId.getValue() != null ) 
         {
             List options = null;
+
+            if (getIssue().getModule() == null)
+            {
+                AttributeOption option = AttributeOptionManager
+                    .getInstance(optionId);
+                setValueOnly(option.getName());
+            }
+            else 
+            {
+            // FIXME! create a key and get the instance directly from
+            // the manager.
             try
             {
                 options = getIssue().getModule().getRModuleOptions(
@@ -352,7 +363,8 @@ public abstract class AttributeValue
                     setValueOnly(option.getDisplayValue());
                     break;
                 }
-            }
+            }   
+            }            
         }
         else
         {
