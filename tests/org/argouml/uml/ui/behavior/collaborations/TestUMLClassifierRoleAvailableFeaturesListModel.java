@@ -1,4 +1,4 @@
-// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.11 2005/01/02 16:43:40 linus Exp $
+// $Id: TestUMLClassifierRoleAvailableFeaturesListModel.java,v 1.12 2005/01/03 18:21:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MFeature;
 
@@ -37,7 +36,7 @@ import ru.novosoft.uml.foundation.core.MFeature;
  */
 public class TestUMLClassifierRoleAvailableFeaturesListModel
     extends AbstractUMLModelElementListModel2Test {
-        
+
     private MClassifier base;
 
     /**
@@ -66,7 +65,7 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MFeature[] features = new MFeature[10];
         for (int i = 0; i < features.length; i++) {
             features[i] = Model.getCoreFactory().createOperation();
@@ -76,14 +75,14 @@ public class TestUMLClassifierRoleAvailableFeaturesListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase[])
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             base.removeFeature((MFeature) elements[i]);
         }
     }
-    
+
     /**
      * @see junit.framework.TestCase#setUp()
      */

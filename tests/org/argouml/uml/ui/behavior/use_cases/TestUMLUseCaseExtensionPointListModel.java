@@ -1,4 +1,4 @@
-// $Id: TestUMLUseCaseExtensionPointListModel.java,v 1.10 2005/01/02 16:43:45 linus Exp $
+// $Id: TestUMLUseCaseExtensionPointListModel.java,v 1.11 2005/01/03 18:21:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.behavior.use_cases;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.use_cases.MExtensionPoint;
 import ru.novosoft.uml.behavior.use_cases.MUseCase;
 
@@ -55,7 +54,7 @@ public class TestUMLUseCaseExtensionPointListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
         setModel(new UMLUseCaseExtensionPointListModel());
@@ -64,7 +63,7 @@ public class TestUMLUseCaseExtensionPointListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MExtensionPoint[] ext = new MExtensionPoint[10];
         for (int i = 0; i < 10; i++) {
             ext[i] = Model.getUseCasesFactory().createExtensionPoint();
@@ -74,9 +73,9 @@ public class TestUMLUseCaseExtensionPointListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             ((MUseCase) getElem()).removeExtensionPoint(
                     (MExtensionPoint) elements[i]);

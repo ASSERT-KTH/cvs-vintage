@@ -1,4 +1,4 @@
-// $Id: TestUMLInteractionMessagesListModel.java,v 1.10 2005/01/02 16:43:40 linus Exp $
+// $Id: TestUMLInteractionMessagesListModel.java,v 1.11 2005/01/03 18:21:20 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
 import ru.novosoft.uml.behavior.collaborations.MMessage;
 
@@ -64,7 +63,7 @@ public class TestUMLInteractionMessagesListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MMessage[] messages = new MMessage[10];
         for (int i = 0; i < messages.length; i++) {
             messages[i] = Model.getCollaborationsFactory().createMessage();
@@ -74,9 +73,9 @@ public class TestUMLInteractionMessagesListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase[])
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             ((MInteraction) getElem()).removeMessage((MMessage) elements[i]);
         }

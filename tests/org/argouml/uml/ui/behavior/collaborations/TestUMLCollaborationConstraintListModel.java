@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationConstraintListModel.java,v 1.10 2005/01/02 16:43:40 linus Exp $
+// $Id: TestUMLCollaborationConstraintListModel.java,v 1.11 2005/01/03 18:21:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ package org.argouml.uml.ui.behavior.collaborations;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.foundation.core.MConstraint;
 import ru.novosoft.uml.foundation.core.MModelElement;
@@ -66,7 +65,7 @@ public class TestUMLCollaborationConstraintListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MConstraint[] constraints = new MConstraint[10];
         for (int i = 0; i < constraints.length; i++) {
             constraints[i] = Model.getCoreFactory().createConstraint();
@@ -76,9 +75,9 @@ public class TestUMLCollaborationConstraintListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase[])
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             ((MCollaboration) getElem()).removeConstrainingElement(
 	            (MModelElement) elements[i]);

@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.236 2005/01/03 16:31:09 linus Exp $
+// $Id: ModelFacade.java,v 1.237 2005/01/03 18:21:22 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -6825,6 +6825,11 @@ public class ModelFacade {
             if (handle instanceof MLink) {
                 ((MLink) handle).setAssociation((MAssociation) association);
                 return;
+            }
+        } else if (association instanceof MAssociationRole) {
+            if (handle instanceof MAssociationEndRole) {
+                ((MAssociationEndRole) handle).setAssociation(
+                        (MAssociationRole) association);
             }
         }
 	illegalArgument(handle, association);

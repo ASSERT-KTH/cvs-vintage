@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationInteractionListModel.java,v 1.10 2005/01/02 16:43:47 linus Exp $
+// $Id: TestUMLCollaborationInteractionListModel.java,v 1.11 2005/01/03 18:21:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 import org.argouml.uml.ui.behavior.collaborations.UMLCollaborationInteractionListModel;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.behavior.collaborations.MCollaboration;
 import ru.novosoft.uml.behavior.collaborations.MInteraction;
 
@@ -56,7 +55,7 @@ public class TestUMLCollaborationInteractionListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
         setModel(new UMLCollaborationInteractionListModel());
@@ -65,7 +64,7 @@ public class TestUMLCollaborationInteractionListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MInteraction[] inter = new MInteraction[10];
         for (int i = 0; i < 10; i++) {
             inter[i] = Model.getCollaborationsFactory().createInteraction();
@@ -75,9 +74,9 @@ public class TestUMLCollaborationInteractionListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             ((MCollaboration) getElem()).removeInteraction(
                     (MInteraction) elements[i]);

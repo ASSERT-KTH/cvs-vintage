@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.9 2005/01/02 16:43:47 linus Exp $
+// $Id: TestUMLModelElementTargetFlowListModel.java,v 1.10 2005/01/03 18:21:21 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ package org.argouml.uml.ui.foundation.core;
 import org.argouml.model.Model;
 import org.argouml.uml.ui.AbstractUMLModelElementListModel2Test;
 
-import ru.novosoft.uml.MBase;
 import ru.novosoft.uml.foundation.core.MFlow;
 import ru.novosoft.uml.foundation.core.MModelElement;
 
@@ -55,7 +54,7 @@ public class TestUMLModelElementTargetFlowListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel(org.argouml.uml.ui.UMLUserInterfaceContainer)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#buildModel()
      */
     protected void buildModel() {
         setModel(new UMLModelElementTargetFlowListModel());
@@ -64,7 +63,7 @@ public class TestUMLModelElementTargetFlowListModel
     /**
      * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#fillModel()
      */
-    protected MBase[] fillModel() {
+    protected Object[] fillModel() {
         MFlow[] ext = new MFlow[10];
         for (int i = 0; i < 10; i++) {
             ext[i] = Model.getCoreFactory().createFlow();
@@ -74,9 +73,9 @@ public class TestUMLModelElementTargetFlowListModel
     }
 
     /**
-     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(ru.novosoft.uml.MBase)
+     * @see org.argouml.uml.ui.AbstractUMLModelElementListModel2Test#removeHalfModel(Object[])
      */
-    protected void removeHalfModel(MBase[] elements) {
+    protected void removeHalfModel(Object[] elements) {
         for (int i = 0; i < 5; i++) {
             ((MModelElement) getElem()).removeTargetFlow((MFlow) elements[i]);
         }

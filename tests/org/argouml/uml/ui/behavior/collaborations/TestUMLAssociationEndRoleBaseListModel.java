@@ -1,4 +1,4 @@
-// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.12 2005/01/02 16:43:40 linus Exp $
+// $Id: TestUMLAssociationEndRoleBaseListModel.java,v 1.13 2005/01/03 18:21:19 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,7 @@ package org.argouml.uml.ui.behavior.collaborations;
 import junit.framework.TestCase;
 
 import org.argouml.model.Model;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MFactoryImpl;
@@ -42,11 +43,11 @@ import ru.novosoft.uml.foundation.core.MAssociationEnd;
 public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
 
     private int oldEventPolicy;
-    private MAssociationEndRole elem;
+    private Object elem;
     private UMLModelElementListModel2 model;
-    private MAssociation baseAssoc;
+    private Object baseAssoc;
     private MAssociationEnd baseEnd;
-    private MAssociationRole assocRole;
+    private Object assocRole;
 
     /**
      * Constructor for TestUMLAssociationEndRoleBaseListModel.
@@ -67,9 +68,9 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
         baseEnd = Model.getCoreFactory().createAssociationEnd();
         assocRole = Model.getCollaborationsFactory().createAssociationRole();
         baseAssoc = Model.getCoreFactory().createAssociation();
-        elem.setAssociation(assocRole);
-        assocRole.setBase(baseAssoc);
-        baseEnd.setAssociation(baseAssoc);
+        ModelFacade.setAssociation(elem, assocRole);
+        ModelFacade.setBase(assocRole, baseAssoc);
+        baseEnd.setAssociation((MAssociation) baseAssoc);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLAssociationEndRoleBaseListModel();
@@ -93,7 +94,7 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      * Test setting the Base.
      */
     public void testAdd() {
-        elem.setBase(baseEnd);
+        ModelFacade.setBase(elem, baseEnd);
         assertEquals(1, model.getSize());
         assertEquals(baseEnd, model.getElementAt(0));
     }
@@ -115,8 +116,11 @@ public class TestUMLAssociationEndRoleBaseListModel extends TestCase {
      * Test removing.
      */
     public void testRemove() {
-        elem.setBase(baseEnd);
-        elem.setBase(null);
+        ModelFacade.setBase(elem, baseEnd);
+
+        // TODO: Find or create a ModelFacade method for this?
+        ((MAssociationEndRole) elem).setBase(null);
+
         assertEquals(0, model.getSize());
     }
 

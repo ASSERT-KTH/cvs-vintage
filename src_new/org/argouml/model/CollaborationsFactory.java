@@ -1,4 +1,4 @@
-// $Id: CollaborationsFactory.java,v 1.1 2005/01/02 10:08:16 linus Exp $
+// $Id: CollaborationsFactory.java,v 1.2 2005/01/03 18:21:23 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,14 +43,14 @@ public interface CollaborationsFactory {
      *
      * @return an initialized UML AssociationEndRole instance.
      */
-    MAssociationEndRole createAssociationEndRole();
+    Object createAssociationEndRole();
 
     /**
      * Create an empty but initialized instance of a UML AssociationRole.
      *
      * @return an initialized UML AssociationRole instance.
      */
-    MAssociationRole createAssociationRole();
+    Object createAssociationRole();
 
     /**
      * Create an empty but initialized instance of a UML ClassifierRole.
