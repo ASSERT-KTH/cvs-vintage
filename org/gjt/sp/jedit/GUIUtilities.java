@@ -53,7 +53,7 @@ import org.gjt.sp.util.Log;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: GUIUtilities.java,v 1.58 2003/02/17 19:48:54 spestov Exp $
+ * @version $Id: GUIUtilities.java,v 1.59 2003/03/10 00:33:22 spestov Exp $
  */
 public class GUIUtilities
 {
@@ -856,7 +856,7 @@ public class GUIUtilities
 		y = jEdit.getIntegerProperty(name + ".y",y);
 
 		// Make sure the window is displayed in visible region
-		Rectangle osbounds = OperatingSystem.getScreenBounds();
+		Rectangle osbounds = OperatingSystem.getScreenBounds(new Rectangle(x,y,width,height));
 		
 		if(x < osbounds.x || x+width > osbounds.width)
 		{
