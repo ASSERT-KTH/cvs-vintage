@@ -28,7 +28,7 @@ import java.awt.Color;
  * A simple text style class. It can specify the color, italic flag,
  * and bold flag of a run of text.
  * @author Slava Pestov
- * @version $Id: SyntaxStyle.java,v 1.5 2003/03/14 02:51:25 spestov Exp $
+ * @version $Id: SyntaxStyle.java,v 1.6 2005/02/13 17:22:46 spestov Exp $
  */
 public class SyntaxStyle
 {
@@ -73,31 +73,9 @@ public class SyntaxStyle
 		return font;
 	} //}}}
 
-	//{{{ getCharWidth() method
-	/**
-	 * Returns the character width of the monospaced font.
-	 * @since jEdit 4.2pre1
-	 */
-	public int getCharWidth()
-	{
-		return charWidth;
-	} //}}}
-
-	//{{{ setCharWidth() method
-	/**
-	 * Sets the character width of the monospaced font.
-	 * @param charWidth The character width
-	 * @since jEdit 4.2pre1
-	 */
-	public void setCharWidth(int charWidth)
-	{
-		this.charWidth = charWidth;
-	} //}}}
-
 	//{{{ Private members
 	private Color fgColor;
 	private Color bgColor;
 	private Font font;
-	private int charWidth;
 	//}}}
 }

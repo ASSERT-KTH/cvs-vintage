@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.29 2004/12/05 04:37:06 spestov Exp $
+ * @version $Id: Debug.java,v 1.30 2005/02/13 17:22:46 spestov Exp $
  */
 public class Debug
 {
@@ -93,11 +93,6 @@ public class Debug
 	 * Show time taken for each EBComponent.
 	 */
 	public static boolean EB_TIMER = false;
-
-	/**
-	 * Disable monospaced font optimization.
-	 */
-	public static boolean DISABLE_MONOSPACE_HACK = false;
 
 	/**
 	 * Paint strings instead of glyph vectors.
