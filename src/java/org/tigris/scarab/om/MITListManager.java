@@ -3,6 +3,8 @@
 package org.tigris.scarab.om;
 
 
+import java.util.List;
+import java.util.Iterator;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
@@ -37,6 +39,39 @@ public class MITListManager
         list.setScarabUser(user);
         return list;
     }
+
+    public static MITList getInstanceFromIssueList(List issues, 
+                                                   ScarabUser user)
+        throws TorqueException
+    {
+        if (issues == null) 
+        {
+            throw new IllegalArgumentException("Null issue list is not allowed.");
+        }        
+        if (user == null) 
+        {
+            throw new IllegalArgumentException("Null user is not allowed.");
+        }
+        
+        MITList list = getInstance();
+        list.setScarabUser(user);
+        List dupeCheck = list.getMITListItems();
+        Iterator i = issues.iterator();
+        if (i.hasNext()) 
+        {
+            Issue issue = (Issue)i.next();
+            MITListItem item = MITListItemManager.getInstance();
+            item.setModule(issue.getModule());
+            item.setIssueType(issue.getIssueType());
+            if (!dupeCheck.contains(item)) 
+            {
+                list.addMITListItem(item);
+            }
+        }
+        
+        return list;
+    }
+
 }
 
 
