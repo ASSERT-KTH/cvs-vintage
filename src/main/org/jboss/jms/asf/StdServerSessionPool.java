@@ -34,175 +34,204 @@ import javax.jms.XASession;
 import javax.jms.XAQueueSession;
 import javax.jms.XATopicSession;
 
-import org.jboss.logging.Logger;
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import EDU.oswego.cs.dl.util.concurrent.Executor;
 import EDU.oswego.cs.dl.util.concurrent.ThreadFactory;
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
 
+import org.apache.log4j.Category;
+
 /**
- * StdServerSessionPool.java
+ * Implementation of ServerSessionPool.
  *
  *
  * Created: Thu Dec  7 17:02:03 2000
  *
- * @author 
- * @version
+ * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a>.
+ * @version $Revision: 1.8 $
  */
+public class StdServerSessionPool
+   implements ServerSessionPool
+{
+   private static ThreadGroup threadGroup =
+      new ThreadGroup("ASF Session Pool Threads");
+   private static final int DEFAULT_POOL_SIZE = 15;
 
-public class StdServerSessionPool implements ServerSessionPool {
-	private static final int DEFAULT_POOL_SIZE = 15;
-	private int poolSize = DEFAULT_POOL_SIZE;
-	private int ack;
-	private boolean transacted;
-	private MessageListener listener;
-	private Connection con;
+   /** Instance logger. */
+   private final Category log = Category.getInstance(this.getClass());
+   
+   private int poolSize = DEFAULT_POOL_SIZE;
+   private int ack;
+   private boolean transacted;
+   private MessageListener listener;
+   private Connection con;
+   private Vector sessionPool = new Vector();
+   private PooledExecutor executor;
+   
+   boolean isTransacted() {
+      return transacted;
+   }
     
+   /**
+    * Minimal constructor, could also have stuff for pool size
+    */
+   public StdServerSessionPool(Connection con,
+                               boolean transacted,
+                               int ack,
+                               MessageListener listener)
+      throws JMSException
+   {
+      this(con,transacted,ack,listener,DEFAULT_POOL_SIZE);
+   }
+   
+   public StdServerSessionPool(Connection con,
+                               boolean transacted,
+                               int ack,
+                               MessageListener listener,
+                               int maxSession)
+      throws JMSException
+   {
+      this.con= con;
+      this.ack= ack;
+      this.listener= listener;
+      this.transacted= transacted;
+      this.poolSize= maxSession;
 
-	private Vector sessionPool = new Vector();
-    
-	boolean isTransacted() {
-	return transacted;
-	}
-    
-    
-	/**
-	 * Minimal constructor, could also have stuff for pool size
-	 */
-	public StdServerSessionPool(Connection con, boolean transacted, int ack, MessageListener listener) throws JMSException{
-	this(con,transacted,ack,listener,DEFAULT_POOL_SIZE);
-	}
-	public StdServerSessionPool(Connection con, boolean transacted, int ack, MessageListener listener, int maxSession) throws JMSException {
-	    this.con= con;
-	    this.ack= ack;
-	    this.listener= listener;
-	    this.transacted= transacted;
-	    this.poolSize= maxSession;
-
-		executor = new PooledExecutor(poolSize);
-		executor.setMinimumPoolSize(0);
-		executor.setKeepAliveTime(1000*30);
-		executor.waitWhenBlocked();
-		executor.setThreadFactory( new ThreadFactory() {
-				public Thread newThread(Runnable command) {
-					return new Thread( threadGroup, command, "Thread Pool Worker");
-				}
- 			}
-		);
-
+      executor = new PooledExecutor(poolSize);
+      executor.setMinimumPoolSize(0);
+      executor.setKeepAliveTime(1000*30);
+      executor.waitWhenBlocked();
+      executor.setThreadFactory(new ThreadFactory() {
+            public Thread newThread(Runnable command) {
+               return new Thread(threadGroup, command, "Thread Pool Worker");
+            }
+         });
 	    
-	    init();
-	    Logger.debug("Server Session pool set up");
-	}
-	// --- JMS API for ServerSessionPool
+      init();
+      log.debug("Server Session pool set up");
+   }
 
-	// implementation of ServerSessionPool.getServerSession
-	public ServerSession getServerSession() 
-		throws JMSException {
-		ServerSession result = null;
-	Logger.debug("Leaving out a server session");
-		try {
-			for (;;) {
-		if (sessionPool.size() > 0) {
-					result = (ServerSession)sessionPool.remove(0);
-					break;
-				}
-				else {
-					try {
-						synchronized (sessionPool) {
-							sessionPool.wait();
-						}
-					} catch (InterruptedException exception){
-						// ignore the error
-					}
-				}
-			}
-		}
-		catch (Exception exception) {
-			throw new JMSException("Error in getServerSession " + exception); 
-		}
-		return result;
-	}
+   // --- JMS API for ServerSessionPool
 
-	// --- Protected messages for StdServerSession to use
+   public ServerSession getServerSession() 
+      throws JMSException
+   {
+      ServerSession result = null;
+      log.debug("Leaving out a server session");
+      try {
+         for (;;) {
+            if (sessionPool.size() > 0) {
+               result = (ServerSession)sessionPool.remove(0);
+               break;
+            }
+            else {
+               try {
+                  synchronized (sessionPool) {
+                     sessionPool.wait();
+                  }
+               }
+               catch (InterruptedException ignore) {}
+            }
+         }
+      }
+      catch (Exception e) {
+         throw new JMSException("Error in getServerSession: " + e);
+      }
+      
+      return result;
+   }
 
-	void recycle(StdServerSession session){
-		synchronized (sessionPool){
-	    sessionPool.addElement(session);
-	    sessionPool.notifyAll();
-	}
-	}
-    
+   // --- Protected messages for StdServerSession to use
 
-    
-	/**
-	 * Clear the pool, clear out both threads and ServerSessions,
-	 * connection.stop() should be run before this method.
-	 */
-	public void clear() {
-	synchronized (sessionPool){
-	    // FIXME - is there a runaway condition here. What if a 
-	    // ServerSession are taken by a ConnecionConsumer? Should we set 
-	    // a flag somehow so that no
-	    // ServerSessions are recycled and the ThreadPool don't leve any
-	    // more threads out.
-	    Logger.debug("Clearing " + sessionPool.size() + " from ServerSessionPool");
-			for(Enumeration e = sessionPool.elements() ; e.hasMoreElements() ; ){
-		StdServerSession ses = (StdServerSession)e.nextElement();
-		// Should we do any thing to the server session?
-		ses.close();
-	    }
-	    sessionPool.clear();
-	    executor.shutdownAfterProcessingCurrentlyQueuedTasks();
-	    sessionPool.notifyAll();
-	}
-	}
+   void recycle(StdServerSession session) {
+      synchronized (sessionPool) {
+         sessionPool.addElement(session);
+         sessionPool.notifyAll();
+      }
+   }
 
-	// --- Private methods used internally
+   Executor getExecutor() {
+      return executor;
+   }
+   
+   /**
+    * Clear the pool, clear out both threads and ServerSessions,
+    * connection.stop() should be run before this method.
+    */
+   public void clear() {
+      synchronized (sessionPool) {
+         // FIXME - is there a runaway condition here. What if a 
+         // ServerSession are taken by a ConnecionConsumer? Should we set 
+         // a flag somehow so that no
+         // ServerSessions are recycled and the ThreadPool don't leve any
+         // more threads out.
+         if (log.isDebugEnabled()) {
+            log.debug("Clearing " + sessionPool.size() +
+                      " from ServerSessionPool");
+         }
+
+         Enumeration e = sessionPool.elements();
+         while (e.hasMoreElements()) {
+            StdServerSession ses = (StdServerSession)e.nextElement();
+            // Should we do any thing to the server session?
+            ses.close();
+         }
+         
+         sessionPool.clear();
+         executor.shutdownAfterProcessingCurrentlyQueuedTasks();
+         sessionPool.notifyAll();
+      }
+   }
+
+   // --- Private methods used internally
 	
-	private void init() throws JMSException{
-	for (int index = 0; index < poolSize; index++){
-		try {
-		    // Here is the meat, that MUST follow the spec
-		    Session ses = null;
-		    XASession xaSes = null;
+   private void init() throws JMSException
+   {
+      for (int index = 0; index < poolSize; index++) {
+         try {
+            // Here is the meat, that MUST follow the spec
+            Session ses = null;
+            XASession xaSes = null;
 
-		    if (con instanceof XATopicConnection) {
-				xaSes = ((XATopicConnection)con).createXATopicSession();
-				ses = ((XATopicSession)xaSes).getTopicSession();
-		    } else if(con instanceof XAQueueConnection) {
-				xaSes = ((XAQueueConnection)con).createXAQueueSession();
-				ses = ((XAQueueSession)xaSes).getQueueSession();
-		    } else if (con instanceof TopicConnection) {
-				ses = ((TopicConnection)con).createTopicSession(transacted, ack);
-				Logger.error("WARNING: Using a non-XA TopicConnection.  It will not be able to participate in a Global UOW");
-		    } else if(con instanceof QueueConnection) {
-				ses = ((QueueConnection)con).createQueueSession(transacted, ack);
-				Logger.error("WARNING: Using a non-XA QueueConnection.  It will not be able to participate in a Global UOW");
-		    } else {
-				Logger.debug("Error in getting session for con: " + con);
-				throw new JMSException("Connection was not reconizable: " + con);
-		    }
+            log.debug("initializing with connection: " + con);
+            
+            if (con instanceof XATopicConnection) {
+               xaSes = ((XATopicConnection)con).createXATopicSession();
+               ses = ((XATopicSession)xaSes).getTopicSession();
+            }
+            else if (con instanceof XAQueueConnection) {
+               xaSes = ((XAQueueConnection)con).createXAQueueSession();
+               ses = ((XAQueueSession)xaSes).getQueueSession();
+            }
+            else if (con instanceof TopicConnection) {
+               ses = ((TopicConnection)con).createTopicSession(transacted, ack);
+               log.warn("Using a non-XA TopicConnection.  " +
+                        "It will not be able to participate in a Global UOW");
+            }
+            else if (con instanceof QueueConnection) {
+               ses = ((QueueConnection)con).createQueueSession(transacted, ack);
+               log.warn("Using a non-XA QueueConnection.  " +
+                        "It will not be able to participate in a Global UOW");
+            }
+            else {
+               log.debug("Error in getting session for con: " + con);
+               throw new JMSException("Connection was not reconizable: " + con);
+            }
 		    
-		    // This might not be totala spec compliant since it
-		    // says that app server should create as many
-		    // message listeners its needs, 
-		    Logger.debug("Setting listener for session");
-		    ses.setMessageListener(listener);
-		    sessionPool.addElement(
-					   new StdServerSession(this, ses, xaSes)
-					       );   
-		}
-				catch (JMSException exception){
-		    Logger.log("DEBUG Error in adding to pool: " + exception+ " Pool: " + this + " listener: " + listener);
-		}
-			} 
-	}
-    
-	private PooledExecutor executor;
-	static private ThreadGroup threadGroup = new ThreadGroup("ASF Session Pool Threads");
-
-	Executor getExecutor() {
-		return executor;
-	}
+            // This might not be totala spec compliant since it
+            // says that app server should create as many
+            // message listeners its needs, 
+            log.debug("Setting listener for session");
+            ses.setMessageListener(listener);
+            sessionPool.addElement(new StdServerSession(this, ses, xaSes));
+         }
+         catch (JMSException exception) {
+            if (log.isDebugEnabled()) {
+               log.debug("Error in adding to pool: " + exception
+                         + " Pool: " + this
+                         + " listener: " + listener);
+            }
+         }
+      } 
+   }
 }
