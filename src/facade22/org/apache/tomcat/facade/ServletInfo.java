@@ -260,12 +260,28 @@ public final class ServletInfo {
 	// the path will serve as servlet name if not set
     }
     
+    DependManager dependM;
+
+    public DependManager getDependManager() {
+	return dependM;
+    }
+
+    public void setDependManager(DependManager dep ) {
+	dependM=dep;
+    }
+
     Dependency dependency;
-    
+
+    /** @deprecated this supports only one depend per
+	jsp/servlet. Wrong.
+    */
     public Dependency getDependency() {
 	return dependency;
     }
 
+    /** @deprecated this supports only one depend per
+	jsp/servlet. Wrong.
+    */
     public void setDependency(Dependency dep ) {
 	dependency=dep;
     }
