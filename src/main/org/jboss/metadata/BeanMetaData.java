@@ -31,7 +31,7 @@ import org.jboss.security.SimplePrincipal;
  * @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a> 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a> 
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *
  *  <p><b>Revisions:</b><br>
  *  <p><b>2001/10/16: billb</b>
@@ -109,11 +109,8 @@ public abstract class BeanMetaData
    private String beanInvoker = null;
    public static final String DEFAULT_HOME_INVOKER = "jboss:service=invoker,type=jrmp";
    public static final String DEFAULT_BEAN_INVOKER = "jboss:service=invoker,type=jrmp";
-   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
-   public static final String DEFAULT_CLUSTERED_SLSB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=RoundRobin";
-   public static final String DEFAULT_CLUSTERED_SFSB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
-   public static final String DEFAULT_CLUSTERED_EB_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
-   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "jboss:service=invoker,type=jrmpha,partition=DefaultPartition,load-balance=FirstAvailable";
+   public static final String DEFAULT_CLUSTERED_HOME_INVOKER = "jboss:service=invoker,type=jrmpha";
+   public static final String DEFAULT_CLUSTERED_BEAN_INVOKER = "jboss:service=invoker,type=jrmpha";
    /** The cluster-config element info */
    private ClusterConfigMetaData clusterConfig = null;
 
@@ -520,10 +517,11 @@ public abstract class BeanMetaData
 
 
       Element clusterConfigElement = getOptionalChild(element, "cluster-config");
+      this.clusterConfig = new ClusterConfigMetaData();
+      clusterConfig.init(this);
       if (clusterConfigElement != null)
       {
-         this.clusterConfig = new ClusterConfigMetaData();
-         clusterConfig.importJbossXml(clusterConfigElement);
+	 clusterConfig.importJbossXml(clusterConfigElement);
       }
 
       // Setup default invokers for this bean
@@ -546,32 +544,7 @@ public abstract class BeanMetaData
 	 }
 	 else // Setup default clustered bean invoker
 	 {
-	    if (isEntity())
-	    {
-	       beanInvoker = DEFAULT_CLUSTERED_EB_INVOKER;
-	    }
-	    else if (isSession())
-	    {
-	       if (this instanceof SessionMetaData)
-	       {
-		  if (((SessionMetaData)this).isStateful())
-		  {
-		     beanInvoker = DEFAULT_CLUSTERED_SFSB_INVOKER;
-		  }
-		  else
-		  {
-		     beanInvoker = DEFAULT_CLUSTERED_SLSB_INVOKER;
-		  }
-	       }
-	       else
-	       {
-		  beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
-	       }
-	    }
-	    else
-	    {
-	       beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
-	    }
+	    beanInvoker = DEFAULT_CLUSTERED_BEAN_INVOKER;
 	 }
       }
    }

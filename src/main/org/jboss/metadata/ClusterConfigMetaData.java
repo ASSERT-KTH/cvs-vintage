@@ -16,7 +16,7 @@ import org.jboss.deployment.DeploymentException;
  * expanded to include other cluster configuration parameters later on.
 
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>.
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class ClusterConfigMetaData extends MetaData
 {
@@ -51,12 +51,39 @@ public class ClusterConfigMetaData extends MetaData
    {
       return this.haSessionStateName;
    }
-   
+
+   public void init(BeanMetaData data)
+   {
+      homeLoadBalancePolicy = "org.jboss.ha.framework.interfaces.RoundRobin";
+      if (beanLoadBalancePolicy == null)
+      {
+	 if (data.isSession())
+	 {
+	    if (((SessionMetaData)data).isStateful())
+	    {
+	       beanLoadBalancePolicy = "org.jboss.ha.framework.interfaces.FirstAvailable";
+	    }
+	    else
+	    {
+	       beanLoadBalancePolicy = "org.jboss.ha.framework.interfaces.RoundRobin";
+	    }
+	 }
+	 else if (data.isEntity())
+	 {
+	    beanLoadBalancePolicy = "org.jboss.ha.framework.interfaces.FirstAvailable";
+	 }
+	 else
+	 {
+	    beanLoadBalancePolicy = "org.jboss.ha.framework.interfaces.FirstAvailable";
+	 }
+      }
+   }
    public void importJbossXml(Element element) throws DeploymentException 
    {
       partitionName = getElementContent(getOptionalChild(element, "partition-name"), DEFAULT_PARTITION);
-      homeLoadBalancePolicy = getElementContent(getOptionalChild(element, "home-load-balance-policy"), null);
-      beanLoadBalancePolicy = getElementContent(getOptionalChild(element, "bean-load-balance-policy"), null);
+      homeLoadBalancePolicy = getElementContent(getOptionalChild(element, "home-load-balance-policy"), homeLoadBalancePolicy);
+      beanLoadBalancePolicy = getElementContent(getOptionalChild(element, "bean-load-balance-policy"), beanLoadBalancePolicy);
+
 
       // SFSB settings only
       //
