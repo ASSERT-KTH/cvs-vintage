@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler</a>
- * @version $Revision: 1.65 $
+ * @version $Revision: 1.66 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -464,10 +464,17 @@ public abstract class EnterpriseContext
       { 
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
          if (con.getBeanMetaData().isBeanManagedTx())
-            throw new IllegalStateException("ctx.getRollbackOnly() not allowed for BMT beans.");
+            throw new IllegalStateException("getRollbackOnly() not allowed for BMT beans.");
 
          try {
-            return con.getTransactionManager().getStatus() == Status.STATUS_MARKED_ROLLBACK; 
+            TransactionManager tm = con.getTransactionManager();
+
+            // The getRollbackOnly and setRollBackOnly method of the SessionContext interface should be used
+            // only in the session bean methods that execute in the context of a transaction.
+            if (tm.getTransaction() == null)
+               throw new IllegalStateException("getRollbackOnly() not allowed without a transaction.");
+
+            return tm.getStatus() == Status.STATUS_MARKED_ROLLBACK;
          } catch (SystemException e) {
             log.warn("failed to get tx manager status; ignoring", e);
             return true;
@@ -478,11 +485,17 @@ public abstract class EnterpriseContext
       { 
          // EJB1.1 11.6.1: Must throw IllegalStateException if BMT
          if (con.getBeanMetaData().isBeanManagedTx())
-            throw new IllegalStateException("ctx.setRollbackOnly() not allowed for BMT beans.");
+            throw new IllegalStateException("setRollbackOnly() not allowed for BMT beans.");
 
          try {
-            con.getTransactionManager().setRollbackOnly();
-         } catch (IllegalStateException e) {
+            TransactionManager tm = con.getTransactionManager();
+
+            // The getRollbackOnly and setRollBackOnly method of the SessionContext interface should be used
+            // only in the session bean methods that execute in the context of a transaction.
+            if (tm.getTransaction() == null)
+               throw new IllegalStateException("setRollbackOnly() not allowed without a transaction.");
+
+            tm.setRollbackOnly();
          } catch (SystemException e) {
             log.warn("failed to set rollback only; ignoring", e);
          }
