@@ -124,8 +124,6 @@
 	  file="${jaxp.home}/jaxp.jar"/>
     <copy tofile="${tomcat.build}/lib/container/parser.jar" 
 	  file="${jaxp.home}/parser.jar"/>
-    <copy tofile="${tomcat.build}/lib/container/jaxp.jar" 
-	  file="${jaxp.home}/jaxp.jar"/>
     <copy file ="src/build/readme/readme.container"
 	  tofile="${tomcat.build}/lib/container/README" />
 
@@ -459,6 +457,12 @@
 
   <target name="tests" depends="main,sanity-test,watchdog-web-based" />
   
+  <target name="test.war">
+    <jar jarfile="${tomcat.dist}/webapps/test.war" 
+	 basedir="${tomcat.build}/webapps/test" 
+	 includes="**"/>
+  </target>
+
   <target name="tests.dist" depends="tests" >
     <jar jarfile="${tomcat.dist}/webapps/test.war" 
 	 basedir="${tomcat.build}/webapps/test" 
