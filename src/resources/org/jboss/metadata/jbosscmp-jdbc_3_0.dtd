@@ -19,7 +19,7 @@ entities, and relationships.
 -->
 <!ELEMENT defaults (datasource?, type-mapping?, create-table?, remove-table?,
          read-only?, time-out?, select-for-update?, pk-constraint?,
-         preferred-relation-mapping?, read-ahead?)>
+         fk-constraint?, preferred-relation-mapping?, read-ahead?)>
 
 
 <!--
@@ -76,6 +76,16 @@ The select-for-update element must be one of the two following:
          <select-for-update>false</select-for-update>
 -->
 <!ELEMENT select-for-update (#PCDATA)>
+
+
+<!--
+Should a foreign key constraint be added for this relationship role?
+
+The fk-constraint element must be one of the two following:
+         <fk-constraint>true</fk-constraint>
+         <fk-constraint>false</fk-constraint>
+-->
+<!ELEMENT fk-constraint (#PCDATA)>
 
 
 <!--
@@ -368,7 +378,7 @@ The ejb-rejationship-role element contains the configuration of an
 ejb-relationship-role.
 -->
 <!ELEMENT ejb-relationship-role (ejb-relationship-role-name,
-         (foreign-key-fields | table-key-fields))>
+         fk-constraint, (foreign-key-fields | table-key-fields))>
 
 
 <!--
