@@ -11,10 +11,6 @@
             isInvokerEnabled="true"
             isWorkDirPersistent="false"
 -->
-        <Context path="/" docBase="webapps/ROOT" />
-        <Context path="/examples" docBase="webapps/examples"  />
-        <Context path="/test" docBase="webapps/test" />
-        
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
         </Connector>
 
