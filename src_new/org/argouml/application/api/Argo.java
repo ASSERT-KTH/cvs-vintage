@@ -1,4 +1,4 @@
-// $Id: Argo.java,v 1.29 2003/11/28 16:06:20 jhraigniac Exp $
+// $Id: Argo.java,v 1.30 2003/12/02 07:00:37 jhraigniac Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -252,6 +252,21 @@ public class Argo
 	return Configuration.getString(KEY_STARTUP_DIR,
 				       org.tigris.gef.base.Globals
 				           .getLastDirectory());
+    }
+
+    /** Helper for localization to eliminate the need to import
+     *  the gef util library.
+     * 
+     * DON'T USE IT : NOT USED ANYMORE, WILL BE REMOVED NEXT RELEASE
+     *
+     * @param bundle the localization bundle name to use
+     * @param key the resource string to find
+     * @return the localized string
+     * @deprecated since 0.15.2.
+     * Use {see org.argouml.i18n.Translator#localize(String)} directly instead.
+     */
+    public static String localize(String bundle, String key) {
+        return org.argouml.i18n.Translator.localize(bundle, key);
     }
 
     /** Returns a vector of plugins of the class type passed
