@@ -12,12 +12,13 @@
   <property name="jrmi.registry"
     value="org.objectweb.jeremie.services.registry.JRMIRegistry"/>
 
+  <property name="test.build.properties" value="${test.build}/test/properties"/>
 
   <taskdef name="carolTest"
     classname="org.objectweb.carol.ant.CarolTestTask"
     classpath="${test.build}/classes"/>
 
-  <typedef name="carolConfig"
+  <typedef name="carolProtocols"
     classname="org.objectweb.carol.ant.CarolConfig"
     classpath="${test.build}/classes"/>
 
@@ -25,120 +26,32 @@
   <!-- ************************************-->
   <!-- *********     TEST ALL    **********-->
   <!-- ************************************-->
-  <target name="test.all"> 
-    <carolTest antfile="conform/generic/carol_double.xml">
-      <carolConfig name="single.jeremie"/>
-      <carolConfig name="single.iiop"/>
-      <carolConfig name="single.jrmp1.1"/>
-      <carolConfig name="single.jrmp1.2"/>
-      <carolConfig name="single.nons.jeremie"/>
-      <carolConfig name="single.nons.iiop"/>
-      <carolConfig name="single.nons.jrmp1.1"/>
-      <carolConfig name="single.nons.jrmp1.2"/>
-      <carolConfig name="multi.suniiop.jeremie"/>
-      <carolConfig name="multi.suniiop.sunjrmp1.1"/>
-      <carolConfig name="multi.suniiop.sunjrmp1.2"/>
-      <carolConfig name="multi.sunjrmp1.1.suniiop"/>
-      <carolConfig name="multi.sunjrmp1.2.suniiop"/> 
-      <carolConfig name="multi.nons.suniiop.jeremie"/>
-      <carolConfig name="multi.nons.suniiop.sunjrmp1.1"/>
-      <carolConfig name="multi.nons.suniiop.sunjrmp1.2"/>
-      <carolConfig name="multi.nons.sunjrmp1.1.suniiop"/>
-      <carolConfig name="multi.nons.sunjrmp1.2.suniiop"/>
+  <target name="test.all">
+    <mkdir dir="${test.build.properties}"/>
+
+    <carolTest
+      antfile="conform/generic/carol_double.xml"
+      propDestination="${test.build.properties}"
+      propSource="${test.ext}">
+
+      <carolProtocols name="jeremie"/>
+      <carolProtocols name="iiop"/>
+      <carolProtocols name="jrmp"/>
+
+     <!--
+      <carolProtocols name="multi.suniiop.jeremie"/>
+      <carolProtocols name="multi.suniiop.sunjrmp1.1"/>
+      <carolProtocols name="multi.suniiop.sunjrmp1.2"/>
+      <carolProtocols name="multi.sunjrmp1.1.suniiop"/>
+      <carolProtocols name="multi.sunjrmp1.2.suniiop"/> 
+      <carolProtocols name="multi.nons.suniiop.jeremie"/>
+      <carolProtocols name="multi.nons.suniiop.sunjrmp1.1"/>
+      <carolProtocols name="multi.nons.suniiop.sunjrmp1.2"/>
+      <carolProtocols name="multi.nons.sunjrmp1.1.suniiop"/>
+      <carolProtocols name="multi.nons.sunjrmp1.2.suniiop"/>
+     -->
     </carolTest>
   </target>
-
-  <!-- ************************************-->
-  <!-- *********     TEST SINGLE    *******-->
-  <!-- ************************************-->
-  <target name="single.jeremie">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
-      <property name="client.properties.file.name1" value="jeremie_carol.properties"/>
-      <property name="server.properties.file.name" value="jeremie_carol.properties"/>
-      <property name="name.server.class.name1" value="${jrmi.registry}"/>
-      <property name="name.server.option1" value="2001"/>
-      <property name="name.server.port1"   value="2001"/>
-      <property name="test.name"          value="jeremie"/>
-    </ant>
-  </target>
-
-  <target name="single.iiop">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="suniiop.jar"/>
-      <property name="client.properties.file.name1" value="iiop_carol.properties"/>
-      <property name="server.properties.file.name" value="iiop_carol.properties"/>
-      <property name="name.server.class.name1" value="${transient.name.server}"/>
-      <property name="name.server.option1" value="-ORBInitialPort 2000"/>
-      <property name="name.server.port1"   value="2000"/>
-      <property name="test.name"          value="suniiop"/>
-    </ant>
-  </target> 
-
-
-  <target name="single.jrmp1.1">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
-      <property name="client.class.name" value=""/>
-      <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
-      <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name1" value="${manageable.registry}"/>
-      <property name="name.server.option1" value="1099"/>
-      <property name="name.server.port1"   value="1099"/>
-      <property name="test.name"          value="sunjrmp1.1"/>
-    </ant>
-  </target>
-
-  <target name="single.jrmp1.2">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
-      <property name="client.properties.file.name1" value="jrmp_carol.properties"/>
-      <property name="server.properties.file.name" value="jrmp_carol.properties"/>
-      <property name="name.server.class.name1" value="${manageable.registry}"/>
-      <property name="name.server.option1" value="1099"/>
-      <property name="name.server.port1"   value="1099"/>
-      <property name="test.name"          value="sunjrmp1.2"/>
-    </ant>
-  </target> 
- 
-  <!-- ********************************************************-->
-  <!-- *********     TEST SINGLE WITHOUT NAME SERVER    *******-->
-  <!-- ********************************************************-->
-  <target name="single.nons.jeremie">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="jeremie_stub.jar"/>
-      <property name="client.properties.file.name1" value="jeremie_carol_nons.properties"/>
-      <property name="server.properties.file.name" value="jeremie_carol_nons.properties"/>
-      <property name="test.name"          value="jeremie.nons"/>
-    </ant>
-  </target>
-
-   <target name="single.nons.iiop">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="suniiop.jar"/>
-      <property name="client.properties.file.name1" value="iiop_carol_nons.properties"/>
-      <property name="server.properties.file.name" value="iiop_carol_nons.properties"/>
-      <property name="test.name"          value="suniiop.nons"/>
-    </ant>
-  </target> 
-
-  <target name="single.nons.jrmp1.1">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="sunjrmp1.1.jar"/>
-      <property name="client.properties.file.name1" value="jrmp_carol_nons.properties"/>
-      <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="test.name"          value="sunjrmp1.1.nons"/>
-    </ant>
-  </target>
-
-  <target name="single.nons.jrmp1.2">
-    <ant antfile="conform/generic/carol_double.xml">
-      <property name="stub.jar.name1" value="sunjrmp1.2.jar"/>
-      <property name="client.properties.file.name1" value="jrmp_carol_nons.properties"/>
-      <property name="server.properties.file.name" value="jrmp_carol_nons.properties"/>
-      <property name="test.name"          value="sunjrmp1.2.nons"/>
-    </ant>
-  </target> 
 
   <!-- ************************************-->
   <!-- *********     TEST MULTI     *******-->

@@ -134,7 +134,7 @@
     <mkdir dir="${test.tmp.server}"/>
 
     <copy file="${test.ext}/${trace.properties.file.name}" tofile="${test.tmp.server}/trace.properties" />  
-    <copy file="${test.ext}/${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
+    <copy file="${server.properties.file.name}" tofile="${test.tmp.server}/carol.properties" />  
  
     <antcall target="_rebuild.tmp.dir1"/>
     <antcall target="_rebuild.tmp.dir2"/>
@@ -144,7 +144,7 @@
     <delete dir="${test.tmp.client1}"/>
     <mkdir dir="${test.tmp.client1}"/>  
 
-    <copy file="${test.ext}/${client.properties.file.name1}"
+    <copy file="${client.properties.file.name1}"
           tofile="${test.tmp.client1}/carol.properties" />
   </target>
 
