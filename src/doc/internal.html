@@ -6,7 +6,7 @@
 	<META NAME="GENERATOR" CONTENT="StarOffice/5.2 (Linux)">
 	<META NAME="CREATED" CONTENT="20000906;23560700">
 	<META NAME="CHANGEDBY" CONTENT="Costin Manolache">
-	<META NAME="CHANGED" CONTENT="20000907;12413500">
+	<META NAME="CHANGED" CONTENT="20000907;16361800">
 	<STYLE>
 	<!--
 		TH P { color: #000000; font-family: "Times New Roman", "Times", serif; font-style: normal }
@@ -358,6 +358,8 @@ application, tomcat standalone server) have control over execution.
 Embedding tomcat requires an adapter that will construct the
 Request/Response adapters and use ContextManager to process the
 request.</P>
+<P><BR><BR>
+</P>
 <P>XXX Probably a better name would be Server, or TomcatContainer. 
 </P>
 <H3>Interceptor</H3>
@@ -437,7 +439,7 @@ bi-directional code reuse.</P>
 <HR>
 <H2>Modules ( tomcat.context, tomcat.request)</H2>
 <P>Most of tomcat functionality is implemented using modules. Modules
-operate on tomcat's core objects and can hook  in and extend tomcat.
+operate on tomcat's core objects and can hook in and extend tomcat.
 They are designed around &quot;Chain of Responsibility&quot; and
 &quot;Strategy&quot; patterns, and shamelessly inspired from Apache
 hooks, with influences from ISAPI and NSAPI.</P>
@@ -455,10 +457,10 @@ hooks, with influences from ISAPI and NSAPI.</P>
 	module, but it's well tested and stable. Most of the current code is
 	derived and can be traced back to tomcat 3.0. We hope that other
 	solutions will show up and will evolve to replace SimpleMapper.</SPAN></P>
-	<LI><P STYLE="font-weight: medium"> <B>LoaderInterceptor</B><SPAN STYLE="font-weight: medium">
-	will set the context ClassLoader. There are 2 modules - one that
-	provide a custom class loader to be used with JDK1.1 and one that
-	plugs JDK1.2 URLClassLoader.  </SPAN>
+	<LI><P STYLE="font-weight: medium"><B>LoaderInterceptor</B> will set
+	the context ClassLoader. There are 2 modules - one that provide a
+	custom class loader to be used with JDK1.1 and one that plugs JDK1.2
+	URLClassLoader. 
 	</P>
 </UL>
 <H3>Adding custom modules</H3>
@@ -520,12 +522,11 @@ the internal buffers, etc.</P>
 	the server is using recycling, the &quot;bad&quot; application will
 	end up with references to all active requests, and will be able to
 	access parameters and informations of other web applications. 
-	</DT><DD STYLE="margin-bottom: 0.2in">
+	</DT><DD>
 	In tomcat the HttpServletRequest is a proxy and a facade for the
 	real request. Tomcat will recycle the Request object, and can (
 	based on a config option) create new HttpServletRequestFacades for
-	each request. 
-	</DD><DT>
+	each request.</DD><DT>
 	Constructor access. It is possible that an application will use the
 	current internal APIs to gain unauthorized access and call internal
 	APIs</DT><DD>
@@ -538,8 +539,14 @@ the internal buffers, etc.</P>
 	JDK1.1 compatible ) mechanism to do security checks when objects are
 	constructed. ( for example add a TomcatSecurity object with empty
 	methods for 1.1 and using TomcatPermission and the 1.2 security
-	system for 1.2.     
-	</DD><HR>
+	system for 1.2. 
+	</DD><DT>
+	DOS - large body with POST data</DT><DD>
+	Tomcat will read the full body when a POST is processed. We need to
+	set upper limits or at least warn of possible abuse.</DD><DT>
+	DOS - general</DT><DD>
+	There are many possible DOS attacks, we need to identify them and
+	provide mechanisms to reduce the effect.</DD><HR>
 </DL>
 <H2>Embedding tomcat</H2>
 <P>Use the tomcat APIs to create ContextManager and set it up or stop
@@ -566,23 +573,20 @@ extensions, so people can develop hooks/modules/SAF/filters in java
 instead of C ( or mod_perl ).</P>
 <HR>
 <H2>Performance</H2>
-<P>This is an important subject and will have a separate paper ( that
-will be ready for ApacheCon ). We spent a lot of work identifying the
-bottlenecks and finding the right methods to improve the performance.
-Based on empirical data ( various experiments we did ) it is possible
-to greatly improve the current performance. The goal is to be within
-20% of Apache and other web servers. I think this is doable and
-without using any low-level optimizations, just by using the right
-patterns and the current architecture. Of course, if other patterns
-will provide something faster we'll try to assimilate them :-)</P>
-<H3>Target configuration</H3>
-<P>As you know, there are many ways to set up tomcat - the core can
-be embedded in applications and used with standalone http adapter, we
-can use multiple web servers with multiple adapters. 
+<P>Performance is not easy - there are many factors and variables,
+and while everyone agrees performance is important,  most of the time
+getting something done fast takes priority. Unfortunately the same
+happens with security, in too many cases :-)</P>
+<P>We spent a lot of work identifying the bottlenecks and finding the
+right methods to improve the performance. Based on empirical data (
+various experiments we did ) it is possible to greatly improve the
+current performance. The goal is to be within 20% of Apache and other
+web servers serving static files. We also want to run significantly
+faster or at similar speed with other server-side technologies ( asp,
+php, mod_perl, cgi ). I think this is doable and without using any
+low-level optimizations or sacrificing code readability, just by
+using better alghoritms and the architecture. 
 </P>
-<P>Optimizing all cases at once is not a good idea - it is important
-to choose a particular configuration and use the right tools to solve
-the problem.</P>
 <P>We have reasons to believe that current web servers ( IIS, Apache,
 NES, AOL ) provide a very good infrastructure of modules and tools.
 Even if we can write very fast code in Java, using the time-proven
@@ -590,36 +594,74 @@ server modules will insure speed and stability. It is also very hard
 to match all the optimizations that are done in the native web
 servers, some of them having heavy dependencies on the OS and
 platform they run on.</P>
-<P>The adapter is also very important. So far JNI proved to be
-significantly faster than TCP based connection, with AJP13 having
-promising performance.</P>
-<P>On tomcat side, it is important to minimize the overhead - if we
-want to run within 20% of static pages we need to make sure tomcat
-have minimal or no overhead. Identifying this overhead and
-eliminating it is the most important optimization that can be done in
-tomcat, and that's where the current design will play an important
-role.</P>
-<P>We will monitor and tune up the following configuration for high
-performance servers: Apache2.0 + JNI + Tomcat. We'll also keep an eye
-on AOL, IIS and NES as servers, but as more people are familiar with
-Apache internals and this will require the use of server modules it's
-better to keep Apache as the target server. Of course, none of the
-changes will be specific to apache - jk_ is a great cross-server
-tool.</P>
-<P>As a secondary target we should look at Apache2.0 + AJP13 +
-Tomcat. This is the configuration that will be used with
-load-balanced servers. In fact, a production site will probably need
-a tuned-up configuration, with compute-intensive webapps running on
-AJP13 and a farm of tomcat servers, while the most
-frequently-accessed pages running with JNI and in process. 
-</P>
-<P>Standalone tomcat and other configurations will greatly benefit
-from reducing the overhead and optimizations, but this can't be the
-&quot;high performance target&quot; for tomcat. While in time it may
-be possible to re-invent all the optimizations from the big web
-servers, it is reasonable to expect that Apache/NES/IIS will remain
-significant :-)</P>
-<H3>Overhead</H3>
+<H3>Targeted configurations</H3>
+<DL>
+	<DT><SPAN STYLE="font-weight: medium">Apache 1.3 + Ajp12 + Tomcat</SPAN>.
+		</DT><DD>
+	This is the most stable configuration integrating Apache as a web
+	server and tomcat as a servlet container</DD><DT>
+	Apache 2.0 / IIS / NES / AOL + Ajp13 + Tomcat 
+	</DT><DD>
+	Apache 2.0 and Ajp13 are considerably faster and this is probably
+	the future configuration of choice, especially with load-balanced
+	servers. Running tomcat as an external process allows farming and is
+	probably safest.</DD><DT>
+	Apache 2.0 /IIS / NES / AOL + JNI + Tomcat 
+	</DT><DD>
+	For sites with applications that need the smallest response time and
+	if the computing requirements do not requires farming ( or farming
+	is done at a higher level) JNI is the fastest way of communication
+	between tomcat and Apache. It is possible to mix JNI and Ajp13 with
+	WebApp granularity</DD><DT>
+	Standalone tomcat 
+	</DT><DD>
+	This configuration is used when tomcat is embeded in applications to
+	provide web services. This is not a &quot;high performance&quot;
+	setup, since we can't re-invent all  the optimizations performed by
+	Apache or other web servers. 
+	</DD></DL>
+<H3>
+Targeted Components 
+</H3>
+<UL>
+	<LI><P><B>Web server adapter</B>. So far JNI proved to be the
+	fastest solution, with AJP13 having promising performance.
+	Standalone http is used in many configurations, and we know that it
+	can be extremely fast ( since other java-only servers did that
+	before). We have to focus on all 3 components. Ajp12 is the most
+	stable, but it's better to leave it as it is.</P>
+</UL>
+<UL>
+	<LI><P><B>Tomcat request overhead</B> - This is what happens between
+	the moment the request is received by the web server and the moment
+	when the final servlet ( handler) is called. We need to make sure
+	tomcat have minimal or no overhead for a normal request invocation.
+	Identifying this overhead and eliminating it is the most important
+	optimization that can be done in tomcat, and that's where the
+	current design will play an important role. 
+	</P>
+	<LI><P><B>Individual API calls. </B><SPAN STYLE="font-weight: medium">Servlet
+	API defines a number of method that a servlet can use, and we need
+	to make sure the implementation is as efficient as possible. It is
+	important to identify the most frequent calls ( like
+	getParameters(), session, etc) and spend the time on them.</SPAN></P>
+	<LI><P STYLE="font-weight: medium"><B>Background activity</B>.
+	Tomcat needs a number of threads that will monitor and maintain it.
+	For example it needs to expire sessions, detect changes, maintain
+	pools, etc. While most of it happens in background, under high load
+	it became a factor. Even more importantly is the garbage that it
+	generates, because it will affect tomcat even with average load ( it
+	is possible to use lower priority for maintenance threads, but GC
+	affects all tomcat activities). 
+	</P>
+</UL>
+<H3>Tuning</H3>
+<UL>
+	<LI><P>Number of mappings</P>
+	<LI><P>Logging</P>
+	<LI><P>Reloading</P>
+</UL>
+<H3>Overhead and hot spots</H3>
 <P>Each pattern has an associated overhead, and it is very important
 to understand what is design overhead, what is implementation
 overhead, and what doesn't matter. 
@@ -632,48 +674,54 @@ servlet service() is called. We also need to look at all the
 operations and access to various methods.</P>
 <P>So far, the following problems have been identified ( starting
 with the most important ):</P>
-<H3>Memory 
-</H3>
-<P>Each request allocates a large number of objects - most of them
-are required in the request processing. By using the Facade we can
-keep the internal interfaces String-free. Many sources and the
-profiling of tomcat suggest Strings overuse are responsible for a
-great performance degradation.</P>
-<P>The profiling also shows a lot of large allocation in the buffers
-- reusing the buffer in JSP had a huge impact on performances. By
-exposing the buffer in the internal API we'll be able to eliminate
-this source of garbage.</P>
-<P>In general, it is posible to set the goal at 0 objects per request
-as tomcat-related overhead. All objects involved in request
-processing are or should be reuseable, and altering the API to make
-sure we use only reuseable objects is well justified. Even if VM gets
-better and better with GC, the cost of GC can never be 0, and on a
-high-loaded server it's probably impossible to do async garbage
-collection - resulting in the &quot;freeze&quot; problem that in turn
-generates huge response times.</P>
-<H3>Code duplication</H3>
-<P>In tomcat 3.2, all the request processing is duplicated in the web
-server and in tomcat. This is a clear waste, and have to be
-eliminated. XXX add more</P>
-<H3>Interceptor overhead</H3>
-<P>In the target configuration the number of interceptors will
-probably be very small, even 0 in some cases for the initial
-invocation. Experiments shows this to not be significant in the
-current code ( i.e. The overhead is hardly detectable ), but as we
-remove the garbage it may play a role. Since this is only an
-implementation issue it will be trivial to resolve ( if it will show
-on the radar - we still try to avoid useless optimizations ) 
-</P>
-<H3>JNI overhead</H3>
-<P>Experience shows a big difference between a JNI and a normal
-method call. While this will probably change with the VM, it is
-important to minimize the number of native invocations and use a
-big-enough granularity. The cost of a TCP round trip is even bigger,
-so both JNI and AJP13 will do that. So far this is not a significant
-problem, the numbers are very small.</P>
+<DL>
+	<DT>Memory 
+	</DT><DD>
+	Each request allocates a large number of objects - most of them are
+	required in the request processing. By using the Facade we can keep
+	the internal interfaces String-free. Many sources and the profiling
+	of tomcat suggest Strings overuse are responsible for a great
+	performance degradation. The profiling also shows a lot of large
+	allocation in the buffers - reusing the buffer in JSP had a huge
+	impact on performances. By exposing the buffer in the internal API
+	we'll be able to eliminate this source of garbage.</DD><DD>
+	In general, it is posible to set the goal at 0 objects per request
+	as tomcat-related overhead. All objects involved in request
+	processing are or should be reuseable, and altering the API to make
+	sure we use only reuseable objects is well justified. Even if VM
+	gets better and better with GC, the cost of GC can never be 0, and
+	on a high-loaded server it's probably impossible to do async garbage
+	collection - resulting in the &quot;freeze&quot; problem that in
+	turn generates huge response times.</DD><DT>
+	Code duplication</DT><DD>
+	In tomcat 3.2, all the request processing is duplicated in the web
+	server and in tomcat. This is a clear waste, and have to be
+	eliminated. XXX add more</DD><DT>
+	Interceptor overhead</DT><DD>
+	In the target configuration the number of interceptors will probably
+	be very small, even 0 in some cases for the initial invocation.
+	Experiments shows this to not be significant in the current code (
+	i.e. The overhead is hardly detectable ), but as we remove the
+	garbage it may play a role. Since this is only an implementation
+	issue it will be trivial to resolve ( if it will show on the radar -
+	we still try to avoid useless optimizations ). XXX I think I have a
+	very good solution for that.</DD><DT>
+	Mapping</DT><DD>
+	So far the mapping doesn't qualify as a hotspot, but that's only
+	because other components need tuning. As the &quot;bad&quot; code is
+	cleaned up this will probably show in profilers.</DD><DT>
+	JNI overhead</DT><DD>
+	Experience shows a big difference between a JNI and a normal method
+	call. While this will probably change with the VM, it is important
+	to minimize the number of native invocations and use a big-enough
+	granularity. The cost of a TCP round trip is even bigger, so both
+	JNI and AJP13 will do that. So far this is not a significant
+	problem, the numbers are very small.</DD></DL>
+<H3>
+Memory tuning</H3>
 <H3>Non-issues</H3>
 <UL>
-	<LI><P>Method call overhead. The current implementation of
+	<LI><P><B>Method call overhead</B>. The current implementation of
 	RequestInterceptor makes a lot of empty method calls, because tomcat
 	will call every notification method for every interceptor. Current
 	tests suggest this is not a significant factor ( add an empty
@@ -684,29 +732,31 @@ problem, the numbers are very small.</P>
 	that have been found. Since most JITs are able to eliminate &quot;dead&quot;
 	code, probably this is a very low priority problem, it may have a
 	small impact on the final code.</P>
-	<LI><P>State maintenance and inter-module communication. The current
-	note mechanism reduce the request state to a indexed array access.
-	So far this is not a factor in the performance, and it's anyway
-	faster than the method used in apache and NES ( string-based ).
-	Looking at the apache implementation it seems the need for such
-	state access is not very big. Another factor is the fact that we
-	have a lot of flexibility with the internal APIs - if a certain
-	state becomes important it is possible to make it part of the API (
-	using getter access == method invocation + field access ).</P>
-	<LI><P>Multiple callback chains. In tomcat each operation is
-	delegated to modules, using the &quot;Chain of Command&quot;
-	pattern. The alternative is to provide a single implementation for
-	certain operations ( for example a single realm ) or use a single
-	chain. The loss in flexibility and loss of other potential
-	optimizations are far bigger than any gain we may get.</P>
-	<LI><P>Multiple interceptors. If the chains are too big, it may
-	impact the performance. So far 5-6 empty interceptors don't seem to
-	affect significantly the performance, and in the &quot;target&quot;
-	configuration most of the chains will be empty by using the
-	native-server implementation.</P>
+	<LI><P>State maintenance and <B>inter-module communication</B>. The
+	current note mechanism reduce the request state to a indexed array
+	access. So far this is not a factor in the performance, and it's
+	anyway faster than the method used in other web servers like apache
+	and NES ( string-based, with a linear search in apache - we use an
+	indexed access for similar problems ). Looking at the apache
+	implementation it seems the need for such state access is not very
+	big. Another factor is the fact that we have a lot of flexibility
+	with the internal APIs - if a certain state becomes important it is
+	possible to make it part of the API ( using getter access == method
+	invocation + field access ).</P>
+	<LI><P><B>Too many hooks</B>. In tomcat each operation is delegated
+	to modules, using the &quot;Chain of Command&quot; pattern. The
+	alternative is to provide a single implementation for certain
+	operations ( for example a single realm ) or use a single chain. The
+	loss in flexibility and loss of other potential optimizations are
+	far bigger than any gain we may get. So far the overhead of using
+	hooks is not visible.</P>
+	<LI><P><B>&quot;Chain of responsibility&quot;</B> ( the overhead of
+	multiple interceptors) . If the chains are too big, it may impact
+	the performance. So far 5-6 empty interceptors don't seem to affect
+	significantly the performance, and in the &quot;target&quot;
+	configuration most of the chains will be empty or very small by
+	using the native-server implementation.</P>
 </UL>
-<P><BR><BR>
-</P>
 <HR>
 <H2>Tomcat and other Web Servers 
 </H2>
