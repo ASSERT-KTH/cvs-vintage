@@ -77,7 +77,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.77 2003/04/23 21:10:16 jon Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.78 2003/04/30 22:23:40 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1473,6 +1473,10 @@ public abstract class AbstractScarabUser
      * is stored in the style of a HTTP <code>Accept-Language</code>
      * header.
      *
+     * @param localeInfo A <code>Locale</code> object, a parsable
+     * string representation, or <code>null</code> for the default.
+     * @exception Exception If there was a problem parsing or noting
+     * the locale.
      * @see org.tigris.scarab.om.ScarabUser#noticeLocale(Object)
      */
     public void noticeLocale(Object localeInfo)
