@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE server>
-<!-- $Id: jboss-service.xml,v 1.72 2002/12/05 10:45:10 ejort Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.73 2002/12/13 04:33:24 patriot1burke Exp $ -->
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
@@ -9,6 +9,14 @@
 <!-- ===================================================================== -->
 
 <server>
+
+
+  <mbean code="org.jboss.aop.AspectManagerService"
+	 name="jboss.aop:service=AspectManager">
+  </mbean>
+ 
+  <mbean code="org.jboss.aop.AspectDeployer" name="jboss.aop:service=AspectDeployer">
+  </mbean>
 
   <!-- Load all jars from the JBOSS_DIST/server/<config>/lib directory. This
     can be restricted to specific jars by specifying them in the archives
