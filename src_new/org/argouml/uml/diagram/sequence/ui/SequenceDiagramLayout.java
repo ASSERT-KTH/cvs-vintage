@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramLayout.java,v 1.7 2003/09/04 20:18:13 thierrylach Exp $
+// $Id: SequenceDiagramLayout.java,v 1.8 2003/09/05 20:39:04 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,6 +31,7 @@
 
 package org.argouml.uml.diagram.sequence.ui;
 
+import org.argouml.model.ModelFacade;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -49,8 +50,6 @@ import org.tigris.gef.graph.GraphModel;
 import org.tigris.gef.graph.GraphEvent;
 
 import ru.novosoft.uml.behavior.common_behavior.MStimulus;
-import ru.novosoft.uml.behavior.common_behavior.MLink;
-
 public class SequenceDiagramLayout extends LayerPerspective {
     protected static Logger cat = 
         Logger.getLogger(SequenceDiagramLayout.class);
@@ -290,7 +289,7 @@ public class SequenceDiagramLayout extends LayerPerspective {
 	    // after all objects are in place the stimuli has to be set in front of the layer
 	    // to keep it all selectable
 
-	    Collection col = ((MLink) link.getOwner()).getStimuli();
+	    Collection col = ModelFacade.getStimuli(link.getOwner());
 	    MStimulus stimulus = null;
 	    Iterator it = col.iterator();
 
@@ -313,7 +312,6 @@ public class SequenceDiagramLayout extends LayerPerspective {
     }
 
 }
-
 
 
 

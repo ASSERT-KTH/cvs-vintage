@@ -1,4 +1,4 @@
-// $Id: CrNoIncomingTransitions.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.9 2003/09/05 20:39:05 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: CrNoIncomingTransitions.java
 // Classes: CrNoIncomingTransitions
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrNoIncomingTransitions.java,v 1.8 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrNoIncomingTransitions.java,v 1.9 2003/09/05 20:39:05 bobtarling Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -34,7 +34,6 @@ import org.argouml.cognitive.Designer;
 import org.argouml.model.ModelFacade;
 
 
-import ru.novosoft.uml.behavior.state_machines.MState;
 import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.behavior.state_machines.MStateVertex;
 import ru.novosoft.uml.foundation.data_types.MPseudostateKind;
@@ -53,8 +52,8 @@ public class CrNoIncomingTransitions extends CrUML {
 	if (!(ModelFacade.isAStateVertex(dm))) return NO_PROBLEM;
 	MStateVertex sv = (MStateVertex) dm;
 	if (ModelFacade.isAState(sv)) {
-	    MStateMachine sm = ((MState) sv).getStateMachine();
-	    if (sm != null && sm.getTop() == sv) return NO_PROBLEM;
+	    Object sm = ModelFacade.getStateMachine(sv);
+	    if (sm != null && ((MStateMachine)sm).getTop() == sv) return NO_PROBLEM;
 	}
 
 	Collection incoming = sv.getIncomings();

@@ -1,5 +1,4 @@
-
-// $Id: UMLReceptionSignalComboBoxModel.java,v 1.9 2003/08/25 19:15:54 bobtarling Exp $
+// $Id: UMLReceptionSignalComboBoxModel.java,v 1.10 2003/09/05 20:39:04 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,7 +73,7 @@ public class UMLReceptionSignalComboBoxModel extends UMLComboBoxModel2 {
      */
     protected Object getSelectedModelElement() {
         if (getTarget() != null) {
-            return ((MReception) getTarget()).getSignal();
+            return ModelFacade.getSignal(getTarget());
         }
         return null;
     }

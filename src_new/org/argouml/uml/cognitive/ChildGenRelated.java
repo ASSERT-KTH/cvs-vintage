@@ -1,4 +1,4 @@
-// $Id: ChildGenRelated.java,v 1.12 2003/09/01 17:56:36 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.13 2003/09/05 20:39:05 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ChildGenRelated.java
 // Classes: ChildGenRelated
 // Original Author: jrobbins
-// $Id: ChildGenRelated.java,v 1.12 2003/09/01 17:56:36 bobtarling Exp $
+// $Id: ChildGenRelated.java,v 1.13 2003/09/05 20:39:05 bobtarling Exp $
 
 
 package org.argouml.uml.cognitive;
@@ -94,7 +94,7 @@ public class ChildGenRelated implements ChildGenerator {
 	    MStateMachine sm = (MStateMachine) o;
 	    MState top = sm.getTop();
 	    if (top != null)
-		res.addAll(((MCompositeState) top).getSubvertices());
+		res.addAll(ModelFacade.getSubvertices(top));
 	    res.add(sm.getContext()); //wasteful!
 	    res.addAll(sm.getTransitions());
 	    return res.elements();

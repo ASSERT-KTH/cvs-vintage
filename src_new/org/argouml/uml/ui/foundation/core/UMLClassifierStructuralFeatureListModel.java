@@ -1,4 +1,4 @@
-// $Id: UMLClassifierStructuralFeatureListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLClassifierStructuralFeatureListModel.java,v 1.3 2003/09/05 20:39:04 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,14 +22,13 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: UMLClassifierStructuralFeatureListModel.java,v 1.2 2003/06/29 23:50:17 linus Exp $
+// $Id: UMLClassifierStructuralFeatureListModel.java,v 1.3 2003/09/05 20:39:04 bobtarling Exp $
 package org.argouml.uml.ui.foundation.core;
 
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
 import ru.novosoft.uml.MBase;
-import ru.novosoft.uml.foundation.core.MClassifier;
-
 /**
  * 
  * @author jaap.branderhorst@xs4all.nl	
@@ -50,7 +49,7 @@ public class UMLClassifierStructuralFeatureListModel
      */
     protected void buildModelList() {
         if (getTarget() != null) {
-            setAllElements(((MClassifier) getTarget()).getStructuralFeatures());
+            setAllElements(ModelFacade.getStructuralFeatures(getTarget()));
         }
     }
 
@@ -58,7 +57,7 @@ public class UMLClassifierStructuralFeatureListModel
      * @see org.argouml.uml.ui.UMLModelElementListModel2#isValidElement(ru.novosoft.uml.MBase)
      */
     protected boolean isValidElement(MBase element) {
-        return ((MClassifier) getTarget()).getStructuralFeatures().contains(element);
+        return ModelFacade.getStructuralFeatures(getTarget()).contains(element);
     }
 
 }
