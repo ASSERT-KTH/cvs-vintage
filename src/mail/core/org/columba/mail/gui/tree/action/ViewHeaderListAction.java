@@ -32,14 +32,14 @@ public class ViewHeaderListAction extends InternAction implements SelectionListe
 	public ViewHeaderListAction(FrameController controller) {
 		super(controller);
 		
-		controller.getSelectionManager().registerSelectionListener("mail.foldertree",this);
+		controller.getSelectionManager().registerSelectionListener("mail.tree",this);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.columba.core.gui.util.SelectionListener#selectionChanged(org.columba.core.gui.util.SelectionChangedEvent)
 	 */
 	public void selectionChanged(SelectionChangedEvent e) {
-		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.foldertree");
+		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");
 		if( references.length == 1) {
 			MainInterface.processor.addOp(
 				new ViewHeaderListCommand(

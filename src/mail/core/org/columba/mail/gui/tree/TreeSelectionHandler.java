@@ -28,7 +28,6 @@ import org.columba.core.gui.util.SelectionHandler;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
-import org.columba.mail.folder.FolderTreeNode;
 
 public class TreeSelectionHandler
 	extends SelectionHandler
@@ -40,7 +39,7 @@ public class TreeSelectionHandler
 	private final static Folder[] folderArray = { null };
 
 	public TreeSelectionHandler(TreeView view) {
-		super("mail.foldertree");
+		super("mail.tree");
 		this.view = view;
 		view.addTreeSelectionListener(this);
 		selectedFolders = new LinkedList();
