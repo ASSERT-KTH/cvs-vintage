@@ -138,12 +138,7 @@ public class ActivityRule extends BaseRule
             }
         }
         
-        AttributeValue attributeValue = null;
-        boolean createTransaction = transaction.getTransactionType().getTypeId().equals(TransactionTypePeer.CREATE_ISSUE__PK);
-        if (createTransaction)
-        {
-            attributeValue = AttributeValue.getNewInstance(attribute, issue);
-        }
+        AttributeValue attributeValue = AttributeValue.getNewInstance(attribute, issue);
         
         if (attribute.isOptionAttribute())
         {
@@ -158,26 +153,17 @@ public class ActivityRule extends BaseRule
                 newPCAO.setName(activityInfo.getName());
                 newPCAO.setAttributeId(attribute.getAttributeId());
                 newPCAO.save();
-                if (createTransaction)
-                {
-                    attributeOption = AttributeOption
-                        .getInstance(attribute, activityInfo.getValue());
-                }
+                attributeOption = AttributeOption
+                    .getInstance(attribute, activityInfo.getValue());
             }
-            if (createTransaction)
-            {
-                attributeValue.setOptionId(attributeOption.getOptionId());
-            }
+            attributeValue.setOptionId(attributeOption.getOptionId());
         }
         else
         {
-            if (createTransaction)
-            {
-                attributeValue.setValue(activityInfo.getValue());
-            }
+            attributeValue.setValue(activityInfo.getValue());
         }
         
-        if (createTransaction)
+        if (transaction.getTransactionType().getTypeId().equals(TransactionTypePeer.CREATE_ISSUE__PK))
         {
             attributeValue.startTransaction(transaction);
             attributeValue.save();
@@ -185,7 +171,7 @@ public class ActivityRule extends BaseRule
         else
         {
             Activity activity = new Activity();
-            activity.create(issue, attribute, activityInfo.getDescription(), transaction,                           
+            activity.create(issue, attribute, activityInfo.getDescription(), transaction,
                             activityInfo.getOldValue(), activityInfo.getValue());
         }
         
