@@ -231,7 +231,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 					"dialog",
 					"account",
 					"enable_pop3_preprocessing"));
-		enablePreProcessingFilterCheckBox.setEnabled(false);
+		
 		
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
@@ -245,7 +245,6 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 				MailResourceLoader.getString("dialog", "account", "configure"));
 		configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
 		configurePreProcessingFilterButton.addActionListener(this);
-		configurePreProcessingFilterButton.setEnabled(false);
 
 		filterPanel.add(configurePreProcessingFilterButton);
 
