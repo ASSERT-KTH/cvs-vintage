@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.24 2003/02/06 23:30:29 d00mst Exp $
+// $Id: ModelFacade.java,v 1.25 2003/02/08 14:50:58 d00mst Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -360,7 +360,8 @@ public class ModelFacade {
      * @returns true if handle is a constructor.
      */
     public static boolean isConstructor(Object handle) {
-        return isStereotype(handle, "create");
+        return CoreHelper.getHelper().isOperation(handle)
+		&& isStereotype(handle, "create");
     }
 
     /**
