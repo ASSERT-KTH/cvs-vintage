@@ -47,12 +47,10 @@ public class ComposerView extends AbstractFrameView {
 
 	private JSplitPane rightSplitPane;
 	private JSplitPane mainSplitPane;
-	private Container editorPane;
 
 	public ComposerView(AbstractFrameController controller) {
 		super(controller);
 		setTitle(MailResourceLoader.getString("dialog", "composer", "composerview_title")); //$NON-NLS-1$
-
 	}
 
 	public void setMainDividerLocation(int i) {

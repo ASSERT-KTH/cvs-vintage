@@ -34,11 +34,7 @@ import org.columba.mail.message.MimePartTree;
  */
 public class AttachmentView extends IconPanel {
 
-	private LinkedList displayedMimeParts;
-
 	private AttachmentModel model;
-
-	
 
 	public AttachmentView(AttachmentModel model) {
 		super();
@@ -49,7 +45,6 @@ public class AttachmentView extends IconPanel {
 	public AttachmentModel getModel() {
 		return model;
 	}
-
 	
 	public MimePart getSelectedMimePart() {
 		return (MimePart) model.getDisplayedMimeParts().get(getSelected());
