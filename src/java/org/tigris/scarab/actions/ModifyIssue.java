@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.96 2002/05/17 23:03:38 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.97 2002/05/17 23:05:32 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -796,10 +796,9 @@ public class ModifyIssue extends BaseModifyIssue
                                    "not correspond to a valid issue.");
                 isValid = false;
             }
-
             // Check whether the entered issue is already dependant on this
             // Issue. If so, and it had been marked deleted, mark as undeleted.
-            if (childIssue != null && issue.getDependency(childIssue) != null)
+            else if (childIssue != null && issue.getDependency(childIssue) != null)
             {
                 Depend prevDepend = issue.getDependency(childIssue);
                 if (prevDepend.getDeleted())
@@ -815,7 +814,7 @@ public class ModifyIssue extends BaseModifyIssue
                 }
             }
             // Make sure issue is not being marked as dependant on itself.
-            if (childIssue != null && childIssue.equals(issue))
+            else if (childIssue != null && childIssue.equals(issue))
             {
                 childId.setMessage("You cannot add a dependency for an " 
                                   + "issue on itself.");
