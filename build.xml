@@ -108,7 +108,7 @@
   <property name="commons-modeler.lib" location="${commons-modeler.home}" />
   <property name="commons-modeler.jar" location="${commons-modeler.lib}/commons-modeler.jar" />
 
-  <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j.jar"/>
+  <property name="jmx.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-jmx.jar"/>
   <property name="jmxtools.jar" location="${jakarta-tomcat-connectors}/lib/mx4j-tools.jar"/>
 
   <property name="log4j.jar" location="${install.dir}/log4j/log4j.jar" />
@@ -331,6 +331,7 @@
     <mkdir dir="${tomcat.build}/lib/apps"/>
     <mkdir dir="${tomcat.build}/lib/container"/>
     <mkdir dir="${tomcat.build}/lib/common"/>
+    <mkdir dir="${tomcat.build}/lib/endorsed"/>
     <mkdir dir="${tomcat.build}/logs"/>
     <mkdir dir="${tomcat.build}/bin"/>
     <mkdir dir="${tomcat.build}/doc"/>
@@ -375,6 +376,9 @@
 
     <copy file ="src/build/readme/readme.common"
           tofile="${tomcat.build}/lib/common/README" />
+
+    <copy file ="src/build/readme/readme.endorsed"
+          tofile="${tomcat.build}/lib/endorsed/README" />
 
     <!-- This act as a "default", Tomcat3.3 will not load it in
          classpath, just a hack to ease the transition
