@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.51 2003/01/07 21:07:05 linus Exp $
+// $Id: FigNodeModelElement.java,v 1.52 2003/01/10 11:44:16 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,7 @@ import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.ui.ActionGoToCritique;
 import org.argouml.ui.Clarifier;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.cmd.CmdSetPreferredSize;
 import org.argouml.uml.UUIDManager;
 import org.argouml.uml.generator.ParserDisplay;
 import org.argouml.uml.ui.ActionProperties;
@@ -571,7 +572,7 @@ public abstract class FigNodeModelElement
         MModelElement me = (MModelElement) getOwner();
         if (me == null)
             return;
-        if (mee == null || mee.getName() == "name" && mee.getSource() == getOwner()) {
+        if (mee == null || "name".equals(mee.getName()) && mee.getSource() == getOwner()) {
             updateNameText();
             damage();
         }
@@ -581,8 +582,11 @@ public abstract class FigNodeModelElement
         }
         // TODO: remove the damage, as soon as we migrated to a structure that takes
         // the modelevents into account
+         CmdSetPreferredSize cmdSPS = 
+            new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
+        cmdSPS.setFigToResize(this);
+        cmdSPS.doIt();
         damage();
-
     }
 
     protected void createFeatureIn(FigGroup fg, InputEvent me) {
@@ -751,6 +755,10 @@ public abstract class FigNodeModelElement
         updateNameText();
         updateStereotypeText();
         updateBounds();
+        CmdSetPreferredSize cmdSPS = 
+            new CmdSetPreferredSize(CmdSetPreferredSize.MINIMUM_SIZE);
+        cmdSPS.setFigToResize(this);
+        cmdSPS.doIt();
         damage();
     }
 
