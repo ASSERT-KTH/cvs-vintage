@@ -72,7 +72,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Module.java,v 1.67 2003/03/28 00:54:58 jon Exp $
+ * @version $Id: Module.java,v 1.68 2003/03/28 01:11:23 jon Exp $
  */
 public interface Module
     extends Serializable
@@ -84,7 +84,7 @@ public interface Module
      */
     String NAME_DELIMINATOR = " > ";
 
-    final Integer ROOT_ID = new Integer(0);
+    Integer ROOT_ID = new Integer(0);
 
     String USER = "user";
     String NON_USER = "non-user";

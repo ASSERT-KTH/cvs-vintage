@@ -60,11 +60,11 @@ import org.apache.turbine.TurbineConfig;
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: TurbineInitialization.java,v 1.7 2003/03/28 00:57:25 jon Exp $
+ * @version $Id: TurbineInitialization.java,v 1.8 2003/03/28 01:11:24 jon Exp $
  */
 public class TurbineInitialization
 {
-    public static String lTrProps = "/WEB-INF/conf/TurbineResources.properties";
+    private static String lTrProps = "/WEB-INF/conf/TurbineResources.properties";
 
     protected static void initTurbine (String configDir)
         throws Exception
