@@ -50,7 +50,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.52 2003/03/14 04:40:59 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.53 2003/03/23 01:31:14 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -413,7 +413,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 
 			int firstLine = textArea.getFirstLine();
 			int visible = textArea.getVisibleLines();
-			int lineCount = textArea.getVirtualLineCount();
+			int lineCount = textArea.getDisplayManager().getScrollLineCount();
 
 			if (visible >= lineCount)
 			{

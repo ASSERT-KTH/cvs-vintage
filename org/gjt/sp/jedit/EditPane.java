@@ -54,7 +54,7 @@ import org.gjt.sp.jedit.textarea.*;
  * @see View#getEditPanes()
  *
  * @author Slava Pestov
- * @version $Id: EditPane.java,v 1.37 2003/03/16 05:37:51 spestov Exp $
+ * @version $Id: EditPane.java,v 1.38 2003/03/23 01:31:14 spestov Exp $
  */
 public class EditPane extends JPanel implements EBComponent
 {
@@ -278,8 +278,8 @@ public class EditPane extends JPanel implements EBComponent
 		/*if(selection != null)
 			textArea.setSelection(selection);*/
 
-		if(firstLine != null)
-			textArea.setFirstLine(textArea.physicalToVirtual(firstLine.intValue()));
+		//if(firstLine != null)
+		//	textArea.setFirstLine(textArea.physicalToVirtual(firstLine.intValue()));
 
 		if(horizontalOffset != null)
 			textArea.setHorizontalOffset(horizontalOffset.intValue());
@@ -610,8 +610,8 @@ public class EditPane extends JPanel implements EBComponent
 		{
 			if(_buffer == buffer)
 			{
-				textArea.getFoldVisibilityManager()
-					.foldStructureChanged();
+				//textArea.getFoldVisibilityManager()
+				//	.foldStructureChanged();
 				textArea.propertiesChanged();
 				textArea.repaint();
 

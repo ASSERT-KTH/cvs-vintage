@@ -39,7 +39,7 @@ import org.gjt.sp.util.Log;
  * this file out.
  * @since jEdit 4.0pre4
  * @author Slava Pestov
- * @version $Id: Java14.java,v 1.16 2003/01/31 04:49:30 spestov Exp $
+ * @version $Id: Java14.java,v 1.17 2003/03/23 01:31:14 spestov Exp $
  */
 class Java14
 {
@@ -169,7 +169,8 @@ class Java14
 		{
 			int newpos = textArea.getFirstLine() + amt;
 			newpos = Math.max(newpos, 0);
-			newpos = Math.min(newpos, textArea.getVirtualLineCount());
+			newpos = Math.min(newpos, textArea.getDisplayManager()
+				.getScrollLineCount());
 			textArea.setFirstLine(newpos);
 		}
 

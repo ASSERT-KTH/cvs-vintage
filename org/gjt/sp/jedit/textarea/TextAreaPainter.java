@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.70 2003/03/22 20:00:51 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.71 2003/03/23 01:31:14 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -893,7 +893,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 				gfx.setFont(font);
 				gfx.setColor(lineBackground.foldLineStyle.getForegroundColor());
 
-				int nextLine = textArea.getFoldVisibilityManager()
+				int nextLine = textArea.getDisplayManager()
 					.getNextVisibleLine(physicalLine);
 				if(nextLine == -1)
 					nextLine = buffer.getLineCount();
@@ -1034,7 +1034,7 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			//{{{ Paint line highlight and collapsed fold highlight
 			collapsedFold = (physicalLine < buffer.getLineCount() - 1
 				&& buffer.isFoldStart(physicalLine)
-				&& !textArea.getFoldVisibilityManager()
+				&& !textArea.getDisplayManager()
 				.isLineVisible(physicalLine + 1));
 
 			if(collapsedFold)
