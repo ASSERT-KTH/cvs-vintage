@@ -76,7 +76,7 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.39 2004/01/31 18:51:39 dep4b Exp $
+ * @version $Id: Email.java,v 1.40 2004/02/05 07:33:30 pledbrook Exp $
  */
 public class Email extends TemplateEmail
 {
@@ -482,7 +482,7 @@ public class Email extends TemplateEmail
         {
             try 
             {
-                locale = user.getLocale();
+                locale = user.getPreferredLocale();
             }
             catch (Exception e)
             {

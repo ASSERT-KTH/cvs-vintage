@@ -61,7 +61,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.93 2003/10/14 04:59:23 jmcnally Exp $
+ * @version $Id: ScarabUser.java,v 1.94 2004/02/05 07:33:29 pledbrook Exp $
  */
 public interface ScarabUser extends User
 {
@@ -481,17 +481,19 @@ public interface ScarabUser extends User
        throws Exception;
 
     /**
-     * Gets the users default locale from the users preferences.
+     * Set the user's locale to a new value.
+     */
+    void setLocale(Locale newLocale);
+
+    /**
+     * Get the user's current locale.
      */
     Locale getLocale();
 
     /**
-     * Saves a user's locale information under specific conditions.
-     *
-     * @param localeInfo Information regarding the user's locale.
+     * Get the user's preferred locale.
      */
-    void noticeLocale(Object localeInfo)
-        throws Exception;
+    Locale getPreferredLocale();
 
     /**
      * Get the ShowOtherModulesInIssueTypeList value.

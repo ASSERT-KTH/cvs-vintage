@@ -56,8 +56,6 @@ import java.util.HashMap;
 import java.util.Comparator;
 import java.sql.Connection;
 
-import org.apache.commons.lang.StringUtils;
-
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
@@ -77,7 +75,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.98 2004/02/01 14:06:36 dep4b Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.99 2004/02/05 07:33:29 pledbrook Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -1640,42 +1638,11 @@ public abstract class AbstractScarabUser
     }
 
     /**
-     * Saves the user's locale preference iff they don't already have
-     * one (calling {@link #save()} internally).  The locale preferece
-     * is stored in the style of a HTTP <code>Accept-Language</code>
-     * header.
-     *
-     * @param localeInfo A <code>Locale</code> object, a parsable
-     * string representation, or <code>null</code> for the default.
-     * @exception Exception If there was a problem parsing or noting
-     * the locale.
-     * @see org.tigris.scarab.om.ScarabUser#noticeLocale(Object)
+     * Set the user's locale to a new value.
      */
-    public void noticeLocale(Object localeInfo)
-        throws Exception
+    public void setLocale(Locale newLocale)
     {
-        UserPreference pref = UserPreferenceManager.getInstance(getUserId());
-        String preferredLocale = pref.getLocale();
-        if (StringUtils.isEmpty(preferredLocale))
-        {
-            if (localeInfo == null)
-            {
-                localeInfo = ScarabConstants.DEFAULT_LOCALE;
-            }
-            if (localeInfo instanceof Locale)
-            {
-                Locale l = (Locale) localeInfo;
-                StringBuffer buf = new StringBuffer(l.getLanguage());
-                String country = l.getCountry();
-                if (StringUtils.isNotEmpty(country))
-                {
-                    buf.append('-').append(country);
-                }
-                localeInfo = buf;
-            }
-            pref.setLocale(localeInfo.toString());
-            pref.save();
-        }
+        locale = newLocale;
     }
 
     /**
@@ -1685,24 +1652,38 @@ public abstract class AbstractScarabUser
     {
         if (locale == null)
         {
-            try 
-            {
-                UserPreference up = 
-                    UserPreferenceManager.getInstance(getUserId());
-                locale = Localization.getLocale(up.getLocale());
-            }
-            catch (Exception e)
-            {
-                // I think it might be ok to return null from this method
-                // but until that is investigated return the default in
-                // event of error
-                locale = ScarabConstants.DEFAULT_LOCALE;
-                Log.get().warn("AbstractScarabUser.getLocale() could not " + 
-                               "retrieve locale for user id=" + getUserId() +
-                               "; Error message: " + e.getMessage());
-            }
+            locale = getPreferredLocale();
         }
         return locale;
+    }
+
+    /**
+     * get preferred Locale from user preferences
+     * @return
+     */
+    public Locale getPreferredLocale()
+    {
+    	Locale result;
+        try
+        {
+            UserPreference up =
+                UserPreferenceManager.getInstance(getUserId());
+            result = Localization.getLocale(up.getLocale());
+        }
+        catch (Exception e)
+        {
+            // I think it might be ok to return null from this method
+            // but until that is investigated return the default in
+            // event of error
+            result = ScarabConstants.DEFAULT_LOCALE;
+            Log.get().warn(
+                "AbstractScarabUser.getLocale() could not "
+                    + "retrieve locale for user id="
+                    + getUserId()
+                    + "; Error message: "
+                    + e.getMessage());
+        }
+        return result;
     }
 
 
