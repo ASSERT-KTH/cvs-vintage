@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolProtocol.java,v 1.2 2005/02/11 12:04:39 benoitf Exp $
+ * $Id: CarolProtocol.java,v 1.3 2005/02/11 12:06:54 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -29,13 +29,13 @@ package org.objectweb.carol.ant;
  */
 final class CarolProtocol {
 
-    public final static CarolProtocol IIOP = protocol("iiop");
+    public  static final CarolProtocol IIOP = protocol("iiop");
 
-    public final static CarolProtocol JEREMIE = protocol("jeremie");
+    public  static final CarolProtocol JEREMIE = protocol("jeremie");
 
-    public final static CarolProtocol JRMP11 = protocol("jrmp", "1.1");
+    public  static final CarolProtocol JRMP11 = protocol("jrmp", "1.1");
 
-    public final static CarolProtocol JRMP12 = protocol("jrmp", "1.2");
+    public  static final CarolProtocol JRMP12 = protocol("jrmp", "1.2");
 
     private final String name;
 

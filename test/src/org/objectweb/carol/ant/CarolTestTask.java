@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.7 2005/02/11 12:04:39 benoitf Exp $
+ * $Id: CarolTestTask.java,v 1.8 2005/02/11 12:06:54 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -251,7 +251,7 @@ public final class CarolTestTask extends Task {
 
         private final boolean usesExternallyStartedNS;
 
-        private final static List configurations;
+        private static final List configurations;
 
         static {
             configurations = new LinkedList();
