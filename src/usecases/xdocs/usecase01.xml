@@ -26,9 +26,11 @@
     <req>Project set up</req>
     <req>User knows which project to report the issue against</req>
 </prerequirements>
+<results>
 <result>
 New issue is entered, or matching existing issue has vote increased.
 </result>
+</results>
 <datasets>
     <data>Quick fields</data>
     <data>Yes/No on duplicate candidates</data>

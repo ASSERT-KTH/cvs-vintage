@@ -1,0 +1,76 @@
+<usecase>
+<number>06</number>
+<title>Run Saved Issue query</title>
+
+<section>
+<extends><a href="usecase05.html">UC-05</a></extends>
+<description>
+    User is given the ability to run a previously staved query.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">Wants to be able to search for an
+    Issue with great detail (including all Attribute fields) and then be
+    able to save it for reuse at a later date.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Existing Issue</req>
+    <req>Saved Query Exists</req>
+</prerequirements>
+<results>
+<result>
+User clicks on saved query. Result page is the Issue view or the Issue list page.
+</result>
+</results>
+<datasets>
+    <data>Query Terms</data>
+    <data>Saved Query Name</data>
+</datasets>
+<faq>
+<!--    <item q="">
+    </item> -->    
+</faq>
+<notes>
+    <note>Need to consider the ability to modify saved searches. This
+    functionality should go into a search editor usecase.</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: click saved search link</li>
+        <li>Scarab: display Search results</li>
+        <li>[validation] Scarab: validates search criteria</li>
+        <li>Scarab: searches for matching issues</li>
+        <li>Scarab: filters search based on users role permissions.</li>
+        <li>if results.size( ) == 0:
+             <ul type="a">
+               <li>Scarab: display message on ProjectIssues with field data as entered</li>
+               <li>User: Modify search criteria and repeat</li>
+             </ul>
+        </li>
+        <li>if results.size( ) == 1: 
+             <ul type="a">
+               <li>Scarab: display issue view page</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
+        <li> if results.size( ) > 1:
+             <ul type="a">
+               <li>Scarab: display issue list page</li>
+               <li>User: survey resulting list</li>
+               <li>User: select one of the presented issues</li>
+               <li>User: sort issues based on column heading</li>
+               <li>User: modify displayed column headings</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
+      </ol>
+</scenario>
+</section>
+</usecase>

@@ -25,12 +25,14 @@
 <prerequirements>
     <req>Logged in</req>
     <req>Project set up</req>
-    <req>Exiting Issue</req>
+    <req>Existing Issue</req>
     <req>User knows Issue ID</req>
 </prerequirements>
+<results>
 <result>
 Details of the Issue is displayed
 </result>
+</results>
 <datasets>
     <data>Issue ID</data>
 </datasets>

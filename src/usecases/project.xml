@@ -3,12 +3,18 @@
         href="http://scarab.tigris.org/usemodels/usecases/">
 
     <title>Scarab</title>
-    
+
     <body>
     <menu name="Use Cases">
-        <item name="Entering an Issue"          href="/usecase01.html"/>
-        <item name="Search for Issue by ID"     href="/usecase02.html"/>
+        <item name="Entering an Issue"              href="/usecase01.html"/>
+        <item name="Search for Issue by ID"         href="/usecase02.html"/>
+        <item name="Quick search for Issues"        href="/usecase03.html"/>
+        <item name="Advanced search for Issues"     href="/usecase04.html"/>
+        <item name="Save Issue query"               href="/usecase05.html"/>
+        <item name="Run Saved Issue query"          href="/usecase06.html"/>
+        <item name="Step through related Issues"    href="/usecase07.html"/>
+        <item name="Review resulting Issues long format"    href="/usecase08.html"/>
     </menu>
-    
+
     </body>
 </project>

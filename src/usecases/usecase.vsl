@@ -27,6 +27,8 @@
 #end
 #end
 
+#macro ( output $value )$xmlout.outputString($value, true)#end
+
 #macro ( makeProject )
     #set ($menus = $project.getChild("body").getChildren("menu"))
     #foreach ( $menu in $menus )
@@ -49,27 +51,27 @@
 #macro (section $section $title)
 <table border="0" cellspacing="1" bgcolor="#cccccc">
   <tr>
-    <td bgcolor="#ffffff" align="right" valign="top"><b>Name:</b></td>
-        <td bgcolor="#ffffff" valign="top">UC-$root.getChild("number").getText() - $title</td>
+    <td bgcolor="white" align="right" valign="top"><b>Name:</b></td>
+        <td bgcolor="white" valign="top">UC-$root.getChild("number").getText() - $title</td>
   </tr>
   <tr>
-    <td bgcolor="#ffffff" align="right" valign="top"><b>Extends:</b></td>
-    <td bgcolor="#ffffff" valign="top">$section.getChild("extends").getText()</td>
+    <td bgcolor="white" align="right" valign="top"><b>Extends:</b></td>
+    <td bgcolor="white" valign="top">#output($section.getChild("extends"))</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Description:</b></td>
-    <td bgcolor="white" valign="top">$section.getChild("description").getText()</td>
+    <td bgcolor="white" valign="top">#output($section.getChild("description"))</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Feature(s):</b></td>
-    <td bgcolor="white" valign="top">$section.getChild("features").getText()</td>
+    <td bgcolor="white" valign="top">#output($section.getChild("features"))</td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Direct Actors:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
     #foreach ( $actor in $section.getChild("players").getChildren() )
-        <li>$actor.getAttributeValue("type") : $actor.getText()</li>
+        <li>$actor.getAttributeValue("type") : #output($actor)</li>
     #end
     </ul>
     </td>
@@ -79,7 +81,7 @@
     <td bgcolor="white" valign="top">
     <ul>
     #foreach ( $actor in $section.getChild("stakeholders").getChildren() )
-        <li>$actor.getAttributeValue("name") : $actor.getText()</li>
+        <li>$actor.getAttributeValue("name") : #output($actor)</li>
     #end
     </ul>
     </td>
@@ -89,21 +91,27 @@
     <td bgcolor="white" valign="top">
     <ul>
     #foreach ( $actor in $section.getChild("prerequirements").getChildren() )
-        <li>$actor.getText()</li>
+        <li>#output($actor)</li>
     #end
     </ul>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="right" valign="top"><b>Result:</b></td>
-    <td bgcolor="white" valign="top">$section.getChild("result").getText()</td>
+    <td bgcolor="white" align="right" valign="top"><b>Results:</b></td>
+    <td bgcolor="white" valign="top">
+    <ul>
+    #foreach ( $actor in $section.getChild("results").getChildren() )
+        <li>#output($actor)</li>
+    #end
+    </ul>
+    </td>
   </tr>
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>DataSets:</b></td>
     <td bgcolor="white" valign="top">
     <ul>
     #foreach ( $actor in $section.getChild("datasets").getChildren() )
-        <li>$actor.getText()</li>
+        <li>#output($actor)</li>
     #end
     </ul>
     </td>
@@ -115,7 +123,7 @@
     #foreach ( $actor in $section.getChild("faq").getChildren() )
         <li>$actor.getAttributeValue("q")
             <ul>
-            <li><font color="green">$actor.getText()</font></li>
+            <li><font color="green">#output($actor)</font></li>
             </ul>
         </li>
     #end
@@ -127,7 +135,7 @@
     <td bgcolor="white" valign="top">
     <ul>
     #foreach ( $actor in $section.getChild("notes").getChildren() )
-        <li>$actor.getText()</li>
+        <li>#output($actor)</li>
     #end
     </ul>
     </td>
@@ -135,7 +143,7 @@
   <tr>
     <td bgcolor="white" align="right" valign="top"><b>Senario:</b></td>
     <td bgcolor="white" valign="top">
-        $xmlout.outputString($section.getChild("scenario"), true)
+        #output($section.getChild("scenario"))
     </td>
   </tr>
 </table>

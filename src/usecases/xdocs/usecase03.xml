@@ -1,0 +1,80 @@
+<usecase>
+<number>03</number>
+<title>Quick search for Issues</title>
+
+<section>
+<extends>None</extends>
+<description>
+       User enters a few terms and sees a list of Issues that are
+       likely to be relevant.  Next, the user can drill into a
+       specific Issue from the list to see its details.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">Wants to be able to search for 
+    an Issue and quickly find it.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Existing Issue</req>
+    <req>User knows some search terms</req>
+</prerequirements>
+<results>
+<result>
+A list of matching Issues are displayed or go directly to the Issue if only
+one matches.
+</result>
+</results>
+<datasets>
+    <data>Query Terms</data>
+</datasets>
+<faq>
+    <item q="If all Issues are in project context, 
+             is there a quick way to jump to Issue in another project?">
+        If possible a link to the other project should be provided.
+    </item>
+    <item q="How can this functionality be put on tigris StartPage?">
+        As a small text entry box.
+    </item>
+</faq>
+<notes>
+    <note>If validation fails, Scarab displays an error</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: visit query page</li> 
+        <li>User: Enter search criteria into field and hits 'search' button</li>
+        <li>[validation] Scarab: validates search criteria</li>
+        <li>Scarab: searches for matching issues</li>
+        <li>Scarab: filters search based on users role permissions.</li>
+        <li>if results.size( ) == 0:
+             <ul type="a">
+               <li>Scarab: display message on search page with field
+               data as entered and status message</li>
+               <li>User: Modify search criteria and repeat</li>
+             </ul>
+        </li>
+        <li>if results.size( ) == 1: 
+             <ul type="a">
+               <li>Scarab: display the issue view page</li>
+             </ul>
+        </li>
+        <li>if results.size( ) > 1:
+             <ul type="a">
+               <li>Scarab: display the issue list page</li>
+               <li>User: survey resulting list</li>
+               <li>User: select one of the presented issues</li>
+               <li>User: sort issues based on column heading</li>
+               <li>User: modify displayed column headings</li>
+             </ul>
+        </li>
+      </ol>
+</scenario>
+</section>
+</usecase>

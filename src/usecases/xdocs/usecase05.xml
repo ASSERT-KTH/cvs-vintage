@@ -1,0 +1,93 @@
+<usecase>
+<number>05</number>
+<title>Save Issue query</title>
+
+<section>
+<extends><a href="usecase03.html">UC-03</a>, <a href="usecase04.html">UC-04</a></extends>
+<description>
+       User performs query on the database. User is then given the
+       option to save the query for use at a later date.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">Wants to be able to search for an
+    Issue with great detail (including all Attribute fields) and then be
+    able to save it for reuse at a later date.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Existing Issue</req>
+    <req>User knows some search terms</req>
+</prerequirements>
+<results>
+<result>
+After the search, a list of matching Issues are displayed or go directly
+to the Issue if only one matches. A button and small text box is
+presented on the results page that gives the user the chance to save the
+query with a value that is typed in. If no value is typed in, then a
+default value "Saved Query X" is assigned (where X is a number). After the
+query has been saved, the query results page is displayed again.
+</result>
+<result>
+There should also be a text entry box on the Issue Search page where the User
+can type in the name for a saved query. This will save the query when the
+search is done. The result is to show the search results page.
+</result>
+</results>
+<datasets>
+    <data>Query Terms</data>
+    <data>Saved Query Name</data>
+</datasets>
+<faq>
+<!--    <item q="">
+    </item> -->    
+</faq>
+<notes>
+    <note>Need to consider the ability to modify saved searches. This
+    functionality should go into a search editor usecase.</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: click 'Search' link</li>
+        <li>Scarab: display Search page</li>
+        <li>User: Enter search criteria into field
+            <ul type="a">
+                <li>User: Enter name of saved query</li>
+            </ul>
+        </li>
+        <li>User: hits 'search' button.</li>
+        <li>[validation] Scarab: validates search criteria</li>
+        <li>Scarab: searches for matching issues</li>
+        <li>Scarab: filters search based on users role permissions.</li>
+        <li>if results.size( ) == 0:
+             <ul type="a">
+               <li>Scarab: display message on ProjectIssues with field data as entered</li>
+               <li>User: Modify search criteria and repeat</li>
+             </ul>
+        </li>
+        <li>if results.size( ) == 1: 
+             <ul type="a">
+               <li>Scarab: display issue view page</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
+        <li> if results.size( ) > 1:
+             <ul type="a">
+               <li>Scarab: display issue list page</li>
+               <li>User: survey resulting list</li>
+               <li>User: select one of the presented issues</li>
+               <li>User: sort issues based on column heading</li>
+               <li>User: modify displayed column headings</li>
+               <li>User: enter name of search to save. Clicks save button</li>
+             </ul>
+        </li>
+      </ol>
+</scenario>
+</section>
+</usecase>

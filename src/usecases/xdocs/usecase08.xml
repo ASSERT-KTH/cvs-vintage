@@ -1,0 +1,47 @@
+<usecase>
+<number>08</number>
+<title>Review resulting Issues long format</title>
+
+<section>
+<extends><a href="usecase03.html">UC-03</a>, <a href="usecase04.html">UC-04</a></extends>
+<description>
+       View a large number of issues at once.  Useful for printing or comparison.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">Wants to be able to quickly view lots of Issues.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Existing Issue</req>
+    <req>View Issue</req>
+</prerequirements>
+<results>
+<result>
+User views bunch of Issues in one single long page.
+</result>
+</results>
+<datasets>
+    <data>Issue ID</data>
+</datasets>
+<faq>
+<!--    <item q="">
+    </item> -->    
+</faq>
+<notes>
+    <note>None</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: view existing Issue</li>
+        <li>Scarab: display existing Issue</li>
+      </ol>
+</scenario>
+</section>
+</usecase>

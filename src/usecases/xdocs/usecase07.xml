@@ -1,0 +1,49 @@
+<usecase>
+<number>07</number>
+<title>Step through related Issues</title>
+
+<section>
+<extends>View an Issue</extends>
+<description>
+    On the View an Issue page, the user is able to quickly link to
+    other related issues. They can be related in a variety of ways 
+    that need to be discussed.
+</description>
+<features>None</features>
+<players>
+    <actor type="User">Any Role (High Priority, High Frequency)</actor>
+    <actor type="Scarab">The scarab system</actor>
+</players>
+<stakeholders>
+    <actor name="Project Participant">Wants to be able to quickly view related Issues.
+    </actor>
+</stakeholders>
+<prerequirements>
+    <req>Logged in</req>
+    <req>Project set up</req>
+    <req>Existing Issue</req>
+    <req>View Issue</req>
+</prerequirements>
+<results>
+<result>
+User views an Issue and is presented with next/prev buttons.
+</result>
+</results>
+<datasets>
+    <data>Issue ID</data>
+</datasets>
+<faq>
+<!--    <item q="">
+    </item> -->    
+</faq>
+<notes>
+    <note>None</note>
+</notes>
+<scenario>
+      <ol>
+        <li>User: view existing Issue</li>
+        <li>Scarab: display existing Issue</li>
+      </ol>
+</scenario>
+</section>
+</usecase>
