@@ -120,7 +120,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).folderPropertyChanged(e);
 			}
 		}
@@ -138,7 +138,7 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).folderAdded(e);
 			}
 		}
@@ -157,9 +157,9 @@ public abstract class AbstractFolder extends DefaultMutableTreeNode implements I
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).folderRemoved(e);
-				listenerList.remove(FolderListener.class,
+				listenerList.remove(IFolderListener.class,
 						(FolderListener) listeners[i + 1]);
 			}
 		}

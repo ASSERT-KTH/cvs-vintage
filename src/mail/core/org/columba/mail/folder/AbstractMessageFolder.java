@@ -190,7 +190,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).messageAdded(e);
 			}
 		}
@@ -225,7 +225,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).messageRemoved(e);
 			}
 		}
@@ -253,7 +253,7 @@ public abstract class AbstractMessageFolder extends AbstractFolder implements
 		// Process the listeners last to first, notifying
 		// those that are interested in this event
 		for (int i = listeners.length - 2; i >= 0; i -= 2) {
-			if (listeners[i] == FolderListener.class) {
+			if (listeners[i] == IFolderListener.class) {
 				((IFolderListener) listeners[i + 1]).messageFlagChanged(e);
 			}
 		}
