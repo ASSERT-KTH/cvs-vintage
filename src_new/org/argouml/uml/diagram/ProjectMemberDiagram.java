@@ -1,4 +1,4 @@
-// $Id: ProjectMemberDiagram.java,v 1.25 2004/09/13 21:11:30 bobtarling Exp $
+// $Id: ProjectMemberDiagram.java,v 1.26 2004/11/10 13:20:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,6 +26,7 @@ package org.argouml.uml.diagram;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -113,9 +114,12 @@ public class ProjectMemberDiagram extends ProjectMember {
      * @see org.argouml.kernel.ProjectMember#save(java.io.Writer)
      */
     public void save(Writer writer, Integer indent) throws SaveException {
-        OCLExpander expander = 
-            new OCLExpander(TemplateReader.readFile(PGML_TEE));
-        
+        OCLExpander expander;
+        try {
+            expander = new OCLExpander(TemplateReader.SINGLETON.read(PGML_TEE));
+        } catch (FileNotFoundException e) {
+            throw new SaveException(e);
+        }
         if (indent == null) {
             try {
                 expander.expand(writer, diagram, "", "");

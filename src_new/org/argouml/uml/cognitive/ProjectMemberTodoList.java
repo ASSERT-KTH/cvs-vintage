@@ -1,4 +1,4 @@
-// $Id: ProjectMemberTodoList.java,v 1.2 2004/11/01 10:55:24 mkl Exp $
+// $Id: ProjectMemberTodoList.java,v 1.3 2004/11/10 13:20:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,6 +25,7 @@
 package org.argouml.uml.cognitive;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -164,9 +165,13 @@ public class ProjectMemberTodoList extends ProjectMember {
                     "No writer specified to save todo list");
         }
         
-        OCLExpander expander = 
-            new OCLExpander(TemplateReader.readFile(TO_DO_TEE));
-
+        OCLExpander expander;
+        try {
+            expander = new OCLExpander(TemplateReader.SINGLETON.read(TO_DO_TEE));
+        } catch (FileNotFoundException e) {
+            throw new SaveException(e);
+        }
+        
         if (indent == null) {
             try {
                 expander.expand(writer, this, "", "");

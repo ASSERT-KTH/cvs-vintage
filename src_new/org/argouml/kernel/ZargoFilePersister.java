@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.15 2004/11/01 10:55:21 mkl Exp $
+// $Id: ZargoFilePersister.java,v 1.16 2004/11/10 13:20:27 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -134,7 +134,7 @@ public class ZargoFilePersister extends AbstractFilePersister {
                         + FileConstants.UNCOMPRESSED_FILE_EXT);
             stream.putNextEntry(zipEntry);
             
-            Hashtable templates = TemplateReader.readFile(ARGO_MINI_TEE);
+            Hashtable templates = TemplateReader.SINGLETON.read(ARGO_MINI_TEE);
             OCLExpander expander = new OCLExpander(templates);
             expander.expand(writer, project, "", "");
                 
