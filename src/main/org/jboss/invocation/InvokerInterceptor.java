@@ -11,12 +11,16 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.lang.reflect.UndeclaredThrowableException;
+
+import javax.transaction.Transaction;
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 
 import org.jboss.proxy.Interceptor;
 
+import org.jboss.system.Registry;
 import org.jboss.util.id.GUID;
 
 /**
@@ -24,7 +28,7 @@ import org.jboss.util.id.GUID;
  * 
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class InvokerInterceptor
    extends Interceptor
@@ -42,6 +46,21 @@ public class InvokerInterceptor
    /** Static references to local invokers. */
    protected static Invoker localInvoker; 
 
+   /** The InvokerProxyHA class */
+   protected static Class invokerProxyHA;
+   
+   static
+   {
+      try
+      {
+         // Using Class.forName() to avoid security problems in the client
+         invokerProxyHA = Class.forName("org.jboss.invocation.InvokerProxyHA");
+      }
+      catch (Throwable ignored)
+      {
+      }
+   }
+   
    /**
     * Get the local invoker reference, useful for optimization.
     */
@@ -67,7 +86,9 @@ public class InvokerInterceptor
    }
 
    /**
-    * Returns wether we are local to the originating container or not. 
+    * Returns wether we are local to the originating container or not.
+    * 
+    * @return true when we have the same GUID 
     */
    public boolean isLocal()
    {
@@ -75,29 +96,137 @@ public class InvokerInterceptor
    }
 
    /**
+    * Whether the target is local
+    * 
+    * @param invocation the invocation
+    * @return true when the target is local
+    */
+   public boolean isLocal(Invocation invocation)
+   {
+      // No local invoker, it must be remote
+      if (localInvoker == null)
+         return false;
+
+      // The proxy was downloaded from a remote location
+      if (isLocal() == false)
+      {
+         // It is not clustered so we go remote
+         if (isClustered(invocation) == false)
+            return false;
+      }
+      
+      // See whether we have a local target
+      return hasLocalTarget(invocation);
+   }
+   
+   /**
+    * Whether we are in a clustered environment<p>
+    * 
+    * NOTE: This should be future compatible under any
+    * new design where a prior target chooser interceptor
+    * picks a non HA target than that code being
+    * inside a ha invoker.
+    * 
+    * @param invocation the invocation
+    * @return true when a clustered invoker
+    */
+   public boolean isClustered(Invocation invocation)
+   {
+      // No clustering classes
+      if (invokerProxyHA == null)
+         return false;
+      
+      // Is the invoker a HA invoker?
+      InvocationContext ctx = invocation.getInvocationContext();
+      Invoker invoker = ctx.getInvoker();
+      return invoker != null && invokerProxyHA.isAssignableFrom(invoker.getClass());
+   }
+   
+   /**
+    * Whether there is a local target
+    * 
+    * @param invocation
+    * @return true when in the registry
+    */
+   public boolean hasLocalTarget(Invocation invocation)
+   {
+      return Registry.lookup(invocation.getObjectName()) != null;
+   }
+   
+   /**
     * The invocation on the delegate, calls the right invoker.  
     * Remote if we are remote, local if we are local. 
     */
    public Object invoke(Invocation invocation)
       throws Exception
    {
-      Object returnValue = null;
-      InvocationContext ctx = invocation.getInvocationContext();
       // optimize if calling another bean in same server VM
-      if ( isLocal() )
-      {
-         // The payload as is is good
-         returnValue = localInvoker.invoke(invocation);
-      }
+      if (isLocal(invocation))
+         return invokeLocal(invocation);
       else
-      {
-         // The payload will go through marshalling at the invoker layer
-         Invoker invoker = ctx.getInvoker();
-         returnValue = invoker.invoke(invocation);
-      }
-      return returnValue;
+         return invokeInvoker(invocation);
    }
 
+   /**
+    * Invoke using local invoker
+    * 
+    * @param invocation the invocation
+    * @return the result
+    * @throws Exception for any error
+    */
+   protected Object invokeLocal(Invocation invocation) throws Exception
+   {
+      return localInvoker.invoke(invocation);
+   }
+
+   /**
+    * Invoke using local invoker and marshalled
+    * 
+    * @param invocation the invocation
+    * @return the result
+    * @throws Exception for any error
+    */
+   protected Object invokeMarshalled(Invocation invocation) throws Exception
+   {
+      MarshalledInvocation mi = new MarshalledInvocation(invocation);
+      MarshalledValue copy = new MarshalledValue(mi);
+      Invocation invocationCopy = (Invocation) copy.get();
+
+      // copy the Tx
+      Transaction tx = invocation.getTransaction();
+      invocationCopy.setTransaction(tx);
+
+      try
+      {
+         Object rtnValue = localInvoker.invoke(invocationCopy);
+         MarshalledValue mv = new MarshalledValue(rtnValue);
+         return mv.get();
+      }
+      catch(Throwable t)
+      {
+         MarshalledValue mv = new MarshalledValue(t);
+         Throwable t2 = (Throwable) mv.get();
+         if( t2 instanceof Exception )
+            throw (Exception) t2;
+         else
+            throw new UndeclaredThrowableException(t2);
+      }
+   }
+
+   /**
+    * Invoke using invoker
+    * 
+    * @param invocation the invocation
+    * @return the result
+    * @throws Exception for any error
+    */
+   protected Object invokeInvoker(Invocation invocation) throws Exception
+   {
+      InvocationContext ctx = invocation.getInvocationContext();
+      Invoker invoker = ctx.getInvoker();
+      return invoker.invoke(invocation);
+   }
+   
    /**
     * Externalize this instance.
     *
