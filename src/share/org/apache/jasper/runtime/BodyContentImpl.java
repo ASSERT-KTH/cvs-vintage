@@ -88,7 +88,7 @@ public class BodyContentImpl extends BodyContent {
         super(writer);
 	cb = new char[bufferSize];
 	nextChar = 0;
-    }
+	 }
 
     /**
      * Write a single character.
@@ -105,7 +105,7 @@ public class BodyContentImpl extends BodyContent {
 
     private void reAllocBuff (int len) {
         //Need to re-allocate the buffer since it is to be
-	//unbounded according to the updated spec..
+ 	//unbounded according to the updated spec..
 
         char[] tmp = null;
 
@@ -113,7 +113,7 @@ public class BodyContentImpl extends BodyContent {
 
 	if (len <= Constants.DEFAULT_BUFFER_SIZE) {
 	    tmp = new char [bufferSize + Constants.DEFAULT_BUFFER_SIZE];
-	    bufferSize += Constants.DEFAULT_BUFFER_SIZE;
+	    bufferSize = bufferSize * 2;
 	} else {
 	    tmp = new char [bufferSize + len];
 	    bufferSize += len;
