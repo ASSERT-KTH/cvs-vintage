@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.6 2000/12/08 23:18:54 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/12/08 23:18:54 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/PrefixMapper.java,v 1.7 2001/01/14 20:39:12 larryi Exp $
+ * $Revision: 1.7 $
+ * $Date: 2001/01/14 20:39:12 $
  *
  * ====================================================================
  *
@@ -227,6 +227,9 @@ public class PrefixMapper {
 	    container = myMap.prefixMappedServlets.get(s);
 	    
 	    if (container == null) {
+		// if empty string didn't map, time to give up
+		if ( s.length() == 0 )
+                    break;
 		s=FileUtil.removeLast( s );
 	    }  else {
 		if( myMap.mapCacheEnabled ) {
