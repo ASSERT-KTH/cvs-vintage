@@ -81,7 +81,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.8 2002/01/23 06:21:50 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.9 2002/01/25 21:56:53 jon Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -275,21 +275,19 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
     public void doSelectattribute( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ModuleEntity module = scarabR.getCurrentModule();
-        IssueType issueType = scarabR.getIssueType();
-        IssueType templateType = 
-            scarabR.getIssueType(issueType.getTemplateId().toString());
         Attribute attribute = scarabR.getAttribute();
  
         if (attribute.getAttributeId() == null)
         { 
-            data.setMessage("Please select an attrubute.");
+            data.setMessage("Please select an attribute.");
         }
         else
         {        
-            AttributeGroup attGroup = scarabR.getAttributeGroup();
+            IntakeTool intake = getIntakeTool(context);
+
+            IssueType issueType = scarabR.getIssueType();
+            ModuleEntity module = scarabR.getCurrentModule();
 
             // add module-attribute groupings
             RModuleAttribute rma = module.addRModuleAttribute(issueType);
@@ -298,6 +296,9 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             rmaGroup.setProperties(rma);
             rma.setAttributeId(attribute.getAttributeId());
             rma.save();
+
+            IssueType templateType = 
+                scarabR.getIssueType(issueType.getTemplateId().toString());
 
             // add module-attributeoption mappings
             List options = attribute.getAttributeOptions();
@@ -320,12 +321,11 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
             rma2.save();
 
             // attribute group-attribute mapping
+            AttributeGroup attGroup = scarabR.getAttributeGroup();
             RAttributeAttributeGroup raag =  
                 attGroup.addRAttributeAttributeGroup(attribute);
             raag.save();
             doCancel(data, context);
-       }      
-
+        }
     }
-
 }
