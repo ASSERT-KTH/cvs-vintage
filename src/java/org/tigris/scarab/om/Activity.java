@@ -66,7 +66,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  *
  * @author <a href="mailto:jmcnally@collab.new">John McNally</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Activity.java,v 1.32 2002/06/20 22:49:52 jon Exp $
+ * @version $Id: Activity.java,v 1.33 2002/07/18 23:41:40 jon Exp $
  */
 public class Activity 
     extends BaseActivity
@@ -84,7 +84,7 @@ public class Activity
      */
     public Attribute getAttribute() throws TorqueException
     {
-        if ( aAttribute==null && (getAttributeId() != null) )
+        if (aAttribute==null && (getAttributeId() != null))
         {
             aAttribute = AttributeManager.getInstance(getAttributeId());
             
@@ -319,7 +319,7 @@ public class Activity
      */
     public AttributeOption getOldAttributeOption() throws Exception
     {
-        if ( oldAttributeOption==null && (getOldValue() != null) )
+        if (oldAttributeOption==null && (getOldValue() != null))
         {
             oldAttributeOption = AttributeOptionManager
                 .getInstance(new NumberKey(getOldValue()));
@@ -328,21 +328,12 @@ public class Activity
     }
 
     /**
-     * Sets the Old Attribute Option associated with this Activity record
-    public void setOldAttributeOption(AttributeOption v) throws Exception
-    {
-        oldAttributeOption  = v;
-        super.setOldValue(v);
-    }
-     */
-
-    /**
      * Gets the AttributeOption object associated with the New Value field
      * (i.e., the new value for the attribute after the change.)
      */
     public AttributeOption getNewAttributeOption() throws Exception
     {
-        if ( newAttributeOption==null && (getNewValue() != null) )
+        if (newAttributeOption==null && (getNewValue() != null))
         {
             newAttributeOption = AttributeOptionManager
                 .getInstance(new NumberKey(getNewValue()));
@@ -350,40 +341,31 @@ public class Activity
         return newAttributeOption;
     }
 
-    /**
-     * Sets the New Attribute Option associated with this Activity record
-    public void setNewAttributeOption(AttributeOption v) throws Exception
-    {
-        newAttributeOption  = v;
-        super.setNewValue(v);
-    }
-     */
-
     public void save(Connection dbCon)
         throws TorqueException
     {
         // make sure to mark last related activity as done
-        if ( isNew() ) 
+        if (isNew()) 
         {
             Criteria crit = new Criteria();
             crit.add(ActivityPeer.ISSUE_ID, getIssueId());
             crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
             crit.add(ActivityPeer.END_DATE, null);
             List result = ActivityPeer.doSelect(crit);
-            if ( result.size() == 1 ) 
+            if (result.size() == 1) 
             {
                 Activity a = (Activity)result.get(0);
                 a.setEndDate(getTransaction().getCreatedDate());
                 a.save(dbCon);
             }
-            else if ( result.size() > 1 ) 
+            else if (result.size() > 1) 
             {
                 // something is wrong with database
                 throw new TorqueException(
                     new ScarabException("Multiple activities on the same"
-                                        +" attribute are active.") );
+                                        +" attribute are active."));
             }
-            else if ( result.size() == 0 ) 
+            else if (result.size() == 0) 
             {
                 // this is okay if the issue is new or has had no previous
                 // activity on this attribute.  Go ahead and check that
@@ -392,11 +374,11 @@ public class Activity
                 crit.add(ActivityPeer.ISSUE_ID, getIssueId());
                 crit.add(ActivityPeer.ATTRIBUTE_ID, getAttributeId());
                 result = ActivityPeer.doSelect(crit);
-                if ( result.size() != 0 ) 
+                if (result.size() != 0) 
                 {
                     throw new TorqueException(
                         new ScarabException("Previous activity has occured" 
-                        + " on the same attribute but none are active.") );
+                        + " on the same attribute but none are active."));
                 }
             }
         }
