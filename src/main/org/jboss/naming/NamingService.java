@@ -6,8 +6,18 @@
  */
 package org.jboss.naming;
 
-import javax.management.*;
-import javax.naming.*;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.Properties;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.MalformedObjectNameException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 
 import org.jnp.server.Main;
 
@@ -18,7 +28,10 @@ import org.jboss.util.ServiceMBeanSupport;
  *      
  *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.12 $
+ *   @version $Revision: 1.13 $
+ *
+ * Revisions:
+ * 20010622 scott.stark: Report IntialContext env for problem tracing
  */
 public class NamingService
    extends ServiceMBeanSupport
@@ -34,7 +47,8 @@ public class NamingService
    // Constructors --------------------------------------------------
    public NamingService()
    {
-      naming = new Main();
+      String categoryName = category.getName();
+      naming = new Main(categoryName);
    }
    
    // Public --------------------------------------------------------
@@ -95,25 +109,58 @@ public class NamingService
       // Read jndi.properties into system properties
       // RO: this is necessary because some components (=Tomcat servlets) use a 
       // buggy classloader that disallows finding the resource properly
-      System.getProperties().load(Thread.currentThread().getContextClassLoader().getResourceAsStream("jndi.properties"));
+      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      InputStream is = loader.getResourceAsStream("jndi.properties");
+      Properties props = new Properties();
+      props.load(is);
+
+      Enumeration keys = props.propertyNames();
+      while( keys.hasMoreElements() )
+      {
+         String key = (String) keys.nextElement();
+         String value = props.getProperty(key);
+         category.debug("System.setProperty, key="+key+", value="+value);
+         System.setProperty(key, value);
+      }
    }
-   
+
    public void startService()
       throws Exception
    {
       naming.start();
+      /* Create a default InitialContext and dump out its env to show what properties
+         were used in its creation. If we find a Context.PROVIDER_URL property
+         issue a warning as this means JNDI lookups are going through RMI.
+      */
+      InitialContext iniCtx = new InitialContext();
+      Hashtable env = iniCtx.getEnvironment();
+      Enumeration keys = env.keys();
+      category.info("InitialContext Environment:");
+      String providerURL = null;
+      while( keys.hasMoreElements() )
+      {
+         String key = (String) keys.nextElement();
+         String value = (String) env.get(key);
+         category.info("key="+key+", value="+value);
+         if( key.equals(Context.PROVIDER_URL) )
+            providerURL = value;
+      }
+      // Warn if there was a Context.PROVIDER_URL
+      if( providerURL != null )
+         category.warn("Saw Context.PROVIDER_URL in server jndi.properties, url="+providerURL);
+
       // Create "java:comp/env"
       RefAddr refAddr = new StringRefAddr("nns", "ENC");
       Reference envRef = new Reference("javax.naming.Context", refAddr, ENCFactory.class.getName(), null);
-      Context ctx = (Context)new InitialContext().lookup("java:");
+      Context ctx = (Context)iniCtx.lookup("java:");
       ctx.rebind("comp", envRef);
-      log.log("Naming started on port "+naming.getPort());
+      category.info("Naming started on port "+naming.getPort());
    }
 
    public void stopService()
    {
       naming.stop();
-      log.log("JNP server stopped");
+      category.info("JNP server stopped");
    }
 
    // Protected -----------------------------------------------------
