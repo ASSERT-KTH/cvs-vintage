@@ -20,7 +20,7 @@ import org.jboss.ejb.EnterpriseContext;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.1 $
+*   @version $Revision: 1.2 $
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -53,13 +53,11 @@ extends AbstractInterceptor
 			// MF Praise: hey for once the comment is good rickard ;-0
 			if (ctx.getId() == null)
 			{
-				System.out.println("STRANGE I DON'T SEE THE ID");
 				// Create did not associate an ID with the ctx
 				// There is nothing to do just let the garbage collector do its work
 			
 			} else
 			{
-				System.out.println("We will releaase the context..."+ctx.getId()+"  look at the cache");
 				// Create was called succesfully we go to the cache
 				((StatefulSessionContainer)getContainer()).getInstanceCache().release(ctx);
 			}
@@ -70,10 +68,8 @@ extends AbstractInterceptor
 	throws Exception
 	{
 		// Get context
-		System.out.println("I do kaeads;lfkj;salfkj" + id);
 		ctx = ((StatefulSessionContainer)getContainer()).getInstanceCache().get(id);
 		
-		System.out.println("D:LSFkj");
 		try
 		{
 			// Invoke through interceptors
