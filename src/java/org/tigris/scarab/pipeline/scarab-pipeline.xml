@@ -17,6 +17,7 @@
     <valve className="org.apache.turbine.pipeline.DefaultSessionValidationValve"/>
     <!-- This one valve is in addition to the standard pipeline -->
     <valve className="org.tigris.scarab.pipeline.FreshenUserValve"/>
+    <valve className="org.tigris.scarab.pipeline.SetModuleDomainInfoValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultACLCreationValve"/>
     <valve className="org.apache.turbine.pipeline.DefaultActionValve"/>
     <valve className="org.apache.turbine.pipeline.RunModulesValve"/>
