@@ -42,7 +42,7 @@ import org.gjt.sp.util.Log;
  * This class records and runs macros.
  *
  * @author Slava Pestov
- * @version $Id: Macros.java,v 1.12 2002/02/07 08:17:06 spestov Exp $
+ * @version $Id: Macros.java,v 1.13 2002/02/07 22:26:18 spestov Exp $
  */
 public class Macros
 {
@@ -228,7 +228,7 @@ public class Macros
 			return;
 		}
 
-		Log.log(Log.DEBUG,this,"Registered " + handler.getName()
+		Log.log(Log.DEBUG,Macros.class,"Registered " + handler.getName()
 			+ " macro handler");
 		macroHandlers.add(handler);
 	} //}}}
