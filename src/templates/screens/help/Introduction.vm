@@ -51,8 +51,8 @@
     search to specific date or issue number ranges. The Custom Query feature allows 
     the user to search by text string-the user can specify a set of information 
     to compare against issues in the database. Frequently used queries can be 
-    saved and easily run. Once a saved query has been created, the user can request 
-    frequent email updates on issues matching the search criteria.</li>
+    saved and easily run. <!--Once a saved query has been created, the user can request 
+    frequent email updates on issues matching the search criteria.--></li>
   <li><strong>Reports: </strong>The robust reports interface allows the user to create and 
     save reports. Reports provide customizable and meaningful metrics. </li>
   <li><strong>Email notifications: </strong>As important events occur, email is generated 

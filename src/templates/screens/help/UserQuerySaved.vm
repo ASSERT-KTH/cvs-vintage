@@ -15,7 +15,7 @@
               <ul>
                 <li><a href="#saving">Saving queries</a></li>
                 <li><a href="#managing">Managing saved queries</a></li>
-                <li><a href="#subscribing">Subscribing to saved queries</a></li>
+                <!--<li><a href="#subscribing">Subscribing to saved queries</a></li>-->
                 <li><a href="#default">Setting a default query</a></li>
               </ul>
             </li>
@@ -76,7 +76,8 @@
     <li>The <strong>Delete selected </strong>button will remove the saved query 
       from your list. You can delete any of your personal saved queries.</li>
   </ul>
-  <p><strong><a name="subscribing" id="subscribing">Subscribing to saved queries</a></strong></p>
+  <!--<p><strong><a name="subscribing" id="subscribing"> Subscribing to saved 
+    queries</a></strong></p>
   <p>Scarab can create and send regular email alerts to you regarding issues matching 
     your saved criteria. From the <strong>Stored query list</strong> page, accessed 
     through the <em>Saved queries</em> link on the left navigation, click the 
@@ -101,7 +102,7 @@
     is used by the <em>Issue List</em> link if you have not performed any other 
     queries during the current session. If you have performed any other queries 
     during the current session the <em>Issue List</em> link will repeat the most 
-    recently run query. </p>
+    recently run query. </p>-->
   
 <div class="courtesylinks"><p><a href="#toc">Top</a></div> 
  
