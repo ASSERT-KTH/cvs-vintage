@@ -117,7 +117,7 @@ in the contrib/tomcat module.
 @see org.jboss.security.SecurityAssociation;
 
 @author  Scott.Stark@jboss.org
-@version $Revision: 1.12 $
+@version $Revision: 1.13 $
 */
 public abstract class AbstractWebContainer 
 extends ServiceMBeanSupport 
@@ -521,6 +521,42 @@ implements AbstractWebContainerMBean
          Util.bind(envCtx, name, new LinkRef(jndiName));
       }
    }
+   
+   
+   
+   public void startService()
+   {
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            "addDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+   }
+   /**
+   * Implements the template method in superclass. This method stops all the
+   * applications in this server.
+   */
+   public void stopService()
+   {
+      try
+      {
+         // Register with the main deployer
+         server.invoke(
+            new ObjectName(org.jboss.deployment.MainDeployerMBean.OBJECT_NAME),
+            "removeDeployer",
+            new Object[] {this},
+            new String[] {"org.jboss.deployment.DeployerMBean"});
+      }
+      catch (Exception e) {log.error("Could not register with MainDeployer", e);}
+  
+   }
+   
+   
    
    /** This creates a java:comp/env/security context that contains a
    securityMgr binding pointing to an AuthenticationManager implementation
