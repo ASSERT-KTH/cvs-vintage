@@ -59,7 +59,7 @@ import org.xml.sax.SAXException;
  * @see       org.jboss.system.Service
  * @author    <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author    <a href="mailtod_jencks@users.sourceforge.net">David Jencks</a>
- * @version   $Revision: 1.4 $ <p>
+ * @version   $Revision: 1.5 $ <p>
  *
  *      <b>20010830 marc fleury:</b>
  *      <ul>initial import
@@ -253,137 +253,144 @@ public class ServiceDeployer
          log.debug("found *service.xml file for url " + url);
          // The service.xml file can define jar the classes it contains depend on
          // We should only have one codebase (or none at all)
-         Element classpath = (Element)document.getElementsByTagName("classpath").item(0);
-         log.debug("found classpath " + classpath);
-         String codebase = "";
-         String archives = "";
-
-         //Does it specify a codebase?
-         if (classpath != null)
+         //And why is that??
+         NodeList classpaths = document.getElementsByTagName("classpath");
+         for (int i = 0; i < classpaths.getLength(); i++)
          {
-            log.debug("setting up classpath " + classpath);
-            // Load the codebase
-            codebase = classpath.getAttribute("codebase").trim();
+            Element classpath = (Element)classpaths.item(i);
+            log.debug("found classpath " + classpath);
+            String codebase = "";
+            String archives = "";
 
-            //if codebase is ".", construct codebase from current url.
-            if (".".equals(codebase))
+            //Does it specify a codebase?
+            if (classpath != null)
             {
-               //does this work with http???
-               codebase = new File(urlString).getParent();
+               log.debug("setting up classpath " + classpath);
+               // Load the codebase
+               codebase = classpath.getAttribute("codebase").trim();
+
+               //if codebase is ".", construct codebase from current url.
+               if (".".equals(codebase))
+               {
+                  //does this work with http???
+                  codebase = new File(urlString).getParent();
+               }
+
+               // Let's make sure the formatting of the codebase ends with the /
+               if (codebase.startsWith("file:") && !codebase.endsWith(File.separator))
+               {
+                  codebase += File.separator;
+               }
+               else if (codebase.startsWith("http:") && !codebase.endsWith("/"))
+               {
+                  codebase += "/";
+               }
+               log.debug("codebase is " + codebase);
+               //Load the archives
+               archives = classpath.getAttribute("archives").trim();
+               log.debug("archives are " + archives);
             }
 
-            // Let's make sure the formatting of the codebase ends with the /
-            if (codebase.startsWith("file:") && !codebase.endsWith(File.separator))
+            if (codebase.startsWith("file:") && archives.equals(""))
             {
-               codebase += File.separator;
-            }
-            else if (codebase.startsWith("http:") && !codebase.endsWith("/"))
-            {
-               codebase += "/";
-            }
-            log.debug("codebase is " + codebase);
-            //Load the archives
-            archives = classpath.getAttribute("archives").trim();
-            log.debug("archives are " + archives);
-         }
-
-         if (codebase.startsWith("file:") && archives.equals(""))
-         {
-            try
-            {
-               File dir = new File(codebase.substring(5));
-               // The patchDir can only be a File one, local
-               File[] jars = dir.listFiles(
-                  new java.io.FileFilter()
-                  {
-                     /**
-                      * filters for jar and zip files in the local directory.
-                      *
-                      * @param pathname  Path to the candidate file.
-                      * @return          True if the file is a jar or zip file.
-                      */
-                     public boolean accept(File pathname)
+               try
+               {
+                  File dir = new File(codebase.substring(5));
+                  // The patchDir can only be a File one, local
+                  File[] jars = dir.listFiles(
+                     new java.io.FileFilter()
                      {
-                        String name2 = pathname.getName();
-                        return name2.endsWith(".jar") || name2.endsWith(".zip");
+                        /**
+                         * filters for jar and zip files in the local directory.
+                         *
+                         * @param pathname  Path to the candidate file.
+                         * @return          True if the file is a jar or zip
+                         *      file.
+                         */
+                        public boolean accept(File pathname)
+                        {
+                           String name2 = pathname.getName();
+                           return name2.endsWith(".jar") || name2.endsWith(".zip");
+                        }
                      }
-                  }
-                     );
-               for (int j = 0; jars != null && j < jars.length; j++)
-               {
-                  File jar = jars[j];
-                  URL u = jar.getCanonicalFile().toURL();
-                  log.debug("addding URLClassLoader for url " + u);
-                  URLClassLoader cl0 = new URLClassLoader(new URL[]{u});
-                  classLoaders.add(cl0);
-               }
-            }
-            catch (Exception e)
-            {
-               e.printStackTrace();
-               throw new DeploymentException(e.getMessage());
-            }
-         }
-
-         // Still no codebase? get the system default
-         else if (codebase.equals(""))
-         {
-            codebase = System.getProperty("jboss.system.libraryDirectory");
-         }
-
-         // We have an archive whatever the codebase go ahead and load the libraries
-         if (!archives.equals(""))
-         {
-
-            StringTokenizer st = new StringTokenizer(archives, ",");
-            //iterate through the packages in archives
-            while (st.hasMoreTokens())
-            {
-               String jar = st.nextToken().trim();
-               String dependencyString = codebase + jar;
-               URL dependency = new URL(dependencyString);
-               //look to see if this package was undeployed by hand--
-               //if so we should not try to redeploy it automatically,
-               //we should wait till it is redeployed by hand.
-               log.debug("Looking for suspension dependencies for url : " + dependency);
-               Set dependents = (Set)suspendedUrlDependencyMap.get(dependency);
-               log.debug("Looking for suspension dependencies for url : " + dependency + ", returned " + dependents);
-               if ((dependents != null) && (dependents.size() > 0))
-               {
-                  //We have to wait till it's redeployed
-                  //Put in a request to be deployed ourselves.
-                  if (!dependents.contains(url))
+                        );
+                  for (int j = 0; jars != null && j < jars.length; j++)
                   {
-                     dependents.add(url);
+                     File jar = jars[j];
+                     URL u = jar.getCanonicalFile().toURL();
+                     log.debug("addding URLClassLoader for url " + u);
+                     URLClassLoader cl0 = new URLClassLoader(new URL[]{u});
+                     classLoaders.add(cl0);
                   }
-                  //may need more cleanup...
-                  urlToPrimaryClassLoaderMap.remove(url);
-                  //we'll try again later...
-                  return;
                }
-
-               //log.debug("adding URLClassLoader for url archive " + dependency);
-               //URLClassLoader cl1 = new URLClassLoader(new URL[]{dependency});
-               if (!isDeployed(dependencyString))
+               catch (Exception e)
                {
-                  log.debug("recursively deploying " + dependency);
-                  deploy(dependencyString);
-               }
-               //This won't work if we only put into primary if deployed by hand,
-               //not recursively
-               //It also doesn't work if we put service.xml files in the classpath
-               Object cl1 = urlToPrimaryClassLoaderMap.get(dependency);
-               if (cl1 != null)
-               {
-                  classLoaders.add(cl1);
+                  e.printStackTrace();
+                  throw new DeploymentException(e.getMessage());
                }
             }
-         }
 
-         else if (codebase.startsWith("http:"))
-         {
-            throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
+            // Still no codebase? get the system default
+            else if (codebase.equals(""))
+            {
+               codebase = System.getProperty("jboss.system.libraryDirectory");
+            }
+
+            // We have an archive whatever the codebase go ahead and load the libraries
+            if (!archives.equals(""))
+            {
+
+               StringTokenizer st = new StringTokenizer(archives, ",");
+               //iterate through the packages in archives
+               while (st.hasMoreTokens())
+               {
+                  String jar = st.nextToken().trim();
+                  String dependencyString = codebase + jar;
+                  URL dependency = new URL(dependencyString);
+                  //look to see if this package was undeployed by hand--
+                  //if so we should not try to redeploy it automatically,
+                  //we should wait till it is redeployed by hand.
+                  log.debug("Looking for suspension dependencies for url : " + dependency);
+                  Set dependents = (Set)suspendedUrlDependencyMap.get(dependency);
+                  log.debug("Looking for suspension dependencies for url : " + dependency + ", returned " + dependents);
+                  if ((dependents != null) && (dependents.size() > 0))
+                  {
+                     //We have to wait till it's redeployed
+                     //Put in a request to be deployed ourselves.
+                     if (!dependents.contains(url))
+                     {
+                        dependents.add(url);
+                     }
+                     //may need more cleanup...
+                     urlToPrimaryClassLoaderMap.remove(url);
+                     //we'll try again later...
+                     return;
+                  }
+
+                  //log.debug("adding URLClassLoader for url archive " + dependency);
+                  //URLClassLoader cl1 = new URLClassLoader(new URL[]{dependency});
+                  if (!isDeployed(dependencyString))
+                  {
+                     log.debug("recursively deploying " + dependency);
+                     deploy(dependencyString);
+                  }
+                  //This won't work if we only put into primary if deployed by hand,
+                  //not recursively
+                  //It also doesn't work if we put service.xml files in the classpath
+                  Object cl1 = urlToPrimaryClassLoaderMap.get(dependency);
+                  if (cl1 != null)
+                  {
+                     classLoaders.add(cl1);
+                  }
+               }
+            }
+
+            else if (codebase.startsWith("http:"))
+            {
+               throw new DeploymentException("Loading from a http:// codebase with no jars specified. Please fix jboss-service.xml in your configuration");
+            }
          }
+         //end loop through classpaths
 
          // The libraries are loaded we can now load the mbeans
          List services = (List)urlToServicesListMap.get(url);

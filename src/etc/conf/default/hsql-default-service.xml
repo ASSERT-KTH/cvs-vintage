@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  JBoss Server Configuration                                           -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<!-- $Id: hsql-default-service.xml,v 1.1 2001/09/09 05:40:47 d_jencks Exp $ -->
+
+
+<server>
+
+
+
+  <classpath archives="
+	 hsql.jar, 
+	 hsql-plugin.jar"/>
+
+  <!-- ==================================================================== -->
+  <!-- JDBC - Initialize the databases                                      -->
+  <!-- to ConnectionFactoryLoader                                           -->
+  <!-- ==================================================================== -->
+
+  <!--mbean code="org.jboss.jdbc.HypersonicDatabase" 
+	 name="JBOSS-SYSTEM:service=Hypersonic">
+    <attribute name="Port">1476</attribute>
+    <attribute name="Silent">true</attribute>
+    <attribute name="Database">default</attribute>
+    <attribute name="Trace">false</attribute>
+  </mbean-->
+
+  <mbean code="org.jboss.resource.ConnectionFactoryLoader" 
+	 name="JBOSS-SYSTEM:service=ConnectionFactoryLoader,name=DefaultDS">
+    <attribute name="ManagedConnectionFactoryProperties">ConnectionURL=jdbc:HypersonicSQL:hsql://localhost:1476
+  DriverClass=org.hsql.jdbcDriver
+  UserName=sa</attribute>
+    <attribute name="JndiName">DefaultDS</attribute>
+    <attribute name="TransactionManagerName">java:/TransactionManager</attribute>
+    <attribute name="ResourceAdapterName">Minerva JDBC LocalTransaction ResourceAdapter</attribute>
+    <attribute name="RARDeployerName">JCA:service=RARDeployer</attribute>
+    <attribute name="ConnectionManagerFactoryName">MinervaSharedLocalCMFactory</attribute>
+    <attribute name="ConnectionManagerProperties">#
+      #Wed Aug 15 16:17:29 EDT 2001
+      InvalidateOnError=false
+      BlockingTimeoutMillis=500000
+      IdleTimeoutMillis=1800000
+      MaxSize=10
+      TimestampUsed=false
+      IdleTimeoutEnabled=false
+      CleanupIntervalMillis=120000
+      MinSize=0
+      GCMinIdleMillis=1200000
+      GCEnabled=false
+      MaxIdleTimeoutPercent=1.0
+    </attribute>
+    <attribute name="PrincipalMappingClass">
+      org.jboss.resource.security.ManyToOnePrincipalMapping
+   </attribute>
+    <attribute name="PrincipalMappingProperties">UserName=sa</attribute>
+  </mbean>
+
+</server>
