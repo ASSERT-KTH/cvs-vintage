@@ -8,6 +8,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.metadata;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,7 +23,7 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  */
 public final class JDBCRelationshipRoleMetaData {
    /**
@@ -65,6 +66,11 @@ public final class JDBCRelationshipRoleMetaData {
     */
    private final String cmrFieldType;
    
+   /**
+    * Type of the cmr field (i.e., collection or set)
+    */
+   private final JDBCReadAheadMetaData readAhead;
+   
    private final Map tableKeyFields = new HashMap();
    private final Map foreignKeyFields = new HashMap();
    
@@ -81,6 +87,7 @@ public final class JDBCRelationshipRoleMetaData {
       multiplicityOne = relationshipRole.isMultiplicityOne();
       cascadeDelete = relationshipRole.isCascadeDelete();
       foreignKeyConstraint = false;
+      readAhead = null;
       
       String tempCmrFieldName = relationshipRole.getCMRFieldName();
       if(tempCmrFieldName == null) {
@@ -132,6 +139,16 @@ public final class JDBCRelationshipRoleMetaData {
          foreignKeyConstraint = Boolean.valueOf(fkString).booleanValue();
       } else {
          foreignKeyConstraint = defaultValues.hasForeignKeyConstraint();
+      }
+
+      // read-ahead
+      Element readAheadElement = 
+            MetaData.getOptionalChild(element, "read-ahead");
+      if(readAheadElement != null) {
+         readAhead = new JDBCReadAheadMetaData(
+               readAheadElement, entity.getReadAhead());
+      } else {
+         readAhead = entity.getReadAhead();
       }
 
       if(relationMetaData.isTableMappingStyle()) {
@@ -244,8 +261,15 @@ public final class JDBCRelationshipRoleMetaData {
     */
    public JDBCRelationshipRoleMetaData getRelatedRole() {
       return relationMetaData.getOtherRelationshipRole(this);
-   }
+   } 
    
+   /**
+    * Gets the read ahead meta data
+    */
+   public JDBCReadAheadMetaData getReadAhead() {
+      return readAhead;
+   }
+
    /**
     * Gets the foreign key fields of this role. The foreign key fields hold the
     * primary keys of the related entity. A relationship role has foreign key 
@@ -279,19 +303,32 @@ public final class JDBCRelationshipRoleMetaData {
                "for: " + relationshipRoleName);
       }
 
+      ArrayList pkFields = new ArrayList();
+
       for(Iterator i = relatedEntity.getCMPFields().iterator(); i.hasNext();) {
          JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 
          if(cmpField.isPrimaryKeyMember()) {
-            cmpField = new JDBCCMPFieldMetaData(
-                  entity,
-                  cmpField,
-                  getCMRFieldName() + "_" + cmpField.getFieldName(),
-                  false,
-                  relationMetaData.isReadOnly(),
-                  relationMetaData.getReadTimeOut());
-            foreignKeyFields.put(cmpField.getFieldName(), cmpField);
+            pkFields.add(cmpField);
          }
+      }
+      
+      for(Iterator i = pkFields.iterator(); i.hasNext(); ) {
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
+      
+         String columnName = getCMRFieldName();
+         if(pkFields.size() > 1) {
+            columnName += "_" + cmpField.getFieldName();
+         }
+
+         cmpField = new JDBCCMPFieldMetaData(
+               entity,
+               cmpField,
+               columnName,
+               false,
+               relationMetaData.isReadOnly(),
+               relationMetaData.getReadTimeOut());
+         foreignKeyFields.put(cmpField.getFieldName(), cmpField);
       }
    }
    
@@ -349,20 +386,32 @@ public final class JDBCRelationshipRoleMetaData {
     * this entity.
     */
    private void loadTableKeyFields() {
+      ArrayList pkFields = new ArrayList();
 
       for(Iterator i = entity.getCMPFields().iterator(); i.hasNext(); ) {
          JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
 
          if(cmpField.isPrimaryKeyMember()) {
-            cmpField = new JDBCCMPFieldMetaData(
-                  entity,
-                  cmpField,
-                  getCMRFieldName() + "_" + cmpField.getFieldName(),
-                  false,
-                  relationMetaData.isReadOnly(),
-                  relationMetaData.getReadTimeOut());
-            tableKeyFields.put(cmpField.getFieldName(), cmpField);
+            pkFields.add(cmpField);
          }
+      }
+      
+      for(Iterator i = pkFields.iterator(); i.hasNext(); ) {
+         JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData)i.next();
+      
+         String columnName = entity.getName();
+         if(pkFields.size() > 1) {
+            columnName += "_" + cmpField.getFieldName();
+         }
+
+         cmpField = new JDBCCMPFieldMetaData(
+               entity,
+               cmpField,
+               columnName,
+               false,
+               relationMetaData.isReadOnly(),
+               relationMetaData.getReadTimeOut());
+         tableKeyFields.put(cmpField.getFieldName(), cmpField);
       }
    }
 
