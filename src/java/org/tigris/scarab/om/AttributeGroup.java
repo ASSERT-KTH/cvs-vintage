@@ -77,6 +77,8 @@ public  class AttributeGroup
             .add(RAttributeAttributeGroupPeer.GROUP_ID, getAttributeGroupId())
             .addJoin(RAttributeAttributeGroupPeer.ATTRIBUTE_ID, 
                                                   AttributePeer.ATTRIBUTE_ID)
+            .add(AttributePeer.ATTRIBUTE_TYPE_ID, 
+                 AttributeTypePeer.USER_TYPE_KEY, Criteria.NOT_EQUAL)
             .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
                                        .PREFERRED_ORDER);
         return AttributePeer.doSelect(crit);
