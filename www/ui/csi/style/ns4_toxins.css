@@ -1,16 +1,13 @@
-
-
-
 html body, body div, body p, body th, body td, body li, body dl, body dd, input, select, textarea, .app h3, .app h4 	{
 	font-family:	Verdana, Helvetica, Arial, sans-serif;
 	}
-html body, body th, body td, textarea, .app h3, .app h4, .app pre, .app code 	{
+html body, body th, body td, textarea, .app h3, .app h4, #rightcol h3, .app pre, .app code 	{
 	font-size:	x-small;
 	voice-family:	"\"}\"";
 	voice-family:	inherit;
 	font-size:	small
 	}
-html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body .app pre, html>body .app code {
+html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body #rightcol h3, html>body .app pre, html>body .app code {
 	font-size:	small
 	}
 small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3 {
@@ -27,7 +24,8 @@ p, ul, ol, dl	{
 	margin-bottom: .67em;
 	}
 #bodycol	{
-	line-height: 1.4
+	line-height: 1.4;
+	padding-left: 1em;
 	}
 table, th, td	{
 	border: none
