@@ -40,7 +40,7 @@ import java.util.*;
 /**
  * Manages dockable windows.
  * @author Slava Pestov
- * @version $Id: DockableWindowManager.java,v 1.23 2002/02/10 04:47:17 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.24 2002/03/09 09:29:25 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -898,6 +898,11 @@ public class DockableWindowManager extends JPanel
 			int leftWidth = Math.min(Math.max(0,_width - _right.width),_left.width);
 			int bottomHeight = Math.min(Math.max(0,_height - topHeight),_bottom.height);
 			int rightWidth = Math.min(Math.max(0,_width - leftWidth),_right.width);
+
+			DockableWindowManager.this.top.setDimension(topHeight);
+			DockableWindowManager.this.left.setDimension(leftWidth);
+			DockableWindowManager.this.bottom.setDimension(bottomHeight);
+			DockableWindowManager.this.right.setDimension(rightWidth);
 
 			if(alternateLayout)
 			{
