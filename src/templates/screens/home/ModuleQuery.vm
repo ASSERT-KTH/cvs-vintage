@@ -81,8 +81,8 @@
     <td><a href="$link.setPage("AdvancedQuery.vm").addPathInfo($scarabG.Constant.NEW_ISSUE_TYPE, $rmit.IssueType.QueryKey).addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "AdvancedQuery.vm").setAction("SelectIssueType")">$rmit.DisplayName</a></td>
     <td>$rmit.IssueType.Description</td>
   </tr>
-</table>
 #end
+</table>
 
 #if ($isMoreThanOne)
 <div class="functnbar3">
