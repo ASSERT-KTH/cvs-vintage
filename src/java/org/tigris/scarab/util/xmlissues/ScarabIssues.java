@@ -355,53 +355,90 @@ public class ScarabIssues implements java.io.Serializable
                                          issueOM, attributeOM, activitySetOM);
 
                 // check to see if this is a new activity or an update activity
-                if (activity.isNewActivity())
+                SequencedHashMap avMap = issueOM.getModuleAttributeValuesMap();
+                Iterator moduleAttributeValueItr = avMap.iterator();
+                while (moduleAttributeValueItr.hasNext()) 
                 {
-                    SequencedHashMap avMap = issueOM.getModuleAttributeValuesMap();
-                    Iterator i = avMap.iterator();
-                    while (i.hasNext()) 
+                    @OM@.AttributeValue avalOM = 
+                        (@OM@.AttributeValue)avMap.get(moduleAttributeValueItr.next());
+                    @OM@.Attribute avalAttributeOM = avalOM.getAttribute();
+
+                    @OM@.AttributeValue avalOM2 = null;
+                    if (!activity.isNewActivity())
                     {
-                        @OM@.AttributeValue avalOM = (@OM@.AttributeValue)avMap.get(i.next());
-                        @OM@.Attribute avalAttributeOM = avalOM.getAttribute();
-                        if (avalAttributeOM.equals(attributeOM))
+                        avalOM2 = @OM@.AttributeValue
+                            .getNewInstance(avalAttributeOM.getAttributeId(), 
+                                                          avalOM.getIssue());
+                        avalOM2.setProperties(avalOM);
+                    }
+                    
+                    if (avalAttributeOM.equals(attributeOM))
+                    {
+                        log.debug("Attribute match!");
+
+                        if (avalAttributeOM.isOptionAttribute())
                         {
-                            log.debug("Attribute match!");
-    
-                            if (avalAttributeOM.isOptionAttribute())
+                            log.debug("we have an option attribute");
+                            @OM@.AttributeOption newAttributeOptionOM = @OM@.AttributeOption
+                                .getInstance(attributeOM, activity.getNewOption());
+                            if (activity.isNewActivity())
                             {
-                                log.debug("we have a option attribute");
-                                @OM@.AttributeOption newAttributeOptionOM = null;                            
-                                if (activity.getNewOption() != null)
+                                avalOM.setOptionId(newAttributeOptionOM.getOptionId());
+                            }
+                            else
+                            {
+                                if (!newAttributeOptionOM.getOptionId()
+                                    .equals(avalOM.getOptionId()))
                                 {
-                                    newAttributeOptionOM = @OM@.AttributeOption
-                                        .getInstance(attributeOM, activity.getNewOption());
-                                    avalOM.setOptionId(newAttributeOptionOM.getOptionId());
+                                    avalOM2.setOptionId(newAttributeOptionOM.getOptionId());
                                 }
                             }
-                            else if (avalAttributeOM.isUserAttribute())
+                        }
+                        else if (avalAttributeOM.isUserAttribute())
+                        {
+                            log.debug("we have a user attribute");
+                            @OM@.ScarabUser newUserOM = @OM@.ScarabUserManager
+                                .getInstance(activity.getNewUser(), module.getDomain());
+                            if (activity.isNewActivity())
                             {
-                                log.debug("we have a user attribute");
-                                @OM@.ScarabUser newUserOM = @OM@.ScarabUserManager.getInstance(activity.getNewUser(), 
-                                    module.getDomain());
                                 avalOM.setUserId(newUserOM.getUserId());
                             }
-                            else if (avalAttributeOM.isTextAttribute())
+                            else
                             {
-                                log.debug("we have a text attribute");
+                                if (!newUserOM.getUserId()
+                                    .equals(avalOM.getUserId()))
+                                {
+                                    avalOM2.setUserId(newUserOM.getUserId());
+                                }
+                            }
+                        }
+                        else if (avalAttributeOM.isTextAttribute())
+                        {
+                            log.debug("we have a text attribute");
+                            if (activity.isNewActivity())
+                            {
                                 avalOM.setValue(activity.getNewValue());
                             }
-                            avalOM.startActivitySet(activitySetOM);
-                            avalOM.setAttribute(attributeOM);
-                            avalOM.setActivityDescription(activity.getDescription());
-                            avalOM.save();
+                            else
+                            {
+                                if (!activity.getNewValue()
+                                    .equals(avalOM.getValue()))
+                                {
+                                    avalOM2.setValue(activity.getNewValue());
+                                }
+                            }
                         }
+                        avalOM.startActivitySet(activitySetOM);
+                        avalOM.setAttribute(attributeOM);
+                        avalOM.setActivityDescription(activity.getDescription());
+                        if (!activity.isNewActivity())
+                        {
+                            avalOM.setProperties(avalOM2);
+                        }
+                        avalOM.save();
                     }
-                    issueOM.save();
                 }
-                else
-                {
-                    log.debug("Not a new Activity: " + activity);
-                }
+                issueOM.save();
 
 /*
                 // Get the Attribute associated with the Activity
