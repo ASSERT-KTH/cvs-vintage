@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Calendar;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
@@ -40,7 +41,7 @@ import org.jboss.system.URLClassLoader;
 *
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>.
-* @version $Revision: 1.44 $
+* @version $Revision: 1.45 $
 * 
 * <p><b>  Revisions:</b>
 * <p><b>  20010830 marcf: </b>
@@ -52,10 +53,12 @@ import org.jboss.system.URLClassLoader;
 */
 public class Main
 {
-	// Constants -----------------------------------------------------
-	
-	String versionIdentifier = "pre-3.0 [RABBIT-HOLE]";
-	// Attributes ----------------------------------------------------
+   // Constants -----------------------------------------------------
+
+   /** The version & build information holder. */
+   private Version version = Version.getInstance();
+
+   // Attributes ----------------------------------------------------
 	
 	// Static --------------------------------------------------------
 	public static void main(final String[] args)
@@ -150,7 +153,8 @@ public class Main
 			System.setProperty("jboss.system.configurationDirectory", confDir);
 			System.setProperty("jboss.system.patchDirectory", patchDir);
 			System.setProperty("jboss.system.libraryDirectory", libDir);
-			System.setProperty("jboss.system.version", versionIdentifier);
+			System.setProperty("jboss.system.version", version.toString());
+                        System.setProperty("jboss.system.version.name", version.getName());
 			
 			// Give feedback about from where jndi.properties is read
 			URL jndiLocation = this.getClass().getResource("/jndi.properties");
@@ -265,11 +269,16 @@ public class Main
 		{
 			e.printStackTrace();
 		}
-		
-		// Done
-		Date stopTime = new Date();
-		Date lapsedTime = new Date(stopTime.getTime()-startTime.getTime());
-		System.out.println("JBoss "+versionIdentifier+" Started in "+lapsedTime.getMinutes()+"m:"+lapsedTime.getSeconds()+"s");
+
+                // Done
+                Date lapsedTime = new Date(new Date().getTime() - startTime.getTime());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(lapsedTime);
+      
+                System.out.println("JBoss " + version +
+                                   " [" + version.getName() + "] Started in " +
+                                   cal.get(Calendar.MINUTE) + "m:" +
+                                   cal.get(Calendar.SECOND) + "s");
 	}
 	
 	
