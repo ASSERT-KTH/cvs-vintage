@@ -3,37 +3,6 @@ $page.setTitle("Advanced query")
 <div class="app" id="advancedquery">
 <h2>$page.Title</h2>
 
-
-##SAVED QUERIES
-     #set ($module = $scarabR.CurrentModule)
-       #if ($module)
-       #set ($issuetype = $scarabR.CurrentIssueType)
-       #set ($privateQueries = $module.getPrivateQueries($data.User, $issuetype))
-       #set ($globalQueries = $module.getGlobalQueries($issuetype))
-       #if (($privateQueries && $privateQueries.size() > 0) || ($globalQueries && $globalQueries.size() > 0))
-<h3>Select save query</h3>
-<div class="axial">
-<table width="100%" cellpadding="3" cellspacing="2" border="1">
-<tr>
-<th width="120">saved queries</th>	
-<td>
-<form action="$link.setPage("AdvancedQuery.vm").setAction("Search")" method="get">
-  <select name="queryId">
-       #foreach ($query in $privateQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-       #foreach ($query in $globalQueries)
-        <option value="$query.QueryId">$query.Name</option>
-       #end
-  </select>&#160;<input type="submit" value="select" name="eventSubmit_doRunstoredquery" /> &#160;$link.setPage("QueryList.vm").setLabel("Saved query list")
-</td>
-</form>
-</tr>
-</table>
-</div>
-      #end
-   #end
-
 <h3>Search the Scarab knowledge base</h3>
 
 <form action="$link.setPage("AdvancedQuery.vm")" method="post">
@@ -42,14 +11,21 @@ $page.setTitle("Advanced query")
 <input type="hidden" name="searchType" value="advanced" />
 <input type="hidden" name="pageNum" value="1" />
 
-<div class="functnbar"><input type="submit"  name="eventSubmit_doSearch" value="Submit" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" /></div>
-		
-		
+<div class="functnbar">
+<input type="submit"  name="eventSubmit_doSearch" value="Submit" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" />
+</div>
+
 #advancedQuery($scarabR.CurrentModule)
 
-
-<div class="functnbar2"><input type="Submit"  name="eventSubmit_doSearch" value="Submit" />&#160;<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" /></div>
+<div class="functnbar2">
+<input type="Submit"  name="eventSubmit_doSearch" value="Submit" />&#160;
+<input type="submit" value="Cancel"  name="eventSubmit_doCancel" />&#160;
+<input type="submit" value="Save this query"  name="eventSubmit_doRedirecttosavequery" />
 </div>
 
 $intake.declareGroups()
 </form>
+
+</div>
