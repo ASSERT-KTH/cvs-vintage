@@ -75,7 +75,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
     This class is responsible for managing the query lists (deleting queries).
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: QueryList.java,v 1.11 2002/03/02 04:17:55 elicia Exp $
+    @version $Id: QueryList.java,v 1.12 2002/03/04 22:13:15 elicia Exp $
 */
 public class QueryList extends RequireLoginFirstAction
 {
@@ -193,7 +193,6 @@ public class QueryList extends RequireLoginFirstAction
                newQuery = query.copy();
                newQuery.setName(query.getName() + " (copy)");
                newQuery.save();
-               break;
              }
          }
      }
