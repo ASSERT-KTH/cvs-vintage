@@ -24,7 +24,7 @@
 // File: UMLStateDiagram.java
 // Classes: UMLStateDiagram
 // Original Author: your email here
-// $Id: UMLStateDiagram.java,v 1.28 2003/05/10 17:42:35 kataka Exp $
+// $Id: UMLStateDiagram.java,v 1.29 2003/05/16 08:51:18 bobtarling Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -229,28 +229,25 @@ public class UMLStateDiagram extends UMLDiagram {
     }
 
     /**
-     * <p>Initialize the toolbar with buttons required for a use case diagram.</p>
-     * @param toolBar The toolbar to which to add the buttons.
+     * Get the actions from which to create a toolbar or equivilent graphic triggers
      */
-    protected void initToolBar(JToolBar toolBar) {
-        toolBar.add(_actionState);
-        toolBar.add(_actionCompositeState);
-        toolBar.add(_actionTransition);
-        toolBar.addSeparator();
-
-        toolBar.add(_actionStartPseudoState);
-        toolBar.add(_actionFinalPseudoState);
-        toolBar.add(_actionBranchPseudoState);
-        toolBar.add(_actionForkPseudoState);
-        toolBar.add(_actionJoinPseudoState);
-        toolBar.add(_actionShallowHistoryPseudoState);
-        toolBar.add(_actionDeepHistoryPseudoState);
-        toolBar.addSeparator();
-        toolBar.add(ActionAddNote.SINGLETON);
-        toolBar.addSeparator();
-
-        //_toolBar.add(Actions.AddInternalTrans);
-        //_toolBar.addSeparator();
+    protected Object[] getUmlActions() {
+        Object actions[] = {
+            _actionState,
+            _actionCompositeState,
+            _actionTransition, null,
+            _actionStartPseudoState,
+            _actionFinalPseudoState,
+            _actionBranchPseudoState,
+            _actionForkPseudoState,
+            _actionJoinPseudoState,
+            _actionShallowHistoryPseudoState,
+            _actionDeepHistoryPseudoState,
+            null,
+            ActionAddNote.SINGLETON,
+            null
+        };
+        return actions;
     }
 
     protected static String getNewDiagramName() {

@@ -24,9 +24,11 @@
 // File: UMLClassDiagram.java
 // Classes: UMLClassDiagram
 // Original Author: jrobbins@ics.uci.edy
-// $Id: UMLClassDiagram.java,v 1.29 2003/05/02 11:11:20 kataka Exp $
+// $Id: UMLClassDiagram.java,v 1.30 2003/05/16 08:51:19 bobtarling Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
+
+import java.awt.Component;
 
 import javax.swing.Action;
 import javax.swing.JToolBar;
@@ -126,37 +128,27 @@ public class UMLClassDiagram extends UMLDiagram {
     }
 
     /**
-     * <p>Initialize the toolbar with buttons required for a use case diagram.</p>
-     * @param toolBar The toolbar to which to add the buttons.
+     * Get the actions from which to create a toolbar or equivilent graphic trigger
      */
-    protected void initToolBar(JToolBar toolBar) {
-        toolBar.add(_actionPackage);
-        toolBar.add(_actionClass);
+    protected Object[] getUmlActions() {
+        Object actions[] = {
+            _actionPackage,
+            _actionClass,
+            buildAssociationPopup(),
+            _actionDepend,
+            _actionPermission,
+            _actionUsage,
+            _actionGeneralize, null,
+            _actionInterface,
+            _actionRealize, null,
+            ActionAddAttribute.SINGLETON,
+            ActionAddOperation.SINGLETON, null,
+            ActionAddNote.SINGLETON
+        };
 
-        toolBar.add(buildAssociationPopup());
-
-        toolBar.add(_actionDepend);
-        toolBar.add(_actionPermission);
-        toolBar.add(_actionUsage);
-        toolBar.add(_actionGeneralize);
-        toolBar.addSeparator();
-
-        //     toolBar.add(_actionObject);
-        //     toolBar.add(_actionLink);
-        //     toolBar.addSeparator();
-
-        toolBar.add(_actionInterface);
-        toolBar.add(_actionRealize);
-        toolBar.addSeparator();
-
-        toolBar.add(ActionAddAttribute.SINGLETON);
-        toolBar.add(ActionAddOperation.SINGLETON);
-        // TODO: remove attribute and operation?
-        toolBar.addSeparator();
-
-        toolBar.add(ActionAddNote.SINGLETON);
+        return actions;
     }
-
+    
     private PopupToolBoxButton buildAssociationPopup() {
         PopupToolBoxButton toolBox = new PopupToolBoxButton(_actionAssociation, 0, 2);
         toolBox.add(_actionAssociation);

@@ -24,7 +24,7 @@
 // File: UMLSequenceDiagram.java
 // Classes: UMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: UMLSequenceDiagram.java,v 1.17 2003/04/06 11:49:54 kataka Exp $
+// $Id: UMLSequenceDiagram.java,v 1.18 2003/05/16 08:51:18 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
@@ -142,20 +142,20 @@ public class UMLSequenceDiagram extends UMLDiagram {
         lay.setGraphEdgeRenderer(rend);
     }
 
-    /** initialize the toolbar for this diagram type */
-    protected void initToolBar(JToolBar toolBar) {
-        toolBar.add(_actionObject);
-        toolBar.addSeparator();
-
-        toolBar.add(_actionLinkWithStimulusCall);
-        toolBar.add(_actionLinkWithStimulusCreate);
-        toolBar.add(_actionLinkWithStimulusDestroy);
-        toolBar.add(_actionLinkWithStimulusSend);
-        toolBar.add(_actionLinkWithStimulusReturn);
-
-        // other actions
-        toolBar.addSeparator();
-        toolBar.add(ActionAddNote.SINGLETON);
+    /**
+     * Get the actions from which to create a toolbar or equivilent graphic trigger
+     */
+    protected Object[] getUmlActions() {
+        Object actions[] = {
+            _actionObject, null,
+            _actionLinkWithStimulusCall,
+            _actionLinkWithStimulusCreate,
+            _actionLinkWithStimulusDestroy,
+            _actionLinkWithStimulusSend,
+            _actionLinkWithStimulusReturn, null,
+            ActionAddNote.SINGLETON
+        };
+        return actions;
     }
 
     /** every stimulus has to become a path item of its link
