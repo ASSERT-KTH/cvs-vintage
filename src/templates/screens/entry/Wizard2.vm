@@ -64,7 +64,7 @@
 <th>Date closed</th>
 </tr>
 #foreach ($issueId in $issueList)
-  #set ($issue = $scarabR.getIssueByPk($issueId.toString()))
+  #set ($issue = $scarabR.getIssue($issueId))
   #set ($issueLink = $link.addPathInfo($data.Parameters).setPathInfo("currentIssueId", $issue.UniqueId).setPage($link.CurrentView).addPathInfo("action", "ReportIssue").toString())
   #indexedRows($velocityCount)
   #set ($issueGroup = $intake.Issue.Default)
