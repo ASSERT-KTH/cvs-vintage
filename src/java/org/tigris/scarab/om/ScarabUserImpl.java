@@ -53,9 +53,7 @@ import java.util.Map;
 import java.util.Calendar;
 import java.util.Collections;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.util.GenerateUniqueId;
-import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
@@ -83,7 +81,7 @@ import org.apache.log4j.Logger;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.101 2003/04/10 22:14:58 dlr Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.102 2003/04/10 23:01:30 dlr Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -101,11 +99,6 @@ public class ScarabUserImpl
      * creation time.
      */
     private static final int UNIQUE_ID_MAX_LEN = 10;
-
-    /**
-     * The user's preferred locale.
-     */
-    private Locale locale = null;
 
     /**
      * Call the superclass constructor to initialize this object.
@@ -999,24 +992,7 @@ public class ScarabUserImpl
     public void noticeLocale(Object localeInfo)
         throws Exception
     {
-        UserPreference pref = UserPreferenceManager.getInstance(getUserId());
-        String preferredLocale = pref.getLocale();
-        if (StringUtils.isEmpty(preferredLocale))
-        {
-            if (localeInfo instanceof Locale)
-            {
-                Locale l = (Locale) localeInfo;
-                StringBuffer buf = new StringBuffer(l.getLanguage());
-                String country = l.getCountry();
-                if (StringUtils.isNotEmpty(country))
-                {
-                    buf.append('-').append(country);
-                }
-                localeInfo = buf;
-            }
-            pref.setLocale(localeInfo.toString());
-            pref.save();
-        }
+        internalUser.noticeLocale(localeInfo);
     }
 
     /**
@@ -1025,11 +1001,6 @@ public class ScarabUserImpl
     public Locale getLocale()
         throws Exception
     {
-        if (locale == null)
-        {
-            UserPreference up = UserPreferenceManager.getInstance(getUserId());
-            locale = Localization.getLocale(up.getLocale());
-        }
-        return locale;
+        return internalUser.getLocale();
     }
 }

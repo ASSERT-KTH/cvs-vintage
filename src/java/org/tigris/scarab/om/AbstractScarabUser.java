@@ -50,14 +50,19 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Comparator;
-
 import java.sql.Connection;
+
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.torque.TorqueException;
 import org.apache.torque.util.Criteria;
 import org.apache.torque.om.BaseObject;
+
+import org.apache.fulcrum.localization.Localization;
 
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.util.ScarabException;
@@ -71,7 +76,7 @@ import org.tigris.scarab.util.Log;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.75 2003/04/10 21:00:44 dlr Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.76 2003/04/10 23:01:30 dlr Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -87,6 +92,11 @@ public abstract class AbstractScarabUser
         "home,ModuleQuery.vm", "home,XModuleList.vm", "Index.vm"};
 
     private static final int MAX_INDEPENDENT_WINDOWS = 10;
+
+    /**
+     * The user's preferred locale.
+     */
+    private Locale locale = null;
 
     /** 
      * counter used as part of a key to store an Issue the user is 
@@ -1454,5 +1464,50 @@ public abstract class AbstractScarabUser
             + "; MITListMap=" + mitListMap.size()
             + "; MostRecentQueryMap=" + mostRecentQueryMap.size()
             + "; MostRecentQueryMITMap=" + mostRecentQueryMITMap.size();
+    }
+
+    /**
+     * Saves the user's locale preference iff they don't already have
+     * one (calling {@link #save()} internally).  The locale preferece
+     * is stored in the style of a HTTP <code>Accept-Language</code>
+     * header.
+     *
+     * @see org.tigris.scarab.om.ScarabUser#noticeLocale(Object)
+     */
+    public void noticeLocale(Object localeInfo)
+        throws Exception
+    {
+        UserPreference pref = UserPreferenceManager.getInstance(getUserId());
+        String preferredLocale = pref.getLocale();
+        if (StringUtils.isEmpty(preferredLocale))
+        {
+            if (localeInfo instanceof Locale)
+            {
+                Locale l = (Locale) localeInfo;
+                StringBuffer buf = new StringBuffer(l.getLanguage());
+                String country = l.getCountry();
+                if (StringUtils.isNotEmpty(country))
+                {
+                    buf.append('-').append(country);
+                }
+                localeInfo = buf;
+            }
+            pref.setLocale(localeInfo.toString());
+            pref.save();
+        }
+    }
+
+    /**
+     * Gets the users default locale from the users preferences.
+     */
+    public Locale getLocale()
+        throws Exception
+    {
+        if (locale == null)
+        {
+            UserPreference up = UserPreferenceManager.getInstance(getUserId());
+            locale = Localization.getLocale(up.getLocale());
+        }
+        return locale;
     }
 }
