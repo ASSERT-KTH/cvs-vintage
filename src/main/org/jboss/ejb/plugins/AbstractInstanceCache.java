@@ -61,13 +61,18 @@ import org.jboss.monitor.MetricsConstants;
 * @author <a href="bill@burkecentral.com">Bill Burke</a>
 * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
 *
-* @version $Revision: 1.13 $
+* @version $Revision: 1.14 $
 *
 *   <p><b>Revisions:</b>
 *
 *   <p><b>20010703 marcf:</b>
 *   <ul>
 *   <li> Synchronization is on the context and not on the mutex any longer  
+*   </ul>
+*   <p><b>20010704 marcf:</b>
+*   <ul>
+*   <li> Commented the getLock removeLock, temporarely, might need to come back when we go beyond
+*        locking at the context level and lock by ID  
 *   </ul>
 */
 public abstract class AbstractInstanceCache
@@ -84,8 +89,6 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 	private Object m_cacheLock = new Object();
 	/* Helper class that handles synchronization for the passivation thread */
 	private PassivationHelper m_passivationHelper;
-	/* Map that holds mutexes used to sync the passivation with other activities */
-	private Map m_lockMap = new HashMap();
 	/* Flag for JMS monitoring of the cache */
 	private boolean m_jmsMonitoring;
 	/* Useful for log messages */
@@ -261,7 +264,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 				getCache().remove(id);
 			}
 		}
-		removeLock(id);
+	//	removeLock(id);
 	}
 	
 	public boolean isActive(Object id)
@@ -276,7 +279,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 	* the cache, either by passivation or by removal.
 	* This method must be synchronized with its dual, {@link #removeLock}.
 	*/
-	public synchronized Sync getLock(Object id)
+/*	public synchronized Sync getLock(Object id)
 	{
 		Sync mutex = (Sync)m_lockMap.get(id);
 		if (mutex == null)
@@ -286,11 +289,12 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 		}
 		return mutex;
 	}
+	*/
 	/**
 	* Removes the mutex associated with the given id.
 	* This method must be synchronized with its dual, {@link #getLock}.
 	*/
-	protected synchronized void removeLock(Object id)
+/*	protected synchronized void removeLock(Object id)
 	{
 		Object mutex = m_lockMap.get(id);
 		if (mutex != null)
@@ -302,7 +306,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 			m_lockMap.remove(id);
 		}
 	}
-	
+*/	
 	// XmlLoadable implementation ----------------------------------------------
 	public void importXml(Element element) throws DeploymentException
 	{
@@ -714,7 +718,7 @@ implements InstanceCache, XmlLoadable, Monitorable, MetricsConstants
 												// bean failed, and fix it. See EJB 1.1, 6.4.1
 												passivate(ctx);
 												executed();
-												removeLock(id);
+			//									removeLock(id);
 												freeContext(ctx);
 												
 												logPassivation(id);
