@@ -76,7 +76,6 @@ public class Activity
     implements Persistent
 {
     private Attribute aAttribute;                 
-    private Transaction aTransaction;                 
     private AttributeOption oldAttributeOption;                 
     private AttributeOption newAttributeOption;                 
 
@@ -154,30 +153,6 @@ public class Activity
             setOldValue(oldValue);
             setNewValue(newValue);
             save();
-    }
-
-    /**
-     * Gets the Transaction object associated with this Activity record
-     */
-    public Transaction getTransaction() throws Exception
-    {
-        if ( aTransaction==null && (getTransactionId() != null) )
-        {
-            aTransaction = TransactionPeer.retrieveByPK(new NumberKey(getTransactionId()));
-            
-            // make sure the parent attribute is in synch.
-            super.setTransaction(aTransaction);            
-        }
-        return aTransaction;
-    }
-
-    /**
-     * Sets the Transaction object associated with this Activity record
-     */
-    public void setTransaction(Transaction v) throws Exception
-    {
-        aTransaction = v;
-        super.setTransaction(v);
     }
 
 
