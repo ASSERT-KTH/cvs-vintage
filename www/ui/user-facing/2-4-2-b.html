@@ -55,38 +55,37 @@
 
 
 
- <div id="projecttools" class="toolgroup">
-  <div class="label"><strong><a href="#">Issue tracking</a></strong></div>
-  <div class="body">
- <div><a href="#">Enter new defect</a></div>
- 
- <div><a href="#">Queries</a></div>
- 
- <div><a href="#">Templates</a></div>
-  
- <div><a href="#">Reports</a></div>
- 
- </div> </div>
- <div id="admintools" class="toolgroup">
 
- 
- <div class="label"><strong>Administration</strong></div>
- 
- <div class="body">
- 
- <div><a href="#">Approval queue</a></div>
-    
- <div><a href="#">Global data</a></div>
- 
- <div><a href="#">Project data</a></div>         
+
+<div id="projecttools" class="toolgroup">
+  <div class="label">
+  <strong><a href="#">Issue tracking home</a></strong>
+  </div>
+  <div class="body">
+    <div><a href="#">Enter new defect</a></div>
+    <div><a href="#">Queries</a></div>
+    <div><a href="#">Templates</a></div>
+    <div><a href="#"  class="selfref">Reports</a></div>
   
- <div><a href="#">Roles</a></div>
- 
- <div><a href="#">Users</a></div>
-   
- </div>
- 
- </div> </div>
+</div>
+</div>
+
+<div class="toolgroup">
+<div class="label">
+ <strong>Admin</strong></div>
+
+<div class="body">
+      <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CGlobalArtifactTypeShow.vm/curadminmenu/1">Global data</a></div>
+  
+  <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CApproval.vm/curadminmenu/2">Approve</a></div>
+
+            <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageModules.vm/curadminmenu/3">Modules</a></div>
+      
+      <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageRoles.vm/curadminmenu/4">Roles</a></div>
+  
+          <div><a href="/scarab/servlet/scarab/curmodule/2/tqk/0/template/admin%2CManageUserSearch.vm/newsearch/true/curadminmenu/5">Users</a></div>
+      </div>
+</div>
 
 
 <div id="helptext" class="toolgroup">
@@ -141,7 +140,6 @@ title="Note: link may open in new window">Get help?</a></div>
   		<noscript><input type="submit" value="Go" name="eventSubmit_doSelectquery" tabindex="4" /></noscript>
 		</form>
   	</td>
-
 	<td>
 		<form action="/servlets/Scarab/curmodule/5/template/Index.vm/action/Search" method="get">
 		<input type="hidden" name="nextTemplate" value="Index.vm" />
@@ -162,194 +160,85 @@ title="Note: link may open in new window">Get help?</a></div>
 <div id="bodycol">
 
 <div id="apphead">
-<h2>Issue tracking: <em>Landing screens</em></h2>
+<h2>Issue tracking: <em>Saved reports</h2></div>
 </div>
+		
 <!-- Scarab - App -->
 
-<div class="app" id="divselect_type">
-
-
+	<div id="div2-4-2" class="app">
+		
 		<div class="tabs">
 			<table cellpadding="3" cellspacing="0" border="0">
 			<tr>
-			<td><a href="2-0-0-1-alt.html" title="#">Project query</a></td>
-			<td><a href="2-0-0-1-alt-2.html" title="#">Enter new...</a></td>
-			<th>Build X-project query</th>
+			<td><a href="2-4-2.html" title="#">Personal profile</td>
+			<th><a href="2-4-2-b.html" title="#">Global / Project</a></th>
 			</tr>
 			</table>
 		</div>
-        
-<div class="functnbar">
- <input type="submit" value="Go" />
-</div>
-		
-		<h3>Issue types selected for this query</h3>
 
-			<div class="colbar">
-			<select name="#">
-			<option value="">Select a saved x-project query...</option>
-			<option value="">All milestone 3 defects</option>
-            <option value="">All milestone 2-4 defects</option>
-            <option value="">Alpha, Beta patches</option>
-            </select>&nbsp;<input type="submit" value="Go" />
-            </div>
+<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>
+		<div class="colbar"><small>Click on "Scope" to execute report</small></div>
+
 		
 		<table width="100%" border="1" cellspacing="2" cellpadding="3">
 		<tr>
 		<th nowrap="nowrap">Select</th>
-		<th>Project</th>
-		<th>Issue type</th>
-		<th>Description</th>
+		<th><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Name</th>
+		<th><a href="#" title="sort">Description</a></th>
+		<th><a href="#" title="sort">Scope</a></th>
+		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">QA team P1 submitted</a></td>
+		<td>Description x</td>
+		<td><a href="#">Cross project</a></td>
+		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">John S P1 S1 </a></td>
+		<td>Description x</td>
+		<td><a href="#">Project: Beta</a></td>
+		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">OSX P1s closed</a></td>
+		<td>Description x</td>
+		<td><a href="#">Project: Gamma</a></td>
+		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">Firmware P1, 2 opened</a></td>
+		<td>Description x</td>
+		<td><a href="#">Project: Theta</a></td>
+		</tr>
+		
+		<tr class="a">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">Special case X</a></td>
+		<td>Description x</td>
+		<td><a href="#">Project: Beta</a></td>
+		</tr>
+		
+		<tr class="b">
+		<td><input type="checkbox" /></td>
+		<td><a href="#">All projects P1 opened</a></td>
+		<td>Description x</td>
+		<td><a href="#">Cross project</a></td>
 		</tr>
 
+		</table>
 
+		<div class="functnbar3"><input type="submit" value="Save changes" />&nbsp;<input type="submit" value="Add new" />&nbsp;<input type="submit" value="Delete" /></div>
 
-        <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 1 defect</a></td>
-        <td>DeltaUI>Alpha</td>
-        </tr>        
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 2 defect</a></td>
-        <td>DeltaUI>Alpha</td>
-        </tr>
-        
-        <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 1 defect</a></td>
-        <td>DeltaUI>Beta</td>
-        </tr>
-        
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Patch</a></td>
-        <td>DeltaUI>Gamma</td>
-        </tr>        
-	     
-   </table>  
-
-<div class="functnbar3">
- <input type="submit" value="Remove from list" />&nbsp;<input type="submit" value="Save this list" />
-</div>
-
-
-<div class="functnbar2">
- <input type="submit" value="Go" />
-</div>
-
-
-<a name="add"></a>
-
-		<h3>Projects / issues in this domain</h3>
-<div class="axial">
-<table border="0" cellspacing="2" cellpadding="3">
-  <tr>
-   <th>Filter string</th>
-   <td><input type="text" value="" />&nbsp;<select name="#"
-   size=""><option value="">Project</option>
-            <option value="18">Issue type</option>
-            </select>&nbsp;<input type="submit" value="filter" /></td>
-  </tr>
- <tr>
-</table>
-</div>
-
-
-<div class="colbar"><div>1-10 of 26</div>
-<div>p. 1 <a href="#">2</a> <a href="#">3</a></div></div>
-
-
-		<div class="directory">
-		<table width="100%" border="1" cellspacing="2" cellpadding="3">
-		<tr>
-		<th nowrap="nowrap">Select</th>
-		<th><a href="#"><img src="../csi/images/icon_downarrow_on.gif" width="13" height="8" alt="sort descending" border="0" /></a>&nbsp;Project / path</th>
-		<th><a href="#">Issue type</a></th>
-		</tr>
-        
-        <tr class="a">
-        <td><input type="checkbox"></td>
-         <td><a href="#">Milestone 3 defect</a></td>
-       <td>DeltaUI>Alpha</td>
-        </tr>
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 4 defect</a></td>
-        <td>DeltaUI>Alpha</td>
-        </tr>
-        
-        <tr class="a">
-        <td><input type="checkbox"></td>
-         <td><a href="#">Patch</a></td>
-       <td>DeltaUI>Alpha</td>
-        </tr>        
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-         <td><a href="#">Use cases</a></td>
-       <td>Foodstuff>Nachos>Alpha</td>
-        </tr>
-
-        <tr class="a">
-        <td><input type="checkbox"></td>
-         <td><a href="#">Milestone 2 defect</a></td>
-       <td>Foodstuff>Nachos>Beta</td>
-        </tr>        
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 3 defect</a></td>
-        <td>Foodstuff>Nachos>Beta</td>
-        </tr>
-        
-        <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 3 defect</a></td>
-        <td>Foodstuff>Nachos>Beta</td>
-        </tr>
-        
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 1 defect</a></td>
-        <td>Turbine>Gamma</td>
-        </tr>        
-        
-        <tr class="a">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 2 defect</a></td>
-        <td>Turbine>Gamma</td>
-        </tr>
-                
-        <tr class="b">
-        <td><input type="checkbox"></td>
-        <td><a href="#">Milestone 3 defect</a></td>
-        <td>Turbine>Gamma</td>
-        </tr>        
-      
-   </table>  
+<p class="paginate">&#171; previous | 1 of 1 | next &#187;</p>		
+		
 	</div>
-<div class="colbar">p. 1 <a href="#">2</a> <a href="#">3</a></div>
-<div class="functnbar3">
- <input type="submit" value="Add selected to x-project query list" />
-</div>
-
-<div class="axial">
-  <table cellpadding="3" cellspacing="2" border="0">
-             <tr>
-       <th>Max items per page</td>
-       <td><input type="radio" name="foo" checked="checked" /> 25 <input type="radio" name="foo" /> 50 <input type="radio" name="foo" /> 75 <input type="radio" name="foo" /> 100&#160;<input type="submit" value="refresh" /></p>
-</td>
-     </tr>
-      </table>
-</div>
-
- 	</div>
-</div>
 	<!-- Scarab - App -->
+
 
 <!-- Structural Elements -->
 </td>
