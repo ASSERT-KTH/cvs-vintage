@@ -82,7 +82,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.31 2003/04/28 21:17:41 spestov Exp $
+ * @author $Id: VFS.java,v 1.32 2003/04/29 01:05:43 spestov Exp $
  */
 public abstract class VFS
 {
@@ -609,9 +609,13 @@ public abstract class VFS
 			this.type = type;
 			this.length = length;
 			this.hidden = hidden;
-			VFS vfs = VFSManager.getVFSForPath(path);
-			canRead = ((vfs.getCapabilities() & READ_CAP) != 0);
-			canWrite = ((vfs.getCapabilities() & WRITE_CAP) != 0);
+			if(path != null)
+			{
+				// maintain backwards compatibility
+				VFS vfs = VFSManager.getVFSForPath(path);
+				canRead = ((vfs.getCapabilities() & READ_CAP) != 0);
+				canWrite = ((vfs.getCapabilities() & WRITE_CAP) != 0);
+			}
 		} //}}}
 
 		protected boolean colorCalculated;

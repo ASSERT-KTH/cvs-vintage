@@ -38,7 +38,7 @@ import org.gjt.sp.util.Log;
 
 /**
  * @author Slava Pestov
- * @version $Id: VFSDirectoryEntryTable.java,v 1.8 2003/04/28 18:52:34 spestov Exp $
+ * @version $Id: VFSDirectoryEntryTable.java,v 1.9 2003/04/29 01:05:43 spestov Exp $
  * @since jEdit 4.2pre1
  */
 public class VFSDirectoryEntryTable extends JTable
@@ -352,7 +352,15 @@ public class VFSDirectoryEntryTable extends JTable
 		VFSDirectoryEntryTableModel model
 		= (VFSDirectoryEntryTableModel)getModel();
 
+		FontMetrics fm = getFontMetrics(getFont());
 		int[] widths = new int[model.getColumnCount()];
+		for(int i = 0; i < widths.length; i++)
+		{
+			String columnName = model.getColumnName(i);
+			if(columnName != null)
+				widths[i] = fm.stringWidth(columnName);
+		}
+
 		for(int i = 0; i < model.files.length; i++)
 		{
 			for(int j = 0; j < widths.length; j++)

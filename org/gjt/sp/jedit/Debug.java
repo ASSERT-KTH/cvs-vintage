@@ -27,7 +27,7 @@ package org.gjt.sp.jedit;
  * development.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: Debug.java,v 1.6 2003/04/24 01:32:28 spestov Exp $
+ * @version $Id: Debug.java,v 1.7 2003/04/29 01:05:42 spestov Exp $
  */
 public class Debug
 {
@@ -88,4 +88,9 @@ public class Debug
 	 * Show time from receiving a key event and the resulting repaint.
 	 */
 	public static boolean KEY_DELAY_TIMER = false;
+
+	/**
+	 * Disable monospaced font optimization.
+	 */
+	public static boolean DISABLE_MONOSPACE_HACK = false;
 }
