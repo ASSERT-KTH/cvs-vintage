@@ -11,6 +11,8 @@ if [ "${TOMCAT_HOME}X" != "X" ] ; then
         CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/servlet.jar"
         CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/webserver.jar"
         CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/xml.jar"
+        CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/jaxp.jar"
+        CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/parser.jar"
         CLASSPATH="$CLASSPATH:${TOMCAT_HOME}/lib/jasper.jar"
 
         # Add the tools.jar file so that Tomcat can find the Java compiler.
