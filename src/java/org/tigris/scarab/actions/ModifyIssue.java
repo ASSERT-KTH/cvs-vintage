@@ -113,7 +113,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class is responsible for edit issue forms.
  * ScarabIssueAttributeValue
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModifyIssue.java,v 1.124 2002/10/09 01:32:12 jon Exp $
+ * @version $Id: ModifyIssue.java,v 1.125 2002/10/22 00:51:57 elicia Exp $
  */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -332,43 +332,22 @@ public class ModifyIssue extends BaseModifyIssue
                             oldDescription, newDescription, 
                             oldURL, newURL);
                     }
+                
+                    // if there is a new URL, add it
+                    Group newGroup = intake.get("Attachment", "urlKey", false);
+                    if (newGroup != null) 
+                    {
+                        Field newNameField = newGroup.get("Name"); 
+                        if (newNameField != null && 
+                            !newNameField.toString().equals(""))
+                        {
+                           handleAttachment(data, context, Attachment.URL__PK, 
+                                            newGroup, issue);
+                        }
+                    }
                 }
             }
         } 
-    }
-
-    /**
-     *  Adds an attachment of type "url".
-     */
-    public void doSubmiturl (RunData data, TemplateContext context) 
-        throws Exception
-    {
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        ScarabLocalizationTool l10n = getLocalizationTool(context);
-        Issue issue = null;
-        try
-        {
-            issue = getIssueFromRequest(data.getParameters());
-        }
-        catch (ScarabException se)
-        {
-            scarabR.setAlertMessage(se.getMessage());
-            return;
-        }
-        ScarabUser user = (ScarabUser)data.getUser();
-        if (!user.hasPermission(ScarabSecurity.ISSUE__EDIT, 
-                               issue.getModule()))
-        {
-            scarabR.setAlertMessage(l10n.get(NO_PERMISSION_MESSAGE));
-            return;
-        }
-
-        IntakeTool intake = getIntakeTool(context);
-        Group group = intake.get("Attachment", "urlKey", false);
-        if (group != null) 
-        {
-            handleAttachment(data, context, Attachment.URL__PK, group, issue);
-        }
     }
 
     /**
