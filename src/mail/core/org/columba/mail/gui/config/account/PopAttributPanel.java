@@ -56,7 +56,6 @@ public class PopAttributPanel implements ActionListener {
     //private JButton mailcheckButton;
     //private JCheckBox limitMessageDownloadCheckBox;
     private JCheckBox limitMessageDownloadCheckBox;
-    private JLabel limitMessageDownloadLabel2;
     private JTextField limitMessageDownloadTextField;
     private JButton configurePreProcessingFilterButton;
     private JPanel jPanel1;
@@ -216,8 +215,6 @@ builder.nextLine();
         limitMessageDownloadCheckBox.setActionCommand("LIMIT_MESSAGE_DOWNLOAD");
         limitMessageDownloadCheckBox.addActionListener(this);
 
-        limitMessageDownloadLabel2 = new LabelWithMnemonic(MailResourceLoader.getString(
-                    "dialog", "account", "KB_per_message"));
 
         limitMessageDownloadTextField = new JTextField();
 
