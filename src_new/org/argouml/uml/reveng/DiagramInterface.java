@@ -1,4 +1,4 @@
-// $Id: DiagramInterface.java,v 1.11 2003/02/03 19:02:36 thn Exp $
+// $Id: DiagramInterface.java,v 1.12 2003/02/26 10:46:40 lepekhine Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -154,6 +154,15 @@ public class DiagramInterface {
 	    }
 	}
     }
+    
+    /**
+     *Check if this diagram already exists in the project.
+     *@param diagram name
+     *@return true if diagram exists in project
+     */
+    public boolean isDiagramInProject(String name) {
+	return ((ProjectManager.getManager().getCurrentProject().findMemberByName( getDiagramName(name) + ".pgml")) != null);
+    }
 
     /**
      * Create a diagram name from a package name
@@ -185,7 +194,8 @@ public class DiagramInterface {
 
 	// Check if this diagram already exists in the project
 	ProjectMember m;
-	if((m = ProjectManager.getManager().getCurrentProject().findMemberByName( getDiagramName(name) + ".pgml")) != null) {
+	if( isDiagramInProject(name) ) {
+	    m = ProjectManager.getManager().getCurrentProject().findMemberByName( getDiagramName(name) + ".pgml");
 
 	    // The diagram already exists in this project. Select it as the current target.
 	    // Andreas: These lines did cost me a few hours of debugging.
