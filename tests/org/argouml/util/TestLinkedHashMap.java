@@ -1,4 +1,4 @@
-// $Id: TestLinkedHashMap.java,v 1.4 2004/08/26 19:34:58 mvw Exp $
+// $Id: TestLinkedHashMap.java,v 1.5 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -123,6 +123,9 @@ public class TestLinkedHashMap extends TestCase {
     }
     
     
+    /**
+     * Test remove() for an entrySet.
+     */
     public void testEntrySetRemove() {
         System.out.println("testEntrySet_Remove");
         
@@ -161,6 +164,9 @@ public class TestLinkedHashMap extends TestCase {
         assertIteratorAgainstArray(keysSet.iterator(), keys);
     }
     
+    /**
+     * Test remove() of an entrySet.
+     */
     public void testKeySetRemove() {
         System.out.println("testKeySet_Remove");
         
@@ -185,6 +191,9 @@ public class TestLinkedHashMap extends TestCase {
         assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
     }
 
+    /**
+     * Test iterated remove().
+     */
     public void testKeySetIteratorRemove() {
         System.out.println("testValues_Iterator_Remove");
         
@@ -293,6 +302,9 @@ public class TestLinkedHashMap extends TestCase {
         assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
     }
 
+    /**
+     * Test iterated remove().
+     */
     public void testValuesIteratorRemove2() {
         System.out.println("testValues_Iterator_Remove2");
         
@@ -326,6 +338,9 @@ public class TestLinkedHashMap extends TestCase {
         assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
     }
     
+    /**
+     * Test iterated remove().
+     */
     public void testValuesIteratorRemove3() {
         System.out.println("testValues_Iterator_Remove2");
         
@@ -363,6 +378,9 @@ public class TestLinkedHashMap extends TestCase {
         assertEntrySetAgainstArrays(entrySet, myKeys, myValues);
     }
     
+    /**
+     * Test iterated remove().
+     */
     public void trueValuesIteratorRemove4() {
         System.out.println("testValues_Iterator_Remove4");
         

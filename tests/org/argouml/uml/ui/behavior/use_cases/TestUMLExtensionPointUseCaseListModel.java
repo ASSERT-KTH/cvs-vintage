@@ -1,4 +1,4 @@
-// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLExtensionPointUseCaseListModel.java,v 1.9 2004/09/26 20:45:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,6 +74,9 @@ public class TestUMLExtensionPointUseCaseListModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setUseCase().
+     */
     public void testSetUseCase() {
         MUseCase usecase = UseCasesFactory.getFactory().createUseCase();
         elem.setUseCase(usecase);
@@ -81,6 +84,9 @@ public class TestUMLExtensionPointUseCaseListModel extends TestCase {
         assertEquals(usecase, model.getElementAt(0));
     }
     
+    /**
+     * Test setUseCase() with null argument.
+     */
     public void testRemoveUseCase() {
         MUseCase usecase = UseCasesFactory.getFactory().createUseCase();
         elem.setUseCase(usecase);

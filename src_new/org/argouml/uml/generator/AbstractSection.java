@@ -1,4 +1,4 @@
-// $Id: AbstractSection.java,v 1.6 2004/08/09 20:55:56 mvw Exp $
+// $Id: AbstractSection.java,v 1.7 2004/09/26 20:45:33 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -55,20 +55,23 @@ public abstract class AbstractSection
     }
 
     /**
-     * @param id
-     * @param indent
+     * @param id the string to generate
+     * @param indent the current indentation
      * @return
      */
     public static String generate(String id, String indent) {
         return "";
     }
 
-    // write todo:
-    // check if sections are not used within the file and put them as comments
-    // at the end of the file.
-    // hint: use a second Map to compare with the used keys
-    // =======================================================================
-
+    /**
+     * write TODO: Check if sections are not used within the file and 
+     * put them as comments at the end of the file.
+     * Hint: use a second Map to compare with the used keys.
+     * 
+    * @param filename the file name
+     * @param indent the current indentation
+     * @param outputLostSections true if lost sections are to be written
+     */
     public void write(String filename, String indent,
 		      boolean outputLostSections)
     {

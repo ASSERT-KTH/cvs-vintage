@@ -1,4 +1,4 @@
-// $Id: TestMyTokenizer.java,v 1.7 2004/09/08 19:31:39 mvw Exp $
+// $Id: TestMyTokenizer.java,v 1.8 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,12 +38,15 @@ public class TestMyTokenizer extends TestCase {
     /**
      * The constructor.
      * 
-     * @param str
+     * @param str the name of the test.
      */
     public TestMyTokenizer(String str) {
 	super(str);
     }
 
+    /**
+     * Test the constructors.
+     */
     public void testConstructors() {
 	Vector seps = new Vector();
 	seps.add(MyTokenizer.DOUBLE_QUOTED_SEPARATOR);
@@ -269,6 +272,9 @@ public class TestMyTokenizer extends TestCase {
 	checkConstr(str7, delim7, res7dot6, seps);
     }
 
+    /**
+     * Test putToken().
+     */
     public void testPutToken() {
 	MyTokenizer st = new MyTokenizer("Hello old friend", " ");
 	int oidx;
@@ -309,6 +315,9 @@ public class TestMyTokenizer extends TestCase {
 	}
     }
 
+    /**
+     * Test lineseparators.
+     */
     public void testLineSeparator() {
 	MyTokenizer st = new MyTokenizer("str1\nstr2\r\nstr3\rstr4",
 					 "",

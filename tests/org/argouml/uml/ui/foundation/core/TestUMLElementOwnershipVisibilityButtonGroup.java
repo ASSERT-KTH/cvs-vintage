@@ -1,4 +1,4 @@
-// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.7 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLElementOwnershipVisibilityButtonGroup.java,v 1.8 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -51,6 +51,9 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         super(arg0);
     }
     
+    /**
+     * Test doClick() of a public button.
+     */
     public void testDoPublicClick() {
 	if (group == null) return; // Inconclusive
         JRadioButton button = group.getPublicButton();
@@ -59,6 +62,9 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         assertEquals(group.getSelection(), button.getModel());
     }
     
+    /**
+     * Test doClick() of a protected button.
+     */
     public void testDoProtectedClick() {
 	if (group == null) return; // Inconclusive
         JRadioButton button = group.getProtectedButton();
@@ -67,6 +73,9 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         assertEquals(group.getSelection(), button.getModel());
     }    
     
+    /**
+     * Test doClick() of a private button.
+     */
     public void testDoPrivateClick() {
 	if (group == null) return; // Inconclusive
         JRadioButton button = group.getPrivateButton();
@@ -75,18 +84,27 @@ public class TestUMLElementOwnershipVisibilityButtonGroup extends TestCase {
         assertEquals(group.getSelection(), button.getModel());
     }   
     
+    /**
+     * Test setting the visibility to public.
+     */
     public void testVisibilityPublic() {
 	if (group == null) return; // Inconclusive
         elem.setVisibility(MVisibilityKind.PUBLIC);
         assertEquals(group.getSelection(), group.getPublicButton().getModel());
     }
     
+    /**
+     * Test setting the visibility to private.
+     */
     public void testVisibilityPrivate() {
 	if (group == null) return; // Inconclusive
         elem.setVisibility(MVisibilityKind.PRIVATE);
         assertEquals(group.getSelection(), group.getPrivateButton().getModel());
     }
     
+    /**
+     * Test setting the visibility to protected.
+     */
     public void testVisibilityProtected() {
 	if (group == null) return; // Inconclusive
         elem.setVisibility(MVisibilityKind.PROTECTED);

@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.11 2004/09/08 19:31:38 mvw Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.12 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -92,22 +92,34 @@ public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         assertTrue(model.contains(stereotypes[5]));
         assertTrue(model.contains(stereotypes[0]));
         assertTrue(model.contains(stereotypes[9]));
     }
     
+    /**
+     * Test setStereotype().
+     */
     public void testSetBase() {
         elem.setStereotype(stereotypes[0]);
         assertTrue(model.getSelectedItem() == stereotypes[0]);
     }
     
+    /**
+     * Test setStereotype() with null argument.
+     */
     public void testSetBaseToNull() {
         elem.setStereotype(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test deletion.
+     */
     public void testRemoveBase() {
         UmlFactory.getFactory().delete(stereotypes[9]);
         assertTrue(!model.contains(stereotypes[9]));

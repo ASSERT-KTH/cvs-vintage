@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNameDocument.java,v 1.11 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: TestUMLModelElementNameDocument.java,v 1.12 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.argouml.uml.ui.MockUMLUserInterfaceContainer;
 import javax.swing.text.BadLocationException;
 
 import ru.novosoft.uml.MFactoryImpl;
-import ru.novosoft.uml.foundation.core.MModelElement;
 import ru.novosoft.uml.model_management.MModel;
 
 /**
@@ -85,11 +84,21 @@ public class TestUMLModelElementNameDocument extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setName().
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testSetName() throws BadLocationException {
         ModelFacade.setName(elem, "test");
         assertEquals("test", model.getText(0, model.getLength()));
     }
     
+    /**
+     * Test setName() for removal of a name.
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testRemoveName() throws BadLocationException
     {
         ModelFacade.setName(elem, "test");
@@ -97,6 +106,11 @@ public class TestUMLModelElementNameDocument extends TestCase {
         assertEquals("", model.getText(0, model.getLength()));
     }
     
+    /**
+     * Test insertString().
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testInsertString()
 	throws BadLocationException
     {
@@ -105,6 +119,11 @@ public class TestUMLModelElementNameDocument extends TestCase {
         assertEquals("test", ModelFacade.getName(elem));
     }
     
+    /**
+     * Test remove().
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testRemoveString() 
 	throws BadLocationException
     {
@@ -113,6 +132,11 @@ public class TestUMLModelElementNameDocument extends TestCase {
         assertEquals("", ModelFacade.getName(elem));
     }
     
+    /**
+     * Test insertString() for appending.
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testAppendString()
 	throws BadLocationException
     {
@@ -121,6 +145,11 @@ public class TestUMLModelElementNameDocument extends TestCase {
         assertEquals("testtest", ModelFacade.getName(elem));
     }
     
+    /**
+     * Test insertString() for inserting in the middle.
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testInsertStringHalfway()
 	throws BadLocationException
     {
@@ -129,6 +158,11 @@ public class TestUMLModelElementNameDocument extends TestCase {
         assertEquals("ttestest", ModelFacade.getName(elem));
     }
     
+    /**
+     * Test removing a string from the middle.
+     * 
+     * @throws BadLocationException when the location is refused
+     */
     public void testRemoveStringHalfway()
 	throws BadLocationException
     {

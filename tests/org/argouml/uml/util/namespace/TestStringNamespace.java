@@ -1,4 +1,4 @@
-// $Id: TestStringNamespace.java,v 1.2 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestStringNamespace.java,v 1.3 2004/09/26 20:45:37 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -62,6 +62,9 @@ public class TestStringNamespace extends TestCase
         return suite;
     }
 
+    /**
+     * Test getCommonNamespace().
+     */
     public void testGetCommonNamespace()
     {
         StringNamespace sns1 =
@@ -92,6 +95,9 @@ public class TestStringNamespace extends TestCase
 
     }
 
+    /**
+     * Test parse() with a Java token.
+     */
     public void testParseWithJavaToken()
     {
         StringNamespace sns =
@@ -113,6 +119,9 @@ public class TestStringNamespace extends TestCase
         assertTrue(sns.isEmpty());
     }
 
+    /**
+     * Test parse() with a UML token. 
+     */
     public void testParseWithUMLToken()
     {
         StringNamespace sns =
@@ -134,6 +143,9 @@ public class TestStringNamespace extends TestCase
         assertTrue(sns.isEmpty());
     }
 
+    /**
+     * Test parse() with an esoteric token.
+     */
     public void testParseWithEsotericToken()
     {
         StringNamespace sns =

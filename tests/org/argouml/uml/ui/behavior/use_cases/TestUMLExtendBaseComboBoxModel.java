@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.9 2004/08/26 19:51:36 mvw Exp $
+// $Id: TestUMLExtendBaseComboBoxModel.java,v 1.10 2004/09/26 20:45:35 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,9 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         assertEquals(10, model.getSize());
         assertTrue(model.contains(bases[5]));
@@ -96,16 +99,25 @@ public class TestUMLExtendBaseComboBoxModel extends TestCase {
         assertTrue(model.contains(bases[9]));
     }
     
+    /**
+     * Test setBase().
+     */
     public void testSetBase() {
         elem.setBase(bases[0]);
         assertTrue(model.getSelectedItem() == bases[0]);
     }
     
+    /**
+     * Test setBase() with null argument.
+     */
     public void testSetBaseToNull() {
         elem.setBase(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test removing a Base.
+     */
     public void testRemoveBase() {
         UmlFactory.getFactory().delete(bases[9]);
         assertEquals(9, model.getSize());

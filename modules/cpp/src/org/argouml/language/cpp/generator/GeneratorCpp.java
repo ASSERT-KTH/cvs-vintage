@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.18 2004/09/08 19:31:37 mvw Exp $
+// $Id: GeneratorCpp.java,v 1.19 2004/09/26 20:45:24 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -161,7 +161,7 @@ public class GeneratorCpp extends Generator2
      * @param o the object to be generated
      * @return the generated string 
      */
-    public static String Generate(Object o) {
+    public static String cppGenerate(Object o) {
 	return SINGLETON.generate(o);
     }
 
@@ -2717,11 +2717,11 @@ public class GeneratorCpp extends Generator2
 	Object entry = ModelFacade.getEntry(state);
 	Object exit = ModelFacade.getExit(state);
 	if (entry != null) {
-	    String entryStr = Generate(entry);
+	    String entryStr = cppGenerate(entry);
 	    if (entryStr.length() > 0) s += "entry / " + entryStr;
 	}
 	if (exit != null) {
-	    String exitStr = Generate(exit);
+	    String exitStr = cppGenerate(exit);
 	    if (s.length() > 0) s += "\n";
 	    if (exitStr.length() > 0) s += "exit / " + exitStr;
 	}

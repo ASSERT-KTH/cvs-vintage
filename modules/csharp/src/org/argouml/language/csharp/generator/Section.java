@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.4 2004/08/24 06:33:46 linus Exp $
+// $Id: Section.java,v 1.5 2004/09/26 20:45:37 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -56,6 +56,11 @@ public class Section {
         mAry.clear();
     }
 
+    /**
+     * @param id the string to generate
+     * @param indent the indentation
+     * @return the generated string
+     */
     public static String generate(String id, String indent) {
         String s = "";
         s += indent + BEGIN + id + END1 + "\n";
@@ -118,6 +123,9 @@ public class Section {
         }
     }
 
+    /**
+     * @param filename the name of the file
+     */
     public void read(String filename) {
         try {
             System.out.println("Start reading");

@@ -1,4 +1,4 @@
-// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.8 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLFeatureOwnerComboBoxModel.java,v 1.9 2004/09/26 20:45:28 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,9 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         assertEquals(10, model.getSize());
         assertTrue(model.contains(types[5]));
@@ -96,16 +99,25 @@ public class TestUMLFeatureOwnerComboBoxModel extends TestCase {
         assertTrue(model.contains(types[9]));
     }
     
+    /**
+     * Test setOwner().
+     */
     public void testSetOwner() {
         elem.setOwner(types[0]);
         assertTrue(model.getSelectedItem() == types[0]);
     }
     
+    /**
+     * Test setOwner() with null argument.
+     */
     public void testSetOwnerToNull() {
         elem.setOwner(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test deletion.
+     */
     public void testRemoveType() {
         UmlFactory.getFactory().delete(types[9]);
         assertEquals(9, model.getSize());

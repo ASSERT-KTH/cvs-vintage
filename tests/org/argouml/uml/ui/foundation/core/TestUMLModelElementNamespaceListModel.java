@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementNamespaceListModel.java,v 1.8 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLModelElementNamespaceListModel.java,v 1.9 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,6 +45,8 @@ public class TestUMLModelElementNamespaceListModel extends TestCase {
     
     /**
      * Constructor for TestUMLModelElementNamespaceListModel.
+     *
+     * @param arg0 the name of the test.
      */
     public TestUMLModelElementNamespaceListModel(String arg0) {
         super(arg0);
@@ -83,6 +85,9 @@ public class TestUMLModelElementNamespaceListModel extends TestCase {
         assertEquals(ns, model.getElementAt(0));
     }
     
+    /**
+     * Test removing a namespace.
+     */
     public void testRemoveNamespace() {
         MNamespace ns = CoreFactory.getFactory().createNamespace();
         elem.setNamespace(ns);

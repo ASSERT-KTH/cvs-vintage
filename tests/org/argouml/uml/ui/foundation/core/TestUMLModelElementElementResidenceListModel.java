@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.8 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLModelElementElementResidenceListModel.java,v 1.9 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,6 +71,9 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
         list = null;
     }
     
+    /**
+     * Test addElementResidence().
+     */
     public void testElementAdded() {
         MElementResidence res = new MElementResidenceImpl();
         elem.addElementResidence(res);
@@ -78,6 +81,9 @@ public class TestUMLModelElementElementResidenceListModel extends TestCase {
         assertTrue(list.getElementAt(0) == res);
     }
     
+    /**
+     * Test removeElementResidence().
+     */
     public void testElementRemoved() {
         MElementResidence res = new MElementResidenceImpl();
         elem.addElementResidence(res);

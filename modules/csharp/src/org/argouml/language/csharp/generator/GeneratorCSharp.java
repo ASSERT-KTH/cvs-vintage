@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.12 2004/08/24 17:37:07 mvw Exp $
+// $Id: GeneratorCSharp.java,v 1.13 2004/09/26 20:45:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,7 +89,7 @@ public class GeneratorCSharp extends Generator2
      * @return The String representation.
      * @deprecated by Linus Tolke as of 0.17.1. Use {link #generate(Object)}.
      */
-    public static String Generate(Object o) {
+    public static String cSharpGenerate(Object o) {
 	return SINGLETON.generate(o);
     }
 
@@ -97,7 +97,10 @@ public class GeneratorCSharp extends Generator2
      * Generates a file for the classifier.
      * This method could have been static if it where not for the need to
      * call it through the Generatorinterface.
-     * @return the full path name of the the generated file.
+     * Returns the full path name of the the generated file.
+     *
+     * @see org.argouml.uml.generator.FileGenerator#GenerateFile(
+     * java.lang.Object, java.lang.String)
      */
     public String GenerateFile(Object cls, String path) {
 	sect = new Section();

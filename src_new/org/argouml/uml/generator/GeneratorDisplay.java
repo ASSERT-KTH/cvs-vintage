@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.69 2004/08/24 17:37:06 mvw Exp $
+// $Id: GeneratorDisplay.java,v 1.70 2004/09/26 20:45:33 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -72,8 +72,8 @@ public class GeneratorDisplay extends Generator2 {
     }
 
     /**
-     * @param o
-     * @return 
+     * @param o the object to be generated
+     * @return the generated string
      */
     public static String Generate(Object o) {
         return singleton.generate(o);
@@ -487,7 +487,7 @@ public class GeneratorDisplay extends Generator2 {
         } else if (kind == ModelFacade.INOUT_PARAMETERDIRECTIONKIND) {
             s.append("inout");
         } else if (kind == ModelFacade.RETURN_PARAMETERDIRECTIONKIND) {
-            // return nothing
+            ;// return nothing
         } else if (kind == ModelFacade.OUT_PARAMETERDIRECTIONKIND) {
             s.append("out");
         }
@@ -801,7 +801,7 @@ public class GeneratorDisplay extends Generator2 {
      * @param impl 
      * @return a string representing the g.
      */
-    public String generateGeneralization(
+    private String generateGeneralization(
         Collection generalizations,
         boolean impl) {
         Collection classes = new ArrayList();

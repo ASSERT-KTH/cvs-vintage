@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.5 2004/09/08 19:31:37 mvw Exp $
+// $Id: Section.java,v 1.6 2004/09/26 20:45:27 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,16 +28,16 @@
  * Created on 24. Februar 2002, 15:30
  */
 
-/**
- *
- *Reading and writing preserved sections from the code
- *
- */
+
 package org.argouml.language.cpp.generator;
 
 import org.argouml.uml.generator.AbstractSection;
 
-
+/**
+*
+*Reading and writing preserved sections from the code
+*
+*/
 public class Section extends AbstractSection {
 
     /**

@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionComboBoxModel.java,v 1.9 2004/08/26 19:51:36 mvw Exp $
+// $Id: TestUMLExtendExtensionComboBoxModel.java,v 1.10 2004/09/26 20:45:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -89,6 +89,9 @@ public class TestUMLExtendExtensionComboBoxModel extends TestCase {
         model = null;
     }
     
+    /**
+     * Test setup.
+     */
     public void testSetUp() {
         assertEquals(10, model.getSize());
         assertTrue(model.contains(extensions[5]));
@@ -96,16 +99,25 @@ public class TestUMLExtendExtensionComboBoxModel extends TestCase {
         assertTrue(model.contains(extensions[9]));
     }
     
+    /**
+     * Test setExtension().
+     */
     public void testSetBase() {
         elem.setExtension(extensions[0]);
         assertTrue(model.getSelectedItem() == extensions[0]);
     }
     
+    /**
+     * Test setExtension() with null argument.
+     */
     public void testSetBaseToNull() {
         elem.setExtension(null);
         assertNull(model.getSelectedItem());
     }
     
+    /**
+     * Test delete().
+     */
     public void testRemoveBase() {
         UmlFactory.getFactory().delete(extensions[9]);
         assertEquals(9, model.getSize());

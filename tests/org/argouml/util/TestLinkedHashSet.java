@@ -1,4 +1,4 @@
-// $Id: TestLinkedHashSet.java,v 1.4 2004/08/26 19:35:01 mvw Exp $
+// $Id: TestLinkedHashSet.java,v 1.5 2004/09/26 20:45:30 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class TestLinkedHashSet extends TestCase {
     /**
      * The constructor.
      * 
-     * @param testName
+     * @param testName the name of the test
      */
     public TestLinkedHashSet(java.lang.String testName) {
         super(testName);
@@ -114,6 +114,9 @@ public class TestLinkedHashSet extends TestCase {
         assertIteratorAgainstArray(linkedHashSet.iterator(), entity);
     }
     
+    /**
+     * Test iterated remove.
+     */
     public void testIteratorRemove() {
         Object[] compare = {
 	    entity[0],
@@ -138,6 +141,9 @@ public class TestLinkedHashSet extends TestCase {
         assertIteratorAgainstArray(linkedHashSet.iterator(), compare);
     }
     
+    /**
+     * Test iterated remove.
+     */
     public void testIteratorRemove2() {
         boolean exceptionCaught = false;
         
@@ -155,6 +161,9 @@ public class TestLinkedHashSet extends TestCase {
         assertTrue(exceptionCaught);
     }
     
+    /**
+     * Test iterated remove.
+     */
     public void testIteratorRemove3() {
         boolean exceptionCaught = false;
         Object[] compare = {
