@@ -23,7 +23,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:dewayne@dmsoft.com">Dewayne McNair</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class Shutdown
 {
@@ -33,9 +33,8 @@ public class Shutdown
    /**
     * Parse the command line and shutdown the remote server.
     *
-    * @param argv       Comamne line arguments.
-    *
-    * @throws Exception         Invalid port number.
+    * @param  argv       Command line arguments.
+    * @throws Exception  Invalid port number.
     */
    public static void main(final String argv[]) throws Exception
    {
@@ -56,6 +55,10 @@ public class Shutdown
    /**
     * Connect to the JBoss servers HTML JMX adapter and invoke the
     * shutdown service.
+    *
+    * @param host The hostname of the JMX server. 
+    * @param port The port of the JMX server. 
+    *
     */
    public static void shutdown(final String host, final int port) {
       try {

@@ -17,7 +17,7 @@ import java.util.Properties;
  *  Provides access to JBoss version (and build) properties.
  *
  * @author     <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 public final class Version
 {
@@ -74,8 +74,8 @@ public final class Version
    /**
     *  Returns the value for the given property name.
     *
-    * @param  name  The name of the property.
-    * @return       The property value or null if the property is not set.
+    * @param     name - The name of the property.
+    * @return    The property value or null if the property is not set.
     */
    public String getProperty(final String name)
    {
@@ -172,6 +172,7 @@ public final class Version
    /**
     * Returns a property value as an int.
     *
+    * @param    name - The name of the property.
     * @return   The property value, or -1 if there was a problem converting
     *           it to an int.
     */
