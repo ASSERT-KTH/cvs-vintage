@@ -46,7 +46,7 @@ import org.jboss.tm.usertx.interfaces.UserTransactionSessionFactory;
  *  propagation contexts of the transactions started here.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.2 $
+ *  @version $Revision: 1.3 $
  */
 public class ClientUserTransaction
    implements UserTransaction,
@@ -79,19 +79,9 @@ public class ClientUserTransaction
     */
    private ClientUserTransaction()
    {
-      // See if we have a local TM
-      try {
-         new InitialContext().lookup("java:/TransactionManager");
-
-         // This instance lives in the server.
-         isInServer = true;
-      } catch (NamingException ex) {
-         // This instance lives in a stand-alone client.
-         isInServer = false;
-
-         // No local TM: Set TPC Factory on GenericProxy.
-         GenericProxy.setTPCFactory(this);
-      }
+      // Tell the proxy that this is the factory for
+      // transaction propagation contexts.
+      GenericProxy.setTPCFactory(this);
    }
 
    // Public --------------------------------------------------------
@@ -103,9 +93,6 @@ public class ClientUserTransaction
    public void begin()
       throws NotSupportedException, SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       ThreadInfo info = getThreadInfo();
 
       try {
@@ -130,9 +117,6 @@ public class ClientUserTransaction
              IllegalStateException,
              SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       ThreadInfo info = getThreadInfo();
 
       try {
@@ -165,9 +149,6 @@ public class ClientUserTransaction
              IllegalStateException,
              SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       ThreadInfo info = getThreadInfo();
 
       try {
@@ -192,9 +173,6 @@ public class ClientUserTransaction
       throws IllegalStateException,
              SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       ThreadInfo info = getThreadInfo();
 
       try {
@@ -215,9 +193,6 @@ public class ClientUserTransaction
    public int getStatus()
       throws SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       ThreadInfo info = getThreadInfo();
       Object tpc = info.getTpc();
 
@@ -240,9 +215,6 @@ public class ClientUserTransaction
    public void setTransactionTimeout(int seconds)
       throws SystemException
    {
-      if (isInServer)
-         throw new SystemException("Cannot use this in the server.");
-
       getThreadInfo().setTimeout(seconds);
    }
 
@@ -279,12 +251,6 @@ public class ClientUserTransaction
 
 
    // Private -------------------------------------------------------
-
-   /**
-    *  Flag that this instance is living in the server.
-    *  Instances living in the server VM cannot be used.
-    */
-   private boolean isInServer;
 
    /**
     *  The RMI remote interface to the real tx service
