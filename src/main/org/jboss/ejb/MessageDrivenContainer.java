@@ -29,6 +29,7 @@ import javax.management.ObjectName;
 import org.jboss.invocation.Invocation;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.util.NullArgumentException;
+import org.jboss.metadata.MessageDrivenMetaData;
 
 /**
  * The container for <em>MessageDriven</em> beans.
@@ -39,7 +40,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -158,9 +159,15 @@ public class MessageDrivenContainer
 
          // Map the bean methods
          Map map = new HashMap();
-         Method m = MessageListener.class.getMethod("onMessage", new Class[]{Message.class});
-         map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
-         log.debug("Mapped " + m.getName() + " " + m.hashCode() + " to " + map.get(m));
+         MessageDrivenMetaData mdMetaData = (MessageDrivenMetaData)metaData;
+         Class clazz = getClassLoader().loadClass(mdMetaData.getMessagingType());
+         Method[] methods = clazz.getDeclaredMethods();
+         for (int i = 0; i < methods.length; i++)
+         {
+            Method m = methods[i];
+            map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
+            log.debug("Mapped " + m.getName() + " " + m.hashCode() + " to " + map.get(m));
+         }
          if( TimedObject.class.isAssignableFrom( beanClass ) ) {
              // Map ejbTimeout
              map.put(
