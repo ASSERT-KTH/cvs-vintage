@@ -1,6 +1,7 @@
 #set ( $action = $link.setPage("ViewIssue.vm").setAction("ModifyIssue").addPathInfo("nextTemplate", "ViewIssue.vm") )
 #set ( $currentIssueId = $data.Parameters.getString("id") )
 #set ( $currentIssue = $scarabR.getIssue($currentIssueId) )
+#set ( $fullHistory = $data.Parameters.getString("fullhistory") )
 
 
 #if ($currentIssue)
@@ -11,6 +12,7 @@
 #set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
 
 <form name="IssueForm" method="post" action="$action" >
+#if ($fullHistory) <input type="hidden" name="fullHistory" value="$fullHistory"> #end
 <input type="hidden" name="id" value="$currentIssue.IssueId">
 <input type="hidden" name="user_id" value="$user.UserId">
 

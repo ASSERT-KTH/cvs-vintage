@@ -374,7 +374,13 @@
       </div>
 #end
 
-#if (!$currentIssue.Activity.isEmpty() )
+#if ($fullHistory.equals("true"))
+  #set( $activity = $currentIssue.getActivity(true) )
+#else
+  #set( $activity = $currentIssue.Activity )
+#end
+
+#if (!$activity.isEmpty() )
 
 ## ISSUE HISTORY
       <div class="grouper">
@@ -390,28 +396,30 @@
           <th><strong>note:</strong></th>
          </tr>
 
-       #foreach( $activity in $currentIssue.Activity )
+       #foreach( $act in $activity )
          #if( $velocityCount % 2 > 0 )
             <tr class="a">
          #else 
             <tr class="b">
          #end
           <td width="120">
-            #if( $activity.Transaction)
-              $activity.Transaction.FormattedCreatedDate
+            #if( $act.Transaction)
+              $act.Transaction.FormattedCreatedDate
             #end
           </td>
-          <td width="120">$activity.Description 
-             #if (!$activity.OldValue.equals(""))
-                  from '$activity.OldValue'
+          <td width="120">$act.Description 
+             #if (!$act.OldValue.equals(""))
+                  from '$act.OldValue'
              #end
-             #if (!$activity.NewValue.equals(""))
-                  to '$activity.NewValue'
-             #end</td>
-          <td> 
-             #if ($activity.Attachment) 
-               $activity.Attachment.DataAsString
-             #end</td>
+             #if (!$act.NewValue.equals(""))
+                  to '$act.NewValue'
+             #end
+          </td>
+          <td> &nbsp;
+             #if ($act.Attachment) 
+               $act.Attachment.DataAsString
+             #end
+          </td>
          </tr>
        #end
 
@@ -419,7 +427,15 @@
        </div>
       </div>
 
-      <p><a href="#">view complete history</p></a>
+#if ($fullHistory.equals("true"))
+    #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPage("ViewIssue.vm").toString() )
+      <p><a href="$historyLink">hide complete history</p></a>
+#else
+    #set ( $historyLink = $link.addPathInfo($data.Parameters).setPathInfo("id", $currentIssue.IssueId.toString()).setPathInfo("fullhistory", "false").setPage("ViewIssue.vm").toString() )
+      <p><a href="$historyLink">show complete history</p></a>
+#end
+
+
       <p><input type="submit" value="cancel" class="button" />&#160;</p>
 #end
 
