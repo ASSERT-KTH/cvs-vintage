@@ -163,7 +163,7 @@ public class IncomingServerPanel
 
 			serverItem.set("save_password", storePasswordCheckBox.isSelected());
 
-			serverItem.set("enable_ssl", secureCheckBox.isEnabled());
+			serverItem.set("enable_ssl", secureCheckBox.isSelected());
 
 			if (isPopAccount()) {
 				serverItem.set(
