@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.89 2005/01/06 14:46:46 noelrocher Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.90 2005/01/26 01:16:30 starksm Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -2880,6 +2880,12 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
       <entity-command name="oracle-sequence"
                       class="org.jboss.ejb.plugins.cmp.jdbc.keygen.JDBCOracleCreateCommand">
          <attribute name="sequence">TEST_SEQUENCE</attribute>
+      </entity-command>
+
+      <!-- this command makes the use of a specific sequence for each table -->
+      <entity-command name="oracle-table-sequence"
+                      class="org.jboss.ejb.plugins.cmp.jdbc.keygen.JDBCOracleSequenceCreateCommand">
+         <attribute name="sequence_name">%%t_seq</attribute>
       </entity-command>
 
       <!-- retrieves generated key of the record inserted into hsql db -->
