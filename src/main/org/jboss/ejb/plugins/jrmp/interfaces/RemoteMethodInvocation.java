@@ -27,7 +27,7 @@ import javax.transaction.Transaction;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:Richard.Monson-Haefel@jGuru.com">Richard Monson-Haefel</a>.
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>.
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public final class RemoteMethodInvocation
    implements java.io.Serializable
@@ -41,7 +41,7 @@ public final class RemoteMethodInvocation
 	
    Object[] args;
 	
-	Transaction tx;
+	transient Transaction tx;
 	Principal identity;
 	
 	transient Map methodMap;
@@ -114,6 +114,7 @@ public final class RemoteMethodInvocation
 	
 	public void setTransaction(Transaction tx)
 	{
+		System.out.println("Set Transaction is CALLED with tx "+tx.hashCode());
 		this.tx = tx;
 	}
 	
@@ -142,8 +143,8 @@ public final class RemoteMethodInvocation
 		out.writeUTF(className);
 		out.writeInt(hash);
 		out.writeObject(args);
-//		out.writeObject(tx);
-//		out.writeObject(identity);
+		out.writeObject(tx);
+		out.writeObject(identity);
    }
    
    protected void readObject(java.io.ObjectInputStream in)
