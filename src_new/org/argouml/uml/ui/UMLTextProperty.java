@@ -1,4 +1,4 @@
-// $Id: UMLTextProperty.java,v 1.17 2004/09/14 20:12:16 mvw Exp $
+// $Id: UMLTextProperty.java,v 1.18 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -103,7 +103,8 @@ public class UMLTextProperty  {
     /**
      * @param container the container of UML user interface components
      * @param newValue the new value 
-     * @throws Exception
+     * @throws Exception @see setProperty(UMLUserInterfaceContainer container,
+     *          String newValue, boolean vetoableCheck)
      */
     public void setProperty(UMLUserInterfaceContainer container,
 			    String newValue)

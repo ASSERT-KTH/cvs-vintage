@@ -1,4 +1,4 @@
-// $Id: TodoListMemberFilePersister.java,v 1.2 2004/10/13 14:50:55 bobtarling Exp $
+// $Id: TodoListMemberFilePersister.java,v 1.3 2004/10/23 11:05:45 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,7 +35,9 @@ import org.xml.sax.SAXException;
 public class TodoListMemberFilePersister extends MemberFilePersister {
     /**
      * Load the todo member.
-     * @throws SAXException on any parsing error.
+     * Throws a SAXException on any parsing error.
+     *
+     * @see org.argouml.xml.argo.MemberFilePersister#load(java.util.Map)
      */
     public void load(Map attributes) throws SAXException {
     }

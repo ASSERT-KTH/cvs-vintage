@@ -1,4 +1,4 @@
-// $Id: UMLCheckBox2.java,v 1.19 2004/09/15 19:17:05 mvw Exp $
+// $Id: UMLCheckBox2.java,v 1.20 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -67,10 +67,7 @@ public abstract class UMLCheckBox2
         propertySetName = name;
         addActionListener(a);
 
-	// TODO: When no longer requiring support for JDK1.2 this constant
-	// can be changed to Action.ACTION_COMMAND_KEY.
-	final String ACTION_COMMAND_KEY = "ActionCommandKey";
-        setActionCommand((String) a.getValue(ACTION_COMMAND_KEY));
+        setActionCommand((String) a.getValue(Action.ACTION_COMMAND_KEY));
     }
 
     /**

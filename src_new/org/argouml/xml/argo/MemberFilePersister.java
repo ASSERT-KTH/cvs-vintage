@@ -1,4 +1,4 @@
-// $Id: MemberFilePersister.java,v 1.2 2004/10/13 14:50:55 bobtarling Exp $
+// $Id: MemberFilePersister.java,v 1.3 2004/10/23 11:05:48 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -36,7 +36,9 @@ public abstract class MemberFilePersister {
     /**
      * Load the member based on instance variables
      * which should have been setup in the constructor.
+     *
      * @throws SAXException on any parsing errors.
+     * @param attributesMap the map (an object that maps keys to values)
      */
     public abstract void load(Map attributesMap) throws SAXException;
 }

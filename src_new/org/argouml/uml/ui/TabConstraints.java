@@ -1,4 +1,4 @@
-// $Id: TabConstraints.java,v 1.39 2004/10/02 13:07:21 mvw Exp $
+// $Id: TabConstraints.java,v 1.40 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -550,7 +550,7 @@ public class TabConstraints extends TabSpawnable implements TabModelTarget {
 
                         if (tree != null) {
                             tree.apply(new DepthFirstAdapter() {
-                                int nameID = 0;
+                                private int nameID = 0;
                                 public void caseAConstraintBody(
                                         AConstraintBody node) {
                                     // replace name

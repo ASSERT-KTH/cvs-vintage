@@ -1,4 +1,4 @@
-// $Id: UMLComboBox.java,v 1.11 2004/10/08 10:07:24 mkl Exp $
+// $Id: UMLComboBox.java,v 1.12 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,6 @@ import javax.swing.*;
 
 import org.argouml.ui.LookAndFeelMgr;
 
-import java.awt.Color;
 import java.awt.event.*;
 import ru.novosoft.uml.MElementEvent;
 

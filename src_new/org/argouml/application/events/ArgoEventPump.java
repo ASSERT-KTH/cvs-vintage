@@ -1,4 +1,4 @@
-// $Id: ArgoEventPump.java,v 1.13 2004/10/18 14:27:30 mkl Exp $
+// $Id: ArgoEventPump.java,v 1.14 2004/10/23 11:05:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -195,14 +195,16 @@ public class ArgoEventPump {
             }
         } else {
             if (event.getEventType() >= ArgoEventTypes.ANY_MODULE_EVENT
-                && event.getEventType() < ArgoEventTypes.ANY_MODULE_EVENT + 100) {
+                && event.getEventType() 
+                    < ArgoEventTypes.ANY_MODULE_EVENT + 100) {
                 if (listener instanceof ArgoModuleEventListener) {
                     handleFireModuleEvent((ArgoModuleEvent) event,
 					  (ArgoModuleEventListener) listener);
                 }
             }
             if (event.getEventType() >= ArgoEventTypes.ANY_NOTATION_EVENT
-                && event.getEventType() < ArgoEventTypes.ANY_NOTATION_EVENT + 100) {
+                && event.getEventType() 
+                    < ArgoEventTypes.ANY_NOTATION_EVENT + 100) {
                 if (listener instanceof ArgoNotationEventListener) {
                     handleFireNotationEvent((ArgoNotationEvent) event,
 					(ArgoNotationEventListener) listener);

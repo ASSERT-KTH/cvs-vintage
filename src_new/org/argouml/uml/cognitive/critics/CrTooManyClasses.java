@@ -1,4 +1,4 @@
-// $Id: CrTooManyClasses.java,v 1.9 2004/09/28 11:12:20 bobtarling Exp $
+// $Id: CrTooManyClasses.java,v 1.10 2004/10/23 11:05:43 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,11 +25,10 @@
 // File: CrTooManyClasses.java
 // Classes: CrTooManyClasses
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrTooManyClasses.java,v 1.9 2004/09/28 11:12:20 bobtarling Exp $
+// $Id: CrTooManyClasses.java,v 1.10 2004/10/23 11:05:43 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
-import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.uml.diagram.static_structure.ui.UMLClassDiagram;
 

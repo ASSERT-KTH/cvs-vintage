@@ -1,4 +1,4 @@
-// $Id: UMLInitialValueComboBox.java,v 1.35 2004/10/08 10:07:24 mkl Exp $
+// $Id: UMLInitialValueComboBox.java,v 1.36 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -23,7 +23,7 @@
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
 package org.argouml.uml.ui;
-import java.awt.Color;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

@@ -1,4 +1,4 @@
-// $Id: WizMEName.java,v 1.14 2004/10/21 08:29:46 mkl Exp $
+// $Id: WizMEName.java,v 1.15 2004/10/23 11:05:43 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,8 +54,6 @@ public class WizMEName extends UMLWizard {
      * 
      */
     public WizMEName() { }
-								       
-									   									       
 
     /**
      * @param s the instructions
@@ -85,6 +83,9 @@ public class WizMEName extends UMLWizard {
 	return null;
     }
     
+    /**
+     * @see org.argouml.uml.cognitive.critics.UMLWizard#setSuggestion(java.lang.String)
+     */
     public void setSuggestion(String s) {
         origSuggest = s;
         suggestion = s;

@@ -1,4 +1,4 @@
-// $Id: CrMultipleAgg.java,v 1.14 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrMultipleAgg.java,v 1.15 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleAgg.java
 // Classes: CrMultipleAgg
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleAgg.java,v 1.14 2004/09/21 19:03:27 mvw Exp $
+// $Id: CrMultipleAgg.java,v 1.15 2004/10/23 11:05:44 mvw Exp $
 
 // 12 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Code corrected as part
 // of fix to issue 619.
@@ -52,8 +52,9 @@ import org.argouml.model.ModelFacade;
  *   separate critic (see {@link org.argouml.uml.cognitive.critics.CrNWayAgg})
  *   which deals with 3- or more-way assocations.</p>
  *
- * @see <a
- * href="http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/#s2.ref.critics_multiple_agg">ArgoUML
+ * @see <a href=
+ * "http://argouml.tigris.org/documentation/snapshots/manual/argouml.html/
+ * #s2.ref.critics_multiple_agg">ArgoUML
  * User Manual: Two Aggregate ends (roles) in binary Association</a>
  */
 

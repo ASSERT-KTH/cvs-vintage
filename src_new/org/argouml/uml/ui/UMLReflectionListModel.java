@@ -1,4 +1,4 @@
-// $Id: UMLReflectionListModel.java,v 1.21 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLReflectionListModel.java,v 1.22 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -244,7 +244,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
 
 
     /**
-     * @param index
+     * @param index index of selected list item
      */
     public void add(int index) {
         try {
@@ -270,7 +270,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
 
 
     /**
-     * @param index
+     * @param index index of selected list item
      */
     public void moveUp(int index) {
         if (theGetMethod != null && theSetMethod != null) {
@@ -296,7 +296,7 @@ public class UMLReflectionListModel extends UMLModelElementListModel   {
     }
 
     /**
-     * @param index
+     * @param index index of selected list item
      */
     public void moveDown(int index) {
         if (theGetMethod != null && theSetMethod != null) {

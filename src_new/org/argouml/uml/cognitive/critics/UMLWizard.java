@@ -1,4 +1,4 @@
-// $Id: UMLWizard.java,v 1.1 2004/10/21 08:29:46 mkl Exp $
+// $Id: UMLWizard.java,v 1.2 2004/10/23 11:05:43 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,6 +42,7 @@ public abstract class UMLWizard extends Wizard {
     protected String suggestion;
 
     /**
+     * The constructor.
      * 
      */
     public UMLWizard() {

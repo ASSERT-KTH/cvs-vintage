@@ -1,4 +1,4 @@
-// $Id: WizardItem.java,v 1.1 2004/10/21 08:38:16 mkl Exp $
+// $Id: WizardItem.java,v 1.2 2004/10/23 11:05:45 mvw Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,16 +27,17 @@ package org.argouml.kernel;
 
 
 /**
- * A WizardItem is a type wizards know how to deal with. It only requires that it
- * is notified to have been changed.
+ * A WizardItem is a type wizards know how to deal with. 
+ * It only requires that it is notified to have been changed.
+ * 
  * @author mkl
  * @see org.argouml.kernel.Wizard
  */
 public interface WizardItem {
 
-    /** notify this wizarditem that it has been changed.
+    /** 
+     * Notify this wizarditem that it has been changed.
      * 
-     *
      */
     void changed();
 

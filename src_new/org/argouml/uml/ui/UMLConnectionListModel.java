@@ -1,4 +1,4 @@
-// $Id: UMLConnectionListModel.java,v 1.21 2004/10/13 05:52:28 linus Exp $
+// $Id: UMLConnectionListModel.java,v 1.22 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,10 +35,10 @@ import org.tigris.gef.graph.MutableGraphModel;
 
 /**
  * @deprecated as of ArgoUml 0.13.5 (10-may-2003), replaced by 
- *             {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier#getAssociationEndScroll()},
- *             this class is part of the 'old'(pre 0.13.*) 
- *             implementation of proppanels
- *             that used reflection a lot.
+ * {@link org.argouml.uml.ui.foundation.core.PropPanelClassifier
+ * #getAssociationEndScroll()},
+ * this class is part of the 'old'(pre 0.13.*) 
+ * implementation of proppanels that used reflection a lot.
  */
 public class UMLConnectionListModel extends UMLBinaryRelationListModel  {
 

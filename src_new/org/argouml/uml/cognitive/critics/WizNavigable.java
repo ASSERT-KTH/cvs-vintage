@@ -1,4 +1,4 @@
-// $Id: WizNavigable.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
+// $Id: WizNavigable.java,v 1.14 2004/10/23 11:05:44 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: WizNavigable.java
 // Classes: WizNavigable
 // Original Author: jrobbins@ics.uci.edu
-// $Id: WizNavigable.java,v 1.13 2004/10/21 08:29:46 mkl Exp $
+// $Id: WizNavigable.java,v 1.14 2004/10/23 11:05:44 mvw Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -59,7 +59,6 @@ public class WizNavigable extends UMLWizard {
      */
     public WizNavigable() { }
 								      
-									  									      
     /**
      * @return the options
      */

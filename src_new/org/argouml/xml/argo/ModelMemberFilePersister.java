@@ -1,4 +1,4 @@
-// $Id: ModelMemberFilePersister.java,v 1.2 2004/10/13 14:50:55 bobtarling Exp $
+// $Id: ModelMemberFilePersister.java,v 1.3 2004/10/23 11:05:48 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,6 @@
 
 package org.argouml.xml.argo;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -84,15 +83,17 @@ public class ModelMemberFilePersister extends MemberFilePersister {
 
     /**
      * Loads a model (XMI only) from an input source. BE ADVISED this
-     * method has a side effect. It sets _UUIDREFS to the model.
+     * method has a side effect. It sets _UUIDREFS to the model.<p>
      * 
      * If there is a problem with the xmi file, an error is set in the
      * getLastLoadStatus() field. This needs to be examined by the
-     * calling function.
+     * calling function.<p>
      *
-     * @throws SAXException If the parser template is syntactically incorrect. 
+     * Throws a SAXException if the parser template is syntactically incorrect. 
+     *
+     * @see org.argouml.xml.argo.MemberFilePersister#load(java.util.Map)
      */
-    public void load(Map AttributesMap) throws SAXException {
+    public void load(Map attributesMap) throws SAXException {
                 
         InputSource source = new InputSource(inputStream);
         Object mmodel = null;
