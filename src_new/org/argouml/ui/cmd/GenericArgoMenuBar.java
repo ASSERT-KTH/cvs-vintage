@@ -1,4 +1,4 @@
-// $Id: GenericArgoMenuBar.java,v 1.8 2004/12/29 22:20:42 linus Exp $
+// $Id: GenericArgoMenuBar.java,v 1.9 2005/01/02 23:11:02 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -591,7 +591,7 @@ public class GenericArgoMenuBar extends JMenuBar
 	setMnemonic(notation, "Notation");
 
         view.addSeparator();
-        JMenuItem showSaved = view.add(new ActionShowSaved());
+        JMenuItem showSaved = view.add(new ActionShowXMLDump());
 	setMnemonic(showSaved, "Show Saved");
 
         appendPluggableMenus(view, PluggableMenu.KEY_VIEW);
