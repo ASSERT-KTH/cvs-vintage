@@ -114,16 +114,16 @@ import org.apache.turbine.Log;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabModule.java,v 1.27 2002/02/07 18:20:08 jon Exp $
+ * @version $Id: AbstractScarabModule.java,v 1.28 2002/02/08 18:20:06 jon Exp $
  */
 public abstract class AbstractScarabModule
     extends BaseObject
     implements ModuleEntity, Comparable
 {
 
-    private static final String USER = "user";
-    private static final String NON_USER = "non-user";
-    
+    private static final Category log = 
+        Category.getInstance("org.tigris.scarab.AbstractScarabModule");
+
     /* removing the internal cache until it can be fixed using artifact_types
     private List allRModuleAttributes;
     private List activeRModuleAttributes;
@@ -193,7 +193,7 @@ public abstract class AbstractScarabModule
             }
             catch (Exception e)
             {
-                Category.getInstance(getClass().getName()).error(e);
+                log.error(e);
                 return null;
             }
             Iterator itr = parents.iterator();
