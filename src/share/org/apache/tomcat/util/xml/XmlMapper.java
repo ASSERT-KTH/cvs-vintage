@@ -454,6 +454,13 @@ public class XmlMapper
     }
 
     /** For the last 2 objects in stack, create a parent-child
+     * and child.childM with parent as parameter
+     */
+    public XmlAction setParent( String childM, String argType ) {
+	return new SetParent( childM, argType );
+    }
+
+    /** For the last 2 objects in stack, create a parent-child
      *  relation by invokeing parent.parentM with the child as parameter
      *  ArgType is the parameter expected by addParent ( null use the current object
      *  type)
@@ -488,6 +495,12 @@ public class XmlMapper
      */
     public XmlAction methodParam(int ord, String attrib) {
 	return new MethodParam(ord, attrib);
+    }
+
+    /** Pop the object stack
+     */
+    public XmlAction popStack() {
+	return new PopStack();
     }
 
 }
@@ -672,8 +685,13 @@ class SetProperties extends XmlAction {
  */
 class SetParent extends XmlAction {
     String childM;
-    public SetParent(String c) {
-	childM=c;
+    String paramT = null;
+    public SetParent(String p) {
+	childM=p;
+    }
+    public SetParent(String p, String c) {
+	childM=p;
+	paramT=c;
     }
 
     public void end( SaxContext ctx) throws Exception {
@@ -688,7 +706,11 @@ class SetParent extends XmlAction {
 					 " " + parentC);
 
 	Class params[]=new Class[1];
-	params[0]=parent.getClass();
+	if( paramT==null) {
+	    params[0]=parent.getClass();
+	} else {
+	    params[0]=Class.forName( paramT );
+	}
 	Method m=obj.getClass().getMethod( childM, params );
 	m.invoke(obj, new Object[] { parent } );
     }
@@ -835,5 +857,19 @@ class  MethodParam extends XmlAction {
 	Stack st=ctx.getObjectStack();
 	String h[]=(String[])st.peek();
 	h[paramId]= ctx.getBody().trim();
+    }
+}
+
+/**
+ */
+class PopStack extends XmlAction {
+    public PopStack() {
+	super();
+    }
+
+    public void end( SaxContext ctx) {
+	Stack st=ctx.getObjectStack();
+	Object top = st.pop();
+	if( ctx.getDebug() > 0 ) cts.log("Pop " + top.getClass().getName());
     }
 }
