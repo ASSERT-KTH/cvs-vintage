@@ -22,7 +22,7 @@
           <li><a href="$link.setPage("help,UserQuery.vm")">Searching the database</a></li>
           <li><a href="$link.setPage("help,ScarabGlossary.vm")">Reports</a></li>
           <li><a href="$link.setPage("help,ScarabBestPractices.vm")">Scarab guidelines</a></li>
-          <li><a href="$link.setPage("help,ScarabFAQ.vm")">FAQ</a></li>
+          <li><a href="$link.setPage("help,ScarabFaq.vm")">FAQ</a></li>
           <li><strong>Glossary</strong></li>
         </ul>
       </li>
