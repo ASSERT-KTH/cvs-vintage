@@ -79,7 +79,7 @@ public class CheckForNewMessagesCommand extends FolderCommand {
 		((StatusObservableImpl)srcFolder.getObservable()).setWorker(worker);
 			 
         // we only check inbox
-		inboxFolder = (IMAPFolder) srcFolder.getChild("Inbox");
+		inboxFolder = (IMAPFolder) srcFolder.findChildWithName("Inbox", false);
 
         // Find old numbers
 		int total  = inboxFolder.getMessageFolderInfo().getExists();
