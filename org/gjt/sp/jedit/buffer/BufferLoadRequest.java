@@ -36,7 +36,7 @@ import org.gjt.sp.util.*;
 /**
  * A buffer load request.
  * @author Slava Pestov
- * @version $Id: BufferLoadRequest.java,v 1.1 2005/02/10 22:35:16 spestov Exp $
+ * @version $Id: BufferLoadRequest.java,v 1.2 2005/03/05 04:25:52 spestov Exp $
  */
 public class BufferLoadRequest extends BufferIORequest
 {
@@ -197,6 +197,10 @@ public class BufferLoadRequest extends BufferIORequest
 				if(!line.startsWith("!"))
 					continue;
 
+				// malformed marks file?
+				if(line.length() == 0)
+					continue;
+				
 				char shortcut = line.charAt(1);
 				int start = line.indexOf(';');
 				int end = line.indexOf(';',start + 1);

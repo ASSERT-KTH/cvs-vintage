@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.syntax.*;
  * </ul>
  *
  * @author Slava Pestov
- * @version $Id: TextUtilities.java,v 1.48 2005/02/13 22:41:53 spestov Exp $
+ * @version $Id: TextUtilities.java,v 1.49 2005/03/05 04:25:52 spestov Exp $
  */
 public class TextUtilities
 {
@@ -608,6 +608,43 @@ loop:		for(int i = pos; i < line.length(); i++)
 		return buf.toString();
 	} //}}}
 
+	//{{{ indexIgnoringWhitespace() method
+	/**
+	 * Inverse of <code>ignoringWhitespaceIndex()</code>.
+	 * @param str A string
+	 * @param index The index
+	 * @return The number of non-whitespace characters that precede the index.
+	 * @since jEdit 4.3pre2
+	 */
+	public static int indexIgnoringWhitespace(String str, int index)
+	{
+		int j = 0;
+		for(int i = 0; i < index; i++)
+			if(!Character.isWhitespace(str.charAt(i))) j++;
+		return j;
+	} //}}}
+
+	//{{{ ignoringWhitespaceIndex() method
+	/**
+	 * Inverse of <code>indexIgnoringWhitespace()</code>.
+	 * @param str A string
+	 * @param index The index
+	 * @return The index into the string where the number of non-whitespace
+	 * characters that precede the index is count.
+	 * @since jEdit 4.3pre2
+	 */
+	public static int ignoringWhitespaceIndex(String str, int index)
+	{
+		int j = 0;
+		for(int i = 0;;i++)
+		{
+			if(!Character.isWhitespace(str.charAt(i))) j++;
+
+			if(j > index)
+				return i;
+		}
+	} //}}}
+
 	//{{{ getStringCase() method
 	public static final int MIXED = 0;
 	public static final int LOWER_CASE = 1;
@@ -689,6 +726,41 @@ loop:		for(int i = pos; i < line.length(); i++)
 
 	//{{{ formatParagraph() method
 	private static void formatParagraph(String text, int maxLineLength,
+		int tabSize, StringBuffer buf)
+	{
+		// align everything to paragraph's leading indent
+		int leadingWhitespaceCount = MiscUtilities.getLeadingWhiteSpace(text);
+		String leadingWhitespace = text.substring(0,leadingWhitespaceCount);
+		int leadingWhitespaceWidth = MiscUtilities.getLeadingWhiteSpaceWidth(text,tabSize);
+
+		buf.append(leadingWhitespace);
+
+		int lineLength = leadingWhitespaceWidth;
+		StringTokenizer st = new StringTokenizer(text);
+		while(st.hasMoreTokens())
+		{
+			String word = st.nextToken();
+			if(lineLength == leadingWhitespaceWidth)
+			{
+				// do nothing
+			}
+			else if(lineLength + word.length() + 1 > maxLineLength)
+			{
+				buf.append('\n');
+				buf.append(leadingWhitespace);
+				lineLength = leadingWhitespaceWidth;
+			}
+			else
+			{
+				buf.append(' ');
+				lineLength++;
+			}
+			buf.append(word);
+			lineLength += word.length();
+		}
+	} //}}}
+	
+	public static void indexIgnoringWhitespace(String text, int maxLineLength,
 		int tabSize, StringBuffer buf)
 	{
 		// align everything to paragraph's leading indent

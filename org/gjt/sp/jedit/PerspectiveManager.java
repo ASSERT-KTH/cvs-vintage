@@ -30,7 +30,7 @@ import org.gjt.sp.util.Log;
  * Manages persistence of open buffers and views across jEdit sessions.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: PerspectiveManager.java,v 1.12 2004/08/17 06:37:36 spestov Exp $
+ * @version $Id: PerspectiveManager.java,v 1.13 2005/03/05 04:25:52 spestov Exp $
  */
 public class PerspectiveManager
 {
@@ -54,6 +54,28 @@ public class PerspectiveManager
 	public static void setPerspectiveDirty(boolean dirty)
 	{
 		PerspectiveManager.dirty = dirty;
+	} //}}}
+
+	//{{{ isPerspectiveEnabled() method
+	/**
+	 * We disable saving of the perspective while the 'close all' dialog is
+	 * showing.
+	 * @since jEdit 4.3pre2
+	 */
+	public static boolean isPerspectiveEnabled()
+	{
+		return enabled;
+	} //}}}
+
+	//{{{ setPerspectiveEnabled() method
+	/**
+	 * We disable saving of the perspective while the 'close all' dialog is
+	 * showing.
+	 * @since jEdit 4.3pre2
+	 */
+	public static void setPerspectiveEnabled(boolean enabled)
+	{
+		PerspectiveManager.enabled = enabled;
 	} //}}}
 
 	//{{{ loadPerspective() method
@@ -113,6 +135,9 @@ public class PerspectiveManager
 	//{{{ savePerspective() method
 	public static void savePerspective(boolean autosave)
 	{
+		if(!isPerspectiveEnabled())
+			return;
+		
 		String settingsDirectory = jEdit.getSettingsDirectory();
 		if(settingsDirectory == null)
 			return;
@@ -245,7 +270,7 @@ public class PerspectiveManager
 		file1.renameTo(file2);
 	} //}}}
 
-	private static boolean dirty;
+	private static boolean dirty, enabled = true;
 
 	//{{{ PerspectiveHandler class
 	static class PerspectiveHandler extends HandlerBase

@@ -48,7 +48,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.245 2005/01/21 01:38:24 spestov Exp $
+ * @version $Id: jEdit.java,v 1.246 2005/03/05 04:25:52 spestov Exp $
  */
 public class jEdit
 {
@@ -2451,9 +2451,18 @@ public class jEdit
 
 		PerspectiveManager.savePerspective(false);
 
-		// Close all buffers
-		if(!closeAllBuffers(view,reallyExit))
-			return;
+		try
+		{
+			PerspectiveManager.setPerspectiveEnabled(false);
+
+			// Close all buffers
+			if(!closeAllBuffers(view,reallyExit))
+				return;
+		}
+		finally
+		{
+			PerspectiveManager.setPerspectiveEnabled(true);
+		}
 
 		// If we are running in background mode and
 		// reallyExit was not specified, then return here.
