@@ -1,4 +1,4 @@
-// $Id: NotationProvider2.java,v 1.5 2004/07/17 13:10:25 kataka Exp $
+// $Id: NotationProvider2.java,v 1.6 2004/08/08 10:55:41 mvw Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -198,7 +198,7 @@ public interface NotationProvider2 {
     /**
      * Generate the String representation for an Action State.
      *
-     * @param m Object to generate representation for.
+     * @param actionState Object to generate representation for.
      * @return The String representation of the object.
      */
     public String generateActionState(Object actionState);

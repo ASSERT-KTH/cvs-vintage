@@ -1,4 +1,4 @@
-// $Id: QuadrantPanel.java,v 1.5 2003/09/16 20:07:59 thierrylach Exp $
+// $Id: QuadrantPanel.java,v 1.6 2004/08/08 10:55:41 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,15 +32,54 @@ package org.argouml.application.api;
  */
 public interface QuadrantPanel {
 
+    /**
+     * The bit-number for a side.
+     */
     public static final int Q_TOP           = 1;
+
+    /**
+     * The bit-number for a side.
+     */
     public static final int Q_BOTTOM        = 2;
+
+    /**
+     * The bit-number for a side.
+     */
     public static final int Q_LEFT          = 4;
+
+    /**
+     * The bit-number for a side.
+     */
     public static final int Q_RIGHT         = 8;
+    
+    /**
+     * A bit-combination indicating uniquely 2 orthogonal sides, 
+     * and hence a corner.
+     */
     public static final int Q_TOP_LEFT      = Q_TOP + Q_LEFT;
+    
+    /**
+     * A bit-combination indicating uniquely 2 orthogonal sides, 
+     * and hence a corner.
+     */
     public static final int Q_TOP_RIGHT     = Q_TOP + Q_RIGHT;
+    
+    /**
+     * A bit-combination indicating uniquely 2 orthogonal sides, 
+     * and hence a corner.
+     */
     public static final int Q_BOTTOM_LEFT   = Q_BOTTOM + Q_LEFT;
+    
+    /**
+     * A bit-combination indicating uniquely 2 orthogonal sides, 
+     * and hence a corner.
+     */
     public static final int Q_BOTTOM_RIGHT  = Q_BOTTOM + Q_RIGHT;
 
+    /**
+     * This shall return a corner indentification.
+     * @return one of Q_TOP_LEFT, Q_TOP_RIGHT, Q_BOTTOM_LEFT, Q_BOTTOM_RIGHT
+     */
     public int getQuadrant();
 
 } /* End interface QuadrantPanel */
