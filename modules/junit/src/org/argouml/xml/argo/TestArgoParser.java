@@ -1,4 +1,4 @@
-// $Id: TestArgoParser.java,v 1.10 2004/08/31 08:07:08 bobtarling Exp $
+// $Id: TestArgoParser.java,v 1.11 2004/09/08 19:31:39 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,6 +35,11 @@ import org.argouml.kernel.ZargoFilePersister;
 
 /** Testcase to load projects without exception. */
 public class TestArgoParser extends TestCase {
+    /**
+     * The constructor.
+     * 
+     * @param name the name
+     */
     public TestArgoParser(String name) {
         super(name);
     }
@@ -89,7 +94,8 @@ public class TestArgoParser extends TestCase {
             url = new URL("file:testmodels/Garbage.zargo");
             ZargoFilePersister persister = new ZargoFilePersister();
             Project p = persister.loadProject(url);
-            assertTrue("Load Status", !ArgoParser.SINGLETON.getLastLoadStatus());
+            assertTrue("Load Status", 
+                    !ArgoParser.SINGLETON.getLastLoadStatus());
         } catch (java.net.MalformedURLException e) {
             assertTrue("Incorrect test case.", false);
         } catch (Exception io) {

@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.9 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.10 2004/09/08 19:31:39 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,6 @@ import java.util.Collection;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
-import ru.novosoft.uml.foundation.core.MClass;
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
 

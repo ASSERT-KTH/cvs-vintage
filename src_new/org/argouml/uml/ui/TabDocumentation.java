@@ -1,4 +1,4 @@
-// $Id: TabDocumentation.java,v 1.28 2004/05/17 15:57:07 mkl Exp $
+// $Id: TabDocumentation.java,v 1.29 2004/09/08 19:31:37 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -71,7 +71,7 @@ import org.tigris.gef.presentation.Fig;
  */
 public class TabDocumentation extends PropPanel {
 
-    private static String _orientation = Configuration.getString(Configuration
+    private static String orientation = Configuration.getString(Configuration
             .makeKey("layout", "tabdocumentation"));
 
     /**
@@ -86,8 +86,8 @@ public class TabDocumentation extends PropPanel {
         // MVW: I changed label.documentation into tab.documentation
         // to get rid of ":" in the tab.
 
-        super(Translator.localize("tab.documentation"), (_orientation
-                .equals("West") || _orientation.equals("East")) ? Vertical
+        super(Translator.localize("tab.documentation"), (orientation
+                .equals("West") || orientation.equals("East")) ? Vertical
                 .getInstance() : Horizontal.getInstance());
 
         addField(Translator.localize("label.author"), new UMLTextField2(
@@ -104,26 +104,26 @@ public class TabDocumentation extends PropPanel {
         addField(Translator.localize("label.deprecated"),
                 new UMLDeprecatedCheckBox());
 
-        UMLTextArea2 _see = new UMLTextArea2(
+        UMLTextArea2 see = new UMLTextArea2(
                 new UMLModelElementTaggedValueDocument("see"));
-        _see.setRows(2);
-        _see.setLineWrap(true);
-        _see.setWrapStyleWord(true);
+        see.setRows(2);
+        see.setLineWrap(true);
+        see.setWrapStyleWord(true);
         JScrollPane spSee = new JScrollPane();
-        spSee.getViewport().add(_see);
+        spSee.getViewport().add(see);
         addField(Translator.localize("label.see"), spSee);
 
         //make new column with LabelledLayout
         add(LabelledLayout.getSeperator());
 
-        UMLTextArea2 _doc = new UMLTextArea2(
+        UMLTextArea2 doc = new UMLTextArea2(
                 new UMLModelElementTaggedValueDocument("documentation"));
 
-        _doc.setRows(2);
-        _doc.setLineWrap(true);
-        _doc.setWrapStyleWord(true);
+        doc.setRows(2);
+        doc.setLineWrap(true);
+        doc.setWrapStyleWord(true);
         JScrollPane spDocs = new JScrollPane();
-        spDocs.getViewport().add(_doc);
+        spDocs.getViewport().add(doc);
         addField(Translator.localize("label.documentation"), spDocs);
     }
 

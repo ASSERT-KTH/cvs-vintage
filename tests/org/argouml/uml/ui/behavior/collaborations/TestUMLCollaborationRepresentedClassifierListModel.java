@@ -1,4 +1,4 @@
-// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.8 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLCollaborationRepresentedClassifierListModel.java,v 1.9 2004/09/08 19:31:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,8 +42,8 @@ public class TestUMLCollaborationRepresentedClassifierListModel
     extends TestCase {
 
     private int oldEventPolicy;
-    protected MCollaboration elem;
-    protected UMLCollaborationRepresentedClassifierListModel model;
+    private MCollaboration elem;
+    private UMLCollaborationRepresentedClassifierListModel model;
     
     /**
      * Constructor for TestUMLCollaborationRepresentedClassifierListModel.

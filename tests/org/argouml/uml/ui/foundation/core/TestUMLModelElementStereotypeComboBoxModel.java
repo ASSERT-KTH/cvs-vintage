@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.10 2004/08/26 19:45:02 mvw Exp $
+// $Id: TestUMLModelElementStereotypeComboBoxModel.java,v 1.11 2004/09/08 19:31:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -47,8 +47,8 @@ import ru.novosoft.uml.model_management.MModel;
 public class TestUMLModelElementStereotypeComboBoxModel extends TestCase {
 
     private int oldEventPolicy;
-    protected MClass elem;
-    protected UMLModelElementStereotypeComboBoxModel model;
+    private MClass elem;
+    private UMLModelElementStereotypeComboBoxModel model;
     private MStereotype[] stereotypes;
     
     /**

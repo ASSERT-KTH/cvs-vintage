@@ -1,4 +1,4 @@
-// $Id: Section.java,v 1.4 2004/08/27 15:42:16 mvw Exp $
+// $Id: Section.java,v 1.5 2004/09/08 19:31:37 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -53,7 +53,7 @@ public class Section extends AbstractSection {
      * can place an initial body within the both identifying lines
      *
      * @param id the section id
-     * @param indent
+     * @param indent the current indentation
      * @return the generated string
      */
     public static String generateTop(String id, String indent) {
@@ -69,7 +69,7 @@ public class Section extends AbstractSection {
      * can place an initial body within the both identifying lines
      *
      * @param id the section id
-     * @param indent
+     * @param indent the current indentation
      * @return the generated string
      */
     public static String generateBottom(String id, String indent) {

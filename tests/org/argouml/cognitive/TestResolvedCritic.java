@@ -1,4 +1,4 @@
-// $Id: TestResolvedCritic.java,v 1.6 2004/08/26 23:03:17 bobtarling Exp $
+// $Id: TestResolvedCritic.java,v 1.7 2004/09/08 19:31:38 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +32,8 @@ import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.uml.foundation.core.CoreFactory;
 import org.tigris.gef.util.VectorSet;
 
-import ru.novosoft.uml.foundation.core.MClass;
-
 public class TestResolvedCritic extends TestCase {
+    
     public TestResolvedCritic(String name) {
 	super(name);
     }

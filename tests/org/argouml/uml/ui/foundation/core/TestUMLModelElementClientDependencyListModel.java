@@ -1,4 +1,4 @@
-// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.11 2004/08/27 13:13:28 bobtarling Exp $
+// $Id: TestUMLModelElementClientDependencyListModel.java,v 1.12 2004/09/08 19:31:38 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,7 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         ns = ModelManagementFactory.getFactory().createModel();
-        elem = (MModelElement)CoreFactory.getFactory().buildClass(ns);
+        elem = (MModelElement) CoreFactory.getFactory().buildClass(ns);
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLModelElementClientDependencyListModel();
@@ -87,7 +87,8 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         MModelElement[] suppliers = new MModelElement[10];
         Object[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
-            suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
+            suppliers[i] = 
+                (MModelElement) CoreFactory.getFactory().buildClass(ns);
             dependencies[i] = 
                 CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }
@@ -104,7 +105,8 @@ public class TestUMLModelElementClientDependencyListModel extends TestCase {
         MModelElement[] suppliers = new MModelElement[10];
         Object[] dependencies = new MDependency[10];
         for (int i = 0; i < 10; i++) {
-            suppliers[i] = (MModelElement)CoreFactory.getFactory().buildClass(ns);
+            suppliers[i] = 
+                (MModelElement) CoreFactory.getFactory().buildClass(ns);
             dependencies[i] = 
                 CoreFactory.getFactory().buildDependency(elem, suppliers[i]);
         }

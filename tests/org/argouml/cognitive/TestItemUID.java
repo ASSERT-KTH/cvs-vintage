@@ -1,4 +1,4 @@
-// $Id: TestItemUID.java,v 1.11 2004/09/02 20:55:32 mvw Exp $
+// $Id: TestItemUID.java,v 1.12 2004/09/08 19:31:38 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,6 @@ import org.argouml.uml.diagram.state.ui.FigCompositeState;
 import org.argouml.uml.diagram.state.ui.FigDeepHistoryState;
 import org.argouml.uml.diagram.state.ui.FigFinalState;
 import org.argouml.uml.diagram.state.ui.FigForkState;
-import org.argouml.uml.diagram.state.ui.FigHistoryState;
 import org.argouml.uml.diagram.state.ui.FigInitialState;
 import org.argouml.uml.diagram.state.ui.FigJoinState;
 import org.argouml.uml.diagram.state.ui.FigShallowHistoryState;
@@ -63,7 +62,6 @@ import org.argouml.uml.diagram.use_case.ui.FigInclude;
 import org.argouml.uml.diagram.use_case.ui.FigUseCase;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;
 
-import ru.novosoft.uml.foundation.core.MClass;
 
 public class TestItemUID extends TestCase {
     
