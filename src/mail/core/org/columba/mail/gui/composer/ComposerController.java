@@ -52,7 +52,8 @@ public class ComposerController
 	private SubjectController subjectController;
 	private PriorityController priorityController;
 	private AccountController accountController;
-	private EditorController editorController;
+	//private EditorController editorController;
+	private AbstractEditorController editorController;
 	private HeaderController headerController;
 	//private MessageComposer messageComposer;
 	private ComposerSpellCheck composerSpellCheck;
@@ -92,7 +93,8 @@ public class ComposerController
 
 	public void charsetChanged(CharsetEvent e) {
 		((ComposerModel) getModel()).setCharsetName(e.getValue());
-		editorController.getView().setCharset(e.getValue());
+		//editorController.getView().setCharset(e.getValue());
+		editorController.setViewCharset(e.getValue());
 	}
 
 	public boolean checkState() {
@@ -257,7 +259,13 @@ public class ComposerController
 	/**
 	 * @return EditorController
 	 */
-	public EditorController getEditorController() {
+	public AbstractEditorController getEditorController() {
+		/*
+		 * *20030906, karlpeder* Method signature changed to 
+		 * return an AbstractEditorController instead of 
+		 * EditorController. Different controllers will be 
+		 * used when composing plain text and html respectively
+		 */
 		return editorController;
 	}
 
@@ -299,6 +307,11 @@ public class ComposerController
 		subjectController = new SubjectController(this);
 		priorityController = new PriorityController(this);
 		accountController = new AccountController(this);
+		
+		// TODO: Add for handling of different editor controllers
+		//       when such have been implemented for plain text and html
+		//       respectively.
+		
 		editorController = new EditorController(this);
 		composerSpellCheck = new ComposerSpellCheck(this);
 		XmlElement optionsElement =
@@ -316,7 +329,8 @@ public class ComposerController
 		String charset = charsetElement.getAttribute("name");
 		if (charset != null) {
 			((ComposerModel) getModel()).setCharsetName(charset);
-			editorController.getView().setCharset(charset);
+			//editorController.getView().setCharset(charset);
+			editorController.setViewCharset(charset);
 		}
 	}
 

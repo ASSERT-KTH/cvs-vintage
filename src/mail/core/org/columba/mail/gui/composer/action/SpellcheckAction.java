@@ -68,11 +68,16 @@ public class SpellcheckAction extends FrameAction {
 		ComposerController composerController =
 			(ComposerController) getFrameController();
 
+		//String checked =
+		//	composerController.getComposerSpellCheck().checkText(
+		//		composerController.getEditorController().getView().getText());
 		String checked =
 			composerController.getComposerSpellCheck().checkText(
-				composerController.getEditorController().getView().getText());
+				composerController.getEditorController().getViewText());
 
-		composerController.getEditorController().getView().setText(checked);
+
+		//composerController.getEditorController().getView().setText(checked);
+		composerController.getEditorController().setViewText(checked);
 	}
 
 }

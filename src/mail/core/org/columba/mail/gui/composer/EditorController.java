@@ -16,6 +16,8 @@
 
 package org.columba.mail.gui.composer;
 
+import java.awt.Font;
+
 import javax.swing.JComponent;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -27,22 +29,31 @@ import org.columba.core.main.MainInterface;
 import org.columba.mail.gui.composer.util.UndoDocument;
 
 /**
- * @author frd
+ * Editor controller used when composing plain text mails.
+ * 
+ * @author frd, Karl Peder Olesen (karlpeder)
  *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
-public class EditorController
-	implements DocumentListener, FocusOwner, CaretListener {
-	EditorView view;
-	ComposerController controller;
+public class EditorController extends AbstractEditorController
+	implements DocumentListener, CaretListener {
+	
+	/*
+	 * *20030906, karlpeder* Changed to extend AbstractEditorController
+	 * to be able to fit into frame work supporting both plain text and
+	 * html composing.
+	 */
+	
+	//EditorView view;
+	//ComposerController controller;
 
+	/** The editor view, i.e. the component used for editing text */
+	private EditorView view;
+	/** Document used in the editor view */
 	private UndoDocument document;
 
 	public EditorController(ComposerController controller) {
-		this.controller = controller;
+		super(controller);
+		//this.controller = controller;
 
 		document = new UndoDocument();
 
@@ -53,9 +64,12 @@ public class EditorController
 		view.addCaretListener(this);
 	}
 
+	/* *20030906, karlpeder* Removed, use misc. setView* / getView* 
+	 *                       methods instead
 	public EditorView getView() {
 		return view;
 	}
+	*/
 
 	public void installListener() {
 		view.installListener(this);
@@ -63,11 +77,11 @@ public class EditorController
 
 	public void updateComponents(boolean b) {
 		if (b) {
-			if (controller.getModel().getBodyText() != null)
+			if (this.getController().getModel().getBodyText() != null)
 				view.setText(controller.getModel().getBodyText());
 		} else {
 			if (view.getText() != null)
-				controller.getModel().setBodyText(view.getText());
+				this.getController().getModel().setBodyText(view.getText());
 		}
 	}
 
@@ -221,6 +235,51 @@ public class EditorController
 	 */
 	public void caretUpdate(CaretEvent arg0) {
 		MainInterface.focusManager.updateActions();
-
 	}
+
+
+    /********************** Methods necessary to hide view from clients *******/
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewFont()
+	 */
+	public Font getViewFont() {
+		return view.getFont();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewFont(java.awt.Font)
+	 */
+	public void setViewFont(Font f) {
+		view.setFont(f);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#getViewText()
+	 */
+	public String getViewText() {
+		return view.getText();
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewText(java.lang.String)
+	 */
+	public void setViewText(String text) {
+		view.setText(text);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewCharset(java.lang.String)
+	 */
+	public void setViewCharset(String charset) {
+		view.setCharset(charset);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.mail.gui.composer.AbstractEditorController#setViewEnabled(boolean)
+	 */
+	public void setViewEnabled(boolean enabled) {
+		view.setEnabled(enabled);
+	}
+
 }

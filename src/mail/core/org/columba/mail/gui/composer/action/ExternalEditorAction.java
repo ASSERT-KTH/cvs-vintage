@@ -70,17 +70,21 @@ public class ExternalEditorAction extends FrameAction {
 			public Object construct() {
 				//composerInterface.composerFrame.setCursor(Cursor.WAIT_CURSOR);
 				composerController.getView().setEnabled(false);
-				composerController.getEditorController().getView().setEnabled(false);
+				//composerController.getEditorController().getView().setEnabled(false);
+				composerController.getEditorController().setViewEnabled(false);
 				ExternalEditor Ed = new ExternalEditor();
+				//Ed.startExternalEditor(
+				//	composerController.getEditorController().getView());
 				Ed.startExternalEditor(
-				composerController.getEditorController().getView());
+					composerController.getEditorController());
 				return Ed;
 			}
 
 			//Runs on the event-dispatching thread.
 			public void finished() {
 				composerController.getView().setEnabled(true);
-				composerController.getEditorController().getView().setEnabled(true);
+				//composerController.getEditorController().getView().setEnabled(true);
+				composerController.getEditorController().setViewEnabled(true);
 				//composerInterface.composerFrame.setCursor(Cursor.DEFAULT_CURSOR);
 			}
 		};

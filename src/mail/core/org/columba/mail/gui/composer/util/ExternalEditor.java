@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 
 import org.columba.core.config.Config;
 import org.columba.core.io.TempFileStore;
-import org.columba.mail.gui.composer.EditorView;
+import org.columba.mail.gui.composer.AbstractEditorController;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
 import org.columba.mail.message.MimeHeader;
 import org.columba.mail.util.MailResourceLoader;
@@ -39,7 +39,12 @@ public class ExternalEditor {
 	public ExternalEditor(String EditorCommand) {
 	} // END public ExternalEditor(String EditorCommand)
 
-	public boolean startExternalEditor(EditorView EditView) {
+	public boolean startExternalEditor(AbstractEditorController EditCtrl) {
+		/*
+		 * *20030906, karlpeder* Method signature changed to take
+		 * an AbstractEditorController (instead of an EditorView) as 
+		 * parameter since the view is no longer directly available
+		 */
 		MimeHeader myHeader = new MimeHeader("text", "plain");
 		MimeTypeViewer viewer = new MimeTypeViewer();
 		File tmpFile = TempFileStore.createTempFileWithSuffix("extern_edit");
@@ -56,7 +61,8 @@ public class ExternalEditor {
 			return false;
 		}
 		try {
-			String M = EditView.getText();
+			//String M = EditView.getText();
+			String M = EditCtrl.getViewText();
 			if (M != null) {
 				FO.write(M);
 			}
@@ -69,7 +75,8 @@ public class ExternalEditor {
 			return false;
 		}
 
-		Font OldFont = EditView.getFont();
+		//Font OldFont = EditView.getFont();
+		Font OldFont = EditCtrl.getViewFont();
 
 		System.out.println("Setting Font to REALLY BIG!!! :-)");
 
@@ -81,9 +88,11 @@ public class ExternalEditor {
 		Font font = Config.getOptionsConfig().getGuiItem().getTextFont();
 		font = font.deriveFont(30);
 		
-		EditView.setFont(font);
+		//EditView.setFont(font);
+		EditCtrl.setViewFont(font);
 		
-		EditView.setText(
+		//EditView.setText(
+		EditCtrl.setViewText(
 			MailResourceLoader.getString(
 				"menu",
 				"composer",
@@ -102,7 +111,8 @@ public class ExternalEditor {
 			return false;
 		}
 
-		EditView.setFont(OldFont);
+		//EditView.setFont(OldFont);
+		EditCtrl.setViewFont(OldFont);
 
 		try {
 			FI = new FileReader(tmpFile);
@@ -135,7 +145,8 @@ public class ExternalEditor {
 		//System.out.println( "++>"+Message+"<++");
 		//System.out.println( Message.length());
 
-		EditView.setText(message);
+		//EditView.setText(message);
+		EditCtrl.setViewText(message);
 
 		return true;
 	} // END public boolean startExternalEditor()

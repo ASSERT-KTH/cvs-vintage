@@ -134,8 +134,16 @@ public class ComposerView extends AbstractFrameView {
 		JPanel editorPanel = new JPanel();
 		editorPanel.setBorder(null);
 		editorPanel.setLayout(new BorderLayout());
+		
+		// TODO: Add for handling of different editor views
+		//       when such have been implemented for plain text and html
+		//       respectively.
+		
+		//JScrollPane scrollPane =
+		//	new JScrollPane(controller.getEditorController().view);
 		JScrollPane scrollPane =
-			new JScrollPane(controller.getEditorController().view);
+			new JScrollPane(controller.getEditorController().getComponent());
+		
 		editorPanel.add(scrollPane, BorderLayout.CENTER);
 
 		JPanel centerPanel = new JPanel();
