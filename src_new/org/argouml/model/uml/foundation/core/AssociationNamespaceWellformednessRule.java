@@ -1,4 +1,4 @@
-// $Id: AssociationNamespaceWellformednessRule.java,v 1.6 2003/11/11 22:01:16 linus Exp $
+// $Id: AssociationNamespaceWellformednessRule.java,v 1.7 2004/08/08 18:39:24 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,7 +38,8 @@ public class AssociationNamespaceWellformednessRule
 
     /**
      * Constructor for AssociationNamespaceWellformednessRule.
-     * @param key
+     * @param key the message key to be looked up 
+     *            to show the message to the user
      */
     public AssociationNamespaceWellformednessRule(String key) {
 	super(key);
@@ -55,7 +56,8 @@ public class AssociationNamespaceWellformednessRule
      * @see org.argouml.model.uml.AbstractWellformednessRule#isWellformed(Object,Object)
      */
     public boolean isWellformed(Object/*MBase*/ element, Object newValue) {
-	if (element instanceof MAssociation && newValue instanceof MClassifier) {
+	if (element instanceof MAssociation 
+            && newValue instanceof MClassifier) {
 	    MAssociation a = (MAssociation) element;
 	    MClassifier c = (MClassifier) newValue;
 	    if (a.getNamespace().equals(c.getNamespace())) {

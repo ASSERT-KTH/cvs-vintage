@@ -1,4 +1,4 @@
-// $Id: FoundationHelper.java,v 1.7 2004/02/29 12:35:40 linus Exp $
+// $Id: FoundationHelper.java,v 1.8 2004/08/08 18:39:25 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,7 +44,7 @@ public class FoundationHelper {
     /**
      * Singleton instance.
      */
-    private static FoundationHelper SINGLETON =
+    private static FoundationHelper singleton =
                    new FoundationHelper();
 
     
@@ -54,7 +54,7 @@ public class FoundationHelper {
      * @return the singleton instance of the helper
      */
     public static FoundationHelper getHelper() {
-        return SINGLETON;
+        return singleton;
     }
 }
 

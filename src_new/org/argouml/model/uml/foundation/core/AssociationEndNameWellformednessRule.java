@@ -1,4 +1,4 @@
-// $Id: AssociationEndNameWellformednessRule.java,v 1.6 2003/11/11 22:01:16 linus Exp $
+// $Id: AssociationEndNameWellformednessRule.java,v 1.7 2004/08/08 18:39:24 mvw Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,12 +39,16 @@ public class AssociationEndNameWellformednessRule
 
     /**
      * Constructor for AssociationEndNameWellformednessRule.
-     * @param key
+     * @param key the message key to be looked up 
+     *            to show the message to the user
      */
     public AssociationEndNameWellformednessRule(String key) {
 	super(key);
     }
 	
+    /**
+     * Constructor for AssociationEndNameWellformednessRule.
+     */
     public AssociationEndNameWellformednessRule() {
 	setUserMessageKey("associationend.name");
     }
