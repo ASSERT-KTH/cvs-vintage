@@ -15,7 +15,6 @@
     <property name="final.name" value="${project}-${version}"/>
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
 
-    <property name="build.compiler" value="classic"/>
     <property name="debug" value="on"/>
     <property name="optimize" value="off"/>
     <property name="deprecation" value="off"/>
