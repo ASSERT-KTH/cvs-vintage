@@ -81,7 +81,7 @@
 		<echo message="the jar file is going to ${dest}/columba.jar "/> 
 		<jar basedir="${dest}" jarfile="${dest}/columba.jar">
 			<include name="**"/>
-			<exclude name="columba.jar"/>
+			<exclude name="**/*.jar"/>
 			<exclude name="README"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
@@ -116,7 +116,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an binary release -->
 	<target name="zip-bin" depends="jar,run-script">
-		<echo message="the zipfile are going to ${dest}/columba-${version}-bin.zip "/> 
+		<echo message="the zipfile is going to ${dest}/columba-${version}-bin.zip "/> 
 		<zip zipfile="${dest}/columba-${version}-bin.zip" update="true">
 			<zipfileset dir="${dest}" prefix="columba-${version}-bin">
 				<include name="README"/>
@@ -136,7 +136,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- create an source zip file, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
 	<!-- this task is for an source release -->
 	<target name="zip-source" depends="init,run-script">
-		<echo message="the zipfile are going to ${dest}/columba-${version}-src.zip "/> 
+		<echo message="the zipfile is going to ${dest}/columba-${version}-src.zip "/> 
 		<zip zipfile="${dest}/columba-${version}-src.zip" update="true">
 			<zipfileset dir="${src}" prefix="columba-${version}-src">
 				<include name="**/*.java"/>
@@ -177,7 +177,7 @@ else echo "cannot find columba.jar in `pwd`"; fi
 	<!-- to build an javadoc documentation -->
 	<target name="doc" depends="init">
 		<echo message="the documentation will go to ${dest}/javadoc"/>
-		<echo message="sopurcepath: ${src}/org/columba"/>
+		<echo message="sourcepath: ${src}/org/columba"/>
 		<javadoc sourcepath="${src}" 
 						 destdir="${dest}/javadoc" 
 						 packagenames="org.columba.*"
