@@ -6,7 +6,7 @@
  */
 package org.jboss.webservice;
 
-// $Id: WSDLDefinitionFactory.java,v 1.3 2004/05/14 18:34:21 tdiesler Exp $
+// $Id: WSDLDefinitionFactory.java,v 1.4 2004/05/29 19:25:02 tdiesler Exp $
 
 import org.jboss.logging.Logger;
 import org.xml.sax.InputSource;
@@ -63,7 +63,7 @@ public final class WSDLDefinitionFactory
          System.setOut(out);
       }
 
-      // write wsdl4j output as debug
+      // write wsdl4j output as trace
       try
       {
          baos.close();
@@ -71,7 +71,7 @@ public final class WSDLDefinitionFactory
          String line = br.readLine();
          while(line != null)
          {
-            log.debug(line);
+            log.trace(line);
             line = br.readLine();
          }
       }
@@ -118,7 +118,7 @@ public final class WSDLDefinitionFactory
 
       public InputSource getImportInputSource(String parent, String relative)
       {
-         log.debug("getImportInputSource [parent=" + parent + ",relative=" + relative + "]");
+         log.trace("getImportInputSource [parent=" + parent + ",relative=" + relative + "]");
 
          String parentDir = parent.substring(0, parent.lastIndexOf("/"));
 
