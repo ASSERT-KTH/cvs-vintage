@@ -29,7 +29,7 @@ rem         its "classpath" internally.  To add your classes to those of
 rem         Tomcat, refer to the Tomcat Users Guide (tomcat_ug.html found
 rem         in the "doc" directory.
 rem
-rem $Id: tomcat.bat,v 1.44 2001/09/09 22:00:45 larryi Exp $
+rem $Id: tomcat.bat,v 1.45 2001/10/21 17:34:12 larryi Exp $
 rem -------------------------------------------------------------------------
 
 
@@ -115,14 +115,18 @@ if "%1" == "estart" goto estart
 echo "Usage:  tomcat (  enableAdmin | env | estart | jspc | run | start | stop )"
 echo Commands:
 echo   enableAdmin - Trust the admin web application,
-echo                 i.e. rewrites conf/apps-admin.xml with trusted="true"
-echo   env -   Set up environment variables that Tomcat would use
-echo   estart - Start Tomcat using the/your EmbeddedTomcat class which
-echo            uses a hardcoded set of modules
-echo   jspc -  Run JSPC in Tomcat's environment
-echo   run -   Start Tomcat in the current window
-echo   start - Start Tomcat in a separate window
-echo   stop -  Stop Tomcat
+echo                   i.e. rewrites conf/apps-admin.xml with trusted="true"
+echo   env         - Set up environment variables that Tomcat would use
+echo   estart      - Start Tomcat using the/your EmbeddedTomcat class which
+echo                   uses a hardcoded set of modules
+echo   jspc        - Run JSPC in Tomcat's environment
+echo   run         - Start Tomcat in the current window
+echo   run -help   - more options (usable with "start" as well):
+echo                   (config, debug, estart, home, install, jkconf, sandbox)
+echo   start       - Start Tomcat in a separate window
+echo   stop        - Stop Tomcat
+echo   stop -help  - more options:
+echo                   (ajpid, host, home, pass, port)
 goto cleanup
 
 :startServer
