@@ -126,8 +126,8 @@ public class Handler {
     // Debug
     protected int debug=0;
     protected Log logger=null;
-    Handler next;
-    Handler prev;
+    protected Handler next;
+    protected Handler prev;
 
 
     private Object notes[]=new Object[ContextManager.MAX_NOTES];
@@ -174,11 +174,11 @@ public class Handler {
 	this.state=i;
     }
     
-    public final String getName() {
+    public String getName() {
 	return name;
     }
 
-    public final void setName(String handlerName) {
+    public void setName(String handlerName) {
         this.name=handlerName;
     }
 
@@ -330,18 +330,18 @@ public class Handler {
 
     /** Debug level for this handler.
      */
-    public final void setDebug( int d ) {
+    public void setDebug( int d ) {
 	debug=d;
     }
 
-    protected final void log( String s ) {
+    protected void log( String s ) {
 	if ( logger==null ) 
 	    contextM.log(s);
 	else 
 	    logger.log(s);
     }
 
-    protected final void log( String s, Throwable t ) {
+    protected void log( String s, Throwable t ) {
 	if(logger==null )
 	    contextM.log(s, t);
 	else

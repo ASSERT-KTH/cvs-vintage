@@ -130,8 +130,9 @@ public class Response {
     /**  Init is called from CM when the object is added
 	 to tomcat.
      */
-    void init() {
-	oBuffer=new OutputBuffer( this );
+    protected void init() {
+	oBuffer=request.getContextManager().createOutputBuffer();
+	oBuffer.setResponse( this );
     }
     
     public Object getFacade() {

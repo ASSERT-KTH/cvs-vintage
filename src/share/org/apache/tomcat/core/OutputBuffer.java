@@ -77,7 +77,7 @@ import org.apache.tomcat.util.buf.*;
  *
  * @author Costin Manolache
  */
-public final class OutputBuffer extends Writer
+public class OutputBuffer extends Writer
     implements ByteChunk.ByteOutputChannel, CharChunk.CharOutputChannel 
         // sink for conversion bytes[]
 {
@@ -107,8 +107,8 @@ public final class OutputBuffer extends Writer
     private ByteChunk bb;
     private CharChunk cb;
     
-    String enc;
-    boolean gotEnc=false;
+    private String enc;
+    private boolean gotEnc=false;
 
     private Response resp;
     private Request req;
@@ -128,7 +128,7 @@ public final class OutputBuffer extends Writer
 	cb.setLimit( size );
     }
 
-    public OutputBuffer(Response resp) {
+    private OutputBuffer(Response resp) {
 	this( DEFAULT_BUFFER_SIZE );
 	setResponse( resp );
     }
@@ -158,7 +158,7 @@ public final class OutputBuffer extends Writer
 	bb.setOffset(c);
     }
 
-    void log( String s ) {
+    protected void log( String s ) {
 	System.out.println("OutputBuffer: " + s );
     }
 
@@ -321,8 +321,8 @@ public final class OutputBuffer extends Writer
         doFlush = false;
     }
 
-    Hashtable encoders=new Hashtable();
-    C2BConverter conv;
+    protected Hashtable encoders=new Hashtable();
+    protected C2BConverter conv;
 
     public void setEncoding(String s) {
 	enc=s;
@@ -337,7 +337,7 @@ public final class OutputBuffer extends Writer
 	conv.flushBuffer();	// ???
     }
 
-    private void setConverter() {
+    protected void setConverter() {
 	if( resp!=null ) 
 	    enc = resp.getCharacterEncoding();
 	if( debug > 0 ) log("Got encoding: " + enc );

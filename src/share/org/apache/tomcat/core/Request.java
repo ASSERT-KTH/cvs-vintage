@@ -238,7 +238,7 @@ public class Request {
 	return state;
     }
 
-    final void setState( int state ) {
+    public final void setState( int state ) {
 	this.state=state;
     }
     

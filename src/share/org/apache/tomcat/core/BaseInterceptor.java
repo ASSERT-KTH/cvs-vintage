@@ -567,7 +567,7 @@ public class BaseInterceptor
 	debug=d;
     }
 
-    public final void setContextManager( ContextManager cm ) {
+    public void setContextManager( ContextManager cm ) {
 	this.cm=cm;
 	this.ct=cm.getContainer();
     }

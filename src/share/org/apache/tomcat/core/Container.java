@@ -101,7 +101,7 @@ public class Container implements Cloneable{
     private ContextManager contextM;
 
     // The webapp including this container, if any
-    Context context;
+    private Context context;
 
     // The type of the mapping
     public static final int UNKNOWN_MAP=0;
@@ -109,14 +109,14 @@ public class Container implements Cloneable{
     public static final int PREFIX_MAP=2;
     public static final int EXTENSION_MAP=3;
     public static final int DEFAULT_MAP=4;
-    int mapType=0;
+    private int mapType=0;
 
 
     // Common map parameters ( path prefix, ext, etc)
-    String transport;
-    String path;
-    String proto;
-    String vhosts[];
+    private String transport;
+    private String path;
+    private String proto;
+    private String vhosts[];
 
     // Container attributes - it's better to use
     // notes, as the access time is much smaller
@@ -124,16 +124,16 @@ public class Container implements Cloneable{
 
     /** The handler associated with this container.
      */
-    Handler handler;
-    String handlerName;
+    private Handler handler;
+    private String handlerName;
     
     /** Security constraints associated with this Container
      */
-    String roles[]=null;
+    private String roles[]=null;
 
-    String methods[]=null;
+    private String methods[]=null;
 
-    boolean special=false;
+    private boolean special=false;
     
     public Container() {
 	initHooks();
@@ -417,9 +417,9 @@ public class Container implements Cloneable{
     public static final int H_engineInit=16;
     public static final int H_COUNT=17;
 
-    Hooks hooks=new Hooks();
-    BaseInterceptor hooksCache[][]=null;
-    BaseInterceptor allHooksCache[]=null;
+    private Hooks hooks=new Hooks();
+    private BaseInterceptor hooksCache[][]=null;
+    private BaseInterceptor allHooksCache[]=null;
 
     private void initHooks() {
 	hooks.registerHook( "postReadRequest", H_postReadRequest );
@@ -536,7 +536,7 @@ public class Container implements Cloneable{
     }
 
     // debug
-    public static final int dL=0;
+    private static final int dL=0;
     private void debug( String s ) {
 	System.out.println("Container: " + s );
     }

@@ -144,7 +144,7 @@ public class ServerSession {
 	facade=o;
     }
     
-    public int getState() {
+    public final int getState() {
 	return state;
     }
 
@@ -159,6 +159,10 @@ public class ServerSession {
 				      this,  state);
 	    }
 	}
+	this.state=state;
+    }
+
+    protected void setState1( int state ) {
 	this.state=state;
     }
 
