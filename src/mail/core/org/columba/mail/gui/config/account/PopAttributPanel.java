@@ -13,14 +13,10 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.config.account;
 
-/*
- * PopAttributPanel.java
- *
- * Created on 2. November 2000, 00:12
- */
-
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -124,9 +120,7 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 
 			item.set("download_limit", limitMessageDownloadTextField.getText());
 
-			item.set(
-				"enable_download_limit",
-				limitMessageDownloadCheckBox.isSelected());
+			item.set("enable_download_limit", limitMessageDownloadCheckBox.isSelected());
 			
 			item.set("enable_pop3preprocessingfilter", enablePreProcessingFilterCheckBox.isSelected());
 		}
@@ -192,14 +186,14 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		//$NON-NLS-1$
 		limitMessageDownloadPanel.add(limitMessageDownloadCheckBox);
 		limitMessageDownloadPanel.add(
-			Box.createRigidArea(new java.awt.Dimension(5, 0)));
+			Box.createRigidArea(new Dimension(5, 0)));
 
 		limitMessageDownloadTextField = new JTextField(5);
 		limitMessageDownloadTextField.setEnabled(true);
 		limitMessageDownloadTextField.setText("18");
 		limitMessageDownloadPanel.add(limitMessageDownloadTextField);
 		limitMessageDownloadPanel.add(
-			Box.createRigidArea(new java.awt.Dimension(5, 0)));
+			Box.createRigidArea(new Dimension(5, 0)));
 
 		limitMessageDownloadLabel2 = new JLabel();
 		limitMessageDownloadLabel2.setEnabled(true);
@@ -232,16 +226,22 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		add(excludeCheckBox);
 
 		enablePreProcessingFilterCheckBox =
-			new JCheckBox("Enable Pre-Processing Filter");
+			new JCheckBox(MailResourceLoader.getString(
+                                        "dialog",
+                                        "account",
+                                        "enable_pop3_preprocessing"));
 
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
 
 		filterPanel.add(enablePreProcessingFilterCheckBox);
 
-		filterPanel.add(Box.createRigidArea(new java.awt.Dimension(5, 0)));
+		filterPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
-		configurePreProcessingFilterButton = new JButton("Configure...");
+		configurePreProcessingFilterButton = new JButton(MailResourceLoader.getString(
+                                                                "dialog",
+                                                                "account",
+                                                                "configure"));
 		configurePreProcessingFilterButton.setActionCommand("CONFIGURE_FILTER");
 		configurePreProcessingFilterButton.addActionListener(this);
 
@@ -254,7 +254,6 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		layout.setConstraints(filterPanel, c);
 		add(filterPanel);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -269,7 +268,5 @@ public class PopAttributPanel extends JPanel implements ActionListener {
 
 			new org.columba.mail.gui.config.pop3preprocessor.ConfigFrame(dialog, list);
 		}
-
 	}
-
 }
