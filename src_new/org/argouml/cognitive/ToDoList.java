@@ -1,4 +1,4 @@
-// $Id: ToDoList.java,v 1.25 2005/01/09 14:58:04 linus Exp $
+// $Id: ToDoList.java,v 1.26 2005/02/16 23:47:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,6 @@ import org.apache.log4j.Logger;
 
 import org.argouml.cognitive.critics.Critic;
 
-import org.tigris.gef.util.VectorSet;
 
 /**
  * Implements a list of ToDoItem's.<p>
@@ -82,9 +81,9 @@ public class ToDoList extends Observable implements Runnable, Serializable {
     private Vector items;
 
     /** These are computed when needed. */
-    private VectorSet allOffenders;
+    private ListSet allOffenders;
     /** These are computed when needed. */
-    private VectorSet allPosters;
+    private ListSet allPosters;
 
     /**
      * ToDoItems that the designer has explicitly indicated that (s)he
@@ -329,13 +328,13 @@ public class ToDoList extends Observable implements Runnable, Serializable {
     /**
      * @return the set of offenders
      */
-    public VectorSet getOffenders() {
+    public ListSet getOffenders() {
         // Extra care to be taken since _allOffenders can be reset while
         // this method is running.
-        VectorSet all = allOffenders;
+        ListSet all = allOffenders;
         if (all == null) {
             int size = items.size();
-            all = new VectorSet(size * 2);
+            all = new ListSet(size * 2);
             for (int i = 0; i < size; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
                 all.addAllElements(item.getOffenders());
@@ -345,7 +344,7 @@ public class ToDoList extends Observable implements Runnable, Serializable {
         return all;
     }
 
-    private void addOffenders(VectorSet newoffs) {
+    private void addOffenders(ListSet newoffs) {
         if (allOffenders != null) {
             allOffenders.addAllElements(newoffs);
 	}
@@ -354,13 +353,13 @@ public class ToDoList extends Observable implements Runnable, Serializable {
     /**
      * @return the set of all the posters
      */
-    public VectorSet getPosters() {
+    public ListSet getPosters() {
         // Extra care to be taken since _allPosters can be reset while
         // this method is running.
-        VectorSet all = allPosters;
+        ListSet all = allPosters;
         if (all == null) {
             int size = items.size();
-            all = new VectorSet();
+            all = new ListSet();
             for (int i = 0; i < size; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
                 all.addElement(item.getPoster());

@@ -1,4 +1,4 @@
-// $Id: ToDoByOffender.java,v 1.13 2005/01/09 14:58:05 linus Exp $
+// $Id: ToDoByOffender.java,v 1.14 2005/02/16 23:47:12 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,7 +32,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoListEvent;
 import org.argouml.cognitive.ToDoListListener;
-import org.tigris.gef.util.VectorSet;
+import org.argouml.cognitive.ListSet;
 
 /**
  * Represents a perspective for ToDo items: grouping by offender type.
@@ -65,7 +65,7 @@ public class ToDoByOffender extends ToDoPerspective
         Object[] path = new Object[2];
         path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.theDesigner().getToDoList()
+        ListSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {
@@ -74,7 +74,7 @@ public class ToDoByOffender extends ToDoPerspective
             int nMatchingItems = 0;
             for (int i = 0; i < nItems; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
-                VectorSet offenders = item.getOffenders();
+                ListSet offenders = item.getOffenders();
                 if (!offenders.contains(off)) continue;
                 nMatchingItems++;
             }
@@ -84,7 +84,7 @@ public class ToDoByOffender extends ToDoPerspective
             nMatchingItems = 0;
             for (int i = 0; i < nItems; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
-                VectorSet offenders = item.getOffenders();
+                ListSet offenders = item.getOffenders();
                 if (!offenders.contains(off)) continue;
                 childIndices[nMatchingItems] = getIndexOfChild(off, item);
                 children[nMatchingItems] = item;
@@ -104,7 +104,7 @@ public class ToDoByOffender extends ToDoPerspective
         Object[] path = new Object[2];
         path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.theDesigner().getToDoList()
+        ListSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {
@@ -113,7 +113,7 @@ public class ToDoByOffender extends ToDoPerspective
             int nMatchingItems = 0;
             for (int i = 0; i < nItems; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
-                VectorSet offenders = item.getOffenders();
+                ListSet offenders = item.getOffenders();
                 if (!offenders.contains(off)) continue;
                 nMatchingItems++;
             }
@@ -123,7 +123,7 @@ public class ToDoByOffender extends ToDoPerspective
             nMatchingItems = 0;
             for (int i = 0; i < nItems; i++) {
                 ToDoItem item = (ToDoItem) items.elementAt(i);
-                VectorSet offenders = item.getOffenders();
+                ListSet offenders = item.getOffenders();
                 if (!offenders.contains(off)) continue;
                 childIndices[nMatchingItems] = getIndexOfChild(off, item);
                 children[nMatchingItems] = item;
@@ -143,7 +143,7 @@ public class ToDoByOffender extends ToDoPerspective
         Object[] path = new Object[2];
         path[0] = Designer.theDesigner().getToDoList();
 
-        VectorSet allOffenders = Designer.theDesigner().getToDoList()
+        ListSet allOffenders = Designer.theDesigner().getToDoList()
                 .getOffenders();
         Enumeration elems = allOffenders.elements();
         while (elems.hasMoreElements()) {

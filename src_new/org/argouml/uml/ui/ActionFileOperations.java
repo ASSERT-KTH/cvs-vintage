@@ -1,4 +1,4 @@
-// $Id: ActionFileOperations.java,v 1.25 2005/02/09 20:41:36 mvw Exp $
+// $Id: ActionFileOperations.java,v 1.26 2005/02/16 23:47:21 bobtarling Exp $
 // Copyright (c) 2004-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -263,11 +263,6 @@ public abstract class ActionFileOperations extends AbstractAction {
                         "An error occured attempting to load the project.",
                         ex);
             dialog.setVisible(true);
-//            JOptionPane.showMessageDialog(
-//                      ProjectBrowser.getInstance(),
-//                      message,
-//                      "Error",
-//                      JOptionPane.ERROR_MESSAGE);
         } else {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);

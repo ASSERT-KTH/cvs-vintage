@@ -1,4 +1,4 @@
-// $Id: Designer.java,v 1.37 2005/01/11 21:03:33 mvw Exp $
+// $Id: Designer.java,v 1.38 2005/02/16 23:47:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -39,7 +39,6 @@ import org.argouml.cognitive.critics.Agency;
 import org.argouml.cognitive.critics.Critic;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationEmpty;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * This class models the designer who is building a complex design in
@@ -647,7 +646,7 @@ public class Designer
      * @see org.argouml.cognitive.Poster#expand(java.lang.String,
      * org.tigris.gef.util.VectorSet)
      */
-    public String expand(String desc, VectorSet offs) { return desc; }
+    public String expand(String desc, ListSet offs) { return desc; }
 
     /**
      * Get the generic clarifier for this designer/poster.

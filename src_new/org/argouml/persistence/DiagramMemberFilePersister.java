@@ -1,4 +1,4 @@
-// $Id: DiagramMemberFilePersister.java,v 1.6 2005/01/24 23:15:57 bobtarling Exp $
+// $Id: DiagramMemberFilePersister.java,v 1.7 2005/02/16 23:47:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -40,6 +40,7 @@ import org.argouml.uml.diagram.ProjectMemberDiagram;
 import org.tigris.gef.ocl.ExpansionException;
 import org.tigris.gef.ocl.OCLExpander;
 import org.tigris.gef.ocl.TemplateReader;
+import org.xml.sax.SAXException;
 
 /**
  * The file persister for the diagram members.
@@ -81,6 +82,8 @@ public class DiagramMemberFilePersister extends MemberFilePersister {
             } else {
                 LOG.error("An error occurred while loading PGML");
             }
+        } catch (SAXException e) {
+            throw new OpenException(e);
         } catch (IOException e) {
             throw new OpenException(e);
         }

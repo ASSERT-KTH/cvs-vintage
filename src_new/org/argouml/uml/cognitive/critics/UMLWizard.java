@@ -1,4 +1,4 @@
-// $Id: UMLWizard.java,v 1.7 2005/02/13 12:55:15 mvw Exp $
+// $Id: UMLWizard.java,v 1.8 2005/02/16 23:47:08 bobtarling Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,9 +26,9 @@
 package org.argouml.uml.cognitive.critics;
 
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
-import org.tigris.gef.util.VectorSet;
 
 
 /**
@@ -67,7 +67,7 @@ public abstract class UMLWizard extends Wizard {
     public Object getModelElement() {
         if (getToDoItem() != null) {
             ToDoItem item = (ToDoItem) getToDoItem();
-            VectorSet offs = item.getOffenders();
+            ListSet offs = item.getOffenders();
             if (offs.size() >= 1) {
                 Object me = /*(MModelElement)*/ offs.elementAt(0);
                 return me;

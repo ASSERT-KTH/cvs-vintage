@@ -1,4 +1,4 @@
-// $Id: CompoundCritic.java,v 1.11 2005/01/09 14:58:05 linus Exp $
+// $Id: CompoundCritic.java,v 1.12 2005/02/16 23:47:19 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,7 @@ import org.argouml.cognitive.Decision;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
 import org.argouml.cognitive.ToDoItem;
-import org.tigris.gef.util.VectorSet;
+import org.argouml.cognitive.ListSet;
 
 /**
  * A CompoundCritic acts like a regular critic in that it checks the
@@ -230,7 +230,7 @@ public class CompoundCritic extends Critic {
      * @see org.argouml.cognitive.Poster#expand(java.lang.String,
      * org.tigris.gef.util.VectorSet)
      */
-    public String expand(String desc, VectorSet offs) {
+    public String expand(String desc, ListSet offs) {
 	throw new UnsupportedOperationException();
     }
 

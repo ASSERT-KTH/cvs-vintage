@@ -1,4 +1,4 @@
-// $Id: CrNodeInstanceWithoutClassifier.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrNodeInstanceWithoutClassifier.java,v 1.16 2005/02/16 23:47:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,11 +29,11 @@ import java.util.Iterator;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * A critic to detect when there are node-instances that
@@ -59,7 +59,7 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 	    return NO_PROBLEM;
 	}
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
-	VectorSet offs = computeOffenders(dd);
+	ListSet offs = computeOffenders(dd);
 	if (offs == null) {
 	    return NO_PROBLEM;
 	}
@@ -72,7 +72,7 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
      */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) dm;
-	VectorSet offs = computeOffenders(dd);
+	ListSet offs = computeOffenders(dd);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
@@ -84,10 +84,10 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 	if (!isActive()) {
 	    return false;
 	}
-	VectorSet offs = i.getOffenders();
+	ListSet offs = i.getOffenders();
 	UMLDeploymentDiagram dd = (UMLDeploymentDiagram) offs.firstElement();
 	//if (!predicate(dm, dsgr)) return false;
-	VectorSet newOffs = computeOffenders(dd);
+	ListSet newOffs = computeOffenders(dd);
 	boolean res = offs.equals(newOffs);
 	return res;
     }
@@ -101,10 +101,10 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
      * @param dd the diagram to check
      * @return the set of offenders
      */
-    public VectorSet computeOffenders(UMLDeploymentDiagram dd) {
+    public ListSet computeOffenders(UMLDeploymentDiagram dd) {
 	Collection figs = dd.getLayer().getContents(null);
         Iterator figIter = figs.iterator();
-	VectorSet offs = null;
+	ListSet offs = null;
 	while (figIter.hasNext()) {
 	    Object obj = figIter.next();
 	    if (!(obj instanceof FigMNodeInstance)) {
@@ -120,7 +120,7 @@ public class CrNodeInstanceWithoutClassifier extends CrUML {
 		    }
 		}
 		if (offs == null) {
-		    offs = new VectorSet();
+		    offs = new ListSet();
 		    offs.addElement(dd);
 		}
 		offs.addElement(fn);

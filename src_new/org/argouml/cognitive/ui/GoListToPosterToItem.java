@@ -1,4 +1,4 @@
-// $Id: GoListToPosterToItem.java,v 1.14 2005/01/09 14:58:05 linus Exp $
+// $Id: GoListToPosterToItem.java,v 1.15 2005/02/16 23:47:12 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,7 @@ import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
-import org.tigris.gef.util.VectorSet;
+import org.argouml.cognitive.ListSet;
 
 
 
@@ -87,7 +87,7 @@ public class GoListToPosterToItem extends AbstractGoList {
      * @return the children
      */
     public Vector getChildren(Object parent) {
-	VectorSet allPosters =
+	ListSet allPosters =
 	    Designer.theDesigner().getToDoList().getPosters();
 	if (parent instanceof ToDoList) {
 	    return allPosters.asVector();

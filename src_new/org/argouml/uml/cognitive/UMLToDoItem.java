@@ -1,4 +1,4 @@
-// $Id: UMLToDoItem.java,v 1.7 2005/01/09 14:58:34 linus Exp $
+// $Id: UMLToDoItem.java,v 1.8 2005/02/16 23:47:09 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,6 +37,7 @@ import java.util.Iterator;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Poster;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.kernel.Project;
 import org.argouml.kernel.ProjectManager;
@@ -46,7 +47,6 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.tigris.gef.base.Globals;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.gef.ui.Highlightable;
-import org.tigris.gef.util.VectorSet;
 
 
 /**
@@ -72,7 +72,7 @@ public class UMLToDoItem extends ToDoItem {
      * @param offs the offenders
      */
     public UMLToDoItem(Poster poster, String h, int p, String d, String m,
-    VectorSet offs) {
+    ListSet offs) {
         super(poster, h, p, d, m, offs);
     }
 
@@ -107,7 +107,7 @@ public class UMLToDoItem extends ToDoItem {
      * @param offs the offenders
      * @param dsgr the designer
      */
-    public UMLToDoItem(Critic c, VectorSet offs, Designer dsgr) {
+    public UMLToDoItem(Critic c, ListSet offs, Designer dsgr) {
         super(c, offs, dsgr);
     }
 

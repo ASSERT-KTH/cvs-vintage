@@ -1,4 +1,4 @@
-// $Id: GoListToOffenderToItem.java,v 1.15 2005/01/09 14:58:05 linus Exp $
+// $Id: GoListToOffenderToItem.java,v 1.16 2005/02/16 23:47:12 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,8 +33,8 @@ import javax.swing.tree.TreePath;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
 import org.argouml.cognitive.ToDoList;
+import org.argouml.cognitive.ListSet;
 import org.argouml.uml.PredicateNotInTrash;
-import org.tigris.gef.util.VectorSet;
 
 
 /**
@@ -93,7 +93,7 @@ public class GoListToOffenderToItem extends AbstractGoList {
      * @return the children
      */
     public Vector getChildren(Object parent) {
-        VectorSet allOffenders = new VectorSet();
+        ListSet allOffenders = new ListSet();
         allOffenders.addAllElementsSuchThat(Designer.theDesigner()
             .getToDoList().getOffenders(),
             getListPredicate());
@@ -109,7 +109,7 @@ public class GoListToOffenderToItem extends AbstractGoList {
 	    Enumeration elems = list.elements();
 	    while (elems.hasMoreElements()) {
 		ToDoItem item = (ToDoItem) elems.nextElement();
-		VectorSet offs = new VectorSet();
+		ListSet offs = new ListSet();
                 offs.addAllElementsSuchThat(item.getOffenders(),
                     getListPredicate());
 		if (offs.contains(parent)) res.addElement(item);

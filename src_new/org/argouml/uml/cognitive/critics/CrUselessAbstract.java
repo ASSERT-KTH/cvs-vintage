@@ -1,4 +1,4 @@
-// $Id: CrUselessAbstract.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.16 2005/02/16 23:47:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -24,7 +24,7 @@
 
 
 
-// $Id: CrUselessAbstract.java,v 1.15 2005/01/30 20:47:39 linus Exp $
+// $Id: CrUselessAbstract.java,v 1.16 2005/02/16 23:47:08 bobtarling Exp $
 package org.argouml.uml.cognitive.critics;
 
 import java.util.Enumeration;
@@ -32,10 +32,10 @@ import java.util.Vector;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.Goal;
+import org.argouml.cognitive.ListSet;
 import org.argouml.model.Model;
 import org.tigris.gef.util.ChildGenerator;
 import org.tigris.gef.util.EnumerationEmpty;
-import org.tigris.gef.util.VectorSet;
 
 /** A critic to detect when a class can never have instances (of
  *
@@ -64,8 +64,8 @@ public class CrUselessAbstract extends CrUML {
 	Object cls = /*(MClass)*/ dm;
 	if (!Model.getFacade().isAbstract(cls))
 	    return false;  // original class was not abstract
-	VectorSet derived =
-	    (new VectorSet(cls)).reachable(new ChildGenDerivedClasses());
+	ListSet derived =
+	    (new ListSet(cls)).reachable(new ChildGenDerivedClasses());
 	Enumeration subclasses = derived.elements();
 	while (subclasses.hasMoreElements()) {
 	    Object c = /*(MClass)*/ subclasses.nextElement();

@@ -1,4 +1,4 @@
-// $Id: Poster.java,v 1.7 2005/01/09 14:58:04 linus Exp $
+// $Id: Poster.java,v 1.8 2005/02/16 23:47:11 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 
-import org.tigris.gef.util.VectorSet;
 
 /**
  * Interface that defines methods required on any object that can
@@ -107,7 +106,7 @@ public interface Poster {
      * @param offs the offenders
      * @return the customized/expanded string
      */
-    String expand(String desc, VectorSet offs);
+    String expand(String desc, ListSet offs);
 
     /**
      * @return the icon shown on the todo item to show the wizard's progress

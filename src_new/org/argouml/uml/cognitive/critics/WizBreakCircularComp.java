@@ -1,4 +1,4 @@
-// $Id: WizBreakCircularComp.java,v 1.20 2005/02/13 12:55:15 mvw Exp $
+// $Id: WizBreakCircularComp.java,v 1.21 2005/02/16 23:47:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,11 +34,11 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.ui.WizStepChoice;
 import org.argouml.cognitive.ui.WizStepConfirm;
 import org.argouml.model.Model;
 import org.argouml.uml.generator.GeneratorDisplay;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * A non-modal wizard to help the user change select an association
@@ -85,7 +85,7 @@ public class WizBreakCircularComp extends UMLWizard {
 	Vector res = new Vector();
 	if (getToDoItem() != null) {
 	    ToDoItem item = (ToDoItem) getToDoItem();
-	    VectorSet offs = item.getOffenders();
+	    ListSet offs = item.getOffenders();
 	    int size = offs.size();
 	    for (int i = 0; i < size; i++) {
 		Object me = /*(MModelElement)*/ offs.elementAt(i);
@@ -170,7 +170,7 @@ public class WizBreakCircularComp extends UMLWizard {
 	LOG.debug("doAction " + oldStep);
 	int choice = -1;
 	ToDoItem item = (ToDoItem) getToDoItem();
-	VectorSet offs = item.getOffenders();
+	ListSet offs = item.getOffenders();
 	switch (oldStep) {
 	case 1:
 	    if (step1 != null) {

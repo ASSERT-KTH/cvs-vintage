@@ -1,4 +1,4 @@
-// $Id: CrUnconventionalAttrName.java,v 1.22 2005/01/30 20:47:38 linus Exp $
+// $Id: CrUnconventionalAttrName.java,v 1.23 2005/02/16 23:47:08 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,11 +28,11 @@ import javax.swing.Icon;
 
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.cognitive.ui.Wizard;
 import org.argouml.model.Model;
 import org.argouml.uml.cognitive.UMLToDoItem;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * Critic to detect whether an attribute name obeys to certain rules.<p>
@@ -118,7 +118,7 @@ public class CrUnconventionalAttrName extends AbstractCrUnconventionalName {
      */
     public ToDoItem toDoItem(Object dm, Designer dsgr) {
 	Object f = /*(MFeature)*/ dm;
-	VectorSet offs = computeOffenders(f);
+	ListSet offs = computeOffenders(f);
 	return new UMLToDoItem(this, offs, dsgr);
     }
 
@@ -126,8 +126,8 @@ public class CrUnconventionalAttrName extends AbstractCrUnconventionalName {
      * @param dm the feature
      * @return the set of offenders
      */
-    protected VectorSet computeOffenders(Object /*MFeature*/ dm) {
-	VectorSet offs = new VectorSet(dm);
+    protected ListSet computeOffenders(Object /*MFeature*/ dm) {
+	ListSet offs = new ListSet(dm);
 	offs.addElement(Model.getFacade().getOwner(dm));
 	return offs;
     }
@@ -180,12 +180,12 @@ public class CrUnconventionalAttrName extends AbstractCrUnconventionalName {
 	if (!isActive()) {
 	    return false;
 	}
-	VectorSet offs = i.getOffenders();
+	ListSet offs = i.getOffenders();
 	Object f = /*(MFeature)*/ offs.firstElement();
 	if (!predicate(f, dsgr)) {
 	    return false;
 	}
-	VectorSet newOffs = computeOffenders(f);
+	ListSet newOffs = computeOffenders(f);
 	boolean res = offs.equals(newOffs);
 	return res;
     }

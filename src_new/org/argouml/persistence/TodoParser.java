@@ -1,4 +1,4 @@
-// $Id: TodoParser.java,v 1.4 2005/01/09 14:58:08 linus Exp $
+// $Id: TodoParser.java,v 1.5 2005/02/16 23:47:10 bobtarling Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,9 +31,9 @@ import org.argouml.cognitive.Designer;
 
 import org.argouml.cognitive.ResolvedCritic;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.cognitive.ListSet;
 import org.xml.sax.SAXException;
 
-import org.tigris.gef.util.VectorSet;
 
 // TODO: Reuse the offender Vector.
 
@@ -251,7 +251,7 @@ public class TodoParser extends SAXParserBase {
 
         dsgr = Designer.theDesigner();
         item = new ToDoItem(dsgr, headline, priority, description, moreinfourl,
-                            new VectorSet());
+                            new ListSet());
         dsgr.getToDoList().addElement(item);
         //cat.debug("Added ToDoItem: " + _headline);
     }

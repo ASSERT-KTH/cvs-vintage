@@ -1,4 +1,4 @@
-// $Id: TestResolvedCritic.java,v 1.12 2005/01/09 14:59:14 linus Exp $
+// $Id: TestResolvedCritic.java,v 1.13 2005/02/16 23:47:13 bobtarling Exp $
 // Copyright (c) 2002-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,6 @@ import junit.framework.TestCase;
 
 import org.argouml.cognitive.critics.Critic;
 import org.argouml.model.Model;
-import org.tigris.gef.util.VectorSet;
 
 /**
  * Test the ResolvedCritic class.
@@ -56,7 +55,7 @@ public class TestResolvedCritic extends TestCase {
         String crString = "class org.argouml.cognitive.critics.Critic";
         ResolvedCritic rc;
         Vector vec = new Vector();
-        VectorSet set = new VectorSet();
+        ListSet set = new ListSet();
 
         /* ResolvedCritic(String, Vector) */
 
@@ -135,7 +134,7 @@ public class TestResolvedCritic extends TestCase {
 	Critic c = new Critic();
 	ResolvedCritic rc1, rc2;
 	Vector vec = new Vector();
-	VectorSet set = new VectorSet();
+	ListSet set = new ListSet();
 
 	rc1 = new ResolvedCritic("RC", null);
 	rc2 = new ResolvedCritic("RC", null);
