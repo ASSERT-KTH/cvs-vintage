@@ -28,7 +28,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.columba.addressbook.gui.util.LabelTextFieldPanel;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 
 public class AddressPanel extends JPanel {

@@ -18,7 +18,6 @@ package org.columba.addressbook.folder;
 import java.util.logging.Logger;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 
 

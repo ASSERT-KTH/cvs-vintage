@@ -36,7 +36,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.core.gui.util.ImageLoader;
 

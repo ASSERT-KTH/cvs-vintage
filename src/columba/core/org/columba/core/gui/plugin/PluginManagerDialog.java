@@ -62,7 +62,6 @@ import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
 import org.columba.core.util.GlobalResourceLoader;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.util.MailResourceLoader;
 
 /**
  * @author fdietz
@@ -237,14 +236,14 @@ implements ActionListener, TreeSelectionListener {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        JButton closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        JButton closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "close"));
         closeButton.setActionCommand("CLOSE");
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "help"));
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);
         getContentPane().add(bottomPanel, BorderLayout.SOUTH);

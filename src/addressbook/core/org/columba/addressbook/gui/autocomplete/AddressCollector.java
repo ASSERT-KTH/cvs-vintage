@@ -95,7 +95,7 @@ public class AddressCollector implements ItemProvider, IAddressCollector {
 		return _adds.keySet().toArray();
 	}
 
-	public HeaderItem getHeaderItem(String add) {
+	public IHeaderItem getHeaderItem(String add) {
 		return (HeaderItem) _adds.get(add);
 	}
 

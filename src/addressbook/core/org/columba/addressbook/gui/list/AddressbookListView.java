@@ -18,8 +18,6 @@ package org.columba.addressbook.gui.list;
 import javax.swing.BorderFactory;
 import javax.swing.JList;
 
-import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 

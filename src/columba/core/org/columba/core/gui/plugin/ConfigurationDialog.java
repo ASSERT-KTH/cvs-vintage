@@ -39,7 +39,7 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginLoadingFailedException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ConfigPluginHandler;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * @author frd
@@ -91,19 +91,19 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        okButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "ok"));
+        okButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "ok"));
         okButton.setActionCommand("OK");
         okButton.addActionListener(this);
         buttonPanel.add(okButton);
 
-        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "cancel"));
+        ButtonWithMnemonic cancelButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "cancel"));
         cancelButton.setActionCommand("CANCEL");
         cancelButton.addActionListener(this);
         buttonPanel.add(cancelButton);
-        helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "help"));
         buttonPanel.add(helpButton);
 
         bottomPanel.add(buttonPanel, BorderLayout.EAST);

@@ -56,7 +56,7 @@ import org.columba.core.help.HelpManager;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ExternalToolsPluginHandler;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 /**
@@ -199,14 +199,14 @@ public class ExternalToolsDialog extends JDialog implements ActionListener,
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 6, 0));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "close"));
+        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "close"));
         closeButton.setActionCommand("CLOSE"); //$NON-NLS-1$
         closeButton.addActionListener(this);
         buttonPanel.add(closeButton);
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(MailResourceLoader.getString(
-                    "global", "help"));
+        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(GlobalResourceLoader.getString(
+                    "global", "global", "help"));
 
         buttonPanel.add(helpButton);
         bottomPanel.add(buttonPanel, BorderLayout.EAST);

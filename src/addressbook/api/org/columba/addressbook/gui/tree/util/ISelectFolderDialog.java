@@ -17,7 +17,7 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.tree.util;
 
-import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.IFolder;
 
 /**
  * @author fdietz
@@ -26,7 +26,7 @@ import org.columba.addressbook.folder.AbstractFolder;
 public interface ISelectFolderDialog {
 	boolean success();
 
-	AbstractFolder getSelectedFolder();
+	IFolder getSelectedFolder();
 
 	int getUid();
 }

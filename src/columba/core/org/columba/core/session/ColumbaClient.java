@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 
-import org.apache.commons.cli.CommandLine;
 import org.columba.core.main.VersionInfo;
 
 /**

@@ -69,11 +69,11 @@ public abstract class Command {
 
 	protected Lock[] folderLocks;
 
-	private DefaultCommandReference reference;
+	private ICommandReference reference;
 
 	protected FrameMediator frameMediator;
 
-	public Command(DefaultCommandReference reference) {
+	public Command(ICommandReference reference) {
 		this.reference = reference;
 
 		commandType = NORMAL_OPERATION;
@@ -81,7 +81,7 @@ public abstract class Command {
 	}
 
 	public Command(FrameMediator frameMediator,
-			DefaultCommandReference reference) {
+			ICommandReference reference) {
 		this.reference = reference;
 		this.frameMediator = frameMediator;
 
@@ -168,7 +168,7 @@ public abstract class Command {
 		this.timeStamp = timeStamp;
 	}
 
-	public DefaultCommandReference getReference() {
+	public ICommandReference getReference() {
 		return reference;
 	}
 

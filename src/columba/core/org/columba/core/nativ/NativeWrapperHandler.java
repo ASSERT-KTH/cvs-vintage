@@ -29,7 +29,6 @@ import org.columba.core.gui.util.ErrorDialog;
 import org.columba.core.main.Main;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.OSInfo;
-import org.columba.mail.gui.action.ReceiveSendAction;
 
 /**
  * Native code wrapper. Based on the OS the appropriate native code handler is
@@ -129,8 +128,6 @@ public class NativeWrapperHandler implements NativeWrapper {
 			menu
 					.add(new CMenuItem(new OpenNewAddressbookWindowAction(
 							mediator)));
-			menu.addSeparator();
-			menu.add(new CMenuItem(new ReceiveSendAction(mediator)));
 			menu.addSeparator();
 			menu.add(new CMenuItem(new AboutDialogAction(mediator)));
 			menu.add(new CMenuItem(new ShowHelpAction(mediator)));

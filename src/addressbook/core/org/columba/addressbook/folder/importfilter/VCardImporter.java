@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.parser.VCardParser;
 

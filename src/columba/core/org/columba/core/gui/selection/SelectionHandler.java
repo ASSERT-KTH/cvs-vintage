@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 
 /**
  * Handles the selection of a component identified with an id.
@@ -69,7 +69,7 @@ public abstract class SelectionHandler {
 	 * @param l
 	 *            selectionlistener
 	 */
-	public void addSelectionListener(SelectionListener l) {
+	public void addSelectionListener(ISelectionListener l) {
 		selectionListener.add(l);
 	}
 
@@ -83,7 +83,7 @@ public abstract class SelectionHandler {
 	 */
 	protected void fireSelectionChanged(SelectionChangedEvent e) {
 		for (Iterator it = selectionListener.iterator(); it.hasNext();) {
-			((SelectionListener) it.next()).selectionChanged(e);
+			((ISelectionListener) it.next()).selectionChanged(e);
 		}
 	}
 
@@ -92,7 +92,7 @@ public abstract class SelectionHandler {
 	 * 
 	 * @return current selection
 	 */
-	public abstract DefaultCommandReference getSelection();
+	public abstract ICommandReference getSelection();
 
 	/**
 	 * Set new selection.
@@ -100,5 +100,5 @@ public abstract class SelectionHandler {
 	 * @param selection
 	 *            new selection
 	 */
-	public abstract void setSelection(DefaultCommandReference selection);
+	public abstract void setSelection(ICommandReference selection);
 }

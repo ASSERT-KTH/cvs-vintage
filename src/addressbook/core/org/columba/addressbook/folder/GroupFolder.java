@@ -20,7 +20,6 @@ package org.columba.addressbook.folder;
 import javax.swing.ImageIcon;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.Group;

@@ -31,8 +31,8 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.javaprog.ui.wizard.DataModel;
 
 import org.columba.core.externaltools.AbstractExternalToolsPlugin;
+import org.columba.core.gui.util.URLLabel;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.URLLabel;
 
 
 /**

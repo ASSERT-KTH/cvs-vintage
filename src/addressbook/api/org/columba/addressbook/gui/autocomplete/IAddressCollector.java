@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.autocomplete;
 
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IHeaderItem;
 import org.frapuccino.addresscombobox.ItemProvider;
 
@@ -38,7 +37,7 @@ public interface IAddressCollector extends ItemProvider {
 
 	Object[] getAddresses();
 
-	HeaderItem getHeaderItem(String add);
+	IHeaderItem getHeaderItem(String add);
 
 	void clear();
 

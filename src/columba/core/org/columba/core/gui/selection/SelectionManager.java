@@ -17,7 +17,7 @@ package org.columba.core.gui.selection;
 
 import java.util.Hashtable;
 
-import org.columba.core.command.DefaultCommandReference;
+import org.columba.core.command.ICommandReference;
 
 /**
  * Manages selection handling of a complete frame which can have many different
@@ -69,7 +69,7 @@ public class SelectionManager {
 	 * @param l
 	 *            listener interested in selection changes
 	 */
-	public void registerSelectionListener(String id, SelectionListener l) {
+	public void registerSelectionListener(String id, ISelectionListener l) {
 		SelectionHandler h = ((SelectionHandler) selectionHandler.get(id));
 
 		h.addSelectionListener(l);
@@ -83,7 +83,7 @@ public class SelectionManager {
 	 * @param selection
 	 *            new selection for this handler
 	 */
-	public void setSelection(String id, DefaultCommandReference selection) {
+	public void setSelection(String id, ICommandReference selection) {
 		((SelectionHandler) selectionHandler.get(id)).setSelection(selection);
 	}
 
@@ -94,7 +94,7 @@ public class SelectionManager {
 	 *            ID of selection handler
 	 * @return reference of current selection of this handler
 	 */
-	public DefaultCommandReference getSelection(String id) {
+	public ICommandReference getSelection(String id) {
 		return ((SelectionHandler) selectionHandler.get(id)).getSelection();
 	}
 

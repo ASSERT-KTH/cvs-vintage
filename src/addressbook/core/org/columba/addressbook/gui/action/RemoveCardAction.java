@@ -26,7 +26,6 @@ import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;

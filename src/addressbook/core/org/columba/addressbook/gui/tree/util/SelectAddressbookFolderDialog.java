@@ -39,9 +39,9 @@ import javax.swing.tree.TreePath;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.config.FolderItem;
-import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
+import org.columba.addressbook.folder.IFolder;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.util.ButtonWithMnemonic;
@@ -59,7 +59,7 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 	private JButton[] buttons;
 
 	//private TreeView treeViewer;
-	private AbstractFolder selectedFolder;
+	private IFolder selectedFolder;
 
 	private TreeModel model;
 
@@ -148,7 +148,7 @@ public class SelectAddressbookFolderDialog extends JDialog implements
 		return bool;
 	}
 
-	public AbstractFolder getSelectedFolder() {
+	public IFolder getSelectedFolder() {
 		return selectedFolder;
 	}
 

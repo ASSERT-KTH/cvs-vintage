@@ -36,7 +36,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IHeaderItem;
 
 

@@ -15,51 +15,50 @@
 //All Rights Reserved.
 package org.columba.core.gui;
 
-import org.columba.mail.command.FolderCommandReference;
-
+import org.columba.core.command.ICommandReference;
 
 /**
- * @author frd
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Manages the clipboard access.
+ * 
+ * @author fdietz
  */
 public class ClipboardManager {
-    public static final int CUT_ACTION = 0;
-    public static final int COPY_ACTION = 1;
-    protected FolderCommandReference messageSelection;
-    protected int cutAction;
+	public static final int CUT_ACTION = 0;
 
-    private static ClipboardManager instance = new ClipboardManager();
-    
-    public ClipboardManager() {
-    }
-    
-    public static ClipboardManager getInstance() {
-    	return instance;
-    }
+	public static final int COPY_ACTION = 1;
 
-    public void setOperation(int op) {
-        cutAction = op;
-    }
+	protected ICommandReference selection;
 
-    public boolean isCutAction() {
-        boolean b = cutAction == CUT_ACTION;
+	protected int cutAction;
 
-        return b;
-    }
+	private static ClipboardManager instance = new ClipboardManager();
 
-    public void setMessageSelection(FolderCommandReference r) {
-        this.messageSelection = r;
-    }
+	public ClipboardManager() {
+	}
 
-    public FolderCommandReference getMessageSelection() {
-        return messageSelection;
-    }
+	public static ClipboardManager getInstance() {
+		return instance;
+	}
 
-    public void clearMessageSelection() {
-        messageSelection = null;
-    }
+	public void setOperation(int op) {
+		cutAction = op;
+	}
+
+	public boolean isCutAction() {
+		boolean b = cutAction == CUT_ACTION;
+
+		return b;
+	}
+
+	public void setSelection(ICommandReference r) {
+		this.selection = r;
+	}
+
+	public ICommandReference getSelection() {
+		return selection;
+	}
+
+	public void clearSelection() {
+		selection = null;
+	}
 }

@@ -20,15 +20,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.columba.mail.filter.FilterAction;
-import org.columba.mail.folder.virtual.VirtualFolder;
 
 /**
  * Special type of {@link Command}which is used for a set of different
  * commands.
- * <p>
- * This is used by {@link FilterAction}and {@link VirtualFolder}to execute
- * commands, which work on a set of references.
  * 
  * @author tstich, fdietz
  */

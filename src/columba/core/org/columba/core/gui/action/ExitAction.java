@@ -22,7 +22,6 @@ import javax.swing.KeyStroke;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;

@@ -11,7 +11,8 @@
  <action name="ReceiveMenu" singleton="true" class="org.columba.mail.mailchecking.FetchMessageSubMenu"/>
  <action name="ManageServerMenu" singleton="true" class="org.columba.mail.pop3.menu.ManageServerSubMenu"/>
  <action name="SaveMessageSourceAs" class="org.columba.mail.gui.table.action.SaveMessageSourceAsAction"/>
- 
+ <action name="Print" class="org.columba.mail.gui.action.PrintAction"/> 
+  
  <!-- edit menu -->
  <action name="SearchMessage" class="org.columba.mail.gui.action.SearchMessageAction"/> 
  <action name="MailAccount" class="org.columba.mail.gui.action.MailAccountAction"/>

@@ -21,8 +21,8 @@ import java.net.URL;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
+import org.columba.core.gui.util.URLController;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.URLController;
 
 
 /**

@@ -15,7 +15,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.gui.list;
 
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IHeaderItem;
 
 

@@ -15,34 +15,20 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003.
 //
 //All Rights Reserved.
-package org.columba.addressbook.folder;
+package org.columba.addressbook.facade;
 
-import java.util.EventListener;
+
+import javax.swing.JFrame;
+
+import org.columba.addressbook.gui.ISelectAddressDialog;
+import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
+import org.columba.addressbook.model.IHeaderItemList;
 
 /**
- * 
- * Clients can attach implementations of this interface to a folder in order to
- * get notified on folder changes.
- * 
  * @author fdietz
+ *
  */
-public interface FolderListener extends EventListener{
-
-	/**
-	 * Called when a item has been added to a folder.
-	 */
-	void itemAdded(FolderEvent e);
-
-	/**
-	 * Called when a item has been removed from a folder.
-	 */
-	void itemRemoved(FolderEvent e);
-
-	/**
-	 * Called when a item has been changed.
-	 * 
-	 * @param e
-	 */
-	void itemChanged(FolderEvent e);
-
+public interface IDialogFacade {
+	 ISelectFolderDialog getSelectFolderDialog();
+	 ISelectAddressDialog getSelectAddressDialog(JFrame frame, IHeaderItemList[] listArray);
 }

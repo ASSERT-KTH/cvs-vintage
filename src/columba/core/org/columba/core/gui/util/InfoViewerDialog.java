@@ -45,104 +45,106 @@ import javax.swing.text.html.StyleSheet;
 
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 /**
  * Dialg showing information to the user. This can be either a URL to document
  * or a string.
- *
+ * 
  * @author fdietz
  */
 public class InfoViewerDialog extends JDialog implements ActionListener {
-    protected JButton helpButton;
-    protected JButton closeButton;
-    protected JTextPane textPane;
+	protected JButton helpButton;
 
-    /**
-     * Creates a new info dialog showing the specified string.
-     */
-    public InfoViewerDialog(String message) {
-        this();
-        HTMLEditorKit editorKit = new HTMLEditorKit();
-        StyleSheet styles = new StyleSheet();
+	protected JButton closeButton;
 
-        Font font = UIManager.getFont("Label.font");
-        String name = font.getName();
-        int size = font.getSize();
-        String css = "<style type=\"text/css\"><!--p {font-family:\"" + name +
-            "\"; font-size:\"" + size + "pt\"}--></style>";
-        styles.addRule(css);
-        editorKit.setStyleSheet(styles);
+	protected JTextPane textPane;
 
-        textPane.setEditorKit(editorKit);
-        textPane.setText(message);
-        setVisible(true);
-    }
+	/**
+	 * Creates a new info dialog showing the specified string.
+	 */
+	public InfoViewerDialog(String message) {
+		this();
+		HTMLEditorKit editorKit = new HTMLEditorKit();
+		StyleSheet styles = new StyleSheet();
 
-    /**
-     * Creates a new info dialog showing the contents of the given URL.
-     */
-    public InfoViewerDialog(URL url) throws IOException {
-        this();
-        textPane.setPage(url);
-        setVisible(true);
-    }
+		Font font = UIManager.getFont("Label.font");
+		String name = font.getName();
+		int size = font.getSize();
+		String css = "<style type=\"text/css\"><!--p {font-family:\"" + name
+				+ "\"; font-size:\"" + size + "pt\"}--></style>";
+		styles.addRule(css);
+		editorKit.setStyleSheet(styles);
 
-    /**
-     * Internal constructor used by the two public ones.
-     */
-    protected InfoViewerDialog() {
-        super(new JFrame(), "Info", true);
-        initComponents();
-        pack();
-        setLocationRelativeTo(null);
-    }
+		textPane.setEditorKit(editorKit);
+		textPane.setText(message);
+		setVisible(true);
+	}
 
-    protected void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        getContentPane().add(mainPanel);
+	/**
+	 * Creates a new info dialog showing the contents of the given URL.
+	 */
+	public InfoViewerDialog(URL url) throws IOException {
+		this();
+		textPane.setPage(url);
+		setVisible(true);
+	}
 
-        // centerpanel
-        textPane = new JTextPane();
-        textPane.setEditable(false);
+	/**
+	 * Internal constructor used by the two public ones.
+	 */
+	protected InfoViewerDialog() {
+		super(new JFrame(), "Info", true);
+		initComponents();
+		pack();
+		setLocationRelativeTo(null);
+	}
 
-        JScrollPane scrollPane = new JScrollPane(textPane);
-        scrollPane.setPreferredSize(new Dimension(450, 300));
-        scrollPane.getViewport().setBackground(Color.white);
+	protected void initComponents() {
+		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		getContentPane().add(mainPanel);
 
-        mainPanel.add(scrollPane);
+		// centerpanel
+		textPane = new JTextPane();
+		textPane.setEditable(false);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
+		JScrollPane scrollPane = new JScrollPane(textPane);
+		scrollPane.setPreferredSize(new Dimension(450, 300));
+		scrollPane.getViewport().setBackground(Color.white);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		mainPanel.add(scrollPane);
 
-        ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString("global", "close"));
-        closeButton.setActionCommand("CLOSE");
-        closeButton.addActionListener(this);
-        buttonPanel.add(closeButton);
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+		bottomPanel.setBorder(new SingleSideEtchedBorder(SwingConstants.TOP));
 
-        ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
-            MailResourceLoader.getString("global", "help"));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 6, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        //TODO (@author fdietz): associate help with button and root pane
-        buttonPanel.add(helpButton);
-        bottomPanel.add(buttonPanel, BorderLayout.EAST);
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
-        getRootPane().setDefaultButton(closeButton);
-        getRootPane().registerKeyboardAction(this, "CLOSE",
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-            JComponent.WHEN_IN_FOCUSED_WINDOW);
-    }
+		ButtonWithMnemonic closeButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "close"));
+		closeButton.setActionCommand("CLOSE");
+		closeButton.addActionListener(this);
+		buttonPanel.add(closeButton);
 
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
+		ButtonWithMnemonic helpButton = new ButtonWithMnemonic(
+				GlobalResourceLoader.getString("global", "global", "help"));
 
-        if (action.equals("CLOSE")) {
-            setVisible(false);
-        }
-    }
+		//TODO (@author fdietz): associate help with button and root pane
+		buttonPanel.add(helpButton);
+		bottomPanel.add(buttonPanel, BorderLayout.EAST);
+		getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+		getRootPane().setDefaultButton(closeButton);
+		getRootPane().registerKeyboardAction(this, "CLOSE",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+				JComponent.WHEN_IN_FOCUSED_WINDOW);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+
+		if (action.equals("CLOSE")) {
+			setVisible(false);
+		}
+	}
 }

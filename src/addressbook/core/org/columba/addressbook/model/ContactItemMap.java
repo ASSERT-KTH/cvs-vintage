@@ -38,7 +38,7 @@ public class ContactItemMap implements IContactItemMap {
 		map.put(uid, contactItem);
 	}
 	
-	public ContactItem get(Object uid) {
+	public IContactItem get(Object uid) {
 		return (ContactItem) map.get(uid);
 	}
 	

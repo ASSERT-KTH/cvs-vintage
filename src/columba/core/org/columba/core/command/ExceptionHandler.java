@@ -31,7 +31,7 @@ import java.net.UnknownServiceException;
 import java.text.MessageFormat;
 
 import org.columba.core.gui.util.ErrorDialog;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 import org.columba.ristretto.imap.IMAPDisconnectedException;
 import org.columba.ristretto.imap.IMAPException;
 import org.columba.ristretto.io.ConnectionDroppedException;
@@ -81,11 +81,11 @@ public class ExceptionHandler {
 		}
 
 		if (exception instanceof IMAPDisconnectedException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"imap_disconnected_error")
 					+ serverResponse;
 		} else {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"imap_error")
 					+ serverResponse;
 		}
@@ -103,16 +103,16 @@ public class ExceptionHandler {
 		String errorMessage = "";
 
 		if (e instanceof BindException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"bind_error");
 		} else if (e instanceof ConnectException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"connect_error");
 		} else if (e instanceof NoRouteToHostException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"no_route_to_host_error");
 		} else if (e instanceof PortUnreachableException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"port_unreachable_error");
 		}
 
@@ -129,23 +129,23 @@ public class ExceptionHandler {
 		String errorMessage = e.getMessage();
 
 		if (e instanceof ProtocolException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"protocol_error");
 		} else if (e instanceof SocketException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"socket_error");
 		} else if (e instanceof SocketTimeoutException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"socket_timeout_error");
 		} else if (e instanceof UnknownHostException) {
-			errorMessage = MessageFormat.format(MailResourceLoader.getString(
+			errorMessage = MessageFormat.format(GlobalResourceLoader.getString(
 					"dialog", "error", "unknown_host_error"), new Object[] { e
 					.getMessage() });
 		} else if (e instanceof UnknownServiceException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"unknown_service_error");
 		} else if (e instanceof ConnectionDroppedException) {
-			errorMessage = MailResourceLoader.getString("dialog", "error",
+			errorMessage = GlobalResourceLoader.getString("dialog", "error",
 					"connection_dropped_error");
 		}
 

@@ -43,7 +43,6 @@ import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.core.gui.frame.FrameModel;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.URLController;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;

@@ -23,7 +23,6 @@ import java.io.File;
 import javax.swing.JOptionPane;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.util.AddressbookResourceLoader;
 import org.columba.core.gui.frame.FrameModel;

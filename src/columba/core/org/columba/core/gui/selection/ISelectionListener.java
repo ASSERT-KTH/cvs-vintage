@@ -21,7 +21,7 @@ package org.columba.core.gui.selection;
  *
  * @author fdietz, tstich
  */
-public interface SelectionListener {
+public interface ISelectionListener {
     /**
  * Called when the selection has changed.
  *

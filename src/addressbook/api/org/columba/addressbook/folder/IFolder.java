@@ -19,9 +19,6 @@ package org.columba.addressbook.folder;
 
 import javax.swing.ImageIcon;
 
-import org.columba.addressbook.config.FolderItem;
-import org.columba.core.xml.XmlElement;
-
 /**
  * @author fdietz
  *
@@ -41,7 +38,7 @@ public interface IFolder {
 	 * 
 	 * @return FolderItem
 	 */
-	XmlElement getNode();
+	//XmlElement getNode();
 
 	/**
 	 * Sets the node.
@@ -49,7 +46,7 @@ public interface IFolder {
 	 * @param node
 	 *            The node to set
 	 */
-	void setNode(FolderItem node);
+	//void setNode(FolderItem node);
 
 	String getName();
 

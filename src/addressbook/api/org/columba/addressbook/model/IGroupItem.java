@@ -20,7 +20,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  *
  */
-public interface IGroupItem {
+public interface IGroupItem extends IHeaderItem{
 	/**
 	 * @return Returns the description.
 	 */

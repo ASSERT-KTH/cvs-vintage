@@ -17,7 +17,7 @@ package org.columba.core.gui.action;
 
 import org.columba.core.action.IMenu;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 /**
@@ -33,7 +33,7 @@ public class OpenNewWindowSubmenu extends IMenu {
  */
     public OpenNewWindowSubmenu(FrameMediator controller, String caption) {
         super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
+            GlobalResourceLoader.getString("global", "global",
                 "menu_file_opennewwindow"));
     }
 }

@@ -10,9 +10,10 @@
 	    </menu>	    
 		<separator/>
 		<extensionpoint name="top" />	
-		<menuitem action="Print"/>	
-		<menuitem action="PrintSetup"/>	
-		<separator/>
+		
+		<!--<menuitem action="PrintSetup"/>
+		<separator/>-->
+		
 		<extensionpoint name="bottom" />
                 <menuitem checkboxaction="WorkOffline"/>
 		<menuitem action="Close"/>			

@@ -25,7 +25,6 @@ import javax.swing.event.EventListenerList;
 
 import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.GroupItem;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContact;
@@ -108,7 +107,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 */
 	protected void fireItemAdded(Object uid) {
 
-		FolderEvent e = new FolderEvent(this, null);
+		IFolderEvent e = new FolderEvent(this, null);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
@@ -127,7 +126,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 */
 	protected void fireItemRemoved(Object uid) {
 
-		FolderEvent e = new FolderEvent(this, null);
+		IFolderEvent e = new FolderEvent(this, null);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 
@@ -146,7 +145,7 @@ public abstract class AbstractFolder extends AddressbookTreeNode implements
 	 */
 	protected void fireItemChanged(Object uid) {
 
-		FolderEvent e = new FolderEvent(this, null);
+		IFolderEvent e = new FolderEvent(this, null);
 		// Guaranteed to return a non-null array
 		Object[] listeners = listenerList.getListenerList();
 

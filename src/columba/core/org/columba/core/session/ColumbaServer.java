@@ -33,14 +33,12 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
-import org.columba.addressbook.main.AddressbookMain;
 import org.columba.core.main.ColumbaCmdLineParser;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.pluginhandler.ComponentPluginHandler;
 import org.columba.core.shutdown.ShutdownManager;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.main.MailMain;
 
 /**
  * Opens a server socket to manage multiple sessions of Columba

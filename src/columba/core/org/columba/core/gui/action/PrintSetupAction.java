@@ -19,18 +19,18 @@ import java.awt.event.ActionEvent;
 
 import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.frame.FrameMediator;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 public class PrintSetupAction extends AbstractColumbaAction {
     public PrintSetupAction(FrameMediator controller) {
         super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
+            GlobalResourceLoader.getString("global", "global",
                 "menu_file_printsetup"));
 
         // tooltip text
         putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
+        		GlobalResourceLoader.getString("global", "global",
                 "menu_file_printsetup").replaceAll("&", ""));
 
         setEnabled(false);

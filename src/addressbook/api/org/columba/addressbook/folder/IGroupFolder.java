@@ -17,7 +17,6 @@
 //All Rights Reserved.
 package org.columba.addressbook.folder;
 
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;

@@ -26,7 +26,7 @@ import java.util.Iterator;
 public interface IContactItemMap {
 	void add(Object uid, IContactItem contactItem);
 
-	ContactItem get(Object uid);
+	IContactItem get(Object uid);
 
 	void remove(Object uid);
 

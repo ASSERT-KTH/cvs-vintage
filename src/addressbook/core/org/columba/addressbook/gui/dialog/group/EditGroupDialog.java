@@ -47,10 +47,6 @@ import org.columba.addressbook.gui.autocomplete.DefaultAddressComboBox;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.gui.list.AddressbookListRenderer;
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
-import org.columba.addressbook.model.Group;
-import org.columba.addressbook.model.HeaderItem;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.model.IGroup;
@@ -252,7 +248,7 @@ public class EditGroupDialog extends JDialog implements ActionListener,
 				
 				for (int i = 0; i < m.length; i++) {
 					
-				    ContactItem item = l.get(m[i]);
+				    IContactItem item = l.get(m[i]);
 				    
 				    members.addElement(item);
 				}

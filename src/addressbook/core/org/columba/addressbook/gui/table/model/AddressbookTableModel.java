@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 

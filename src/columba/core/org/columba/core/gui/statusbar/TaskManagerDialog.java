@@ -55,7 +55,7 @@ import org.columba.core.gui.statusbar.event.WorkerStatusChangedEvent;
 import org.columba.core.gui.util.ButtonWithMnemonic;
 import org.columba.core.help.HelpManager;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.config.filter.FilterTransferHandler;
+
 
 /**
  * Dialog showing all running tasks.
@@ -163,7 +163,6 @@ public class TaskManagerDialog extends JDialog
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setPreferredSize(new Dimension(300, 250));
 		scrollPane.getViewport().setBackground(Color.white);
-		scrollPane.setTransferHandler(new FilterTransferHandler(scrollPane));
 		centerPanel.add(scrollPane);
 
 		mainPanel.add(centerPanel);

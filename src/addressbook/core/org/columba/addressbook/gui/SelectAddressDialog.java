@@ -40,13 +40,12 @@ import javax.swing.SwingConstants;
 import net.javaprog.ui.wizard.plaf.basic.SingleSideEtchedBorder;
 
 import org.columba.addressbook.folder.AbstractFolder;
+import org.columba.addressbook.folder.IContactFolder;
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.gui.tree.util.ISelectFolderDialog;
-import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.model.HeaderItem;
-import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IHeaderItem;
 import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.util.AddressbookResourceLoader;
@@ -468,7 +467,7 @@ public class SelectAddressDialog extends JDialog implements ActionListener, ISel
 			ISelectFolderDialog dialog = AddressbookTreeModel.getInstance()
 					.getSelectAddressbookFolderDialog();
 
-			AbstractFolder selectedFolder = dialog.getSelectedFolder();
+			IContactFolder selectedFolder = (IContactFolder) dialog.getSelectedFolder();
 
 			if (selectedFolder != null) {
 				try {

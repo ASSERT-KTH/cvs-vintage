@@ -25,7 +25,7 @@ import org.columba.addressbook.model.IContact;
  * @author fdietz
  *  
  */
-public interface IContactStorage {
+public interface IContactStorage extends IFolder{
 
 	int count();
 

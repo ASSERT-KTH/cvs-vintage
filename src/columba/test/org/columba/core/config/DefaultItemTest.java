@@ -18,12 +18,12 @@ public class DefaultItemTest extends TestCase {
  * Test for int hashCode().
  */
     public void testHashCode() {
-        DefaultItem item = new DefaultItem(new XmlElement());
+        IDefaultItem item = new DefaultItem(new XmlElement());
         item.set("boolean", false);
         item.set("badboolean", true);
         item.set("key", "value");
 
-        DefaultItem item2 = new DefaultItem(new XmlElement());
+        IDefaultItem item2 = new DefaultItem(new XmlElement());
         item2.set("boolean", false);
         item2.set("badboolean", true);
         item2.set("key", "value");
@@ -37,12 +37,12 @@ public class DefaultItemTest extends TestCase {
  * Test for boolean equals(Object)
  */
     public void testEqualsObject() {
-        DefaultItem item = new DefaultItem(new XmlElement());
+        IDefaultItem item = new DefaultItem(new XmlElement());
         item.set("boolean", false);
         item.set("badboolean", true);
         item.set("key", "value");
 
-        DefaultItem item2 = new DefaultItem(new XmlElement());
+        IDefaultItem item2 = new DefaultItem(new XmlElement());
         item2.set("boolean", false);
         item2.set("badboolean", true);
         item2.set("key", "value");
@@ -65,8 +65,8 @@ public class DefaultItemTest extends TestCase {
  * Test for clone()
  */
     public void testClone() {
-        DefaultItem item1 = new DefaultItem(new XmlElement("EL"));
-        DefaultItem item2 = (DefaultItem) item1.clone();
+        IDefaultItem item1 = new DefaultItem(new XmlElement("EL"));
+        IDefaultItem item2 = (IDefaultItem) item1.clone();
         assertEquals("The parent and the cloned object are not equal", item1,
             item2);
         assertNotSame("The parent and the cloned object are the same", item1,
@@ -86,7 +86,7 @@ public class DefaultItemTest extends TestCase {
         xml.addSubElement(new XmlElement("child2"));
 
         item1 = new DefaultItem(xml);
-        item2 = (DefaultItem) item1.clone();
+        item2 = (IDefaultItem) item1.clone();
         assertEquals("The parent and the cloned object are not equal", item1,
             item2);
         assertNotSame("The parent and the cloned object are the same", item1,
@@ -105,7 +105,7 @@ public class DefaultItemTest extends TestCase {
     
     public void testSet() {
     	XmlElement root = new XmlElement("root");
-    	DefaultItem item = new DefaultItem(root);
+    	IDefaultItem item = new DefaultItem(root);
     	item.set("sub/path", "test", "value");
     	
     	assertTrue( root.getElement("sub/path")!= null ); 

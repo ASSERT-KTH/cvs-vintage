@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import org.columba.core.gui.focus.FocusOwner;
-import org.columba.mail.gui.composer.util.UndoDocument;
 
 
 /**

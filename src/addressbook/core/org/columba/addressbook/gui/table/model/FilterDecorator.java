@@ -24,7 +24,6 @@ import java.util.List;
 import javax.swing.event.TableModelEvent;
 
 import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 

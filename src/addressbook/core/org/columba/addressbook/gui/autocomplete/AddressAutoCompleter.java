@@ -28,6 +28,7 @@ import javax.swing.JTextField;
 
 import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.IHeaderItem;
 
 
 /**
@@ -89,7 +90,7 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
         if (opts.length > 0) {
             String str = opts[0].toString();
 
-            HeaderItem item = AddressCollector.getInstance().getHeaderItem((String) opts[0]);
+            IHeaderItem item = AddressCollector.getInstance().getHeaderItem((String) opts[0]);
 
             if (item == null) {
                 item = new ContactItem();
@@ -145,7 +146,7 @@ public class AddressAutoCompleter implements KeyListener, ItemListener {
         if (event.getStateChange() == ItemEvent.SELECTED) {
             String selected = (String) _comboBox.getSelectedItem();
 
-            HeaderItem item = AddressCollector.getInstance().getHeaderItem(selected);
+            IHeaderItem item = AddressCollector.getInstance().getHeaderItem(selected);
 
             if (item == null) {
                 item = new ContactItem();

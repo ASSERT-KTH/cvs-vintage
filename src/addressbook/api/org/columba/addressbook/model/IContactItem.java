@@ -20,7 +20,7 @@ package org.columba.addressbook.model;
  * @author fdietz
  *
  */
-public interface IContactItem {
+public interface IContactItem extends IHeaderItem{
 	/**
 	 * @return Returns the address.
 	 */

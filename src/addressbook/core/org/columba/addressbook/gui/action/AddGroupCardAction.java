@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import org.columba.addressbook.folder.AddressbookFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
 import org.columba.addressbook.folder.FolderFactory;
-import org.columba.addressbook.folder.GroupFolder;
 import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;

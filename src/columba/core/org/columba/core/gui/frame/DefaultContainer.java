@@ -42,8 +42,6 @@ import org.columba.core.gui.toolbar.ColumbaToolBar;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.main.Main;
 import org.columba.core.xml.XmlElement;
-import org.columba.mail.gui.frame.AbstractMailFrameController;
-import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 /**
  * @author fdietz

@@ -22,9 +22,19 @@ import org.columba.addressbook.gui.autocomplete.AddressCollector;
 import org.columba.addressbook.gui.autocomplete.IAddressCollector;
 import org.columba.addressbook.gui.tree.AddressbookTreeModel;
 import org.columba.addressbook.model.Contact;
+import org.columba.addressbook.model.ContactItem;
+import org.columba.addressbook.model.GroupItem;
+import org.columba.addressbook.model.HeaderItem;
+import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContact;
+import org.columba.addressbook.model.IContactItem;
+import org.columba.addressbook.model.IGroupItem;
+import org.columba.addressbook.model.IHeaderItem;
+import org.columba.addressbook.model.IHeaderItemList;
 import org.columba.addressbook.model.VCARD;
 import org.columba.core.main.Main;
+import org.columba.mail.message.HeaderList;
+import org.columba.mail.message.IHeaderList;
 import org.columba.ristretto.message.Address;
 import org.columba.ristretto.parser.ParserException;
 
@@ -97,6 +107,48 @@ public final class ContactFacade implements IContactFacade{
 	 */
 	public IAddressCollector getAddressCollector() {
 		return AddressCollector.getInstance();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderItemList()
+	 */
+	public IHeaderItemList createHeaderItemList() {
+		return new HeaderItemList();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderItem()
+	 */
+	public IHeaderItem createHeaderItem() {
+		return new HeaderItem();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createContact()
+	 */
+	public IContact createContact() {
+		return new Contact();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createHeaderList()
+	 */
+	public IHeaderList createHeaderList() {
+		return new HeaderList();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createContactItem()
+	 */
+	public IContactItem createContactItem() {
+		return new ContactItem();
+	}
+
+	/**
+	 * @see org.columba.addressbook.facade.IContactFacade#createGroupItem()
+	 */
+	public IGroupItem createGroupItem() {
+		return new GroupItem();
 	}
 
 }

@@ -26,16 +26,14 @@ import javax.swing.tree.TreePath;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.IGroupFolder;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.dialog.group.EditGroupDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.TableController;
 import org.columba.addressbook.gui.tree.TreeController;
-import org.columba.addressbook.model.Contact;
-import org.columba.addressbook.model.Group;
 import org.columba.addressbook.model.IContact;
 import org.columba.addressbook.model.IGroup;
 import org.columba.addressbook.util.AddressbookResourceLoader;

@@ -18,7 +18,7 @@ package org.columba.core.config;
 import org.columba.core.xml.XmlElement;
 
 
-public class DefaultItem implements Cloneable {
+public class DefaultItem implements Cloneable, IDefaultItem {
     XmlElement root;
 
     //private Document document;
@@ -424,7 +424,7 @@ public AdapterNode addKey(
     public boolean equals(Object obj) {
         boolean equal = false;
 
-        if ((obj != null) && (obj instanceof DefaultItem)) {
+        if ((obj != null) && (obj instanceof IDefaultItem)) {
             DefaultItem other = (DefaultItem) obj;
 
             if ((root == other.root) ||

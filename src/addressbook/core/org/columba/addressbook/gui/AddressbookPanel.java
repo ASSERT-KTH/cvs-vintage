@@ -34,7 +34,6 @@ import javax.swing.event.ChangeListener;
 
 import org.columba.addressbook.gui.list.AddressbookDNDListView;
 import org.columba.addressbook.gui.list.AddressbookListModel;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.HeaderItemList;
 import org.columba.addressbook.model.IContactItemMap;
 import org.columba.addressbook.util.AddressbookResourceLoader;

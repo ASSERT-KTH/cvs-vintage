@@ -29,14 +29,14 @@ import javax.swing.table.TableColumnModel;
 
 import org.columba.addressbook.folder.AbstractFolder;
 import org.columba.addressbook.folder.AddressbookTreeNode;
-import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.FolderEvent;
 import org.columba.addressbook.folder.FolderListener;
+import org.columba.addressbook.folder.IContactStorage;
+import org.columba.addressbook.folder.IFolderEvent;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
 import org.columba.addressbook.gui.table.model.AddressbookTableModel;
 import org.columba.addressbook.gui.table.model.FilterDecorator;
 import org.columba.addressbook.gui.table.model.SortDecorator;
-import org.columba.addressbook.model.ContactItem;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.core.gui.focus.FocusManager;
 import org.columba.core.gui.focus.FocusOwner;
@@ -208,7 +208,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	/**
 	 * @see org.columba.addressbook.folder.FolderListener#itemAdded(org.columba.addressbook.folder.FolderEvent)
 	 */
-	public void itemAdded(FolderEvent e) {
+	public void itemAdded(IFolderEvent e) {
 		getAddressbookModel().update();
 
 	}
@@ -216,7 +216,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	/**
 	 * @see org.columba.addressbook.folder.FolderListener#itemChanged(org.columba.addressbook.folder.FolderEvent)
 	 */
-	public void itemChanged(FolderEvent e) {
+	public void itemChanged(IFolderEvent e) {
 		getAddressbookModel().update();
 
 	}
@@ -224,7 +224,7 @@ public class TableController implements TreeSelectionListener, FolderListener,
 	/**
 	 * @see org.columba.addressbook.folder.FolderListener#itemRemoved(org.columba.addressbook.folder.FolderEvent)
 	 */
-	public void itemRemoved(FolderEvent e) {
+	public void itemRemoved(IFolderEvent e) {
 		getAddressbookModel().update();
 
 	}

@@ -21,11 +21,10 @@ package org.columba.addressbook.gui.table;
 import java.awt.event.MouseEvent;
 
 import org.columba.addressbook.folder.AbstractFolder;
-import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.folder.GroupFolder;
+import org.columba.addressbook.folder.IContactStorage;
 import org.columba.addressbook.gui.dialog.contact.ContactDialog;
 import org.columba.addressbook.gui.frame.AddressbookFrameMediator;
-import org.columba.addressbook.model.Contact;
 import org.columba.addressbook.model.IContact;
 import org.columba.core.gui.util.DoubleClickListener;
 import org.columba.core.gui.util.ErrorDialog;

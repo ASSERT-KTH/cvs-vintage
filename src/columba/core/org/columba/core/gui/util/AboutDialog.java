@@ -51,8 +51,6 @@ import org.columba.core.io.DiskIO;
 import org.columba.core.main.Main;
 import org.columba.core.main.VersionInfo;
 import org.columba.core.util.GlobalResourceLoader;
-import org.columba.mail.gui.util.AddressLabel;
-import org.columba.mail.gui.util.URLLabel;
 
 /**
  * This dialog shows information about Columba.

@@ -29,5 +29,6 @@ public interface AddressbookServiceProvider {
 	public static final String CONFIG = PACKAGE+"IConfigFacade";
 	public static final String FOLDER = PACKAGE+"IFolderFacade";
 	public static final String PARSER = PACKAGE+"IParserFacade";
+	public static final String DIALOG = PACKAGE+"IDialogFacade";
 	
 }

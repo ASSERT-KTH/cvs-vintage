@@ -19,8 +19,6 @@ package org.columba.addressbook.gui.table.model;
 
 import javax.swing.event.TableModelListener;
 
-import org.columba.addressbook.model.ContactItem;
-import org.columba.addressbook.model.ContactItemMap;
 import org.columba.addressbook.model.IContactItem;
 import org.columba.addressbook.model.IContactItemMap;
 

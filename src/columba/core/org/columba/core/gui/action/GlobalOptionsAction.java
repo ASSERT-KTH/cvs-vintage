@@ -21,17 +21,17 @@ import org.columba.core.action.AbstractColumbaAction;
 import org.columba.core.gui.config.GeneralOptionsDialog;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.gui.util.ImageLoader;
-import org.columba.mail.util.MailResourceLoader;
+import org.columba.core.util.GlobalResourceLoader;
 
 
 public class GlobalOptionsAction extends AbstractColumbaAction {
     public GlobalOptionsAction(FrameMediator controller) {
         super(controller,
-            MailResourceLoader.getString("menu", "mainframe",
+            GlobalResourceLoader.getString("global", "global",
                 "menu_edit_generaloptions"));
 
         putValue(SHORT_DESCRIPTION,
-            MailResourceLoader.getString("menu", "mainframe",
+            GlobalResourceLoader.getString("global", "global",
                 "menu_edit_generaloptions_tooltip").replaceAll("&", ""));
 
         putValue(SMALL_ICON,
