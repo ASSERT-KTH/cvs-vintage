@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.2.txt,v 1.8 2002/05/17 13:03:46 keith Exp $
+$Id: RELEASE-NOTES-3.3.2.txt,v 1.9 2002/06/27 04:38:57 billbarker Exp $
 
 
 This document describes the changes that have been made since the
@@ -43,6 +43,10 @@ Bug No.  Description
 8092	 Fixed JSP source exposure proplem.
 
 9165	 Fix auto-detection of tomcat.install for certain 1.1.x JDKs.
+
+7654	 Make certain that the Context Classloader is set before a servlet 
+	 class is loaded.  This allows JAXP and log4j classes to be created
+	 in the constructor of the servlet, instead of in init.
 
 Jasper:
 
