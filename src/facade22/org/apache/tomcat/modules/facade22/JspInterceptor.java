@@ -601,7 +601,7 @@ class JspEngineContext1 implements JspCompilationContext {
 
     public HttpServletRequest getRequest() {
 	log("JspEngineContext1: getRequest " + req );
-        return req.getFacade();
+        return (HttpServletRequest)req.getFacade();
     }
     
 
@@ -610,7 +610,7 @@ class JspEngineContext1 implements JspCompilationContext {
      */
     public HttpServletResponse getResponse() {
 	log("JspEngineContext1: getResponse " );
-        return req.getResponse().getFacade();
+        return (HttpServletResponse)req.getResponse().getFacade();
     }
 
     /**
@@ -644,7 +644,7 @@ class JspEngineContext1 implements JspCompilationContext {
     public ServletContext getServletContext() {
 	log("JspEngineContext1: getCtx " +
 			   req.getContext().getFacade());
-        return req.getContext().getFacade();
+        return (ServletContext)req.getContext().getFacade();
     }
     
     /**
@@ -803,7 +803,8 @@ class JspEngineContext1 implements JspCompilationContext {
     public java.io.InputStream getResourceAsStream(String res)
     {
 	log("JspEngineContext1: getRAS " + res);
-        return req.getContext().getFacade().getResourceAsStream(res);
+        ServletContext sctx=(ServletContext)req.getContext().getFacade();
+	return sctx.getResourceAsStream(res);
     };
 
     /** 
