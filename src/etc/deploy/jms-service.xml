@@ -27,6 +27,7 @@
   </mbean>
 
   <!-- JMS XA Resource adapter, use this to get transacted JMS in beans -->
+<!--old configuration, see below for new choice.
   <mbean code="org.jboss.resource.ConnectionFactoryLoader"
          name="jboss.jca:service=ConnectionFactoryLoader,name=JmsXA">
     <attribute name="JndiName">JmsXA</attribute>
@@ -57,5 +58,44 @@
     <attribute name="PrincipalMappingProperties">
     </attribute>
   </mbean>
+-->
+  <!--new configuration for new ConnectionManager-->
+  <mbean code="org.jboss.resource.connectionmanager.XATxConnectionManager" name="jboss.jca:service=JmsXACM">
+    <!--make the rar deploy!-->
+    <depends>jboss.jca:service=RARDeployer</depends>
+
+    <depends optional-attribute-name="ManagedConnectionFactoryName">
+      <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=JmsXADS">
+        <!--hack till better deployment system-->
+        <depends optional-attribute-name="OldRarDeployment">jboss.jca:service=RARDeployment,name=JMS Adapter</depends>
+
+        <!--real attributes-->
+        <attribute name="ManagedConnectionFactoryProperties">
+          <properties>
+            <config-property>
+              <config-property-name>SessionDefaultType</config-property-name>
+              <config-property-type>java.lang.String</config-property-type>
+              <config-property-value>javax.jms.Topic</config-property-value>
+            </config-property>
+          </properties>
+        </attribute>
+        <attribute name="JndiName">JmsXA</attribute>
+      </mbean>
+    </depends>
+
+    <depends optional-attribute-name="ManagedConnectionPool">
+      <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool" name="jboss.jca:service=JmsXAPool">
+        <attribute name="MinSize">0</attribute>
+        <attribute name="MaxSize">50</attribute>
+        <attribute name="BlockingTimeoutMillis">5000</attribute>
+        <attribute name="IdleTimeoutMinutes">15</attribute>
+        <attribute name="Criteria">ByContainer</attribute>
+      </mbean>
+    </depends>
+    <depends optional-attribute-name="CachedConnectionManager">jboss.jca:service=CachedConnectionManager</depends>
+    <attribute name="SecurityDomainJndiName">java:/jaas/JmsXARealm</attribute>
+    <attribute name="TransactionManager">java:/TransactionManager</attribute>
+  </mbean>
+
 
 </server>
