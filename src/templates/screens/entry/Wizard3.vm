@@ -185,7 +185,6 @@ $page.setTitle("Enter issue")
  <tr>
    <th>* Reason</th>
    <td>
-   <p>
 #if ($issue.DefaultTextAttributeValue)
     Any information that did not fit within one of the attributes shown
     above can be added here.
@@ -193,8 +192,7 @@ $page.setTitle("Enter issue")
     <strong>Required</strong>Please supply a short description which will be
     useful for users receiving the new issue email.  Also any information that
     did not fit within one of the attributes shown above can be added here.
-#end 
-   </p>
+#end
 
 #set ($intakeAttachment = $intake.Attachment.setKey("_1"))
 #textAreaMedium("$intakeAttachment.DataAsString.Key" $intakeAttachment.DataAsString)
