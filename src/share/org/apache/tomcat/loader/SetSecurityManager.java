@@ -88,6 +88,7 @@ public class SetSecurityManager {
 	    Class c=Class.forName(className);
 	    Object o=c.newInstance();
 	    System.setSecurityManager((SecurityManager)o);
+	    System.out.println("Security Manager set to " + className);
 	} catch( ClassNotFoundException ex ) {
 	    System.out.println("SecurityManager Class not found: " + className);
 	    System.exit(1);

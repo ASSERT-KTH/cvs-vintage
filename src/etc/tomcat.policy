@@ -17,9 +17,9 @@ grant codeBase "file:${tomcat.home}/classes/-" {
 // By default we grant read access on webapp dir and
 // write in workdir
 grant codeBase "file:${tomcat.home}/webapps/examples" {
-      permission java.net.SocketPermission "localhost:1024-" "listen";
+      permission java.net.SocketPermission "localhost:1024-", "listen";
       permission java.util.PropertyPermission "*", "read";
-}
+};
 
 // default permissions granted to all domains
 

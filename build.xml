@@ -66,6 +66,16 @@
            deprecation="off" >
            <exclude name="**/Jdk12Interceptor.java" 
                     unless="jdk12.present"/>
+           <exclude name="**/SetSecurityManager.java" 
+                    unless="jdk12.present"/>
+           <exclude name="**/EmbededTomcat.java" 
+                    unless="jdk12.present"/>
+           <exclude name="**/PolicyInterceptor.java" 
+                    unless="jdk12.present"/>
+           <exclude name="**/JspLoader12.java" 
+                    unless="jdk12.present"/>
+           <exclude name="**/AdaptiveClassLoader12.java" 
+                    unless="jdk12.present"/>
            <exclude name="**/SSLSocketFactory.java"
                     unless="jsse.present" />
      </javac>

@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.9 2000/06/13 00:32:30 costin Exp $
- * $Revision: 1.9 $
- * $Date: 2000/06/13 00:32:30 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/runtime/JspLoader.java,v 1.10 2000/06/15 00:26:43 costin Exp $
+ * $Revision: 1.10 $
+ * $Date: 2000/06/15 00:26:43 $
  *
  * ====================================================================
  * 
@@ -84,7 +84,7 @@ import org.apache.jasper.Options;
 import org.apache.jasper.compiler.Compiler;
 
 import org.apache.tomcat.logging.Logger;
-
+import javax.servlet.http.*;
 /**
  * This is a class loader that loads JSP files as though they were
  * Java classes. It calls the compiler to compile the JSP file into a
@@ -110,12 +110,17 @@ public class JspLoader extends ClassLoader {
     /*
      * This should be factoried out
      */
-    public JspLoader(ClassLoader cl, Options options)
-    {
-	//	super(cl); // JDK 1.2 FIXME
+    public JspLoader() {
 	super();
+    }
+
+    public void setParentClassLoader( ClassLoader cl) 
+    {
 	this.parent = cl;
-        this.options = options; 
+    }
+    
+    public void setOptions( Options options) {
+	this.options = options;
     }
 
     protected synchronized Class loadClass(String name, boolean resolve)
@@ -205,21 +210,7 @@ public class JspLoader extends ClassLoader {
                  * this class using doPriviledged because the parent JSP
                  * may not have sufficient Permissions.
                  */
-                if( System.getSecurityManager() != null ) {
-                    class doInit implements PrivilegedAction {
-                        private String fileName;
-                        public doInit(String file) {
-                            fileName = file;
-                        }
-                        public Object run() {
-                            return loadClassDataFromFile(fileName);
-                        }
-                    }
-                    doInit di = new doInit(fileName);
-                    classBytes = (byte [])AccessController.doPrivileged(di);
-                } else {
-                    classBytes = loadClassDataFromFile(fileName);
-                }
+		classBytes = loadClassDataFromFile(fileName);
                 if( classBytes == null ) {
                     throw new ClassNotFoundException(Constants.getString(
                                              "jsp.error.unable.loadclass", 
@@ -238,14 +229,7 @@ public class JspLoader extends ClassLoader {
      * Just a short hand for defineClass now... I suspect we might need to
      * make this public at some point of time. 
      */
-    private final Class defClass(String className, byte[] classData) {
-        // If a SecurityManager is being used, set the ProtectionDomain
-        // for this clas when it is defined.
-        Object pd = options.getProtectionDomain();
-        if( pd != null ) {
-	    //	    System.out.println("JspLoader: loading with " + pd );
-	    return defineClass(className, classData, 0, classData.length, (ProtectionDomain)pd);
-	}
+    protected  Class defClass(String className, byte[] classData) {
         return defineClass(className, classData, 0, classData.length);
     }
 
@@ -253,7 +237,15 @@ public class JspLoader extends ClassLoader {
      * Load JSP class data from file, method may be called from
      * within a doPriviledged if a SecurityManager is installed.
      */
-    private byte[] loadClassDataFromFile(String fileName) {
+    protected byte[] loadClassDataFromFile(String fileName) {
+	return doLoadClassDataFromFile( fileName );
+    }
+
+    /**
+     * Load JSP class data from file, method may be called from
+     * within a doPriviledged if a SecurityManager is installed.
+     */
+    protected byte[] doLoadClassDataFromFile(String fileName) {
         byte[] classBytes = null;
         try {
             FileInputStream fin = new FileInputStream(fileName);
@@ -352,4 +344,13 @@ public class JspLoader extends ClassLoader {
     public String toString() {
 	return "JspLoader( " +  options.getScratchDir()   + " ) / " + parent;
     }
+
+    boolean loadJSP(JspServlet jspS, String name, String classpath, 
+		    boolean isErrorPage, HttpServletRequest req,
+		    HttpServletResponse res) 
+	throws JasperException, FileNotFoundException 
+    {
+	return jspS.doLoadJSP( name, classpath, isErrorPage, req, res );
+    }
+
 }

@@ -58,8 +58,6 @@ package org.apache.jasper.compiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import java.security.*;
-
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Constants;
 import org.apache.jasper.JasperException;
@@ -270,33 +268,7 @@ public class JspCompiler extends Compiler implements Mangler {
      * Determines whether the current JSP class is older than the JSP file
      * from whence it came
      */
-    public boolean isOutDated()
-    {
-        if( System.getSecurityManager() == null )
-            return isOutDated_normal();
-        else
-            return isOutDated_priviledged();
-    }
-
-    /**
-     * When using a SecurityManager and a JSP page itself triggers
-     * another JSP due to an errorPage or from a jsp:include,
-     * the isOutDated check must be performed with the Permissions of
-     * this class using doPriviledged because the parent JSP
-     * may not have sufficient Permissions.
-     */
-    private final boolean isOutDated_priviledged() {
-        class doInit implements PrivilegedAction {
-            public Object run() {
-                return new Boolean(isOutDated_normal());
-            }
-        }    
-        doInit di = new doInit();
-        Boolean res = (Boolean)AccessController.doPrivileged(di);
-        return res.booleanValue();
-    }
-
-    private final boolean isOutDated_normal() {
+    public boolean isOutDated() {
         File jspReal = null;
 
         jspReal = new File(ctxt.getRealPath(jsp.getPath()));
@@ -311,34 +283,7 @@ public class JspCompiler extends Compiler implements Mangler {
         return outDated;
     }
 
-    /**
-     * When using a SecurityManager and a JSP page itself triggers
-     * another JSP due to an errorPage or from a jsp:include,
-     * the computeClassFileData must be performed with the Permissions of
-     * this class using doPriviledged because the parent JSP
-     * may not have sufficient Permissions.
-     */
     private final void computeClassFileData() {
-        if( System.getSecurityManager() == null )
-            computeClassFileData_normal();
-        else
-            computeClassFileData_priviledged();
-    }
-
-    private final void computeClassFileData_priviledged()
-    {
-        class doInit implements PrivilegedAction {
-            public Object run()
-            {
-                computeClassFileData_normal();
-                return null;
-            }
-        }
-        doInit di = new doInit();
-        AccessController.doPrivileged(di);
-    }
-
-    private final void computeClassFileData_normal() {
 	File jspReal = null;
 
         String initPath = jsp.getPath();

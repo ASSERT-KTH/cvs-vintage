@@ -336,7 +336,7 @@ public final class JDBCRealm extends BaseInterceptor {
           // Next we convert the resultset into a String[]
               Vector vrol=new Vector();
               while (rs.next()) {
-                  vrol.add(rs.getString(1));
+                  vrol.addElement(rs.getString(1));
               }
               String[] res=new String[vrol.size()];
               for(int i=0 ; i<vrol.size() ; i++ )

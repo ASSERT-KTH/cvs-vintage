@@ -203,6 +203,14 @@ public class JspServlet extends HttpServlet {
     String serverInfo;
 
     static boolean firstTime = true;
+    static boolean jdk12=false;
+    static {
+	try {
+	    Class.forName( "java.security.PrivilegedAction" );
+	    jdk12=true;
+	} catch(Throwable ex ) {
+	}
+    }
 
     public void init(ServletConfig config)
 	throws ServletException
@@ -232,9 +240,21 @@ public class JspServlet extends HttpServlet {
                               }, Logger.DEBUG);
 	}
 	//	System.out.println("JspServlet: init " + config.getServletName() );
-	this.loader = new JspLoader(parentClassLoader, 
-				    options);
+	if( loader==null ) {
+	    if( jdk12 ) {
+		try {
+		    Class ld=Class.forName("org.apache.jasper.runtime.JspLoader12");
+		    loader=(JspLoader)ld.newInstance();
+		} catch(Throwable t ) {
+		    t.printStackTrace();
+		}
+	    }
+	    if( loader==null )
+		loader = new JspLoader();
 
+	    loader.setParentClassLoader(parentClassLoader);
+	    loader.setOptions(options);
+	}
 	if (firstTime) {
 	    firstTime = false;
 	    Constants.message("jsp.message.scratch.dir.is", 
@@ -399,7 +419,23 @@ public class JspServlet extends HttpServlet {
      *  @param classpath explicitly set the JSP compilation path.
      *  @return true if JSP files is newer
      */
-    public boolean loadJSP(String name, String classpath, 
+    boolean loadJSP(String name, String classpath, 
+	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
+	throws JasperException, FileNotFoundException 
+    {
+	// Loader knows how to set the right priviledges, and call
+	// doLoadeJsp
+	return loader.loadJSP( this, name, classpath, isErrorPage, req, res );
+    }
+
+    /*  Check if we need to reload a JSP page.
+     *
+     *  Side-effect: re-compile the JSP page.
+     *
+     *  @param classpath explicitly set the JSP compilation path.
+     *  @return true if JSP files is newer
+     */
+    boolean doLoadJSP(String name, String classpath, 
 	boolean isErrorPage, HttpServletRequest req, HttpServletResponse res) 
 	throws JasperException, FileNotFoundException 
     {

@@ -118,7 +118,7 @@ import java.security.*;
  * @author Martin Pool
  * @author Jim Heintz
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000/06/10 17:09:04 $
+ * @version $Revision: 1.7 $ $Date: 2000/06/15 00:26:47 $
  * @see java.lang.ClassLoader
  */
 public class AdaptiveClassLoader extends ClassLoader {
@@ -127,7 +127,7 @@ public class AdaptiveClassLoader extends ClassLoader {
     /**
      * Instance of the SecurityManager installed.
      */
-    static private SecurityManager sm;
+    static protected SecurityManager sm;
 
     /**
      * Generation counter, incremented for each classloader as they are
@@ -154,7 +154,7 @@ public class AdaptiveClassLoader extends ClassLoader {
      * <p>
      * It may be empty when only system classes are controlled.
      */
-    private Vector repository;
+    protected Vector repository;
 
     /**
      * A parent class loader for delegation of finding a class definition.
@@ -162,7 +162,7 @@ public class AdaptiveClassLoader extends ClassLoader {
      * being passed to a constructor, and retreived with getParent() method. For JDK 1.1
      * compatibility, we'll duplicate the 1.2 private member var.
      */
-    private ClassLoader parent;
+    protected ClassLoader parent;
     
     /**
      * Private class used to maintain information about the classes that
@@ -199,23 +199,6 @@ public class AdaptiveClassLoader extends ClassLoader {
 
     /**
      * Creates a new class loader that will load classes from specified
-     * class repositories.
-     *
-     * @param classRepository An set of File classes indicating
-     *        directories and/or zip/jar files. It may be empty when
-     *        only system classes are loaded.
-     * @throw java.lang.IllegalArgumentException if the objects contained
-     *        in the vector are not a file instance or the file is not
-     *        a valid directory or a zip/jar file.
-     */
-    public AdaptiveClassLoader(Vector classRepository)
-        throws IllegalArgumentException
-    {
-	this(classRepository, null);
-    }
-    
-    /**
-     * Creates a new class loader that will load classes from specified
      * class repositories, delegating first to the passed parent for definitions.
      *
      * @param classRepository An set of File classes indicating
@@ -227,11 +210,12 @@ public class AdaptiveClassLoader extends ClassLoader {
      *        in the vector are not a file instance or the file is not
      *        a valid directory or a zip/jar file.
      */
-    public AdaptiveClassLoader(Vector classRepository, ClassLoader theParent)
+    public AdaptiveClassLoader() {
+    }
+
+    public void setRepository( Vector classRepository ) 
 	throws IllegalArgumentException
     {
-	this.parent = theParent;
-	
 	// Create the cache of loaded classes
 	cache = new Hashtable();
 	
@@ -396,7 +380,9 @@ public class AdaptiveClassLoader extends ClassLoader {
      * as this one.
      */
     public AdaptiveClassLoader reinstantiate() {
-        return new AdaptiveClassLoader(repository);
+        AdaptiveClassLoader cl=new AdaptiveClassLoader();
+	cl.setRepository(repository);
+	return cl;
     }
 
     //------------------------------------ Implementation of Classloader
@@ -502,10 +488,6 @@ public class AdaptiveClassLoader extends ClassLoader {
 		    classData =
                         loadClassFromZipfile(file, name, classCache);
 		}
-            // Make sure we catch and rethrow SecurityManager exceptions
-            } catch(AccessControlException aex) {
-                aex.printStackTrace();
-                throw aex;
             } catch(SecurityException sex) {
                 sex.printStackTrace();
                 throw sex;
@@ -518,13 +500,7 @@ public class AdaptiveClassLoader extends ClassLoader {
 
             if (classData != null) {
                 // Define the class with a ProtectionDomain if using a SecurityManager
-                if( sm != null ) {
-                // Define the class
-		    //		    System.out.println("Defining class using PT ");
-                    c = defineClass(name, classData, 0, classData.length, cp.getProtectionDomain());
-                } else {
-                c = defineClass(name, classData, 0, classData.length);
-                }
+                c=doDefineClass(name, classData, cp.getProtectionDomain());
                 // Cache the result;
                 classCache.loadedClass = c;
                 // Origin is set by the specific loader
@@ -541,6 +517,12 @@ public class AdaptiveClassLoader extends ClassLoader {
         throw new ClassNotFoundException(name);
     }
 
+    // Override this with PD
+    protected Class doDefineClass(String name, byte classData[], Object pd )
+    {
+	return  defineClass(name, classData, 0, classData.length);
+    }
+    
     /**
      * Load a class using the system classloader.
      *

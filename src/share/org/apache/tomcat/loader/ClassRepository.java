@@ -61,13 +61,12 @@ package org.apache.tomcat.loader;
 import java.io.*;
 import java.lang.*;
 import java.util.*;
-import java.security.*;
 
 public class ClassRepository {
     private File file;
-    private ProtectionDomain protectionDomain;
+    private Object protectionDomain;
 
-    public ClassRepository( File f, ProtectionDomain pd) {
+    public ClassRepository( File f, Object pd) {
 	file = f;
 	protectionDomain = pd;
     } 
@@ -76,7 +75,7 @@ public class ClassRepository {
 	return file;
     }
 
-    public ProtectionDomain getProtectionDomain() {
+    public Object getProtectionDomain() {
 	return protectionDomain;
     }
 }

@@ -69,13 +69,23 @@ import java.security.*;
 // method in ClassLoader. The alternative is to require a public method with
 // the equivalent functionality
 
-public class AdaptiveServletLoader  extends AdaptiveClassLoader implements ServletLoader  {
+public class AdaptiveServletLoader  extends AdaptiveClassLoader
+    implements ServletLoader
+{
     AdaptiveClassLoader classL;
+    static boolean jdk12=false;
+    static {
+	try {
+	    Class.forName( "java.security.PrivilegedAction" );
+	    jdk12=true;
+	} catch(Throwable ex ) {
+	}
+    }
     Vector classP;
     ClassLoader parent;
     
     public AdaptiveServletLoader() {
-	super( new Vector() ); // dumy -
+	super(); // dumy -
 	// this class will not be used as a class loader, it's just a trick for
 	// protected loadClass()
 	classP=new Vector();
@@ -133,8 +143,21 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
     /** Return a real class loader
      */
     public ClassLoader getClassLoader() {
-	if( classL==null )
-	    classL= new AdaptiveClassLoader( classP, parent );
+	if( classL==null && jdk12 ) {
+	    try {
+		Class ld=Class.forName("org.apache.tomcat.loader.AdaptiveClassLoader12");
+		classL=(AdaptiveClassLoader)ld.newInstance();
+	    } catch(Throwable t ) {
+		t.printStackTrace();
+	    }
+	}
+
+	if( classL==null ) {
+	    // jdk1.1 or error
+	    classL= new AdaptiveClassLoader();
+	}
+	classL.setParent( parent );
+	classL.setRepository( classP );
 	return classL;
     }
 
@@ -177,7 +200,7 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
     public void addRepository( File f, Object pd ) {
 	try {
             classP.addElement(
-                new ClassRepository( new File(FileUtil.patch(f.getCanonicalPath())), (ProtectionDomain)pd )
+                new ClassRepository( new File(FileUtil.patch(f.getCanonicalPath())), pd )
                 );
 	} catch( IOException ex) {
             ex.printStackTrace();

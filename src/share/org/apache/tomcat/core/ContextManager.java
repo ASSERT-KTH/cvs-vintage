@@ -72,7 +72,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.security.*;
+//import java.security.*;
 
 /* XXX The main function of CM is to serve as an entry point into
    tomcat and manage a list of resources that are part of the servlet
@@ -134,7 +134,7 @@ public class ContextManager {
     /**
      * The default security permissions to use
      */
-    private Permissions permissions;
+    private Object permissions;
 
     /** Adapters for the incoming protocol
      */
@@ -287,8 +287,8 @@ public class ContextManager {
     /**
      * Add a Permission to the default Permissions
      */
-    public void addPermissions(SetSecurityManager secman) {
-	permissions = secman.getPermissions();
+    public void setPermissions(Object permissions) {
+	this.permissions = permissions;
     }
 
     

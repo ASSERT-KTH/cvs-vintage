@@ -65,11 +65,11 @@ public class Tomcat {
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
 	xh.addRule( "ContextManager/Context", xh.setProperties() );
-        // Rules for setting Context SecurityManager Permissions
-        xh.addRule( "ContextManager/Context/Permission",xh.methodSetter("setPermission",3));
-        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(0,"className"));
-        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(1,"attribute"));
-        xh.addRule( "ContextManager/Context/Permission",xh.methodParam(2,"value"));
+//         // Rules for setting Context SecurityManager Permissions
+//         xh.addRule( "ContextManager/Context/Permission",xh.methodSetter("setPermission",3));
+//         xh.addRule( "ContextManager/Context/Permission",xh.methodParam(0,"className"));
+//         xh.addRule( "ContextManager/Context/Permission",xh.methodParam(1,"attribute"));
+//         xh.addRule( "ContextManager/Context/Permission",xh.methodParam(2,"value"));
 	xh.addRule( "ContextManager/Context", xh.addChild( "addContext", null ) );
 
 	// Virtual host support.
@@ -144,11 +144,11 @@ public class Tomcat {
     void setSecurityManager( XmlMapper xh ) {
         xh.addRule("Server/SecurityManager", xh.objectCreate("org.apache.tomcat.loader.SetSecurityManager"));
         xh.addRule("Server/SecurityManager", xh.setProperties());
-        xh.addRule("Server/SecurityManager/Permission",xh.methodSetter("setPermission",3));
-        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(0,"className"));
-        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(1,"attribute"));
-        xh.addRule("Server/SecurityManager/Permission",xh.methodParam(2,"value"));
-        xh.addRule("Server/SecurityManager",xh.addChild("addPermissions",null));
+//         xh.addRule("Server/SecurityManager/Permission",xh.methodSetter("setPermission",3));
+//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(0,"className"));
+//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(1,"attribute"));
+//         xh.addRule("Server/SecurityManager/Permission",xh.methodParam(2,"value"));
+//         xh.addRule("Server/SecurityManager",xh.addChild("addPermissions",null));
     }
 
     /**
