@@ -58,7 +58,7 @@ Attribute options
    #set ($raag = $group.getRAttributeAttributeGroup($attribute))
    #set ( $raagGroup = $intake.RAttributeAttributeGroup.mapTo($raag) )
    #set ( $maxNum = $group.Attributes.size() )
- #rows()
+ #indexedRows($velocityCount)
  <td>-&nbsp;<input type="checkbox" name="att_delete_$attribute.AttributeId" /></td>
  <td><a href="#">$attribute.Name</a></td>
  <td><input type="text" size="15" value="$rmaGroup.DisplayValue" /></td>

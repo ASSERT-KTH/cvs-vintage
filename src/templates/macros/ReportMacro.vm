@@ -60,7 +60,7 @@
  </tr>
 #end
     #foreach ( $row in $model.Rows )
-    #rows()
+    #indexedRows($velocityCount)
         #foreach ($cell in $row)
             #if ( $model.isHeading($cell) )
                 #if ($cell.SubHeadings)
