@@ -102,13 +102,32 @@ public final class ErrorHandler extends BaseInterceptor {
     {
 	if( ctx.getHost() == null && ctx.getPath().equals(""))
 	    rootContext = ctx;
-	ctx.addServlet( new ExceptionHandler(this));
-	ctx.addServlet( new StatusHandler(this));
+	boolean showDebugInfo=true;
+	ContextManager cm=ctx.getContextManager();
+	String dI=cm.getProperty( "showDebugInfo" );
+	if( dI!=null && ( dI.equalsIgnoreCase("no") ||
+			  dI.equalsIgnoreCase("false"))) {
+	    showDebugInfo=false;
+	}
+
+	// override with per/context setting
+	dI=ctx.getProperty( "showDebugInfo" );
+	if( dI!=null && ( dI.equalsIgnoreCase("no") ||
+			  dI.equalsIgnoreCase("false"))) {
+	    showDebugInfo=false;
+	}
+	if( dI!=null && ( dI.equalsIgnoreCase("yes") ||
+			  dI.equalsIgnoreCase("true"))) {
+	    showDebugInfo=true;
+	}
+	
+	ctx.addServlet( new ExceptionHandler(this, showDebugInfo));
+	ctx.addServlet( new StatusHandler(this, showDebugInfo));
 
 	// Default status handlers
 	ctx.addServlet( new RedirectHandler(this));
 	ctx.addErrorPage( "302", "tomcat.redirectHandler");
-	ctx.addServlet( new NotFoundHandler(this));
+	ctx.addServlet( new NotFoundHandler(this, showDebugInfo));
 	ctx.addErrorPage( "404", "tomcat.notFoundHandler");
     }
 
@@ -330,11 +349,13 @@ class NotFoundHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
+    boolean showDebugInfo=true;
     
-    NotFoundHandler(BaseInterceptor bi) {
+    NotFoundHandler(BaseInterceptor bi, boolean showDebugInfo) {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.notFoundHandler";
 	setModule(bi);
+	this.showDebugInfo=showDebugInfo;
     }
 
     public void doService(Request req, Response res)
@@ -376,7 +397,7 @@ class NotFoundHandler extends Handler {
 	    .append( requestURI )
 	    .append("\r\n");
 
-	if ( null != requestURI && contextM.isShowDebugInfo() ) {
+	if ( null != requestURI && showDebugInfo ) {
 	    buf.append("<br><br>\r\n<b>")
 		.append(sm.getString("defaulterrorpage.notfoundrequest"))
 		.append("</b> ")
@@ -400,11 +421,13 @@ class ExceptionHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
-
-    ExceptionHandler(BaseInterceptor bi) {
+    boolean showDebugInfo=true;
+    
+    ExceptionHandler(BaseInterceptor bi, boolean showDebugInfo) {
 	//	setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.exceptionHandler";
 	setModule( bi );
+	this.showDebugInfo=showDebugInfo;
     }
 
     public void doService(Request req, Response res)
@@ -440,7 +463,7 @@ class ExceptionHandler extends Handler {
 	// only include <head>...<body> if reset was successful
 	if (bufReset) {
 	    buf.append("<head><title>");
-	    if( null != errorURI && contextM.isShowDebugInfo() ) {
+	    if( null != errorURI && showDebugInfo ) {
 		buf.append(sm.getString("defaulterrorpage.includedservlet") )
 		    .append(" ");
 	    }  else {
@@ -450,7 +473,7 @@ class ExceptionHandler extends Handler {
 		.append("</title></head>\r\n<body>\r\n");
 	}
 	buf.append("<h1>");
-	if( null != errorURI && contextM.isShowDebugInfo() ) {
+	if( null != errorURI && showDebugInfo ) {
 	    buf.append(sm.getString("defaulterrorpage.includedservlet") ).
 		append(" ");
 	}  else {
@@ -466,7 +489,7 @@ class ExceptionHandler extends Handler {
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
-	if ( null != errorURI && contextM.isShowDebugInfo()) {
+	if ( null != errorURI && showDebugInfo ) {
 	    buf.append("\r\n<h2>")
 		.append(sm.getString("defaulterrorpage.errorlocation"))
 		.append(" ")
@@ -474,7 +497,7 @@ class ExceptionHandler extends Handler {
 		.append("</h2>");
 	}
 
- 	if (contextM.isShowDebugInfo()) {
+ 	if (showDebugInfo) {
 	    buf.append("<b>")
 		.append(sm.getString("defaulterrorpage.internalservleterror"));
 	    buf.append("</b><br>\r\n<pre>");
@@ -503,11 +526,13 @@ class StatusHandler extends Handler {
     static StringManager sm=StringManager.
 	getManager("org.apache.tomcat.resources");
     int sbNote=0;
-
-    StatusHandler(BaseInterceptor bi) {
+    boolean showDebugInfo=true;
+    
+    StatusHandler(BaseInterceptor bi, boolean showDebugInfo) {
 	//setOrigin( Handler.ORIGIN_INTERNAL );
 	name="tomcat.statusHandler";
 	setModule( bi );
+	this.showDebugInfo=showDebugInfo;
     }
     
     // We don't want interceptors called for redirect
@@ -540,7 +565,7 @@ class StatusHandler extends Handler {
 	// only include <head>...<body> if reset was successful
 	if (bufReset) {
 	    buf.append("<head><title>");
-	    if( null != errorURI && contextM.isShowDebugInfo() ) {
+	    if( null != errorURI && showDebugInfo ) {
 		buf.append(sm.getString("defaulterrorpage.includedservlet") )
 		    .append(" ");
 	    }  else {
@@ -550,7 +575,7 @@ class StatusHandler extends Handler {
 		.append("</title></head>\r\n<body>\r\n");
 	}
 	buf.append("<h1>");
-	if( null != errorURI && contextM.isShowDebugInfo() ) {
+	if( null != errorURI && showDebugInfo ) {
 	    buf.append(sm.getString("defaulterrorpage.includedservlet") )
 		.append(" ");
 	}  else {
@@ -566,7 +591,7 @@ class StatusHandler extends Handler {
 	    .append(req.requestURI().toString())
 	    .append("</h2>");
 
-	if ( sc >= 400 && errorURI != null && contextM.isShowDebugInfo()) {
+	if ( sc >= 400 && errorURI != null && showDebugInfo) {
 	    buf.append("\r\n<h2>")
 		.append(sm.getString("defaulterrorpage.errorlocation"))
 		.append(" ")
