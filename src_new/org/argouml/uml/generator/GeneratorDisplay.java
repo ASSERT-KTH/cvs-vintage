@@ -1,4 +1,4 @@
-// $Id: GeneratorDisplay.java,v 1.60 2004/04/26 19:46:57 thn Exp $
+// $Id: GeneratorDisplay.java,v 1.61 2004/04/28 17:54:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -933,7 +933,15 @@ public class GeneratorDisplay extends Generator2 {
         }
         if (s.length() == 0 && p.length() == 0)
             return "";
-
+        
+        /* If there are no arguments, then do not show the ().
+         * This solves issue 1758. 
+         * Arguments are not supported anyhow in the UI yet.
+         * These brackets are easily confused with the brackets 
+         * for the Operation of a CallAction.
+         */
+        if (p.length() == 0) return s;
+        
         return s + " (" + p + ")";
     }
 
