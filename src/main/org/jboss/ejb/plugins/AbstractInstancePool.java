@@ -8,8 +8,9 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 import java.util.LinkedList;
-import java.util.Iterator;
+import java.lang.reflect.UndeclaredThrowableException;
 import javax.ejb.EJBException;
+import javax.ejb.CreateException;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.InstancePool;
@@ -27,12 +28,12 @@ import EDU.oswego.cs.dl.util.concurrent.FIFOSemaphore;
  *  Abstract Instance Pool class containing the basic logic to create
  *  an EJB Instance Pool.
  *
- *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Oberg</a>
  *  @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  *  @author <a href="mailto:sacha.labourey@cogito-info.ch">Sacha Labourey</a>
  *  @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
- *  @version $Revision: 1.34 $
+ *  @version $Revision: 1.35 $
  *
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  */
@@ -107,6 +108,20 @@ public abstract class AbstractInstancePool
       return this.maxSize;
    }
 
+   /** Get the current avaiable count from the strict max view. If there is
+    * no strict max then this will be Long.MAX_VALUE to indicate there is no
+    * restriction.
+    * @jmx:managed-attribute
+    * @return the current avaiable count from the strict max view
+    */
+   public long getAvailableCount()
+   {
+      long size = Long.MAX_VALUE;
+      if( strictMaxSize != null )
+         size = strictMaxSize.permits();
+      return size;
+   }
+
    /**
     *   Get an instance without identity.
     *   Can be used by finders,create-methods, and activation
@@ -133,9 +148,8 @@ public abstract class AbstractInstancePool
 
       synchronized (pool)
       {
-         if (!pool.isEmpty())
+         if ( pool.isEmpty() == false )
          {
-            //mReadyBean.remove();
             return (EnterpriseContext) pool.removeFirst();
          }
       }
@@ -143,15 +157,27 @@ public abstract class AbstractInstancePool
       // Pool is empty, create an instance
       try
       {
-         return create(container.createBeanClassInstance());
+         Object instance = container.createBeanClassInstance();
+         return create(instance);
       }
-      catch (InstantiationException e)
+      catch (Throwable e)
       {
-         throw new EJBException("Could not instantiate bean", e);
-      }
-      catch (IllegalAccessException e)
-      {
-         throw new EJBException("Could not instantiate bean", e);
+         // Release the strict max size mutex if it exists
+         if( strictMaxSize != null )
+         {
+            strictMaxSize.release();
+         }
+         // Don't wrap CreateExceptions
+         if( e instanceof CreateException )
+            throw (CreateException) e;
+
+         // Wrap e in an Exception if needed
+         Exception ex = null;
+         if( (e instanceof Exception) == false )
+         {
+            ex = new UndeclaredThrowableException(e);
+         }
+         throw new EJBException("Could not instantiate bean", ex);
       }
    }
 
@@ -187,7 +213,7 @@ public abstract class AbstractInstancePool
             {
                pool.addFirst(ctx);
             } // end of if ()
-            }
+         }
          // If we block when maxSize instances are in use, invoke release on strictMaxSize
          if( strictMaxSize != null )
             strictMaxSize.release();
