@@ -85,7 +85,7 @@ import org.tigris.scarab.om.ScarabUserImplPeer;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminTool.java,v 1.1 2001/12/04 15:53:48 dr Exp $
+ * @version $Id: SecurityAdminTool.java,v 1.2 2001/12/04 23:15:24 dr Exp $
  */
 public class SecurityAdminTool implements SecurityAdminScope
 {
@@ -121,6 +121,20 @@ public class SecurityAdminTool implements SecurityAdminScope
         }
         
         return (user);
+    }
+    
+    /** Returns a Permission object retrieved by specifying the name of the permission.
+     *
+     * @param name the name of the permission to retrieve
+     * @returns the specified Permission, if found, or null otherwise
+     * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
+     */
+    public Permission getPermissionByName(String name) throws Exception
+    {
+        Permission permission = null;
+        permission = (Permission)TurbineSecurity.getPermission(name);   
+        
+        return (permission);
     }
     
     /** Returns a Role object retrieved by specifying the name of the role.

@@ -69,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: SecurityAdminScope.java,v 1.1 2001/12/04 15:53:48 dr Exp $
+ * @version $Id: SecurityAdminScope.java,v 1.2 2001/12/04 23:15:24 dr Exp $
  */
 public interface SecurityAdminScope extends ApplicationTool
 {
@@ -80,6 +80,12 @@ public interface SecurityAdminScope extends ApplicationTool
     public ScarabUser getUserByUsername(String username)
         throws Exception;
 
+    /**
+     * Get a permission based on the given name.
+     */
+    public Permission getPermissionByName(String name)
+        throws Exception;
+        
     /**
      * Get a role based on the given name.
      */
