@@ -1,4 +1,4 @@
-// $Id: ActionNew.java,v 1.21 2004/01/07 21:05:41 jjones Exp $
+// $Id: ActionNew.java,v 1.22 2004/08/16 18:04:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -46,16 +46,25 @@ public class ActionNew extends UMLAction {
     ////////////////////////////////////////////////////////////////
     // static variables
 
+    /**
+     * The singleton.
+     */
     public static ActionNew SINGLETON = new ActionNew(); 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     protected ActionNew() { super("action.new"); }
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent e) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project p = ProjectManager.getManager().getCurrentProject();
@@ -63,12 +72,12 @@ public class ActionNew extends UMLAction {
 	if (p != null && p.needsSave()) {
 	    String t =
 		MessageFormat.format(Translator.localize("Actions",
-						   "optionpane.new-project-save-changes-to"),
-				     new Object[] {p.getName()} );
+				"optionpane.new-project-save-changes-to"),
+				new Object[] {p.getName()} );
 	    int response =
 		JOptionPane.showConfirmDialog(pb, t, t,
 					      JOptionPane.YES_NO_CANCEL_OPTION
-					      );
+		);
 
 	    if (response == JOptionPane.CANCEL_OPTION 
 	        || response == JOptionPane.CLOSED_OPTION) return;

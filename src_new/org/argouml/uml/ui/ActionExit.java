@@ -1,4 +1,4 @@
-// $Id: ActionExit.java,v 1.15 2004/01/07 21:05:41 jjones Exp $
+// $Id: ActionExit.java,v 1.16 2004/08/16 18:04:45 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -44,6 +44,9 @@ public class ActionExit extends UMLAction
     ////////////////////////////////////////////////////////////////
     // static variables
   
+    /**
+     * The singleton.
+     */
     public static ActionExit SINGLETON = new ActionExit();
  
     /** remember if this form is already active, so that it does
@@ -54,6 +57,9 @@ public class ActionExit extends UMLAction
     ////////////////////////////////////////////////////////////////
     // constructors
   
+    /**
+     * The constructor.
+     */
     public ActionExit() {
 	super ("action.exit", NO_ICON);
 	active = false;
@@ -62,6 +68,9 @@ public class ActionExit extends UMLAction
     ////////////////////////////////////////////////////////////////
     // main methods
   
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed (ActionEvent ae) {
 	ProjectBrowser pb = ProjectBrowser.getInstance();
 	Project p = ProjectManager.getManager().getCurrentProject();
@@ -70,8 +79,8 @@ public class ActionExit extends UMLAction
 	    active = true;
 	    String t = 
 		MessageFormat.format(Translator.localize("Actions",
-						   "optionpane.exit-save-changes-to"),
-				     new Object[] {p.getName()} );
+			"optionpane.exit-save-changes-to"),
+			new Object[] {p.getName()} );
 	    int response = 
 		JOptionPane.showConfirmDialog(pb, t, t, 
 					      JOptionPane.YES_NO_CANCEL_OPTION);

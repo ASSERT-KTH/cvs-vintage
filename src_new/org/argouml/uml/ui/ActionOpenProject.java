@@ -1,4 +1,4 @@
-// $Id: ActionOpenProject.java,v 1.38 2004/08/15 11:44:00 bobtarling Exp $
+// $Id: ActionOpenProject.java,v 1.39 2004/08/16 18:04:45 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -218,8 +218,8 @@ public class ActionOpenProject
             } else if (file.endsWith("." + xmiPersister.getExtension())) {
                 persister = xmiPersister;
             } else {
-                throw new IllegalStateException("Filename " + url.getFile() + 
-                                                " is not of a known file type");
+                throw new IllegalStateException("Filename " + url.getFile()  
+                                + " is not of a known file type");
             }
           
             p = persister.loadProject(url);
@@ -301,7 +301,7 @@ public class ActionOpenProject
         try {
             url = new URL(argument);
         } catch (MalformedURLException e) {
-                e.printStackTrace();
+            e.printStackTrace();
             LOG.error("Incorrectly formatted URL.", e);
             return false;
         }

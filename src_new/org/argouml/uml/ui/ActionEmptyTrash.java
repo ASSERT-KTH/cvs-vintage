@@ -1,4 +1,4 @@
-// $Id: ActionEmptyTrash.java,v 1.4 2003/06/29 23:50:02 linus Exp $
+// $Id: ActionEmptyTrash.java,v 1.5 2004/08/16 18:04:45 mvw Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -35,22 +35,34 @@ public class ActionEmptyTrash extends UMLChangeAction {
     ////////////////////////////////////////////////////////////////
     // static variables
     
+    /**
+     * The singleton.
+     */
     public static ActionEmptyTrash SINGLETON = new ActionEmptyTrash(); 
 
 
     ////////////////////////////////////////////////////////////////
     // constructors
 
+    /**
+     * The constructor.
+     */
     public ActionEmptyTrash() { super("action.empty-trash", NO_ICON); }
 
 
     ////////////////////////////////////////////////////////////////
     // main methods
 
+    /**
+     * @see org.argouml.uml.ui.UMLAction#shouldBeEnabled()
+     */
     public boolean shouldBeEnabled() {
 	return Trash.SINGLETON.getSize() > 0;
     }
 
+    /**
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
     public void actionPerformed(ActionEvent ae) {
 	Trash.SINGLETON.emptyTrash();
 	super.actionPerformed(ae);
