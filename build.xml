@@ -52,14 +52,6 @@
   <property name="jeremie.jar"   value="${externals}/jeremie.jar"/> 
   <property name="compiler.jeremie" value="org.objectweb.jeremie.tools.jrmic.JRMICompiler" />
 
-  <!-- externals classpath -->
-  <path id="externals.classpath">
-    <fileset dir="${externals}">
-      <include name="**/*.jar"/>
-    </fileset>
-    <pathelement location="${build}/classes"/>   
-  </path>
-
   <!-- Building of carol compilation classpath (no externals needed) -->
   <path id="carol.classpath">
     <fileset dir="${externals}">
@@ -189,7 +181,7 @@
       debug="${compile.debug}"
       nowarn="${compile.nowarn}"
       optimize="${compile.optimize}">
-      <classpath refid="externals.classpath"/>
+      <classpath refid="carol.classpath"/>
       <!-- include specific rmi iiop interception features -->
       <include name="**/org/objectweb/carol/rmi/jonathan/**/*.java"/>
     </javac> 
@@ -245,7 +237,7 @@
     <mkdir dir="${dist.jdoc}"/>
     <condition property="interceptor.classes.presents">
       <available classname="org.omg.PortableInterceptor.ORBInitInfo">
-	<classpath refid="externals.classpath"/>
+	<classpath refid="carol.classpath"/>
       </available>
     </condition>
     <javadoc
@@ -259,7 +251,7 @@
 	<pathelement path="${src}"/>
 	<pathelement path="${build}/classes"/>
       </sourcepath>
-      <classpath refid="externals.classpath"/>
+      <classpath refid="carol.classpath"/>
     </javadoc>
   </target>
 
