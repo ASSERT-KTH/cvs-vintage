@@ -66,13 +66,12 @@ import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /** 
  * This class manages the Query table.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Query.java,v 1.59 2003/04/30 01:11:05 jon Exp $
+ * @version $Id: Query.java,v 1.60 2003/05/03 22:37:24 jon Exp $
  */
 public class Query 
     extends org.tigris.scarab.om.BaseQuery

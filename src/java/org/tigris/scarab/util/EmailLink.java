@@ -55,8 +55,6 @@ import org.apache.fulcrum.pool.InitableRecyclable;
 // Scarab
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.SkipFiltering;
@@ -64,7 +62,7 @@ import org.tigris.scarab.util.SkipFiltering;
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: EmailLink.java,v 1.1 2003/04/29 23:03:52 jon Exp $
+ * @version $Id: EmailLink.java,v 1.2 2003/05/03 22:37:24 jon Exp $
  */
 public class EmailLink
     implements InitableRecyclable, SkipFiltering
@@ -81,7 +79,7 @@ public class EmailLink
     private boolean disposed = false;
 
     /** An ArrayList that contains all the path info if any. */
-    protected List pathInfo = new ArrayList();
+    private List pathInfo = new ArrayList();
 
     /** HTTP protocol. */
     public static final String HTTP = "http";
@@ -633,16 +631,16 @@ public class EmailLink
                 out.append('%');
                 int low = (int) (toEscape & 0x0f);
                 int high = (int) ((toEscape & 0xf0) >> 4);
-                out.append(hexadecimal[high]);
-                out.append(hexadecimal[low]);
+                out.append(HEXADECIMAL[high]);
+                out.append(HEXADECIMAL[low]);
             }
         }
     }
 
     /**
-     * Array mapping hexadecimal values to the corresponding ASCII characters.
+     * Array mapping HEXADECIMAL values to the corresponding ASCII characters.
      */
-    private static final char[] hexadecimal =
+    private static final char[] HEXADECIMAL =
         {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'A', 'B', 'C', 'D', 'E', 'F'

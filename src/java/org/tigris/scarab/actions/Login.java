@@ -47,7 +47,6 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.List;
-import java.util.Locale;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -67,8 +66,6 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Log;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.UserPreference;
-import org.tigris.scarab.om.UserPreferenceManager;
 import org.tigris.scarab.actions.base.ScarabTemplateAction;
 
 /**
@@ -76,7 +73,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * Action.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Login.java,v 1.44 2003/04/10 22:14:58 dlr Exp $
+ * @version $Id: Login.java,v 1.45 2003/05/03 22:37:24 jon Exp $
  */
 public class Login extends ScarabTemplateAction
 {

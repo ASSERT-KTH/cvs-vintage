@@ -72,7 +72,7 @@ import org.tigris.scarab.om.ActivitySetPeer;
  * fromdate and todate can be entered in "yyyy-MM-dd HH:mm:ss" format
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: ActivityList.java,v 1.4 2003/04/29 23:35:04 jmcnally Exp $
+ * @version $Id: ActivityList.java,v 1.5 2003/05/03 22:37:24 jon Exp $
  */
 public class ActivityList extends Default
 {
@@ -167,10 +167,10 @@ public class ActivityList extends Default
                 {
                     ScarabCache.clear();
                     return sets.remove(sets.size()-1);
-	            }
+                }
 
                 public void remove()
-	            {
+                {
                     //not implemented
                 }
             };

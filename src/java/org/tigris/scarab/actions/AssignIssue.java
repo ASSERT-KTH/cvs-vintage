@@ -75,13 +75,12 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.EmailContext;
-import org.tigris.scarab.util.ScarabLink;
 
 /**
  * This class is responsible for assigning users to attributes.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: AssignIssue.java,v 1.94 2003/04/30 01:06:09 jon Exp $
+ * @version $Id: AssignIssue.java,v 1.95 2003/05/03 22:37:24 jon Exp $
  */
 public class AssignIssue extends BaseModifyIssue
 {

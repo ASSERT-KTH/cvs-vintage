@@ -46,8 +46,6 @@ package org.tigris.scarab.om;
  * individuals on behalf of CollabNet.
  */ 
 
-import org.apache.torque.TorqueException;
-
 /** 
  * This class is the home of where we store user preferences
  * right now the design is based on adding columns to the database
@@ -55,7 +53,7 @@ import org.apache.torque.TorqueException;
  * to come up with a real system for dealing with this.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: UserPreference.java,v 1.10 2003/04/10 22:14:58 dlr Exp $
+ * @version $Id: UserPreference.java,v 1.11 2003/05/03 22:37:24 jon Exp $
  */
 public class UserPreference 
     extends org.tigris.scarab.om.BaseUserPreference

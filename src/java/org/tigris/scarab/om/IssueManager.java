@@ -52,7 +52,6 @@ import java.util.LinkedList;
 
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.Persistent;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.manager.CacheListener;
 import org.apache.torque.util.Criteria;
 import org.tigris.scarab.util.Log;

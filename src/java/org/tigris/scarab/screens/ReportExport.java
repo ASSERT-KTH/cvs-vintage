@@ -58,10 +58,6 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.reports.ReportBridge;
 import org.tigris.scarab.reports.ReportDate;
 import org.tigris.scarab.reports.ReportGroup;
@@ -73,13 +69,12 @@ import org.tigris.scarab.tools.Format;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.util.word.QueryResult;
-
 
 /**
  * Handles export of a report to non-web formats.
  *
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
+ * @version $Id: ReportExport.java,v 1.2 2003/05/03 22:37:24 jon Exp $
  * @see org.tigris.scarab.screens.DataExport
  * @since Scarab 1.0
  */

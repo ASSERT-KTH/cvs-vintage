@@ -52,7 +52,6 @@ import java.util.MissingResourceException;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.fulcrum.localization.Localization;
-import org.apache.fulcrum.localization.LocalizationService;
 import org.apache.turbine.RunData;
 import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.LocalizationTool;

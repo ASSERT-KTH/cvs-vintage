@@ -55,13 +55,12 @@ import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.Log;
-import org.tigris.scarab.om.Issue;
 
 /**
  * Handles dynamic title
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MoveIssue.java,v 1.1 2003/04/11 23:20:09 jmcnally Exp $
+ * @version $Id: MoveIssue.java,v 1.2 2003/05/03 22:37:24 jon Exp $
  */
 public class MoveIssue extends Default
 {

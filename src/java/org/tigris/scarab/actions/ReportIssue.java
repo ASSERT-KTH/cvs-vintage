@@ -79,7 +79,6 @@ import org.tigris.scarab.om.Attachment;
 import org.tigris.scarab.om.AttachmentManager;
 import org.tigris.scarab.om.RModuleAttribute;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabLink;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.util.word.QueryResult;
 import org.tigris.scarab.tools.ScarabRequestTool;
@@ -90,7 +89,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.168 2003/04/30 01:08:48 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.169 2003/05/03 22:37:24 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {

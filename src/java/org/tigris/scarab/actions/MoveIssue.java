@@ -70,7 +70,6 @@ import org.tigris.scarab.om.IssueTypeManager;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.IssueManager;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.Email;
 import org.tigris.scarab.util.EmailContext;
@@ -82,7 +81,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.57 2003/04/30 01:08:15 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.58 2003/05/03 22:37:24 jon Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {

@@ -53,18 +53,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
-import java.io.StringWriter;
 import javax.mail.SendFailedException;
 
 import org.apache.commons.lang.StringUtils;
 
-import org.apache.fulcrum.template.TurbineTemplate;
 import org.apache.fulcrum.template.TemplateContext;
 import org.apache.fulcrum.template.TemplateEmail;
 import org.apache.fulcrum.velocity.ContextAdapter;
 import org.apache.fulcrum.mimetype.TurbineMimeTypes;
 import org.apache.fulcrum.ServiceException;
-import org.apache.fulcrum.TurbineServices;
 
 import org.apache.turbine.Turbine;
 
@@ -84,7 +81,7 @@ import org.tigris.scarab.services.email.VelocityEmail;
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: Email.java,v 1.32 2003/05/03 05:15:46 jmcnally Exp $
+ * @version $Id: Email.java,v 1.33 2003/05/03 22:37:24 jon Exp $
  */
 public class Email extends TemplateEmail
 {
