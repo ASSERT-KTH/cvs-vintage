@@ -50,7 +50,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	protected List workerStatusChangeListeners;
 
 	private int timeStamp;
-
+	
 	public Worker(DefaultProcessor parent) {
 		super();
 		
@@ -63,6 +63,7 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		cancelled = false;
 
 		workerStatusChangeListeners = new Vector();
+		
 	}
 
 	public void process(Command op, int operationMode, int timeStamp) {
@@ -143,6 +144,10 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		progressBarMax = 0;
 	}
 
+	/**
+	 * Sets the maximum value for the progress bar.
+	 * @param max		New max. value for progress bar
+	 */
 	public void setProgressBarMaximum(int max) {
 		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.PROGRESSBAR_MAX_CHANGED);
@@ -154,6 +159,10 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 		fireWorkerStatusChanged(e);
 	}
 
+	/**
+	 * Sets the current value of the progress bar.
+	 * @param value		New current value of progress bar
+	 */	
 	public void setProgressBarValue(int value) {
 		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.PROGRESSBAR_VALUE_CHANGED);
@@ -166,42 +175,55 @@ public class Worker extends SwingWorker implements WorkerStatusController {
 	}
 
 	/**
-	 * Convenience method for setting the progress bar value
-	 * to zero, i.e. to clear the progress bar.
+	 * Sets the progress bar value to zero, i.e. clears the progress bar.
+	 * This is the same as calling setProgressBarValue(0)
 	 */
 	public void resetProgressBar() {
 		setProgressBarValue(0);
 	}
 	
+	/** 
+	 * Returns the max. value for the progress bar
+	 */
 	public int getProgessBarMaximum() {
 		return progressBarMax;
 	}
 
+	/**
+	 * Returns the current value for the progress bar
+	 */
 	public int getProgressBarValue() {
 		return progressBarValue;
 	}
 
+	/**
+	 * Returns the text currently displayed in the status bar
+	 */
 	public String getDisplayText() {
 		return displayText;
 	}
 
-	public void setDisplayText(String displayText) {
+	/**
+	 * Set the text to be displayed in the status bar
+	 * @param 	text	Text to display in status bar
+	 */
+	public void setDisplayText(String text) {
 		WorkerStatusChangedEvent e = new WorkerStatusChangedEvent(getTimeStamp());
 		e.setType(WorkerStatusChangedEvent.DISPLAY_TEXT_CHANGED);
 		e.setOldValue(displayText);
 
-		this.displayText = displayText;
+		displayText = text;
 
 		e.setNewValue(displayText);
 		fireWorkerStatusChanged(e);
 	}
 	
 	/**
-	 * Convenience method for setting the display text to an empty
-	 * string, i.e. to clear the display text.
+	 * Clears the text displayed in the status bar. This is the same as
+	 * calling setDisplayText("")
 	 */
 	public void clearDisplayText() {
-		setDisplayText("");
+		setDisplayText("");		
 	}
 
 	public void addWorkerStatusChangeListener(WorkerStatusChangeListener l) {

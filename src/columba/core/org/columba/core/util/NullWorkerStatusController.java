@@ -48,6 +48,12 @@ public class NullWorkerStatusController implements WorkerStatusController {
 	}
 
 	/**
+	 * @see org.columba.core.command.WorkerStatusController#clearDisplayText()
+	 */
+	public void clearDisplayText() {
+	}
+
+	/**
 	 * @see org.columba.core.command.WorkerStatusController#getDisplayText()
 	 */
 	public String getDisplayText() {
@@ -66,6 +72,12 @@ public class NullWorkerStatusController implements WorkerStatusController {
 	public void setProgressBarValue(int value) {
 	}
 
+	/**
+	 * @see org.columba.core.command.WorkerStatusController#resetProgressBar()
+	 */
+	public void resetProgressBar() {
+	}
+	
 	/**
 	 * @see org.columba.core.command.WorkerStatusController#incProgressBarValue()
 	 */

@@ -53,9 +53,9 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	}
 
 	/**
-	 * set current value of progressbar
-	 * @param i
-	 */
+	 * Sets the current value of the progress bar.
+	 * @param i		New current value of progress bar
+	 */	
 	public void setCurrent(int i) {
 
 		if (worker != null)
@@ -64,9 +64,8 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	}
 
 	/**
-	 * set maximum value of progressbar
-	 * 
-	 * @param i
+	 * Sets the maximum value for the progress bar.
+	 * @param i		New max. value for progress bar
 	 */
 	public void setMax(int i) {
 
@@ -74,20 +73,18 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 			worker.setProgressBarMaximum(i);
 
 	}
-	/** 
-	 * Convenience method for setting current to zero.
-	 * Must have the same effect as calling setCurrent(0)
-	 * 
- 	 * @see org.columba.core.command.StatusObservable#resetCurrent()
+
+	/**
+	 * Sets the progress bar value to zero, i.e. clears the progress bar.
+	 * This is the same as calling setCurrent(0)
 	 */
 	public void resetCurrent() {
 		setCurrent(0);
 	}
 
 	/**
-	 * set message of statusbar
-	 * 
-	 * @param string
+	 * Set the text to be displayed in the status bar
+	 * @param string	Text to display in status bar
 	 */
 	public void setMessage(String string) {
 
@@ -96,6 +93,14 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	}
 
 	/**
+	 * Clears the text displayed in the status bar.
+	 */
+	public void clearMessage() {
+		if ( worker != null) worker.setDisplayText("");
+	}
+
+	/**
+	 * Returns the encapsulated worker object
 	 * @return
 	 */
 	public Worker getWorker() {
@@ -103,6 +108,7 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	}
 
 	/**
+	 * Sets the encapsulated worker object
 	 * @param worker
 	 */
 	public void setWorker(Worker worker) {
@@ -133,13 +139,6 @@ public class StatusObservableImpl implements StatusObservable, ProgressObserver 
 	 */
 	public void valueChanged(int value) {
 		if( worker != null) worker.setProgressBarValue( value );
-	}
-
-	/* (non-Javadoc)
-	 * @see org.columba.core.command.StatusObservable#clearMessage()
-	 */
-	public void clearMessage() {
-		if ( worker != null) worker.setDisplayText("");
 	}
 
 }

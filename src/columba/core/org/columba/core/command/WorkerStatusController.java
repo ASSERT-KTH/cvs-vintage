@@ -16,13 +16,45 @@
 package org.columba.core.command;
 
 public interface WorkerStatusController {
+	
+	/**
+	 * Set the text to be displayed in the status bar
+	 * @param text	Text to display in status bar
+	 */
 	public void setDisplayText( String text );
+	/**
+	 * Returns the text currently displayed in the status bar
+	 */
 	public String getDisplayText();
+	/**
+	 * Clears the text displayed in the status bar. This is the same as
+	 * calling setDisplayText("")
+	 */
+	public void clearDisplayText();
 	
-	public void setProgressBarMaximum( int max );	
+	/**
+	 * Sets the maximum value for the progress bar.
+	 * @param max		New max. value for progress bar
+	 */
+	public void setProgressBarMaximum( int max );
+	/**
+	 * Sets the current value of the progress bar.
+	 * @param value		New current value of progress bar
+	 */	
 	public void setProgressBarValue( int value );
-	
+	/**
+	 * Sets the progress bar value to zero, i.e. clears the progress bar.
+	 * This is the same as calling setProgressBarValue(0)
+	 */
+	public void resetProgressBar();
+
+	/** 
+	 * Returns the max. value for the progress bar
+	 */
 	public int getProgessBarMaximum();	
+	/**
+	 * Returns the current value for the progress bar
+	 */
 	public int getProgressBarValue();
 	
 	public void cancel();

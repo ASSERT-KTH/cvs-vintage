@@ -32,19 +32,34 @@ package org.columba.core.command;
  */
 public interface StatusObservable {
 	
+	/**
+	 * Sets the current value of the progress bar.
+	 * @param i		New current value of progress bar
+	 */	
 	public void setCurrent(int i);
+	/**
+	 * Sets the maximum value for the progress bar.
+	 * @param i		New max. value for progress bar
+	 */
 	public void setMax(int i);
-	
-	/** 
-	 * Convenience method for setting current to zero.
-	 * Must have the same effect as calling setCurrent(0)
+	/**
+	 * Sets the progress bar value to zero, i.e. clears the progress bar.
+	 * This is the same as calling setCurrent(0)
 	 */
 	public void resetCurrent();
 	
 	public boolean isCancelled();
 	public void cancel( boolean b );
 	
+
+	/**
+	 * Set the text to be displayed in the status bar
+	 * @param string	Text to display in status bar
+	 */
 	public void setMessage(String string);
+	/**
+	 * Clears the text displayed in the status bar.
+	 */
 	public void clearMessage();
 	
 }
