@@ -68,7 +68,7 @@ import org.tigris.scarab.actions.base.ScarabTemplateAction;
  * the user to confirm their registration by going to the Confirm.vm page.
  *       
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RegisterConfirm.java,v 1.25 2002/01/16 01:29:21 jon Exp $
+ * @version $Id: RegisterConfirm.java,v 1.26 2002/01/16 01:34:15 jon Exp $
  */
 public class RegisterConfirm extends ScarabTemplateAction
 {
@@ -102,6 +102,7 @@ public class RegisterConfirm extends ScarabTemplateAction
             }
             catch (org.apache.fulcrum.security.util.EntityExistsException e)
             {
+                data.setMessage(e.getMessage());
                 setTarget(data, "Confirm.vm");
                 return;
             }
