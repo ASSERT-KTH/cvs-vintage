@@ -1,4 +1,4 @@
-/* $Id: Main.java,v 1.31 2001/03/25 21:53:15 larryi Exp $
+/* $Id: Main.java,v 1.32 2001/05/21 04:44:24 costin Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -107,7 +107,7 @@ import org.apache.tomcat.util.compat.Jdk11Compat;
 	@author Costin Manolache
 	@author Ignacio J. Ortega
 	@author Mel Martinez mmartinez@g1440.com
-	@version $Revision: 1.31 $ $Date: 2001/03/25 21:53:15 $
+	@version $Revision: 1.32 $ $Date: 2001/05/21 04:44:24 $
  */
 public class Main{
 
@@ -174,7 +174,7 @@ public class Main{
     String serverBase;
     String commonBase;
     String homeDir;
-    static final String DEFAULT_CONFIG="conf/server.xml";
+    static final String DEFAULT_CONFIG="conf" + File.separator + "server.xml";
     boolean doStop=false;
     // if needed
     // null means user didn't set one
@@ -204,7 +204,7 @@ public class Main{
         try {
             File f = new File(base);
             r = f.getCanonicalPath();
-            if( ! r.endsWith("/") ) r+="/";
+            if( ! r.endsWith("/") && ! r.endsWith(File.separator) ) r+=File.separator;
         } catch (IOException ioe) {
             ioe.printStackTrace();
             r=base;
@@ -232,9 +232,11 @@ public class Main{
             return libBase;
         }
         if( installDir!=null ){
-            libBase=checkDir( installDir + "/lib/container");
+            libBase=checkDir( installDir + File.separator + "lib" +
+			      File.separator + "container");
         }else{
-            libBase=checkDir("./lib/container");
+            libBase=checkDir("." + File.separator + "lib" +
+			     File.separator + "container");
         }
         return libBase;
     }
@@ -244,9 +246,11 @@ public class Main{
             return serverBase;
         }
         if( installDir!=null ){
-            serverBase=checkDir( installDir + "/lib/apps");
+            serverBase=checkDir( installDir + File.separator + "lib" +
+				 File.separator + "apps");
         }else{
-            serverBase=checkDir("./lib/apps");
+            serverBase=checkDir("." + File.separator + "lib" +
+				File.separator + "apps");
         }
         return serverBase;
     }
@@ -256,9 +260,11 @@ public class Main{
             return commonBase;
         }
         if( installDir!=null ){
-            commonBase=checkDir( installDir + "/lib/common");
+            commonBase=checkDir( installDir + File.separator + "lib" +
+				 File.separator+ "common");
         }else{
-            commonBase=checkDir("./lib/common");
+            commonBase=checkDir("." +File.separator + "lib" +
+				File.separator + "common");
         }
         return commonBase;
     }
