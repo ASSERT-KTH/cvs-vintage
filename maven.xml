@@ -17,23 +17,34 @@
     <attainGoal name="torque:om"/>
   </preGoal>
 
-  <postGoal name="war:webapp"> 
+  <preGoal name="war:webapp">
+    <ant:tstamp/>
+    <ant:filterset id="scarab.filter">
+      <ant:filter token="VERSION"
+                value="${pom.currentVersion}" />
+      <ant:filter token="BUILD_DATE"
+                value="${DSTAMP}${TSTAMP}" />
+      <ant:filter token="SCARAB_MODULE_CODE_LENGTH"
+                value="${scarab.module.code.length}" />
+    </ant:filterset>
     <j:set var="warWebappBuildDir"
         value="${pom.getPluginContext('maven-war-plugin').getVariable('maven.war.webapp.dir')}"/>
     <ant:echo message="Copying files to webapp ${warWebappBuildDir}"/>
     <ant:copy todir="${warWebappBuildDir}/WEB-INF/conf">
       <ant:fileset dir="${maven.src.dir}/conf/conf"
           includes="**/*.*"/>
+      <ant:filterset refid="scarab.filter"/>
     </ant:copy>
     <ant:copy todir="${warWebappBuildDir}/WEB-INF/sql">
       <ant:fileset dir="${maven.src.dir}/sql"
           includes="**/*.*"/>
+      <ant:filterset refid="scarab.filter"/>
     </ant:copy>    
     <!--ant:copy todir="${warWebappBuildDir}/WEB-INF/classes">
       <ant:fileset dir="${maven.src.dir}/conf/classes"
           includes="**/*.*"/>
     </ant:copy-->    
-  </postGoal>
+  </preGoal>
   
   <postGoal name="clean:clean"> 
      <ant:delete>
