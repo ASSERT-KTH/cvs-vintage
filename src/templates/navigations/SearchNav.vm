@@ -2,10 +2,11 @@
   #set ($module = $scarabR.CurrentModule)
 #end
 #if ($scarabR.CurrentIssueType)
-  #set ($issuetype = $scarabR.CurrentIssueType)
+  #set ($currentIssueType = $scarabR.CurrentIssueType)
 #end
+#set ($user = $data.User)
 
-#if ($data.User.hasLoggedIn() && $module)
+#if ($user.hasLoggedIn() && $module)
 <div id="topmodule">
  <table border="0" cellspacing="0" cellpadding="3">
   <tr>
@@ -20,15 +21,15 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 1)
 <td>
-<form action="$link.setPage($data.User.HomePage).setAction("SelectIssueType")" 
+<form action="$link.setPage($user.HomePage).setAction("SelectIssueType")" 
     method="get">
  <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" 
-    value="$data.User.HomePage" />
+    value="$user.HomePage" />
  <select name="$scarabG.Constant.NEW_ISSUE_TYPE" tabindex="3" 
     onChange="this.form.submit();">
   #foreach($issueType in $issueTypes)
     #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
-    <option#if ($issueType.QueryKey == $scarabR.CurrentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
+    <option#if ($issueType.QueryKey == $currentIssueType.QueryKey) selected="selected"#end value="$issueType.QueryKey">$rmit.DisplayName</option>
   #end
  </select>
 ## give actionEvent as hidden field so user does not have to click Go,
@@ -47,24 +48,28 @@
     <option value="AdvancedQuery.vm">$l10n.SelectQuery</option>
     <option value="AdvancedQuery.vm">&#160;$l10n.Advanced</option>
     <option value="Search.vm">&#160;$l10n.Custom</option>
-    #if ($scarabR.CurrentIssueType && $data.User.hasMostRecentQuery())
+    #if ($currentIssueType && $user.hasMostRecentQuery())
         <option value="IssueList.vm">&#160;$l10n.MostRecent</option>
     #end
-    #if ($scarabR.CurrentIssueType && $data.User.getDefaultQuery($module, $scarabR.CurrentIssueType))
-        <option value="$data.User.getDefaultQuery($module, $scarabR.CurrentIssueType).QueryId" >&#160;Default query</option> 
+  
+    #if ($currentIssueType)
+      #set ($defaultQuery = $user.getDefaultQuery($module, $currentIssueType))
+      #if ($defaultQuery)
+        <option value="$defaultQuery.QueryId" >&#160;Default query</option>
+      #end 
     #end
 
 #set ($privateQueries = $scarabR.PrivateQueries)
 #set ($globalQueries = $scarabR.GlobalQueries)
 
-#if ($privateQueries && $privateQueries.size() > 0)
+#if ($privateQueries && !$privateQueries.isEmpty())
     <option value="QueryList.vm">$l10n.SavedPersonalQueries</option>
    #foreach ($query in $privateQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
    #end
 #end
 
-#if ($globalQueries && $globalQueries.size() > 0)
+#if ($globalQueries && !$globalQueries.isEmpty())
     <option value="QueryList.vm">$l10n.SavedProjectQueries</option>
    #foreach ($query in $globalQueries)
     <option value="$query.QueryId">&#160;$query.Name</option>
@@ -79,23 +84,15 @@
   </td>
 
 #if ($currentIssueType)
-  <td>
-    ## Add Template list to the top bar so that using a template will be easier
-    #set ($allTemplates = $scarabR.IssueTemplates)
-    #if ($allTemplates.size() > 0)
-    
-    #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($scarabR.CurrentIssueType))
-    #if ($rmit.Dedupe)
-      #set ($wizardScreen = "entry,Wizard1.vm")
-    #else
-      #set ($wizardScreen = "entry,Wizard3.vm")
-    #end 
-
+  ## Add Template list to the top bar so that using a template will be easier
+  #set ($allTemplates = $scarabR.IssueTemplates)
+  #if ($allTemplates.size() > 0)    
+   <td>
     <form action="$link.setPage("SaveTemplate.vm")" method="POST">
     <input type="hidden" name="action" value="TemplateList" />
     <input type="hidden" name="eventSubmit_doUsetemplate" value="foo" />
-    <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" value="$wizardScreen" />
-    #set ($user = $data.User)
+    <input type="hidden" name="$scarabG.Constant.OTHER_TEMPLATE" 
+        value="$scarabR.NextEntryTemplate" />
     #set ($permItemDelete = $scarabR.hasPermission($scarabG.Permission.ITEM__DELETE, $module))
     <select name="templateId" tabindex="5" onChange="this.form.submit();">
          <option value="0">$l10n.SelectTemplate</option>
@@ -108,11 +105,10 @@
     </select>
     <noscript><input type="submit" value="$l10n.Go" name="eventSubmit_doUsetemplate" tabindex="6" /></noscript>
     </form>
-    #end
-    </td>
+   </td>
+  #end
 #end
   </tr>
  </table>
 </div>
 #end
-

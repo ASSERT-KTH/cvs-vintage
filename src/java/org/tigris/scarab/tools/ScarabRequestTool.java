@@ -1990,7 +1990,7 @@ try{
     {
         return QueryPeer.getQueries(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "avail", "desc", "private");
+               "name", "asc", "private");
     }
 
     /**
@@ -2001,7 +2001,7 @@ try{
     {
         return QueryPeer.getQueries(getCurrentModule(),
                getCurrentIssueType(), (ScarabUser)data.getUser(), 
-               "avail", "desc", "global");
+               "name", "asc", "global");
     }
 
     /**
