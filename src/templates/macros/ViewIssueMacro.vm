@@ -58,7 +58,7 @@
        #set ($attrInput = $intake.AttributeValue.mapTo($attVal))
        #if ($attVal.Attribute.isOptionAttribute())
           $!attVal.AttributeOption.Name
-	   #elseif ($attr.isUserAttribute())
+       #elseif ($attr.isUserAttribute())
           #listUsers($attr)
        #else
           $!attrInput.Value
@@ -360,50 +360,70 @@
 ## ATTACHMENT
 #set ($attachments = $currentIssue.Attachments)
 #if ($attachments.size() > 0 )
-<h3>Attachment</h3>
-    <div class="axial">
-    <table cellpadding="3" cellspacing="2" border="0">
+    <h3>Attachment</h3>
+    <div>
+    <table width="100%" cellpadding="3" cellspacing="2" border="1">
        #set ($atch = $scarabR.Attachment)
        #set ($intakeAttachment = $intake.Attachment.mapTo($atch))
-       #if ($atch.Name)
+       #set ($intakeAttachment = $intake.Attachment.setKey("fileKey"))
+       <tr>
+        <th> &nbsp; </th>
+        <th>File Name</th>
+        <th>File Description</th>
+       </tr>
+       #foreach ($file in $currentIssue.Attachments)
+           #indexedRows($velocityCount)
+           #if ($file.TypeId.toString().equals("1"))
+               <tr>
+                  <td>
+                    <input type="checkbox" name="file_$file.AttachmentId" />
+                  </td>
+                  <td>$file.FileName</td>
+                  <td>$file.Name</td>
+                </tr>
+            #end
+       #end
+       #if ($canEdit)
             <tr>
-            <th>Attachment description</th>
-            <td>
-                 $!intakeAttachment.Name
-            </td>
+               <th>Add attachment</th>
+               <td>
+                <input type="file" name="$intakeAttachment.File.Key" size="45"
+                value="$!intakeAttachment.File.Value.FileName" />
+               </td>
+            </tr>
+            <tr>
+               <th>Attachment description</th>
+               <td>
+                #textAreaMedium("$intakeAttachment.Name.Key" $intakeAttachment.Name)
+               </td>
             </tr>
        #end
-       <tr>
-        <th>File name</th>
-        <td>
-        <select name="view_file_$intakeAttachment.Id.Key" class="select">
-            #if (!$atch.AttachmentId)
-                <option value="0">Choose file name</option>
-            #else
-                <option value=$atch.AttachmentId>
-                $atch.FilePath</option>
-            #end
-            #foreach ($attachment in $currentIssue.Attachments)
-                <option value="$attachment.AttachmentId">
-                $attachment.FilePath</option>
-            #end
-        </select>
-        </td>
-     </tr>
-     #if ( $atch.DataAsString)
-     <tr>
-      <th>Attachment file content</th>
-        <td>
-          <pre>$!intakeAttachment.DataAsString</pre>
-        </td>
-     </tr>
-     #end
-  </table>
-  </div>
 
-<div class="functnbar3">
-  <input type="submit" value="View File" name="eventSubmit_doViewattachment" />
-</div>
+       #if ($atch.Name)
+            <tr>
+               <th>Attachment description</th>
+               <td>
+                 $!atch.Name
+               </td>
+            </tr>
+       #end
+       #if ( $atch.DataAsString)
+            <tr>
+               <th>Attachment file content</th>
+               <td>
+                 <pre>$!atch.DataAsString</pre>
+               </td>
+            </tr>
+       #end
+    </table>
+    </div>
+    <div class="functnbar3">
+        <input type="submit" value="View file" name="eventSubmit_doViewfile"  />&#160;
+        #if ($canEdit)
+            <input type="submit" value="Add file" name="eventSubmit_doSubmitfile"  />&#160;
+        #end
+    </div>
+    
 #end
 
 ## ISSUE HISTORY

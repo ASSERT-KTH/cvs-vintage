@@ -23,7 +23,7 @@ You are viewing an issue in a different Module than is currently selected.
 #if ($currentIssue)
 
  #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
- <form method="post" action="$link.setPage("ViewIssue.vm").setAction("ModifyIssue")">
+ <form method="post" enctype="multipart/form-data" action="$link.setPage("ViewIssue.vm").setAction("ModifyIssue")">
    <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="ViewIssue.vm" />
 
  #if ($fullHistory)
