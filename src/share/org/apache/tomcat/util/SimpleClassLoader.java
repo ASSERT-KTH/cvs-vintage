@@ -501,4 +501,9 @@ public class SimpleClassLoader extends ClassLoader {
         return buf;
     }
 
+    public URL[] getURLs() {
+        //TODO:  Add custom implementation.
+        return urls;
+    }
+
 }
