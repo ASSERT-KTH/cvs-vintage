@@ -146,6 +146,7 @@ public class Ajp13
     public static final byte SC_A_SSL_CERT      = 7;
     public static final byte SC_A_SSL_CIPHER    = 8;
     public static final byte SC_A_SSL_SESSION   = 9;
+    public static final byte SC_A_SECRET   = 12;
 
     // Used for attributes which are not in the list above
     public static final byte SC_A_REQ_ATTRIBUTE = 10; 
@@ -218,7 +219,8 @@ public class Ajp13
     int pos;   // Current read position within that buffer
 
     boolean end_of_stream; // true if we've received an empty packet
-
+    String secret=null;
+    
     // True to ignore HTTP server auth 
     private boolean tomcatAuthentication=true;
 
@@ -252,6 +254,10 @@ public class Ajp13
 	out = socket.getOutputStream();
 	in  = socket.getInputStream();
 	pos = 0;
+    }
+
+    public String getSecret() {
+        return secret;
     }
 
     /**
@@ -292,6 +298,10 @@ public class Ajp13
 	    return decodeRequest(req, hBuf);
 	    
 	case JK_AJP13_SHUTDOWN:
+            if( hBuf.getLen() > 3 ) {
+                // we have a secret 
+                secret=hBuf.getString();
+            }
 	    return -2;
 	}
 	return 200; // XXX This is actually an error condition 
@@ -410,6 +420,12 @@ public class Ajp13
                 }
                 break;
 
+            case SC_A_SECRET   :
+                String s=msg.getString();
+                if( s!=null )
+                    secret=s;
+                break;
+                    
 	    case SC_A_SSL_CIPHER   :
 		isSSL = true;
 		req.setAttribute("javax.servlet.request.cipher_suite",
@@ -428,7 +444,10 @@ public class Ajp13
                 break;
 
 	    default:
-		return 500; // Error
+                // Ignore. Assume a single-string value - we shouldn't
+                // allow anything else.
+                msg.getString();
+                break;
             }
         }
 
