@@ -1,4 +1,4 @@
-// $Id: NSUMLModelEventPump.java,v 1.6 2004/12/01 19:37:26 linus Exp $
+// $Id: NSUMLModelEventPump.java,v 1.7 2004/12/30 22:34:18 linus Exp $
 // Copyright (c) 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -460,7 +460,7 @@ class NSUMLClassEventListener extends NSUMLEventListener {
         super(l, modelClass, ev);
 
         UmlModelEventPump.getPump()
-	    .addClassModelEventListener(this, (Class) getElement(),
+	    .addClassModelEventListener(this, getElement(),
 					getEvents());
     }
 
@@ -469,6 +469,7 @@ class NSUMLClassEventListener extends NSUMLEventListener {
      */
     public void delete() {
         UmlModelEventPump.getPump()
-	    .removeClassModelEventListener(this, (Class) getElement());
+	    .removeClassModelEventListener(this, getElement(),
+	            			   getEvents());
     }
 }
