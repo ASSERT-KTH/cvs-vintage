@@ -51,7 +51,7 @@ import org.jboss.logging.Log;
  *		One per cmp entity bean type. 		
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -62,6 +62,8 @@ public class JDBCEntityBridge implements EntityBridge {
 	protected JDBCCMPFieldBridge[] primaryKeyFields;	
 
 	protected JDBCCMRFieldBridge[] cmrFields;
+	protected Map cmrFieldsByName;
+	
 	protected JDBCSelectorBridge[] selectors;
 	
 	protected JDBCCMPFieldBridge[] eagerLoadFields;
@@ -154,7 +156,8 @@ public class JDBCEntityBridge implements EntityBridge {
 	}
 	
 	protected void loadCMRFields(JDBCEntityMetaData metadata) throws DeploymentException {
-		ArrayList cmrFieldList = new ArrayList(metadata.getCMPFields().size());
+		cmrFieldsByName = new HashMap(metadata.getRelationshipRoles().size());
+		ArrayList cmrFieldList = new ArrayList(metadata.getRelationshipRoles().size());
 
       // create each field    
 		Iterator iter = metadata.getRelationshipRoles().iterator();
@@ -162,6 +165,7 @@ public class JDBCEntityBridge implements EntityBridge {
 			JDBCRelationshipRoleMetaData relationshipRole = (JDBCRelationshipRoleMetaData)iter.next();
 			JDBCCMRFieldBridge cmrField = new JDBCCMRFieldBridge(this, manager, relationshipRole); 
 			cmrFieldList.add(cmrField);
+			cmrFieldsByName.put(cmrField.getFieldName(), cmrField);
 		}
 		
 		// save the cmr fields in the cmr field array
@@ -238,6 +242,10 @@ public class JDBCEntityBridge implements EntityBridge {
 	
 	public CMRFieldBridge[] getCMRFields() {
 		return cmrFields;
+	}
+	
+	public JDBCCMRFieldBridge getCMRFieldByName(String name) {
+		return (JDBCCMRFieldBridge)cmrFieldsByName.get(name);
 	}
 	
 	public JDBCCMRFieldBridge[] getJDBCCMRFields() {
