@@ -6,7 +6,9 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE scarab SYSTEM "$staticLink.setPath("/dtd/scarab-issues.dtd")">
 <scarab>
-  <module id="$module.ModuleId" parent="$module.ParentId">
+  <module>
+    <id>$module.ModuleId</id>
+    <parent-id>$module.ParentId</parent-id>
     <name>$module.RealName</name>
     <owner-id>$scarabR.getUser($module.OwnerId).UserName</owner-id>
     <description>$module.Description</description>
@@ -17,15 +19,20 @@
   #set ($issue = $scarabR.getIssue($issueId))
   #if ($issue)
   <issues>
-    <issue id="$issue.IdCount">
+    <issue>
+      <id>$issue.IdCount</id>
       <artifact-type>$issue.IssueType.Name</artifact-type>
         <transactions>
         #foreach ($transaction in $issue.Transactions)
 
-          <transaction id="$transaction.TransactionId">
+          <transaction>
+            <id>$transaction.TransactionId</id>
             <type>$transaction.TransactionType.Name</type>
             <committed-by>$scarabR.getUser($transaction.CreatedBy).UserName</committed-by>
-            <created-date format="$sdf.toPattern()">$sdf.format($transaction.CreatedDate)</created-date>
+            <created-date>
+              <format>$sdf.toPattern()</format>
+              <timestamp>$sdf.format($transaction.CreatedDate)</timestamp>
+            </created-date>
             <activities>
             #foreach ($activity in $transaction.ActivityList)
 
@@ -67,8 +74,14 @@
             #end
         
               <mimetype>$attachment.MimeType</mimetype>
-              <created-date format="$sdf.toPattern()">$sdf.format($attachment.CreatedDate)</created-date>
-              <modified-date format="$sdf.toPattern()">$sdf.format($attachment.ModifiedDate)</modified-date>
+              <created-date>
+                <format>$sdf.toPattern()</format>
+                <timestamp>$sdf.format($attachment.CreatedDate)</timestamp>
+              </created-date>
+              <modified-date>
+                <format>$sdf.toPattern()</format>
+                <timestamp>$sdf.format($attachment.ModifiedDate)</timestamp>
+              </modified-date>
               <created-by>$scarabR.getUser($attachment.CreatedBy).UserName</created-by>
               <modified-by>$!scarabR.getUser($attachment.ModifiedBy).UserName</modified-by>
             </attachment>
