@@ -99,6 +99,19 @@
     </java>
   </target>
 
+  <target name="test-attributevalue" depends="compile">
+    <echo>Running Attribute Value tests...</echo>
+
+    <java     classname="${test.runner}" fork="yes" 
+            failonerror="${testbed.failonerror}">
+      <jvmarg value="${config.dir}"/>
+      <arg value="org.tigris.scarab.om.AttributeValueTest"/>
+      <classpath>
+        <path refid="classpath"/>
+      </classpath>
+    </java>
+  </target>
+
   <target name="test-query" depends="compile">
     <echo>Running Query tests...</echo>
 
