@@ -1,4 +1,8 @@
 /*
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/collections/Attic/SimplePool.java,v 1.2 2001/02/28 19:24:32 larryi Exp $
+ * $Revision: 1.2 $
+ * $Date: 2001/02/28 19:24:32 $
+ *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -59,11 +63,6 @@
 
 package org.apache.tomcat.util.collections;
 
-import java.util.zip.*;
-import java.net.*;
-import java.util.*;
-import java.io.*;
-
 /**
  * Simple object pool. Based on ThreadPool and few other classes
  *
@@ -79,9 +78,6 @@ public final class SimplePool  {
     private Object pool[];
 
     private int max;
-    private int minSpare;
-    private int maxSpare;
-
     private int current=-1;
 
     Object lock;
@@ -106,12 +102,11 @@ public final class SimplePool  {
      * Add the object to the pool, silent nothing if the pool is full
      */
     public  void put(Object o) {
-	int idx=-1;
 	synchronized( lock ) {
-	    if( current < max - 1 )
-		idx=++current;
-	    if( idx >= 0 ) 
-		pool[idx]=o;
+	    if( current < (max-1) ) {
+		current += 1;
+		pool[current] = o;
+            }
 	}
     }
 
@@ -119,20 +114,20 @@ public final class SimplePool  {
      * Get an object from the pool, null if the pool is empty.
      */
     public  Object get() {
-	int idx=-1;
+	Object item = null;
 	synchronized( lock ) {
-	    if( current >= 0 )
-		idx=current--;
-	    if( idx >= 0  ) 
-		return pool[idx];
+	    if( current >= 0 ) {
+		item = pool[current];
+		current -= 1;
+	    }
 	}
-	return null;
+	return item;
     }
 
-    /** Return the size of the pool
+    /**
+     * Return the size of the pool
      */
     public int getMax() {
 	return max;
     }
-
 }
