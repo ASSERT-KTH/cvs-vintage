@@ -88,6 +88,7 @@
   </target>  
 
   <target name="compile.conform" if="test.conform.dir.exist">
+  	<mkdir dir="${test.build}/classes"/>
     <javac 
       srcdir="${test.src}"
       destdir="${test.build}/classes"
