@@ -16,7 +16,7 @@
         early tests.
     -->
 
-     <property name="revision" value="$Revision: 1.49 $" />  
+     <property name="revision" value="$Revision: 1.50 $" />  
      <property name="host" value="127.0.0.1" />
      <property name="port"     value="8080" />
      <property name="colonPort" value=":${port}" />
@@ -1373,6 +1373,9 @@ mod_webapp into mod_jk )
              returnCode="${http.protocol} 404" />
 
       <gtest  request="GET /test/nul.jsp HTTP/1.0"
+             returnCode="${http.protocol} 404" />
+
+      <gtest  request="GET /test/NUL.jsp HTTP/1.0"
              returnCode="${http.protocol} 404" />
 
       <gtest  request="GET /test/prn.jsp HTTP/1.0"
