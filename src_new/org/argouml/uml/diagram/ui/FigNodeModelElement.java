@@ -25,7 +25,7 @@
 // Classes: FigNodeModelElement
 // Original Author: abonner
 
-// $Id: FigNodeModelElement.java,v 1.42 2002/12/12 22:54:59 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.43 2002/12/12 23:54:04 kataka Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -667,11 +667,17 @@ public abstract class FigNodeModelElement
     public void setOwner(Object own) {
         Object oldOwner = getOwner();
         super.setOwner(own);
-        if (oldOwner instanceof MModelElement)
+        if (oldOwner instanceof MModelElement) {
+            // patch for issue 1439
             UmlModelEventPump.getPump().removeModelEventListener(
                 this,
                 (MModelElement) oldOwner);
+            ((MModelElement)oldOwner).removeMElementListener(UmlModelEventPump.getPump());   
+        }         
+            
         if (own instanceof MModelElement) {
+            // patch for issue 1439
+            ((MModelElement)own).addMElementListener(UmlModelEventPump.getPump());
             MModelElement me = (MModelElement) own;
             // UmlModelEventPump.getPump().removeModelEventListener(this, me);
             UmlModelEventPump.getPump().addModelEventListener(this, me);
