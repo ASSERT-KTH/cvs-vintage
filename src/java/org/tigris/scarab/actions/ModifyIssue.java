@@ -107,7 +107,7 @@ import org.tigris.scarab.util.ScarabConstants;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.95 2002/05/17 22:46:31 jon Exp $
+    @version $Id: ModifyIssue.java,v 1.96 2002/05/17 23:03:38 jon Exp $
 */
 public class ModifyIssue extends BaseModifyIssue
 {
@@ -789,11 +789,8 @@ public class ModifyIssue extends BaseModifyIssue
         else
         {
             // Check that child ID entered corresponds to a valid issue
-            try
-            {
-                childIssue = scarabR.getIssue(childId.toString());
-            }
-            catch (Exception e)
+            childIssue = scarabR.getIssue(childId.toString());
+            if (childIssue == null)
             {
                 childId.setMessage("The id you entered does " +
                                    "not correspond to a valid issue.");
