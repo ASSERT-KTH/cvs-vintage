@@ -1,4 +1,4 @@
-// $Id: ColumnDescriptor.java,v 1.27 2003/08/30 23:23:49 alexb Exp $
+// $Id: ColumnDescriptor.java,v 1.28 2003/08/31 00:17:57 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -493,7 +493,7 @@ class ColumnSupplier extends ColumnDescriptor {
     public Object getValueFor(Object target) {
 	if (!(ModelFacade.isADependency(target))) return "N/A";
 	String name = "";
-	Collection conns = ((MDependency) target).getSuppliers();
+	Collection conns = ModelFacade.getSuppliers(target);
 	if (conns != null && (conns.size() == 1)) {
 	    Iterator it = conns.iterator();
 	    while (it.hasNext()) {
@@ -516,7 +516,7 @@ class ColumnClient extends ColumnDescriptor {
     public Object getValueFor(Object target) {
 	if (!(ModelFacade.isADependency(target))) return "N/A";
 	String name = "";
-	Collection conns = ((MDependency) target).getClients();
+	Collection conns = ModelFacade.getClients(target);
 	if (conns != null && (conns.size() == 1)) {
 	    Iterator it = conns.iterator();
 	    while (it.hasNext()) {

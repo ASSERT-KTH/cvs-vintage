@@ -1,5 +1,4 @@
-
-// $Id: GoOperationToCollaboration.java,v 1.5 2003/08/25 19:15:56 bobtarling Exp $
+// $Id: GoOperationToCollaboration.java,v 1.6 2003/08/31 00:17:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,10 +26,9 @@
 package org.argouml.uml.diagram.collaboration.ui;
 
 import java.util.Collection;
+import org.argouml.model.ModelFacade;
 
 import org.argouml.ui.AbstractGoRule;
-import ru.novosoft.uml.foundation.core.MOperation;
-
 /**
  * Go rule for navigation in the navpane from an operation to the collaboration
  * representing it.
@@ -45,8 +43,8 @@ public class GoOperationToCollaboration extends AbstractGoRule {
      * @see org.argouml.ui.AbstractGoRule#getChildren(java.lang.Object)
      */
     public Collection getChildren(Object parent) {
-        if (org.argouml.model.ModelFacade.isAOperation(parent)) {
-            return ((MOperation) parent).getCollaborations();
+        if (ModelFacade.isAOperation(parent)) {
+            return ModelFacade.getCollaborations(parent);
         }
         return null;
     }

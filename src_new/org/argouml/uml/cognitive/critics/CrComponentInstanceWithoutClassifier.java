@@ -1,4 +1,4 @@
-// $Id: CrComponentInstanceWithoutClassifier.java,v 1.6 2003/08/30 21:28:52 alexb Exp $
+// $Id: CrComponentInstanceWithoutClassifier.java,v 1.7 2003/08/31 00:17:57 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Vector;
 import org.argouml.cognitive.Designer;
 import org.argouml.cognitive.ToDoItem;
+import org.argouml.model.ModelFacade;
 import org.argouml.uml.diagram.deployment.ui.FigComponentInstance;
 import org.argouml.uml.diagram.deployment.ui.FigMNodeInstance;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;
@@ -83,9 +84,9 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
      * are the UMLDeploymentDiagram and all FigComponentInstances with no
      * enclosing FigMNodeInstance
      **/
-    public VectorSet computeOffenders(UMLDeploymentDiagram dd) { 
+    public VectorSet computeOffenders(UMLDeploymentDiagram deploymentDiagram) { 
 
-	Vector figs = dd.getLayer().getContents();
+	Vector figs = deploymentDiagram.getLayer().getContents();
 	VectorSet offs = null;
 	int size = figs.size();
 	boolean isNode = false;
@@ -96,35 +97,30 @@ public class CrComponentInstanceWithoutClassifier extends CrUML {
 	for (int i = 0; i < size; i++) {
 	    Object obj = figs.elementAt(i);
 	    if (!(obj instanceof FigComponentInstance)) continue;
-	    FigComponentInstance fc = (FigComponentInstance) obj;
-	    if (fc != null) {
-		MComponentInstance coi = (MComponentInstance) fc.getOwner();
+	    FigComponentInstance figComponentInstance = (FigComponentInstance) obj;
+	    if (figComponentInstance != null) {
+		MComponentInstance coi = (MComponentInstance) figComponentInstance.getOwner();
 		if (coi != null) {
 		    Collection col = coi.getClassifiers();
 		    if (col.size() > 0) continue;     
 		}       
 		if (offs == null) {
 		    offs = new VectorSet();
-		    offs.addElement(dd);
+		    offs.addElement(deploymentDiagram);
 		}
-		offs.addElement(fc);
-	    }
-	    else if (fc.getEnclosingFig() != null 
-		     && ((((MComponentInstance)
-			   fc.getOwner()).getNodeInstance())
-			 == null))
-	    {
+		offs.addElement(figComponentInstance);
+	    } else if (figComponentInstance.getEnclosingFig() != null 
+		     && ((ModelFacade.getNodeInstance(figComponentInstance.getOwner()))
+			 == null)) {
 		if (offs == null) {
 		    offs = new VectorSet();
-		    offs.addElement(dd);
+		    offs.addElement(deploymentDiagram);
 		}
-		offs.addElement(fc);
+		offs.addElement(figComponentInstance);
 	    }
-     
 	}
 
 	return offs; 
     } 
 
 } /* end class CrComponentInstanceWithoutClassifier.java */
-

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramGraphModel.java,v 1.42 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.43 2003/08/31 00:17:58 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramGraphModel.java
 // Classes: ClassDiagramGraphModel
 // Original Author: jrobbins@ics.uci.edu
-// $Id: ClassDiagramGraphModel.java,v 1.42 2003/08/30 18:59:43 bobtarling Exp $
+// $Id: ClassDiagramGraphModel.java,v 1.43 2003/08/31 00:17:58 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.static_structure;
@@ -277,8 +277,8 @@ public class ClassDiagramGraphModel extends UMLMutableGraphSupport
 	    end1 = ((MGeneralization) edge).getParent();
 	}
 	else if (org.argouml.model.ModelFacade.isADependency(edge)) {
-	    Collection clients = ((MDependency) edge).getClients();
-	    Collection suppliers = ((MDependency) edge).getSuppliers();
+	    Collection clients = ModelFacade.getClients(edge);
+	    Collection suppliers = ModelFacade.getSuppliers(edge);
 	    if (clients == null || suppliers == null) return false;
 	    end0 = ((Object[]) clients.toArray())[0];
 	    end1 = ((Object[]) suppliers.toArray())[0];
