@@ -1,4 +1,4 @@
-// $Id: FigNodeModelElement.java,v 1.108 2004/07/17 13:10:29 kataka Exp $
+// $Id: FigNodeModelElement.java,v 1.109 2004/07/18 18:56:04 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -431,8 +431,7 @@ public abstract class FigNodeModelElement
 		&& getOwner() != null
 		&& (!ModelManagementHelper.getHelper()
 		    .isCyclicOwnership(owningModelelement, getOwner()))
-		&& (!ModelFacade.isANamespace(owningModelelement)
-		    || (CoreHelper.getHelper()
+		&& ((CoreHelper.getHelper()
 			.isValidNamespace(getOwner(),
 					  owningModelelement)))) {
                 ModelFacade.setModelElementContainer(getOwner(), 

@@ -1,4 +1,4 @@
-// $Id: FigComment.java,v 1.26 2004/02/13 21:53:15 mvw Exp $
+// $Id: FigComment.java,v 1.27 2004/07/18 18:56:04 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: FigComment.java
 // Classes: FigComment
 // Original Author: a_rueckert@gmx.net
-// $Id: FigComment.java,v 1.26 2004/02/13 21:53:15 mvw Exp $
+// $Id: FigComment.java,v 1.27 2004/07/18 18:56:04 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -181,7 +181,8 @@ public class FigComment
 
     /**
      * Create a note for a given model element.
-     *
+     * @deprecated as of 0.17.1 nobody should use this constructor since it not only constructs
+     * the fig but also the model behind it. That should not be done by a fig which is only a view to the model
      * @param element The annotated model element.
      */
     public FigComment(Object element) {

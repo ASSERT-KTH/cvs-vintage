@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramGraphModel.java,v 1.40 2004/07/17 13:10:29 kataka Exp $
+// $Id: UseCaseDiagramGraphModel.java,v 1.41 2004/07/18 18:56:05 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -315,6 +315,7 @@ public class UseCaseDiagramGraphModel
      *              this graph, <code>false</code> otherwise.
      */
     public boolean canAddNode(Object node) {
+        if (super.canAddNode(node)) return true;
         if (_nodes.contains(node)) {
 	    return false;
 	}
@@ -339,6 +340,9 @@ public class UseCaseDiagramGraphModel
      *              this graph, <code>false</code> otherwise.
      */
     public boolean canAddEdge(Object edge)  {
+        if (super.canAddEdge(edge)) {
+            return true;
+        }
 
         // Give up if we are already on the graph
         if (edge == null) return false;
@@ -504,7 +508,7 @@ public class UseCaseDiagramGraphModel
         // Add the element and place it in the namespace of the model
         _edges.addElement(edge);
 
-        if (ModelFacade.getNamespace(edge) == null) {
+        if (ModelFacade.isAModelElement(edge) && ModelFacade.getNamespace(edge) == null) {
             ModelFacade.addOwnedElement(_model, /*(MModelElement)*/ edge);
         }
 

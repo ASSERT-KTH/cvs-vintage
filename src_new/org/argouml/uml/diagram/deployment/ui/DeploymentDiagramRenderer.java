@@ -1,4 +1,4 @@
-// $Id: DeploymentDiagramRenderer.java,v 1.12 2003/09/13 22:06:05 alexb Exp $
+// $Id: DeploymentDiagramRenderer.java,v 1.13 2004/07/18 18:56:03 kataka Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -29,7 +29,10 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.argouml.uml.diagram.static_structure.ui.FigClass;
+import org.argouml.uml.diagram.static_structure.ui.FigComment;
+import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.static_structure.ui.FigInterface;
 import org.argouml.uml.diagram.static_structure.ui.FigLink;
 import org.argouml.uml.diagram.ui.FigAssociation;
@@ -62,6 +65,9 @@ public class DeploymentDiagramRenderer
 	else if (ModelFacade.isAInterface(node))
 	    return new FigInterface(gm, node); 
 	else if (ModelFacade.isAObject(node)) return new FigObject(gm, node);
+	  else if (ModelFacade.isAComment(node)) {
+	            return new FigComment(gm, node);
+	        }
 	cat.debug("TODO DeploymentDiagramRenderer getFigNodeFor");
 	return null;
     }
@@ -111,6 +117,9 @@ public class DeploymentDiagramRenderer
 	    depFig.getFig().setDashed(true);
 	    return depFig;
 	}
+	if (edge instanceof CommentEdge) {
+            return new FigEdgeNote(edge, lay);
+        }
 
 	return null;
     }

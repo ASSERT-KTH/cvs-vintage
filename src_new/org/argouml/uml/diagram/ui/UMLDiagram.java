@@ -1,4 +1,4 @@
-// $Id: UMLDiagram.java,v 1.45 2004/06/24 06:25:43 linus Exp $
+// $Id: UMLDiagram.java,v 1.46 2004/07/18 18:56:04 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,8 +38,10 @@ import org.argouml.kernel.ProjectManager;
 import org.argouml.model.ModelFacade;
 import org.argouml.model.uml.UmlModelEventPump;
 import org.argouml.ui.ArgoDiagram;
+import org.argouml.ui.CmdCreateNode;
 import org.argouml.ui.CmdSetMode;
 import org.argouml.ui.targetmanager.TargetManager;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 import org.tigris.gef.base.ModeBroom;
 import org.tigris.gef.base.ModeCreateFigCircle;
 import org.tigris.gef.base.ModeCreateFigInk;
@@ -49,6 +51,7 @@ import org.tigris.gef.base.ModeCreateFigRRect;
 import org.tigris.gef.base.ModeCreateFigRect;
 import org.tigris.gef.base.ModeCreateFigSpline;
 import org.tigris.gef.base.ModeCreateFigText;
+import org.tigris.gef.base.ModeCreatePolyEdge;
 import org.tigris.gef.base.ModeSelect;
 import org.tigris.gef.presentation.Fig;
 import org.tigris.toolbar.ToolBarFactory;
@@ -76,6 +79,24 @@ public abstract class UMLDiagram
 
     ////////////////////////////////////////////////////////////////
     // actions for toolbar
+    
+    /**
+     * Tool to add a comment node.<p>
+     */
+    protected static Action _actionComment =
+	new RadioAction(new CmdCreateNode(ModelFacade.COMMENT, "Note"));
+
+    /**
+     * Tool to create an relationship between a comment node and some other node
+     * using a polyedge.<p>
+     */
+    protected static Action _actionCommentLink = new RadioAction(
+        new CmdSetMode(
+            ModeCreatePolyEdge.class,  
+            "edgeClass",
+            CommentEdge.class,
+            "CommentLink"));
+
 
     protected static Action _actionSelect =
         new CmdSetMode(ModeSelect.class, "Select");

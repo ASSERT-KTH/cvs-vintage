@@ -1,4 +1,4 @@
-// $Id: CollabDiagramGraphModel.java,v 1.35 2003/11/10 12:35:04 jhraigniac Exp $
+// $Id: CollabDiagramGraphModel.java,v 1.36 2004/07/18 18:56:03 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -38,6 +38,7 @@ import org.argouml.model.ModelFacade;
 
 import org.argouml.model.uml.foundation.core.CoreHelper;
 import org.argouml.uml.diagram.UMLMutableGraphSupport;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
 
 /** This class defines a bridge between the UML meta-model
  *  representation of the design and the GraphModel interface used by
@@ -164,6 +165,10 @@ public class CollabDiagramGraphModel extends UMLMutableGraphSupport
 	    if (clients == null || suppliers == null) return false;
 	    end0 = (clients.toArray())[0];
 	    end1 = (suppliers.toArray())[0];
+	}
+	if (edge instanceof CommentEdge) {
+	    end0 = ((CommentEdge)edge).getSource();
+	    end1 = ((CommentEdge)edge).getDestination();
 	}
 	if (end0 == null || end1 == null) return false;
 	if (!_nodes.contains(end0)) return false;

@@ -1,4 +1,4 @@
-// $Id: ClassfileImport.java,v 1.8 2003/07/24 19:40:47 alexb Exp $
+// $Id: ClassfileImport.java,v 1.9 2004/07/18 18:56:01 kataka Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -48,8 +48,8 @@ import org.argouml.util.SuffixFilter;
 /**
  * This is the main class for the classfile import.
  *
- * $Revision: 1.8 $
- * $Date: 2003/07/24 19:40:47 $
+ * $Revision: 1.9 $
+ * $Date: 2004/07/18 18:56:01 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
@@ -374,9 +374,7 @@ public class ClassfileImport extends FileImportSupport {
     public boolean initializeModule() {
 
 	// Advertise a little
-	Argo.log.info ("+---------------------------------------+");
-	Argo.log.info ("| Java classfile import module enabled! |");
-	Argo.log.info ("+---------------------------------------+");
+	
 
         return true;
     }

@@ -1,4 +1,4 @@
-// $Id: ClassDiagramRenderer.java,v 1.20 2004/06/08 01:28:24 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.21 2004/07/18 18:56:04 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: ClassDiagramRenderer.java
 // Classes: ClassDiagramRenderer
 // Original jrobbins@ics.uci.edu
-// $Id: ClassDiagramRenderer.java,v 1.20 2004/06/08 01:28:24 bobtarling Exp $
+// $Id: ClassDiagramRenderer.java,v 1.21 2004/07/18 18:56:04 kataka Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -82,6 +82,9 @@ public class ClassDiagramRenderer
         else if (ModelFacade.isAModel(node)) return new FigModel(gm, node);
         else if (ModelFacade.isASubsystem(node)) return new FigSubsystem(gm, node);
         else if (ModelFacade.isAPackage(node)) return new FigPackage(gm, node);
+        else if (ModelFacade.isAComment(node)) {
+            return new FigComment(gm, node);
+        }
         cat.error("TODO ClassDiagramRenderer getFigNodeFor " + node);
         return null;
     }
@@ -162,7 +165,10 @@ public class ClassDiagramRenderer
                 FigDependency depFig = new FigDependency(edge, lay);
                 return depFig;
             }
-        }
+        } else 
+            if (edge instanceof CommentEdge) {
+                return new FigEdgeNote(edge, lay);
+            }
         cat.error("TODO ClassDiagramRenderer getFigEdgeFor");
         return null;
     }

@@ -1,4 +1,4 @@
-// $Id: UMLClassDiagram.java,v 1.46 2004/06/24 06:25:42 linus Exp $
+// $Id: UMLClassDiagram.java,v 1.47 2004/07/18 18:56:04 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,7 +34,6 @@ import org.argouml.uml.diagram.static_structure.ClassDiagramGraphModel;
 import org.argouml.uml.diagram.ui.ActionAddAssociation;
 import org.argouml.uml.diagram.ui.RadioAction;
 import org.argouml.uml.diagram.ui.UMLDiagram;
-import org.argouml.uml.diagram.ui.ActionAddNote;
 import org.argouml.uml.diagram.ui.ActionAddAttribute;
 import org.argouml.uml.diagram.ui.ActionAddOperation;
 import org.tigris.gef.base.LayerPerspective;
@@ -164,7 +163,8 @@ public class UMLClassDiagram extends UMLDiagram {
             _actionRealize, null,
             ActionAddAttribute.SINGLETON,
             ActionAddOperation.SINGLETON, null,
-            ActionAddNote.SINGLETON
+            _actionComment,
+            _actionCommentLink
         };
 
         return actions;

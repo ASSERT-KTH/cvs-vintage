@@ -1,4 +1,4 @@
-// $Id: UseCaseDiagramRenderer.java,v 1.14 2004/07/17 13:10:30 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.15 2004/07/18 18:56:06 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,7 +25,7 @@
 // File: UseCaseDiagramRenderer.java
 // Classes: UseCaseDiagramRenderer
 // Original Author: abonner@ics.uci.edu
-// $Id: UseCaseDiagramRenderer.java,v 1.14 2004/07/17 13:10:30 kataka Exp $
+// $Id: UseCaseDiagramRenderer.java,v 1.15 2004/07/18 18:56:06 kataka Exp $
 
 // 3 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Extended to support the
 // Extend and Include relationships. JavaDoc added for clarity.
@@ -35,6 +35,9 @@ package org.argouml.uml.diagram.use_case.ui;
 
 import org.apache.log4j.Logger;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
+import org.argouml.uml.diagram.static_structure.ui.FigComment;
+import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
@@ -97,6 +100,9 @@ public class UseCaseDiagramRenderer
         else if (org.argouml.model.ModelFacade.isAUseCase(node)) {
             return new FigUseCase(gm, node);
         }
+        else if (ModelFacade.isAComment(node)) {
+            return new FigComment(gm, node);
+        }
 
         // If we get here we were asked for a fig we can't handle.
 
@@ -124,7 +130,7 @@ public class UseCaseDiagramRenderer
      *              one.
      */
 
-    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {
+    public FigEdge getFigEdgeFor(GraphModel gm, Layer lay, Object edge) {        
 
         cat.debug("making figedge for " + edge);
 
@@ -228,7 +234,11 @@ public class UseCaseDiagramRenderer
             depFig.setDestFigNode(supplierFN);
 
             return depFig;
+        } else 
+        if (edge instanceof CommentEdge) {
+            return new FigEdgeNote(edge, lay);
         }
+            
 
         // If we get here, we can't handle this sort of edge.
 

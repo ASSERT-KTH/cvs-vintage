@@ -1,4 +1,4 @@
-// $Id: CollabDiagramRenderer.java,v 1.12 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: CollabDiagramRenderer.java,v 1.13 2004/07/18 18:56:03 kataka Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -25,13 +25,16 @@
 // File: CollabDiagramRenderer.java
 // Classes: CollabDiagramRenderer
 // Original Author: agauthie@ics.uci.edu
-// $Id: CollabDiagramRenderer.java,v 1.12 2003/09/04 20:18:12 thierrylach Exp $
+// $Id: CollabDiagramRenderer.java,v 1.13 2004/07/18 18:56:03 kataka Exp $
 
 package org.argouml.uml.diagram.collaboration.ui;
 
 import org.apache.log4j.Logger;
 
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.diagram.static_structure.ui.CommentEdge;
+import org.argouml.uml.diagram.static_structure.ui.FigComment;
+import org.argouml.uml.diagram.static_structure.ui.FigEdgeNote;
 import org.argouml.uml.diagram.ui.FigDependency;
 import org.argouml.uml.diagram.ui.FigGeneralization;
 import org.argouml.uml.diagram.ui.FigMessage;
@@ -55,6 +58,9 @@ public class CollabDiagramRenderer
 	    return new FigClassifierRole(gm, lay, node);
 	if (ModelFacade.isAMessage(node))
 	    return new FigMessage(gm, lay, node);
+	if (ModelFacade.isAComment(node)) {
+            return new FigComment(gm, node);
+        }
 	cat.debug("TODO CollabDiagramRenderer getFigNodeFor");
 	return null;
     }
@@ -76,6 +82,9 @@ public class CollabDiagramRenderer
 	    FigDependency depFig = new FigDependency(edge , lay);
 	    return depFig;
 	}
+	if (edge instanceof CommentEdge) {
+            return new FigEdgeNote(edge, lay);
+        }
 
 	cat.debug("TODO CollabDiagramRenderer getFigEdgeFor");
 	return null;

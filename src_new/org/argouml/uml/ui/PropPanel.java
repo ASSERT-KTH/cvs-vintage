@@ -1,4 +1,4 @@
-// $Id: PropPanel.java,v 1.80 2004/05/24 20:32:16 mkl Exp $
+// $Id: PropPanel.java,v 1.81 2004/07/18 18:56:06 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -280,6 +280,7 @@ public abstract class PropPanel
     /**
        This method (and addMElementListener) can be overriden if the
        prop panel wants to monitor additional objects.
+       ONLY use it if the target is a NSUML modelelement
 
        @param target target of prop panel
 

@@ -1,4 +1,4 @@
-// $Id: GeneratorCSharp.java,v 1.8 2004/06/24 06:28:40 linus Exp $
+// $Id: GeneratorCSharp.java,v 1.9 2004/07/18 18:56:02 kataka Exp $
 // Copyright (c) 1996-2002, 2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -1394,6 +1394,13 @@ public class GeneratorCSharp extends Generator2
     public String getModuleAuthor() { return "Mike Lipkie"; }
     public String getModuleVersion() { return "0.1.0"; }
     public String getModuleKey() { return "module.language.csharp.generator"; }
+    
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
+     */
+    public String generateActionState(Object actionState) {       
+        return generateState(actionState);
+    }
 
 
 } /* end class GeneratorCSharp */

@@ -1,4 +1,4 @@
-// $Id: GeneratorCpp.java,v 1.12 2004/06/29 00:05:35 euluis Exp $
+// $Id: GeneratorCpp.java,v 1.13 2004/07/18 18:56:02 kataka Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -3073,7 +3073,14 @@ public class GeneratorCpp extends Generator2
     {
         this._verboseDocs = verbose;
     }
+    
 
 
+    /**
+     * @see org.argouml.application.api.NotationProvider2#generateActionState(java.lang.Object)
+     */
+    public String generateActionState(Object actionState) {       
+        return generateState(actionState);
+    }
 } /* end class GeneratorCpp */
 
