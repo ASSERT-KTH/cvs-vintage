@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/buf/Attic/HexUtils.java,v 1.3 2001/07/19 05:49:02 costin Exp $
- * $Revision: 1.3 $
- * $Date: 2001/07/19 05:49:02 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/buf/Attic/HexUtils.java,v 1.4 2002/03/11 06:45:44 billbarker Exp $
+ * $Revision: 1.4 $
+ * $Date: 2002/03/11 06:45:44 $
  *
  * ====================================================================
  *
@@ -97,6 +97,13 @@ public final class HexUtils {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     };
     
+    /**
+     * Table for DEC to HEX byte translation.
+     */
+    public static final byte[] HEX = 
+    { (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', 
+      (byte) '6', (byte) '7', (byte) '8', (byte) '9', (byte) 'a', (byte) 'b', 
+      (byte) 'c', (byte) 'd', (byte) 'e', (byte) 'f' };
 
 
     /**
