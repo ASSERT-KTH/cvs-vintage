@@ -1,0 +1,69 @@
+#set ( $action = $link.setPage("QueryList.vm").setAction("QueryList").addPathInfo("nextTemplate", "QueryList.vm") )
+
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+
+
+<form method="post" action="$action" >
+  <h2>Saved query list (2.2.2)</h2>
+
+#if ( !$module.Queries.isEmpty() )
+       <p>Click on location to execute</p>
+
+      <p class="functnbar"><input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+       <h3>templates</h3>
+
+       <p>&#171; previous | 1 of 1 | next &#187; </p>
+
+       <table width="100%" border="1" cellspacing="2" cellpadding="3">
+        <tr>
+         <th nowrap="nowrap"><a href="#"><img src="../csi/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" /></a><a href="#"><img src="../csi/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" /></a></th>
+
+         <th><a href="#" title="sort">Query name:</a></th>
+
+         <th><a href="#" title="sort">Query descr:</a></th>
+
+         <th><a href="#" title="sort">Availability:</a></th>
+
+         <th><a href="#" title="sort">Location:</a> (click to execute)</th>
+         
+         <th><a href="#" title="sort">author:</a></th>
+
+        </tr>
+
+#foreach ( $query in $module.Queries )
+
+         #if( $velocityCount % 2 > 0 )
+            <tr class="a">
+         #else 
+            <tr class="b">
+         #end
+         <td><input type="checkbox" name="delete_$query.QueryId"/></td>
+
+         <td><a href="#">$query.Name</a></td>
+
+         <td>$query.Description</td>
+
+         <td>$query.QueryType.Name</td>
+
+         <td><a href="$query.getLink($link.toString())">project '$scarabR.getModule($query.ModuleId.toString()).Name'</a></td>
+
+        #set ($createdUser = $scarabR.getUser($query.UserId.toString()) )
+         <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
+        </tr>
+#end
+
+      </table>
+
+       <p>&#171; previous | 1 of 1 | next &#187; </p>
+
+<p class="functnbar"><input type="submit" value="delete selected" name="eventSubmit_doDeletequeries" />&#160;<input type="submit" value="cancel" name="eventSubmit_doCancel" /></p>
+
+      </div>
+     </td>
+    </tr>
+   </table>
+#else
+    There are no stored queries.
+#end
+  </form>
