@@ -109,7 +109,7 @@
     <fail message="Can't find jakarta-tomcat-jasper repository, you must check it out before building tomcat" />
   </target>
   
-  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.jtc,msg.jtj,msg.commons-dbcp" >
+  <target name="init" depends="detect,msg.jdk12,msg.jsse,msg.commons-dbcp" >
   </target>
 
   <target name="prepare.jaxp101"  depends="detect" if="jaxp10-present" >
@@ -260,10 +260,25 @@
       <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
     </javac>
 
+    <copy todir="${tomcat.build}/classes">
+      <fileset dir="src/share">
+        <include name="org/apache/tomcat/util/**/*.properties"/>
+        <include name="org/apache/tomcat/util/**/*.dtd"/>
+      </fileset>
+    </copy>
+
     <jar jarfile="${tomcat.build}/lib/common/core_util.jar"
          basedir="${tomcat.build}/classes">
       <include name="org/apache/tomcat/util/hooks/**"/>
       <include name="org/apache/tomcat/util/log/**"/>
+    </jar>
+
+    <jar jarfile="${tomcat.build}/lib/common/connector_util.jar"
+         basedir="${tomcat.build}/classes">
+      <include name="org/apache/tomcat/util/collections/**"/>
+      <include name="org/apache/tomcat/util/http/**"/>
+      <include name="org/apache/tomcat/util/res/**"/>
+      <include name="org/apache/tomcat/util/buf/**"/>
     </jar>
 
     <jar jarfile="${tomcat.build}/lib/container/tomcat_util.jar"
@@ -513,7 +528,7 @@
     </jar>
   </target>
 
-  <target name="tomcat-jars" depends="prepare,connector_util,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,connector,facade22,tomcat-startup">
+  <target name="tomcat-jars" depends="prepare,tomcat_util,tomcat.jar,stop-tomcat.jar,tomcat_core,jasper,tomcat_modules,facade22,tomcat-startup">
   </target>
 
   <target name="tomcat-jars-new" depends="tomcat-jars">
@@ -794,5 +809,16 @@
   </target>
 
   <target name="all" depends="clean,dist"/>
+  
+  <target name="help" >
+    <echo message="Usefull targets: "/>
+    <echo message="" />
+    <echo message="  tomcat-jars: basic build for all the jars" />
+    <echo message="  webapps: example, root, admin " />
+    <echo message="  tests: test webapp" />
+    <echo message="  webapptests.dist,watchdog.dist:  generate wars " />
+    <echo message="  dist:  javadocs, wars, delete expanded dirs" />
+    <echo message="  clean-classes: remove classes and jars ( remake with tomcat-jars )" />
+  </target>
 
 </project>
