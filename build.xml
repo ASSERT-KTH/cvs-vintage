@@ -129,7 +129,8 @@
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/Main.java"/>    
       <include name="org/apache/tomcat/util/compat/**"/>    
-      <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
+      <exclude name="**/util/compat/Jdk12Support.java" unless="jdk12.present"/>
+      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
     <jar jarfile="${tomcat.build}/lib/tomcat.jar" 
 	 basedir="${tomcat.build}/classes" 
@@ -149,6 +150,7 @@
 	   srcdir="src/share">
       <!-- no dependencies -->
       <include name="org/apache/tomcat/startup/StopTomcat.java"/>    
+      <include name="org/apache/tomcat/util/IntrospectionUtils.java"/>    
     </javac>
     <copy todir="${tomcat.build}/classes/org/apache/tomcat/resources">
             <fileset dir="src/share/org/apache/tomcat/resources">
@@ -162,6 +164,7 @@
       <include name="org/apache/tomcat/startup/StopTomcat.class"/> 
       <include name="org/apache/tomcat/util/StringManager.class"/> 
       <include name="org/apache/tomcat/resources/LocalStrings*"/> 
+      <include name="org/apache/tomcat/util/IntrospectionUtils**"/> 
     </jar>
   </target>
 
@@ -431,30 +434,6 @@
     <chmod perm="+x" file="${tomcat.dist}/bin/startup.sh"/>
     <chmod perm="+x" file="${tomcat.dist}/bin/shutdown.sh"/>
   </target>
-
-  <target name="modulesDoc.xml" >
-    <!-- using alexandria'x XMLDoclet -->
-    <javac srcdir="src/build" 
-	   destdir="${tomcat.build}/classes" 
-	   debug="${debug}" 
-	   optimize="${optimize}" 
-	   deprecation="off" >
-      <classpath>
-	<pathelement location="${java.home}/../lib/tools.jar"/>
-      </classpath>
-    </javac>
-    <javadoc packagenames="org.apache.tomcat.modules.*,org.apache.tomcat.facade.*" 
-	     sourcepath="src/share;src/facade22" 
-	     destdir="${tomcat.dist}/webapps/ROOT/javadoc" 
-	     author="true" 
-	     version="true" >
-        <doclet name="XMLDoclet" path="${tomcat.build}/classes" >
-          <param name="-file" value="${tomcat.build}/conf/modulesDoc.xml" />
-        </doclet>
-    </javadoc>
-  </target>
-
-
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with ZIP                                  -->
