@@ -16,7 +16,7 @@
 
 package org.columba.core.main;
 
-import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -74,10 +74,21 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		addCustomClasspath();
+		setLibraryPath();
 		
 		Main.getInstance().run(args);
 	}
 
+	
+	private static void setLibraryPath() throws Exception {		
+		System.setProperty("java.library.path", System.getProperty("java.library.path") + ":native/" + System.getProperty("os.name").toLowerCase() + "/lib");
+		Field fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
+		fieldSysPath.setAccessible(true);
+		if (fieldSysPath != null) {
+		fieldSysPath.set(System.class.getClassLoader(), null);
+		}		
+	}
+	
 	private static void addCustomClasspath() throws Exception {
 		String columbaPath = System.getProperty("columba.class.path");
 		if( columbaPath == null || columbaPath.length() == 0) return;
