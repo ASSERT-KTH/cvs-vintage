@@ -80,6 +80,10 @@ public class QueryCloner implements QueryVisitor
 
    public Object visit(InnerJoin join, Object param)
    {
-      return new InnerJoin((Relation)join.getLeft().accept(this, param), (Relation)join.getRight().accept(this, param));
+      return new InnerJoin(
+            (Relation)join.getLeft().accept(this, param),
+            (NamedRelation)join.getJoin().accept(this, param),
+            (Relation)join.getRight().accept(this, param),
+            join.getAssociationEnd());
    }
 }

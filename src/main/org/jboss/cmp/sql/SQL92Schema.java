@@ -71,6 +71,21 @@ public class SQL92Schema implements AbstractSchema
    }
 
    /**
+    * Add a foreign key constraint referencing the primary key of the parent
+    * @param name the name of the constraint
+    * @param parentEndName a name used to identify this constraint from the parent
+    * @param parent the parent Table
+    * @param fkColumnNames column names in the child table in this constraint
+    * @param childEndName a name used to identify this constraint from the child
+    * @param child the child Table
+    * @return a Relationship describing this constraint
+    */
+   public Relationship addFKConstraint(String name, String parentEndName, Table parent, String[] fkColumnNames, String childEndName, Table child)
+   {
+      return addFKConstraint(name, parentEndName, parent, fkColumnNames, childEndName, child, child.getPkFields());
+   }
+
+   /**
     * Add a foreign key constraint referencing the a arbitrary unqiue key of the parent
     * @param name the name of the constraint
     * @param parentEndName a name used to identify this constraint from the parent

@@ -84,6 +84,14 @@ public class SchemaMapper extends QueryCloner
       return new RangeRelation(relation.getAlias(), (AbstractClass) map(relation.getType()));
    }
 
+   public Object visit(InnerJoin join, Object param)
+   {
+      return new InnerJoin((Relation) join.getLeft().accept(this, param),
+                           (NamedRelation) join.getJoin().accept(this, param),
+                           (Relation) join.getRight().accept(this, param),
+                           (AbstractAssociationEnd)map(join.getAssociationEnd()));
+   }
+
    private class InternalNoMapException extends RuntimeException {
       private Object cause;
 

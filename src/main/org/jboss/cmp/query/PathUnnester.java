@@ -43,19 +43,24 @@ public class PathUnnester extends QueryCloner
 
    public Object visit(CollectionRelation relation, Object param)
    {
-      Relation newLeft = (Relation) param;
+      Relation joinTree = (Relation) param;
       Path path = relation.getPath();
-      StringBuffer newAlias = new StringBuffer();
-      newAlias.append(path.getRoot().getAlias());
+      NamedRelation left = path.getRoot();
+      RangeRelation right;
+
+      StringBuffer newAlias = new StringBuffer(left.getAlias());
+      AbstractAssociationEnd step = null;
       for (Iterator i = path.listSteps(); i.hasNext();)
       {
-         AbstractAssociationEnd step = (AbstractAssociationEnd) i.next();
+         step = (AbstractAssociationEnd) i.next();
          if (i.hasNext()) {
             newAlias.append('_').append(step.getName());
-            newLeft = new InnerJoin(newLeft, new RangeRelation(newAlias.toString(), step.getPeer().getType()));
+            right = new RangeRelation(newAlias.toString(), step.getPeer().getType());
+            joinTree = new InnerJoin(joinTree, left, right, step);
+            left = right;
          }
       }
-      RangeRelation newRight = new RangeRelation(relation.getAlias(), relation.getType());
-      return new InnerJoin(newLeft, newRight);
+      right = new RangeRelation(relation.getAlias(), relation.getType());
+      return new InnerJoin(joinTree, left, right, step);
    }
 }

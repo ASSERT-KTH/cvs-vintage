@@ -71,4 +71,23 @@ public class RelationshipEnd implements AbstractAssociationEnd
    {
       return columnNames;
    }
+
+   public String getJoinCondition(String leftAlias, String rightAlias)
+   {
+      StringBuffer buf = new StringBuffer(50);
+      String[] rightColumns = peer.getColumnNames();
+      buf.append("(");
+      for (int i=0; i < columnNames.length; i++)
+      {
+         if (i > 0)
+         {
+            buf.append(" AND ");
+         }
+         buf.append(leftAlias).append(".").append(columnNames[i]);
+         buf.append(" = ");
+         buf.append(rightAlias).append(".").append(rightColumns[i]);
+      }
+      buf.append(")");
+      return buf.toString();
+   }
 }

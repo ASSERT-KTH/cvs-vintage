@@ -21,6 +21,7 @@ import org.jboss.cmp.query.QueryNode;
 import org.jboss.cmp.query.QueryVisitor;
 import org.jboss.cmp.query.RangeRelation;
 import org.jboss.cmp.query.InnerJoin;
+import org.jboss.cmp.query.Relation;
 
 /**
  * Transformer that produces (pure) SQL92 text from a Query
@@ -119,9 +120,11 @@ public class SQL92Generator implements QueryVisitor
    {
       StringBuffer buf = (StringBuffer) param;
       join.getLeft().accept(this, buf);
+      NamedRelation right = (NamedRelation) join.getRight();
       buf.append(" INNER JOIN");
-      join.getRight().accept(this, buf);
-      buf.append(" ON (...)");
+      right.accept(this, buf);
+      RelationshipEnd end = (RelationshipEnd) join.getAssociationEnd();
+      buf.append(" ON ").append(end.getJoinCondition(join.getJoin().getAlias(), right.getAlias()));
       return buf;
    }
 }
