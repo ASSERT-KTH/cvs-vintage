@@ -70,7 +70,7 @@ import org.tigris.scarab.util.Log;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: MITList.java,v 1.39 2003/11/14 22:16:50 dep4b Exp $
+ * @version $Id: MITList.java,v 1.40 2003/12/08 00:43:46 thierrylach Exp $
  */
 public  class MITList 
     extends org.tigris.scarab.om.BaseMITList
@@ -730,7 +730,7 @@ public  class MITList
                 result.setModuleId(getModule().getModuleId());
                 result.setIssueTypeId(getIssueType().getIssueTypeId());
             }
-		
+        
         if (!isNew()) 
         {
             result.setListId(getListId());
