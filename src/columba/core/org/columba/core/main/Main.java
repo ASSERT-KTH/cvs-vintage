@@ -29,6 +29,7 @@ import org.columba.core.gui.menu.MenuPluginHandler;
 import org.columba.core.gui.themes.ThemeSwitcher;
 import org.columba.core.gui.util.FontProperties;
 import org.columba.core.gui.util.StartUpFrame;
+import org.columba.core.help.HelpManager;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.ConfigPluginHandler;
@@ -92,7 +93,10 @@ public class Main {
     // enable logging 
     new ColumbaLogger();
 
+	// initialize configuration backend
     new Config();
+    
+   
 
     AddressbookMain addressbook = new AddressbookMain();
     addressbook.initConfiguration();
@@ -139,6 +143,9 @@ public class Main {
 	
 	// set application wide font
 	FontProperties.setFont();
+	
+	// initialze JavaHelp manager
+	new HelpManager();
 
     frame.advance();
 
