@@ -68,7 +68,7 @@ import org.apache.torque.util.Criteria;
  * This class describes a Module within the Scarab system
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ModuleEntity.java,v 1.53 2002/01/27 21:21:13 jmcnally Exp $
+ * @version $Id: ModuleEntity.java,v 1.54 2002/01/30 04:47:55 elicia Exp $
  */
 public interface ModuleEntity
 {
@@ -145,9 +145,6 @@ public interface ModuleEntity
 
     public String getDescription();
     public void setDescription(String description);
-
-    public boolean getDedupe();
-    public void setDedupe(boolean dedupe);
 
     public String getUrl();
     public void setUrl(String url);

@@ -83,7 +83,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.7 2002/01/23 06:21:50 elicia Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.8 2002/01/30 04:47:55 elicia Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -192,14 +192,15 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
                 attGroup.save();
             }
 
-            // Set dedupe property for module
-            Group modGroup = intake.get("Module", module.getQueryKey(), false);
-            modGroup.setProperties(module);
+/*
+            // Set dedupe property for module-issueType
+            Group rmitGroup = intake.get("RModuleIssueType", rmit.getQueryKey(), false);
             if (!areThereDedupeAttrs)
             {
-                module.setDedupe(false);
+                rmit.setDedupe(false);
             }
-            module.save();
+            rmit.save();
+*/
         }
     }
 

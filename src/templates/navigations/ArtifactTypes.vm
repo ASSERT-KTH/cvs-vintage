@@ -1,14 +1,14 @@
 #set ($issueTypes = $scarabR.CurrentModule.NavIssueTypes)
 #if ($issueTypes && $issueTypes.size() > 0)
 
-#if ($scarabR.CurrentModule.Dedupe)
-#set ($wizardScreen = "entry,Wizard1.vm")
-#else
-#set ($wizardScreen = "entry,Wizard3.vm")
-#end 
 
 #foreach($issueType in $issueTypes)
   #set ($rmit = $scarabR.CurrentModule.getRModuleIssueType($issueType))
+  #if ($rmit.Dedupe)
+    #set ($wizardScreen = "entry,Wizard1.vm")
+  #else
+    #set ($wizardScreen = "entry,Wizard3.vm")
+  #end 
   #if ($issueType.equals($scarabR.CurrentIssueType))
     <div><small><strong>$rmit.DisplayText</strong></small>
     <div><small>$link.setPage("$wizardScreen").setLabel("Enter new")</small></div>

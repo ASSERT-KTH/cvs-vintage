@@ -95,7 +95,7 @@ $link.setPage("admin,ManageArtifactTypes.vm").setLabel("here") to proceed.
  <tr>
    <td>&#160;</td>
    <td>Duplicate check</td>
-   <td>#booleanCheckbox ($modGroup.Dedupe)</td>
+   <td>#booleanCheckbox ($rmitGroup.Dedupe)</td>
    <td>#numericSelect("dupe_order" 1 $maxNum $issueDedupeSequence 1)</td>
  </tr>
  #end

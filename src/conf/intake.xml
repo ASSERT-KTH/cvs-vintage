@@ -150,7 +150,6 @@
         </field>
         <field name="Active" key="active" type="boolean"/>
         <field name="Required" key="req" type="boolean"/>
-        <field name="Dedupe" key="dedupe" type="boolean"/>
         <field name="QuickSearch" key="qs" type="boolean"/>
         <field name="IsDefaultText" key="dt" type="boolean"/>
         <field name="Order" key="order" type="int" 
@@ -202,6 +201,7 @@
            <rule name="maxValue" value="99">Please enter a value less than 99</rule>
            <rule name="minValue" value="1">Please enter a value greater than 0</rule>
         </field>
+        <field name="Dedupe" key="dedupe" type="boolean"/>
         <field name="DisplayName" key="name" type="String">
         <rule name="maxLength" value="255">Please keep the display name to less than 256 characters</rule>
         </field>
