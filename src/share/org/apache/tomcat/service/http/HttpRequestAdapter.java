@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.7 2000/02/18 00:17:49 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/18 00:17:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/http/Attic/HttpRequestAdapter.java,v 1.8 2000/03/28 03:40:00 craigmcc Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/03/28 03:40:00 $
  *
  * ====================================================================
  *
@@ -128,7 +128,8 @@ public class HttpRequestAdapter extends RequestImpl {
 	// 	}
 
 	// for 0.9, we don't have headers!
-	if(protocol!=null)
+	if ((protocol!=null) &&
+            !protocol.toLowerCase().startsWith("http/0."))
 	    headers.read(in);
 	//	processCookies(); // called later
 
