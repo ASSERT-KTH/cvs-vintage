@@ -1,4 +1,4 @@
-$page.setTitle("Global Artifact Types")
+$page.setTitle("Global Issue Types")
 
 <div id="globalartifactshow" class="app">
 <h2>$page.Title</h2>
@@ -15,12 +15,12 @@ This page is for selecting an Artifact Type to edit which is defined in a global
 <input type="submit" value="Done" name="eventSubmit_doDone" />&#160;<input type="submit" value="Cancel" name="eventSubmit_doCancel" />
 </div>       
 
-<h3>Artifacts</h3>
+<h3>Issue Types</h3>
 
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Deleted</th>
-<th>Artifact Name</th>
+<th>Issue Type Name</th>
 <th>Description</th>
 </tr>
 #set ($allIssueTypes = $scarabG.AllIssueTypes)
