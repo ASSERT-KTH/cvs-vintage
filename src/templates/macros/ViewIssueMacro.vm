@@ -4,13 +4,12 @@
     #set ( $canEdit = $security.hasPermission("Issue | Edit", $module) )
     #set ($attrValues = $currentIssue.ModuleAttributeValuesMap)
 
-      <div class="grouper">
        #datatitle ("Issue ID #$currentIssue.UniqueId")
 
       <div class="axial">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <table cellpadding="3" cellspacing="2" border="0">
         <tr>
-         <th width="120">Issue ID #:</th>
+         <th width="120">Issue ID #</th>
          <td>#$currentIssue.UniqueId</td>
         </tr>
 
@@ -30,7 +29,7 @@
 
   #if( $canEdit )
          <tr>
-          <th width="120">$attVal.Attribute.Name:</th>
+          <th width="120">$attVal.Attribute.Name</th>
           <td>
     #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
         #attrValueLeafSelect ($attVal $field "")
@@ -52,7 +51,7 @@
   #else
     #if ($attVal.isSet())
          <tr>
-          <th width="120">$attVal.Attribute.Name:</th>
+          <th width="120">$attVal.Attribute.Name</th>
           <td>
        #set ( $attrInput = $intake.AttributeValue.mapTo($attVal) ) 
        #if ($attVal.Attribute.AttributeType.Name == "combo-box" )
@@ -70,36 +69,39 @@
 
 #if ( $canEdit )
          <tr>
-           <td colspan="2">Please add a comment to explain your change(s):
-           <BR>
+           <th>Comment</th>
+           <td>
+           
         #set( $attCommentGroup = $intake.Attachment.setKey("attCommentKey") )
-         #fieldErrorMsg($attCommentGroup.DataAsString "<br>")
+         #fieldErrorMsg($attCommentGroup.DataAsString "<br />")
            <textarea rows="4" cols="35" class="text" name ="$attCommentGroup.DataAsString.Key">$!attCommentGroup.DataAsString.Value</textarea>
            <input type="hidden" name="$attCommentGroup.Name.Key" value="comment">
-           </td>
+           <p>
+Please add a comment to explain your change(s)
+</p>
+</td>
         </tr>
         <tr>
-           <td colspan="2"><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" /></td>
+           <td>&nbsp;</td> <td><input type="submit" value="edit attributes" name="eventSubmit_doSubmitattributes" /></td>
          </tr>
 #end
         </table>
        </div>
-      </div>
 
 ### ASSIGNEES
 
       <h3>Personnel</h3>
 
       <div class="axial">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <table cellpadding="3" cellspacing="2" border="0">
         <tr>
-         <th width="120">committed by:</th>
+         <th width="120">Committed by</th>
         #set ($createdUser = $currentIssue.CreatedBy)
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 
         <tr>
-         <th width="120">assignee(s):</th>
+         <th width="120">Assignee(s)</th>
          <td>
    #if ( $currentIssue.AssigneeAttributeValues.isEmpty() )
          None assigned.
@@ -118,7 +120,8 @@
         </tr>
         #if ($canEdit)
         <tr>
-          <td colspan="2">
+        <td>&nbsp;</td>
+          <td>
             <input type="submit" value="edit assignees" name="eventSubmit_doEditassignees" />
           </td>
         </tr>
@@ -128,19 +131,18 @@
 
 ## URLS
 #if (!$currentIssue.Urls.isEmpty() || $canEdit)
-      <div class="grouper">
+
        #datatitle ("Related Links")
-      </div>
-       <div class="datatable">
+
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
           <th><img src="/scarab/images/icon_uparrow.gif" width="13" height="8" alt="sort" border="0" />
               <img src="/scarab/images/icon_downarrow.gif" width="13" height="8" alt="sort" border="0" />
           </th>
 
-          <th>URL:</th>
+          <th>URL</th>
 
-          <th>Description:</th>
+          <th>Description</th>
          </tr>
 
     #foreach($url in $currentIssue.Urls)
@@ -165,16 +167,16 @@
    
     #if ($canEdit)
          <tr>
-          <td><strong>add url:</strong></td>
+          <td><strong>Add url:</strong></td>
 
 #set( $urlGroup = $intake.Attachment.setKey("urlKey") )
           <td>
-         #fieldErrorMsg($urlGroup.Name "<br>")
+         #fieldErrorMsg($urlGroup.Name "<br />")
          <input type="text" size="25" class="text" name="$urlGroup.Name.Key" value="$!urlGroup.Name" />
          </td>
 
           <td>
-         #fieldErrorMsg($urlGroup.DataAsString "<br>")
+         #fieldErrorMsg($urlGroup.DataAsString "<br />")
          <input type="text" size="25" class="text" name="$urlGroup.DataAsString.Key" value="$!urlGroup.DataAsString"/>
           </td>
 
@@ -185,7 +187,7 @@
     #if ($canEdit)
            <p><input type="submit" value="add url" name="eventSubmit_doSubmiturl"  />&#160;<input type="submit" value="delete url"  name="eventSubmit_doDeleteurl" /></p>
     #end
-       </div>
+
 #end
 
 
@@ -193,41 +195,35 @@
 ## ADD DEPENDENCY
 #if ($canEdit)
 
-<div class="grouper">
-
 #set( $dependGroup = $intake.Depend.setKey("dependKey") )
 <input type="hidden" name="$dependGroup.ObserverId.Key" value="$currentIssue.IssueId">
 
 #datatitle ("Add Dependency")
-</div>
 
-<div class="datatable">
-<table width="100%" border="1" cellspacing="2" cellpadding="3">
  #if (!$dependGroup.ObservedId.Message.equals(""))
- <tr>
-   <td colspan="2" class="alert">$dependGroup.ObservedId.Message</td>
- </tr>
+ <p><strong class="alert">$dependGroup.ObservedId.Message</strong></p>
  #end
  #if (!$dependGroup.TypeId.Message.equals(""))
- <tr>
-   <td colspan="2" class="alert">$dependGroup.TypeId.Message</td>
- </tr>
+ <p><strong class="alert">$dependGroup.TypeId.Message</strong></p>
  #end
- <tr>
-  <td>Add dependency on issue #</td>
-  <td valign="top"><input type="text" size="3" class="text" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId"></td>
-  <td valign="top"><select name="$dependGroup.TypeId.Key" class="select">
+<div class="axial">
+ <table cellspacing="2" cellpadding="3" border="0">
+<tr>
+  <th>Add dependency on issue #</th>
+  <td><input type="text" size="3" name="$dependGroup.ObservedId.Key" value = "$!dependGroup.ObservedId" />
+<p><select name="$dependGroup.TypeId.Key" class="select">
     <option value="0">Choose dependency type</option>
     #foreach ($dependType in $currentIssue.getAllDependencyTypes())
       <option value="$dependType.DependTypeId">
           $dependType.Name</option>
     #end
-  </select>
+  </select></p>
     </td>
  </tr>
+<tr><td>&nbsp;</td><td><input type="submit" value="add dependency"  name="eventSubmit_doAdddependency" /></td></tr> 
 </table>
-       <p><input type="submit" value="add dependency"  name="eventSubmit_doAdddependency" />
 </div>
+       
 
 #end
 
@@ -235,18 +231,17 @@
 
 ## PARENT ISSUES
 #if (!$currentIssue.Parents.isEmpty() )
-      <div class="grouper">
+
       #datatitle ("Parent Issues")
-      </div>
-       <div class="datatable">
+
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
 
-          <th width="20%">issue id#:</th>
+          <th width="20%">issue id#</th>
 
-          <th width="40%">issue summary:</th>
+          <th width="40%">issue summary</th>
 
-          <th>dependency type:</th>
+          <th>dependency type</th>
          </tr>
 
        #foreach( $parent in $currentIssue.Parents )
@@ -285,27 +280,25 @@
 
         </table>
 #if ($canEdit)
-       <p><input type="submit"  name="eventSubmit_doUpdateparent" value="update parent issue" />
+       <p><input type="submit"  name="eventSubmit_doUpdateparent" value="update parent issue" /></p>
 #end
-       </div>
-      </div>
+
 #end
 
 
 ## CHILD ISSUES
 #if (!$currentIssue.Children.isEmpty() )
-      <div class="grouper">
+
        #datatitle ("Child Issues")
 
-       <div class="datatable">
         <table width="100%" border="1" cellspacing="2" cellpadding="3">
          <tr>
 
-          <th width="20%">issue id#:</th>
+          <th width="20%">issue id#</th>
 
-          <th width="40%">issue summary:</th>
+          <th width="40%">issue summary</th>
 
-          <th>dependency type:</th>
+          <th>dependency type</th>
          </tr>
 
        #foreach( $child in $currentIssue.Children )
@@ -348,8 +341,6 @@
 
     #if ( $canEdit )
        <p><input type="submit" value="update child issue"  name="eventSubmit_doUpdatechild" />
-       </div>
-      </div>
     #end
 #end
 #if (!$currentIssue.Comments.isEmpty() || $canEdit)
@@ -359,7 +350,7 @@
 <h3>Comments</h3>
 
       <div class="axial">
-       <table width="100%" cellpadding="3" cellspacing="2" border="1">
+       <table cellpadding="3" cellspacing="2" border="0">
 
     #foreach($comment in $currentIssue.Comments)
         <tr>
@@ -370,26 +361,27 @@
 
          <td>
          #if ($security.hasPermission("Module | Edit"))
-           <textarea rows="2" cols="35" class="text" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea></td>
+           <textarea rows="2" cols="35" class="text" name="edit_comment_$comment.AttachmentId">$comment.DataAsString</textarea>
          #else
            $comment.DataAsString
-         #end
+         #end</td>
         </tr>
 
     #end
 
     #if ( $canEdit )
          <tr>
-          <td width="60" class="a"><strong>add comment:</strong></td>
-          <td class="b">
+          <th>Add comment</td>
+          <td>
         #set( $commentGroup = $intake.Attachment.setKey("commentKey") )
-        #fieldErrorMsg($commentGroup.DataAsString "<br>")
-           <textarea rows="2" cols="35" class="text" name ="$commentGroup.DataAsString.Key"></textarea>
+        #fieldErrorMsg($commentGroup.DataAsString "<br />")
+           <textarea rows="2" cols="35" name ="$commentGroup.DataAsString.Key"></textarea>
            <input type="hidden" name="$commentGroup.Name.Key" value="comment">
           </td>
          </tr>
          <tr>
-         <td colspan="2">
+         <td>&nbsp;</td>
+         <td>
            <input type="submit" value="add comment" name="eventSubmit_doSubmitcomment"/>&#160; 
          #if ($security.hasPermission("Module | Edit"))
            <input type="submit" value="edit comment(s)" name="eventSubmit_doEditcomment"/>
@@ -398,7 +390,6 @@
     #end
         </table>
        </div>
-      </div>
 #end
 
 #if ($fullHistory.equals("true"))
@@ -409,17 +400,16 @@
 #if (!$activity.isEmpty() )
 
 ## ISSUE HISTORY
-      <div class="grouper">
+
        #datatitle ("Issue History (up to first ten)")
 
-       <div class="datatable">
         <table width="100%" cellpadding="3" cellspacing="2" border="1">
          <tr>
-          <th width="120"><strong>date stamp:</strong></th>
+          <th width="120">date stamp</th>
 
-          <th><strong>action:</strong></th>
+          <th>action</th>
 
-          <th><strong>note:</strong></th>
+          <th>note</th>
          </tr>
 
        #foreach( $act in $activity )
@@ -452,17 +442,15 @@
        #end
 
         </table>
-       </div>
-      </div>
 
 
 #if ($currentIssue.isHistoryLong())
    #if ($fullHistory.equals("true"))
         #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "false") ) 
-        <p><a href="$historyLink">hide complete history</p></a>
+        <p><a href="$historyLink">hide complete history</a></p>
    #else
         #set ( $historyLink = $link.setPage("ViewIssue.vm").addPathInfo("id", $currentIssueId).addPathInfo("fullhistory", "true") )
-        <p><a href="$historyLink">show complete history</p></a>
+        <p><a href="$historyLink">show complete history</a></p>
    #end
 #end
 
