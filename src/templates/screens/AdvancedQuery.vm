@@ -13,9 +13,8 @@
 
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160
-    <input type="submit" name="eventSubmit_doSave" 
-        value="Save this Query" />
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+    <input type="submit" name="eventSubmit_doSave" value="Save this Query" />
 </p>
 
 <h3>Search the Scarab Knowledge Base</h3>
@@ -375,9 +374,8 @@
 
 <p class="functnbar">
     <input type="submit" name="eventSubmit_doSearch" value="Search" />&#160;
-    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160
-    <input type="submit" name="eventSubmit_doSave" 
-        value="Save this Query" />
+    <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
+    <input type="submit" name="eventSubmit_doSave" value="Save this Query" />
 </p>
    
   
