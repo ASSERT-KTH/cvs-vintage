@@ -37,7 +37,7 @@ import org.jboss.security.SecurityAssociation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * <p><b>Revisions:</b>
  * <p><b>20010704 marcf</b>
@@ -210,10 +210,13 @@ public class StatefulSessionInstanceInterceptor
                 !ctx.getTransaction().equals(mi.getTransaction()))
             {
                // Calls must be in the same transaction
-               throw new EJBException("Application Error: tried to enter " +
-                                      "Stateful bean with different transaction context");
+                  StringBuffer msg = new StringBuffer("Application Error: " +
+                     "tried to enter Stateful bean with different tx context");
+                  msg.append(", contextTx: " + ctx.getTransaction());
+                  msg.append(", methodTx: " + mi.getTransaction());
+                  throw new EJBException(msg.toString());
             }
-               
+ 
             //If the instance will participate in a new transaction we register a sync for it
             if (ctx.getTransaction() == null && mi.getTransaction() != null)
             {
