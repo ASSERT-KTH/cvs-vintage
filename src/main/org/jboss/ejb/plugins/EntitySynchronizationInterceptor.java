@@ -57,7 +57,7 @@ import org.jboss.util.Sync;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
- * @version $Revision: 1.42 $
+ * @version $Revision: 1.43 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2001/06/28: marcf</b>
@@ -243,6 +243,7 @@ public class EntitySynchronizationInterceptor
          // Store entity
          if (dirty)
          {
+				System.out.println("storing");
             container.getPersistenceManager().storeEntity(ctx);
          }
       }
@@ -295,7 +296,7 @@ public class EntitySynchronizationInterceptor
       if( log.isTraceEnabled() )
          log.trace("invoke called for ctx "+ctx+", tx="+tx);
   
-      //Commit Option D....
+      //Commit Option D.... 
       if(commitOption == ConfigurationMetaData.D_COMMIT_OPTION && !validContexts.contains(ctx.getId()))
       {
          //bean isn't in cache
@@ -308,6 +309,7 @@ public class EntitySynchronizationInterceptor
       {
          try
          {
+				System.out.println("Loading");
             // If not tell the persistence manager to load the state
             container.getPersistenceManager().loadEntity(ctx);
          }
@@ -440,7 +442,7 @@ public class EntitySynchronizationInterceptor
        
                      if( trace )
                         log.trace("sync calling store on ctx "+ctx+", dirty="+dirty);
-                     if (dirty)
+                      if (dirty)
                         container.getPersistenceManager().storeEntity(ctx);
                   }
                }
@@ -542,11 +544,7 @@ public class EntitySynchronizationInterceptor
      
                ctx.setTransaction(null);
      
-               // notify the lock of the end of the transaction
-               // it wakes up all the threads in the current transaction
-               // it wakes up at least one thread from the next transaction
-               // This next tx thread will set the transaction variable in the lock logic
-               lock.nextTransaction();
+              	lock.setTransaction(null);
      
                if( trace )
                   log.trace("afterCompletion, sent notifyAll on TxLock for ctx="+ctx);
@@ -573,13 +571,7 @@ public class EntitySynchronizationInterceptor
          // The context is no longer synchronized on the TX
          ctx.hasTxSynchronization(false);
          ctx.setTransaction(null);
-   
-   
-         // notify the lock this will set current transaction to null 
-         // it also wakes up at least one thread from the next transaction
-         // This thread will set the next transaction in the lock logic
-         lock.nextTransaction();
-  
+ 			lock.setTransaction(null);    
       }
       finally
       {

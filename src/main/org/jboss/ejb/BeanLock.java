@@ -32,7 +32,7 @@ import org.jboss.logging.log4j.JBossCategory;
  * @author <a href="bill@burkecentral.com">Bill Burke</a>
  * @author <a href="marc.fleury@jboss.org">Marc Fleury</a>
  *
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  *
  * <p><b>Revisions:</b><br>
 *  <p><b>2001/07/29: billb</b>
@@ -46,17 +46,12 @@ import org.jboss.logging.log4j.JBossCategory;
 *   interceptor code it is now factored out allowing for pluggable lock policies (optimistic for ex) 
 *   <li>Implemented pessimistic locking and straight spec requirement in the schedule method
 *   would need to factor this in an abstract class for the BeanLock that extending policies can use
-*   <li> N-lock design for the actual lock implementation (one per tx) which enables a full FIFO 
-*   implementation on the transactions themselves.
 * </ol>
  */
 public class BeanLock
 {
-   /** The actual lock objects **/
-   // private LinkedList txList = (LinkedList) Collections.synchronizedList(new LinkedList()) ;
-   private LinkedList txList = new LinkedList();
-   private HashMap txLocks = new HashMap();
-   private Object currentLock = new Object();
+   /** The actual lock object **/
+   private Object lock = new Object();
  
    /** number of threads invoking methods on this bean (1 normally >1 if reentrant) **/
    private int numMethodLocks = 0;
@@ -144,7 +139,7 @@ public class BeanLock
          if (miTx != null && miTx.getStatus() == Status.STATUS_MARKED_ROLLBACK)
          {
             log.error("Saw rolled back tx="+miTx);
-            throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
+	         throw new RuntimeException("Transaction marked for rollback, possibly a timeout");
          }
   
          //Next test is independent of whether the context is locked or not, it is purely transactional
@@ -163,26 +158,23 @@ public class BeanLock
             {
                if( trace ) log.trace("Begin wait on Tx="+tx);
      
-               // Insert the transaction in the list of waiting tx, and create a lock
-               if (!txList.contains(miTx)) 
-               {  
-                  txList.addLast(miTx);
-     
-                  txLocks.put(miTx, new Object());
-               }
-    
                // And lock the threads on the lock corresponding to the Tx in MI
-               synchronized(txLocks.get(miTx))
+               synchronized(lock)
                {
                   // We are going to wait on one of the implementation locks therefore
                   // we need to release the sync on the BeanLock object itself
                   syncAlreadyReleased = true;
-                  releaseSync(); 
-
                   
-                  txLocks.get(miTx).wait(txTimeout);
-                  //txLocks.get(miTx).wait(); 
-               }
+						//In case the thread was the only one alive
+						if (numMethodLocks <= 0) lock.notify();
+						
+						releaseSync(); 
+						
+						//Wait a thread coming out will wake you up
+						//lock.wait(txTimeout);
+                  lock.wait();
+              
+				   }
                if( trace ) log.trace("End wait on TxLock="+tx);
             }
    
@@ -214,18 +206,16 @@ public class BeanLock
                {
      
                   if( trace ) log.trace("Begin lock.wait(), id="+mi.getId());
-                  synchronized(currentLock)
+                  synchronized(lock)
                   {
                      // we're about to wait on a different object, so release synch on beanlock
                      // Also, this notify should always be within the synch(lock) block
                      syncAlreadyReleased = true;
                      releaseSync();
-      
-                     //FIXME: use this line when 2.5 is released otherwise
-                     // transaction timeouts will never happen.
-                      currentLock.wait(txTimeout);
-                     //currentLock.wait(); 
-                  }
+      					if (numMethodLocks <= 0) lock.notify();
+                     //lock.wait(txTimeout);
+                     lock.wait();
+						}
                }
     
                catch (InterruptedException ignored) {}     
@@ -268,46 +258,7 @@ public class BeanLock
     * by the schedule call.  
     */
    public void setTransaction(Transaction tx){this.tx = tx;}
-   
-   /*
-    * nextTransaction()
-    *
-    * nextTransaction will 
-    * - set the current tx to null
-    * - wake up all the threads still waiting on the current lock 
-    * - schedule the next transaction by notifying at least a thread
-    * - setting the thread with the new transaction so there is no race with incoming calls
-    */
-   public void nextTransaction() 
-   {
-      // Make sure nobody is stupid enough to call this method when it isn't synchronized.
-      if (!synched) throw new IllegalStateException("call of method nextTransaction should always be synched!");
-      
-      tx = null;
-      
-      // wake everyone on the current lock
-      synchronized(currentLock) {currentLock.notifyAll();}
-      
-      // is there a waiting list?
-      if (!txList.isEmpty()) 
-      {
-         // The new transaction is the next one, important to set it up to avoid race with 
-         // new incoming calls
-         this.tx = (Transaction) txList.removeFirst();
-         
-         //Promote the first transaction FIFO
-         currentLock = txLocks.remove(this.tx);
-         
-         //Time to harvest the currentLock has threads waiting
-         synchronized(currentLock) { currentLock.notify();}   
-      }  
-      // If not just keep the currentLock it is doing fine
-   }
-   
-   public Transaction getTransaction()
-   {
-      return tx;
-   }
+   public Transaction getTransaction(){return tx;}
    
    
    public boolean isMethodLocked() { return numMethodLocks > 0;}
@@ -327,11 +278,7 @@ public class BeanLock
       {
          
          //Wake up a thread to do work on the instance within the current transaction
-         synchronized(currentLock) 
-         {
-            
-            currentLock.notify();
-         }
+         synchronized(lock) {lock.notify();}
       }
    }
    
