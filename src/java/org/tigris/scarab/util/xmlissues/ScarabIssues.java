@@ -116,7 +116,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @version $Id: ScarabIssues.java,v 1.55 2003/08/26 22:54:04 elicia Exp $
+ * @version $Id: ScarabIssues.java,v 1.56 2003/08/27 01:10:48 dlr Exp $
  */
 public class ScarabIssues implements java.io.Serializable
 {
@@ -129,21 +129,33 @@ public class ScarabIssues implements java.io.Serializable
      */
     private List issues = null;
 
-    private XmlIssue issue = null;
     private String importType = null;
+
     private int importTypeCode = -1;
     
     private List allDependencies = new ArrayList();
 
-    /** maps the issue id in the xml file to the issue id of issue
-       that was created from the xml file. */
+    /**
+     * Maps issue IDs from the XML file to IDs assigned by the DB.
+     */
     private Map issueXMLMap = new HashMap();
 
-    /** left side is the id in the XML file. right side is the created id in the db */
+    /**
+     * Maps activity set IDs from the XML file to IDs assigned by the
+     * DB.
+     */
     private Map activitySetIdMap = new HashMap();
+
+    /**
+     * Maps attachment IDs from the XML file to IDs assigned by the
+     * DB.
+     */
     private Map attachmentIdMap = new HashMap();
 
-    /** left side is the id in the XML file. right side is the created id in the db */
+    /**
+     * Maps dependency IDs from the XML file to IDs assigned by the
+     * DB.
+     */
     private List dependActivitySetId = new ArrayList();
 
     private static final int CREATE_SAME_DB = 1;
@@ -156,7 +168,7 @@ public class ScarabIssues implements java.io.Serializable
      * We default to be in validation mode.  Insert only occurs
      * post-validation.
      */
-    private static boolean inValidationMode = true;
+    private boolean inValidationMode = true;
 
     /**
      * A record of any errors encountered during the import.  Set by
@@ -169,22 +181,21 @@ public class ScarabIssues implements java.io.Serializable
      */
     private Set importUsers = new HashSet();
 
-    // current file attachment handling code has a security bug that can allow a user
-    // to see any file on the host that is readable by scarab.  It is not easy to exploit
-    // this hole, and there are cases where we want to use the functionality and can be
-    // sure the hole is not being exploited.  So adding a flag to disallow file attachments
-    // when importing through the UI.
-    // This class is instantiated as a bean while parsing the xml file and the addIssue method
-    // will be called before we have an opportunity to enable file attachments.  We do not
-    // want to enable file attachments via the xml file as that defeats the lockdown.
-    // ThreadLocal variable fits the bill, so until a better solution is found...
-    private static final ThreadLocal allowFileAttachmentsTL = new ThreadLocal();
-    private boolean allowFileAttachments;
+    /**
+     * The current file attachment handling code has a security bug
+     * that can allow a user to see any file on the host that is
+     * readable by scarab.  It is not easy to exploit this hole, and
+     * there are cases where we want to use the functionality and can
+     * be sure the hole is not being exploited.  So adding a flag to
+     * disallow file attachments when importing through the UI.
+     *
+     * This flag is set by ImportIssues after our instance is created
+     * during XML parsing.
+     */
+    private boolean allowFileAttachments = false;
     
     public ScarabIssues()
     {
-        this.allowFileAttachments =
-            Boolean.TRUE.equals(allowFileAttachmentsTL.get());
         issues = new ArrayList();
         if (nullAttribute == null)
         {
@@ -194,7 +205,7 @@ public class ScarabIssues implements java.io.Serializable
             }
             catch (Exception e)
             {
-                LOG.debug("Could not assign nullAttribute");
+                LOG.warn("Could not assign nullAttribute", e);
             }
         }
     }
@@ -210,19 +221,14 @@ public class ScarabIssues implements java.io.Serializable
      * So adding a flag to allow file attachments under certain
      * circumstances.
      */
-    public static void allowFileAttachments(boolean b)
+    public void allowFileAttachments(boolean flag)
     {
-        allowFileAttachmentsTL.set( b ? Boolean.TRUE : Boolean.FALSE );
+        this.allowFileAttachments = flag;
     }
 
-    public static void setInValidationMode(boolean value)
+    public void inValidationMode(boolean flag)
     {
-        inValidationMode=value;
-    }
-
-    public static boolean isInValidationMode()
-    {
-        return inValidationMode;
+        inValidationMode = flag;
     }
 
     public void setImportType(String value)
@@ -436,26 +442,20 @@ public class ScarabIssues implements java.io.Serializable
         return issues;
     }
 
-    public XmlIssue getIssue()
-    {
-        return this.issue;
-    }
-
     public void addIssue(XmlIssue issue)
         throws Exception
     {
         LOG.debug("Module.addIssue(): " + issue.getId());
-        this.issue = issue;
         try
         {
             if (inValidationMode)
             {
                 importErrors.setParseContext(module.getCode() + issue.getId());
-                doIssueValidateEvent(getModule(), getIssue());
+                doIssueValidateEvent(getModule(), issue);
             }
             else
             {
-                doIssueEvent(getModule(), getIssue());
+                doIssueEvent(getModule(), issue);
             }
         }
         catch (Exception e)
