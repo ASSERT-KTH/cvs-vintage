@@ -77,7 +77,7 @@ Here is sample output from the tables:
 </p>
 </blockquote>
 </blockquote>
-<table align="center">
+<table align="center" border="0">
 <tr>
 <td>
 <pre>
@@ -97,8 +97,8 @@ mysql> select * from roles;
 +------------+
 | role_name  |
 +------------+
-| tomcatRole |
-| otherRole  |
+| tomcat     |
+| role1      |
 +------------+
 2 rows in set (0.02 sec)
 
@@ -109,10 +109,10 @@ mysql> select * from user_roles;
 +------------+-----------+
 | role_name  | user_name |
 +------------+-----------+
-| tomcatRole | user1     |
-| otherRole  | user2     |
-| otherRole  | tomcat    |
-| tomcatRole | tomcat    |
+| tomcat     | user1     |
+| role1      | user2     |
+| tomcat     | tomcat    |
+| role1      | tomcat    |
 +------------+-----------+
 4 rows in set (0.00 sec)
 
@@ -132,7 +132,7 @@ mysql>
 <blockquote>
 <p><code><br>
 &lt;RequestInterceptor 
-	className="org.apache.tomcat.realm.JDBCRealm"<br>
+	className="org.apache.tomcat.request.JDBCRealm"<br>
  
 	debug="99"      
 	driverName="org.gjt.mm.mysql.Driver" <br>
@@ -226,7 +226,7 @@ To achieve this, you will  need to use the same digest strategies that JDBCrealm
    - Make sure that the JDBC driver is in the lib directory.
 <br>
 - If you have problem connecting you can specify connectionName and connectionPassword</p>
-<div align="center">$Header: /tmp/cvs-vintage/tomcat/src/doc/JDBCRealm-howto.html,v 1.1 2000/09/01 22:44:45 nacho Exp $
+<div align="center">$Header: /tmp/cvs-vintage/tomcat/src/doc/JDBCRealm-howto.html,v 1.2 2000/09/05 17:57:42 nacho Exp $
 </div>
 </body>
 </html>
