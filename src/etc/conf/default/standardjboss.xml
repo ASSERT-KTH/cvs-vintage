@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjboss.xml,v 1.50 2002/09/18 03:01:18 patriot1burke Exp $ -->
+<!-- $Id: standardjboss.xml,v 1.51 2002/09/27 23:04:00 patriot1burke Exp $ -->
 
 <jboss>
    <invoker-proxy-bindings>
@@ -283,6 +283,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
@@ -330,6 +331,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
@@ -376,6 +378,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceSynchronizationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.cmp.jdbc.JDBCRelationInterceptor</interceptor>
@@ -384,7 +387,7 @@
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-    <locking-policy>org.jboss.ejb.plugins.lock.MethodOnlyEJBLock</locking-policy>
+    <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
 	 <container-cache-conf>
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
@@ -422,6 +425,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
@@ -468,6 +472,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
@@ -669,6 +674,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
@@ -715,6 +721,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntitySynchronizationInterceptor</interceptor>
 	 </container-interceptors>
@@ -760,6 +767,7 @@
 	    <interceptor>org.jboss.ejb.plugins.EntityCreationInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityLockInterceptor</interceptor>
 	    <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceInterceptor</interceptor>
+            <interceptor>org.jboss.ejb.plugins.EntityReentranceInterceptor</interceptor>
 	    @jca.connection.interceptor@
 	    <interceptor>org.jboss.ejb.plugins.EntityMultiInstanceSynchronizationInterceptor</interceptor>
 	 </container-interceptors>
@@ -767,7 +775,7 @@
 	 <instance-cache>org.jboss.ejb.plugins.EntityInstanceCache</instance-cache>
 	 <persistence-manager>org.jboss.ejb.plugins.BMPPersistenceManager</persistence-manager>
 	 <transaction-manager>org.jboss.tm.TxManager</transaction-manager>
-	 <locking-policy>org.jboss.ejb.plugins.lock.QueuedPessimisticEJBLock</locking-policy>
+	 <locking-policy>org.jboss.ejb.plugins.lock.NoLock</locking-policy>
 	 <container-cache-conf>
 	    <cache-policy>org.jboss.ejb.plugins.LRUEnterpriseContextCachePolicy</cache-policy>
 	    <cache-policy-conf>
