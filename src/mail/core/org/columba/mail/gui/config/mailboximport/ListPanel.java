@@ -32,8 +32,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.columba.core.gui.util.MultiLineLabel;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.plugin.ImportPluginHandler;
 
 /**
@@ -42,27 +44,28 @@ import org.columba.mail.plugin.ImportPluginHandler;
  */
 public class ListPanel
 	extends DefaultWizardPanel
-	implements ListSelectionListener
-{
+	implements ListSelectionListener {
 	private JList list;
 	private JLabel label;
 	private MultiLineLabel descriptionLabel;
-	
+
+	ImportPluginHandler pluginHandler;
 	/*
 	private String[] importerList;
 	private String[] name;
 	private String[] description;
 	*/
-	
+
 	public ListPanel(
 		JDialog dialog,
 		ActionListener listener,
 		String title,
 		String description,
-		ImageIcon icon)
-	{
+		ImageIcon icon) {
 		super(dialog, listener, title, description, icon);
 
+		//JPanel panel = this;
+		//		panel = createPanel(listener);
 	}
 
 	public ListPanel(
@@ -71,28 +74,20 @@ public class ListPanel
 		String title,
 		String description,
 		ImageIcon icon,
-		boolean b)
-	{
+		boolean b) {
 		super(dialog, listener, title, description, icon);
-		
-	}
 
-	public String getSelection()
-	{
-		int index = list.getSelectedIndex();
-		
-		//String key = importerList[index];
-		
-		
-		
-		//return key;
-		
-		return ""; 
-	}
-
-	protected JPanel createPanel(ActionListener listener)
-	{
-		JPanel panel = new JPanel();
+		pluginHandler = null;
+				try {
+					pluginHandler =
+						(ImportPluginHandler) MainInterface.pluginManager.getHandler(
+							"org.columba.mail.import");
+				} catch (PluginHandlerNotFoundException ex) {
+					NotifyDialog d = new NotifyDialog();
+					d.showDialog(ex);
+				}
+				
+		JPanel panel = this;
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		//panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setLayout(new BorderLayout());
@@ -117,7 +112,7 @@ public class ListPanel
 		middlePanel.setLayout(layout);
 
 		generateList();
-		list = new JList();
+		//list = new JList();
 
 		JScrollPane scrollPane = new JScrollPane(list);
 		//scrollPane.setPreferredSize( new Dimension(200,200) );
@@ -148,28 +143,33 @@ public class ListPanel
 
 		list.addListSelectionListener(this);
 		list.setSelectedIndex(0);
-
-		return panel;
 	}
 
-	protected void generateList()
-	{
-		ImportPluginHandler pluginHandler =
-					(ImportPluginHandler) MainInterface.pluginManager.getHandler(
-						"org.columba.mail.importer");
-			
-		String[] names = pluginHandler.getPluginIdList();
+	public String getSelection() {
+		int index = list.getSelectedIndex();
+
+		//String key = importerList[index];
+
+		//return key;
+
+		return (String) list.getSelectedValue();
+	}
+
+	protected void generateList() {
 		
+
+		String[] names = pluginHandler.getPluginIdList();
+
 		list = new JList(names);
-					
+
 		/*
 		importerList = new String[] { "MBOX",
 						"PegasusMail",
 						"Mozilla",
 						"Evolution"};
 		
-	
-
+		
+		
 		name = new String[ importerList.length ];
 		description = new String[ importerList.length ];
 		
@@ -179,14 +179,13 @@ public class ListPanel
 			description[i] = MailResourceLoader.getString("dialog","mailboximport", importerList[i]+"_description");
 		}
 		*/
-		
+
 	}
 
-	public void valueChanged(ListSelectionEvent event)
-	{
-		
-		
+	public void valueChanged(ListSelectionEvent event) {
+
 		int index = list.getSelectedIndex();
+
 		
 		/*
 		String str = description[index];

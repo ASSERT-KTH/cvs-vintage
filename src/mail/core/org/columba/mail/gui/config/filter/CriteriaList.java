@@ -35,13 +35,15 @@ import javax.swing.JScrollPane;
 import org.columba.core.config.Config;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
 import org.columba.core.plugin.AbstractPluginHandler;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterCriteria;
 import org.columba.mail.filter.FilterRule;
 import org.columba.mail.gui.config.filter.plugins.DefaultCriteriaRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
-import org.columba.core.main.MainInterface;
 
 public class CriteriaList extends JPanel implements ActionListener {
 
@@ -55,8 +57,17 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 	public CriteriaList(Filter filter) {
 		super();
-		pluginHandler = MainInterface.pluginManager.getHandler("org.columba.mail.filter");
+		
+		try {
 
+			pluginHandler =
+				MainInterface.pluginManager.getHandler(
+					"org.columba.mail.filter");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
+		
 		this.config = MainInterface.config;
 		this.filter = filter;
 
@@ -64,8 +75,8 @@ public class CriteriaList extends JPanel implements ActionListener {
 
 		panel = new JPanel();
 		JScrollPane scrollPane = new JScrollPane(panel);
-		setBorder(BorderFactory.createEmptyBorder(1,1,1,1) );
-		
+		setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
 		scrollPane.setPreferredSize(new Dimension(500, 100));
 		setLayout(new BorderLayout());
 
@@ -141,7 +152,14 @@ public class CriteriaList extends JPanel implements ActionListener {
 			Object[] args = { pluginHandler, this, criteria };
 
 			try {
-				column = (DefaultCriteriaRow) ((AbstractFilterPluginHandler)pluginHandler).getGuiPlugin(type, args);
+				column =
+					(DefaultCriteriaRow)
+						(
+							(
+								AbstractFilterPluginHandler) pluginHandler)
+									.getGuiPlugin(
+						type,
+						args);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

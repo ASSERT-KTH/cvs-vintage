@@ -23,7 +23,9 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginInterface;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.gui.config.filter.ActionList;
@@ -31,9 +33,9 @@ import org.columba.mail.gui.config.filter.util.ActionComboBoxRenderer;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
 public class DefaultActionRow implements PluginInterface {
-	
+
 	protected JPanel panel;
-	
+
 	protected FilterAction filterAction;
 
 	private JComboBox actionComboBox;
@@ -45,26 +47,21 @@ public class DefaultActionRow implements PluginInterface {
 
 	protected int count;
 
-	
-	
 	public DefaultActionRow(ActionList list, FilterAction action) {
-		
+
 		this.filterAction = action;
 		this.actionList = list;
-		
+
 		panel = new JPanel();
-	
-		
-		
+
 		initComponents();
-	
+
 		updateComponents(true);
-	
+
 		actionComboBox.addActionListener(actionList);
 	}
-	
-	public JPanel getContentPane()
-	{
+
+	public JPanel getContentPane() {
 		return panel;
 	}
 
@@ -88,12 +85,21 @@ public class DefaultActionRow implements PluginInterface {
 
 		panel.setLayout(gridbag);
 
-		FilterActionPluginHandler pluginHandler =
-			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.filteraction");
-				
+		FilterActionPluginHandler pluginHandler = null;
+		try {
+
+			pluginHandler =
+				(
+					FilterActionPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.mail.filteraction");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 		String[] names = pluginHandler.getPluginIdList();
-		
+
 		/*
 		for ( int i=0; i<names.length; i++ )
 		{
@@ -102,9 +108,9 @@ public class DefaultActionRow implements PluginInterface {
 		}
 		*/
 
-		actionComboBox = new JComboBox( names );
+		actionComboBox = new JComboBox(names);
 		actionComboBox.setRenderer(new ActionComboBoxRenderer());
-		
+
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 1.0;
 		c.insets = new Insets(2, 5, 2, 5);
@@ -117,7 +123,6 @@ public class DefaultActionRow implements PluginInterface {
 
 		count = 0;
 
-		
 	}
 
 	public void addComponent(JComponent component) {
@@ -141,7 +146,5 @@ public class DefaultActionRow implements PluginInterface {
 	public void setFilterAction(FilterAction filterAction) {
 		this.filterAction = filterAction;
 	}
-
-
 
 }

@@ -42,6 +42,7 @@ import org.columba.core.gui.util.StartUpFrame;
 import org.columba.core.gui.util.ThemeSwitcher;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.plugin.InterpreterHandler;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.plugin.PluginManager;
 import org.columba.core.shutdown.SaveConfigPlugin;
 import org.columba.core.shutdown.ShutdownManager;
@@ -224,13 +225,18 @@ public class Main {
 
 				MainInterface.pluginManager.initPlugins();
 
-				(
+				try {
+
 					(
-						ActionPluginHandler) MainInterface
-							.pluginManager
-							.getHandler(
-						"action")).addActionList(
-					"org/columba/mail/action/action.xml");
+						(
+							ActionPluginHandler) MainInterface
+								.pluginManager
+								.getHandler(
+							"action")).addActionList(
+						"org/columba/mail/action/action.xml");
+				} catch (PluginHandlerNotFoundException ex) {
+
+				}
 
 				frame.advance();
 

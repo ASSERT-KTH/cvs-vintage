@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.Hashtable;
 
 import org.columba.core.loader.DefaultClassLoader;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.xml.XmlElement;
 
 /**
@@ -51,6 +52,8 @@ public abstract class AbstractPluginHandler {
 
 		if (config != null)
 			pluginListConfig = new PluginListConfig(config);
+			
+		ColumbaLogger.log.debug("initialising plugin-handler: "+id);
 
 	}
 

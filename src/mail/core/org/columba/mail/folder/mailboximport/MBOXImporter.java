@@ -20,9 +20,14 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.folder.Folder;
 
 public class MBOXImporter extends DefaultMailboxImporter
 {
+	public MBOXImporter( Folder destinationFolder, File[] sourceFiles)
+	{
+		super(destinationFolder, sourceFiles);
+	}
 
 	public int getType()
 	{

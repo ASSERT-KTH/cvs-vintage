@@ -35,6 +35,9 @@ import javax.swing.JScrollPane;
 import org.columba.core.config.Config;
 import org.columba.core.config.TableItem;
 import org.columba.core.gui.util.ImageLoader;
+import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.filter.Filter;
 import org.columba.mail.filter.FilterAction;
 import org.columba.mail.filter.FilterActionList;
@@ -42,15 +45,12 @@ import org.columba.mail.gui.config.filter.plugins.DefaultActionRow;
 import org.columba.mail.gui.config.filter.plugins.MarkActionRow;
 import org.columba.mail.plugin.AbstractFilterPluginHandler;
 import org.columba.mail.plugin.FilterActionPluginHandler;
-import org.columba.core.main.MainInterface;
-
 
 public class ActionList extends JPanel implements ActionListener {
 
 	private Config config;
 
 	private Filter filter;
-	
 
 	private TableItem v;
 
@@ -67,7 +67,6 @@ public class ActionList extends JPanel implements ActionListener {
 		this.config = MainInterface.config;
 		this.filter = filter;
 
-		
 		list = new Vector();
 
 		panel = new JPanel();
@@ -89,8 +88,7 @@ public class ActionList extends JPanel implements ActionListener {
 		if (b == false) {
 
 			for (int i = 0; i < list.size(); i++) {
-				DefaultActionRow row =
-					(DefaultActionRow) list.get(i);
+				DefaultActionRow row = (DefaultActionRow) list.get(i);
 				row.updateComponents(false);
 			}
 		}
@@ -139,10 +137,19 @@ public class ActionList extends JPanel implements ActionListener {
 
 		panel.setLayout(gridbag);
 
+		FilterActionPluginHandler pluginHandler = null;
+		try {
 
-		FilterActionPluginHandler pluginHandler =
-			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.filteraction");
+			pluginHandler =
+				(
+					FilterActionPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.mail.filteraction");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
 		FilterActionList actionList = filter.getFilterActionList();
 
@@ -156,23 +163,24 @@ public class ActionList extends JPanel implements ActionListener {
 
 			try {
 				row =
-					(DefaultActionRow) ((AbstractFilterPluginHandler)pluginHandler).getGuiPlugin(
+					(DefaultActionRow)
+						(
+							(
+								AbstractFilterPluginHandler) pluginHandler)
+									.getGuiPlugin(
 						name,
 						args);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			
-			if ( row == null )
-			{
+
+			if (row == null) {
 				// maybe the plugin wasn't loaded correctly
 				//  -> use default
-				
+
 				//row = new MarkActionRow(this,action);
-				row = new MarkActionRow(this,action);
+				row = new MarkActionRow(this, action);
 			}
-			
-			
 
 			if (row != null) {
 				c.fill = GridBagConstraints.NONE;

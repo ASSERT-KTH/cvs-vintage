@@ -34,8 +34,7 @@ import org.columba.core.gui.util.wizard.WizardTextField;
  * @version 	1.0
  * @author
  */
-public class SourcePanel extends DefaultWizardPanel
-{
+public class SourcePanel extends DefaultWizardPanel {
 	JButton sourceButton;
 	JButton destinationButton;
 
@@ -44,8 +43,7 @@ public class SourcePanel extends DefaultWizardPanel
 		ActionListener listener,
 		String title,
 		String description,
-		ImageIcon icon)
-	{
+		ImageIcon icon) {
 		super(dialog, listener, title, description, icon);
 	}
 	public SourcePanel(
@@ -54,24 +52,10 @@ public class SourcePanel extends DefaultWizardPanel
 		String title,
 		String description,
 		ImageIcon icon,
-		boolean b)
-	{
+		boolean b) {
 		super(dialog, listener, title, description, icon);
-	}
 
-	public void setSource(String str)
-	{
-		sourceButton.setText(str);
-	}
-
-	public void setDestination(String str)
-	{
-		destinationButton.setText(str);
-	}
-
-	protected JPanel createPanel(ActionListener listener)
-	{
-		JPanel panel = new JPanel();
+		JPanel panel = this;
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 20, 30));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -97,10 +81,18 @@ public class SourcePanel extends DefaultWizardPanel
 		destinationButton.setActionCommand("DESTINATION");
 		destinationButton.addActionListener(listener);
 		middlePanel.addTextField(destinationButton);
-		middlePanel.addExample(new JLabel("(Destination Folder inside Columba)"));
+		middlePanel.addExample(
+			new JLabel("(Destination Folder inside Columba)"));
 
 		panel.add(middlePanel);
-
-		return panel;
 	}
+
+	public void setSource(String str) {
+		sourceButton.setText(str);
+	}
+
+	public void setDestination(String str) {
+		destinationButton.setText(str);
+	}
+
 }

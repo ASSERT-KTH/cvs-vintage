@@ -19,137 +19,83 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 
-import org.columba.core.gui.util.DialogStore;
 import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
+import org.columba.core.gui.util.wizard.DefaultWizardDialog;
 import org.columba.core.gui.util.wizard.DefaultWizardPanel;
+import org.columba.core.gui.util.wizard.WizardPanelSequence;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
+import org.columba.mail.command.ImportFolderCommandReference;
 import org.columba.mail.folder.Folder;
+import org.columba.mail.folder.command.ImportMessageCommand;
 import org.columba.mail.folder.mailboximport.DefaultMailboxImporter;
 import org.columba.mail.gui.tree.util.SelectFolderDialog;
+import org.columba.mail.plugin.ImportPluginHandler;
 
-public class ImportWizard implements ActionListener
-{
+public class ImportWizard
+	extends DefaultWizardDialog
+	implements ActionListener {
+
 	public ListPanel listPanel;
 	public SourcePanel sourcePanel;
 	//public ProgressPanel progressPanel;
 
-	private JDialog dialog;
+	//private JDialog dialog;
 
-	private File sourceFile;
+	private File[] sourceFiles;
 
 	private Folder destFolder;
 
 	private Boolean cancel = Boolean.TRUE;
 
-	public ImportWizard()
-	{
+	protected WizardPanelSequence sequence;
+
+	ImportPluginHandler pluginHandler;
+
+	public ImportWizard() {
 		destFolder = (Folder) MainInterface.treeModel.getFolder(101);
 
-		init();
+		DefaultWizardPanel p = getSequence().getFirstPanel();
+		init(p);
+
+		updateWindow(p);
+		
 	}
 
-	public void init()
-	{
-		dialog = DialogStore.getDialog("Import Mailbox...");
 
-		listPanel =
-			new ListPanel(
-				dialog,
-				this,
-				"Import Mailbox",
-				"Choose mailbox type",
-				ImageLoader.getSmallImageIcon("stock_preferences.png"),
-				true);
-
-		sourcePanel =
-			new SourcePanel(
-				dialog,
-				this,
-				"Import Mailbox",
-				"Choose source/destination folder",
-				ImageLoader.getSmallImageIcon("stock_preferences.png"),
-				true);
-
-
-		//listPanel.setNext(sourcePanel);
-		//sourcePanel.setPrev(listPanel);
-
-		/*
-		progressPanel =
-			new ProgressPanel(
-				dialog,
-				this,
-				"Import Mailbox",
-				"Choose destination folder",
-				ImageLoader.getImageIcon("preferences", "Preferences24"),
-				true);
-		progressPanel.setPrev(sourcePanel);
-		sourcePanel.setNext(progressPanel);
-		*/
-
-		setPanel(listPanel);
-
-		/*
-		java.awt.Dimension dim = dialog.getSize();
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-		dialog.setLocation(
-			screenSize.width / 2 - dim.width / 2,
-			screenSize.height / 2 - dim.height / 2);
-		*/
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
-	}
-
-	public void setPanel(DefaultWizardPanel panel)
-	{
-		dialog.getContentPane().add(panel);
-		dialog.validate();
-		dialog.pack();
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		String action = e.getActionCommand();
 
-		if (action.equals("FINISH"))
-		{
-			if (sourceFile == null)
-			{
+		if (action.equals("FINISH")) {
+			if (sourceFiles == null) {
 				NotifyDialog dialog = new NotifyDialog();
 				dialog.showDialog("You have to specify a source File!");
 
-			}
-			else
-			{
+			} else {
 
 				dialog.setVisible(false);
 
 				finish();
 			}
-		}
-		else if (action.equals("SOURCE"))
-		{
+		} else if (action.equals("SOURCE")) {
 			JFileChooser fc = new JFileChooser();
-
+			fc.setMultiSelectionEnabled(true);
+			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			fc.setFileHidingEnabled(false);
+			
 			int returnVal = fc.showOpenDialog(dialog);
 
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-			{
-				sourceFile = fc.getSelectedFile();
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				sourceFiles = fc.getSelectedFiles();
 				//this is where a real application would open the file.
-				sourcePanel.setSource(sourceFile.toString());
+				sourcePanel.setSource(sourceFiles[0].toString());
 			}
 
-		}
-		else if (action.equals("DESTINATION"))
-		{
-			
+		} else if (action.equals("DESTINATION")) {
+
 			SelectFolderDialog dialog =
 				MainInterface.treeModel.getSelectFolderDialog();
 
@@ -160,41 +106,78 @@ public class ImportWizard implements ActionListener
 
 				sourcePanel.setDestination(path);
 			}
-			
-			
 
 		}
 	}
 
-	public void finish()
-	{
-		
-		String className = listPanel.getSelection();
+	public void finish() {
 
-		/*
+		String pluginId = listPanel.getSelection();
+
+		pluginHandler = null;
+		try {
+			pluginHandler =
+				(ImportPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.mail.import");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
+
 		DefaultMailboxImporter importer = null;
 
-		Class actClass = null;
-
-		try
-		{
-
-			actClass =
-				Class.forName("org.columba.mail.folder.mailboximport." + className + "Importer");
-
-			importer = (DefaultMailboxImporter) actClass.newInstance();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return;
+		Object[] args = { destFolder, sourceFiles };
+		try {
+			importer =
+				(DefaultMailboxImporter)
+					((ImportPluginHandler) pluginHandler).getPlugin(
+					pluginId,
+					args);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
-		importer.init();
-		importer.setDestinationFolder(destFolder);
-		importer.setSourceFile(sourceFile);
-		*/
-        
+		ImportFolderCommandReference[] r = new ImportFolderCommandReference[1];
+		File[] files = sourceFiles;
+
+		r[0] = new ImportFolderCommandReference(destFolder, files, importer);
+
+		MainInterface.processor.addOp( new ImportMessageCommand(r));
+		
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see org.columba.core.gui.util.wizard.DefaultWizardDialog#getSequence()
+	 */
+	public WizardPanelSequence getSequence() {
+
+		if (sequence == null) {
+			sequence = new WizardPanelSequence();
+
+			listPanel =
+				new ListPanel(
+					dialog,
+					this,
+					"Import Mailbox",
+					"Choose mailbox type",
+					ImageLoader.getSmallImageIcon("stock_preferences.png"),
+					true);
+
+			sequence.addPanel(listPanel);
+
+			sourcePanel =
+				new SourcePanel(
+					dialog,
+					this,
+					"Import Mailbox",
+					"Choose source/destination folder",
+					ImageLoader.getSmallImageIcon("stock_preferences.png"),
+					true);
+			sequence.addPanel(sourcePanel);
+		}
+
+		return sequence;
 	}
 
 }

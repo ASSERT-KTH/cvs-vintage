@@ -24,9 +24,10 @@ import org.columba.addressbook.config.FolderItem;
 import org.columba.addressbook.folder.Root;
 import org.columba.addressbook.plugin.FolderPluginHandler;
 import org.columba.core.config.DefaultXmlConfig;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
-
 
 public class AddressbookTreeModel extends DefaultTreeModel {
 	//private AddressbookTreeNode rootNode;
@@ -134,10 +135,15 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 
 		Object[] args = { item };
 
-		FolderPluginHandler handler =
-			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-				"addressbook_folder");
-
+		FolderPluginHandler handler = null;
+		try {
+			handler =
+				(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+					"addressbook_folder");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
 		AddressbookTreeNode folder = null;
 		try {
@@ -148,7 +154,6 @@ public class AddressbookTreeModel extends DefaultTreeModel {
 			ex.printStackTrace();
 		}
 
-		
 		return folder;
 
 		/*

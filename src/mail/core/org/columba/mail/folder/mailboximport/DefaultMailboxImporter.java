@@ -26,22 +26,34 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.gui.util.NotifyDialog;
 import org.columba.mail.folder.Folder;
 
-public abstract class DefaultMailboxImporter 
-{
+public abstract class DefaultMailboxImporter  {
 	public static int TYPE_FILE = 0;
 	public static int TYPE_DIRECTORY = 1;
 
 	protected Folder destinationFolder;
-	protected File sourceFile;
+	protected File[] sourceFiles;
 	//protected TempFolder tempFolder;
 	protected int counter;
+	
+	
 
-	public void init()
-	{
+	public DefaultMailboxImporter(
+		
+		Folder destinationFolder,
+		File[] sourceFiles) {
+		
+		
+
+		this.destinationFolder = destinationFolder;
+		this.sourceFiles = sourceFiles;
+
+		init();
+	}
+
+	public void init() {
 		counter = 0;
 		//tempFolder = new TempFolder();
 	}
-
 
 	/*********** overwrite the following methods **************************/
 
@@ -49,38 +61,35 @@ public abstract class DefaultMailboxImporter
 	 * overwrite this method to specify type
 	 * the wizard dialog will open the correct file/directory dialog automatically
 	 */
-	public int getType()
-	{
+	public int getType() {
 		return TYPE_FILE;
 	}
-
 
 	/**
 	 * this method does all the import work
 	 */
-	public abstract void importMailbox(File file, WorkerStatusController worker) throws Exception;
-
+	public abstract void importMailbox(
+		File file,
+		WorkerStatusController worker)
+		throws Exception;
 
 	/*********** intern methods (no need to overwrite these) ****************/
 
-	public void setSourceFile(File file)
-	{
-		this.sourceFile = file;
+	public void setSourceFiles(File[] files) {
+		this.sourceFiles = files;
 	}
 
 	/**
 	 * set destination folder
 	 */
-	public void setDestinationFolder(Folder folder)
-	{
+	public void setDestinationFolder(Folder folder) {
 		destinationFolder = folder;
 	}
 
 	/**
 	 *  counter for successfully imported messages
 	 */
-	public int getCount()
-	{
+	public int getCount() {
 		return counter;
 	}
 
@@ -88,28 +97,22 @@ public abstract class DefaultMailboxImporter
 	 *  this method calls your overwritten importMailbox(File)-method
 	 *  and handles exceptions
 	 */
-	public void run( WorkerStatusController worker )
-	{
-		// FIXME
+	public void run(WorkerStatusController worker) {
 		
-		
+
 		worker.setDisplayText("Importing messages...");
 
-		
-
-		try
-		{
-			importMailbox(sourceFile, worker);
-		}
-		catch (Exception ex)
-		{
-			if (ex instanceof FileNotFoundException)
+		try {
+			for ( int i=0; i<sourceFiles.length; i++)
 			{
+			
+			importMailbox(sourceFiles[i], worker);
+			}
+		} catch (Exception ex) {
+			if (ex instanceof FileNotFoundException) {
 				NotifyDialog dialog = new NotifyDialog();
 				dialog.showDialog("Source File not found!");
-			}
-			else
-			{
+			} else {
 				ExceptionDialog dialog = new ExceptionDialog();
 				dialog.showDialog(ex);
 			}
@@ -118,57 +121,44 @@ public abstract class DefaultMailboxImporter
 			dialog.showDialog(
 				"Message import failed! No messages were added to your folder.");
 
-			
+			return;
+		}
 
-			
-			
+		if (worker.cancelled()) {
 			
 			return;
 		}
 
-		if (worker.cancelled())
-		{
-			NotifyDialog dialog = new NotifyDialog();
-			dialog.showDialog(
-				"You cancelled the import operation! No messages were added to your folder.");
-
-			
-			return;
-		}
-
-		if (getCount() == 0)
-		{
+		if (getCount() == 0) {
 			NotifyDialog dialog = new NotifyDialog();
 			dialog.showDialog(
 				"Message import failed! No messages were added to your folder.\nThis means that the parser didn't throw any exception even if it didn't recognize the mailbox format or simple the messagebox didn't contain any messages.");
 
-			
-
 			return;
-		}
-		else if (getCount() > 0)
-		{
-			
-			JOptionPane.showMessageDialog(null, "Message import was successfull!", "Information",
-                                  JOptionPane.INFORMATION_MESSAGE,
-                                  ImageLoader.getImageIcon("stock_dialog_info_48.png") );
-			
-		}
+		} else if (getCount() > 0) {
 
+			JOptionPane.showMessageDialog(
+				null,
+				"Message import was successfull!",
+				"Information",
+				JOptionPane.INFORMATION_MESSAGE,
+				ImageLoader.getImageIcon("stock_dialog_info_48.png"));
+
+		}
 
 	}
 
 	/**
 	 * use this method to save a message to the specified destination folder
 	 */
-	protected void saveMessage(String rawString, WorkerStatusController worker) throws Exception
-	{
+	protected void saveMessage(String rawString, WorkerStatusController worker)
+		throws Exception {
 		destinationFolder.addMessage(rawString, worker);
-		
+
 		counter++;
 
 		worker.setDisplayText("Importing messages: " + getCount());
-		
+
 		// FIXME
 		/*
 		int index = rawString.indexOf("\n\n");
@@ -177,35 +167,35 @@ public abstract class DefaultMailboxImporter
 			System.out.println("non-standard-compliant message:\n" + rawString);
 			return;
 		}
-
+		
 		String headerString = rawString.substring(0, index);
 		Rfc822Parser parser = new Rfc822Parser();
-
+		
 		ColumbaHeader header = parser.parseHeader(rawString);
-
+		
 		Message m = new Message(header);
 		ColumbaHeader h = m.getHeader();
 		m.setRawString(rawString);
-
+		
 		h.set("columba.flags.recent", Boolean.TRUE);
-
+		
 		int size = rawString.length();
-
+		
 		size = Math.round(size / 1024);
-
+		
 		if (size == 0)
 			size = 1;
 		//m.setSize( size );
 		h.set("columba.size", new Integer(size));
-
+		
 		Date date = DateParser.parseString((String) h.get("date"));
 		//System.out.println("date1: "+ h.get("date") );
 		//m.setDate( date );
 		h.set("columba.date", date);
 		Date date2 = (Date) h.get("columba.date");
-
+		
 		//System.out.println("date2: "+ h.get("columba.date") );
-
+		
 		String shortFrom = (String) header.get("From");
 		if (shortFrom != null)
 		{
@@ -219,11 +209,11 @@ public abstract class DefaultMailboxImporter
 					if (shortFrom.endsWith("\""))
 						shortFrom = shortFrom.substring(0, shortFrom.length() - 1);
 				}
-
+		
 			}
 			else
 				shortFrom = shortFrom;
-
+		
 			//m.setShortFrom( shortFrom );
 			h.set("columba.from", shortFrom);
 		}
@@ -232,11 +222,11 @@ public abstract class DefaultMailboxImporter
 			//m.setShortFrom("");
 			h.set("columba.from", new String(""));
 		}
-
+		
 		String priority = (String) header.get("X-Priority");
 		if (priority != null)
 		{
-
+		
 			//m.setPriority( prio );
 			h.set("columba.priority", Integer.getInteger(priority));
 		}
@@ -245,12 +235,12 @@ public abstract class DefaultMailboxImporter
 			//m.setPriority( 3 );
 			h.set("columba.priority", new Integer(3));
 		}
-
+		
 		String attachment = (String) header.get("Content-Type");
 		if (attachment != null)
 		{
 			attachment = attachment.toLowerCase();
-
+		
 			if (attachment.indexOf("multipart") != -1)
 			{
 				//m.setAttachment(true);
@@ -267,9 +257,9 @@ public abstract class DefaultMailboxImporter
 			h.set("columba.attachment", Boolean.FALSE);
 			//m.setAttachment(false);
 		}
-
+		
 		Object uid = tempFolder.workerAdd(m);
-
+		
 		Object[] uids = new Object[1];
 		uids[0] = uid;
 		
@@ -278,7 +268,7 @@ public abstract class DefaultMailboxImporter
 		MainInterface.crossbar.operate(op);
 		
 		counter++;
-
+		
 		setText("Importing messages: " + getCount());
 		*/
 	}
@@ -287,11 +277,15 @@ public abstract class DefaultMailboxImporter
 	protected void finish()
 	{
 		Object[] uids = tempFolder.getUids();
-
+	
 		FolderOperation op =
 			new FolderOperation(Operation.MOVE, 0, uids, tempFolder, destinationFolder);
 		MainInterface.crossbar.operate(op);
 	}
 	*/
+
+	
+
+	
 
 }

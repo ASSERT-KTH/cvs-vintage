@@ -24,7 +24,9 @@ import org.columba.core.action.BasicAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.CMenu;
 import org.columba.core.gui.util.CMenuItem;
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.pop3.POP3ServerController;
 
@@ -71,17 +73,23 @@ public class Menu extends JMenuBar {
 		initFromXML();
 		*/
 
-		(
-			(MenuPluginHandler) MainInterface.pluginManager.getHandler(
-				"menu")).insertPlugins(
-			this);
+		try {
+
+			(
+				(MenuPluginHandler) MainInterface.pluginManager.getHandler(
+					"menu")).insertPlugins(
+				this);
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 	}
 
 	public void extendMenuFromFile(String path) {
 		menuGenerator.extendMenuFromFile(path);
 		menuGenerator.createMenuBar(this);
 	}
-	
+
 	public void extendMenu(XmlElement menuExtension) {
 		menuGenerator.extendMenu(menuExtension);
 	}

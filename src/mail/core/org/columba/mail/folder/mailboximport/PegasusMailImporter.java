@@ -21,24 +21,24 @@ import java.io.File;
 import java.io.FileReader;
 
 import org.columba.core.command.WorkerStatusController;
+import org.columba.mail.folder.Folder;
 
 /**
  * @version 	1.0
  * @author
  */
-public class PegasusMailImporter extends DefaultMailboxImporter
-{
-	
+public class PegasusMailImporter extends DefaultMailboxImporter {
 
-	public int getType()
-	{
+	public PegasusMailImporter(Folder destinationFolder, File[] sourceFiles) {
+		super(destinationFolder, sourceFiles);
+	}
+
+	public int getType() {
 		return TYPE_FILE;
 	}
-	
-	
 
-	public void importMailbox(File file, WorkerStatusController worker) throws Exception
-	{
+	public void importMailbox(File file, WorkerStatusController worker)
+		throws Exception {
 
 		int count = 0;
 		boolean sucess = false;
@@ -49,26 +49,22 @@ public class PegasusMailImporter extends DefaultMailboxImporter
 		String str;
 
 		// parse line by line
-		while ((str = in.readLine()) != null)
-		{
+		while ((str = in.readLine()) != null) {
 			// if user cancelled task exit immediately			
 			if (worker.cancelled() == true)
 				return;
 
 			// if line doesn't start with "From ???@???" or line length is 0
 			//  -> save everything in StringBuffer
-			if ((str.startsWith("From ???@???") == false) || (str.length() == 0))
-			{
+			if ((str.startsWith("From ???@???") == false)
+				|| (str.length() == 0)) {
 				strbuf.append(str + "\n");
-			}
-			else
-			{
+			} else {
 
-				if (strbuf.length() != 0)
-				{
+				if (strbuf.length() != 0) {
 					// found new message
 
-					saveMessage(strbuf.toString());
+					saveMessage(strbuf.toString(), worker);
 
 					count++;
 
@@ -82,9 +78,8 @@ public class PegasusMailImporter extends DefaultMailboxImporter
 		}
 
 		// save last message, because while loop aborted before being able to save message
-		if ((sucess == true) && (strbuf.length() > 0))
-		{
-			saveMessage(strbuf.toString());
+		if ((sucess == true) && (strbuf.length() > 0)) {
+			saveMessage(strbuf.toString(), worker);
 		}
 
 		in.close();

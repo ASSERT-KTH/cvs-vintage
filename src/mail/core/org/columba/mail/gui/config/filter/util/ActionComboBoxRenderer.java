@@ -12,7 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.mail.plugin.FilterActionPluginHandler;
 
 /**
@@ -33,9 +35,17 @@ public class ActionComboBoxRenderer
 	public ActionComboBoxRenderer() {
 		super();
 
-		pluginHandler =
-			(FilterActionPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.filteraction");
+		try {
+			pluginHandler =
+				(
+					FilterActionPluginHandler) MainInterface
+						.pluginManager
+						.getHandler(
+					"org.columba.mail.filteraction");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
 	}
 
@@ -60,7 +70,7 @@ public class ActionComboBoxRenderer
 		String id = (String) value;
 
 		String userVisibleName = pluginHandler.getUserVisibleName(id);
-		
+
 		setText(userVisibleName);
 
 		return this;

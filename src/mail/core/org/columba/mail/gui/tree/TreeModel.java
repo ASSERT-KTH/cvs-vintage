@@ -20,7 +20,9 @@ import java.util.MissingResourceException;
 
 import javax.swing.tree.DefaultTreeModel;
 
+import org.columba.core.gui.util.NotifyDialog;
 import org.columba.core.main.MainInterface;
+import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 import org.columba.mail.config.FolderItem;
 import org.columba.mail.config.FolderXmlConfig;
@@ -147,9 +149,16 @@ public class TreeModel extends DefaultTreeModel {
 
 		String type = item.get("type");
 
-		FolderPluginHandler handler =
-			(FolderPluginHandler) MainInterface.pluginManager.getHandler(
-				"org.columba.mail.folder");
+		FolderPluginHandler handler = null;
+		try {
+
+			handler =
+				(FolderPluginHandler) MainInterface.pluginManager.getHandler(
+					"org.columba.mail.folder");
+		} catch (PluginHandlerNotFoundException ex) {
+			NotifyDialog d = new NotifyDialog();
+			d.showDialog(ex);
+		}
 
 		Object[] args = { item };
 
@@ -242,7 +251,7 @@ public class TreeModel extends DefaultTreeModel {
 			return f;
 		}
 		*/
-		
+
 	}
 
 	public FolderTreeNode getFolder(int uid) {
@@ -285,9 +294,7 @@ public class TreeModel extends DefaultTreeModel {
 				if (item == null)
 					continue;
 
-				if (item
-					.get("type")
-					.equals("IMAPRootFolder")) {
+				if (item.get("type").equals("IMAPRootFolder")) {
 					int account = item.getInteger("account_uid");
 
 					if (account == accountUid) {
