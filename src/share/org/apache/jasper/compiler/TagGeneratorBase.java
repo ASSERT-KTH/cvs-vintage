@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.2 1999/10/20 11:22:55 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagGeneratorBase.java,v 1.3 1999/10/21 07:57:23 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/21 07:57:23 $
  *
  * ====================================================================
  * 
@@ -76,18 +76,27 @@ abstract class TagGeneratorBase extends GeneratorBase {
 
     static private Hashtable tagVarNumbers = new Hashtable();
 
-    static protected void tagBegin(String tagHandlerInstanceName) {
-	tagHandlerStack.push(tagHandlerInstanceName);
+    static class TagVariableData {
+        String tagHandlerInstanceName;
+        String tagEvalVarName;
+        TagVariableData(String tagHandlerInstanceName, String tagEvalVarName) {
+            this.tagHandlerInstanceName = tagHandlerInstanceName;
+            this.tagEvalVarName = tagEvalVarName;
+        }
     }
 
-    static protected String tagEnd() {
-	return (String) tagHandlerStack.pop();
+    static protected void tagBegin(TagVariableData tvd) {
+	tagHandlerStack.push(tvd);
     }
 
-    static protected String topTag() {
+    static protected TagVariableData tagEnd() {
+	return (TagVariableData) tagHandlerStack.pop();
+    }
+
+    static protected TagVariableData topTag() {
 	if (tagHandlerStack.empty())
-	    return "null";
-	return (String) tagHandlerStack.peek();
+	    return null;
+	return (TagVariableData) tagHandlerStack.peek();
     }
 	    
     static protected String getTagVarName(String prefix, String shortTagName) {

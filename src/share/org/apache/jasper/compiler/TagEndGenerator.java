@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.2 1999/10/20 11:22:55 akv Exp $
- * $Revision: 1.2 $
- * $Date: 1999/10/20 11:22:55 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/TagEndGenerator.java,v 1.3 1999/10/21 07:57:22 akv Exp $
+ * $Revision: 1.3 $
+ * $Date: 1999/10/21 07:57:22 $
  *
  * ====================================================================
  * 
@@ -97,7 +97,10 @@ public class TagEndGenerator
     }
     
     public void generate(ServletWriter writer, Class phase) {
-	String thVarName = tagEnd();
+        TagVariableData tvd = tagEnd();
+        String thVarName = tvd.tagHandlerInstanceName;
+        String evalVarName = tvd.tagEvalVarName;
+        
         VariableInfo[] vi = ti.getVariableInfo(new TagData(attrs));
 
         Class tagHandlerClass = tli.getTagCache(shortTagName).getTagHandlerClass();
@@ -112,9 +115,25 @@ public class TagEndGenerator
         
         declareVariables(writer, vi, false, true, VariableInfo.AT_BEGIN);
 	writer.popIndent(); // try 
+
+        /** FIXME: REMOVE BEGIN */
+        writer.println("} catch (Throwable t) {");
+        writer.pushIndent();
+
+        writer.println("System.err.println(\"Caught: \");");
+        writer.println("t.printStackTrace();");
+        writer.popIndent();
+        /** FIXME: REMOVE END */
+        
 	writer.println("} finally {");
 	writer.pushIndent();
-	writer.println("out = pageContext.popBody();");
+        if (implementsBodyTag) {
+            writer.println("if ("+evalVarName+" != Tag.EVAL_BODY_INCLUDE)");
+            writer.pushIndent(); 
+            writer.println("out = pageContext.popBody();");
+            writer.popIndent();
+        }
+
 	writer.popIndent();
 	writer.println("}");
 
@@ -125,6 +144,16 @@ public class TagEndGenerator
 	writer.pushIndent(); writer.println("return;"); writer.popIndent();
 
 	writer.popIndent(); // try
+
+        /** FIXME: REMOVE BEGIN */
+        writer.println("} catch (Throwable t) {");
+        writer.pushIndent();
+
+        writer.println("System.err.println(\"Caught: \");");
+        writer.println("t.printStackTrace();");
+        writer.popIndent();
+        /** FIXME: REMOVE END */
+
 	writer.println("} finally {");
 	writer.pushIndent();
 	writer.println(thVarName+".release();");
