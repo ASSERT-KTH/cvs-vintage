@@ -33,24 +33,37 @@ import org.columba.core.gui.util.ImageLoader;
 import org.columba.core.util.WindowMaximizer;
 
 /**
- * @author freddy
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * 
+ * The view is responsible for creating the initial frame, menu and
+ * toolbar, statusbar.
+ * 
+ * 
+ * @author fdietz
  */
 public abstract class AbstractFrameView
 	extends JFrame
 	implements WindowListener {
 		
+	/**
+	 * internally used toolbar ID
+	 */
 	public static final String MAIN_TOOLBAR = "main";
 	
+	/**
+	 * 
+	 * every view contains a reference to its creator
+	 * 
+	 */
 	protected AbstractFrameController frameController;
+	
 	protected Menu menu;
 
 	protected ToolBar toolbar;
 
+	/**
+	 * in order to support multiple toolbars we use a panel as
+	 * parent container
+	 */
 	protected JPanel toolbarPane;
 
 	public AbstractFrameView(AbstractFrameController frameController) {
@@ -63,46 +76,62 @@ public abstract class AbstractFrameView
 			"Columba - version: "
 				+ org.columba.core.main.MainInterface.version);
 
+
 		JPanel panel = (JPanel) this.getContentPane();
 		panel.setLayout(new BorderLayout());
+		
+		// add statusbar
 		panel.add(frameController.getStatusBar(), BorderLayout.SOUTH);
 
+		// add window listener
 		addWindowListener(this);
 
+
+		// add toolbar
 		toolbarPane = new JPanel();
 		toolbarPane.setLayout(new BoxLayout(toolbarPane, BoxLayout.Y_AXIS));
 		panel.add(toolbarPane, BorderLayout.NORTH);
 
-		init();
-	}
-
-	public void init() {
+		// create menu
 		menu = createMenu(frameController);
 		if (menu != null)
 			setJMenuBar(menu);
 
+		// create toolbar
 		toolbar = createToolbar(frameController);
 		if ((toolbar != null) && (isToolbarVisible())) {
 			toolbarPane.add(toolbar);
 		}
 	}
 
+	
+	/**
+	 * 
+	 * @return	true, if toolbar is enabled, false otherwise
+	 * 
+	 */
 	public boolean isToolbarVisible() {
 
 		return frameController.isToolbarEnabled(MAIN_TOOLBAR);
 		
 	}
 
+	/**
+	 * Load the window position, size and maximization state
+	 *
+	 */
 	public void loadWindowPosition() {
 		ViewItem viewItem = frameController.getViewItem();
 		int x = viewItem.getInteger("window", "width");
 		int y = viewItem.getInteger("window", "height");
 		boolean maximized = viewItem.getBoolean("window", "maximized", true);
 
+		// if window is maximized -> ignore the window size
+		// properties
 		if (maximized)
-			maximize();
+		WindowMaximizer.maximize(this);
 		else {
-
+			// otherwise, use window size property 
 			Dimension dim = new Dimension(x, y);
 			setSize(dim);
 
@@ -110,17 +139,11 @@ public abstract class AbstractFrameView
 		}
 	}
 
-	public void maximize() {
-		WindowMaximizer.maximize(this);
-
-		/*
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize);
-		*/
-
-		//setExtendedState(MAXIMIZED_BOTH);
-	}
-
+	/**
+	 * 
+	 * Save current window position, size and maximization state
+	 *
+	 */
 	public void saveWindowPosition() {
 
 		java.awt.Dimension d = getSize();
@@ -137,6 +160,10 @@ public abstract class AbstractFrameView
 		item.set("maximized", isMaximized);
 	}
 
+	/**
+	 * Show toolbar
+	 *
+	 */
 	public void showToolbar() {
 
 		boolean b = isToolbarVisible();
@@ -207,11 +234,32 @@ public abstract class AbstractFrameView
 		return menu;
 	}
 
+	/**
+	 * Overwrite method to add custom menu.
+	 * 
+	 * Use core menu and plug all the mail/addressbook specific actions
+	 * in the menu.
+	 * 
+	 * @param controller	controller of view
+	 * @return				complete menu
+	 */
 	protected abstract Menu createMenu(AbstractFrameController controller);
 
+	/**
+	 * Overwrite method to add custom toolbar.
+	 * 
+	 * Use core toolbar and plug all the mail/addressbook specific actions
+	 * in the toolbar.
+	 * 
+	 * @param controller	controller of view
+	 * @return				complete toolbar
+	 */
 	protected abstract ToolBar createToolbar(AbstractFrameController controller);
 
+
 	/**
+	 * Return controller of this view
+	 * 
 	 * @return FrameController
 	 */
 	public AbstractFrameController getFrameController() {

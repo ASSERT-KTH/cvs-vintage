@@ -20,14 +20,30 @@ import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.xml.XmlElement;
 
 /**
- * @author frd
+ * 
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * FrameModel manages all frames. It keeps a list of every
+ * controller.
+ * 
+ * Its also the place to create a new frame, or save and close
+ * all frames at once.
+ * 
+ * Frame controllers are plugins.
+ * 
+ * @see FramePluginHandler
+ * 
+ * @author fdietz
  */
 public class FrameModel {
 
+	/**
+	 * list of frame controllers
+	 */
 	protected static List list;
+	
+	/**
+	 * viewlist xml treenode
+	 */
 	protected static XmlElement viewList =
 		Config.get("options").getElement("/options/gui/viewlist");
 
@@ -35,6 +51,7 @@ public class FrameModel {
 
 		list = new Vector();
 
+		// load all frames from configuration file
 		for (int i = 0; i < viewList.count(); i++) {
 			XmlElement view = viewList.getElement(i);
 			String id = view.getAttribute("id");
@@ -49,6 +66,19 @@ public class FrameModel {
 		}
 	}
 
+	/**
+	 * Create new frame controller.
+	 * <p>
+	 * 
+	 * FrameControllers are plugins.
+	 * 
+	 * @see FramePluginHandler
+	 * 
+	 * @param id			controller ID
+	 * @param viewItem		ViewItem containing frame properties
+	 * 
+	 * @return				frame controller
+	 */
 	public static AbstractFrameController createFrameController(
 		String id,
 		ViewItem viewItem) {
@@ -80,6 +110,11 @@ public class FrameModel {
 		return frame;
 	}
 
+	/**
+	 * 
+	 * Save all open frames and close them.
+	 *
+	 */
 	public static void saveAll() {
 
 		viewList.removeAllElements();
@@ -96,6 +131,11 @@ public class FrameModel {
 		}
 	}
 
+	/**
+	 * Close specific frame
+	 * 
+	 * @param c		frame controller to close
+	 */
 	public static void close(AbstractFrameController c) {
 		if (list.size() == 1) {
 			// last frame
@@ -112,20 +152,15 @@ public class FrameModel {
 
 	
 
+	/**
+	 * 
+	 * Open view with specific ID.
+	 * 
+	 * @param id		controller ID
+	 * @return			frame controller
+	 */
 	public static AbstractFrameController openView(String id) {
-		/*
-		XmlElement view = new XmlElement("view");
-		view.addAttribute("id", id);
-		XmlElement window = new XmlElement("window");
-		window.addAttribute("x", "0");
-		window.addAttribute("y", "0");
-		window.addAttribute("width", "900");
-		window.addAttribute("height", "700");
-		window.addAttribute("maximized", "true");
-		view.addElement(window);
-		viewList.addElement(view);
-		*/
-
+		
 		AbstractFrameController c = createFrameController(id, null);
 		
 		c.openView();

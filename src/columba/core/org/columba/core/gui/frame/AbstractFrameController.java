@@ -28,33 +28,71 @@ import org.columba.core.xml.XmlElement;
 import org.columba.mail.gui.frame.TooltipMouseHandler;
 
 /**
+ * The Controller is responsible for creating a view.
+ * 
+ * It provides a selection handler facility through a 
+ * SelectionManager.
+ * 
+ * @see org.columba.core.gui.selection.SelectionManager
+ * 
+ * 
+ * 
  * @author Timo Stich (tstich@users.sourceforge.net)
  * 
  */
 public abstract class AbstractFrameController {
 
 	protected StatusBar statusBar;
+	
+	/**
+	 * Menuitems use this to display a string in the statusbar
+	 */
 	protected MouseAdapter mouseTooltipHandler;
 
+	/**
+	 * Saves view information like position, size and maximization state
+	 */
 	protected ViewItem viewItem;
 
+	/**
+	 * 
+	 * View this controller handles
+	 */
 	protected AbstractFrameView view;
+	
+	/**
+	 * Selection handler
+	 */
 	protected SelectionManager selectionManager;
 	
-
+	/**
+	 * ID of controller
+	 */
 	protected String id;
 
+	/**
+	 * 
+	 * default view configuration
+	 */
 	protected XmlElement defaultView;
 
 	/**
 	 * Constructor for FrameController.
 	 * 
 	 * Warning: Never do any inits in the constructor -> use init() instead!
+	 * 
+	 * The problem is that we have some circular dependencies here:
+	 * The view needs the action to be initializied first.
+	 * The actions need the controller properly initialized.
+	 * 
+	 * So, take care when changing the order of initialization
+	 * 
 	 */
 	public AbstractFrameController(String id, ViewItem viewItem) {
 		this.id = id;
 		this.viewItem = viewItem;
 
+		// initialize default view options
 		defaultView = new XmlElement("view");
 		XmlElement window = new XmlElement("window");
 		window.addAttribute("width", "640");
@@ -68,37 +106,48 @@ public abstract class AbstractFrameController {
 		if (viewItem == null)
 			this.viewItem = new ViewItem(createDefaultConfiguration(id));
 
+		// register statusbar at global taskmanager
 		statusBar = new StatusBar(MainInterface.processor.getTaskManager());
 
+		// add tooltip handler
 		mouseTooltipHandler = new TooltipMouseHandler(statusBar);
 
+		// init selection handler
 		selectionManager = new SelectionManager();
+		
+		// initialize the view here
 		init();
 
+		// initialize all actions
 		initActions();
-
-		view = createView();
-		//view.init();
 		
-		initInternActions();
+		// create view
+		view = createView();
+		
 	}
 
+	/**
+	 * 
+	 * @see ThreePaneMailFrameController for an example of its usage
+	 *
+	 */
 	protected void initActions() {
-		/*
-		ActionPluginHandler handler = null;
-		try {
-
-			handler =
-				(ActionPluginHandler) MainInterface.pluginManager.getHandler(
-					"org.columba.core.action");
-			handler.initGuiElements();
-		} catch (PluginHandlerNotFoundException ex) {
-			ex.printStackTrace();
-			return;
-		}
-		*/
 	}
 
+	/**
+	 * 
+	 * Create default view configuration
+	 * 
+	 * This is used by implementations of controllers who want
+	 * to store some more information, which is specific to their
+	 * domain.
+	 * 
+	 * @see AbstractMailFrameController for implementation example
+	 * 
+	 * 
+	 * @param id	ID of controller
+	 * @return		xml treenode containing the new configuration
+	 */
 	protected XmlElement createDefaultConfiguration(String id) {
 		XmlElement child = (XmlElement) defaultView.clone();
 		child.addAttribute("id", id);
@@ -106,33 +155,57 @@ public abstract class AbstractFrameController {
 		return child;
 	}
 
+
 	/**
 	 * - create all additional controllers
 	 * - register SelectionHandlers
 	 */
 	protected abstract void init();
 
-	protected abstract void initInternActions();
 
+	/**
+	 * 
+	 * @return	statusbar
+	 */
 	public StatusBar getStatusBar() {
 		return statusBar;
 	}
 
 	/**
 	 * Returns the mouseTooltipHandler.
+	 * 
 	 * @return MouseAdapter
 	 */
 	public MouseAdapter getMouseTooltipHandler() {
 		return mouseTooltipHandler;
 	}
 
+	/**
+	 * 
+	 * Save window properties, don't close it.
+	 * 
+	 * Hmm. Somethings wrong here:
+	 * Note that mail component will overwrite this method
+	 * to save its domain specific configuration.
+	 * 
+	 * So, close() method below should reuse saveAndClose(),
+	 * where saveAndClose() should be renamed to something 
+	 * which makes more sense. 
+	 * 
+	 */
 	public void saveAndClose() {
 		view.saveWindowPosition();
 		//model.saveAndUnregister(id);
 	}
 
+	/**
+	 * 
+	 * Save window properties and close the window
+	 * 
+	 *
+	 */
 	public void close() {
-                ColumbaLogger.log.info("closing FrameController");
+        ColumbaLogger.log.info("closing FrameController");
 
 		view.saveWindowPosition();
 		view.setVisible(false);
@@ -144,8 +217,17 @@ public abstract class AbstractFrameController {
 		//getView().setVisible(false);	
 	}
 
+	/**
+	 * Create view 
+	 * 
+	 * @return	view object
+	 */
 	abstract protected AbstractFrameView createView();
 
+	/**
+	 * Open new view.
+	 *
+	 */
 	public void openView() {
 		view.loadWindowPosition();
 		
@@ -172,11 +254,23 @@ public abstract class AbstractFrameController {
 		this.viewItem = item;
 	}
 	
+	/**
+	 * Enable/Disable toolbar configuration
+	 * 
+	 * @param id		ID of controller
+	 * @param enable	true/false
+	 */
 	public void enableToolbar(String id, boolean enable)
 	{
 		getViewItem().set("toolbars", id, enable);
 	}
 	
+	/**
+	 * Returns true if the toolbar is enabled
+	 * 
+	 * @param id		ID of controller
+	 * @return			true, if toolbar is enabled, false otherwise
+	 */
 	public boolean isToolbarEnabled(String id)
 	{
 		return getViewItem().getBoolean("toolbars", id, true);

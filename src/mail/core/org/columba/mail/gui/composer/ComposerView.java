@@ -45,49 +45,33 @@ public class ComposerView extends AbstractFrameView {
 
 	public static final String ACCOUNTINFOPANEL = "accountinfopanel";
 
-	
 	private JSplitPane rightSplitPane;
-	
-	public ComposerView(AbstractFrameController controller) {
-		super(controller);
+
+	public ComposerView(AbstractFrameController ctrl) {
+		super(ctrl);
 		setTitle(MailResourceLoader.getString("dialog", "composer", "composerview_title")); //$NON-NLS-1$
-	}
 
-	public void setRightDividerLocation(int i) {
-		rightSplitPane.setDividerLocation(i);
-	}
-
-	public int getRightDividerLocation() {
-		return rightSplitPane.getDividerLocation();
-	}
-	
-	public void init() {
-		super.init();
-		
 		Container contentPane;
 
 		contentPane = getContentPane();
 
 		ComposerController controller = (ComposerController) frameController;
-		
-		
-		if ( isAccountInfoPanelVisible() )
+
+		if (isAccountInfoPanelVisible())
 			toolbarPane.add(controller.getIdentityInfoPanel());
-		
-		
-		JScrollPane attachmentScrollPane = new JScrollPane(controller.getAttachmentController().view);
-		
+
+		JScrollPane attachmentScrollPane =
+			new JScrollPane(controller.getAttachmentController().view);
+
 		rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		rightSplitPane.setBorder(null);
 		rightSplitPane.add(
 			controller.getHeaderController().view,
 			JSplitPane.LEFT);
-		rightSplitPane.add(
-		attachmentScrollPane,
-			JSplitPane.RIGHT);
+		rightSplitPane.add(attachmentScrollPane, JSplitPane.RIGHT);
 		rightSplitPane.setDividerSize(5);
 		rightSplitPane.setDividerLocation(400);
-		
+
 		JPanel topPanel = new JPanel();
 		topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
 
@@ -162,16 +146,22 @@ public class ComposerView extends AbstractFrameView {
 		centerPanel.add(editorPanel, BorderLayout.CENTER);
 
 		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout( new BorderLayout() );
-		
-		mainPanel.add( rightSplitPane, BorderLayout.NORTH);
-		mainPanel.add( centerPanel, BorderLayout.CENTER);
-		
-		contentPane.add( mainPanel, BorderLayout.CENTER);
-		
-		pack();
+		mainPanel.setLayout(new BorderLayout());
 
-		
+		mainPanel.add(rightSplitPane, BorderLayout.NORTH);
+		mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+		contentPane.add(mainPanel, BorderLayout.CENTER);
+
+		pack();
+	}
+
+	public void setRightDividerLocation(int i) {
+		rightSplitPane.setDividerLocation(i);
+	}
+
+	public int getRightDividerLocation() {
+		return rightSplitPane.getDividerLocation();
 	}
 
 	/* (non-Javadoc)
