@@ -21,6 +21,7 @@ import javax.management.ObjectName;
 import org.apache.log4j.Category;
 import org.apache.log4j.NDC;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
 
 /** This is a JMX MBean that provides three features:
 1., It initalizes the log4j framework from the log4j properties format file
@@ -38,7 +39,7 @@ import org.apache.log4j.PropertyConfigurator;
 @author <a href="mailto:phox@galactica.it">Fulco Muriglio</a>
 @author Scott_Stark@displayscape.com
 @author <a href="mailto:davidjencks@earthlink.net">David Jencks</a>
-@version $Revision: 1.6 $
+@version $Revision: 1.7 $
 */
 public class Log4jService implements Log4jServiceMBean, NotificationListener,
     MBeanRegistration
@@ -104,6 +105,8 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
     */
     public void start() throws Exception
     {
+        // See if this is an xml configuration file
+        boolean isXML = configurationPath.endsWith(".xml");
         // Make sure the config file can be found
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(configurationPath);
@@ -113,11 +116,17 @@ public class Log4jService implements Log4jServiceMBean, NotificationListener,
         {
             // configurationPath is a file path
             String path = url.getFile();
-            PropertyConfigurator.configureAndWatch(path, 1000*refreshPeriod);
+            if( isXML )
+                DOMConfigurator.configureAndWatch(path, 1000*refreshPeriod);
+            else
+                PropertyConfigurator.configureAndWatch(path, 1000*refreshPeriod);
         }
         else
         {
-            PropertyConfigurator.configure(url);
+            if( isXML )
+                DOMConfigurator.configure(url);
+            else
+                PropertyConfigurator.configure(url);
         }
         this.category = Category.getRoot();
         category.info("Started Log4jService, config="+url);
