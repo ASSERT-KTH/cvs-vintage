@@ -27,6 +27,7 @@ fi
 
 MYSQL=`which mysql`
 MYSQLSHOW=`which mysqlshow`
+MYSQLDUMP=`which mysqldump`
 
 if [ ! -x "${MYSQL}" ] ; then
     echo "The MySQL binary needs to be in your PATH!"
@@ -45,9 +46,12 @@ if [ $base_exists -ne 1 ] ; then
 	exit
 fi
 
+echo "Creating a backup of your existing database..."
+${MYSQLDUMP} -u ${USER} ${PASSCMD} -r mysql-scarab-backup.sql ${DB_NAME}
+
 # Creating new base and inputting default data
 
 for i in `ls ${UPGRADE}/mysql-upgrade-${FROM}-${TO}-*.sql` ; do
-    echo "${i}..."
+    echo "Executing upgrade script: ${i}..."
     ${MYSQL} -u ${USER} ${PASSCMD} ${DB_NAME} < ${i}    
 done
