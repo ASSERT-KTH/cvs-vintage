@@ -79,7 +79,7 @@ import org.jboss.ejb.plugins.jaws.deployment.Finder;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class JAWSPersistenceManager
    implements EntityPersistenceManager
@@ -731,31 +731,34 @@ public class JAWSPersistenceManager
          boolean[] dirtyField = new boolean[currentState.length];
          Object[] oldState = (Object[])ctx.getPersistenceContext();
          boolean dirty = false;
-         ArrayList dirtyFields = new ArrayList();
          int refIdx = 0;
          for (int i = 0;i < currentState.length; i++)
          {
             if (((Integer)jdbcTypes.get(i)).intValue() == Types.REF)
             {
-               if (!currentState[i].equals(oldState[i]))
-               {
-                  JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
-                  for (int j = 0; j < pkFields.length; j++)
-                  {
-                     updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
-                     dirty = true;
-                  }
-                  dirtyField[i] = true;
-               }
+					if (((currentState[i] != null) && 
+							(oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
+						 (oldState[i] != null))
+					{
+					   JawsCMPField[] pkFields = (JawsCMPField[])ejbRefs.get(refIdx);
+					   for (int j = 0; j < pkFields.length; j++)
+					   {
+					      updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"_"+pkFields[j].getColumnName()+"=?";
+					      dirty = true;
+					   }
+					   dirtyField[i] = true;
+					}
                refIdx++;
             } else
             {
-               if (!currentState[i].equals(oldState[i]))
-               {
-                  updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
-                  dirty = true;
-                  dirtyField[i] = true;
-               }
+					if (((currentState[i] != null) &&
+						 (oldState[i] == null || !currentState[i].equals(oldState[i]))) ||
+						 (oldState[i] != null))
+					{
+					   updateSql += (dirty?",":"") + ((JawsCMPField)CMPFields.get(i)).getColumnName()+"=?";
+					   dirty = true;
+					   dirtyField[i] = true;
+					}
             }
          }
          
@@ -773,7 +776,7 @@ public class JAWSPersistenceManager
          
          int idx = 1;
          refIdx = 0;
-         for (int i = 0;i < dirtyFields.size(); i++)
+         for (int i = 0;i < dirtyField.length; i++)
          {
             if (((JawsCMPField)CMPFields.get(i)).getJdbcType().equals("REF"))
             {
