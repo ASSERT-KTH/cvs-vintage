@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.sql.DataSource;
 import javax.ejb.EJBException;
+import javax.transaction.Status;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
@@ -40,7 +43,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public class JDBCStartCommand {
 
@@ -137,17 +140,24 @@ public class JDBCStartCommand {
          return;
       }
 
-      Connection con = null;
-      Statement statement = null;
-
       // since we use the pools, we have to do this within a transaction
+
+      // suspend the current transaction
+      TransactionManager tm = manager.getContainer().getTransactionManager();
+      Transaction oldTransaction = null;
       try {
-         manager.getContainer().getTransactionManager().begin ();         
-      } catch (Exception e) {
-         throw new DeploymentException("Could not get transaction to create " +
-               "table in", e);
+         oldTransaction = tm.suspend();
+      } catch(Exception e) {
+         throw new DeploymentException("Could not suspend current " +
+               "transaction before creating table.", e);
       }
+
       try {
+         // start the new transaction
+         tm.begin();
+
+         Connection con = null;
+         Statement statement = null;
          try {        
             // get the connection
             con = dataSource.getConnection();
@@ -164,16 +174,36 @@ public class JDBCStartCommand {
             JDBCUtil.safeClose(statement);
             JDBCUtil.safeClose(con);
          }
-         manager.getContainer().getTransactionManager().commit ();
+
+         // commit the new transaction
+         tm.commit();
       } catch(Exception e) {
          log.debug("Could not create table " + tableName);
+
+         // try to rollback the new transaction
          try {
-            manager.getContainer().getTransactionManager().rollback();
+            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+               tm.rollback();
+            }
          } catch(Exception _e) {
             log.error("Could not roll back transaction: ", e);
          }
          throw new DeploymentException("Error while creating table", e);
+      } finally {
+         try {
+            // suspend the new transaction
+            tm.suspend();
+
+            // resume the old transaction
+            if(oldTransaction != null) {
+               tm.resume(oldTransaction);
+            }
+         } catch(Exception e) {
+            throw new DeploymentException("Could not reattach original " +
+                  "transaction after create table");
+         }
       }
+
       // success
       log.info("Created table '" + tableName + "' successfully.");
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);
@@ -324,20 +354,26 @@ public class JDBCStartCommand {
       String sql = fkConstraint.getFunctionSql(args);
 
       // since we use the pools, we have to do this within a transaction
+      // suspend the current transaction
+      TransactionManager tm = manager.getContainer().getTransactionManager();
+      Transaction oldTransaction = null;
       try {
-         manager.getContainer().getTransactionManager().begin ();         
-      } catch (Exception e) {
-         throw new DeploymentException("Could not get transaction to create " +
-               "table in", e);
+         oldTransaction = tm.suspend();
+      } catch(Exception e) {
+         throw new DeploymentException("Could not suspend current " +
+               "transaction before alter table create foreign key.", e);
       }
 
-      Connection con = null;
-      Statement statement = null;
       try {
+         // start the new transaction
+         tm.begin();
+
+         Connection con = null;
+         Statement statement = null;
          try {
             // get the connection
             con = dataSource.getConnection();
-         
+      
             // create the statement
             statement = con.createStatement();
          
@@ -351,18 +387,36 @@ public class JDBCStartCommand {
             JDBCUtil.safeClose(con);
          }
 
-         // commit the transaction
-         manager.getContainer().getTransactionManager().commit();
+         // commit the new transaction
+         tm.commit();
       } catch(Exception e) {
          log.debug("Could not add foreign key constriant: table=" + tableName);
+
+         // try to rollback the new transaction
          try {
-            manager.getContainer().getTransactionManager().rollback ();
-         } catch (Exception _e) {
+            if(tm.getStatus() != Status.STATUS_NO_TRANSACTION) {
+               tm.rollback();
+            }
+         } catch(Exception _e) {
             log.error("Could not roll back transaction: ", e);
-         }  
+         }
          throw new DeploymentException("Error while adding foreign key " +
                "constraint", e);
+      } finally {
+         try {
+            // suspend the new transaction
+            tm.suspend();
+
+            // resume the old transaction
+            if(oldTransaction != null) {
+               tm.resume(oldTransaction);
+            }
+         } catch(Exception e) {
+            throw new DeploymentException("Could not reattach original " +
+                  "transaction after create table");
+         }
       }
+
 
       // success
       log.info("Added foreign key constriant to table '" + tableName);
