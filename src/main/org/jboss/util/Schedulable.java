@@ -35,6 +35,6 @@ public interface Schedulable
     **/
    public void perform(
       Date pTimeOfCall,
-      int pRemainingRepetitions
+      long pRemainingRepetitions
    );
 }

@@ -6,6 +6,7 @@
  */
 package org.jboss.util;
 
+import java.security.InvalidParameterException;
 import java.util.Date;
 
 import org.jboss.util.ServiceMBean;
@@ -32,33 +33,14 @@ public interface SchedulerMBean
 
    /**
     * Starts the schedule if the schedule is stopped otherwise nothing will happen.
-    * The scheduled is immediately set to started even the first call is in the
+    * The Schedule is immediately set to started even the first call is in the
     * future.
     *
-    * @param pSchedulableClass Full qaulified Class Name of the class implementing
-    *                          the {@link org.jboss.util.Schedulable} interface.
-    * @param pInitArguments Arrays of arguments for the constructor. It must have as
-    *                       many elements as the Initial Types array. If null then
-    *                       an empty array is assumed.
-    * @param pInitTypes Arrays of data types to look up the constructor. It must have
-    *                   as many elements as the Init Arguments array. If null then an
-    *                   empty array is assumed.
-    * @param pInitialStartDate Date when the schedule will be started initially. If
-    *                          null of older than now it will started NOW.
-    * @param pSchedulePeriod Time in Milliseconds between two scheduled calls after
-    *                        the initial call.
-    * @param pNumberOfRepetitions Number of repetitions this schedule is suppossed to
-    *                             call. If less or equal than 0 it will repeat
-    *                             unlimited.
+    * @throws InvalidParameterException If any of the necessary values are not set
+    *                                   or invalid (especially for the Schedulable
+    *                                   class attributes).
     **/
-   public void startSchedule(
-      String pSchedulableClass,
-      Object[] pInitArguments,
-      String[] pInitTypes,
-      Date pInitialStartDate,
-      long pSchedulePeriod,
-      int pNumberOfRepetitions
-   );
+   public void startSchedule();
    
    /**
     * Stops the schedule because it is either not used anymore or to restart it with
@@ -73,15 +55,104 @@ public interface SchedulerMBean
    );
    
    /**
+    * Stops the server right now and starts it right now.
+    **/
+   public void restartSchedule();
+   
+   /**
+    * @return Full qualified Class name of the schedulable class called by the schedule or
+    *         null if not set.
+    **/
+   public String getSchedulableClass();
+   
+   /**
+    * Sets the fully qualified Class name of the Schedulable Class being called by the
+    * Scheduler. Must be set before the Schedule is started. Please also set the
+    * {@link #setSchedulableArguments} and {@link #setSchedulableArgumentTypes}.
+    *
+    * @param pSchedulableClass Fully Qualified Schedulable Class.
+    *
+    * @throws InvalidParameterException If the given value is not a valid class or cannot
+    *                                   be loaded by the Scheduler or is not of instance
+    *                                   Schedulable.
+    **/
+   public void setSchedulableClass( String pSchedulableClass )
+      throws InvalidParameterException;
+   
+   /**
+    * @return Comma seperated list of Constructor Arguments used to instantiate the
+    *         Schedulable class instance. Right now only basic data types, String and
+    *         Classes with a Constructor with a String as only argument are supported.
+    **/
+   public String getSchedulableArguments();
+   
+   /**
+    * Sets the comma seperated list of arguments for the Schedulable class. Note that
+    * this list must have as many elements as the Schedulable Argument Type list otherwise
+    * the start of the Scheduler will fail. Right now only basic data types, String and
+    * Classes with a Constructor with a String as only argument are supported.
+    *
+    * @param pArgumentList List of arguments used to create the Schedulable intance. If
+    *                      the list is null or empty then the no-args constructor is used.
+    **/
+   public void setSchedulableArguments( String pArgumentList );
+   
+   /**
+    * @return A comma seperated list of Argument Types which should match the list of
+    *         arguments.
+    **/
+   public String getSchedulableArgumentTypes();
+   
+   /**
+    * Sets the comma seperated list of argument types for the Schedulable class. This will
+    * be used to find the right constructor and to created the right instances to call the
+    * constructor with. This list must have as many elements as the Schedulable Arguments
+    * list otherwise the start of the Scheduler will fail. Right now only basic data types,
+    * String and Classes with a Constructor with a String as only argument are supported.
+    *
+    * @param pTypeList List of arguments used to create the Schedulable intance. If
+    *                  the list is null or empty then the no-args constructor is used.
+    *
+    * @throws InvalidParameterException If the given list contains a unknow datat type.
+    **/
+   public void setSchedulableArgumentTypes( String pTypeList )
+      throws InvalidParameterException;
+   
+   /**
     * @return Schedule Period between two scheduled calls in Milliseconds. It will always
     *         be bigger than 0 except it returns -1 then the schedule is stopped.
     **/
    public long getSchedulePeriod();
    
    /**
+    * Sets the Schedule Period between two scheduled call.
+    *
+    * @param pPeriod Time between to scheduled calls (after the initial call) in Milliseconds.
+    *                This value must be bigger than 0.
+    *
+    * @throws InvalidParameterException If the given value is less or equal than 0
+    **/
+   public void setSchedulePeriod( long pPeriod );
+   
+   /**
+    * @return Number of scheduled calls initially. If -1 then there is not limit.
+    **/
+   public long getInitialRepetitions();
+   
+   /**
+    * Sets the initial number of scheduled calls.
+    *
+    * @param pNumberOfCalls Initial Number of scheduled calls. If -1 then the number
+    *                       is unlimted.
+    *
+    * @throws InvalidParameterException If the given value is less or equal than 0
+    **/
+   public void setInitialRepetitions( long pNumberOfCalls );
+
+   /**
     * @return Number of remaining repetitions. If -1 then there is no limit.
     **/
-   public int getRemainingRepetitions();
+   public long getRemainingRepetitions();
    
    /**
     * @return True if the schedule is up and running. If you want to start the schedule
@@ -89,5 +160,10 @@ public interface SchedulerMBean
     *         first with {@ #stopSchedule} and wait until this method returns false.
     **/
    public boolean isStarted();
+   
+   /**
+    * @return True if any attributes are changed but the Schedule is not restarted yet.
+    **/
+   public boolean isRestartPending();
 
 }
