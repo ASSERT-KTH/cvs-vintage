@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.1 1999/10/09 00:30:16 duncan Exp $
- * $Revision: 1.1 $
- * $Date: 1999/10/09 00:30:16 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/RequestMapper.java,v 1.2 1999/10/12 07:17:47 gonzo Exp $
+ * $Revision: 1.2 $
+ * $Date: 1999/10/12 07:17:47 $
  *
  * ====================================================================
  *
@@ -198,8 +198,15 @@ public class RequestMapper {
 	    } else {
 	        int i = s.lastIndexOf("/");
 
-		s = s.substring(0, ((i > -1) ? i : 0));
-	    }
+                if (i > 0) {
+		    s = s.substring(0, i);
+                } else if (i == 0 &&
+                    ! s.equals("/")) {
+                    s = "/";
+                } else {
+                    s = "";
+                }
+            }
 	}
 
 	return wrapper;
