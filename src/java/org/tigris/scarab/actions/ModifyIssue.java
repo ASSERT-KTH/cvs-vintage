@@ -76,7 +76,7 @@ import org.tigris.scarab.util.word.IssueSearch;
     This class is responsible for edit issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ModifyIssue.java,v 1.14 2001/07/27 23:57:21 elicia Exp $
+    @version $Id: ModifyIssue.java,v 1.15 2001/08/01 00:17:33 elicia Exp $
 */
 public class ModifyIssue extends TemplateAction
 {
@@ -89,6 +89,8 @@ public class ModifyIssue extends TemplateAction
     {
         String id = data.getParameters().getString("id");
         Issue issue = (Issue) IssuePeer.retrieveByPK(new NumberKey(id));
+        ScarabUser user = (ScarabUser)data.getUser();
+
         IntakeTool intake = (IntakeTool)context
             .get(ScarabConstants.INTAKE_TOOL);
        
@@ -108,7 +110,8 @@ public class ModifyIssue extends TemplateAction
         Criteria crit = new Criteria()
             .add(RModuleAttributePeer.ACTIVE, true)        
             .add(RModuleAttributePeer.REQUIRED, true);        
-        Attribute[] requiredAttributes = issue.getScarabModule().getAttributes(crit);
+        Attribute[] requiredAttributes = issue.getScarabModule()
+                                         .getAttributes(crit);
         AttributeValue aval = null;
         Group group = null;
 
@@ -150,13 +153,13 @@ public class ModifyIssue extends TemplateAction
 
         if ( intake.isAllValid() ) 
         {
-System.out.println("all valid");
-
             // Save explanatory comment
             commentGroup.setProperties(attachment);
             attachment.setIssue(issue);
             attachment.setTypeId(new NumberKey("2"));
             attachment.setMimeType("text/plain");
+            attachment.setCreatedDate(new Date());
+            attachment.setCreatedBy(user.getUserId());
             attachment.save();
                     
             // Save transaction record
@@ -258,6 +261,7 @@ System.out.println("all valid");
         Attachment attachment = new Attachment();
         String typeID= null;
         Group group = null;
+        ScarabUser user = (ScarabUser)data.getUser();
 
         if (type.equals("url"))
         {
@@ -291,7 +295,10 @@ System.out.println("all valid");
                 attachment.setIssue(issue);
                 attachment.setTypeId(new NumberKey(typeID));
                 attachment.setMimeType("text/plain");
+                attachment.setCreatedDate(new Date());
+                attachment.setCreatedBy(user.getUserId());
                 attachment.save();
+                intake.remove(group);
                 String template = data.getParameters()
                                  .getString(ScarabConstants.NEXT_TEMPLATE);
                 setTarget(data, template);            
@@ -474,6 +481,7 @@ System.out.println("all valid");
             // group.setProperties, but getting errors. (John?)
             //group.setProperties(depend);
             depend.save();
+            intake.remove(group);
         }
         else
         {
