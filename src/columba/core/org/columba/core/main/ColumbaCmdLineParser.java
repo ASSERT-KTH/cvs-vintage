@@ -38,6 +38,8 @@ public class ColumbaCmdLineParser {
     private static CmdLineParser.Option subject;
     private static CmdLineParser.Option cc;
     private static CmdLineParser.Option bcc;
+    
+    protected CmdLineParser parser;
     private boolean debugOption = false;
     private String pathOption = null;
     private String rcptOption = null;
@@ -48,45 +50,46 @@ public class ColumbaCmdLineParser {
     private String ccOption = null;
     private String bccOption = null;
 
+    public ColumbaCmdLineParser() {
+        parser = new CmdLineParser();
+    }
+    
     /**
      * Parsing the commandline arguments and set the given values to the commandline arguments.
      * @param args commandline arguments to be parsed
      */
     public void initCmdLine(String[] args) {
-        //init new CommandLineParser from jargs
-        CmdLineParser commandLineParser = new CmdLineParser();
-
         // setting any options
         // the short option '+' is an hack until jargs supports also "only long commands"
         // TODO make options i18n compatible
-        help = commandLineParser.addBooleanOption('+', "help");
-        version = commandLineParser.addBooleanOption('+', "version");
-        debug = commandLineParser.addBooleanOption('d', "debug");
-        composer = commandLineParser.addBooleanOption('c', "composer");
-        rcpt = commandLineParser.addStringOption('r', "rcpt");
-        body = commandLineParser.addStringOption('b', "body");
-        path = commandLineParser.addStringOption('p', "path");
-        mailurl = commandLineParser.addStringOption('+', "mailurl");
-        subject = commandLineParser.addStringOption('s', "subject");
-        cc = commandLineParser.addStringOption('+', "cc");
-        bcc = commandLineParser.addStringOption('+', "bcc");
+        help = parser.addBooleanOption('+', "help");
+        version = parser.addBooleanOption('+', "version");
+        debug = parser.addBooleanOption('d', "debug");
+        composer = parser.addBooleanOption('c', "composer");
+        rcpt = parser.addStringOption('r', "rcpt");
+        body = parser.addStringOption('b', "body");
+        path = parser.addStringOption('p', "path");
+        mailurl = parser.addStringOption('+', "mailurl");
+        subject = parser.addStringOption('s', "subject");
+        cc = parser.addStringOption('+', "cc");
+        bcc = parser.addStringOption('+', "bcc");
 
         try {
-            commandLineParser.parse(args);
+            parser.parse(args);
         } catch (CmdLineParser.OptionException e) {
             printUsage();
             System.exit(2);
         }
 
-        checkHelp(help, commandLineParser);
-        checkVersion(version, commandLineParser);
-        checkDebug(debug, commandLineParser);
-        checkPath(path, commandLineParser);
-        checkRCPT(rcpt, commandLineParser);
-        checkBody(body, commandLineParser);
-        checkComposer(composer, commandLineParser);
-        checkSubject(subject, commandLineParser);
-        checkMailurl(mailurl, commandLineParser);
+        checkHelp();
+        checkVersion();
+        checkDebug();
+        checkPath();
+        checkRCPT();
+        checkBody();
+        checkComposer();
+        checkSubject();
+        checkMailurl();
     }
 
     /**
@@ -95,8 +98,8 @@ public class ColumbaCmdLineParser {
      * @param helpOpt help Option @see CmdLineParser.Option
      * @param parser parser which parsed the option
      */
-    private void checkHelp(CmdLineParser.Option helpOpt, CmdLineParser parser) {
-        Boolean helpValue = (Boolean) parser.getOptionValue(helpOpt);
+    private void checkHelp() {
+        Boolean helpValue = (Boolean) parser.getOptionValue(help);
 
         if (helpValue != null) {
             if (helpValue.booleanValue()) {
@@ -112,9 +115,8 @@ public class ColumbaCmdLineParser {
      * @param versionOpt Verion Option @see CmdLineParser.Option
      * @param parser parser which parsed the option
      */
-    private void checkVersion(CmdLineParser.Option versionOpt,
-        CmdLineParser parser) {
-        Boolean versionValue = (Boolean) parser.getOptionValue(versionOpt);
+    private void checkVersion() {
+        Boolean versionValue = (Boolean) parser.getOptionValue(version);
 
         if (versionValue != null) {
             if (versionValue.booleanValue()) {
@@ -131,8 +133,8 @@ public class ColumbaCmdLineParser {
      * @param debugOpt Option for debug @see CmdLineParser.Option
      * @param parser parser which parsed the option
      */
-    private void checkDebug(CmdLineParser.Option debugOpt, CmdLineParser parser) {
-        Boolean debugValue = (Boolean) parser.getOptionValue(debugOpt);
+    private void checkDebug() {
+        Boolean debugValue = (Boolean) parser.getOptionValue(debug);
 
         if (debugValue != null) {
             setDebugOption(debugValue.booleanValue());
@@ -145,8 +147,8 @@ public class ColumbaCmdLineParser {
      * @param pathOpt the path option @see CmdLineParser.Option
      * @param parser parser which parsed the Option
      */
-    private void checkPath(CmdLineParser.Option pathOpt, CmdLineParser parser) {
-        String pathValue = (String) parser.getOptionValue(pathOpt);
+    private void checkPath() {
+        String pathValue = (String) parser.getOptionValue(path);
         setPathOption(pathValue);
 
         if (pathValue != null) {
@@ -162,8 +164,8 @@ public class ColumbaCmdLineParser {
      * @param rcptOpt the recipient Option @see CmdLineParser.Option
      * @param parser parsed which parsed the Option
      */
-    private void checkRCPT(CmdLineParser.Option rcptOpt, CmdLineParser parser) {
-        String rcptValue = (String) parser.getOptionValue(rcptOpt);
+    private void checkRCPT() {
+        String rcptValue = (String) parser.getOptionValue(rcpt);
         setRcptOption(rcptValue);
     }
 
@@ -174,8 +176,8 @@ public class ColumbaCmdLineParser {
      * @param bodyOpt the Option for body @see CmdLineParser.Option
      * @param parser parser which parsed the Option
      */
-    private void checkBody(CmdLineParser.Option bodyOpt, CmdLineParser parser) {
-        String bodyValue = (String) parser.getOptionValue(bodyOpt);
+    private void checkBody() {
+        String bodyValue = (String) parser.getOptionValue(body);
         setBodyOption(bodyValue);
     }
 
@@ -186,9 +188,8 @@ public class ColumbaCmdLineParser {
      * @param composerOpt Composer Option @see CmdLineParser.Option
      * @param parser parser which parsed the Option
      */
-    private void checkComposer(CmdLineParser.Option composerOpt,
-        CmdLineParser parser) {
-        Boolean composerValue = (Boolean) parser.getOptionValue(composerOpt);
+    private void checkComposer() {
+        Boolean composerValue = (Boolean) parser.getOptionValue(composer);
 
         if (composerValue != null) {
             setComposerOption(composerValue.booleanValue());
@@ -202,9 +203,8 @@ public class ColumbaCmdLineParser {
       * @param mailurlOpt Composer Option @see CmdLineParser.Option
       * @param parser parser which parsed the Option
       */
-    private void checkMailurl(CmdLineParser.Option mailurlOpt,
-        CmdLineParser parser) {
-        String mailurlValue = (String) parser.getOptionValue(mailurlOpt);
+    private void checkMailurl() {
+        String mailurlValue = (String) parser.getOptionValue(mailurl);
 
         if (mailurlValue != null) {
             setMailurlOption(mailurlValue);
@@ -218,9 +218,8 @@ public class ColumbaCmdLineParser {
      * @param subjectOpt Composer Option @see CmdLineParser.Option
      * @param parser parser which parsed the Option
      */
-    private void checkSubject(CmdLineParser.Option subjectOpt,
-        CmdLineParser parser) {
-        String subjectValue = (String) parser.getOptionValue(subjectOpt);
+    private void checkSubject() {
+        String subjectValue = (String) parser.getOptionValue(subject);
         setSubjectOption(subjectValue);
     }
 
