@@ -254,7 +254,7 @@ public class EditGroupDialog extends JDialog implements ActionListener
 				addressbookInterface.tree.getSelectAddressbookFolderDialog();
 
 			Folder selectedFolder = dialog.getSelectedFolder();
-			if (folder != null)
+			if (selectedFolder != null)
 			{
 				HeaderItemList list = selectedFolder.getHeaderItemList();
 				setHeaderList(list);
