@@ -55,6 +55,19 @@
 
 ## PRIMARY INFO
 #if ($tab == 1)
+
+<h3>Static issue info</h3>
+<div class="axial">
+<table cellpadding="3" cellspacing="2" border="0">
+<tr>
+<th>Date/time committed</th>
+<td>$format.getDate($scarabR.DateFormat, $currentIssue.CreatedDate)</td>
+</tr>
+<th>Last date/time modified</th>
+<td>$format.getDate($scarabR.DateFormat, $currentIssue.ModifiedDate)</td>
+</tr> </table>
+</div>
+
 <div class="axial">
 #foreach ($group in $module.getAttributeGroups($issueType))
   #if (!$group.Attributes.isEmpty())
