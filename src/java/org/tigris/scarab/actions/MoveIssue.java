@@ -79,6 +79,7 @@ import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.om.RModuleOption;
 import org.tigris.scarab.om.RModuleOptionPeer;
 import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributePeer;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.Transaction;
@@ -87,6 +88,8 @@ import org.tigris.scarab.om.Activity;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.util.ScarabConstants;
+import org.tigris.scarab.util.Email;
+import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class is responsible for moving/copying an issue 
@@ -94,7 +97,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: MoveIssue.java,v 1.28 2002/04/22 21:32:56 jon Exp $
+ * @version $Id: MoveIssue.java,v 1.29 2002/04/25 18:05:31 elicia Exp $
  */
 public class MoveIssue extends RequireLoginFirstAction
 {
@@ -107,214 +110,105 @@ public class MoveIssue extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        if (intake.isAllValid())
+        if (!intake.isAllValid())
         {
-            Group moveIssue = intake.get("MoveIssue",
-                              IntakeTool.DEFAULT_KEY, false);
-            String selectAction = moveIssue.get("Action").toString();
-            NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
-                getValue());
-            Issue issue = getScarabRequestTool(context).getIssue();
-            Module oldModule = issue.getModule();
-
-            // it's wrong to move an issue to the same module
-            // but it's allowed to copy an issue to the same module ???
-            if (selectAction.equals("move")
-                && (oldModule.getModuleId().equals(newModuleId)))
-            {
-                //setTarget(data, template);
-                scarabR.setAlertMessage("Cannot move an issue to the same destination " +
-                    "module as its source module");
-                return;
-            }
-            else
-            {
-                String nextTemplate = getNextTemplate(data);
-                setTarget(data, nextTemplate);
-            }
+            return;
         }
+
+        Issue issue = getScarabRequestTool(context).getIssue();
+        Module oldModule = issue.getModule();
+        Group moveIssue = intake.get("MoveIssue",
+                          IntakeTool.DEFAULT_KEY, false);
+        String selectAction = moveIssue.get("Action").toString();
+        NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
+                                                       getValue());
+        Module newModule = ModuleManager
+                           .getInstance(new NumberKey(newModuleId));
+        ScarabUser user = (ScarabUser)data.getUser();
+
+        // Check permissions
+        String permission = ScarabSecurity.ISSUE__ENTER;
+        if (selectAction.equals("move"))
+        {
+            permission = ScarabSecurity.MODULE__EDIT;
+        }
+        if (!user.hasPermission(ScarabSecurity.ISSUE__ENTER, oldModule)
+            || !user.hasPermission(permission, newModule))
+        {
+            data.setMessage(NO_PERMISSION_MESSAGE);
+            return;
+        }
+
+        // Check that destination module has the current issue type
+        if (newModule.getRModuleIssueType(issue.getIssueType()) == null)
+        {
+            data.setMessage("The destination module does not have "
+                   + "this issue type associated with it. Please add " 
+                   + " this issue type and try again.");
+            return;
+        }
+
+        String nextTemplate = getNextTemplate(data);
+        setTarget(data, nextTemplate);
     }
 
     /**
      * Deals with moving or copying an issue from one module to
      * another module.
-     * FIXME: rewrite to be more method based so that outside
-     * processes can take advantage of this functionality.
      */
     public void doSaveissue( RunData data, TemplateContext context )
         throws Exception
     {
-        String template = getCurrentTemplate(data, null);
-        String nextTemplate = getNextTemplate(data, template);
-
         IntakeTool intake = getIntakeTool(context);
         if (!intake.isAllValid())
         {
-            setTarget(data, template);
             return;
         }
 
+        Issue issue = getScarabRequestTool(context).getIssue();
+        Module oldModule = issue.getModule();
         Group moveIssue = intake.get("MoveIssue",
                           IntakeTool.DEFAULT_KEY, false);
         NumberKey newModuleId = ((NumberKey) moveIssue.get("ModuleId").
             getValue());
+        Module newModule = ModuleManager
+               .getInstance(new NumberKey(newModuleId));
         String selectAction = moveIssue.get("Action").toString();
-
-        Issue issue = getScarabRequestTool(context).getIssue();
-        Module oldModule = issue.getModule();
         ScarabUser user = (ScarabUser)data.getUser();
+        
+        Issue newIssue = issue.move(newModule, selectAction, user);
 
-        NumberKey newIssueId;
-        Issue newIssue;
-        StringBuffer descBuf = null;
-        Module newModule;
-        Attachment attachment = new Attachment();
-
-        List matchingAttributes = issue
-            .getMatchingAttributeValuesList(new NumberKey(newModuleId));
-        List orphanAttributes = issue
-            .getOrphanAttributeValuesList(new NumberKey(newModuleId));
-        Transaction transaction = new Transaction();
-
-        // Move issue to other module
-        if (selectAction.equals("move"))
+        // generate comment
+        StringBuffer descBuf = new StringBuffer();
+        String comment = null;
+        if (selectAction.equals("copy"))
         {
-            // Save transaction record
-            transaction.create(TransactionTypePeer.MOVE_ISSUE__PK,
-                               user, null);
-            newIssue = issue;
-            newIssue.setModuleId(new NumberKey(newModuleId)); 
-            newIssue.save();
-            newModule = newIssue.getModule();
-            
-            // change the Issue's id prefix to match the new modules code
-            newIssue.setIdPrefix(newModule.getCode());
-            newIssue.save();
-
-            // Delete non-matching attributes.
-            for (int i=0;i<orphanAttributes.size();i++)
-            {
-               AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
-               attVal.setDeleted(true);
-               attVal.startTransaction(transaction);
-               attVal.save();
-            }
-            descBuf = new StringBuffer(" moved from ");
-            descBuf.append(oldModule.getName()).append(" to ");
-            descBuf.append(newModule.getName());
-        }
-        // Copy issue to other module 
-        // (no need to test, cause intake has already done that for us)
-        else
-        {
-            // Save transaction record
-            transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
-                               user, null);
-            newModule = ModuleManager.getInstance(new NumberKey(newModuleId));
-            newIssue = newModule.getNewIssue(issue.getIssueType());
-            newIssue.save();
-
-            // Copy over attributes
-            for (int i=0;i<matchingAttributes.size();i++)
-            {
-               AttributeValue attVal = (AttributeValue) matchingAttributes
-                                                        .get(i);
-               AttributeValue newAttVal = attVal.copy();
-               newAttVal.setIssueId(newIssue.getIssueId());
-               newAttVal.startTransaction(transaction);
-               newAttVal.save();
-            }
-            List activityList = issue.getActivity();
-
-            // Copy over history
-            for (int i=0;i<activityList.size();i++)
-            {
-               Activity activity = (Activity) activityList
-                                              .get(i);
-               Activity newActivity = activity.copy();
-               newActivity.setIssueId(newIssue.getIssueId());
-               newActivity.save();
-            }
-            descBuf = new StringBuffer(" copied from issue ");
-            descBuf.append(issue.getUniqueId());
-            descBuf.append(" in module ").append(oldModule.getName());
-        }
-
-        if (!orphanAttributes.isEmpty())
-        {
-            // Save comment
-            StringBuffer dataBuf = new StringBuffer("Removed " + 
-                                                    "irrelevant attribute(s): ");
-            for (int i=0;i<orphanAttributes.size();i++)
-            {
-               AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
-               dataBuf.append(attVal.getAttribute().getName());
-               String field = null;
-               if (attVal.getAttribute().getAttributeType()
-                   .getName().equals(ScarabConstants.DROPDOWN_LIST))
-               {
-                   field = attVal.getAttributeOption().getName();
-               } 
-               else if (attVal.getAttribute().getAttributeType()
-                                             .getName().equals("user"))
-               {
-                   ScarabUser assignedUser = ScarabUserManager
-                            .getInstance((ObjectKey)attVal.getUserId());
-                   field = assignedUser.getUserName();
-               } 
-            
-               dataBuf.append("=").append(field);
-               if (i < orphanAttributes.size()-1 )
-               {
-                  dataBuf.append(",");
-               } 
-            }
-            attachment.setDataAsString(dataBuf.toString());
-            context.put("deletedAttributes", dataBuf.toString());
+            comment = " copied from issue ";
         }
         else
         {
-            if (selectAction.equals("move"))
-            {
-                attachment.setDataAsString("All attributes were moved.");
-            }
-            else
-            {
-                attachment.setDataAsString("All attributes were copied.");
-            }
+            comment = " moved from issue ";
         }
-            
-        if (selectAction.equals("move"))
-        {
-            attachment.setName("Moved issue note");
-        }
-        else
-        {
-            attachment.setName("Copied issue note");
-        }
-        attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
-        attachment.save();
-
-        // Update transaction
-        transaction.setAttachment(attachment);
-        transaction.save();
-
-        // Save activity record
-        Activity activity = new Activity();
-        Attribute zeroAttribute = AttributeManager
-            .getInstance(new NumberKey("0"));
-        activity.create(newIssue, zeroAttribute, descBuf.toString(),
-                        transaction, oldModule.getName(), newModule.getName());
+        descBuf.append(comment);
+        descBuf.append(issue.getUniqueId());
+        descBuf.append(" in module ").append(oldModule.getName());
 
         // placed in the context for the email to be able to access them
         context.put("action", selectAction);
-        context.put("oldModule", oldModule.getName());
+        context.put("issue", newIssue);
+        context.put("oldModule", oldModule);
         context.put("newModule", newModule.getName());
-        if (!transaction.sendEmail(new ContextAdapter(context), newIssue, 
-                              "issue " +  newIssue.getUniqueId() 
-                              + descBuf.toString(),
-                              "email/MoveIssue.vm"))
+
+        // Send notification email
+        String fromUser = "scarab.email.modifyissue";
+        String template = Turbine.getConfiguration().
+           getString("scarab.email.moveissue.template",
+                     "email/MoveIssue.vm");
+        if (!Email.sendEmail(new ContextAdapter(context), newModule, fromUser,
+                             issue.getUsersToEmail(AttributePeer.EMAIL_TO),
+                             issue.getUsersToEmail(AttributePeer.CC_TO),
+                              "Issue " +  newIssue.getUniqueId() 
+                              + descBuf.toString(), template))
         {
              getScarabRequestTool(context).setInfoMessage(
                  "Your changes were saved, but could not send "
@@ -322,12 +216,8 @@ public class MoveIssue extends RequireLoginFirstAction
         }                      
 
         // Redirect to moved or copied issue
-        getScarabRequestTool(context).setCurrentModule(newModule);
         data.getParameters().remove("id");
         data.getParameters().add("id", newIssue.getUniqueId().toString());
-        data.getParameters().remove(ScarabConstants.CURRENT_MODULE);
-        data.getParameters().add(ScarabConstants.CURRENT_MODULE,
-                               newModule.getModuleId().toString());
         setTarget(data, "ViewIssue.vm");
     }
 

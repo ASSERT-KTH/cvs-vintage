@@ -58,6 +58,7 @@ import java.util.Date;
 import java.sql.Connection;
 
 // Turbine classes
+import org.apache.turbine.TemplateContext;
 import org.apache.torque.TorqueException;
 import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
@@ -1559,6 +1560,117 @@ public class Issue
         return result;
     }
 
+    /**
+     *  Move or copy issue to destination module.
+     */
+    public Issue move(Module newModule, String action, ScarabUser user)
+          throws Exception
+    {
+        NumberKey newIssueId;
+        Issue newIssue;
+        StringBuffer descBuf = null;
+        Attachment attachment = new Attachment();
+
+        Transaction transaction = new Transaction();
+        Module oldModule = getModule();
+        newIssue = newModule.getNewIssue(getIssueType());
+        newIssue.save();
+        List matchingAttributes = getMatchingAttributeValuesList(newModule);
+        List orphanAttributes = getOrphanAttributeValuesList(newModule);
+        List userAttributes = getUserAttributeValues();
+
+        // Save transaction record
+        transaction.create(TransactionTypePeer.CREATE_ISSUE__PK,
+                           getCreatedBy(), null);
+        
+        // Copy over attributes
+        for (int i=0;i<matchingAttributes.size();i++)
+        {
+           AttributeValue attVal = (AttributeValue) matchingAttributes
+                                                    .get(i);
+           AttributeValue newAttVal = attVal.copy();
+           newAttVal.setIssueId(newIssue.getIssueId());
+           newAttVal.startTransaction(transaction);
+           newAttVal.save();
+        }
+
+        // Generate comment to deal with attributes that do not
+        // Exist in destination module, as well as the user attributes.
+        // Later will find another solution for user attributes.
+        if (!orphanAttributes.isEmpty() || !userAttributes.isEmpty())
+        {
+            // Save comment
+            StringBuffer delAttrsBuf = new StringBuffer("Did not copy over the "
+                 + "following attribute info: ");
+            for (int i=0;i<orphanAttributes.size();i++)
+            {
+                AttributeValue attVal = (AttributeValue) orphanAttributes.get(i);
+                String field = null;
+                if (attVal.getAttribute().isOptionAttribute())
+                {
+                    delAttrsBuf.append(attVal.getAttribute().getName());
+                    field = attVal.getAttributeOption().getName();
+                    delAttrsBuf.append("=").append(field).append(". ");
+                } 
+           }
+           // Add user attributes to comment.
+           for (int i=0;i<userAttributes.size();i++)
+           {
+               AttributeValue attVal = (AttributeValue)userAttributes.get(i);
+               delAttrsBuf.append(attVal.getAttribute().getName());
+               delAttrsBuf.append("=").append(attVal.getValue());
+               delAttrsBuf.append(". ");
+           }
+           attachment.setDataAsString(delAttrsBuf.toString()); 
+        }
+        else
+        {
+            attachment.setDataAsString("All attributes were copied.");
+        }
+            
+        if (action.equals("move"))
+        {
+            attachment.setName("Moved issue note");
+        }
+        else
+        {
+            attachment.setName("Copied issue note");
+        }
+        attachment.setTextFields(user, newIssue, Attachment.MODIFICATION__PK);
+        attachment.save();
+
+        // Create transaction for the MoveIssue activity
+        Transaction transaction2 = new Transaction();
+        transaction2.create(TransactionTypePeer.MOVE_ISSUE__PK,
+                           user, null);
+        transaction2.setAttachment(attachment);
+        transaction2.save();
+
+        // Generate comment
+        // If moving issue, delete original
+        String comment = null;
+        if (action.equals("copy"))
+        {
+            comment = " copied from issue ";
+        }
+        else
+        {
+            comment = " moved from issue ";
+            // delete original issue
+            delete(user);
+        }
+        descBuf = new StringBuffer(comment).append(getUniqueId());
+        descBuf.append(" in module ").append(oldModule.getName());
+
+        // Save activity record
+        Activity activity = new Activity();
+        Attribute zeroAttribute = AttributeManager
+            .getInstance(new NumberKey("0"));
+        activity.create(newIssue, zeroAttribute, descBuf.toString(),
+                        transaction2, oldModule.getName(), newModule.getName());
+
+        return newIssue;
+    }
 
     /**
      * The Date when this issue was closed.
@@ -1669,37 +1781,29 @@ public class Issue
         voteValue.save();
     }
 
-    /**
-     * Gets a list of Matching AttributeValues which match a given Module.
-     * It is used in the MoveIssue2.vm template
-     */
-    public List getMatchingAttributeValuesList(String moduleId)
-          throws Exception
-    {
-        return getMatchingAttributeValuesList(new NumberKey(moduleId));
-    }
 
     /**
-     * Gets a list of Matching AttributeValues which match a given Module.
+     * Gets a list of non-user AttributeValues which match a given Module.
      * It is used in the MoveIssue2.vm template
      */
-    public List getMatchingAttributeValuesList(NumberKey moduleId)
+    public List getMatchingAttributeValuesList(Module newModule)
           throws Exception
     {
         AttributeValue aval = null;
         List matchingAttributes = new ArrayList();
-        Module module = ModuleManager.getInstance(moduleId);
 
         HashMap setMap = this.getAttributeValuesMap();
         Iterator iter = setMap.keySet().iterator();
         while ( iter.hasNext() ) 
         {
             aval = (AttributeValue)setMap.get(iter.next());
-            RModuleAttribute modAttr = module.
+            if (!aval.getAttribute().isUserAttribute())
+            {
+            RModuleAttribute modAttr = newModule.
                 getRModuleAttribute(aval.getAttribute(), getIssueType());
             
-            // If this attribute is not active for the destination module,
-            // Add to orphanAttributes list
+            // If this attribute is active for the destination module,
+            // Add to matching attributes list
             if (modAttr != null && modAttr.getActive()) 
             {
                 // If attribute is an option attribute,
@@ -1720,26 +1824,24 @@ public class Issue
                     matchingAttributes.add(aval);
                 }
             } 
+            }
         }
         return matchingAttributes;
     }
 
-    /**
-     * Gets a list of Orphan AttributeValues which match a given Module.
-     * It is used in the MoveIssue2.vm template
-     */
-    public List getOrphanAttributeValuesList(String moduleId)
+    public List getMatchingAttributeValuesList(String moduleId)
           throws Exception
     {
-        return getOrphanAttributeValuesList(new NumberKey(moduleId));
+         Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
+         return getMatchingAttributeValuesList(module);
     }
-    
 
     /**
-     * Gets a list of Orphan AttributeValues which match a given Module.
+     * Gets a list AttributeValues which the source module has,
+     * But the destination module does not have, when doing a copy.
      * It is used in the MoveIssue2.vm template
      */
-    public List getOrphanAttributeValuesList(NumberKey moduleId)
+    public List getOrphanAttributeValuesList(Module newModule)
           throws Exception
     {
         List orphanAttributes = null;
@@ -1748,19 +1850,18 @@ public class Issue
         {        
             AttributeValue aval = null;
             orphanAttributes = new ArrayList();
-            Module module = ModuleManager.getInstance(moduleId);
             
             HashMap setMap = this.getAttributeValuesMap();
             Iterator iter = setMap.keySet().iterator();
             while ( iter.hasNext() ) 
             {
                 aval = (AttributeValue)setMap.get(iter.next());
-                RModuleAttribute modAttr = module.
+                RModuleAttribute modAttr = newModule.
                     getRModuleAttribute(aval.getAttribute(), getIssueType());
                 
                 // If this attribute is not active for the destination module,
                 // Add to orphanAttributes list
-                if (modAttr == null || !modAttr.getActive()) 
+                if (modAttr == null || !modAttr.getActive())
                 {
                     orphanAttributes.add(aval);
                 } 
@@ -1789,6 +1890,13 @@ public class Issue
             orphanAttributes = (List)obj;
         }
         return orphanAttributes;
+    }
+
+    public List getOrphanAttributeValuesList(String moduleId)
+          throws Exception
+    {
+         Module module = ModuleManager.getInstance(new NumberKey(moduleId)); 
+         return getOrphanAttributeValuesList(module);
     }
 
     /**
@@ -2017,6 +2125,23 @@ public class Issue
      * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
      */
     public boolean hasEditPermission( ScarabUser user, Module module)
+        throws Exception
+    {                
+        boolean hasPerm = false;
+
+        if (user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
+            || user.equals(getCreatedBy()))
+        {
+            hasPerm = true;
+        } 
+        return hasPerm;
+    }
+
+    /**
+     * Checks if user has permission to move issue to destination module.
+     * @deprecated user.hasPermission(ScarabSecurity.ISSUE__EDIT, module)
+     */
+    public boolean hasMovePermission( ScarabUser user, Module module)
         throws Exception
     {                
         boolean hasPerm = false;
