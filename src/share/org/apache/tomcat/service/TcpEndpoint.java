@@ -1,13 +1,13 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.7 2000/02/09 01:18:39 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2000/02/09 01:18:39 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/service/Attic/TcpEndpoint.java,v 1.8 2000/02/17 10:37:42 shachor Exp $
+ * $Revision: 1.8 $
+ * $Date: 2000/02/17 10:37:42 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -15,7 +15,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -23,15 +23,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -59,7 +59,7 @@
  *
  * [Additional notices, if required by prior licensing conditions]
  *
- */ 
+ */
 
 
 package org.apache.tomcat.service;
@@ -75,14 +75,14 @@ import java.util.*;
    It should do nothing more - as soon as it get a socket ( and all socket options
    are set, etc), it just handle the stream to ConnectionHandler.processConnection. (costin)
 */
-   
-   
+
+
 
 /**
  * Handle incoming TCP connections.
- * 
+ *
  * This class implement a simple server model: one listener thread accepts on a socket and
- * creates a new worker thread for each incoming connection. 
+ * creates a new worker thread for each incoming connection.
  *
  * More advanced Endpoints will reuse the threads, use queues, etc.
  *
@@ -90,83 +90,114 @@ import java.util.*;
  * @author Jason Hunter [jch@eng.sun.com]
  * @author James Todd [gonzo@eng.sun.com]
  * @author Costin@eng.sun.com
+ * @author Gal Shachor [shachor@il.ibm.com]
  */
 public class TcpEndpoint  { // implements Endpoint {
 
-    private StringManager sm =StringManager.getManager("org.apache.tomcat.service");
+    private StringManager sm = StringManager.getManager("org.apache.tomcat.service");
 
-    private static final int BACKLOG = 50;
+    private static final int BACKLOG = 100;
     private static final int TIMEOUT = 1000;
+
+    private boolean isPool = true;
 
     private int backlog = BACKLOG;
     private int timeout = TIMEOUT;
-    
-    //    private EndpointManager manager;
 
-    String handlerClassName;
     TcpConnectionHandler handler;
-    
+
     private InetAddress inet;
     private int port;
 
     private ServerSocketFactory factory;
     private ServerSocket serverSocket;
 
-    TcpListenerThread listener;
+    Runnable listener;
     boolean running = true;
-    
+
+    ThreadPool tp;
+
     public TcpEndpoint() {
+        tp = new ThreadPool();
     }
 
-    // -------------------- Configuration --------------------	
+    // -------------------- Configuration --------------------
 
-//     public void setEndpointManager( EndpointManager manager ) {
-// 	this.manager=manager;
-//     }
+    public void setPoolOn(boolean isPool) {
+        this.isPool = isPool;
+    }
+
+    public boolean isPoolOn() {
+        return isPool;
+    }
+
+    public void setMaxThreads(int maxThreads) {
+        tp.setMaxThreads(maxThreads);
+    }
+
+    public int getMaxThreads() {
+        return tp.getMaxThreads();
+    }
+
+    public void setMaxSpareThreads(int maxThreads) {
+        tp.setMaxSpareThreads(maxThreads);
+    }
+
+    public int getMaxSpareThreads() {
+        return tp.getMaxSpareThreads();
+    }
+
+    public void setMinSpareThreads(int minThreads) {
+        tp.setMinSpareThreads(minThreads);
+    }
+
+    public int getMinSpareThreads() {
+        return tp.getMinSpareThreads();
+    }
 
     public int getPort() {
-	return port;
+	    return port;
     }
 
     public void setPort(int port ) {
-	this.port=port;
+	    this.port=port;
     }
 
     public InetAddress getAddress() {
-	return inet;
+	    return inet;
     }
 
     public void setAddress(InetAddress inet) {
-	this.inet=inet;
+	    this.inet=inet;
     }
 
     public void setServerSocket(ServerSocket ss) {
-	serverSocket = ss;
+	    serverSocket = ss;
     }
 
     public void setServerSocketFactory(  ServerSocketFactory factory ) {
-	this.factory=factory;
-    }
-
-    public void setConnectionHandlerClassName( String classN ) {
-
+	    this.factory=factory;
     }
 
     public void setConnectionHandler( TcpConnectionHandler handler ) {
-	this.handler=handler;
+    	this.handler=handler;
     }
 
     public TcpConnectionHandler getConnectionHandler() {
-	return handler;
+	    return handler;
     }
-    
+
     /**
      * Allows the server developer to specify the backlog that
      * should be used for server sockets. By default, this value
-     * is 50.
+     * is 100.
      */
     public void setBacklog(int backlog) {
-	this.backlog = backlog;
+	    this.backlog = backlog;
+    }
+
+    public int getBacklog() {
+        return backlog;
     }
 
     /**
@@ -178,150 +209,230 @@ public class TcpEndpoint  { // implements Endpoint {
      * <p>By default this value is 1000ms.
      */
     public void setTimeout(int timeout) {
-	this.timeout = timeout;
+	    this.timeout = timeout;
     }
 
     // -------------------- Public methods --------------------
-    
+
     public void startEndpoint() throws IOException, InstantiationException {
-	try {
-	    if(factory==null)
-		factory=ServerSocketFactory.getDefault();
-	    if(serverSocket==null) {
-		if (inet != null) {
-		    serverSocket = factory.createSocket(port, backlog);
-		} else {
-		    serverSocket = factory.createSocket(port, backlog, inet);
-		}
-	    }
-	} catch( IOException ex ) {
-	    // throw?
-	    // ex.printStackTrace();
-	    running=false;
+	    try {
+	        if(factory==null)
+		        factory=ServerSocketFactory.getDefault();
+	        if(serverSocket==null) {
+		        if (inet != null) {
+		            serverSocket = factory.createSocket(port, backlog);
+    		    } else {
+	    	        serverSocket = factory.createSocket(port, backlog, inet);
+		        }
+	        }
+	        if(isPool) {
+    	        tp.start();
+    	    }
+	    } catch( IOException ex ) {
+	        // throw?
+	        // ex.printStackTrace();
+	        running=false;
             throw ex;
-	    //	    throw new HttpServerException(msg);
-	} catch( InstantiationException ex1 ) {
-	    // throw?
-	    // ex1.printStackTrace();
-	    running=false;
+	        // throw new HttpServerException(msg);
+	    } catch( InstantiationException ex1 ) {
+	        // throw?
+	        // ex1.printStackTrace();
+	        running=false;
             throw ex1;
-	    //	    throw new HttpServerException(msg);
-	}
-	running=true;
-	System.out.println("Starting tcp endpoint on " + port + " with " + handler.getClass().getName());
-	listener=new TcpListenerThread( this );
-	Thread thread = new Thread(listener);
-	thread.start();
+	        // throw new HttpServerException(msg);
+	    }
+	    running=true;
+	    System.out.println("Starting tcp endpoint on " + port + " with " + handler.getClass().getName());
+        if(isPool) {
+    	    listener = new TcpWorkerThread(this);
+            tp.runIt(listener);
+        } else {
+    	    listener = new TcpListenerThread( this );
+	        Thread thread = new Thread(listener);
+	        thread.start();
+	    }
     }
 
-    
     public void stopEndpoint() {
-	running=false;
-	try {
-	    serverSocket.close(); // XXX?
-	} catch(Exception e) {
-	}
-	serverSocket = null;
-
+        tp.shutdown();
+	    running=false;
+	    try {
+	        serverSocket.close(); // XXX?
+	    } catch(Exception e) {
+	    }
+	    serverSocket = null;
     }
-
-
 
     // -------------------- Private methods
 
-    void processSocket( Socket s )
-	throws IOException
+    void processSocket(Socket s) throws IOException
     {
-	// XXX reuse, pools, etc
+    	// XXX reuse, pools, etc
 
-	// XXX set socket options
-	// 	s.setSoLinger( true, 100);
-	//	s.setSoTimeout( 1000 );
-	
-	TcpConnection con=new TcpConnection();
-	con.setEndpoint(this);
-	con.setSocket( s );
-	TcpConnectionHandler handler = getConnectionHandler();
-	TcpConnectionThread handlerThread=new TcpConnectionThread(handler, con);
-	
-	new Thread(handlerThread).start();
+    	// XXX set socket options
+    	// 	s.setSoLinger( true, 100);
+    	//	s.setSoTimeout( 1000 );
+
+    	TcpConnection con=new TcpConnection();
+    	con.setEndpoint(this);
+    	con.setSocket( s );
+    	TcpConnectionHandler handler = getConnectionHandler();
+    	TcpConnectionThread handlerThread=new TcpConnectionThread(handler, con);
+
+   	    new Thread(handlerThread).start();
     }
-    
+
     void acceptConnections() {
-	try {
-	    if (running == false)
-		return;
+    	try {
+    	    if(running == false)
+        		return;
 
-	    if( null!= serverSocket) {
-		Socket socket = serverSocket.accept();
-		if (running == false) {
-		    socket.close();  // rude, but unlikely!
-		}
-		processSocket(socket);
-	    }
-	} catch (InterruptedIOException iioe) {
-	    // normal part -- should happen regularly so
-	    // that the endpoint can release if the server
-	    // is shutdown.
-	    // you know, i really wish that there was a
-	    // way for the socket to timeout without
-	    // tripping an exception. Exceptions are so
-	    // 'spensive.
-	} catch (SocketException e) {
-	    if (running != false) {
-		running = false;
-		String msg = sm.getString("endpoint.err.fatal",
-					  serverSocket, e);
-		e.printStackTrace(); // something very wrong happened - better know what
-		System.err.println(msg);
-	    }
-	} catch (Exception e) {
-	    running = false;
-	    String msg = sm.getString("endpoint.err.fatal",
-				      serverSocket, e);
-	    e.printStackTrace(); // something very wrong happened - better know what
-	    System.err.println(msg);
-	}
+    	    if(null!= serverSocket) {
+        		Socket socket = acceptSocket();
+    	    	if(running != false) {
+        		    processSocket(socket);
+        		}
+    	    }
+    	} catch(Throwable e) {
+    	    running = false;
+    	    String msg = sm.getString("endpoint.err.fatal",
+    				                  serverSocket, e);
+    	    e.printStackTrace(); // something very wrong happened - better know what
+    	    System.err.println(msg);
+    	}
     }
 
+    Socket acceptSocket() {
+        Socket accepted = null;
+    	try {
+    	    if(running == true) {
+        	    if(null!= serverSocket) {
+            		accepted = serverSocket.accept();
+    	        	if(running == false) {
+    	        	    if(null != accepted) {
+        		            accepted.close();  // rude, but unlikely!
+        		            accepted = null;
+        		        }
+    		        }
+    	        }
+    	    }
+    	} catch(InterruptedIOException iioe) {
+    	    // normal part -- should happen regularly so
+    	    // that the endpoint can release if the server
+    	    // is shutdown.
+    	    // you know, i really wish that there was a
+    	    // way for the socket to timeout without
+    	    // tripping an exception. Exceptions are so
+    	    // 'spensive.
+    	} catch (SocketException e) {
+    	    if (running != false) {
+        		running = false;
+        		String msg = sm.getString("endpoint.err.fatal",
+    					                  serverSocket, e);
+    	    	e.printStackTrace(); // something very wrong happened - better know what
+    		    System.err.println(msg);
+    	    }
+    	} catch(Throwable e) {
+    	    running = false;
+    	    String msg = sm.getString("endpoint.err.fatal",
+    				                  serverSocket, e);
+    	    e.printStackTrace(); // something very wrong happened - better know what
+    	    System.err.println(msg);
+    	}
+
+    	return accepted;
+    }
 }
 
-// -------------------- Threads -------------------- 
+// -------------------- Threads --------------------
 // XXX add a more efficient model - use thread pools, use a Queue, etc
 
 // Keep the thread model in one place !
 
-// Listener thread
-class TcpListenerThread implements Runnable {
+/*
+ * I switched the threading model here.
+ *
+ * We used to have a "listener" thread and a "connection"
+ * thread, this results in code simplicity but also a needless
+ * thread switch.
+ *
+ * Instead I am now using a pool of threads, all the threads are
+ * simmetric in their execution and no thread switch is needed.
+ */
+class TcpWorkerThread implements Runnable {
     TcpEndpoint endpoint;
-    
-    public TcpListenerThread( TcpEndpoint endpoint) {
-	this.endpoint=endpoint;
+    Vector connectionCache;
+
+    public TcpWorkerThread(TcpEndpoint endpoint) {
+	    this.endpoint = endpoint;
+	    connectionCache = new Vector(endpoint.getMaxThreads());
+	    for(int i = 0 ; i < endpoint.getMaxThreads()/2 ; i++) {
+	        connectionCache.addElement(new TcpConnection());
+	    }
     }
-    
+
     public void run() {
-	while (endpoint.running) {
-	    endpoint.acceptConnections();
-	}
-	//endpoint.manager.notifyEndpointDown(this);
+	    while(endpoint.running) {
+	        Socket s = endpoint.acceptSocket();
+	        if(null != s) {
+	            // Continue accepting on another thread...
+	            endpoint.tp.runIt(this);
+
+	            TcpConnection con = null;
+	            try {
+                	// XXX set socket options
+                	// 	s.setSoLinger( true, 100);
+                	//	s.setSoTimeout( 1000 );
+                    try {
+                        con = (TcpConnection)connectionCache.lastElement();
+                        connectionCache.removeElementAt(connectionCache.size() - 1);
+                    } catch(Throwable t) {
+                        con = new TcpConnection();
+                    }
+
+                	con.setEndpoint(endpoint);
+                	con.setSocket(s);
+                	endpoint.getConnectionHandler().processConnection(con, null);
+                } finally {
+                    con.recycle();
+                    connectionCache.addElement(con);
+                }
+
+                break;
+	        }
+	    }
     }
 }
 
-// Worker Thread 
+// Listener thread
+class TcpListenerThread implements Runnable {
+    TcpEndpoint endpoint;
+
+    public TcpListenerThread( TcpEndpoint endpoint) {
+    	this.endpoint=endpoint;
+    }
+
+    public void run() {
+	    while (endpoint.running) {
+	        endpoint.acceptConnections();
+    	}
+	    //endpoint.manager.notifyEndpointDown(this);
+    }
+}
+
+// Worker Thread
 // call handleConnection() in a new thread
 // XXX thread reuse!
 class TcpConnectionThread implements Runnable {
     TcpConnectionHandler handler;
     TcpConnection connection;
-    
+
     public TcpConnectionThread( TcpConnectionHandler handler, TcpConnection connection) {
-	this.handler=handler;
-	this.connection=connection;
+    	this.handler=handler;
+	    this.connection=connection;
     }
-    
+
     public void run() {
-	handler.processConnection(connection, null);
+	    handler.processConnection(connection, null);
     }
 }
-    
-
