@@ -73,7 +73,7 @@ import org.jboss.ejb.plugins.local.BaseLocalContainerInvoker;
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
  *   @author Scott_Stark@displayscape.com
- *   @version $Revision: 1.43 $
+ *   @version $Revision: 1.44 $
  */
 public abstract class Container
 {
@@ -418,7 +418,6 @@ public abstract class Container
          // Since the BCL is already associated with this thread we can start using the java: namespace directly
          Context ctx = (Context) new InitialContext().lookup("java:comp");
          Context envCtx = ctx.createSubcontext("env");
-         Logger.debug("java:comp/env: "+envCtx);
 
          // Bind environment properties
          {
@@ -589,6 +588,19 @@ public abstract class Container
             }
          }
 
+         /* Create a java:comp/env/security/security-domain link to the container
+            or application security-domain if one exists so that access to the
+            security manager can be made without knowing the global jndi name.
+         */
+         String securityDomain = metaData.getContainerConfiguration().getSecurityDomain();
+         if( securityDomain == null )
+             securityDomain = metaData.getApplicationMetaData().getSecurityDomain();
+         if( securityDomain != null )
+         {
+              Logger.debug("Binding securityDomain: "+securityDomain+ " to JDNI ENC as: security-domain");
+              bind(envCtx, "security-domain", new LinkRef(securityDomain));
+         }
+
          Logger.debug("End java:comp/env for EJB: "+beanMetaData.getEjbName());
       } catch (NamingException e)
       {
@@ -597,9 +609,7 @@ public abstract class Container
          throw new DeploymentException("Could not set up environment", e);
       }
 
-
    }
-
 
 
    /**
