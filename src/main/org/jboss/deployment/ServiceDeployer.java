@@ -21,6 +21,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Collections;
@@ -57,7 +59,7 @@ import org.jboss.system.ServiceMBeanSupport;
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @see org.jboss.system.Service
 *
-* @version $Revision: 1.1 $
+* @version $Revision: 1.2 $
 *
 *   <p><b>20010830 marc fleury:</b>
 *   <ul>
@@ -74,8 +76,8 @@ implements ServiceDeployerMBean
 	// each url can spawn a series of MLet classloaders that are specific to it and cycled
 	private Map urlToClassLoadersSetMap;
 	
-	// each url can describe many Services, we keep the ObjectNames in here
-	private Map urlToServicesSetMap;
+	// each url can describe many Services, we keep the ObjectNames in here, order is important so use list
+	private Map urlToServicesListMap;
 	
 	// JMX
 	private MBeanServer server;
@@ -120,7 +122,7 @@ implements ServiceDeployerMBean
 		
 		// Support for the new packaged format
 		try {
-			if (url.endsWith(".jsr")) {
+			if (url.endsWith(".jsr") || url.endsWith(".sar")) {
 				
 				URLClassLoader cl = new URLClassLoader(new URL[] {new URL(url)});
 				
@@ -207,6 +209,15 @@ implements ServiceDeployerMBean
 		
 		// The libraries are loaded we can now load the mbeans 
 		
+		// marcf: I don't think we should keep track and undeploy... 
+		List services = (List) urlToServicesListMap.get(url);
+				
+		if (services == null) 
+		{
+			services = Collections.synchronizedList(new ArrayList());
+			urlToServicesListMap.put(url, services);
+		}
+				
 		NodeList nl = document.getElementsByTagName("mbean");
 		for (int i = 0 ; i < nl.getLength() ; i++) 	
 		{
@@ -221,16 +232,47 @@ implements ServiceDeployerMBean
 					new Object[] {mbean},
 					new String[] {"org.w3c.dom.Element"});
 				
-				// marcf: I don't think we should keep track and undeploy... 
-				Set services = (Set) urlToServicesSetMap.get(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml");
-				
-				if (services == null) 
-				{
-					services = Collections.synchronizedSet(new HashSet());
-					urlToServicesSetMap.put(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml", services);
-				}
-				
 				services.add(service);
+			}
+			catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
+			catch (RuntimeMBeanException rbe) {rbe.getTargetException().printStackTrace();}
+			catch (MalformedObjectNameException mone) {} 
+			catch (ReflectionException re) {} 
+			catch (InstanceNotFoundException re) {} 
+			catch (Exception e) {e.printStackTrace();}
+		}
+
+		//iterate through services and init.
+		for(Iterator it = services.iterator();it.hasNext();)
+		{
+			ObjectName service = (ObjectName)it.next();
+
+			try {
+				server.invoke(
+					new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+					"init",
+					new Object[] {service},
+					new String[] {"javax.management.ObjectName"});
+			}
+			catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
+			catch (RuntimeMBeanException rbe) {rbe.getTargetException().printStackTrace();}
+			catch (MalformedObjectNameException mone) {} 
+			catch (ReflectionException re) {} 
+			catch (InstanceNotFoundException re) {} 
+			catch (Exception e) {e.printStackTrace();}
+		}
+
+		//iterate through services and start.
+		for(Iterator it = services.iterator();it.hasNext();)
+		{
+			ObjectName service = (ObjectName)it.next();
+
+			try {
+				server.invoke(
+					new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+					"start",
+					new Object[] {service},
+					new String[] {"javax.management.ObjectName"});
 			}
 			catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
 			catch (RuntimeMBeanException rbe) {rbe.getTargetException().printStackTrace();}
@@ -245,13 +287,44 @@ implements ServiceDeployerMBean
 	public void undeploy (String url)
 	throws MalformedURLException, IOException, DeploymentException {
 		
-		Set set = (Set) urlToServicesSetMap.remove(url);
+		List set = (List) urlToServicesListMap.remove(url);
 		
 		if (set != null) 
 		{
-			
-			Iterator iterator = set.iterator();
-			while (iterator.hasNext()) 
+			//stop services
+			for(Iterator iterator = set.iterator();iterator.hasNext();)
+			{
+				ObjectName name = (ObjectName) iterator.next();
+				
+				try 
+				{
+					server.invoke(
+						new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+						"stop",
+						new Object[] {name},
+						new String[] {"javax.management.ObjectName"});
+				}
+				catch (Exception e) { e.printStackTrace();}
+			}
+		  
+			//destroy services
+			for(Iterator iterator = set.iterator();iterator.hasNext();)
+			{
+				ObjectName name = (ObjectName) iterator.next();
+				
+				try 
+				{
+					server.invoke(
+						new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+						"destroy",
+						new Object[] {name},
+						new String[] {"javax.management.ObjectName"});
+				}
+				catch (Exception e) { e.printStackTrace();}
+			}
+		  
+			//undeploy services
+			for(Iterator iterator = set.iterator();iterator.hasNext();)
 			{
 				ObjectName name = (ObjectName) iterator.next();
 				
@@ -271,7 +344,7 @@ implements ServiceDeployerMBean
 	public boolean isDeployed (String url)
 	throws MalformedURLException, DeploymentException {
 		
-		return urlToClassLoadersSetMap.containsKey(url);
+		return urlToServicesListMap.containsKey(url);
 	
 	};
 	
@@ -298,7 +371,7 @@ implements ServiceDeployerMBean
 			
 			//Encapsulate with a ServiceClassLoader
 			urlToClassLoadersSetMap = Collections.synchronizedMap(new HashMap());
-			urlToServicesSetMap = Collections.synchronizedMap(new HashMap());
+			urlToServicesListMap = Collections.synchronizedMap(new HashMap());
 			
 			//Initialize the libraries for the server by default we add the libraries in lib/services
 			// and client
@@ -394,6 +467,14 @@ implements ServiceDeployerMBean
 				
 			// The libraries are loaded we can now load the mbeans 
 			
+			List services = (List) urlToServicesListMap.get(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml");
+			
+			if (services == null) 
+			{
+				services = Collections.synchronizedList(new ArrayList());
+				urlToServicesListMap.put(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml", services);
+			}
+					
 			NodeList nl = document.getElementsByTagName("mbean");
 			for (int i = 0 ; i < nl.getLength() ; i++) 	
 			{
@@ -408,14 +489,6 @@ implements ServiceDeployerMBean
 						new Object[] {mbean},
 						new String[] {"org.w3c.dom.Element"});
 					
-					Set services = (Set) urlToServicesSetMap.get(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml");
-					
-					if (services == null) 
-					{
-						services = Collections.synchronizedSet(new HashSet());
-						urlToServicesSetMap.put(System.getProperty("jboss.system.configurationDirectory") + "jboss-service.xml", services);
-					}
-					
 					services.add(service);
 				}
 				catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
@@ -426,6 +499,47 @@ implements ServiceDeployerMBean
 				catch (Exception e) {e.printStackTrace();}
 			
 			}		
+
+			//iterate through services and init.
+			for(Iterator it = services.iterator();it.hasNext();)
+			{
+				ObjectName service = (ObjectName)it.next();
+	
+				try {
+					server.invoke(
+						new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+						"init",
+						new Object[] {service},
+						new String[] {"javax.management.ObjectName"});
+				}
+				catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
+				catch (RuntimeMBeanException rbe) {rbe.getTargetException().printStackTrace();}
+				catch (MalformedObjectNameException mone) {} 
+				catch (ReflectionException re) {} 
+				catch (InstanceNotFoundException re) {} 
+				catch (Exception e) {e.printStackTrace();}
+			}
+	
+			//iterate through services and start.
+			for(Iterator it = services.iterator();it.hasNext();)
+			{
+				ObjectName service = (ObjectName)it.next();
+	
+				try {
+					server.invoke(
+						new ObjectName("JBOSS-SYSTEM:spine=ServiceController"),
+						"start",
+						new Object[] {service},
+						new String[] {"javax.management.ObjectName"});
+				}
+				catch (MBeanException mbe) {mbe.getTargetException().printStackTrace();}
+				catch (RuntimeMBeanException rbe) {rbe.getTargetException().printStackTrace();}
+				catch (MalformedObjectNameException mone) {} 
+				catch (ReflectionException re) {} 
+				catch (InstanceNotFoundException re) {} 
+				catch (Exception e) {e.printStackTrace();}
+			}
+
 		}
 		catch (Exception e) {e.printStackTrace();}
 	
