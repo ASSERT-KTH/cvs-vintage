@@ -76,8 +76,6 @@ public  class AttributeGroup
     // the following Strings are method names that are used in caching results
     private static final String GET_ATTRIBUTES = 
         "getAttributes";
-    private static final String GET_HIGHEST_ORDERED_ATTRIBUTE = 
-        "getHighestOrderedAttribute";
     private static final String GET_R_ATTRIBUTE_ATTRGROUP = 
         "getRAttributeAttributeGroup";
     private static final String GET_ATTRIBUTE_GROUPS = 
@@ -176,36 +174,6 @@ public  class AttributeGroup
         }
         return result;
     }
-
-
-    /**
-     * Returns order of the attribute in this group with highest sequence #
-     * FIXME: this method includes all attributes, while getAttributes 
-     * excludes user attributes.  Need to explain or fix differences.
-     */
-    public int getHighestOrderedAttribute()
-        throws Exception
-    {
-        List result = null;
-        Object obj = ScarabCache.get(this, GET_HIGHEST_ORDERED_ATTRIBUTE); 
-        if ( obj == null ) 
-        {        
-            Criteria crit = new Criteria()
-                .add(RAttributeAttributeGroupPeer.GROUP_ID, 
-                     getAttributeGroupId())
-                .addAscendingOrderByColumn(RAttributeAttributeGroupPeer
-                                           .PREFERRED_ORDER);
-            result = RAttributeAttributeGroupPeer.doSelect(crit); 
-            ScarabCache.put(result, this, GET_HIGHEST_ORDERED_ATTRIBUTE);
-        }
-        else 
-        {
-            result = (List)obj;
-        }
-        return ((RAttributeAttributeGroup)result.get(result.size()-1))
-            .getOrder();
-    }
-
 
     /**
      * Retrieves R_ATTRIBUTE_ATTRIBUTEGROUP mapping object for this group
