@@ -30,6 +30,8 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.management.ObjectName;
 import javax.management.MBeanException;
+import javax.management.RuntimeMBeanException;
+import javax.management.RuntimeOperationsException;
 import javax.management.MBeanRegistration;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
@@ -54,7 +56,7 @@ import org.jboss.system.Registry;
  * from RMI/JRMP into the JMX base.
  *
  * @author <a href="mailto:marc.fleury@jboss.org>Marc Fleury</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  *
  * <p><b>Revisions:</b><br>
  * <p><b>2002/01/13: Sacha Labourey</b>
@@ -367,7 +369,15 @@ public class JRMPInvoker
          return new MarshalledObject(obj);
       }
       catch (Exception e) {
-	 e = org.jboss.util.ThrowableTranslator.translate(e);
+         if (e instanceof MBeanException)
+            e = ((MBeanException)e).getTargetException();
+
+         if (e instanceof RuntimeMBeanException)
+            e = ((RuntimeMBeanException)e).getTargetException();
+
+         if (e instanceof RuntimeOperationsException)
+            e = ((RuntimeOperationsException)e).getTargetException();
+         
 	 log.error("operation failed", e);
 	 throw e;
       }
