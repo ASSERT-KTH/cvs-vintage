@@ -39,7 +39,7 @@ public class MarkMessageAsReadAction extends AbstractFilterAction {
 		MailFolderCommandReference r = new MailFolderCommandReference(
 				srcFolder, uids);
 
-		String variant = ((MailFilterAction) filterAction).getMarkVariant();
+		String variant = filterAction.get("markvariant");
 
 		if (variant.equals("read")) {
 			r.setMarkVariant(MarkMessageCommand.MARK_AS_READ);
