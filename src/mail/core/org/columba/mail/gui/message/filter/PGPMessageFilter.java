@@ -116,7 +116,12 @@ public class PGPMessageFilter extends AbstractFilter {
 
 		//		@TODO dont use deprecated method
 		header = folder.getMessageHeader(uid);
-
+		
+		// Check if the message still exists
+		// or has been moved by e.g. a filter
+		if(header == null ) return null;
+		
+		
 		// TODO (@author waffel): encrypt AND sign dosN#t work. The message is always only
 		// encrypted. We need a function that knows, here
 		// is an encrypted AND signed Message. Thus first encyrpt and then
