@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsFactory.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestExtensionMechanismsFactory.java,v 1.2 2004/11/21 14:28:10 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.ExtensionMechanismsFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
@@ -34,7 +33,9 @@ import org.argouml.util.CheckUMLModelHelper;
  *
  */
 public class TestExtensionMechanismsFactory extends TestCase {
-
+    /**
+     * List of model elements to test.
+     */
     private static String[] allModelElements = {
 	"Stereotype",
 	"TaggedValue",
@@ -42,7 +43,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name of the test
      */
     public TestExtensionMechanismsFactory(String n) {
@@ -64,7 +65,7 @@ public class TestExtensionMechanismsFactory extends TestCase {
     public void testCreates() {
 
 	String[] objs = {
-	    "Stereotype", "TaggedValue", null 
+	    "Stereotype", "TaggedValue", null,
 	};
 
 	CheckUMLModelHelper.createAndRelease(

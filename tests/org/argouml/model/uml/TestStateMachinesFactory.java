@@ -1,4 +1,4 @@
-// $Id: TestStateMachinesFactory.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestStateMachinesFactory.java,v 1.2 2004/11/21 14:34:51 linus Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,6 @@ package org.argouml.model.uml;
 
 import junit.framework.TestCase;
 
-import org.argouml.model.uml.StateMachinesFactory;
 import org.argouml.util.CheckUMLModelHelper;
 
 /**
@@ -34,7 +33,9 @@ import org.argouml.util.CheckUMLModelHelper;
  *
  */
 public class TestStateMachinesFactory extends TestCase {
-
+    /**
+     * Model elements to test.
+     */
     private static String[] allModelElements =
     {
 	"CallEvent",
@@ -58,7 +59,7 @@ public class TestStateMachinesFactory extends TestCase {
 
     /**
      * The constructor.
-     * 
+     *
      * @param n the name of the test
      */
     public TestStateMachinesFactory(String n) {
@@ -101,7 +102,7 @@ public class TestStateMachinesFactory extends TestCase {
 	    "SynchState",
 	    "TimeEvent",
 	    "Transition",
-	    null 
+	    null,
 	};
 
 	CheckUMLModelHelper.createAndRelease(

@@ -1,4 +1,4 @@
-// $Id: TestExtensionMechanismsHelper.java,v 1.1 2004/11/02 18:35:20 mvw Exp $
+// $Id: TestExtensionMechanismsHelper.java,v 1.2 2004/11/21 14:28:10 linus Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,15 +26,12 @@ package org.argouml.model.uml;
 
 import java.util.Collection;
 
-import org.argouml.model.uml.CoreFactory;
-import org.argouml.model.uml.ExtensionMechanismsFactory;
-import org.argouml.model.uml.ExtensionMechanismsHelper;
+import junit.framework.TestCase;
+
 import org.argouml.util.CheckUMLModelHelper;
 
 import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.foundation.extension_mechanisms.MStereotype;
-
-import junit.framework.TestCase;
 
 /**
  * @since Oct 10, 2002
@@ -50,9 +47,9 @@ public class TestExtensionMechanismsHelper extends TestCase {
     public TestExtensionMechanismsHelper(String arg0) {
         super(arg0);
     }
-    
+
     /**
-     * This test does not work yet since there are problems with 
+     * This test does not work yet since there are problems with
      * isolating the project from the projectbrowser.
      */
     public void testGetAllPossibleStereotypes1() {
@@ -72,7 +69,7 @@ public class TestExtensionMechanismsHelper extends TestCase {
         assertTrue("stereotype not in list of possible stereotypes",
 		   col.contains(stereo2));
     }
-    
+
     /**
      * Test if we can create modelelements with the names given.
      */
@@ -81,7 +78,7 @@ public class TestExtensionMechanismsHelper extends TestCase {
 		ExtensionMechanismsFactory.getFactory(),
 		TestExtensionMechanismsFactory.getAllModelElements());
     }
-    
+
     /**
      * Test if we can create a valid stereotype for all the modelelements.
      */
