@@ -17,16 +17,16 @@ import org.jboss.logging.Logger;
  * java.sql.Connection back in any case (in the case of XAConnections, the
  * transactional-ness is handled under the covers).  You must create the pools
  * ahead of time by creating and initializing the appropriate DataSource.
- * <TABLE BORDER="1">
- *   <TR><TH>Connection Type</TH><TH>URL Form</TH></TR>
- *   <TR><TD>Connection</TD><TD>jdbc:minerva:<I>PoolName</I></TD></TR>
- *   <TR><TD>XAConnection</TD><TD>jdbc:minervaxa:<I>PoolName</I></TD></TR>
- * </TABLE>
- * <P>Note that you must load this driver like normal in order to use it:<BR>
- * <CODE>Class.forName("org.minerva.datasource.PoolDriver");</CODE></P>
+ * <P>You should use a URL of the form <B>jdbc:minerva:<I>PoolName</I></B>
+ * to get a connection from the pool.  This will check for both a JDBC Pool
+ * and XA Pool if necessary, so don't create one pool of each type with the
+ * same name!</P>
+ * <P>This driver will be loaded automatically whenever a JDBC Pool or XA
+ * Pool is created, but you can also use the standard <CODE>Class.forName</CODE>
+ * call to load it.</P>
  * @see org.jboss.minerva.datasource.JDBCPoolDataSource
  * @see org.jboss.minerva.datasource.XAPoolDataSource
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class PoolDriver implements Driver {

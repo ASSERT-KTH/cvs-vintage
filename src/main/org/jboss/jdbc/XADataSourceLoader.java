@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  * pool generates connections that are registered with the current Transaction
  * and support two-phase commit.  The constructors are called by the JMX engine
  * based on your MLET tags.
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author Aaron Mulder (ammulder@alumni.princeton.edu)
  */
 public class XADataSourceLoader extends ServiceMBeanSupport
@@ -246,7 +246,7 @@ public class XADataSourceLoader extends ServiceMBeanSupport
         // Unbind from JNDI
         try {
             String name = source.getPoolName();
-            new InitialContext().unbind("xa."+name);
+            new InitialContext().unbind(name);
             log.log("XA Connection pool "+name+" removed from JNDI");
             source.close();
             log.log("XA Connection pool "+name+" shut down");
