@@ -1,4 +1,4 @@
-// $Id: FigObjectFlowState.java,v 1.10 2004/09/05 15:19:55 mvw Exp $
+// $Id: FigObjectFlowState.java,v 1.11 2004/09/06 20:21:16 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -136,7 +136,8 @@ public class FigObjectFlowState extends FigNodeModelElement {
      */
     protected void modelChanged(MElementEvent mee) {        
         super.modelChanged(mee);
-        if (mee.getSource() == getOwner()) {
+        if ((mee.getSource() == getOwner()) 
+            || (mee.getSource() == ModelFacade.getType(getOwner()))) {
             renderingChanged();
         }
     }
