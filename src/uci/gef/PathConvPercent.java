@@ -19,7 +19,7 @@
 // File: PathConvPercent.java
 // Classes: PathConvPercent
 // Original Author: abonner@ics.uci.edu
-// $Id: PathConvPercent.java,v 1.5 1998/04/18 01:26:44 jrobbins Exp $
+// $Id: PathConvPercent.java,v 1.6 1998/04/18 22:50:50 jrobbins Exp $
 
 package uci.gef;
 

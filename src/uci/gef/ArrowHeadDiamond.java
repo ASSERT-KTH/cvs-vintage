@@ -28,7 +28,7 @@
 // File: ArrowHead.java
 // Classes: ArrowHead
 // Original Author: abonner@ics.uci.edu
-// $Id: ArrowHeadDiamond.java,v 1.3 1998/04/18 01:25:47 jrobbins Exp $
+// $Id: ArrowHeadDiamond.java,v 1.4 1998/04/18 22:50:46 jrobbins Exp $
 
 package uci.gef;
 
