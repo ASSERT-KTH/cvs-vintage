@@ -1,4 +1,4 @@
-// $Id: ZargoFilePersister.java,v 1.6 2004/12/27 05:07:54 linus Exp $
+// $Id: ZargoFilePersister.java,v 1.7 2004/12/27 19:25:38 bobtarling Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -140,31 +140,51 @@ public class ZargoFilePersister extends UmlFilePersister {
 
             stream.closeEntry();
 
+            // First we save all objects that are not XMI objects i.e. the
+            // diagrams (first for loop).
+            // Then we save all XMI objects (second for loop).
+            // This is because order is important on saving.
+            // Bob - Why not do it the other way around? Surely
+            // when reloading it is better to load XMI first
+            // then the diagrams.
             Collection names = new ArrayList();
-            int counter = 0;
+            int counter = 0;  
             int size = project.getMembers().size();
             for (int i = 0; i < size; i++) {
-                ProjectMember projectMember =
+                ProjectMember projectMember = 
                     (ProjectMember) project.getMembers().elementAt(i);
-                if (LOG.isInfoEnabled()) {
-                    LOG.info("Saving member: "
-                            + ((ProjectMember) project.getMembers()
+                if (!(projectMember.getType().equalsIgnoreCase("xmi"))) {
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Saving member: "
+                              + ((ProjectMember) project.getMembers()
                                     .elementAt(i)).getName());
-                }
-                String name = projectMember.getName();
-                if (!projectMember.getType().equalsIgnoreCase("xmi")) {
+                    }
+                    String name = projectMember.getName();
                     String originalName = name;
                     while (names.contains(name)) {
                         name = ++counter + originalName;
                     }
                     names.add(name);
+                    stream.putNextEntry(new ZipEntry(name));
+                    projectMember.save(writer, null);
+                    writer.flush();
+                    stream.closeEntry();
                 }
-                stream.putNextEntry(new ZipEntry(name));
-                projectMember.save(writer, null);
-                writer.flush();
-                stream.closeEntry();
             }
 
+            for (int i = 0; i < size; i++) {
+                ProjectMember projectMember = 
+                    (ProjectMember) project.getMembers().elementAt(i);
+                if (projectMember.getType().equalsIgnoreCase("xmi")) {
+                    if (LOG.isInfoEnabled()) {
+                        LOG.info("Saving member of type: "
+                              + ((ProjectMember) project.getMembers()
+                                    .elementAt(i)).getType());
+                    }
+                    stream.putNextEntry(new ZipEntry(projectMember.getName()));
+                    projectMember.save(writer, null);
+                }
+            }
             // if save did not raise an exception
             // and name+"#" exists move name+"#" to name+"~"
             // this is the correct backup file
@@ -303,40 +323,41 @@ public class ZargoFilePersister extends UmlFilePersister {
         }
         return zis;
     }
-}
+    
 
-
-/**
- * A stream of input streams for reading the Zipped file.
- */
-class SubInputStream extends FilterInputStream {
-    private ZipInputStream in;
 
     /**
-     * The constructor.
-     *
-     * @param z the zip input stream
+     * A stream of input streams for reading the Zipped file.
      */
-    public SubInputStream(ZipInputStream z) {
-	super(z);
-	in = z;
-    }
+    private class SubInputStream extends FilterInputStream {
+        private ZipInputStream in;
 
-    /**
-     * @see java.io.InputStream#close()
-     */
-    public void close() throws IOException  {
-	in.closeEntry();
-    }
+        /**
+         * The constructor.
+         *
+         * @param z the zip input stream
+         */
+        public SubInputStream(ZipInputStream z) {
+            super(z);
+            in = z;
+        }
 
-    /**
-     * Reads the next ZIP file entry and positions stream at the beginning
-     * of the entry data.
-     *
-     * @return the ZipEntry just read
-     * @throws IOException if an I/O error has occurred
-     */
-    public ZipEntry getNextEntry() throws IOException {
-	return in.getNextEntry();
+        /**
+         * @see java.io.InputStream#close()
+         */
+        public void close() throws IOException  {
+            in.closeEntry();
+        }
+
+        /**
+         * Reads the next ZIP file entry and positions stream at the beginning
+         * of the entry data.
+         *
+         * @return the ZipEntry just read
+         * @throws IOException if an I/O error has occurred
+         */
+        public ZipEntry getNextEntry() throws IOException {
+            return in.getNextEntry();
+        }
     }
 }
