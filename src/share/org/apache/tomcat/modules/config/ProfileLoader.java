@@ -67,6 +67,8 @@ import java.net.*;
 import org.apache.tomcat.util.res.StringManager;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.xml.*;
+import org.apache.tomcat.util.compat.*;
+import org.apache.tomcat.util.IntrospectionUtils;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.modules.server.*;
 import org.apache.tomcat.util.log.*;
@@ -85,6 +87,8 @@ import org.xml.sax.*;
  */
 public class ProfileLoader extends BaseInterceptor {
     Hashtable profiles=new Hashtable();
+    ClassLoader parentLoader;
+    static final Jdk11Compat jdk11Compat=Jdk11Compat.getJdkCompat();
     
     public ProfileLoader() {
     }
@@ -99,7 +103,7 @@ public class ProfileLoader extends BaseInterceptor {
 
     public void addProfile( Profile p ) {
 	String name=p.getName();
-	if( debug > -1 ) log ( "Adding " + name );
+	if( debug > 0 ) log ( "Adding " + name );
 	if( name==null ) return;
 	profiles.put( name, p );
     }
@@ -113,18 +117,29 @@ public class ProfileLoader extends BaseInterceptor {
     {
 	String ctxProfile=ctx.getProperty("profile");
 	if( ctxProfile==null ) ctxProfile="default";
-
 	Profile p=(Profile)profiles.get( ctxProfile );
 	if( p==null ) {
 	    log( "Can't find profile " + ctxProfile );
 	    p=(Profile)profiles.get("default");
 	}
 
+	
 	if( p==null ) throw new TomcatException( "Can't load profile");
+
+	URL[] cp=p.commonClassPath;
+	for (int i=0; i<cp.length; i++ ) {
+	    ctx.addClassPath( cp[i]);
+	}
+	cp=p.sharedClassPath;
+	for (int i=0; i<cp.length; i++ ) {
+	    ctx.addClassPath( cp[i]);
+	}
+
+	
 	Enumeration en=p.getModules();
 	while( en.hasMoreElements()) {
 	    BaseInterceptor bi=(BaseInterceptor)en.nextElement();
-	    log( ctx + " " + bi );
+	    if( debug > 0 ) log( ctx + " " + bi );
 	    ctx.addInterceptor( bi );
 	}
     }
@@ -140,11 +155,13 @@ public class ProfileLoader extends BaseInterceptor {
     {
 	if( this != module ) return;
 
+	parentLoader=cm.getParentLoader();
+
 	XmlMapper xh=new XmlMapper();
 	xh.setDebug( debug );
 
 	addProfileRules( xh );
-	addTagRules( cm, xh );
+	addTagRules( cm, ctx, xh );
 	
 	if (configFile == null)
 	    configFile=DEFAULT_CONFIG;
@@ -165,60 +182,194 @@ public class ProfileLoader extends BaseInterceptor {
 
     // -------------------- Xml reading details --------------------
 
-    public void addTagRules( ContextManager cm, XmlMapper xh )
+    public void addTagRules( ContextManager cm, Context ctx, XmlMapper xh )
 	throws TomcatException
     {
 	Hashtable modules=(Hashtable)cm.getNote("modules");
 	if( modules==null) return;
 	Enumeration keys=modules.keys();
+
 	while( keys.hasMoreElements() ) {
 	    String name=(String)keys.nextElement();
 	    String classN=(String)modules.get( name );
 
 	    String tag="Profile" + "/" + name;
-	    xh.addRule(  tag ,
-			 xh.objectCreate( classN, null ));
-	    xh.addRule( tag ,
-			xh.setProperties());
-	    xh.addRule( tag, new XmlAction() {
-		    public void end(SaxContext ctx ) throws Exception {
-			BaseInterceptor obj=(BaseInterceptor)
-			    ctx.currentObject();
-			Profile parent=(Profile)
-			    ctx.previousObject();
-
-			parent.addModule( obj );
-		    }
-		});
+	    xh.addRule( tag, new TagAction(classN));
 	}
     }
 
     public  void addProfileRules( XmlMapper xh ) {
-	xh.addRule( "Profile", new XmlAction() {
-		public void start(SaxContext ctx ) throws Exception {
-		    Profile p=new Profile();
-		    AttributeList attributes = ctx.getCurrentAttributes();
-		    p.setName( attributes.getValue("name"));
-		    ctx.pushObject( p );
-		}
-		public void end(SaxContext ctx ) {
-		    ProfileLoader parent=(ProfileLoader)
-			ctx.previousObject();
-		    Profile obj=(Profile)
-			ctx.currentObject();
-		    System.out.println("XXX " + obj.getName());
-		    parent.addProfile( obj );
-
-		}
-		public void cleanup( SaxContext ctx ) {
-		    ctx.popObject();
-		}
-	    });
+	xh.addRule( "Profile", new ProfileAction(this));
     }
+
+    // -------------------- Utils --------------------
+
+    static class ProfileAction extends XmlAction {
+	ProfileLoader ploader;
+	
+	ProfileAction( ProfileLoader ploader ) {
+	    this.ploader=ploader;
+	}
+	
+	public void start(SaxContext ctx ) throws Exception {
+	    Profile p=new Profile();
+	    AttributeList attributes = ctx.getCurrentAttributes();
+	    p.setName( attributes.getValue("name"));
+	    ploader.setLoaders(p);
+	    ctx.pushObject( p );
+	}
+	public void end(SaxContext ctx ) {
+	    Profile obj=(Profile)ctx.currentObject();
+	    ploader.addProfile( obj );
+
+	}
+	public void cleanup( SaxContext ctx ) {
+	    ctx.popObject();
+	}
+    }
+
+
+    static class TagAction extends XmlAction {
+	String className;
+	
+	TagAction( String classN ) {
+	    this.className=classN;
+	}
+
+	public void start( SaxContext ctx) throws Exception {	
+	    String tag=ctx.getCurrentElement();
+	    Profile profile=(Profile)ctx.currentObject();
+	    Class c=null;
+	    ClassLoader cl=profile.containerLoader;	
+	    System.out.println( "CCL1 " + cl );    
+// 	    try {
+// 		c=Class.forName( className );
+// 	    } catch( ClassNotFoundException ex ) {
+// 		if( cl!=null )
+	    try {
+			c=cl.loadClass( className );
+	    } catch( ClassNotFoundException ex2 ) {
+		System.out.println( "CCL2 " + profile.commonLoader );
+		System.out.println(((java.net.URLClassLoader)cl).getParent());
+		c=profile.commonLoader.loadClass(className);
+	    }
+// 		else throw ex;
+// 	    }
+
+	    Object o=c.newInstance();
+
+	    AttributeList attributes = ctx.getCurrentAttributes();
+
+	    for (int i = 0; i < attributes.getLength (); i++) {
+		String type = attributes.getType (i);
+		String name=attributes.getName(i);
+		String value=attributes.getValue(i);
+		
+		IntrospectionUtils.setProperty( o, name, value );
+	    }
+
+	    profile.addModule( (BaseInterceptor)o );
+	}
+    }
+
+    void setLoaders( Profile p ) {
+	String name=p.getName();
+	String home=cm.getHome();
+
+	System.out.println("XXXXX " + parentLoader );
+	p.commonClassPath=getClassPath(home + "/lib/common/" + name, false);
+	p.commonLoader=
+	    jdk11Compat.newClassLoaderInstance(p.commonClassPath ,
+					       parentLoader);
+	for( int i=0; i< p.commonClassPath.length; i++ ) {
+	    log( "Common " + name + " " + p.commonClassPath[i]);
+	}
+	
+	p.sharedClassPath=getClassPath(home + "/lib/apps/" + name, false);
+	p.appLoader=jdk11Compat.newClassLoaderInstance(p.sharedClassPath ,
+						       p.commonLoader);
+
+	URL[] serverClassPath=getClassPath(home + "/lib/container/" + name,
+					   true);
+	p.containerLoader=jdk11Compat.newClassLoaderInstance(serverClassPath ,
+							     p.commonLoader);
+	log( "CCL " + p.containerLoader + " " + p.commonLoader);
+	for( int i=0; i< serverClassPath.length; i++ ) {
+	    log( "Container " + name + " " + serverClassPath[i]);
+	}
+    }
+
+    private URL[] getClassPath(String p0, boolean javacInc)
+    {
+        Vector urlV=new Vector();
+        try{
+            String cpComp[]=getJarFiles(p0);
+            if (cpComp != null){
+                int jarCount=cpComp.length;
+                for( int i=0; i< jarCount ; i++ ) {
+                    urlV.addElement( getURL(  p0 , cpComp[i] ));
+                }
+            }
+	    if( javacInc ) {
+		urlV.addElement( new URL( "file", null ,
+					  System.getProperty( "java.home" ) +
+					  "/../lib/tools.jar"));
+	    }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return getURLs(urlV);
+    }
+
+    public static URL getURL( String base, String file ) {
+        try {
+            File baseF = new File(base);
+            File f = new File(baseF,file);
+            String path = f.getCanonicalPath();
+            if( f.isDirectory() ){
+                    path +="/";
+            }
+            return new URL( "file", null, path );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public String[] getJarFiles(String ld) {
+	File dir = new File(ld);
+        String[] names=null;
+        if (dir.isDirectory()){
+            names = dir.list( new FilenameFilter(){
+            public boolean accept(File d, String name) {
+                if (name.endsWith(".jar")){
+                    return true;
+                }
+                return false;
+            }
+            });
+        }
+
+	return names;
+    }
+    
+    private URL[] getURLs(Vector v){
+        URL[] urls=new URL[ v.size() ];
+        for( int i=0; i<v.size(); i++ ) {
+            urls[i]=(URL)v.elementAt( i );
+        }
+        return urls;
+    }
+
 }
 
 class Profile {
     String name;
+    URL[] sharedClassPath;
+    URL[] commonClassPath;
+    ClassLoader commonLoader;
+    ClassLoader containerLoader;
+    ClassLoader appLoader;
     Vector modules=new Vector();
     
     public Profile() {};
@@ -239,4 +390,8 @@ class Profile {
 	modules.addElement( bi );
     }
 
+    ClassLoader getContainerLoader() {
+	return containerLoader;
+    }
+    
 }
