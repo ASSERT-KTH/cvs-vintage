@@ -173,15 +173,9 @@ public final class Servlet22Interceptor
 	    newState==ServerSession.STATE_EXPIRED )   {
 	    
 	    // generate "unbould" events when the session is suspended or
-	    // expired :
-	    
-	    // Session facades are managed by the request facades.
-	    // So, the facade returned at this point by the method getFacade() 
-	    // of ServerSession is not valid : it could refer to a session facade
-	    // that is unused, or used by a request facade for another server session.
-	    // That's why we have to manage our own facade.
-	    HttpSessionFacade sessionFacade = new HttpSessionFacade();
-	    
+	    // expired
+	    HttpSession httpSess=(HttpSession)sess.getFacade();
+
 	    Vector removed=new Vector();
 	    Enumeration e = sess.getAttributeNames();
 	    // announce all values with listener that we'll remove them
@@ -189,22 +183,12 @@ public final class Servlet22Interceptor
 		String key = (String) e.nextElement();
 		Object value = sess.getAttribute(key);
 
-		sessionFacade.setRealSession(sess);
-		
 		if( value instanceof  HttpSessionBindingListener) {
 		    ((HttpSessionBindingListener) value).valueUnbound
-			(new HttpSessionBindingEvent(sessionFacade , key));
+			(new HttpSessionBindingEvent(httpSess , key));
 		    removed.addElement( key );
 		}
-		
-		// prevents a session crossover
-		sess.setFacade( null );
 	    }
-	    
-	    // helps garbage collector
-	    sessionFacade.recycle();
-	    sessionFacade = null;
-	    
 	    // remove
 	    e=removed.elements();
 	    while( e.hasMoreElements() ) {
