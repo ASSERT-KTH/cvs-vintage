@@ -89,6 +89,7 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
 
     int checkInterval = 60;
     int maxActiveSessions = -1;
+    String randomClass=null;
     
     public StandardSessionInterceptor() {
     }
@@ -107,7 +108,12 @@ public final class StandardSessionInterceptor  extends BaseInterceptor {
     public void setMaxActiveSessions( int count ) {
 	maxActiveSessions=count;
     }
-    
+
+    public final void setRandomClass(String randomClass) {
+	this.randomClass=randomClass;
+	System.setProperty(ContextManager.RANDOM_CLASS_PROPERTY, randomClass);
+    }
+
     
     // -------------------- Tomcat request events --------------------
     public void engineInit( ContextManager cm ) throws TomcatException {
