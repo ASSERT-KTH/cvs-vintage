@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.3 2001/07/03 16:27:14 hgomez Exp $
- * $Revision: 1.3 $
- * $Date: 2001/07/03 16:27:14 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/MappedCharDataGenerator.java,v 1.4 2001/12/04 02:21:04 larryi Exp $
+ * $Revision: 1.4 $
+ * $Date: 2001/12/04 02:21:04 $
  *
  * ====================================================================
  * 
@@ -117,6 +117,7 @@ public class MappedCharDataGenerator extends CharDataGenerator {
 	    }
 	}
 	writer.print(sb.toString());
-	writer.print("\");\n");
+	writer.print("\");");
+	writer.println();
     }
 }

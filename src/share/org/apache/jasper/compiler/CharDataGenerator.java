@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.4 2001/07/03 16:27:12 hgomez Exp $
- * $Revision: 1.4 $
- * $Date: 2001/07/03 16:27:12 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/jasper/compiler/CharDataGenerator.java,v 1.5 2001/12/04 02:21:04 larryi Exp $
+ * $Revision: 1.5 $
+ * $Date: 2001/12/04 02:21:04 $
  *
  * ====================================================================
  * 
@@ -127,7 +127,8 @@ public class CharDataGenerator
 	    }
 	}
 	writer.print(sb.toString());
-	writer.print("\");\n");
+	writer.print("\");");
+	writer.println();
     }
 
 
