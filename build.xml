@@ -143,10 +143,12 @@
      <!-- for sun iiop  -->
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.wrapping.JNDIResourceWrapper">
+      <compilerarg value="-poa"/> 
       <classpath refid="carol.classpath"/>
     </rmic> 
     <rmic base="${build}/classes" iiop="true" compiler="sun"
       classname="org.objectweb.carol.jndi.wrapping.JNDIReferenceWrapper">
+      <compilerarg value="-poa"/> 
       <classpath refid="carol.classpath"/>
     </rmic>
     <javac 

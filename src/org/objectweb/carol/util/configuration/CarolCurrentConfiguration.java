@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolCurrentConfiguration.java,v 1.2 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: CarolCurrentConfiguration.java,v 1.3 2004/12/13 16:24:14 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.util.configuration;
@@ -145,14 +145,27 @@ public class CarolCurrentConfiguration {
      * Get the Context Hashtable
      * @return Hashtable the hashtable of Context
      */
-    public Hashtable getNewContextHashtable() throws NamingException {
+    public Hashtable getNewContextHashtable(Hashtable env) throws NamingException {
 
         // build a new hashtable of context
         Hashtable result = new Hashtable();
 
         for (Enumeration e = icHashtable.keys(); e.hasMoreElements();) {
             String k = (String) e.nextElement();
-            result.put(k, new InitialContext((Properties) icHashtable.get(k)));
+
+            // Get protocol env
+            Hashtable protocolEnv = (Hashtable) icHashtable.get(k);
+
+            // Add properties which are not already defined (not JNDI env)
+            for (Enumeration enu = env.keys(); enu.hasMoreElements();) {
+                String key = (String) enu.nextElement();
+                // not a java property defined, add it
+                if (protocolEnv.get(key) == null || !key.startsWith("java")) {
+                    protocolEnv.put(key, env.get(key));
+                }
+            }
+
+            result.put(k, new InitialContext(protocolEnv));
         }
 
         return result;

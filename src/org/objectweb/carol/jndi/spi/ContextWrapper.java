@@ -22,7 +22,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: ContextWrapper.java,v 1.4 2004/09/01 11:02:41 benoitf Exp $
+ * $Id: ContextWrapper.java,v 1.5 2004/12/13 16:24:13 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 package org.objectweb.carol.jndi.spi;
@@ -95,7 +95,7 @@ public class ContextWrapper implements Context {
                 env.put(CarolDefaultValues.JNDI_FACTORY_PREFIX, prop.get(CarolDefaultValues.JNDI_FACTORY_PREFIX));
                 ac = new InitialContext(env);
             } else {
-                ac = new MultiContext();
+                ac = new MultiContext(env);
             }
         } catch (Exception e) {
             String msg = "ContextWrapper.ContextWrapper() failed: " + e;

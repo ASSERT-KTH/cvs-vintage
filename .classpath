@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="externals/velocity-dep-1.4.jar"/>
 	<classpathentry kind="lib" path="externals/kilim.jar"/>
 	<classpathentry kind="lib" path="test/externals/junit.jar"/>
+	<classpathentry sourcepath="/JacORBcvs" kind="lib" path="externals/jacorb.jar"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
