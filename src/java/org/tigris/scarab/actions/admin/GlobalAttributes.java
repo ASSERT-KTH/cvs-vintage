@@ -72,61 +72,10 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.20 2002/06/21 20:06:21 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.21 2002/07/02 23:16:34 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
-
-    /**
-     * On the admin,GlobalAttributeShow.vm page, delete the selected attributes.
-     */
-    public void doDelete( RunData data, TemplateContext context ) 
-        throws Exception
-    {
-        IntakeTool intake = (IntakeTool)context
-            .get(ScarabConstants.INTAKE_TOOL);
-        String attributeType = data.getParameters().getString("attributeType");
-        if ( intake.isAllValid() ) 
-        {
-            List allAttributes;
-            if (attributeType != null && attributeType.equals("user"))
-            {
-                allAttributes = AttributePeer.getAttributes("user");
-            }
-            else
-            {
-                allAttributes = AttributePeer.getAttributes();
-            }
-            for (int i=0;i<allAttributes.size();i++)
-            {
-                Attribute attr = (Attribute) allAttributes.get(i);
-                Group attrGroup = intake.get("Attribute", attr.getQueryKey(),false);
-                Field deleted = attrGroup.get("Deleted");
-
-                try
-                {
-                    if (attrGroup != null)
-                    {
-                        if (!attr.getDeleted() && deleted.toString().equals("true"))
-                        {
-                            allAttributes.remove(attr);
-                            attr.deleteModuleMappings((ScarabUser)data.getUser());
-                        }
-                        deleted.setProperty(attr);
-                        attr.save();
-                        intake.remove(attrGroup);
-                        data.setMessage(DEFAULT_MSG);  
-                    }
-                }
-                catch (Exception e)
-                {
-                    getScarabRequestTool(context)
-                        .setAlertMessage("Failure: " + e.getMessage());
-                    return;
-                }
-            }
-        }
-    }
 
     /**
      * Manages clicking of the create new button
