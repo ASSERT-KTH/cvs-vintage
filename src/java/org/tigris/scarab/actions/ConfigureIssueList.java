@@ -74,7 +74,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.11 2001/09/30 19:07:44 jon Exp $
+    @version $Id: ConfigureIssueList.java,v 1.12 2001/10/09 20:39:14 elicia Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -83,30 +83,25 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         throws Exception
     {
         IntakeTool intake = getIntakeTool(context);
-        String userId = data.getParameters().getString("user_id");
 
         ScarabRequestTool scarab = getScarabRequestTool(context);
         ModuleEntity module = scarab.getCurrentModule();
         NumberKey moduleId = module.getModuleId();
-
-        // FIXME: this should be retrieved via cache or something
-        //        Not directly from the database. 
-        //        TurbineSecurity.getUser(username)
-        ScarabUser user = (ScarabUser) ScarabUserImplPeer
-                          .retrieveByPK(new NumberKey(userId));
+        ScarabUser user = (ScarabUser)data.getUser();
 
         RModuleUserAttribute mua = null;
 
         // Delete current attribute selections for user
         Criteria crit = new Criteria();
-        crit.add(RModuleUserAttributePeer.USER_ID, userId);
+        crit.add(RModuleUserAttributePeer.USER_ID, user.getUserId());
         List currentAttributes = RModuleUserAttributePeer.doSelect(crit);
         for (int i =0; i<currentAttributes.size(); i++)
         {
             try
             {
                 mua = RModuleUserAttributePeer.retrieveByPK(moduleId, 
-                      new NumberKey(userId), new NumberKey(((RModuleUserAttribute)
+                      new NumberKey(user.getUserId()), 
+                      new NumberKey(((RModuleUserAttribute)
                       currentAttributes.get(i)).getAttributeId()));
                 mua.delete();
             }
@@ -125,7 +120,7 @@ public class ConfigureIssueList extends RequireLoginFirstAction
             if (key.startsWith("selected_"))
             {
                 NumberKey attributeId =  new NumberKey(key.substring(9));
-                String queryKey = moduleId + ":" + userId + ":" 
+                String queryKey = moduleId + ":" + user.getUserId() + ":" 
                                   + attributeId.toString();
                 Group group = intake.get("RModuleUserAttribute", queryKey, false);
                 
@@ -139,6 +134,26 @@ public class ConfigureIssueList extends RequireLoginFirstAction
         String template = data.getParameters()
             .getString(ScarabConstants.NEXT_TEMPLATE);
         setTemplate(data, template);            
+    }
+
+    /**
+        Resets back to default values for module.
+    */
+    public void doUsedefaults( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        data.getParameters().add("usedefaults", "true"); 
+        setTarget(data, "ConfigureIssueList.vm");            
+    }
+        
+        
+    /**
+        This redirects back to issue list.
+    */
+    public void doGoissuelist( RunData data, TemplateContext context ) 
+        throws Exception
+    {
+        setTemplate(data, "IssueList.vm");            
     }
 
     /**
