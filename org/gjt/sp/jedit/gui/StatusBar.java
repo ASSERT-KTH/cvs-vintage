@@ -50,7 +50,7 @@ import org.gjt.sp.util.*;
  * <li>Displaying memory status
  * </ul>
  *
- * @version $Id: StatusBar.java,v 1.55 2003/04/02 01:45:26 spestov Exp $
+ * @version $Id: StatusBar.java,v 1.56 2003/04/08 02:13:24 spestov Exp $
  * @author Slava Pestov
  * @since jEdit 3.2pre2
  */
@@ -149,7 +149,7 @@ public class StatusBar extends JPanel implements WorkThreadProgressListener
 		memory.setBackground(painter.getBackground());
 		memory.setForeground(painter.getForeground());
 
-		Font font = UIManager.getFont("Label.font");
+		Font font = wrap.getFont();
 		FontMetrics fm = getFontMetrics(font);
 		Dimension dim = null;
 

@@ -37,7 +37,7 @@ import org.gjt.sp.jedit.*;
 /**
  * An abstract tabbed options dialog box.
  * @author Slava Pestov
- * @version $Id: OptionsDialog.java,v 1.31 2003/03/22 21:44:37 spestov Exp $
+ * @version $Id: OptionsDialog.java,v 1.32 2003/04/08 02:13:24 spestov Exp $
  */
 public abstract class OptionsDialog extends EnhancedDialog
 	implements ActionListener, TreeSelectionListener
@@ -407,6 +407,8 @@ public abstract class OptionsDialog extends EnhancedDialog
 		public PaneNameRenderer()
 		{
 			paneFont = UIManager.getFont("Tree.font");
+			if(paneFont == null)
+				paneFont = jEdit.getFontProperty("metal.secondary.font");
 			groupFont = paneFont.deriveFont(Font.BOLD);
 		}
 

@@ -54,7 +54,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: JEditTextArea.java,v 1.225 2003/04/04 19:51:14 spestov Exp $
+ * @version $Id: JEditTextArea.java,v 1.226 2003/04/08 02:13:24 spestov Exp $
  */
 public class JEditTextArea extends JComponent
 {
@@ -5406,7 +5406,6 @@ loop:			for(int i = lineNo + 1; i < getLineCount(); i++)
 	//{{{ recalculateLastPhysicalLine() method
 	void recalculateLastPhysicalLine()
 	{
-		System.err.println("recalculateLastPhysicalLine()");
 		int oldScreenLastLine = screenLastLine;
 		for(int i = visibleLines - 1; i >= 0; i--)
 		{

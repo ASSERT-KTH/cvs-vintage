@@ -40,7 +40,7 @@ import org.gjt.sp.jedit.*;
 /**
  * VFS browser tree view.
  * @author Slava Pestov
- * @version $Id: BrowserView.java,v 1.58 2003/02/20 01:55:12 spestov Exp $
+ * @version $Id: BrowserView.java,v 1.59 2003/04/08 02:13:21 spestov Exp $
  */
 class BrowserView extends JPanel
 {
@@ -484,6 +484,8 @@ class BrowserView extends JPanel
 		ParentDirectoryRenderer()
 		{
 			plainFont = UIManager.getFont("Tree.font");
+			if(plainFont == null)
+				plainFont = jEdit.getFontProperty("metal.secondary.font");
 			boldFont = new Font(plainFont.getName(),Font.BOLD,plainFont.getSize());
 		}
 

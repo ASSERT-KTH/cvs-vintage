@@ -101,7 +101,7 @@ import java.util.*;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: DockableWindowManager.java,v 1.65 2003/04/05 22:18:01 spestov Exp $
+ * @version $Id: DockableWindowManager.java,v 1.66 2003/04/08 02:13:23 spestov Exp $
  * @since jEdit 2.6pre3
  */
 public class DockableWindowManager extends JPanel
@@ -965,7 +965,6 @@ public class DockableWindowManager extends JPanel
 		{
 			String dockable = windowList[i].name;
 			Entry entry = (Entry)windows.get(dockable);
-			System.err.println(dockable);
 
 			String newPosition = jEdit.getProperty(dockable
 				+ ".dock-position",FLOATING);
