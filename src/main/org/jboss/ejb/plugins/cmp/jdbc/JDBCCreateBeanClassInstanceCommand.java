@@ -12,8 +12,8 @@ import java.lang.reflect.Constructor;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
-import org.jboss.proxy.Proxy;
-import org.jboss.proxy.InvocationHandler;
+import org.jboss.proxy.compiler.Proxy;
+import org.jboss.proxy.compiler.InvocationHandler;
 
 /**
  * JDBCBeanClassInstanceCommand creates instance of the bean class. For 
@@ -23,7 +23,7 @@ import org.jboss.proxy.InvocationHandler;
  * <FIX-ME>should not generat a subclass for ejb 1.1</FIX-ME>
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
  
 public class JDBCCreateBeanClassInstanceCommand {

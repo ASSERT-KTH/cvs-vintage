@@ -18,15 +18,15 @@ import javax.management.RuntimeOperationsException;
 import javax.management.RuntimeMBeanException;
 import javax.management.RuntimeErrorException;
 
-import org.jboss.proxy.Proxy;
-import org.jboss.proxy.InvocationHandler;
+import org.jboss.proxy.compiler.Proxy;
+import org.jboss.proxy.compiler.InvocationHandler;
 
 /**
  * A factory for producing MBean proxies.
  *      
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class MBeanProxy
    implements InvocationHandler
