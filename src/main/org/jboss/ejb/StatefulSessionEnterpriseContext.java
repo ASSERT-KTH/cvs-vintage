@@ -26,7 +26,7 @@ import javax.ejb.SessionContext;
  *
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public class StatefulSessionEnterpriseContext
    extends EnterpriseContext
@@ -131,11 +131,7 @@ public class StatefulSessionEnterpriseContext
             throw new IllegalStateException( "No remote interface defined." );
 
          if (ejbObject == null) {
-            try {
-               ejbObject = ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id);
-            } catch (RemoteException re) {
-               throw new IllegalStateException();
-            }
+               ejbObject = (EJBObject) ((StatefulSessionContainer)con).getContainerInvoker().getStatefulSessionEJBObject(id);
          }  
 
          return ejbObject;
