@@ -23,7 +23,7 @@ $page.setTitle("Advanced query")
 
 <h3>Search the Scarab knowledge base</h3>
 
-#advancedQuery()
+#advancedQuery($scarabR.CurrentModule)
 
 <div class="functnbar2">
 <table cellpadding="4" cellspacing="0" border="1">
