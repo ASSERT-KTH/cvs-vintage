@@ -1,4 +1,4 @@
-/* $Id: ApacheConfig.java,v 1.20 2001/08/02 10:33:02 larryi Exp $
+/* $Id: ApacheConfig.java,v 1.21 2001/08/10 03:57:07 larryi Exp $
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
@@ -62,12 +62,7 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.log.*;
 import java.io.*;
-import java.net.*;
 import java.util.*;
-
-// Used to find Ajp1? connector port
-import org.apache.tomcat.modules.server.Ajp12Interceptor;
-import org.apache.tomcat.modules.server.Ajp13Interceptor;
 
 /* The idea is to keep all configuration in server.xml and
    the normal apache config files. We don't want people to
@@ -90,7 +85,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
 */
 
 /**
-    Generates automatic apache configurations based on
+    Generates automatic apache mod_jk configurations based on
     the Tomcat server.xml settings and the war contexts
     initialized during startup.
     <p>
@@ -112,7 +107,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
                              </li>
      <li><b>jkConfig</b> - path to use for writing Apache mod_jk conf file. If
                             not set, defaults to
-                            "conf/jk/mod_jk.conf".</li>
+                            "conf/auto/mod_jk.conf".</li>
      <li><b>workersConfig</b> - path to workers.properties file used by 
                             mod_jk. If not set, defaults to
                             "conf/jk/workers.properties".</li>
@@ -122,7 +117,7 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
                         "libexec/mod_jk.so" everywhere else.</li>
      <li><b>jkLog</b> - path to log file to be used by mod_jk.</li>
      <li><b>jkDebug</b> - JK Loglevel setting.  May be debug, info, error, or emerg.
-                          If not set, defaults to no log.</li>
+                          If not set, defaults to emerg.</li>
      <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
                            specified, defaults to "ajp13" if an Ajp13Interceptor
                            is in use, otherwise it defaults to "ajp12".</li>
@@ -149,10 +144,11 @@ import org.apache.tomcat.modules.server.Ajp13Interceptor;
     </ul>
     <p>
     @author Costin Manolache
+    @author Larry Isaacs
     @author Mel Martinez
-	@version $Revision: 1.20 $ $Date: 2001/08/02 10:33:02 $
+	@version $Revision: 1.21 $ $Date: 2001/08/10 03:57:07 $
  */
-public class ApacheConfig  extends BaseInterceptor { 
+public class ApacheConfig  extends BaseJkConfig { 
     
     /** default path to mod_jk .conf location */
     public static final String MOD_JK_CONFIG = "conf/auto/mod_jk.conf";
@@ -177,23 +173,8 @@ public class ApacheConfig  extends BaseInterceptor {
         }
     }
     
-    public static final String JTC_AJP13_INTERCEPTOR =
-            "org.apache.ajp.tomcat33.Ajp13Interceptor";
-
-    private File configHome = null;
     private File jkConfig = null;
-    private File workersConfig = null;
     private File modJk = null;
-    private File jkLog = null;
-
-    private String jkProto = null;
-    private int portInt=0;
-    String tomcatHome;
-    private boolean useJkMount=true;
-    
-    private String jkDebug=null;
-
-    private boolean noRoot=true;
 
     // ssl settings 
     private boolean sslExtract=true;
@@ -201,10 +182,6 @@ public class ApacheConfig  extends BaseInterceptor {
     private String sslSessionIndicator="SSL_SESSION_ID";
     private String sslCipherIndicator="SSL_CIPHER";
     private String sslCertsIndicator="SSL_CLIENT_CERT";
-    
-    // default is true until we can map all web.xml directives
-    // Or detect only portable directives were used.
-    boolean forwardAll=true;
     
     public ApacheConfig() {
     }
@@ -238,60 +215,10 @@ public class ApacheConfig  extends BaseInterceptor {
 
     //-------------------- Properties --------------------
 
-    /** If false, we'll try to generate a config that will
-     *  let apache serve static files.
-     *  The default is true, forward all requests in a context
-     *  to tomcat. 
-     */
-    public void setForwardAll( boolean b ) {
-	forwardAll=b;
-    }
-
-    /** Special option - do not generate mappings for the ROOT
-        context. The default is true, and will not generate the mappings,
-        not redirecting all pages to tomcat (since /* matches everything).
-        This means that Apache's root remains intact but isn't completely
-        servlet/JSP enabled. If the ROOT webapp can be configured with
-        apache serving static files, there's no problem setting this
-        option to false. If not, then setting it false means Apache will
-        be out of picture for all requests.
-    */
-    public void setNoRoot( boolean b ) {
-	noRoot=b;
-    }
-    
-    /**
-        set a path to the parent directory of the
-        conf folder.  That is, the parent directory
-        within which setJservConfig(), setJkConfig()
-        and setWorkerConfig() paths would be resolved against
-        if relative.  For example if ConfigHome is set to "/home/tomcat"
-        and JkConfig is set to "conf/mod_jk.conf" then the resulting 
-        path returned from getJkConfig() would be: 
-        "/home/tomcat/conf/mod_jk.conf".</p>
-        <p>
-        However, if JkConfig, JservConfig or WorkersConfig
-        are set to absolute paths, this attribute is ignored.
-        <p>
-        If not set, execute() will set this to TOMCAT_HOME.
-        <p>
-        @param <b>dir</b> - path to a directory
-    */
-    public void setConfigHome(String dir){
-	if( dir==null ) return;
-        File f=new File(dir);
-        if(!f.isDirectory()){
-            throw new IllegalArgumentException(
-                "ApacheConfig.setConfigHome(): "+
-                "Configuration Home must be a directory! : "+dir);
-        }
-        configHome = f;
-    }
-    
     /**
         set the path to the output file for the auto-generated
         mod_jk configuration file.  If this path is relative
-        then getJkConfig() will resolve it absolutely against
+        then it will be resolved absolutely against
         the getConfigHome() path.
         <p>
         @param <b>path</b> String path to a file
@@ -301,42 +228,11 @@ public class ApacheConfig  extends BaseInterceptor {
     }
 
     /**
-        set a path to the workers.properties file.
-        @param <b>path</b> String path to workers.properties file
-    */
-    public void setWorkersConfig(String path){
-        workersConfig= (path==null?null:new File(path));
-    }
-    
-    /**
         set the path to the mod_jk Apache Module
         @param <b>path</b> String path to a file
     */
     public void setModJk(String path){
         modJk=( path==null?null:new File(path));
-    }
-   /**
-        set the path to the mod_jk log file
-        @param <b>path</b> String path to a file
-    */
-    public void setJkLog(String path){
-        jkLog= ( path==null?null:new File(path));
-    }
-    
-    /**
-        set the Ajp protocal
-        @param <b>protocal</b> String protocol, "ajp12" or "ajp13"
-     */
-    public void setJkProtocol(String protocol){
-        jkProto = protocol;
-    }
-
-
-    /** Set the verbosity level for mod_jk.
-	( use debug, error, etc, off or none disables )
-     */
-    public void setJkDebug( String level ) {
-	jkDebug=null;
     }
 
     /** By default mod_jk is configured to collect SSL information from
@@ -383,12 +279,8 @@ public class ApacheConfig  extends BaseInterceptor {
     /** Initialize defaults for properties that are not set
 	explicitely
     */
-    public void initProperties(ContextManager cm) {
-	tomcatHome = cm.getHome();
-	File tomcatDir = new File(tomcatHome);
-	if(configHome==null){
-	    configHome=tomcatDir;
-	}
+    protected void initProperties(ContextManager cm) {
+        super.initProperties(cm);
 	
 	jkConfig=getConfigFile( jkConfig, configHome, MOD_JK_CONFIG);
 	workersConfig=getConfigFile( workersConfig, configHome,
@@ -400,37 +292,6 @@ public class ApacheConfig  extends BaseInterceptor {
 	jkLog=getConfigFile( jkLog, configHome, JK_LOG_LOCATION);
     }
 
-    private void initProtocol(ContextManager cm) {
-	if( portInt == 0 )
-	    portInt=8007;
-
-	// Find Ajp1? connectors
-	BaseInterceptor ci[]=cm.getContainer().getInterceptors();
-	// try to get jakarta-tomcat-connectors Ajp13 Interceptor class
-	Class jtcAjp13 = null;
-	try {
-	    jtcAjp13 = Class.forName(JTC_AJP13_INTERCEPTOR);
-	} catch ( ClassNotFoundException e ) { }
-	    
-	for( int i=0; i<ci.length; i++ ) {
-	    Object con=ci[i];
-	    if( con instanceof  Ajp12Interceptor ) {
-		Ajp12Interceptor tcpCon=(Ajp12Interceptor) con;
-		portInt=tcpCon.getPort();
-	    }
-	    // if jkProtocol not specified and Ajp13 Interceptor found, use Ajp13
-	    // ??? XXX
-	    if( jkProto == null &&
-		( con instanceof  Ajp13Interceptor ||
-		  ( jtcAjp13 != null && jtcAjp13.isInstance(con) ) ) ) {
-		jkProto = "ajp13";
-	    }
-	}
-
-	// default to ajp12
-	if( jkProto==null ) jkProto="ajp12";
-    }
-    
     // -------------------- Generate config --------------------
     
     /**
@@ -523,7 +384,6 @@ public class ApacheConfig  extends BaseInterceptor {
 		       + "\"");
 	mod_jk.println();
 
-	// XXX Make it configurable 
 	if( jkDebug != null ) {
 	    mod_jk.println("JkLogLevel " + jkDebug);
 	    mod_jk.println();
@@ -785,28 +645,6 @@ public class ApacheConfig  extends BaseInterceptor {
     }    
 
     // -------------------- Utils --------------------
-
-    private File getConfigFile( File base, File configDir, String defaultF )
-    {
-	//log( "getConfigFile " + base + " " + configDir + " " +defaultF );
-	if( base==null )
-	    base=new File( defaultF );
-	if( ! base.isAbsolute() ) {
-	    if( configDir != null )
-		base=new File( configDir, base.getPath());
-	    else
-		base=new File( base.getAbsolutePath()); //??
-	}
-	File parent=new File(base.getParent());
-        if(!parent.exists()){
-            if(!parent.mkdirs()){
-                throw new RuntimeException(
-                    "Unable to create path to config file :"+
-		    jkConfig.getAbsolutePath());
-            }
-        }
-	return base;
-    }
 
     private String getApacheDocBase(Context context)
     {

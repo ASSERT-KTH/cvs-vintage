@@ -62,20 +62,77 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.io.FileUtil;
 import org.apache.tomcat.util.log.*;
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 
 /**
- * Used by ContextManager to generate automatic Netscape configurations
- *
- * @author Gal Shachor shachor@il.ibm.com
+    Generates automatic Netscape nsapi_redirect configurations based on
+    the Tomcat server.xml settings and the war contexts
+    initialized during startup.
+    <p>
+    This config interceptor is enabled by inserting an NSConfig
+    element in the <b>&lt;ContextManager&gt;</b> tag body inside
+    the server.xml file like so:
+    <pre>
+    * < ContextManager ... >
+    *   ...
+    *   <<b>NSConfig</b> <i>options</i> />
+    *   ...
+    * < /ContextManager >
+    </pre>
+    where <i>options</i> can include any of the following attributes:
+    <ul>
+     <li><b>configHome</b> - default parent directory for the following paths.
+                            If not set, this defaults to TOMCAT_HOME. Ignored
+                            whenever any of the following paths is absolute.
+                             </li>
+     <li><b>objConfig</b> - path to use for writing Netscape obj.conf
+                            file. If not set, defaults to
+                            "conf/auto/obj.conf".</li>
+     <li><b>workersConfig</b> - path to workers.properties file used by 
+                                nsapi_redirect. If not set, defaults to
+                                "conf/jk/workers.properties".</li>
+     <li><b>jkLog</b> - path to log file to be used by nsapi_redirect.</li>
+     <li><b>jkDebug</b> - Loglevel setting.  May be debug, info, error, or emerg.
+                          If not set, defaults to emerg.</li>
+     <li><b>jkProtocol</b> The desired protocal, "ajp12" or "ajp13". If not
+                           specified, defaults to "ajp13" if an Ajp13Interceptor
+                           is in use, otherwise it defaults to "ajp12".</li>
+     <li><b>forwardAll</b> - If true, forward all requests to Tomcat. This helps
+                             insure that all the behavior configured in the web.xml
+                             file functions correctly.  If false, let Netscape serve
+                             static resources assuming it has been configured
+                             to do so. The default is true.
+                             Warning: When false, some configuration in
+                             the web.xml may not be duplicated in Netscape.
+                             Review the uriworkermap file to see what
+                             configuration is actually being set in Netscape.</li>
+     <li><b>noRoot</b> - If true, the root context is not mapped to
+                         Tomcat.  If false and forwardAll is true, all requests
+                         to the root context are mapped to Tomcat. If false and
+                         forwardAll is false, only JSP and servlets requests to
+                         the root context are mapped to Tomcat. When false,
+                         to correctly serve Tomcat's root context you must also
+                         modify the Home Directory setting in Netscape
+                         to point to Tomcat's root context directory.
+                         Otherwise some content, such as the root index.html,
+                         will be served by Netscape before nsapi_redirect gets a chance
+                         to claim the request and pass it to Tomcat.
+                         The default is true.</li>
+    </ul>
+  <p>
+    @author Costin Manolache
+    @author Larry Isaacs
+    @author Gal Shachor
+	@version $Revision: 1.4 $
  */
-public class NSConfig  extends BaseInterceptor { 
+public class NSConfig  extends BaseJkConfig { 
 
     public static final String WORKERS_CONFIG = "/conf/jk/workers.properties";
-    public static final String NS_CONFIG = "/conf/jk/obj.conf";
-    public static final String JK_LOG_LOCATION = "/logs/netscape_redirect.log";
+    public static final String NS_CONFIG = "/conf/auto/obj.conf";
+    public static final String NSAPI_LOG_LOCATION = "/logs/nsapi_redirect.log";
+
+    private File objConfig = null;
 
     Log loghelper = Log.getLog("tc_log", this);
     
@@ -88,12 +145,50 @@ public class NSConfig  extends BaseInterceptor {
 	execute( cm );
     }
     
+    //-------------------- Properties --------------------
+    
+    /**
+        set the path to the output file for the auto-generated
+        isapi_redirect registry file.  If this path is relative
+        then getRegConfig() will resolve it absolutely against
+        the getConfigHome() path.
+        <p>
+        @param <b>path</b> String path to a file
+    */
+    public void setObjConfig(String path){
+	objConfig= (path==null)?null:new File(path);
+    }
+
+    // -------------------- Initialize/guess defaults --------------------
+
+    /** Initialize defaults for properties that are not set
+	explicitely
+    */
+    protected void initProperties(ContextManager cm) {
+        super.initProperties(cm);
+
+	objConfig=getConfigFile( objConfig, configHome, NS_CONFIG);
+	workersConfig=getConfigFile( workersConfig, configHome, WORKERS_CONFIG);
+	jkLog=getConfigFile( jkLog, configHome, NSAPI_LOG_LOCATION);
+    }
+
+    // -------------------- Generate config --------------------
+
+    /**
+        executes the NSConfig interceptor. This method generates Netscape
+        configuration files for use with nsapi_redirect.  If not
+        already set, this method will setConfigHome() to the value returned
+        from <i>cm.getHome()</i>.
+        <p>
+        @param <b>cm</b> a ContextManager object.
+    */
     public void execute(ContextManager cm) throws TomcatException 
     {
-	    try {
-	        String tomcatHome = cm.getHome();
+        try {
+	    initProperties(cm);
+	    initProtocol(cm);
 
-            PrintWriter objfile = new PrintWriter(new FileWriter(tomcatHome + NS_CONFIG + "-auto"));
+            PrintWriter objfile = new PrintWriter(new FileWriter(objConfig));
            
             objfile.println("###################################################################");		    
             objfile.println("# Auto generated configuration. Dated: " +  new Date());
@@ -112,9 +207,9 @@ public class NSConfig  extends BaseInterceptor {
             objfile.println();            
             objfile.println("Init fn=\"load-modules\" funcs=\"jk_init,jk_service\" shlib=\"<put full path to the redirector here>\"");
             objfile.println("Init fn=\"jk_init\" worker_file=\"" + 
-                            new File(tomcatHome, WORKERS_CONFIG).toString().replace('\\', '/') +  
-                            "\" log_level=\"debug\" log_file=\"" + 
-                            new File(tomcatHome, JK_LOG_LOCATION).toString().replace('\\', '/') + 
+                            workersConfig.toString().replace('\\', '/') +  
+                            "\" log_level=\"" + jkDebug + "\" log_file=\"" + 
+                            jkLog.toString().replace('\\', '/') + 
                             "\"");
             objfile.println();
             
@@ -135,7 +230,7 @@ public class NSConfig  extends BaseInterceptor {
 		        String vhost = context.getHost();
 
 		        if(vhost != null) {
-		            // Vhosts are not supported yet for IIS
+		            // Vhosts are not supported yet for Netscape
 		            continue;
 		        }
 		        if(path.length() > 1) {            
@@ -180,14 +275,14 @@ public class NSConfig  extends BaseInterceptor {
             objfile.println("#######################################################");		    
             objfile.println("<Object name=servlet>");
             objfile.println("ObjectType fn=force-type type=text/html");
-            objfile.println("Service fn=\"jk_service\" worker=\"ajp12\" path=\"/*\"");
+            objfile.println("Service fn=\"jk_service\" worker=\""+ jkProto + "\" path=\"/*\"");
             objfile.println("</Object>");
             objfile.println();
 
 	        
-	        objfile.close();	        
-	    } catch(Exception ex) {
-	        loghelper.log("Error generating automatic Netscape configuration", ex);
-	    }
+            objfile.close();	        
+        } catch(Exception ex) {
+            loghelper.log("Error generating automatic Netscape configuration", ex);
+        }
     }    
 }
