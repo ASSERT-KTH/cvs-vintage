@@ -83,7 +83,7 @@ import org.tigris.scarab.util.ScarabConstants;
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
  * @author <a href="mailto:mpoeschl@martmot.at">Martin Poeschl</a>
- * @version $Id: ManageUser.java,v 1.32 2004/12/09 22:05:38 dabbous Exp $
+ * @version $Id: ManageUser.java,v 1.33 2004/12/11 20:22:30 dabbous Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -254,8 +254,10 @@ public class ManageUser extends RequireLoginFirstAction
                             TurbineSecurity.forcePassword(su, password);
                             su.setPasswordExpire(Calendar.getInstance());
                             TurbineSecurity.saveUser(su);
+                            User me = data.getUser();
                             try
                             {
+                                data.setUser(su);
                                 sendNotificationEmail(context, su, password);
                             }
                             catch(Exception e)
@@ -263,6 +265,7 @@ public class ManageUser extends RequireLoginFirstAction
                                 Localizable msg = new L10NMessage(L10NKeySet.ExceptionEmailFailure,e);
                                 scarabR.setAlertMessage(msg);
                             }
+                            data.setUser(me);
                         }
                         else
                         /* !password.equals(passwordConfirm) */
