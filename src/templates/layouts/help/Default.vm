@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/main.css")" />
   <link rel="stylesheet" type="text/css" href="$staticLink.setPath("/style/print.css")" media="print" />
  </head>
-<body class="docs">
+<body class="docs" onload="self.focus()">
 $renderer.render("screens", $template)
 </body>
 </html>
