@@ -37,7 +37,7 @@ import org.jboss.ejb.EntityPersistenceStore;
 *      
 *   @see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.10 $
+*   @version $Revision: 1.11 $
 */
 public class CMPPersistenceManager
 implements EntityPersistenceManager {
@@ -116,7 +116,7 @@ implements EntityPersistenceManager {
     }
     
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
-    throws RemoteException, CreateException {
+    throws Exception {
         // Get methods
         Method createMethod = (Method)createMethods.get(m);
     	Method postCreateMethod = (Method)postCreateMethods.get(m);
@@ -132,15 +132,7 @@ implements EntityPersistenceManager {
 		} catch (InvocationTargetException ite) 
 		{
 		 	Throwable e = ite.getTargetException();
-			if (e instanceof CreateException)
-			{
-				// Rethrow exception
-				throw (CreateException)e;
-			} else if (e instanceof RemoteException)
-			{
-				// Rethrow exception
-				throw (RemoteException)e;
-			} else if (e instanceof EJBException)
+			if (e instanceof EJBException)
 			{
 				// Rethrow exception
 				throw (EJBException)e;
@@ -148,8 +140,15 @@ implements EntityPersistenceManager {
 			{
 				// Wrap runtime exceptions
 				throw new EJBException((Exception)e);
+			} else if (e instanceof Exception)
+			{
+            // Remote, Create, or custom app. exception
+			   throw (Exception)e;
+			} else
+			{
+			   throw (Error)e;
 			}
-        }
+      }
                  
         // Have the store persist the new instance, the return is the key
         Object id = store.createEntity(m, args, ctx);
@@ -179,15 +178,7 @@ implements EntityPersistenceManager {
 		} catch (InvocationTargetException ite) 
 		{
 		 	Throwable e = ite.getTargetException();
-			if (e instanceof CreateException)
-			{
-				// Rethrow exception
-				throw (CreateException)e;
-			} else if (e instanceof RemoteException)
-			{
-				// Rethrow exception
-				throw (RemoteException)e;
-			} else if (e instanceof EJBException)
+			if (e instanceof EJBException)
 			{
 				// Rethrow exception
 				throw (EJBException)e;
@@ -195,12 +186,19 @@ implements EntityPersistenceManager {
 			{
 				// Wrap runtime exceptions
 				throw new EJBException((Exception)e);
+			} else if (e instanceof Exception)
+			{
+			   // Remote, Create, or custom app. exception
+			   throw (Exception)e;
+			} else
+			{
+			   throw (Error)e;
 			}
-        }
+      }
     }
     
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-    throws RemoteException, FinderException {
+    throws Exception {
       
        // The store will find the entity and return the primaryKey
        Object id = store.findEntity(finderMethod, args, ctx);
@@ -210,7 +208,7 @@ implements EntityPersistenceManager {
     }
     
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-    throws RemoteException, FinderException {
+    throws Exception {
 
        // The store will find the id and return a collection of PrimaryKeys
        Collection ids = store.findEntities(finderMethod, args, ctx);

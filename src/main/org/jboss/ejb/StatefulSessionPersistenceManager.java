@@ -19,7 +19,7 @@ import org.jboss.ejb.Container;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public interface StatefulSessionPersistenceManager
    extends ContainerPlugin
@@ -34,7 +34,7 @@ public interface StatefulSessionPersistenceManager
    
    // Public --------------------------------------------------------
    public void createSession(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
-      throws RemoteException, CreateException;
+      throws Exception;
       
    public void activateSession(StatefulSessionEnterpriseContext ctx)
       throws RemoteException;

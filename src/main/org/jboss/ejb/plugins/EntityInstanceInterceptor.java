@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.15 $
+*   @version $Revision: 1.16 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -134,7 +134,6 @@ extends AbstractInterceptor
               {
                  // Possible deadlock
                  Transaction tx = ctx.getTransaction();
-
                  Logger.log("LOCKING-WAITING for id "+ctx.getId()+" ctx.hash "+ctx.hashCode()+" tx:"+((tx == null) ? "null" : tx.toString()));
                  
                  try{ctx.wait(5000);}

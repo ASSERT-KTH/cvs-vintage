@@ -17,7 +17,7 @@ import org.jboss.ejb.StatefulSessionEnterpriseContext;
 *      
 *	@see <related>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*	@version $Revision: 1.2 $
+*	@version $Revision: 1.3 $
 */
 public class StatefulSessionInstancePool
 extends AbstractInstancePool
@@ -38,8 +38,8 @@ extends AbstractInstancePool
 	}
 	
 	// Protected -----------------------------------------------------
-	protected EnterpriseContext create(Object instance, Container con)
-	throws RemoteException
+	protected EnterpriseContext create(Object instance)
+	throws Exception
 	{
 		// The instance is created by the caller and is a newInstance();
 		return new StatefulSessionEnterpriseContext(instance, getContainer());

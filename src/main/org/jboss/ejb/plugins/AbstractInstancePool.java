@@ -31,7 +31,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.5 $
+ *	@version $Revision: 1.6 $
  */
 public abstract class AbstractInstancePool
    implements InstancePool, XmlLoadable
@@ -92,7 +92,7 @@ public abstract class AbstractInstancePool
     * @exception   RemoteException  
     */
    public synchronized EnterpriseContext get()
-      throws RemoteException
+      throws Exception
    {
 //DEBUG      Logger.debug("Get instance "+this);
       
@@ -103,7 +103,7 @@ public abstract class AbstractInstancePool
       {
          try
          {
-            return create(container.getBeanClass().newInstance(), container);
+            return create(container.getBeanClass().newInstance());
          } catch (InstantiationException e)
          {
             throw new ServerException("Could not instantiate bean", e);
@@ -127,6 +127,8 @@ public abstract class AbstractInstancePool
    {
       // Pool it
 //DEBUG      Logger.debug("Free instance:"+ctx.getId()+"#"+ctx.getTransaction());
+      
+      ctx.clear();      
       
       if (pool.size() < maxSize)
       {
@@ -164,8 +166,8 @@ public abstract class AbstractInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected abstract EnterpriseContext create(Object instance, Container con)
-      throws RemoteException;
+   protected abstract EnterpriseContext create(Object instance)
+      throws Exception;
     
    // Private -------------------------------------------------------
 

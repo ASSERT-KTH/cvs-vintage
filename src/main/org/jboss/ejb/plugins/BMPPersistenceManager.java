@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.14 $
+*   @version $Revision: 1.15 $
 */
 public class BMPPersistenceManager
 implements EntityPersistenceManager
@@ -109,7 +109,7 @@ implements EntityPersistenceManager
     }
     
     public void createEntity(Method m, Object[] args, EntityEnterpriseContext ctx)
-    throws RemoteException, CreateException
+    throws Exception
     {
          Method createMethod = (Method)createMethods.get(m);
          Method postCreateMethod = (Method)postCreateMethods.get(m);
@@ -189,7 +189,7 @@ implements EntityPersistenceManager
     }
     
     public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-       throws RemoteException, FinderException
+       throws Exception
     {
        // call the finder method
        Object objectId = callFinderMethod(finderMethod, args, ctx);
@@ -199,7 +199,7 @@ implements EntityPersistenceManager
     }
     
     public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext ctx)
-    throws RemoteException, FinderException
+    throws Exception
     {
        // call the finder method
        Object result = callFinderMethod(finderMethod, args, ctx);

@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public interface InstancePool
    extends ContainerPlugin
@@ -35,7 +35,7 @@ public interface InstancePool
     * @exception   RemoteException  
     */
    public EnterpriseContext get()
-      throws RemoteException;
+      throws Exception;
    
    /**
     *   Return an anonymous instance after invocation.

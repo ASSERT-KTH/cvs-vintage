@@ -41,6 +41,7 @@ import javax.ejb.CreateException;
 import javax.ejb.DuplicateKeyException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.ejb.EJBException;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
@@ -60,7 +61,7 @@ import org.jboss.logging.Logger;
  *  @see <related>
  *  @author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
- *  @version $Revision: 1.10 $
+ *  @version $Revision: 1.11 $
  */
 public class StatefulSessionFilePersistenceManager
    implements StatefulSessionPersistenceManager
@@ -100,7 +101,10 @@ public class StatefulSessionFilePersistenceManager
         // Initialize the dataStore
        String ejbName = con.getBeanMetaData().getEjbName();
       
-       File database = new File("database");
+       // Base dir
+       File databaseDir = new File(getClass().getResource("/db.properties").getFile()).getParentFile();
+      
+       File database = new File(databaseDir, "sessions");
       
        dir = new File(database, ejbName);
          
@@ -131,7 +135,7 @@ public class StatefulSessionFilePersistenceManager
    }
    
    public void createSession(Method m, Object[] args, StatefulSessionEnterpriseContext ctx)
-      throws RemoteException, CreateException
+      throws Exception
    {
       // Get methods
       try
@@ -141,25 +145,39 @@ public class StatefulSessionFilePersistenceManager
          // Call ejbCreate
          createMethod.invoke(ctx.getInstance(), args);
          
-         // Set id
-         ctx.setId(nextId());
-       
-         // Insert in cache
-         ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
-        
-         // Create EJBObject
-         ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
-
-      } catch (InvocationTargetException e)
-      {
-         throw new CreateException("Create failed:"+e.getTargetException());
-      } catch (NoSuchMethodException e)
-      {
-         throw new CreateException("Create methods not found:"+e);
       } catch (IllegalAccessException e)
-      {
-         throw new CreateException("Could not create entity:"+e);
-      } 
+       {
+         // Throw this as a bean exception...(?)
+         throw new EJBException(e);
+       } catch (InvocationTargetException ite) 
+       {
+         Throwable e = ite.getTargetException();
+         if (e instanceof EJBException)
+         {
+      	   // Rethrow exception
+      	   throw (EJBException)e;
+         } else if (e instanceof RuntimeException)
+         {
+      	   // Wrap runtime exceptions
+      	   throw new EJBException((Exception)e);
+         } else if (e instanceof Exception)
+         {
+            // Remote, Create, or custom app. exception
+            throw (Exception)e;
+         } else
+         {
+            throw (Error)e;
+         }
+       }
+      
+      // Set id
+      ctx.setId(nextId());
+
+      // Insert in cache
+      ((StatefulSessionContainer)con).getInstanceCache().insert(ctx);
+
+      // Create EJBObject
+      ctx.setEJBObject(con.getContainerInvoker().getStatefulSessionEJBObject(ctx.getId()));
    }
 
    public void activateSession(StatefulSessionEnterpriseContext ctx)
@@ -181,10 +199,36 @@ public class StatefulSessionFilePersistenceManager
          
           // Call bean
          ejbActivate.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
+      } catch (ClassNotFoundException e)
       {
-         throw new ServerException("Activation failed", e);
-      }
+        throw new ServerException("Could not activate", e); 
+      } catch (IOException e)
+      {
+        throw new ServerException("Could not activate", e); 
+      } catch (IllegalAccessException e)
+       {
+         // Throw this as a bean exception...(?)
+         throw new EJBException(e);
+       } catch (InvocationTargetException ite) 
+       {
+         Throwable e = ite.getTargetException();
+         if (e instanceof EJBException)
+         {
+      	   // Rethrow exception
+      	   throw (EJBException)e;
+         } else if (e instanceof RuntimeException)
+         {
+      	   // Wrap runtime exceptions
+      	   throw new EJBException((Exception)e);
+         } else if (e instanceof RemoteException)
+         {
+            // Remote, Create, or custom app. exception
+            throw (RemoteException)e;
+         } else
+         {
+            throw (Error)e;
+         }
+       }
    }
    
    public void passivateSession(StatefulSessionEnterpriseContext ctx)
@@ -205,10 +249,33 @@ public class StatefulSessionFilePersistenceManager
               out.writeObject(fields[i].get(ctx.getInstance()));
          
          out.close();   
-       } catch (Exception e)
+       } catch (IOException e)
        {
-          throw new ServerException("Passivation failed", e);
-       }
+         throw new ServerException("Could not passivate", e);
+       }catch (IllegalAccessException e)
+        {
+          // Throw this as a bean exception...(?)
+          throw new EJBException(e);
+        } catch (InvocationTargetException ite) 
+        {
+          Throwable e = ite.getTargetException();
+          if (e instanceof EJBException)
+          {
+       	   // Rethrow exception
+       	   throw (EJBException)e;
+          } else if (e instanceof RuntimeException)
+          {
+       	   // Wrap runtime exceptions
+       	   throw new EJBException((Exception)e);
+          } else if (e instanceof RemoteException)
+          {
+             // Remote, Create, or custom app. exception
+             throw (RemoteException)e;
+          } else
+          {
+             throw (Error)e;
+          }
+        }
    }
       
    public void removeSession(StatefulSessionEnterpriseContext ctx)
@@ -218,10 +285,32 @@ public class StatefulSessionFilePersistenceManager
       try
       {
          ejbRemove.invoke(ctx.getInstance(), new Object[0]);
-      } catch (Exception e)
-      {
-         throw new ServerException("Remove failed", e);
-      }
+      } catch (IllegalAccessException e)
+       {
+         // Throw this as a bean exception...(?)
+         throw new EJBException(e);
+       } catch (InvocationTargetException ite) 
+       {
+         Throwable e = ite.getTargetException();
+         if (e instanceof EJBException)
+         {
+      	   // Rethrow exception
+      	   throw (EJBException)e;
+         } else if (e instanceof RuntimeException)
+         {
+      	   // Wrap runtime exceptions
+      	   throw new EJBException((Exception)e);
+         } else if (e instanceof RemoveException)
+         {
+            throw (RemoveException)e;
+         } else if (e instanceof RemoteException)
+         {
+            throw (RemoteException)e;
+         } else
+         {
+            throw (Error)e;
+         }
+       }
    }
    
    // Z implementation ----------------------------------------------

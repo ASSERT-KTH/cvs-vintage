@@ -14,7 +14,7 @@ import javax.ejb.NoSuchEntityException;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public interface InstanceCache
    extends ContainerPlugin
@@ -40,7 +40,7 @@ public interface InstanceCache
     * @exception   RemoteException  
     */
    public EnterpriseContext get(Object id)
-      throws RemoteException, NoSuchEntityException;
+      throws Exception;
 
    /**
     *   Insert an active instance after creation or activation. Write-lock is required.

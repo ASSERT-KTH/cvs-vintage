@@ -36,7 +36,7 @@ import org.jboss.util.SerializableEnumeration;
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
-*   @version $Revision: 1.28 $
+*   @version $Revision: 1.29 $
 */
 public class EntityContainer
 extends Container
@@ -373,7 +373,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
     */
     
     public Object find(MethodInvocation mi)
-    throws java.rmi.RemoteException, FinderException
+    throws Exception
     {
         
         // Multi-finder?
@@ -420,7 +420,7 @@ implements ContainerInvokerContainer, InstancePoolContainer
     */
     
     public EJBObject createHome(MethodInvocation mi)
-    throws java.rmi.RemoteException, CreateException
+    throws Exception
     {
        
        // The persistence manager takes care of the wiring and creating the EJBObject

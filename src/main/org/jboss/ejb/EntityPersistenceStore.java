@@ -27,7 +27,7 @@ import org.jboss.ejb.ContainerPlugin;
  *	@see EntityPersistenceManager
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.1 $
+ *	@version $Revision: 1.2 $
  */
 public interface EntityPersistenceStore
 extends ContainerPlugin
@@ -46,11 +46,10 @@ extends ContainerPlugin
 	 * @param   args  any create parameters
 	 * @param   instance  the instance being used for this create call
 	 * @return  Object, the primary key computed by CMP PM or null for BMP
-	 * @exception   RemoteException  thrown if some system exception occurs
-	 * @exception   CreateException  thrown if some heuristic problem occurs
+	 * @exception   Exception  
 	 */
    public Object createEntity(Method m, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, CreateException;
+      throws Exception;
 
 	/**
 	 *	This method is called when single entities are to be found. The persistence manager must find out
@@ -65,8 +64,8 @@ extends ContainerPlugin
 	 * @exception   FinderException  thrown if some heuristic problem occurs
 	 */
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, FinderException;
-
+      throws Exception;
+   
 	/**
 	 *	This method is called when collections of entities are to be found. The persistence manager must find out
 	 *	whether the wanted instances are available in the persistence store, and if so 
@@ -80,7 +79,7 @@ extends ContainerPlugin
 	 * @exception   FinderException  thrown if some heuristic problem occurs
 	 */
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, FinderException;
+      throws Exception;
 
 
 	/**

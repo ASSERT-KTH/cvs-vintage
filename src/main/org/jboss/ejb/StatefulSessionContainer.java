@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *      
  *   @see <related>
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
- *   @version $Revision: 1.18 $
+ *   @version $Revision: 1.19 $
  */
 public class StatefulSessionContainer
    extends Container
@@ -364,7 +364,7 @@ public class StatefulSessionContainer
    
    // Home interface implementation ---------------------------------
    public EJBObject createHome(MethodInvocation mi)
-      throws java.rmi.RemoteException, CreateException
+      throws Exception
    {
       getPersistenceManager().createSession(mi.getMethod(), mi.getArguments(), (StatefulSessionEnterpriseContext)mi.getEnterpriseContext());
      return ((StatefulSessionEnterpriseContext)mi.getEnterpriseContext()).getEJBObject();

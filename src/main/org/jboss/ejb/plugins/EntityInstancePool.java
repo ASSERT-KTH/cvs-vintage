@@ -8,6 +8,8 @@ package org.jboss.ejb.plugins;
 
 import java.rmi.RemoteException;
 
+import javax.ejb.EJBException;
+
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.EntityEnterpriseContext;
@@ -18,7 +20,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- *	@version $Revision: 1.6 $
+ *	@version $Revision: 1.7 $
  */
 public class EntityInstancePool
    extends AbstractInstancePool
@@ -63,10 +65,9 @@ public class EntityInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance, Container con)
-      throws RemoteException
+   protected EnterpriseContext create(Object instance)
+      throws Exception
    {
-       // MF FIXME why pass con and then use getContainer()
       return new EntityEnterpriseContext(instance, getContainer());
    }
     

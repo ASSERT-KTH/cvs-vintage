@@ -36,7 +36,7 @@ import org.jboss.logging.Logger;
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  *  @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.16 $
+ *	@version $Revision: 1.17 $
  */
 public abstract class EnterpriseContext
 {
@@ -112,7 +112,6 @@ public abstract class EnterpriseContext
        //new Exception().printStackTrace();
        
 //DEBUG		Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);
-        Logger.debug("EnterpriseContext.lock() "+hashCode()+" "+locked);    
     }
     
     public void unlock() {
@@ -124,13 +123,11 @@ public abstract class EnterpriseContext
        if (locked <0) new Exception().printStackTrace();
        
 //DEBUG		Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
-        Logger.debug("EnterpriseContext.unlock() "+hashCode()+" "+locked);
     }
     
     public boolean isLocked() {
             
 //DEBUG       Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
-            Logger.debug("EnterpriseContext.isLocked() "+hashCode()+" at "+locked);
        return locked != 0;
    }
    

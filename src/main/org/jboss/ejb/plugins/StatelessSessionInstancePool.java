@@ -17,7 +17,7 @@ import org.jboss.ejb.StatelessSessionEnterpriseContext;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public class StatelessSessionInstancePool
    extends AbstractInstancePool
@@ -41,10 +41,10 @@ public class StatelessSessionInstancePool
    // Package protected ---------------------------------------------
     
    // Protected -----------------------------------------------------
-   protected EnterpriseContext create(Object instance, Container con)
-      throws RemoteException
+   protected EnterpriseContext create(Object instance)
+      throws Exception
    {
-      return new StatelessSessionEnterpriseContext(instance, con);
+      return new StatelessSessionEnterpriseContext(instance, getContainer());
    }
     
    // Private -------------------------------------------------------

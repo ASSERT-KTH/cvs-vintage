@@ -29,7 +29,7 @@ import org.jboss.logging.Logger;
  *      
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.4 $
+ *	@version $Revision: 1.5 $
  */
 public class SingletonStatelessSessionInstancePool
    implements InstancePool, XmlLoadable
@@ -85,7 +85,7 @@ public class SingletonStatelessSessionInstancePool
     * @exception   RemoteException  
     */
    public synchronized EnterpriseContext get()
-      throws RemoteException
+      throws Exception
    {
       // Wait while someone else is using it
       while(inUse && isSynchronized)
@@ -156,7 +156,7 @@ public class SingletonStatelessSessionInstancePool
     
    // Protected -----------------------------------------------------
    protected EnterpriseContext create(Object instance, Container con)
-      throws RemoteException
+      throws Exception
    {
       return new StatelessSessionEnterpriseContext(instance, con);
    }

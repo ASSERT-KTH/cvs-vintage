@@ -24,7 +24,7 @@ import javax.ejb.RemoveException;
  *
  *	@see EntityContainer
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
- *	@version $Revision: 1.2 $
+ *	@version $Revision: 1.3 $
  */
 public interface EntityPersistenceManager
    extends ContainerPlugin
@@ -39,11 +39,9 @@ public interface EntityPersistenceManager
 	 * @param   m  the create method in the home interface that was called
 	 * @param   args  any create parameters
 	 * @param   instance  the instance being used for this create call
-	 * @exception   RemoteException  thrown if some system exception occurs
-	 * @exception   CreateException  thrown if some heuristic problem occurs
 	 */
    public void createEntity(Method m, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, CreateException;
+      throws Exception;
 
 	/**
 	 *	This method is called when single entities are to be found. The persistence manager must find out
@@ -54,11 +52,9 @@ public interface EntityPersistenceManager
 	 * @param   args  any finder parameters
 	 * @param   instance  the instance to use for the finder call
 	 * @return     an EJBObject representing the found entity
-	 * @exception   RemoteException  thrown if some system exception occurs
-	 * @exception   FinderException  thrown if some heuristic problem occurs
 	 */
    public Object findEntity(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, FinderException;
+      throws Exception;
 
 	/**
 	 *	This method is called when collections of entities are to be found. The persistence manager must find out
@@ -69,11 +65,9 @@ public interface EntityPersistenceManager
 	 * @param   args  any finder parameters
 	 * @param   instance  the instance to use for the finder call
 	 * @return     an EJBObject collection representing the found entities
-	 * @exception   RemoteException  thrown if some system exception occurs
-	 * @exception   FinderException  thrown if some heuristic problem occurs
 	 */
    public Collection findEntities(Method finderMethod, Object[] args, EntityEnterpriseContext instance)
-      throws RemoteException, FinderException;
+      throws Exception;
 
 
 	/**

@@ -15,6 +15,7 @@ import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionContext;
 import javax.ejb.SessionBean;
+import javax.ejb.EJBException;
 
 /**
  *	<description> 
@@ -22,7 +23,7 @@ import javax.ejb.SessionBean;
  *	@see <related>
  *	@author Rickard Öberg (rickard.oberg@telkel.com)
  *  @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
- *	@version $Revision: 1.3 $
+ *	@version $Revision: 1.4 $
  */
 public class StatelessSessionEnterpriseContext
    extends EnterpriseContext
@@ -37,7 +38,7 @@ public class StatelessSessionEnterpriseContext
    
    // Constructors --------------------------------------------------
    public StatelessSessionEnterpriseContext(Object instance, Container con)
-      throws RemoteException
+      throws Exception
    {
       super(instance, con);
       ctx = new SessionContextImpl();
@@ -48,12 +49,17 @@ public class StatelessSessionEnterpriseContext
       {
          Method ejbCreate = instance.getClass().getMethod("ejbCreate", new Class[0]);
          ejbCreate.invoke(instance, new Object[0]);
-      } catch (InvocationTargetException e)
+      } catch (InvocationTargetException e) 
       {
-         throw new ServerException("Could not call ejbCreate", (Exception)e.getTargetException());
-      } catch (Exception e)
-      {
-         throw new ServerException("Could not call ejbCreate", e);
+          Throwable ex = e.getTargetException();
+          if (ex instanceof EJBException)
+             throw (Exception)ex;
+          else if (ex instanceof RuntimeException)
+             throw new EJBException((Exception)ex); // Transform runtime exception into what a bean *should* have thrown
+          else if (ex instanceof Exception)
+             throw (Exception)ex;
+          else
+             throw (Error)ex;
       }
    }
    
