@@ -52,7 +52,6 @@
       {
        item.value=val2
       }
-      alert("val1=["+val1+"] val2=["+val2+"] item=["+item.value+"]");
     }
     </script>
   
@@ -104,7 +103,7 @@
 
  <select name="$attrInput.get($optionFieldName).Key"
    #if($size.length())size="$size"#end #if($multiple.equals("true"))multiple="multiple"#end>
-  #if ($size.length() == 0)
+  #if ($size.length() == 0 && $newValues == '')
    <option value="">$l10n.Choose</option>
   #end
   #foreach ($option in $module.getOptionTree($attr, $issueType, false))
