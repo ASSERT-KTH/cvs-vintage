@@ -30,12 +30,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:vincent.harcq@hubmethods.com">Vincent Harcq</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * <p><b>2002/08/27: loubyansky</b>
- * <ol>
- *   <li>added JDBCCMPFieldMetaData( JDBCEntityMetaData entity )</li>
- * </ol>
- *
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 public final class JDBCCMPFieldMetaData {
    /**
@@ -101,6 +96,17 @@ public final class JDBCCMPFieldMetaData {
     */
    private final List propertyOverrides = new ArrayList();
 
+   // Unknown Primary Key Attributes -------------------------
+
+   /**
+    * indicates whether this is an unknown pk field
+    */
+   private final boolean unknownPkField;
+
+   /**
+    * JNDI name of the key factory for this field
+    */
+   private final String keyFactory;
 
    /**
     * This constructor added to create an unknown primary key
@@ -109,9 +115,9 @@ public final class JDBCCMPFieldMetaData {
    public JDBCCMPFieldMetaData( JDBCEntityMetaData entity )
    {
       this.entity = entity;
-      fieldName = "unknownPkField";
+      fieldName = entity.getName() + "_upk";
       fieldType = java.lang.String.class;
-      columnName = "unknownPkColumn";
+      columnName = entity.getName() + "_upk";
       jdbcType = java.sql.Types.VARCHAR;
       sqlType = "VARCHAR(32)";
       readOnly = false;
@@ -119,6 +125,9 @@ public final class JDBCCMPFieldMetaData {
       primaryKeyMember = true;
       notNull = true;
       primaryKeyField = null;
+      unknownPkField = true;
+      // here some default factory should be setup
+      keyFactory = null;
    }
 
    /**
@@ -186,6 +195,10 @@ public final class JDBCCMPFieldMetaData {
          primaryKeyField = pkField;
       }
       notNull = fieldType.isPrimitive() || primaryKeyMember;
+
+      // Unknown primary key attributes setup
+      unknownPkField = false;
+      keyFactory = null;
    }
 
    /**
@@ -276,6 +289,19 @@ public final class JDBCCMPFieldMetaData {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
                   this, (Element)iterator.next()));
       }
+
+      // unknown primary key
+      this.unknownPkField = defaultValues.isUnknownPkField();
+
+      // key factory
+      // NOTE: even if it's required for unknown-pk it might be absent
+      // because this class represents non-pk fields too
+      String keyFactory = MetaData.getOptionalChildContent(
+         element, "key-factory" );
+      if( keyFactory != null )
+         this.keyFactory = keyFactory;
+      else
+         this.keyFactory = defaultValues.getKeyFactory();
    }
 
    /**
@@ -345,7 +371,7 @@ public final class JDBCCMPFieldMetaData {
 
       // primary key member?
       this.primaryKeyMember = primaryKeyMember;
-      
+
       // not-null
       this.notNull = notNull;
 
@@ -358,6 +384,19 @@ public final class JDBCCMPFieldMetaData {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
                   this, (Element)iterator.next()));
       }
+
+      // unknown primary key
+      this.unknownPkField = defaultValues.isUnknownPkField();
+
+      // key factory
+      // NOTE: even if it's required for unknown-pk it might be absent
+      // because this class represents non-pk fields too
+      String keyFactory = MetaData.getOptionalChildContent(
+         element, "key-factory" );
+      if( keyFactory != null )
+         this.keyFactory = keyFactory;
+      else
+         this.keyFactory = defaultValues.getKeyFactory();
    }
 
    /**
@@ -416,7 +455,7 @@ public final class JDBCCMPFieldMetaData {
 
       // primary key member?
       this.primaryKeyMember = primaryKeyMember;
-      
+
       // field object of the primary key
       primaryKeyField = defaultValues.getPrimaryKeyField();
 
@@ -428,6 +467,12 @@ public final class JDBCCMPFieldMetaData {
          propertyOverrides.add(new JDBCCMPFieldPropertyMetaData(
                   this, (JDBCCMPFieldPropertyMetaData)i.next()));
       }
+
+      // unknown primary key
+      this.unknownPkField = defaultValues.isUnknownPkField();
+
+      // key factory
+      this.keyFactory = defaultValues.getKeyFactory();
    }
 
    /**
@@ -536,6 +581,21 @@ public final class JDBCCMPFieldMetaData {
     */
    public Field getPrimaryKeyField() {
       return primaryKeyField;
+   }
+
+   /**
+    * Is this field an unknown primary key field?
+    * @return true if the field is an unknown primary key field
+    */
+   public boolean isUnknownPkField() {
+      return unknownPkField;
+   }
+
+   /**
+    * Gets key factory JNDI name
+    */
+   public String getKeyFactory() {
+      return keyFactory;
    }
 
    /**
