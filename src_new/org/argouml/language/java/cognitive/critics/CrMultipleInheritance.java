@@ -1,4 +1,4 @@
-// $Id: CrMultipleInheritance.java,v 1.8 2004/09/21 19:03:30 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.9 2004/10/21 09:51:53 mkl Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrMultipleInheritance.java.java
 // Classes: CrMultipleInheritance.java
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrMultipleInheritance.java,v 1.8 2004/09/21 19:03:30 mvw Exp $
+// $Id: CrMultipleInheritance.java,v 1.9 2004/10/21 09:51:53 mkl Exp $
 
 package org.argouml.language.java.cognitive.critics;
 
@@ -75,7 +75,7 @@ public class CrMultipleInheritance extends CrUML {
     public void initWizard(Wizard w) {
 	if (w instanceof WizCueCards) {
 	    WizCueCards wcc = (WizCueCards) w;
-	    ToDoItem item = w.getToDoItem();
+	    ToDoItem item = (ToDoItem) w.getToDoItem();
 	    Object modelElement = /*(MModelElement)*/ 
 	        item.getOffenders().elementAt(0);
 	    String nameStr = ModelFacade.getName(modelElement);
