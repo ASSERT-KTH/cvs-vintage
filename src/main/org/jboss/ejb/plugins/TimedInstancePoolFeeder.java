@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * An instance pool feeder which periodically adds instances to the pool.
  * 
  * @author ???
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 public class TimedInstancePoolFeeder
    extends TimerTask
@@ -64,7 +64,8 @@ public class TimedInstancePoolFeeder
       }
       catch(Exception e)
       {
-         log.error("Unexpcted failure; ignoring", e);
+         log.error("Unexpected failure; stopping feeder", e);
+         stop();
       }
    }
 
