@@ -17,7 +17,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
  *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */                            
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
@@ -32,13 +32,16 @@ import org.jboss.ejb.DeploymentException;
 import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCEJBQLFinderCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
-import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
 public class JDBCSelectorBridge implements SelectorBridge {
-   protected final JDBCQlQueryMetaData queryMetaData;
+   protected final JDBCQueryMetaData queryMetaData;
    protected final JDBCStoreManager manager;
    
-   public JDBCSelectorBridge(JDBCStoreManager manager, JDBCQlQueryMetaData queryMetaData) {
+   public JDBCSelectorBridge(
+         JDBCStoreManager manager, 
+         JDBCQueryMetaData queryMetaData) {
+
       this.queryMetaData = queryMetaData;      
       this.manager = manager;
    }
@@ -73,7 +76,8 @@ public class JDBCSelectorBridge implements SelectorBridge {
             throw new ObjectNotFoundException();
          }
          if(retVal.size() > 1) {
-            throw new FinderException(getSelectorName() + " returned " + retVal.size() + " objects");
+            throw new FinderException(getSelectorName() + 
+                  " returned " + retVal.size() + " objects");
          }
          return retVal.iterator().next();
       } else {
