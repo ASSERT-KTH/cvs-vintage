@@ -49,17 +49,15 @@ package org.tigris.scarab.om;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.fulcrum.TurbineServices;
 import org.apache.torque.TorqueException;
 import org.tigris.scarab.test.BaseScarabTestCase;
-import org.tigris.scarab.test.mocks.MockFulcrumServiceManager;
 import org.tigris.scarab.util.ScarabException;
 
 /**
  * A Testing Suite for the om.Query class.
  *
  * @author <a href="mailto:mumbly@oneofus.org">Tim McNerney</a>
- * @version $Id: QueryTest.java,v 1.18 2004/11/23 08:34:39 dep4b Exp $
+ * @version $Id: QueryTest.java,v 1.19 2004/11/23 14:02:30 dep4b Exp $
  */
 public class QueryTest extends BaseScarabTestCase
 {

@@ -47,68 +47,65 @@ package org.tigris.scarab.util.word;
  */ 
 
 // JDK classes
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Set;
 
+import org.apache.commons.collections.LRUMap;
+import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.fulcrum.localization.Localization;
+import org.apache.log4j.Logger;
 import org.apache.torque.Torque;
 import org.apache.torque.TorqueException;
 import org.apache.torque.adapter.DB;
-import org.apache.torque.util.Criteria;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.ComboKey;
+import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.SimpleKey;
-import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.collections.LRUMap;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.fulcrum.localization.Localization;
-import org.apache.log4j.Logger;
-
-// Scarab classes
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributeManager;
-import org.tigris.scarab.om.AttachmentTypePeer;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssuePeer;
-import org.tigris.scarab.om.AttributeValuePeer;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.ActivityPeer;
-import org.tigris.scarab.om.ActivitySetPeer;
-import org.tigris.scarab.om.RModuleOptionPeer;
-import org.tigris.scarab.om.RModuleOption;
-import org.tigris.scarab.om.RModuleIssueType;
-import org.tigris.scarab.om.RModuleIssueTypeManager;
-import org.tigris.scarab.om.Module;
-import org.tigris.scarab.om.ModuleManager;
-import org.tigris.scarab.om.MITList;
-import org.tigris.scarab.om.MITListItem;
-import org.tigris.scarab.om.RModuleUserAttribute;
-import org.tigris.scarab.om.ScarabUser;
-
+import org.apache.torque.util.Criteria;
 import org.tigris.scarab.attribute.OptionAttribute;
 import org.tigris.scarab.attribute.StringAttribute;
+import org.tigris.scarab.om.ActivityPeer;
+import org.tigris.scarab.om.ActivitySetPeer;
+import org.tigris.scarab.om.AttachmentTypePeer;
+import org.tigris.scarab.om.Attribute;
+import org.tigris.scarab.om.AttributeManager;
+import org.tigris.scarab.om.AttributeValue;
+import org.tigris.scarab.om.AttributeValuePeer;
+import org.tigris.scarab.om.Issue;
+import org.tigris.scarab.om.IssuePeer;
+import org.tigris.scarab.om.IssueType;
+import org.tigris.scarab.om.MITList;
+import org.tigris.scarab.om.MITListItem;
+import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ModuleManager;
+import org.tigris.scarab.om.RModuleIssueType;
+import org.tigris.scarab.om.RModuleIssueTypeManager;
+import org.tigris.scarab.om.RModuleOption;
+import org.tigris.scarab.om.RModuleOptionPeer;
+import org.tigris.scarab.om.RModuleUserAttribute;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.security.ScarabSecurity;
 import org.tigris.scarab.tools.localization.L10NKeySet;
-import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.IteratorWithSize;
+import org.tigris.scarab.util.Log;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /** 
  * A utility class to build up and carry out a search for 
@@ -116,7 +113,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * not a more specific type of Issue.
  *
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: IssueSearch.java,v 1.128 2004/11/23 08:28:27 dep4b Exp $
+ * @version $Id: IssueSearch.java,v 1.129 2004/11/23 14:01:01 dep4b Exp $
  */
 public class IssueSearch 
     extends Issue
