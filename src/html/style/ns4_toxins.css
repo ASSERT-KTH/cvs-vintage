@@ -10,13 +10,13 @@ html body, body th, body td, textarea, .app h3, .app h4, #rightcol h3, .app pre,
 html>body, html>body th, html>body td, html>body input, html>body select, html>body textarea, html>body .app h3, html>body .app h4, html>body #rightcol h3, html>body .app pre, html>body .app code {
 	font-size:	small
 	}
-small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, #breadcrumbs td, .courtesylinks {
+small, div#footer td, div#login, div#helptext th, div#helptext td, div.tabs th, div.tabs td, input, select, .paginate, .functnbar, .functnbar2, .functnbar3, #breadcrumbs td, .courtesylinks, #rightcol div.help {
 	font-size:	xx-small !important;
 	voice-family:	"\"}\"";
 	voice-family:	inherit;
 	font-size:	x-small !important
 	}
-html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .paginate, html>body .functnbar, html>body .functnbar2, html>body .functnbar3, html>body #breadcrumbs td, html>body .courtesylinks   {
+html>body small, html>body div#footer td, html>body div#login, html>body div#helptext td, html>body div#helptext th, html>body div.tabs th, html>body div.tabs td, html>body input, html>body select, html>body .paginate, html>body .functnbar, html>body .functnbar2, html>body .functnbar3, html>body #breadcrumbs td, html>body .courtesylinks, html>body #rightcol div.help   {
 	font-size:	x-small !important
 	}
 p, ul, ol, dl	{
@@ -141,7 +141,7 @@ ul.tasks li {
 #leftcol, #breadcrumbs {
  border-top: 1px solid #fff;
  }
-#rightcol div.www {
+#rightcol div.www, #rightcol div.help {
  border: 1px solid #ccc;
  padding: 0 .5em
  }
