@@ -24,7 +24,7 @@
 // File: FigTransition.java
 // Classes: FigTransition
 // Original Author: your email address here
-// $Id: FigTransition.java,v 1.4 2002/08/15 16:57:08 kataka Exp $
+// $Id: FigTransition.java,v 1.5 2002/08/19 09:24:46 kataka Exp $
 
 package org.argouml.uml.diagram.state.ui;
 
@@ -123,10 +123,14 @@ public class FigTransition extends FigEdgeModelElement {
         MStateVertex destOwner = (MStateVertex)dest.getOwner();
         MStateVertex sourceOwner = (MStateVertex)source.getOwner();
         Set set = new HashSet();
-        set.addAll(destOwner.getOutgoings());
-        set.addAll(destOwner.getIncomings());
-        set.addAll(sourceOwner.getOutgoings());
-        set.addAll(sourceOwner.getIncomings());
+        if (destOwner != null) {
+        	set.addAll(destOwner.getOutgoings());
+        	set.addAll(destOwner.getIncomings());
+        }
+        if (sourceOwner != null) {
+        	set.addAll(sourceOwner.getOutgoings());
+        	set.addAll(sourceOwner.getIncomings());
+        }
         Vector retVector = new Vector();
         retVector.addAll(set);
         return retVector;                  
