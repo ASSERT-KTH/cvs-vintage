@@ -34,7 +34,7 @@ import org.jboss.ejb.EnterpriseContext;
 import org.jboss.ejb.InstanceCache;
 import org.jboss.ejb.InstancePool;
 import org.jboss.ejb.MethodInvocation;
-
+import org.jboss.metadata.ConfigurationMetaData;
 import org.jboss.logging.Logger;
 
 /**
@@ -48,39 +48,19 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.24 $
+*   @version $Revision: 1.25 $
 */
 public class EntitySynchronizationInterceptor
 extends AbstractInterceptor
 {
 	// Constants -----------------------------------------------------
 	
-	/**
-	*  Cache a "ready" instance between transactions.
-	*  Data will <em>not</em> be reloaded from persistent storage when
-	*  a new transaction is started.
-	*  This option should only be used if the instance has exclusive
-	*  access to its persistent storage.
-	*/
-	public static final int A = 0; // Keep instance cached
-	
-	/**
-	*  Cache a "ready" instance between transactions and reload data
-	*  from persistent storage on transaction start.
-	*/
-	public static final int B = 1; // Invalidate state
-	
-	/**
-	*  Passivate instance after each transaction.
-	*/
-	public static final int C = 2; // Passivate
-	
 	// Attributes ----------------------------------------------------
 	
 	/**
 	*  The current commit option.
 	*/
-	protected int commitOption = A;
+	protected int commitOption;
 	
 	/**
 	*  The container of this interceptor.
@@ -91,7 +71,7 @@ extends AbstractInterceptor
 	*  Optional isModified method
 	*/
 	protected Method isModified;
-   
+	
 	// Static --------------------------------------------------------
 	
 	// Constructors --------------------------------------------------
@@ -101,10 +81,11 @@ extends AbstractInterceptor
 	{ 
 		this.container = (EntityContainer)container; 
 	}
-   
+	
    public void init()
       throws Exception
    {
+		commitOption = container.getBeanMetaData().getContainerConfiguration().getCommitOption();
       // Check for isModified method
       try
       {
@@ -121,23 +102,7 @@ extends AbstractInterceptor
 	{
 		return container;
 	}
-	
-	/**
-	*  Setter for property commitOption.
-	*/
-	public void setCommitOption(int commitOption)
-	{
-		this.commitOption = commitOption;
-	}
-	
-	/**
-	*  Getter for property commitOption.
-	*/
-	public int getCommitOption()
-	{
-		return commitOption;
-	}
-	
+
 	/**
 	*  Register a transaction synchronization callback with a context.
 	*/
@@ -292,7 +257,7 @@ extends AbstractInterceptor
             
                // Store entity
                if (dirty)
-					   ((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
+					((EntityContainer)getContainer()).getPersistenceManager().storeEntity(ctx);
 				}
 				
 				return result;
@@ -336,13 +301,13 @@ extends AbstractInterceptor
 		public void beforeCompletion()
 		{
 			// DEBUG Logger.debug("beforeCompletion called for ctx "+ctx.hashCode());
-		
+			
 			if (ctx.getId() != null) {
 				
 				// This is an independent point of entry. We need to make sure the 
-			    // thread is associated with the right context class loader
+				// thread is associated with the right context class loader
 				ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-      			Thread.currentThread().setContextClassLoader(container.getClassLoader());
+				Thread.currentThread().setContextClassLoader(container.getClassLoader());
 
 				try {
 					
@@ -352,7 +317,7 @@ extends AbstractInterceptor
 						// it would mean that someone is commiting when all the work is not done
 						
 						// Store instance if business method was invoked
-						if (ctx.isInvoked())  {
+						if (ctx.isInvoked()) {
 							
 							//DEBUG Logger.debug("EntitySynchronization sync calling store on ctx "+ctx.hashCode());
 							
@@ -360,18 +325,18 @@ extends AbstractInterceptor
 							boolean dirty = true;
 							if (isModified != null)
 							{
-                                try
-                                {
-                                   dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
-                                } catch (Exception e)
-                                {
-                                    // Ignore
-                                    e.printStackTrace();
-                                }
+								try
+								{
+									dirty = ((Boolean)isModified.invoke(ctx.getInstance(), new Object[0])).booleanValue();
+								} catch (Exception e)
+								{
+									// Ignore
+									e.printStackTrace();
+								}
 							}
 							
-                            if (dirty)
-							   container.getPersistenceManager().storeEntity(ctx);
+							if (dirty)
+								container.getPersistenceManager().storeEntity(ctx);
 						}
 					} catch (NoSuchEntityException e) {
 						// Object has been removed -- ignore
@@ -388,102 +353,94 @@ extends AbstractInterceptor
 					} catch (IllegalStateException ex) {
 						// DEBUG ex.printStackTrace();
 					}
-				} 
+				}
 				finally {
-				    
+					
 					Thread.currentThread().setContextClassLoader(oldCl);
 				}
 			}
 		}
 	
-    
-	public void afterCompletion(int status)
-	{
 		
-		// This is an independent point of entry. We need to make sure the 
-		// thread is associated with the right context class loader
-		ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(container.getClassLoader());
-		
-		if (ctx.getId() != null) {
+		public void afterCompletion(int status)
+		{
 			
-			try {
+			// This is an independent point of entry. We need to make sure the 
+			// thread is associated with the right context class loader
+			ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(container.getClassLoader());
+			
+			if (ctx.getId() != null) { 
 				
-				//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
-				
-				// If rolled back -> invalidate instance
-				if (status == Status.STATUS_ROLLEDBACK) {
+				try { 
 					
-					try {
+					//DEBUG Logger.debug("afterCompletion called for ctx "+ctx.hashCode());
+					
+					// If rolled back -> invalidate instance
+					if (status == Status.STATUS_ROLLEDBACK) { 
 						
-						// finish the transaction association
+						try { 
+							
+							// finish the transaction association
+							ctx.setTransaction(null);
+							
+							ctx.setValid(false); 
+							
+							// remove from the cache
+							container.getInstanceCache().remove(ctx.getCacheKey());
+							
+							// return to pool
+							container.getInstancePool().free(ctx); 
+							
+							// wake threads waiting
+							synchronized(ctx) { ctx.notifyAll();}
+							
+						} catch (Exception e) { 
+							// Ignore
+						}
+						
+					} else { 
+						// The transaction is done
 						ctx.setTransaction(null);
 						
-						ctx.setValid(false); 
+						// We are afterCompletion so the invoked can be set to false (db sync is done)
+						ctx.setInvoked(false);
 						
-						// remove from the cache
-						container.getInstanceCache().remove(ctx.getId());
-						
-						// return to pool
-						container.getInstancePool().free(ctx); 
-						
-						// wake threads waiting
-						synchronized(ctx) { ctx.notifyAll();}
-					
-					} catch (Exception e) {
-						// Ignore
-					}
-				
-				} else {
-					// The transaction is done
-					ctx.setTransaction(null);
-					
-					// We are afterCompletion so the invoked can be set to false (db sync is done)
-					ctx.setInvoked(false);
-					
-					switch (commitOption) {
-						// Keep instance cached after tx commit
-						case A:
+						switch (commitOption) { 
+							// Keep instance cached after tx commit
+						case ConfigurationMetaData.A_COMMIT_OPTION:
 							// The state is still valid (only point of access is us)
 							ctx.setValid(true); 
-						break;
-						
-						// Keep instance active, but invalidate state
-						case B:
+							break;
+							
+							// Keep instance active, but invalidate state
+						case ConfigurationMetaData.B_COMMIT_OPTION:
 							// Invalidate state (there might be other points of entry)
 							ctx.setValid(false); 
-						break;
-						
-						// Invalidate everything AND Passivate instance
-						case C:
-							try {
-								
-								// Passivate instance
-								container.getPersistenceManager().passivateEntity(ctx); 
-								
-								// Remove from the cache, it is not active anymore
-								container.getInstanceCache().remove(ctx.getId()); 
-								
-								// Back to the pool
-								container.getInstancePool().free(ctx); 
-							} catch (Exception e) {
+							break;
+							
+							// Invalidate everything AND Passivate instance
+						case ConfigurationMetaData.C_COMMIT_OPTION:
+							try { 
+								container.getInstanceCache().release(ctx);	
+							} catch (Exception e) { 
 								Logger.debug(e);
 							}
-						break;
+							break;
+						}
+						
 					}
-				
 				}
-			}
-			
-			finally {
 				
-				Thread.currentThread().setContextClassLoader(oldCl);
-				
-				// Notify all who are waiting for this tx to end, they are waiting since the locking logic
-				synchronized (ctx) {ctx.notifyAll();}
+				finally { 
+					
+					Thread.currentThread().setContextClassLoader(oldCl);
+					
+					// Notify all who are waiting for this tx to end, they are waiting since the locking logic
+					synchronized (ctx) {ctx.notifyAll();}
+				}
 			}
 		}
 	}
-    }
 }
 
