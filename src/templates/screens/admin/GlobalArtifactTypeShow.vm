@@ -54,7 +54,7 @@
 </td>
     #set ($group = $intake.IssueType.mapTo($issueType))
 <td>#booleanCheckbox($group.Locked)</td>
-<td>#booleanCheckbox($group.Default)</td>
+<td>#booleanCheckbox($group.Isdefault)</td>
 </tr>
 #end
 </table>
