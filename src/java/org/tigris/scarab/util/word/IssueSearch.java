@@ -1168,10 +1168,8 @@ public class IssueSearch
             addCreatedDateRange(crit);
             addMinimumVotes(crit);
 
-System.out.println("BEFORE USERS=" + crit);
             // add user values
             combineUserAndTextCriteria(crit);
-System.out.println("AFTEr USERS=" + crit);
 
             // state change query
             addStateChangeQuery(crit);
