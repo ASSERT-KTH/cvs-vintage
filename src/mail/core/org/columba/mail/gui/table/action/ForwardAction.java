@@ -9,7 +9,6 @@ package org.columba.mail.gui.table.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import org.columba.core.action.FrameAction;
@@ -36,14 +35,7 @@ public class ForwardAction extends FrameAction {
 	 * @param keyStroke
 	 */
 	public ForwardAction(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
+		FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

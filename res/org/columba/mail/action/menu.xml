@@ -38,6 +38,33 @@
 		<menuitem action="ReplyToList" />
 		<menuitem action="Forward" />
 		<menuitem action="ForwardInline" />
+		<menuitem action="Bounce" />
+		<separator />
+		<menuitem action="CopyMessage" />
+		<menuitem action="MoveMessage" />
+		<menuitem action="DeleteMessage" />
+		<separator/>
+		<menuitem action="AddSenderToAddressbook"/>
+		<menuitem action="AddAllSendersToAddressbook"/>
+		<separator/>
+		<menu name="menu_message_mark">
+		 <menuitem action="MarkAsRead"/>
+		 <menuitem action="MarkAsFlagged"/>
+		 <menuitem action="MarkAsExpunged"/>
+		</menu>
+	</menu>
+	
+	<menu name="menu_utilities">
+	 <menu name="menu_message_filter">
+	  <menuitem action="CreateFilterOnSubject"/>
+	  <menuitem action="CreateFilterOnFrom"/>
+	  <menuitem action="CreateFilterOnTo"/>
+	 </menu>
+	 <menu name="menu_message_vfolder">
+	  <menuitem action="CreateVFolderOnSubject"/>
+	  <menuitem action="CreateVFolderOnFrom"/>
+	  <menuitem action="CreateVFolderOnTo"/>
+	 </menu>	
 	</menu>
 	
 	

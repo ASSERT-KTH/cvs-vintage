@@ -34,15 +34,7 @@ public class BounceAction extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public BounceAction(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
+	public BounceAction(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

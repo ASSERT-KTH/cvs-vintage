@@ -34,14 +34,7 @@ public class ReplyAsAttachment extends FrameAction {
 	 * @param keyStroke
 	 */
 	public ReplyAsAttachment(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
+		FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

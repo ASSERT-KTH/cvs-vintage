@@ -8,9 +8,6 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.core.gui.util.ImageLoader;
@@ -37,16 +34,7 @@ public class DeleteMessageAction extends FrameAction {
 	 * @param showToolbarText
 	 */
 	public DeleteMessageAction(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String tooltip,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke,
-		boolean showToolbarText) {
+		FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(

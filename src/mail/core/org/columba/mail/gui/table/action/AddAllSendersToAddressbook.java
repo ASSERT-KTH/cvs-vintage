@@ -8,9 +8,6 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.KeyStroke;
-
 import org.columba.core.action.FrameAction;
 import org.columba.core.gui.FrameController;
 import org.columba.mail.util.MailResourceLoader;
@@ -33,15 +30,7 @@ public class AddAllSendersToAddressbook extends FrameAction {
 	 * @param mnemonic
 	 * @param keyStroke
 	 */
-	public AddAllSendersToAddressbook(
-		FrameController frameController,
-		String name,
-		String longDescription,
-		String actionCommand,
-		ImageIcon small_icon,
-		ImageIcon big_icon,
-		int mnemonic,
-		KeyStroke keyStroke) {
+	public AddAllSendersToAddressbook(FrameController frameController) {
 		super(
 			frameController,
 			MailResourceLoader.getString(
