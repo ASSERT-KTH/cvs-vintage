@@ -20,6 +20,8 @@ import org.jboss.system.Service;
 import org.jboss.management.j2ee.EJB;
 import org.jboss.management.j2ee.EjbModule;
 
+import org.jboss.logging.Logger;
+
 /**
  * An Application represents a collection of beans that are deployed as a
  * unit.
@@ -31,11 +33,14 @@ import org.jboss.management.j2ee.EjbModule;
  * @see EJBDeployer
  * 
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class Application
    implements Service
 {
+   /** Class logger. */
+   private static final Logger log = Logger.getLogger(Application.class);
+   
    // Constants -----------------------------------------------------
     
    // Attributes ----------------------------------------------------
@@ -209,7 +214,9 @@ public class Application
     */
    public void start() throws Exception
    {
-      System.out.println( "Application.start(), begin" );
+      boolean debug = log.isDebugEnabled();
+      
+      log.debug( "Application.start(), begin" );
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
@@ -218,16 +225,21 @@ public class Application
       for (Iterator i = containers.values().iterator(); i.hasNext();)
       {
          Container con = (Container)i.next();
-         System.out.println( "Application.start(), start container: " + con );
+         if (debug) {
+            log.debug( "Application.start(), start container: " + con );
+         }
+         
          con.start();
          // Create JSR-77 EJB-Wrapper
-         System.out.println( "Application.start(), create JSR-77 EJB-Component" );
+         log.debug( "Application.start(), create JSR-77 EJB-Component" );
          ObjectName lEJB = EJB.create(
             con.mbeanServer,
             getModuleName(),
             con.getBeanMetaData()
          );
-         System.out.println( "Application.start(), EJB: " + lEJB );
+         if (debug) {
+            log.debug( "Application.start(), EJB: " + lEJB );
+         }
          if( lEJB != null ) {
             con.mEJBObjectName = lEJB.toString();
          }
