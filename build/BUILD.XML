@@ -9,16 +9,16 @@
   <property name="images.dir" value="CH/ifa/draw/images"/>
   <property name="javadraw.images.dir" value="CH/ifa/draw/samples/javadraw/sampleimages"/>
   <property name="pert.images.dir" value="CH/ifa/draw/samples/pert/images"/>
- 
+
   <property name="javadoc.dir" value="${dest.dir}/javadoc"/>
   <property name="mk.dir" value="${dest.dir}/build"/>
-  
+
   <property name="javac.deprecation" value="off"/>
   <property name="javac.includes" value="**/*.java"/>
 
   <property name="manifest.name" value="JHotdraw.mf"/>
-  
-  <!-- Give user a chance to override without editing this file 
+
+  <!-- Give user a chance to override without editing this file
        (and without typing -D each time it compiles it -->
   <property file="${user.home}/.ant.properties" />
 
@@ -27,13 +27,13 @@
   <!-- =================================================================== -->
   <target name="all" depends="clean, main, javadocs">
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Builds a package with all essential files                           -->
   <!-- =================================================================== -->
   <target name="main" depends="compile, copyResources, jar">
   </target>
-  
+
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
