@@ -1,4 +1,4 @@
-// $Id: OuterClassifierContext.java,v 1.10 2003/02/06 19:09:07 thn Exp $
+// $Id: OuterClassifierContext.java,v 1.11 2003/02/21 22:45:13 alexb Exp $
 
 /*
   JavaRE - Code generation and reverse engineering for UML and Java
@@ -88,10 +88,10 @@ class OuterClassifierContext extends Context
 		}
 		else {
 		    // Only interfaces will do
-		    throw new Exception();
+		    throw new ClassNotFoundException();
 		}
 	    }
-	    catch(Throwable e) {
+	    catch(ClassNotFoundException e) {
 		// Continue the search through the rest of the model
 		if(context != null) {
 		    mInterface = context.getInterface(name);
@@ -137,7 +137,7 @@ class OuterClassifierContext extends Context
 		    iClassifier = UmlFactory.getFactory().getCore().buildClass(name,mClassifier);
 		}
 	    }
-	    catch(Throwable e) {
+	    catch(ClassNotFoundException e) {
 		// Continue the search through the rest of the model
 		if(context != null) {
 		    iClassifier = context.get(name);
