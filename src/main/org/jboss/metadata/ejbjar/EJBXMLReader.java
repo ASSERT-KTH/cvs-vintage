@@ -107,9 +107,14 @@ public class EJBXMLReader extends HandlerBase implements XMLReader {
             if(bean != null)
                 bean.description = contents;
             // otherwise, a container transaction description
-        } else if(name.equals("display-name"))
-            bean.displayName = contents;
-        else if(name.equals("home"))
+        } else if(name.equals("display-name")) {
+            if (bean != null) {
+                bean.displayName = contents;
+            } else {
+             // TODO:
+             // set the display name in the ejb-jar file
+            }
+        } else if(name.equals("home"))
             try {
                 bean.homeClass = loadClass(contents);
             } catch(ClassNotFoundException e) {
