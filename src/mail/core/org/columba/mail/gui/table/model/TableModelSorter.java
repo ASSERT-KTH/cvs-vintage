@@ -200,6 +200,7 @@ public class TableModelSorter extends BasicTableModelSorter {
 
 		super.set(headerList);
 
+		if (( headerList != null ) && (headerList.count() != 0 ) )
 		update();
 	}
 
