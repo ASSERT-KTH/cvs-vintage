@@ -54,8 +54,14 @@ be asked to confirm it the next time you try to login.
 </div>
 
 <div class="functnbar2">
-<input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+<input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
 <input type="submit" name="eventSubmit_doConfirm" value="Confirm" />
+  </td>
+ </tr>
+</table>
 </div>
 
 $intake.declareGroups()

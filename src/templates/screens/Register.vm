@@ -11,11 +11,15 @@ $page.setTitle("Scarab Registration")
 <input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="RegisterConfirm.vm" />
 <input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="Login.vm" />
 
+## we set $password because we don't want the mapped users password to
+## show up in the form! Doh!
 #set ($user = $data.User.getTemp($scarabG.Constant.SESSION_REGISTER))
 #if ($user.FirstName)
   #set ($regGroup = $intake.Register.mapTo($user))
+  #set ($password = "")
 #else
   #set ($regGroup = $intake.Register.Default)
+  #set ($password = $regGroup.Password)
 #end
 
 <div class="axial">
@@ -48,8 +52,10 @@ $page.setTitle("Scarab Registration")
 <tr>
  <th> *Password</th>
  <td>
-  <input name="$regGroup.Password.Key" type="password" value="$regGroup.Password" size="25" />
-  #fieldErrorMsg($regGroup.Password "")
+  <input name="$regGroup.Password.Key" type="password" value="$password" size="25" />
+  #if ($password.Message) ## hack
+  #fieldErrorMsg($password "")
+  #end
  </td>
 </tr>
 <tr>
@@ -60,15 +66,21 @@ $page.setTitle("Scarab Registration")
  </td>
 </tr>
 </table>
+</div>
 
 <p>* Required field</p>
 
 <div class="functnbar2">
- <input type="submit" name="eventSubmit_doCancel" value="Cancel" />
+<table cellpadding="4" cellspacing="0" border="1">
+ <tr>
+  <td class="firstchild">
+ <input type="submit" name="eventSubmit_doCancel" value="Cancel" />&#160;
  <input type="submit" name="eventSubmit_doRegister" value="Register" />
+  </td>
+ </tr>
+</table>
 </div>
 
-</div>
 $intake.declareGroups()
 </form>
 </div>
