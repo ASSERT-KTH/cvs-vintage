@@ -3,7 +3,7 @@ rem -------------------------------------------------------------------------
 rem JBoss JVM Launcher
 rem -------------------------------------------------------------------------
 
-rem $Id: shutdown.bat,v 1.10 2004/03/01 21:29:11 kimptoc Exp $
+rem $Id: shutdown.bat,v 1.11 2004/08/07 19:39:38 starksm Exp $
 
 if not "%ECHO%" == ""  echo %ECHO%
 if "%OS%" == "Windows_NT"  setlocal
@@ -50,7 +50,7 @@ set JAVA=%JAVA_HOME%\bin\java
 
 :SKIP_SET_JAVA_HOME
 
-set JBOSS_CLASSPATH=%JBOSS_CLASSPATH%;%MAIN_JAR%;../client/jbossall-client.jar
+set JBOSS_CLASSPATH=%JBOSS_CLASSPATH%;%MAIN_JAR%;%DIRNAME%/../client/jbossall-client.jar
 
 rem Setup JBoss sepecific properties
 set JAVA_OPTS=%JAVA_OPTS% -Djboss.boot.loader.name=%PROGNAME%
