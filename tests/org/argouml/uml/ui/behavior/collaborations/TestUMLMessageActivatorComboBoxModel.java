@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.8 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLMessageActivatorComboBoxModel.java,v 1.9 2004/08/26 19:51:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -66,8 +66,10 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);    
         activators = new MMessage[10];
         MModel m = ModelManagementFactory.getFactory().createModel();
-        MInteraction inter = CollaborationsFactory.getFactory().createInteraction();
-        MCollaboration col = CollaborationsFactory.getFactory().createCollaboration();
+        MInteraction inter = 
+            CollaborationsFactory.getFactory().createInteraction();
+        MCollaboration col = 
+            CollaborationsFactory.getFactory().createCollaboration();
         inter.setContext(col);
         col.setNamespace(m);
         inter.addMessage(elem);
@@ -76,7 +78,8 @@ public class TestUMLMessageActivatorComboBoxModel extends TestCase {
             inter.addMessage(activators[i]);
         }  
         model = new UMLMessageActivatorComboBoxModel(); 
-        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem})); 
+        model.targetSet(new TargetEvent(this, "set", new Object[0], 
+                new Object[] {elem})); 
     }
 
     /**

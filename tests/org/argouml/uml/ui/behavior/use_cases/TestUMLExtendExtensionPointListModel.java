@@ -1,4 +1,4 @@
-// $Id: TestUMLExtendExtensionPointListModel.java,v 1.5 2004/02/24 08:28:20 linus Exp $
+// $Id: TestUMLExtendExtensionPointListModel.java,v 1.6 2004/08/26 19:51:36 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -78,7 +78,8 @@ public class TestUMLExtendExtensionPointListModel
      */
     protected void removeHalfModel(MBase[] elements) {
         for (int i = 0; i < 5; i++) {
-            ((MExtend) elem).removeExtensionPoint((MExtensionPoint) elements[i]);
+            ((MExtend) elem).removeExtensionPoint(
+                    (MExtensionPoint) elements[i]);
         }
     }
 

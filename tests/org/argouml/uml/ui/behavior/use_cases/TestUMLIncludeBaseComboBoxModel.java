@@ -1,4 +1,4 @@
-// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.9 2004/07/31 22:30:23 kataka Exp $
+// $Id: TestUMLIncludeBaseComboBoxModel.java,v 1.10 2004/08/26 19:51:36 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -68,7 +68,8 @@ public class TestUMLIncludeBaseComboBoxModel extends TestCase {
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
         model = new UMLIncludeBaseComboBoxModel();
-        model.targetSet(new TargetEvent(this, "set", new Object[0], new Object[] {elem}));
+        model.targetSet(new TargetEvent(this, "set", new Object[0], 
+                new Object[] {elem}));
         bases = new MUseCase[10];
         MModel m = ModelManagementFactory.getFactory().createModel();
         ProjectManager.getManager().getCurrentProject().setRoot(m);

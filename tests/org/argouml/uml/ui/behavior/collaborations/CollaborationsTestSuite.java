@@ -1,4 +1,4 @@
-// $Id: CollaborationsTestSuite.java,v 1.2 2004/02/24 08:28:19 linus Exp $
+// $Id: CollaborationsTestSuite.java,v 1.3 2004/08/26 19:51:37 mvw Exp $
 // Copyright (c) 2002-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,15 +42,20 @@ public class CollaborationsTestSuite {
 			  + (CollaborationsTestSuite.class
 			     .getPackage().getName()));
 	suite.addTestSuite(TestUMLAssociationEndRoleBaseListModel.class);
-	suite.addTestSuite(TestUMLAssociationRoleAssociationEndRoleListModel.class);
+	suite.addTestSuite(TestUMLAssociationRoleAssociationEndRoleListModel
+	                                                            .class);
 	suite.addTestSuite(TestUMLAssociationRoleBaseComboBoxModel.class);
 	suite.addTestSuite(TestUMLAssociationRoleMessageListModel.class);
-	suite.addTestSuite(TestUMLClassifierRoleAvailableContentsListModel.class);
-	suite.addTestSuite(TestUMLClassifierRoleAvailableFeaturesListModel.class);
+	suite.addTestSuite(TestUMLClassifierRoleAvailableContentsListModel
+	                                                            .class);
+	suite.addTestSuite(TestUMLClassifierRoleAvailableFeaturesListModel
+	                                                            .class);
 	suite.addTestSuite(TestUMLClassifierRoleBaseListModel.class);
 	suite.addTestSuite(TestUMLCollaborationConstraintListModel.class);
-	suite.addTestSuite(TestUMLCollaborationRepresentedClassifierListModel.class);
-	suite.addTestSuite(TestUMLCollaborationRepresentedOperationListModel.class);
+	suite.addTestSuite(TestUMLCollaborationRepresentedClassifierListModel
+	                                                            .class);
+	suite.addTestSuite(TestUMLCollaborationRepresentedOperationListModel
+	                                                            .class);
 	suite.addTestSuite(TestUMLInteractionCollaborationListModel.class);
 	suite.addTestSuite(TestUMLInteractionMessagesListModel.class);
 	suite.addTestSuite(TestUMLMessageActionListModel.class);

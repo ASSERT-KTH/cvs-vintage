@@ -1,4 +1,4 @@
-// $Id: TestUMLMessageSenderListModel.java,v 1.7 2004/02/24 08:28:19 linus Exp $
+// $Id: TestUMLMessageSenderListModel.java,v 1.8 2004/08/26 19:51:37 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -61,7 +61,8 @@ public class TestUMLMessageSenderListModel extends TestCase {
         elem = CollaborationsFactory.getFactory().createMessage();
         oldEventPolicy = MFactoryImpl.getEventPolicy();
         MFactoryImpl.setEventPolicy(MFactoryImpl.EVENT_POLICY_IMMEDIATE);
-        MockUMLUserInterfaceContainer cont = new MockUMLUserInterfaceContainer();
+        MockUMLUserInterfaceContainer cont = 
+            new MockUMLUserInterfaceContainer();
         cont.setTarget(elem);
         model = new UMLMessageSenderListModel();
         model.setTarget(elem);
@@ -79,14 +80,16 @@ public class TestUMLMessageSenderListModel extends TestCase {
     }
     
     public void testSetSender() {
-        MClassifierRole role = CollaborationsFactory.getFactory().createClassifierRole();
+        MClassifierRole role = 
+            CollaborationsFactory.getFactory().createClassifierRole();
         elem.setSender(role);
         assertEquals(1, model.getSize());
         assertEquals(role, model.getElementAt(0));
     }
     
     public void testRemoveReceiver() {
-        MClassifierRole role = CollaborationsFactory.getFactory().createClassifierRole();
+        MClassifierRole role = 
+            CollaborationsFactory.getFactory().createClassifierRole();
         elem.setSender(role);
         elem.setSender(null);
         assertEquals(0, model.getSize());

@@ -1,4 +1,4 @@
-// $Id: CommonBehaviorTestSuite.java,v 1.1 2003/09/04 19:07:29 thierrylach Exp $
+// $Id: CommonBehaviorTestSuite.java,v 1.2 2004/08/26 19:51:36 mvw Exp $
 // Copyright (c) 2002-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -37,7 +37,8 @@ public class CommonBehaviorTestSuite {
 	 * @return the junit test suite
 	 */
     public static Test suite() {
-        TestSuite suite = new TestSuite("Tests for " + CommonBehaviorTestSuite.class.getPackage().getName());
+        TestSuite suite = new TestSuite("Tests for " 
+                + CommonBehaviorTestSuite.class.getPackage().getName());
         suite.addTestSuite(TestUMLReceptionSignalComboBoxModel.class);
         return suite;
     }
