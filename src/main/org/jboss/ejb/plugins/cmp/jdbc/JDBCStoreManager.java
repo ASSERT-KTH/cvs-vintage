@@ -21,6 +21,8 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
@@ -57,7 +59,7 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public class JDBCStoreManager implements EntityPersistenceStore {
 
@@ -66,6 +68,9 @@ public class JDBCStoreManager implements EntityPersistenceStore {
     * this value instead of 'null'
     */
    private static final Object NULL_VALUE = new Object();
+
+   private static final Object TX_DATA_KEY = new Object();
+   private Map applicationData = Collections.synchronizedMap(new HashMap());
 
    private EntityContainer container;
    private Logger log;
@@ -158,7 +163,72 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public JDBCCommandFactory getCommandFactory() {
       return (JDBCCommandFactory) commandFactory;
    }
+   
+   public Map getApplicationDataMap() {
+      return applicationData;
+   }
 
+   public Object getApplicationData(Object key) {
+      return applicationData.get(key);
+   }
+
+   public void putApplicationData(Object key, Object value) {
+      applicationData.put(key, value);
+   }
+
+   public void removeApplicationData(Object key) {
+      applicationData.remove(key);
+   }
+
+   public Map getApplicationTxDataMap() {
+      try {
+         Transaction tx = tm.getTransaction();
+      
+         // get the map between the tx and the txDataMap
+         Map txMap = (Map)getApplicationData(TX_DATA_KEY);
+         synchronized(txMap) {
+            // get the txDataMap from the txMap
+            Map txDataMap = (Map)txMap.get(tx);
+
+            // do we have an existing map
+            if(txDataMap == null) {
+               // We want to be notified when the transaction commits
+               ApplicationTxDataSynchronization synch = 
+                     new ApplicationTxDataSynchronization(tx);
+               tx.registerSynchronization(synch);
+
+               // create and add the new map
+               txDataMap = new HashMap();
+               txMap.put(tx, txDataMap);
+            }
+            return txDataMap;
+         }
+      } catch(Exception e) {
+         throw new EJBException("Error getting application tx data map.", e);
+      }
+   }
+
+   public Object getApplicationTxData(Object key) {
+      return getApplicationTxDataMap().get(key);
+   }
+
+   public void putApplicationTxData(Object key, Object value) {
+      getApplicationTxDataMap().put(key, value);
+   }
+
+   public void removeApplicationTxData(Object key) {
+      getApplicationTxDataMap().remove(key);
+   }
+
+   private void initApplicationDataMap() {
+      synchronized(applicationData) {
+         Map txDataMap = (Map)getApplicationData(TX_DATA_KEY);
+         if(txDataMap == null) {
+            txDataMap = new HashMap();
+            putApplicationData(TX_DATA_KEY, txDataMap);
+         }
+      }
+   }
 
    //
    // Store Manager Life Cycle Commands
@@ -167,7 +237,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       log.debug("Initializing CMP plugin for " +
                 container.getBeanMetaData().getEjbName());
 
-      initTxDataMap();
+      initApplicationDataMap();
 
       metaData = loadJDBCEntityMetaData();
 
@@ -312,6 +382,7 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public void loadEntity(EntityEnterpriseContext ctx) {
       // is any on the data already in the entity valid
       if(!ctx.isValid()) {
+         log.debug("RESET PERSISTENCE CONTEXT: id="+ctx.getId());
          entityBridge.resetPersistenceContext(ctx);
       }
 
@@ -345,33 +416,30 @@ public class JDBCStoreManager implements EntityPersistenceStore {
 
    public void storeEntity(EntityEnterpriseContext ctx) {
       storeEntityCommand.execute(ctx);
-      synchronizeRelationData(ctx.getTransaction());
+      synchronizeRelationData();
    }
 
-   public void synchronizeRelationData(Transaction tx) {
-      Map txDataMap = getTxDataMap();
-      Map txData = (Map)txDataMap.get(tx);
-      if(txData != null) {
-         Iterator iterator = txData.values().iterator();
-         while(iterator.hasNext()) {
-            Object obj = iterator.next();
-            if(obj instanceof RelationData) {
-               RelationData relationData = (RelationData) obj;
+   private void synchronizeRelationData() {
+      Map txData = getApplicationTxDataMap();
+      Iterator iterator = txData.values().iterator();
+      while(iterator.hasNext()) {
+         Object obj = iterator.next();
+         if(obj instanceof RelationData) {
+            RelationData relationData = (RelationData) obj;
                
-               // only need to bother if neither side has a foreign key
-               if(!relationData.getLeftCMRField().hasForeignKey() &&
-               !relationData.getRightCMRField().hasForeignKey()) {
+            // only need to bother if neither side has a foreign key
+            if(!relationData.getLeftCMRField().hasForeignKey() &&
+            !relationData.getRightCMRField().hasForeignKey()) {
                   
-                  // delete all removed pairs from relation table
-                  deleteRelations(relationData);
+               // delete all removed pairs from relation table
+               deleteRelations(relationData);
                   
-                  // insert all added pairs into the relation table
-                  insertRelations(relationData);
+               // insert all added pairs into the relation table
+               insertRelations(relationData);
                   
-                  relationData.addedRelations.clear();
-                  relationData.removedRelations.clear();
-                  relationData.notRelatedPairs.clear();
-               }
+               relationData.addedRelations.clear();
+               relationData.removedRelations.clear();
+               relationData.notRelatedPairs.clear();
             }
          }
       }
@@ -407,28 +475,6 @@ public class JDBCStoreManager implements EntityPersistenceStore {
    public void insertRelations(RelationData relationData) {  
       insertRelationsCommand.execute(relationData);
    }
-
-   public Map getTxDataMap() {
-      ApplicationMetaData amd = 
-            container.getBeanMetaData().getApplicationMetaData();
-
-      // Get Tx Hashtable
-      return (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
-   }
-
-   private void initTxDataMap() {
-      ApplicationMetaData amd = 
-            container.getBeanMetaData().getApplicationMetaData();
-
-      // Get Tx Hashtable
-      Map txDataMap = (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
-      if(txDataMap == null) {
-         // we are the first JDBC CMP manager to get to initTxDataMap.
-         txDataMap = Collections.synchronizedMap(new HashMap());
-         amd.addPluginData("CMP-JDBC-TX-DATA", txDataMap);
-      }
-   }
-
 
    //
    // Read Ahead Code
@@ -682,6 +728,38 @@ public class JDBCStoreManager implements EntityPersistenceStore {
       }
       public void beforeCompletion() {
          //no-op
+      }
+   }
+
+   private class ApplicationTxDataSynchronization implements Synchronization {
+      /**
+       *  The transaction we follow.
+       */
+      private Transaction tx;
+      
+      /**
+       *  Create a new instance synchronization instance.
+       */
+      private ApplicationTxDataSynchronization(Transaction tx)
+      {
+         this.tx = tx;
+      }
+ 
+      /**
+       * Unused
+       */
+      public void beforeCompletion() {
+         //no-op
+      }
+
+      /**
+       * Free-up any data associated with this transaction.
+       */
+      public void afterCompletion(int status) {
+         Map txMap = (Map)getApplicationData(TX_DATA_KEY);
+         synchronized(txMap) {
+            txMap.remove(tx);
+         }
       }
    }
 }
