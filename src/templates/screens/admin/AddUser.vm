@@ -11,7 +11,7 @@
 
 <h2>$page.Title</h2>
 
-<h3>Add New User</h3>
+<h3>Add new user</h3>
 
 <form name="AddUserForm" action="$link.setPage("admin,AddUser.vm")" method="post">
   <input type="hidden" name="action" value="admin.ManageUser" />
@@ -21,7 +21,6 @@
   <input type="hidden" name="lastAction" value="">
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
-
 
 #if (($lastAction) && ($lastAction =="addeduser"))
     #set ($regGroup = $intake.Register.Default)

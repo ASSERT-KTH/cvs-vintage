@@ -1,6 +1,6 @@
 #**
 @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
-@version $Id: AddPermission.vm,v 1.2 2002/01/22 16:59:43 dlr Exp $
+@version $Id: AddPermission.vm,v 1.3 2002/03/01 17:07:24 jon Exp $
 *#
 
 #set ($lastAction = $data.Parameters.getString("lastAction"))
@@ -9,7 +9,7 @@
 
 <h2>$page.Title</h2>
 
-<h3>Add Permission</h3>
+<h3>Add permission</h3>
 
 <form name="EditUserForm" action="admin%2cAddPermission.vm" method="post">
   <input type="hidden" name="action" value="admin.ManagePermissions" />
@@ -22,7 +22,6 @@
 #else
     #set ($permissionNameData = $regGroup.PermissionName)
 #end
-
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
@@ -51,6 +50,3 @@ $intake.declareGroups()
 
 </form>
 </div>
-
-
-
