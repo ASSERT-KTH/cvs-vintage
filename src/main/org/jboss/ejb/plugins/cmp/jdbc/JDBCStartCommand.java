@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  */
 public class JDBCStartCommand {
 
@@ -226,9 +226,25 @@ public class JDBCStartCommand {
       
       sql.append(" (");
          // add fields
-         //sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
+         // sql.append(SQLUtil.getCreateTableColumnsClause(entity.getFields()));
+
+         // THE FOLLOWING SHOULD BE IMPROVED
+         boolean isFirstColumn = true;
          for(Iterator iter = entity.getFields().iterator(); iter.hasNext();) {
             JDBCFieldBridge fieldBridge = (JDBCFieldBridge)iter.next();
+
+            // if a field is a CMR field and isn't a column in
+            // the entity's table, its jdbcType is null
+            JDBCType type = fieldBridge.getJDBCType();
+            if(type == null || type.getColumnNames().length < 1) {
+               continue;
+            }
+
+            if(isFirstColumn) {
+               isFirstColumn = false;
+            } else {
+               sql.append(", ");
+            }
 
             // apply auto-increment template
             if( fieldBridge.isKeyDbGenerated() ) {
@@ -240,16 +256,13 @@ public class JDBCStartCommand {
                   getAutoIncrementTemplate();
                if(autoIncrement == null) {
                   throw new IllegalStateException(
-                     "The field must be auto-increment " );
+                     "The field must be auto-increment");
                }
 
                String[] args = new String[] { columnClause };
                sql.append(autoIncrement.getFunctionSql(args));
             } else {
-               sql.append(SQLUtil.getCreateTableColumnsClause(fieldBridge));
-            }
-            if(iter.hasNext()) {
-               sql.append(", ");
+               sql.append(SQLUtil.getCreateTableColumnsClause(type));
             }
          }
 
