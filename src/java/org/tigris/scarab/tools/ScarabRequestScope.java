@@ -69,7 +69,7 @@ import org.tigris.scarab.services.module.ModuleEntity;
  * methodology</a> to be implemented.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabRequestScope.java,v 1.11 2001/08/13 06:08:13 jon Exp $
+ * @version $Id: ScarabRequestScope.java,v 1.12 2001/08/15 05:17:36 jon Exp $
  */
 public interface ScarabRequestScope extends ApplicationTool
 {
@@ -84,24 +84,30 @@ public interface ScarabRequestScope extends ApplicationTool
     public Attribute getAttribute() throws Exception;
 
     /**
-     * A User object for use within the Scarab API.
+     * A User object for use within the Scarab API. This
+     * is the result of whatever was set with setUser().
+     * It can return null if setUser() has not been previously
+     * called. If you would like to get the currently logged
+     * in User, retrieve that from the data.getUser() method.
      */
     public void setUser (ScarabUser user);
 
     /**
-     * A User object for use within the Scarab API.
+     * A User object for use within the Scarab API. This
+     * is the result of whatever was set with setUser().
+     * It can return null if setUser() has not been previously
+     * called. If you would like to get the currently logged
+     * in User, retrieve that from the data.getUser() method.
      */
     public ScarabUser getUser();
 
     /**
-     * A User object for use within the Scarab API.
+     * Return a specific User by ID from within the system.
+     * You can pass in either a NumberKey or something that
+     * will resolve to a String object as id.toString() is 
+     * called on everything that isn't a NumberKey.
      */
-    public ScarabUser getUser(String id) throws Exception;
-
-    /**
-     * A User object for use within the Scarab API.
-     */
-    public ScarabUser getUser(Integer id) throws Exception;
+    public ScarabUser getUser(Object id) throws Exception;
 
     /**
      * A Issue object for use within the Scarab API.

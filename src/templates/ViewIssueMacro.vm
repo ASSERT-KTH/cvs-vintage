@@ -86,13 +86,13 @@
 
 ### ASSIGNEES
 
-      <h3>personnel</h3>
+      <h3>Personnel</h3>
 
       <div class="axial">
        <table width="100%" cellpadding="3" cellspacing="2" border="1">
         <tr>
          <th width="120">committed by:</th>
-        #set ($createdUser = $scarabR.getUser($currentIssue.CreatedBy) )
+        #set ($createdUser = $scarabR.getUser($currentIssue.CreatedBy))
          <td><a href="mailTo:$createdUser.Email">$createdUser.UserName</a></td>
         </tr>
 

@@ -214,35 +214,50 @@ try{
     }
 
     /**
-     * A User object for use within the Scarab API.
+     * A User object for use within the Scarab API. This
+     * is the result of whatever was set with setUser().
+     * It can return null if setUser() has not been previously
+     * called. If you would like to get the currently logged
+     * in User, retrieve that from the data.getUser() method.
      */
     public void setUser (ScarabUser user)
     {
-        // this.user = user;
+        this.user = user;
     }
 
     /**
-     * A User object for use within the Scarab API.
+     * A User object for use within the Scarab API. This
+     * is the result of whatever was set with setUser().
+     * It can return null if setUser() has not been previously
+     * called. If you would like to get the currently logged
+     * in User, retrieve that from the data.getUser() method.
      */
     public ScarabUser getUser()
     {
-        if (user == null)
-        {
-            this.user = (ScarabUser)data.getUser();
-        }
-        return (ScarabUser)data.getUser();
+        return this.user;
     }
 
     /**
-     * A User object for use within the Scarab API.
+     * Return a specific User by ID from within the system.
+     * You can pass in either a NumberKey or something that
+     * will resolve to a String object as id.toString() is 
+     * called on everything that isn't a NumberKey.
      */
-    public ScarabUser getUser(String id)
+    public ScarabUser getUser(Object id)
      throws Exception
     {
         ScarabUser su = null;
         try
         {
-            ObjectKey pk = (ObjectKey)new NumberKey(id);
+            ObjectKey pk = null;
+            if (id instanceof NumberKey)
+            {
+                pk = (ObjectKey) id;
+            }
+            else
+            {
+                pk = (ObjectKey)new NumberKey(id.toString());
+            }
             su = (ScarabUser)ScarabUserImplPeer.retrieveScarabUserImplByPK(pk);
         }
         catch (Exception e)
@@ -250,15 +265,6 @@ try{
             e.printStackTrace();
         }
         return su;
-    }
-
-    /**
-     * A User object for use within the Scarab API.
-     */
-    public ScarabUser getUser(Integer id)
-        throws Exception
-    {
-        return getUser(id.toString());
     }
 
     /**
