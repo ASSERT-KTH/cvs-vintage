@@ -97,7 +97,7 @@ import org.apache.turbine.Turbine;
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ScarabGlobalTool.java,v 1.48 2002/11/05 22:09:16 elicia Exp $
+ * @version $Id: ScarabGlobalTool.java,v 1.49 2002/11/05 22:24:39 elicia Exp $
  */
 public class ScarabGlobalTool implements ScarabGlobalScope
 {
@@ -233,7 +233,6 @@ public class ScarabGlobalTool implements ScarabGlobalScope
     public List getAllIssueTypes(boolean deleted)
         throws Exception
     {
-System.out.println(deleted);
         return IssueTypePeer.getAllIssueTypes(deleted, "name", "asc");
     }
     

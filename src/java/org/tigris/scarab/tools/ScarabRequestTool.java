@@ -1275,26 +1275,26 @@ try{
         }
         else
         {
-	    try
+            try
             {
-	        issue = Issue.getIssueById(id);
-	        if (issue == null)
-	        {
-	           String code = getCurrentModule().getCode();
-                   id = code + id;
-	           issue = Issue.getIssueById(id);
-	        }
-            if (issue.getDeleted())
+                issue = Issue.getIssueById(id);
+                if (issue == null)
+                {
+                   String code = getCurrentModule().getCode();
+                       id = code + id;
+                   issue = Issue.getIssueById(id);
+                }
+                if (issue.getDeleted())
+                {
+                    setAlertMessage(l10n.get("InvalidId"));
+                    issue = null;
+                }
+            }
+            catch (Exception e)
             {
                 setAlertMessage(l10n.get("InvalidId"));
-                issue = null;
-             }
-	    }        
-	    catch (Exception e)
-	    {
-	        setAlertMessage(l10n.get("InvalidId"));
+            }
 	    }
-        }
         return issue;
     }
 
@@ -1352,8 +1352,8 @@ try{
                 Iterator i = issueIds.iterator();
                 while (i.hasNext()) 
                 {
-                    issues.add(getIssue((String)i.next()));
-                }            
+                    Issue issue = getIssue((String)i.next());
+                }
             }
             else if (issueIds.get(0) instanceof NumberKey)
             {
@@ -1361,7 +1361,11 @@ try{
                 Iterator i = issueIds.iterator();
                 while (i.hasNext()) 
                 {
-                    issues.add(IssueManager.getInstance((NumberKey)i.next()));
+                    Issue issue = IssueManager.getInstance((NumberKey)i.next());
+                    if (issue != null)
+                    {
+                        issues.add(issue);
+                    }
                 }
             }
             else 
