@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.13 2000/06/18 20:14:13 jon Exp $
- * $Revision: 1.13 $
- * $Date: 2000/06/18 20:14:13 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/session/Attic/StandardSession.java,v 1.14 2000/06/18 22:18:20 craigmcc Exp $
+ * $Revision: 1.14 $
+ * $Date: 2000/06/18 22:18:20 $
  *
  * ====================================================================
  *
@@ -97,7 +97,7 @@ import org.apache.tomcat.util.StringManager;
  *
  * @author Craig R. McClanahan
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @version $Revision: 1.13 $ $Date: 2000/06/18 20:14:13 $
+ * @version $Revision: 1.14 $ $Date: 2000/06/18 22:18:20 $
  */
 
 final class StandardSession
@@ -183,7 +183,7 @@ final class StandardSession
     /**
      * The string manager for this package.
      */
-    private StringManager sm =
+    private static StringManager sm =
         StringManager.getManager("org.apache.tomcat.session");
 
 
