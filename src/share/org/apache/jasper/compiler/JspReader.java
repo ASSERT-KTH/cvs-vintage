@@ -141,13 +141,13 @@ public class JspReader {
             null : master.substring(0, master.lastIndexOf("/") + 1);
         boolean isAbsolute = name.startsWith("/");
 
-        if (parent == null || isAbsolute)
-            pushFile(new File(name), encoding);
-        else
-            pushFile(new File(parent + name), encoding);
-
-        if (master == null)
-            master = name;
+	if (parent == null || isAbsolute) {
+	    master = name;
+	    pushFile(new File(name), encoding);
+	} else {
+	    master = parent + name;
+	    pushFile(new File(master), encoding);
+	}
     }
 
     /**
@@ -205,10 +205,10 @@ public class JspReader {
 	    caw.close();
 	    if (current == null) {
 		current = new Mark( this, caw.toCharArray(), fileid, getFile(fileid),
-				    file.getParent(), encoding );
+				    master, encoding );
 	    } else {
 		current.pushStream( caw.toCharArray(), fileid, getFile(fileid),
-				    file.getParent(), encoding );
+				    master, encoding );
 	    }
 
         } catch (FileNotFoundException fnfe) {
@@ -241,7 +241,10 @@ public class JspReader {
 		(Constants.getString("jsp.error.file.not.registered",
 				     new Object[] {fName}));
 
-	return current.popStream();
+	boolean result = current.popStream();
+	if (result)
+	    master = current.baseDir;
+	return (result);
     }
 	
     protected JspReader(String file, JspCompilationContext ctx, String encoding) 
