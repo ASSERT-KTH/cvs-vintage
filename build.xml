@@ -14,7 +14,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.183 2005/01/24 10:26:44 tdiesler Exp $ -->
+<!-- $Id: build.xml,v 1.184 2005/01/27 20:19:43 telrod Exp $ -->
 
 <project default="main" name="JBoss/Server">
 
@@ -37,7 +37,7 @@
   <!-- ================================================================== -->
 
   <!--
-     | Initialize the build system.  Must depend on '_buildmagic:init'.  
+     | Initialize the build system.  Must depend on '_buildmagic:init'.
      | Other targets should depend on 'init' or things will mysteriously fail.
    -->
 
@@ -50,9 +50,9 @@
   <!-- ================================================================== -->
 
   <!--
-     | Configure the build system.  
+     | Configure the build system.
      |
-     | This target is invoked by the Buildmagic initialization logic and 
+     | This target is invoked by the Buildmagic initialization logic and
      | should contain module specific configuration elements.
    -->
 
@@ -99,6 +99,7 @@
       <path refid="jboss.jmx.classpath"/>
       <path refid="jboss.naming.classpath"/>
       <path refid="jboss.transaction.classpath"/>
+      <path refid="jboss.remoting.classpath"/>
     </path>
 
     <!-- ===== -->
@@ -196,10 +197,10 @@
   <!-- Compile                                                            -->
   <!-- ================================================================== -->
 
-  <!-- 
+  <!--
      |  Compile everything.
      |
-     |  This target should depend on other compile-* targets for each 
+     |  This target should depend on other compile-* targets for each
      |  different type of compile that needs to be performed, short of
      |  documentation compiles.
     -->
@@ -341,7 +342,7 @@
   <!-- Archives                                                           -->
   <!-- ================================================================== -->
 
-  <!-- 
+  <!--
      |  Build all jar files.
     -->
   <target name="jars" description="Builds all jar files."
@@ -356,7 +357,7 @@
     <jar jarfile="${build.lib}/jboss.jar" manifest="${build.etc}/default.mf">
       <fileset dir="${build.classes}">
         <include name="org/jboss/**"/>
-        
+
         <!-- Exclude command line utilities -->
         <exclude name="org/jboss/*"/>
 
