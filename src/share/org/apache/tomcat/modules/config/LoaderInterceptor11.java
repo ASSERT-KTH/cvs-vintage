@@ -171,6 +171,9 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	if( debug > 0 )
 	    log("Loader " + loader.getClass().getName() + " " + parent);
 	context.setClassLoader( dcl );
+	// support for jasper and other applications
+	context.setAttribute( "org.apache.tomcat.classloader",
+			      context.getClassLoader());
     }
 
     public void reload( Request req, Context context) throws TomcatException {
@@ -205,6 +208,8 @@ public class LoaderInterceptor11 extends BaseInterceptor {
 	ClassLoader loader=jdk11Compat.newClassLoaderInstance( urls, parent);
 	DependClassLoader dcl=new DependClassLoader( dm, loader);
 	context.setClassLoader( dcl );
+	context.setAttribute( "org.apache.tomcat.classloader",
+			      ctx.getClassLoader());
     }
 
     // --------------------
