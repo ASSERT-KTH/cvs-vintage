@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.columba.core.command.Command;
 import org.columba.core.command.ICommandReference;
+import org.columba.core.command.ProgressObservedInputStream;
 import org.columba.core.command.Worker;
 import org.columba.core.command.WorkerStatusController;
 import org.columba.core.io.StreamUtils;
@@ -38,84 +39,108 @@ import org.columba.ristretto.message.MimeHeader;
  */
 public abstract class SaveAttachmentCommand extends Command {
 
-    private static final Logger LOG = Logger.getLogger("org.columba.mail.gui.message.attachment.command");
+	private static final Logger LOG = Logger
+			.getLogger("org.columba.mail.gui.message.attachment.command");
 
-    /**
-     * Constructor for SaveAttachmentCommand.
-     *
-     * @param reference the reference for the command.
-     */
-    public SaveAttachmentCommand(ICommandReference reference) {
-        super(reference);
-    }
+	/**
+	 * Constructor for SaveAttachmentCommand.
+	 * 
+	 * @param reference
+	 *            the reference for the command.
+	 */
+	public SaveAttachmentCommand(ICommandReference reference) {
+		super(reference);
+	}
 
-    /**
-     * @see org.columba.core.command.Command#execute(Worker)
-     */
-    public void execute(WorkerStatusController worker) throws Exception {
-        MailFolderCommandReference r = (MailFolderCommandReference) getReference();
-        AbstractMessageFolder folder = (AbstractMessageFolder) r.getSourceFolder();
-        Object[] uids = r.getUids();
+	/**
+	 * @see org.columba.core.command.Command#execute(Worker)
+	 */
+	public void execute(WorkerStatusController worker) throws Exception {
+		MailFolderCommandReference r = (MailFolderCommandReference) getReference();
+		AbstractMessageFolder folder = (AbstractMessageFolder) r
+				.getSourceFolder();
+		Object[] uids = r.getUids();
 
-        Integer[] address = r.getAddress();
+		Integer[] address = r.getAddress();
 
-        MimeHeader header = folder.getMimePartTree(uids[0]).getFromAddress(address).getHeader();
-        
-        InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
+		MimeHeader header = folder.getMimePartTree(uids[0]).getFromAddress(
+				address).getHeader();
 
-        File tempFile = getDestinationFile(header);
+		InputStream bodyStream = folder.getMimePartBodyStream(uids[0], address);
 
-        if (tempFile != null) {
+		// wrap with observable stream for progress bar updates
+		bodyStream = new ProgressObservedInputStream(bodyStream, worker);
 
-        	int encoding = header.getContentTransferEncoding();
+		File destFile = getDestinationFile(header);
+		
+		worker.setDisplayText("Saving "+destFile.getName());
+		
+		// write to temporary file
+		File tempFile = new File(destFile.getAbsoluteFile()+".part");
+		
+		if (tempFile == null)
+			return;
 
-            switch (encoding) {
-                case MimeHeader.QUOTED_PRINTABLE:
-                    bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
-                    break;
+		int encoding = header.getContentTransferEncoding();
 
-                case MimeHeader.BASE64:
-                    bodyStream = new Base64DecoderInputStream(bodyStream);
-                    break;
-                default:
-            }
+		switch (encoding) {
+		case MimeHeader.QUOTED_PRINTABLE:
+			bodyStream = new QuotedPrintableDecoderInputStream(bodyStream);
+			break;
 
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Storing the attachment to :" + tempFile);
-            }
+		case MimeHeader.BASE64:
+			bodyStream = new Base64DecoderInputStream(bodyStream);
+			break;
+		default:
+		}
 
-            FileOutputStream fileStream = new FileOutputStream(tempFile);
-            StreamUtils.streamCopy(bodyStream, fileStream);
-            fileStream.close();
-            bodyStream.close();
-        }
-    }
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Storing the attachment to :" + tempFile);
+		}
 
-    /**
-     * Returns the filename of the attachment.
-     * @param mimepart the mime part containing the attachment.
-     * @return the filename for the attachment.
-     */
-    protected String getFilename(MimeHeader header) {
-        String fileName = header.getContentParameter("name");
+		FileOutputStream fileStream = new FileOutputStream(tempFile);
+		StreamUtils.streamCopy(bodyStream, fileStream);
+		fileStream.close();
+		bodyStream.close();
 
-        if (fileName == null) {
-            fileName = header.getDispositionParameter("filename");
-        }
+		// rename "*.part" file to destination file
+		tempFile.renameTo(destFile);
+		
+		// reset progress bar
+		worker.setProgressBarValue(0);
+		
+		// We are done - clear the status message with a delay
+		worker.clearDisplayTextWithDelay();
+	}
 
-        // decode filename
-        if (fileName != null) {
-            StringBuffer buf = EncodedWord.decode(fileName);
-            fileName = buf.toString();
-        }
-        return fileName;
-    }
+	/**
+	 * Returns the filename of the attachment.
+	 * 
+	 * @param mimepart
+	 *            the mime part containing the attachment.
+	 * @return the filename for the attachment.
+	 */
+	protected String getFilename(MimeHeader header) {
+		String fileName = header.getContentParameter("name");
 
-    /**
-     * Returns the destination file for the attachment.
-     *
-     * @param mimepart the mime part containing the attachment.
-     * @return a File path; null if the saving should be cancelled.
-     */
-    protected abstract File getDestinationFile(MimeHeader header);
+		if (fileName == null) {
+			fileName = header.getDispositionParameter("filename");
+		}
+
+		// decode filename
+		if (fileName != null) {
+			StringBuffer buf = EncodedWord.decode(fileName);
+			fileName = buf.toString();
+		}
+		return fileName;
+	}
+
+	/**
+	 * Returns the destination file for the attachment.
+	 * 
+	 * @param mimepart
+	 *            the mime part containing the attachment.
+	 * @return a File path; null if the saving should be cancelled.
+	 */
+	protected abstract File getDestinationFile(MimeHeader header);
 }
