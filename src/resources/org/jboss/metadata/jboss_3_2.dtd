@@ -9,8 +9,8 @@ The DOCTYPE is:
       "-//JBoss//DTD JBOSS 3.2//EN"
       "http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
 
-$Id: jboss_3_2.dtd,v 1.2 2003/03/06 08:37:37 loubyansky Exp $
-$Revision: 1.2 $
+$Id: jboss_3_2.dtd,v 1.3 2003/03/19 14:26:25 mnewcomb Exp $
+$Revision: 1.3 $
 
 Overview of the architecture of jboss.xml
 
@@ -188,7 +188,7 @@ for the various EJB proxies.
 
   Used in: jboss
 -->
-<!ELEMENT enterprise-beans (session*, entity*, message-driven*)>
+<!ELEMENT enterprise-beans (session | entity | message-driven)*>
 
 <!--
   The entity element holds information specific to jboss and not declared
