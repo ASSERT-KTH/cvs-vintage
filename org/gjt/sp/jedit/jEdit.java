@@ -47,7 +47,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the jEdit text editor.
  * @author Slava Pestov
- * @version $Id: jEdit.java,v 1.21 2001/11/23 09:08:48 spestov Exp $
+ * @version $Id: jEdit.java,v 1.22 2001/11/23 11:16:41 spestov Exp $
  */
 public class jEdit
 {
@@ -1364,6 +1364,17 @@ public class jEdit
 	public static Buffer openFile(final View view, String parent,
 		String path, boolean newFile, Hashtable props)
 	{
+		if(view != null && parent == null)
+			parent = MiscUtilities.getParentOfPath(view.getBuffer().getPath());
+
+		if(MiscUtilities.isURL(path))
+		{
+			if(MiscUtilities.getProtocolOfURL(path).equals("file"))
+				path = path.substring(5);
+		}
+
+		path = MiscUtilities.constructPath(parent,path);
+
 		Buffer buffer = getBuffer(path);
 		if(buffer != null)
 		{

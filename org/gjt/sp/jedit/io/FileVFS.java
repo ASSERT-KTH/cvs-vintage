@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
 /**
  * Local filesystem VFS.
  * @author Slava Pestov
- * @version $Id: FileVFS.java,v 1.10 2001/11/23 09:08:49 spestov Exp $
+ * @version $Id: FileVFS.java,v 1.11 2001/11/23 11:16:42 spestov Exp $
  */
 public class FileVFS extends VFS
 {
@@ -68,7 +68,7 @@ public class FileVFS extends VFS
 		if(path.equals("/"))
 			return FileRootsVFS.PROTOCOL + ":";
 
-                return super.getParentOfPath(path);
+		return super.getParentOfPath(path);
 	} //}}}
 
 	//{{{ constructPath() method
