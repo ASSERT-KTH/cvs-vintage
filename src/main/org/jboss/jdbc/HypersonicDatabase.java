@@ -27,13 +27,11 @@ import org.jboss.util.ServiceMBeanSupport;
 /**
  *   Integration with Hypersonic SQL (http://hsql.oron.ch/). Starts a Hypersonic database in-VM.
  *
- *   Note that once started it cannot be shutdown.
- *      
  *   @see HypersonicDatabaseMBean
  *   @author Rickard Öberg (rickard.oberg@telkel.com)
  *   @author Scott_Stark@displayscape.com
  *   @author Peter Fagerlund pf@iprobot.se @see stopService()
- *   @version $Revision: 1.7 $
+ *   @version $Revision: 1.8 $
  */
 public class HypersonicDatabase
    extends ServiceMBeanSupport
