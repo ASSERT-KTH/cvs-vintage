@@ -22,7 +22,7 @@ import org.jboss.system.ServiceMBean;
  * {@link javax.management.j2ee.JNDI JNDI}.
  *
  * @author  <a href="mailto:andreas@jboss.org">Andreas Schaefer</a>.
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  *   
  * <p><b>Revisions:</b>
  *
@@ -128,8 +128,8 @@ public class JNDI
    {
       super( "JNDI", pName, pServer );
       Logger log = getLog();
-      if (log.isInfoEnabled())
-         log.info( "Service name: " + pService );
+      if (log.isDebugEnabled())
+         log.debug( "Service name: " + pService );
       mService = pService;
    }
    
