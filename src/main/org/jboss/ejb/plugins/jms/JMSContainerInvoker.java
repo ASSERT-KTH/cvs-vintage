@@ -63,7 +63,7 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
 /**
  * EJBProxyFactory for JMS MessageDrivenBeans
  *
- * @version <tt>$Revision: 1.62 $</tt>
+ * @version <tt>$Revision: 1.63 $</tt>
  * @author <a href="mailto:peter.antman@tim.se">Peter Antman</a> .
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
@@ -325,6 +325,11 @@ public class JMSContainerInvoker
    }
    
    // EJBProxyFactory implementation
+
+   public boolean isIdentical(Container container, Invocation mi)
+   {
+      throw new Error("Not valid for MessageDriven beans");
+   }
 
    /**
     * Always throws an Error

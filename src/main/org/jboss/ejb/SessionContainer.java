@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb;
 
-// $Id: SessionContainer.java,v 1.7 2004/06/21 11:13:07 ejort Exp $
+// $Id: SessionContainer.java,v 1.8 2004/06/21 14:17:25 ejort Exp $
 
 import org.jboss.invocation.Invocation;
 import org.jboss.invocation.MarshalledInvocation;
@@ -35,7 +35,7 @@ import java.util.Map;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 30.10.2003
  */
 public abstract class SessionContainer extends Container
@@ -646,7 +646,14 @@ public abstract class SessionContainer extends Container
     */
    public boolean isIdentical(Invocation mi) throws RemoteException
    {
-      return false; // TODO
+      EJBProxyFactory ci = getProxyFactory();
+      if (ci == null)
+      {
+         String msg = "No ProxyFactory, check for ProxyFactoryFinderInterceptor";
+         throw new IllegalStateException(msg);
+      }
+
+      return ci.isIdentical(this, mi);
    }
 
    public EJBMetaData getEJBMetaDataHome(Invocation mi) throws RemoteException

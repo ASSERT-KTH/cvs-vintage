@@ -13,6 +13,7 @@ import javax.ejb.EJBMetaData;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBObject;
 
+import org.jboss.invocation.Invocation;
 import org.jboss.metadata.InvokerProxyBindingMetaData;
 
 /**
@@ -30,9 +31,9 @@ import org.jboss.metadata.InvokerProxyBindingMetaData;
  *
  * @see Container
  * 
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard ï¿½berg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  *
  *<p><b>20011219 marc fleury:</b>
 * <ul>
@@ -52,6 +53,14 @@ extends ContainerPlugin
     * Set the invoker jndi binding
     */
    void setInvokerBinding(String binding);
+   /**
+    * Protocol specific isIdentical implementation
+    *
+    * @param container the container
+    * @param mi the invocation 
+    * @return true when identical, false otherwise
+    */
+   boolean isIdentical(Container container, Invocation mi);
    /**
     * This method is called whenever the metadata for this container is
     * needed.

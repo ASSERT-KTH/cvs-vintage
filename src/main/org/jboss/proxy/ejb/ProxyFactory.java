@@ -27,6 +27,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.EJBProxyFactoryContainer;
+import org.jboss.invocation.Invocation;
 import org.jboss.invocation.Invoker;
 import org.jboss.invocation.InvocationContext;
 import org.jboss.invocation.InvocationKey;
@@ -66,7 +67,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark/a>
  * @author <a href="mailto:thomas.diesler@jboss.org">Thomas Diesler/a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class ProxyFactory
    implements EJBProxyFactory
@@ -487,7 +488,12 @@ public class ProxyFactory
    }
 
    // EJBProxyFactory implementation -------------------------------------
-   
+
+   public boolean isIdentical(Container container, Invocation mi)
+   {
+      throw new UnsupportedOperationException("TODO provide a default implementation");
+   }
+
    public EJBMetaData getEJBMetaData()
    {
       return ejbMetaData;

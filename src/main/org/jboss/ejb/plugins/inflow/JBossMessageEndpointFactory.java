@@ -28,6 +28,7 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EJBProxyFactory;
 import org.jboss.ejb.MessageDrivenContainer;
+import org.jboss.invocation.Invocation;
 import org.jboss.invocation.InvocationType;
 import org.jboss.invocation.InvokerInterceptor;
 import org.jboss.logging.Logger;
@@ -50,7 +51,7 @@ import EDU.oswego.cs.dl.util.concurrent.SynchronizedInt;
  * @jmx:mbean extends="org.jboss.system.ServiceMBean"
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a> .
- * @version <tt>$Revision: 1.2 $</tt>
+ * @version <tt>$Revision: 1.3 $</tt>
  */
 public class JBossMessageEndpointFactory
    extends ServiceMBeanSupport
@@ -197,6 +198,11 @@ public class JBossMessageEndpointFactory
    
    // EJBProxyFactory implementation --------------------------------
 
+   public boolean isIdentical(Container container, Invocation mi)
+   {
+      throw new Error("Not valid for MessageDriven beans");
+   }
+   
    public Object getEJBHome()
    {
       throw new Error("Not valid for MessageDriven beans");
