@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributeEdit.java,v 1.57 2003/07/02 16:58:10 dlr Exp $
+ * @version $Id: GlobalAttributeEdit.java,v 1.58 2003/07/03 05:38:30 venkatesh Exp $
  */
 public class GlobalAttributeEdit extends RequireLoginFirstAction
 {
@@ -115,8 +115,8 @@ public class GlobalAttributeEdit extends RequireLoginFirstAction
             }
             attributeName = attrGroup.get("Name");
             description = attrGroup.get("Description");
-            isDupe = Attribute.checkForDuplicate(attributeName.toString(), attr);
-         
+            isDupe = Attribute.checkForDuplicate(attributeName.toString().trim(), attr);
+
             // Check for blank attribute names.
             if (attributeName.toString().trim().length() == 0)
             {
