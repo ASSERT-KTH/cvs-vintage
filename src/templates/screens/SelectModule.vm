@@ -12,7 +12,7 @@
 <tr>
     <td>
     $currentModule.Name
-    #set ($canEdit = $security.hasPermission("Module | Edit", $curModule))
+    #set ($canEdit = $security.hasPermission("Module | Edit", $currentModule))
     #if ($canEdit)<a href="$link.setPage("ModifyModule.vm")">(Edit)</a>#end
     </td>
     <td>$currentModule.Description</td>
@@ -22,26 +22,22 @@
 
 <h3>New module selection</h3>
 #if ($userModules.size() > 0)
-<form action="$link.setPage("SelectModule.vm").setAction("SelectModule")" method="get">
-#if ($nextTemplate && $nextTemplate.length() > 0)
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="$nextTemplate" />
-#else
-<input type="hidden" name="$scarabG.Constant.NEXT_TEMPLATE" value="Links.vm" />
-#end
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
 <tr>
     <th>Module name</th>
     <th>Module desc</th>
 </tr>
 
+#if ($nextTemplate && $nextTemplate.length() > 0)
+#set ($tmpNext = $nextTemplate)
+#else
+#set ($tmpNext = "Links.vm")
+#end
+
 #foreach ($module in $userModules)
 #indexedRows($velocityCount)
 <td>
- #if ($module.Name.equals($currentModule.Name))
-<input type="radio" name="newmodule" value="$module.ModuleId" checked="checked" />$module.Name
- #else
-<input type="radio" name="newmodule" value="$module.ModuleId" />$module.Name
- #end
+<a href="$link.setPage("SelectModule.vm").setAction("SelectModule").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "$tmpNext").addPathInfo("newmodule", "$module.ModuleId")">$module.Name</a>
 </td>
 <td>
 $module.Description
@@ -51,11 +47,6 @@ $module.Description
 
 </table>
 
-<p>
-<input type="submit" name="eventSubmit_doSelect" value="Select Module" />
-</p>
-</form>
-
 #else
 <p><strong class="alert">
 Sorry, you do not have access to select any other modules. Please
@@ -64,5 +55,4 @@ has permissions to select a Module.
 </strong></p>
 #end
 
-</div>
 </div>

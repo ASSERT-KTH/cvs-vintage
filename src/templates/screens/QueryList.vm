@@ -58,7 +58,7 @@ $page.setTitle("Stored query list")
   <th>Query name</th>
   <th>Query description</th>
   <th>Location</th>
-  <th>Initiated By</th>
+  <th>Initiated by</th>
  </tr>
  #foreach ( $query in $module.getPrivateQueries($user) )
   #indexedRows($velocityCount)
