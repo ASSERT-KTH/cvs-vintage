@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.149 2002/11/13 00:26:16 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.150 2002/11/14 21:16:30 elicia Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -285,51 +285,23 @@ public class ReportIssue extends RequireLoginFirstAction
                 AttributeValue aval = (AttributeValue)avMap.get(i.next());
                 Group group = 
                     intake.get("AttributeValue", aval.getQueryKey(), false);
+                String value = null;
                 if (group != null) 
                 {
-                    group.setProperties(aval);
-                    
-                    /*
-                     * FIXME! I think changes in the code have made this
-                     * hack unnecessary, but I do not have time to test
-                     * this theory atm. -jdm
-                     *
-                     * The next piece of code is for storing the values
-                     * of the attributes into the context (which is than
-                     * used by Wizard2.vm) This is necessary because it 
-                     * seems that group.setProperties(aval) does not 
-                     * store the values so they are never passed to the
-                     * next template (Wizard3.vm). This code fixes bug 
-                     * http://scarab.tigris.org/issues/show_bug.cgi?id=70
-                     */
-                    String field = null;
-                    if (aval.getAttribute().getAttributeType()
-                        .getValidationKey() != null)
+                    if (aval instanceof OptionAttribute) 
                     {
-                        field = aval.getAttribute().getAttributeType()
-                            .getValidationKey();
+                        value = group.get("OptionId").toString();
                     }
-                    else if (aval.getAttribute().getAttributeType()
-                             .getName().equals(ScarabConstants.DROPDOWN_LIST))
+                    else 
                     {
-                        field = "OptionId";
+                        value = group.get("Value").toString();
                     }
-                    else
+                    if (value != null && value.toString().length() > 0)
                     {
-                        field = "Value";
-                    }
-                    Object key = group.get(field).getKey();
-                    Object value = group.get(field).getValue();
-                    if ((key != null) && (value != null)) 
-                    {
-                        values.put(group.get(field).getKey()
-                                       , group.get(field).getValue());
+                        group.setProperties(aval);
                     }
                 }
             }
-            context.put("wizard1_intake", values);
-            // end code related to issue 70
-    
             success = true;
         }
         else
@@ -400,6 +372,7 @@ public class ReportIssue extends RequireLoginFirstAction
                             {
                                 newValue = group.get("Value").toString();
                             }
+System.out.println(newValue);
                             if (newValue.length() != 0)
                             {
                                 newValues.put(attr.getAttributeId(), newValue);
