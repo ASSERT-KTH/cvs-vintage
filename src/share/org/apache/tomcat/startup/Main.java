@@ -188,7 +188,8 @@ public class Main {
 
             URL[] sharedClassPath=getURLs(getClassPathV(getSharedDir()));
             URL[] commonClassPath=getURLs(getClassPathV(getCommonDir()));
-	    // XXX Should be: JdkCompat.newClassLoaderInstance !!            ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
+	    // XXX Should be: JdkCompat.newClassLoaderInstance !!
+	    ClassLoader commonCl= IntrospectionUtils.getURLClassLoader(commonClassPath , parentL );
 	    ClassLoader sharedCl= IntrospectionUtils.getURLClassLoader(sharedClassPath , commonCl );
             ClassLoader serverCl= IntrospectionUtils.getURLClassLoader(serverClassPath , commonCl );
 	    if( commonCl==null ) {
