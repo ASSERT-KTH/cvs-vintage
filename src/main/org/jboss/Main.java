@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
  *
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version $Revision: 1.51 $
+ * @version $Revision: 1.52 $
  *
  * <b>Revisions:</b>
  * <p>
@@ -88,6 +88,7 @@ public class Main
       {
          final PrintStream err = System.err;
 
+         System.setProperty("jboss.system.started", new Date(startTime).toString());
          System.setProperty("jboss.system.installationURL", installURL);
          System.setProperty("jboss.system.configurationDirectory", confDir);
          System.setProperty("jboss.system.patchDirectory", patchDir);

@@ -17,12 +17,12 @@ import org.jboss.logging.Logger;
 /**
  * A simple mbean that dumps out info like the system properties, etc.
  *      
- * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>.
- * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>.
- * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>.
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
+ * @author <a href="mailto:hiram.chirino@jboss.org">Hiram Chirino</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class Info
    implements InfoMBean, MBeanRegistration
@@ -30,7 +30,8 @@ public class Info
    // Constants -----------------------------------------------------
 
    // Attributes ----------------------------------------------------
-   /** Instance logger. */
+
+   /** Class logger. */
    private static Logger log = Logger.create("GPA");
 
    //
@@ -51,6 +52,11 @@ public class Info
    protected String configurationDirectory;
    protected String patchDirectory;
    protected String jbossVersion;
+
+   /** When this instance was started. */
+   protected String jbossStarted;
+
+   
    // Static --------------------------------------------------------
 
    // Constructors --------------------------------------------------
@@ -74,6 +80,7 @@ public class Info
 		
       // JBoss stuff
       jbossVersion = System.getProperty("jboss.system.version");
+      jbossStarted = System.getProperty("jboss.system.started");
       jbossLocalHomeDirectory = System.getProperty("jboss.system.home");
       installationURL = System.getProperty("jboss.system.installationURL");
       configurationDirectory = System.getProperty("jboss.system.configurationDirectory");
@@ -86,29 +93,35 @@ public class Info
       log.info("Java version: " +
               javaVersion + "," +
               javaVendor);
+      
       log.info("Java VM: " +
               javaVMName + " " +
               javaVMVersion + "," +
               javaVMVendor);
+      
       log.info("OS-System: " +
               osName + " " +
               osVersion + "," +
               osArch);
+      
       log.info("JBoss Version : " + jbossVersion);
+      log.info("JBoss start time : " + jbossStarted);
       log.info("localDir : " + jbossLocalHomeDirectory);
-      log.info("installationURL : "+ installationURL);
+      log.info("installationURL : " + installationURL);
       log.info("configuration : " + configurationDirectory);
-      log.info("libraries : "+libraryDirectory);
-      //	   log.info("local patch directory " + patchDirectory);
+      log.info("libraries : " + libraryDirectory);
+      log.info("local patch directory: " + patchDirectory);
       log.info("Oh, and remember we love you");
 		
       // dump out the entire system properties if debug is enabled
-      log.debug("+++ Full System Properties Dump");
-      Enumeration names= System.getProperties().propertyNames();
-      while (names.hasMoreElements())
-      {
-         String pname= (String) names.nextElement();
-         log.debug(pname + ": " + System.getProperty(pname));
+      if (log.isDebugEnabled()) {
+         log.debug("+++ Full System Properties Dump");
+         Enumeration names = System.getProperties().propertyNames();
+         while (names.hasMoreElements())
+         {
+            String pname = (String)names.nextElement();
+            log.debug(pname + ": " + System.getProperty(pname));
+         }
       }
 		
       return new ObjectName(OBJECT_NAME);
@@ -126,24 +139,31 @@ public class Info
       // empty
    }
 	
-   public String getJavaVersion() {return javaVersion;} 
-   public String getJavaVendor() {return javaVendor;}
-   public String getJavaVMName() {return javaVMName;}
-   public String getJavaVMVersion() {return javaVMVersion;}
-   public String getJavaVMVendor() { return javaVMVendor;}
-   public String getOSName() {return osName;}
-   public String getOSVersion() { return osVersion;}
-   public String getOSArch() { return osArch;}
-   public String getLocalJBossSystemHomeDirectory() {return jbossLocalHomeDirectory;}
-   public String getLocalInstallationURL(){return installationURL;}
-   public String getConfigurationDirectoryURL(){return configurationDirectory;}
-   public String getLocalPatchDirectory(){ return patchDirectory;}
-   public String getJBossVersion() { return jbossVersion;}
-   public String getLibraryDirectoryURL() { return libraryDirectory;}
-   public String getInstallationURL() { return installationURL;}
-	
+   public String getJavaVersion() { return javaVersion; } 
+   public String getJavaVendor() { return javaVendor; }
+   public String getJavaVMName() { return javaVMName; }
+   public String getJavaVMVersion() { return javaVMVersion; }
+   public String getJavaVMVendor() { return javaVMVendor; }
+   public String getOSName() { return osName; }
+   public String getOSVersion() { return osVersion; }
+   public String getOSArch() { return osArch; }
+   public String getLocalJBossSystemHomeDirectory() { return jbossLocalHomeDirectory; }
+   public String getLocalInstallationURL() { return installationURL; }
+   public String getConfigurationDirectoryURL() { return configurationDirectory; }
+   public String getLocalPatchDirectory() { return patchDirectory; }
+   public String getJBossVersion() { return jbossVersion; }
+   public String getLibraryDirectoryURL() { return libraryDirectory; }
+   public String getInstallationURL() { return installationURL; }
+
+   /**
+    * Return the time which this server instance was started.
+    */
+   public String getStartTime() {
+      return jbossStarted;
+   }
+   
    public String getThreadGroupInfo(ThreadGroup group) {
-      StringBuffer rc= new StringBuffer();
+      StringBuffer rc = new StringBuffer();
 		
       rc.append("<BR><B>");
       rc.append("Thread Group: " + group.getName());
