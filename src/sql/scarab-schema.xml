@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.78 2002/01/24 18:12:37 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.79 2002/01/30 04:53:51 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -586,6 +586,11 @@
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="false" default="0" type="INTEGER"/>
     <!--
+        Deduping on/off for this module/issuetype.
+    -->
+    <column name="DEDUPE" required="false" type="BOOLEANINT" 
+        default="1" size="1"/>
+    <!--
         Default number of history entries.
     -->
     <column name="HISTORY" required="false" default="5" type="INTEGER"/>
@@ -778,9 +783,6 @@
     -->
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"/>
-    <column name="DEDUPE" required="false" type="BOOLEANINT" 
-        default="1" size="1"/>
-
     <column name="CLASS_KEY" required="false" type="INTEGER" inheritance="single">
       <inheritance key="1" class="ScarabModuleContainer" extends="org.tigris.scarab.om.ScarabModule"/>
     </column>
