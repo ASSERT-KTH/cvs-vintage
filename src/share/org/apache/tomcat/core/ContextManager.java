@@ -553,6 +553,7 @@ public final class ContextManager implements LogAware{
 	}
     }
 
+
     /** Shut down and removes a context from service.
      */
     public final void removeContext( Context context ) throws TomcatException {

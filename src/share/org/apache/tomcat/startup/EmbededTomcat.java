@@ -6,6 +6,7 @@ import java.io.*;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.request.*;
 import org.apache.tomcat.modules.server.*;
+import org.apache.tomcat.modules.facade22.*;
 import org.apache.tomcat.modules.session.*;
 import org.apache.tomcat.context.*;
 import org.apache.tomcat.util.log.*;
@@ -36,16 +37,12 @@ import java.util.*;
  * 
  * @author costin@eng.sun.com
  */
-public class EmbededTomcat { // extends WebService
-    ContextManager contextM = null;
+public class EmbededTomcat { 
+    ContextManager contextM = new ContextManager();
     Object application;
+
     // null == not set up
     Vector requestInt=null;
-    /** Right now we assume all web apps use the same
-	servlet API version. This will change after we
-	finish the FacadeManager implementation
-    */
-    //    FacadeManager facadeM=null;
     Vector connectors=new Vector();
 
     String workDir;
@@ -59,6 +56,10 @@ public class EmbededTomcat { // extends WebService
     }
 
     // -------------------- Properties - set before start
+
+    public ContextManager getContextManager() {
+	return contextM;
+    }
     
     /** Set debugging - must be called before anything else
      */
@@ -98,8 +99,8 @@ public class EmbededTomcat { // extends WebService
     
     // -------------------- Endpoints --------------------
     
-    /** Add a web service on the specified address. You must add all the
-     *  endpoints before calling start().
+    /** Add a HTTP listener.
+     *  You must add all the endpoints before calling start().
      */
     public void addEndpoint( int port, InetAddress addr , String hostname)
 	throws TomcatException
@@ -114,12 +115,10 @@ public class EmbededTomcat { // extends WebService
 	if( addr != null ) sc.setAddress( addr );
 	if( hostname != null ) sc.setHostName( hostname );
 	
-	//	sc.setTcpConnectionHandler( new HttpConnectionHandler());
-	
 	contextM.addInterceptor(  sc );
     }
 
-    /** Add a secure web service.
+    /** Add a secure HTTP listener.
      */
     public void addSecureEndpoint( int port, InetAddress addr, String hostname,
 				    String keyFile, String keyPass )
@@ -134,26 +133,25 @@ public class EmbededTomcat { // extends WebService
 	if( addr != null ) sc.setAddress(  addr );
 	if( hostname != null ) sc.setHostName( hostname );
 	
-	sc.setSocketFactory("org.apache.tomcat.net.SSLSocketFactory");
-	//	log("XXX " + keyFile + " " + keyPass);
-	//	HttpConnectionHandler hc=new HttpConnectionHandler();
+	sc.setSocketFactory("org.apache.tomcat.util.net.SSLSocketFactory");
 	sc.setSecure(true);
-	// sc.setTcpConnectionHandler( hc );
-	// XXX add the secure socket
-	
+
 	contextM.addInterceptor(  sc );
     }
 
     // -------------------- Context add/remove --------------------
+
+    boolean initialized=false;
     
     /** Add and init a context
      */
-    public Object addContext( String ctxPath, URL docRoot )
+    public Context addContext( String ctxPath, URL docRoot )
 	throws TomcatException
     {
 	if(debug>0) log( "add context \"" + ctxPath + "\" " + docRoot );
-	if( contextM == null )
+	if( ! initialized ) {
 	    initContextManager();
+	}
 	
 	// tomcat supports only file-based contexts
 	if( ! "file".equals( docRoot.getProtocol()) ) {
@@ -178,51 +176,6 @@ public class EmbededTomcat { // extends WebService
 	return null;
     }
 
-    /** Remove a context
-     */
-    public void removeContext( Object sctx ) {
-	if(debug>0) log( "remove context " + sctx );
-	try {
-// 	    if( facadeM==null ) {
-// 		log("ERROR removing context " +
-// 		    sctx + ": no facade manager", Logger.ERROR);
-// 		return;
-// 	    }
-	    //	    Context ctx=contextM.getRealContext( sctx );
-	    Context ctx=(Context)sctx;
-	    contextM.removeContext( ctx );
-	} catch( Exception ex ) {
-	    log("exception removing context " + sctx, ex);
-	}
-    }
-
-    Hashtable extraClassPaths=new Hashtable();
-
-    /** The application may want to add an application-specific path
-	to the context.
-    */
-    public void addClassPath( Object context, String cpath ) {
-	if(debug>0) log( "addClassPath " + context + " " +
-			  cpath );
-
-	try {
-	    Vector cp=(Vector)extraClassPaths.get(context);
-	    if( cp == null ) {
-		cp=new Vector();
-		extraClassPaths.put( context, cp );
-	    }
-	    cp.addElement( cpath );
-	} catch( Exception ex ) {
-	    log("exception adding classpath " + cpath +
-		" to context " + context, ex);
-	}
-	
-	// XXX This functionality can be achieved by setting it in the parent
-	// class loader ( i.e. the loader that is used to load tomcat ).
-
-	// It shouldn't be needed if the web app is self-contained,
-    }
-
     /** Find the context mounted at /cpath.
 	Right now virtual hosts are not supported in
 	embeded tomcat.
@@ -242,66 +195,6 @@ public class EmbededTomcat { // extends WebService
 	return null;
     }
 
-    /** This will make the context available.
-     */
-    public void initContext( Object sctx ) {
-	try {
-// 	    if( facadeM==null ) {
-// 		log("XXX ERROR: no facade manager");
-// 		return;
-// 	    }
-	    Context ctx=(Context)sctx;
-	    //contextM.getRealContext( sctx );
-	    ctx.init();
-
-	    //	    Object pd=ctx.getProtectionDomain();
-	    //	    log("Ctx.pd " + pd);
-
-	    // Add any extra cpaths
-	    Vector cp=(Vector)extraClassPaths.get( sctx );
-	    if( cp!=null ) {
-		for( int i=0; i<cp.size(); i++ ) {
-		    String cpath=(String)cp.elementAt(i);
-		    File f=new File( cpath );
-		    String absPath=f.getAbsolutePath();
-		    if( ! absPath.endsWith("/" ) && f.isDirectory() ) {
-			absPath+="/";
-		    }
-		    try {
-			ctx.addClassPath( new URL( "file", null,
-						   absPath ));
-		    } catch( MalformedURLException ex ) {
-		    }
-		}
-	    }
-
-
-	} catch( Exception ex ) {
-	    log("exception initializing context " + sctx, ex);
-	}
-    }
-
-    public void destroyContext( Object ctx ) {
-
-    }
-
-    // -------------------- Start/stop
-    
-    public void start() {
-	try {
-	    contextM.start();
-// 	} catch( IOException ex ) {
-// 	    log("Error starting EmbededTomcat", ex);
-	} catch( Exception ex ) {
-	    log("Error starting EmbededTomcat", ex);
-	}
-	if(debug>0) log( "Started" );
-    }
-
-    public void stop() {
-	// XXX not implemented
-    }
-    
     // -------------------- Private methods
     public void addInterceptor( BaseInterceptor ri ) {
 	if( requestInt == null ) requestInt=new Vector();
@@ -314,7 +207,6 @@ public class EmbededTomcat { // extends WebService
 	throws TomcatException 
     {
 	if(requestInt==null)  initDefaultInterceptors();
-	contextM=new ContextManager();
 	contextM.setDebug( debug );
 	
 	for( int i=0; i< requestInt.size() ; i++ ) {
@@ -330,6 +222,7 @@ public class EmbededTomcat { // extends WebService
 	    log("exception initializing ContextManager", ex);
 	}
 	if(debug>0) log( "ContextManager initialized" );
+	initialized=true;
     }
     
     private void initDefaultInterceptors() {
@@ -344,8 +237,14 @@ public class EmbededTomcat { // extends WebService
 	// It need a major refactoring to support multiple
 	// interfaces ( I'm not sure it'll be possible to support
 	// multiple APIs at the same time in embeded mode )
+
+	//	addInterceptor( new LogEvents() );
 	
-	BaseInterceptor webXmlI= (BaseInterceptor)newObject("org.apache.tomcat.facade.WebXmlReader");
+	DefaultCMSetter defaultCMI=new DefaultCMSetter();
+	addInterceptor( defaultCMI );
+
+	BaseInterceptor webXmlI=
+	    (BaseInterceptor)newObject("org.apache.tomcat.facade.WebXmlReader");
 	addInterceptor( webXmlI );
 
 	PolicyInterceptor polI=new PolicyInterceptor();
@@ -355,16 +254,11 @@ public class EmbededTomcat { // extends WebService
 	LoaderInterceptor12 loadI=new LoaderInterceptor12();
 	addInterceptor( loadI );
 
-	DefaultCMSetter defaultCMI=new DefaultCMSetter();
-	addInterceptor( defaultCMI );
+	ErrorHandler errH=new ErrorHandler();
+	addInterceptor( errH );
 
 	WorkDirInterceptor wdI=new WorkDirInterceptor();
 	addInterceptor( wdI );
-
-	
-	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.modules.facade22.LoadOnStartupInterceptor");
-	//	LoadOnStartupInterceptor loadOnSI=new LoadOnStartupInterceptor();
-	addInterceptor( loadOnSI );
 
 	// Debug
 	// 	LogEvents logEventsI=new LogEvents();
@@ -375,18 +269,24 @@ public class EmbededTomcat { // extends WebService
 
 	SimpleMapper1 mapI=new SimpleMapper1();
 	addInterceptor( mapI );
-	mapI.setDebug(0);
 
 	InvokerInterceptor invI=new InvokerInterceptor();
 	addInterceptor( invI );
-	invI.setDebug(0);
 	
+	JspInterceptor jspI=new JspInterceptor();
+	addInterceptor( jspI );
+
 	StaticInterceptor staticI=new StaticInterceptor();
 	addInterceptor( staticI );
-	mapI.setDebug(0);
 
 	addInterceptor( new SimpleSessionStore());
 	
+	BaseInterceptor loadOnSI= (BaseInterceptor)newObject("org.apache.tomcat.modules.facade22.LoadOnStartupInterceptor");
+	addInterceptor( loadOnSI );
+
+	BaseInterceptor s22=(BaseInterceptor)newObject("org.apache.tomcat.facade.Servlet22Interceptor");
+	addInterceptor( s22 );
+
 	// access control ( find if a resource have constraints )
 	AccessInterceptor accessI=new AccessInterceptor();
 	addInterceptor( accessI );
@@ -402,16 +302,16 @@ public class EmbededTomcat { // extends WebService
     
 
     // -------------------- Utils --------------------
-    private void log( String s ) {
+    public void log( String s ) {
 	loghelper.log( s );
     }
-    private void log( String s, Throwable t ) {
+    public void log( String s, Throwable t ) {
 	loghelper.log( s, t );
     }
-    private void log( String s, int level ) {
+    public void log( String s, int level ) {
 	loghelper.log( s, level );
     }
-    private void log( String s, Throwable t, int level ) {
+    public void log( String s, Throwable t, int level ) {
 	loghelper.log( s, t, level );
     }
 
@@ -425,17 +325,16 @@ public class EmbededTomcat { // extends WebService
 	    EmbededTomcat tc=new EmbededTomcat();
 	    tc.setWorkDir( pwd + "/work"); // relative to pwd
 
-	    Object sctx;
-	    sctx=tc.addContext("", new URL
-		( "file", null, pwd + "/webapps/ROOT"));
-	    tc.initContext( sctx );
+	    Context sctx=tc.addContext("", new URL
+				       ( "file", null, pwd + "/webapps/ROOT"));
+	    sctx.init();
 
 	    sctx=tc.addContext("/examples", new URL
 		("file", null, pwd + "/webapps/examples"));
-	    tc.initContext( sctx );
+	    sctx.init();
 
 	    tc.addEndpoint( 8080, null, null);
-	    tc.start();
+	    tc.getContextManager().start();
 	} catch (Throwable t ) {
 	    // this stack trace is ok, i guess, since it's just a
 	    // sample main
