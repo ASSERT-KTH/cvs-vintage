@@ -64,7 +64,7 @@ import org.apache.turbine.om.security.*;
  * so there isn't much here.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabModule.java,v 1.7 2001/07/05 00:49:04 jon Exp $
+ * @version $Id: ScarabModule.java,v 1.8 2001/07/06 19:00:54 jmcnally Exp $
  */
 public class ScarabModule extends Module
     implements Group, Comparable
@@ -155,19 +155,6 @@ public class ScarabModule extends Module
         }
     }
 
-
-    public static String getGroupFromModule(ModuleEntity module)
-    {
-        return null;
-    }
-
-    public String getModuleNameFromGroup(Group group)
-    {
-        String gname = group.getName();
-        int lastDash = gname.lastIndexOf('-');
-        return null;
-
-    }
 
     // *******************************************************************
     // Turbine Group implementation get/setName and save are defined above
