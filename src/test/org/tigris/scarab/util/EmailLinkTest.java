@@ -55,7 +55,7 @@ import org.tigris.scarab.util.EmailLink;
  * Used for testing the ScarabUtil.java class.
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
- * @version $Id: EmailLinkTest.java,v 1.1 2003/04/29 23:03:52 jon Exp $
+ * @version $Id: EmailLinkTest.java,v 1.2 2003/04/30 21:24:27 jon Exp $
  */
 public class EmailLinkTest extends BaseTestCase
 {
@@ -78,7 +78,7 @@ public class EmailLinkTest extends BaseTestCase
     {
         Module module = getModule();
         EmailLink el = new EmailLink(module);
-        el.setPage("Foo.vm");
-        assertEquals("http://10.0.0.1:8080/s/template/Foo.vm/curmodule/5",el.toString());
+        el.setPage("Foo.vm").addPathInfo("foo", "bar").addPathInfo("jjj","aaa");
+        assertEquals("http://10.0.0.1:8080/s/template/Foo.vm/curmodule/5/foo/bar/jjj/aaa",el.toString());
     }
 }
