@@ -43,7 +43,7 @@ import org.jboss.logging.Logger;
 *   @see <related>
 *   @author Rickard Öberg (rickard.oberg@telkel.com)
 *   @author <a href="marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
 */
 public class EntityInstanceInterceptor
 extends AbstractInterceptor
@@ -89,9 +89,9 @@ extends AbstractInterceptor
          ctx.unlock();
          
          // Still free? Not free if create() was called successfully
-         if (mi.getEnterpriseContext().getId() == null)
+         if (ctx.getId() == null)
          {
-          container.getInstancePool().free(mi.getEnterpriseContext());
+          container.getInstancePool().free(ctx);
          } 
          else
          {
@@ -112,12 +112,13 @@ extends AbstractInterceptor
        CacheKey key = (CacheKey) mi.getId();
        
        // Get cache
-       InstanceCache cache = ((EntityContainer)getContainer()).getInstanceCache();
-       
+       EnterpriseInstanceCache cache = (EnterpriseInstanceCache)container.getInstanceCache();
+       Object mutex = cache.getLock(key);
+	   
        EnterpriseContext ctx = null;
        
        // We synchronize the locking logic (so that the invoke is unsynchronized and can be reentrant)
-       synchronized (cache)
+       synchronized (mutex)
        {
          do
          {
@@ -194,21 +195,21 @@ extends AbstractInterceptor
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key.id);
+         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
          
          throw e;
        } catch (RuntimeException e)
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key.id);
+         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
          
          throw e;
        } catch (Error e)
        {
          // Discard instance
          // EJB 1.1 spec 12.3.1
-         ((EntityContainer)getContainer()).getInstanceCache().remove(key.id);
+         ((EntityContainer)getContainer()).getInstanceCache().remove(key);
          
          throw e;
        } finally
@@ -217,7 +218,7 @@ extends AbstractInterceptor
          if (ctx != null)
          {
           
-          synchronized (ctx) {
+          synchronized (mutex) {
               
               // unlock the context
               ctx.unlock();
@@ -225,14 +226,16 @@ extends AbstractInterceptor
               if (ctx.getId() == null)                             
               {
                  // Remove from cache
-                 cache.remove(key.id);
+                 cache.remove(key);
                  
                  // It has been removed -> send to free pool
                  container.getInstancePool().free(ctx);
               }
               
               // notify the thread waiting on ctx
-              ctx.notifyAll();
+			  synchronized (ctx) {
+				ctx.notifyAll();
+			  }
           }
          }
        }
@@ -283,4 +286,3 @@ extends AbstractInterceptor
        return false;
     }
 }
-
