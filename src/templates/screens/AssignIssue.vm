@@ -8,6 +8,7 @@
 #set ($searchString = $data.Parameters.getString("searchString" , ""))
 #set ($searchField = $data.Parameters.getString("searchField" , ""))
 
+
 #if ($userAttrs.isEmpty())
  <p class="alert">$l10n.NoAssignableUserAttributes</p>
 #elseif ($issueListSize == 0)
@@ -20,10 +21,8 @@
   #set ($actionLink = $link.setPage("AssignIssue.vm").toString())
 #end
 
-<form action="$actionLink" method="get">
+<form action="$actionLink" method="post">
 <input type="hidden" name="action" value="AssignIssue" />
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 ## pass issue id's
 #foreach ($issueId in $issueIdList)
   <input type="hidden" name="issue_ids" value="$issueId" />
@@ -146,6 +145,7 @@
           #foreach ($issueId in $issueIdList)
               #set ($arrowLink = $arrowLink.addPathInfo("issue_ids", $issueId))
           #end
+$arrowLink
            <a href="$arrowLink"><img src="$staticLink.setPath("/images/icon_downarrow_on.gif")" width="13" height="8" alt="sort descending" title="sort descending" border="0" /></a>&#160;
         #else
           #set ($arrowLink = $link.setPage("AssignIssue.vm").setPathInfo("sortPolarity", "desc").setPathInfo("sortColumn", "$shortName").setPathInfo("pageNum", $pageNum.toString()).setPathInfo("resultsPerPage", $resultsPerPage.toString()).setPathInfo("searchString", $searchString).setPathInfo("searchField", $searchField))
@@ -273,8 +273,6 @@
  <input type="submit" name="eventSubmit_doAdd" value="$l10n.AddAssignee" />
 </div>
 
-#set ($cancelPage = $data.Parameters.getString("$scarabG.Constant.CANCEL_TEMPLATE", "IssueList.vm"))
-<input type="hidden" name="$scarabG.Constant.CANCEL_TEMPLATE" value="$cancelPage" />
 
 ## keep track of state of the list, resultsPerPage should come after the
 ## chance to change it, because we will use the first value
