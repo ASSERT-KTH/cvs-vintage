@@ -18,15 +18,14 @@ package org.columba.mail.gui.table.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.InternAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.logging.ColumbaLogger;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.gui.message.command.ViewMessageCommand;
 
-public class ViewMessageAction
-	extends InternAction {
+public class ViewMessageAction extends FrameAction {
 
 	protected Object oldUid;
 	
@@ -35,14 +34,14 @@ public class ViewMessageAction
 	 * @param controller
 	 */
 	public ViewMessageAction(FrameMediator controller) {
-		super(controller);
+		super(controller, "ViewMessageAction");
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.table");
+		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameMediator().getSelectionManager().getSelection("mail.table");
 		Object[] uids = references[0].getUids(); 
 		
 		if( uids.length == 1) {
@@ -57,9 +56,7 @@ public class ViewMessageAction
 
 		MainInterface.processor.addOp(
 			new ViewMessageCommand(
-				getFrameController(), references
-				));
+				getFrameMediator(), references));
 		}
 	}
-
 }

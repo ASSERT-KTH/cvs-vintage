@@ -18,33 +18,32 @@ package org.columba.mail.gui.tree.action;
 
 import java.awt.event.ActionEvent;
 
-import org.columba.core.action.InternAction;
+import org.columba.core.action.FrameAction;
 import org.columba.core.gui.frame.FrameMediator;
 import org.columba.core.main.MainInterface;
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.gui.table.command.ViewHeaderListCommand;
 
-public class ViewHeaderListAction extends InternAction {
+public class ViewHeaderListAction extends FrameAction {
 
 	/**
 	 * @param controller
 	 */
 	public ViewHeaderListAction(FrameMediator controller) {
-		super(controller);
+		super(controller, "ViewHeaderListAction");
 	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	public void actionPerformed(ActionEvent evt) {
-		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameController().getSelectionManager().getSelection("mail.tree");		
+		FolderCommandReference[] references  = (FolderCommandReference[]) getFrameMediator().getSelectionManager().getSelection("mail.tree");		
 		if( (references.length == 1) && (references[0].getFolder() instanceof Folder) ) {
 			MainInterface.processor.addOp(
 				new ViewHeaderListCommand(
-					getFrameController(),references));
+					getFrameMediator(), references));
 		
 		}
 	}
-
 }
