@@ -1,4 +1,4 @@
-// $Id: StartBrowser.java,v 1.6 2003/12/06 18:12:57 alexb Exp $
+// $Id: StartBrowser.java,v 1.7 2004/03/06 21:16:27 mvw Exp $
 // Copyright (c) 2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -34,10 +34,10 @@ import org.apache.log4j.Logger;
  * @stereotype utility
  */
 public class StartBrowser {
-	/** logger */
-	private static Logger cat = Logger.getLogger(StartBrowser.class);
+    /** logger */
+    private static Logger cat = Logger.getLogger(StartBrowser.class);
 
-	/**
+    /**
      * Open an Url in the system's default browser.
      * <P>
      * This will probably not be perfect for everyone but hopefully it is a
