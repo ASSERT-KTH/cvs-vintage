@@ -70,7 +70,6 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
 
-
 /**
  * Check ContextManager and set defaults for non-set properties
  *
@@ -111,4 +110,97 @@ public class DefaultCMSetter { //  implements TomcatHandler
 
 	return 0;
     }
+
+    /** Called when a new context is added to the server.
+     *
+     *  - Check it and set defaults for WorkDir, EngineHeader and SessionManager.
+     *  If you don't like the defaults, set them in Context before adding it to the
+     *  engine.
+     *
+     *  - Set up defaults for context interceptors and session if nothing is set
+     */
+    public int addContext(ContextManager cm, Context ctx) {
+	// Make sure context knows about its manager.
+	ctx.setContextManager( cm );
+	setEngineHeader( ctx );
+
+	if( ctx.getWorkDir() == null)
+	    setWorkDir(ctx);
+	
+	// Set default session manager if none set
+	if( ctx.getSessionManager() == null ) 
+	    ctx.setSessionManager(new org.apache.tomcat.session.StandardSessionManager());
+
+	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
+
+	// If no ContextInterceptors are set up use defaults
+	Enumeration enum=ctx.getContextInterceptors();
+	if( ! enum.hasMoreElements() ) {
+	    // set up work dir ( attribute + creation )
+	    ctx.addContextInterceptor(new WorkDirInterceptor());
+	    
+	    // Read context's web.xml
+	    // new WebXmlInterceptor().contextInit( this );
+	    ctx.addContextInterceptor( new WebXmlReader());
+	    
+	    // load initial servlets
+	    ctx.addContextInterceptor(new LoadOnStartupInterceptor());
+	}
+	
+	// XXX Loader properties - need to be set on loader!!
+	ctx.addClassPath("WEB-INF/classes");
+	ctx.addLibPath("WEB-INF/lib");
+
+	if(ctx.getLoader() == null) {
+	    ctx.setLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl(ctx));
+	}
+
+
+	return 0;
+    }
+
+    // -------------------- implementation
+    /** Encoded ContextManager.getWorkDir() + host + port + path
+     */
+    private void setWorkDir(Context ctx ) {
+	ContextManager cm=ctx.getContextManager();
+	
+	StringBuffer sb=new StringBuffer();
+	sb.append(cm.getWorkDir());
+	sb.append(File.separator);
+	sb.append(cm.getHostName() );
+	sb.append("_").append(cm.getPort());
+	sb.append(URLEncoder.encode( ctx.getPath() ));
+	
+	ctx.setWorkDir( new File(sb.toString()));
+    }
+    
+    private void setEngineHeader(Context ctx) {
+        String engineHeader=ctx.getEngineHeader();
+
+	if( engineHeader==null) {
+	    /*
+	     * Whoever modifies this needs to check this modification is
+	     * ok with the code in com.jsp.runtime.ServletEngine or talk
+	     * to akv before you check it in. 
+	     */
+	    // Default value for engine header
+	    // no longer use core.properties - the configuration comes from
+	    // server.xml or web.xml - no more properties.
+	    StringBuffer sb=new StringBuffer();
+	    sb.append(Constants.TOMCAT_NAME).append("/").append(Constants.TOMCAT_VERSION);
+	    sb.append(" (").append(Constants.JSP_NAME).append(" ").append(Constants.JSP_VERSION);
+	    sb.append("; ").append(Constants.SERVLET_NAME).append(" ");
+	    sb.append(Constants.SERVLET_MAJOR).append(".").append(Constants.SERVLET_MINOR);
+	    sb.append( "; Java " );
+	    sb.append(System.getProperty("java.version")).append("; ");
+	    sb.append(System.getProperty("os.name") + " ");
+	    sb.append(System.getProperty("os.version") + " ");
+	    sb.append(System.getProperty("os.arch") + "; java.vendor=");
+	    sb.append(System.getProperty("java.vendor")).append(")");
+	    engineHeader=sb.toString();
+	}
+	ctx.setEngineHeader( engineHeader );
+    }
+
 }

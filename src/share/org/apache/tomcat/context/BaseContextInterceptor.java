@@ -98,6 +98,14 @@ public class BaseContextInterceptor implements ContextInterceptor {
 	return 0;
     }
 
+    public int addMapping( Context ctx, String path, ServletWrapper servlet) {
+	return 0;
+    }
+
+
+    public int removeMapping( Context ctx, String path ) {
+	return 0;
+    }
 
     
 }

@@ -120,18 +120,20 @@ public class Context {
     private boolean isWARExpanded = false;
     private boolean isWARValidated = false;
 
-    // Class Loading 
+    // Class Loading
+    // XXX Nobody sets it     private ClassLoader classLoader;
     private String classPath = ""; // classpath used by the classloader.
     private Vector classPaths = new Vector();
     private Vector libPaths = new Vector();
     private ServletClassLoader servletLoader;
-    private ClassLoader classLoader = null;
-    
+
     // Interceptors
     private Vector initInterceptors = new Vector();
     private Vector serviceInterceptors = new Vector();
     private Vector destroyInterceptors = new Vector();
     private RequestSecurityProvider rsProvider;
+
+    private Vector contextInterceptors = new Vector();
     
     // Servlets loaded by this context( String->ServletWrapper )
     private Hashtable servlets = new Hashtable();
@@ -357,7 +359,7 @@ public class Context {
 	//	Real Path is the same as PathTranslated for a new request
 	
 	Context base=this; // contextM.getContext("");
-	Request req=contextM.createRequest( base , normPath(path) );
+	Request req=contextM.createRequest( base , FileUtil.normPath(path) );
 	contextM.processRequest(req);
 	
 	String mappedPath = req.getMappedPath();
@@ -485,27 +487,20 @@ public class Context {
 	}
 	this.initialized = true;
 
-	// Set defaults if not already there
-	new DefaultContextSetter().contextInit( this );
-	
-	// set up work dir ( attribute + creation )
-	new WorkDirInterceptor().contextInit( this );
+	for( int i=0; i< contextInterceptors.size(); i++ ) {
+	    ((ContextInterceptor)contextInterceptors.elementAt(i)).contextInit( this );
+	}
+    }
 
-	// Read context's web.xml
-	// new WebXmlInterceptor().contextInit( this );
-	new WebXmlReader().contextInit( this );
+    public void addContextInterceptor( ContextInterceptor ci) {
+	contextInterceptors.addElement( ci );
+    }
 
-	// load initial servlets
-	new LoadOnStartupInterceptor().contextInit( this );
+    public Enumeration getContextInterceptors() {
+	return contextInterceptors.elements();
     }
 
     public SessionManager getSessionManager() {
-	if( sessionManager==null ) {
-	    // default - will change when a better one exists
-	    //	    sessionManager = org.apache.tomcat.session.ServerSessionManager.getManager();
-	    sessionManager =
-		new org.apache.tomcat.session.StandardSessionManager();
-	}
 	return sessionManager;
     }
 
@@ -528,8 +523,10 @@ public class Context {
 
 	getSessionManager().removeSessions(this);
 
-	new WorkDirInterceptor().contextShutdown(this);
-	
+	for( int i=0; i< contextInterceptors.size(); i++ ) {
+	    ((ContextInterceptor)contextInterceptors.elementAt(i)).contextShutdown( this );
+	}
+
 	System.out.println("Context: " + this + " down");
     }
     
@@ -954,23 +951,27 @@ public class Context {
     }
 
     // -------------------- Class Loading --------------------
+
+    // XXX I have no ideea how it works !
+    // Used by JSP and loader
+    /** ClassLoader used to load this servlet.
+     */
     public ClassLoader getClassLoader() {
-      return this.classLoader;
+	// Doesn't work:	return (ClassLoader)servletLoader;
+
+	// ClassLoader is allways null, nobody sets it
+	return null;
     }
 
-    public void setClassLoader(ClassLoader classLoader) {
-      this.classLoader = classLoader;
-    }
+    //     public void setClassLoader(ClassLoader classLoader) {
+    //       this.classLoader = classLoader;
+    //     }
 
-    void setLoader(ServletClassLoader loader ) {
+    public void setLoader(ServletClassLoader loader ) {
 	this.servletLoader=loader;
     }
     
-    ServletClassLoader getLoader() {
-	if(servletLoader == null) {
-	    // XXX configurable option !!!
-	    servletLoader = new org.apache.tomcat.loader.ServletClassLoaderImpl(this);
-	}
+    public ServletClassLoader getLoader() {
 	return servletLoader;
     }
 
@@ -1021,28 +1022,4 @@ public class Context {
 	return "Ctx(" + path + "," + getDocBase() + ")";
 	// + " , " + getDocumentBase() + " ) ";
     }
-
-
-        // XXX Probably not needed, used by getRealPath()
-    private String normPath( String path ) {
-	int i = -1;
-	// norm path
-	if( path==null) {
-	    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
-	    return "";
-	}
-        while ((i = path.indexOf('\\')) > -1) {
-            String a = path.substring(0, i);
-            String b = "";
- 
-            if (i < path.length() - 1) {
-                b = path.substring(i + 1);
-            } 
- 
-            path = a + "/" + b;
-        }
-	return path;
-    }
-    
-
 }

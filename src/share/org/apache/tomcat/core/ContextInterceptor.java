@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.2 2000/02/03 07:11:51 costin Exp $
- * $Revision: 1.2 $
- * $Date: 2000/02/03 07:11:51 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ContextInterceptor.java,v 1.3 2000/02/08 23:52:47 costin Exp $
+ * $Revision: 1.3 $
+ * $Date: 2000/02/08 23:52:47 $
  *
  * ====================================================================
  *
@@ -86,5 +86,13 @@ public interface ContextInterceptor {
     /** Notify when a servlet is removed from context
      */
     public int removeServlet( Context ctx, ServletWrapper sw);
-    
+
+    /** Notify when a mapping is added to a context
+     */
+    public int addMapping( Context ctx, String path, ServletWrapper servlet);
+
+    /** Notify when a mapping is deleted  from  a context
+     */
+    public int removeMapping( Context ctx, String path );
+
 }

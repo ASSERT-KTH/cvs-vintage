@@ -214,14 +214,18 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) {
-	//     System.out.println("Add context ");
-	ctx.setContextManager( this );
-	// assert "valid path" 
-
 	// it will replace existing context - it's better than 
 	// IllegalStateException.
 	String path=ctx.getPath();
+	if( getContext( path ) != null ) {
+	    removeContext(path);
+	}
+
+	// Set defaults for the context
+	new DefaultCMSetter().addContext( this, ctx );
+	
 	if(debug>0) log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase());
+
 	contexts.put( path, ctx );
     }
     
