@@ -10,79 +10,67 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.EntityCache;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.logging.Logger;
 import org.jboss.deployment.DeploymentException;
+import org.jboss.security.SecurityAssociation;
+import org.jboss.invocation.InvocationType;
 
-import javax.ejb.EJBLocalObject;
 import javax.ejb.RemoveException;
-import java.util.Set;
+import javax.ejb.EJBException;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.lang.reflect.Method;
 
 /**
  *
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.4 $
  */
 public abstract class CascadeDeleteStrategy
 {
+   private Method removeMethod;
+   private InvocationType invocationType;
+
    /**
     * No cascade-delete strategy.
     */
    public static final class NoneCascadeDeleteStrategy
       extends CascadeDeleteStrategy
    {
-      public NoneCascadeDeleteStrategy(JDBCCMRFieldBridge cmrField)
+      public NoneCascadeDeleteStrategy(JDBCCMRFieldBridge cmrField) throws DeploymentException
       {
          super(cmrField);
       }
 
-      public boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelationsRef)
+      public void removedIds(EntityEnterpriseContext ctx, Object[] oldRelationRefs, List ids)
       {
-         boolean removed = false;
-         Object value = cmrField.getInstanceValue(ctx);
-         if(cmrField.isCollectionValued())
-         {
-            Set c = (Set)value;
-            if(!c.isEmpty())
-            {
-               removed = true;
-               cmrField.setInstanceValue(ctx, null);
-            }
-         }
-         else
-         {
-            if(value != null)
-            {
-               removed = true;
-               cmrField.setInstanceValue(ctx, null);
-            }
-         }
-         return removed;
+         cmrField.setInstanceValue(ctx, null);
       }
 
       public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
-         throws RemoveException
       {
-         boolean debug = log.isDebugEnabled();
+         boolean trace = log.isTraceEnabled();
          for(int i = 0; i < oldValues.size(); ++i)
          {
-            EJBLocalObject oldValue = (EJBLocalObject)oldValues.get(i);
+            Object oldValue = oldValues.get(i);
             if(relatedManager.uncheduledCascadeDelete(oldValue))
             {
-               if(debug)
-                  log.debug("Removing " + oldValue);
+               if(trace)
+               {
+                  log.trace("Removing " + oldValue);
+               }
 
-               oldValue.remove();
+               invokeRemoveRelated(oldValue);
             }
-            else
+            else if(trace)
             {
-               if(debug)
-                  log.debug(oldValue + " already removed");
+               log.trace(oldValue + " already removed");
             }
          }
       }
@@ -94,56 +82,35 @@ public abstract class CascadeDeleteStrategy
    public static final class DefaultCascadeDeleteStrategy
       extends CascadeDeleteStrategy
    {
-      public DefaultCascadeDeleteStrategy(JDBCCMRFieldBridge cmrField)
+      public DefaultCascadeDeleteStrategy(JDBCCMRFieldBridge cmrField) throws DeploymentException
       {
          super(cmrField);
       }
 
-      public boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelationsRef)
+      public void removedIds(EntityEnterpriseContext ctx, Object[] oldRelationRef, List ids)
       {
-         boolean removed = false;
-         Object value = cmrField.getInstanceValue(ctx);
-         if(cmrField.isCollectionValued())
-         {
-            Set c = (Set)value;
-            if(!c.isEmpty())
-            {
-               removed = true;
-               cmrField.scheduleChildrenForCascadeDelete(ctx);
-               scheduleCascadeDelete(oldRelationsRef, new ArrayList(c));
-               cmrField.setInstanceValue(ctx, null);
-            }
-         }
-         else
-         {
-            if(value != null)
-            {
-               removed = true;
-               cmrField.scheduleChildrenForCascadeDelete(ctx);
-               scheduleCascadeDelete(oldRelationsRef, Collections.singletonList(value));
-               cmrField.setInstanceValue(ctx, null);
-            }
-         }
-         return removed;
+         cmrField.scheduleChildrenForCascadeDelete(ctx);
+         scheduleCascadeDelete(oldRelationRef, new ArrayList(ids));
+         cmrField.setInstanceValue(ctx, null);
       }
 
-      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException
+      public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
       {
-         boolean debug = log.isDebugEnabled();
+         boolean trace = log.isTraceEnabled();
          for(int i = 0; i < oldValues.size(); ++i)
          {
-            EJBLocalObject oldValue = (EJBLocalObject)oldValues.get(i);
+            Object oldValue = oldValues.get(i);
             if(relatedManager.uncheduledCascadeDelete(oldValue))
             {
-               if(debug)
-                  log.debug("Removing " + oldValue);
-
-               oldValue.remove();
+               if(trace)
+               {
+                  log.trace("Removing " + oldValue);
+               }
+               invokeRemoveRelated(oldValue);
             }
-            else
+            else if(trace)
             {
-               if(debug)
-                  log.debug(oldValue + " already removed");
+               log.trace(oldValue + " already removed");
             }
          }
       }
@@ -186,51 +153,31 @@ public abstract class CascadeDeleteStrategy
          );
       }
 
-      public boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelationsRef)
+      public void removedIds(EntityEnterpriseContext ctx, Object[] oldRelationRefs, List ids)
       {
-         boolean removed = false;
-         Object value = cmrField.getInstanceValue(ctx);
-         if(cmrField.isCollectionValued())
-         {
-            Set c = (Set)value;
-            if(!c.isEmpty())
-            {
-               removed = true;
-               cmrField.scheduleChildrenForBatchCascadeDelete(ctx);
-               scheduleCascadeDelete(oldRelationsRef, new ArrayList(c));
-            }
-         }
-         else
-         {
-            if(value != null)
-            {
-               removed = true;
-               cmrField.scheduleChildrenForBatchCascadeDelete(ctx);
-               scheduleCascadeDelete(oldRelationsRef, Collections.singletonList(value));
-            }
-         }
-
-         return removed;
+         cmrField.scheduleChildrenForBatchCascadeDelete(ctx);
+         scheduleCascadeDelete(oldRelationRefs, new ArrayList(ids));
       }
 
       public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException
       {
          boolean didDelete = false;
-         boolean debug = log.isDebugEnabled();
+         boolean trace = log.isTraceEnabled();
          for(int i = 0; i < oldValues.size(); ++i)
          {
-            EJBLocalObject oldValue = (EJBLocalObject)oldValues.get(i);
+            Object oldValue = oldValues.get(i);
             if(relatedManager.uncheduledCascadeDelete(oldValue))
             {
-               if(debug)
-                  log.debug("Removing " + oldValue);
-               oldValue.remove();
+               if(trace)
+               {
+                  log.trace("Removing " + oldValue);
+               }
+               invokeRemoveRelated(oldValue);
                didDelete = true;
             }
-            else
+            else if(trace)
             {
-               if(debug)
-                  log.debug(oldValue + " already removed");
+               log.trace(oldValue + " already removed");
             }
          }
 
@@ -266,15 +213,43 @@ public abstract class CascadeDeleteStrategy
    protected final JDBCStoreManager relatedManager;
    protected final Logger log;
 
-   public CascadeDeleteStrategy(JDBCCMRFieldBridge cmrField)
+   public CascadeDeleteStrategy(JDBCCMRFieldBridge cmrField) throws DeploymentException
    {
       this.cmrField = cmrField;
       entity = (JDBCEntityBridge)cmrField.getEntity();
       relatedManager = cmrField.getRelatedManager();
+
+      Class localClass = relatedManager.getMetaData().getLocalClass();
+      if(localClass != null)
+      {
+         try
+         {
+            removeMethod = localClass.getMethod("remove", new Class[]{});
+         }
+         catch(NoSuchMethodException e)
+         {
+            throw new DeploymentException("Failed to obtain the remove method from " + localClass.getName(), e);
+         }
+         invocationType = InvocationType.LOCAL;
+      }
+      else
+      {
+         Class remoteClass = relatedManager.getMetaData().getRemoteClass();
+         try
+         {
+            removeMethod = remoteClass.getMethod("remove", new Class[]{});
+         }
+         catch(NoSuchMethodException e)
+         {
+            throw new DeploymentException("Failed to obtain the remove method from " + localClass.getName(), e);
+         }
+         invocationType = InvocationType.REMOTE;
+      }
+
       log = Logger.getLogger(getClass().getName() + "." + cmrField.getEntity().getEntityName());
    }
 
-   public abstract boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelationsRef);
+   public abstract void removedIds(EntityEnterpriseContext ctx, Object[] oldRelationRefs, List ids);
 
    public abstract void cascadeDelete(EntityEnterpriseContext ctx, List oldValues) throws RemoveException;
 
@@ -330,5 +305,41 @@ public abstract class CascadeDeleteStrategy
 
       if(log.isDebugEnabled())
          log.debug("Remove: Rows affected = " + rowsAffected);
+   }
+
+   public void invokeRemoveRelated(Object relatedId)
+   {
+      Thread thread = Thread.currentThread();
+      ClassLoader oldCL = thread.getContextClassLoader();
+      EntityContainer container = relatedManager.getContainer();
+      thread.setContextClassLoader(container.getClassLoader());
+
+      try
+      {
+         EntityCache instanceCache = (EntityCache) container.getInstanceCache();
+
+         org.jboss.invocation.Invocation invocation = new org.jboss.invocation.Invocation();
+         invocation.setId(instanceCache.createCacheKey(relatedId));
+         invocation.setArguments(new Object[]{});
+         invocation.setTransaction(container.getTransactionManager().getTransaction());
+         invocation.setPrincipal(SecurityAssociation.getPrincipal());
+         invocation.setCredential(SecurityAssociation.getCredential());
+         invocation.setType(invocationType);
+         invocation.setMethod(removeMethod);
+
+         container.invoke(invocation);
+      }
+      catch(EJBException e)
+      {
+         throw e;
+      }
+      catch(Exception e)
+      {
+         throw new EJBException("Error in remove instance", e);
+      }
+      finally
+      {
+         thread.setContextClassLoader(oldCL);
+      }
    }
 }

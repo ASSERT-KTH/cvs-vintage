@@ -19,7 +19,6 @@ import javax.ejb.CreateException;
 import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
-import javax.ejb.EJBLocalObject;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -56,7 +55,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.64 $
+ * @version $Revision: 1.65 $
  */
 public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
@@ -244,21 +243,21 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
    /**
     * Schedules instances for cascade-delete
     */
-   public void scheduleCascadeDelete(List instances)
+   public void scheduleCascadeDelete(List pks)
    {
       Set registered = (Set)cascadeDeleteSet.get();
-      registered.addAll(instances);
+      registered.addAll(pks);
    }
 
    /**
     * Unschedules instance cascade delete.
-    * @param instance  EJBLocalObject instance.
+    * @param pk  instance primary key.
     * @return  true if the instance was scheduled for cascade deleted.
     */
-   public boolean uncheduledCascadeDelete(EJBLocalObject instance)
+   public boolean uncheduledCascadeDelete(Object pk)
    {
       Set registered = (Set)cascadeDeleteSet.get();
-      return registered.remove(instance);
+      return registered.remove(pk);
    }
 
    public Object getApplicationTxData(Object key)
@@ -592,7 +591,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       if(loaded)
       {
          ctx.setValid(true);
-         entityBridge.setCreated(ctx);
+         JDBCEntityBridge.setCreated(ctx);
       }
    }
 
@@ -619,7 +618,7 @@ public final class JDBCStoreManager implements JDBCEntityPersistenceStore
       }
 
       // mark the entity as created; if it was loading it was created
-      entityBridge.setCreated(ctx);
+      JDBCEntityBridge.setCreated(ctx);
 
       return loadEntityCommand.execute(ctx, failIfNotFound);
    }

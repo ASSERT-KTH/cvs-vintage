@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.ejb.RemoveException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
+import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
@@ -28,7 +29,7 @@ import org.jboss.deployment.DeploymentException;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  */
 public final class JDBCRemoveEntityCommand
 {
@@ -92,7 +93,7 @@ public final class JDBCRemoveEntityCommand
       // if one of the store fails an EJBException will be thrown
       if(!syncOnCommitOnly && needsSync)
       {
-         manager.getContainer().synchronizeEntitiesWithinTransaction(ctx.getTransaction());
+         EntityContainer.synchronizeEntitiesWithinTransaction(ctx.getTransaction());
       }
 
       if(!batchCascadeDelete)

@@ -73,7 +73,7 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.81 $
+ * @version $Revision: 1.82 $
  */
 public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
@@ -378,7 +378,23 @@ public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 
    public boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelationsRef)
    {
-      return cascadeDeleteStrategy.removeFromRelations(ctx, oldRelationsRef);
+      load(ctx);
+
+      FieldState fieldState = getFieldState(ctx);
+      List value = fieldState.getValue();
+
+      boolean removed;
+      if(!value.isEmpty())
+      {
+         cascadeDeleteStrategy.removedIds(ctx, oldRelationsRef, value);
+         removed = true;
+      }
+      else
+      {
+         removed = false;
+      }
+      return removed;
+      //return cascadeDeleteStrategy.removeFromRelations(ctx, oldRelationsRef);
    }
 
    public void cascadeDelete(EntityEnterpriseContext ctx, List oldValues)
