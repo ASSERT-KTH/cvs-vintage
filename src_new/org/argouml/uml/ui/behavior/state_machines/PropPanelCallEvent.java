@@ -1,4 +1,4 @@
-// $Id: PropPanelCallEvent.java,v 1.22 2004/10/13 05:52:20 linus Exp $
+// $Id: PropPanelCallEvent.java,v 1.23 2004/11/24 21:57:04 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,9 +28,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.argouml.i18n.Translator;
-
-
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
 import org.argouml.uml.ui.UMLLinkedList;
+import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -53,6 +55,12 @@ public class PropPanelCallEvent extends PropPanelEvent {
     public void initialize() {
         super.initialize();
        
+        new PropPanelButton(this, lookupIcon("Parameter"), 
+                Translator.localize("button.new-parameter"),
+                new ActionNewParameter());
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+
+        
         // TODO: make the next list into a scrollbox (issue 2288)
         JList operationList =
 	    new UMLLinkedList(new UMLCallEventOperationListModel());

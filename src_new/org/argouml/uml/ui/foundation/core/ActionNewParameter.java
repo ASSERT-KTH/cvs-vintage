@@ -1,4 +1,4 @@
-// $Id: ActionNewParameter.java,v 1.6 2004/11/23 21:43:11 mvw Exp $
+// $Id: ActionNewParameter.java,v 1.7 2004/11/24 21:57:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -43,9 +43,8 @@ public class ActionNewParameter extends AbstractActionNewModelElement {
 
     /**
      * The constructor.
-     * 
      */
-    protected ActionNewParameter() {
+    public ActionNewParameter() {
         super("button.new-parameter");
     }
 

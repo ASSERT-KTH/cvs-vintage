@@ -1,4 +1,4 @@
-// $Id: PropPanelParameter.java,v 1.49 2004/11/22 19:34:15 mvw Exp $
+// $Id: PropPanelParameter.java,v 1.50 2004/11/24 21:57:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -91,7 +91,7 @@ public class PropPanelParameter extends PropPanelModelElement {
                 new ActionNavigateContainerElement()));
         new PropPanelButton(this, lookupIcon("Parameter"), 
                 Translator.localize("button.new-parameter"), 
-                "addParameter", null);
+                new ActionAddParameter());
         addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
@@ -199,6 +199,5 @@ public class PropPanelParameter extends PropPanelModelElement {
         }
         return behFeatureScroll;
     }
-
 
 } /* end class PropPanelParameter */

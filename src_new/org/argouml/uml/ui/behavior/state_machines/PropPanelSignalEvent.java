@@ -1,4 +1,4 @@
-// $Id: PropPanelSignalEvent.java,v 1.7 2004/09/22 17:27:45 mvw Exp $
+// $Id: PropPanelSignalEvent.java,v 1.8 2004/11/24 21:57:05 mvw Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,6 +28,11 @@
 
 package org.argouml.uml.ui.behavior.state_machines;
 
+import org.argouml.i18n.Translator;
+import org.argouml.uml.ui.ActionRemoveFromModel;
+import org.argouml.uml.ui.PropPanelButton;
+import org.argouml.uml.ui.PropPanelButton2;
+import org.argouml.uml.ui.foundation.core.ActionNewParameter;
 import org.argouml.util.ConfigLoader;
 
 /**
@@ -44,6 +49,19 @@ public class PropPanelSignalEvent extends PropPanelEvent {
         super("Signal event", lookupIcon("SignalEvent"), 
               ConfigLoader.getTabPropsOrientation());
     }
+    
+    /**
+     * @see org.argouml.uml.ui.behavior.state_machines.PropPanelEvent#initialize()
+     */
+    public void initialize() {
+        super.initialize();
+        
+        new PropPanelButton(this, lookupIcon("Parameter"), 
+                Translator.localize("button.new-parameter"),
+                new ActionNewParameter());
+        addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
+    }
+
 } 
 
 

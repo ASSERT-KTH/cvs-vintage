@@ -1,4 +1,4 @@
-// $Id: PropPanelGuard.java,v 1.28 2004/11/22 19:34:16 mvw Exp $
+// $Id: PropPanelGuard.java,v 1.29 2004/11/24 21:57:05 mvw Exp $
 // Copyright (c) 1996-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.i18n.Translator;
 import org.argouml.model.ModelFacade;
+import org.argouml.uml.ui.ActionNavigateTransition;
 import org.argouml.uml.ui.ActionRemoveFromModel;
 import org.argouml.uml.ui.PropPanelButton;
 import org.argouml.uml.ui.PropPanelButton2;
@@ -87,7 +88,9 @@ public class PropPanelGuard extends PropPanelModelElement {
 
 	new PropPanelButton(this,
             ResourceLoaderWrapper.lookupIconResource("NavigateUp"), 
-            Translator.localize("button.go-up"), "navigateUp", null);
+            Translator.localize("button.go-up"), 
+            new ActionNavigateTransition());
+    
 	addButton(new PropPanelButton2(this, new ActionRemoveFromModel()));
     }
 
