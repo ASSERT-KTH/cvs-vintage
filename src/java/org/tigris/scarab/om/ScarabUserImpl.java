@@ -89,7 +89,7 @@ import org.apache.log4j.Category;
  * implementation needs.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUserImpl.java,v 1.76 2002/07/12 21:28:08 elicia Exp $
+ * @version $Id: ScarabUserImpl.java,v 1.77 2002/07/13 00:44:35 jmcnally Exp $
  */
 public class ScarabUserImpl 
     extends BaseScarabUserImpl 
@@ -188,6 +188,13 @@ public class ScarabUserImpl
             {
                 return getPrivateModules(permission);
             }
+
+            protected void 
+                deleteRModuleUserAttribute(RModuleUserAttribute rmua)
+                throws Exception
+            {
+                privateDeleteRModuleUserAttribute(rmua);
+            }    
         };
     }
     
@@ -232,6 +239,12 @@ public class ScarabUserImpl
     {        
         return getModules(permissions, showDeletedModules);
     }
+    private void privateDeleteRModuleUserAttribute(RModuleUserAttribute rmua)
+        throws Exception
+    {
+        rmua.delete(this);
+    }
+
 
     /**
      *   Utility method that takes a username and a confirmation code
@@ -370,6 +383,14 @@ public class ScarabUserImpl
         return hasPermission;
     }
     
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, List)
+     */
+    public boolean hasPermission(String perm, List modules)
+    {
+        return internalUser.hasPermission(perm, modules);
+    }
+        
     /**
      * @see org.tigris.scarab.om.ScarabUser#getModules()
      */
@@ -937,5 +958,14 @@ public class ScarabUserImpl
         throws Exception
     {
         return internalUser.getCurrentRModuleIssueType();
+    }
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes()
+     */
+    public void updateIssueListAttributes(List attributes)
+        throws Exception
+    {
+        internalUser.updateIssueListAttributes(attributes);
     }
 }

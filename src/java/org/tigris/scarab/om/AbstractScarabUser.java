@@ -79,7 +79,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * 
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
  * @author <a href="mailto:jmcnally@collab.net">John McNally</a>
- * @version $Id: AbstractScarabUser.java,v 1.42 2002/07/12 21:57:31 elicia Exp $
+ * @version $Id: AbstractScarabUser.java,v 1.43 2002/07/13 00:44:35 jmcnally Exp $
  */
 public abstract class AbstractScarabUser 
     extends BaseObject 
@@ -212,6 +212,24 @@ public abstract class AbstractScarabUser
      * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, Module)
      */
     public abstract boolean hasPermission(String perm, Module module);
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#hasPermission(String, List)
+     */
+    public boolean hasPermission(String perm, List modules)
+    {
+        boolean hasPerm = false;
+        if (modules != null && !modules.isEmpty()) 
+        {
+            hasPerm = true;
+            Iterator i = modules.iterator();
+            while (i.hasNext() && hasPerm) 
+            {
+                hasPerm = hasPermission(perm, (Module)i.next());
+            }
+        }
+        return hasPerm;
+    }
 
     /**
      * @see org.tigris.scarab.om.ScarabUser#getName()
@@ -398,36 +416,69 @@ public abstract class AbstractScarabUser
         if ( obj == null ) 
         {        
             Criteria crit = new Criteria(4)
-                .add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId())
                 .add(RModuleUserAttributePeer.USER_ID, getUserId())
                 .add(RModuleUserAttributePeer.ATTRIBUTE_ID, 
                      attribute.getAttributeId())
-                .add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
-                     issueType.getIssueTypeId());
+                .add(RModuleUserAttributePeer.LIST_ID, null);
+            if (module == null) 
+            {
+                crit.add(RModuleUserAttributePeer.MODULE_ID, null);
+            }
+            else 
+            {
+                crit.add(RModuleUserAttributePeer.MODULE_ID, 
+                         module.getModuleId());
+                
+            }            
+            if (issueType == null) 
+            {
+                crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);
+            }
+            else 
+            {
+                crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                         issueType.getIssueTypeId());                
+            }
+            
             List muas = RModuleUserAttributePeer.doSelect(crit);
             if ( muas.size() == 1 ) 
             {
                 result = (RModuleUserAttribute)muas.get(0);
             }
-            else if ( muas.size() == 0 )
+            else if ( muas.isEmpty() )
             {
-                result = new RModuleUserAttribute();
-                result.setModuleId(module.getModuleId());
-                result.setUserId(getUserId());
-                result.setIssueTypeId(issueType.getIssueTypeId());
-                result.setAttributeId(attribute.getAttributeId());
+                result = 
+                    getNewRModuleUserAttribute(attribute, module, issueType);
             }
             else 
             {
                 throw new ScarabException(
                 "Not sure, but this should probably only return one - jdm");
-        }
+            }
             ScarabCache.put(result, this, GET_R_MODULE_USERATTRIBUTE, 
                             module, attribute, issueType);
         }
         else 
         {
             result = (RModuleUserAttribute)obj;
+        }
+        return result;
+    }
+    
+    protected RModuleUserAttribute getNewRModuleUserAttribute(
+        Attribute attribute, Module module, IssueType issueType)
+        throws Exception
+    {
+        RModuleUserAttribute result = RModuleUserAttributeManager.getInstance();
+        result.setUserId(getUserId());
+        result.setAttributeId(attribute.getAttributeId());
+        if (module != null) 
+        {
+            result.setModuleId(module.getModuleId());
+        }
+        if (issueType != null) 
+        {
+            result.setIssueTypeId(issueType.getIssueTypeId());
         }
         return result;
     }
@@ -1047,4 +1098,63 @@ public abstract class AbstractScarabUser
         
         return rmit;
     }
+
+
+    /**
+     * @see org.tigris.scarab.om.ScarabUser#updateIssueListAttributes()
+     */
+    public void updateIssueListAttributes(List attributes)
+        throws Exception
+    {
+        MITList mitList = getCurrentMITList();
+        Module module = null;
+        IssueType issueType = null;
+
+        // Delete current attribute selections for user
+        Iterator currentAttributes = null;
+        if (mitList == null) 
+        {
+            Criteria crit = new Criteria();
+            crit.add(RModuleUserAttributePeer.USER_ID, getUserId());
+            issueType = getCurrentIssueType();
+            module = getCurrentModule();
+            crit.add(RModuleUserAttributePeer.MODULE_ID, module.getModuleId());
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     issueType.getIssueTypeId());
+            currentAttributes = RModuleUserAttributePeer.doSelect(crit)
+                .iterator();
+        }
+        else 
+        {
+            currentAttributes = mitList.getSavedRMUAs().iterator();
+        }
+
+        while (currentAttributes.hasNext()) 
+        {
+            deleteRModuleUserAttribute(
+                (RModuleUserAttribute)currentAttributes.next());
+        }
+
+        Iterator iter = attributes.iterator();
+        int i = 1;
+        while (iter.hasNext()) 
+        {
+            Attribute attribute = (Attribute)iter.next();
+            RModuleUserAttribute rmua = null;
+            if (mitList != null)
+            {
+                rmua = mitList.getNewRModuleUserAttribute(attribute);
+            }
+            else 
+            {
+                rmua = getNewRModuleUserAttribute(attribute, module, issueType);
+            }
+            rmua.setOrder(i++);
+            rmua.save();
+        }
+    }
+
+    protected abstract void 
+        deleteRModuleUserAttribute(RModuleUserAttribute rmua)
+        throws Exception;
 }

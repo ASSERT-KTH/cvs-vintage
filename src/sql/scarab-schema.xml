@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.104 2002/07/03 01:54:34 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.105 2002/07/13 00:44:35 jmcnally Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -1029,32 +1029,41 @@
 <!--
     User's choice of attributes to appear on the Issue List screen.
 -->
-<table name="SCARAB_R_MODULE_USER_ATTRIBUTE" idMethod="none" 
+<table name="SCARAB_R_MODULE_USER_ATTRIBUTE" idMethod="idbroker" 
         javaName="RModuleUserAttribute">
+    <!--
+        pk.
+    -->
+    <column name="RMUA_ID" primaryKey="true" required="true" type="INTEGER"/>
+
+    <!--
+        MITList .
+    -->
+    <column name="LIST_ID" required="false" type="INTEGER"/>
     <!--
         Module.
     -->
-    <column name="MODULE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="MODULE_ID" required="false" type="INTEGER"/>
     <!--
         Person.
     -->
-    <column name="USER_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="USER_ID" required="true" type="INTEGER"/>
     <!--
         Artifact type.
     -->
-    <column name="ISSUE_TYPE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ISSUE_TYPE_ID" required="false" type="INTEGER"/>
     <!--
         Attribute.
     -->
-    <column name="ATTRIBUTE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <column name="ATTRIBUTE_ID" required="true" type="INTEGER"/>
     <!--
         Column order.
     -->
     <column name="PREFERRED_ORDER" javaName="Order" required="true" default="0" type="INTEGER"/>
-    <!--
-        Flag, which marks that association has been deleted.
-    -->
 
+    <foreign-key foreignTable="SCARAB_MIT_LIST">
+        <reference local="LIST_ID" foreign="LIST_ID"/>
+    </foreign-key>
     <foreign-key foreignTable="SCARAB_MODULE">
         <reference local="MODULE_ID" foreign="MODULE_ID"/>
     </foreign-key>
@@ -1067,6 +1076,14 @@
     <foreign-key foreignTable="SCARAB_ATTRIBUTE">
         <reference local="ATTRIBUTE_ID" foreign="ATTRIBUTE_ID"/>
     </foreign-key>
+
+    <unique>
+        <unique-column name="LIST_ID"/>
+        <unique-column name="MODULE_ID"/>
+        <unique-column name="USER_ID"/>
+        <unique-column name="ISSUE_TYPE_ID"/>
+        <unique-column name="ATTRIBUTE_ID"/>
+    </unique>
 </table>
 
 <!--

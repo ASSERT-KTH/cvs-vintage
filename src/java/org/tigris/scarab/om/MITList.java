@@ -287,8 +287,6 @@ public  class MITList
     {
         boolean common = true;
         Iterator items = iterator();
-        // skip the first one
-        items.next();
         while (items.hasNext()) 
         {
             MITListItem compareItem = (MITListItem)items.next();
@@ -396,15 +394,26 @@ public  class MITList
         throws Exception
     {
         List matchingRMUAs = new ArrayList();
-        MITListItem item = getFirstItem();
-        Module module = getModule(item);
-        IssueType issueType = getIssueType(item);
-        List rmuas = getScarabUser()
-            .getRModuleUserAttributes(module, issueType);
-        if (rmuas.isEmpty())
+        List rmuas = getSavedRMUAs();
+        int sizeGoal = rmuas.size();
+        if (sizeGoal == 0) 
         {
-            rmuas = module.getDefaultRModuleUserAttributes(issueType);
+            sizeGoal = 3;
         }
+        
+        if (rmuas.isEmpty()) 
+        {
+            MITListItem item = getFirstItem();
+            Module module = getModule(item);
+            IssueType issueType = getIssueType(item);
+            rmuas = getScarabUser()
+                .getRModuleUserAttributes(module, issueType);
+            if (rmuas.isEmpty())
+            {
+                rmuas = module.getDefaultRModuleUserAttributes(issueType);
+            }
+        }
+        
         Iterator i = rmuas.iterator();
         while (i.hasNext()) 
         {
@@ -415,7 +424,103 @@ public  class MITList
                 matchingRMUAs.add(rmua);   
             }            
         }
+        // if nothing better, go with random common attributes
+        int moreAttributes = sizeGoal - matchingRMUAs.size();
+        if (moreAttributes > 0) 
+        {
+            Iterator attributes = getCommonAttributes().iterator();
+            while (attributes.hasNext() && moreAttributes > 0) 
+            {
+                Attribute attribute = (Attribute)attributes.next();
+                boolean isInList = false;
+                i = matchingRMUAs.iterator();
+                while (i.hasNext()) 
+                {
+                    RModuleUserAttribute rmua = (RModuleUserAttribute)i.next();
+                    if (rmua.getAttribute().equals(attribute)) 
+                    {
+                        isInList = true;
+                        break;
+                    }
+                }
+                if (!isInList) 
+                {
+                    RModuleUserAttribute rmua = 
+                        getNewRModuleUserAttribute(attribute);
+                    matchingRMUAs.add(rmua);
+                    moreAttributes--;
+                }
+            }
+        }
+        
         return matchingRMUAs;
+    }
+
+    protected RModuleUserAttribute getNewRModuleUserAttribute(
+        Attribute attribute)
+        throws Exception
+    {
+        RModuleUserAttribute result = RModuleUserAttributeManager.getInstance();
+        result.setUserId(getUserId());
+        result.setAttributeId(attribute.getAttributeId());
+        if (!isNew()) 
+        {
+            result.setListId(getListId());
+        }
+        else 
+        {
+            if (isSingleModule()) 
+            {
+                result.setModuleId(getModule().getModuleId());
+            }
+            if (isSingleIssueType()) 
+            {
+                result.setIssueTypeId(getIssueType().getIssueTypeId());
+            }            
+        }
+        return result;
+    }
+
+
+    protected List getSavedRMUAs()
+        throws Exception
+    {
+        Criteria crit = new Criteria();
+        crit.add(RModuleUserAttributePeer.USER_ID, getUserId());
+        if (!isNew())
+        {
+            crit.add(RModuleUserAttributePeer.LIST_ID, getListId());
+        }
+        else if (isSingleModuleIssueType())        
+        {
+            crit.add(RModuleUserAttributePeer.LIST_ID, null);
+            crit.add(RModuleUserAttributePeer.MODULE_ID, 
+                     getModule().getModuleId());
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     getIssueType().getIssueTypeId());
+        }
+        else if (isSingleModule())
+        {
+            crit.add(RModuleUserAttributePeer.LIST_ID, null);
+            crit.add(RModuleUserAttributePeer.MODULE_ID, 
+                     getModule().getModuleId());
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);
+        }
+        else if (isSingleIssueType())
+        {
+            crit.add(RModuleUserAttributePeer.LIST_ID, null);
+            crit.add(RModuleUserAttributePeer.MODULE_ID, null);
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, 
+                     getIssueType().getIssueTypeId());
+        }
+        else 
+        {
+            crit.add(RModuleUserAttributePeer.LIST_ID, null);
+            crit.add(RModuleUserAttributePeer.MODULE_ID, null);
+            crit.add(RModuleUserAttributePeer.ISSUE_TYPE_ID, null);            
+        }
+                
+        return RModuleUserAttributePeer.doSelect(crit);
     }
 
     public List getCommonLeafRModuleOptions(Attribute attribute)

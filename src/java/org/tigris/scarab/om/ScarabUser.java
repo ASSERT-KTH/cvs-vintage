@@ -62,7 +62,7 @@ import org.tigris.scarab.util.ScarabException;
  * This is an interface which describes what a ScarabUser is...
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ScarabUser.java,v 1.71 2002/07/12 21:28:08 elicia Exp $
+ * @version $Id: ScarabUser.java,v 1.72 2002/07/13 00:44:35 jmcnally Exp $
  */
 public interface ScarabUser extends User
 {
@@ -236,6 +236,12 @@ public interface ScarabUser extends User
     public boolean hasPermission(String perm, Module module);
 
     /**
+     * Returns true if this user has the given permission within all the given
+     * modules, false otherwise.  If the list is null or empty
+     */
+    public boolean hasPermission(String perm, List modules);
+
+    /**
      * Gets all modules which are currently associated with this user 
      * (relationship has not been deleted.)
      */
@@ -402,6 +408,15 @@ public interface ScarabUser extends User
      * selected by the user within a request.
      */
     public RModuleIssueType getCurrentRModuleIssueType()
+        throws Exception;
+
+    /**
+     * Updates the attributes shown in IssueList.vm
+     * Removes any saved preferences for the current mit list or current module
+     * and issue type.  And replaces them with the attributes given.
+     * The order of the attributes is preserved.
+     */
+    public void updateIssueListAttributes(List attributes)
         throws Exception;
 }
 

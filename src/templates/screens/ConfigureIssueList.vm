@@ -32,17 +32,8 @@
   #set ($attribute = $moduleAttribute.Attribute)
   #set ($userAttribute = $user.getRModuleUserAttribute($module, $attribute, $issueType))
 
-  #set ($intakeUserAttr = $intake.RModuleUserAttribute.mapTo($userAttribute))
-
-## Get the attributes user has selected. If they have not selected any,
-## Use defaults in database.
-  #set ($rmuas = $user.getRModuleUserAttributes($module, $issueType))
-  #if ($rmuas.isEmpty() || $usedefaults.equals("true"))
-   #set ($rmuas = $module.getDefaultRModuleUserAttributes($issueType))
-  #end
-  
   #set ($order = 1)
-  #foreach ($moduleUserAttribute in $rmuas)
+  #foreach ($moduleUserAttribute in $scarabR.RModuleUserAttributes)
    #if ($attribute.Name.equals($moduleUserAttribute.Attribute.Name))
     #set ($checked = true)
     #set ($order = $moduleUserAttribute.Order)
@@ -51,10 +42,10 @@
 
   <tr class="a">
    <td><input type="checkbox"#checked($checked) 
-        name="selected_$attribute.AttributeId" /></td>
+        name="attid" value="$attribute.AttributeId" /></td>
    <td>$attribute.Name</td>
    <td>
-    #numericSelect ($intakeUserAttr.Order.Key 1 $maxNum $order 1)
+    #numericSelect ("attorder" 1 $maxNum $order 1)
    </td>
   </tr>
  #end

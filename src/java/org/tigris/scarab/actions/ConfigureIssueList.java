@@ -47,6 +47,11 @@ package org.tigris.scarab.actions;
  */ 
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Comparator;
+import java.util.Collections;
 
 // Turbine Stuff 
 import org.apache.turbine.TemplateContext;
@@ -78,7 +83,7 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 /**
     This class is responsible for the user configuration of the issue list.
     @author <a href="mailto:elicia@collab.net">Elicia David</a>
-    @version $Id: ConfigureIssueList.java,v 1.24 2002/05/30 17:08:18 jmcnally Exp $
+    @version $Id: ConfigureIssueList.java,v 1.25 2002/07/13 00:44:35 jmcnally Exp $
 */
 public class ConfigureIssueList extends RequireLoginFirstAction
 {
@@ -86,49 +91,41 @@ public class ConfigureIssueList extends RequireLoginFirstAction
     public void doSave( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
-
         ScarabRequestTool scarab = getScarabRequestTool(context);
-        Module module = scarab.getCurrentModule();
-        IssueType issueType = scarab.getCurrentIssueType();
-        NumberKey moduleId = module.getModuleId();
-        ScarabUser user = (ScarabUser)data.getUser();
-
-        RModuleUserAttribute mua = null;
-
-        // Delete current attribute selections for user
-        Criteria crit = new Criteria();
-        crit.add(RModuleUserAttributePeer.USER_ID, user.getUserId());
-        List currentAttributes = RModuleUserAttributePeer.doSelect(crit);
-        for (int i =0; i<currentAttributes.size(); i++)
-        {
-            ((RModuleUserAttribute)currentAttributes.get(i))
-                .delete(user);
-        }
-        //ScarabCache.clear();
 
         // Add user's new selection of attributes
         ParameterParser params = data.getParameters();
-        Object[] keys = params.getKeys();
-        for (int i =0; i<keys.length; i++)
+        String[] ids = params.getStrings("attid");
+        String[] orders = params.getStrings("attorder");
+        final Map orderMap = new HashMap();
+        List attributes = new ArrayList(ids.length);
+        for (int i =0; i<ids.length; i++)
         {
-            String key = keys[i].toString();
-            if (key.startsWith("selected_"))
-            {
-                NumberKey attributeId =  new NumberKey(key.substring(9));
-                Attribute attribute = AttributeManager
-                    .getInstance(attributeId);
-
-                mua = user.getRModuleUserAttribute(module, 
-                                                   attribute, issueType);
-                Group group = intake.get("RModuleUserAttribute", 
-                                         mua.getQueryKey(), false);
-
-                Field order = group.get("Order");
-                order.setProperty(mua);
-                mua.save();
-            }
+            Attribute attribute = AttributeManager
+                .getInstance(new NumberKey(ids[i]));
+            attributes.add(attribute);
+            Integer order = new Integer(orders[i]);
+            orderMap.put(attribute, order);
         }
+        Comparator c = new Comparator()
+            {
+                public int compare(Object o1, Object o2)
+                {
+                    int order1 = ((Integer)orderMap.get(o1)).intValue();
+                    int order2 = ((Integer)orderMap.get(o2)).intValue();
+                    int result = order2 - order1;
+                    if (result == 0) 
+                    {
+                        Attribute a1 = (Attribute)o1;
+                        Attribute a2 = (Attribute)o2;
+                        result = a1.getName().compareTo(a2.getName());
+                    }
+                    return result;
+                }
+            };
+        Collections.sort(attributes, c);
+        ((ScarabUser)data.getUser()).updateIssueListAttributes(attributes);
+            
         data.setMessage(DEFAULT_MSG);
     }
 
