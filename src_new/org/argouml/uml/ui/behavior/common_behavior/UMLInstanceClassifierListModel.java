@@ -1,4 +1,4 @@
-// $Id: UMLInstanceClassifierListModel.java,v 1.2 2004/09/14 17:35:12 mvw Exp $
+// $Id: UMLInstanceClassifierListModel.java,v 1.3 2004/12/05 20:15:15 mvw Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,6 +27,10 @@ package org.argouml.uml.ui.behavior.common_behavior;
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.ui.UMLModelElementListModel2;
 
+/**
+ * The model for instances of a classifier.
+ *
+ */
 public class UMLInstanceClassifierListModel 
     extends UMLModelElementListModel2 {
 

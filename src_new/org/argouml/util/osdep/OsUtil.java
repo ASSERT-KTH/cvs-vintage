@@ -1,4 +1,4 @@
-// $Id: OsUtil.java,v 1.8 2004/11/25 15:36:26 bobtarling Exp $
+// $Id: OsUtil.java,v 1.9 2004/12/05 20:15:16 mvw Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -69,7 +69,10 @@ public class OsUtil {
                 .equals("Sun Microsystems Inc."));
     }
 
-    /** check whether we deal with a JDK 1.3.x */
+    /** 
+     * Check whether we deal with a JDK 1.3.x. 
+     * @return true if we deal with Java 1.3.x.
+     */
     public static boolean isJdk131() {
         return (System.getProperty("java.version").startsWith("1.3.")); 
     }
