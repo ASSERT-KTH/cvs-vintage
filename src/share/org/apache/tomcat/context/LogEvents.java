@@ -58,7 +58,7 @@
  */ 
 
 
-package org.apache.tomcat.core;
+package org.apache.tomcat.context;
 
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
@@ -67,46 +67,46 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
 
-/**
+/** Log all Context events
  */
-public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
-    ContextManager cm; 
-    protected Vector methods=new Vector();
+public class LogEvents extends BaseInterceptor {
     
-    public BaseInterceptor() {
+    public LogEvents() {
     }
 
-    public void setContextManager( ContextManager cm ) {
-	this.cm=cm;
-    }
-    
     // -------------------- Request notifications --------------------
     public int requestMap(Request request ) {
+	request.getContext().log( "Request map " + request);
 	return 0;
     }
 
-    public int contextMap( Request rrequest ) {
+    public int contextMap( Request request ) {
 	return 0;
     }
 
     public int preService(Request request, Response response) {
+	request.getContext().log( "Pre service " + request);
 	return 0;
     }
 
-    public int beforeBody( Request rrequest, Response response ) {
+    public int beforeBody( Request request, Response response ) {
+	request.getContext().log( "Before body " + request);
 	return 0;
     }
 
     public int beforeCommit( Request request, Response response) {
+	request.getContext().log( "Before commit " + request);
 	return 0;
     }
 
 
     public int afterBody( Request request, Response response) {
+	request.getContext().log( "After Body " + request);
 	return 0;
     }
 
     public int postService(Request request, Response response) {
+	request.getContext().log( "Post service " + request);
 	return 0;
     }
 
@@ -116,66 +116,80 @@ public class BaseInterceptor implements RequestInterceptor, ContextInterceptor {
 
     // -------------------- Context notifications --------------------
     public void contextInit(Context ctx) throws TomcatException {
+	ctx.log( "Context Init ");
     }
 
     public void contextShutdown(Context ctx) throws TomcatException {
+	ctx.log( "Context Shutdown ");
     }
 
     /** Notify when a new servlet is added
      */
     public void addServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+	ctx.log( "Add servlet " + sw);
     }
     
     /** Notify when a servlet is removed from context
      */
     public void removeServlet( Context ctx, ServletWrapper sw) throws TomcatException {
+	ctx.log( "Remove servlet " + sw);
     }
 
     public void addMapping( Context ctx, String path, ServletWrapper servlet) throws TomcatException {
+	ctx.log( "Add mapping " + path + "->" + servlet);
     }
 
 
     public void removeMapping( Context ctx, String path ) throws TomcatException {
+	ctx.log( "Remove mapping ");
     }
 
     /** Called when the ContextManger is started
      */
     public void engineInit(ContextManager cm) throws TomcatException {
+	cm.log( "Engine init");
     }
 
     /** Called before the ContextManager is stoped.
      *  You need to stop any threads and remove any resources.
      */
     public void engineShutdown(ContextManager cm) throws TomcatException {
+	cm.log( "Engine shutdown");
     }
 
 
     /** Called when a context is added to a CM
      */
     public void addContext( ContextManager cm, Context ctx ) throws TomcatException {
+	ctx.log( "Add context");
     }
 
     /** Called when a context is removed from a CM
      */
     public void removeContext( ContextManager cm, Context ctx ) throws TomcatException {
+	ctx.log( "Remove context");
     }
 
     /** Servlet Init  notification
      */
     public void preServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+	ctx.log( "Pre servlet init " + sw);
     }
 
     
     public void postServletInit( Context ctx, ServletWrapper sw ) throws TomcatException {
+	ctx.log( "Post servlet init " + sw);
     }
 
     /** Servlet Destroy  notification
      */
     public void preServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+	ctx.log( "Pre servlet destroy " + sw);
     }
 
     
     public void postServletDestroy( Context ctx, ServletWrapper sw ) throws TomcatException {
+	ctx.log( "Post servlet destroy " + sw);
     }
 
 }

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.10 2000/02/03 07:11:55 costin Exp $
+# $Id: tomcat.sh,v 1.11 2000/02/13 20:49:45 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -68,7 +68,6 @@ for i in ${TOMCAT_HOME}/lib/* ; do
 done
 
 CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
-echo XXX $CLASSPATH
 
 
 # Backdoor classpath setting for development purposes when all classes

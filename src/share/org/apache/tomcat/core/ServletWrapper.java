@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.23 2000/02/13 01:43:41 costin Exp $
- * $Revision: 1.23 $
- * $Date: 2000/02/13 01:43:41 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/core/Attic/ServletWrapper.java,v 1.24 2000/02/13 20:49:40 costin Exp $
+ * $Revision: 1.24 $
+ * $Date: 2000/02/13 20:49:40 $
  *
  * ====================================================================
  *
@@ -78,11 +78,6 @@ import javax.servlet.http.*;
  * @author Harish Prabandham
  * @author costin@dnt.ro
  */
-
-//
-// WARNING: Some of the APIs in this class are used by J2EE. 
-// Please talk to harishp@eng.sun.com before making any changes.
-//
 public class ServletWrapper {
     protected StringManager sm = StringManager.getManager("org.apache.tomcat.core");
 

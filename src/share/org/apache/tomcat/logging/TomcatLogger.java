@@ -109,10 +109,12 @@ public class TomcatLogger extends Logger {
 	    w.print(' ');
 
 	    if (message != null)
-		w.println(message);
+		w.print(message);
 	    
 	    if (t != null)
 		t.printStackTrace(w);
+
+	    w.println("</"+TomcatLogger.this.getName()+"> ");
 
 	    return sw.toString();
 	}

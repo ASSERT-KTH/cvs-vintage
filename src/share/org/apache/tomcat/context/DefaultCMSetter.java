@@ -81,28 +81,6 @@ public class DefaultCMSetter extends BaseInterceptor {
     public DefaultCMSetter() {
     }
 	
-    public void engineInit(ContextManager cm)  {
-	// set a default connector ( http ) if none defined yet
-	Enumeration conn=cm.getConnectors();
-	if( ! conn.hasMoreElements() ) {
-	    // Make the default customizable!
-	    cm.addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
-	}
-	
- 	RequestInterceptor rI[]=cm.getRequestInterceptors();
-	if( rI.length ==0  ) {
-	    // nothing set up by starter, add default ones
-	    cm.log("Setting default interceptors ", Logger.INFORMATION);
-
-	    // Use the simplified mapper - revert if too many bugs and
-	    SimpleMapper smap=new SimpleMapper();
-	    smap.setContextManager( cm );
-	    cm.addRequestInterceptor(smap);
-
-	    cm.addRequestInterceptor(new SessionInterceptor());
-	}
-    }
-
     /** Called when a new context is added to the server.
      *
      *  - Check it and set defaults for WorkDir, EngineHeader and SessionManager.
@@ -112,8 +90,6 @@ public class DefaultCMSetter extends BaseInterceptor {
      *  - Set up defaults for context interceptors and session if nothing is set
      */
     public void addContext(ContextManager cm, Context ctx) {
-	// Make sure context knows about its manager.
-	ctx.setContextManager( cm );
 	setEngineHeader( ctx );
 
 	if( ctx.getWorkDir() == null)
@@ -125,19 +101,6 @@ public class DefaultCMSetter extends BaseInterceptor {
 
 	//  Alternative: org.apache.tomcat.session.ServerSessionManager.getManager();
 
-	// If no ContextInterceptors are set up use defaults
-	ContextInterceptor cI[]=ctx.getContextInterceptors();
-	if( cI.length==0 ) {
-	    // set up work dir ( attribute + creation )
-	    ctx.addContextInterceptor(new WorkDirInterceptor());
-	    
-	    // Read context's web.xml
-	    // new WebXmlInterceptor().contextInit( this );
-	    ctx.addContextInterceptor( new WebXmlReader());
-	    
-	    // load initial servlets
-	    ctx.addContextInterceptor(new LoadOnStartupInterceptor());
-	}	
 	// XXX Loader properties - need to be set on loader!!
 	//ctx.setServletLoader( new org.apache.tomcat.loader.ServletClassLoaderImpl());
 	ctx.setServletLoader( new org.apache.tomcat.loader.AdaptiveServletLoader());

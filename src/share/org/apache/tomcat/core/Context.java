@@ -165,6 +165,13 @@ public class Context {
 	//	System.out.println("New Context ");
     }
 	
+    ServletContextFacade getFacade() {
+        if(contextFacade==null )
+	    contextFacade = new ServletContextFacade(contextM, this);
+	return contextFacade;
+    }
+
+
     // -------------------- Settable context properties --------------------
     // -------------------- Required properties
     public ContextManager getContextManager() {
@@ -212,7 +219,11 @@ public class Context {
     }
 
     // -------------------- Tomcat specific properties
-
+    // workaround for XmlMapper unable to set anything but strings
+    public void setReloadable( String s ) {
+	reloadable=new Boolean( s ).booleanValue();
+    }
+    
     public void setReloadable( boolean b ) {
 	reloadable=b;
     }
@@ -223,280 +234,7 @@ public class Context {
 	return reloadable;
     }
     
-    public String getEngineHeader() {
-	return engineHeader;
-    }
-
-    public void setEngineHeader(String s) {
-        engineHeader=s;
-    }
-
-    public boolean isInvokerEnabled() {
-        return isInvokerEnabled;
-    }
-
-    
-    public void setInvokerEnabled(boolean isInvokerEnabled) {
-        this.isInvokerEnabled = isInvokerEnabled;
-    }
-
-    public File getWorkDir() {
-	return workDir;
-    }
-
-    public void setWorkDir(File workDir) {
-	this.workDir = workDir;
-    }
-
-    /** Set work dir using a String property
-     */
-    public void setWorkDirPath(String workDir) {
-	this.workDir=new File(workDir);
-    }
-
-    public boolean isWorkDirPersistent() {
-        return this.isWorkDirPersistent;
-    }
-
-    public void setWorkDirPersistent( boolean b ) {
-	isWorkDirPersistent=b;
-    }
-    
-    // -------------------- Internal tomcat attributes 
-    public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
-	this.rsProvider = rsProvider;
-    }
-
-    public RequestSecurityProvider getRequestSecurityProvider() {
-	return this.rsProvider;
-    }
-
-    public RequestDispatcher getRequestDispatcher(String path) {
-	if ( path == null  || ! path.startsWith("/")) {
-	    return null; // spec say "return null if we can't return a dispather
-	}
-
-	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
-	rD.setPath( path );
-
-	return rD;
-    }
-
-    public RequestDispatcher getNamedDispatcher(String name) {
-        if (name == null)
-	    return null;
-
-	// We need to do the checks 
-	ServletWrapper wrapper = getServletByName( name );
-	if (wrapper == null)
-	    return null;
-	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
-	rD.setName( name );
-
-	return rD;
-    }
-
-    /** Implements getResource() - use a sub-request to let interceptors do the job.
-     */
-    public URL getResource(String rpath) throws MalformedURLException {
-        URL url = null;
-
-	if ("".equals(rpath)) 
-	    return getDocumentBase();
-	
-        if (rpath == null)
-	    return null;
-
-	if ( ! rpath.startsWith("/")) {
-	    rpath="/" + rpath;
-	}
-
-	// Create a Sub-Request, do the request processing stage
-	// that will take care of aliasing and set the paths
-	Request lr=contextM.createRequest( this, rpath );
-	getContextManager().processRequest(lr);
-
-	String mappedPath = lr.getMappedPath();
-
-	// XXX workaround for mapper bugs
-	if( mappedPath == null ) {
-	    mappedPath=lr.getPathInfo();
-	}
-	if(mappedPath == null )
-	    mappedPath=lr.getLookupPath();
-	
-        URL docBase = getDocumentBase();
-
-	url=new URL(docBase.getProtocol(), docBase.getHost(),
-		       docBase.getPort(), docBase.getFile() + mappedPath);
-	if( debug>0) log( "getResourceURL=" + url + " request=" + lr );
-	return url;
-    }
-
-    
-    Context getContext(String path) {
-	if (! path.startsWith("/")) {
-	    return null; // according to spec, null is returned
-	    // if we can't  return a servlet, so it's more probable
-	    // servlets will check for null than IllegalArgument
-	}
-	Request lr=contextM.createRequest( this, path );
-	getContextManager().processRequest(lr);
-        return lr.getContext();
-    }
-
-    public void log(String msg, Throwable t) {
-	System.err.println(msg);
-	t.printStackTrace(System.err);
-    }
-
-    /**
-     * 
-     */
-    String getRealPath( String path) {
-	//	Real Path is the same as PathTranslated for a new request
-	
-	Context base=this; // contextM.getContext("");
-	Request req=contextM.createRequest( base , FileUtil.normPath(path) );
-	contextM.processRequest(req);
-	
-	String mappedPath = req.getMappedPath();
-
-	// XXX workaround - need to fix mapper to return mapped path
-	if( mappedPath == null ) 
-	    mappedPath=req.getPathInfo();
-	if(mappedPath == null )
-	    mappedPath=req.getLookupPath();
-	
-	String realPath= this.getDocBase() + mappedPath;
-
-	// Probably not needed - it will be used on the local FS
-	realPath = FileUtil.patch(realPath);
-
-	return realPath;
-    }
-
-    public File getWARDir() {
-        return this.warDir;
-    }
-
-    public void setWARDir( File f ) {
-	warDir=f;
-    }
-
-    public boolean isWARExpanded() {
-        return this.isWARExpanded;
-    }
-
-    public void setIsWARExpanded(boolean isWARExpanded) {
-        this.isWARExpanded = isWARExpanded;
-    }
-
-    public boolean isWARValidated() {
-        return this.isWARValidated;
-    }
-
-    public void setIsWARValidated(boolean isWARValidated) {
-        this.isWARValidated = isWARValidated;
-    }
-    
-    /**
-     * Initializes this context to take on requests. This action
-     * will cause the context to load it's configuration information
-     * from the webapp directory in the docbase.
-     *
-     * <p>This method may only be called once and must be called
-     * before any requests are handled by this context and after setContextManager()
-     * is called.
-     */
-    public synchronized void init() throws TomcatException {
-	// XXX Context is a mostly a "data" object, it contain all
-	// context properties. We should use ContextManager.initContext() instead.
-	if (this.initialized) {
-	    String msg = sm.getString("context.init.alreadyinit");
-	    throw new IllegalStateException(msg);
-	}
-	this.initialized = true;
-	
-	// All interceptor logic is in ContextManager.
-	contextM.initContext( this );
-    }
-
-    public void addContextInterceptor( ContextInterceptor ci) {
-	contextInterceptors.addElement( ci );
-    }
-
-    ContextInterceptor cInterceptors[];
-
-    /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-    */
-    public ContextInterceptor[] getContextInterceptors() {
-	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
-	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
-	    for( int i=0; i<cInterceptors.length; i++ ) {
-		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
-	    }
-	}
-	return cInterceptors;
-    }
-
-    public void addRequestInterceptor( RequestInterceptor ci) {
-	requestInterceptors.addElement( ci );
-    }
-
-    RequestInterceptor rInterceptors[];
-    
-    /** Return the context interceptors as an array.
-	For performance reasons we use an array instead of
-	returning the vector - the interceptors will not change at
-	runtime and array access is faster and easier than vector
-	access
-    */
-    public RequestInterceptor[] getRequestInterceptors() {
-	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
-	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
-	    for( int i=0; i<rInterceptors.length; i++ ) {
-		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
-	    }
-	}
-	return rInterceptors;
-    }
-
-    public SessionManager getSessionManager() {
-	return sessionManager;
-    }
-
-    public void setSessionManager( SessionManager manager ) {
-	sessionManager= manager;
-    }
-    
-    public void shutdown() throws TomcatException {
-	// shut down container
-	initialized=false;
-	Enumeration enum = servlets.keys();
-
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper wrapper = (ServletWrapper)servlets.get(key);
-
-	    servlets.remove(key);
-	    wrapper.destroy();
-	}
-	// shut down any sessions
-
-	getSessionManager().removeSessions(this);
-
-	for( int i=0; i< contextInterceptors.size(); i++ ) {
-	    ((ContextInterceptor)contextInterceptors.elementAt(i)).contextShutdown( this );
-	}
-
-	System.out.println("Context: " + this + " down");
-    }
-    
+    // -------------------- Web.xml properties --------------------
     public Enumeration getWelcomeFiles() {
 	return welcomeFiles.elements();
     }
@@ -597,27 +335,6 @@ public class Context {
         attributes.remove(name);
     }
     
-    /** @deprecated - use getDocBase and URLUtil if you need it as URL
-     */
-    public URL getDocumentBase() {
-	if( documentBase == null ) {
-	    if( docBase != null)
-		try {
-		    documentBase=URLUtil.resolve( docBase );
-		} catch( MalformedURLException ex ) {
-		    ex.printStackTrace();
-		}
-	}
-        return documentBase;
-    }
-
-    /** @deprecated - use setDocBase
-     */
-    public void setDocumentBase(URL s) {
-	// Used only by startup, will be removed
-        this.documentBase=s;
-    }
-
     public String getDescription() {
         return this.description;
     }
@@ -699,42 +416,7 @@ public class Context {
 	this.formErrorPage=formErrorPage;
     }   
     
-    ServletContextFacade getFacade() {
-        if(contextFacade==null )
-	    contextFacade = new ServletContextFacade(contextM, this);
-	return contextFacade;
-    }
-
-    // --------------------
-
-    /** Remove all servlets with a specific class name
-     */
-    void removeServletByClassName(String className)
-	throws TomcatException
-    {
-	Enumeration enum = servlets.keys();
-	while (enum.hasMoreElements()) {
-	    String key = (String)enum.nextElement();
-	    ServletWrapper sw = (ServletWrapper)servlets.get(key);
-            if (className.equals(sw.getServletClass()))
-		servlets.remove(sw.getServletName());
-		contextM.removeServlet( this, sw );
-	}
-    }
-
-    /** Remove the servlet with a specific name
-     */
-    public void removeServletByName(String servletName)
-	throws TomcatException
-    {
-	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
-	if( wrapper != null ) {
-	    servlets.remove( servletName );
-	    contextM.removeServlet( this, wrapper );
-	}
-    }
-
-    // -------------------- Mappings
+    // -------------------- Mappings --------------------
     
     /**
      * Maps a named servlet to a particular path or extension.
@@ -817,6 +499,18 @@ public class Context {
 
     // -------------------- Servlets management --------------------
     
+    /** Remove the servlet with a specific name
+     */
+    public void removeServletByName(String servletName)
+	throws TomcatException
+    {
+	ServletWrapper wrapper=(ServletWrapper)servlets.get(servletName);
+	if( wrapper != null ) {
+	    servlets.remove( servletName );
+	    contextM.removeServlet( this, wrapper );
+	}
+    }
+
     public ServletWrapper getServletByName(String servletName) {
 	return (ServletWrapper)servlets.get(servletName);
     }
@@ -846,7 +540,15 @@ public class Context {
 	return servlets.keys();
     }
 
-    // -------------------- Class Loading --------------------
+    // -------------------- Loading and sessions --------------------
+    public SessionManager getSessionManager() {
+	return sessionManager;
+    }
+
+    public void setSessionManager( SessionManager manager ) {
+	sessionManager= manager;
+    }
+
 
     public void setServletLoader(ServletLoader loader ) {
 	this.servletL=loader;
@@ -861,6 +563,10 @@ public class Context {
 	debug=level;
     }
 
+    public int getDebug( ) {
+	return debug;
+    }
+
     public void log( String msg ) {
 	System.out.println("Context(" + path  + "): " + msg );
     }
@@ -869,4 +575,251 @@ public class Context {
 	return "Ctx(" + path + "," + getDocBase() + ")";
 	// + " , " + getDocumentBase() + " ) ";
     }
+
+    // -------------------- Facade methods --------------------
+
+    public RequestDispatcher getRequestDispatcher(String path) {
+	if ( path == null  || ! path.startsWith("/")) {
+	    return null; // spec say "return null if we can't return a dispather
+	}
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
+	rD.setPath( path );
+
+	return rD;
+    }
+
+    public RequestDispatcher getNamedDispatcher(String name) {
+        if (name == null)
+	    return null;
+
+	// We need to do the checks 
+	ServletWrapper wrapper = getServletByName( name );
+	if (wrapper == null)
+	    return null;
+	RequestDispatcherImpl rD=new RequestDispatcherImpl( this );
+	rD.setName( name );
+
+	return rD;
+    }
+
+    /** Implements getResource() - use a sub-request to let interceptors do the job.
+     */
+    public URL getResource(String rpath) throws MalformedURLException {
+        URL url = null;
+
+	if ("".equals(rpath)) 
+	    return getDocumentBase();
+	
+        if (rpath == null)
+	    return null;
+
+	if ( ! rpath.startsWith("/")) {
+	    rpath="/" + rpath;
+	}
+
+	// Create a Sub-Request, do the request processing stage
+	// that will take care of aliasing and set the paths
+	Request lr=contextM.createRequest( this, rpath );
+	getContextManager().processRequest(lr);
+
+	String mappedPath = lr.getMappedPath();
+
+	// XXX workaround for mapper bugs
+	if( mappedPath == null ) {
+	    mappedPath=lr.getPathInfo();
+	}
+	if(mappedPath == null )
+	    mappedPath=lr.getLookupPath();
+	
+        URL docBase = getDocumentBase();
+
+	url=new URL(docBase.getProtocol(), docBase.getHost(),
+		       docBase.getPort(), docBase.getFile() + mappedPath);
+	if( debug>0) log( "getResourceURL=" + url + " request=" + lr );
+	return url;
+    }
+
+    
+    Context getContext(String path) {
+	if (! path.startsWith("/")) {
+	    return null; // according to spec, null is returned
+	    // if we can't  return a servlet, so it's more probable
+	    // servlets will check for null than IllegalArgument
+	}
+	Request lr=contextM.createRequest( this, path );
+	getContextManager().processRequest(lr);
+        return lr.getContext();
+    }
+
+    public void log(String msg, Throwable t) {
+	System.err.println(msg);
+	t.printStackTrace(System.err);
+    }
+
+    /**
+     * 
+     */
+    String getRealPath( String path) {
+	//	Real Path is the same as PathTranslated for a new request
+	
+	Context base=this; // contextM.getContext("");
+	Request req=contextM.createRequest( base , FileUtil.normPath(path) );
+	contextM.processRequest(req);
+	
+	String mappedPath = req.getMappedPath();
+
+	// XXX workaround - need to fix mapper to return mapped path
+	if( mappedPath == null ) 
+	    mappedPath=req.getPathInfo();
+	if(mappedPath == null )
+	    mappedPath=req.getLookupPath();
+	
+	String realPath= this.getDocBase() + mappedPath;
+
+	// Probably not needed - it will be used on the local FS
+	realPath = FileUtil.patch(realPath);
+
+	return realPath;
+    }
+
+    // -------------------- Deprecated
+    // 
+
+    public boolean isInvokerEnabled() {
+        return isInvokerEnabled;
+    }
+
+    
+    public void setInvokerEnabled(boolean isInvokerEnabled) {
+        this.isInvokerEnabled = isInvokerEnabled;
+    }
+
+    public boolean isWorkDirPersistent() {
+        return this.isWorkDirPersistent;
+    }
+
+    public void setWorkDirPersistent( boolean b ) {
+	isWorkDirPersistent=b;
+    }
+    
+    public File getWorkDir() {
+	return workDir;
+    }
+
+    public void setWorkDir(File workDir) {
+	this.workDir = workDir;
+    }
+
+    /** Set work dir using a String property
+     */
+    public void setWorkDirPath(String workDir) {
+	this.workDir=new File(workDir);
+    }
+    public String getEngineHeader() {
+	return engineHeader;
+    }
+
+    public void setEngineHeader(String s) {
+        engineHeader=s;
+    }
+
+    public void setRequestSecurityProvider(RequestSecurityProvider rsProvider) {
+	this.rsProvider = rsProvider;
+    }
+
+    public RequestSecurityProvider getRequestSecurityProvider() {
+	return this.rsProvider;
+    }
+
+    public File getWARDir() {
+        return this.warDir;
+    }
+
+    public void setWARDir( File f ) {
+	warDir=f;
+    }
+
+    public boolean isWARExpanded() {
+        return this.isWARExpanded;
+    }
+
+    public void setIsWARExpanded(boolean isWARExpanded) {
+        this.isWARExpanded = isWARExpanded;
+    }
+
+    public boolean isWARValidated() {
+        return this.isWARValidated;
+    }
+
+    public void setIsWARValidated(boolean isWARValidated) {
+        this.isWARValidated = isWARValidated;
+    }
+    
+    public void addContextInterceptor( ContextInterceptor ci) {
+	contextInterceptors.addElement( ci );
+    }
+
+    ContextInterceptor cInterceptors[];
+
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public ContextInterceptor[] getContextInterceptors() {
+	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
+	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
+	    for( int i=0; i<cInterceptors.length; i++ ) {
+		cInterceptors[i]=(ContextInterceptor)contextInterceptors.elementAt(i);
+	    }
+	}
+	return cInterceptors;
+    }
+
+    public void addRequestInterceptor( RequestInterceptor ci) {
+	requestInterceptors.addElement( ci );
+    }
+
+    RequestInterceptor rInterceptors[];
+    
+    /** Return the context interceptors as an array.
+	For performance reasons we use an array instead of
+	returning the vector - the interceptors will not change at
+	runtime and array access is faster and easier than vector
+	access
+    */
+    public RequestInterceptor[] getRequestInterceptors() {
+	if( rInterceptors == null || rInterceptors.length != requestInterceptors.size()) {
+	    rInterceptors=new RequestInterceptor[requestInterceptors.size()];
+	    for( int i=0; i<rInterceptors.length; i++ ) {
+		rInterceptors[i]=(RequestInterceptor)requestInterceptors.elementAt(i);
+	    }
+	}
+	return rInterceptors;
+    }
+
+    /** @deprecated - use getDocBase and URLUtil if you need it as URL
+     */
+    public URL getDocumentBase() {
+	if( documentBase == null ) {
+	    if( docBase != null)
+		try {
+		    documentBase=URLUtil.resolve( docBase );
+		} catch( MalformedURLException ex ) {
+		    ex.printStackTrace();
+		}
+	}
+        return documentBase;
+    }
+
+    /** @deprecated - use setDocBase
+     */
+    public void setDocumentBase(URL s) {
+	// Used only by startup, will be removed
+        this.documentBase=s;
+    }
+
+
+
 }

@@ -112,10 +112,6 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 	return 0;
     }
 
-    public int contextMap( Request rrequest ) {
-	return 0;
-    }
-
     public int beforeBody( Request rrequest, Response response ) {
 	String reqSessionId = response.getSessionId();
 	if( reqSessionId==null)
@@ -135,5 +131,15 @@ public class SessionInterceptor extends  BaseInterceptor implements RequestInter
 
 	return 0;
     }
+
+
+    /** Notification of context shutdown
+     */
+    public void contextShutdown( Context ctx )
+	throws TomcatException
+    {
+	ctx.getSessionManager().removeSessions(ctx);
+    }
+
 
 }

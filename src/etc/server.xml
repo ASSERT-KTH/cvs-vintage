@@ -1,44 +1,61 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <Server>
-    <ContextManager port="8080" hostName="" inet="">
+    <!-- Debug low-level events in XmlMapper startup -->
+    <xmlmapper:debug level="0" />
 
-        <!-- This is quite flexible; we can either have a log file per
-             module in Tomcat (example: ContextManager) or we can have
-	     one for Servlets and one for Jasper, or we can just have
-	     one tomcat.log for both Servlet and Jasper.
+    <!-- This is quite flexible; we can either have a log file per
+         module in Tomcat (example: ContextManager) or we can have
+         one for Servlets and one for Jasper, or we can just have
+	 one tomcat.log for both Servlet and Jasper.
 
-	     If you omit "path" there, then stderr should be used.
+	 If you omit "path" there, then stderr should be used.
 
-	     verbosityLevel values can be: 
-			    FATAL
-			    ERROR
-			    WARNING 
-			    INFORMATION
-			    DEBUG
-
+	 verbosityLevel values can be: 
+	    FATAL
+	    ERROR
+	    WARNING 
+            INFORMATION
+            DEBUG
          -->
 
-	<Logger name="CTXMGR_LOG" 
-	        path="logs/tomcat.log" 
-		verbosityLevel = "DEBUG" />
+    <Logger name="CTXMGR_LOG" 
+	    verbosityLevel = "DEBUG" />
 
-	<Logger name="STARTUP_LOG"
-		path="logs/tomcat.log"
-		verbosityLevel = "DEBUG"
-		timestamp = "no" />
+    <Logger name="STARTUP_LOG"
+            verbosityLevel = "DEBUG"
+	    timestamp = "no" />
 
-	<Logger name="JASPER_LOG" 
-	        path="logs/jasper.log"
-		verbosityLevel = "INFORMATION" />
+    <Logger name="JASPER_LOG" 
+	    path="logs/jasper.log"
+            verbosityLevel = "INFORMATION" />
+
+    <ContextManager debug="0" home="." workDir="work" >
+        <!-- ContextInterceptor className="org.apache.tomcat.context.LogEvents" / -->
+        <ContextInterceptor className="org.apache.tomcat.context.AutoSetup" />
+        <ContextInterceptor className="org.apache.tomcat.context.DefaultCMSetter" />
+        <ContextInterceptor className="org.apache.tomcat.context.WorkDirInterceptor" />
+        <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
+        <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
+        <!-- Request processing -->
+        <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" />
+        <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
 
         <Connector className="org.apache.tomcat.service.http.HttpAdapter">
+            <Parameter name="port" value="8080"/>
         </Connector>
 
-        <!-- AJP12 - current JServ module -->
         <Connector className="org.apache.tomcat.service.TcpEndpointConnector">
             <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
             <Parameter name="port" value="8007"/>
         </Connector>
+
+        <!-- example - how to override AutoSetup actions -->
+        <Context path="/examples" docBase="webapps/examples" debug="1" reloadable="true" > 
+        </Context>
+        <!-- example - how to override AutoSetup actions -->
+        <Context path="" docBase="webapps/ROOT" debug="1" reloadable="true" > 
+        </Context>
+
     </ContextManager>
 </Server>

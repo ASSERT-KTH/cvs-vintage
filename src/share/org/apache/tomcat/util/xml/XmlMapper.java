@@ -37,7 +37,8 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     
     public XmlMapper() {
 	attributeStack = new Object[100]; // depth of the xml doc
-	tagStack = new String[100]; 
+	tagStack = new String[100];
+	initDefaultRules();
     }
     
     public void setDocumentLocator (Locator locator)
@@ -136,6 +137,7 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     // -------------------- Utils --------------------
     // Debug ( to be replaced with the real thing )
     public void setDebug( int level ) {
+	if(level!=0) log( "Debug level: " + level );
 	debug=level;
     }
 
@@ -206,6 +208,25 @@ public class XmlMapper implements DocumentHandler, SaxContext, EntityResolver, D
     Rule rules[]=new Rule[100];
     Rule matching[]=new Rule[100];
     int ruleCount=0;
+
+    /**
+     */
+    private void initDefaultRules() {
+	// One-time actions, in line
+	addRule( "xmlmapper:debug",
+		 new XmlAction() {
+			 public void start(SaxContext ctx) {
+			     int top=ctx.getTagCount()-1;
+			     AttributeList attributes = ctx.getAttributeList( top );
+			     String levelS=attributes.getValue("level");
+			     XmlMapper mapper=(XmlMapper)ctx;
+			     if( levelS!=null)
+				 mapper.setDebug( new Integer(levelS).intValue());
+			 }
+		     }
+		 );
+	
+    }
     
     public void addRule( String path, XmlAction action ) {
 	rules[ruleCount]=new Rule( new PathMatch( path ) , action);
@@ -396,7 +417,7 @@ class SetProperties extends XmlAction {
     public SetProperties() {
     }
 
-    public void start( SaxContext ctx) {
+    public void start( SaxContext ctx ) {
 	Stack st=ctx.getObjectStack();
 	Object elem=st.peek();
 	int top=ctx.getTagCount()-1;
@@ -407,11 +428,100 @@ class SetProperties extends XmlAction {
 	    String name=attributes.getName(i);
 	    String value=attributes.getValue(i);
 
-	    InvocationHelper.setProperty( elem, name, value );
-	    if( ctx.getDebug() > 0 ) ctx.log("setProperty(" + name + " "  + value  +")" );
+	    setProperty( ctx, elem, name, value );
 	}
 
     }
+
+    /** Find a method with the right name
+	If found, call the method ( if param is int or boolean we'll convert value to
+	the right type before) - that means you can have setDebug(1).
+    */
+    static void setProperty( SaxContext ctx, Object o, String name, String value ) {
+	if( ctx.getDebug() > 1 ) ctx.log("setProperty(" + o.getClass() + " " +  name + "="  + value  +")" );
+
+	String setter= "set" +capitalize(name);
+
+	try {
+	    Method methods[]=o.getClass().getMethods();
+	    Method setPropertyMethod=null;
+
+	    // First, the ideal case - a setFoo( String ) method
+	    for( int i=0; i< methods.length; i++ ) {
+		Class paramT[]=methods[i].getParameterTypes();
+		if( setter.equals( methods[i].getName() ) &&
+		    paramT.length == 1 &&
+		    "java.lang.String".equals( paramT[0].getName())) {
+
+		    methods[i].invoke( o, new Object[] { value } );
+		    return;
+		}
+	    }
+
+	    // Try a setFoo ( int ) or ( boolean )
+	    for( int i=0; i< methods.length; i++ ) {
+		boolean ok=true;
+		if( setter.equals( methods[i].getName() ) &&
+		    methods[i].getParameterTypes().length == 1) {
+		    
+		    // match - find the type and invoke it
+		    Class paramType=methods[i].getParameterTypes()[0];
+		    Object params[]=new Object[1];
+		    if ("java.lang.Integer".equals( paramType.getName()) ||
+			"int".equals( paramType.getName())) {
+			try {
+			    params[0]=new Integer(value);
+			} catch( NumberFormatException ex ) {ok=false;}
+		    } else if ("java.lang.Boolean".equals( paramType.getName())) {
+			params[0]=new Boolean(value);
+		    } else {
+			ctx.log("Unknown type " + paramType.getName() );
+		    }
+
+		    if( ok ) {
+			//	System.out.println("XXX: " + methods[i] + " " + o + " " + params[0] );
+			methods[i].invoke( o, params );
+			return;
+		    }
+		}
+		
+		// save "setProperty" for later
+		if( "setProperty".equals( methods[i].getName())) {
+		    setPropertyMethod=methods[i];
+		}
+	    }
+
+	    // Ok, no setXXX found, try a setProperty("name", "value")
+	    if( setPropertyMethod != null ) {
+		Object params[]=new Object[2];
+		params[0]=name;
+		params[1]=value;
+		setPropertyMethod.invoke( o, params );
+	    }
+
+	} catch( SecurityException ex1 ) {
+	    if( ctx.getDebug() > 0 ) ctx.log("SecurityException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 1 ) ex1.printStackTrace();
+	} catch (IllegalAccessException iae) {
+	    if( ctx.getDebug() > 0 ) ctx.log("IllegalAccessException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 1 ) iae.printStackTrace();
+	} catch (InvocationTargetException ie) {
+	    if( ctx.getDebug() > 0 ) ctx.log("InvocationTargetException for " + o.getClass() + " " +  name + "="  + value  +")" );
+	    if( ctx.getDebug() > 1 ) ie.printStackTrace();
+	}
+    }
+
+    /** Reverse of Introspector.decapitalize
+     */
+    static String capitalize(String name) {
+	if (name == null || name.length() == 0) {
+	    return name;
+	}
+	char chars[] = name.toCharArray();
+	chars[0] = Character.toUpperCase(chars[0]);
+	return new String(chars);
+    }
+
 }
 
 

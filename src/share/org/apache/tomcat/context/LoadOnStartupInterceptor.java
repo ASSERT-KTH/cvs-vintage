@@ -77,19 +77,16 @@ import javax.servlet.*;
  */
 public class LoadOnStartupInterceptor extends BaseInterceptor {
     private static StringManager sm =StringManager.getManager("org.apache.tomcat.context");
-    int debug=0;
     
     public LoadOnStartupInterceptor() {
     }
 
-    public void setDebug( int i ) {
-	debug=i;
-    }
-    
     public void contextInit(Context ctx) {
-	init(ctx);
+	Hashtable loadableServlets = new Hashtable();
+	init(ctx,loadableServlets);
+	
 	Vector orderedKeys = new Vector();
-	Enumeration e=getInitLevels();
+	Enumeration e=  loadableServlets.keys();
 		
 	// order keys
 	while (e.hasMoreElements()) {
@@ -119,14 +116,12 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 
 	for (int i = 0; i < orderedKeys.size(); i ++) {
 	    Integer key = (Integer)orderedKeys.elementAt(i);
-
-	    Enumeration sOnLevel = getLoadableServlets( key );
-
+	    Enumeration sOnLevel =  ((Vector)loadableServlets.get( key )).elements();
 	    while (sOnLevel.hasMoreElements()) {
 		String servletName = (String)sOnLevel.nextElement();
 		ServletWrapper  result = ctx.getServletByName(servletName);
 
-		if( debug > 0 ) ctx.log("Loading " + key + " "  + servletName );
+		if( ctx.getDebug() > 0 ) ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
 		    System.out.println("Warning: we try to load an undefined servlet " + servletName);
 		else {
@@ -193,40 +188,24 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
     // -------------------- 
     // Old logic from Context - probably something cleaner can replace it.
 
-    private Hashtable loadableServlets = new Hashtable();
-
-    void init(Context ctx) {
+    void init(Context ctx, Hashtable loadableServlets ) {
 	Enumeration enum=ctx.getServletNames();
 	while(enum.hasMoreElements()) {
 	    String name=(String)enum.nextElement();
 	    ServletWrapper sw=ctx.getServletByName( name );
 	    int i=sw.getLoadOnStartUp();
-	    if( i!= 0)
-		addLoadableServlet( new Integer(i), name );
+	    Integer level=new Integer(i);
+	    if( i!= 0) {
+		Vector v;
+		if( loadableServlets.get(level) != null ) 
+		    v=(Vector)loadableServlets.get(level);
+		else
+		    v=new Vector();
+		
+		v.addElement(name);
+		loadableServlets.put(level, v);
+	    }
 	}
-    }
-    
-    Enumeration getInitLevels() {
-	return loadableServlets.keys();
-    }
-
-    Enumeration getLoadableServlets( Integer level ) {
-	return ((Vector)loadableServlets.get( level )).elements();
-    }
-
-    void setLoadableServlets( Integer level, Vector servlets ) {
-	loadableServlets.put( level, servlets );
-    }
-
-    void addLoadableServlet( Integer level,String name ) {
-	Vector v;
-	if( loadableServlets.get(level) != null ) 
-	    v=(Vector)loadableServlets.get(level);
-	else
-	    v=new Vector();
-	
-	v.addElement(name);
-	loadableServlets.put(level, v);
     }
     
 

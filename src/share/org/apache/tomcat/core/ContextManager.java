@@ -117,6 +117,7 @@ public class ContextManager {
      */
     int port;
 
+    int debug=0;
     String workDir;
 
     // Instalation directory  
@@ -132,6 +133,41 @@ public class ContextManager {
     }
 
     // -------------------- Context repository --------------------
+
+    /** Set default settings ( interceptors, connectors, loader, manager )
+     *  It is called from init if no connector is set up  - note that we
+     *  try to avoid any "magic" - you either set up everything ( using
+     *  server.xml or alternatives) or you don't set up and then defaults
+     *  will be used.
+     * 
+     *  Set interceptors or call setDefaults before adding contexts.
+     */
+    public void setDefaults() {
+	if(connectors.size()==0) {
+	    log("Setting default adapter");
+	    addServerConnector(  new org.apache.tomcat.service.http.HttpAdapter() );
+	}
+	
+	if( contextInterceptors.size()==0) {
+	    log("Setting default context interceptors");
+	    addContextInterceptor(new LogEvents());
+	    addContextInterceptor(new AutoSetup());
+	    addContextInterceptor(new DefaultCMSetter());
+	    addContextInterceptor(new WorkDirInterceptor());
+	    addContextInterceptor( new WebXmlReader());
+	    addContextInterceptor(new LoadOnStartupInterceptor());
+	}
+	
+	if( requestInterceptors.size()==0) {
+	    log("Setting default request interceptors");
+	    SimpleMapper smap=new SimpleMapper();
+	    smap.setContextManager( this );
+	    addRequestInterceptor(smap);
+	    addRequestInterceptor(new SessionInterceptor());
+	}
+    }
+     
+    
     /**
      * Get the names of all the contexts in this server.
      */
@@ -140,53 +176,61 @@ public class ContextManager {
     }
 
     /** Init() is called after the context manager is set up
-     *  and configured
+     *  and configured. 
      */
     public void init()  throws TomcatException {
-	long time=System.currentTimeMillis();
-
-	(new DefaultCMSetter()).engineInit(this);
-
-	
-	(new AutoSetup()).engineInit(this);
-	// Initialize and check Context Manager 
+	//	long time=System.currentTimeMillis();
+	ContextInterceptor cI[]=getContextInterceptors();
+	for( int i=0; i< cI.length; i++ ) {
+	    cI[i].engineInit( this );
+	}
 	
     	// init contexts
 	Enumeration enum = getContextNames();
 	while (enum.hasMoreElements()) {
             Context context = getContext((String)enum.nextElement());
-            context.init();
+            initContext( context );
 	}
-
-	log("Time to initialize: "+ (System.currentTimeMillis()-time), Logger.INFORMATION);
-
-	// After all context are configured, we can generate Apache configs
-	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
-	apacheConfig.execute( this );     
+	//	log("Time to initialize: "+ (System.currentTimeMillis()-time), Logger.INFORMATION);
     }
 
-    /** Initialize a context. This method is will call all "global"
-     * interceptors ( set on CM level ) and then context specific
-     * interceptors.
+    
+    /**
+     * Initializes this context to take on requests. This action
+     * will cause the context to load it's configuration information
+     * from the webapp directory in the docbase.
+     *
+     * <p>This method may only be called once and must be called
+     * before any requests are handled by this context and after setContextManager()
+     * is called.
      */
     public void initContext( Context ctx ) throws TomcatException {
-	//
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].contextInit( ctx );
 	}
+    }
+    
+    public void shutdownContext( Context ctx ) throws TomcatException {
+	// shut down and servlet
+	Enumeration enum = ctx.getServletNames();
+
+	while (enum.hasMoreElements()) {
+	    String key = (String)enum.nextElement();
+	    ServletWrapper wrapper = ctx.getServletByName( key );
+	    ctx.removeServletByName( key );
+	    wrapper.destroy();
+	}
 	
-	cI=ctx.getContextInterceptors();
+	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
-	    cI[i].contextInit( ctx );
+	    cI[i].contextShutdown( ctx );
 	}
     }
     
     /** Will start the connectors and begin serving requests
      */
     public void start() throws Exception {//TomcatException {
-	init();
-	
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).start();
@@ -194,27 +238,16 @@ public class ContextManager {
     }
 
     public void stop() throws Exception {//TomcatException {
-	System.out.println("Stopping context manager ");
-
+	log("Stopping context manager ");
 	Enumeration connE=getConnectors();
 	while( connE.hasMoreElements() ) {
 	    ((ServerConnector)connE.nextElement()).stop();
 	}
 
-	destroy();
-    }
-
-    public void destroy() throws Exception {//TomcatException {
-	
+	ContextInterceptor cI[]=getContextInterceptors();
 	Enumeration enum = getContextNames();
 	while (enum.hasMoreElements()) {
-	    Context context =
-	        getContext((String)enum.nextElement());
-	    
-	    System.out.println("Taking down context: " +
-			       context.getPath());
-	    
-	    context.shutdown();
+	    removeContext((String)enum.nextElement());
 	}
     }
 
@@ -227,8 +260,6 @@ public class ContextManager {
     public Context getContext(String name) {
 	return (Context)contexts.get(name);
     }
-
-
     
     /**
      * Adds a new Context to the set managed by this ContextManager.
@@ -236,22 +267,20 @@ public class ContextManager {
      * @param ctx context to be added.
      */
     public void addContext( Context ctx ) throws TomcatException {
-	// it will replace existing context - it's better than 
-	// IllegalStateException.
+	// Make sure context knows about its manager.
+	ctx.setContextManager( this );
+
+	// it will replace existing context - it's better than  IllegalStateException.
 	String path=ctx.getPath();
 	if( getContext( path ) != null ) {
 	    log("Warning: replacing context for " + path, Logger.WARNING);
 	    removeContext(path);
 	}
 
-	// Set defaults for the context
-	new DefaultCMSetter().addContext( this, ctx );
-
 	ContextInterceptor cI[]=getContextInterceptors();
 	for( int i=0; i< cI.length; i++ ) {
 	    cI[i].addContext( this, ctx );
 	}
-
 	
 	log(" adding " + ctx + " " + ctx.getPath() + " " +  ctx.getDocBase(), Logger.INFORMATION);
 
@@ -276,7 +305,7 @@ public class ContextManager {
 	}
 
 	if(context != null) {
-	    context.shutdown();
+	    shutdownContext( context );
 	    contexts.remove(name);
 	}
     }
@@ -374,6 +403,9 @@ public class ContextManager {
 	access
     */
     public ContextInterceptor[] getContextInterceptors() {
+	if( contextInterceptors.size() == 0 ) {
+	    setDefaults();
+	}
 	if( cInterceptors == null || cInterceptors.length != contextInterceptors.size()) {
 	    cInterceptors=new ContextInterceptor[contextInterceptors.size()];
 	    for( int i=0; i<cInterceptors.length; i++ ) {
@@ -411,6 +443,7 @@ public class ContextManager {
      * Sets the port number on which this server listens.
      *
      * @param port The new port number
+     * @deprecated 
      */
     public void setPort(int port) {
 	this.port=port;
@@ -418,6 +451,7 @@ public class ContextManager {
 
     /**
      * Gets the port number on which this server listens.
+     * @deprecated 
      */
     public int getPort() {
 	if(port==0) port=DEFAULT_PORT;
@@ -428,6 +462,7 @@ public class ContextManager {
      * Sets the virtual host name of this server.
      *
      * @param host The new virtual host name
+     * @deprecated 
      */
     public void setHostName( String host) {
 	this.hostname=host;
@@ -435,6 +470,7 @@ public class ContextManager {
 
     /**
      * Gets the virtual host name of this server.
+     * @deprecated 
      */
     public String getHostName() {
 	if(hostname==null)
@@ -481,8 +517,8 @@ public class ContextManager {
 	    processRequest( rrequest );
 
 	    if( rrequest.getWrapper() == null ) {
-		System.out.println("ERROR: mapper returned no wrapper ");
-		System.out.println(rrequest );
+		log("ERROR: mapper returned no wrapper ");
+		log(rrequest.toString() );
 		// XXX send an error - it shouldn't happen, mapper is broken
 	    } else {
 		// do it
@@ -498,8 +534,8 @@ public class ContextManager {
 	    }
 	    // XXX
 	    // this isn't what we want, we want to log the problem somehow
-	    System.out.println("HANDLER THREAD PROBLEM: " + e);
-	    System.out.println("Request: " + rrequest);
+	    log("HANDLER THREAD PROBLEM: " + e);
+	    log("Request: " + rrequest);
 	    e.printStackTrace();
 	}
     }
@@ -570,9 +606,25 @@ public class ContextManager {
 	return lr;
     }
 
+    public void setDebug( int level ) {
+	
+	if( level != 0 ) System.out.println( "Setting level to " + level);
+	debug=level;
+    }
+
     boolean firstLog = true;
     Logger cmLog = null;
     
+    public final void log(String msg) {
+	if (firstLog == true) {
+	    cmLog = Logger.getLogger("CTXMGR_LOG");
+	    firstLog = false;
+	}
+
+	if (cmLog != null)
+	    cmLog.log(msg, Logger.DEBUG);
+    }
+
     public final void log(String msg, int level) {
 	if (firstLog == true) {
 	    cmLog = Logger.getLogger("CTXMGR_LOG");

@@ -43,6 +43,18 @@ public class Tomcat {
 	xh.addRule( "ContextManager", xh.setProperties() );
 	//	xh.addRule( "ContextManager", xh.setParent( "setServer" ) );
 	//	xh.addRule( "ContextManager", xh.addChild( "setContextManager", null) );
+
+	xh.addRule( "ContextManager/ContextInterceptor", xh.objectCreate(null, "className"));
+	xh.addRule( "ContextManager/ContextInterceptor", xh.setProperties() );
+	xh.addRule( "ContextManager/ContextInterceptor", xh.setParent("setContextManager") );
+	xh.addRule( "ContextManager/ContextInterceptor", xh.addChild( "addContextInterceptor",
+								      "org.apache.tomcat.core.ContextInterceptor" ) );
+	
+	xh.addRule( "ContextManager/RequestInterceptor", xh.objectCreate(null, "className"));
+	xh.addRule( "ContextManager/RequestInterceptor", xh.setProperties() );
+	xh.addRule( "ContextManager/RequestInterceptor", xh.setParent("setContextManager") );
+	xh.addRule( "ContextManager/RequestInterceptor", xh.addChild( "addRequestInterceptor",
+								      "org.apache.tomcat.core.RequestInterceptor" ) );
 	
  	xh.addRule( "ContextManager/Context", xh.objectCreate("org.apache.tomcat.core.Context"));
 	xh.addRule( "ContextManager/Context", xh.setParent( "setContextManager") );
@@ -54,7 +66,7 @@ public class Tomcat {
 	xh.addRule( "ContextManager/Connector", xh.addChild( "addServerConnector", "org.apache.tomcat.core.ServerConnector") );
 
 	
-	xh.addRule("ContextManager/Logger", 
+	xh.addRule("ContextManager/Logger",
 		   xh.objectCreate("org.apache.tomcat.logging.TomcatLogger"));
 	xh.addRule("ContextManager/Logger", xh.setProperties());
 	xh.addRule("ContextManager/Logger", 
@@ -78,15 +90,20 @@ public class Tomcat {
 	xh.setDebug( 0 );
 	ContextManager cm=new ContextManager();
 	setHelper( xh );
-	//	org.apache.tomcat.server.HttpServer server=new org.apache.tomcat.server.HttpServer();
 	xh.readXml(f,cm);
-	//	cm=server.getContextManager();
+
+	// Generate Apache configs
+	//
+	org.apache.tomcat.task.ApacheConfig apacheConfig=new  org.apache.tomcat.task.ApacheConfig();
+	apacheConfig.execute( cm );     
 
 	if( doStop ) {
-	    stopTomcat(cm);
+	    stopTomcat(cm); // stop serving
 	    return;
 	}
-	cm.start();
+
+	cm.init(); // set up contexts
+	cm.start(); // start serving
     }
     
     public static void main(String args[] ) {
