@@ -81,35 +81,24 @@ public class ModuleCodeRule extends BaseRule
     protected void doInsertionAtBody(String moduleCode)
         throws Exception
     {
-        // FIXME: get rid of the pop tart
-        Module module = (Module)getDigester().pop();
-        module = getImportBean().getModule();
+        Module module = getImportBean().getModule();
         module.setCode(moduleCode);
         module.save();
-        getDigester().push(module);
     }
     
     protected void doValidationAtBody(String moduleCode)
         throws Exception
     {
-        Module module;
-        String moduleId = (String)getDigester().pop();
-// FIXME: this should use getImportBean().getModule()
-        module = (Module)ModuleManager
-            .getInstance(new NumberKey(moduleId));
+        Module module = getImportBean().getModule();
         //make sure the existing module has the same code
         String existingModuleCode = module.getCode();
         if(!existingModuleCode.equals(moduleCode))
         {
             throw new Exception("The existing module with module id: " + 
-                                    moduleId + " has module code: " + 
+                                    module.getModuleId() + " has module code: " + 
                                     existingModuleCode + 
                                     " which is not same as the import module code: " + 
                                     moduleCode);
-        }
-        else
-        {
-            getDigester().push(moduleCode);
         }
     }
 }

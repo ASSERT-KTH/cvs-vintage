@@ -97,7 +97,6 @@ public class ModuleRule extends BaseRule
         }
         module.setParentId(new NumberKey(attributes.getValue("parent")));
         module.setOwnerId("0");
-        getDigester().push(module);
         getImportBean().setModule(module);
         log().debug("(" + getImportBean().getState() + 
             ") digested module: " + module.getName());
@@ -105,8 +104,18 @@ public class ModuleRule extends BaseRule
     
     protected void doValidationAtBegin(Attributes attributes) throws Exception
     {
-        getDigester().push(attributes.getValue("id"));
-        
+        Module module = null;
+        try
+        {
+            module = (Module)ModuleManager
+                .getInstance(new NumberKey(attributes.getValue("id")));
+            getImportBean().setModule(module);
+        }
+        catch (Exception e)
+        {
+            throw new Exception ("Validation failed: module id: " + 
+                attributes.getValue("id") + " not found in database.");
+        }
         try
         {
             Module parentModule = (Module)ModuleManager
@@ -141,11 +150,17 @@ public class ModuleRule extends BaseRule
     
     protected void doInsertionAtEnd()
     {
-        Module module = (Module)getDigester().pop();
+/*
+        Module module = getImportBean().getModule();
+        if (module == null)
+        {
+            throw new Exception ("
+        }
+        .save();
+*/
     }
     
     protected void doValidationAtEnd()
     {
-        String moduleCode = (String)getDigester().pop();
     }
 }

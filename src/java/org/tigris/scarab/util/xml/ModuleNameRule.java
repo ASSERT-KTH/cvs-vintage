@@ -74,17 +74,28 @@ public class ModuleNameRule extends BaseRule
         super.doInsertionOrValidationAtBody(text);
     }
     
+    /**
+     * Creates a new module if it doesn't already exist. Updates
+     * existing modules.
+     */
     protected void doInsertionAtBody(String moduleName)
+        throws Exception
     {
-        // FIXME: don't pop anymore.
-        Module module = (Module)getDigester().pop();
-        module = getImportBean().getModule();
+        Module module = getImportBean().getModule();
+        if (module == null)
+        {
+            throw new Exception ("Could not find <module>");
+        }
         module.setRealName(moduleName);
-        module.setDescription(moduleName);
-        getDigester().push(module);
+        module.save();
     }
     
     protected void doValidationAtBody(String moduleName)
+        throws Exception
     {
+        if (moduleName == null || moduleName.length() == 0)
+        {
+            throw new Exception ("Missing module <name> information.");
+        }
     }
 }
