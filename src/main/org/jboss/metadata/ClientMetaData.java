@@ -6,7 +6,7 @@
  */
 package org.jboss.metadata;
 
-// $Id: ClientMetaData.java,v 1.9 2004/05/06 16:14:11 tdiesler Exp $
+// $Id: ClientMetaData.java,v 1.10 2004/05/10 16:22:26 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
 import org.w3c.dom.Element;
@@ -14,12 +14,13 @@ import org.w3c.dom.Element;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.net.URLClassLoader;
 
 /** The metdata data from a j2ee application-client.xml descriptor
  * 
  * @author Scott.Stark@jboss.org
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public class ClientMetaData
 {
@@ -41,10 +42,10 @@ public class ClientMetaData
    private String callbackHandler;
 
    /** The ClassLoader to load additional resources */
-   private ClassLoader resourceCl;
+   private URLClassLoader resourceCl;
 
    /** Set the ClassLoader to load additional resources */
-   public void setResourceClassLoader(ClassLoader resourceCl)
+   public void setResourceClassLoader(URLClassLoader resourceCl)
    {
       this.resourceCl = resourceCl;
    }

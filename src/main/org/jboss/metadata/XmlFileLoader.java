@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 /** XmlFileLoader class is used to read ejb-jar.xml, standardjboss.xml, jboss.xml
  * files, process them using DTDs and create ApplicationMetaData object for
@@ -32,7 +33,7 @@ import java.net.URL;
  * @author <a href="mailto:Darius.D@jbees.com">Darius Davidavicius</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
- * @version $Revision: 1.46 $
+ * @version $Revision: 1.47 $
  */
 public class XmlFileLoader
 {
@@ -41,7 +42,7 @@ public class XmlFileLoader
    // Attributes ----------------------------------------------------
    private static boolean defaultValidateDTDs = false;
    private static Logger log = Logger.getLogger(XmlFileLoader.class);
-   private ClassLoader classLoader;
+   private URLClassLoader classLoader;
    private ApplicationMetaData metaData;
    private boolean validateDTDs;
    
@@ -77,7 +78,7 @@ public class XmlFileLoader
    /**
     * Set the class loader
     */
-   public void setClassLoader(ClassLoader cl)
+   public void setClassLoader(URLClassLoader cl)
    {
       classLoader = cl;
    }

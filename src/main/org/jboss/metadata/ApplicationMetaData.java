@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 
 /**
@@ -27,7 +28,7 @@ import java.util.*;
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>.
  * @author <a href="mailto:Thomas.Diesler@arcor.de">Thomas Diesler</a>.
  *
- * @version $Revision: 1.49 $
+ * @version $Revision: 1.50 $
  */
 public class ApplicationMetaData
    extends MetaData
@@ -65,20 +66,20 @@ public class ApplicationMetaData
    private boolean enforceEjbRestrictions;
 
    /** The ClassLoader to load additional resources */
-   private ClassLoader resourceCl;
+   private URLClassLoader resourceCl;
 
    public ApplicationMetaData()
    {
    }
 
    /** Get the ClassLoader to load additional resources */
-   public ClassLoader getResourceCl()
+   public URLClassLoader getResourceCl()
    {
       return resourceCl;
    }
 
    /** Set the ClassLoader to load additional resources */
-   public void setResourceClassLoader(ClassLoader resourceCl)
+   public void setResourceClassLoader(URLClassLoader resourceCl)
    {
       this.resourceCl = resourceCl;
    }

@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ import java.util.Set;
  * @see org.jboss.web.AbstractWebContainer
  
  * @author Scott.Stark@jboss.org
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  */
 public class WebMetaData extends MetaData
 {
@@ -91,10 +92,10 @@ public class WebMetaData extends MetaData
    private int replicationType = REPLICATION_TYPE_SYNC;
 
    /** The ClassLoader to load additional resources */
-   private ClassLoader resourceCl;
+   private URLClassLoader resourceCl;
 
    /** Set the ClassLoader to load additional resources */
-   public void setResourceClassLoader(ClassLoader resourceCl)
+   public void setResourceClassLoader(URLClassLoader resourceCl)
    {
       this.resourceCl = resourceCl;
    }

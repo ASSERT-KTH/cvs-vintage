@@ -19,7 +19,7 @@ package org.jboss.verifier;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: Main.java,v 1.7 2004/04/02 12:29:07 tdiesler Exp $
+ * $Id: Main.java,v 1.8 2004/05/10 16:22:30 tdiesler Exp $
  *
  * You can reach the author by sending email to jplindfo@helsinki.fi.
  */
@@ -42,7 +42,7 @@ import org.jboss.metadata.XmlFileLoader;
  * <a href="http://www.ejboss.org">JBoss project</a>
  *
  * @author 	Juha Lindfors
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since  	JDK 1.3
  */
 public class Main
@@ -68,7 +68,7 @@ public class Main
          }
 
          URL url = new File(args[0]).toURL();
-         ClassLoader cl = new URLClassLoader( new URL[] {url},
+         URLClassLoader cl = new URLClassLoader( new URL[] {url},
             Thread.currentThread().getContextClassLoader());
          XmlFileLoader xfl = new XmlFileLoader();
          BeanVerifier verifier = new BeanVerifier();

@@ -6,10 +6,10 @@
  */
 package org.jboss.metadata;
 
-// $Id: ServiceRefMetaData.java,v 1.8 2004/05/07 14:58:49 tdiesler Exp $
+// $Id: ServiceRefMetaData.java,v 1.9 2004/05/10 16:22:26 tdiesler Exp $
 
 import org.jboss.deployment.DeploymentException;
-import org.w3c.dom.Document;
+import org.jboss.webservice.WSDLLocatorImpl;
 import org.w3c.dom.Element;
 
 import javax.wsdl.Definition;
@@ -17,19 +17,17 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /** The metdata data from service-ref element in web.xml, ejb-jar.xml, and application-client.xml.
  *
  * @author Thomas.Diesler@jboss.org
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public class ServiceRefMetaData implements Serializable
 {
@@ -52,9 +50,7 @@ public class ServiceRefMetaData implements Serializable
    private URL wsdlOverride;
 
    /** The ClassLoader to load additional resources */
-   private transient ClassLoader resourceCl;
-   // The wsdl document, if we have one
-   private transient Document wsdlDocument;
+   private transient URLClassLoader resourceCL;
    // The wsdl definition, if we have one
    private transient Definition wsdlDefinition;
 
@@ -66,19 +62,19 @@ public class ServiceRefMetaData implements Serializable
 
    /** Constructor with a given resource classloader, used on the server side
     */
-   public ServiceRefMetaData(ClassLoader resourceCl)
+   public ServiceRefMetaData(URLClassLoader resourceCl)
    {
       setResourceCl(resourceCl);
    }
 
    /** Set the resource classloader that can load the wsdl file
     */
-   public void setResourceCl(ClassLoader resourceCl)
+   public void setResourceCl(URLClassLoader resourceCl)
    {
       if (resourceCl == null)
          throw new IllegalArgumentException("ResourceClassLoader cannot be null");
 
-      this.resourceCl = resourceCl;
+      this.resourceCL = resourceCl;
    }
 
    public String getJaxrpcMappingFile()
@@ -107,9 +103,9 @@ public class ServiceRefMetaData implements Serializable
 
    public Class getServiceInterfaceClass() throws ClassNotFoundException
    {
-      if (resourceCl == null)
+      if (resourceCL == null)
          throw new IllegalStateException("Resource class loader not set");
-      return resourceCl.loadClass(serviceInterface);
+      return resourceCL.loadClass(serviceInterface);
    }
 
    public QName getServiceQName()
@@ -132,42 +128,6 @@ public class ServiceRefMetaData implements Serializable
       return wsdlOverride;
    }
 
-   public Document getWsdlDocument()
-   {
-      if (wsdlDocument != null)
-         return wsdlDocument;
-
-      try
-      {
-         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-         factory.setNamespaceAware(true);
-         DocumentBuilder builder = factory.newDocumentBuilder();
-
-         InputStream wsdlInputStream = null;
-         if (wsdlOverride != null)
-         {
-            wsdlInputStream = wsdlOverride.openStream();
-            if (wsdlInputStream == null)
-               throw new DeploymentException("Cannot open WSDL at: " + wsdlOverride);
-         }
-         else if (wsdlFile != null)
-         {
-            wsdlInputStream = resourceCl.getResourceAsStream(wsdlFile);
-            if (wsdlInputStream == null)
-               throw new DeploymentException("Cannot open WSDL at: " + wsdlFile);
-         }
-
-         if (wsdlInputStream != null)
-            wsdlDocument = builder.parse(wsdlInputStream);
-      }
-      catch (Exception e)
-      {
-         throw new IllegalStateException("Cannot get wsdl document, cause: " + e.toString());
-      }
-
-      return wsdlDocument;
-   }
-
    public Definition getWsdlDefinition()
    {
       if (wsdlDefinition != null)
@@ -177,9 +137,8 @@ public class ServiceRefMetaData implements Serializable
       {
          WSDLFactory wsdlFactory = WSDLFactory.newInstance();
          WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-         Document wsdlDocument = getWsdlDocument();
-         if (wsdlDocument != null)
-            wsdlDefinition = wsdlReader.readWSDL(null, wsdlDocument);
+         URL wsdlLocation = resourceCL.findResource(wsdlFile);
+         wsdlDefinition = wsdlReader.readWSDL(new WSDLLocatorImpl(wsdlLocation));
       }
       catch (WSDLException e)
       {
