@@ -24,7 +24,7 @@
 // File: PropPanelObject.java
 // Classes: PropPanelObject
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelObject.java,v 1.12 2002/10/08 20:04:38 kataka Exp $
+// $Id: PropPanelObject.java,v 1.13 2002/10/10 21:34:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -65,7 +65,7 @@ public class PropPanelObject extends PropPanelModelElement {
 	addField(new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox),3,0,0);
    
 	addCaption(Argo.localize("UMLMenu", "label.namespace"),4,0,1);
-	addLinkField(namespaceScroll,4,0,0);
+	addLinkField(namespaceComboBox,4,0,0);
 
 	addCaption("Stimuli sent:",1,1,0.25);
 	JList sentList = new UMLList(new UMLStimulusListModel(this,null,true,"sent"),true);

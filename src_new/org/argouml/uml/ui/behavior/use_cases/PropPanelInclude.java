@@ -24,7 +24,7 @@
 // File: PropPanelInclude.java
 // Classes: PropPanelInclude
 // Original Author: mail@jeremybennett.com
-// $Id: PropPanelInclude.java,v 1.3 2002/10/09 20:03:58 kataka Exp $
+// $Id: PropPanelInclude.java,v 1.4 2002/10/10 21:34:30 kataka Exp $
 
 // 2 Apr 2002: Jeremy Bennett (mail@jeremybennett.com). Created to support a
 // proper Include implementation with Use Cases
@@ -79,7 +79,7 @@ public class PropPanelInclude extends PropPanelModelElement {
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
         addField(Argo.localize("UMLMenu", "label.stereotype"), 
             new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceScroll);
+        addField(Argo.localize("UMLMenu", "label.namespace"), namespaceComboBox);
     
     JComboBox baseBox = new UMLComboBox2(this, new UMLIncludeBaseComboBoxModel(this), ActionSetIncludeBase.SINGLETON);
     addField(Argo.localize("UMLMenu", "label.usecase-base"), baseBox);

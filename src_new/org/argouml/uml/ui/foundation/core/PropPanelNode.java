@@ -25,7 +25,7 @@
 // File: PropPanelNode.java
 // Classes: PropPanelNode
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNode.java,v 1.13 2002/09/15 06:55:27 linus Exp $
+// $Id: PropPanelNode.java,v 1.14 2002/10/10 21:34:30 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" and "Specializes:" for inheritance.
@@ -72,7 +72,7 @@ public class PropPanelNode extends PropPanelClassifier {
     addField(modifiersPanel,4,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.namespace"),5,0,0);
-   addField(namespaceScroll,5,0,0);
+   addField(namespaceComboBox,5,0,0);
 
     addCaption("Specializations:",6,0,1);
     addField(derivedScroll,6,0,1);

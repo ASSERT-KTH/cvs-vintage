@@ -26,7 +26,7 @@
 // File: PropPanelLink.java
 // Classes: PropPanelLink
 // Original Author: jrobbins@ics.uci.edu
-// $Id: PropPanelLink.java,v 1.10 2002/10/08 20:04:38 kataka Exp $
+// $Id: PropPanelLink.java,v 1.11 2002/10/10 21:34:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -65,7 +65,7 @@ public class PropPanelLink extends PropPanelModelElement {
 
 
     addCaption(Argo.localize("UMLMenu", "label.namespace"),3,0,1);
-    addLinkField(namespaceScroll,3,0,1);
+    addLinkField(namespaceComboBox,3,0,1);
 
 
     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateNamespace",null);

@@ -24,7 +24,7 @@
 // File: PropPanelNodeInstance.java
 // Classes: PropPanelNodeInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelNodeInstance.java,v 1.7 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelNodeInstance.java,v 1.8 2002/10/10 21:34:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -60,7 +60,7 @@ public class PropPanelNodeInstance extends PropPanelModelElement {
 
 
 	addCaption(Argo.localize("UMLMenu", "label.namespace"),4,0,1);
-	addField(namespaceScroll,4,0,0);
+	addField(namespaceComboBox,4,0,0);
 
 
 	new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);

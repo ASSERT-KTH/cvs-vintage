@@ -24,7 +24,7 @@
 // File: PropPanelUseCase.java
 // Classes: PropPanelUseCase
 // Original Author: your email address here
-// $Id: PropPanelUseCase.java,v 1.18 2002/10/09 20:03:58 kataka Exp $
+// $Id: PropPanelUseCase.java,v 1.19 2002/10/10 21:34:30 kataka Exp $
 
 // 21 Mar 2002: Jeremy Bennett (mail@jeremybennett.com). Changed to use the
 // labels "Generalizes:" for inheritance (needs Specializes some time).
@@ -83,7 +83,7 @@ public class PropPanelUseCase extends PropPanelClassifier {
         
         addField(Argo.localize("UMLMenu", "label.name"), nameField);
     	addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-    	addField(Argo.localize("UMLMenu", "label.namespace"),namespaceScroll);
+    	addField(Argo.localize("UMLMenu", "label.namespace"),namespaceComboBox);
 		
 	PropPanelModifiers mPanel = new PropPanelModifiers(3);
         Class mclass = MUseCase.class;

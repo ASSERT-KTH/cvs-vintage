@@ -24,7 +24,7 @@
 // File: PropPanelComponentInstance.java
 // Classes: PropPanelComponentInstance
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: PropPanelComponentInstance.java,v 1.7 2002/07/16 09:02:51 jhraigniac Exp $
+// $Id: PropPanelComponentInstance.java,v 1.8 2002/10/10 21:34:31 kataka Exp $
 
 package org.argouml.uml.ui.behavior.common_behavior;
 
@@ -62,7 +62,7 @@ public class PropPanelComponentInstance extends PropPanelModelElement {
     addField(stereotypeBox,3,0,0);
 
     addCaption(Argo.localize("UMLMenu", "label.namespace"),4,0,1);
-    addField(namespaceScroll,4,0,0);
+    addField(namespaceComboBox,4,0,0);
 
     new PropPanelButton(this,buttonPanel,_navUpIcon, Argo.localize("UMLMenu", "button.go-up"),"navigateUp",null);
     new PropPanelButton(this,buttonPanel,_navBackIcon, Argo.localize("UMLMenu", "button.go-back"),"navigateBackAction","isNavigateBackEnabled");

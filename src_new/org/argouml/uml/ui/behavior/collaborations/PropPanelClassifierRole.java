@@ -24,7 +24,7 @@
 // File: PropPanelClassifierRole.java
 // Classes: PropPanelClassifierRole
 // Original Author: agauthie@ics.uci.edu
-// $Id: PropPanelClassifierRole.java,v 1.14 2002/10/08 20:04:37 kataka Exp $
+// $Id: PropPanelClassifierRole.java,v 1.15 2002/10/10 21:34:30 kataka Exp $
 
 package org.argouml.uml.ui.behavior.collaborations;
 
@@ -60,7 +60,7 @@ public class PropPanelClassifierRole extends PropPanelClassifier {
     
     addField(Argo.localize("UMLMenu", "label.name"), nameField);
     addField(Argo.localize("UMLMenu", "label.stereotype"), new UMLComboBoxNavigator(this, Argo.localize("UMLMenu", "tooltip.nav-stereo"),stereotypeBox));
-    addField(Argo.localize("UMLMenu", "label.namespace"),namespaceScroll);
+    addField(Argo.localize("UMLMenu", "label.namespace"),namespaceComboBox);
     
     addField(Argo.localize("UMLMenu", "label.multiplicity"),new UMLMultiplicityComboBox(this,mclass));
     
