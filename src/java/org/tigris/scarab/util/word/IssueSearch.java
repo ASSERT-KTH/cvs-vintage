@@ -2210,11 +2210,20 @@ public class IssueSearch
 
     /**
      * Called by the garbage collector to release any database
-     * resources associated with this query.  Should be called
-     * indirectly via {@link #close()}, as finalization is not always
-     * reliable.
+     * resources associated with this query.
+     *
+     * @see #close()
      */
     protected void finalize()
+    {
+        close();
+    }
+
+    /**
+     * Releases any managed resources associated with this search
+     * (e.g. database connections, etc.).
+     */
+    public void close()
     {
         if (conn != null)
         {
@@ -2234,15 +2243,6 @@ public class IssueSearch
                 Torque.closeConnection(this.conn);
             }
         }
-    }
-
-    /**
-     * Releases any managed resources associated with this search
-     * (e.g. database connections, etc.).
-     */
-    public void close()
-    {
-        finalize();
     }
 
     protected class QueryResultList extends AbstractList
