@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.109 2002/09/12 00:58:18 elicia Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.110 2002/09/20 19:04:18 elicia Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -572,6 +572,8 @@
     <column name="DELETED" required="false" type="BOOLEANINT" 
         default="0" size="1"></column>
     <column name="LOCKED" required="false" type="BOOLEANINT" 
+        default="0" size="1"/>
+    <column name="ISDEFAULT" required="false" type="BOOLEANINT" 
         default="0" size="1"/>
     <foreign-key foreignTable="SCARAB_ISSUE_TYPE">
         <reference local="PARENT_ID" foreign="ISSUE_TYPE_ID"/>
