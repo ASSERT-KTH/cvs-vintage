@@ -16,9 +16,7 @@
 
 package org.columba.mail.pop3.command;
 
-import java.net.NoRouteToHostException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
+import java.io.IOException;
 import java.util.List;
 import java.text.MessageFormat;
 
@@ -109,24 +107,12 @@ public class FetchNewMessagesCommand extends Command {
 
 		} catch (CommandCancelledException e) {
 			server.forceLogout();
-		} catch (UnknownHostException e) {
+		} catch (IOException e) {
+                        String name = e.getClass().getName();
 			JOptionPane.showMessageDialog(
 				null,
 				e.getLocalizedMessage(),
-				"UnkownHostException",
-				JOptionPane.ERROR_MESSAGE);
-		} catch (SocketTimeoutException e) {
-			JOptionPane.showMessageDialog(
-				null,
-				e.getLocalizedMessage(),
-				"TimeoutException",
-				JOptionPane.ERROR_MESSAGE);
-			server.forceLogout();
-		} catch (NoRouteToHostException e) {
-			JOptionPane.showMessageDialog(
-				null,
-				e.getLocalizedMessage(),
-				"NoRouteToHostException",
+				name.substring(name.lastIndexOf(".")),
 				JOptionPane.ERROR_MESSAGE);
 		} finally {
 			// always enable the menuitem again 
