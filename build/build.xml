@@ -17,6 +17,7 @@
     <property name="final.dir" value="${basedir}/../${final.name}/"/>
             
     <property name="src.conf.dir" value="${src.dir}/conf"/>
+    <property name="www.dir" value="${src.dir}/../www"/>
     <property name="src.html.dir" value="${src.dir}/html"/>
     <property name="src.i18n.dir" value="${src.dir}/i18n"/>
     <property name="src.images.dir" value="${src.dir}/images"/>
@@ -1246,6 +1247,38 @@
         </ant>
         <move file="${src.java.dir.scarab}/${project}-default-all-data.xml"
             tofile="${src.sql.dir}/${project}-default-all-data.xml"/>
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Generates an Html description of the DB schema                     -->
+    <!-- This should be integrated with torque, so effort to integrate      -->
+    <!-- into the build has not been done                                   -->
+    <!-- ================================================================== -->
+    <target name="html-schema">
+        <echo message="This task expects you to have xalan-j_2_3_1 binary
+                       distribution located at ${lib.repo}/xalan-j_2_3_1"/>
+        <java classname="org.apache.xalan.xslt.Process" fork="yes"
+              args="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl 
+                    -IN  ${src.sql.dir}/scarab-schema.xml 
+                    -OUT ${src.sql.dir}/scarab-schema.html">
+           <!-- it seems ant is treating these as jvmarg ??
+           <arg value="-XSL ${src.dir}/dtd/XMLSchemaToHTML.xsl"/>
+           <arg value="-IN  ${src.sql.dir}/scarab-schema.xml"/>
+           <arg value="-OUT ${src.sql.dir}/scarab-schema.html"/>
+           -->
+           <classpath>
+               <fileset dir="${lib.repo}/xalan-j_2_3_1/bin">
+                   <include name="xalan.jar"/>
+                   <include name="xml-apis.jar"/>
+                   <include name="xercesImpl.jar"/>
+               </fileset>
+           </classpath>
+        </java>
+
+        <copy file="${src.sql.dir}/scarab-schema.html"
+            tofile="${www.dir}/generated-scarab-schema.html"/>
+
     </target>
 
 </project>
