@@ -72,7 +72,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.17 2002/05/01 01:50:43 elicia Exp $
+ * @version $Id: GlobalAttributes.java,v 1.18 2002/05/03 00:54:13 elicia Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -112,6 +112,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
                             allAttributes.remove(attr);
                         }
                         intake.remove(attrGroup);
+                        data.setMessage(DEFAULT_MSG);  
                     }
                 }
                 catch (Exception e)
@@ -157,6 +158,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
                Attribute newAttribute = attribute
                   .copyAttribute((ScarabUser)data.getUser());
                newAttribute.save();
+               data.setMessage(DEFAULT_MSG);  
              }
          }
      }
@@ -183,6 +185,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
                           .retrieveByPK(new NumberKey(id));
                    attribute.setDeleted(true);
                    attribute.save();
+                   data.setMessage(DEFAULT_MSG);  
                 }
             }
         }

@@ -72,10 +72,11 @@ import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.services.cache.ScarabCache;  
 
 /**
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ModuleAttributeEdit.java,v 1.11 2002/05/02 00:27:45 elicia Exp $
+ * @version $Id: ModuleAttributeEdit.java,v 1.12 2002/05/03 00:54:13 elicia Exp $
  */
 public class ModuleAttributeEdit extends RequireLoginFirstAction
 {
@@ -101,6 +102,8 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                                  rmo.getQueryKey(), false);
                 rmoGroup.setProperties(rmo);
                 rmo.save();
+                ScarabCache.clear();
+                data.setMessage(DEFAULT_MSG);  
             }
         } 
     }
@@ -150,6 +153,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                {
                    rmo2.delete(user);
                    rmos.remove(rmo);
+                   data.setMessage(DEFAULT_MSG);  
                }
                catch (Exception e)
                {
@@ -188,6 +192,7 @@ public class ModuleAttributeEdit extends RequireLoginFirstAction
                 module.addAttributeOption(issueType, new NumberKey(optionIds[i]));
             }
             doCancel(data, context);
+            data.setMessage(DEFAULT_MSG);  
         }
     }
 

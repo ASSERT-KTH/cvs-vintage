@@ -84,7 +84,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: AttributeGroupEdit.java,v 1.21 2002/05/01 01:12:15 elicia Exp $
+ * @version $Id: AttributeGroupEdit.java,v 1.22 2002/05/03 00:54:13 elicia Exp $
  */
 public class AttributeGroupEdit extends RequireLoginFirstAction
 {
@@ -103,6 +103,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                                     ag.getQueryKey(), false);
         agGroup.setProperties(ag);
         ag.save();
+        data.setMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -149,6 +150,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 raagGroup.setProperties(raag);
                 raag.save();
             }
+            data.setMessage(DEFAULT_MSG);  
             //ScarabCache.clear();
         } 
 
@@ -213,6 +215,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 rmit.save();
             }
        }
+       data.setMessage(DEFAULT_MSG);  
     }
 
     /**
@@ -256,6 +259,7 @@ public class AttributeGroupEdit extends RequireLoginFirstAction
                 attGroup.addAttribute(attribute);
             }
             doCancel(data, context);
+            data.setMessage(DEFAULT_MSG);  
         }
     }
 

@@ -66,7 +66,7 @@ import org.tigris.scarab.util.ScarabConstants;
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.16 2002/04/30 19:50:49 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.17 2002/05/03 00:54:13 elicia Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -124,6 +124,7 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 // Edit existing issue type
                 group.setProperties(issueType);
                 issueType.save();
+                data.setMessage(DEFAULT_MSG);  
             }
 
         }
