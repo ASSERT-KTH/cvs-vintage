@@ -72,12 +72,12 @@ Global attributes
 <table width="100%" border="1" cellspacing="2" cellpadding="3">
 <tr>
 <th>Select</th>
-<th>Deleted?</th>
 <th>#sort ("name" "Name")</th>
 <th>#sort ("desc" "Description")</th>
 <th>#sort("type" "Input type")</th>
 <th>#sort ("user" "Author")</th>
 <th>#sort("date" "Creation date")</th>
+<th>Deleted?</th>
 </tr>
 
 #foreach( $attribute in $allAttributes )
@@ -86,7 +86,6 @@ Global attributes
     #indexedRows($velocityCount)
 
   <td><input type="checkbox" name="action_$attribute.AttributeId"></td>
-  <td>#booleanCheckbox ($attgroup.Deleted)
   <td>$link.setPage("admin,GlobalAttributeEdit.vm").addPathInfo("att_0id", "$attgroup.Id").setLabel("$attribute.Name")</td>
   <td>#if ($attribute.Description) $attribute.Description #else &nbsp; #end</td>
   <td>
@@ -100,6 +99,7 @@ Global attributes
   </td>
   <td>#attributeCreatedBy($attribute)</td>
   <td>$format.getDate($scarabR.DateFormat, $attribute.CreatedDate)</td>
+  <td>$attgroup.Deleted</td>
   </tr>
   #end
 #end
@@ -110,7 +110,6 @@ Global attributes
 <input type="submit" value="Create new"  name="eventSubmit_doCreatenew" />&#160;
 #if (!$allAttributes.isEmpty())
 <input type="submit" value="Copy selected" name="eventSubmit_doCopy" />&#160;
-<input type="submit" value="Delete/Undelete selected"  name="eventSubmit_doDelete" />
 #end
 </div>
 

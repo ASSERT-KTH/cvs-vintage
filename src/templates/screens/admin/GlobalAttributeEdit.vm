@@ -75,6 +75,10 @@
  </tr>
   #end
 </tr>
+ <tr>
+  <th>Deleted</th>
+  <td>#booleanCheckbox ($attgroup.Deleted)
+ </tr>
 </table>
 </div>
 
