@@ -19,6 +19,8 @@ import javax.ejb.EJBObject;
 import javax.ejb.EJBMetaData;
 import javax.ejb.CreateException;
 import javax.ejb.RemoveException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 
 import javax.jms.MessageListener;
 import javax.jms.Message;
@@ -37,7 +39,7 @@ import org.jboss.util.NullArgumentException;
  * @author <a href="mailto:docodan@mvcsoft.com">Daniel OConnor</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author <a href="mailto:Scott.Stark@jboss.org">Scott Stark</a>
- * @version $Revision: 1.34 $
+ * @version $Revision: 1.35 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -159,6 +161,13 @@ public class MessageDrivenContainer
          Method m = MessageListener.class.getMethod("onMessage", new Class[]{Message.class});
          map.put(m, beanClass.getMethod(m.getName(), m.getParameterTypes()));
          log.debug("Mapped " + m.getName() + " " + m.hashCode() + " to " + map.get(m));
+         if( TimedObject.class.isAssignableFrom( beanClass ) ) {
+             // Map ejbTimeout
+             map.put(
+                TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
+                beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
+             );
+         }
          beanMapping = map;
 
          // Initialize pool

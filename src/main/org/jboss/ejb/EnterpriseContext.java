@@ -18,6 +18,7 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBContext;
 import javax.ejb.EJBException;
+import javax.ejb.TimerService;
 import javax.transaction.Status;
 import javax.transaction.Transaction;
 import javax.transaction.UserTransaction;
@@ -51,7 +52,7 @@ import org.jboss.tm.usertx.client.ServerVMClientUserTransaction;
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:juha@jboss.org">Juha Lindfors</a>
  * @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- * @version $Revision: 1.61 $
+ * @version $Revision: 1.62 $
  *
  * Revisions:
  * 2001/06/29: marcf
@@ -245,6 +246,10 @@ public abstract class EnterpriseContext
          throw new EJBException("Deprecated"); 
       }
 
+      public TimerService getTimerService() throws IllegalStateException
+      {
+         return getContainer().getTimerService( null );
+      }
       /** Get the Principal for the current caller. This method
           cannot return null according to the ejb-spec.
       */

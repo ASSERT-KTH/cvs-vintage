@@ -17,6 +17,8 @@ import java.util.Map;
 import javax.ejb.EJBHome;
 import javax.ejb.EJBLocalHome;
 import javax.ejb.Handle;
+import javax.ejb.Timer;
+import javax.ejb.TimedObject;
 import javax.management.ObjectName;
 
 import org.jboss.invocation.Invocation;
@@ -31,7 +33,7 @@ import org.jboss.metadata.SessionMetaData;
  * web services.
  * </p>
  * @author <a href="mailto:Christoph.Jung@infor.de">Christoph G. Jung</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 30.10.2003
  */
 
@@ -233,6 +235,13 @@ public abstract class SessionContainer extends Container {
       if (localInterface != null) {
          Method[] m = localInterface.getMethods();
          setUpBeanMappingImpl(map, m, "javax.ejb.EJBLocalObject");
+      }
+      if( TimedObject.class.isAssignableFrom( beanClass ) ) {
+          // Map ejbTimeout
+          map.put(
+             TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
+             beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
+          );
       }
       beanMapping = map;
       // the sei->bean mapping is factored out, because the sei could be set

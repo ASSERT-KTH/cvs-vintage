@@ -24,6 +24,8 @@ import javax.ejb.EJBLocalHome;
 import javax.ejb.EJBMetaData;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
+import javax.ejb.TimedObject;
+import javax.ejb.Timer;
 
 import javax.transaction.Transaction;
 import javax.management.ObjectName;
@@ -47,7 +49,7 @@ import org.jboss.util.collection.SerializableEnumeration;
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.103 $
+ * @version $Revision: 1.104 $
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -949,6 +951,13 @@ public class EntityContainer
          {
             Method[] m = localInterface.getMethods();
             setupBeanMappingImpl( m, "javax.ejb.EJBLocalObject" );
+         }
+         if( TimedObject.class.isAssignableFrom( beanClass ) ) {
+             // Map ejbTimeout
+             beanMapping.put(
+                TimedObject.class.getMethod( "ejbTimeout", new Class[] { Timer.class } ),
+                beanClass.getMethod( "ejbTimeout", new Class[] { Timer.class } )
+             );
          }
       }
       catch (Exception e)
