@@ -24,7 +24,7 @@
 // File: FigClass.java
 // Classes: FigClass
 // Original Author: abonner
-// $Id: FigClass.java,v 1.4 2000/11/08 13:32:27 toby Exp $
+// $Id: FigClass.java,v 1.5 2000/11/29 14:55:56 toby Exp $
 
 package org.argouml.uml.diagram.static_structure.ui;
 
@@ -74,18 +74,16 @@ public class FigClass extends FigNodeModelElement {
 //     _stereo.setLineWidth(0);
 //     _stereo.setFilled(false);
 
-    _attr = new FigText(10, 30, 90, 21);
+    _attr = new FigText(10, 30, 90, 21, true);
     _attr.setFilled(true);
     _attr.setLineWidth(1);
-    _attr.setExpandOnly(true);
     _attr.setFont(LABEL_FONT);
     _attr.setTextColor(Color.black);
     _attr.setJustification(FigText.JUSTIFY_LEFT);
 
-    _oper = new FigText(10, 50, 90, 21);
+    _oper = new FigText(10, 50, 90, 21, true);
     _oper.setFilled(true);
     _oper.setLineWidth(1);
-    _oper.setExpandOnly(true);
     _oper.setFont(LABEL_FONT);
     _oper.setTextColor(Color.black);
     _oper.setJustification(FigText.JUSTIFY_LEFT);
