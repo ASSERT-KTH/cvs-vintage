@@ -10,7 +10,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<!-- $Id: build.xml,v 1.21 2001/09/01 04:21:25 user57 Exp $ -->
+<!-- $Id: build.xml,v 1.22 2001/09/02 19:29:38 kimptoc Exp $ -->
 
 <project name="JBoss" default="main">
 
@@ -218,7 +218,7 @@
     <pathelement path="${jboss.naming.lib}/jnpserver.jar"/>
   </path>
 
-  <!-- The combined depedant module classpath -->
+  <!-- The combined dependant module classpath -->
   <path id="dependentmodule.classpath">
     <path refid="jboss.j2ee.classpath"/>
     <path refid="jboss.naming.classpath"/>
