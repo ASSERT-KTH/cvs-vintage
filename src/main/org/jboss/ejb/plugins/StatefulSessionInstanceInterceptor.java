@@ -34,7 +34,13 @@ import javax.ejb.EJBObject;
 *   @see <related>
 *   @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *   @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
-*   @version $Revision: 1.16 $
+*   @version $Revision: 1.17 $
+*
+*   <p><b>Revisions:</b>
+*   <p><b>20010704 marcf</b>
+*   <ul>
+*   <li>- Moved to new synchronization
+*   </ul>
 */
 public class StatefulSessionInstanceInterceptor
 extends AbstractInterceptor
@@ -45,25 +51,25 @@ extends AbstractInterceptor
 	protected StatefulSessionContainer container;
 	
 	// Static -------------------------------------------------------
-    private static Method getEJBHome;
-    private static Method getHandle;
-    private static Method getPrimaryKey;
-    private static Method isIdentical;
-    private static Method remove;
-    static 
-    {
-       try 
-       {
-         Class[] noArg = new Class[0];
-         getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
-         getHandle = EJBObject.class.getMethod("getHandle", noArg);
-         getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
-         isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
-         remove = EJBObject.class.getMethod("remove", noArg);
-       }
-       catch (Exception x) {x.printStackTrace();}
-    }
-    
+	private static Method getEJBHome;
+	private static Method getHandle;
+	private static Method getPrimaryKey;
+	private static Method isIdentical;
+	private static Method remove;
+	static 
+	{
+		try 
+		{
+			Class[] noArg = new Class[0];
+			getEJBHome = EJBObject.class.getMethod("getEJBHome", noArg);
+			getHandle = EJBObject.class.getMethod("getHandle", noArg);
+			getPrimaryKey = EJBObject.class.getMethod("getPrimaryKey", noArg);
+			isIdentical = EJBObject.class.getMethod("isIdentical", new Class[] {EJBObject.class});
+			remove = EJBObject.class.getMethod("remove", noArg);
+		}
+		catch (Exception x) {x.printStackTrace();}
+	}
+	
 	// Constructors -------------------------------------------------
 	
 	// Public -------------------------------------------------------
@@ -99,14 +105,17 @@ extends AbstractInterceptor
 			return getNext().invokeHome(mi);
 		} finally
 		{
-			// Release the lock
-			ctx.unlock();
-			
-			// Still free? Not free if create() was called successfully
-			if (ctx.getId() == null)
+			synchronized (ctx) 
 			{
-				container.getInstancePool().free(ctx); 
-			} 
+				// Release the lock
+				ctx.unlock();
+				
+				// Still free? Not free if create() was called successfully
+				if (ctx.getId() == null)
+				{
+					container.getInstancePool().free(ctx); 
+				}
+			}
 		}
 	}
 	
@@ -127,7 +136,7 @@ extends AbstractInterceptor
 			
 			// We want to be notified when the transaction commits
 			tx.registerSynchronization(synch);
-		
+			
 			// EJB 1.1, 6.5.3
 			synch.afterBegin();
 		
@@ -146,20 +155,16 @@ extends AbstractInterceptor
 		AbstractInstanceCache cache = (AbstractInstanceCache)container.getInstanceCache();
 		Object id = mi.getId();
 		EnterpriseContext ctx = null;
-		Sync mutex = (Sync)cache.getLock(id);
 		
-		// We synchronize the locking logic (so we can be reentrant)
-		try 
+		// Get context
+		ctx = container.getInstanceCache().get(mi.getId());
+		
+		synchronized(ctx) 
 		{
-			mutex.acquire();
 			
-			// Get context
-			ctx = container.getInstanceCache().get(mi.getId());
-		
 			// Associate it with the method invocation
 			mi.setEnterpriseContext(ctx);
-		
-		
+			
 			// BMT beans will lock and replace tx no matter what, CMT do work on transaction
 			if (!((SessionMetaData)container.getBeanMetaData()).isBeanManagedTx()) {
 				
@@ -176,7 +181,6 @@ extends AbstractInterceptor
 				if (ctx.getTransaction() == null && mi.getTransaction() != null) {
 					
 					register(ctx, mi.getTransaction());
-				
 				}
 			}
 			
@@ -196,11 +200,6 @@ extends AbstractInterceptor
 					ctx.lock();
 				}
 			}
-		}
-		catch (InterruptedException ignored) {} 
-		finally 
-		{
-			mutex.release();
 		}
 		
 		try
@@ -233,13 +232,12 @@ extends AbstractInterceptor
 			if (ctx != null)
 			{
 				// Still a valid instance
-				try 
+				synchronized(ctx) 
 				{
-					mutex.acquire();
-
+					
 					// release it
 					ctx.unlock();
-				
+					
 					// if removed, remove from cache
 					if (ctx.getId() == null)
 					{
@@ -247,14 +245,12 @@ extends AbstractInterceptor
 						container.getInstanceCache().remove(mi.getId());
 					}
 				}
-				catch (InterruptedException ignored) {}
-				finally {mutex.release();}
 			}
 		}
 	}
 	
-    private boolean isCallAllowed(MethodInvocation mi) 
-    {
+	private boolean isCallAllowed(MethodInvocation mi) 
+	{
 		Method m = mi.getMethod();
 		if (m.equals(getEJBHome) ||
 			m.equals(getHandle) ||
@@ -265,10 +261,10 @@ extends AbstractInterceptor
 			return true;
 		}
 		return false;
-    }
+	}
 	
 	// Inner classes -------------------------------------------------
-
+	
 	private class InstanceSynchronization
 	implements Synchronization
 	{
@@ -299,7 +295,7 @@ extends AbstractInterceptor
 			this.tx = tx;
 			this.ctx = ctx;
 			
-			// Let's compute it now
+			// Let's compute it now, to speed things up we could 
 			notifySession = (ctx.getInstance() instanceof javax.ejb.SessionSynchronization);
 			
 			if (notifySession) {
@@ -362,16 +358,14 @@ extends AbstractInterceptor
 			if (notifySession) {
 				
 				try {
-					 
+					
 					if (status == Status.STATUS_COMMITTED) 
 						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(true)});
 					else
 						afterCompletion.invoke(ctx.getInstance(), new Object[] {new Boolean(false)});
 				}
 				catch (Exception e) {Logger.exception(e);}
-			}
-		
-		
+			}			
 		}
 	}
 }
