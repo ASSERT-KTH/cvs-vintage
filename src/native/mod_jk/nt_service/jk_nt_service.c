@@ -56,14 +56,14 @@
 /***************************************************************************
  * Description: NT System service for Jakarta/Tomcat                       *
  * Author:      Gal Shachor <shachor@il.ibm.com>                           *
- * Version:     $Revision: 1.4 $                                           *
+ *              Dave Oxley <Dave@JungleMoss.com>                           *
+ * Version:     $Revision: 1.5 $                                           *
  ***************************************************************************/
 
 #include "jk_global.h"
 #include "jk_util.h"
 #include "jk_ajp13.h"
 #include "jk_connect.h"
-
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -84,6 +84,14 @@ static char                    szErr[1024] = "";
 static HANDLE                  hServerStopEvent = NULL;
 static int                     shutdown_port;
 static char                    *shutdown_protocol = AJP12_TAG;
+typedef enum ActionEnum
+{   acNoAction  = 0,
+    acInstall   = 1,
+    acRemove    = 2,
+    acStartTC   = 3,
+    acStopTC    = 4
+}   ActionEnum;
+
 
 struct jk_tomcat_startup_data {
     char *classpath;
@@ -106,8 +114,16 @@ static void WINAPI service_ctrl(DWORD dwCtrlCode);
 static void WINAPI service_main(DWORD dwArgc, 
                                 char **lpszArgv);
 static void install_service(char *name, 
-                            char *prp_file);
+                            char *user, 
+                            char *password, 
+                            char *deps, 
+                            BOOL bAutomatic, 
+                            char *rel_prp_file);
 static void remove_service(char *name);
+static void start_service(char *name,
+                          char *machine);
+static void stop_service(char *name,
+                         char *machine);
 static char *GetLastErrorText(char *lpszBuf, DWORD dwSize);
 static void AddToMessageLog(char *lpszMsg);
 static BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
@@ -137,19 +153,43 @@ static int read_startup_data(jk_map_t *init_map,
 
 static void usage_message(const char *name)
 {
-    printf("%s - Usage:\n", name);
-    printf("%s -i <service name> <configuration properties file>\n", name);
-    printf("\tto install the service\n");
-    printf("%s -r <service name>\n", name);    
-    printf("\tto remove the service\n");
+    printf("%s - Usage:\n\n", name);
+    printf("To install the service:\n");
+    printf("%s -i <service name> {optional params} <config properties file>\n", name);
+    printf("    Optional parameters\n");
+    printf("        -u <user name> - In the form DomainName\\UserName (.\\UserName for local)\n");
+    printf("        -p <user password>\n");
+    printf("        -a - Set startup type to automatic\n");
+    printf("        -d <sevice dependancy> - Can be entered multiple times\n\n");
+    printf("To remove the service:\n");
+    printf("%s -r <service name>\n\n", name);
+    printf("To start the service:\n");
+    printf("%s -s <service name> {optional params}\n", name);
+    printf("    Optional parameters\n");
+    printf("        -m <machine>\n\n");
+    printf("To stop the service:\n");
+    printf("%s -t <service name> {optional params}\n", name);
+    printf("    Optional parameters\n");
+    printf("        -m <machine>\n");
 }
 
 void main(int argc, char **argv)
 {
     WORD wVersionRequested;
     WSADATA wsaData;
-    int err; 
-        
+    int i;
+    int err;
+    int count;
+    int iAction = acNoAction;
+    char *pServiceName = NULL;
+    char *pUserName = NULL;
+    char *pPassword = NULL;
+    char *pMachine = NULL;
+    BOOL bAutomatic = FALSE;
+    char strDependancy[256] = "";
+
+    memset(strDependancy, 0, 255);
+
     wVersionRequested = MAKEWORD(1, 1); 
     err = WSAStartup(wVersionRequested, &wsaData);
     if(0 != err) {
@@ -170,20 +210,51 @@ void main(int argc, char **argv)
                     LOBYTE(wsaData.wVersion),
                     HIBYTE(wsaData.wVersion));
 
-
     __try {
-        if((argc > 2) && ((*argv[1] == '-') || (*argv[1] == '/'))) {
-            char *cmd = argv[1];
-            cmd++;
-            if(0 == stricmp("i", cmd) && (4 == argc)) {
-                install_service(argv[2], argv[3]);
+        if(argc > 2) {
+            count=0;
+            for (i=1;i<argc;i++) {
+                if ((*argv[i] == '-') || (*argv[i] == '/')) {
+                    char *cmd = argv[i];
+                    cmd++;
+                    if(0 == stricmp("i", cmd)) {
+                        iAction = acInstall;
+                        pServiceName = argv[i+1];
+                    } else if(0 == stricmp("r", cmd)) {
+                        iAction = acRemove;
+                        pServiceName = argv[i+1];
+                    } else if(0 == stricmp("s", cmd)) {
+                        iAction = acStartTC;
+                        pServiceName = argv[i+1];
+                    } else if(0 == stricmp("t", cmd)) {
+                        iAction = acStopTC;
+                        pServiceName = argv[i+1];
+                    } else if(0 == stricmp("u", cmd)) {
+                        pUserName = argv[i+1];
+                    } else if(0 == stricmp("p", cmd)) {
+                        pPassword = argv[i+1];
+                    } else if(0 == stricmp("m", cmd)) {
+                        pMachine = argv[i+1];
+                    } else if(0 == stricmp("a", cmd)) {
+                        bAutomatic = TRUE;
+                    } else if(0 == stricmp("d", cmd)) {
+                        memcpy(strDependancy+count, argv[i+1], strlen(argv[i+1]));
+                        count+= strlen(argv[i+1])+1;
+                    }
+                }
+            }
+            switch (iAction) {
+            case acInstall:
+                install_service(pServiceName, pUserName, pPassword, strDependancy, bAutomatic, argv[i-1]);
                 return;
-            } else if(0 == stricmp("r", cmd) && (3 == argc)) {
-                remove_service(argv[2]);
+            case acRemove:
+                remove_service(pServiceName);
                 return;
-            } else if(0 == stricmp("s", cmd) && (3 == argc)) {
-                HANDLE hTomcat;
-                start_tomcat(argv[2], &hTomcat);
+            case acStartTC:
+                start_service(pServiceName, pMachine);
+                return;
+            case acStopTC:
+                stop_service(pServiceName, pMachine);
                 return;
             }
         } else if(2  == argc) {
@@ -304,6 +375,10 @@ BOOL ReportStatusToSCMgr(DWORD dwCurrentState,
 }
 
 void install_service(char *name, 
+                     char *user, 
+                     char *password, 
+                     char *deps, 
+                     BOOL bAutomatic,
                      char *rel_prp_file)
 {
     SC_HANDLE   schService;
@@ -311,6 +386,9 @@ void install_service(char *name,
     char        szExecPath[2048];
     char        szPropPath[2048];
     char        *dummy;
+
+    if (0 == stricmp("", deps))
+        deps = NULL;
 
     if(!GetFullPathName(rel_prp_file, sizeof(szPropPath) - 1, szPropPath, &dummy)) {
         printf("Unable to install %s - %s\n", 
@@ -333,8 +411,8 @@ void install_service(char *name,
         return;
     }
 
-    schSCManager = OpenSCManager(NULL,  // machine (NULL == local)
-                                 NULL,  // database (NULL == default)
+    schSCManager = OpenSCManager(NULL,     // machine (NULL == local)
+                                 NULL,     // database (NULL == default)
                                  SC_MANAGER_ALL_ACCESS);   // access required                       
     if(schSCManager) {
         schService = CreateService(schSCManager, // SCManager database
@@ -342,14 +420,14 @@ void install_service(char *name,
                                    name,         // name to display
                                    SERVICE_ALL_ACCESS, // desired access
                                    SERVICE_WIN32_OWN_PROCESS,  // service type
-                                   SERVICE_DEMAND_START,       // start type
+                                   bAutomatic ? SERVICE_AUTO_START : SERVICE_DEMAND_START,       // start type
                                    SERVICE_ERROR_NORMAL,       // error control type
                                    szExecPath,                 // service's binary
                                    NULL,                       // no load ordering group
                                    NULL,                       // no tag identifier
-                                   NULL,                       // dependencies
-                                   NULL,                       // LocalSystem account
-                                   NULL);                      // no password
+                                   deps,                       // dependencies
+                                   user,                       // account
+                                   password);                  // password
 
         if(schService) {
             printf("The service named %s was created. Now adding registry entries\n", name);
@@ -423,6 +501,100 @@ void remove_service(char *name)
     }
 }
 
+void start_service(char *name, char *machine)
+{
+    SC_HANDLE   schService;
+    SC_HANDLE   schSCManager;
+
+    schSCManager = OpenSCManager(machine,  // machine (NULL == local)
+                                 NULL,     // database (NULL == default)
+                                 SC_MANAGER_ALL_ACCESS);   // access required                       
+
+    if(schSCManager) {
+        schService = OpenService(schSCManager, name, SERVICE_ALL_ACCESS);
+
+        if(schService) {
+            // try to start the service
+            if(StartService(schService, 0, NULL)) {
+                printf("Starting %s.", name);
+                Sleep(1000);
+
+                while(QueryServiceStatus(schService, &ssStatus )) {
+                    if(ssStatus.dwCurrentState == SERVICE_START_PENDING) {
+                        printf(".");
+                        Sleep(1000);
+                    } else {
+                        break;
+                    }
+                }
+
+                if(ssStatus.dwCurrentState == SERVICE_RUNNING) {
+                    printf("\n%s started.\n", name);
+                } else {
+                    printf("\n%s failed to start.\n", name);
+                }
+            }
+            else
+                printf("StartService failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+
+            CloseServiceHandle(schService);
+        } else {
+            printf("OpenService failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+        }
+
+        CloseServiceHandle(schSCManager);
+    } else {
+        printf("OpenSCManager failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+    }
+}
+
+void stop_service(char *name, char *machine)
+{
+    SC_HANDLE   schService;
+    SC_HANDLE   schSCManager;
+
+    schSCManager = OpenSCManager(machine,  // machine (NULL == local)
+                                 NULL,     // database (NULL == default)
+                                 SC_MANAGER_ALL_ACCESS);   // access required                       
+
+    if(schSCManager) {
+        schService = OpenService(schSCManager, name, SERVICE_ALL_ACCESS);
+
+        if(schService) {
+            // try to stop the service
+            if(ControlService( schService, SERVICE_CONTROL_STOP, &ssStatus )) {
+                printf("Stopping %s.", name);
+                Sleep(1000);
+
+                while(QueryServiceStatus(schService, &ssStatus )) {
+                    if(ssStatus.dwCurrentState == SERVICE_STOP_PENDING) {
+                        printf(".");
+                        Sleep(1000);
+                    } else {
+                        break;
+                    }
+                }
+
+                if(ssStatus.dwCurrentState == SERVICE_STOPPED) {
+                    printf("\n%s stopped.\n", name);
+                } else {
+                    printf("\n%s failed to stop.\n", name);
+                }
+            }
+            else
+                printf("StopService failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+
+            CloseServiceHandle(schService);
+        } else {
+            printf("OpenService failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+        }
+
+        CloseServiceHandle(schSCManager);
+    } else {
+        printf("OpenSCManager failed - %s\n", GetLastErrorText(szErr, sizeof(szErr)));
+    }
+}
+
 static int set_registry_values(char *name, 
                                char *prp_file)
 {
@@ -476,7 +648,7 @@ static int set_registry_values(char *name,
                                                    value);
                 if(rc) {
                     printf("Registry values were added\n");
-                    printf("If you have already updated wrapper.properties you may start the %s service by executing \"net start %s\" from the command prompt\n",
+                    printf("If you have already updated wrapper.properties you may start the %s service by executing \"jk_nt_service -s %s\" from the command prompt\n",
                            name,
                            name);                    
                 }
@@ -802,13 +974,13 @@ static int create_registry_key(const char *tag,
 {
     LONG  lrc = RegCreateKeyEx(HKEY_LOCAL_MACHINE,
                                tag,
-			                   0,
-			                   NULL,
-			                   REG_OPTION_NON_VOLATILE,
-			                   KEY_WRITE,
-			                   NULL,
-			                   key,
-			                   NULL);
+                               0,
+                               NULL,
+                               REG_OPTION_NON_VOLATILE,
+                               KEY_WRITE,
+                               NULL,
+                               key,
+                               NULL);
     if(ERROR_SUCCESS != lrc) {
         return JK_FALSE;        
     }
@@ -824,9 +996,9 @@ static int set_registry_config_parameter(HKEY hkey,
 
     lrc = RegSetValueEx(hkey, 
                         tag,            
-			            0,              
-			            REG_SZ,  
-    			        value, 
+                        0,              
+                        REG_SZ,  
+                        value, 
                         strlen(value));
 
     if(ERROR_SUCCESS != lrc) {
