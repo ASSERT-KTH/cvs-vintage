@@ -247,31 +247,6 @@ public class TableModelThreadedView extends TreeTableModelDecorator {
         return false;
     }
 
-    public MessageNode addItem(MessageNode child) {
-        MessageNode rootNode = getRealModel().getRootNode();
-        ColumbaHeader childHeader = child.getHeader();
-
-        String id = (String) childHeader.get("Message-ID");
-
-        if (id == null) {
-            id = (String) childHeader.get("Message-Id");
-        }
-
-        ;
-
-        if (id == null) {
-            id = new String("<bogus-id:" + (idCount++) + ">");
-        }
-
-        childHeader.set("Message-ID", id);
-        hashtable.put(id, child);
-
-        add(child, rootNode);
-
-        return rootNode;
-
-    }
-
     /**
      * implements TableModelModifier
      *  

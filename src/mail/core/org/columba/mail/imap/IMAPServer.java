@@ -338,8 +338,8 @@ public class IMAPServer {
 			for (int i = 0; i < serverSaslMechansims.length; i++) {
 				oneLine.append(' ');
 				oneLine.append(serverSaslMechansims[i].substring(5)); // remove
-																	  // the
-																	  // 'AUTH='
+				// the
+				// 'AUTH='
 			}
 
 			//AUTH?
@@ -1004,6 +1004,11 @@ public class IMAPServer {
 
 				header.set("columba.attachment", header.hasAttachments());
 
+				// make sure that we have a Message-ID
+				String messageID = (String) header.get("Message-Id");
+				if (messageID != null)
+					header.set("Message-ID", header.get("Message-Id"));
+
 				headerList.add(header, uid);
 			}
 		} catch (IMAPDisconnectedException e) {
@@ -1138,21 +1143,23 @@ public class IMAPServer {
 			return getHeaders(uid, keys, path);
 		}
 	}
-	
+
 	/**
 	 * Get complete headers.
 	 * 
-	 * @param uid		message uid	
-	 * @param path		mailbox path
-	 * @return
-	 * @throws Exception
+	 * @param uid
+	 *            message uid
+	 * @param path
+	 *            mailbox path
+	 * @return @throws
+	 *         Exception
 	 */
 	public Header getAllHeaders(Object uid, String path) throws Exception {
 		try {
 			ensureSelectedState(path);
 
-			IMAPHeader[] headers = protocol.uidFetchHeader(
-					new SequenceSet(((Integer) uid).intValue()));
+			IMAPHeader[] headers = protocol.uidFetchHeader(new SequenceSet(
+					((Integer) uid).intValue()));
 
 			return headers[0].getHeader();
 		} catch (IMAPDisconnectedException e) {
