@@ -13,6 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
+
 package org.columba.mail.gui.table;
 
 import java.awt.Component;
@@ -31,12 +32,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.columba.mail.gui.table.util.MessageNode;
 import org.columba.mail.message.HeaderInterface;
 
-/**
- * @author frd
- *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
 public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 	private Font plainFont, boldFont, underlinedFont;
@@ -54,7 +49,6 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 		underlinedFont = UIManager.getFont("Tree.font");
 		underlinedFont = underlinedFont.deriveFont(Font.ITALIC);
-
 	}
 
 	/* (non-Javadoc)
@@ -88,7 +82,6 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 
 		HeaderInterface header = messageNode.getHeader();
 		if (header == null) {
-			System.out.println("header is null");
 			return this;
 		}
 
@@ -169,5 +162,4 @@ public class SubjectTreeRenderer extends DefaultTreeCellRenderer {
 			textR,
 			0);
 	}
-
 }
