@@ -51,7 +51,7 @@ package org.tigris.scarab.util;
     A place to put public final static strings.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: ScarabConstants.java,v 1.6 2001/03/29 19:34:43 jmcnally Exp $
+    @version $Id: ScarabConstants.java,v 1.7 2001/04/03 20:52:54 jmcnally Exp $
 */
 
 public interface ScarabConstants
@@ -91,5 +91,12 @@ public interface ScarabConstants
      */
     public static final String INTAKE_TOOL = "intake";
 
+    /**
+     * This name will be used to distinguish specific scarab application
+     * from other instances that it may interact with (in the future).
+     * It is the prefix to all issue id's created in response to an issue
+     * entered against a module in this instance's database.
+     */
+    public static final String INSTANCE_NAME = "scarab.instance.name";
 }    
 

@@ -72,12 +72,10 @@ import org.tigris.scarab.util.*;
     This class is responsible for report issue forms.
     ScarabIssueAttributeValue
     @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: ReportIssue.java,v 1.2 2001/03/29 19:34:42 jmcnally Exp $
+    @version $Id: ReportIssue.java,v 1.3 2001/04/03 20:52:53 jmcnally Exp $
 */
 public class ReportIssue extends VelocityAction
 {
-
-
     public void doSubmitattributes( RunData data, Context context ) 
         throws Exception
     {
@@ -127,9 +125,7 @@ public class ReportIssue extends VelocityAction
             
             if ( issue.containsMinimumAttributeValues() ) 
             {
-System.out.println("Saving issue");
-issue.save();
-System.out.println("Saved issue");
+                issue.save();
 
                 String template = data.getParameters()
                     .getString(ScarabConstants.NEXT_TEMPLATE, "entry/Report3.vm");

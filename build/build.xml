@@ -160,7 +160,8 @@
         <uptodate property="torque.uptodate"
             targetfile="${src.lib.dir}/${torque.zip}">
             <srcfiles dir="${turbine.dir}/conf/torque" includes="**/*"/>
-            <srcfiles dir="${turbine.dir}/src/java" includes="**/*.java"/>
+            <srcfiles dir="${turbine.dir}/src/java/org/apache/turbine/torque" 
+                      includes="**/*.java"/>
         </uptodate>
     </target>
 

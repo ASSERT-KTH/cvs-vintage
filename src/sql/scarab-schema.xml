@@ -1,4 +1,4 @@
-<!-- $Id: scarab-schema.xml,v 1.2 2001/03/29 19:32:04 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.3 2001/04/03 20:52:54 jmcnally Exp $ -->
 
 <app-data>
 <database>
@@ -288,9 +288,23 @@
 -->
 <table name="SCARAB_ISSUE" idMethod="idbroker" javaName="Issue">
     <!--
-        Unique identifier.
+        Unique identifier used for primary key.
     -->
     <column name="ISSUE_ID" primaryKey="true" required="true" type="INTEGER"></column>
+    <!--
+        Part of Id related to module.
+    -->
+    <column name="ID_PREFIX" required="true" type="CHAR" size="4"/>
+    <!--
+        Part of Id which is an integer.
+    -->
+    <column name="ID_COUNT" type="INTEGER" size="10" required="true"/>
+    <!--
+        The instance of scarab the issue was originally reported to.
+        This field will be null for the normal instance where the issue
+        is local to this database.
+    -->
+    <column name="ID_INSTANCE"  type="VARCHAR" size="15"/>
     <!--
         Module that issue relates to.
     -->
@@ -437,6 +451,11 @@
         Name.
     -->
     <column name="MODULE_NAME" javaName="Name" required="true" type="VARCHAR" size="255"></column>
+    <!--
+        Abbreviation whose primary use to identify related issues.
+    -->
+    <column name="MODULE_CODE" javaName="Code" required="true" 
+            type="CHAR" size="4"/>
     <!--
         Description.
     -->

@@ -1,34 +1,12 @@
-  <FORM METHOD="post" NAME="Report2Form">
-  <input type="hidden" name="action" value="Report2">
+#set ( $action = $link.setPage("entry/Wizard3.vm").setAction("ReportIssue").addPathInfo("nextTemplate", "entry/Wizard4.vm") )
+#set ($user = $scarabR.User)
+#set ($module = $user.CurrentModule)
+##set ($issue = $user.ReportingIssue)
+
+#set ($currentIssue = $om.Issue.setKey($data.Parameters.getString("currentIssueId")) )
+
+  <FORM METHOD="post" NAME="Report2Form" action="$action">
   <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-    <TR>
-      <TD>
-<!-- top nav bar -->
-        <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0">
-          <TR>
-            <TD NOWRAP CLASS="NavHeader">SCARAB:</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">My Bugs</A>&nbsp;</TD>
-            <TD CLASS="NavHeaderOn" BGCOLOR="#cccccc">&nbsp;</TD>
-            <TD CLASS="NavHeaderOn" NOWRAP BGCOLOR="#cccccc">Report</TD>
-            <TD CLASS="NavHeaderOn" BGCOLOR="#cccccc">&nbsp;</TD>
-            <TD NOWRAP CLASS="NavHeader">&nbsp;<A HREF="/">Browse</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Assign (8)</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Search</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Admin</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD CLASS="NavHeader"><A HREF="/">Help</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD CLASS="NavHeader"><A HREF="/">Prefs</A></TD>
-            <TD CLASS="NavHeader">|</TD>
-            <TD NOWRAP CLASS="NavHeader"><A HREF="/">Log Out</A></TD>
-          </TR>
-        </TABLE>
-<!-- end top nav bar -->
-      </TD>
-    </TR>
     <TR>
       <TD HEIGHT="1" BGCOLOR="#000000"><SPACER TYPE="block" HEIGHT="1"></TD>
     </TR>
@@ -65,7 +43,7 @@
     #set ( $issueLink = $link.setPage($link.currentTemplate) )
     #set ( $issueLink = $issueLink.addData("currentIssueId", $issue.UniqueId) )
 
-    #if ($data.Parameters.getString("currentIssueId") == $issue.UniqueId)
+    #if ( == $issue.PrimaryKey)
         <TR>
           <TD VALIGN="top" CLASS="TableDataOn" bgcolor="#CCDDFF">
             $issue.UniqueId</TD>
@@ -107,10 +85,17 @@
         </TR>
         <TR>
           <TD nowrap VALIGN="top" CLASS="TableDataHeader">Issue ID#:</TD>
-          <TD VALIGN="top" CLASS="TableData">34678</TD>
+          <TD VALIGN="top" CLASS="TableData">
+
+$currentIssue.UniqueId
+
+          </TD>
           <TD VALIGN="top">&nbsp;</TD>
           <TD VALIGN="top" CLASS="TableDataHeader">Status:</TD>
-          <TD VALIGN="top" CLASS="TableData">Closed</TD>
+          <TD VALIGN="top" CLASS="TableData">
+
+
+Closed</TD>
         </TR>
         <TR>
           <TD HEIGHT="2" COLSPAN="5"><SPACER TYPE="block" HEIGHT="2"></TD>
