@@ -164,11 +164,11 @@ public class PluginGenerator
 	writer.print ("out.println (\"<PARAM name=\\\"type\\\"");
 	writer.print (" value=\\\"");
 	if (type.equals ("applet")) 
-	    writer.print ("application/x-java-applet;");
+	    writer.print ("application/x-java-applet");
 	else if (type.equals ("bean"))
-	    writer.print ("application/x-java-bean;");
+	    writer.print ("application/x-java-bean");
 	if (jreversion != null) {
-	    writer.print ("version=");
+	    writer.print (";version=");
 	    writer.print (jreversion);
 	}
 	writer.print ("\\\"");
