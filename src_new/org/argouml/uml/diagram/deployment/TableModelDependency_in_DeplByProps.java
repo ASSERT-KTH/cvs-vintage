@@ -1,5 +1,4 @@
-
-// $Id: TableModelDependency_in_DeplByProps.java,v 1.7 2003/08/31 15:19:42 alexb Exp $
+// $Id: TableModelDependency_in_DeplByProps.java,v 1.8 2003/09/21 15:23:23 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,9 +31,6 @@ package org.argouml.uml.diagram.deployment;
 
 import java.util.*;
 import java.beans.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;

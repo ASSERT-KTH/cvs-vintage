@@ -1,4 +1,4 @@
-// $Id: FigSeqLink.java,v 1.24 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: FigSeqLink.java,v 1.25 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -54,7 +54,6 @@ import org.tigris.gef.presentation.*;
 
 import ru.novosoft.uml.MElementEvent;
 import ru.novosoft.uml.MElementListener;
-import ru.novosoft.uml.behavior.common_behavior.*;
 public class FigSeqLink
     extends FigEdgeModelElement
     implements MElementListener

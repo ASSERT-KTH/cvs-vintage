@@ -1,4 +1,4 @@
-// $Id: UMLList.java,v 1.8 2003/09/21 11:07:03 bobtarling Exp $
+// $Id: UMLList.java,v 1.9 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -28,7 +28,6 @@ import javax.swing.*;
 import java.lang.reflect.*;
 import java.awt.event.*;
 import java.awt.*;
-import ru.novosoft.uml.foundation.core.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import ru.novosoft.uml.MElementEvent;
 

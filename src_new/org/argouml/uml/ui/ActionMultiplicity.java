@@ -1,4 +1,4 @@
-// $Id: ActionMultiplicity.java,v 1.5 2003/09/18 23:35:13 bobtarling Exp $
+// $Id: ActionMultiplicity.java,v 1.6 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,6 @@ package org.argouml.uml.ui;
 import org.argouml.uml.diagram.ui.*;
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
 import java.awt.event.*;
 import java.util.*;
 import org.argouml.model.ModelFacade;
@@ -44,24 +42,24 @@ public class ActionMultiplicity extends UMLAction {
 
     // multiplicity
     public static UMLAction SrcMultOne =
-	new ActionMultiplicity(MMultiplicity.M1_1, "src");
+	new ActionMultiplicity(ModelFacade.M1_1_MULTIPLICITY, "src");
     public static UMLAction DestMultOne =
-	new ActionMultiplicity(MMultiplicity.M1_1, "dest");
+	new ActionMultiplicity(ModelFacade.M1_1_MULTIPLICITY, "dest");
 
     public static UMLAction SrcMultZeroToOne =
-	new ActionMultiplicity(MMultiplicity.M0_1, "src");
+	new ActionMultiplicity(ModelFacade.M0_1_MULTIPLICITY, "src");
     public static UMLAction DestMultZeroToOne =
-	new ActionMultiplicity(MMultiplicity.M0_1, "dest");
+	new ActionMultiplicity(ModelFacade.M0_1_MULTIPLICITY, "dest");
 
     public static UMLAction SrcMultZeroToMany =
-	new ActionMultiplicity(MMultiplicity.M0_N, "src");
+	new ActionMultiplicity(ModelFacade.M0_N_MULTIPLICITY, "src");
     public static UMLAction DestMultZeroToMany =
-	new ActionMultiplicity(MMultiplicity.M0_N, "dest");
+	new ActionMultiplicity(ModelFacade.M0_N_MULTIPLICITY, "dest");
 
     public static UMLAction SrcMultOneToMany =
-	new ActionMultiplicity(MMultiplicity.M1_N, "src");
+	new ActionMultiplicity(ModelFacade.M1_N_MULTIPLICITY, "src");
     public static UMLAction DestMultOneToMany =
-	new ActionMultiplicity(MMultiplicity.M1_N, "dest");
+	new ActionMultiplicity(ModelFacade.M1_N_MULTIPLICITY, "dest");
 
 
     ////////////////////////////////////////////////////////////////

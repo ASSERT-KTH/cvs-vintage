@@ -1,4 +1,4 @@
-// $Id: SequenceDiagramRenderer.java,v 1.7 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.8 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,15 +27,11 @@
 // File: SequenceDiagramRenderer.java
 // Classes: SequenceDiagramRenderer
 // Original Author: 5eichler@inormatik.uni-hamburg.de
-// $Id: SequenceDiagramRenderer.java,v 1.7 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: SequenceDiagramRenderer.java,v 1.8 2003/09/21 15:23:22 bobtarling Exp $
 
 package org.argouml.uml.diagram.sequence.ui;
 
 import java.util.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.collaborations.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.tigris.gef.base.*;
 import org.tigris.gef.presentation.*;
@@ -71,10 +67,10 @@ public class SequenceDiagramRenderer
 		cat.debug("null connections....");
 		return null;
 	    }
-	    MLinkEnd fromEnd = (MLinkEnd) ((Object[]) connections.toArray())[0];
-	    Object fromInst = /*(MInstance)*/ fromEnd.getInstance();
-	    MLinkEnd toEnd = (MLinkEnd) ((Object[]) connections.toArray())[1];
-	    Object toInst = /*(MInstance)*/ toEnd.getInstance();
+	    Object/*MLinkEnd*/ fromEnd = ((Object[]) connections.toArray())[0];
+	    Object fromInst = /*(MInstance)*/ ModelFacade.getInstance(fromEnd);
+	    Object/*MLinkEnd*/ toEnd = ((Object[]) connections.toArray())[1];
+	    Object toInst = /*(MInstance)*/ ModelFacade.getInstance(toEnd);
 	    FigNode fromFN = (FigNode) lay.presentationFor(fromInst);
 	    FigNode toFN = (FigNode) lay.presentationFor(toInst);
 	    mlFig.setSourcePortFig(fromFN);

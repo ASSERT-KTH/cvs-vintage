@@ -1,4 +1,4 @@
-// $Id: PropPanelModel.java,v 1.10 2003/06/29 23:50:44 linus Exp $
+// $Id: PropPanelModel.java,v 1.11 2003/09/21 15:23:25 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +27,7 @@ package org.argouml.uml.ui.model_management;
 import org.argouml.application.api.*;
 import org.argouml.util.ConfigLoader;
 import org.argouml.application.ArgoVersion;
-
-import ru.novosoft.uml.model_management.*;
+import ru.novosoft.uml.model_management.MModelImpl;
 
 public class PropPanelModel extends PropPanelPackage
     implements PluggablePropertyPanel 
@@ -43,6 +42,7 @@ public class PropPanelModel extends PropPanelPackage
     }
 
     public Class getClassForPanel() {
+        // TODO Shouldn't refer to NSUML implementation class
         return MModelImpl.class;
     }
 

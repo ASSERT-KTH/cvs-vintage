@@ -1,5 +1,4 @@
-
-// $Id: TableModelUseCaseByProps.java,v 1.4 2003/08/31 15:19:43 alexb Exp $
+// $Id: TableModelUseCaseByProps.java,v 1.5 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +26,6 @@ package org.argouml.uml.diagram.use_case;
 
 import java.util.*;
 import java.beans.*;
-
-import ru.novosoft.uml.behavior.use_cases.*;
 
 import org.argouml.uml.*;
 import org.argouml.uml.diagram.use_case.ui.UMLUseCaseDiagram;

@@ -1,4 +1,4 @@
-// $Id: TablePanelUMLSequenceDiagram.java,v 1.8 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: TablePanelUMLSequenceDiagram.java,v 1.9 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,7 +26,7 @@
 // File: TablePanelUMLSequenceDiagram.java
 // Classes: TablePanelUMLSequenceDiagram
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TablePanelUMLSequenceDiagram.java,v 1.8 2003/09/13 11:00:10 bobtarling Exp $
+// $Id: TablePanelUMLSequenceDiagram.java,v 1.9 2003/09/21 15:23:22 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence.ui;
@@ -38,10 +38,6 @@ import java.beans.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.foundation.data_types.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.tigris.gef.ui.*;
 

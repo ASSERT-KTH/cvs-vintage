@@ -1,4 +1,4 @@
-// $Id: PropPanelSubsystem.java,v 1.6 2003/09/18 23:35:14 bobtarling Exp $
+// $Id: PropPanelSubsystem.java,v 1.7 2003/09/21 15:23:25 bobtarling Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -32,11 +32,10 @@ import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.ui.*;
 import org.argouml.uml.ui.foundation.core.*;
 
-import ru.novosoft.uml.model_management.*;
-import ru.novosoft.uml.foundation.core.*;
-
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import org.argouml.model.ModelFacade;
+import ru.novosoft.uml.model_management.MSubsystemImpl;
 
 /** A property panel for UML subsystems. */
 public class PropPanelSubsystem extends PropPanelPackage
@@ -60,6 +59,7 @@ public class PropPanelSubsystem extends PropPanelPackage
     }
 
     public Class getClassForPanel() {
+        // TODO Shouldn't refer to NSUML implementation class
         return MSubsystemImpl.class;
     }
 
@@ -73,10 +73,9 @@ public class PropPanelSubsystem extends PropPanelPackage
     
     public void addOperation() {
         Object target = getTarget();
-        if (org.argouml.model.ModelFacade.isAClassifier(target)) {
+        if (ModelFacade.isAClassifier(target)) {
             Object/*MOperation*/ newOper =
-                UmlFactory.getFactory().getCore().buildOperation(
-                                                                 (MClassifier) target);
+                UmlFactory.getFactory().getCore().buildOperation(target);
             TargetManager.getInstance().setTarget(newOper);
         }
     }

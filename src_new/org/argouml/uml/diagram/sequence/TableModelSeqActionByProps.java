@@ -1,4 +1,4 @@
-// $Id: TableModelSeqActionByProps.java,v 1.5 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: TableModelSeqActionByProps.java,v 1.6 2003/09/21 15:23:23 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,16 +26,13 @@
 // File: TableModelSeqActionByProps.java
 // Classes: TableModelSeqActionByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelSeqActionByProps.java,v 1.5 2003/09/13 11:00:11 bobtarling Exp $
+// $Id: TableModelSeqActionByProps.java,v 1.6 2003/09/21 15:23:23 bobtarling Exp $
 
 
 package org.argouml.uml.diagram.sequence;
 
 import java.util.*;
 import java.beans.*;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.argouml.model.ModelFacade;
 import org.argouml.uml.*;

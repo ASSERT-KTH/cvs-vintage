@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.142 2003/09/21 14:11:14 bobtarling Exp $
+// $Id: ModelFacade.java,v 1.143 2003/09/21 15:23:25 bobtarling Exp $
 // Copyright (c) 2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -289,7 +289,7 @@ public class ModelFacade {
         MVisibilityKind.PROTECTED;
     
     public static final Object AGGREGATE_AGGREGATIONKIND =
-        MAggregationKind.COMPOSITE;
+        MAggregationKind.AGGREGATE;
     public static final Object COMPOSITE_AGGREGATIONKIND =
         MAggregationKind.COMPOSITE;
     public static final Object NONE_AGGREGATIONKIND =
@@ -297,6 +297,15 @@ public class ModelFacade {
 
     public static final Object M1_1_MULTIPLICITY =
         MMultiplicity.M1_1;
+    
+    public static final Object M0_1_MULTIPLICITY =
+        MMultiplicity.M0_1;
+    
+    public static final Object M0_N_MULTIPLICITY =
+        MMultiplicity.M0_N;
+    
+    public static final Object M1_N_MULTIPLICITY =
+        MMultiplicity.M1_N;
     
     public static final Object CLASSIFIER_SCOPEKIND =
         MScopeKind.CLASSIFIER;

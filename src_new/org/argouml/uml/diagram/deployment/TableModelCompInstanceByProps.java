@@ -1,4 +1,4 @@
-// $Id: TableModelCompInstanceByProps.java,v 1.8 2003/09/11 21:10:10 bobtarling Exp $
+// $Id: TableModelCompInstanceByProps.java,v 1.9 2003/09/21 15:23:23 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,16 +26,13 @@
 // File: TableModelCompInstanceByProps.java
 // Classes: TableModelCompInstanceByProps
 // Original Author: 5eichler@informatik.uni-hamburg.de
-// $Id: TableModelCompInstanceByProps.java,v 1.8 2003/09/11 21:10:10 bobtarling Exp $
+// $Id: TableModelCompInstanceByProps.java,v 1.9 2003/09/21 15:23:23 bobtarling Exp $
 
 package org.argouml.uml.diagram.deployment;
 
 import java.util.*;
 import java.beans.*;
 import org.argouml.model.ModelFacade;
-
-import ru.novosoft.uml.foundation.core.*;
-import ru.novosoft.uml.behavior.common_behavior.*;
 
 import org.argouml.uml.*;
 import org.argouml.uml.diagram.deployment.ui.UMLDeploymentDiagram;

@@ -1,4 +1,4 @@
-// $Id: UMLUserInterfaceContainer.java,v 1.5 2003/06/29 23:50:04 linus Exp $
+// $Id: UMLUserInterfaceContainer.java,v 1.6 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -26,8 +26,9 @@
 package org.argouml.uml.ui;
 import org.argouml.ui.*;
 import org.argouml.uml.*;
-import ru.novosoft.uml.foundation.core.*;
 import java.util.*;
+import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
 
 /**
  *    Interface supported by any container of UML user interface components.

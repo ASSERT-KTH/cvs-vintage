@@ -1,5 +1,4 @@
-
-// $Id: TableModelStateByProps.java,v 1.6 2003/09/04 20:11:45 thierrylach Exp $
+// $Id: TableModelStateByProps.java,v 1.7 2003/09/21 15:23:22 bobtarling Exp $
 // Copyright (c) 1996-99 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,8 +26,6 @@ package org.argouml.uml.diagram.state;
 
 import java.util.*;
 import java.beans.*;
-
-import ru.novosoft.uml.behavior.state_machines.*;
 
 import org.apache.log4j.Logger;
 import org.argouml.uml.*;
