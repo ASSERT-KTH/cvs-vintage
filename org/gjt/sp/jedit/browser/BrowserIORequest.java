@@ -32,7 +32,7 @@ import org.gjt.sp.util.*;
 /**
  * A browser I/O request.
  * @author Slava Pestov
- * @version $Id: BrowserIORequest.java,v 1.18 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: BrowserIORequest.java,v 1.19 2003/08/04 00:23:07 spestov Exp $
  */
 class BrowserIORequest extends WorkRequest
 {
@@ -101,9 +101,6 @@ class BrowserIORequest extends WorkRequest
 			mkdir();
 			break;
 		}
-
-		if(type != LIST_DIRECTORY)
-			browser.endRequest();
 	} //}}}
 
 	//{{{ toString() method

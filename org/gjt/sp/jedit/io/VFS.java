@@ -41,7 +41,7 @@ import org.gjt.sp.util.Log;
  * <code>services.xml</code> files like so:
  *
  * <pre>&lt;SERVICE CLASS="org.gjt.sp.jedit.io.VFS" NAME="<i>name</i>"&gt;
- *    new <i>MyVFS<i>();
+ *    new <i>MyVFS</i>();
  *&lt;/SERVICE&gt;</pre>
  *
  * URLs of the form <code><i>name</i>:<i>path</i></code> will then be handled
@@ -91,7 +91,7 @@ import org.gjt.sp.util.Log;
  * @see VFSManager#getVFSForProtocol(String)
  *
  * @author Slava Pestov
- * @author $Id: VFS.java,v 1.37 2003/06/10 22:10:43 spestov Exp $
+ * @author $Id: VFS.java,v 1.38 2003/08/04 00:23:07 spestov Exp $
  */
 public abstract class VFS
 {

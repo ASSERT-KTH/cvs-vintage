@@ -67,7 +67,7 @@ import org.gjt.sp.util.Log;
  *
  * @author Slava Pestov
  * @author John Gellene (API documentation)
- * @version $Id: MiscUtilities.java,v 1.57 2003/06/24 23:24:39 spestov Exp $
+ * @version $Id: MiscUtilities.java,v 1.58 2003/08/04 00:23:07 spestov Exp $
  */
 public class MiscUtilities
 {
@@ -126,6 +126,9 @@ public class MiscUtilities
 	 */
 	public static String resolveSymlinks(String path)
 	{
+		// 2 aug 2003: OS/2 Java has a broken getCanonicalPath()
+		if(OperatingSystem.isOS2())
+			return path;
 		try
 		{
 			return new File(path).getCanonicalPath();

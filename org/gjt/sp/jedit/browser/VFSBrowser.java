@@ -44,7 +44,7 @@ import org.gjt.sp.util.Log;
 /**
  * The main class of the VFS browser.
  * @author Slava Pestov
- * @version $Id: VFSBrowser.java,v 1.94 2003/06/04 01:44:17 spestov Exp $
+ * @version $Id: VFSBrowser.java,v 1.95 2003/08/04 00:23:07 spestov Exp $
  */
 public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusComponent
 {
@@ -563,6 +563,14 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 				session,vfs,files[i].deletePath,
 				null,null,null));
 		}
+
+		VFSManager.runInAWTThread(new Runnable()
+		{
+			public void run()
+			{
+				endRequest();
+			}
+		});
 	} //}}}
 
 	//{{{ rename() method
@@ -589,6 +597,14 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		VFSManager.runInWorkThread(new BrowserIORequest(
 			BrowserIORequest.RENAME,this,
 			session,vfs,from,to,null,null));
+
+		VFSManager.runInAWTThread(new Runnable()
+		{
+			public void run()
+			{
+				endRequest();
+			}
+		});
 	} //}}}
 
 	//{{{ mkdir() method
@@ -628,6 +644,14 @@ public class VFSBrowser extends JPanel implements EBComponent, DefaultFocusCompo
 		VFSManager.runInWorkThread(new BrowserIORequest(
 			BrowserIORequest.MKDIR,this,
 			session,vfs,newDirectory,null,null,null));
+
+		VFSManager.runInAWTThread(new Runnable()
+		{
+			public void run()
+			{
+				endRequest();
+			}
+		});
 	} //}}}
 
 	//{{{ newFile() method

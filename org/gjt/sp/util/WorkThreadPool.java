@@ -1,5 +1,5 @@
 /*
- * WorkThread.java - Background thread that does stuff
+ * WorkThreadPool.java - Background thread pool that does stuff
  * :tabSize=8:indentSize=8:noTabs=false:
  * :folding=explicit:collapseFolds=1:
  *
@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
 /**
  * A pool of work threads.
  * @author Slava Pestov
- * @version $Id: WorkThreadPool.java,v 1.6 2003/05/28 22:37:19 spestov Exp $
+ * @version $Id: WorkThreadPool.java,v 1.7 2003/08/04 00:23:07 spestov Exp $
  * @see org.gjt.sp.util.WorkThread
  * @since jEdit 2.6pre1
  */
@@ -66,6 +66,7 @@ public class WorkThreadPool
 	 */
 	public void start()
 	{
+		/* not really needed since threads don't start until after */
 		synchronized(lock)
 		{
 			started = true;
