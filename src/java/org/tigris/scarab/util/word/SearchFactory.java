@@ -53,7 +53,7 @@ import org.apache.turbine.Log;
  *  Returns an instance of the SearchIndex specified in Scarab.properties
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: SearchFactory.java,v 1.10 2002/01/23 10:14:35 dlr Exp $
+ * @version $Id: SearchFactory.java,v 1.11 2002/01/23 10:34:18 dlr Exp $
  */
 public class SearchFactory
 {
@@ -70,8 +70,17 @@ public class SearchFactory
         }
         catch (Exception e)
         {
-            Log.warn("An indexer and search engine has not been specified: " +
-                     "Text will not be searchable: "  + e);
+            String err;
+            if (className == null || className.trim().length() == 0)
+            {
+                err = "An indexer and search engine has not been specified";
+            }
+            else
+            {
+                err = "Unable to to create '" + className + '\'';
+            }
+            err += ": Text will not be searchable: " + e;
+            Log.warn(err);
         }
         searchIndex = si;
     }
