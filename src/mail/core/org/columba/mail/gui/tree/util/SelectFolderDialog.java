@@ -93,6 +93,7 @@ public class SelectFolderDialog
 		okButton.addActionListener(this);
 		buttonPanel.add(okButton);
 		newButton = new JButton(MailResourceLoader.getString("dialog", "folder", "new_folder"));
+                newButton.setMnemonic(MailResourceLoader.getMnemonic("dialog", "folder", "new_folder"));
 		newButton.setEnabled(true);
 		newButton.setActionCommand("NEW");
 		newButton.addActionListener(this);

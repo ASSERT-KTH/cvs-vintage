@@ -54,6 +54,7 @@ public class EditFolderDialog implements ActionListener {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
         JLabel label2 = new JLabel(MailResourceLoader.getString("dialog", "folder", "name"));
+        label2.setDisplayedMnemonic(MailResourceLoader.getMnemonic("dialog", "folder", "name"));
         centerPanel.add(label2);
         centerPanel.add(Box.createHorizontalStrut(5));
         textField = new JTextField(name, 15);
