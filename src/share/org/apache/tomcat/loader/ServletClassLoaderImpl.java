@@ -137,11 +137,7 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
         for(Enumeration e = classP.elements() ; e.hasMoreElements(); ) {
             File f = (File) e.nextElement();
             if (cpath.length()>0) cpath += separator;
-	    try {
-		cpath += FileUtil.patch(f.getCanonicalPath());
-	    } catch( IOException ex) {
-		ex.printStackTrace();
-	    }
+	    cpath += f;
         }
 
         return cpath;
@@ -153,8 +149,9 @@ public class ServletClassLoaderImpl extends NetworkClassLoader implements Servle
      *  that may require a reload.
      */
     public void addRepository( File f ) {
-	classP.addElement( f );
 	try {
+	    classP.addElement(new File(FileUtil.patch(f.getCanonicalPath())));
+
 	    String path=f.getCanonicalPath();
 	    // NetworkClassLoader will use the last char to
 	    // decide if it's a directory or a jar.

@@ -151,11 +151,7 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
         for(Enumeration e = classP.elements() ; e.hasMoreElements(); ) {
             File f = (File) e.nextElement();
             if (cpath.length()>0) cpath += separator;
-	    try {
-		cpath += FileUtil.patch(f.getCanonicalPath());
-	    } catch( IOException ex) {
-		ex.printStackTrace();
-	    }
+            cpath += f;
         }
 
         return cpath;
@@ -168,7 +164,11 @@ public class AdaptiveServletLoader  extends AdaptiveClassLoader implements Servl
      */
     public void addRepository( File f ) {
 	//	System.out.println("Adding " + f.getName() );
-	classP.addElement( f );
+	try {
+	    classP.addElement(new File(FileUtil.patch(f.getCanonicalPath())));
+	} catch( IOException ex) {
+            ex.printStackTrace();
+	}
     }
 
     /** Add a new remote repository. Not all class loader will
