@@ -1,4 +1,4 @@
-// $Id: CrClassMustBeAbstract.java,v 1.6 2003/01/18 16:59:23 linus Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.7 2003/01/29 06:09:02 mkl Exp $
 // Copyright (c) 1996-2003 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -27,7 +27,7 @@
 // File: CrClassMustBeAbstract.java
 // Classes: CrClassMustBeAbstract
 // Original Author: jrobbins@ics.uci.edu
-// $Id: CrClassMustBeAbstract.java,v 1.6 2003/01/18 16:59:23 linus Exp $
+// $Id: CrClassMustBeAbstract.java,v 1.7 2003/01/29 06:09:02 mkl Exp $
 
 package org.argouml.uml.cognitive.critics;
 
@@ -57,7 +57,7 @@ public class CrClassMustBeAbstract extends CrUML {
 	if (!(ModelFacade.isAClass(dm))) return NO_PROBLEM;
 	if (ModelFacade.isAbstract(dm)) return NO_PROBLEM;
 	
-	Iterator enum = ModelFacade.getOperationsInh(dm);
+	Iterator enum = ModelFacade.getOperations(dm);
 	while (enum.hasNext()) {
 	    if (ModelFacade.isAbstract(enum.next())) return PROBLEM_FOUND;
 	}
