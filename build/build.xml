@@ -1645,8 +1645,8 @@ diff -u -r1.5 project.xml
     </target>
 
     <target name="checkstyle-mail" depends="checkstyle">
-        <mail from="jon@latchkey.com"
-              tolist="jon@latchkey.com"
+        <mail from="${scarab.checkstyle.email.from}"
+              tolist="${scarab.checkstyle.email.to}"
               mailhost="${scarab.system.mail.host}"
               subject="Checkstyle violation(s) in project ${Name}"
               messagefile="${build.dir}/checkstyle.txt"/>
