@@ -86,11 +86,13 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 
 /**
-    This class is responsible for report issue forms.
-
-    @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
-    @version $Id: Search.java,v 1.77 2002/05/31 18:31:00 elicia Exp $
-*/
+ *  This class is responsible for searching.
+ *
+ * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
+ * @author <a href="mailto:elicia@collab.net">Elicia David</a>
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: Search.java,v 1.78 2002/06/20 04:43:26 jon Exp $
+ */
 public class Search extends RequireLoginFirstAction
 {
     private static int DEFAULT_ISSUE_LIMIT = 25;
@@ -104,12 +106,22 @@ public class Search extends RequireLoginFirstAction
     public void doSearch(RunData data, TemplateContext context)
         throws Exception
     {
+        ScarabRequestTool scarabR = getScarabRequestTool(context);
+        List searchResults = null;
+        try
+        {
+            searchResults = scarabR.getCurrentSearchResults();
+        }
+        catch (Exception e)
+        {
+            setTarget(data, getCurrentTemplate(data));
+            scarabR.setAlertMessage(e.getMessage());
+            return;
+        }
         String queryString = getQueryString(data);
         data.getUser().setTemp(ScarabConstants.CURRENT_QUERY, queryString);
-        ScarabRequestTool scarabR = getScarabRequestTool(context);
-        List searchResults = scarabR.getCurrentSearchResults();
         data.getParameters().add("queryString", queryString);
-        if (searchResults.size() > 0)
+        if (searchResults != null && searchResults.size() > 0)
         {
             context.put("issueList", searchResults);
             String template = data.getParameters()
@@ -118,7 +130,6 @@ public class Search extends RequireLoginFirstAction
             setTarget(data, template);            
         }
     }
-
 
     /**
         Redirects to form to save the query. May redirect to Login page.
