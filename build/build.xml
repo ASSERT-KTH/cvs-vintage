@@ -172,6 +172,7 @@
 
         <filter token="SCARAB_CONTEXT" value="${scarab.context}"/>
         <filter token="SCARAB_HTML_REDIRECT" value="${scarab.html.redirect}"/>
+        <filter token="SCARAB_WELCOME_FILE" value="${scarab.welcome.file}"/>
 
         <copy todir="${build.project}/style" filtering="yes">
             <fileset dir="${build.dir}/${tigris-style}/css"
