@@ -16,7 +16,7 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
-package org.columba.mail.gui.util;
+package org.columba.mail.gui.charset;
 
 import org.columba.core.gui.menu.CMenuItem;
 
