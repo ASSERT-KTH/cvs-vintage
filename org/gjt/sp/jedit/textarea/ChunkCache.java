@@ -35,7 +35,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  *
  * @author Slava Pestov
- * @version $Id: ChunkCache.java,v 1.100 2004/12/23 00:25:10 spestov Exp $
+ * @version $Id: ChunkCache.java,v 1.101 2004/12/23 19:33:27 spestov Exp $
  */
 class ChunkCache
 {
@@ -688,12 +688,12 @@ class ChunkCache
 						length = textArea.getLineLength(physicalLine) - offset + 1;
 				}
 
-				int expected = textArea.displayManager
+				/*int expected = textArea.displayManager
 					.getScreenLineCount(physicalLine);
 				if(screenLines != expected)
 				{
 					Log.log(Log.ERROR,this,"Inconsistent screen line counts: " + screenLines + ", " + expected);
-				}
+				}*/
 			}
 			else
 			{

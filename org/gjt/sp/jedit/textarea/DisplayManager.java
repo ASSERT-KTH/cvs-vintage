@@ -34,7 +34,7 @@ import org.gjt.sp.util.Log;
  * Manages low-level text display tasks.
  * @since jEdit 4.2pre1
  * @author Slava Pestov
- * @version $Id: DisplayManager.java,v 1.110 2004/12/22 22:39:30 spestov Exp $
+ * @version $Id: DisplayManager.java,v 1.111 2004/12/23 19:33:27 spestov Exp $
  */
 public class DisplayManager
 {
@@ -629,7 +629,7 @@ public class DisplayManager
 
 		notifyScreenLineChanges();
 	} //}}}
-	
+
 	//{{{ setFirstPhysicalLine() method
 	void setFirstPhysicalLine(int amount, int skew)
 	{
@@ -1862,9 +1862,6 @@ loop:		for(;;)
 			// must update screen line counts before we call
 			// notifyScreenLineChanges() since that calls
 			// updateScrollBars() which needs valid info
-			int _firstLine = textArea.getFirstPhysicalLine();
-			int _lastLine = textArea.getLastPhysicalLine();
-
 			int line = delayedUpdateStart;
 			if(!isLineVisible(line))
 				line = getNextVisibleLine(line);

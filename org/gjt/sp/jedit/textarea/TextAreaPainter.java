@@ -49,7 +49,7 @@ import org.gjt.sp.util.Log;
  * @see JEditTextArea
  *
  * @author Slava Pestov
- * @version $Id: TextAreaPainter.java,v 1.106 2004/12/22 22:39:30 spestov Exp $
+ * @version $Id: TextAreaPainter.java,v 1.107 2004/12/23 19:33:28 spestov Exp $
  */
 public class TextAreaPainter extends JComponent implements TabExpander
 {
@@ -1004,7 +1004,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 			int lastLine, int[] physicalLines, int[] start,
 			int[] end, int y, int lineHeight)
 		{
-			DisplayManager displayManager = textArea.displayManager;
 			if(textArea.wrapMargin != 0
 				&& !textArea.wrapToWidth
 				&& isWrapGuidePainted())
@@ -1019,7 +1018,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
 		public String getToolTipText(int x, int y)
 		{
-			DisplayManager displayManager = textArea.displayManager;
 			if(textArea.wrapMargin != 0
 				&& !textArea.wrapToWidth
 				&& isWrapGuidePainted())
