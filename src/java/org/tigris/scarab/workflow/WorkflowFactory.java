@@ -52,14 +52,45 @@ import org.apache.turbine.Turbine;
 import org.tigris.scarab.util.ScarabException;
 
 /**
- * This class retrieves the appropriate workflow tool.
+ * This class retrieves the appropriate workflow tool. The DefaultWorkflow
+ * is a noop implementation of workflow that always returns true.
  *
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
  * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @version $Id: WorkflowFactory.java,v 1.8 2002/10/24 22:59:31 jon Exp $
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @version $Id: WorkflowFactory.java,v 1.9 2003/01/30 22:25:24 jon Exp $
  */
 public class WorkflowFactory 
 {
+    /** the default is false */
+    public static boolean forceUseDefault = false;
+
+    /**
+     * This is used when you want to force the workflow to 
+     * use the default workflow and override whatever is configured.
+     * Set it to true to override and false to turn that off again.
+     * This is useful during xml import to turn off workflow validation
+     * in case the import process doesn't know anything about the 
+     * workflow process.
+     */
+    public static void setForceUseDefault(boolean value)
+    {
+        forceUseDefault = value;
+    }
+
+    /**
+     * This is used when you want to force the workflow to 
+     * use the default workflow and override whatever is configured.
+     * Set it to true to override and false to turn that off again.
+     * This is useful during xml import to turn off workflow validation
+     * in case the import process doesn't know anything about the 
+     * workflow process.
+     */
+    public static boolean getForceUseDefault()
+    {
+        return forceUseDefault;
+    }
+
     /**
      * Creates a new instance of the configured {@link
      * org.tigris.scarab.workflow.Workflow} implementation, defaulting
@@ -75,25 +106,32 @@ public class WorkflowFactory
         Workflow wf = null;
         try
         {
-            List classNames = Turbine.getConfiguration()
-                .getVector("scarab.workflow.classname");
-            // Satisfy a strange case where one needs to append their
-            // own configuration to the properties file and cannot 
-            // easily remove the existing one. so, take the second
-            // instance...
-            String className = null;
-            if (classNames.size() > 1)
+            if (forceUseDefault)
             {
-                className = (String) classNames.get(1);
+                wf = (Workflow) DefaultWorkflow.class.newInstance();
             }
             else
             {
-                className = (String) classNames.get(0);
+                List classNames = Turbine.getConfiguration()
+                    .getVector("scarab.workflow.classname");
+                // Satisfy a strange case where one needs to append their
+                // own configuration to the properties file and cannot 
+                // easily remove the existing one. so, take the second
+                // instance...
+                String className = null;
+                if (classNames.size() > 1)
+                {
+                    className = (String) classNames.get(1);
+                }
+                else
+                {
+                    className = (String) classNames.get(0);
+                }
+    
+                Class wfClass = (className != null ? Class.forName(className) :
+                                 DefaultWorkflow.class);
+                wf = (Workflow) wfClass.newInstance();
             }
-
-            Class wfClass = (className != null ? Class.forName(className) :
-                             DefaultWorkflow.class);
-            wf = (Workflow) wfClass.newInstance();
         }
         catch (Exception e)
         {

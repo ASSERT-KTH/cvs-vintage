@@ -61,11 +61,11 @@ import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.util.ScarabException;
 
 /**
- * This class adds a ModuleManager.CURRENT_PROJECT to every link. This class is added
- * into the context to replace the $link that Turbine adds.
+ * Default implementation of workflow is a noop. It doesn't do
+ * anything.
  *   
  * @author <a href="mailto:elicia@tigris.org">Elicia David</a>
- * @version $Id: DefaultWorkflow.java,v 1.9 2003/01/13 21:18:04 elicia Exp $
+ * @version $Id: DefaultWorkflow.java,v 1.10 2003/01/30 22:25:24 jon Exp $
  */
 public class DefaultWorkflow implements Workflow
 {
