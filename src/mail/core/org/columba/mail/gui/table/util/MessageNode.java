@@ -40,8 +40,6 @@ public class MessageNode extends DefaultMutableTreeNode {
 		super(header);
 
 		this.uid = uid;
-		
-		children = new Vector(1000,100);
 	}
 
 	public Vector getVector() {
@@ -87,9 +85,4 @@ public class MessageNode extends DefaultMutableTreeNode {
 		this.hasRecentChildren = hasRecentChildren;
 	}
 	
-	public void setSize( int size)
-	{
-		if ( children == null ) children = new Vector( size, size % 100);
-	}
-
 }

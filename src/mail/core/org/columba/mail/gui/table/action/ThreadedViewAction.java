@@ -76,7 +76,6 @@ public class ThreadedViewAction
 			'0',
 			KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
 
-		
 		(
 			(
 				MailFrameController) frameController)
@@ -89,13 +88,14 @@ public class ThreadedViewAction
 
 	public void tableChanged(TableChangedEvent e) {
 		if (MainInterface.DEBUG) {
-                        ColumbaLogger.log.info("event=" + e);
-                }
+			ColumbaLogger.log.info("event=" + e);
+		}
 
 		if (e.getEventType() == TableChangedEvent.UPDATE) {
 			Folder folder =
 				(Folder) ((MailFrameController) frameController)
-					.treeController.getTreeSelectionManager()
+					.treeController
+					.getTreeSelectionManager()
 					.getFolder();
 			boolean enableThreadedView =
 				folder.getFolderItem().getBoolean(
@@ -111,7 +111,7 @@ public class ThreadedViewAction
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		
+
 		JCheckBoxMenuItem item = (JCheckBoxMenuItem) e.getSource();
 
 		Folder folder =
@@ -125,25 +125,28 @@ public class ThreadedViewAction
 			"property",
 			"enable_threaded_view",
 			enableThreadedView);
-		
-		
+
 		updateTable(getState());
-		
-		
-		
+
+		((MailFrameController) frameController)
+			.tableController
+			.getHeaderTableModel()
+			.update();
+
 	}
 
 	protected void updateTable(boolean enableThreadedView) {
+		((MailFrameController) frameController)
+			.tableController
+			.getView()
+			.enableThreadedView(enableThreadedView);
+
 		((MailFrameController) frameController)
 			.tableController
 			.getHeaderTableModel()
 			.getTableModelThreadedView()
 			.toggleView(enableThreadedView);
 
-		((MailFrameController) frameController)
-			.tableController
-			.getView()
-			.enableThreadedView(enableThreadedView);
 	}
 
 	/* (non-Javadoc)

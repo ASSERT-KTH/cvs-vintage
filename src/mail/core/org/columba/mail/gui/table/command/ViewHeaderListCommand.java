@@ -15,6 +15,8 @@
 //All Rights Reserved.
 package org.columba.mail.gui.table.command;
 
+import java.awt.Rectangle;
+
 import org.columba.core.command.Command;
 import org.columba.core.command.CompoundCommand;
 import org.columba.core.command.DefaultCommandReference;
@@ -62,42 +64,46 @@ public class ViewHeaderListCommand extends SelectiveGuiUpdateCommand {
 				"mail.table")).setFolder(
 			folder);
 
-		/*
+		((MailFrameController) frameController)
+			.tableController
+			.getHeaderTableModel()
+			.setHeaderList(headerList);
+
 		boolean enableThreadedView =
 			folder.getFolderItem().getBoolean(
 				"property",
 				"enable_threaded_view",
 				false);
-				
-		((MailFrameController) frameController)
-					.tableController
-					.getView()
-					.enableThreadedView(enableThreadedView);
-		*/
 
 		((MailFrameController) frameController)
 			.tableController
-			.getHeaderTableModel()
-			.setHeaderList(headerList);
+			.getView()
+			.enableThreadedView(enableThreadedView);
+
+		((MailFrameController) frameController)
+			.tableController
+			.getView()
+			.getTableModelThreadedView()
+			.toggleView(enableThreadedView);
 
 		TableChangedEvent ev =
 			new TableChangedEvent(TableChangedEvent.UPDATE, folder);
 
 		MailFrameController.tableChanged(ev);
 
-		/*
 		boolean ascending =
 			((MailFrameController) frameController)
 				.tableController
 				.isAscending();
-		ColumbaLogger.log.debug("ascending=" + ascending);
-		*/
-		//scrollPane.repaint();
 
 		((MailFrameController) frameController)
 			.tableController
 			.getView()
 			.clearSelection();
+		((MailFrameController) frameController)
+			.tableController
+			.getView()
+			.scrollRectToVisible(new Rectangle(0, 0, 0, 0));
 
 		MainInterface.treeModel.nodeChanged(folder);
 
