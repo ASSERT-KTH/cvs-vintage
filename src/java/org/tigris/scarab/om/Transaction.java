@@ -208,22 +208,13 @@ public class Transaction
                      createdByUser.getFirstName() + " " 
                      + createdByUser.getLastName());
         }
+
         // Then add users who are assigned to "email-to" attributes
         List users = issue.getUsersToEmail(AttributePeer.EMAIL_TO);
         Iterator iter = users.iterator();
         while ( iter.hasNext() ) 
         {
             ScarabUser toUser = (ScarabUser)iter.next();
-            te.setTo(toUser.getFirstName() + " " + toUser.getLastName(), 
-                     toUser.getEmail());
-            try
-            {
-                te.sendMultiple();
-            }
-            catch (SendFailedException e)
-            {
-                success = false;
-            }
             te.addTo(toUser.getEmail(),
                      toUser.getFirstName() + " " + toUser.getLastName());
         }
@@ -236,6 +227,15 @@ public class Transaction
             ScarabUser ccUser = (ScarabUser)iter.next();
             te.addCc(ccUser.getEmail(),
                      ccUser.getFirstName() + " " + ccUser.getLastName());
+        }
+
+        try
+        {
+            te.sendMultiple();
+        }
+        catch (SendFailedException e)
+        {
+            success = false;
         }
         return success;
     }
