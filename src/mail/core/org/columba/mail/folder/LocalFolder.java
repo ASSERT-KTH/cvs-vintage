@@ -255,7 +255,8 @@ public abstract class LocalFolder extends Folder {
 				// this message is already cached
 				//ColumbaLogger.log.info("using already cached message..");
 
-				return (AbstractMessage) aktMessage.clone();
+				return (AbstractMessage) aktMessage;
+				//return (AbstractMessage) aktMessage.clone();
 			}
 		}
 
