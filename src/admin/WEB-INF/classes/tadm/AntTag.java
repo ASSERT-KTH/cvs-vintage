@@ -54,41 +54,23 @@ public class AntTag extends TagSupport {
     
     //-------------------- Properties --------------------
 
-    String testFileName;
-    String target;
-    String testApp;
-    String debug;
-    String outputType="html";
-
     /** Set the name of the test.xml, relative to the base dir.
      *  For example, /WEB-INF/test-tomcat.xml
      */
     public void setTestFile( String s ) {
-	testFileName=s;
+	args.put("ant.file", s);
     }
 
     /** Set the target - a subset of tests to be run
      */
     public void setTarget( String s ) {
-	//	System.out.println("Setting target " + s );
-	target=s;
-    }
-
-    /** The application containing the test file
-     *  ( if not set assume the test file is local to /admin app.
-     */
-    public void setTestApp( String s ) {
-	testApp=s;
+	addTarget(s);
     }
 
     public void setDebug( String s ) {
-	debug=s;
+	args.setProperty( "debug", s);
     }
 
-    public void setOutputType( String s ) {
-	outputType=s;
-    }
-    
     // -------------------- Implementation methods --------------------
     
     private void runTest() throws JspException {

@@ -22,11 +22,8 @@
     <info>Run ant</info>
     <attribute>
        <name>testFile</name>
-       <required>true</required>
-    </attribute>
-    <attribute>
-       <name>testApp</name>
        <required>false</required>
+       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
        <name>target</name>
@@ -35,11 +32,6 @@
     </attribute>
     <attribute>
        <name>debug</name>
-       <required>false</required>
-       <rtexprvalue>true</rtexprvalue>
-    </attribute>
-    <attribute>
-       <name>outputType</name>
        <required>false</required>
        <rtexprvalue>true</rtexprvalue>
     </attribute>

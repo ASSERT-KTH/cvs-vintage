@@ -2,20 +2,34 @@
 
 <%@ taglib uri="http://jakarta.apache.org/taglibs/tomcat_admin-1.0" 
            prefix="adm" %>
+<%@ taglib uri="http://jakarta.apache.org/taglibs/ant-1.0" 
+           prefix="ant" %>
 
 This page will show the result of executing the sanity test suite. 
 You can see the context log <a href="/jsp-tests/context_log.txt">here</a>
+
+<ant:gtest />
 
 <adm:admin ctxPath="/jsp-tests" 
 	   action="setLogger" 
 	   value="webapps/jsp-tests/context_log.txt" />
 
-
-<adm:gtest testFile="WEB-INF/jsp-gtest.xml" 
-	   testApp="/jsp-tests" 
-	   target='main' 
-           debug='<%= request.getParameter("debug") %>' 
-           outputType='html' />
+<pre>
+<ant:ant>
+  <ant:target name="main" />
+  <ant:property name="ant.file" 
+		location="/WEB-INF/jsp-gtest.xml" 
+		webApp="/jsp-tests" />
+  <ant:property name="wgdir" 
+		location="/Golden" 
+		webApp="/jsp-tests" />
+  <ant:property name="debug"  param="debug" />
+  <ant:property name="outputType" value="html"  />
+  <ant:property name="port" param="port" />
+  <ant:property name="http.protocol" param="server.proto" />
+  <ant:property name="host" param="host" />
+</ant:ant>
+</pre>
 
 <% // Test completed, display the results ( outType=none means
    // Gtest doesn't generate any output ( but we have to wait untill

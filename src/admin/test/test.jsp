@@ -28,17 +28,13 @@ You can see the context log <a href="/test/context_log.txt">here</a>
 <!-- trozo 1 -->
 <ant:gtest />
 
-<ant:ant testFile="WEB-INF/test-tomcat.xml" 
-	 testApp="/test" >
+<ant:ant>
   <ant:target param="target" />
   
   <ant:property name="ant.file" 
 		location="/WEB-INF/test-tomcat.xml" 
 		webApp="/test" />
   <ant:property name="gdir" 
-		location="/Golden" 
-		webApp="/test" />
-  <ant:property name="wgdir" 
 		location="/Golden" 
 		webApp="/test" />
   <ant:property name="debug"  param="debug" />

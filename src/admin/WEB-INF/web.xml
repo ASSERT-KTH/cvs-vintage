@@ -24,7 +24,7 @@
       <http-method>PUT</http-method>
     </web-resource-collection>
     <auth-constraint>
-      <role-name>admin</role-name>
+      <role-name>tomcat_admin</role-name>
     </auth-constraint>
   </security-constraint>
   
