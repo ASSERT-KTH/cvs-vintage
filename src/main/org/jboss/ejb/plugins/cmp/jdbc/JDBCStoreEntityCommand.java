@@ -28,35 +28,36 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  */
 public final class JDBCStoreEntityCommand
 {
    private final JDBCEntityBridge entity;
-   private final Logger log;
    private final JDBCCMPFieldBridge[] primaryKeyFields;
+   private final Logger log;
 
    public JDBCStoreEntityCommand(JDBCStoreManager manager)
    {
       entity = manager.getEntityBridge();
+      primaryKeyFields = entity.getPrimaryKeyFields();
 
       // Create the Log
       log = Logger.getLogger(
          this.getClass().getName() +
          "." +
          manager.getMetaData().getName());
-
-      // locate auto-update fields
-      primaryKeyFields = entity.getPrimaryKeyFields();
    }
 
    public void execute(EntityEnterpriseContext ctx)
    {
-      if(!entity.isDirty(ctx))
+      // scheduled for batch cascade-delete instance should not be updated
+      // because foreign key fields could be updated to null and cascade-delete will fail.
+      if(!entity.isDirty(ctx) || entity.isScheduledForBatchCascadeDelete(ctx))
       {
          if(log.isTraceEnabled())
          {
-            log.trace("Store command NOT executed. Entity is not dirty: pk=" + ctx.getId());
+            log.trace("Store command NOT executed. Entity is not dirty "
+               + " or scheduled for *batch* cascade delete: pk=" + ctx.getId());
          }
          return;
       }

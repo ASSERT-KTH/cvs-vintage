@@ -19,10 +19,11 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  */
 public class JDBCCommandFactory
 {
+
    private final Logger log;
    private final JDBCStoreManager manager;
 
@@ -144,7 +145,7 @@ public class JDBCCommandFactory
       JDBCCreateCommand cec;
       try
       {
-         cec = (JDBCCreateCommand) manager.getMetaData().
+         cec = (JDBCCreateCommand)manager.getMetaData().
             getEntityCommand().getCommandClass().newInstance();
          cec.init(manager);
       }
@@ -169,8 +170,8 @@ public class JDBCCommandFactory
       return new JDBCPostCreateEntityCommand(manager);
    }
 
-
    public JDBCRemoveEntityCommand createRemoveEntityCommand()
+      throws DeploymentException
    {
       return new JDBCRemoveEntityCommand(manager);
    }

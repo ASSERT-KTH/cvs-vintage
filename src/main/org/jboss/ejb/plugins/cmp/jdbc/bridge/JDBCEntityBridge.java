@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import javax.ejb.EJBException;
+import javax.ejb.RemoveException;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -62,7 +63,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  */
 public class JDBCEntityBridge implements EntityBridge
 {
@@ -162,15 +163,17 @@ public class JDBCEntityBridge implements EntityBridge
          {
             versionField = new JDBCLongVersionFieldBridge(manager, fieldMD);
          }
-         else if(strategy == JDBCOptimisticLockingMetaData.TIMESTAMP_COLUMN_STRATEGY)
-         {
-            versionField = new JDBCTimestampVersionFieldBridge(manager, fieldMD);
-         }
-         else if(strategy == JDBCOptimisticLockingMetaData.KEYGENERATOR_COLUMN_STRATEGY)
-         {
-            versionField = new JDBCKeyGenVersionFieldBridge(
-               manager, fieldMD, lockMetaData.getKeyGeneratorFactory());
-         }
+         else
+            if(strategy == JDBCOptimisticLockingMetaData.TIMESTAMP_COLUMN_STRATEGY)
+            {
+               versionField = new JDBCTimestampVersionFieldBridge(manager, fieldMD);
+            }
+            else
+               if(strategy == JDBCOptimisticLockingMetaData.KEYGENERATOR_COLUMN_STRATEGY)
+               {
+                  versionField = new JDBCKeyGenVersionFieldBridge(
+                     manager, fieldMD, lockMetaData.getKeyGeneratorFactory());
+               }
          addCMPField(versionField);
       }
 
@@ -254,6 +257,53 @@ public class JDBCEntityBridge implements EntityBridge
       loadSelectors(metadata);
    }
 
+   public void resolveRelationships() throws DeploymentException
+   {
+      for(int i = 0; i < cmrFields.length; ++i)
+         cmrFields[i].resolveRelationship();
+
+      // load groups:  cannot be created until relationships have
+      // been resolved because loadgroups must check for foreign keys
+      loadLoadGroups(metadata);
+      loadEagerLoadGroup(metadata);
+      loadLazyLoadGroups(metadata);
+   }
+
+   /**
+    * The third phase of deployment. The method is called when relationships are already resolved.
+    * @throws DeploymentException
+    */
+   public void start() throws DeploymentException
+   {
+      for(int i = 0; i < cmrFields.length; ++i)
+      {
+         cmrFields[i].start();
+      }
+   }
+
+   public boolean removeFromRelations(EntityEnterpriseContext ctx, Object[] oldRelations)
+   {
+      boolean removed = false;
+      for(int i = 0; i < cmrFields.length; ++i)
+      {
+         if(cmrFields[i].removeFromRelations(ctx, oldRelations))
+            removed = true;
+      }
+      return removed;
+   }
+
+   public void cascadeDelete(EntityEnterpriseContext ctx, Map oldRelations)
+      throws RemoveException
+   {
+      for(int i = 0; i < cmrFields.length; ++i)
+      {
+         JDBCCMRFieldBridge cmrField = cmrFields[i];
+         Object value = oldRelations.get(cmrField);
+         if(value != null)
+            cmrField.cascadeDelete(ctx, (List)value);
+      }
+   }
+
    public String getEntityName()
    {
       return metadata.getName();
@@ -272,18 +322,6 @@ public class JDBCEntityBridge implements EntityBridge
    public Class getLocalInterface()
    {
       return metadata.getLocalClass();
-   }
-
-   public void resolveRelationships() throws DeploymentException
-   {
-      for(int i = 0; i < cmrFields.length; ++i)
-         cmrFields[i].resolveRelationship();
-
-      // load groups:  cannot be created until relationships have
-      // been resolved because loadgroups must check for foreign keys
-      loadLoadGroups(metadata);
-      loadEagerLoadGroup(metadata);
-      loadLazyLoadGroups(metadata);
    }
 
    public JDBCEntityMetaData getMetaData()
@@ -754,6 +792,64 @@ public class JDBCEntityBridge implements EntityBridge
       return tableFields;
    }
 
+   /**
+    * Marks the context as removed.
+    * @param ctx instance's context
+    */
+   public void setRemoved(EntityEnterpriseContext ctx)
+   {
+      getEntityState(ctx).setRemoved();
+   }
+
+   /**
+    * @param ctx instance's context.
+    * @return true if instance was removed.
+    */
+   public boolean isRemoved(EntityEnterpriseContext ctx)
+   {
+      return getEntityState(ctx).isRemoved();
+   }
+
+   /**
+    * Marks the instance as scheduled for cascade delete (not for batch cascade delete)
+    * @param ctx instance's context.
+    */
+   public void scheduleForCascadeDelete(EntityEnterpriseContext ctx)
+   {
+      getEntityState(ctx).scheduleForCascadeDelete();
+      if(log.isTraceEnabled())
+         log.trace("Scheduled for cascade-delete: " + ctx.getId());
+   }
+
+   /**
+    * @param ctx instance's context.
+    * @return true if instance was scheduled for cascade delete (not for batch cascade delete)
+    */
+   public boolean isScheduledForCascadeDelete(EntityEnterpriseContext ctx)
+   {
+      return getEntityState(ctx).isScheduledForCascadeDelete();
+   }
+
+   /**
+    * Marks the instance as scheduled for batch cascade delete (not for cascade delete)
+    * @param ctx instance's context.
+    */
+   public void scheduleForBatchCascadeDelete(EntityEnterpriseContext ctx)
+   {
+      getEntityState(ctx).scheduleForBatchCascadeDelete();
+      if(log.isTraceEnabled())
+         log.trace("Scheduled for batch-cascade-delete: " + ctx.getId());
+   }
+
+   /**
+    * @param ctx instance's context.
+    * @return true if instance was scheduled for batch cascade delete (not for cascade delete)
+    */
+   public boolean isScheduledForBatchCascadeDelete(EntityEnterpriseContext ctx)
+   {
+      return getEntityState(ctx).isScheduledForBatchCascadeDelete();
+   }
+
    private static EntityState getEntityState(EntityEnterpriseContext ctx)
    {
       JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
@@ -825,32 +921,33 @@ public class JDBCEntityBridge implements EntityBridge
             defaultLockGroupMask[versionField.getTableIndex()] = true;
             versionField.setLockingStrategy(LockingStrategy.VERSION);
          }
-         else if(olMD.getGroupName() != null)
-         {
-            defaultLockGroupMask = loadGroupMask(olMD.getGroupName(), null);
-            for(int i = 0; i < tableFields.length; ++i)
+         else
+            if(olMD.getGroupName() != null)
             {
-               if(defaultLockGroupMask[i])
+               defaultLockGroupMask = loadGroupMask(olMD.getGroupName(), null);
+               for(int i = 0; i < tableFields.length; ++i)
                {
-                  JDBCCMPFieldBridge tableField = tableFields[i];
-                  tableField.setLockingStrategy(LockingStrategy.GROUP);
-                  tableField.addDefaultFlag(ADD_TO_WHERE_ON_UPDATE);
+                  if(defaultLockGroupMask[i])
+                  {
+                     JDBCCMPFieldBridge tableField = tableFields[i];
+                     tableField.setLockingStrategy(LockingStrategy.GROUP);
+                     tableField.addDefaultFlag(ADD_TO_WHERE_ON_UPDATE);
+                  }
                }
             }
-         }
-         else // read or modified strategy
-         {
-            LockingStrategy strategy =
-               (olMD.getLockingStrategy() == JDBCOptimisticLockingMetaData.READ_STRATEGY ?
-               LockingStrategy.READ : LockingStrategy.MODIFIED
-               );
-            for(int i = 0; i < tableFields.length; ++i)
+            else // read or modified strategy
             {
-               JDBCCMPFieldBridge field = tableFields[i];
-               if(!field.isPrimaryKeyMember())
-                  field.setLockingStrategy(strategy);
+               LockingStrategy strategy =
+                  (olMD.getLockingStrategy() == JDBCOptimisticLockingMetaData.READ_STRATEGY ?
+                  LockingStrategy.READ : LockingStrategy.MODIFIED
+                  );
+               for(int i = 0; i < tableFields.length; ++i)
+               {
+                  JDBCCMPFieldBridge field = tableFields[i];
+                  if(!field.isPrimaryKeyMember())
+                     field.setLockingStrategy(strategy);
+               }
             }
-         }
       }
 
       // add the * load group
@@ -969,10 +1066,16 @@ public class JDBCEntityBridge implements EntityBridge
 
    public class EntityState
    {
+      private static final byte REMOVED = 1;
+      private static final byte SCHEDULED_FOR_CASCADE_DELETE = 2;
+      private static final byte SCHEDULED_FOR_BATCH_CASCADE_DELETE = 4;
+
       /** indicates whether ejbCreate method was executed */
       private boolean ejbCreateDone = false;
       /** indicates whether ejbPostCreate method was executed */
       private boolean ejbPostCreateDone = false;
+
+      private byte entityFlags;
 
       /** array of field flags*/
       private final byte[] fieldFlags = new byte[tableFields.length];
@@ -983,6 +1086,37 @@ public class JDBCEntityBridge implements EntityBridge
          {
             fieldFlags[i] = tableFields[i].getDefaultFlags();
          }
+      }
+
+      public void setRemoved()
+      {
+         entityFlags |= REMOVED;
+         entityFlags &= ~(SCHEDULED_FOR_CASCADE_DELETE | SCHEDULED_FOR_BATCH_CASCADE_DELETE);
+      }
+
+      public boolean isRemoved()
+      {
+         return (entityFlags & REMOVED) > 0;
+      }
+
+      public void scheduleForCascadeDelete()
+      {
+         entityFlags |= SCHEDULED_FOR_CASCADE_DELETE;
+      }
+
+      public boolean isScheduledForCascadeDelete()
+      {
+         return (entityFlags & SCHEDULED_FOR_CASCADE_DELETE) > 0;
+      }
+
+      public void scheduleForBatchCascadeDelete()
+      {
+         entityFlags |= SCHEDULED_FOR_BATCH_CASCADE_DELETE | SCHEDULED_FOR_CASCADE_DELETE;
+      }
+
+      public boolean isScheduledForBatchCascadeDelete()
+      {
+         return (entityFlags & SCHEDULED_FOR_BATCH_CASCADE_DELETE) > 0;
       }
 
       public void setCreated()

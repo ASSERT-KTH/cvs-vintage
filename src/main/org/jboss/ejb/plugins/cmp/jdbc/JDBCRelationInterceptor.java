@@ -26,7 +26,7 @@ import org.jboss.logging.Logger;
  * relationship.  This interceptor also manages the relation table data.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -49,7 +49,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
    // Public --------------------------------------------------------
    public void setContainer(Container container)
    {
-      this.container = (EntityContainer) container;
+      this.container = (EntityContainer)container;
       if(container != null)
       {
          log = Logger.getLogger(
@@ -68,9 +68,10 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
 
    public Object invoke(Invocation mi) throws Exception
    {
-      if(!(mi instanceof CMRInvocation)) return getNext().invoke(mi);
+      if(!(mi instanceof CMRInvocation))
+         return getNext().invoke(mi);
 
-      CMRMessage relationshipMessage = ((CMRInvocation) mi).getCmrMessage();
+      CMRMessage relationshipMessage = ((CMRInvocation)mi).getCmrMessage();
       if(relationshipMessage == null)
       {
          // Not a relationship message. Invoke down the chain
@@ -78,8 +79,8 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
       }
 
       // We are going to work with the context a lot
-      EntityEnterpriseContext ctx = (EntityEnterpriseContext) mi.getEnterpriseContext();
-      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) mi.getArguments()[0];
+      EntityEnterpriseContext ctx = (EntityEnterpriseContext)mi.getEnterpriseContext();
+      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)mi.getArguments()[0];
 
       if(CMRMessage.GET_RELATED_ID == relationshipMessage)
       {
@@ -103,13 +104,18 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
          }
          cmrField.addRelation(ctx, relatedId);
 
-         RelationData relationData = getRelationData(cmrField);
-         relationData.addRelation(
-            cmrField,
-            ctx.getId(),
-            cmrField.getRelatedCMRField(),
-            relatedId);
-
+         // WARN: do not check
+         //if(cmrField.isCollectionValued() && cmrField.getRelatedCMRField().isCollectionValued())
+         // it could be 1:1 with relation table mapping
+         if(!cmrField.hasForeignKey() && !cmrField.getRelatedCMRField().hasForeignKey())
+         {
+            RelationData relationData = getRelationData(cmrField);
+            relationData.addRelation(
+               cmrField,
+               ctx.getId(),
+               cmrField.getRelatedCMRField(),
+               relatedId);
+         }
          return null;
 
       }
@@ -125,17 +131,29 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
          }
          cmrField.removeRelation(ctx, relatedId);
 
-         RelationData relationData = getRelationData(cmrField);
-         relationData.removeRelation(
-            cmrField,
-            ctx.getId(),
-            cmrField.getRelatedCMRField(),
-            relatedId);
+         // WARN: do not check
+         //if(cmrField.isCollectionValued() && cmrField.getRelatedCMRField().isCollectionValued())
+         // it could be 1:1 with relation table mapping
+         if(!cmrField.hasForeignKey() && !cmrField.getRelatedCMRField().hasForeignKey())
+         {
+            RelationData relationData = getRelationData(cmrField);
+            relationData.removeRelation(
+               cmrField,
+               ctx.getId(),
+               cmrField.getRelatedCMRField(),
+               relatedId);
+         }
 
          return null;
       }
-      else if(CMRMessage.INIT_RELATED_CTX == relationshipMessage)
+      else if(CMRMessage.SCHEDULE_FOR_CASCADE_DELETE == relationshipMessage)
       {
+         cmrField.getEntity().scheduleForCascadeDelete(ctx);
+         return null;
+      }
+      else if(CMRMessage.SCHEDULE_FOR_BATCH_CASCADE_DELETE == relationshipMessage)
+      {
+         cmrField.getEntity().scheduleForBatchCascadeDelete(ctx);
          return null;
       }
       else
@@ -150,7 +168,7 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
    {
       JDBCStoreManager manager = cmrField.getJDBCStoreManager();
       JDBCRelationMetaData relationMetaData = cmrField.getMetaData().getRelationMetaData();
-      RelationData relationData = (RelationData) manager.getApplicationTxData(relationMetaData);
+      RelationData relationData = (RelationData)manager.getApplicationTxData(relationMetaData);
 
       if(relationData == null)
       {

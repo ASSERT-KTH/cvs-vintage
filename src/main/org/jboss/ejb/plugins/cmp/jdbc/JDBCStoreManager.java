@@ -58,7 +58,7 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.59 $
+ * @version $Revision: 1.60 $
  */
 public final class JDBCStoreManager implements EntityPersistenceStore
 {
@@ -113,10 +113,8 @@ public final class JDBCStoreManager implements EntityPersistenceStore
    private TransactionManager tm;
    private TransactionLocal txDataMap;
 
-   /**
-    * A set of cascade-deleted EJBLocalObject instances.
-    */
-   private TransactionLocal cascadeDeleteRegistry = new TransactionLocal()
+   /** Set of EJBLocalObject instances to be cascade-deleted excluding those that should be batch-cascade-deleted. */
+   private TransactionLocal cascadeDeleteSet = new TransactionLocal()
    {
       protected Object initialValue()
       {
@@ -141,7 +139,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
     */
    public void setContainer(Container container)
    {
-      this.container = (EntityContainer) container;
+      this.container = (EntityContainer)container;
       if(container != null)
       {
          ejbModule = container.getEjbModule();
@@ -220,7 +218,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
          }
 
          // get the txDataMap from the txMap
-         Map txMap = (Map) txDataMap.get(tx);
+         Map txMap = (Map)txDataMap.get(tx);
 
          // do we have an existing map
          if(txMap == null)
@@ -246,22 +244,22 @@ public final class JDBCStoreManager implements EntityPersistenceStore
    }
 
    /**
-    *
+    * Schedules instances for cascade-delete
     */
-   public void addCascadeDelete(List instances)
+   public void scheduleCascadeDelete(List instances)
    {
-      Set registered = (Set) cascadeDeleteRegistry.get();
+      Set registered = (Set)cascadeDeleteSet.get();
       registered.addAll(instances);
    }
 
    /**
-    * Called whenever an entity should be cascade-deleted.
+    * Unschedules instance cascade delete.
     * @param instance  EJBLocalObject instance.
-    * @return  true if the entity should be deleted.
+    * @return  true if the instance was scheduled for cascade deleted.
     */
-   public boolean doCascadeDelete(EJBLocalObject instance)
+   public boolean uncheduledCascadeDelete(EJBLocalObject instance)
    {
-      Set registered = (Set) cascadeDeleteRegistry.get();
+      Set registered = (Set)cascadeDeleteSet.get();
       return registered.remove(instance);
    }
 
@@ -286,7 +284,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
 
    private Map getEntityTxDataMap()
    {
-      Map entityTxDataMap = (Map) getApplicationTxData(this);
+      Map entityTxDataMap = (Map)getApplicationTxData(this);
       if(entityTxDataMap == null)
       {
          entityTxDataMap = new HashMap();
@@ -312,7 +310,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
 
    public Catalog getCatalog()
    {
-      return (Catalog) getApplicationData(CATALOG);
+      return (Catalog)getApplicationData(CATALOG);
    }
 
    private void initApplicationDataMap()
@@ -320,13 +318,12 @@ public final class JDBCStoreManager implements EntityPersistenceStore
       Map moduleData = ejbModule.getModuleDataMap();
       synchronized(moduleData)
       {
-         txDataMap = (TransactionLocal) moduleData.get(TX_DATA_KEY);
+         txDataMap = (TransactionLocal)moduleData.get(TX_DATA_KEY);
          if(txDataMap == null)
          {
             txDataMap = new TransactionLocal();
             moduleData.put(TX_DATA_KEY, txDataMap);
          }
-
       }
    }
 
@@ -339,7 +336,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
       // Store a reference to this manager in an application level hashtable.
       // This way in the start method other managers will be able to know
       // the other managers.
-      HashMap managersMap = (HashMap) getApplicationData(CREATED_MANAGERS);
+      HashMap managersMap = (HashMap)getApplicationData(CREATED_MANAGERS);
       if(managersMap == null)
       {
          managersMap = new HashMap();
@@ -363,7 +360,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
       // If all managers have been started (this is the last manager),
       // complete the other two phases of startup.
       Catalog catalog = getCatalog();
-      HashMap managersMap = (HashMap) getApplicationData(CREATED_MANAGERS);
+      HashMap managersMap = (HashMap)getApplicationData(CREATED_MANAGERS);
       if(catalog.getEntityCount() == managersMap.size()
          && catalog.getEJBNames().equals(managersMap.keySet()))
       {
@@ -378,7 +375,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
          // Start Phase 2: resolve relationships
          for(int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager manager = (JDBCStoreManager) managers.get(i);
+            JDBCStoreManager manager = (JDBCStoreManager)managers.get(i);
             manager.resolveRelationships();
          }
 
@@ -387,7 +384,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
          // Start Phase 3: create tables and compile queries
          for(int i = 0; i < managers.size(); ++i)
          {
-            JDBCStoreManager manager = (JDBCStoreManager) managers.get(i);
+            JDBCStoreManager manager = (JDBCStoreManager)managers.get(i);
             manager.startStoreManager();
          }
       }
@@ -454,6 +451,8 @@ public final class JDBCStoreManager implements EntityPersistenceStore
     */
    private void startStoreManager() throws Exception
    {
+      entityBridge.start();
+
       // Store manager life cycle commands
       startCommand = commandFactory.createStartCommand();
       stopCommand = commandFactory.createStopCommand();
@@ -646,22 +645,17 @@ public final class JDBCStoreManager implements EntityPersistenceStore
          Object obj = iterator.next();
          if(obj instanceof RelationData)
          {
-            RelationData relationData = (RelationData) obj;
+            RelationData relationData = (RelationData)obj;
 
-            // only need to bother if neither side has a foreign key
-            if(!relationData.getLeftCMRField().hasForeignKey() &&
-               !relationData.getRightCMRField().hasForeignKey())
-            {
-               // delete all removed pairs from relation table
-               deleteRelations(relationData);
+            // delete all removed pairs from relation table
+            deleteRelations(relationData);
 
-               // insert all added pairs into the relation table
-               insertRelations(relationData);
+            // insert all added pairs into the relation table
+            insertRelations(relationData);
 
-               relationData.addedRelations.clear();
-               relationData.removedRelations.clear();
-               relationData.notRelatedPairs.clear();
-            }
+            relationData.addedRelations.clear();
+            relationData.removedRelations.clear();
+            relationData.notRelatedPairs.clear();
          }
       }
    }
@@ -700,7 +694,7 @@ public final class JDBCStoreManager implements EntityPersistenceStore
       ApplicationMetaData amd = container.getBeanMetaData().getApplicationMetaData();
 
       // Get JDBC MetaData
-      JDBCApplicationMetaData jamd = (JDBCApplicationMetaData) amd.getPluginData(CMP_JDBC);
+      JDBCApplicationMetaData jamd = (JDBCApplicationMetaData)amd.getPluginData(CMP_JDBC);
 
       if(jamd == null)
       {

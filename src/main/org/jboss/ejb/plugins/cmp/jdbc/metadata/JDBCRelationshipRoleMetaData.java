@@ -23,86 +23,66 @@ import org.w3c.dom.Element;
  * the ejb-jar.xml file's ejb-relation elements.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
+ * @version $Revision: 1.20 $
  */
 public final class JDBCRelationshipRoleMetaData
 {
-   /**
-    * Relation to which this role belongs.
-    */
+   /** Relation to which this role belongs. */
    private final JDBCRelationMetaData relationMetaData;
 
-   /**
-    * Role name
-    */
+   /** Role name */
    private final String relationshipRoleName;
 
-   /**
-    * Is the multiplicity one? If not, multiplicity is many.
-    */
+   /** Is the multiplicity one? If not, multiplicity is many. */
    private final boolean multiplicityOne;
 
-   /**
-    * Should this role have a foreign key constraint?
-    */
+   /** Should this role have a foreign key constraint? */
    private final boolean foreignKeyConstraint;
 
-   /**
-    * Should this entity be deleted when related entity is deleted.
-    */
+   /** Should this entity be deleted when related entity is deleted. */
    private final boolean cascadeDelete;
 
-   /**
-    * The entity that has this role.
-    */
+   /** Should the cascade-delete be batched. */
+   private final boolean batchCascadeDelete;
+
+   /** The entity that has this role. */
    private final JDBCEntityMetaData entity;
 
-   /**
-    * Name of the entity's cmr field for this role.
-    */
+   /** Name of the entity's cmr field for this role. */
    private final String cmrFieldName;
 
-   /**
-    * true if this side is navigable
-    */
+   /** true if this side is navigable */
    private final boolean navigable;
 
-   /**
-    * Type of the cmr field (i.e., collection or set)
-    */
+   /** Type of the cmr field (i.e., collection or set) */
    private final String cmrFieldType;
 
    private boolean genIndex;
 
-   /**
-    * Type of the cmr field (i.e., collection or set)
-    */
+   /** Type of the cmr field (i.e., collection or set) */
    private final JDBCReadAheadMetaData readAhead;
 
-   /**
-    * The other role in this relationship.
-    */
+   /** The other role in this relationship. */
    private JDBCRelationshipRoleMetaData relatedRole;
 
-   /**
-    * The key fields used by this role by field name.
-    */
+   /** The key fields used by this role by field name. */
    private Map keyFields;
 
    /** deep read ahead. */
    private boolean deepReadAhead = false;
 
-   public JDBCRelationshipRoleMetaData(
-      JDBCRelationMetaData relationMetaData,
-      JDBCApplicationMetaData application,
-      RelationshipRoleMetaData role) throws DeploymentException
+   public JDBCRelationshipRoleMetaData(JDBCRelationMetaData relationMetaData,
+                                       JDBCApplicationMetaData application,
+                                       RelationshipRoleMetaData role)
+      throws DeploymentException
    {
-
       this.relationMetaData = relationMetaData;
 
       relationshipRoleName = role.getRelationshipRoleName();
       multiplicityOne = role.isMultiplicityOne();
       cascadeDelete = role.isCascadeDelete();
+      batchCascadeDelete = false;
       foreignKeyConstraint = false;
       readAhead = null;
 
@@ -128,17 +108,14 @@ public final class JDBCRelationshipRoleMetaData
       }
    }
 
-   public JDBCRelationshipRoleMetaData(
-      JDBCRelationMetaData relationMetaData,
-      JDBCApplicationMetaData application,
-      Element element,
-      JDBCRelationshipRoleMetaData defaultValues)
+   public JDBCRelationshipRoleMetaData(JDBCRelationMetaData relationMetaData,
+                                       JDBCApplicationMetaData application,
+                                       Element element,
+                                       JDBCRelationshipRoleMetaData defaultValues)
       throws DeploymentException
    {
-
       this.relationMetaData = relationMetaData;
-      this.entity = application.getBeanByEjbName(
-         defaultValues.getEntity().getName());
+      this.entity = application.getBeanByEjbName(defaultValues.getEntity().getName());
 
       relationshipRoleName = defaultValues.getRelationshipRoleName();
       multiplicityOne = defaultValues.isMultiplicityOne();
@@ -169,6 +146,25 @@ public final class JDBCRelationshipRoleMetaData
       else
       {
          readAhead = entity.getReadAhead();
+      }
+
+      batchCascadeDelete = MetaData.getOptionalChild(element, "batch-cascade-delete") != null;
+      if(batchCascadeDelete)
+      {
+         if(!cascadeDelete)
+         throw new DeploymentException(
+            relationMetaData.getRelationName() + '/' + relationshipRoleName
+            + " has batch-cascade-delete in jbosscmp-jdbc.xml but has no cascade-delete in ejb-jar.xml"
+         );
+
+         if(relationMetaData.isTableMappingStyle())
+         {
+            throw new DeploymentException(
+               "Relationship " + relationMetaData.getRelationName()
+               + " with relation-table-mapping style was setup for batch cascade-delete."
+               + " Batch cascade-delete supported only for foreign key mapping style."
+            );
+         }
       }
    }
 
@@ -253,6 +249,11 @@ public final class JDBCRelationshipRoleMetaData
       return cascadeDelete;
    }
 
+   public boolean isBatchCascadeDelete()
+   {
+      return batchCascadeDelete;
+   }
+
    public boolean isDeepReadAhead()
    {
       return deepReadAhead;
@@ -330,8 +331,9 @@ public final class JDBCRelationshipRoleMetaData
       {
          if(isMultiplicityMany())
             return Collections.EMPTY_MAP;
-         else if(getRelatedRole().isMultiplicityOne() && !getRelatedRole().isNavigable())
-            return Collections.EMPTY_MAP;
+         else
+            if(getRelatedRole().isMultiplicityOne() && !getRelatedRole().isNavigable())
+               return Collections.EMPTY_MAP;
       }
 
       // get all of the pk fields
@@ -406,11 +408,12 @@ public final class JDBCRelationshipRoleMetaData
       {
          return Collections.EMPTY_MAP;
       }
-      else if(relationMetaData.isForeignKeyMappingStyle() && isMultiplicityMany())
-      {
-         throw new DeploymentException("Role: " + relationshipRoleName + " with multiplicity many using " +
-            "foreign-key mapping is not allowed to have key-fields");
-      }
+      else
+         if(relationMetaData.isForeignKeyMappingStyle() && isMultiplicityMany())
+         {
+            throw new DeploymentException("Role: " + relationshipRoleName + " with multiplicity many using " +
+               "foreign-key mapping is not allowed to have key-fields");
+         }
 
       // load the default field values
       Map defaultFields = getPrimaryKeyFields();

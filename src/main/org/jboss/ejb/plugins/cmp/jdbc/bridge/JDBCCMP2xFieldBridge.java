@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -219,8 +219,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
    {
       if(isReadTimedOut(ctx))
       {
-         JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
-         FieldState fieldState = (FieldState) jdbcCtx.getFieldState(jdbcContextIndex);
+         JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+         FieldState fieldState = (FieldState)jdbcCtx.getFieldState(jdbcContextIndex);
          if(fieldState != null)
             fieldState.reset();
       }
@@ -245,6 +245,11 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       return getFieldState(ctx).getLockedValue();
    }
 
+   public void updateState(EntityEnterpriseContext ctx, Object value)
+   {
+      getFieldState(ctx).updateState(value);
+   }
+
    // Private
 
    private void addCMRChainLink(ChainLink nextCMRChainLink)
@@ -258,8 +263,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 
    private FieldState getFieldState(EntityEnterpriseContext ctx)
    {
-      JDBCContext jdbcCtx = (JDBCContext) ctx.getPersistenceContext();
-      FieldState fieldState = (FieldState) jdbcCtx.getFieldState(jdbcContextIndex);
+      JDBCContext jdbcCtx = (JDBCContext)ctx.getPersistenceContext();
+      FieldState fieldState = (FieldState)jdbcCtx.getFieldState(jdbcContextIndex);
       if(fieldState == null)
       {
          fieldState = new FieldState(jdbcCtx);
@@ -350,6 +355,18 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       public void setClean()
       {
          entityState.setClean(tableIndex);
+         updateState(value);
+      }
+
+      /**
+       * Updates the state to some specific value that might be different from the current
+       * field's value. This trick is needed for foreign key fields because they can be
+       * changed while not being loaded. When the owning CMR field is loaded this method is
+       * called with the loaded from the database value. Thus, we have correct state and locked value.
+       * @param value  the value loaded from the database.
+       */
+      private void updateState(Object value)
+      {
          state = stateFactory.getFieldState(value);
          lockedValue = value;
       }

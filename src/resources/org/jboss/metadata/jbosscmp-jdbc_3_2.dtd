@@ -465,8 +465,16 @@ The ejb-rejationship-role element contains the configuration of an
 ejb-relationship-role.
 -->
 <!ELEMENT ejb-relationship-role (ejb-relationship-role-name,
-         fk-constraint?, key-fields?, read-ahead?)>
+         fk-constraint?, key-fields?, read-ahead?, batch-cascade-delete?)>
 
+<!--
+The batch-cascade-delete element specifies that, this side of the relationship
+should be batch deleted with one SQL statement of the form
+DELETE FROM <related-table> WHERE <foreign-key> = ?
+The presense of cascade-delete element in ejb-jar.xml for the matching
+ejb-relationship-role is mandatory.
+-->
+<!ELEMENT batch-cascade-delete EMPTY>
 
 <!--
 Name of the ejb-relationship-role being configured.  This must match
