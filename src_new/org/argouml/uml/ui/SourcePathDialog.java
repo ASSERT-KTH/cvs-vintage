@@ -1,4 +1,4 @@
-// $Id: SourcePathDialog.java,v 1.7 2003/10/15 20:11:46 linus Exp $
+// $Id: SourcePathDialog.java,v 1.8 2003/11/26 21:39:10 mkl Exp $
 // Copyright (c) 1996-2002 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -173,7 +173,7 @@ class SrcPathTableModel extends DefaultTableModel {
     public SrcPathTableModel() {
         super(new Object[][] {
         }, new String[] {
-	    "", "Name", "Type", "Source path" 
+	    " ", "Name", "Type", "Source path" 
 	});
         Project p = ProjectManager.getManager().getCurrentProject();
         Collection elems =
