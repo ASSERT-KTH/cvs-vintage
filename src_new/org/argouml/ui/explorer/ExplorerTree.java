@@ -1,4 +1,4 @@
-// $Id: ExplorerTree.java,v 1.9 2003/10/11 11:17:41 alexb Exp $
+// $Id: ExplorerTree.java,v 1.10 2003/10/18 21:42:16 alexb Exp $
 // Copyright (c) 1996-2001 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -177,8 +177,6 @@ extends DisplayTextTree
     int row,
     boolean hasFocus) {
         
-        //cat.debug("convertValueToText");
-        
         // do model elements first
         if (ModelFacade.isAModelElement(value)) {
             
@@ -195,8 +193,12 @@ extends DisplayTextTree
             // displayed in the perspective
             else if (ModelFacade.isAComment(value)) {
                 name = ModelFacade.getName(value);
-                if (name != null && name.length() > 10) {
-                    name = name.substring(0, 10) + "...";
+                
+                if (name != null && name.indexOf("\n") < 80) {
+                    name = name.substring(0, name.indexOf("\n")) + "...";
+                }
+                else if (name != null && name.length() > 80) {
+                    name = name.substring(0, 80) + "...";
                 }
             } else {
                 name = ModelFacade.getName(value);
