@@ -2,7 +2,7 @@
 <!DOCTYPE database SYSTEM
           "http://jakarta.apache.org/turbine/dtd/database.dtd">
 
-<!-- $Id: scarab-schema.xml,v 1.80 2002/02/05 23:30:23 jmcnally Exp $ -->
+<!-- $Id: scarab-schema.xml,v 1.81 2002/02/07 01:37:33 jon Exp $ -->
 
 <database name="@DATABASE_PROP_NAME@">
 <!--
@@ -695,8 +695,8 @@
         <index-column name="ISSUE_ID"/>
         <index-column name="ATTRIBUTE_ID"/>
      </index>
-     <index name="IX_ISSUE_OPTION">
-        <index-column name="ISSUE_ID"/>
+     <index name="IX_DELETED_OPTION">
+        <index-column name="DELETED"/>
         <index-column name="OPTION_ID"/>
      </index>
 </table>
