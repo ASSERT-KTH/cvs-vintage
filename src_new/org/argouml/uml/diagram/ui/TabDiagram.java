@@ -21,7 +21,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-// $Id: TabDiagram.java,v 1.11 2003/02/19 14:49:54 linus Exp $
+// $Id: TabDiagram.java,v 1.12 2003/03/28 21:01:56 alexb Exp $
 
 package org.argouml.uml.diagram.ui;
 
@@ -161,9 +161,17 @@ implements TabModelTarget, GraphSelectionListener, ModeChangeListener {
         setTarget(_target);
     }
 
-    public boolean shouldBeEnabled() {
-        return _shouldBeEnabled;
+  public boolean shouldBeEnabled(Object target) {
+  
+    if (target instanceof UMLDiagram) {
+      _shouldBeEnabled = true;
     }
+    else {
+      _shouldBeEnabled = false;
+    }
+    
+    return _shouldBeEnabled;
+  }
 
   ////////////////////////////////////////////////////////////////
   // accessors
