@@ -215,7 +215,7 @@
       debug="${debug}" 
       optimize="${optimize}"
       deprecation="off"
-      srcdir="src/share" >
+      srcdir="src/facade22" >
       <classpath>
 	<pathelement location="${servlet22.jar}" />
 	<pathelement location="${tomcat.build}/lib/tomcat_util.jar" />
@@ -331,6 +331,13 @@
       <exclude name="**/SSLSocketFactory.java"
 	unless="jsse.present" />
     </javac>
+    <javac srcdir="src/facade22" destdir="${tomcat.build}/classes"
+      classpath="${servlet.jar};${jaxp}/jaxp.jar" 
+      debug="${debug}" 
+      optimize="${optimize}"
+      deprecation="off" >
+    </javac>
+
     <copydir src="src/share" dest="${tomcat.build}/classes"
       excludes="javax/**">
       <include name="**/*.properties" />

@@ -63,7 +63,6 @@ package org.apache.tomcat.context;
 import org.apache.tomcat.core.*;
 import org.apache.tomcat.core.Constants;
 import org.apache.tomcat.util.*;
-import org.apache.tomcat.facade.ServletWrapper;
 import org.apache.tomcat.logging.*;
 import java.io.*;
 import java.net.*;
@@ -119,7 +118,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	    Enumeration sOnLevel =  ((Vector)loadableServlets.get( key )).elements();
 	    while (sOnLevel.hasMoreElements()) {
 		String servletName = (String)sOnLevel.nextElement();
-		ServletWrapper  result = (ServletWrapper)ctx.getServletByName(servletName);
+		Handler result = ctx.getServletByName(servletName);
 
 		if( ctx.getDebug() > 0 ) ctx.log("Loading " + key + " "  + servletName );
 		if(result==null)
@@ -141,7 +140,7 @@ public class LoadOnStartupInterceptor extends BaseInterceptor {
 	}
     }
 
-    void loadJsp( Context context, ServletWrapper result ) throws Exception {
+    void loadJsp( Context context, Handler result ) throws Exception {
 	// A Jsp initialized in web.xml -
 
 	// Log ( since I never saw this code called, let me know if it does

@@ -98,7 +98,9 @@ public interface FacadeManager {
 
     public  HttpServletResponse createHttpServletResponseFacade(Response res);
 
-
+    /** Create a new handler
+     */
+    public Handler createHandler();
 
 
     public  void recycle( Request req );

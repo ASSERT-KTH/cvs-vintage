@@ -689,6 +689,10 @@ public class Context implements LogAware {
 	return (Handler)servlets.get(servletName);
     }
 
+    public Handler createHandler() {
+	return getFacadeManager().createHandler();
+    }
+    
     /**
      * Add a servlet with the given name to the container. The
      * servlet will be loaded by the container's class loader

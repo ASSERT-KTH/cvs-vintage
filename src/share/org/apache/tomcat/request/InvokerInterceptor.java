@@ -60,8 +60,8 @@ package org.apache.tomcat.request;
 
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.core.*;
-import org.apache.tomcat.facade.ServletWrapper;
-import org.apache.tomcat.facade.*;
+//import org.apache.tomcat.facade.ServletWrapper;
+//import org.apache.tomcat.facade.*;
 import org.apache.tomcat.logging.*;
 import org.apache.tomcat.core.Constants;
 import java.io.IOException;
@@ -154,7 +154,7 @@ public class InvokerInterceptor extends BaseInterceptor {
 	// it's a much cleaner way to construct the servlet and
 	// make sure all interceptors are up to date.
 	try {
-	    ServletWrapper sw=new ServletWrapper();
+	    Handler sw=ctx.createHandler();
 	    sw.setContext(ctx);
 	    sw.setServletName(servletName);
 	    sw.setServletClass( servletName );

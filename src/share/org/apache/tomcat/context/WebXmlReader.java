@@ -4,7 +4,6 @@ import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.xml.*;
 import org.apache.tomcat.logging.*;
-import org.apache.tomcat.facade.ServletWrapper;
 import java.beans.*;
 import java.io.*;
 import java.io.IOException;
@@ -16,6 +15,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import org.w3c.dom.*;
+
+// XXX XXX Specific to servlet 2.2 
 
 /**
  * @author costin@dnt.ro
@@ -34,10 +35,10 @@ public class WebXmlReader extends BaseInterceptor {
 	validate=b;
     }
 
-    private ServletWrapper addServlet( Context ctx, String name, String classN )
+    private Handler addServlet( Context ctx, String name, String classN )
 	throws TomcatException
     {
-	ServletWrapper sw=new ServletWrapper();
+	Handler sw=ctx.createHandler();
 	sw.setContext(ctx);
 	sw.setServletName( name );
 	sw.setServletClass( classN);
@@ -51,7 +52,7 @@ public class WebXmlReader extends BaseInterceptor {
     {
 	//	addServlet( ctx, "default", "org.apache.tomcat.servlets.DefaultServlet");
 // 	addServlet( ctx, "invoker", "org.apache.tomcat.servlets.InvokerServlet");
-	ServletWrapper sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
+	Handler sw=addServlet( ctx, "jsp", "org.apache.jasper.servlet.JspServlet");
 	//	sw.addInitParam("jspCompilerPlugin", "org.apache.jasper.compiler.JikesJavaCompiler");
 
 // 	ctx.addServletMapping( "/servlet/*", "invoker");

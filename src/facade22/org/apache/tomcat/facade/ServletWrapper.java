@@ -78,9 +78,6 @@ import javax.servlet.http.*;
  */
 public class ServletWrapper extends Handler {
 
-    // servletName is stored in config!
-    protected String servletName;
-    protected String servletClassName; // required
     protected Class servletClass;
 
     protected Servlet servlet;
@@ -88,8 +85,8 @@ public class ServletWrapper extends Handler {
     // facade
     protected ServletConfig configF;
 
-    // Jsp pages
-    private String path = null;
+    //     // Jsp pages
+    //     private String path = null;
 
     // optional informations
     protected String description = null;
@@ -107,7 +104,7 @@ public class ServletWrapper extends Handler {
     protected long lastAccessed;
     protected int serviceCount = 0;
     
-    int loadOnStartup=0;
+    //    int loadOnStartup=0;
 
     Hashtable securityRoleRefs=new Hashtable();
 
@@ -176,11 +173,9 @@ public class ServletWrapper extends Handler {
     }
 
     public void setServletClass(String servletClassName) {
-	if( name==null ) name=servletClassName;
-	this.servletClassName = servletClassName;
+	super.setServletClass( servletClassName );
 	servlet=null; // reset the servlet, if it was set
 	servletClass=null;
-	initialized=false;
     }
 
     public void reload() {
@@ -213,7 +208,6 @@ public class ServletWrapper extends Handler {
     }
 
     // -------------------- Jsp specific code
-    // Will go in JspHandler
     
     public String getPath() {
         return this.path;

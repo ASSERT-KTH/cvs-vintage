@@ -101,6 +101,12 @@ public final class Servlet22Manager implements FacadeManager {
 	this.ctx=ctx;
     }
 
+    /** Create a new handler
+     */
+    public Handler createHandler() {
+	return new ServletWrapper();
+    }
+
     public ServletContext createServletContextFacade(Context ctx) {
 	//if( ctx != this.ctx ) return null; // throw
 	return new ServletContextFacade(ctx.getContextManager() , ctx);

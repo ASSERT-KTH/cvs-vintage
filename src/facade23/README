@@ -1,0 +1,18 @@
+How to build tomcat with servlet 2.3 ( in order to implement it).
+
+- get javax.servlet 
+
+       cvs co -r SERVLET_23_JSP_12 jakarta-servletapi; 
+       ant  -Dservletapi.build=../build/servletapi23 -Dservletapi.dist=../dist/servletapi23 dist 
+
+- build it
+
+- edit build.xml, uncomment the 2 lines ( setting servlet23.jar and servlet.jar to point to
+the new jar )
+
+- use "ant tomcat-new" to build each individual module
+
+So far the facade is identical with 2.2 facade, all new functionality
+must be implemented ( and preferebly most code rewritten ).
+
+Good luck!
