@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.6 2000/12/07 19:52:56 costin Exp $
- * $Revision: 1.6 $
- * $Date: 2000/12/07 19:52:56 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/net/Attic/PoolTcpEndpoint.java,v 1.7 2001/02/17 07:09:02 costin Exp $
+ * $Revision: 1.7 $
+ * $Date: 2001/02/17 07:09:02 $
  *
  * ====================================================================
  *
@@ -258,9 +258,7 @@ public class PoolTcpEndpoint { // implements Endpoint {
     }
 
     public void stopEndpoint() {
-	log("Stopping endpoint");
 	if (running) {
-	    log("Stack trace that called stopEndpoint():", new Throwable("trace"), Logger.DEBUG);
 	    tp.shutdown();
 	    running = false;
 	    try {
