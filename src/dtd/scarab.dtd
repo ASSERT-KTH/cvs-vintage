@@ -1,11 +1,22 @@
 <!-- General elements common to other elements: -->
 
+<!-- a string value -->
 <!ELEMENT type ( #PCDATA ) >
+<!-- generally a primary key id -->
 <!ELEMENT id ( #PCDATA ) >
+<!-- a string value -->
 <!ELEMENT name ( #PCDATA ) >
+<!-- username -->
 <!ELEMENT created-by ( #PCDATA ) >
+<!-- if a dependency or attachment is removed, then mark as deleted -->
+<!ELEMENT deleted ( #PCDATA ) >
+
+<!-- format and timestamp are nested in created-date and modified-date 
+     must be able to parse the timestamp entry into the format or errors
+     will happen. -->
 <!ELEMENT format ( #PCDATA ) >
 <!ELEMENT timestamp ( #PCDATA ) >
+<!-- a short description of a change or an attachment. less than 250 characters -->
 <!ELEMENT description ( #PCDATA ) >
 
 <!-- General compound elements common to other elements: -->
@@ -22,49 +33,91 @@
 <!ELEMENT attachment ( id, name, type, (( filename, reconcile-path? )| data ), 
           mimetype, created-date, modified-date?, created-by, 
           modified-by?, deleted ) >
+  <!-- normally, just the regular name of the file -->
   <!ELEMENT filename ( #PCDATA ) >
+  <!-- if this is 'true', then the filename must be an absolute path
+       to the file. the import process will then try to copy the file
+       to the right path in Scarab's attachment directory tree. -->
   <!ELEMENT reconcile-path ( #PCDATA ) >
+  <!-- attachments store more than just files -->
   <!ELEMENT data ( #PCDATA ) >
+  <!-- as defined in scarab/src/conf/mime.types -->
   <!ELEMENT mimetype ( #PCDATA ) >
+  <!-- username -->
   <!ELEMENT modified-by ( #PCDATA ) >
   <!ELEMENT modified-date ( format, timestamp ) >
 
 <!-- General hierarchy of major elements: -->
 
 <!ELEMENT scarab-issues ( import-type, module, issues+ ) >
+
+  <!-- please see: http://scarab.tigris.org/import-issues.html -->
   <!ELEMENT import-type ( #PCDATA ) >
+
   <!ELEMENT module ( id, parent-id, name, owner, description, url, 
                      domain, code ) >
+    <!-- the modules parent primary key id -->
     <!ELEMENT parent-id ( #PCDATA ) >
+    <!-- username who is the owner of the module -->
     <!ELEMENT owner ( #PCDATA ) >
+    <!-- url is not required -->
     <!ELEMENT url ( #PCDATA ) >
+    <!-- the domain this server runs on -->
     <!ELEMENT domain ( #PCDATA ) >
+    <!-- the module code -->
     <!ELEMENT code ( #PCDATA ) >
+
   <!ELEMENT issues ( issue+ ) >
     <!ELEMENT issue ( id, artifact-type, activity-sets ) >
       <!ELEMENT artifact-type ( #PCDATA ) >
       <!ELEMENT activity-sets ( activity-set+ ) >
+        <!--
+            The ActivitySet needs to have a unique id in the file.
+
+            If you are creating an ActivitySet with a dependency in it,
+            then there should be duplicate ActivitySet's in both issues.
+            They should have the same ID value. The only difference is
+            the activity id should be unique between the two.
+            
+        -->
         <!ELEMENT activity-set ( id, type, created-by, created-date, 
                                  activities, attachment? ) >
+          <!-- just a container element for activity elements -->
           <!ELEMENT activities ( activity+ ) >
+            <!-- describes an activity which is a change to an issue.
+                 each change is its own activity. For example, if you
+                 change Status to Closed and Resolution to Fixed, then
+                 that is one ActivitySet and two Activity elements -->
             <!ELEMENT activity ( id?, attribute, old-numeric-value?, 
                                  new-numeric-value?, old-user?, new-user?, 
                                  old-option?, new-option?, old-value?, 
                                  new-value?, dependency?, description, 
                                  end-date?, attachment? ) >
+              <!-- the name of the attribute -->
               <!ELEMENT attribute ( #PCDATA ) >
+              
+              <!-- the various forms of data. the reason why this is not
+                   just one element is because multiple of these could 
+                   potentially be set at the same time. -->
+              <!-- integer value -->
               <!ELEMENT old-numeric-value ( #PCDATA ) >
               <!ELEMENT new-numeric-value ( #PCDATA ) >
+              <!-- username -->
               <!ELEMENT old-user ( #PCDATA ) >
               <!ELEMENT new-user ( #PCDATA ) >
+              <!-- attribute option -->
               <!ELEMENT old-option ( #PCDATA ) >
               <!ELEMENT new-option ( #PCDATA ) >
+              <!-- text value -->
               <!ELEMENT old-value ( #PCDATA ) >
               <!ELEMENT new-value ( #PCDATA ) >
+              
+              <!-- see above comment about creating these -->
               <!ELEMENT dependency ( id, parent, child, type, deleted ) >
+              
+                <!-- parent/child contains the issue id, ie: FOO1 -->
                 <!ELEMENT parent ( #PCDATA ) >
                 <!ELEMENT child ( #PCDATA ) >
-                <!ELEMENT deleted ( #PCDATA ) >
+                
+              <!-- please see: http://scarab.tigris.org/recording-issues.txt -->
               <!ELEMENT end-date ( format, timestamp ) >
-          
-
