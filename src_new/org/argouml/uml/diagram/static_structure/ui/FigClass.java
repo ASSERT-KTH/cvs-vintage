@@ -25,7 +25,7 @@
 // Classes: FigClass
 // Original Author: abonner
 
-// $Id: FigClass.java,v 1.43 2002/11/24 00:42:27 kataka Exp $
+// $Id: FigClass.java,v 1.44 2002/11/29 10:21:08 kataka Exp $
 
 
 
@@ -254,6 +254,7 @@ public class FigClass extends FigNodeModelElement {
     enableSizeChecking(false);
     suppressCalcBounds = true;
     addFig(_bigPort);
+    addFig(_namespace);
     addFig(_stereo);
     addFig(_name);
     addFig(_stereoLineBlinder);
