@@ -27,18 +27,24 @@ import java.io.*;
 import javax.swing.*;
 import org.argouml.kernel.*;
 import org.argouml.uml.reveng.java.*;
+import org.argouml.uml.diagram.ui.*;
+import org.argouml.uml.diagram.static_structure.layout.*;
+import org.tigris.gef.base.*;
 import ru.novosoft.uml.model_management.*;
 
 
 /**
  * This is the main class for all import classes.
  *
- * $Revision: 1.1 $
- * $Date: 2001/03/07 14:42:46 $
+ * $Revision: 1.2 $
+ * $Date: 2001/03/20 11:12:01 $
  *
  * @author Andreas Rueckert <a_rueckert@gmx.net>
  */
 public class Import {
+
+    // Create a interface to the current diagram
+    static DiagramInterface _diagram = new DiagramInterface(Globals.curEditor());
 
     /**
      * The main method for all parsing actions. It calls the
@@ -55,6 +61,14 @@ public class Import {
 	    doDirectory( p, f);     // import all the files in this directory
 	else
 	    parseFile(p, f);       // Try to parse this file.
+
+	// Layout the modified diagrams.
+	for(int i=0; i < _diagram.getModifiedDiagrams().size(); i++) {
+	    ClassdiagramLayouter layouter = new ClassdiagramLayouter((UMLDiagram)(_diagram.getModifiedDiagrams().elementAt(i)));
+	    layouter.layout();
+
+	    // Resize the diagram???
+	}
     }
 
     /**
@@ -94,6 +108,6 @@ public class Import {
 
 	// Is this file a Java source file?
 	if ( ( f.getName().length() > 5) && f.getName().substring( f.getName().length() - 5).equals( ".java"))
-	    JavaImport.parseFile( p, f);
+	    JavaImport.parseFile( p, f, _diagram);
     }
 }
