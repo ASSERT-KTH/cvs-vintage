@@ -41,9 +41,4 @@ public class EJBRelation implements AbstractAssociation
    {
       return rightEnd;
    }
-
-   public String getJoinCondition(String leftAlias, String rightAlias)
-   {
-      throw new UnsupportedOperationException();
-   }
 }

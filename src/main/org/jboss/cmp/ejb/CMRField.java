@@ -11,7 +11,7 @@ package org.jboss.cmp.ejb;
 
 import org.jboss.persistence.schema.AbstractAssociation;
 import org.jboss.persistence.schema.AbstractAssociationEnd;
-import org.jboss.persistence.schema.AbstractClass;
+import org.jboss.persistence.schema.AbstractComplexType;
 
 public class CMRField implements AbstractAssociationEnd
 {
@@ -34,7 +34,7 @@ public class CMRField implements AbstractAssociationEnd
       return name;
    }
 
-   public AbstractClass getType()
+   public AbstractComplexType getType()
    {
       return type;
    }

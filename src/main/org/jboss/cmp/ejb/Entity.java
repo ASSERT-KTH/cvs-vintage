@@ -9,10 +9,10 @@
 
 package org.jboss.cmp.ejb;
 
-import org.jboss.persistence.schema.AbstractClassWithIdentity;
+import org.jboss.persistence.schema.AbstractClass;
 import org.jboss.persistence.schema.AbstractType;
 
-public abstract class Entity implements AbstractClassWithIdentity
+public abstract class Entity implements AbstractClass
 {
    protected final String ejbName;
    protected final AbstractType pkClass;

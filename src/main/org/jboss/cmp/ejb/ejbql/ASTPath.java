@@ -11,6 +11,8 @@ package org.jboss.cmp.ejb.ejbql;
 
 public class ASTPath extends SimpleNode
 {
+   public boolean innerJoin;
+
    public ASTPath(int i)
    {
       super(i);

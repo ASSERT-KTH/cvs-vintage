@@ -29,11 +29,13 @@ ASTEJBQL EJBQL() #EJBQL :
 }
 
 void SelectClause() #Select :
-{}
+{
+  ASTPath path;
+}
 {
   <SELECT> [ <DISTINCT> { jjtThis.distinct = true; } ]
   ( <OBJECT> "(" IdentificationVariable() ")"
-  | PathExpression()
+  | path=PathExpression() { path.innerJoin=true; }
   )
 }
 
@@ -50,9 +52,11 @@ void IdentificationVariableDeclaration() :
 }
 
 void CollectionMemberDeclaration() #IdDeclaration :
-{}
 {
-  <IN> "(" PathExpression() ")"  [<AS>] Identifier()
+  ASTPath path;
+}
+{
+  <IN> "(" path=PathExpression() { path.innerJoin=true; } ")"  [<AS>] Identifier()
 }
 
 void RangeVariableDeclaration() #IdDeclaration :
@@ -141,10 +145,11 @@ void Factor() :
   | <SQRT> "(" Expression() ")"
 }
 
-void PathExpression() #Path :
+ASTPath PathExpression() #Path :
 {}
 {
   IdentificationVariable() ( "." Identifier() )+
+  { return jjtThis; }
 }
 
 void IdentificationVariable() :
