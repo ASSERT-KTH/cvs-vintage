@@ -33,7 +33,7 @@ import org.jboss.invocation.Invocation;
  *
  *   @see <related>
  *   @author  <a href="mailto:marc@jboss.org">Marc Fleury</a>
- *   @version $Revision: 1.16 $
+ *   @version $Revision: 1.17 $
  *   Revisions:
  *
  *   <p><b>Revisions:</b>
@@ -294,7 +294,7 @@ public class MarshalledInvocation
       // Keep it in the payload
       if (this.method == null)
       {
-         throw new IllegalStateException("Failed to find method for hash:" + methodHash);
+         throw new IllegalStateException("Failed to find method for hash:" + methodHash + " available mappings: " + methodMap);
       }
       return this.method;
    }
