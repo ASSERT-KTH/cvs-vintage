@@ -18,19 +18,27 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolProtocol.java,v 1.1 2005/02/09 19:47:48 el-vadimo Exp $
+ * $Id: CarolProtocol.java,v 1.2 2005/02/11 12:04:39 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
 package org.objectweb.carol.ant;
 
+/**
+ * @author Vadim Nasardinov (vadimn@redhat.com)
+ */
 final class CarolProtocol {
-    public final static CarolProtocol IIOP    = protocol("iiop");
+
+    public final static CarolProtocol IIOP = protocol("iiop");
+
     public final static CarolProtocol JEREMIE = protocol("jeremie");
-    public final static CarolProtocol JRMP11  = protocol("jrmp", "1.1");
-    public final static CarolProtocol JRMP12  = protocol("jrmp", "1.2");
+
+    public final static CarolProtocol JRMP11 = protocol("jrmp", "1.1");
+
+    public final static CarolProtocol JRMP12 = protocol("jrmp", "1.2");
 
     private final String name;
+
     private final String version;
 
     private CarolProtocol(String name, String version) {

@@ -18,7 +18,7 @@
  * USA
  *
  * --------------------------------------------------------------------------
- * $Id: CarolTestTask.java,v 1.6 2005/02/09 23:16:31 el-vadimo Exp $
+ * $Id: CarolTestTask.java,v 1.7 2005/02/11 12:04:39 benoitf Exp $
  * --------------------------------------------------------------------------
  */
 
@@ -41,11 +41,19 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.Property;
 
+/**
+ * @author Vadim Nasardinov (vadimn@redhat.com)
+ */
 public final class CarolTestTask extends Task {
+
     private String antfile;
+
     private String propDestination;
+
     private String propSource;
+
     private File propDestDir;
+
     private File propSourceDir;
 
     public void setAntfile(String antfile) {
@@ -81,12 +89,12 @@ public final class CarolTestTask extends Task {
         propSourceDir = new File(propSource);
         assertIsDirectory("propSource", propSourceDir);
 
-        for (Iterator configs=Config.supportedConfigurations(); configs.hasNext(); ) {
+        for (Iterator configs = Config.supportedConfigurations(); configs.hasNext();) {
             Config config = (Config) configs.next();
             Ant ant = newAnt();
 
             setClientProperties(ant, config.getProto1(), 1);
-            
+
             if (config.getProto2() != null) {
                 setClientProperties(ant, config.getProto2(), 2);
             }
@@ -97,11 +105,7 @@ public final class CarolTestTask extends Task {
         }
     }
 
-
-    private void setClientProperties(Ant ant,
-                                     CarolProtocol proto,
-                                     int clientNum)
-        throws BuildException {
+    private void setClientProperties(Ant ant, CarolProtocol proto, int clientNum) throws BuildException {
 
         if (clientNum != 1 && clientNum != 2) {
             throw new IllegalStateException("can't happen");
@@ -112,30 +116,24 @@ public final class CarolTestTask extends Task {
         clientProps.setProperty("carol.protocols", proto.getName());
         clientProps.setProperty("carol.start.ns", "false");
 
-        for (Enumeration props=template.propertyNames(); props.hasMoreElements(); ) {
+        for (Enumeration props = template.propertyNames(); props.hasMoreElements();) {
             String propName = (String) props.nextElement();
 
             if (propName.startsWith("carol.")) {
                 clientProps.setProperty(propName, template.getProperty(propName));
             } else {
                 // XXX: get rid of this "alter" nonsense
-                setAntProperty(ant,
-                               propName + clientNum,
-                               alter(proto, propName, template.getProperty(propName)));
+                setAntProperty(ant, propName + clientNum, alter(proto, propName, template.getProperty(propName)));
             }
         }
 
-        File clientPropsFile = new File(propDestDir,
-                                        "client" + clientNum + ".properties");
+        File clientPropsFile = new File(propDestDir, "client" + clientNum + ".properties");
         saveProperties(clientPropsFile, clientProps);
 
-        setAntProperty(ant,
-                       "client.properties.file.name" + clientNum,
-                       clientPropsFile.getAbsolutePath());
+        setAntProperty(ant, "client.properties.file.name" + clientNum, clientPropsFile.getAbsolutePath());
     }
 
-    private void setServerProperties(Ant ant, Config config)
-        throws BuildException {
+    private void setServerProperties(Ant ant, Config config) throws BuildException {
 
         CarolProtocol proto1 = config.getProto1();
         CarolProtocol proto2 = config.getProto2();
@@ -147,15 +145,12 @@ public final class CarolTestTask extends Task {
         if (proto2 != null) {
             Properties template2 = loadProperties(proto2.getName() + ".properties");
             append(template, template2);
-            serverProps.setProperty("carol.protocols",
-                                    proto1.getName() + "," + proto2.getName());
+            serverProps.setProperty("carol.protocols", proto1.getName() + "," + proto2.getName());
         }
 
+        serverProps.setProperty("carol.start.ns", config.usesExternallyStartedNS());
 
-        serverProps.setProperty("carol.start.ns",
-                                config.usesExternallyStartedNS());
-
-        for (Enumeration props=template.propertyNames(); props.hasMoreElements(); ) {
+        for (Enumeration props = template.propertyNames(); props.hasMoreElements();) {
             String propName = (String) props.nextElement();
 
             if (propName.startsWith("carol.")) {
@@ -163,36 +158,28 @@ public final class CarolTestTask extends Task {
             }
         }
 
-
         File serverPropsFile = new File(propDestDir, "server.properties");
         saveProperties(serverPropsFile, serverProps);
 
         setAntProperty(ant, "test.name", config.toString());
-        setAntProperty(ant,
-                       "server.properties.file.name",
-                       serverPropsFile.getAbsolutePath());
+        setAntProperty(ant, "server.properties.file.name", serverPropsFile.getAbsolutePath());
     }
-
 
     private static void append(Properties p1, Properties p2) {
-        for (Enumeration props=p2.propertyNames(); props.hasMoreElements(); ) {
+        for (Enumeration props = p2.propertyNames(); props.hasMoreElements();) {
             String propName = (String) props.nextElement();
             p1.setProperty(propName, p2.getProperty(propName));
-        }        
+        }
     }
 
-
-
-    private static void saveProperties(File file, Properties props)
-        throws BuildException {
+    private static void saveProperties(File file, Properties props) throws BuildException {
 
         try {
             FileOutputStream os = new FileOutputStream(file);
             props.store(os, null);
             os.close();
         } catch (IOException ex) {
-            throw new BuildException
-                ("couldn't create " + file, ex);
+            throw new BuildException("couldn't create " + file, ex);
         }
     }
 
@@ -213,12 +200,10 @@ public final class CarolTestTask extends Task {
     private static void assertIsDirectory(String propName, File dir) {
         if (!dir.exists()) {
             System.err.println("dir: " + dir);
-            throw new BuildException
-                (propName + " " + dir + " does not exist");
+            throw new BuildException(propName + " " + dir + " does not exist");
         }
         if (!dir.isDirectory()) {
-            throw new BuildException
-                (propName + " " + dir + " is not a directory");
+            throw new BuildException(propName + " " + dir + " is not a directory");
         }
     }
 
@@ -232,7 +217,6 @@ public final class CarolTestTask extends Task {
         String suffix = proto == CarolProtocol.JRMP11 ? "1.1" : "1.2";
         return value + suffix + ".jar";
     }
-
 
     private Properties loadProperties(String filename) throws BuildException {
         File propFile = new File(propSourceDir, filename);
@@ -250,40 +234,43 @@ public final class CarolTestTask extends Task {
         } catch (IOException ex) {
             throw new BuildException("couldn't load " + filename, ex);
         } finally {
-            try { is.close(); }
-            catch (IOException ex) { ; }
+            try {
+                is.close();
+            } catch (IOException ex) {
+                ;
+            }
         }
         return props;
     }
 
     private static class Config {
+
         private final CarolProtocol proto1;
+
         private final CarolProtocol proto2;
+
         private final boolean usesExternallyStartedNS;
 
         private final static List configurations;
 
         static {
             configurations = new LinkedList();
-            CarolProtocol[] protos =
-                new CarolProtocol[] {CarolProtocol.IIOP,
-                                     CarolProtocol.JEREMIE,
-                                     CarolProtocol.JRMP11,
-                                     CarolProtocol.JRMP12};
+            CarolProtocol[] protos = new CarolProtocol[] {CarolProtocol.IIOP, CarolProtocol.JEREMIE,
+                    CarolProtocol.JRMP11, CarolProtocol.JRMP12};
 
             boolean[] nsValues = new boolean[] {true, false};
 
-            for (int nsIdx=0; nsIdx<nsValues.length; nsIdx++) {
+            for (int nsIdx = 0; nsIdx < nsValues.length; nsIdx++) {
                 final boolean usesExternal = nsValues[nsIdx];
 
-                for (int ii=0; ii<protos.length; ii++) {
+                for (int ii = 0; ii < protos.length; ii++) {
                     configurations.add(new Config(protos[ii], null, usesExternal));
                 }
 
-                for (int ii=0; ii<protos.length-1; ii++) {
+                for (int ii = 0; ii < protos.length - 1; ii++) {
                     final CarolProtocol proto1 = protos[ii];
 
-                    for (int jj=ii+1; jj<protos.length; jj++) {
+                    for (int jj = ii + 1; jj < protos.length; jj++) {
                         final CarolProtocol proto2 = protos[jj];
                         configurations.add(new Config(proto1, proto2, usesExternal));
                     }
@@ -291,9 +278,10 @@ public final class CarolTestTask extends Task {
             }
         }
 
-
         Config(CarolProtocol proto1, CarolProtocol proto2, boolean usesExternallyStartedNS) {
-            if (proto1 == null) { throw new NullPointerException("proto1"); }
+            if (proto1 == null) {
+                throw new NullPointerException("proto1");
+            }
 
             this.proto1 = proto1;
             this.proto2 = proto2;
@@ -318,13 +306,10 @@ public final class CarolTestTask extends Task {
 
         public static Iterator supportedConfigurations() {
             List configs = new LinkedList();
-            CarolProtocol[] protos =
-                new CarolProtocol[] {CarolProtocol.IIOP,
-                                     CarolProtocol.JEREMIE,
-                                     CarolProtocol.JRMP11,
-                                     CarolProtocol.JRMP12};
+            CarolProtocol[] protos = new CarolProtocol[] {CarolProtocol.IIOP, CarolProtocol.JEREMIE,
+                    CarolProtocol.JRMP11, CarolProtocol.JRMP12};
 
-            for (int ii=0; ii<protos.length; ii++) {
+            for (int ii = 0; ii < protos.length; ii++) {
                 configs.add(new Config(protos[ii], null, true));
                 configs.add(new Config(protos[ii], null, false));
             }
@@ -342,8 +327,6 @@ public final class CarolTestTask extends Task {
 
             return configs.iterator();
         }
-
-
 
         public String toString() {
             StringBuffer sb = new StringBuffer(proto1.getNameVersion());
