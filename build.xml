@@ -6,6 +6,7 @@
 
   <!-- ==================== Copy static files ==================== -->
   <!-- IF YOU CHANGE, sync dist.prepare !!! -->
+
   <target name="prepare">
     <mkdir dir="src/doc"/> <!-- Temp change until dir is not empty -->
     <mkdir dir="${tomcat.build}"/>
@@ -62,9 +63,6 @@
            classpath="${tomcat.build}/classes"/>
     <javac srcdir="src/examples/jsp/plugin/applet"
            destdir="${tomcat.build}/webapps/examples/jsp/plugin/applet"/>
-    <jar   jarfile="${tomcat.build}/webapps/examples.war"
-           basedir="${tomcat.build}/webapps/examples"
-           items="." /> 
 
     <!-- Root context -->
     <mkdir dir="${tomcat.build}/webapps/ROOT"/>
@@ -72,9 +70,6 @@
     <javac srcdir="src/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/ROOT/WEB-INF/classes"
            classpath="${tomcat.build}/classes"/>
-    <jar   jarfile="${tomcat.build}/webapps/ROOT.war"
-           basedir="${tomcat.build}/webapps/ROOT"
-           items="." /> 
 
     <!-- Test application -->
     <mkdir dir="${tomcat.build}/webapps/test"/>
@@ -82,68 +77,60 @@
     <javac srcdir="src/tests/webpages/WEB-INF/classes"
            destdir="${tomcat.build}/webapps/test/WEB-INF/classes"
            classpath="${tomcat.build}/classes"/>
-    <jar   jarfile="${tomcat.build}/webapps/test.war"
-           basedir="${tomcat.build}/webapps/test"
-           items="." /> 
-
   </target>
+
 
   <!-- ==================== Copy the files to distribution format ==================== -->
   <target name="dist" depends="main,webapps">
+
     <mkdir dir="${tomcat.home}"/>
-    <mkdir dir="${tomcat.home}/classes"/>
-    <mkdir dir="${tomcat.home}/conf"/>
-    <mkdir dir="${tomcat.home}/src"/>
-    <mkdir dir="${tomcat.home}/lib"/>
-    <mkdir dir="${tomcat.home}/bin"/>
-    <mkdir dir="${tomcat.home}/webapps"/>
-    <mkdir dir="${tomcat.home}/webapps/ROOT"/>
-
-    <copydir src="${tomcat.build}/bin" dest="${tomcat.home}/bin" />
-    <copydir src="${tomcat.build}/conf" dest="${tomcat.home}/conf"/>
-    <copydir src="${tomcat.build}/doc" dest="${tomcat.home}/doc"/>
-    <copydir src="${tomcat.build}/src" dest="${tomcat.home}/src"/>
-    <copydir src="${tomcat.build}/lib" dest="${tomcat.home}/lib"/>
-    <copyfile src="${tomcat.build}/LICENSE" dest="${tomcat.home}/LICENSE"/>
-
-    <copydir src="${tomcat.build}/webapps/ROOT" dest="${tomcat.home}/webapps/ROOT"/>
-    <copydir src="${tomcat.build}/webapps/examples" dest="${tomcat.home}/webapps/examples"/>
-    <copydir src="${tomcat.build}/webapps/test" dest="${tomcat.home}/webapps/test"/>
-    <!-- Copy only war format for examples and test  -->
-    <copyfile src="${tomcat.build}/webapps/examples.war" 
-              dest="${tomcat.home}/webapps/examples.war"/>
-    <copyfile src="${tomcat.build}/webapps/test.war" 
-              dest="${tomcat.home}/webapps/test.war"/>
-
+    <copydir src="${tomcat.build}" dest="${tomcat.home}"/>
 
     <!-- create tomcat jar files -->
     <jar jarfile="${tomcat.home}/lib/webserver.jar"
-         basedir="${tomcat.build}/classes"
+         basedir="${tomcat.home}/classes"
          items="org/apache/tomcat"/> 
     <jar jarfile="${tomcat.home}/lib/servlet.jar"
-         basedir="${tomcat.build}/classes"
+         basedir="${tomcat.home}/classes"
          items="javax/servlet"/>
     <jar jarfile="${tomcat.home}/lib/jasper.jar"
-         basedir="${tomcat.build}/classes"
+         basedir="${tomcat.home}/classes"
          items="org/apache/jasper"/>
+
+    <deltree dir="${tomcat.home}/classes"/>
+
+    <!-- create webapp WARS -->
+    <jar   jarfile="${tomcat.home}/webapps/examples.war"
+           basedir="${tomcat.home}/webapps/examples"
+           items="." /> 
+    <deltree dir="${tomcat.home}/webapps/examples"/>
+
+    <jar   jarfile="${tomcat.home}/webapps/ROOT.war"
+           basedir="${tomcat.home}/webapps/ROOT"
+           items="." />
+    <deltree dir="${tomcat.home}/webapps/ROOT"/>
+
+    <jar   jarfile="${tomcat.home}/webapps/test.war"
+           basedir="${tomcat.home}/webapps/test"
+           items="." /> 
+    <deltree dir="${tomcat.home}/webapps/test"/>
+
 
     <!-- Change permissions for unix -->
     <chmod perm="+x" src="${tomcat.home}/bin/tomcat.sh"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/ant"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/startup.sh"/>
-    <chmod perm="+x" src="${tomcat.build}/bin/shutdown.sh"/>
+    <chmod perm="+x" src="${tomcat.home}/bin/ant"/>
+    <chmod perm="+x" src="${tomcat.home}/bin/startup.sh"/>
+    <chmod perm="+x" src="${tomcat.home}/bin/shutdown.sh"/>
+    <chmod perm="+x" src="${tomcat.home}/bin/test-tomcat.sh"/>
   </target>
   
   <!-- ==================== Admin ==================== -->
   <target name="clean">
     <deltree dir="${tomcat.build}"/>
-  </target>
-  
-  <target name="dist.clean">
     <deltree dir="${tomcat.home}"/>
   </target>
-
-  <target name="all" depends="clean,main,dist,webapps"/>
-  <target name="main" depends="tomcat"/>
+  
+  <target name="all" depends="clean,dist"/>
+  <target name="main" depends="tomcat,webapps"/>
   
 </project>
