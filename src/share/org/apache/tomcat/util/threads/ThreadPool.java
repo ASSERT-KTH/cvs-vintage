@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.7 2001/10/16 03:20:50 costin Exp $
- * $Revision: 1.7 $
- * $Date: 2001/10/16 03:20:50 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/threads/Attic/ThreadPool.java,v 1.8 2001/11/03 05:58:46 billbarker Exp $
+ * $Revision: 1.8 $
+ * $Date: 2001/11/03 05:58:46 $
  *
  * ====================================================================
  *
@@ -145,9 +145,6 @@ public class ThreadPool  {
 	stopThePool=false;
         currentThreadCount  = 0;
         currentThreadsBusy  = 0;
-        maxThreads      = MAX_THREADS;
-        maxSpareThreads = MAX_SPARE_THREADS;
-        minSpareThreads = MIN_SPARE_THREADS;
 
         adjustLimits();
 
