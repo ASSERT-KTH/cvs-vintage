@@ -10,113 +10,180 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.SQLException;
+import javax.sql.DataSource;
+import javax.ejb.EJBException;
+
 import org.jboss.ejb.plugins.cmp.StartCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCStartCommand creates the table if specified in xml.
  *    
-  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
+ * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand {
-   // Constructors --------------------------------------------------
+public class JDBCStartCommand implements StartCommand {
+
+   private JDBCStoreManager manager;
+   private JDBCEntityBridge entity;
+   private JDBCEntityMetaData entityMetaData;
+   private Logger log;
    private boolean alreadyCreated = false;
    
    public JDBCStartCommand(JDBCStoreManager manager) {
-      super(manager, "Start");
-   }   
+      this.manager = manager;
+      entity = manager.getEntityBridge();
+      entityMetaData = entity.getMetaData();
 
-   // InitCommand implementation ---------------------------------
+      // Create the Log
+      log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
+   }
 
    public void execute() throws Exception {
       // Create table if necessary
       if(!alreadyCreated || entityMetaData.getCreateTable()) {
-         createTable(entityMetaData.getTableName(), getEntityCreateTableSQL());
-         
-         // create relation tables
-         JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
-         for(int i=0; i<cmrFields.length; i++) {
-            //Verify that there is a related CMR field (to avoid NPE)
-            if(!cmrFields[i].hasForeignKey() 
-                  && cmrFields[i].getRelatedCMRField() != null 
-                  && !cmrFields[i].getRelatedCMRField().hasForeignKey()) {
-               createTable(cmrFields[i].getRelationTableName(), getRelationCreateTableSQL(cmrFields[i]));
-            }
-         }
+         createTable(
+               manager.getDataSource(),
+               entityMetaData.getTableName(),
+               getEntityCreateTableSQL());
 
          alreadyCreated = true;
+      } 
+
+      // create relation tables
+      JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
+      for(int i=0; i<cmrFields.length; i++) {
+         JDBCRelationMetaData relationMetaData = 
+               cmrFields[i].getRelationMetaData();
+
+         if(relationMetaData.isTableMappingStyle() &&
+            !relationMetaData.getTableExists()) {
+            
+            if(relationMetaData.getCreateTable()) {
+               createTable(
+                     relationMetaData.getDataSource(),
+                     relationMetaData.getTableName(),
+                     getRelationCreateTableSQL(cmrFields[i]));
+            } else {
+               log.info("Table not create as requested: " +
+                     relationMetaData.getTableName());
+            }
+            
+            relationMetaData.setTableExists(true);
+         }
       }
    }
 
-   protected void createTable(String tableName, String sql) throws Exception {
-      // first check if the table already exists...
-      // (a j2ee spec compatible jdbc driver has to fully 
-      // implement the DatabaseMetaData)
-      Connection con = null;
-      ResultSet rs = null;
-      try {
-         con = manager.getConnection();
-         DatabaseMetaData dmd = con.getMetaData();
-         rs = dmd.getTables(con.getCatalog(), null, tableName, null);
-         if (rs.next ()) {
-            log.info("Table '" + tableName + "' already exists");
-            return;
-         }
-      } finally {
-         JDBCUtil.safeClose(rs);
-         JDBCUtil.safeClose(con);
+   private void createTable(
+         DataSource dataSource,
+         String tableName,
+         String sql) {
+
+      // does this table already exist
+      if(tableExists(dataSource, tableName)) {
+         log.info("Table '" + tableName + "' already exists");
+         return;
       }
 
+      Connection con = null;
+      Statement statement = null;
       try {
          // since we use the pools, we have to do this within a transaction
          manager.getContainer().getTransactionManager().begin ();
-         jdbcExecute(sql);
-         manager.getContainer().getTransactionManager().commit ();
+
+         // get the connection
+         con = dataSource.getConnection();
          
-         // Create successful, log this
+         // create the statement
+         statement = con.createStatement();
+         
+         // execute sql
+         statement.executeUpdate(sql);
+
+         // commit the transaction
+         manager.getContainer().getTransactionManager().commit ();
+
+         // success
          log.info("Created table '" + tableName + "' successfully.");
-       } catch (Exception e) {
+      } catch (Exception e) {
          log.debug("Could not create table " + tableName, e);
          try {
             manager.getContainer().getTransactionManager().rollback ();
          } catch (Exception _e) {
             log.error("Could not roll back transaction: ", e);
          }
+      } finally {
+         JDBCUtil.safeClose(statement);
+         JDBCUtil.safeClose(con);
       }
    }
 
-   protected String getEntityCreateTableSQL() throws Exception {
-      // Create table SQL
+   private boolean tableExists(
+         DataSource dataSource, 
+         String tableName) {
+
+      Connection con = null;
+      ResultSet rs = null;
+      try {
+         con = dataSource.getConnection();
+
+         // (a j2ee spec compatible jdbc driver has to fully 
+         // implement the DatabaseMetaData)
+         DatabaseMetaData dmd = con.getMetaData();
+         rs = dmd.getTables(con.getCatalog(), null, tableName, null);
+         return rs.next();
+      } catch(SQLException e) {
+         // This should not happen. A J2EE compatiable JDBC driver is
+         // required fully support metadata.
+         throw new EJBException("Error while checking if table aleady " +
+               "exists: ", e);
+      } finally {
+         JDBCUtil.safeClose(rs);
+         JDBCUtil.safeClose(con);
+      }
+   }
+
+   private String getEntityCreateTableSQL() {
+
       StringBuffer sql = new StringBuffer();
       sql.append("CREATE TABLE ").append(entityMetaData.getTableName());
       
       sql.append(" (");
-         // list all cmp fields
-         sql.append(SQLUtil.getCreateTableColumnsClause(entity.getJDBCCMPFields()));
+         // add cmp fields
+         sql.append(SQLUtil.getCreateTableColumnsClause(
+                  entity.getJDBCCMPFields()));
          
-         // append foriegn key fields
+         // add foriegn key fields
          JDBCCMRFieldBridge[] cmrFields = entity.getJDBCCMRFields();
          for(int i=0; i<cmrFields.length; i++) {
             if(cmrFields[i].hasForeignKey()) {
-               sql.append(", ").append(SQLUtil.getCreateTableColumnsClause(cmrFields[i].getForeignKeyFields()));
+               sql.append(", ").append(SQLUtil.getCreateTableColumnsClause(
+                     cmrFields[i].getForeignKeyFields()));
             }
          }
 
-         // If there is a primary key field,
-         // and the bean has explicitly <pk-constraint>true</pk-constraint> in jbosscmp-jdbc.xml
-         // add primary key constraint.
+         // add a pk constraint
          if(entityMetaData.hasPrimaryKeyConstraint())  {
             sql.append(", CONSTRAINT pk").append(entityMetaData.getTableName());
             
             sql.append(" PRIMARY KEY (");
-               sql.append(SQLUtil.getColumnNamesClause(entity.getJDBCPrimaryKeyFields()));
+               sql.append(SQLUtil.getColumnNamesClause(
+                        entity.getJDBCPrimaryKeyFields()));
             sql.append(")");
          }   
       sql.append(")");
@@ -124,39 +191,37 @@ public class JDBCStartCommand extends JDBCUpdateCommand implements StartCommand 
       return sql.toString();
    }
 
-   protected String getRelationCreateTableSQL(JDBCCMRFieldBridge cmrField) throws Exception {
-      // Create table SQL
+   private String getRelationCreateTableSQL(JDBCCMRFieldBridge cmrField) {
+
       StringBuffer sql = new StringBuffer();
-      sql.append("CREATE TABLE ").append(cmrField.getRelationTableName());
+      sql.append("CREATE TABLE ").append(
+            cmrField.getRelationMetaData().getTableName());
       
       sql.append(" (");
-         // list all cmp fields
-         sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getTableKeyFields()));
-         sql.append(", ");      
-         sql.append(SQLUtil.getCreateTableColumnsClause(cmrField.getRelatedCMRField().getTableKeyFields()));
+         // add cmr table key fields
+         sql.append(SQLUtil.getCreateTableColumnsClause(
+                  cmrField.getTableKeyFields()));
 
-         // If there is a primary key field,
-         // and the bean has explicitly <pk-constraint>true</pk-constraint> in jbosscmp-jdbc.xml
-         // add primary key constraint.
+         // add related cmr table key fields
+         sql.append(", ");      
+         sql.append(SQLUtil.getCreateTableColumnsClause(
+                  cmrField.getRelatedCMRField().getTableKeyFields()));
+
+//         // add a pk constraint
 //         if(cmrField.hasPrimaryKeyConstraint())  {
-//            sql.append(", CONSTRAINT pk").append(cmrField.getRelationTableName());
+//            sql.append(", CONSTRAINT pk").append(
+//                  cmrField.getRelationTableName());
 //            
 //            sql.append(" PRIMARY KEY (");
-//               sql.append(SQLUtil.getColumnNamesClause(cmrField.getTableKeyFields())));
+//               sql.append(SQLUtil.getColumnNamesClause(
+//                     cmrField.getTableKeyFields())));
 //               sql.append(", ");      
-//               sql.append(SQLUtil.getColumnNamesClause(cmrField.getRelatedCMRField().getTableKeyFields()));
+//               sql.append(SQLUtil.getColumnNamesClause(
+//                     cmrField.getRelatedCMRField().getTableKeyFields()));
 //            sql.append(")");
 //         }   
       sql.append(")");
       
       return sql.toString();
-   }
-
-   protected String getSQL(Object sql) throws Exception {
-      return (String) sql;
-   }
-   
-   protected Object handleResult(int rowsAffected, Object argOrArgs) throws Exception {
-      return null;
    }
 }

@@ -6,7 +6,7 @@
  */
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-import java.rmi.RemoteException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,12 +16,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.ejb.CreateException;
+import javax.ejb.EJBException;
+import javax.ejb.FinderException;
+import javax.ejb.RemoveException;
 import javax.sql.DataSource;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+
 import org.jboss.deployment.DeploymentException;
+import org.jboss.ejb.Container;
+import org.jboss.ejb.EntityContainer;
+import org.jboss.ejb.EntityPersistenceStore2;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.ListCacheKey;
 import org.jboss.ejb.plugins.cmp.CMPStoreManager;
@@ -33,12 +42,15 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCApplicationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCXmlFileLoader;
+import org.jboss.logging.Logger;
 import org.jboss.metadata.ApplicationMetaData;
 import org.jboss.proxy.Proxy;
 import org.jboss.util.CachePolicy;
 import org.jboss.util.FinderResults;
 import org.jboss.util.LRUCachePolicy;
 
+import java.lang.reflect.Constructor;
+import org.jboss.proxy.InvocationHandler;
 /**
  * JDBCStoreManager manages storage of persistence data into a table.
  * Other then loading the initial jbosscmp-jdbc.xml file this class
@@ -54,32 +66,59 @@ import org.jboss.util.LRUCachePolicy;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
-public class JDBCStoreManager extends CMPStoreManager {
+public class JDBCStoreManager implements EntityPersistenceStore2 {
+
    /**
     * To simplify null values handling in the preloaded data pool we use 
     * this value instead of 'null'
     */
    private static final Object NULL_VALUE = new Object();
 
-   protected DataSource dataSource;
+   private Constructor beanProxyConstructor;
 
-   protected JDBCTypeFactory typeFactory;
+   private EntityContainer container;
+   private Logger log;
 
-   protected JDBCEntityMetaData metaData;
-   protected JDBCEntityBridge entityBridge;
+   private JDBCEntityMetaData metaData;
+   private JDBCEntityBridge entityBridge;
 
-   protected JDBCLoadFieldCommand loadFieldCommand;
-   protected JDBCFindByForeignKeyCommand findByForeignKeyCommand;
-   protected JDBCLoadRelationCommand loadRelationCommand;
-   protected JDBCDeleteRelationsCommand deleteRelationsCommand;
-   protected JDBCInsertRelationsCommand insertRelationsCommand;
-   protected boolean readAheadOnLoad;
-   protected int readAheadLimit;
-   protected JDBCReadAheadCommand readAheadCommand;
+   private DataSource dataSource;
+   private JDBCTypeFactory typeFactory;
+   private JDBCQueryManager queryManager;
 
-   protected LRUCachePolicy readAheadCache;
+   private JDBCCommandFactory commandFactory;
+
+   // Manager life cycle commands
+   private JDBCInitCommand initCommand;
+   private JDBCStartCommand startCommand;
+   private JDBCStopCommand stopCommand;
+   private JDBCDestroyCommand destroyCommand;
+
+   // Entity life cycle commands
+   private JDBCInitEntityCommand initEntityCommand;
+   private JDBCFindEntityCommand findEntityCommand;
+   private JDBCFindEntitiesCommand findEntitiesCommand;
+   private JDBCCreateEntityCommand createEntityCommand;
+   private JDBCRemoveEntityCommand removeEntityCommand;
+   private JDBCLoadEntityCommand loadEntityCommand;
+   private JDBCStoreEntityCommand storeEntityCommand;
+   private JDBCActivateEntityCommand activateEntityCommand;
+   private JDBCPassivateEntityCommand passivateEntityCommand;
+
+   // commands
+   private JDBCLoadFieldCommand loadFieldCommand;
+   private JDBCFindByForeignKeyCommand findByForeignKeyCommand;
+   private JDBCLoadRelationCommand loadRelationCommand;
+   private JDBCDeleteRelationsCommand deleteRelationsCommand;
+   private JDBCInsertRelationsCommand insertRelationsCommand;
+
+   // read ahead stuff
+   private boolean readAheadOnLoad;
+   private int readAheadLimit;
+   private JDBCReadAheadCommand readAheadCommand;
+   private LRUCachePolicy readAheadCache;
 
    /**
     * A map of data preloaded within some transaction for some entity. This map
@@ -98,7 +137,53 @@ public class JDBCStoreManager extends CMPStoreManager {
     */
    private TransactionManager tm;
 
+   public EntityContainer getContainer() {
+      return container;
+   }
+
+   public void setContainer(Container container) {
+      this.container = (EntityContainer)container;
+      this.log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            container.getBeanMetaData().getEjbName());
+   }
+ 
+   public JDBCEntityBridge getEntityBridge() {
+      return entityBridge;
+   }
+
+   /**
+    * Returns the datasource for this entity.
+    */
+   public DataSource getDataSource() {
+      return dataSource;
+   }
+
+   public JDBCTypeFactory getJDBCTypeFactory() {
+      return typeFactory;
+   }
+
+   public JDBCEntityMetaData getMetaData() {
+      return metaData;
+   }
+
+   public JDBCQueryManager getQueryManager() {
+      return queryManager;
+   }
+
+   public JDBCCommandFactory getCommandFactory() {
+      return (JDBCCommandFactory) commandFactory;
+   }
+
+
+   //
+   // Store Manager Life Cycle Commands
+   //
    public void init() throws Exception {
+      log.debug("Initializing CMP plugin for " +
+                container.getBeanMetaData().getEjbName());
+
       initTxDataMap();
 
       metaData = loadJDBCEntityMetaData();
@@ -118,25 +203,37 @@ public class JDBCStoreManager extends CMPStoreManager {
             metaData.getJDBCApplication().getValueClasses());
 
       // create the bridge between java land and this engine (sql land)
-      entityBridge = new JDBCEntityBridge(metaData, log, this);
+      entityBridge = new JDBCEntityBridge(metaData, this);
 
-      super.init();
+      // Set up Commands
+      commandFactory = new JDBCCommandFactory(this);
 
-      loadFieldCommand = getCommandFactory().createLoadFieldCommand();
+      // Create store manager life cycle commands
+      initCommand = commandFactory.createInitCommand();
+      startCommand = commandFactory.createStartCommand();
+      stopCommand = commandFactory.createStopCommand();
+      destroyCommand = commandFactory.createDestroyCommand();
 
-      findByForeignKeyCommand = 
-            getCommandFactory().createFindByForeignKeyCommand();
+      /// Create ejb life cycle commands
+      initEntityCommand = commandFactory.createInitEntityCommand();
+      findEntityCommand = commandFactory.createFindEntityCommand();
+      findEntitiesCommand = commandFactory.createFindEntitiesCommand();
+      createEntityCommand = commandFactory.createCreateEntityCommand();
+      removeEntityCommand = commandFactory.createRemoveEntityCommand();
+      loadFieldCommand = commandFactory.createLoadFieldCommand();
+      loadEntityCommand = commandFactory.createLoadEntityCommand();
+      storeEntityCommand = commandFactory.createStoreEntityCommand();
+      activateEntityCommand = commandFactory.createActivateEntityCommand();
+      passivateEntityCommand = commandFactory.createPassivateEntityCommand();
 
-      loadRelationCommand = getCommandFactory().createLoadRelationCommand();
+      // Create relationship commands
+      findByForeignKeyCommand = commandFactory.createFindByForeignKeyCommand();
+      loadRelationCommand = commandFactory.createLoadRelationCommand();
+      deleteRelationsCommand = commandFactory.createDeleteRelationsCommand();
+      insertRelationsCommand = commandFactory.createInsertRelationsCommand();
 
-      deleteRelationsCommand = 
-            getCommandFactory().createDeleteRelationsCommand();
-
-      insertRelationsCommand = 
-            getCommandFactory().createInsertRelationsCommand();
-
-      readAheadCommand = getCommandFactory().createReadAheadCommand();
-
+      // Initialize the read ahead code
+      readAheadCommand = commandFactory.createReadAheadCommand();
       readAheadOnLoad = metaData.getReadAhead().isOnLoadUsed();
       if (readAheadOnLoad) {
          readAheadLimit = metaData.getReadAhead().getLimit();
@@ -145,98 +242,216 @@ public class JDBCStoreManager extends CMPStoreManager {
          readAheadCache.init();
       }
       tm = (TransactionManager) container.getTransactionManager();
+
+      // Create the query manager
+      queryManager = new JDBCQueryManager(this);
+
+      // Execute the init Command
+      initCommand.execute();
    }
 
    public void start() throws Exception {
-      super.start();
+      startCommand.execute();
       
-      // Send a start event to the queries
-      // Some queries need to do some work on startup. For example, EJB-QL 
-      // queries perform a translation to SQL.
-      JDBCFindEntitiesCommand find = 
-            (JDBCFindEntitiesCommand)findEntitiesCommand;
-      find.start();
+      // Start the query manager. At this point is creates all of the
+      // query commands. The must occure in the start phase, as
+      // queries can opperate on other entities in the application, and
+      // all entities are gaurenteed to be createed until the start phase.
+      queryManager.start();
       
       // If we are using a readAheadCache, start it.
-      if (readAheadCache != null) {
+      if(readAheadCache != null) {
          readAheadCache.start();
       }
+
+      //
+      // get the bean proxy constructor
+      //
+
+      // use proxy generator to create one implementation
+      Class beanClass = container.getBeanClass();
+      Class[] classes = new Class[] { beanClass };
+      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
+            container, 
+            entityBridge,
+            beanClass);
+      ClassLoader classLoader = beanClass.getClassLoader();
+      Object o = Proxy.newProxyInstance(classLoader, classes, handler);
+
+      // steal the constructor from the object
+      beanProxyConstructor = 
+            o.getClass().getConstructor(new Class[]{InvocationHandler.class});
+      
+      // now create one to make sure everything is cool
+      createBeanClassInstance();
    }
 
    public void stop() {
-      super.stop();
+      // On deploy errors, sometimes CMPStoreManager was never initialized!
+      if(stopCommand != null) { 
+         stopCommand.execute();
+      }
 
       // Inform the readAhead cache that we are done.
-      if (readAheadCache != null) {
+      if(readAheadCache != null) {
          readAheadCache.stop();
       }
    }
 
    public void destroy() {
-      super.destroy();
+      // On deploy errors, sometimes CMPStoreManager was never initialized!
+      if(destroyCommand != null) {
+         destroyCommand.execute();
+      }
+
       if (readAheadCache != null) {
          readAheadCache.stop();
          readAheadCache = null;
       }
    }
 
-   public JDBCEntityBridge getEntityBridge() {
-      return entityBridge;
+   //
+   // EJB Life Cycle Commands
+   //
+   /**
+    * Returns a new instance of a class which implemnts the bean class.
+    *
+    * @see java.lang.Class#newInstance
+    * @return the new instance
+    */
+   public Object createBeanClassInstance() throws Exception {
+      Class beanClass = container.getBeanClass();
+
+      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
+            container, 
+            entityBridge,
+            beanClass);
+
+      return beanProxyConstructor.newInstance(new Object[]{handler});
    }
 
-   public JDBCTypeFactory getJDBCTypeFactory() {
-      return typeFactory;
+   public void initEntity(EntityEnterpriseContext ctx) {
+      initEntityCommand.execute(ctx);
    }
 
-   public JDBCEntityMetaData getMetaData() {
-      return metaData;
+   public Object createEntity(
+         Method createMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws CreateException {
+
+      return createEntityCommand.execute(createMethod, args, ctx);
    }
 
-   protected CommandFactory createCommandFactory() throws Exception {
-      return new JDBCCommandFactory(this);
+   public Object findEntity(
+         Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws FinderException {
+
+      return findEntityCommand.execute(finderMethod, args, ctx);
    }
 
-   public JDBCCommandFactory getCommandFactory() {
-      return (JDBCCommandFactory) commandFactory;
+   public FinderResults findEntities(
+         Method finderMethod,
+         Object[] args,
+         EntityEnterpriseContext ctx) throws FinderException {
+      return findEntitiesCommand.execute(finderMethod, args, ctx);
    }
 
-   public void loadEntity(EntityEnterpriseContext ctx)
-      throws RemoteException
-   {
-      boolean done = false;
-      JDBCCMPFieldBridge[] fieldsToLoad;
+   public void activateEntity(EntityEnterpriseContext ctx) {
+      activateEntityCommand.execute(ctx);
+   }
 
+   public void loadEntity(EntityEnterpriseContext ctx) {
       // is any on the data already in the entity valid
       if(!ctx.isValid()) {
          entityBridge.resetPersistenceContext(ctx);
       }
 
-      if (readAheadOnLoad) {
-         fieldsToLoad = entityBridge.getEagerLoadFields();
-         if ((fieldsToLoad.length == 0) || readAheadFields(fieldsToLoad, ctx)) {
-            done = true;
+      if(readAheadOnLoad) {
+         JDBCCMPFieldBridge[] fieldsToLoad = entityBridge.getEagerLoadFields();
+         if((fieldsToLoad.length == 0) || readAheadFields(fieldsToLoad, ctx)) {
+           return;
          }
       }
-      if (!done) {
-         super.loadEntity(ctx);
+      
+      loadEntityCommand.execute(ctx);
+   }
+
+   public void loadField(
+         JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
+
+      JDBCCMPFieldBridge[] fieldsToLoad = 
+            loadFieldCommand.getFieldGroupsUnion(field);
+
+      if(readAheadOnLoad) {
+         if(readAheadFields(fieldsToLoad, ctx)) {
+            return;
+         }
+      }
+      loadFieldCommand.execute(fieldsToLoad, ctx);
+   }
+
+   public void storeEntity(EntityEnterpriseContext ctx) {
+      storeEntityCommand.execute(ctx);
+   }
+
+   public void passivateEntity(EntityEnterpriseContext ctx) {
+      passivateEntityCommand.execute(ctx);
+   }
+
+   public void removeEntity(EntityEnterpriseContext ctx)
+         throws RemoveException {
+      removeEntityCommand.execute(ctx);
+   }
+
+   //
+   // Relationship Commands
+   //
+   public Set findByForeignKey(
+         Object foreignKey, 
+         JDBCCMPFieldBridge[] foreignKeyFields) {
+
+      return findByForeignKeyCommand.execute(foreignKey, foreignKeyFields);
+   }
+
+   public Set loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {
+      return loadRelationCommand.execute(cmrField, pk);
+   }
+
+   public void deleteRelations(RelationData relationData) {
+      deleteRelationsCommand.execute(relationData);
+   }
+
+   public void insertRelations(RelationData relationData) {  
+      insertRelationsCommand.execute(relationData);
+   }
+
+   public Map getTxDataMap() {
+      ApplicationMetaData amd = 
+            container.getBeanMetaData().getApplicationMetaData();
+
+      // Get Tx Hashtable
+      return (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
+   }
+
+   private void initTxDataMap() {
+      ApplicationMetaData amd = 
+            container.getBeanMetaData().getApplicationMetaData();
+
+      // Get Tx Hashtable
+      Map txDataMap = (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
+      if(txDataMap == null) {
+         // we are the first JDBC CMP manager to get to initTxDataMap.
+         txDataMap = Collections.synchronizedMap(new HashMap());
+         amd.addPluginData("CMP-JDBC-TX-DATA", txDataMap);
       }
    }
 
-   public void loadField(JDBCCMPFieldBridge field, EntityEnterpriseContext ctx) {
-      boolean done = false;
-      JDBCCMPFieldBridge[] fieldsToLoad;
 
-      fieldsToLoad = loadFieldCommand.getFieldGroupsUnion(field);
-      if (readAheadOnLoad) {
-         if (readAheadFields(fieldsToLoad, ctx)) {
-            done = true;
-         }
-      }
-      if (!done) {
-         loadFieldCommand.execute(fieldsToLoad, ctx);
-      }
-   }
-
+   //
+   // Read Ahead Code
+   //
+   
    /**
     * Fills all preloaded fields.
     * @return The list of fields that are not preloaded yet.
@@ -291,78 +506,12 @@ public class JDBCStoreManager extends CMPStoreManager {
                   log.warn("Didn't read ahead field '" + fieldsToLoad[0].getMetaData().getFieldName() + "'");
                   success = false;
                }
-            } catch (RemoteException ex) {
-               log.warn("Read ahead failed", ex);
+            } catch(EJBException e) {
+               log.warn("Read ahead failed", e);
             }
          }
       }
       return success;
-   }
-
-    /**
-   * Returns a new instance of a class which implemnts the bean class.
-   *
-   * @see java.lang.Class#newInstance
-   * @return the new instance
-   */
-   public Object createBeanClassInstance() throws Exception {
-      Class beanClass = container.getBeanClass();
-
-      Class[] classes = new Class[] { beanClass };
-      EntityBridgeInvocationHandler handler = new EntityBridgeInvocationHandler(
-            container, 
-            entityBridge,
-            beanClass);
-      ClassLoader classLoader = beanClass.getClassLoader();
-
-      return Proxy.newProxyInstance(classLoader, classes, handler);
-   }
-
-   /**
-    * Returns a database connection
-    */
-   public Connection getConnection() throws SQLException {
-      return dataSource.getConnection();
-   }
-
-   public Set findByForeignKey(
-         Object foreignKey, 
-         JDBCCMPFieldBridge[] foreignKeyFields) {
-
-      return findByForeignKeyCommand.execute(foreignKey, foreignKeyFields);
-   }
-
-   public Set loadRelation(JDBCCMRFieldBridge cmrField, Object pk) {
-      return loadRelationCommand.execute(cmrField, pk);
-   }
-
-   public void deleteRelations(RelationData relationData) {
-      deleteRelationsCommand.execute(relationData);
-   }
-
-   public void insertRelations(RelationData relationData) {  
-      insertRelationsCommand.execute(relationData);
-   }
-
-   public Map getTxDataMap() {
-      ApplicationMetaData amd = 
-            container.getBeanMetaData().getApplicationMetaData();
-
-      // Get Tx Hashtable
-      return (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
-   }
-
-   private void initTxDataMap() {
-      ApplicationMetaData amd = 
-            container.getBeanMetaData().getApplicationMetaData();
-
-      // Get Tx Hashtable
-      Map txDataMap = (Map)amd.getPluginData("CMP-JDBC-TX-DATA");
-      if(txDataMap == null) {
-         // we are the first JDBC CMP manager to get to initTxDataMap.
-         txDataMap = Collections.synchronizedMap(new HashMap());
-         amd.addPluginData("CMP-JDBC-TX-DATA", txDataMap);
-      }
    }
 
    private JDBCEntityMetaData loadJDBCEntityMetaData() 

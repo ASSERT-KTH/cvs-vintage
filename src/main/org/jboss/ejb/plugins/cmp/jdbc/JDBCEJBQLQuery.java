@@ -18,24 +18,21 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
 /**
- * JDBCDefinedFinderCommand finds entities based on an xml sql specification.
- * This class needs more work and I will clean it up in CMP 2.x phase 3.
- * The only thing to to note is the seperation of query into a from and where
- * clause. This code has been cleaned up to improve readability.
+ * This class generates a query from EJB-QL.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.1 $
  */
-public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
+public class JDBCEJBQLQuery extends JDBCAbstractQueryCommand {
 
-   public JDBCEJBQLFinderCommand(
+   public JDBCEJBQLQuery(
          JDBCStoreManager manager, 
          JDBCQueryMetaData q) throws DeploymentException {
 
       super(manager, q);
 
       JDBCQlQueryMetaData metadata = (JDBCQlQueryMetaData)q;
-      log.debug("EQL-QL: "+metadata.getEjbQl());
+      getLog().debug("EQL-QL: "+metadata.getEjbQl());
       
       // get a parser
       Parser ejbql = new EJBQLParser().ejbqlQuery();
@@ -59,17 +56,15 @@ public class JDBCEJBQLFinderCommand extends JDBCFinderCommand {
       // select bridge object
       Object selectBridgeObject = target.getSelectObject();
       if(selectBridgeObject instanceof JDBCEntityBridge) {
-         selectEntity = (JDBCEntityBridge)selectBridgeObject;
-         selectCMPField = null;
+         setSelectEntity((JDBCEntityBridge)selectBridgeObject);
       } else if(selectBridgeObject instanceof JDBCCMPFieldBridge) {
-         selectCMPField = (JDBCCMPFieldBridge)selectBridgeObject;
-         selectEntity = null;
+         setSelectField((JDBCCMPFieldBridge)selectBridgeObject);
       } else {
          throw new IllegalStateException("Select bridge object is instance " +
                "of unknown type: selectBridgeObject=" + selectBridgeObject);
       }
       
       // get the parameter order
-      setParameters(target.getInputParameters());
+      setParameterList(target.getInputParameters());
    }
 }

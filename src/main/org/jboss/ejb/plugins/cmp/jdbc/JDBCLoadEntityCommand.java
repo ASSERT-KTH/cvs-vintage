@@ -7,20 +7,18 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-
-import java.util.ArrayList;
-
-import java.rmi.NoSuchObjectException;
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.util.ArrayList;
+import javax.ejb.EJBException;
+import javax.ejb.NoSuchEntityException;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.LoadEntityCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCLoadEntityCommand loads the data for an instance from the table.
@@ -35,80 +33,84 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:dirk@jboss.de">Dirk Zimmermann</a>
  * @author <a href="mailto:danch@nvisia.com">danch (Dan Christopherson)</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
-public class JDBCLoadEntityCommand
-   extends JDBCQueryCommand
-   implements LoadEntityCommand
-{
-   // Constructors --------------------------------------------------
+public class JDBCLoadEntityCommand implements LoadEntityCommand {
+   private JDBCStoreManager manager;
+   private JDBCEntityBridge entity;
+   private Logger log;
 
    public JDBCLoadEntityCommand(JDBCStoreManager manager) {
-      super(manager, "Load");
+      this.manager = manager;
+      entity = manager.getEntityBridge();
+
+      // Create the Log
+      log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
    }
 
-   // LoadEntityCommand implementation ---------------------------
-
-   public void execute(EntityEnterpriseContext ctx) throws RemoteException {
+   public void execute(EntityEnterpriseContext ctx) {
       // load the instance primary key fields
       entity.injectPrimaryKeyIntoInstance(ctx, ctx.getId());
       
-      // pass this info on
-      ExecutionState es = new ExecutionState();
-      es.ctx = ctx;
-      es.fields = getLoadFields(ctx);
+      // determine the fields to load
+      JDBCCMPFieldBridge[] loadFields = getLoadFields(ctx);
 
-      if(es.fields.length > 0) {
-         try {
-            jdbcExecute(es);
-         } catch (Exception e) {
-            throw new ServerException("Load failed", e);
-         }
+      // if no there are not load fields return
+      if(loadFields.length == 0) {
+         return;
       }
-      
-      // mark the entity as created; if it was loaded it was created 
-      entity.setCreated(ctx);
-   }
 
-   // JDBCQueryCommand overrides ------------------------------------
-
-   protected String getSQL(Object argOrArgs) throws Exception {
-      ExecutionState es = (ExecutionState)argOrArgs;
-
-      
+      // generate the sql
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.fields));
-      sql.append(" FROM ").append(entityMetaData.getTableName());
-      sql.append(" WHERE ").append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(loadFields));
+      sql.append(" FROM ").append(entity.getTableName());
+      sql.append(" WHERE ").append(
+            SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
       
-      return sql.toString();
-   }
+      Connection con = null;
+      PreparedStatement ps = null;
+      try {
+         // get the connection
+         con = manager.getDataSource().getConnection();
+         
+         // create the statement
+         ps = con.prepareStatement(sql.toString());
+         
+         // set the parameters
+         entity.setPrimaryKeyParameters(ps, 1, ctx.getId());
 
-   protected void setParameters(PreparedStatement ps, Object arg)
-      throws Exception
-   {
-      ExecutionState es = (ExecutionState)arg;      
-      entity.setPrimaryKeyParameters(ps, 1, es.ctx.getId());
-   }
+         // execute statement
+         ResultSet rs = ps.executeQuery();
 
-   protected Object handleResult(ResultSet rs, Object arg) throws Exception {
-      ExecutionState es = (ExecutionState)arg;      
-
-      if(!rs.next()) {
-         throw new NoSuchObjectException("Entity " + es.ctx.getId() + " not found");
+         // did we get results
+         if(!rs.next()) {
+            throw new NoSuchEntityException("Entity " + ctx.getId() + 
+                  " not found");
+         }
+      
+         // load each field and mark it clean
+         int index = 1;
+         for(int i=0; i<loadFields.length; i++) {
+            index = loadFields[i].loadInstanceResults(rs, index, ctx);
+            loadFields[i].setClean(ctx);
+         }
+      
+         // mark the entity as created; if it was loaded it was created 
+         entity.setCreated(ctx);
+      } catch(EJBException e) {
+         throw e;
+      } catch(Exception e) {
+         throw new EJBException("Load failed", e);
+      } finally {
+         JDBCUtil.safeClose(ps);
+         JDBCUtil.safeClose(con);
       }
-      
-      // load each field
-      int parameterIndex = 1;
-      for(int i=0; i<es.fields.length; i++) {
-         parameterIndex = es.fields[i].loadInstanceResults(rs, parameterIndex, es.ctx);
-         es.fields[i].setClean(es.ctx);
-      }
-      
-      return null;
    }
-   
-   protected JDBCCMPFieldBridge[] getLoadFields(EntityEnterpriseContext ctx) {
+
+   private JDBCCMPFieldBridge[] getLoadFields(EntityEnterpriseContext ctx) {
       JDBCCMPFieldBridge[] eagerFields = entity.getEagerLoadFields();
       ArrayList fields = new ArrayList(eagerFields.length);
 
@@ -118,11 +120,7 @@ public class JDBCLoadEntityCommand
             fields.add(eagerFields[i]);
          }
       }
-      return (JDBCCMPFieldBridge[])fields.toArray(new JDBCCMPFieldBridge[fields.size()]);
-   }
-   
-   private class ExecutionState {
-      public JDBCCMPFieldBridge[] fields;
-      public EntityEnterpriseContext ctx;
+      return (JDBCCMPFieldBridge[])fields.toArray(
+            new JDBCCMPFieldBridge[fields.size()]);
    }
 }

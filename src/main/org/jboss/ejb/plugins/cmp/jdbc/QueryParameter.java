@@ -2,6 +2,8 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 import javax.ejb.EJBException;
 import javax.ejb.EJBLocalObject;
@@ -18,6 +20,72 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.logging.Logger;
 
 public class QueryParameter {
+   public static List createParameters(
+         int argNum, 
+         JDBCCMPFieldBridge field) {
+
+      List parameters;
+
+      JDBCType type = field.getJDBCType();
+      if(type instanceof JDBCTypeComplex) {
+         JDBCTypeComplexProperty[] props = 
+               ((JDBCTypeComplex)type).getProperties();
+         
+         parameters = new ArrayList(props.length);
+         
+         for(int i=0; i<props.length; i++) {
+            QueryParameter param = new QueryParameter(
+                     argNum,
+                     null,
+                     props[i],
+                     props[i].getJDBCType());
+            parameters.add(param);
+         }
+      } else {
+         parameters = new ArrayList(1);
+
+         QueryParameter param = new QueryParameter(
+                  argNum,
+                  null,
+                  null,
+                  type.getJDBCTypes()[0]);
+         parameters.add(param);
+      }
+      return parameters;
+   } 
+
+   public static List createParameters(
+         int argNum, 
+         JDBCEntityBridge entity) {
+
+      List parameters = new ArrayList();
+
+      JDBCCMPFieldBridge[] pkFields = entity.getJDBCPrimaryKeyFields();
+      for(int i=0; i<pkFields.length; i++) {
+         JDBCType type = pkFields[i].getJDBCType();
+         if(type instanceof JDBCTypeComplex) {
+            JDBCTypeComplexProperty[] props = 
+                  ((JDBCTypeComplex)type).getProperties();
+            for(int j=0; j<props.length; j++) {
+               QueryParameter param = new QueryParameter(
+                        argNum,
+                        pkFields[i],
+                        props[j],
+                        props[j].getJDBCType());
+               parameters.add(param);
+            }
+         } else {
+            QueryParameter param = new QueryParameter(
+                     argNum,
+                     pkFields[i],
+                     null,
+                     type.getJDBCTypes()[0]);
+            parameters.add(param);
+         }
+      }
+      return parameters;
+   } 
+   
    private int argNum;
    private JDBCCMPFieldBridge field;
    private JDBCTypeComplexProperty property;

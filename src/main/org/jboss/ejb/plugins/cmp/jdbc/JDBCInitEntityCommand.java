@@ -9,40 +9,34 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.rmi.RemoteException;
 
-
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.InitEntityCommand;
-
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 
 /**
  * CMPStoreManager JDBCActivateEntityCommand
  *    
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
- 
 public class JDBCInitEntityCommand implements InitEntityCommand {
-   // Constructors --------------------------------------------------
-   JDBCEntityBridge entity;
+   private JDBCEntityBridge entity;
    
    public JDBCInitEntityCommand(JDBCStoreManager manager) {
       entity = manager.getEntityBridge();
    }
    
-   // ActivateEntityCommand implementation -----------------------
-   
    /**
-   * Called before ejbCreate. In the JDBCStoreManager we need to 
-   * initialize the presistence context. The persistence context is where
-   * where bean data is stored. If CMP 1.x, original values are store 
-   * and for CMP 2.x actual values are stored int the context. Then we
-   * initialize the data. In CMP 1.x fields are reset to Java defaults, and
-   * in CMP 2.x current value in persistence store are initialized.
-   *
-   * Note: persistence context is also initialized in activate.
-   */
-   public void execute(EntityEnterpriseContext ctx) throws RemoteException {
+    * Called before ejbCreate. In the JDBCStoreManager we need to 
+    * initialize the presistence context. The persistence context is where
+    * where bean data is stored. If CMP 1.x, original values are store 
+    * and for CMP 2.x actual values are stored int the context. Then we
+    * initialize the data. In CMP 1.x fields are reset to Java defaults, and
+    * in CMP 2.x current value in persistence store are initialized.
+    *
+    * Note: persistence context is also initialized in activate.
+    */
+   public void execute(EntityEnterpriseContext ctx) {
       entity.initPersistenceContext(ctx);
       entity.initInstance(ctx);
    }

@@ -10,135 +10,159 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import java.util.List;
 
-import java.rmi.RemoteException;
-import java.rmi.ServerException;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.ejb.EJBException;
 
 import org.jboss.util.FinderResults;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.logging.Logger;
 
 /**
  * JDBCReadAheadCommand
  *
  * @author <a href="mailto:on@ibis.odessa.ua">Oleg Nitz</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
-public class JDBCReadAheadCommand
-   extends JDBCQueryCommand
-{
+public class JDBCReadAheadCommand {
+
+   private JDBCStoreManager manager;
+   private JDBCEntityBridge entity;
+   private Logger log;
+   
    private JDBCCMPFieldBridge[] lastLoadFields;
    private String lastFullClause;
    private int lastKeysCount = -1;
-   private JDBCCMPFieldBridge[] pkFields;
-
-   // Constructors --------------------------------------------------
 
    public JDBCReadAheadCommand(JDBCStoreManager manager) {
-      super(manager, "ReadAhead");
-      pkFields = entity.getJDBCPrimaryKeyFields();
+      this.manager = manager;
+      entity = manager.getEntityBridge();
+
+      // Create the Log
+      log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
    }
 
-   // LoadEntitiesCommand implementation.
+   public void execute(
+         JDBCCMPFieldBridge[] loadFields, 
+         FinderResults finderResults, 
+         int from, 
+         int to) {
 
-   public void execute(JDBCCMPFieldBridge[] loadFields, FinderResults keys, int from, int to)
-      throws RemoteException
-   {
-      List allKeys;
-      Object[] args;
+      // is there anything to load?
+      if((loadFields.length == 0) || 
+            !(finderResults.getAllKeys() instanceof List)) {
 
-      if ((loadFields.length == 0) || !(keys.getAllKeys() instanceof List)) {
          return;
       }
-      allKeys = (List) keys.getAllKeys();
-      args = new Object[] {loadFields, allKeys.subList(from, to).toArray()};
 
+      // get the keys of the entities we want to load
+      Object[] keys = 
+            ((List)finderResults.getAllKeys()).subList(from, to).toArray();
+
+      // generate the sql
+      String sql = getSQL(loadFields, keys.length);
+
+      Connection con = null;
+      PreparedStatement ps = null;
       try {
-         jdbcExecute(args);
-      } catch (Exception e) {
-         throw new ServerException("Load failed", e);
-      }
-   }
-
-   // JDBCQueryCommand overrides ------------------------------------
-
-   protected Object handleResult(ResultSet rs, Object argOrArgs) throws Exception
-   {
-      Object[] pkRef = new Object[1];
-      Object pk;
-      Object[] argumentRef = new Object[1];
-      int parameterIndex;
-      Object[] args2 = (Object[]) argOrArgs;
-      JDBCCMPFieldBridge[] loadFields = (JDBCCMPFieldBridge[]) (args2[0]);
-
-      while (rs.next()) {
-         try {
-            parameterIndex = 1;
-            for (int i = 0; i < pkFields.length; i++) {
-               parameterIndex = pkFields[i].loadPrimaryKeyResults(rs, parameterIndex, pkRef);
-            }
-            pk = pkRef[0];
-            for (int i = 0; i < loadFields.length; i++) {
-               parameterIndex = loadFields[i].loadArgumentResults(rs, parameterIndex, argumentRef);
-               manager.addPreloadData(pk, loadFields[i], argumentRef[0]);
-            }
-         } catch (Exception e) {
-            throw new ServerException("Load failed", e);
+         // get the connection
+         con = manager.getDataSource().getConnection();
+         
+         // create the statement
+         ps = con.prepareStatement(sql);
+         
+         // set the parameters
+         int index = 1;
+         for(int i = 0; i < keys.length; i++) {
+            index = entity.setPrimaryKeyParameters(ps, index, keys[i]);
          }
+
+         // execute statement
+         ResultSet rs = ps.executeQuery();
+
+         // did we get results
+         Object[] ref = new Object[1];
+         while(rs.next()) {
+            // reset the prameter index for this row
+            index = 1;
+           
+            // ref must be reset to null 
+            ref[0] = null;
+            
+            // load the pk
+            index = entity.loadPrimaryKeyResults(rs, index, ref);
+            Object pk = ref[0];
+
+            // load each field and store it in the cache
+            for(int i = 0; i < loadFields.length; i++) {
+               // ref must be reset to null
+               ref[0] = null;
+
+               // load the result of the field
+               index = loadFields[i].loadArgumentResults(rs, index, ref);
+
+               // cache the field value
+               manager.addPreloadData(pk, loadFields[i], ref[0]);
+            }
+         }
+      } catch(Exception e) {
+         throw new EJBException("Load failed", e);
+      } finally {
+         JDBCUtil.safeClose(ps);
+         JDBCUtil.safeClose(con);
       }
-      return null;
    }
 
-   protected void setParameters(PreparedStatement ps, Object args) throws Exception {
-      Object[] args2 = (Object[]) args;
-      Object[] keys = (Object[]) (args2[1]);
+   private String getSQL(JDBCCMPFieldBridge[] loadFields, int keysCount) {
 
-      for (int i = 0; i < keys.length; i++) {
-         entity.setPrimaryKeyParameters(ps, i + 1, keys[i]);
-      }
-   }
+      // We can reuse the last generated sql if the load fields have
+      // not chanded and the key count.
+      boolean canUseLast = (keysCount == lastKeysCount) && 
+            (loadFields.length == lastLoadFields.length);
 
-   // JDBCommand ovverrides -----------------------------------------
-   protected String getSQL(Object args) throws Exception {
-      Object[] args2 = (Object[]) args;
-      JDBCCMPFieldBridge[] loadFields = (JDBCCMPFieldBridge[]) (args2[0]);
-      int keysCount = ((Object[]) (args2[1])).length;
-      JDBCCMPFieldBridge[] allFields;
-      StringBuffer sb;
-      boolean canUseLast;
+      if(canUseLast) {
+         for(int i = 0; i < loadFields.length; i++) {
+            if(!loadFields[i].getMetaData().equals(
+                     lastLoadFields[i].getMetaData())) {
 
-      canUseLast = (keysCount == lastKeysCount && loadFields.length == lastLoadFields.length);
-      if (canUseLast) {
-         for (int i = 0; i < loadFields.length; i++) {
-            if (!loadFields[i].getMetaData().equals(lastLoadFields[i].getMetaData())) {
                canUseLast = false;
                break;
             }
          }
       }
-      if (!canUseLast) {
-         // SELECT pkFields, loadFields FROM table WHERE pk1=? AND pk2=? OR pk1=? AND pk2=? ..."
-         sb = new StringBuffer(1024);
-         allFields = new JDBCCMPFieldBridge[pkFields.length + loadFields.length];
-         System.arraycopy(pkFields, 0, allFields, 0, pkFields.length);
-         System.arraycopy(loadFields, 0, allFields, pkFields.length, loadFields.length);
-         StringBuffer sql = new StringBuffer();
-         sb.append("SELECT ").append(SQLUtil.getColumnNamesClause(allFields));
-         sb.append(" FROM ").append(entityMetaData.getTableName());
-         sb.append(" WHERE ");
-         for (int i = 0; i < keysCount; i++) {
-            if (i > 0) {
-               sb.append(" OR ");
+
+      if(!canUseLast) {
+         // SELECT pkFields, loadFields
+         // FROM table 
+         // WHERE pk1=? AND pk2=? OR pk1=? AND pk2=? ...
+
+         StringBuffer sql = new StringBuffer(1024);
+
+         sql.append("SELECT ");
+            sql.append(SQLUtil.getColumnNamesClause(
+                     entity.getJDBCPrimaryKeyFields()));
+            sql.append(SQLUtil.getColumnNamesClause(loadFields));
+            
+         sql.append(" FROM ").append(entity.getTableName());
+
+         sql.append(" WHERE ");
+         for(int i=0; i < keysCount; i++) {
+            if(i > 0) {
+               sql.append(" OR ");
             }
-            sb.append(SQLUtil.getWhereClause(entity.getJDBCPrimaryKeyFields()));
+            sql.append(SQLUtil.getWhereClause(
+                     entity.getJDBCPrimaryKeyFields()));
          }
+         
          lastKeysCount = keysCount;
          lastLoadFields = loadFields;
-         lastFullClause = sb.toString();
+         lastFullClause = sql.toString();
       }
       return lastFullClause;
    }
-
-   // protected -----------------------------------------------------
 }

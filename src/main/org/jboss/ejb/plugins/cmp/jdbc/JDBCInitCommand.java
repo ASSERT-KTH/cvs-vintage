@@ -7,11 +7,7 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
-
-
-
 import org.jboss.ejb.plugins.cmp.InitCommand;
-
 
 /**
  * JDBCInitCommand does nothing.
@@ -22,16 +18,12 @@ import org.jboss.ejb.plugins.cmp.InitCommand;
  * @author <a href="mailto:shevlandj@kpi.com.au">Joe Shevland</a>
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public class JDBCInitCommand implements InitCommand {
-   
-   // Constructors --------------------------------------------------
    public JDBCInitCommand(JDBCStoreManager manager) {
    }
 
-   // InitCommand implementation ---------------------------------
-
-   public void execute() throws Exception {
+   public void execute() {
    }
 }

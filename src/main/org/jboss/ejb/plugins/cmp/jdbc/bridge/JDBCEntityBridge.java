@@ -34,7 +34,6 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
-import org.jboss.logging.Logger;
 import org.jboss.proxy.Proxies;
 import org.jboss.proxy.InvocationHandler;
 
@@ -50,7 +49,7 @@ import org.jboss.proxy.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    protected JDBCEntityMetaData metadata;
@@ -69,22 +68,24 @@ public class JDBCEntityBridge implements EntityBridge {
    protected JDBCCMPFieldBridge[] eagerLoadFields;
    protected ArrayList lazyLoadGroups;
    
-   protected Logger log;
-
    public JDBCEntityBridge(
          JDBCEntityMetaData metadata, 
-         Logger log,
          JDBCStoreManager manager) throws DeploymentException {
 
       this.metadata = metadata;                  
-      this.log = log;
       this.manager = manager;
             
+      // CMP fields
       loadCMPFields(metadata);
+
+      // eager/load groups
       loadEagerLoadFields(metadata);
       loadLazyLoadGroups(metadata);
       
+      // CMR fields
       loadCMRFields(metadata);
+
+      // ejbSelect methods
       loadSelectors(metadata);
    }
 
@@ -227,6 +228,10 @@ public class JDBCEntityBridge implements EntityBridge {
       return metadata;
    }
    
+   public String getTableName() {
+      return metadata.getTableName();
+   }
+
    public Class getPrimaryKeyClass() {
       return metadata.getPrimaryKeyClass();
    }

@@ -17,7 +17,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * committed these list are retrieved and used to update the relation table.   
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 public class RelationData {
    private JDBCCMRFieldBridge leftCMRField;
@@ -27,7 +27,10 @@ public class RelationData {
    public Set removedRelations = new HashSet();
    public Set notRelatedPairs = new HashSet();
    
-   public RelationData(JDBCCMRFieldBridge leftCMRField, JDBCCMRFieldBridge rightCMRField) {
+   public RelationData(
+         JDBCCMRFieldBridge leftCMRField,
+         JDBCCMRFieldBridge rightCMRField) {
+
       this.leftCMRField = leftCMRField;
       this.rightCMRField = rightCMRField;
    }
@@ -46,7 +49,8 @@ public class RelationData {
       
       // only need to bother if neither side has a foreign key
       if(!leftCMRField.hasForeignKey() && !rightCMRField.hasForeignKey()) {
-         RelationPair pair = createRelationPair(leftCMRField, leftId, rightCMRField, rightId);
+         RelationPair pair = createRelationPair(
+               leftCMRField, leftId, rightCMRField, rightId);
          if(removedRelations.contains(pair)) {
             // we were going to remove this relation
             // and now we are adding it.  Just
@@ -71,7 +75,8 @@ public class RelationData {
 
       // only need to bother if neither side has a foreign key
       if(!leftCMRField.hasForeignKey() && !rightCMRField.hasForeignKey()) {
-         RelationPair pair = createRelationPair(leftCMRField, leftId, rightCMRField, rightId);
+         RelationPair pair = createRelationPair(
+               leftCMRField, leftId, rightCMRField, rightId);
          if(addedRelations.contains(pair)) {
             // we were going to add this relation
             // and now we are removing it.  Just
@@ -83,7 +88,8 @@ public class RelationData {
             // added to the remove list. This avoids 
             // an extra 'DELETE FROM...' query.
             // This happend when a object is moved from
-            // one relation to another. See JDBCCMRFieldBridge.createRelationLinks
+            // one relation to another. See 
+            // JDBCCMRFieldBridge.createRelationLinks
             notRelatedPairs.add(pair);
          } else {
             // if pair is related (not not related)
@@ -99,14 +105,18 @@ public class RelationData {
          JDBCCMRFieldBridge leftCMRField, Object leftId, 
          JDBCCMRFieldBridge rightCMRField, Object rightId) {
             
-      if(this.leftCMRField == leftCMRField && this.rightCMRField == rightCMRField) {
+      if(this.leftCMRField == leftCMRField && 
+            this.rightCMRField == rightCMRField) {
+
          return new RelationPair(leftCMRField, leftId, rightCMRField, rightId);
       }
-      if(this.leftCMRField == rightCMRField && this.rightCMRField == leftCMRField) {
+      if(this.leftCMRField == rightCMRField &&
+            this.rightCMRField == leftCMRField) {
+
          return new RelationPair(rightCMRField, rightId, leftCMRField, leftId);
       }   
       throw new EJBException("Error: cmrFields are of wrong type");
    }
 }
-   
+
 

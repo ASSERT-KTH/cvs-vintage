@@ -7,6 +7,8 @@
 package org.jboss.ejb.plugins.cmp.jdbc.bridge;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,13 +30,15 @@ import org.jboss.ejb.plugins.cmp.CMPStoreManager;
 import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
+import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.logging.Logger;
 import org.jboss.security.SecurityAssociation;
 
 /**
- * JDBCCMRFieldBridge a bean relationship. This class only supports relationships
- * between entities managed by a JDBCStoreManager in the same application.
+ * JDBCCMRFieldBridge a bean relationship. This class only supports
+ * relationships between entities managed by a JDBCStoreManager in the same
+ * application.
  *
  * Life-cycle:
  *      Tied to the EntityBridge.
@@ -43,7 +47,7 @@ import org.jboss.security.SecurityAssociation;
  *      One for each role that entity has.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */                            
 public class JDBCCMRFieldBridge implements CMRFieldBridge {
    // ------ Invocation messages ------
@@ -165,6 +169,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       this.manager = manager;
       this.metadata = metadata;
       
+
+      //  Creat the log
       String categoryName = this.getClass().getName() + 
             "." + 
             manager.getMetaData().getName() +
@@ -177,8 +183,8 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
             "-" +
             metadata.getRelatedRole().getCMRFieldName();
       }
-
       this.log = Logger.getLogger(categoryName);
+
 
       //
       // Set handles to the related entity's container, cache, 
@@ -344,6 +350,13 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
    }
 
    /**
+    * Gets the relation metadata.
+    */
+   public JDBCRelationMetaData getRelationMetaData() {
+      return metadata.getRelationMetaData();
+   }
+
+   /**
     * Gets the name of this field.
     */
    public String getFieldName() {
@@ -386,13 +399,6 @@ public class JDBCCMRFieldBridge implements CMRFieldBridge {
       return foreignKeyFields;
    }
    
-   /**
-    * Gets the name of the relation table.
-    */
-   public String getRelationTableName() {
-      return metadata.getRelationMetaData().getTableName();
-   }
-      
    /**
     * The related entity's cmr field for this relationship.
     */

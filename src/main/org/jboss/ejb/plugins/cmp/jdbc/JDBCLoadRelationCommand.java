@@ -7,88 +7,90 @@
 
 package org.jboss.ejb.plugins.cmp.jdbc;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement; 
 import java.sql.ResultSet; 
 import java.util.HashSet; 
 import java.util.Set; 
 import javax.ejb.EJBException; 
+
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge; 
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge; 
+import org.jboss.logging.Logger;
 
 /**
  * Loads relations for a particular entity from a relation table.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
-public class JDBCLoadRelationCommand extends JDBCQueryCommand {
-   // Constructors --------------------------------------------------
-   
+public class JDBCLoadRelationCommand {
+   private JDBCStoreManager manager;
+   private Logger log;
+
    public JDBCLoadRelationCommand(JDBCStoreManager manager) {
-      super(manager, "LoadRelation");
+      this.manager = manager;
+
+      // Create the Log
+      log = Logger.getLogger(
+            this.getClass().getName() + 
+            "." + 
+            manager.getMetaData().getName());
    }
-   
-   // FindEntitiesCommand implementation -------------------------
-   
+
    public Set execute(JDBCCMRFieldBridge cmrField, Object pk) {
-            
-      ExecutionState es = new ExecutionState();
-      es.cmrField = cmrField;
-      es.pk = pk;
+      // get the key fields
+      JDBCCMPFieldBridge[] myKeyFields = cmrField.getTableKeyFields();
+      JDBCCMPFieldBridge[] relatedKeyFields = 
+            cmrField.getRelatedCMRField().getTableKeyFields();
 
-      try {
-         return (Set)jdbcExecute(es);
-      } catch (Exception e) {
-         throw new EJBException("FindByForeignKey failed", e);
-      }
-   }
-
-   protected String getSQL(Object arg) throws Exception {
-      ExecutionState es = (ExecutionState)arg;
-
-      // Create table SQL
+      // generate SQL
       StringBuffer sql = new StringBuffer();
-      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(es.cmrField.getRelatedCMRField().getTableKeyFields()));
-      sql.append(" FROM ").append(es.cmrField.getRelationTableName());
-      sql.append(" WHERE ").append(SQLUtil.getWhereClause(es.cmrField.getTableKeyFields()));
-      
-      return sql.toString();
-   }
+      sql.append("SELECT ").append(SQLUtil.getColumnNamesClause(
+               cmrField.getRelatedCMRField().getTableKeyFields()));
+      sql.append(" FROM ");
+      sql.append(cmrField.getRelationMetaData().getTableName());
+      sql.append(" WHERE ").append(SQLUtil.getWhereClause(
+               cmrField.getTableKeyFields()));
 
-   protected void setParameters(PreparedStatement ps, Object arg) throws Exception {
-      ExecutionState es = (ExecutionState)arg;
-      
-      JDBCCMPFieldBridge[] myKeyFields = es.cmrField.getTableKeyFields();
-      
-      int parameterIndex = 1;
-      for(int i=0; i<myKeyFields.length; i++) {
-         parameterIndex = myKeyFields[i].setPrimaryKeyParameters(ps, parameterIndex, es.pk);
-      }
-   }
-
-   protected Object handleResult(ResultSet rs, Object arg) throws Exception {   
-      ExecutionState es = (ExecutionState)arg;
-
-      Set result = new HashSet();   
-
-      Object[] pkRef = new Object[1];
-      while(rs.next()) {
-         pkRef[0] = null;   
+      Connection con = null;
+      PreparedStatement ps = null;
+      try {
+         // get the connection
+         con = manager.getDataSource().getConnection();
          
-         JDBCCMPFieldBridge[] relatedKeyFields = es.cmrField.getRelatedCMRField().getTableKeyFields();
+         // create the statement
+         ps = con.prepareStatement(sql.toString());
+         
+         // set the parameters
+         int index = 1;
+         for(int i=0; i<myKeyFields.length; i++) {
+            index = myKeyFields[i].setPrimaryKeyParameters(ps, index, pk);
+         }
 
-         int parameterIndex = 1;
-         for(int i=0; i<relatedKeyFields.length; i++) {
-            parameterIndex = relatedKeyFields[i].loadPrimaryKeyResults(rs, parameterIndex, pkRef);
-         }      
-         result.add(pkRef[0]);
+         // execute statement
+         ResultSet rs = ps.executeQuery();
+
+         // load the results
+         Set result = new HashSet();   
+         Object[] pkRef = new Object[1];
+         while(rs.next()) {
+            pkRef[0] = null;   
+            index = 1;
+            for(int i=0; i<relatedKeyFields.length; i++) {
+               index = relatedKeyFields[i].loadPrimaryKeyResults(
+                     rs, index, pkRef);
+            }      
+            result.add(pkRef[0]);
+         }
+
+         // success
+         return result;
+      } catch(Exception e) {
+         throw new EJBException("Load relation by foreign-key failed", e);
+      } finally {
+         JDBCUtil.safeClose(ps);
+         JDBCUtil.safeClose(con);
       }
-
-      return result;
-   }
-
-   private static class ExecutionState {
-      private JDBCCMRFieldBridge cmrField;
-      private Object pk;
    }
 }

@@ -17,7 +17,7 @@ package org.jboss.ejb.plugins.cmp.jdbc.bridge;
  *      One for each entity bean ejbSelect method.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */                            
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import javax.ejb.EJBException;
 import javax.ejb.FinderException;
 import javax.ejb.ObjectNotFoundException;
 import org.jboss.ejb.plugins.cmp.bridge.SelectorBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCQueryCommand;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 
@@ -58,7 +59,9 @@ public class JDBCSelectorBridge implements SelectorBridge {
    public Object execute(Object[] args) throws FinderException {
       Collection retVal = null;
       try {
-         retVal = manager.findEntities(getMethod(), args, null);
+         JDBCQueryCommand query = 
+               manager.getQueryManager().getQueryCommand(getMethod());
+         retVal = query.execute(getMethod(), args, null);
       } catch(FinderException e) {
          throw e;
       } catch(EJBException e) {
