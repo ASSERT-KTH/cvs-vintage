@@ -9,7 +9,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.69 2003/12/31 15:42:39 ejort Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.70 2004/01/12 15:42:41 pilhuhn Exp $ -->
 
 <jbosscmp-jdbc>
 
@@ -578,6 +578,12 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <function-name>count</function-name>
             <function-sql>count(?1)</function-sql>
          </function-mapping>
+         
+		 <function-mapping>
+			 <function-name>locate</function-name>
+			 <function-sql>locate(CAST(?1 as VARCHAR(254)),
+				 CAST(?2 as VaRCHAR(254)),?3)</function-sql>
+		 </function-mapping>
 
          <mapping>
             <java-type>java.lang.Boolean</java-type>
@@ -642,11 +648,19 @@ Mapping proposed by Computer Associates, but does not work with JBoss properly
             <jdbc-type>TIMESTAMP</jdbc-type>
             <sql-type>TIMESTAMP</sql-type>
          </mapping>
+         <!-- this one gives errors with DB2 V8.1
+         		and at least the NET driver
          <mapping>
             <java-type>java.lang.Object</java-type>
             <jdbc-type>JAVA_OBJECT</jdbc-type>
             <sql-type>BLOB(2000)</sql-type>
          </mapping>
+         -->
+      	<mapping>
+            <java-type>java.lang.Object</java-type>
+            <jdbc-type>VARBINARY</jdbc-type>
+            <sql-type>BLOB(2000)</sql-type>
+         </mapping>         
       </type-mapping>
 
       <type-mapping>
