@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997-1999 The Java Apache Project.  All rights reserved.
+ * Copyright (c) 1997-2000 The Java Apache Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,7 +56,7 @@
 /*****************************************************************************
  * Description: jserv_utils.c provides a subset of functions used by jserv   *
  * Author:      Pierpaolo Fumagalli <ianosh@iname.com>                       *
- * Version:     $Revision: 1.2 $                                            *
+ * Version:     $Revision: 1.3 $                                             *
  *****************************************************************************/
 #include "jserv.h"
 
@@ -299,7 +299,7 @@ void jserv_error_var(const char *file, int line, int level, jserv_config *cfg,
             /* Log extended error informations */
             write(cfg->logfilefd,"\n",1);
             for (x=0; x<buflen; x++) write(cfg->logfilefd," ",1);
-            buf=ap_psprintf("File: %s (line=%d)", file, line);
+            buf=ap_psprintf(p, "File: %s (line=%d)", file, line);
 #endif /* ifdef JSERV_DEBUG */
 
             /* Put newline character, cleanup and exit */
