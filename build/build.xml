@@ -44,6 +44,7 @@
 
     <property name="extensions.lib.dir" value="${extensions.dir}/lib"/>
     <property name="extensions.templates.dir" value="${extensions.dir}/templates"/>
+    <property name="extensions.conf.dir" value="${extensions.dir}/conf"/>
 
     <!-- Build classpath -->
     <path id="classpath">
@@ -211,12 +212,11 @@
             </fileset>
         </copy>
 
-        <!-- Copy DTDs. -->
-        <copy todir="${build.dest.scarab}/org/tigris/scarab" filtering="yes">
-          <fileset dir="${src.dtd.dir}">
-            <include name="scarab.dtd"/>
-            <include name="scarab-settings.dtd"/>
-          </fileset>
+        <copy todir="${build.project}/dtd" filtering="yes">
+            <fileset dir="${src.dtd.dir}">
+                <include name="**/scarab.dtd"/>
+                <include name="**/scarab-settings.dtd"/>
+            </fileset>
         </copy>
 
         <!-- Conditionally copy templates -->
@@ -225,6 +225,16 @@
         <copy todir="${build.project.webinf}" filtering="yes">
             <fileset dir="${src.conf.dir}/">
                 <include name="web.xml"/>
+                <include name="server-config.wsdd"/>
+            </fileset>
+        </copy>
+
+        <copy todir="${build.project.webinf}" filtering="yes"
+              overwrite="true"
+              verbose="true">
+            <fileset dir="${extensions.conf.dir}/">
+                <include name="web.xml"/>
+                <include name="server-config.wsdd"/>
             </fileset>
         </copy>
 
