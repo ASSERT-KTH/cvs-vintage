@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: jboss-service.xml,v 1.18 2001/12/10 06:27:48 schaefera Exp $ -->
+<!-- $Id: jboss-service.xml,v 1.19 2001/12/18 21:45:31 mnf999 Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -30,33 +30,7 @@
 	 then there is no need to list the files and it should commented
 -->
 
-  <classpath archives="
-  	 castor.jar,
-	 castor-jdo-plugin.jar,
-	 concurrent.jar,
-	 gnu-regexp.jar,
-	 jaas.jar,
-	 JavaGroups.jar,
-	 jbossha.jar,
-	 jboss-j2ee.jar,
-	 jboss.jar,
-	 jbossmx.jar,
-	 jbosssx.jar,
-	 jcert.jar,
-	 jmxtools.jar,
-	 jndi.jar,
-	 jnet.jar,
-	 jnpserver.jar,
-	 jpl-pattern.jar,
-	 jpl-util.jar,
-	 jsr77.jar,
-	 jsse.jar,
-	 jts.jar,
-	 mail.jar,
-	 tyrex.jar,
-	 tyrex-tm-plugin.jar,
-	 xalan.jar"/>
-
+  <classpath codebase="lib/ext" archives="*"/>
 
   <!-- ==================================================================== -->
   <!-- Class Loading                                                        -->
@@ -209,8 +183,73 @@
 
 
   <!-- ==================================================================== -->
-  <!-- Don't you dare add your custom MBeans here! put them in a sar!       -->
+  <!-- Mail Connection Factory                                              -->
   <!-- ==================================================================== -->
 
+  <mbean code="org.jboss.mail.MailService" name="JBOSS-SYSTEM:service=Mail">
+    <attribute name="JNDIName">Mail</attribute>
+    <attribute name="ConfigurationFile">mail.properties</attribute>
+    <attribute name="User">user_id</attribute>
+    <attribute name="Password">password</attribute>
+  </mbean>
+
+
+
+  <!-- ==================================================================== -->
+  <!-- Invokers to the JMX node                                             -->
+  <!-- ==================================================================== -->
+
+  <!-- RMI/JRMP invoker -->
+  <mbean code="org.jboss.invocation.jrmp.server.JRMPInvoker" 
+   name="JBOSS-SYSTEM:service=invoker,type=jrmp">
+    <attribute name="RMIObjectPort">4444</attribute>
+    <!--<attribute name="RMIClientSocketFactory">custom</attribute>
+    <attribute name="RMIServerSocketFactory">custom</attribute>
+    <attribute name="RMIServerSocketAddr">custom</attribute>-->
+  </mbean>
+  
+  <mbean code="org.jboss.invocation.local.LocalInvoker" 
+   name="JBOSS-SYSTEM:service=invoker,type=local">
+  </mbean>
+  
+  <!-- ==================================================================== -->
+  <!-- ADD YOUR CUSTOM MBEANS HERE IF YOU WANT THEM IN THE STATIC JBOSS     -->
+  <!-- USE A SAR/BARE XML IF YOU WANT DYNAMICITY OF REDEPLOY FOR MBEANS     -->
+  <!-- ==================================================================== -->
 
 </server>
+
+
+
+  <!-- ==================================================================== -->
+  <!-- IF YOU USE NET-BOOT YOU NEED TO SPECIFY THE LIBRARIES THROUGH HTTP   -->
+  <!-- ==================================================================== -->
+
+<!--
+  <classpath archives="
+  	 castor.jar,
+	 castor-jdo-plugin.jar,
+	 concurrent.jar,
+	 gnu-regexp.jar,
+	 jaas.jar,
+	 JavaGroups.jar,
+	 jbossha.jar,
+	 jboss-j2ee.jar,
+	 jboss.jar,
+	 jbossmx.jar,
+	 jbosssx.jar,
+	 jcert.jar,
+	 jmxtools.jar,
+	 jndi.jar,
+	 jnet.jar,
+	 jnpserver.jar,
+	 jpl-pattern.jar,
+	 jpl-util.jar,
+	 jsr77.jar,
+	 jsse.jar,
+	 jts.jar,
+	 mail.jar,
+	 tyrex.jar,
+	 tyrex-tm-plugin.jar,
+	 xalan.jar"/>
+-->
