@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: standardjbosscmp-jdbc.xml,v 1.13 2002/01/04 22:39:46 dsundstrom Exp $ -->
+<!-- $Id: standardjbosscmp-jdbc.xml,v 1.14 2002/01/15 23:17:09 dsundstrom Exp $ -->
 
 <jbosscmp-jdbc>
    
@@ -23,6 +23,12 @@
       <fk-constraint>false</fk-constraint>
       <row-locking>false</row-locking>
       <preferred-relation-mapping>foreign-key</preferred-relation-mapping>
+      <read-ahead>
+         <strategy>on-load</strategy>
+         <page-size>1000</page-size>
+         <eager-load-group>*</eager-load-group>
+      </read-ahead>
+      <list-cache-max>1000</list-cache-max>
    </defaults>
    
    <type-mappings>
@@ -483,8 +489,8 @@
 	 
 	 <mapping>
 	    <java-type>java.lang.Boolean</java-type>
-	    <jdbc-type>TINYINT</jdbc-type>
-	    <sql-type>INT2</sql-type>
+       <jdbc-type>CHAR</jdbc-type>
+       <sql-type>BOOLEAN</sql-type>
 	 </mapping>
 	 <mapping>
 	    <java-type>java.lang.Byte</java-type>
