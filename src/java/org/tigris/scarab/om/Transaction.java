@@ -177,7 +177,7 @@ public class Transaction
         // add data to context
         context.put("issue", issue);
         // FIXME: (JSS) is this needed?
-        context.put("attachment", aAttachment);
+        context.put("attachment", getAttachment());
         context.put("activityList", getActivityList());
         
         String fromUser = "scarab.email.modifyissue";
