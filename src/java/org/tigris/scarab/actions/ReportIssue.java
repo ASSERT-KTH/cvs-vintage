@@ -87,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.148 2002/11/06 23:19:24 jon Exp $
+ * @version $Id: ReportIssue.java,v 1.149 2002/11/13 00:26:16 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -408,28 +408,19 @@ public class ReportIssue extends RequireLoginFirstAction
                     }
         
                     ActivitySet activitySet = null;
+                    Attachment comment = null;
                     try
                     {
-                        // FIXME: see comment a few lines down...
-                        activitySet = issue.setInitialAttributeValues(null, newValues, user);
+                        // grab the comment data
+                        comment = new Attachment();
+                        commentField.setProperty(comment);
+                        activitySet = issue
+                            .setInitialAttributeValues(null, comment, newValues, user);
                     }
                     catch (Exception se)
                     {
                         scarabR.setAlertMessage(se.getMessage());
                         return;
-                    }
-
-                    // save the comment
-                    // FIXME: combine this code with the code above
-                    // so that it is all in one method. there is no reason
-                    // to have this separate.
-                    Attachment comment = new Attachment();
-                    commentField.setProperty(comment);
-                    if ( comment.getData() != null 
-                         && comment.getData().length() > 0) 
-                    {
-                        issue.setInitialAttributeValuesComment(activitySet, comment, 
-                            (ScarabUser)data.getUser());
                     }
                     
                     // set the template to the user selected value
@@ -446,11 +437,11 @@ public class ReportIssue extends RequireLoginFirstAction
                     doRedirect(data, context, templateCode, issue);
                 
                     // send email
-                    if ( summary.length() == 0 ) 
+                    if (summary.length() == 0 && comment != null)
                     {
                         summary = comment.getData();
                     }
-                    if ( summary.length() > 60 ) 
+                    if (summary.length() > 60)
                     {
                         summary = summary.substring(0,60) + "...";
                     }                
@@ -517,7 +508,6 @@ public class ReportIssue extends RequireLoginFirstAction
     public void doRemovefile(RunData data, TemplateContext context)
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         Issue reportingIssue = scarabR.getReportingIssue();
         ParameterParser params = data.getParameters();
@@ -535,7 +525,8 @@ public class ReportIssue extends RequireLoginFirstAction
             } 
         }
         // set any attribute values that were entered before adding the file.
-        setAttributeValues(scarabR.getReportingIssue(), intake, context);
+        setAttributeValues(scarabR.getReportingIssue(), 
+                           getIntakeTool(context), context);
         doGotowizard3(data, context);
     }
     
@@ -546,8 +537,8 @@ public class ReportIssue extends RequireLoginFirstAction
     public void doAddnote(RunData data, TemplateContext context) 
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);        
         ScarabLocalizationTool l10n = getLocalizationTool(context);
+        IntakeTool intake = getIntakeTool(context);        
         if (intake.isAllValid())
         {
             // save the attachment
@@ -568,12 +559,21 @@ public class ReportIssue extends RequireLoginFirstAction
                         searchAndSetTemplate(data, context, 0, "entry,Wizard2.vm");
                         return;
                     }
+                    ActivitySet activitySet = null;
                     for (int i=0; i < issues.size(); i++)
                     {
                         Issue issue = (Issue)issues.get(i);
-                        issue.addNote(attachment, (ScarabUser)data.getUser());
+                        activitySet = 
+                            issue.addNote(activitySet, attachment, 
+                                (ScarabUser)data.getUser());
+                        if (!activitySet.sendEmail(
+                             new ContextAdapter(context), issue))
+                        {
+                            scarabR.setInfoMessage(
+                                l10n.get("NoteAddedButEmailError"));
+                        }
                     }
-                    
+
                     scarabR.setConfirmMessage(l10n.get("CommentAdded"));
                     // if there was only one duplicate issue and we just added
                     // a note to it, assume user is done
