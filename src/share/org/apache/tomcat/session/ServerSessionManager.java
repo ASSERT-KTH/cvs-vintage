@@ -66,14 +66,13 @@ import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.collections.SimplePool;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.helper.*;
-import org.apache.tomcat.core.*;
 import org.apache.tomcat.util.log.*;
 
 /**
  *
  * 
  */
-public final class ServerSessionManager  
+public class ServerSessionManager  
 {
     protected Log loghelper = new Log("tc_log", this);
     
@@ -113,7 +112,11 @@ public final class ServerSessionManager
     public Expirer getExpirer() {
 	return expirer;
     }
-    
+
+    public void setRandomSource( Random r ) {
+	randomSource=r;
+    }
+
     // ------------------------------------------------------------- Properties
 
     public int getMaxActiveSessions() {

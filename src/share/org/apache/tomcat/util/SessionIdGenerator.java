@@ -87,7 +87,6 @@ public class SessionIdGenerator {
      */
     static private int session_count = 0;
     static private long lastTimeVal = 0;
-    static private java.util.Random globalRandomSource;
 
     // MAX_RADIX is 36
     /*
@@ -118,26 +117,8 @@ public class SessionIdGenerator {
     {
         StringBuffer sessionId = new StringBuffer();
 	if( randomSource==null)
-	    randomSource= globalRandomSource;
+	    throw new RuntimeException( "No random source " );
 	
-        if (randomSource == null) {
-            String className = System.
-		getProperty("tomcat.sessionid.randomclass");
-            if (className != null) {
-                try {
-                    Class randomClass = Class.forName(className);
-                    randomSource = (java.util.Random)randomClass.newInstance();
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (randomSource == null)
-                randomSource = new java.security.SecureRandom();
-	    
-	    globalRandomSource = randomSource;
-        }
-
         // random value ..
         long n = randomSource.nextLong();
         if (n < 0) n = -n;
@@ -176,21 +157,21 @@ public class SessionIdGenerator {
         return sessionId.toString();
     }
 
-    static synchronized public String getIdentifier (String jsIdent)
-    {
-	return getIdentifier( globalRandomSource, jsIdent);
-    }
+//     static synchronized public String getIdentifier (String jsIdent)
+//     {
+// 	return getIdentifier( globalRandomSource, jsIdent);
+//     }
     
-    static synchronized public String getIdentifier ()
-    {
-	return getIdentifier( globalRandomSource, null);
-    }
+//     static synchronized public String getIdentifier ()
+//     {
+// 	return getIdentifier( globalRandomSource, null);
+//     }
     
-    public static synchronized String generateId(Random randomSource) {
-        return getIdentifier(randomSource, null);
-    }
+//     public static synchronized String generateId(Random randomSource) {
+//         return getIdentifier(randomSource, null);
+//     }
 
-    public static synchronized String generateId() {
-        return getIdentifier(globalRandomSource, null);
-    }
+//     public static synchronized String generateId() {
+//         return getIdentifier(globalRandomSource, null);
+//     }
 }

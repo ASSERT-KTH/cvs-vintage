@@ -62,6 +62,7 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.Random;
 import org.apache.tomcat.util.*;
 import org.apache.tomcat.util.threads.*;
 import org.apache.tomcat.core.*;
@@ -93,7 +94,11 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 
     int checkInterval = 60;
     int maxActiveSessions = -1;
-    String randomClass=null;
+    String randomClassName=null;
+    // creating a Random is very expensive, make sure we reuse
+    // instances ( keyed by class name - different contexts can use different
+    // random sources 
+    static Hashtable randoms=new Hashtable();
     
     public SimpleSessionStore() {
     }
@@ -114,9 +119,11 @@ public final class SimpleSessionStore  extends BaseInterceptor {
     }
 
     public final void setRandomClass(String randomClass) {
-	this.randomClass=randomClass;
-	System.getProperties().
-	    put(ContextManager.RANDOM_CLASS_PROPERTY, randomClass);
+	this.randomClassName=randomClass;
+	if( null == randoms.get( randomClassName) ) {
+	    randoms.put( randomClassName,
+			 createRandomClass( randomClassName ));
+	}
     }
 
     
@@ -234,7 +241,8 @@ public final class SimpleSessionStore  extends BaseInterceptor {
     }
 
     //--------------------  Tomcat context events --------------------
-    
+
+
     /** Init session management stuff for this context. 
      */
     public void contextInit(Context ctx) throws TomcatException {
@@ -244,6 +252,9 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	if( sm == null ) {
 	    sm=new ServerSessionManager();
 	    ctx.getContainer().setNote( manager_note, sm );
+	    if( randomClassName==null )
+		setRandomClass("java.security.SecureRandom" );
+	    sm.setRandomSource( (Random)randoms.get( randomClassName ));
 	    sm.setMaxInactiveInterval( (long)ctx.getSessionTimeOut() *
 				       60 * 1000 );
 	}
@@ -280,6 +291,20 @@ public final class SimpleSessionStore  extends BaseInterceptor {
 	return (ServerSessionManager)ctx.getContainer().getNote(manager_note);
     }
 
-
-
+    private Random createRandomClass( String s ) {
+	Random randomSource=null;
+	String className = s;
+	if (className != null) {
+	    try {
+		Class randomClass = Class.forName(className);
+		randomSource = (java.util.Random)randomClass.newInstance();
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
+	if (randomSource == null)
+	    randomSource = new java.security.SecureRandom();
+	return randomSource;
+    }
+    
 }
