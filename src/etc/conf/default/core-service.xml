@@ -7,7 +7,7 @@
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
-<!-- $Id: core-service.xml,v 1.1 2001/09/11 02:48:05 dmaplesden Exp $ -->
+<!-- $Id: core-service.xml,v 1.2 2001/09/18 08:25:41 starksm Exp $ -->
 
 <!-- 
    |  This is where you can add and configure your MBeans.
@@ -47,23 +47,10 @@
   <!-- Security                                                             -->
   <!-- ==================================================================== -->
 
-  <!-- Uncomment to enable the sample SRPVerifierStore service
-  <mbean code="org.jboss.security.srp.SRPVerifierStoreService" 
-         name="Security:name=SRPVerifierStoreService">
-    <attribute name="JndiName">SRPDefaultVerifierSource</attribute>
-    <attribute name="StoreFile">SRPVerifierStore.ser</attribute>
+  <mbean code="org.jboss.security.plugins.SecurityConfig"
+	 name="Security:name=SecurityConfig">
+    <attribute name="AuthConf">auth.conf</attribute>
   </mbean>
-  -->
-
-  <!-- Uncomment to enable the SRP login service
-  <mbean code="org.jboss.security.srp.SRPService"
-         name="service:name=SRPService">
-    <attribute name="JndiName">SRPServerInterface</attribute>
-    <attribute name="VerifierSourceJndiName">SRPDefaultVerifierSource</attribute>
-    <attribute name="AuthenticationCacheJndiName">SRPAuthenticationCache</attribute>
-    <attribute name="ServerPort">10099</attribute>
-  </mbean>
-  -->
 
   <!-- JAAS security manager and realm mapping -->
   <mbean code="org.jboss.security.plugins.JaasSecurityManagerService"
@@ -72,14 +59,6 @@
       org.jboss.security.plugins.JaasSecurityManager
     </attribute>
   </mbean>
-
-  <!-- Uncomment to enable the XML implementation of the JAAS policy
-  <mbean code="org.jboss.security.plugins.SecurityPolicyService"
-         name="Security:name=SecurityPolicyService">
-    <attribute name="JndiName">DefaultSecurityPolicy</attribute>
-    <attribute name="PolicyFile">sample_policy.xml</attribute>
-  </mbean>
-  -->
 
   <!-- ==================================================================== -->
   <!-- Transactions                                                         -->
