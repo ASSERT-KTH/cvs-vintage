@@ -77,7 +77,7 @@ import antlr.collections.impl.ASTArray;
  *
  * Version tracking now done with following ID:
  *
- * $Id: JavaRecognizer.java,v 1.3 2001/03/12 13:52:36 toby Exp $
+ * $Id: JavaRecognizer.java,v 1.4 2001/03/13 21:25:35 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -524,9 +524,13 @@ public JavaRecognizer(ParserSharedInputState state) {
 		match(IDENT);
 		ie=interfaceExtends();
 		if ( inputState.guessing==0 ) {
-			getModeller().addInterface(interfaceName.getText(), modifiers, ie, javadoc);
+			getModeller().addInterface(interfaceName.getText(), modifiers,
+			ie, javadoc);
 		}
 		classBlock();
+		if ( inputState.guessing==0 ) {
+			getModeller().popClassifier();
+		}
 	}
 	
 /** A declaration is the creation of a reference or primitive-type variable

@@ -60,7 +60,7 @@ import java.util.*;
  *
  * Version tracking now done with following ID:
  *
- * $Id: java.g,v 1.3 2001/03/12 13:52:36 toby Exp $
+ * $Id: java.g,v 1.4 2001/03/13 21:25:35 marcus Exp $
  *
  * BUG:
  * 		Doesn't like boolean.class!
@@ -350,13 +350,15 @@ superClassClause returns [String superClassName = null]
 // Definition of a Java Interface
 interfaceDefinition![String javadoc, short modifiers]
 {Vector ie=null;}
-	:	"interface" interfaceName:IDENT
-		// it might extend some other interfaces
-		ie=interfaceExtends
-		{getModeller().addInterface(interfaceName.getText(), modifiers, ie, javadoc);}
-		// now parse the body of the interface (looks like a class...)
-		cb:classBlock
-	;
+        :       "interface" interfaceName:IDENT
+                // it might extend some other interfaces
+                ie=interfaceExtends
+                {getModeller().addInterface(interfaceName.getText(), modifiers,
+ie, javadoc);}
+                // now parse the body of the interface (looks like a class...)
+                cb:classBlock
+                {getModeller().popClassifier();}
+        ;
 
 
 // This is the body of a class.  You can have fields and extra semicolons,
