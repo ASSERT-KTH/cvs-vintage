@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.columba.core.io.DiskIO;
 import org.columba.core.io.StreamUtils;
+import org.columba.core.logging.ColumbaLogger;
 import org.columba.mail.folder.DataStorageInterface;
 import org.columba.mail.folder.LocalFolder;
 import org.columba.ristretto.message.io.FileSource;
@@ -90,14 +91,24 @@ public class MHDataStorage implements DataStorageInterface {
 		return file.exists();
 	}
 	
-	public void removeMessage(Object uid) {
+	public void removeMessage(Object uid) throws Exception {
 		File file =
 			new File(
 				folder.getDirectoryFile()
 					+ File.separator
 					+ ((Integer) uid).toString());
-					
-		file.delete();
+		
+		// delete the file containing the message in the file system			
+		if (!file.delete()) {
+			// Could not delete the file - possibly someone has a lock on it
+			ColumbaLogger.log.warn("Could not delete " + 
+					file.getAbsolutePath() + ". Will try to delete it on exit");
+			// ... delete it when Columba exists instead
+			file.deleteOnExit();
+		} else {
+			ColumbaLogger.log.debug(file.getAbsolutePath() + 
+					" deleted successfully");
+		}
 	}
 
 	public int getMessageCount() {
@@ -136,7 +147,6 @@ public class MHDataStorage implements DataStorageInterface {
 					+ File.separator
 					+ ((Integer) uid).toString());
 		
-		
 		return new FileSource(file);
 	}
 
@@ -153,7 +163,7 @@ public class MHDataStorage implements DataStorageInterface {
 			
 			StreamUtils.streamCopy(source, out);
 			
-                        source.close();
+            source.close();
 			out.close();
 	}
 }

@@ -60,8 +60,9 @@ public interface DataStorageInterface {
 	 * Remove message from datastorage
 	 * 
 	 * @param uid			UID of message
+	 * @throws Exception
 	 */
-	public void removeMessage( Object uid );
+	public void removeMessage( Object uid ) throws Exception;
 	
 	/**
 	 * Get message source from data storage
