@@ -2,6 +2,28 @@
 <Server>
     <module name="PasswordPrompter" javaClass="org.apache.tomcat.modules.config.PasswordPrompter" />
     <ContextManager>
-        <PasswordPrompter />
+<!--
+Useful Prompts:
+            
+Http10Connector:
+    promptkeypass="Http10Connector|isSecure|isAttributeSet:keypass|setAttribute:keypass|SSL socket detected, please enter the certificate password:"
+
+    if using JSSE:
+    promptkeystorepass="Http10Connector|isSecure|isAttributeSet:keystorePass|setAttribute:keystorePass|SSL socket detected, please enter the keystore password:"
+
+JDBCRealm
+    promptJDBCuser="JDBCRealm|always|isConnectionNameSet|setConnectionName|"JDBC Realm detected, please enter the connection password:"
+    
+Ajp12Connector
+    promptajp12secret="Ajp12Connector|always|always|setSecret|Please enter shutdown password for Ajp12 connector"
+
+Ajp13Connector
+    promptajp13secret="Ajp13Connector|always|always|setSecret|Please enter shutdown password for Ajp13 connector"
+
+-->
+        <PasswordPrompter debug="0"
+            promptkeypass="Http10Connector|isSecure|isAttributeSet:keypass|setAttribute:keypass|SSL socket detected, please enter the certificate password:"
+            promptJDBCpass="JDBCRealm|always|isConnectionPasswordSet|setConnectionPassword|JDBC Realm detected, please enter the connection password:"
+            />
     </ContextManager>
 </Server>
