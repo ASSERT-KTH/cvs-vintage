@@ -7,6 +7,10 @@
 
   <body>
     <release version="b19" date="in cvs">
+      <action dev="pledbrook" type="fix">
+        SCB1065 - the admin user can now change their own details, although they
+        can no longer change users' passwords.
+      </action>
       <action dev="epugh" type="add">
         Integrated Peter's scarab properties xml file to generate as part of the site docs.
       </action>

@@ -27,14 +27,11 @@
   #set ($lastNameData = $user2.LastName)
   #set ($userNameData = $user2.UserName)
   #set ($emailData = $user2.Email)
-  #set ($passwordData = "")
 #else
   #if ($user2)
     #set ($regGroup = $intake.Register.mapTo($user2))
-    #set ($passwordData = "")
   #else
     #set ($regGroup = $intake.Register.Default)
-    #set ($passwordData = $regGroup.Password)
   #end
 
   #set ($firstNameData = $regGroup.FirstName)
@@ -45,6 +42,16 @@
 
 <div class="axial">
 <table cellpadding="3" cellspacing="2" border="0">
+<tr>
+  ## FIXME: In SCB197, John notes that SecurityService makes user name
+  ## change problematic, as it assumes that a user name defines a user.
+ <th>$l10n.Username</th>
+ <td>
+  #* <input name="$regGroup.UserName.Key" value="$userNameData" type="text" size="25" />
+  #fieldErrorMsg($regGroup.UserName "") *#
+  $userNameData
+ </td>
+</tr>
 <tr>
  <th>*&nbsp;$l10n.FirstName</th>
  <td>
@@ -60,33 +67,10 @@
  </td>
 </tr>
 <tr>
-  ## FIXME: In SCB197, John notes that SecurityService makes user name
-  ## change problematic, as it assumes that a user name defines a user.
- <th>$l10n.Username</th>
- <td>
-  #* <input name="$regGroup.UserName.Key" value="$userNameData" type="text" size="25" />
-  #fieldErrorMsg($regGroup.UserName "") *#
-  $userNameData
- </td>
-</tr>
-<tr>
  <th>*&nbsp;$l10n.Email</th>
  <td>
   <input name="$regGroup.Email.Key" value="$emailData" type="text" size="25" />
   #fieldErrorMsg($regGroup.Email "")
- </td>
-</tr>
-<tr>
- <th>
- #if ($state != "showedituser")*#end&nbsp;$l10n.Password
- </th>
- <td>
-  #if ($state != "showedituser")
-  <input name="$regGroup.Password.Key" value="$passwordData" type="text" size="25" />
-  #fieldErrorMsg($regGroup.Password "")
-  #else
-  <input name="editpassword" value="$passwordData" type="text" size="25" />
-  #end
  </td>
 </tr>
 </table>
