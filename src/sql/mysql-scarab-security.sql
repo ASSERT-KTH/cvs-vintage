@@ -63,12 +63,12 @@ create table xxxx_populate_RolePermission  (
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
-         where TURBINE_ROLE.ROLE_NAME = "Partner"
+         where TURBINE_ROLE.ROLE_NAME = 'Partner'
            and TURBINE_PERMISSION.PERMISSION_NAME in (
-                  "User | Edit Preferences",
-                  "Issue | Attach",
-                  "Issue | Search",
-                  "Issue | View")
+                  'User | Edit Preferences',
+                  'Issue | Attach',
+                  'Issue | Search',
+                  'Issue | View')
 ;
 
 /*
@@ -80,8 +80,8 @@ insert into xxxx_populate_RolePermission
          from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
                TURBINE_ROLE_PERMISSION as ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
-	   and FromRole.ROLE_NAME = "Partner"
-	   and ToRole.ROLE_NAME = "Observer"
+	   and FromRole.ROLE_NAME = 'Partner'
+	   and ToRole.ROLE_NAME = 'Observer'
 ;
 
 insert into TURBINE_ROLE_PERMISSION 
@@ -91,8 +91,8 @@ delete from xxxx_populate_RolePermission;
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
-         where TURBINE_ROLE.ROLE_NAME = "Observer"
-           and TURBINE_PERMISSION.PERMISSION_NAME = "Issue | Enter"
+         where TURBINE_ROLE.ROLE_NAME = 'Observer'
+           and TURBINE_PERMISSION.PERMISSION_NAME = 'Issue | Enter'
 ;
 
 /*
@@ -104,8 +104,8 @@ insert into xxxx_populate_RolePermission
          from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
                TURBINE_ROLE_PERMISSION as ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
-	   and FromRole.ROLE_NAME = "Observer"
-	   and ToRole.ROLE_NAME = "Developer"
+	   and FromRole.ROLE_NAME = 'Observer'
+	   and ToRole.ROLE_NAME = 'Developer'
 ;
 insert into TURBINE_ROLE_PERMISSION 
 	select * from xxxx_populate_RolePermission;
@@ -114,13 +114,11 @@ delete from xxxx_populate_RolePermission;
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
-         where TURBINE_ROLE.ROLE_NAME = "Developer"
+         where TURBINE_ROLE.ROLE_NAME = 'Developer'
            and TURBINE_PERMISSION.PERMISSION_NAME in (
-                "Module | Add",
-                "Issue | Edit",
-                "Issue | Assign",
-                "Issue | Search",
-                "Issue | View")
+                'Module | Add',
+                'Issue | Edit',
+                'Issue | Assign')
 ;
 
 /*
@@ -132,8 +130,8 @@ insert into xxxx_populate_RolePermission
          from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
                TURBINE_ROLE_PERMISSION as ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
-	   and FromRole.ROLE_NAME = "Developer"
-	   and ToRole.ROLE_NAME = "QA"
+	   and FromRole.ROLE_NAME = 'Developer'
+	   and ToRole.ROLE_NAME = 'QA'
 ;
 insert into TURBINE_ROLE_PERMISSION 
 	select * from xxxx_populate_RolePermission;
@@ -148,8 +146,8 @@ insert into xxxx_populate_RolePermission
          from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
                TURBINE_ROLE_PERMISSION as ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
-	   and FromRole.ROLE_NAME = "Developer"
-	   and ToRole.ROLE_NAME = "Project Owner"
+	   and FromRole.ROLE_NAME = 'Developer'
+	   and ToRole.ROLE_NAME = 'Project Owner'
 ;
 insert into TURBINE_ROLE_PERMISSION 
 	select * from xxxx_populate_RolePermission;
@@ -158,12 +156,12 @@ delete from xxxx_populate_RolePermission;
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
-         where TURBINE_ROLE.ROLE_NAME = "Project Owner"
+         where TURBINE_ROLE.ROLE_NAME = 'Project Owner'
            and TURBINE_PERMISSION.PERMISSION_NAME in (
-                "Module | Edit",
-                "Item | Approve",
-                "Item | Delete",
-                "Vote | Manage")
+                'Module | Edit',
+                'Item | Approve',
+                'Item | Delete',
+                'Vote | Manage')
 ;
 
 /*
@@ -175,8 +173,8 @@ insert into xxxx_populate_RolePermission
          from  TURBINE_ROLE as FromRole, TURBINE_ROLE as ToRole,
                TURBINE_ROLE_PERMISSION as ToCopy
          where ToCopy.ROLE_ID = FromRole.ROLE_ID
-	   and FromRole.ROLE_NAME = "Project Owner"
-	   and ToRole.ROLE_NAME = "Root"
+	   and FromRole.ROLE_NAME = 'Project Owner'
+	   and ToRole.ROLE_NAME = 'Root'
 ;
 insert into TURBINE_ROLE_PERMISSION 
 	select * from xxxx_populate_RolePermission;
@@ -185,10 +183,10 @@ delete from xxxx_populate_RolePermission;
 insert into TURBINE_ROLE_PERMISSION (ROLE_ID, PERMISSION_ID)
        select  TURBINE_ROLE.ROLE_ID, TURBINE_PERMISSION.PERMISSION_ID
          from  TURBINE_ROLE, TURBINE_PERMISSION
-         where TURBINE_ROLE.ROLE_NAME = "Root"
+         where TURBINE_ROLE.ROLE_NAME = 'Root'
            and TURBINE_PERMISSION.PERMISSION_NAME in (
-                "Domain | Admin",
-                "Domain | Edit")
+                'Domain | Admin',
+                'Domain | Edit')
 ;
 
 
@@ -201,6 +199,6 @@ INSERT INTO TURBINE_USER_GROUP_ROLE ( USER_ID, GROUP_ID, ROLE_ID )
 SELECT TURBINE_USER.USER_ID, SCARAB_MODULE.MODULE_ID, TURBINE_ROLE.ROLE_ID from 
 TURBINE_USER, SCARAB_MODULE, TURBINE_ROLE 
 WHERE TURBINE_USER.LOGIN_NAME = '@ADMIN_USERNAME@' AND 
-SCARAB_MODULE.MODULE_NAME = 0
+SCARAB_MODULE.MODULE_ID = 0
 AND TURBINE_ROLE.ROLE_NAME in ('turbine_root', 'Root');
 
