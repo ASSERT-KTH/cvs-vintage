@@ -188,13 +188,15 @@ public class Context {
      *  and set up War interceptors.
      *
      *  "Basic" tomcat treats it is a file ( either absolute or relative to
-     *  the CM home ). XXX Make it absolute ??
+     *  the CM home ). 
      *
+     *  If docBase is relative assume it is relative  to the context manager home.
      */
     public void setDocBase( String docB ) {
 	this.docBase=docB;
     }
 
+    
     public String getDocBase() {
 	return docBase;
     }
@@ -635,8 +637,20 @@ public class Context {
     public URL getResource(String rpath) throws MalformedURLException {
         URL url = null;
 
+	String absPath=getDocBase();
+
+	if (FileUtil.isAbsolute( docBase ) )
+	    absPath=docBase;
+	else 
+	    absPath = contextM.getHome() + File.separator + docBase;
+
+	try {
+	    absPath = new File(absPath).getCanonicalPath();
+	} catch (IOException npe) {
+	}
+
 	if ("".equals(rpath))
-	    return getDocumentBase();
+	    return new URL( "file", null, 0, absPath );
 
         if (rpath == null)
 	    return null;
@@ -659,7 +673,6 @@ public class Context {
 	if(mappedPath == null )
 	    mappedPath=lr.getLookupPath();
 
-        URL documentBase = getDocumentBase();
 	try {
 	    String contextHome=new File( docBase ).getCanonicalPath();
 	    String realPath=contextHome + mappedPath;
@@ -671,9 +684,9 @@ public class Context {
 		// in order to support non-file based repositories.
 		return null;
 	    }
-            url=new URL(documentBase.getProtocol(), documentBase.getHost(),
-                        documentBase.getPort(), 
-                        documentBase.getFile() + mappedPath);
+            url=new URL("file", null,
+                        0, 
+                        absPath + mappedPath);
 	    if( debug>9) log( "getResourceURL=" + url + " request=" + lr );
 	    return url;
 	} catch( IOException ex ) {
@@ -706,7 +719,9 @@ public class Context {
 	//	Real Path is the same as PathTranslated for a new request
 
 	Context base=this; // contextM.getContext("");
-	Request req=contextM.createRequest( base , FileUtil.normPath(path) );
+	String normP=FileUtil.normPath(path);
+	
+	Request req=contextM.createRequest( base , normP );
 	contextM.processRequest(req);
 
 	String mappedPath = req.getMappedPath();
@@ -719,13 +734,13 @@ public class Context {
 
 	String realPath= this.getDocBase() + mappedPath;
 
-        // evaluate relative paths relative to the context's home
-        if (!(new File(realPath).isAbsolute()))
-            realPath = contextM.getHome() + "/" + realPath;
+	if (!(new File(realPath).isAbsolute()))
+	    realPath = contextM.getHome() + "/" + realPath;
 
 	// Probably not needed - it will be used on the local FS
 	realPath = FileUtil.patch(realPath);
 
+	if( debug>5) log("Get real path " + path + " " + realPath + " " + normP );
 	return realPath;
     }
 
@@ -897,6 +912,7 @@ public class Context {
     }
 
     /** @deprecated - use getDocBase and URLUtil if you need it as URL
+     *  NOT USED INSIDE TOMCAT - ONLY IN OLD J2EE CONNECTORS !
      */
     public URL getDocumentBase() {
 	if( documentBase == null ) {
@@ -905,17 +921,11 @@ public class Context {
 	    try {
 		String absPath=docBase;
 
-		// detect absolute path
-		if (docBase.startsWith(File.separator) ||
-		    docBase.startsWith("/") ||
-		    (  docBase.length() >= 2 &&
-		       Character.isLetter(docBase.charAt(0)) &&
-		       docBase.charAt(1) == ':')
-		    ) {
+		// detect absolute path ( use the same logic in all tomcat )
+		if (FileUtil.isAbsolute( docBase ) )
 		    absPath=docBase;
-		} else {
+	        else 
 		    absPath = contextM.getHome() + File.separator + docBase;
-		}
 
 		try {
 		    absPath = new File(absPath).getCanonicalPath();

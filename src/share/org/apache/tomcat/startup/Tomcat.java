@@ -104,7 +104,26 @@ public class Tomcat {
 	setConnectorHelper( xh );
 	setLogHelper( xh );
 
-	File f=new File(cm.getHome(), configFile);
+	File f;
+
+	// - if no -f config is specified, use tomcat.home and set ContextManager.home to the same thing.
+	//   The user probably wants the default tomcat.
+	// - if a config file is specified - just use it, it will probably set the contextmanager home.
+	if( configFile==null ) {
+	    String tchome=System.getProperty("tomcat.home");
+	    if( tchome == null ) {
+		System.out.println("No tomcat.home property, you need to set TOMCAT_HOME or add -Dtomcat.home ");
+		// try "." - a better solution would be to just exit.
+		tchome=".";
+	    } 
+	    // Home will be identical to tomcat home if default config is used.
+	    cm.setHome( tchome );
+	    f=new File(tchome, DEFAULT_CONFIG );
+	} else {
+	    // config file is relative to the working directory
+	    // if it doesn't set a home for the context manager, tomcat.home will be used
+	    f=new File(configFile);
+	}
 
 	try {
 	    xh.readXml(f,cm);
@@ -188,7 +207,10 @@ public class Tomcat {
     }
     
     // -------------------- Command-line args processing --------------------
-    String configFile="conf/server.xml";
+    // null means user didn't set one
+    String configFile=null;
+    // relative to TOMCAT_HOME 
+    static final String DEFAULT_CONFIG="conf/server.xml";
     boolean doStop=false;
     
     public static void printUsage() {

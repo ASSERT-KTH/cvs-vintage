@@ -25,16 +25,31 @@ public class WebXmlReader extends BaseInterceptor {
     public WebXmlReader() {
     }
 
-    public void contextInit(Context ctx) {
+    public void contextInit(Context ctx) throws TomcatException {
 	if( ctx.getDebug() > 0 ) ctx.log("XmlReader - init  " + ctx.getPath() + " " + ctx.getDocBase() );
 
 	// read default web.xml
 	try {
             String home = ctx.getContextManager().getHome();
-	    processFile(ctx, home + "/conf/web.xml");
-            File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
-            if (!inf_xml.isAbsolute())
-                inf_xml = new File(home, inf_xml.toString());
+	    // XXX make it configurable
+	    File default_xml=new File( home + "/conf/web.xml" );
+
+	    // try the default ( installation ) 
+	    if( ! default_xml.exists() ) {
+		String tchome=ctx.getContextManager().getTomcatHome();
+		if( tchome != null )
+		    default_xml=new File( tchome + "/conf/web.xml");
+	    }
+	    
+	    if( ! default_xml.exists() )
+		throw new TomcatException("Can't find default web.xml configuration");
+	    
+	    processFile(ctx, default_xml.toString());
+	    File inf_xml = new File(ctx.getDocBase() + "/WEB-INF/web.xml");
+	    // if relative, base it to cm.home
+	    if (!inf_xml.isAbsolute())
+		inf_xml = new File(home, inf_xml.toString());
+
 	    processFile(ctx, inf_xml.toString());
 	    XmlMapper xh=new XmlMapper();
 	} catch (Exception e) {
@@ -48,7 +63,7 @@ public class WebXmlReader extends BaseInterceptor {
 	try {
 	    File f=new File(FileUtil.patch(file));
 	    if( ! f.exists() ) {
-		ctx.log( "File not found, using defaults " + f );
+		ctx.log( "File not found " + f + ", using only defaults" );
 		return;
 	    }
 	    if( ctx.getDebug() > 0 ) ctx.log("Reading " + file );

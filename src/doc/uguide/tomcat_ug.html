@@ -1,11 +1,12 @@
 
 <html>
   <head>
-    <!-- $Id: tomcat_ug.html,v 1.1 2000/03/16 12:19:56 shachor Exp $ -->
+    <!-- $Id: tomcat_ug.html,v 1.2 2000/03/16 20:43:22 costin Exp $ -->
     <!-- Copyright 1999, Apache Software Foundation -->
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     <link rel="stylesheet" href=style.css>
     <title>Tomcat - A Minimalistic Users Guid</title>
+    <!-- Changed by: Costin Manolache, 16-Mar-2000 -->
   </head>
   <body link="#0000ff" vlink="#800080">
     <!-- Banner element, all hail the Project! -->
@@ -222,7 +223,7 @@
       development team provides a few scripts to ease starting and stopping
       Tomcat</p>
 
-    <p><B>Note: The scripts or only a convenient way to start/stop...
+    <p><B>Note: The scripts are only a convenient way to start/stop...
 	You can modify them to customize the CLASSPATH, environment variables
 	such as PATH and LD_LIBRARY_PATH, etc. as long as you generate a
 	correct	command line for Tomcat.</B>
@@ -236,18 +237,18 @@
         <th BGCOLOR="#c0c0c0" WIDTH="75%"> Description </th>
       </tr>
       <tr>
-	<td> startup </td>
-        <td> Starts tomcat in the background </td>
-      </tr>
-      <tr>
-	<td> shutdown </td>
-        <td> Stops tomcat (shutting it down) </td>
-      </tr>
-      <tr>
 	<td> tomcat </td>
         <td> The main script. Set the proper environment (including
 	  CLASSPATH, TOMCAT_HOME and JAVA_HOME) and start Tomcat with the
 	  proper command line parameters. </td>
+      </tr>
+      <tr>
+	<td> startup </td>
+        <td> Starts tomcat in the background. Shortcut for "tomcat start" </td>
+      </tr>
+      <tr>
+	<td> shutdown </td>
+        <td> Stops tomcat (shutting it down). Shortcut for "tomcat stop" </td>
       </tr>
     </table>
 
@@ -392,8 +393,10 @@
 	  The ContextManager has a few attributes that provides it with:
 	  <ol>
 	    <li> Debug level used for logging debug messages. </li>
-	    <li> The location of the home directory (relative to the TOMCAT_HOME) </li>
-	    <li> The name of the temporary working directory. </li>
+	    <li> The base location for webapps/, conf/, logs/ and all defined contexts. 
+	         It is used to start tomcat from directory different from TOMCAT_HOME.
+	    </li>
+	    <li> The name of the working directory. </li>
 	  </ol>
 	</td>
       </tr>
@@ -445,7 +448,25 @@
       </tr>
     </table>
 
-  </p>
+    </p>
+    <h3> Starting tomcat from another directory </h3>
+    
+    <p>By default tomcat will use TOMCAT_HOME/conf/server.xml for configuration. The default 
+       configuration will use TOMCAT_HOME as base for the contexts. </p>
+    <p>You can change this by using "-f /path/to/server.xml" option, and a different server 
+       configuration file and setting the home property of the context manger. You need to 
+       set up the required files inside the home: </p>
+    <ul>
+      <li>A webapps/ directory ( if you create one ) - all war files will be expanded and 
+	all subdirectories added as contexts.</li>
+      <li>conf/ directory - you can store a special web.xml and other configuration files</li>
+      <li>logs/ - all logs will go to this directory instead of the main TOMCAT_HOME/logs/</li>
+      <li>work/ - work directories for the contexts.
+      </li>
+    </ul>
+
+    <p>If the ContextManager.home property in server.xml is relative, it will be relative to
+      the current working directory.</p>
 
     <h3> web.xml </h3>
     <p>
@@ -536,6 +557,12 @@
       it tries to provide a better insight of the configuration instructions. You can find
       additional information the <a href="in http://java.apache.org/jserv/install/index.html">
 	jserv install page </a>.
+    </p>
+
+    <p> When Tomcat starts up it will automatically generate a configuration file for
+        Apache in <code>TOMCAT_HOME/conf/tomcat-apache.conf</code> Most of the time you don't need to 
+        do anything but include this file ( using Include ) in your httpd.conf.
+        If you have special needs, you can use this file as a base for  your customized configuration.
     </p>
 
     <p> The Apache-Tomcat configuration uses Apache core configuration directives

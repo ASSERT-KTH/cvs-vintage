@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: tomcat.sh,v 1.14 2000/03/01 20:32:48 costin Exp $
+# $Id: tomcat.sh,v 1.15 2000/03/16 20:43:26 costin Exp $
 
 # Shell script to start and stop the server
 
@@ -60,13 +60,14 @@ if [ "$TOMCAT_HOME" = "" ] ; then
     exit 1
 fi
 
+
 if [ -z "$JAVA_HOME" ] ;  then
-  JAVACMD=`which java`
-  if [ -z "$JAVACMD" ] ; then
+  JAVA=`which java`
+  if [ -z "$JAVA" ] ; then
     echo "Cannot find JAVA. Please set your PATH."
     exit 1
   fi
-  JAVA_BINDIR=`dirname $JAVACMD`
+  JAVA_BINDIR=`dirname $JAVA`
   JAVA_HOME=$JAVA_BINDIR/..
 fi
 
@@ -83,8 +84,10 @@ for i in ${TOMCAT_HOME}/lib/* ; do
   CLASSPATH=${CLASSPATH}:$i
 done
 
-CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
-
+if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
+   # We are probably in a JDK1.2 environment
+   CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+fi
 
 # Backdoor classpath setting for development purposes when all classes
 # are compiled into a /classes dir and are not yet jarred.
@@ -98,23 +101,13 @@ fi
 
 export CLASSPATH
 
-if [ ! -f conf/server.xml ] ; then 
-   if [ "$2" = "" ] ; then
-     # Probably we are in a wrong directory, use tomcat_home
-     # If arguments are passed besides start/stop, probably a -f was used,
-     # or the user knows what he's doing
-     echo cd ${TOMCAT_HOME} 
-     cd ${TOMCAT_HOME}
-   fi
-fi
-
 # We start the server up in the background for a couple of reasons:
 #   1) It frees up your command window
 #   2) You should use `stop` option instead of ^C to bring down the server
 if [ "$1" = "start" ] ; then 
   shift 
   echo Using classpath: ${CLASSPATH}
-  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME} org.apache.tomcat.startup.Tomcat "$@" &
+  $JAVACMD  -Dtomcat.home=${TOMCAT_HOME}  org.apache.tomcat.startup.Tomcat "$@" &
 #   $JAVACMD org.apache.tomcat.shell.Startup "$@" &
 
 elif [ "$1" = "stop" ] ; then 

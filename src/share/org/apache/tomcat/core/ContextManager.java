@@ -420,27 +420,46 @@ public class ContextManager {
     /** The root directory of tomcat
      */
     public String getHome() {
-	if( home == null ) setHome(".");
+	if(home!=null) return home;
+
+	// If none defined, assume tomcat.home is used as base.
+	String homeS=System.getProperty("tomcat.home");
+	if( homeS != null )
+	    setHome( homeS );
+	else
+	    setHome("."); // try current dir - we should throw an exception
 	return home;
     }
     
+    /** Tomcat installation directory, where libraries and default files are located
+     */
+    public String getTomcatHome() {
+	return System.getProperty("tomcat.home");
+    }
+
     /** 
-     * Set installation directory.  If path specified is relative, evaluate
-     * it relative to the tomcat.home property if available, otherwise, 
+     * Set installation directory.  If path specified is relative, 
      * evaluate it relative to the current working directory.
+     *
+     * This is used for the home attribute and it's used to find webapps
+     * and conf. Note that libs are probably already configured, so it will
+     * not affect that.
      */
     public void setHome(String home) {
         File homeFile = new File(home);
-        if (!homeFile.isAbsolute()) {
-            String tomcat_home = System.getProperty("tomcat.home");
-            if (tomcat_home != null) homeFile = new File(tomcat_home, home); 
-        }
+
+	// change it if you want relative home based on tomcat.home
+	//         if (!homeFile.isAbsolute()) {
+	//             String tomcat_home = System.getProperty("tomcat.home");
+	//             if (tomcat_home != null) homeFile = new File(tomcat_home, home); 
+	//         }
         
         try {
             this.home = homeFile.getCanonicalPath();
         } catch (IOException ioe) {
             this.home = home; // oh well, we tried...
         }
+	log( "Setting home to " + this.home );
     }
     
     /**

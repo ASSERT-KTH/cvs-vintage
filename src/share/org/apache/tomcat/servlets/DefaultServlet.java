@@ -86,16 +86,16 @@ public class DefaultServlet extends HttpServlet {
     public void init() throws ServletException {
 	contextF = getServletContext();
 	context = ((ServletContextFacade)getServletContext()).getRealContext();
-
+	
 	// doesn't change - set it in init!
 	docBase = context.getDocBase();
         if (! docBase.endsWith("/")) {
             docBase += "/";
         }
 
-        // ensure docBase relative to home
-        if (!(new File(docBase)).isAbsolute())
-            docBase = context.getContextManager().getHome() + "/" + docBase;
+	// ensure docBase relative to home
+	if (!(new File(docBase)).isAbsolute())
+	    docBase = context.getContextManager().getHome() + "/" + docBase;
 
 	// debug 
 	String dbg=getServletConfig().getInitParameter("debug");

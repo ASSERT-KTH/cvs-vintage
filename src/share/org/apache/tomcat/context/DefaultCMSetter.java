@@ -82,10 +82,10 @@ public class DefaultCMSetter extends BaseInterceptor {
     }
 
     public void engineInit(ContextManager cm) throws TomcatException {
-	// check if we are in the right directory
-	File f=new File( cm.getHome() + "/conf/web.xml");
+	// check if we have the right tomcat home directory
+	File f=new File( cm.getTomcatHome() + "/conf/web.xml");
 	if( ! f.exists() ) {
-	    throw new TomcatException( "Wrong home " + cm.getHome());
+	    throw new TomcatException( "Wrong tomcat home " + cm.getHome());
 	}
     }
     

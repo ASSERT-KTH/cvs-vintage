@@ -1,7 +1,7 @@
 /*
- * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.4 2000/02/08 23:52:49 costin Exp $
- * $Revision: 1.4 $
- * $Date: 2000/02/08 23:52:49 $
+ * $Header: /tmp/cvs-vintage/tomcat/src/share/org/apache/tomcat/util/Attic/FileUtil.java,v 1.5 2000/03/16 20:43:26 costin Exp $
+ * $Revision: 1.5 $
+ * $Date: 2000/03/16 20:43:26 $
  *
  * ====================================================================
  *
@@ -166,6 +166,19 @@ public class FileUtil {
         return patchPath;
     }
 
+    public static boolean isAbsolute( String path ) {
+	// normal file
+	if( path.startsWith("/" ) ) return true;
+
+	if( path.startsWith(File.separator ) ) return true;
+
+	// win c:
+	if (path.length() >= 3 &&
+            Character.isLetter(path.charAt(0)) &&
+            path.charAt(1) == ':')
+	    return true;
+	return false;
+    }
     
     // Probably not needed, original code used by Context.getRealPath()
     // XXX Find if it is duplicated, merge with the other "path" functions
