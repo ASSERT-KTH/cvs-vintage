@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.EntityBean;
+import javax.ejb.EJBObject;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
 
@@ -44,7 +45,7 @@ import org.jboss.management.j2ee.TimeStatistic;
  * @author <a href="mailto:danch@nvisia.com">Dan Christopherson</a>
  * @author <a href="mailto:bill@burkecentral.com">Bill Burke</a>
  * @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
- * @version $Revision: 1.37 $
+ * @version $Revision: 1.38 $
  *
  * Revisions:
  * 20010621 Bill Burke: removed loadEntities call because CMP read-ahead is now
@@ -109,7 +110,7 @@ public class CMPPersistenceManager
       if (con!= null) store.setContainer(con);
    }
 
-   public void init()
+   public void create()
       throws Exception
    {
       // The common EJB methods
@@ -130,7 +131,7 @@ public class CMPPersistenceManager
          createMethodCache( methods );
       }
       
-      store.init();
+      store.create();
    }
 
    /**
@@ -243,7 +244,7 @@ public class CMPPersistenceManager
       // Create EJBObject
       if (con.getContainerInvoker() != null)
       {
-         ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
       }
       if (con.getLocalHomeClass() != null)
       {

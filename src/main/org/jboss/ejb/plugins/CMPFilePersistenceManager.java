@@ -38,7 +38,7 @@ import org.jboss.util.FinderResults;
 /**
  * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
  * @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * <p><b>20010801 marc fleury:</b>
  * <ul>
  * <li>- insertion in cache upon create in now done in the instance interceptor
@@ -73,7 +73,7 @@ public class CMPFilePersistenceManager
       con = (EntityContainer)c;
    }
    
-   public void init()
+   public void create()
       throws Exception
    {
       String ejbName = con.getBeanMetaData().getEjbName();

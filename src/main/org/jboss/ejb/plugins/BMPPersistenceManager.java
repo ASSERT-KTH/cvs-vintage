@@ -21,6 +21,7 @@ import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
 import javax.ejb.EJBException;
+import javax.ejb.EJBObject;
 
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EntityContainer;
@@ -39,7 +40,7 @@ import org.apache.log4j.Category;
 *  @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
 *  @author <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
 *  @author <a href="mailto:andreas.schaefer@madplanet.com">Andreas Schaefer</a>
-*  @version $Revision: 1.33 $
+*  @version $Revision: 1.34 $
 *
 *  <p><b>Revisions:</b>
 *  <p><b>20010709 andreas schaefer:</b>
@@ -94,7 +95,7 @@ implements EntityPersistenceManager
       con = (EntityContainer)c;
    }
 
-   public void init()
+   public void create()
    throws Exception
    {
       ejbLoad = EntityBean.class.getMethod("ejbLoad", new Class[0]);
@@ -252,7 +253,7 @@ implements EntityPersistenceManager
          // Create EJBObject
            // Create EJBObject
         if (con.getContainerInvoker() != null)
-         ctx.setEJBObject(con.getContainerInvoker().getEntityEJBObject(cacheKey));
+         ctx.setEJBObject((EJBObject) con.getContainerInvoker().getEntityEJBObject(cacheKey));
         if (con.getLocalHomeClass() != null)
          ctx.setEJBLocalObject(con.getLocalContainerInvoker().getEntityEJBLocalObject(cacheKey));
 
