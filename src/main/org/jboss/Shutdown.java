@@ -36,7 +36,7 @@ import org.jnp.interfaces.NamingContext;
  * A JMX client that uses an MBeanServerConnection to shutdown a remote JBoss
  * server.
  *
- * @version <tt>$Revision: 1.19 $</tt>
+ * @version <tt>$Revision: 1.20 $</tt>
  * @author  <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @author  Scott.Stark@jboss.org
  */
@@ -55,7 +55,7 @@ public class Shutdown
       System.out.println("usage: " + PROGRAM_NAME + " [options] <operation>");
       System.out.println();
       System.out.println("options:");
-      System.out.println("    -h, --help                Show this help message");
+      System.out.println("    -h, --help                Show this help message (default)");
       System.out.println("    -D<name>[=<value>]        Set a system property");
       System.out.println("    --                        Stop processing options");
       System.out.println("    -s, --server=<url>        Specify the JNDI URL of the remote server");
@@ -65,9 +65,10 @@ public class Shutdown
       System.out.println("    -p, --password=<name>     Specify the password for authentication");
       System.out.println();
       System.out.println("operations:");
-      System.out.println("    -S, --shutdown            Shutdown the server (default)");
+      System.out.println("    -S, --shutdown            Shutdown the server");
       System.out.println("    -e, --exit=<code>         Force the VM to exit with a status code");
       System.out.println("    -H, --halt=<code>         Force the VM to halt with a status code");
+      System.out.println();
    }
 
    public static void main(final String[] args) throws Exception
