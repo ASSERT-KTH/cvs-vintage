@@ -1,0 +1,45 @@
+# -----------------------------------------------------------------------------
+# build.properties.sample
+#
+# This is an example "build.properties" file, used to customize building Tomcat
+# for your local environment.  It defines the location of all external
+# modules that Tomcat depends on.  Copy this file to "build.properties"
+# in the top-level source directory, and customize it as needed.
+#
+# $Id: build.properties.sample,v 1.1 2002/04/08 01:56:51 larryi Exp $
+# -----------------------------------------------------------------------------
+
+
+# ----- Java API for XML Processing (JAXP), v1.0.1 or later -----
+jaxp.home=./bin
+jaxp.lib=${jaxp.home}
+
+
+# ----- Jakarta Tomcat Connectors path -----
+jakarta-tomcat-connectors=../jakarta-tomcat-connectors
+
+
+# ----- Tomcat Tomcat Connectors Util -----
+tomcat-util.jar=${jakarta-tomcat-connectors}/util/build/lib/tomcat-util.jar
+
+
+# ----- (optional) Java Secure Sockets Extension (JSSE), v1.0.2 or later -----
+jsse.home=../jsse1.0.2
+jsse.lib=${jsse.home}/lib
+
+
+# ----- (optional) PureTLS Extension -----
+puretls.home=../puretls-0.9b2
+puretls.lib=${puretls.home}/build
+puretls.jar=${puretls.lib}/puretls.jar
+
+
+# ----- (optional) Jakarta Tomcat Connectors Http11 -----
+jtc.http11.home=${jakarta-tomcat-connectors}/http11
+jtc.http11.lib=${jtc.http11.home}/build/lib
+
+
+# ----- (optional) Jakarta Commons Logging (required by Http11) -----
+commons-logging.home=../commons-logging-1.0
+commons-logging.lib=${commons-logging.home}
+commond-logging.jar=${commons-logging.lib}/commons-logging.jar
