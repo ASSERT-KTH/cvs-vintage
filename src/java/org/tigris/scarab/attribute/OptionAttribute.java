@@ -49,62 +49,48 @@ import java.util.Vector;
 import java.util.Hashtable;
 
 import org.apache.torque.om.ObjectKey;
+import org.apache.turbine.util.Log;
 
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.AttributeOption;
+import org.tigris.scarab.om.RModuleOption;
+
 
 /**
  * this is a superclass for attributes which use option lists (SelectOne & Voted)
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.12 $ $Date: 2001/09/11 03:41:45 $
+ * @version $Revision: 1.13 $ $Date: 2001/09/13 17:35:17 $
  */
 public abstract class OptionAttribute extends AttributeValue
 {
-    private Vector options; // vector of Option
-    private Hashtable optionsById;
-    private Hashtable optionsByNum;
-    /** Creates new SelectAttribute */
+    public void setValue(String value)
+    {
+        // would throw exception if allowed, but will throw and log to 
+        // help track down error
+        try
+        {
+            throw new Exception(
+                "setValue was called on an OptionAttribute");
+        }
+        catch (Exception e)
+        {
+            Log.error(e);
+        }
+    }
+
+    public void setOption(RModuleOption option)
+        throws Exception
+    {
+        setOptionIdOnly(option.getOptionId());
+        setValueOnly(option.getDisplayValue());
+    }
 
     public Object loadResources() throws Exception
     {
-        /*
-        Criteria crit = new Criteria()
-            .addOrderByColumn(AttributeOptionPeer.WEIGHT);
-        
-        Vector opts = getAttribute().getAttributeOptions(crit);
-
-        Hashtable optsById = new Hashtable(opts.size());
-        Hashtable optsByNum = new Hashtable(opts.size());
-        
-        for (int i=0; i<opts.size(); i++)
-        {
-            AttributeOption opt = (AttributeOption)opts.get(i);
-            optsById.put(opt.getPrimaryKey(), opt);
-            optsByNum.put(new Integer(opt.getWeight()), opt);
-        }
-        Object[] res = {opts, optsById, optsByNum};
-        
-        return res;
-        */
         return null;
     }
 
-    public AttributeOption getOptionById(ObjectKey id)
-    {
-        return (AttributeOption)optionsById.get(id);
-    }
-    
-    public AttributeOption getOptionByNum(int numericValue)
-    {
-        return (AttributeOption)optionsByNum
-            .get(new Integer(numericValue));
-    }
-    
-    public Vector getOptions()
-    {
-        return options;
-    }
     /** this method is used by an Attribute instance
      * to obtain specific resources such as option list for SelectOneAttribute.
      * It may, for example put them into instance variables.
@@ -116,12 +102,6 @@ public abstract class OptionAttribute extends AttributeValue
      */
     public void setResources(Object resources)
     {
-        /*
-        Object[] res = (Object[])resources;
-        options = (Vector)res[0];
-        optionsById = (Hashtable)res[1];
-        optionsByNum = (Hashtable)res[2];
-        */
     }
 
 }

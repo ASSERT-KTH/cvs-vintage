@@ -53,7 +53,7 @@ import java.util.Vector;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.7 $ $Date: 2001/09/11 03:41:45 $
+ * @version $Revision: 1.8 $ $Date: 2001/09/13 17:35:17 $
  */
 public class VotedAverageAttribute extends VotedAttribute 
 {
@@ -61,11 +61,11 @@ public class VotedAverageAttribute extends VotedAttribute
      * This method calculates result of the vote
      */
     public String computeResult()
+        throws Exception
     {
         int total = 0;
         int count = 0;
         Enumeration votes = getVotes().elements();
-        Vector opts = getOptions();
         while (votes.hasMoreElements())
         {
             total += ((AttributeOption)votes.nextElement()).getWeight();
@@ -77,7 +77,8 @@ public class VotedAverageAttribute extends VotedAttribute
         }
         else
         {
-            return getOptionByNum(total/count).getName();
+            return AttributeOption.getInstance(getAttribute(), total/count)
+                .getName();
         }
     }
 }

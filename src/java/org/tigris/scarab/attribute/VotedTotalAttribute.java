@@ -55,7 +55,7 @@ import java.util.Vector;
  *  This is a Bugzilla-style attribute. The result is the sum of all votes.
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.6 $ $Date: 2001/09/11 03:41:45 $
+ * @version $Revision: 1.7 $ $Date: 2001/09/13 17:35:17 $
  */
 public class VotedTotalAttribute extends VotedAttribute
 {
@@ -67,7 +67,6 @@ public class VotedTotalAttribute extends VotedAttribute
     {
         int total = 0;
         Enumeration votes = getVotes().elements();
-        Vector opts = getOptions();
         while (votes.hasMoreElements())
         {
             total += ((AttributeOption)votes.nextElement()).getWeight();
@@ -75,3 +74,4 @@ public class VotedTotalAttribute extends VotedAttribute
         return Integer.toString(total);
     }
 }
+

@@ -46,6 +46,7 @@ package org.tigris.scarab.attribute;
  * individuals on behalf of Collab.Net.
  */ 
 
+import org.tigris.scarab.om.AttributeOption;
 import org.tigris.scarab.om.AttributeVote;
 import org.tigris.scarab.om.AttributeVotePeer;
 import org.tigris.scarab.om.AttributeValuePeer;
@@ -60,7 +61,7 @@ import java.util.Vector;
 /**
  *
  * @author <a href="mailto:fedor.karpelevitch@home.com">Fedor</a>
- * @version $Revision: 1.13 $ $Date: 2001/08/02 07:11:37 $
+ * @version $Revision: 1.14 $ $Date: 2001/09/13 17:35:17 $
  */
 public abstract class VotedAttribute extends OptionAttribute
 {
@@ -83,7 +84,7 @@ public abstract class VotedAttribute extends OptionAttribute
         if ( getIssue().getPrimaryKey() != null) 
         {
             
-        
+            //note this code is old and has never been used
         int i;
         votes = new Hashtable();
         AttributeVote vote;
@@ -93,9 +94,8 @@ public abstract class VotedAttribute extends OptionAttribute
         for (i=0; i<res.size(); i++)
         {
             vote = (AttributeVote)res.get(i);
-            votes.put(vote.getUserId().toString(), 
-                      getOptionById(new NumberKey(
-                      String.valueOf(vote.getOptionId()))));
+            votes.put(vote.getUserId().toString(), AttributeOption
+                      .getInstance(vote.getOptionId()));
         }
         Criteria crit1 = new Criteria()
             .add(AttributeValuePeer.VALUE_ID, getValueId());
@@ -111,7 +111,7 @@ public abstract class VotedAttribute extends OptionAttribute
      *  This method calculates result of the vote
      *
      */
-    protected abstract String computeResult();
+    protected abstract String computeResult() throws Exception;
     
     /** Updates both InternalValue and Value of the Attribute object and saves them
      * to database

@@ -49,14 +49,18 @@ package org.tigris.scarab.attribute;
 // JDK Stuff
 import java.util.List;
 
+import org.apache.turbine.util.Log;
+
 // Scarab Stuff
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.services.module.ModuleEntity;
+import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.services.user.UserManager;
 
 /**
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Revision: 1.11 $ $Date: 2001/09/13 01:08:52 $
+ * @version $Revision: 1.12 $ $Date: 2001/09/13 17:35:17 $
  */
 public class UserAttribute extends AttributeValue
 {
@@ -68,6 +72,38 @@ public class UserAttribute extends AttributeValue
     public String getUserName()
     {
         return getValue();
+    }
+
+    public void setUser(ScarabUser user)
+        throws Exception
+    {
+        setValueOnly(user.getUserName());
+        setUserIdOnly(user.getUserId());
+    }
+
+    public void setValue(String username)
+  
+    {
+        // can't throw an exception, so just log it
+        try
+        {
+            if ( username != null ) 
+            {
+                ScarabUser user = UserManager.getInstance(username);
+                setUserIdOnly(user.getUserId());
+            }
+            else
+            {
+                // any reason to set a username to null, once its already set?
+                setUserIdOnly(null);
+            }
+            
+            setValueOnly(username);
+        }
+        catch (Exception e)
+        {
+            Log.error(e);
+        }
     }
 
     public void init() throws Exception
@@ -89,8 +125,4 @@ public class UserAttribute extends AttributeValue
     {
         return null;
     }
-
-
 }
-
-
