@@ -791,9 +791,8 @@ Prints out a date entry form.
 #macro(entryTemplateAndAttributes $issue $moduleAttributeGroups $buttonName $buttonEvent $showTemplates)
 #set ($module = $issue.Module)
 #set ($issueType = $issue.IssueType)
-#set ($magSize = $moduleAttributeGroups.size())
 
-#if ($magSize == 0)
+#if ($moduleAttributeGroups.isEmpty())
 <h3>$title</h3>
 <p><em>$l10n.NoAttributesDefinedForIssueType</em></p>
 #else

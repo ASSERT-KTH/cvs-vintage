@@ -143,11 +143,12 @@
 </table>
 </div>
 
-
+#if (!$moduleAttributeGroups.isEmpty())
 <div class="functnbar2">
 <input type="submit" value="$l10n.SubmitIssue"  name="eventSubmit_doEnterissue" />&#160;
 <input type="reset" value="$l10n.Reset" name="eventSubmit_doRefresh" />&#160;
 </div>
+#end
 
 $intake.declareGroups()
 </form>
