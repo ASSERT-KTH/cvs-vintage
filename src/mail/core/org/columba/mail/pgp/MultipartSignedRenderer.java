@@ -15,13 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Vector;
-
 import org.columba.core.io.CloneStreamMaster;
+
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
+
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.InputStreamMimePart;
@@ -29,9 +27,16 @@ import org.columba.ristretto.message.MimeHeader;
 import org.columba.ristretto.message.MimePart;
 import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.SequenceInputStream;
+
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import java.util.Vector;
+
 
 public class MultipartSignedRenderer extends MimePartRenderer {
     private MimeHeader signatureHeader;
@@ -41,15 +46,15 @@ public class MultipartSignedRenderer extends MimePartRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.ristretto.composer.MimePartRenderer#getRegisterString()
-     */
+ * @see org.columba.ristretto.composer.MimePartRenderer#getRegisterString()
+ */
     public String getRegisterString() {
         return "multipart/signed";
     }
 
     /* (non-Javadoc)
-     * @see org.columba.ristretto.composer.MimePartRenderer#render(org.columba.ristretto.message.StreamableMimePart)
-     */
+ * @see org.columba.ristretto.composer.MimePartRenderer#render(org.columba.ristretto.message.StreamableMimePart)
+ */
     public InputStream render(MimePart part) throws Exception {
         Vector streams = new Vector((2 * 2) + 3);
 
@@ -87,7 +92,8 @@ public class MultipartSignedRenderer extends MimePartRenderer {
         StreamableMimePart signatureMimePart;
 
         signatureMimePart = null;
-/*
+
+        /*
         PGPController controller = PGPController.getInstance();
 
         signatureMimePart = new InputStreamMimePart(signatureHeader,
@@ -98,17 +104,21 @@ public class MultipartSignedRenderer extends MimePartRenderer {
         */
         JSCFController controller = JSCFController.getInstance();
         JSCFConnection con = controller.getConnection();
+
         //con.getProperties().put("USERID", pgpItem.get("id"));
         PGPPassChecker passCheck = PGPPassChecker.getInstance();
         boolean check = passCheck.checkPassphrase(con);
+
         if (!check) {
             throw new WrongPassphraseException();
         }
+
         JSCFStatement stmt = con.createStatement();
         JSCFResultSet res = stmt.executeSign(signedPartCloneModel.getClone());
-        
-        signatureMimePart = new InputStreamMimePart(signatureHeader, res.getResultStream());
-        
+
+        signatureMimePart = new InputStreamMimePart(signatureHeader,
+                res.getResultStream());
+
         streams.add(MimeTreeRenderer.getInstance().renderMimePart(signatureMimePart));
 
         // Create the closing boundary

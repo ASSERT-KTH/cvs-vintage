@@ -15,15 +15,11 @@
 //All Rights Reserved.
 package org.columba.mail.pgp;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Vector;
-
-import javax.swing.JOptionPane;
-
 import org.columba.core.io.StreamUtils;
+
 import org.columba.mail.config.PGPItem;
 import org.columba.mail.message.PGPMimePart;
+
 import org.columba.ristretto.composer.MimePartRenderer;
 import org.columba.ristretto.composer.MimeTreeRenderer;
 import org.columba.ristretto.message.InputStreamMimePart;
@@ -34,9 +30,17 @@ import org.columba.ristretto.message.StreamableMimePart;
 import org.columba.ristretto.message.io.CharSequenceSource;
 import org.columba.ristretto.message.io.SequenceInputStream;
 import org.columba.ristretto.message.io.Source;
+
 import org.waffel.jscf.JSCFConnection;
 import org.waffel.jscf.JSCFResultSet;
 import org.waffel.jscf.JSCFStatement;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 
 public class MultipartEncryptedRenderer extends MimePartRenderer {
@@ -52,15 +56,15 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.columba.ristretto.composer.MimePartRenderer#getRegisterString()
-     */
+ * @see org.columba.ristretto.composer.MimePartRenderer#getRegisterString()
+ */
     public String getRegisterString() {
         return "multipart/encrypted";
     }
 
     /* (non-Javadoc)
-     * @see org.columba.ristretto.composer.MimePartRenderer#render(org.columba.ristretto.message.StreamableMimePart)
-     */
+ * @see org.columba.ristretto.composer.MimePartRenderer#render(org.columba.ristretto.message.StreamableMimePart)
+ */
     public InputStream render(MimePart part) throws Exception {
         Vector streams = new Vector((2 * 2) + 3);
 
@@ -90,21 +94,27 @@ public class MultipartEncryptedRenderer extends MimePartRenderer {
 
         StreamableMimePart encryptedPart;
         encryptedPart = null;
-        
+
         /*
-        JSCFDriverManager.registerJSCFDriver(new GPGDriver());
-        JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
-        */
+JSCFDriverManager.registerJSCFDriver(new GPGDriver());
+JSCFConnection con = JSCFDriverManager.getConnection("jscf:gpg:"+pgpItem.get("path"));
+*/
         JSCFController controller = JSCFController.getInstance();
         JSCFConnection con = controller.getConnection();
+
         //con.getProperties().put("USERID", pgpItem.get("id"));
         JSCFStatement stmt = con.createStatement();
-        JSCFResultSet res = stmt.executeEncrypt(MimeTreeRenderer.getInstance() .renderMimePart(part.getChild(0)), 
-                pgpItem.get("recipients"));
+        JSCFResultSet res = stmt.executeEncrypt(MimeTreeRenderer.getInstance()
+                                                                .renderMimePart(part.getChild(
+                        0)), pgpItem.get("recipients"));
+
         if (res.isError()) {
-            JOptionPane.showMessageDialog(null, StreamUtils.readInString(res.getErrorStream()).toString());
+            JOptionPane.showMessageDialog(null,
+                StreamUtils.readInString(res.getErrorStream()).toString());
         }
-        encryptedPart = new InputStreamMimePart(encryptedHeader,res.getResultStream());
+
+        encryptedPart = new InputStreamMimePart(encryptedHeader,
+                res.getResultStream());
         streams.add(MimeTreeRenderer.getInstance().renderMimePart(encryptedPart));
 
         // Create the closing boundary

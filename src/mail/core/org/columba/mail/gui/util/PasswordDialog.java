@@ -107,21 +107,21 @@ public class PasswordDialog implements ActionListener {
     }
 
     /**
-     * Make dialog visible.
-     * <p>
-     * Note that the emailAddress parameter, needs to be really unique. I
-     * therefore suggest a combination between host and login name, instead.
-     * This way user can see his login name. -> changed method signature!
-     *
-     * @param login
-     *            login name
-     * @param host
-     *            host name
-     * @param password
-     *            password
-     * @param save
-     *            should the password be saved?
-     */
+ * Make dialog visible.
+ * <p>
+ * Note that the emailAddress parameter, needs to be really unique. I
+ * therefore suggest a combination between host and login name, instead.
+ * This way user can see his login name. -> changed method signature!
+ *
+ * @param login
+ *            login name
+ * @param host
+ *            host name
+ * @param password
+ *            password
+ * @param save
+ *            should the password be saved?
+ */
     public void showDialog(String login, String host, String password,
         boolean save) {
         this.user = login;

@@ -15,15 +15,17 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
+import org.columba.core.action.AbstractColumbaAction;
+
+import org.columba.mail.config.AccountItem;
+import org.columba.mail.config.AccountList;
+import org.columba.mail.main.MailInterface;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Vector;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.mail.config.AccountItem;
-import org.columba.mail.config.AccountList;
-import org.columba.mail.main.MailInterface;
 
 /**
  * Manages automatic mail-checking for all accounts.
@@ -31,119 +33,117 @@ import org.columba.mail.main.MailInterface;
  * {@link AbstractMailCheckingAction} contains a timer object
  * for automatic mail-checking, which triggers the account-type
  * specific <code>actionPerformed</code> method.
- * 
+ *
  *
  * @author fdietz
  */
-public class MailCheckingManager extends Observable{
+public class MailCheckingManager extends Observable {
+    private List list;
 
-	private List list;
- 
+    public MailCheckingManager() {
+        super();
 
-	public MailCheckingManager() {
-		super();
-		
-		list= new Vector();
+        list = new Vector();
 
-		// get list of all accounts
-		AccountList accountList= MailInterface.config.getAccountList();
+        // get list of all accounts
+        AccountList accountList = MailInterface.config.getAccountList();
 
-		// for each account
-		for (int i= 0; i < accountList.count(); i++) {
-			AccountItem accountItem= accountList.get(i);
+        // for each account
+        for (int i = 0; i < accountList.count(); i++) {
+            AccountItem accountItem = accountList.get(i);
 
-			add(accountItem);
-		}
+            add(accountItem);
+        }
+    }
 
-	}
+    /**
+     * Return array of actions to create the mail-checking
+     * menu.
+     *
+     *
+     * @return                array of actions
+     *
+     * @see
+     */
+    public AbstractColumbaAction[] getActions() {
+        AbstractColumbaAction[] actions = new AbstractColumbaAction[list.size()];
 
-	/**
-	 * Return array of actions to create the mail-checking 
-	 * menu.
-	 * 
-	 * 
-	 * @return		array of actions
-	 * 
-	 * @see 
-	 */
-	public AbstractColumbaAction[] getActions() {
+        Iterator it = list.iterator();
+        int i = 0;
 
-		AbstractColumbaAction[] actions= new AbstractColumbaAction[list.size()];
+        while (it.hasNext()) {
+            actions[i++] = ((AbstractMailCheckingAction) it.next());
+        }
 
-		Iterator it= list.iterator();
-		int i= 0;
-		while (it.hasNext()) {
-			actions[i++]= ((AbstractMailCheckingAction) it.next());
-		}
+        return actions;
+    }
 
-		return actions;
-	}
+    public AbstractMailCheckingAction get(int uid) {
+        Iterator it = list.iterator();
 
-	public AbstractMailCheckingAction get(int uid) {
-		Iterator it= list.iterator();
-		// for each account
-		while (it.hasNext()) {
-			AbstractMailCheckingAction action=
-				(AbstractMailCheckingAction) it.next();
+        // for each account
+        while (it.hasNext()) {
+            AbstractMailCheckingAction action = (AbstractMailCheckingAction) it.next();
 
-			AccountItem accountItem= action.getAccountItem();
-			int i= accountItem.getUid();
-			if (i == uid) {
-				// found matching account
-				return action;
-			}
-		}
+            AccountItem accountItem = action.getAccountItem();
+            int i = accountItem.getUid();
 
-		return null;
-	}
+            if (i == uid) {
+                // found matching account
+                return action;
+            }
+        }
 
-	public void remove(int uid) {
-		AbstractMailCheckingAction action= get(uid);
+        return null;
+    }
 
-		// remove this account
-		if (action != null)
-			list.remove(action);
+    public void remove(int uid) {
+        AbstractMailCheckingAction action = get(uid);
 
-	}
+        // remove this account
+        if (action != null) {
+            list.remove(action);
+        }
+    }
 
-	public void restartTimer(int uid) {
-		AbstractMailCheckingAction action= get(uid);
+    public void restartTimer(int uid) {
+        AbstractMailCheckingAction action = get(uid);
 
-		// restart timer
-		if (action != null)
-			action.restartTimer();
-	}
+        // restart timer
+        if (action != null) {
+            action.restartTimer();
+        }
+    }
 
-	public void add(AccountItem accountItem) {
-		if (accountItem.isPopAccount()) {
-			list.add(new POP3MailCheckingAction(accountItem));
-		} else {
-			list.add(new IMAPMailCheckingAction(accountItem));
-		}
-	}
+    public void add(AccountItem accountItem) {
+        if (accountItem.isPopAccount()) {
+            list.add(new POP3MailCheckingAction(accountItem));
+        } else {
+            list.add(new IMAPMailCheckingAction(accountItem));
+        }
+    }
 
-	/**
-	 * Check for new messages in all accounts
-	 *
-	 */
-	public void check() {
-		Iterator it= list.iterator();
-		// for each account
-		while (it.hasNext()) {
-			AbstractMailCheckingAction action=
-				(AbstractMailCheckingAction) it.next();
-			action.check();
-		}
-	}
-	
-	/**
-	 * Notify all observers.
-	 *
-	 */
-	public void update() {
-		setChanged();
-		
-		notifyObservers();
-	}
-	
+    /**
+     * Check for new messages in all accounts
+     *
+     */
+    public void check() {
+        Iterator it = list.iterator();
+
+        // for each account
+        while (it.hasNext()) {
+            AbstractMailCheckingAction action = (AbstractMailCheckingAction) it.next();
+            action.check();
+        }
+    }
+
+    /**
+     * Notify all observers.
+     *
+     */
+    public void update() {
+        setChanged();
+
+        notifyObservers();
+    }
 }

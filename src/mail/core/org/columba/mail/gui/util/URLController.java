@@ -19,13 +19,12 @@ import org.columba.addressbook.folder.ContactCard;
 import org.columba.addressbook.gui.tree.util.SelectAddressbookFolderDialog;
 import org.columba.addressbook.main.AddressbookInterface;
 
-import org.columba.core.main.MainInterface;
 import org.columba.core.xml.XmlElement;
 
-import org.columba.mail.main.MailInterface;
 import org.columba.mail.gui.composer.ComposerController;
 import org.columba.mail.gui.composer.ComposerModel;
 import org.columba.mail.gui.mimetype.MimeTypeViewer;
+import org.columba.mail.main.MailInterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,7 +94,7 @@ public class URLController implements ActionListener {
 
         // init model to html or text according to stored option		
         XmlElement optionsElement = MailInterface.config.get("composer_options")
-                                              .getElement("/options");
+                                                        .getElement("/options");
         XmlElement htmlElement = optionsElement.getElement("html");
 
         if (htmlElement == null) {

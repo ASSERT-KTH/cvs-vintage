@@ -65,11 +65,11 @@ public class DateChooserDialog implements ActionListener {
         JPanel bottomPanel = new JPanel();
 
         /*
-        bottomPanel.setBorder(new WizardTopBorder());
-        Border border = bottomPanel.getBorder();
-        Border margin = BorderFactory.createEmptyBorder(15, 10, 10, 10);
-        bottomPanel.setBorder(new CompoundBorder(border, margin));
-        */
+bottomPanel.setBorder(new WizardTopBorder());
+Border border = bottomPanel.getBorder();
+Border margin = BorderFactory.createEmptyBorder(15, 10, 10, 10);
+bottomPanel.setBorder(new CompoundBorder(border, margin));
+*/
         bottomPanel.setLayout(new BorderLayout());
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 

@@ -16,11 +16,13 @@
 package org.columba.mail.mailchecking;
 
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.FolderCommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.folder.command.CheckForNewMessagesCommand;
 import org.columba.mail.folder.imap.IMAPRootFolder;
 import org.columba.mail.main.MailInterface;
+
 
 /**
  * IMAP mail checking item.
@@ -28,34 +30,28 @@ import org.columba.mail.main.MailInterface;
  * @author fdietz
  */
 public class IMAPMailCheckingAction extends AbstractMailCheckingAction {
+    private int accountUid;
 
-	private int accountUid;
+    /**
+ * Constructor
+ * 
+ * @param item                account item
+ */
+    public IMAPMailCheckingAction(AccountItem accountItem) {
+        super(accountItem);
 
-	/**
-	 * Constructor
-	 * 
-	 * @param item		account item
-	 */
-	public IMAPMailCheckingAction(
-		AccountItem accountItem) {
-		super(accountItem);
+        // account ID
+        accountUid = accountItem.getUid();
+    }
 
-		// account ID
-		accountUid= accountItem.getUid();
+    /**
+ * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
+ */
+    public void check() {
+        IMAPRootFolder imapRootFolder = (IMAPRootFolder) MailInterface.treeModel.getImapFolder(accountUid);
+        FolderCommandReference[] r = new FolderCommandReference[1];
+        r[0] = new FolderCommandReference(imapRootFolder);
 
-	}
-
-	/**
-	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
-	 */
-	public void check() {
-		IMAPRootFolder imapRootFolder=
-			(IMAPRootFolder) MailInterface.treeModel.getImapFolder(accountUid);
-		FolderCommandReference[] r= new FolderCommandReference[1];
-		r[0]= new FolderCommandReference(imapRootFolder);
-
-		MainInterface.processor.addOp(new CheckForNewMessagesCommand(r));
-
-	}
-
+        MainInterface.processor.addOp(new CheckForNewMessagesCommand(r));
+    }
 }

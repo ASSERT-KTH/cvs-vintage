@@ -16,50 +16,53 @@
 //
 //All Rights Reserved.undation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
-
 package org.columba.mail.gui.util;
-
-import java.nio.charset.Charset;
 
 import org.columba.core.gui.menu.CMenuItem;
 
 import org.columba.mail.util.MailResourceLoader;
+
+import java.nio.charset.Charset;
+
 
 /**
  * A menu item for displaying charsets.
  */
 public class CharsetMenuItem extends CMenuItem {
     protected Charset charset;
-    
+
     /**
-     * Creates a new menu item for the given charset.
-     */
+ * Creates a new menu item for the given charset.
+ */
     public CharsetMenuItem(Charset charset) {
         super("");
         setCharset(charset);
     }
-    
+
     /**
-     * Returns the charset associated with this menu item.
-     */
+ * Returns the charset associated with this menu item.
+ */
     public Charset getCharset() {
         return charset;
     }
-    
+
     /**
-     * Sets the charset associated with this menu item. This is used for the
-     * selectedMenuItem property in CharacterEncodingSubMenu. This method
-     * adapts the display text accordingly.
-     */
+ * Sets the charset associated with this menu item. This is used for the
+ * selectedMenuItem property in CharacterEncodingSubMenu. This method
+ * adapts the display text accordingly.
+ */
     public void setCharset(Charset charset) {
         this.charset = charset;
+
         String charsetName;
+
         if (charset == null) {
             charsetName = "auto";
         } else {
             charsetName = charset.name();
         }
+
         setText(MailResourceLoader.getString("menu", "mainframe",
-                    "menu_view_charset_" + charsetName));
+                "menu_view_charset_" + charsetName));
     }
 }

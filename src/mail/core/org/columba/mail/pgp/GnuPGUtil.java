@@ -37,9 +37,9 @@ public class GnuPGUtil extends DefaultUtil {
     };
 
     /* (non-Javadoc)
-     * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
-     * @deprecated Use JSCF
-     */
+ * @see org.columba.mail.pgp.DefaultUtil#getRawCommandString(int)
+ * @deprecated Use JSCF
+ */
     protected String[] getRawCommandString(int type) {
         List ret = new ArrayList();
         StringTokenizer strToken = new StringTokenizer(cmd[type], " ");
@@ -52,9 +52,9 @@ public class GnuPGUtil extends DefaultUtil {
     }
 
     /**
-     * every line of the error stream starts with "gpg"; remove these characters
-     * @deprecated Use JSCF
-     */
+ * every line of the error stream starts with "gpg"; remove these characters
+ * @deprecated Use JSCF
+ */
     protected String parse(String s) {
         StringBuffer str = new StringBuffer(s);
 

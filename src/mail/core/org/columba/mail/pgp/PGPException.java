@@ -14,16 +14,16 @@ package org.columba.mail.pgp;
  */
 public class PGPException extends Exception {
     /**
-     * @deprecated Use JSCF
-     */
+ * @deprecated Use JSCF
+ */
     public PGPException() {
         super("PGP failure");
     }
 
     /**
-     * @param arg0
-     * @deprecated Use JSCF
-     */
+ * @param arg0
+ * @deprecated Use JSCF
+ */
     public PGPException(String arg0) {
         super(arg0);
     }

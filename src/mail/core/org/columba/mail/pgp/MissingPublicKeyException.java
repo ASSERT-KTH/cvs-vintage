@@ -13,16 +13,16 @@ package org.columba.mail.pgp;
  */
 public class MissingPublicKeyException extends VerificationException {
     /**
-     * @deprecated Use JSCF
-     */
+ * @deprecated Use JSCF
+ */
     public MissingPublicKeyException() {
         super("Missing Public Key");
     }
 
     /**
-     * @param message
-     * @deprecated Use JSCF
-     */
+ * @param message
+ * @deprecated Use JSCF
+ */
     public MissingPublicKeyException(String message) {
         super(message);
     }

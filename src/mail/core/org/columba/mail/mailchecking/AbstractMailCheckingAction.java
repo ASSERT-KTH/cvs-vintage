@@ -15,14 +15,16 @@
 //All Rights Reserved.
 package org.columba.mail.mailchecking;
 
+import org.columba.core.action.AbstractColumbaAction;
+import org.columba.core.config.DefaultItem;
+import org.columba.core.xml.XmlElement;
+
+import org.columba.mail.config.AccountItem;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.Timer;
 
-import org.columba.core.action.AbstractColumbaAction;
-import org.columba.core.config.DefaultItem;
-import org.columba.core.xml.XmlElement;
-import org.columba.mail.config.AccountItem;
 
 /**
  * For each account there exists one check action.
@@ -32,91 +34,87 @@ import org.columba.mail.config.AccountItem;
  *
  * @author fdietz
  */
-public abstract class AbstractMailCheckingAction
-	extends AbstractColumbaAction {
+public abstract class AbstractMailCheckingAction extends AbstractColumbaAction {
+    private final static int ONE_SECOND = 1000;
 
-	private final static int ONE_SECOND= 1000;
+    /**
+ * account item
+ */
+    private AccountItem accountItem;
+    private Timer timer;
 
-	/**
-	 * account item
-	 */
-	private AccountItem accountItem;
+    public AbstractMailCheckingAction(AccountItem accountItem) {
+        super(null, null);
 
-	private Timer timer;
+        this.accountItem = accountItem;
 
-	public AbstractMailCheckingAction(AccountItem accountItem) {
-		super(null, null);
+        createName();
 
-		this.accountItem= accountItem;
+        restartTimer();
+    }
 
-		createName();
+    private void createName() {
+        //	generate label for menuitem
+        String name = accountItem.getName();
+        String address = accountItem.getIdentityItem().get("address");
+        String menuItemName = name + " (" + address + ")";
 
-		restartTimer();
-	}
+        putValue(AbstractColumbaAction.NAME, menuItemName);
+    }
 
-	private void createName() {
-		//	generate label for menuitem
-		String name= accountItem.getName();
-		String address= accountItem.getIdentityItem().get("address");
-		String menuItemName= name + " (" + address + ")";
+    public void restartTimer() {
+        // recreate name of menuitem 
+        createName();
 
-		putValue(AbstractColumbaAction.NAME, menuItemName);
-	}
+        DefaultItem item = null;
 
-	public void restartTimer() {
-		
-		// recreate name of menuitem 
-		createName();
-		
-		DefaultItem item= null;
-		if (accountItem.isPopAccount()) {
-			XmlElement e= accountItem.getRoot().getElement("popserver");
-			item= new DefaultItem(e);
-		} else {
-			XmlElement e= accountItem.getRoot().getElement("imapserver");
-			item= new DefaultItem(e);
-		}
+        if (accountItem.isPopAccount()) {
+            XmlElement e = accountItem.getRoot().getElement("popserver");
+            item = new DefaultItem(e);
+        } else {
+            XmlElement e = accountItem.getRoot().getElement("imapserver");
+            item = new DefaultItem(e);
+        }
 
-		if (item.getBoolean("enable_mailcheck")) {
-			int interval= item.getInteger("mailcheck_interval");
+        if (item.getBoolean("enable_mailcheck")) {
+            int interval = item.getInteger("mailcheck_interval");
 
-			timer= new Timer(ONE_SECOND * interval * 60, this);
-			timer.restart();
-		} else {
-			if (timer != null) {
-				timer.stop();
-				timer= null;
-			}
-		}
-	}
+            timer = new Timer(ONE_SECOND * interval * 60, this);
+            timer.restart();
+        } else {
+            if (timer != null) {
+                timer.stop();
+                timer = null;
+            }
+        }
+    }
 
-	/**
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		Object source= arg0.getSource();
+    /**
+ * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+ */
+    public void actionPerformed(ActionEvent arg0) {
+        Object source = arg0.getSource();
 
-		if (source.equals(timer)) {
-			// timer action
-			check();
-		} else {
-			check();
-		}
-	}
+        if (source.equals(timer)) {
+            // timer action
+            check();
+        } else {
+            check();
+        }
+    }
 
-	/**
-	 * Check for new messages.
-	 * <p>
-	 * Subclasses should implement this method.
-	 *
-	 */
-	public abstract void check();
+    /**
+ * Check for new messages.
+ * <p>
+ * Subclasses should implement this method.
+ *
+ */
+    public abstract void check();
 
-	/**
-	 * @return
-	 */
-	public AccountItem getAccountItem() {
-		return accountItem;
-	}
-
+    /**
+ * @return
+ */
+    public AccountItem getAccountItem() {
+        return accountItem;
+    }
 }

@@ -14,17 +14,17 @@ package org.columba.mail.pgp;
  */
 public class VerificationException extends PGPException {
     /**
-     * 
-     *@deprecated Use JSCF
-     */
+ * 
+ *@deprecated Use JSCF
+ */
     public VerificationException() {
         super("Verification failed");
     }
-    
+
     /**
-     * @param message
-     * @deprecated Use JSCF
-     */
+ * @param message
+ * @deprecated Use JSCF
+ */
     public VerificationException(String message) {
         super(message);
     }

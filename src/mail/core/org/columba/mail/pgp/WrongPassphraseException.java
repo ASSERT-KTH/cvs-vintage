@@ -13,16 +13,16 @@ package org.columba.mail.pgp;
  */
 public class WrongPassphraseException extends PGPException {
     /**
-     * @deprecated Use JSCF
-     */
+ * @deprecated Use JSCF
+ */
     public WrongPassphraseException() {
         super();
     }
 
     /**
-     * @param arg0
-     * @deprecated Use JSCF
-     */
+ * @param arg0
+ * @deprecated Use JSCF
+ */
     public WrongPassphraseException(String arg0) {
         super(arg0);
     }

@@ -97,17 +97,17 @@ public class DateChooser extends JPanel implements ActionListener {
     private int[] weekendCols = { 0, 0 };
 
     /** Construct a new <code>DateChooser</code>. The selection will be
-    * initialized to the current date.
-    */
+* initialized to the current date.
+*/
     public DateChooser() {
         this(Calendar.getInstance());
     }
 
     /** Construct a new <code>DateChooser</code> with the specified selected
-     * date.
-     *
-     * @param <code>date</code> The date for the selection.
-     */
+ * date.
+ *
+ * @param <code>date</code> The date for the selection.
+ */
     public DateChooser(Calendar date) {
         //asupport = new ActionSupport(this);
         DateFormatSymbols sym = new DateFormatSymbols();
@@ -151,11 +151,10 @@ public class DateChooser extends JPanel implements ActionListener {
         l_month = new JLabel();
 
         //p1.add(l_month);
-
         /*
-        l_year = new JLabel();
-        p1.add(l_year);
-        */
+l_year = new JLabel();
+p1.add(l_year);
+*/
         l_date = new JLabel("Date");
         l_date.setAlignmentX(0);
         p1.add(l_date, BorderLayout.CENTER);
@@ -170,29 +169,29 @@ public class DateChooser extends JPanel implements ActionListener {
         p1.add(b_rmonth, BorderLayout.EAST);
 
         /*
-        JPanel p2 = new JPanel();
-        p2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        top.add("East", p2);
+JPanel p2 = new JPanel();
+p2.setLayout(new FlowLayout(FlowLayout.LEFT));
+top.add("East", p2);
 
-        b_lyear = new JButton("<");
-        b_lyear.addActionListener( this );
-        //b_lyear.setMargin(KiwiUtils.emptyInsets);
-        b_lyear.setFocusPainted(false);
-        b_lyear.setOpaque(false);
-        //b_lyear.addActionListener(this);
-        p2.add(b_lyear);
+b_lyear = new JButton("<");
+b_lyear.addActionListener( this );
+//b_lyear.setMargin(KiwiUtils.emptyInsets);
+b_lyear.setFocusPainted(false);
+b_lyear.setOpaque(false);
+//b_lyear.addActionListener(this);
+p2.add(b_lyear);
 
-        l_year = new JLabel();
-        p2.add(l_year);
+l_year = new JLabel();
+p2.add(l_year);
 
-        b_ryear = new JButton(">");
-        b_ryear.addActionListener( this );
-        //b_ryear.setMargin(KiwiUtils.emptyInsets);
-        b_ryear.setFocusPainted(false);
-        b_ryear.setOpaque(false);
-        //b_ryear.addActionListener(this);
-        p2.add(b_ryear);
-        */
+b_ryear = new JButton(">");
+b_ryear.addActionListener( this );
+//b_ryear.setMargin(KiwiUtils.emptyInsets);
+b_ryear.setFocusPainted(false);
+b_ryear.setOpaque(false);
+//b_ryear.addActionListener(this);
+p2.add(b_ryear);
+*/
         add("North", top);
 
         calendarPane = new CalendarPane();
@@ -200,9 +199,9 @@ public class DateChooser extends JPanel implements ActionListener {
         add("Center", calendarPane);
 
         /*
-        Font f = getFont();
-        setFont(new Font(f.getName(), Font.BOLD, f.getSize()));
-        */
+Font f = getFont();
+setFont(new Font(f.getName(), Font.BOLD, f.getSize()));
+*/
         int fd = date.getFirstDayOfWeek();
         weekendCols[0] = (Calendar.SUNDAY - fd + 7) % 7;
         weekendCols[1] = (Calendar.SATURDAY - fd + 7) % 7;
@@ -229,52 +228,52 @@ public class DateChooser extends JPanel implements ActionListener {
     }
 
     /** Add a <code>ActionListener</code> to this component's list of listeners.
-      *
-      * @param listener The listener to add.
-      */
+  *
+  * @param listener The listener to add.
+  */
     public void addActionListener(ActionListener listener) {
         //asupport.addActionListener(listener);
     }
 
     /** Remove a <code>ActionListener</code> from this component's list of
-      * listeners.
-      *
-      * @param listener The listener to remove.
-      */
+  * listeners.
+  *
+  * @param listener The listener to remove.
+  */
     public void removeActionListener(ActionListener listener) {
         //asupport.removeActionListener(listener);
     }
 
     /** Set the highlight color for this component.
-     *
-     * @param color The new highlight color.
-     */
+ *
+ * @param color The new highlight color.
+ */
     public void setHighlightColor(Color color) {
         highlightColor = color;
     }
 
     /** Get the highlight color for this component.
-     *
-     * @return The current highlight color.
-     */
+ *
+ * @return The current highlight color.
+ */
     public Color getHighlightColor() {
         return (highlightColor);
     }
 
     /** Get a copy of the <code>Calendar</code> object that represents the
-    * currently selected date.
-    *
-    * @return The currently selected date.
-    */
+* currently selected date.
+*
+* @return The currently selected date.
+*/
     public Calendar getSelectedDate() {
         return ((Calendar) selectedDate.clone());
     }
 
     /**
-     * Set the selected date for the chooser.
-     *
-     * @param date The date to select.
-     */
+ * Set the selected date for the chooser.
+ *
+ * @param date The date to select.
+ */
     public void setSelectedDate(Calendar date) {
         selectedDate = copyDate(date, selectedDate);
         selectedDay = selectedDate.get(Calendar.DAY_OF_MONTH);
@@ -283,9 +282,9 @@ public class DateChooser extends JPanel implements ActionListener {
     }
 
     /** Set the earliest selectable date for the chooser.
-     *
-     * @param date The (possibly <code>null</code>) minimum selectable date.
-     */
+ *
+ * @param date The (possibly <code>null</code>) minimum selectable date.
+ */
     public void setMinimumDate(Calendar date) {
         minDate = ((date == null) ? null : copyDate(date, minDate));
         minDay = ((date == null) ? (-1) : minDate.get(Calendar.DATE));
@@ -294,18 +293,18 @@ public class DateChooser extends JPanel implements ActionListener {
     }
 
     /** Get the earliest selectable date for the chooser.
-     *
-     * @return The minimum selectable date, or <code>null</code> if there is no
-     * minimum date currently set.
-     */
+ *
+ * @return The minimum selectable date, or <code>null</code> if there is no
+ * minimum date currently set.
+ */
     public Calendar getMinimumDate() {
         return (minDate);
     }
 
     /** Set the latest selectable date for the chooser.
-     *
-     * @param date The (possibly <code>null</code>) maximum selectable date.
-     */
+ *
+ * @param date The (possibly <code>null</code>) maximum selectable date.
+ */
     public void setMaximumDate(Calendar date) {
         maxDate = ((date == null) ? null : copyDate(date, maxDate));
         maxDay = ((date == null) ? (-1) : maxDate.get(Calendar.DATE));
@@ -314,20 +313,20 @@ public class DateChooser extends JPanel implements ActionListener {
     }
 
     /** Get the latest selectable date for the chooser.
-     *
-     * @return The maximum selectable date, or <code>null</code> if there is no
-     * maximum date currently set.
-     */
+ *
+ * @return The maximum selectable date, or <code>null</code> if there is no
+ * maximum date currently set.
+ */
     public Calendar getMaximumDate() {
         return (maxDate);
     }
 
     /**
-     * Set the format for the textual date display at the bottom of the
-     * component.
-     *
-     * @param <code>format</code> The new date format to use.
-     */
+ * Set the format for the textual date display at the bottom of the
+ * component.
+ *
+ * @param <code>format</code> The new date format to use.
+ */
     public void setDateFormat(SimpleDateFormat format) {
         datefmt = format;
 
@@ -340,49 +339,48 @@ public class DateChooser extends JPanel implements ActionListener {
 
         if (o == b_lmonth) {
             selectedDate.add(Calendar.MONTH, -1);
-        }
-        else if (o == b_rmonth) {
+        } else if (o == b_rmonth) {
             selectedDate.add(Calendar.MONTH, 1);
         }
 
         /*
-        else if (o == b_lyear)
+else if (o == b_lyear)
+{
+        selectedDate.add(Calendar.YEAR, -1);
+        if (minDate != null)
         {
-                selectedDate.add(Calendar.YEAR, -1);
-                if (minDate != null)
-                {
-                        int m = minDate.get(Calendar.MONTH);
-                        if (selectedDate.get(Calendar.MONTH) < m)
-                                selectedDate.set(Calendar.MONTH, m);
-                }
+                int m = minDate.get(Calendar.MONTH);
+                if (selectedDate.get(Calendar.MONTH) < m)
+                        selectedDate.set(Calendar.MONTH, m);
         }
+}
 
-        else if (o == b_ryear)
+else if (o == b_ryear)
+{
+        selectedDate.add(Calendar.YEAR, 1);
+        if (maxDate != null)
         {
-                selectedDate.add(Calendar.YEAR, 1);
-                if (maxDate != null)
-                {
-                        int m = maxDate.get(Calendar.MONTH);
-                        if (selectedDate.get(Calendar.MONTH) > m)
-                                selectedDate.set(Calendar.MONTH, m);
-                }
+                int m = maxDate.get(Calendar.MONTH);
+                if (selectedDate.get(Calendar.MONTH) > m)
+                        selectedDate.set(Calendar.MONTH, m);
         }
-        */
+}
+*/
         selectedDay = 1;
         selectedDate.set(Calendar.DATE, selectedDay);
 
         _refresh();
 
         /*
-        asupport.fireActionEvent(((o == b_lmonth) || (o == b_rmonth))
-                                 ? MONTH_CHANGE_CMD : YEAR_CHANGE_CMD);
-                        */
+asupport.fireActionEvent(((o == b_lmonth) || (o == b_rmonth))
+                         ? MONTH_CHANGE_CMD : YEAR_CHANGE_CMD);
+                */
     }
 
     /* Determine what day of week the first day of the month falls on. It's too
-     * bad we have to resort to this hack; the Java API provides no means of
-     * doing this any other way.
-     */
+ * bad we have to resort to this hack; the Java API provides no means of
+ * doing this any other way.
+ */
     private void _computeFirstDay() {
         int d = selectedDate.get(Calendar.DAY_OF_MONTH);
         selectedDate.set(Calendar.DAY_OF_MONTH, 1);
@@ -391,9 +389,9 @@ public class DateChooser extends JPanel implements ActionListener {
     }
 
     /* This method is called whenever the month or year changes. It's job is to
-     * repaint the labels and determine whether any selection range limits have
-     * been reached.
-     */
+ * repaint the labels and determine whether any selection range limits have
+ * been reached.
+ */
     private void _refresh() {
         l_date.setText(datefmt.format(selectedDate.getTime()));
 

@@ -13,10 +13,7 @@
 //Portions created by Frederik Dietz and Timo Stich are Copyright (C) 2003. 
 //
 //All Rights Reserved.
-
 package org.columba.mail.main;
-
-import java.util.Enumeration;
 
 import org.columba.core.backgroundtask.TaskInterface;
 import org.columba.core.main.DefaultMain;
@@ -25,6 +22,7 @@ import org.columba.core.plugin.ActionPluginHandler;
 import org.columba.core.plugin.MenuPluginHandler;
 import org.columba.core.plugin.PluginHandlerNotFoundException;
 import org.columba.core.shutdown.ShutdownManager;
+
 import org.columba.mail.config.MailConfig;
 import org.columba.mail.folder.Folder;
 import org.columba.mail.folder.FolderTreeNode;
@@ -45,7 +43,11 @@ import org.columba.mail.pop3.POP3ServerCollection;
 import org.columba.mail.shutdown.SaveAllFoldersPlugin;
 import org.columba.mail.shutdown.SavePOP3CachePlugin;
 import org.columba.mail.spam.SaveSpamDBPlugin;
+
 import org.columba.ristretto.composer.MimeTreeRenderer;
+
+import java.util.Enumeration;
+
 
 /**
  * @author frd
@@ -65,11 +67,9 @@ public class MailMain extends DefaultMain {
      */
     public void initConfiguration() {
         System.setProperty("java.protocol.handler.pkgs",
-                System.getProperty("java.protocol.handler.pkgs", "") +
-                "|org.columba.mail.url");
+            System.getProperty("java.protocol.handler.pkgs", "") +
+            "|org.columba.mail.url");
         MailInterface.config = new MailConfig(MainInterface.config);
-        
-        
     }
 
     /* (non-Javadoc)
@@ -79,31 +79,35 @@ public class MailMain extends DefaultMain {
         MailInterface.popServerCollection = new POP3ServerCollection();
 
         MailInterface.mailCheckingManager = new MailCheckingManager();
-        
+
         MailInterface.treeModel = new TreeModel(MailInterface.config.getFolderConfig());
-        
+
         //TODO: move this to TreeModel constructor
         ShutdownManager.getShutdownManager().register(new Runnable() {
-            public void run() {
-                saveFolder((FolderTreeNode)MailInterface.treeModel.getRoot());
-            }
-            
-            protected void saveFolder(FolderTreeNode parentFolder) {
-                FolderTreeNode child;
-                for (Enumeration e = parentFolder.children(); e.hasMoreElements();) {
-                    child = (FolderTreeNode)e.nextElement();
-                    if (child instanceof Folder) {
-                        try {
-                            ((Folder)child).save();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    saveFolder(child);
+                public void run() {
+                    saveFolder((FolderTreeNode) MailInterface.treeModel.getRoot());
                 }
-            }
-        });
-        
+
+                protected void saveFolder(FolderTreeNode parentFolder) {
+                    FolderTreeNode child;
+
+                    for (Enumeration e = parentFolder.children();
+                            e.hasMoreElements();) {
+                        child = (FolderTreeNode) e.nextElement();
+
+                        if (child instanceof Folder) {
+                            try {
+                                ((Folder) child).save();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+
+                        saveFolder(child);
+                    }
+                }
+            });
+
         if (MailInterface.config.getAccountList().count() == 0) {
             new AccountWizardLauncher().launchWizard(true);
         }
@@ -143,15 +147,15 @@ public class MailMain extends DefaultMain {
 
         TaskInterface plugin = new SaveAllFoldersPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
-        
+
         plugin = new SavePOP3CachePlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
-        
+
         plugin = new SaveSpamDBPlugin();
         MainInterface.backgroundTaskManager.register(plugin);
         ShutdownManager.getShutdownManager().register(plugin);
-        
+
         // initialize cached headers which can be configured by the user
         // -> see documentation in class
         CachedHeaderfields.addConfiguration();

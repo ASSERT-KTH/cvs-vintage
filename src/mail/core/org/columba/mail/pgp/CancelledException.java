@@ -24,16 +24,16 @@ package org.columba.mail.pgp;
  */
 public class CancelledException extends PGPException {
     /**
-     * @deprecated Use JSCF
-     */
+ * @deprecated Use JSCF
+ */
     public CancelledException() {
         super();
     }
 
     /**
-     * @param arg0
-     * @deprecated Use JSCF
-     */
+ * @param arg0
+ * @deprecated Use JSCF
+ */
     public CancelledException(String arg0) {
         super(arg0);
     }

@@ -16,11 +16,13 @@
 package org.columba.mail.mailchecking;
 
 import org.columba.core.main.MainInterface;
+
 import org.columba.mail.command.POP3CommandReference;
 import org.columba.mail.config.AccountItem;
 import org.columba.mail.main.MailInterface;
 import org.columba.mail.pop3.POP3Server;
 import org.columba.mail.pop3.command.FetchNewMessagesCommand;
+
 
 /**
  * POP3 mail-checking item.
@@ -28,46 +30,39 @@ import org.columba.mail.pop3.command.FetchNewMessagesCommand;
  * @author fdietz
  */
 public class POP3MailCheckingAction extends AbstractMailCheckingAction {
+    private int accountUid;
 
-	private int accountUid;
+    /**
+ * Constructor
+ * 
+ * @param item                account item
+ */
+    public POP3MailCheckingAction(AccountItem accountItem) {
+        super(accountItem);
 
-	/**
-	 * Constructor
-	 * 
-	 * @param item		account item
-	 */
-	public POP3MailCheckingAction(AccountItem accountItem) {
-		super(accountItem);
+        // account ID
+        accountUid = accountItem.getUid();
+    }
 
-		// account ID
-		accountUid= accountItem.getUid();
+    /**
+ * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
+ */
+    public void check() {
+        POP3Server controller = MailInterface.popServerCollection.uidGet(accountUid);
 
-	}
+        boolean excludeFromCheckAll = controller.getAccountItem().getPopItem()
+                                                .getBoolean("exclude_from_checkall",
+                false);
 
-	/**
-	 * @see org.columba.mail.mailchecking.AbstractMailCheckingAction#check()
-	 */
-	public void check() {
+        if (excludeFromCheckAll) {
+            return;
+        }
 
-		POP3Server controller=
-			MailInterface.popServerCollection.uidGet(accountUid);
+        POP3CommandReference[] r = new POP3CommandReference[1];
+        r[0] = new POP3CommandReference(controller);
 
-		boolean excludeFromCheckAll=
-			controller.getAccountItem().getPopItem().getBoolean(
-				"exclude_from_checkall",
-				false);
+        FetchNewMessagesCommand c = new FetchNewMessagesCommand(r);
 
-		if (excludeFromCheckAll) {
-			return;
-		}
-		
-		POP3CommandReference[] r= new POP3CommandReference[1];
-		r[0]= new POP3CommandReference(controller);
-
-		FetchNewMessagesCommand c= new FetchNewMessagesCommand(r);
-
-		MainInterface.processor.addOp(c);
-
-	}
-
+        MainInterface.processor.addOp(c);
+    }
 }
