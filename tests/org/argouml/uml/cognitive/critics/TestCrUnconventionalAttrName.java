@@ -1,4 +1,4 @@
-// $Id: TestCrUnconventionalAttrName.java,v 1.3 2004/11/02 08:30:55 mkl Exp $
+// $Id: TestCrUnconventionalAttrName.java,v 1.4 2004/11/23 08:44:19 d00mst Exp $
 // Copyright (c) 2003-2004 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -52,7 +52,7 @@ public class TestCrUnconventionalAttrName extends TestCase {
      * Not giving a name should not result in a suggestion.
      */
     public void testNullName() {
-        assertEquals("", cr.computeSuggestion(null));
+        assertEquals("attr", cr.computeSuggestion(null));
     }
     
     /**
