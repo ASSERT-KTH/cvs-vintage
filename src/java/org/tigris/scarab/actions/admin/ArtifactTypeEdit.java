@@ -77,7 +77,7 @@ import org.tigris.scarab.services.cache.ScarabCache;
  * action methods on RModuleAttribute table
  *      
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: ArtifactTypeEdit.java,v 1.51 2003/06/27 20:58:01 dlr Exp $
+ * @version $Id: ArtifactTypeEdit.java,v 1.52 2003/07/11 06:56:03 venkatesh Exp $
  */
 public class ArtifactTypeEdit extends RequireLoginFirstAction
 {
@@ -99,8 +99,14 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
         IntakeTool intake = getIntakeTool(context);
         Module module = scarabR.getCurrentModule();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
+        if (rmit == null)
+        {
+            scarabR.setAlertMessage(l10n.get("IssueTypeRemovedFromModule"));
+            doCancel(data, context);
+            return false;
+        }
         // Set properties for module-issue type info
-        Group rmitGroup = intake.get("RModuleIssueType", 
+        Group rmitGroup = intake.get("RModuleIssueType",
                                         rmit.getQueryKey(), false);
         if (intake.isAllValid())
         {
@@ -169,7 +175,12 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
 
         Module module = scarabR.getCurrentModule();
         RModuleIssueType rmit = module.getRModuleIssueType(issueType);
-
+        if (rmit == null)
+        {
+            scarabR.setAlertMessage(l10n.get("IssueTypeRemovedFromModule"));
+            doCancel(data, context);
+            return false;
+        }
         List attGroups = module.getAttributeGroups(issueType, false);
 
         boolean isValid = true;
@@ -256,7 +267,7 @@ public class ArtifactTypeEdit extends RequireLoginFirstAction
             }
 
             // Set dedupe property for module-issueType
-            if (!areThereDedupeAttrs 
+            if (!areThereDedupeAttrs
                 || module.getAttributeGroups(issueType).size() < 2)
             {
                 rmit.setDedupe(false);

@@ -1,7 +1,10 @@
+#set ($rmit = "")
 #set ($module = $scarabR.CurrentModule)
 #set ($issueType = $scarabR.IssueType)
 #set ($issueTypeId = $data.Parameters.getString("issueTypeId",""))
 #set ($issueTypeLock = $issueType.Locked)
+#set ($groups = $module.getAttributeGroups($issueType, false))
+#set ($rmit= $module.getRModuleIssueType($issueType))
 
 <div class="app" id="div2-1-4-0">
 
@@ -9,10 +12,14 @@
 <p class="infomark"><em>$l10n.IssueTypeNotFound
 $link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
 </em></p>
-#else
-#set ($groups = $module.getAttributeGroups($issueType, false))
 
-#set ($rmit= $module.getRModuleIssueType($issueType))
+#elseif ($rmit.length() == 0)
+<p class="infomark"><em>$l10n.IssueTypeRemovedFromModuleAndProceed
+$link.setPage("admin,ManageArtifactTypes.vm").setLabel("$l10n.Here").
+</em></p>
+
+#else
+
 #set ($rmitGroup = $intake.RModuleIssueType.mapTo($rmit))
 #set ($modGroup = $intake.Module.mapTo($module))
 

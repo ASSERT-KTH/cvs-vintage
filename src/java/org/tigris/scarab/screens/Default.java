@@ -69,7 +69,7 @@ import org.tigris.scarab.om.ScarabUser;
  * duplication of code.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Default.java,v 1.72 2003/04/01 17:09:58 jmcnally Exp $
+ * @version $Id: Default.java,v 1.73 2003/07/11 06:56:03 venkatesh Exp $
  */
 public class Default extends TemplateSecureScreen
 {
@@ -107,7 +107,15 @@ public class Default extends TemplateSecureScreen
         // add the title text to the context.
         ScarabLocalizationTool l10n = (ScarabLocalizationTool)
             context.get("l10n");
-        String title = getTitle(scarabR, l10n, data, context);
+        String title = null;
+        try
+        {
+            title = getTitle(scarabR, l10n, data, context);
+        }
+        catch (Exception e)
+        {
+            Log.get().debug("Exception while getting page title for Screen :"+data.getTarget());
+        }
         if (title == null)
         {
             title = "Scarab";
