@@ -66,10 +66,14 @@
                    ## Output the value of the attribute. How this is done
                    ## depends on the attribute type.
                    #if ($isOptionAttr)
-                     #if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
-                       $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
-                     #else
-                       [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+                     #if (!$attVal.AttributeOption)
+	                     --
+	                 #else
+                       #if ($module.getRModuleOption($attVal.AttributeOption, $issueType).Active)
+                         $!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+                       #else
+                         [I]$!module.getRModuleOption($attVal.AttributeOption, $issueType).DisplayValue
+                      #end
                      #end
                    #elseif ($att.AttributeType.Name == "long-string")
                      ## Convert the raw text to formatted HTML before
