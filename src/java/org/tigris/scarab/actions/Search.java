@@ -46,7 +46,6 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -54,29 +53,18 @@ import java.util.ArrayList;
 import org.apache.turbine.ParameterParser; 
 import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
-import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 
 import org.apache.commons.lang.StringUtils;
 
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.torque.om.NumberKey; 
-import org.apache.torque.util.Criteria;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.om.Attribute;
-import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.AttributeValuePeer;
-import org.tigris.scarab.om.AttributeValue;
-import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.Query;
-import org.tigris.scarab.om.RQueryUser;
 import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.ModuleManager;
 import org.tigris.scarab.om.Scope;
@@ -86,7 +74,6 @@ import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.word.IssueSearch;
 
 /**
  *  This class is responsible for searching.
@@ -94,12 +81,10 @@ import org.tigris.scarab.util.word.IssueSearch;
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: Search.java,v 1.93 2002/10/09 03:48:44 jmcnally Exp $
+ * @version $Id: Search.java,v 1.94 2002/10/23 21:33:24 jon Exp $
  */
 public class Search extends RequireLoginFirstAction
 {
-    private static int DEFAULT_ISSUE_LIMIT = 25;
-
     public void doPerform(RunData data, TemplateContext context)
         throws Exception
     {
@@ -158,7 +143,6 @@ public class Search extends RequireLoginFirstAction
 
         Field name = queryGroup.get("Name");
         name.setRequired(true);
-        Field value = queryGroup.get("Value");
         data.getParameters().setString("queryString", getQueryString(data));
 
         Module module = scarabR.getCurrentModule();
@@ -295,7 +279,7 @@ public class Search extends RequireLoginFirstAction
     public void doViewall(RunData data, TemplateContext context)
          throws Exception
     {        
-        getAllIssueIds(data, context);
+        getAllIssueIds(data);
         setTarget(data, "ViewIssueLong.vm");            
     }
 
@@ -305,7 +289,7 @@ public class Search extends RequireLoginFirstAction
     public void doViewselected(RunData data, TemplateContext context)
          throws Exception
     {        
-        List selectedIds = getSelected(data, context);
+        List selectedIds = getSelected(data);
         if (selectedIds.size() > 0)
         {
             setTarget(data, "ViewIssueLong.vm");            
@@ -327,7 +311,7 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        List selectedIds = getSelected(data, context);
+        List selectedIds = getSelected(data);
         if (selectedIds.size() > 0)
         {
             List modules = ModuleManager.getInstancesFromIssueList(
@@ -356,7 +340,7 @@ public class Search extends RequireLoginFirstAction
         ScarabUser user = (ScarabUser)data.getUser();
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
-        getAllIssueIds(data, context);
+        getAllIssueIds(data);
         List modules = ModuleManager.getInstancesFromIssueList(
             scarabR.getIssues());
         if (user.hasPermission(ScarabSecurity.ISSUE__ASSIGN, modules)) 
@@ -473,7 +457,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Retrieves list of all issue id's and puts in the context.
     */
-    private void getAllIssueIds(RunData data, TemplateContext context) 
+    private void getAllIssueIds(RunData data)
     {
         ParameterParser pp = data.getParameters();
         String[] allIssueIds = pp.getStrings("all_issue_ids");
@@ -489,7 +473,7 @@ public class Search extends RequireLoginFirstAction
     /**
         Retrieves list of selected issue id's and puts in the context.
     */
-    private List getSelected(RunData data, TemplateContext context) 
+    private List getSelected(RunData data)
     {
         List newIssueIdList = new ArrayList();
         String[] selectedIds = data.getParameters().getStrings("issue_ids");

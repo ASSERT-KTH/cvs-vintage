@@ -46,13 +46,11 @@ package org.tigris.scarab.actions;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 import java.util.Iterator;
 
 import org.apache.commons.collections.SequencedHashMap;
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
 import org.apache.turbine.modules.ContextAdapter;
@@ -67,14 +65,12 @@ import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueManager;
-import org.tigris.scarab.om.IssueType;
 import org.tigris.scarab.om.IssueTemplateInfo;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ActivitySet;
 import org.tigris.scarab.om.ActivitySetManager;
 import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.attribute.OptionAttribute;
-import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.om.AttributeOption;
@@ -85,7 +81,7 @@ import org.tigris.scarab.om.AttributeOptionManager;
  * This class is responsible for report managing enter issue templates.
  *   
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: TemplateList.java,v 1.35 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: TemplateList.java,v 1.36 2002/10/23 21:34:32 jon Exp $
  */
 public class TemplateList extends RequireLoginFirstAction
 {
@@ -183,8 +179,6 @@ public class TemplateList extends RequireLoginFirstAction
                 group = intake.get("AttributeValue", aval.getQueryKey(),false);
                 if ( group != null )
                 {
-                    NumberKey newOptionId = null;
-                    NumberKey oldOptionId = null;
                     String newValue = "";
                     String oldValue = "";
                     if (aval instanceof OptionAttribute) 
@@ -194,15 +188,14 @@ public class TemplateList extends RequireLoginFirstAction
                     
                         if (!newValue.equals(""))
                         {
-                            newOptionId = new NumberKey(newValue);
-                            AttributeOption newAttributeOption = 
+                            AttributeOption newAttributeOption =
                               AttributeOptionManager
                               .getInstance(new NumberKey(newValue));
                             newValue = newAttributeOption.getName();
                         }
                         if (!oldValue.equals(""))
                         {
-                            oldOptionId = aval.getOptionId();
+                            NumberKey oldOptionId = aval.getOptionId();
                             AttributeOption oldAttributeOption = 
                               AttributeOptionManager
                               .getInstance(oldOptionId);

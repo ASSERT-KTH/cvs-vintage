@@ -68,13 +68,12 @@ import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.RIssueTypeAttribute;
 import org.tigris.scarab.om.AttributeGroupManager;
 import org.tigris.scarab.om.ScarabUser;
-import org.tigris.scarab.util.ScarabConstants;
 
 /**
  * This class deals with modifying Global Artifact Types.
  *
  * @author <a href="mailto:elicia@collab.net">Elicia David</a>
- * @version $Id: GlobalArtifactTypeCreate.java,v 1.26 2002/09/29 18:57:30 elicia Exp $
+ * @version $Id: GlobalArtifactTypeCreate.java,v 1.27 2002/10/23 21:37:49 jon Exp $
  */
 public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
 {
@@ -163,7 +162,6 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
         Field order1 = null;
         Field order2 = null;
         int dupeOrder = 0;
-        boolean areThereDedupeAttrs = false;
         // Manage attribute groups
         // Only have dedupe if there are more than one active group
         if (issueType.getAttributeGroups(true).size() > 1)
@@ -227,7 +225,6 @@ public class GlobalArtifactTypeCreate extends RequireLoginFirstAction
                 {
                     if (!attGroup.getAttributes().isEmpty())
                     {
-                         areThereDedupeAttrs = true;
                          attGroup.setDedupe(true);
                     }
                 }
@@ -329,7 +326,6 @@ System.out.println("CURRMOD " + scarabR.getCurrentModule().getModuleId());
     public void doSelectuserattribute( RunData data, TemplateContext context )
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         IssueType issueType = scarabR.getIssueType();
@@ -417,7 +413,7 @@ System.out.println("CURRMOD " + scarabR.getCurrentModule().getModuleId());
             {
                 // Set properties for issue type-attribute mapping
                 Attribute attribute = (Attribute)userAttributes.get(i);
-                RIssueTypeAttribute ria = (RIssueTypeAttribute)issueType
+                RIssueTypeAttribute ria = issueType
                         .getRIssueTypeAttribute(attribute);
                 Group riaGroup = intake.get("RIssueTypeAttribute", 
                                  ria.getQueryKey(), false);

@@ -50,27 +50,19 @@ import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 // Turbine Stuff 
-import org.apache.turbine.Turbine;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.modules.ContextAdapter;
 import org.apache.turbine.RunData;
 import org.apache.turbine.ParameterParser;
 
 import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.collections.ExtendedProperties;
 
-import org.apache.torque.util.Criteria;
-import org.apache.torque.om.NumberKey;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.intake.model.Field;
-import org.apache.fulcrum.TurbineServices;
-import org.apache.fulcrum.upload.TurbineUploadService;
-import org.apache.fulcrum.upload.UploadService;
 
 // Scarab Stuff
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
@@ -79,18 +71,11 @@ import org.tigris.scarab.attribute.UserAttribute;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.om.Issue;
 import org.tigris.scarab.om.IssueType;
-import org.tigris.scarab.om.IssuePeer;
 import org.tigris.scarab.om.AttributeValue;
 import org.tigris.scarab.om.ActivitySet;
-import org.tigris.scarab.om.ActivitySetManager;
-import org.tigris.scarab.om.ActivitySetTypePeer;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.Attachment;
-import org.tigris.scarab.om.AttachmentType;
-import org.tigris.scarab.om.AttachmentTypePeer;
-import org.tigris.scarab.om.Module;
 import org.tigris.scarab.om.RModuleAttribute;
-import org.tigris.scarab.om.RModuleAttributePeer;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.util.word.IssueSearch;
@@ -102,7 +87,7 @@ import org.tigris.scarab.services.security.ScarabSecurity;
  * This class is responsible for report issue forms.
  *
  * @author <a href="mailto:jmcnally@collab.net">John D. McNally</a>
- * @version $Id: ReportIssue.java,v 1.143 2002/10/22 22:43:07 elicia Exp $
+ * @version $Id: ReportIssue.java,v 1.144 2002/10/23 21:32:06 jon Exp $
  */
 public class ReportIssue extends RequireLoginFirstAction
 {
@@ -170,7 +155,6 @@ public class ReportIssue extends RequireLoginFirstAction
                                          String nextTemplate)
         throws Exception
     {
-        IntakeTool intake = getIntakeTool(context);
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         //ScarabUser user = (ScarabUser)data.getUser();
         Issue issue = scarabR.getReportingIssue();
@@ -366,7 +350,6 @@ public class ReportIssue extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Issue issue = scarabR.getReportingIssue();
-        IssueType issueType = issue.getIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
         
         // set the attribute values and if that was successful save the issue.
@@ -392,8 +375,6 @@ public class ReportIssue extends RequireLoginFirstAction
                 if (commentField.isValid() || saveIssue)
                 {
                     HashMap newValues = new HashMap();
-                    AttributeValue aval = null;
-                    AttributeValue aval2 = null;
                     List modAttrs = issue.getModule().getRModuleAttributes(issue.getIssueType(), true, "all");
 
                     // this is used for the workflow stuff...FIXME: it should

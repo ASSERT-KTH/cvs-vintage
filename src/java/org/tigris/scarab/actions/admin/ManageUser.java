@@ -50,21 +50,16 @@ package org.tigris.scarab.actions.admin;
 // JDK classes
 import java.util.Calendar;
 import java.util.List;
-import java.util.ArrayList;
 
 // Turbine Stuff
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.RunData;
-import org.apache.turbine.Turbine;
 import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.intake.model.Group;
 import org.apache.fulcrum.security.TurbineSecurity;
-//import org.apache.fulcrum.security.entity.Group;
 import org.apache.fulcrum.security.entity.Role;
 import org.apache.fulcrum.security.entity.User;
 import org.apache.fulcrum.security.util.AccessControlList;
-import org.apache.torque.util.Criteria;
-import org.apache.turbine.ParameterParser;
 
 // Scarab Stuff
 import org.tigris.scarab.om.ScarabUser;
@@ -75,14 +70,13 @@ import org.tigris.scarab.util.Log;
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabGlobalTool;
-import org.tigris.scarab.tools.ScarabLocalizationTool;
 
 /**
  * This class is responsible for dealing with the user management
  * Action(s).
  *
  * @author <a href="mailto:dr@bitonic.com">Douglas B. Robertson</a>
- * @version $Id: ManageUser.java,v 1.13 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: ManageUser.java,v 1.14 2002/10/23 21:42:33 jon Exp $
  */
 public class ManageUser extends RequireLoginFirstAction
 {
@@ -94,7 +88,6 @@ public class ManageUser extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
-        String state = data.getParameters().getString("state");
         ScarabUser su = null;
         
         IntakeTool intake = getIntakeTool(context);
@@ -167,7 +160,6 @@ public class ManageUser extends RequireLoginFirstAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         String template = getCurrentTemplate(data, null);
         String nextTemplate = getNextTemplate(data, template);
-        String state = data.getParameters().getString("state");
         ScarabUser su = null;
         
         IntakeTool intake = getIntakeTool(context);

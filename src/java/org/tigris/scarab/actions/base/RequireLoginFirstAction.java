@@ -47,9 +47,6 @@ package org.tigris.scarab.actions.base;
  */ 
 
 // Java Stuff
-import java.util.Stack;
-import java.util.HashMap;
-import java.util.Iterator;
 
 // Turbine Stuff
 import org.apache.log4j.Category;
@@ -57,8 +54,6 @@ import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
 import org.apache.turbine.TemplateSecureAction;
 import org.apache.turbine.tool.IntakeTool;
-import org.apache.turbine.ParameterParser;
-import org.apache.fulcrum.intake.model.Group;
 
 // Scarab Stuff
 import org.tigris.scarab.util.ScarabConstants;
@@ -67,17 +62,14 @@ import org.tigris.scarab.tools.ScarabLocalizationTool;
 import org.tigris.scarab.screens.Default;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.services.security.ScarabSecurity;
-//import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.om.Module;
-//import org.tigris.scarab.om.Issue;
-import org.tigris.scarab.om.IssueType;
 
 /**
  * This is a badly named class which is essentially equivalent to the 
  * Default.java Screen except that it has a few helper methods.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: RequireLoginFirstAction.java,v 1.41 2002/10/17 20:10:44 jmcnally Exp $    
+ * @version $Id: RequireLoginFirstAction.java,v 1.42 2002/10/23 21:45:47 jon Exp $    
  */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
@@ -102,7 +94,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
         ScarabRequestTool scarabR = getScarabRequestTool(context);
         ScarabLocalizationTool l10n = getLocalizationTool(context);
         Module currentModule = scarabR.getCurrentModule();
-        IssueType currentIssueType = scarabR.getCurrentIssueType();
         ScarabUser user = (ScarabUser)data.getUser();
 
         if (ScarabSecurity.NONE.equals(perm)) 
@@ -332,7 +323,6 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      * available in the arguments), should override this method.
      *
      * @param data a <code>RunData</code> value
-     * @param context a <code>TemplateContext</code> value
      * @return a <code>boolean</code> value
      */
     protected String getRequiredPermission(RunData data)

@@ -46,34 +46,25 @@ package org.tigris.scarab.actions.admin;
  * individuals on behalf of Collab.Net.
  */ 
 
-import java.util.List;
 
 import org.apache.turbine.RunData;
 import org.apache.turbine.TemplateContext;
-import org.apache.torque.om.ObjectKey;
 import org.apache.torque.om.NumberKey;
-import org.apache.turbine.tool.IntakeTool;
-import org.apache.fulcrum.intake.model.Group;
-import org.apache.fulcrum.intake.model.Field;
 
 import org.tigris.scarab.actions.base.RequireLoginFirstAction;
 import org.tigris.scarab.om.Attribute;
 import org.tigris.scarab.om.AttributeManager;
 import org.tigris.scarab.om.AttributePeer;
-import org.tigris.scarab.om.ROptionOption;
-import org.tigris.scarab.om.ParentChildAttributeOption;
 import org.tigris.scarab.om.ScarabUser;
 import org.tigris.scarab.util.ScarabConstants;
-import org.tigris.scarab.util.ScarabException;
 import org.tigris.scarab.tools.ScarabRequestTool;
 import org.tigris.scarab.tools.ScarabLocalizationTool;
-import org.tigris.scarab.services.security.ScarabSecurity;
 
 /**
  * This class deals with modifying Global Attributes.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: GlobalAttributes.java,v 1.24 2002/09/15 15:37:18 jmcnally Exp $
+ * @version $Id: GlobalAttributes.java,v 1.25 2002/10/23 21:39:57 jon Exp $
  */
 public class GlobalAttributes extends RequireLoginFirstAction
 {
@@ -106,7 +97,7 @@ public class GlobalAttributes extends RequireLoginFirstAction
             if (key.startsWith("action_"))
             {
                id = key.substring(7);
-               attribute = (Attribute) AttributePeer
+               attribute = AttributePeer
                       .retrieveByPK(new NumberKey(id));
                Attribute newAttribute = attribute
                   .copyAttribute((ScarabUser)data.getUser());
