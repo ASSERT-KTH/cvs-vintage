@@ -207,9 +207,9 @@ public class IssueSearch
     private static String FROM = " FROM ";
     private static String ORDER_BY = " ORDER BY ";
     private static String BASE_OPTION_SORT_LEFT_JOIN = 
-        " LEFT OUTER JOIN SCARAB_R_MODULE_OPTION sortRMO ON " + 
-        "(SCARAB_ISSUE.MODULE_ID=sortRMO.MODULE_ID AND SCARAB_ISSUE.TYPE_ID=" +
-        "sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
+        " LEFT OUTER JOIN " + RModuleOptionPeer.TABLE_NAME + " sortRMO ON " +
+        '(' + IssuePeer.MODULE_ID + "=sortRMO.MODULE_ID AND " +
+        IssuePeer.TYPE_ID + "=sortRMO.ISSUE_TYPE_ID AND sortRMO.OPTION_ID=";
 
     private static int NO_ATTRIBUTE_SORT = -1;
 
@@ -831,24 +831,15 @@ public class IssueSearch
             this.sortAttributeId = v;
         }
     }
-    
 
     /**
-     * Get the value of sortPolarity.
+     * Whether to do SQL sorting in <code>DESC</code> or
+     * <code>ASC</code> order (the default being the latter).
      * @return value of sortPolarity.
      */
     public String getSortPolarity() 
     {
-        String polarity = null;
-        if (DESC.equals(sortPolarity)) 
-        {
-            polarity = DESC;
-        }        
-        else 
-        {
-            polarity = ASC;
-        }
-        return polarity;
+        return (DESC.equals(sortPolarity) ? DESC : ASC);
     }
     
     /**
@@ -1955,9 +1946,10 @@ public class IssueSearch
                 // add it as an outer join
                 if (fromString.indexOf(alias) < 0)
                 {
-                    outerJoin.append(
-                        " LEFT OUTER JOIN SCARAB_ISSUE_ATTRIBUTE_VALUE ")
-                        .append(alias).append(" ON (SCARAB_ISSUE.ISSUE_ID=")
+                    outerJoin.append(" LEFT OUTER JOIN ")
+                        .append(AttributeValuePeer.TABLE_NAME).append(' ')
+                        .append(alias).append(" ON (")
+                        .append(IssuePeer.ISSUE_ID).append('=')
                         .append(alias).append(".ISSUE_ID AND ").append(alias)
                         .append(".DELETED=0 AND ").append(alias)
                         .append(".ATTRIBUTE_ID=").append(id).append(')');
@@ -2006,35 +1998,14 @@ public class IssueSearch
         if (sortColumn == null) 
         {
             sb.append(ORDER_BY).append(IssuePeer.ID_PREFIX);
-            if (getSortPolarity().equals("desc"))
-            {
-                sb.append(" DESC");
-            }
-            else
-            {
-                sb.append(" ASC");
-            }
+            sb.append(' ').append(getSortPolarity());
             sb.append(',').append(IssuePeer.ID_COUNT);
-            if (getSortPolarity().equals("desc"))
-            {
-                sb.append(" DESC");
-            }
-            else
-            {
-                sb.append(" ASC");
-            }
+            sb.append(' ').append(getSortPolarity());
         }
         else 
         {
             sb.append(ORDER_BY).append(sortColumn);
-            if (getSortPolarity().equals("desc"))
-            {
-                sb.append(" DESC");
-            }
-            else
-            {
-                sb.append(" ASC");
-            }
+            sb.append(' ').append(getSortPolarity());
             // add pk sort so that rows can be combined easily
             sb.append(',').append(IssuePeer.ISSUE_ID).append(" ASC");
         }
@@ -2219,4 +2190,3 @@ public class IssueSearch
         return rmit;
     }
 }
-
