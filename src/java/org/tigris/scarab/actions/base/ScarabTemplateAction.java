@@ -63,7 +63,7 @@ import org.tigris.scarab.tools.ScarabRequestTool;
  *  a couple methods useful for Scarab.
  *   
  *  @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- *  @version $Id: ScarabTemplateAction.java,v 1.2 2001/09/30 18:35:17 jon Exp $
+ *  @version $Id: ScarabTemplateAction.java,v 1.3 2001/09/30 19:28:05 jon Exp $
  */
 public abstract class ScarabTemplateAction extends TemplateAction
 {
@@ -85,6 +85,9 @@ public abstract class ScarabTemplateAction extends TemplateAction
                 ScarabConstants.SCARAB_REQUEST_TOOL);
     }
 
+    /**
+     * Require people to implement this method
+     */
     public abstract void doPerform( RunData data, TemplateContext context )
         throws Exception;
 }

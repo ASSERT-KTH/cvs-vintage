@@ -65,7 +65,7 @@ import org.tigris.scarab.om.ScarabUser;
     for the Default Screen.
 
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Default.java,v 1.19 2001/09/30 18:31:39 jon Exp $
+    @version $Id: Default.java,v 1.20 2001/09/30 19:28:06 jon Exp $
 */
 public class Default extends TemplateSecureScreen
 {
@@ -82,6 +82,16 @@ public class Default extends TemplateSecureScreen
      * or if the user does not have the base permissions.
      */
     protected boolean isAuthorized( RunData data ) throws Exception
+    {
+        return checkAuthorized(data);
+    }
+
+    /**
+     * Public static access to the isAuthorized() method so that
+     * an Action can use this same method to do authorization.
+     */
+    public static boolean checkAuthorized(RunData data)
+        throws Exception
     {
         String template = ScarabPage.getScreenTemplate(data);
         if (template != null)
@@ -140,7 +150,7 @@ public class Default extends TemplateSecureScreen
         return true;
     }
 
-    private void setTargetSelectModule(RunData data)
+    private static void setTargetSelectModule(RunData data)
     {
         // Note: we need to replace '/' with ',' so that 
         //       the hidden input field will have the right
@@ -153,7 +163,7 @@ public class Default extends TemplateSecureScreen
                 .getString("scarab.CurrentModuleTemplate", "SelectModule.vm"));        
     }
 
-    private void setTargetLogin(RunData data)
+    private static void setTargetLogin(RunData data)
     {
         // Note: we need to replace '/' with ',' so that 
         //       the hidden input field will have the right

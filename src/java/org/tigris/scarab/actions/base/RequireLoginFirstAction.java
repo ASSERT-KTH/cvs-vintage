@@ -57,16 +57,15 @@ import org.apache.turbine.tool.IntakeTool;
 import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.pages.ScarabPage;
 import org.tigris.scarab.tools.ScarabRequestTool;
+import org.tigris.scarab.screens.Default;
 
 /**
-    All you have to do is extend this screen to require someone
-    to log in first. Eventually it will be made smart enough to
-    also redirect you to the page you requested after having 
-    logged in. That part isn't a priority yet though.
-
-    @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: RequireLoginFirstAction.java,v 1.8 2001/09/30 18:31:38 jon Exp $    
-*/
+ * This is a badly named class which is essentially equivalent to the 
+ * Default.java Screen except that it has a few helper methods.
+ *
+ * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
+ * @version $Id: RequireLoginFirstAction.java,v 1.9 2001/09/30 19:28:05 jon Exp $    
+ */
 public abstract class RequireLoginFirstAction extends TemplateSecureAction
 {
     /**
@@ -74,16 +73,7 @@ public abstract class RequireLoginFirstAction extends TemplateSecureAction
      */
     protected boolean isAuthorized( RunData data ) throws Exception
     {
-        if (!data.getUser().hasLoggedIn())
-        {
-            data.getParameters().add (ScarabConstants.NEXT_TEMPLATE,
-                ScarabPage.getScreenTemplate(data));
-            setTarget(data, Turbine
-                            .getConfiguration()
-                            .getString("template.login", "Login.vm"));
-            return false;
-        }
-        return true;
+        return Default.checkAuthorized(data);
     }
 
     /**
