@@ -25,7 +25,7 @@ import org.jboss.logging.Logger;
  *  A common superclass for the transaction interceptors.
  *
  *  @author <a href="mailto:osh@sparre.dk">Ole Husgaard</a>
- *  @version $Revision: 1.1 $
+ *  @version $Revision: 1.2 $
  */
 abstract class AbstractTxInterceptor
    extends AbstractInterceptor
@@ -35,7 +35,7 @@ abstract class AbstractTxInterceptor
 
     /** Local reference to the container's TransactionManager. */
     protected TransactionManager tm;
- 
+
     /** The container that we manage transactions for. */
     protected Container container;
 
@@ -99,7 +99,9 @@ abstract class AbstractTxInterceptor
                 return getNext().invokeHome(mi);
         } catch (RuntimeException e) {
             try {
-                mi.getTransaction().setRollbackOnly();
+                if(mi.getTransaction() != null) {
+                    mi.getTransaction().setRollbackOnly();
+                }
             } catch (SystemException ex) {
                 Logger.exception(ex);
             } catch (IllegalStateException ex) {

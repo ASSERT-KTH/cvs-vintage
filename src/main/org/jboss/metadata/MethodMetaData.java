@@ -15,7 +15,7 @@ import org.w3c.dom.Element;
 import org.jboss.ejb.DeploymentException;
 
 /** The combination of the method-permission, container-transaction
- 
+
 <p>
 The method-permission element specifies that one or more security
 roles are allowed to invoke one or more enterprise bean methods. The
@@ -37,7 +37,7 @@ attribute is to be applied to all the specified methods.
 
  *   @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  *   @author <a href="mailto:Scott_Stark@displayscape.com">Scott Stark</a>.
- *   @version $Revision: 1.9 $
+ *   @version $Revision: 1.10 $
  */
 public class MethodMetaData extends MetaData {
     // Constants -----------------------------------------------------
@@ -53,8 +53,8 @@ public class MethodMetaData extends MetaData {
     denotes all the methods of an enterprise bean’s component and home
     interfaces.
     */
-	private String methodName;
-	private String ejbName;
+        private String methodName;
+        private String ejbName;
 
     /** The method-intf element allows a method element to differentiate
     between the methods with the same name and signature that are multiply
@@ -67,10 +67,10 @@ public class MethodMetaData extends MetaData {
     <method-intf>LocalHome</method-intf>
     <method-intf>Local</method-intf>
      */
-	private boolean intf = false;
+        private boolean intf = false;
     /** One of: HOME_METHOD, REMOTE_METHOD, LOCAL_HOME_METHOD, LOCAL_METHOD */
-	private char methodType;
-	private boolean param = false;
+        private char methodType;
+        private boolean param = false;
     /** The unchecked element specifies that a method is not checked for
     authorization by the container prior to invocation of the method.
     Used in: method-permission
@@ -85,7 +85,7 @@ public class MethodMetaData extends MetaData {
     /** The method-params element contains a list of the fully-qualified Java
     type names of the method parameters.
     */
-	private ArrayList paramList = EMPTY_PARAM_LIST;
+        private ArrayList paramList = EMPTY_PARAM_LIST;
     /** The trans-attribute element specifies how the container must manage
     the transaction boundaries when delegating a method invocation to an
     enterprise bean’s business method.
@@ -97,52 +97,52 @@ public class MethodMetaData extends MetaData {
     <trans-attribute>Mandatory</trans-attribute>
     <trans-attribute>Never</trans-attribute>
     */
-	private byte transactionType;
-    
-	private Set permissions;
+        private byte transactionType;
+
+        private Set permissions;
 
     // Static --------------------------------------------------------
-    
+
     // Constructors --------------------------------------------------
     public MethodMetaData () {
-	}
-	
+        }
+
     // Public --------------------------------------------------------
-	
-	public String getMethodName() { return methodName; }
-	
-	public String getEjbName() { return ejbName; }
-	
-	public boolean isHomeMethod() { return methodType == HOME_METHOD ; }
+
+        public String getMethodName() { return methodName; }
+
+        public String getEjbName() { return ejbName; }
+
+        public boolean isHomeMethod() { return methodType == HOME_METHOD ; }
     public boolean isRemoteMethod() { return methodType == REMOTE_METHOD ; }
     public boolean isLocalHomeMethod() { return methodType == LOCAL_HOME_METHOD ; }
     public boolean isLocalMethod() { return methodType == LOCAL_METHOD ; }
     public boolean isUnchecked() { return unchecked; }
     public boolean isExcluded() { return excluded; }
-	public boolean isIntfGiven() { return intf; }
-	
+        public boolean isIntfGiven() { return intf; }
+
     public boolean isParamGiven() { return param; }
-	
-	public Iterator getParams() { return paramList.iterator(); }
 
-	public byte getTransactionType() { return transactionType; }
-	
-	public void setTransactionType(byte type) {
-	    transactionType = type;
-	}
+        public Iterator getParams() { return paramList.iterator(); }
 
-	public Set getRoles() { return permissions; }
-	
-	public void setRoles(Set perm) { permissions = perm; }
+        public byte getTransactionType() { return transactionType; }
+
+        public void setTransactionType(byte type) {
+            transactionType = type;
+        }
+
+        public Set getRoles() { return permissions; }
+
+        public void setRoles(Set perm) { permissions = perm; }
     public void setUnchecked() { unchecked = true; }
     public void setExcluded() { excluded = true; }
 
-	public boolean patternMatches(String name, Class[] arg, boolean remote) {
-		return patternMatches(name, getClassNames(arg), remote);
-	}
-	
-	public boolean patternMatches(String name, String[] arg, boolean remote) {
-		
+        public boolean patternMatches(String name, Class[] arg, boolean remote) {
+                return patternMatches(name, getClassNames(arg), remote);
+        }
+
+        public boolean patternMatches(String name, String[] arg, boolean remote) {
+
         // the wildcard matches everything
         if (getMethodName().equals("*"))
         {
@@ -151,74 +151,81 @@ public class MethodMetaData extends MetaData {
             return true;
         }
 
-		if (! getMethodName().equals(name)) {
-	    	// different names -> no
-			return false;
-			
-		} else {
-			// we have the same name
-			// next check: home or remote
-			if (isIntfGiven() && (isRemoteMethod() != remote)) return false;
-				
-			if (! isParamGiven()) {
-		    	// no param given in descriptor -> ok
-				return true;
-			} else {
-				// we *have* to check the parameters
-				return sameParams(arg);
-			}
-		}
-	}
-			
-	/**
+                if (! getMethodName().equals(name)) {
+                // different names -> no
+                        return false;
+
+                } else {
+                        // we have the same name
+                        // next check: home or remote
+                        if (isIntfGiven() && (isRemoteMethod() != remote)) return false;
+
+                        if (! isParamGiven()) {
+                        // no param given in descriptor -> ok
+                                return true;
+                        } else {
+                                // we *have* to check the parameters
+                                return sameParams(arg);
+                        }
+                }
+        }
+
+        /**
      @param a method element
      */
     public void importEjbJarXml(Element element) throws DeploymentException {
-		methodName = getElementContent(getUniqueChild(element, "method-name"));
-		ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
-		
-		Element intfElement = getOptionalChild(element, "method-intf");
-		if (intfElement != null) {
-			intf = true;
-			String methodIntf = getElementContent(intfElement);
-			if (methodIntf.equals("Home")) {
-				methodType = HOME_METHOD;
-			} else if (methodIntf.equals("Remote")) {
-				methodType = REMOTE_METHOD;
-			} else if (methodIntf.equals("LocalHome")) {
-				methodType = LOCAL_HOME_METHOD;
-			} else if (methodIntf.equals("Local")) {
-				methodType = LOCAL_METHOD;
-			} else {
-				throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local'");
-			}
-		}
+                methodName = getElementContent(getUniqueChild(element, "method-name"));
+                ejbName = getElementContent(getUniqueChild(element, "ejb-name"));
 
-		Element paramsElement = getOptionalChild(element, "method-params");
-	    if (paramsElement != null)
+                Element intfElement = getOptionalChild(element, "method-intf");
+                if (intfElement != null) {
+                        intf = true;
+                        String methodIntf = getElementContent(intfElement);
+                        if (methodIntf.equals("Home")) {
+                                methodType = HOME_METHOD;
+                        } else if (methodIntf.equals("Remote")) {
+                                methodType = REMOTE_METHOD;
+                        } else if (methodIntf.equals("LocalHome")) {
+                                methodType = LOCAL_HOME_METHOD;
+                        } else if (methodIntf.equals("Local")) {
+                                methodType = LOCAL_METHOD;
+                        } else {
+                                throw new DeploymentException("method-intf tag should be one of: 'Home', 'Remote', 'LocalHome', 'Local'");
+                        }
+                }
+
+                Element paramsElement = getOptionalChild(element, "method-params");
+            if (paramsElement != null)
         {
-			param = true;
+                        param = true;
             paramList = new ArrayList();
-			Iterator paramsIterator = getChildrenByTagName(paramsElement, "method-param");
-			while (paramsIterator.hasNext()) {
-				paramList.add(getElementContent((Element)paramsIterator.next()));
-			}
-		}
-	}		
-    
-	// Package protected ---------------------------------------------
-    
+                        Iterator paramsIterator = getChildrenByTagName(paramsElement, "method-param");
+                        while (paramsIterator.hasNext()) {
+                                paramList.add(getElementContent((Element)paramsIterator.next()));
+                        }
+                }
+        }
+
+        // Package protected ---------------------------------------------
+
     // Protected -----------------------------------------------------
-    
+
     // Private -------------------------------------------------------
     private static String[] getClassNames(Class[] source) {
         String out[] = new String[source.length];
-        for(int i=0; i<out.length; i++)
-            out[i] = source[i].getName();
+        for(int i=0; i<out.length; i++) {
+            String brackets = "";
+            Class cls = source[i];
+            while(cls.isArray()) {
+                brackets += "[]";
+                cls = cls.getComponentType();
+            }
+            out[i] = cls.getName()+brackets;
+        }
         return out;
     }
 
-	private boolean sameParams(String[] arg) {
+    private boolean sameParams(String[] arg) {
         if(arg.length != paramList.size()) return false;
         for(int i=0; i<arg.length; i++)
             if (!arg[i].equals(paramList.get(i)))
