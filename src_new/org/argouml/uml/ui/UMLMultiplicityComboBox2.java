@@ -1,4 +1,4 @@
-// $Id: UMLMultiplicityComboBox2.java,v 1.9 2005/01/02 16:43:46 linus Exp $
+// $Id: UMLMultiplicityComboBox2.java,v 1.10 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -30,7 +30,8 @@ import org.argouml.model.ModelFacade;
 /**
  * An editable and searchable combobox to edit the multiplicity attribute of
  * some modelelement.
- * @author jaap.branderhorst@xs4all.nl	
+ *
+ * @author jaap.branderhorst@xs4all.nl
  * @since Jan 5, 2003
  */
 public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
@@ -40,7 +41,7 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
      * @param arg0 the combobox model
      * @param selectAction the action
      */
-    public UMLMultiplicityComboBox2(UMLComboBoxModel2 arg0, 
+    public UMLMultiplicityComboBox2(UMLComboBoxModel2 arg0,
             UMLAction selectAction) {
         super(arg0, selectAction);
     }
@@ -57,10 +58,10 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
         String text = (String) item;
         Object/*MMultiplicity*/ multi = null;
         try {
-            multi = Model.getUmlFactory().getDataTypes()
-                .createMultiplicity(text); //new MMultiplicity(text);
-        }
-        catch (IllegalArgumentException e) {
+            multi =
+                Model.getDataTypesFactory()
+                	.createMultiplicity(text); //new MMultiplicity(text);
+        } catch (IllegalArgumentException e) {
             Object o = search(text);
             if (o != null && ModelFacade.isAMultiplicity(o)) {
                 multi = o;
@@ -68,8 +69,9 @@ public class UMLMultiplicityComboBox2 extends UMLSearchableComboBox {
         }
         if (multi != null) {
             setSelectedItem(multi);
-        } else
+        } else {
             getEditor().setItem(getSelectedItem());
+        }
     }
 
 }

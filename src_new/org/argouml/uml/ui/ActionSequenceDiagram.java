@@ -1,4 +1,4 @@
-// $Id: ActionSequenceDiagram.java,v 1.32 2005/01/02 16:43:46 linus Exp $
+// $Id: ActionSequenceDiagram.java,v 1.33 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -33,7 +33,7 @@ import org.argouml.ui.explorer.ExplorerEventAdaptor;
 import org.argouml.ui.targetmanager.TargetManager;
 import org.argouml.uml.diagram.sequence.ui.UMLSequenceDiagram;
 
-/** 
+/**
  * Action to add a new sequence diagram.<p>
  *
  * Fully rebuild starting 1-8-2003<p>
@@ -52,7 +52,7 @@ public class ActionSequenceDiagram extends UMLAction {
     /**
      * The singleton.
      */
-    public static final ActionSequenceDiagram SINGLETON = 
+    public static final ActionSequenceDiagram SINGLETON =
         new ActionSequenceDiagram();
 
     ////////////////////////////////////////////////////////////////
@@ -75,7 +75,7 @@ public class ActionSequenceDiagram extends UMLAction {
             owner = ModelFacade.getNamespace(target);
         }
         Object collaboration =
-            Model.getUmlFactory().getCollaborations().buildCollaboration(
+            Model.getCollaborationsFactory().buildCollaboration(
                 owner,
                 target);
         UMLSequenceDiagram diagram = new UMLSequenceDiagram(collaboration);

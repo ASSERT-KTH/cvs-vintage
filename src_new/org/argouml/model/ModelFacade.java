@@ -1,4 +1,4 @@
-// $Id: ModelFacade.java,v 1.244 2005/01/08 15:36:16 linus Exp $
+// $Id: ModelFacade.java,v 1.245 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -5987,7 +5987,7 @@ public class ModelFacade {
          */
         if (handle instanceof MExpression) {
             MExpressionEditor expressionEditor =
-		(MExpressionEditor) Model.getUmlFactory().getDataTypes()
+		(MExpressionEditor) Model.getDataTypesFactory()
 		    .createExpressionEditor(handle);
             expressionEditor.setBody((String) expr);
             expressionEditor.toExpression();
@@ -6015,7 +6015,7 @@ public class ModelFacade {
         if (handle instanceof MExpression) {
             MExpressionEditor expressionEditor =
                 (MExpressionEditor)
-                	Model.getUmlFactory().getDataTypes().
+                	Model.getDataTypesFactory().
                 		createExpressionEditor(handle);
             expressionEditor.setLanguage(language);
             handle = expressionEditor.toExpression();

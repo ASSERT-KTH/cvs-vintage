@@ -1,4 +1,4 @@
-// $Id: CoreFactoryImpl.java,v 1.7 2005/01/07 19:41:58 linus Exp $
+// $Id: CoreFactoryImpl.java,v 1.8 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -932,8 +932,8 @@ public class CoreFactoryImpl
         MAttribute attr = (MAttribute) createAttribute();
         attr.setName("newAttr");
         attr.setMultiplicity(
-                (MMultiplicity) nsmodel.getUmlFactory()
-                	.getDataTypes().createMultiplicity(1, 1));
+                (MMultiplicity) nsmodel.getDataTypesFactory()
+                	.createMultiplicity(1, 1));
         attr.setStereotype(null);
         attr.setOwner(null);
         attr.setType(intType);
@@ -1293,8 +1293,8 @@ public class CoreFactoryImpl
 	    }
 	}
 	if (notation != null && notation.getName() != null) {
-	    method.setBody((MProcedureExpression)
-	            nsmodel.getUmlFactory().getDataTypes()
+	    method.setBody(
+	            (MProcedureExpression) nsmodel.getDataTypesFactory()
 	            	.createProcedureExpression(notation.getName(), body));
 	}
 	return method;

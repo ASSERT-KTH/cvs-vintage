@@ -1,4 +1,4 @@
-// $Id: ActivityGraphsHelperImpl.java,v 1.2 2005/01/07 09:11:00 linus Exp $
+// $Id: ActivityGraphsHelperImpl.java,v 1.3 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -31,10 +31,13 @@ import org.argouml.model.ActivityGraphsHelper;
 import org.argouml.model.ModelFacade;
 
 import ru.novosoft.uml.behavior.activity_graphs.MObjectFlowState;
+import ru.novosoft.uml.behavior.state_machines.MCompositeState;
 import ru.novosoft.uml.behavior.state_machines.MState;
+import ru.novosoft.uml.behavior.state_machines.MStateMachine;
 import ru.novosoft.uml.foundation.core.MBehavioralFeature;
 import ru.novosoft.uml.foundation.core.MClassifier;
 import ru.novosoft.uml.foundation.core.MModelElement;
+import ru.novosoft.uml.foundation.core.MNamespace;
 import ru.novosoft.uml.model_management.MPackage;
 
 /**
@@ -76,11 +79,12 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
         if (!(ofs instanceof MObjectFlowState)) {
             throw new IllegalArgumentException();
         }
-        Object cs = ModelFacade.getContainer(ofs); // the composite state
-        Object sm = ModelFacade.getStateMachine(cs); // the statemachine
-        Object ns = ModelFacade.getContext(sm); // the namespace
-        if (!ModelFacade.isANamespace(ns)) {
-            ns = ModelFacade.getNamespace(ns);
+
+        MCompositeState cs = ((MObjectFlowState) ofs).getContainer();
+        MStateMachine sm = cs.getStateMachine();
+        MModelElement ns = sm.getContext();
+        if (!(ns instanceof MNamespace)) {
+            ns = ns.getNamespace();
         }
         if (ns != null) {
             Collection c =
@@ -88,8 +92,8 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
                 	.getAllModelElementsOfKind(ns, ModelFacade.CLASSIFIER);
             Iterator i = c.iterator();
             while (i.hasNext()) {
-                Object classifier = i.next();
-                String cn = ((MModelElement) classifier).getName();
+                MModelElement classifier = (MModelElement) i.next();
+                String cn = classifier.getName();
                 if (cn.equals(s)) {
                     return classifier;
                 }
@@ -117,25 +121,25 @@ class ActivityGraphsHelperImpl implements ActivityGraphsHelper {
         if (!(c instanceof MClassifier)) {
             throw new IllegalArgumentException();
         }
+
         if ((s == "") || (s == null)) { // TODO: Shouldn't it be "".equals(s)?
             return null;
         }
-        Collection allStatemachines = ModelFacade.getBehaviors(c);
+        Collection allStatemachines = ((MClassifier) c).getBehaviors();
         Iterator i = allStatemachines.iterator();
         while (i.hasNext()) {
-            Object statemachine = i.next();
-            Object top = nsmodel.getStateMachinesHelper().getTop(statemachine);
+            MStateMachine statemachine = (MStateMachine) i.next();
+            MState top = statemachine.getTop();
             Collection allStates =
                 nsmodel.getStateMachinesHelper().getAllSubStates(top);
             Iterator ii = allStates.iterator();
             while (ii.hasNext()) {
-                Object state = ii.next();
-                if (ModelFacade.isAState(state)) {
-                    String statename = ((MState) state).getName();
-                    if (statename != null) {
-                        if (statename.equals(s)) {
-                            return state;
-                        }
+                MState state = (MState) ii.next();
+
+                String statename = state.getName();
+                if (statename != null) {
+                    if (statename.equals(s)) {
+                        return state;
                     }
                 }
             }

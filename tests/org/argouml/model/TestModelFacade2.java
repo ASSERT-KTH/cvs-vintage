@@ -1,4 +1,4 @@
-// $Id: TestModelFacade2.java,v 1.9 2005/01/03 16:31:04 linus Exp $
+// $Id: TestModelFacade2.java,v 1.10 2005/01/08 20:46:35 linus Exp $
 // Copyright (c) 2003-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -82,11 +82,9 @@ public class TestModelFacade2 extends TestCase {
      * Test for setModelElementContainer.
      */
     public void testSetModelElementContainer() {
-	UmlFactory fy = Model.getUmlFactory();
-
 	Object container =
-	    fy.getActivityGraphs().createActivityGraph();
-	Object partition = fy.getActivityGraphs().createPartition();
+	    Model.getActivityGraphsFactory().createActivityGraph();
+	Object partition = Model.getActivityGraphsFactory().createPartition();
 
 	ModelFacade.setModelElementContainer(partition, container);
 
@@ -98,8 +96,7 @@ public class TestModelFacade2 extends TestCase {
      * Test some Tagged Value functions.
      */
     public void testTaggedValue() {
-	UmlFactory fy = Model.getUmlFactory();
-	Object cls = fy.getCore().buildClass();
+	Object cls = Model.getCoreFactory().buildClass();
 
 	assertNull(ModelFacade.getTaggedValue(cls, "fooValue"));
 	ModelFacade.setTaggedValue(cls, "fooValue", "foo");
@@ -114,14 +111,13 @@ public class TestModelFacade2 extends TestCase {
      * Test the stereotypes.
      */
     public void testGetStereotypes() {
-	UmlFactory fy = Model.getUmlFactory();
-	Object cls = fy.getCore().buildClass();
+	Object cls = Model.getCoreFactory().buildClass();
 
 	Collection coll1 = ModelFacade.getStereotypes(cls);
 	assertEquals(0, coll1.size());
 
 	Object stereotype =
-	    fy.getExtensionMechanisms().buildStereotype(
+	    Model.getExtensionMechanismsFactory().buildStereotype(
 	            "TestStereotype",
 	            ModelFacade.getNamespace(cls));
 

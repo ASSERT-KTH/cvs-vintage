@@ -1,4 +1,4 @@
-// $Id: StateMachinesFactoryImpl.java,v 1.3 2005/01/08 11:11:10 linus Exp $
+// $Id: StateMachinesFactoryImpl.java,v 1.4 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 1996-2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -616,7 +616,7 @@ public class StateMachinesFactoryImpl
         event.setNamespace((MModel) model);
         event.setName("");
         Object te =
-            nsmodel.getUmlFactory().getDataTypes()
+            nsmodel.getDataTypesFactory()
             	.createTimeExpression("", s);
         ModelFacade.setWhen(event, te);
         return event;
@@ -647,7 +647,7 @@ public class StateMachinesFactoryImpl
         event.setNamespace((MModel) model);
         event.setName("");
         Object ce =
-            nsmodel.getUmlFactory().getDataTypes()
+            nsmodel.getDataTypesFactory()
             	.createBooleanExpression("", s);
         ModelFacade.setExpression(event, ce);
 

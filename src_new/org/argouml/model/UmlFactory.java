@@ -1,4 +1,4 @@
-// $Id: UmlFactory.java,v 1.2 2005/01/08 11:34:23 linus Exp $
+// $Id: UmlFactory.java,v 1.3 2005/01/08 20:46:36 linus Exp $
 // Copyright (c) 2005 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -74,22 +74,6 @@ public interface UmlFactory {
 
     /**
      * Returns the package factory for the UML
-     * package Foundation::ExtensionMechanisms.
-     *
-     * @return the ExtensionMechanisms factory instance.
-     */
-    ExtensionMechanismsFactory getExtensionMechanisms();
-
-    /**
-     * Returns the package factory for the UML
-     * package Foundation::DataTypes.
-     *
-     * @return the DataTypes factory instance.
-     */
-    DataTypesFactory getDataTypes();
-
-    /**
-     * Returns the package factory for the UML
      * package Foundation::Core.
      *
      * @return the Core factory instance.
@@ -127,14 +111,6 @@ public interface UmlFactory {
      * @return the Collaborations factory instance.
      */
     CollaborationsFactory getCollaborations();
-
-    /**
-     * Returns the package factory for the UML
-     * package BehavioralElements::ActivityGraphs.
-     *
-     * @return the ActivityGraphs factory instance.
-     */
-    ActivityGraphsFactory getActivityGraphs();
 
     /**
      * Returns the package factory for the UML
