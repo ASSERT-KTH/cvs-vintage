@@ -5,6 +5,11 @@
 
 <h2>$page.Title</h2>
 
+<p>
+$link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Request roles") in modules which you are not
+currently associated.
+</p>
+
 #if ($currentModule)
 <h3>Currently selected module</h3>
 <table cellpadding="3" cellspacing="2" border="1" width="100%">
@@ -31,7 +36,7 @@
 
 #end
 
-<h3>Select module</h3>
+<h3>$page.Title</h3>
 #set ($userModules = $data.User.Modules)
 #if ($userModules.size() > 0)
 <table border="1" cellspacing="2" cellpadding="3" width="100%">
@@ -77,8 +82,4 @@ has permissions to select a Module.
 </strong></p>
 #end
 
-<p>
-$link.setPage("RequestRoles.vm").addPathInfo($scarabG.Constant.NEXT_TEMPLATE, "SelectModule.vm").setLabel("Request roles") in modules which you are not
-currently associated.
-</p>
 </div>
