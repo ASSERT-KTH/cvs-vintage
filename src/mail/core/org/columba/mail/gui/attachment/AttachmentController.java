@@ -25,7 +25,6 @@ import javax.swing.JScrollPane;
 
 import org.columba.core.util.SwingWorker;
 import org.columba.mail.gui.attachment.action.AttachmentActionListener;
-import org.columba.mail.gui.attachment.menu.AttachmentMenu;
 import org.columba.mail.gui.attachment.util.IconPanel;
 import org.columba.mail.gui.frame.MailFrameController;
 import org.columba.mail.message.MimePart;
@@ -78,7 +77,7 @@ public class AttachmentController {
 
 		actionListener = new AttachmentActionListener(this);
 
-		menu = new AttachmentMenu(this);
+		menu = new AttachmentMenu(superController);
 
 		getView().setDoubleClickActionCommand("OPEN");
 		getView().addActionListener(actionListener);
@@ -181,7 +180,7 @@ public class AttachmentController {
 	}
 
 	private JPopupMenu getPopupMenu() {
-		return menu.getPopupMenu();
+		return menu;
 	}
 
 	class PopupListener extends MouseAdapter {

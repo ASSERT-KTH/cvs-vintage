@@ -73,5 +73,10 @@
  <action name="SignMessage" class="org.columba.mail.gui.composer.action.SignMessageAction"/>
  <action name="Spellcheck" class="org.columba.mail.gui.composer.action.SpellcheckAction"/>
  
+ <!-- attachment -->
+ <action name="OpenAttachment" class="org.columba.mail.gui.attachment.action.OpenAction"/>
+ <action name="OpenAttachmentWith" class="org.columba.mail.gui.attachment.action.OpenWithAction"/>
+ <action name="SaveAttachmentAs" class="org.columba.mail.gui.attachment.action.SaveAsAction"/>
+ 
  
 </actionlist>
