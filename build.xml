@@ -476,6 +476,7 @@
     <!-- create webapp WARS -->
     <jar   jarfile="${tomcat.home}/webapps/examples.war"
       basedir="${tomcat.home}/webapps/examples"
+      excludes="jsp/snp/snoop.jsp"
       includes="**" /> 
     <deltree dir="${tomcat.home}/webapps/examples"/>
 
