@@ -367,9 +367,9 @@ public class SessionId extends  BaseInterceptor
 	// the only one supported by all browsers
 	StringBuffer buf = new StringBuffer();
 	buf.append( "JSESSIONID=" ).append( reqSessionId );
-	buf.append( ";Path=" ).append(  sessionPath  );
+	buf.append( "; Path=" ).append(  sessionPath  );
 	if( secureCookie && rrequest.isSecure() ) {
-	    buf.append(";Secure");
+	    buf.append("; Secure");
 	}
 	response.addHeader( "Set-Cookie",
 			    buf.toString());
