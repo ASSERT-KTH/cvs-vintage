@@ -11,12 +11,20 @@
 <adm:moduleAdmin var="store" 
 		 type="org.apache.tomcat.modules.session.SimpleSessionStore" />
 
-  <h3>Invalidate <%= request.getParameter("id" ) %></h3>
+  <h3>Invalidating  <%= request.getParameter("id" ) %></h3>
 
-<% org.apache.tomcat.core.ServerSession s=store.findSession( ctx, 
+<% 
+   org.apache.tomcat.core.ServerSession s=store.findSession( ctx, 
              request.getParameter("id" ));
-   s.setState( org.apache.tomcat.core.ServerSession.STATE_EXPIRED );
+   if (s != null ) {
+        s.setState( org.apache.tomcat.core.ServerSession.STATE_EXPIRED );
 %>
+<h4> Session invalidated successfully</h4>
+<%        
+   } else
+%>
+
+<h4> Session not found , already invalidated </h4>
 
 </body>
 </html>
