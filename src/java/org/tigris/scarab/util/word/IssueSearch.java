@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 // Turbine classes
 import org.apache.torque.om.NumberKey;
@@ -796,7 +797,7 @@ public class IssueSearch
     }
 
     private void addCreatedDateRange(Criteria crit)
-        throws ScarabException
+        throws ScarabException, Exception
     {
         Date minUtilDate = parseDate(getMinDate(), false);
         Date maxUtilDate = parseDate(getMaxDate(), true);
@@ -827,7 +828,8 @@ public class IssueSearch
      * this flag is true, then 24 hours - 1 msec will be added to the date.
      * @return a <code>Date</code> value
      */
-    private Date parseDate(String dateString, boolean addTwentyFourHours)
+    public Date parseDate(String dateString, boolean addTwentyFourHours)
+        throws Exception
     {
         Date date = null;
         if ( dateString != null ) 
@@ -845,8 +847,7 @@ public class IssueSearch
                 }
                 catch (Exception ee)
                 {
-                    // ignore/debug
-                    ee.printStackTrace();
+                     throw new Exception("sdf");
                 }
             }
             else
@@ -857,8 +858,7 @@ public class IssueSearch
                 }
                 catch (Exception ee)
                 {
-                    // ignore/debug
-                    ee.printStackTrace();
+                     throw new Exception("sdf");
                 }
             }
         }

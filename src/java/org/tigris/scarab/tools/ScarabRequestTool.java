@@ -47,6 +47,7 @@ package org.tigris.scarab.tools;
  */ 
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,6 +68,7 @@ import org.apache.turbine.tool.IntakeTool;
 import org.apache.fulcrum.localization.Localization;
 import org.apache.fulcrum.intake.Intake;
 import org.apache.fulcrum.intake.model.Group;
+import org.apache.fulcrum.intake.model.Field;
 import org.apache.fulcrum.pool.RecyclableSupport;
 import org.apache.fulcrum.util.parser.StringValueParser;
 import org.apache.fulcrum.util.parser.ValueParser;
@@ -111,10 +113,10 @@ import org.tigris.scarab.util.ScarabConstants;
 import org.tigris.scarab.util.word.IssueSearch;
 import org.tigris.scarab.om.Report;
 import org.tigris.scarab.om.ReportManager;
-//import org.tigris.scarab.om.TransactionManager;
 import org.tigris.scarab.om.TransactionPeer;
 import org.tigris.scarab.om.TransactionTypePeer;
 import org.tigris.scarab.om.ActivityPeer;
+import org.tigris.scarab.util.ScarabException;  
 
 /**
  * This class is used by the Scarab API
@@ -1311,7 +1313,7 @@ try{
      * Performs search on current query (which is stored in user session).
     */
     public List getCurrentSearchResults()
-        throws Exception
+        throws Exception, ScarabException
     {
         ScarabUser user = (ScarabUser)data.getUser();
         String currentQueryString = getCurrentQuery();
@@ -1330,6 +1332,7 @@ try{
            intake = parseQuery(currentQueryString);
         }
         
+
         // If they have entered users to search on, and that returns no results
         // Don't bother running search
         if (data.getParameters().getStrings("user_list") != null
@@ -1351,6 +1354,29 @@ try{
             // Set intake properties
             Group searchGroup = intake.get("SearchIssue", 
                                            getSearch().getQueryKey() );
+
+            Field minDate = searchGroup.get("MinDate");
+            if (minDate != null && minDate.toString().length() > 0)
+            { 
+                checkDate(search, minDate.toString());
+            }
+            Field maxDate = searchGroup.get("MaxDate");
+            if (maxDate != null && minDate.toString().length() > 0)
+            { 
+                checkDate(search, minDate.toString());
+            }
+            Field stateChangeFromDate = searchGroup.get("StateChangeFromDate");
+            if (stateChangeFromDate != null 
+                && stateChangeFromDate.toString().length() > 0)
+            { 
+                checkDate(search, stateChangeFromDate.toString());
+            }
+            Field stateChangeToDate = searchGroup.get("StateChangeToDate");
+            if (stateChangeToDate != null 
+                && stateChangeToDate.toString().length() > 0)
+            { 
+                checkDate(search, stateChangeToDate.toString());
+            }
             searchGroup.setProperties(search);
 
             // Set attribute values to search on
@@ -1396,6 +1422,23 @@ try{
             data.setMessage("No matching issues.");
         }            
         return matchingIssueIds;
+    }
+
+    /**
+     * Attempts to parse a date passed in the query page.
+    */
+    private void checkDate(IssueSearch search, String date)
+        throws Exception
+    {
+        try
+        {
+            search.parseDate(date, false);
+        }
+        catch (Exception e)
+        {
+            data.setMessage("Invalid date.");
+            throw new Exception("Invalid date.");
+        }
     }
 
     /**
