@@ -46,7 +46,7 @@ import gnu.getopt.LongOpt;
 *
 * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
 * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
-* @version $Revision: 1.53 $
+* @version $Revision: 1.54 $
 *
 * <b>Revisions:</b>
 * <p>
@@ -157,18 +157,7 @@ public class Main
             // Set ServiceClassLoader as classloader for the construction of
             // the basic JBoss-System
             Thread.currentThread().setContextClassLoader(mcl);
-            
-            System.out.println("Looking for the docuemnt");
-            try
-            {
-               mcl.loadClass("javax.xml.parsers.DocumentBuilderFactory");
-               System.out.println("I am ok, go figure");
-            }
-            catch (ClassNotFoundException e)
-            {
-               e.printStackTrace();
-            }
-            
+                        
             // Create the Loggers
             server.createMBean("org.jboss.logging.Log4jService", null, loader);
             
