@@ -485,7 +485,14 @@ class NotFoundHandler extends Handler {
 	throws Exception
     {
 	String msg=(String)req.getAttribute("javax.servlet.error.message");
-	res.setContentType("text/html");	// ISO-8859-1 default
+
+	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	if (charset == null) {
+	    res.setContentType("text/html");
+	} else {
+	    res.setContentType("text/html; charset=" + charset);
+	    res.setUsingWriter(true);
+	}
 
 	// "javax.servlet.include.request_uri" is set to this handler
 	String requestURI = req.requestURI().toString();
@@ -591,7 +598,7 @@ class ExceptionHandler extends Handler {
 	// only include <head>...<body> if reset was successful
 	if ( needsHead ) {
            String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
-           if (charset == null || charset.equalsIgnoreCase("ISO-8859-1"))
+           if (charset == null)
                res.setContentType("text/html");
            else {
                res.setContentType("text/html; charset=" + charset);
@@ -690,13 +697,18 @@ class StatusHandler extends Handler {
 	if( sc == 304 ) {
 	    //NotModified must not return a body
 	    return;
-	} else {
-	    // don't set a content type if we are answering If-Modified-Since.
-	    // Proxy caches might update their cached content-type with this
-	    // info (mod_proxy does it). Martin Algesten 15th Oct, 2002.
+	} 
+	// don't set a content type if we are answering If-Modified-Since.
+	// Proxy caches might update their cached content-type with this
+	// info (mod_proxy does it). Martin Algesten 15th Oct, 2002.
+	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	if (charset == null) {
 	    res.setContentType("text/html");
+	} else {
+	    res.setContentType("text/html; charset=" + charset);
+	    res.setUsingWriter(true);
 	}
-
+	
 	if( sbNote==0 ) {
 	    sbNote=req.getContextManager().getNoteId(ContextManager.REQUEST_NOTE,
 						     "StatusHandler.buff");
@@ -815,7 +827,14 @@ class RedirectHandler extends Handler {
 
 	if( debug>0) ctx.log("Redirect " + location + " " + req );
 
-	res.setContentType("text/html");	// ISO-8859-1 default
+	String charset = LocaleToCharsetMap.getCharset(Locale.getDefault());
+	if (charset == null) {
+	    res.setContentType("text/html");
+	} else {
+	    res.setContentType("text/html; charset=" + charset);
+	    res.setUsingWriter(true);
+	}
+
 	res.setHeader("Location", location);
 
 	if( sbNote==0 ) {
