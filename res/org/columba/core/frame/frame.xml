@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
 
 <framelist>
  <frame name="Mail" class="org.columba.mail.gui.frame.MailFrameController" />
