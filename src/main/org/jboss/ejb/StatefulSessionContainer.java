@@ -37,7 +37,7 @@ import org.jboss.invocation.MarshalledInvocation;
  * @author <a href="mailto:marc.fleury@jboss.org">Marc Fleury</a>
  * @author <a href="mailto:scott.stark@jboss.org">Scott Stark</a>
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version <tt>$Revision: 1.59 $</tt>
+ * @version <tt>$Revision: 1.60 $</tt>
  *
  * @jmx:mbean extends="org.jboss.ejb.ContainerMBean"
  */
@@ -498,10 +498,13 @@ public class StatefulSessionContainer
       }
       ctx.setId(id);
 
-      // Invoke ejbCreate()
+      // Invoke ejbCreate<METHOD>()
       try
       {
-         Method createMethod = getBeanClass().getMethod("ejbCreate", m.getParameterTypes());
+         // Build the ejbCreate<METHOD> from the home create<METHOD> sig
+         String createName = m.getName();
+         String ejbCreateName = "ejbC" + createName.substring(1);
+         Method createMethod = getBeanClass().getMethod(ejbCreateName, m.getParameterTypes());
          if (debug) {
             log.debug("Using create method for session: " + createMethod);
          }
