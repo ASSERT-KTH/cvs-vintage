@@ -54,12 +54,13 @@ import org.xml.sax.Attributes;
 import org.apache.commons.util.GenerateUniqueId;
 
 import org.tigris.scarab.om.ScarabUser;
+import org.tigris.scarab.om.ScarabUserManager;
 import org.tigris.scarab.om.ScarabUserImpl;
 
 import org.apache.fulcrum.security.TurbineSecurity;
 
 /**
- * Handler for the xpath "scarab/user".
+ * Handler for the xpath "scarab/module/user".
  *
  * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
  * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
@@ -82,6 +83,10 @@ public class UserRule extends BaseRule
     public void begin(Attributes attributes) throws Exception
     {
         log().debug("(" + getImportBean().getState() + ") user begin");
+
+        // create a blank user instance to stuff with data
+        ScarabUser user = (ScarabUser)ScarabUserManager.getInstance();
+        getImportBean().setScarabUser(user);
     }
     
     /**
@@ -91,7 +96,20 @@ public class UserRule extends BaseRule
     public void end()
         throws Exception
     {
-        super.doInsertionOrValidationAtEnd();
+        ScarabUser user = getImportBean().getScarabUser();
+        // check to make sure we haven't already found the user in the file
+        if (isUserInUserList(getImportBean()))
+        {
+            log().debug("(" + getImportBean().getState() + ") user: " + 
+                user.getEmail() + ", already defined; ignoring");
+        }
+        else
+        {
+            getImportBean().getUserList().add(user.getEmail());
+            log().debug("(" + getImportBean().getState() + ") new user: " + 
+                user.getEmail());
+            super.doInsertionOrValidationAtEnd();
+        }
         getImportBean().getRoleList().clear();
         log().debug("(" + getImportBean().getState() + ") user end");
     }
@@ -99,30 +117,33 @@ public class UserRule extends BaseRule
     /**
      * handle creating the user.  sets the password to a temporary random password.
      * when the user signs in, they should just click on forgot password, and this
-     * will reset their password so that they can access the application.  No roles
-     * are granted to the individual, just a user account created.
+     * will reset their password so that they can access the application.  FIXME: No roles
+     * are currently granted to the individual, just a user account is created.
      */
     protected void doInsertionAtEnd()
         throws Exception
     {
-        // pop off the stack in reverse order!
         List roles = getImportBean().getRoleList();
-        String email = (String)getDigester().pop();
-        String lastName = (String)getDigester().pop();
+        ScarabUser user = getImportBean().getScarabUser();
+        String email = user.getEmail();
+        String lastName = user.getLastName();
         if (lastName == null)
         {
             lastName = "";
         }
-        String firstName = (String)getDigester().pop();
+        String firstName = user.getFirstName();
         if (firstName == null)
         {
             firstName = "";
         }
 
-        ScarabUser user;
         try
         {
-            user = (ScarabUser)TurbineSecurity.getUser(email);
+            ScarabUser existingUser = (ScarabUser)TurbineSecurity.getUser(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            TurbineSecurity.saveUser(user);
+            log().debug("(" + getImportBean().getState() + ") updated user: " + email);
         }
         catch (Exception e)
         {
@@ -131,7 +152,7 @@ public class UserRule extends BaseRule
             {
                 tempPassword = tempPassword.substring(0, UNIQUE_ID_MAX_LEN);
             }
-            user  = (ScarabUser) TurbineSecurity.getAnonymousUser();
+            user = ScarabUserManager.getInstance();
             user.setUserName(email);
             user.setFirstName(firstName);
             user.setLastName(lastName);
@@ -151,22 +172,14 @@ public class UserRule extends BaseRule
         throws Exception
     {
         // pop off the stack in reverse order!
-        String email = (String)getDigester().pop();
-        String lastName = (String)getDigester().pop();
-        String firstName = (String)getDigester().pop();
+        ScarabUser user = getImportBean().getScarabUser();
         List roles = getImportBean().getRoleList();
         log().debug("(" + getImportBean().getState() + ") user has: " + roles.size() + " roles");
+    }
 
-
-        if (getImportBean().getUserList().contains(email))
-        {
-            log().debug("(" + getImportBean().getState() + ") user: " + 
-                email + ", already defined; ignoring");
-// multiple users may be defined, just ignore them.
-            return;
-//            throw new Exception("User: " + email + ", already defined");
-        }
-        
-        getImportBean().getUserList().add(email);
+    public static boolean isUserInUserList(ImportBean ib)
+    {
+        return ib.getUserList()
+            .contains(ib.getScarabUser().getEmail());
     }
 }

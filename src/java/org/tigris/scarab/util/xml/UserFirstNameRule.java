@@ -46,40 +46,21 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import org.xml.sax.Attributes;
+
+import org.tigris.scarab.om.ScarabUser;
+
 /**
- * Generic handler to push the text onto the stack.
+ * Handler for the xpath "scarab/module/user/firstname".
  *
- * @author <a href="mailto:kevin.minshull@bitonic.com">Kevin Minshull</a>
- * @author <a href="mailto:richard.han@bitonic.com">Richard Han</a>
+ * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @version $Id: UserFirstNameRule.java,v 1.1 2002/04/11 02:51:07 jon Exp $
  */
-public class PropertyRule extends BaseRule
+public class UserFirstNameRule extends BaseRule 
 {
-    
-    /**
-     * Base constructor.
-     *
-     * @param digester The digester with which this rule is associated
-     * @param identifier Used to tell which PropertyRule is which
-     */
-    public PropertyRule(ImportBean ib)
+    public UserFirstNameRule(ImportBean ib)
     {
         super(ib);
-    }
-
-    /**
-     * Get the identifier associated with this test.
-     */
-    public String getIdentifier()
-    {
-        return getImportBean().getIdentifier();
-    }
-    
-    /** 
-     * Return the identifier.
-     */
-    public String toString()
-    {
-        return getImportBean().getIdentifier();
     }
 
     /**
@@ -91,8 +72,10 @@ public class PropertyRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        log().debug("(" + getImportBean().getState() + ") " + 
-            getImportBean().getIdentifier() + " body: " + text);
-        getDigester().push(text);
+        if (text != null && text.length() > 0)
+        {
+            ScarabUser user = getImportBean().getScarabUser();
+            user.setFirstName(text);
+        }
     }
 }

@@ -50,12 +50,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.tigris.scarab.om.Module;
+import org.tigris.scarab.om.ScarabUser;
 import org.apache.commons.digester.Digester;
 
 /**
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: ImportBean.java,v 1.1 2002/03/28 03:55:22 jon Exp $
+ * @version $Id: ImportBean.java,v 1.2 2002/04/11 02:51:07 jon Exp $
  */
 public class ImportBean
 {
@@ -65,8 +66,7 @@ public class ImportBean
     private List roleList = null;
     private List userList = null;
     private Module module = null;
-    /** String identifing this particular <code>TestRule</code> */
-    private String identifier = null;
+    private ScarabUser user = null;
 
     public String getState()
     {
@@ -136,6 +136,17 @@ public class ImportBean
         this.module = value;
     }
 
+    public ScarabUser getScarabUser()
+    {
+        return this.user;
+    }
+    
+    public void setScarabUser(ScarabUser value)
+    {
+        this.user = value;
+    }
+
+/*
     public String getIdentifier()
     {
         return this.identifier;
@@ -145,4 +156,5 @@ public class ImportBean
     {
         this.identifier = value;
     }
+*/
 }

@@ -46,15 +46,19 @@ package org.tigris.scarab.util.xml;
  * individuals on behalf of Collab.Net.
  */
 
+import org.xml.sax.Attributes;
+
+import org.tigris.scarab.om.ScarabUser;
+
 /**
- * Handler for the xpath "scarab/module/user/role".
+ * Handler for the xpath "scarab/module/user/email".
  *
  * @author <a href="mailto:jon@collab.net">Jon Scott Stevens</a>
+ * @version $Id: UserEmailRule.java,v 1.1 2002/04/11 02:51:07 jon Exp $
  */
-public class RoleRule extends BaseRule 
+public class UserEmailRule extends BaseRule 
 {
-
-    public RoleRule(ImportBean ib)
+    public UserEmailRule(ImportBean ib)
     {
         super(ib);
     }
@@ -68,13 +72,10 @@ public class RoleRule extends BaseRule
      */
     public void body(String text) throws Exception
     {
-        if (text != null && 
-            !UserRule.isUserInUserList(getImportBean()) && 
-            text.length() > 0)
+        if (text != null && text.length() > 0)
         {
-            getImportBean().getRoleList().add(text);
-            log().debug("(" + getImportBean().getState() + 
-                ") added role: " + text);
+            ScarabUser user = getImportBean().getScarabUser();
+            user.setEmail(text);
         }
     }
 }

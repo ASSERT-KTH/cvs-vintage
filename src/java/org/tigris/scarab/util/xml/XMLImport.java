@@ -63,7 +63,7 @@ import org.tigris.scarab.util.TurbineInitialization;
  * an Ant xml file.
  *
  * @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
- * @version $Id: XMLImport.java,v 1.11 2002/04/10 01:56:07 jon Exp $
+ * @version $Id: XMLImport.java,v 1.12 2002/04/11 02:51:07 jon Exp $
  */
 public class XMLImport extends MatchingTask
 {
@@ -321,12 +321,9 @@ public class XMLImport extends MatchingTask
         getDigester().addRule("scarab/module/issue/transaction/activity/attribute/type", new ActivityAttributeTypeRule(ib));
         getDigester().addRule("scarab/module/issue/transaction/activity/description", new ActivityDescriptionRule(ib));
         getDigester().addRule("scarab/module/user", new UserRule(ib));
-        ib.setIdentifier("user-firstname");
-        getDigester().addRule("scarab/module/user/firstname", new PropertyRule(ib));
-        ib.setIdentifier("user-lastname");
-        getDigester().addRule("scarab/module/user/lastname", new PropertyRule(ib));
-        ib.setIdentifier("user-email");
-        getDigester().addRule("scarab/module/user/email", new PropertyRule(ib));
+        getDigester().addRule("scarab/module/user/firstname", new UserFirstNameRule(ib));
+        getDigester().addRule("scarab/module/user/lastname", new UserLastNameRule(ib));
+        getDigester().addRule("scarab/module/user/email", new UserEmailRule(ib));
         getDigester().addRule("scarab/module/user/role", new RoleRule(ib));
     }
 }
