@@ -1,21 +1,31 @@
 <?xml version="1.0"?>
 
-
 <!-- created by waffel (alias Thomas Wabner -->
-<!-- version 0.1 -->
-<!-- date 10.05.2002 -->
+<!-- version 0.2 -->
+<!-- date 13.05.2002 -->
+
+<!-- CHANGES: -->
+<!-- the destination folder has name with the verion prefix -->
+<!-- the copy-required task has bee update, includes now README_JDK1.3 and AUTHORS -->
+<!-- an task run-script has bee added to create an run.sh script via ant -->
+<!-- the task for building zip file are splitted into three task, one for the binary -->
+<!--    and one for the source-version, the third is for the zip-task to creat both -->
+<!-- en task release are includes, this is the same as zip, but with an better name -->
+<!-- the zip files are includes an prefix to unzip the file in an directory and not plain ;-) -->
+<!-- a lot of little things -->
+
 
 <project name="columba" default="build" basedir=".">
 
 	<property name="src" value="."/>
 	<property name="build" value="build"/>
 	<property name="dist" value="dist"/>
-	<property name="dest" value="../columba-dest"/>
 	<property name="classpath" value="${src}/ext/csWillySpell.jar"/>
 
 	<property name="user.name" value="The columba Team"/>
 	<!-- here we should use the cvs-verion info for automatic replace the version -->
 	<property name="version" value="0.9.9-pre"/>
+	<property name="dest" value="../columba-${version}"/>
 	<!-- i'am not sure that we need this -->
 	<property name="TODAY" value="heute"/>
 
@@ -31,15 +41,16 @@
 				<include name="**/*.xml"/>
 				<include name="**/*.dtd"/>
 				<include name="**/*.gif"/>
-				<include name="**/*.gif"/>
 				<include name="**/*.jpeg"/>
 				<include name="**/*.png"/>
 				<include name="**/*.wav"/>
 				<include name="**/*.properties"/>
+				<include name="ext/csWillySpell.jar"/>
 				<include name="README"/>
-                                <include name="README_JDK1.3"/>
+				<include name="README_JDK1.3"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
+				<include name="AUTHORS"/>
                                 <include name="AUTHORS"/>
 				<exclude name="build.xml"/>
 				<exclude name="ant.dtd"/>
@@ -58,9 +69,10 @@
 			<include name="**"/>
 			<exclude name="columba.jar"/>
 			<exclude name="README"/>
-                        <exclude name="README_JDK1.3"/>
+			<exclude name="README_JDK1.3"/>
 			<exclude name="CHANGES"/>
 			<exclude name="LICENSE"/>
+			<exclude name="AUTHORS"/>
                         <exclude name="AUTHORS"/> 
 			<manifest>
 				<attribute name="Main-Class" value="org.columba.main.Main"/>
@@ -70,20 +82,66 @@
 		</jar>
 	</target>
 
-	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES -->
-	<!-- this is the thing that do all for us -->
-	<target name="zip" depends="jar">
-		<zip zipfile="${dest}/columba-${version}.zip" update="true">
-			<fileset dir="${dest}">
+	<target name="run-script" depends="init">
+		<echo file="${dest}/run.sh">#!/bin/sh
+echo "starting columba ..."
+echo "from path: `pwd`"
+if test -f "`pwd`/columba.jar" ; then java -jar `pwd`/columba.jar ; 
+else echo "cannot find columba.jar in `pwd`"; fi
+		</echo>
+	</target>
+
+
+	<!-- create an release zip file, contains the jar file and README, LICENSE, CHANGES, AUTHORS -->
+	<!-- this task is for an binary release -->
+	<target name="zip-bin" depends="jar,run-script">
+		<zip zipfile="${dest}/columba-${version}-bin.zip" update="true">
+			<zipfileset dir="${dest}" prefix="columba-${version}-bin">
 				<include name="README"/>
                                 <include name="README_JDK1.3"/> 
+				<include name="AUTHORS"/>
 				<include name="LICENSE"/>
 				<include name="CHANGES"/>
                                 <include name="AUTHORS"/>                                
 				<include name="columba.jar"/>
-			</fileset>
+				<include name="ext/csWillySpell.jar"/>
+				<include name="run.sh"/>
+			</zipfileset>
 		</zip>
 	</target>
+	<!-- create an source zip file, contain all sources and README, LICENSE, CHANGES, AUTHORS -->
+	<!-- this task is for an source release -->
+	<target name="zip-source" depends="init,run-script">
+		<zip zipfile="${dest}/columba-${version}-src.zip" update="true">
+			<zipfileset dir="${src}" prefix="columba-${version}-src">
+				<include name="**/*.java"/>
+				<include name="**/*.jar"/>
+				<include name="**/*.xml"/>
+				<include name="**/*.dtd"/>
+				<include name="**/*.gif"/>
+				<include name="**/*.jpeg"/>
+				<include name="**/*.png"/>
+				<include name="**/*.wav"/>
+				<include name="**/*.properties"/>
+				<include name="README"/>
+				<include name="README_JDK1.3"/>
+				<include name="LICENSE"/>
+				<include name="CHANGES"/>
+				<include name="AUTHORS"/>
+			</zipfileset>
+			<zipfileset dir="${dest}" prefix="columba-${version}-src">
+				<include name="run.sh"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
+	<target name="zip" depends="zip-bin,zip-source"/>
+
+	<!-- this target creates two zip-files, one for binary release and one for the source stuff -->
+	<!-- this is also the release target ;-0 -->
+	<target name="release" depends="zip-bin,zip-source"/>
+
 
 	<!-- only for build the class-files -->
 	<target name="build" depends="compile"/>
