@@ -61,6 +61,9 @@ public class AttachmentController implements KeyListener {
 		view.addPopupListener(new PopupListener());
 
 		fileChooser = new JFileChooser();
+		
+		installListener();
+
 	}
 
 	public ActionListener getActionListener() {
@@ -133,6 +136,7 @@ public class AttachmentController implements KeyListener {
 	/******************* KeyListener ****************************/
 
 	public void keyPressed(KeyEvent k) {
+		
 		switch (k.getKeyCode()) {
 			case (KeyEvent.VK_DELETE) :
 				if (view.count() > 0)
