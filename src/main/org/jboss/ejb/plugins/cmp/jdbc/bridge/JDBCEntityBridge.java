@@ -42,6 +42,9 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationshipRoleMetaData;
 import org.jboss.proxy.compiler.Proxies;
 import org.jboss.proxy.compiler.InvocationHandler;
 
+import org.jboss.ejb.plugins.keygenerator.KeyGenerator;
+import org.jboss.ejb.plugins.keygenerator.KeyGeneratorFactory;
+
 
 /**
  * JDBCEntityBridge follows the Bridge pattern [Gamma et. al, 1995].
@@ -54,7 +57,7 @@ import org.jboss.proxy.compiler.InvocationHandler;
  *      One per cmp entity bean type.       
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */                            
 public class JDBCEntityBridge implements EntityBridge {
    private JDBCEntityMetaData metadata;
@@ -83,6 +86,9 @@ public class JDBCEntityBridge implements EntityBridge {
    private Map loadGroups;
    private List eagerLoadFields;
    private List lazyLoadGroups;
+
+   /** key generator for unknown primary key */
+   private KeyGenerator keyGenerator;
    
    public JDBCEntityBridge(
          JDBCEntityMetaData metadata, 
@@ -122,6 +128,50 @@ public class JDBCEntityBridge implements EntityBridge {
 
       // ejbSelect methods
       loadSelectors(metadata);
+
+      // set up key generator for unknown primary key
+      if( metadata.getPrimaryKeyClass() == java.lang.Object.class ) {
+         Iterator iter = metadata.getCMPFields().iterator();
+         while( iter.hasNext() ) {
+            JDBCCMPFieldMetaData cmpField = (JDBCCMPFieldMetaData) iter.next();
+            if( cmpField.isUnknownPkField() ) {
+               try {
+                  KeyGeneratorFactory keyGeneratorFactory =
+                     (KeyGeneratorFactory)new InitialContext().lookup(
+                        cmpField.getKeyGeneratorFactory() );
+                  keyGenerator = keyGeneratorFactory.getKeyGenerator();
+               } catch(NamingException e) {
+                  throw new DeploymentException(
+                     "Error: can't find key generator factory: "
+                     + cmpField.getKeyGeneratorFactory(), e);
+               } catch( Exception e ) {
+                  throw new DeploymentException(
+                     "Error: can't create key generator instance; "
+                     + " key generator factory: "
+                     + cmpField.getKeyGeneratorFactory(), e );
+               }
+               break;
+            }
+         }
+      }
+   }
+
+   /**
+    * Sets the key generator for the entity
+    * @param keyGenerator primary key generator for the entity
+    */
+   public void setKeyGenerator( KeyGenerator keyGenerator )
+   {
+      this.keyGenerator = keyGenerator;
+   }
+
+   /**
+    * Gets the primary key generator for this entity
+    * @return the primary key generator for the entity or null if entity has a "known" primary key
+    */
+   public KeyGenerator getKeyGenerator()
+   {
+      return keyGenerator;
    }
 
    public void resolveRelationships() throws DeploymentException {
