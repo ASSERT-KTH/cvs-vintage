@@ -1,8 +1,11 @@
 <!DOCTYPE html PUBLIC "-//CollabNet//DTD XHTML 1.0 Transitional//EN"
     "http://www.collabnet.com/dtds/collabnet_transitional_10.dtd">
+
+#set ($page.Title = $l10n.ScarabLinks)
+
 <html>
  <head>
-  <title>$l10n.Title</title>
+  <title>$page.Title</title>
   <meta http-equiv="Content-type" content="$data.ContentType" />
 
   <style type="text/css">
