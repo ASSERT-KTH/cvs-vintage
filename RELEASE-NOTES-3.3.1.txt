@@ -3,7 +3,7 @@
                                  Release Notes
                                  =============
 
-$Id: RELEASE-NOTES-3.3.1.txt,v 1.44 2002/03/06 04:23:05 billbarker Exp $
+$Id: RELEASE-NOTES-3.3.1.txt,v 1.45 2002/03/08 11:47:43 larryi Exp $
 
 
 This document describes the changes that have been made since the
@@ -147,6 +147,18 @@ Bug No.  Description
          modules.xml or server.xml isn't present.  Also, the port number is
          now shown when JVM_Bind exceptions occur.
 
+[F]      Ajp12Connector and Ajp13Connector now accepts ContextMananger
+         properties called ajpid12 and ajpid13, respectively.  This property
+         overrides the ajpidFile attribute of these modules, allowing the
+         ajpid file to be specified via command line arguments.  For
+         consistency, the same arguments are also accepted by the StopTomcat
+         task to specify the file and protocol to use for shutdown.
+
+[F]      The Ajp13Connector now accepts shutdownEnable in addition to
+         shutDownEnable at attributes that control if shutdown is enabled
+         via the Ajp13 protocol.  shutdownEnable was added since it uses
+         a more intuitive uppercase/lowercase spelling.
+
 
 Server:
 
@@ -264,6 +276,7 @@ Bug No.  Description
 
 6887	 Fix a problem locating an error-page when using virtual hosts.
 [F]
+
 
 Configuration:
 
