@@ -71,7 +71,7 @@ import org.tigris.scarab.om.ScarabUser;
     Action.
     
     @author <a href="mailto:jon@collab.net">Jon S. Stevens</a>
-    @version $Id: Login.java,v 1.9 2001/05/24 02:39:20 jmcnally Exp $
+    @version $Id: Login.java,v 1.10 2001/06/22 01:26:12 jmcnally Exp $
 */
 public class Login extends VelocityAction
 {
@@ -86,8 +86,6 @@ public class Login extends VelocityAction
             .get(ScarabConstants.INTAKE_TOOL);
 
         Group login = intake.get("Login", IntakeTool.DEFAULT_KEY);
-        login.get("Username").setRequired(true);
-        login.get("Password").setRequired(true);
         
         if ( intake.isAllValid() && checkUser(data, context) ) 
         {
@@ -115,8 +113,18 @@ public class Login extends VelocityAction
         String username = login.get("Username").toString();
         String password = login.get("Password").toString();
         
-        // Authenticate the user and get the object.
-        User user = TurbineSecurity.getAuthenticatedUser( username, password );
+        User user = null;
+        try
+        {
+            // Authenticate the user and get the object.
+            user = TurbineSecurity
+                .getAuthenticatedUser( username, password );
+        }
+        catch ( TurbineSecurityException e )
+        {
+            data.setMessage("Invalid username or password.");
+            return failAction(data);
+        }
         
         try
         {

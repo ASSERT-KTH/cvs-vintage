@@ -144,11 +144,11 @@
 
 <group name="Login" key="login">
     <field name="Username" key="u" type="String">
-        <rule name="minLength" value="1">Please enter an email address</rule>
+        <rule name="required" value="true">Please enter an email address</rule>
         <rule name="mask" value=".+@.+\..+">Please enter a valid email address</rule>
     </field>
     <field name="Password" key="p" type="String">
-        <rule name="minLength" value="1">Please enter a password</rule>
+        <rule name="required" value="true">Please enter a password</rule>
     </field>
 </group>
 
