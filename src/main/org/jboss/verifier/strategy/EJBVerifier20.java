@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: EJBVerifier20.java,v 1.11 2002/04/08 02:35:01 jwalters Exp $
+ * $Id: EJBVerifier20.java,v 1.12 2002/04/09 04:06:37 jwalters Exp $
  */
 
 
@@ -49,7 +49,7 @@ import org.jboss.metadata.EntityMetaData;
  *
  * @author 	Juha Lindfors   (jplindfo@helsinki.fi)
  * @author  Jay Walters     (jwalters@computer.org)
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since  	JDK 1.3
  */
 public class EJBVerifier20 extends AbstractVerifier {
@@ -109,9 +109,8 @@ public class EJBVerifier20 extends AbstractVerifier {
 
     public void checkEntity(EntityMetaData entity)
     {
-       System.out.println("WARNING: EJBVerifier2.0 Entity Bean verification not implemented");
-       /* boolean pkVerified     = false;
-        boolean beanVerified   = false; // Need to change this once the code is in place
+        boolean pkVerified     = false;
+        boolean beanVerified   = false; 
         boolean remoteHomeVerified = false;
         boolean remoteVerified = false;
         boolean localHomeVerified  = false;
@@ -134,7 +133,7 @@ public class EJBVerifier20 extends AbstractVerifier {
          * local home or local interface.
          *
          * Spec 12.2.1
-         *
+         */
         if (!(remoteHomeVerified && remoteVerified) &&
             !(localHomeVerified && localVerified)) {
             localOrHomeExists = false;
@@ -145,9 +144,9 @@ public class EJBVerifier20 extends AbstractVerifier {
             /*
              * Verification for this entity bean done. Fire the event
              * to tell listeneres everything is ok.
-             *
+             */
             fireBeanVerifiedEvent(entity);
-        }*/
+        }
     }
         
     public void checkMessageBean(BeanMetaData bean)
@@ -165,9 +164,22 @@ public class EJBVerifier20 extends AbstractVerifier {
         return m.getName().startsWith(EJB_CREATE_METHOD);
     }
 
-    public boolean isHomeMethod(Method m) 
-    {
-        return m.getName().startsWith(HOME_METHOD);
+	public boolean isEjbSelectMethod(Method m)
+	{
+		return m.getName().startsWith(EJB_SELECT_METHOD);
+	}
+
+    public Iterator getEjbSelectMethods(Class c) {
+
+        List selects = new LinkedList();
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i)
+            if (isEjbSelectMethod(method[i]))
+                selects.add(method[i]);
+
+        return selects.iterator();
     }
 
     public boolean isEjbHomeMethod(Method m) 
@@ -175,6 +187,10 @@ public class EJBVerifier20 extends AbstractVerifier {
         return m.getName().startsWith(EJB_HOME_METHOD);
     }
 
+    /**
+	 * Home methods are any method on the home interface which isn't a create
+	 * or find method.
+	 */
     public Iterator getHomeMethods(Class c) {
 
         List homes = new LinkedList();
@@ -182,13 +198,24 @@ public class EJBVerifier20 extends AbstractVerifier {
         Method[] method = c.getMethods();
 
         for (int i = 0; i < method.length; ++i)
-            if (isHomeMethod(method[i]))
+            if (!isCreateMethod(method[i]) && !isFinderMethod(method[i]))
                 homes.add(method[i]);
 
         return homes.iterator();
     }
 
+    public Iterator getEjbHomeMethods(Class c) {
 
+        List homes = new LinkedList();
+
+        Method[] method = c.getMethods();
+
+        for (int i = 0; i < method.length; ++i)
+            if (isEjbHomeMethod(method[i]))
+                homes.add(method[i]);
+
+        return homes.iterator();
+    }
 
 /*
  *****************************************************************************
@@ -233,20 +260,15 @@ public class EJBVerifier20 extends AbstractVerifier {
              if (session.isStateless()) {
 
                  if (!hasDefaultCreateMethod(home)) {
-                    fireSpecViolationEvent(session, new Section("7.8.a"));
+                    fireSpecViolationEvent(session, new Section("7.10.6.d2"));
                     status = false;
                  }
 
                  else {
                      Method create = getDefaultCreateMethod(home);
 
-                     if (!hasRemoteReturnType(session, create)) {
-                        fireSpecViolationEvent(session, create, new Section("7.8.b"));;
-                        status = false;
-                     }
-
                      if (hasMoreThanOneCreateMethods(home)) {
-                         fireSpecViolationEvent(session, new Section("7.8.c"));
+                         fireSpecViolationEvent(session, new Section("7.10.6.d2"));
                          status = false;
                      }
                  }
@@ -304,7 +326,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              * Spec 7.10.6
              */
             if (!hasCreateMethod(home)) {
-                fireSpecViolationEvent(session, new Section("7.10.6.d"));
+                fireSpecViolationEvent(session, new Section("7.10.6.d1"));
                 status = false;
             }
 
@@ -340,7 +362,7 @@ public class EJBVerifier20 extends AbstractVerifier {
                     Method create = (Method)createMethods.next();
 
                     if (!hasMatchingEJBCreate(bean, create)) {
-                        fireSpecViolationEvent(session, create, new Section("7.10.6.e1"));
+                        fireSpecViolationEvent(session, create, new Section("7.10.6.e"));
                         status = false;
                     }
 
@@ -407,9 +429,6 @@ public class EJBVerifier20 extends AbstractVerifier {
              * The local home interface of a stateless session bean MUST have one
              * create() method that takes no arguments.
              *
-             * The create() method MUST return the session bean's remote
-             * interface.
-             *
              * There CAN NOT be other create() methods in the home interface.
              *
              * Spec 7.8
@@ -417,20 +436,13 @@ public class EJBVerifier20 extends AbstractVerifier {
              if (session.isStateless()) {
 
                  if (!hasDefaultCreateMethod(home)) {
-                    fireSpecViolationEvent(session, new Section("7.8.a"));
+                    fireSpecViolationEvent(session, new Section("7.10.8.d2"));
                     status = false;
-                 }
-
-                 else {
+                 } else {
                      Method create = getDefaultCreateMethod(home);
 
-                     if (!hasLocalReturnType(session, create)) {
-                        fireSpecViolationEvent(session, create, new Section("7.8.b"));;
-                        status = false;
-                     }
-
                      if (hasMoreThanOneCreateMethods(home)) {
-                         fireSpecViolationEvent(session, new Section("7.8.c"));
+                         fireSpecViolationEvent(session, new Section("7.10.8.d2"));
                          status = false;
                      }
                  }
@@ -472,7 +484,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              * Spec 7.10.8
              */
             if (!hasCreateMethod(home)) {
-                fireSpecViolationEvent(session, new Section("7.10.8.d"));
+                fireSpecViolationEvent(session, new Section("7.10.8.d1"));
                 status = false;
             }
 
@@ -509,7 +521,7 @@ public class EJBVerifier20 extends AbstractVerifier {
                     Method create = (Method)createMethods.next();
 
                     if (!hasMatchingEJBCreate(bean, create)) {
-                        fireSpecViolationEvent(session, create, new Section("7.10.8.e1"));
+                        fireSpecViolationEvent(session, create, new Section("7.10.8.e"));
                         status = false;
                     }
 
@@ -1086,11 +1098,12 @@ public class EJBVerifier20 extends AbstractVerifier {
                 if (method.getDeclaringClass().getName().equals(EJB_HOME_INTERFACE))
                     continue;
 
-                if (! (isCreateMethod(method) || isFinderMethod(method) ||
-                      isHomeMethod(method)) ) {
-                    fireSpecViolationEvent(entity, method, new Section("12.2.9.c"));
-                    status = false;
-                }
+				// No way to figure out if it's a home method at the moment...
+                //if (! (isCreateMethod(method) || isFinderMethod(method) ||
+                //       isHomeMethod(method)) ) {
+                //    fireSpecViolationEvent(entity, method, new Section("12.2.9.c"));
+                //    status = false;
+                //}
             }
 
             /*
@@ -1322,6 +1335,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              *
              * Spec 12.2.11
              */
+
             homeMethods = Arrays.asList(home.getMethods()).iterator();
 
             while (homeMethods.hasNext()) {
@@ -1332,11 +1346,12 @@ public class EJBVerifier20 extends AbstractVerifier {
                 if (method.getDeclaringClass().getName().equals(EJB_LOCAL_HOME_INTERFACE))
                     continue;
 
-                if (! (isCreateMethod(method) || isFinderMethod(method) ||
-                       isHomeMethod(method)) ) {
-                    fireSpecViolationEvent(entity, method, new Section("12.2.11.d"));
-                    status = false;
-                }
+				// No way to figure out if it's a home method right now
+                //if (! (isCreateMethod(method) || isFinderMethod(method) ||
+                //       isHomeMethod(method)) ) {
+                //    fireSpecViolationEvent(entity, method, new Section("12.2.11.d"));
+                //    status = false;
+                //}
             }
 
             /*
@@ -1905,6 +1920,7 @@ public class EJBVerifier20 extends AbstractVerifier {
              *
              * Spec 10.6.5
              */
+
             if (hasEJBCreateMethod(bean, false)) {
                 Iterator it =  getEJBCreateMethods(bean);
 
@@ -1942,15 +1958,112 @@ public class EJBVerifier20 extends AbstractVerifier {
                 }
             }
 
-            /**
-             * FIXME
-             * MUST not define finders
-             * ejbSelect methods
-             * ejbHome methods
+            /*
+             * The ejbHome(...) method signatures MUST follow these rules:
              *
-             * Spec 9.2.5
+             *      - The method name MUST have ejbHome as its prefix.
+             *      - The method MUST be declared as public
+             *      - The method MUST NOT be declared as static.
+             *      - The method MUST NOT define the java.rmi.RemoteException
+             *
+             * Spec 10.6.6
              */
 
+            Iterator it = getEjbHomeMethods(bean);
+            while (it.hasNext()) {
+                Method ejbHome = (Method)it.next();
+                if (!isPublic(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.a"));
+                    status = false;
+                }
+
+                if (isStatic(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.b"));
+                    status = false;
+                }
+
+                if (throwsRemoteException(ejbHome)) {
+                    fireSpecViolationEvent(entity, ejbHome, new Section("10.6.6.c"));
+                    status = false;
+                }
+            }
+
+            /*
+             * The CMP entity bean MUST implement get and set accessor methods for 
+			 * each field within the abstract persistance schema.
+             *
+             * Spec 10.6.2
+             */
+
+			try {
+                it = entity.getCMPFields();
+                while(it.hasNext()) {
+                    String fieldName = (String)it.next();
+			        String getName = "get" + fieldName.substring(0,1).toUpperCase() +
+				                     fieldName.substring(1);
+                    try {
+				        Method m = bean.getDeclaredMethod(getName, new Class[0]);
+				    } catch (NoSuchMethodException nsme) {
+                        fireSpecViolationEvent(entity, new Section("10.6.2.g"));
+                        status = false;
+				    }
+				    String setName = "set" + fieldName.substring(0,1).toUpperCase() +
+				                     fieldName.substring(1);
+                    Field field = bean.getField(fieldName);
+                    Class[] args = new Class[1];
+				    args[0] = field.getType();
+                    try {
+				        Method m = bean.getDeclaredMethod(setName, args);
+				    } catch (NoSuchMethodException nsme) {
+                        fireSpecViolationEvent(entity, new Section("10.6.2.h"));
+                        status = false;
+				    }
+	             }				 
+             } catch (NoSuchFieldException nsfe) {
+                 fireSpecViolationEvent(entity, new Section("10.6.2.j"));
+                 status = false;
+			 }
+
+            /*
+             * The ejbSelect(...) method signatures MUST follow these rules:
+             *
+             *      - The method name MUST have ejbSelect as its prefix.
+             *      - The method MUST be declared as public
+             *      - The method MUST be declared as abstract.
+             *      - The method MUST define the javax.ejb.FinderException
+             *
+             * Spec 10.6.7
+             */
+
+            it = getEjbSelectMethods(bean);
+            while (it.hasNext()) {
+                Method ejbSelect = (Method)it.next();
+                if (!isPublic(ejbSelect)) {
+                    fireSpecViolationEvent(entity, ejbSelect, new Section("10.6.7.a"));
+                    status = false;
+                }
+
+                if (!isAbstract(ejbSelect)) {
+                    fireSpecViolationEvent(entity, ejbSelect, new Section("10.6.7.b"));
+                    status = false;
+                }
+
+                if (!throwsFinderException(ejbSelect)) {
+                    fireSpecViolationEvent(entity, ejbSelect, new Section("10.6.7.c"));
+                    status = false;
+                }
+            }
+
+            /**
+             * A CMP Entity Bean must not define Finder methods.
+             *
+             * Spec 10.6.2
+             */
+
+            if (hasFinderMethod(bean)) {
+                fireSpecViolationEvent(entity, new Section("10.6.2.i"));
+                status = false;
+            }
         }
         catch (ClassNotFoundException e) {
 
@@ -2237,79 +2350,113 @@ public class EJBVerifier20 extends AbstractVerifier {
 
     private boolean verifyPrimaryKey(EntityMetaData entity) {
         boolean status = true;
-        String section;
-        if (entity.isCMP()) section = "10.6.13";
-        else section = "12.2.12";
+        boolean cmp = entity.isCMP();
         if(entity.getPrimaryKeyClass() == null || entity.getPrimaryKeyClass().length() == 0) {
-            fireSpecViolationEvent(entity, new Section(section+".a"));
+            if (cmp) fireSpecViolationEvent(entity, new Section("10.6.1.a"));
+            else fireSpecViolationEvent(entity, new Section("12.2.1.a"));
             return false; // We can't get any further if there's no PK class specified!
         }
 
+	    /**
+         * FIXME - Still missing the bits from 10.8.2 for CMP primary keys.  Primarily
+         * the class must be public, all fields in the class must be public and the
+         * fields must also be a subset of the CMP fields within the bean.
+         */
+
+        Class cls = null;
+        try {
+            cls = classloader.loadClass(entity.getPrimaryKeyClass());
+        } catch(ClassNotFoundException e) {
+            if (cmp) fireSpecViolationEvent(entity, new Section("10.6.13.d"));
+            else fireSpecViolationEvent(entity, new Section("12.2.12.d"));
+            status = false;  // Can't do any other checks if the class is null!
+		}
+
+        /**
+         * The primary key type must be a valid type in RMI-IIOP.
+         *
+         * Spec 10.6.13 & 12.2.12
+         */
+        if (!isRMIIDLValueType(cls)) {
+            if (cmp) fireSpecViolationEvent(entity, new Section("10.6.13.a"));
+            else fireSpecViolationEvent(entity, new Section("12.2.12.a"));
+            status = false;
+        }
+
+        /**
+         * No primary key field specified, just a primary key class.
+         */
         if(entity.getPrimKeyField() == null || entity.getPrimKeyField().length() == 0) {
 
-            Class cls = null;
-
-            try {
-                cls = classloader.loadClass(entity.getPrimaryKeyClass());
-
-                /**
-                 * The primary key type must be a valid type in RMI-IIOP.
-                 *
-                 * Spec 10.6.13 & 12.2.12
-                 */
-                if (!isRMIIDLValueType(cls)) {
-                    status = false;
-                    fireSpecViolationEvent(entity, new Section(section+".b"));
-                }
-
-                if(!cls.getName().equals("java.lang.Object")) {
-                    Object one, two;
+			/**
+             * This is a check for some interesting implementation of equals() and
+             * hashCode().  I am not sure how well it works in the end.
+             */
+            if(!cls.getName().equals("java.lang.Object")) {
+                Object one, two;
+                try {
+                    one = cls.newInstance();
+                    two = cls.newInstance();
                     try {
-                        one = cls.newInstance();
-                        two = cls.newInstance();
-                        try {
-                            if(!one.equals(two)) {
-                                status = false;
-                                fireSpecViolationEvent(entity, new Section(section+".c"));
-                            }
-                        } catch(NullPointerException e) {} // That's OK - the implementor expected the fields to have values
-                        try {
-                            if(one.hashCode() != two.hashCode()) {
-                                status = false;
-                                fireSpecViolationEvent(entity, new Section(section+".d"));
-                            }
-                        } catch(NullPointerException e) {} // That's OK - the implementor expected the fields to have values
-                    } catch(IllegalAccessException e) {
-                        // [FIXME] The two error messages below are incorrect.
-                        //         The RMI-IDL language mapping does not require
-                        //         the value types to have a no args constructor.
-                        //                                                  [JPL]
-                        //
-                        //fireSpecViolationEvent(entity, new Section("9.2.9.a"));
-                        //status = false;
-                    } catch(InstantiationException e) {
-                        //fireSpecViolationEvent(entity, new Section("9.2.9.a"));
-                        //status = false;
+                        if(!one.equals(two)) {
+                			if (cmp) fireSpecViolationEvent(entity, new Section("10.6.13.b"));
+		                    else fireSpecViolationEvent(entity, new Section("12.2.12.b"));
+                            status = false;
+                        }
+                    } catch(NullPointerException e) {} // That's OK - the implementor expected the fields to have values
+                    try {
+                        if(one.hashCode() != two.hashCode()) {
+                			if (cmp) fireSpecViolationEvent(entity, new Section("10.6.13.c"));
+			                else fireSpecViolationEvent(entity, new Section("12.2.12.c"));
+                            status = false;
+                        }
+                    } catch(NullPointerException e) {} // That's OK - the implementor expected the fields to have values
+                } catch(IllegalAccessException e) {
+                    /**
+                     * If CMP primary key class MUST have a public constructor with no
+                     * parameters.
+                     * 10.8.2.a
+                     */
+                    if (cmp) {
+                        fireSpecViolationEvent(entity, new Section("10.8.2.a"));
+                        status = false;
                     }
+                } catch(InstantiationException e) {
+					//Not sure what condition this is at the moment - JMW
+                    //fireSpecViolationEvent(entity, new Section("9.2.9.a"));
+                    //status = false;
                 }
-            } catch(ClassNotFoundException e) {
-                fireSpecViolationEvent(entity, new Section(section+".e"));
-                status = false;  // Can't do any other checks if the class is null!
             }
         } else {
+            /**
+             *  BMP Beans MUST not include the primkey-field element in their deployment
+             *  descriptor.
+             *  Deployment descriptor comment
+             */
             if(entity.isBMP()) {
-                fireSpecViolationEvent(entity, new Section("9.4.7.1.a"));
+                fireSpecViolationEvent(entity, new Section("dd.a"));
                 status = false;
             }
             try {
                 Class fieldClass = classloader.loadClass(entity.getEjbClass());
                 Field field = null;
                 try {
+                    /**
+                     * The class of the primary key field MUST match the primary key
+                     * class specified for the entity bean.
+					 *
+                     * Spec 10.8.1
+                     */
                     field = fieldClass.getField(entity.getPrimKeyField());
                     if(!entity.getPrimaryKeyClass().equals(field.getType().getName())) {
                         status = false;
-                        fireSpecViolationEvent(entity, new Section("9.4.7.1.c"));
+                        fireSpecViolationEvent(entity, new Section("10.8.1.a"));
                     }
+                    /**
+                     * The primary keyfield MUST be a CMP field within the entity bean.
+					 *
+                     * Spec 10.8.1
+                     */
                     Iterator it = entity.getCMPFields();
                     boolean found = false;
                     while(it.hasNext()) {
@@ -2321,11 +2468,16 @@ public class EJBVerifier20 extends AbstractVerifier {
                     }
                     if(!found) {
                         status = false;
-                        fireSpecViolationEvent(entity, new Section("9.4.7.1.d"));
+                        fireSpecViolationEvent(entity, new Section("10.8.1.b"));
                     }
                 } catch(NoSuchFieldException e) {
+                    /**
+                     * The primary keyfield MUST be a CMP field within the entity bean.
+					 *
+                     * Spec 10.8.1
+                     */
                     status = false;
-                    fireSpecViolationEvent(entity, new Section("9.4.7.1.b"));
+                    fireSpecViolationEvent(entity, new Section("10.8.1.b"));
                 }
             } catch(ClassNotFoundException e) {} // reported elsewhere
         }

@@ -19,7 +19,7 @@ package org.jboss.verifier.strategy;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * This package and its source code is available at www.jboss.org
- * $Id: AbstractVerifier.java,v 1.28 2002/04/08 02:35:01 jwalters Exp $
+ * $Id: AbstractVerifier.java,v 1.29 2002/04/09 04:06:37 jwalters Exp $
  */
 
 // standard imports
@@ -84,7 +84,7 @@ import org.gjt.lindfors.pattern.StrategyContext;
  * </ul>
  * </p>
  *
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since  	JDK 1.3
  */
 public abstract class AbstractVerifier implements VerificationStrategy {
@@ -319,6 +319,13 @@ public abstract class AbstractVerifier implements VerificationStrategy {
      */
     public boolean isAbstract(Class c) {
         return (Modifier.isAbstract(c.getModifiers()));
+    }
+
+    /*
+     * checks if the given method is declared as abstract
+     */
+    public boolean isAbstract(Method m) {
+        return (Modifier.isAbstract(m.getModifiers()));
     }
 
     /*
@@ -1145,11 +1152,11 @@ public abstract class AbstractVerifier implements VerificationStrategy {
     protected final static String CREATE_METHOD         =
         "create";
 
-    protected final static String HOME_METHOD         =
-        "home";
-
     protected final static String EJB_HOME_METHOD     =
         "ejbHome";
+
+    protected final static String EJB_SELECT_METHOD     =
+        "ejbSelect";
 
     private final static String FINALIZE_METHOD       =
         "finalize";
