@@ -35,6 +35,7 @@ import org.jboss.ejb.EJBProxyFactory;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.invocation.Invocation;
+import org.jboss.invocation.InvocationType;
 
 import org.jboss.logging.Logger;
 import org.jboss.jms.ConnectionFactoryHelper;
@@ -57,7 +58,7 @@ import org.w3c.dom.Node;
  *      </a>
  * @author    <a href="mailto:marc.fleury@telkel.com">Marc Fleury</a>
  * @author    <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * @version   $Revision: 1.46 $
+ * @version   $Revision: 1.47 $
  */
 public class JMSContainerInvoker
    implements EJBProxyFactory
@@ -628,8 +629,9 @@ public class JMSContainerInvoker
       throws Exception
    {
 
-      Invocation mi =
-      new Invocation(id, m, args, tx, identity, credential);
+      Invocation invocation = 
+            new Invocation(id, m, args, tx, identity, credential);
+      invocation.setType(InvocationType.LOCAL);
       
       // Set the right context classloader
       ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -637,7 +639,7 @@ public class JMSContainerInvoker
       
       try
       {
-         return container.invoke(mi);
+         return container.invoke(invocation);
       }
       finally
       {
