@@ -55,7 +55,8 @@ public class Query
         } 
 
         if (!security.hasPermission(ScarabSecurity.ITEM__APPROVE, 
-                                    user, module))
+                                    user, module) 
+            && getQueryType().getQueryTypeId().equals(GLOBAL__PK))
         {
             // Send Email
             // add data to context for email template
