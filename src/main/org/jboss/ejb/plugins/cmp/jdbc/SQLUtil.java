@@ -18,9 +18,9 @@ import java.util.ArrayList;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.logging.Logger;
 
 import java.util.Vector;
@@ -31,7 +31,7 @@ import java.util.Vector;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  */
 public final class SQLUtil
 {
@@ -368,7 +368,7 @@ public final class SQLUtil
    /**
     * Returns ', columnName0 [, columnName1 [AND columnName2 [...]]]'
     */
-   public static StringBuffer appendColumnNamesClause(JDBCCMPFieldBridge[] fields,
+   public static StringBuffer appendColumnNamesClause(JDBCFieldBridge[] fields,
                                                       String identifier,
                                                       StringBuffer buf)
    {
@@ -662,26 +662,26 @@ public final class SQLUtil
    //    [AND parent.pkColumnName2=child.fkColumnName2 [...]]]
    // =======================================================================
 
-   public static StringBuffer getJoinClause(JDBCCMRFieldBridge cmrField,
+   public static StringBuffer getJoinClause(JDBCAbstractCMRFieldBridge cmrField,
                                             String parentAlias,
                                             String childAlias,
                                             StringBuffer buf)
    {
-      JDBCEntityBridge parentEntity = cmrField.getEntity();
-      JDBCEntityBridge childEntity = (JDBCEntityBridge)cmrField.getRelatedEntity();
+      JDBCAbstractEntityBridge parentEntity = cmrField.getEntity();
+      JDBCAbstractEntityBridge childEntity = (JDBCEntityBridge)cmrField.getRelatedEntity();
 
-      JDBCCMPFieldBridge parentField;
-      JDBCCMPFieldBridge childField;
+      JDBCFieldBridge parentField;
+      JDBCFieldBridge childField;
 
       if(cmrField.hasForeignKey())
       {
          // parent has the foreign keys
-         JDBCCMPFieldBridge[] parentFkFields = cmrField.getForeignKeyFields();
+         JDBCFieldBridge[] parentFkFields = cmrField.getForeignKeyFields();
          int i = 0;
          while(i < parentFkFields.length)
          {
             parentField = parentFkFields[i++];
-            childField = childEntity.getCMPFieldByName(parentField.getFieldName());
+            childField = (JDBCFieldBridge)childEntity.getFieldByName(parentField.getFieldName());
             getJoinClause(parentField, parentAlias, childField, childAlias, buf);
             if(i < parentFkFields.length)
                buf.append(AND);
@@ -690,12 +690,12 @@ public final class SQLUtil
       else
       {
          // child has the foreign keys
-         JDBCCMPFieldBridge[] childFkFields = cmrField.getRelatedCMRField().getForeignKeyFields();
+         JDBCFieldBridge[] childFkFields = cmrField.getRelatedCMRField().getForeignKeyFields();
          int i = 0;
          while(i < childFkFields.length)
          {
             childField = childFkFields[i++];
-            parentField = parentEntity.getCMPFieldByName(childField.getFieldName());
+            parentField = (JDBCFieldBridge)parentEntity.getFieldByName(childField.getFieldName());
 
             // add the sql
             getJoinClause(parentField, parentAlias, childField, childAlias, buf);
@@ -708,22 +708,22 @@ public final class SQLUtil
       return buf;
    }
 
-   public static StringBuffer getRelationTableJoinClause(JDBCCMRFieldBridge cmrField,
+   public static StringBuffer getRelationTableJoinClause(JDBCAbstractCMRFieldBridge cmrField,
                                                          String parentAlias,
                                                          String relationTableAlias,
                                                          StringBuffer buf)
    {
-      JDBCEntityBridge parentEntity = cmrField.getEntity();
-      JDBCCMPFieldBridge parentField;
-      JDBCCMPFieldBridge relationField;
+      JDBCAbstractEntityBridge parentEntity = cmrField.getEntity();
+      JDBCFieldBridge parentField;
+      JDBCFieldBridge relationField;
 
       // parent to relation table join
-      JDBCCMPFieldBridge[] parentFields = cmrField.getTableKeyFields();
+      JDBCFieldBridge[] parentFields = cmrField.getTableKeyFields();
       int i = 0;
       while(i < parentFields.length)
       {
          relationField = parentFields[i++];
-         parentField = parentEntity.getCMPFieldByName(relationField.getFieldName());
+         parentField = (JDBCFieldBridge)parentEntity.getFieldByName(relationField.getFieldName());
          getJoinClause(parentField, parentAlias, relationField, relationTableAlias, buf);
          if(i < parentFields.length)
             buf.append(AND);

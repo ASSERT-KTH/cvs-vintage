@@ -70,7 +70,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
       // set create allowed
       createAllowed = true;
-      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
       for(int i = 0; i < pkFields.length; i++)
       {
          if(pkFields[i].isReadOnly())
@@ -116,18 +116,18 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
       // TODO: implement this logic nicer
       if(insertAfterEjbPostCreate)
       {
-         if(!entity.isEjbCreateDone(ctx))
+         if(!JDBCEntityBridge.isEjbCreateDone(ctx))
          {
             checkCreateAllowed();
             generateFields(ctx);
-            entity.setEjbCreateDone(ctx);
+            JDBCEntityBridge.setEjbCreateDone(ctx);
          }
          else
          {
             beforeInsert(ctx);
             performInsert(ctx);
             afterInsert(ctx);
-            entity.setCreated(ctx);
+            JDBCEntityBridge.setCreated(ctx);
          }
       }
       else
@@ -137,7 +137,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
          beforeInsert(ctx);
          performInsert(ctx);
          afterInsert(ctx);
-         entity.setCreated(ctx);
+         JDBCEntityBridge.setCreated(ctx);
       }
       return getPrimaryKey(ctx);
    }
@@ -154,12 +154,12 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
    {
       // extract the pk field to be generated
       JDBCCMPFieldBridge pkField = null;
-      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
       for(int i = 0; i < pkFields.length; ++i)
       {
          if(pkField != null)
             throw new DeploymentException("Generation only supported with single PK field.");
-         pkField = pkFields[i];
+         pkField = (JDBCCMPFieldBridge)pkFields[i];
       }
       return pkField;
    }
@@ -217,7 +217,7 @@ public abstract class JDBCAbstractCreateCommand implements JDBCCreateCommand
 
    protected void initInsertFields()
    {
-      JDBCCMPFieldBridge[] fields = entity.getTableFields();
+      JDBCFieldBridge[] fields = entity.getTableFields();
       List insertFieldsList = new ArrayList(fields.length);
       for(int i = 0; i < fields.length; i++)
       {

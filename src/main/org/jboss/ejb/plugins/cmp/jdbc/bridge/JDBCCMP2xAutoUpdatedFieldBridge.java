@@ -18,7 +18,7 @@ import java.sql.PreparedStatement;
  * The base class for all automatically updated fields such as audit and version.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public abstract class JDBCCMP2xAutoUpdatedFieldBridge extends JDBCCMP2xFieldBridge
 {
@@ -36,7 +36,7 @@ public abstract class JDBCCMP2xAutoUpdatedFieldBridge extends JDBCCMP2xFieldBrid
       throws DeploymentException
    {
       super(
-         cmpField.getManager(),
+         (JDBCStoreManager)cmpField.getManager(),
          cmpField.getFieldName(),
          cmpField.getFieldType(),
          cmpField.getJDBCType(),

@@ -9,6 +9,7 @@ package org.jboss.ejb.plugins.cmp.jdbc;
 
 import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQlQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCQueryMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -18,7 +19,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  */
 public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
 {
@@ -56,7 +57,7 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
       // set select object
       if(compiler.isSelectEntity())
       {
-         JDBCEntityBridge selectEntity = compiler.getSelectEntity();
+         JDBCEntityBridge selectEntity = (JDBCEntityBridge)compiler.getSelectEntity();
 
          // set the select entity
          setSelectEntity(selectEntity);
@@ -71,7 +72,7 @@ public final class JDBCEJBQLQuery extends JDBCAbstractQueryCommand
       }
       else if(compiler.isSelectField())
       {
-         setSelectField(compiler.getSelectField());
+         setSelectField((JDBCCMPFieldBridge)compiler.getSelectField());
       }
       else
       {

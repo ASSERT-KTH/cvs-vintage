@@ -26,6 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.CMPFieldStateFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
 import org.jboss.ejb.plugins.cmp.jdbc.LockingStrategy;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 
 import org.jboss.logging.Logger;
 
@@ -45,7 +46,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W.Rupp</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  *
  * <p><b>Revisions:</b>
  *
@@ -157,7 +158,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       defaultFlags |= flag;
    }
 
-   public JDBCStoreManager getManager()
+   public JDBCEntityPersistenceStore getManager()
    {
       return manager;
    }
@@ -222,7 +223,7 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
       {
          throw new EJBException("Field is read-only: fieldName=" + fieldName);
       }
-      if(primaryKeyMember && manager.getEntityBridge().isEjbCreateDone(ctx))
+      if(primaryKeyMember && JDBCEntityBridge.isEjbCreateDone(ctx))
       {
          throw new IllegalStateException("A CMP field that is a member " +
             "of the primary key can only be set in ejbCreate " +
@@ -426,6 +427,11 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          JDBCUtil.ResultSetReader[] rsReaders = jdbcType.getResultSetReaders();
          for(int i = 0; i < javaTypes.length; i++)
          {
+            if(log.isTraceEnabled())
+            {
+               log.debug("reading: " + javaTypes[i].getName() + ' ' + getFieldName() + " index=" + parameterIndex);
+            }
+
             Object columnValue = rsReaders[i].get(rs, parameterIndex++, javaTypes[i]);
             argumentRef[0] = jdbcType.setColumnValue(i, argumentRef[0], columnValue);
          }
@@ -439,6 +445,11 @@ public abstract class JDBCAbstractCMPFieldBridge implements JDBCCMPFieldBridge
          throw new EJBException("Internal error getting results " +
             "for field member " + getFieldName(), e);
       }
+   }
+
+   public boolean isCMPField()
+   {
+      return true;
    }
 
    public boolean isRelationTableField()

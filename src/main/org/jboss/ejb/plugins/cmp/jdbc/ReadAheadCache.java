@@ -34,7 +34,7 @@ import java.util.Map;
  * basis. The read ahead data for each entity is stored with a soft reference.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  */
 public final class ReadAheadCache
 {
@@ -392,8 +392,8 @@ public final class ReadAheadCache
                cmrField.load(ctx, (List) value);
 
                // add the loaded list to the related entity's readahead cache
-               JDBCStoreManager relatedManager =
-                  cmrField.getRelatedCMRField().getJDBCStoreManager();
+               JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
+               JDBCStoreManager relatedManager = relatedCMRField.getJDBCStoreManager();
                ReadAheadCache relatedReadAheadCache =
                   relatedManager.getReadAheadCache();
                relatedReadAheadCache.addFinderResults(

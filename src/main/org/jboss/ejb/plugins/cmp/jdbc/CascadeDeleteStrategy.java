@@ -269,7 +269,7 @@ public abstract class CascadeDeleteStrategy
    public CascadeDeleteStrategy(JDBCCMRFieldBridge cmrField)
    {
       this.cmrField = cmrField;
-      entity = cmrField.getEntity();
+      entity = (JDBCEntityBridge)cmrField.getEntity();
       relatedManager = cmrField.getRelatedManager();
       log = Logger.getLogger(getClass().getName() + "." + cmrField.getEntity().getEntityName());
    }

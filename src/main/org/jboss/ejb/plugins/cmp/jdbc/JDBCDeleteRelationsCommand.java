@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  */
 public final class JDBCDeleteRelationsCommand
 {
@@ -119,8 +119,8 @@ public final class JDBCDeleteRelationsCommand
    {
       int index = 1;
       Iterator pairs = relationData.removedRelations.iterator();
-      JDBCCMPFieldBridge[] leftFields = relationData.getLeftCMRField().getTableKeyFields();
-      JDBCCMPFieldBridge[] rightFields = relationData.getRightCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] leftFields = (JDBCCMPFieldBridge[])relationData.getLeftCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] rightFields = (JDBCCMPFieldBridge[])relationData.getRightCMRField().getTableKeyFields();
       while(pairs.hasNext())
       {
          RelationPair pair = (RelationPair) pairs.next();

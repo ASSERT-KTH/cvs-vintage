@@ -17,21 +17,21 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.jboss.ejb.plugins.cmp.ejbql.*;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.logging.Logger;
 
 /**
  * Compiles EJB-QL and JBossQL into SQL using OUTER and INNER joins.
  *
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 public final class EJBQLToSQL92Compiler
    implements QLCompiler, JBossQLParserVisitor
@@ -61,7 +61,7 @@ public final class EJBQLToSQL92Compiler
    private int offsetValue;
    private int limitParam;
    private int limitValue;
-   private JDBCStoreManager selectManager;
+   private JDBCEntityPersistenceStore selectManager;
    private Object selectObject;
    private List inputParameters = new ArrayList();
 
@@ -177,22 +177,32 @@ public final class EJBQLToSQL92Compiler
 
    public boolean isSelectEntity()
    {
-      return selectObject instanceof JDBCEntityBridge;
+      return selectObject instanceof JDBCAbstractEntityBridge;
    }
 
-   public JDBCEntityBridge getSelectEntity()
+   public JDBCAbstractEntityBridge getSelectEntity()
    {
-      return (JDBCEntityBridge) selectObject;
+      return (JDBCAbstractEntityBridge) selectObject;
    }
 
    public boolean isSelectField()
    {
-      return selectObject instanceof JDBCCMPFieldBridge;
+      boolean result;
+      if(selectObject instanceof JDBCFieldBridge)
+      {
+         JDBCFieldBridge field = (JDBCFieldBridge)selectObject;
+         result = field.isCMPField();
+      }
+      else
+      {
+         result = false;
+      }
+      return result;
    }
 
-   public JDBCCMPFieldBridge getSelectField()
+   public JDBCFieldBridge getSelectField()
    {
-      return (JDBCCMPFieldBridge) selectObject;
+      return (JDBCFieldBridge) selectObject;
    }
 
    public SelectFunction getSelectFunction()
@@ -200,7 +210,7 @@ public final class EJBQLToSQL92Compiler
       return (SelectFunction) selectObject;
    }
 
-   public JDBCStoreManager getStoreManager()
+   public EntityPersistenceStore getStoreManager()
    {
       return selectManager;
    }
@@ -386,18 +396,19 @@ public final class EJBQLToSQL92Compiler
          }
          else
          {
-            JDBCEntityBridge selectEntity = (JDBCEntityBridge) path.getEntity();
-            setTypeFactory(selectEntity.getManager().getJDBCTypeFactory());
+            JDBCAbstractEntityBridge selectEntity = (JDBCAbstractEntityBridge) path.getEntity();
             selectManager = selectEntity.getManager();
             selectObject = selectEntity;
+            setTypeFactory(selectEntity.getManager().getJDBCTypeFactory());
 
             final String alias = aliasManager.getAlias(path.getPath());
             SQLUtil.getColumnNamesClause(
-               selectEntity.getPrimaryKeyFields(),
+               selectEntity.getTableFields(),
                alias,
                sql
             );
 
+            /*
             if(readAhead.isOnFind())
             {
                String eagerLoadGroupName = readAhead.getEagerLoadGroup();
@@ -409,6 +420,7 @@ public final class EJBQLToSQL92Compiler
                   sql
                );
             }
+            */
 
             addLeftJoinPath(path);
          }
@@ -423,20 +435,20 @@ public final class EJBQLToSQL92Compiler
 
          if(path.isCMPField())
          {
-            JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
+            JDBCFieldBridge selectField = (JDBCFieldBridge)path.getCMPField();
             selectManager = selectField.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
          }
          else if(path.isCMRField())
          {
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
-            selectManager = cmrField.getEntity().getManager();
+            JDBCFieldBridge cmrField = (JDBCFieldBridge)path.getCMRField();
+            selectManager = cmrField.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
             addLeftJoinPath(path);
          }
          else
          {
-            final JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
+            final JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge)path.getEntity();
             selectManager = entity.getManager();
             setTypeFactory(selectManager.getJDBCTypeFactory());
             addLeftJoinPath(path);
@@ -571,9 +583,9 @@ public final class EJBQLToSQL92Compiler
 
          if(field.getJDBCType() == null)
          {
-            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) field;
-            final JDBCCMPFieldBridge[] keyFields;
-            if(cmrField.getRelationMetaData().isTableMappingStyle())
+            JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) field;
+            final JDBCFieldBridge[] keyFields;
+            if(cmrField.getMetaData().getRelationMetaData().isTableMappingStyle())
             {
                keyFields = cmrField.getTableKeyFields();
             }
@@ -635,8 +647,8 @@ public final class EJBQLToSQL92Compiler
       addLeftJoinPath(path);
 
       StringBuffer sql = (StringBuffer) data;
-      JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField();
-      JDBCEntityBridge relatedEntity = cmrField.getRelatedJDBCEntity();
+      JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField();
+      JDBCAbstractEntityBridge relatedEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
       String alias = aliasManager.getAlias(path.getPath());
       SQLUtil.getIsNullClause(node.not, relatedEntity.getPrimaryKeyFields(), alias, sql);
 
@@ -648,7 +660,7 @@ public final class EJBQLToSQL92Compiler
       Node member = node.jjtGetChild(0);
       ASTPath colPath = (ASTPath) node.jjtGetChild(1);
       String colAlias = aliasManager.getAlias(colPath.getPath());
-      JDBCEntityBridge colEntity = (JDBCEntityBridge) colPath.getEntity();
+      JDBCAbstractEntityBridge colEntity = (JDBCAbstractEntityBridge) colPath.getEntity();
 
       addLeftJoinPath(colPath);
 
@@ -669,7 +681,7 @@ public final class EJBQLToSQL92Compiler
       else if(member instanceof ASTPath)
       {
          ASTPath memberPath = (ASTPath) member;
-         JDBCEntityBridge memberEntity = (JDBCEntityBridge) memberPath.getEntity();
+         JDBCAbstractEntityBridge memberEntity = (JDBCAbstractEntityBridge) memberPath.getEntity();
 
          if(!memberEntity.equals(colEntity))
          {
@@ -965,8 +977,8 @@ public final class EJBQLToSQL92Compiler
       }
       else
       {
-         JDBCEntityBridge entity = (JDBCEntityBridge)cntPath.getEntity();
-         final JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge)cntPath.getEntity();
+         final JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          if(pkFields.length > 1)
          {
             countCompositePk = true;
@@ -1020,7 +1032,7 @@ public final class EJBQLToSQL92Compiler
       }
 
       addLeftJoinPath(node);
-      JDBCCMPFieldBridge cmpField = (JDBCCMPFieldBridge) node.getCMPField();
+      JDBCFieldBridge cmpField = (JDBCFieldBridge) node.getCMPField();
       String alias = aliasManager.getAlias(node.getPath(node.size() - 2));
       SQLUtil.getColumnNamesClause(cmpField, alias, buf);
       return data;
@@ -1136,7 +1148,7 @@ public final class EJBQLToSQL92Compiler
    public Object visit(ASTRangeVariableDeclaration node, Object data)
    {
       ASTAbstractSchema schema = (ASTAbstractSchema) node.jjtGetChild(0);
-      JDBCEntityBridge entity = (JDBCEntityBridge) schema.entity;
+      JDBCAbstractEntityBridge entity = (JDBCAbstractEntityBridge) schema.entity;
       ASTIdentifier id = (ASTIdentifier) node.jjtGetChild(1);
       declareTable(id.identifier, entity.getTableName());
       return data;
@@ -1155,7 +1167,7 @@ public final class EJBQLToSQL92Compiler
       ASTPath fromPath = (ASTPath) fromNode;
       addLeftJoinPath(fromPath);
       String fromAlias = aliasManager.getAlias(fromPath.getPath());
-      JDBCEntityBridge fromEntity = (JDBCEntityBridge) fromPath.getEntity();
+      JDBCAbstractEntityBridge fromEntity = (JDBCAbstractEntityBridge) fromPath.getEntity();
 
       if(toNode instanceof ASTParameter)
       {
@@ -1173,7 +1185,7 @@ public final class EJBQLToSQL92Compiler
          ASTPath toPath = (ASTPath) toNode;
          addLeftJoinPath(toPath);
          String toAlias = aliasManager.getAlias(toPath.getPath());
-         JDBCEntityBridge toEntity = (JDBCEntityBridge) toPath.getEntity();
+         JDBCAbstractEntityBridge toEntity = (JDBCAbstractEntityBridge) toPath.getEntity();
 
          // can only compare like kind entities
          if(!fromEntity.equals(toEntity))
@@ -1218,8 +1230,8 @@ public final class EJBQLToSQL92Compiler
             if(path.isCMRField(i))
             {
                final String curPath = path.getPath(i);
-               final JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField(i);
-               final JDBCEntityBridge joinEntity = cmrField.getRelatedJDBCEntity();
+               final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
+               final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
                final String joinAlias = aliasManager.getAlias(curPath);
 
                JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
@@ -1273,8 +1285,8 @@ public final class EJBQLToSQL92Compiler
             if(path.isCMRField(i))
             {
                final String curPath = path.getPath(i);
-               final JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) path.getCMRField(i);
-               final JDBCEntityBridge joinEntity = cmrField.getRelatedJDBCEntity();
+               final JDBCAbstractCMRFieldBridge cmrField = (JDBCAbstractCMRFieldBridge) path.getCMRField(i);
+               final JDBCAbstractEntityBridge joinEntity = (JDBCAbstractEntityBridge)cmrField.getRelatedEntity();
                final String joinAlias = aliasManager.getAlias(curPath);
 
                JDBCRelationMetaData relation = cmrField.getMetaData().getRelationMetaData();
@@ -1407,11 +1419,11 @@ public final class EJBQLToSQL92Compiler
    }
 
    // verify that parameter is the same type as the entity
-   private void verifyParameterEntityType(int number, JDBCEntityBridge entity)
+   private void verifyParameterEntityType(int number, JDBCAbstractEntityBridge entity)
    {
       Class parameterType = getParameterType(number);
-      Class remoteClass = entity.getMetaData().getRemoteClass();
-      Class localClass = entity.getMetaData().getLocalClass();
+      Class remoteClass = entity.getRemoteInterface();
+      Class localClass = entity.getLocalInterface();
       if((localClass == null || !localClass.isAssignableFrom(parameterType)) &&
          (remoteClass == null || !remoteClass.isAssignableFrom(parameterType)))
       {

@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
 {
@@ -107,11 +107,11 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
       SelectFunction selectFunction = null;
       if(compiler.isSelectEntity())
       {
-         selectEntity = compiler.getSelectEntity();
+         selectEntity = (JDBCEntityBridge)compiler.getSelectEntity();
       }
       else if(compiler.isSelectField())
       {
-         selectField = compiler.getSelectField();
+         selectField = (JDBCCMPFieldBridge)compiler.getSelectField();
       }
       else
       {
@@ -143,7 +143,7 @@ public final class JDBCDynamicQLQuery extends JDBCAbstractQueryCommand
          selectEntity,
          selectField,
          selectFunction,
-         compiler.getStoreManager(),
+         (JDBCStoreManager)compiler.getStoreManager(),
          mask,
          compiler.getInputParameters(),
          leftJoinCMRList,

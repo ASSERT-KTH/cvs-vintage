@@ -37,9 +37,7 @@ import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.EntityContainer;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.ejb.EntityCache;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
-import org.jboss.ejb.plugins.cmp.bridge.CMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCContext;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
@@ -48,6 +46,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.CascadeDeleteStrategy;
 import org.jboss.ejb.plugins.cmp.jdbc.RelationData;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 import org.jboss.tm.TransactionLocal;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
@@ -72,9 +71,9 @@ import org.jboss.security.SecurityAssociation;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.77 $
+ * @version $Revision: 1.78 $
  */
-public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
+public final class JDBCCMRFieldBridge extends JDBCAbstractCMRFieldBridge
 {
    /** The entity bridge to which this cmr field belongs. */
    private final JDBCEntityBridge entity;
@@ -225,7 +224,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       }
 
       // Related Manager
-      relatedManager = relatedEntity.getManager();
+      relatedManager = (JDBCStoreManager)relatedEntity.getManager();
 
       // Related Container
       EntityContainer relatedContainer = relatedManager.getContainer();
@@ -281,7 +280,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
             pkFieldsToFKFields.put(pkField, new JDBCCMP2xFieldBridge(manager, cmpFieldMetaData));
          }
          // second step is to order fk fields to match the order of pk fields
-         JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          for(int i = 0; i < pkFields.length; ++i)
          {
             Object fkField = pkFieldsToFKFields.get(pkFields[i]);
@@ -339,7 +338,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    /**
     * Gets bridge for this entity.
     */
-   public JDBCEntityBridge getEntity()
+   public JDBCAbstractEntityBridge getEntity()
    {
       return entity;
    }
@@ -437,7 +436,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    /**
     * Gets the key fields that this entity maintains in the relation table.
     */
-   public JDBCCMPFieldBridge[] getTableKeyFields()
+   public JDBCFieldBridge[] getTableKeyFields()
    {
       return tableKeyFields;
    }
@@ -445,15 +444,20 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    /**
     * Gets the foreign key fields of this entity (i.e., related entities pk fields)
     */
-   public JDBCCMP2xFieldBridge[] getForeignKeyFields()
+   public JDBCFieldBridge[] getForeignKeyFields()
    {
       return foreignKeyFields;
+   }
+
+   public JDBCEntityPersistenceStore getManager()
+   {
+      return manager;
    }
 
    /**
     * The related entity's cmr field for this relationship.
     */
-   public JDBCCMRFieldBridge getRelatedCMRField()
+   public JDBCAbstractCMRFieldBridge getRelatedCMRField()
    {
       return relatedCMRField;
    }
@@ -591,7 +595,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       if(isReadOnly())
          throw new EJBException("Field is read-only: fieldName=" + getFieldName());
 
-      if(!entity.isEjbCreateDone(ctx))
+      if(!JDBCEntityBridge.isEjbCreateDone(ctx))
       {
          throw new IllegalStateException("A CMR field cannot be set " +
             "in ejbCreate; this should be done in the ejbPostCreate " +
@@ -819,7 +823,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
    private void checkSetForeignKey(EntityEnterpriseContext myCtx, Object newValue)
       throws IllegalStateException
    {
-      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
       for(int i = 0; i < pkFields.length; ++i)
       {
          JDBCCMP2xFieldBridge pkField = (JDBCCMP2xFieldBridge)pkFields[i];
@@ -1492,6 +1496,11 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       throw new UnsupportedOperationException();
    }
 
+   public boolean isCMPField()
+   {
+      return false;
+   }
+
    public boolean hasFKFieldsMappedToCMPFields()
    {
       return hasFKFieldsMappedToCMPFields;
@@ -1562,7 +1571,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
          JDBCCMP2xFieldBridge fkField = null;
 
          // look among the CMP fields for the field with the same column name
-         JDBCCMPFieldBridge[] tableFields = entity.getTableFields();
+         JDBCCMPFieldBridge[] tableFields = (JDBCCMPFieldBridge[])entity.getTableFields();
          for(int tableInd = 0; tableInd < tableFields.length && fkField == null; ++tableInd)
          {
             JDBCCMP2xFieldBridge cmpField = (JDBCCMP2xFieldBridge)tableFields[tableInd];
@@ -1572,7 +1581,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
 
                // construct the foreign key field
                fkField = new JDBCCMP2xFieldBridge(
-                  cmpField.getManager(), // this cmpField's manager
+                  (JDBCStoreManager) cmpField.getManager(), // this cmpField's manager
                   relatedPKField.getFieldName(),
                   relatedPKField.getFieldType(),
                   cmpField.getJDBCType(), // this cmpField's jdbc type
@@ -1609,7 +1618,7 @@ public final class JDBCCMRFieldBridge implements JDBCFieldBridge, CMRFieldBridge
       // The order is important in fk-constraint generation and in SELECT when loading
       if(fkFieldsByRelatedPKFields.size() > 0)
       {
-         JDBCCMPFieldBridge[] relatedPKFields = relatedEntity.getPrimaryKeyFields();
+         JDBCFieldBridge[] relatedPKFields = relatedEntity.getPrimaryKeyFields();
          List fkList = new ArrayList(relatedPKFields.length);
          for(int i = 0; i < relatedPKFields.length; ++i)
          {

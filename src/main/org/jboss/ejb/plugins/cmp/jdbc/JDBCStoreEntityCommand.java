@@ -14,6 +14,7 @@ import javax.ejb.EJBException;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.logging.Logger;
 
 /**
@@ -28,12 +29,12 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCStoreEntityCommand
 {
    private final JDBCEntityBridge entity;
-   private final JDBCCMPFieldBridge[] primaryKeyFields;
+   private final JDBCFieldBridge[] primaryKeyFields;
    private final Logger log;
 
    public JDBCStoreEntityCommand(JDBCStoreManager manager)

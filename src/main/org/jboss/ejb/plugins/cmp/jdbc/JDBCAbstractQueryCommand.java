@@ -45,7 +45,7 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:justin@j-m-f.demon.co.uk">Justin Forder</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  *
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  */
 public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
 {
@@ -229,7 +229,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
                // read the preload fields
                if(eagerLoadMask != null)
                {
-                  JDBCCMPFieldBridge[] tableFields = selectEntity.getTableFields();
+                  JDBCCMPFieldBridge[] tableFields = (JDBCCMPFieldBridge[])selectEntity.getTableFields();
                   for(int i = 0; i < eagerLoadMask.length; i++)
                   {
                      if(eagerLoadMask[i])
@@ -354,7 +354,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.selectField = null;
       this.selectFunction = null;
       this.selectEntity = selectEntity;
-      this.selectManager = selectEntity.getManager();
+      this.selectManager = (JDBCStoreManager)selectEntity.getManager();
    }
 
    protected JDBCCMPFieldBridge getSelectField()
@@ -367,7 +367,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
       this.selectEntity = null;
       this.selectFunction = null;
       this.selectField = selectField;
-      this.selectManager = selectField.getManager();
+      this.selectManager = (JDBCStoreManager)selectField.getManager();
    }
 
    protected void setSelectFunction(SelectFunction func, JDBCStoreManager manager)
@@ -640,7 +640,7 @@ public abstract class JDBCAbstractQueryCommand implements JDBCQueryCommand
          // load eager load group
          if(node.eagerLoadMask != null)
          {
-            JDBCCMPFieldBridge[] tableFields = relatedEntity.getTableFields();
+            JDBCCMPFieldBridge[] tableFields = (JDBCCMPFieldBridge[])relatedEntity.getTableFields();
             for(int fieldInd = 0; fieldInd < tableFields.length; ++fieldInd)
             {
                if(node.eagerLoadMask[fieldInd])

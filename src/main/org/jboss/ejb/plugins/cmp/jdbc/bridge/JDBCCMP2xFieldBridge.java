@@ -34,7 +34,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  */
 public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 {
@@ -75,7 +75,7 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
       throws DeploymentException
    {
       this(
-         cmpField.getManager(),
+         (JDBCStoreManager) cmpField.getManager(),
          cmpField.getFieldName(),
          cmpField.getFieldType(),
          cmpField.getJDBCType(),
@@ -559,7 +559,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
                // put calculated relatedId to the waiting list
                if(ctx.getId() != null)
                {
-                  cmrField.getRelatedCMRField().addRelatedPKWaitingForMyPK(newRelatedId, ctx.getId());
+                  JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
+                  relatedCMRField.addRelatedPKWaitingForMyPK(newRelatedId, ctx.getId());
                }
             }
          }
@@ -571,7 +572,8 @@ public class JDBCCMP2xFieldBridge extends JDBCAbstractCMPFieldBridge
 
       private void destroyRelations(Object oldRelatedId, EntityEnterpriseContext ctx)
       {
-         cmrField.getRelatedCMRField().removeRelatedPKWaitingForMyPK(oldRelatedId, ctx.getId());
+         JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
+         relatedCMRField.removeRelatedPKWaitingForMyPK(oldRelatedId, ctx.getId());
          try
          {
             if(cmrField.isForeignKeyValid(oldRelatedId))

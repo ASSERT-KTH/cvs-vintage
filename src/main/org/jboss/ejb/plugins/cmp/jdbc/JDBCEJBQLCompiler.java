@@ -62,10 +62,12 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCFunctionMappingMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCTypeMappingMetaData;
 import org.jboss.ejb.plugins.cmp.bridge.CMPFieldBridge;
+import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.deployment.DeploymentException;
 
 /**
@@ -73,7 +75,7 @@ import org.jboss.deployment.DeploymentException;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  *          <p/>
  *          TODO: collecting join paths needs rewrite
  */
@@ -266,9 +268,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       return selectObject instanceof JDBCEntityBridge;
    }
 
-   public JDBCEntityBridge getSelectEntity()
+   public JDBCAbstractEntityBridge getSelectEntity()
    {
-      return (JDBCEntityBridge)selectObject;
+      return (JDBCAbstractEntityBridge)selectObject;
    }
 
    public boolean isSelectField()
@@ -276,7 +278,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       return selectObject instanceof JDBCCMPFieldBridge;
    }
 
-   public JDBCCMPFieldBridge getSelectField()
+   public JDBCFieldBridge getSelectField()
    {
       return (JDBCCMPFieldBridge)selectObject;
    }
@@ -286,7 +288,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       return (SelectFunction)selectObject;
    }
 
-   public JDBCStoreManager getStoreManager()
+   public EntityPersistenceStore getStoreManager()
    {
       return selectManager;
    }
@@ -925,9 +927,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          {
             // set the select object
             JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
-            setTypeFactory(selectField.getManager().getJDBCTypeFactory());
-            selectManager = selectField.getManager();
+            selectManager = (JDBCStoreManager)selectField.getManager();
             selectObject = selectField;
+            setTypeFactory(selectManager.getJDBCTypeFactory());
 
             addJoinPath(path);
             String alias = aliasManager.getAlias(path.getPath(path.size() - 2));
@@ -937,9 +939,9 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          {
             // set the select object
             JDBCEntityBridge selectEntity = (JDBCEntityBridge)path.getEntity();
-            setTypeFactory(selectEntity.getManager().getJDBCTypeFactory());
-            selectManager = selectEntity.getManager();
+            selectManager = (JDBCStoreManager) selectEntity.getManager();
             selectObject = selectEntity;
+            setTypeFactory(selectManager.getJDBCTypeFactory());
 
             selectEntity(path, buf);
          }
@@ -955,18 +957,18 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
          if(path.isCMPField())
          {
             JDBCCMPFieldBridge selectField = (JDBCCMPFieldBridge)path.getCMPField();
-            selectManager = selectField.getManager();
+            selectManager = (JDBCStoreManager)selectField.getManager();
          }
          else if(path.isCMRField())
          {
             JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)path.getCMRField();
-            selectManager = cmrField.getEntity().getManager();
+            selectManager = (JDBCStoreManager)cmrField.getEntity().getManager();
             addJoinPath(path);
          }
          else
          {
             final JDBCEntityBridge entity = (JDBCEntityBridge)path.getEntity();
-            selectManager = entity.getManager();
+            selectManager = (JDBCStoreManager)entity.getManager();
             addJoinPath(path);
          }
 
@@ -1471,7 +1473,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       else
       {
          JDBCEntityBridge entity = (JDBCEntityBridge)cntPath.getEntity();
-         final JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         final JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          if(pkFields.length > 1)
          {
             countCompositePk = true;
@@ -1757,7 +1759,7 @@ public final class JDBCEJBQLCompiler extends BasicVisitor implements QLCompiler
       else if(selectObject instanceof JDBCEntityBridge)
       {
          JDBCEntityBridge entity = (JDBCEntityBridge)selectObject;
-         JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+         JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
          for(int pkInd = 0; pkInd < pkFields.length; ++pkInd)
          {
             if(pkFields[pkInd] == cmpField)

@@ -32,7 +32,7 @@ import org.jboss.ejb.EntityEnterpriseContext;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  */
 public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge
 {
@@ -73,11 +73,6 @@ public interface JDBCCMPFieldBridge extends JDBCFieldBridge, CMPFieldBridge
     * field is stored.
     */
    public Field getPrimaryKeyField();
-
-   /**
-    * Gets the JDBCStoreManager for this field
-    */
-   public JDBCStoreManager getManager();
 
    /**
     * Gets the value of this field in the specified primaryKey object.

@@ -34,8 +34,8 @@ import org.jboss.ejb.plugins.cmp.jdbc.JDBCStoreManager;
 import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
 import org.jboss.ejb.plugins.cmp.jdbc.LockingStrategy;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCTypeFactory;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 
-import org.jboss.ejb.plugins.cmp.bridge.EntityBridge;
 import org.jboss.ejb.plugins.cmp.bridge.EntityBridgeInvocationHandler;
 import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
 
@@ -64,9 +64,9 @@ import org.jboss.logging.Logger;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="mailto:heiko.rupp@cellent.de">Heiko W. Rupp</a>
- * @version $Revision: 1.47 $
+ * @version $Revision: 1.48 $
  */
-public class JDBCEntityBridge implements EntityBridge
+public class JDBCEntityBridge implements JDBCAbstractEntityBridge
 {
    public final static byte LOADED = 1;
    public final static byte LOAD_REQUIRED = 2;
@@ -352,7 +352,7 @@ public class JDBCEntityBridge implements EntityBridge
       return metadata;
    }
 
-   public JDBCStoreManager getManager()
+   public JDBCEntityPersistenceStore getManager()
    {
       return manager;
    }
@@ -442,7 +442,7 @@ public class JDBCEntityBridge implements EntityBridge
       return null;
    }
 
-   public JDBCCMPFieldBridge[] getPrimaryKeyFields()
+   public JDBCFieldBridge[] getPrimaryKeyFields()
    {
       return primaryKeyFields;
    }
@@ -847,7 +847,7 @@ public class JDBCEntityBridge implements EntityBridge
       return index;
    }
 
-   public JDBCCMPFieldBridge[] getTableFields()
+   public JDBCFieldBridge[] getTableFields()
    {
       return tableFields;
    }
@@ -1048,9 +1048,10 @@ public class JDBCEntityBridge implements EntityBridge
 
          if(field instanceof JDBCCMRFieldBridge)
          {
-            if(((JDBCCMRFieldBridge)field).hasForeignKey())
+            JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge)field;
+            if(cmrField.hasForeignKey())
             {
-               JDBCCMPFieldBridge[] fkFields = ((JDBCCMRFieldBridge)field).getForeignKeyFields();
+               JDBCCMPFieldBridge[] fkFields = (JDBCCMPFieldBridge[])cmrField.getForeignKeyFields();
                for(int i = 0; i < fkFields.length; ++i)
                {
                   group[fkFields[i].getTableIndex()] = true;

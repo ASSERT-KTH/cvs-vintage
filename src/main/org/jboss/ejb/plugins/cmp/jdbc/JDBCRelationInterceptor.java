@@ -16,6 +16,7 @@ import org.jboss.ejb.plugins.AbstractInterceptor;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRMessage;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.CMRInvocation;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
 import org.jboss.logging.Logger;
 
 /**
@@ -26,7 +27,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCRelationInterceptor extends AbstractInterceptor
 {
@@ -123,12 +124,14 @@ public final class JDBCRelationInterceptor extends AbstractInterceptor
       }
       else if(CMRMessage.SCHEDULE_FOR_CASCADE_DELETE == relationshipMessage)
       {
-         cmrField.getEntity().scheduleForCascadeDelete(ctx);
+         JDBCEntityBridge entity = ((JDBCEntityBridge)cmrField.getEntity());
+         entity.scheduleForCascadeDelete(ctx);
          return null;
       }
       else if(CMRMessage.SCHEDULE_FOR_BATCH_CASCADE_DELETE == relationshipMessage)
       {
-         cmrField.getEntity().scheduleForBatchCascadeDelete(ctx);
+         JDBCEntityBridge entity = ((JDBCEntityBridge)cmrField.getEntity());
+         entity.scheduleForBatchCascadeDelete(ctx);
          return null;
       }
       else

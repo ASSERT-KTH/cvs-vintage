@@ -22,7 +22,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
  *
  * @author <a href="mailto:aloubyansky@hotmail.com">Alex Loubyansky</a>
  *
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  */
 public final class JDBCPostCreateEntityCommand
 {
@@ -39,8 +39,9 @@ public final class JDBCPostCreateEntityCommand
       for(int i = 0; i < cmrFields.length; ++i)
       {
          JDBCCMRFieldBridge cmrField = (JDBCCMRFieldBridge) cmrFields[i];
+         JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
          if(cmrField.hasFKFieldsMappedToCMPFields()
-            || cmrField.getRelatedCMRField().hasFKFieldsMappedToCMPFields())
+            || relatedCMRField.hasFKFieldsMappedToCMPFields())
          {
             fkToCMPList.add(cmrField);
          }
@@ -61,6 +62,7 @@ public final class JDBCPostCreateEntityCommand
       for(int i = 0; i < cmrWithFKMappedToCMP.length; ++i)
       {
          JDBCCMRFieldBridge cmrField = cmrWithFKMappedToCMP[i];
+         JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
          if(cmrField.hasFKFieldsMappedToCMPFields())
          {
             Object relatedId = cmrField.getRelatedIdFromContext(ctx);
@@ -74,7 +76,7 @@ public final class JDBCPostCreateEntityCommand
                   }
                   else
                   {
-                     cmrField.getRelatedCMRField().addRelatedPKWaitingForMyPK(relatedId, ctx.getId());
+                     relatedCMRField.addRelatedPKWaitingForMyPK(relatedId, ctx.getId());
                   }
                }
                catch(Exception e)
@@ -83,7 +85,7 @@ public final class JDBCPostCreateEntityCommand
                }
             }
          }
-         else if(cmrField.getRelatedCMRField().hasFKFieldsMappedToCMPFields())
+         else if(relatedCMRField.hasFKFieldsMappedToCMPFields())
          {
             cmrField.addRelatedPKsWaitedForMe(ctx);
          }

@@ -25,7 +25,6 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCCMPFieldMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCEntityMetaData;
 import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCRelationMetaData;
@@ -45,7 +44,7 @@ import org.jboss.logging.Logger;
  * @author <a href="loubyansky@ua.fm">Alex Loubyansky</a>
  * @author <a href="heiko.rupp@cellent.de">Heiko W.Rupp</a>
  * @author <a href="joachim@cabsoft.be">Joachim Van der Auwera</a>
- * @version $Revision: 1.45 $
+ * @version $Revision: 1.46 $
  */
 public final class JDBCStartCommand
 {
@@ -235,8 +234,8 @@ public final class JDBCStartCommand
                {
                   ArrayList oldNames = SQLUtil.getOldColumns(cmrField.getTableName(), dataSource).getColumnNames();
                   ArrayList newNames = new ArrayList();
-                  JDBCCMPFieldBridge[] leftKeys = cmrField.getTableKeyFields();
-                  JDBCCMPFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
+                  JDBCFieldBridge[] leftKeys = cmrField.getTableKeyFields();
+                  JDBCFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
                   JDBCFieldBridge[] fields = new JDBCFieldBridge[leftKeys.length + rightKeys.length];
                   System.arraycopy( leftKeys, 0, fields, 0, leftKeys.length );
                   System.arraycopy( rightKeys, 0, fields, leftKeys.length, rightKeys.length );
@@ -323,7 +322,7 @@ public final class JDBCStartCommand
             // Create related fk constraint
             if(!entity.equals(cmrField.getRelatedJDBCEntity()))
             {
-               addForeignKeyConstraint(cmrField.getRelatedCMRField());
+               addForeignKeyConstraint((JDBCCMRFieldBridge)cmrField.getRelatedCMRField());
             }
          }
       }
@@ -729,7 +728,7 @@ public final class JDBCStartCommand
       throws DeploymentException
    {
       // Only create indices on CMP fields
-      JDBCCMPFieldBridge[] cmpFields = entity.getTableFields();
+      JDBCFieldBridge[] cmpFields = entity.getTableFields();
       for(int i = 0; i < cmpFields.length; ++i)
       {
          JDBCFieldBridge field = cmpFields[i];
@@ -782,7 +781,8 @@ public final class JDBCStartCommand
       }
       else
       {
-         tableName = field.getRelatedCMRField().getEntity().getTableName();
+         JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)field.getRelatedCMRField();
+         tableName = relatedCMRField.getEntity().getTableName();
       }
 
       JDBCRelationshipRoleMetaData left, right;
@@ -854,8 +854,8 @@ public final class JDBCStartCommand
       JDBCCMRFieldBridge cmrField,
       DataSource dataSource) throws DeploymentException
    {
-      JDBCCMPFieldBridge[] leftKeys = cmrField.getTableKeyFields();
-      JDBCCMPFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
+      JDBCFieldBridge[] leftKeys = cmrField.getTableKeyFields();
+      JDBCFieldBridge[] rightKeys = cmrField.getRelatedCMRField().getTableKeyFields();
       JDBCFieldBridge[] fieldsArr = new JDBCFieldBridge[leftKeys.length + rightKeys.length];
       System.arraycopy(leftKeys, 0, fieldsArr, 0, leftKeys.length);
       System.arraycopy(rightKeys, 0, fieldsArr, leftKeys.length, rightKeys.length);
@@ -929,9 +929,9 @@ public final class JDBCStartCommand
       DataSource dataSource,
       String tableName,
       String cmrFieldName,
-      JDBCCMPFieldBridge[] fields,
+      JDBCFieldBridge[] fields,
       String referencesTableName,
-      JDBCCMPFieldBridge[] referencesFields) throws DeploymentException
+      JDBCFieldBridge[] referencesFields) throws DeploymentException
    {
       // can only alter tables we created
       Set createdTables = (Set)manager.getApplicationData(CREATED_TABLES_KEY);

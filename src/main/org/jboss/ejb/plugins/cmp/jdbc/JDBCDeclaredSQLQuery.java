@@ -28,7 +28,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.metadata.JDBCReadAheadMetaData;
  * @author <a href="mailto:michel.anke@wolmail.nl">Michel de Groot</a>
  * @author <a href="danch@nvisia.com">danch (Dan Christopherson</a>
  * @author <a href="alex@jboss.org">Alex Loubyansky</a>
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  */
 public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
 {
@@ -147,7 +147,8 @@ public final class JDBCDeclaredSQLQuery extends JDBCAbstractQueryCommand
       {
          // we are just selecting one field
          JDBCCMPFieldBridge selectField = getSelectField();
-         table = getSelectField().getManager().getEntityBridge().getTableName();
+         JDBCStoreManager manager = (JDBCStoreManager)getSelectField().getManager();
+         table = manager.getEntityBridge().getTableName();
          selectList = SQLUtil.getColumnNamesClause(
             selectField, getTableAlias(alias, from, table), new StringBuffer()).toString();
       }

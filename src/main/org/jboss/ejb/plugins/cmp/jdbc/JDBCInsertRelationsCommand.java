@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  */
 public final class JDBCInsertRelationsCommand {
    private final Logger log;
@@ -109,13 +109,13 @@ public final class JDBCInsertRelationsCommand {
 
       // left keys
       Object leftId = pair.getLeftId();
-      JDBCCMPFieldBridge[] leftFields = relationData.getLeftCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] leftFields = (JDBCCMPFieldBridge[])relationData.getLeftCMRField().getTableKeyFields();
       for(int i = 0; i < leftFields.length; ++i)
          index = leftFields[i].setPrimaryKeyParameters(ps, index, leftId);
 
       // right keys
       Object rightId = pair.getRightId();
-      JDBCCMPFieldBridge[] rightFields = relationData.getRightCMRField().getTableKeyFields();
+      JDBCCMPFieldBridge[] rightFields = (JDBCCMPFieldBridge[])relationData.getRightCMRField().getTableKeyFields();
       for(int i = 0; i < rightFields.length; ++i)
          index = rightFields[i].setPrimaryKeyParameters(ps, index, rightId);
    }

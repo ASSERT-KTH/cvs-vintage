@@ -28,7 +28,6 @@ import org.jboss.deployment.DeploymentException;
 import org.jboss.ejb.Container;
 import org.jboss.ejb.EjbModule;
 import org.jboss.ejb.EntityContainer;
-import org.jboss.ejb.EntityPersistenceStore;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
@@ -57,9 +56,9 @@ import org.jboss.tm.TransactionLocal;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alex Loubyansky</a>
  * @see org.jboss.ejb.EntityPersistenceStore
- * @version $Revision: 1.63 $
+ * @version $Revision: 1.64 $
  */
-public final class JDBCStoreManager implements EntityPersistenceStore
+public final class JDBCStoreManager implements JDBCEntityPersistenceStore
 {
    /** The key used to store the tx data map. */
    private static final Object TX_DATA_KEY = "TX_DATA_KEY";

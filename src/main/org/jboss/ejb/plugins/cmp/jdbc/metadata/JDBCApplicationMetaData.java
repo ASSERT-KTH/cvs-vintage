@@ -31,7 +31,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.SQLUtil;
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="sebastien.alborini@m4x.org">Sebastien Alborini</a>
  * @author <a href="alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  */
 public final class JDBCApplicationMetaData
 {
@@ -134,7 +134,9 @@ public final class JDBCApplicationMetaData
             {
                throw new DeploymentException("Unable to load persistence manager", e);
             }
-            if(entity.isCMP() && JDBC_PM.isAssignableFrom(pm))
+            
+            if(entity.isCMP() &&
+               (JDBC_PM.isAssignableFrom(pm) || pm.getName().equals("org.jboss.ejb.plugins.cmp.jdbc2.JDBCStoreManager2")))
             {
                JDBCEntityMetaData jdbcEntity = new JDBCEntityMetaData(this, entity);
 

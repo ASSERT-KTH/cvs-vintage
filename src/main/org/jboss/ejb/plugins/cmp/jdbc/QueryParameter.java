@@ -18,6 +18,8 @@ import javax.ejb.EJBObject;
 import org.jboss.ejb.plugins.cmp.ejbql.Catalog;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMPFieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCEntityBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCFieldBridge;
+import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCAbstractEntityBridge;
 
 import org.jboss.logging.Logger;
 
@@ -58,13 +60,13 @@ public final class QueryParameter
       return parameters;
    }
 
-   public static List createParameters(int argNum, JDBCEntityBridge entity)
+   public static List createParameters(int argNum, JDBCAbstractEntityBridge entity)
    {
       List parameters = new ArrayList();
-      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
       for(int i = 0; i < pkFields.length; ++i)
       {
-         JDBCCMPFieldBridge pkField = pkFields[i];
+         JDBCFieldBridge pkField = pkFields[i];
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
@@ -96,13 +98,13 @@ public final class QueryParameter
       return parameters;
    }
 
-   public static List createPrimaryKeyParameters(int argNum, JDBCEntityBridge entity)
+   public static List createPrimaryKeyParameters(int argNum, JDBCAbstractEntityBridge entity)
    {
       List parameters = new ArrayList();
-      JDBCCMPFieldBridge[] pkFields = entity.getPrimaryKeyFields();
+      JDBCFieldBridge[] pkFields = entity.getPrimaryKeyFields();
       for(int i = 0; i < pkFields.length; ++i)
       {
-         JDBCCMPFieldBridge pkField = pkFields[i];
+         JDBCFieldBridge pkField = pkFields[i];
 
          JDBCType type = pkField.getJDBCType();
          if(type instanceof JDBCTypeComplex)
@@ -135,7 +137,7 @@ public final class QueryParameter
 
    private int argNum;
    private final boolean isPrimaryKeyParameter;
-   private JDBCCMPFieldBridge field;
+   private JDBCFieldBridge field;
    private JDBCTypeComplexProperty property;
    private final String parameterString;
 
@@ -242,14 +244,14 @@ public final class QueryParameter
    public QueryParameter(
       int argNum,
       boolean isPrimaryKeyParameter,
-      JDBCCMPFieldBridge field,
+      JDBCFieldBridge field,
       JDBCTypeComplexProperty property,
       int jdbcType)
    {
 
       this.argNum = argNum;
       this.isPrimaryKeyParameter = isPrimaryKeyParameter;
-      this.field = field;
+      this.field = (JDBCFieldBridge)field;
       this.property = property;
       this.jdbcType = jdbcType;
 

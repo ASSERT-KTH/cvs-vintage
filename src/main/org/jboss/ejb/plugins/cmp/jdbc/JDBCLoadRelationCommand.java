@@ -32,7 +32,7 @@ import org.jboss.logging.Logger;
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
  * @author <a href="mailto:alex@jboss.org">Alexey Loubyansky</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  */
 public final class JDBCLoadRelationCommand
 {
@@ -54,7 +54,7 @@ public final class JDBCLoadRelationCommand
 
    public Collection execute(JDBCCMRFieldBridge cmrField, Object pk)
    {
-      JDBCCMRFieldBridge relatedCMRField = cmrField.getRelatedCMRField();
+      JDBCCMRFieldBridge relatedCMRField = (JDBCCMRFieldBridge)cmrField.getRelatedCMRField();
 
       // get the read ahead cahces
       ReadAheadCache readAheadCache = manager.getReadAheadCache();
@@ -159,7 +159,7 @@ public final class JDBCLoadRelationCommand
                // read the preload fields
                if(preloadMask != null)
                {
-                  JDBCCMPFieldBridge[] relatedFields = cmrField.getRelatedJDBCEntity().getTableFields();
+                  JDBCCMPFieldBridge[] relatedFields = (JDBCCMPFieldBridge[])cmrField.getRelatedJDBCEntity().getTableFields();
                   for(int i = 0; i < relatedFields.length; ++i)
                   {
                      if(preloadMask[i])
@@ -276,17 +276,17 @@ public final class JDBCLoadRelationCommand
       if(cmrField.getRelationMetaData().isTableMappingStyle())
       {
          // relation table
-         return cmrField.getTableKeyFields();
+         return (JDBCCMPFieldBridge[])cmrField.getTableKeyFields();
       }
       else if(cmrField.getRelatedCMRField().hasForeignKey())
       {
          // related has foreign key
-         return cmrField.getRelatedCMRField().getForeignKeyFields();
+         return (JDBCCMPFieldBridge[])cmrField.getRelatedCMRField().getForeignKeyFields();
       }
       else
       {
          // i have foreign key
-         return entity.getPrimaryKeyFields();
+         return (JDBCCMPFieldBridge[])entity.getPrimaryKeyFields();
       }
    }
 
@@ -295,17 +295,17 @@ public final class JDBCLoadRelationCommand
       if(cmrField.getRelationMetaData().isTableMappingStyle())
       {
          // relation table
-         return cmrField.getRelatedCMRField().getTableKeyFields();
+         return (JDBCCMPFieldBridge[])cmrField.getRelatedCMRField().getTableKeyFields();
       }
       else if(cmrField.getRelatedCMRField().hasForeignKey())
       {
          // related has foreign key
-         return cmrField.getRelatedJDBCEntity().getPrimaryKeyFields();
+         return (JDBCCMPFieldBridge[])cmrField.getRelatedJDBCEntity().getPrimaryKeyFields();
       }
       else
       {
          // i have foreign key
-         return cmrField.getForeignKeyFields();
+         return (JDBCCMPFieldBridge[])cmrField.getForeignKeyFields();
       }
    }
 

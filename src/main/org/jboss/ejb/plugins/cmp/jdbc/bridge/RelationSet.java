@@ -18,7 +18,6 @@ import javax.ejb.EJBLocalObject;
 
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.LocalProxyFactory;
-import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
 
 /**
  * This is the relationship set.  An instance of this class
@@ -27,7 +26,7 @@ import org.jboss.ejb.plugins.cmp.jdbc.bridge.JDBCCMRFieldBridge;
  * or the responsibilities of this class.
  *
  * @author <a href="mailto:dain@daingroup.com">Dain Sundstrom</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  */
 public class RelationSet implements Set
 {

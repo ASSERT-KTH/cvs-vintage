@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import org.jboss.ejb.EntityEnterpriseContext;
 import org.jboss.ejb.plugins.cmp.bridge.FieldBridge;
 import org.jboss.ejb.plugins.cmp.jdbc.JDBCType;
+import org.jboss.ejb.plugins.cmp.jdbc.JDBCEntityPersistenceStore;
 
 
 /**
@@ -101,4 +102,10 @@ public interface JDBCFieldBridge extends FieldBridge
     * Mark this field as clean.
     */
    public void setClean(EntityEnterpriseContext ctx);
+
+   boolean isCMPField();
+
+   JDBCEntityPersistenceStore getManager();
+
+   Object getPrimaryKeyValue(Object arg);
 }
