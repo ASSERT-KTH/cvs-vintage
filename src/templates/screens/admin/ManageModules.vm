@@ -31,10 +31,15 @@ $module.Deleted
 <p class="alert">Sorry, no modules to edit.</a>
 #end
 
+#if ($data.User.getEditableModules().size() > 0)
 <form action="$link.setPage("admin,ModifyModule.vm").addPathInfo("new", "true")" method="post">
 <div class="functnbar2">
 <input type="submit" name="maxumusDorkus" value="Create new module" />
 </div>
 </form>
+#else
+<p class="alert">It is not possible to create a new module because you do not have
+module edit permission in any other modules.</p>
+#end
 
 </div>
