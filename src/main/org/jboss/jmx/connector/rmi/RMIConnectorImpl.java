@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector.rmi;
 
 import java.io.ObjectInputStream;
@@ -69,28 +70,25 @@ import org.jboss.jmx.connector.notification.PollingClientNotificationListener;
 import org.jboss.jmx.connector.notification.RMIClientNotificationListener;
 import org.jboss.jmx.connector.notification.SearchClientNotificationListener;
 
+import org.jboss.logging.Logger;
+
 /**
-* Implementation of the JMX Connector over the RMI protocol 
-*      
-* @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
-* @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
-*/
+ * Implementation of the JMX Connector over the RMI protocol 
+ *      
+ * @author <a href="mailto:rickard.oberg@telkel.com">Rickard Öberg</a>
+ * @author <A href="mailto:andreas@jboss.org">Andreas &quot;Mad&quot; Schaefer</A>
+ */
 public class RMIConnectorImpl
    implements /* RemoteMBeanServerMBean, */ RMIConnectorImplMBean
 {
-   // Constants -----------------------------------------------------
-   
-   // Attributes ----------------------------------------------------
+   protected static final Logger log = Logger.getLogger(RMIConnectorImpl.class);
+
    private RMIAdaptor        mRemoteAdaptor;
    private Object            mServer = "";
    private Vector            mListeners = new Vector();
    private int               mEventType = NOTIFICATION_TYPE_RMI;
    private String[]          mOptions = new String[ 0 ];
    private Random            mRandom = new Random();
-   
-   // Static --------------------------------------------------------
-   
-   // Constructors --------------------------------------------------
    
    /**
    * AS For evaluation purposes
@@ -130,22 +128,22 @@ public class RMIConnectorImpl
       }
       try {
          InitialContext lNamingContext = new InitialContext();
-         System.out.println( "RMIClientConnectorImp.start(), got Naming Context: " +   lNamingContext +
+         log.debug( "RMIClientConnectorImp.start(), got Naming Context: " +   lNamingContext +
             ", environment: " + lNamingContext.getEnvironment() +
             ", name in namespace: " + lNamingContext.getNameInNamespace()
          );
          // This has to be adjusted later on to reflect the given parameter
          mRemoteAdaptor = (RMIAdaptor) new InitialContext().lookup( "jmx:" + pServer + ":rmi" );
-         System.err.println( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteAdaptor );
+         log.error( "RMIClientConnectorImpl.start(), got remote connector: " + mRemoteAdaptor );
          mServer = pServer;
       }
       catch( Exception e ) {
-         e.printStackTrace();
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
       }
    }
 
    public void stop() {
-      System.out.println( "RMIClientConnectorImpl.stop(), start" );
+      log.debug( "RMIClientConnectorImpl.stop(), start" );
       // First go through all the reistered listeners and remove them
       if( mRemoteAdaptor != null ) {
          // Loop through all the listeners and remove them
@@ -191,13 +189,13 @@ public class RMIConnectorImpl
       } else {
          lJNDIContext = new InitialContext();
       }
-      System.out.println( "JNDI Environment: " + lJNDIContext.getEnvironment() );
-      System.out.println( "Lookup Queue Connection Factory: " + pJNDIName );
+      log.debug( "JNDI Environment: " + lJNDIContext.getEnvironment() );
+      log.debug( "Lookup Queue Connection Factory: " + pJNDIName );
       Object aRef = lJNDIContext.lookup( pJNDIName );
-      System.out.println( "Narrow Queue Connection Factory" );
+      log.debug( "Narrow Queue Connection Factory" );
       QueueConnectionFactory aFactory = (QueueConnectionFactory) 
          PortableRemoteObject.narrow( aRef, QueueConnectionFactory.class );
-      System.out.println( "Narrow Queue Connection" );
+      log.debug( "Narrow Queue Connection" );
       QueueConnection lConnection = aFactory.createQueueConnection();
       lConnection.start();
       return lConnection;
@@ -321,7 +319,7 @@ public class RMIConnectorImpl
          return mRemoteAdaptor.queryMBeans( pName, pQuery );
       }
       catch( RemoteException re ) {
-         re.printStackTrace();
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
          //AS Not a good style but for now
          return null;
       }
@@ -335,6 +333,7 @@ public class RMIConnectorImpl
          return mRemoteAdaptor.queryNames( pName, pQuery );
       }
       catch( RemoteException re ) {
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);         
          //AS Not a good style but for now
          return null;
       }
@@ -347,6 +346,7 @@ public class RMIConnectorImpl
          return mRemoteAdaptor.isRegistered( pName );
       }
       catch( RemoteException re ) {
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
          //AS Not a good style but for now
          return false;
       }
@@ -460,7 +460,7 @@ public class RMIConnectorImpl
       }
       catch( RemoteException re ) {
          //AS Not a good style but for now
-         re.printStackTrace();
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
          return null;
       }
    }
@@ -472,6 +472,7 @@ public class RMIConnectorImpl
       }
       catch( RemoteException re ) {
          //AS Not a good style but for now
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);         
          return null;
       }
    }
@@ -494,7 +495,7 @@ public class RMIConnectorImpl
          mRemoteAdaptor.addNotificationListener( pName, pListener, pFilter, pHandback );
       }
       catch( RemoteException re ) {
-         throw new RuntimeException( "Remote access to perform this operation failed: " + re.getMessage() );
+         throw new RuntimeException( "Remote access to perform this operation failed: " + re );
       }
    }
 
@@ -550,8 +551,7 @@ public class RMIConnectorImpl
          if( e instanceof InstanceNotFoundException ) {
             throw (InstanceNotFoundException) e;
          }
-         e.printStackTrace();
-         throw new RuntimeException( "Remote access to perform this operation failed: " + e.getMessage() );
+         throw new RuntimeException("Remote access to perform this operation failed: " + e);
       }
    }
 
@@ -596,14 +596,10 @@ public class RMIConnectorImpl
          return mRemoteAdaptor.getMBeanInfo( pName );
       }
       catch( RemoteException re ) {
+         log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", re);
          //AS Not a good style but for now
          return null;
       }
    }
-
-   // Protected -----------------------------------------------------
-
-   // Private -------------------------------------------------------
-
 }   
 

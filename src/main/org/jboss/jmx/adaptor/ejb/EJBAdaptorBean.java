@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.adaptor.ejb;
 
 import java.util.ArrayList;
@@ -45,34 +46,29 @@ import javax.naming.NamingException;
 
 import org.jboss.jmx.connector.RemoteMBeanServer;
 
+import org.jboss.logging.Logger;
+
 /**
-* JMX EJB-Adaptor allowing a EJB client to work on a remote
-* MBean Server.
-*
-* @author Andreas Schaefer
-* @version $Revision: 1.7 $
-*
-* @ejb:bean type="Stateless"
-*           name="jmx/ejb/Adaptor"
-*           jndi-name="ejb/jmx/ejb/Adaptor"
-* @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
-*                name="Server-Name"
-*                value="null"
-* @ejb:transaction type="Supports"
-*
-**/
+ * JMX EJB-Adaptor allowing a EJB client to work on a remote
+ * MBean Server.
+ *
+ * @author Andreas Schaefer
+ * @version $Revision: 1.8 $
+ *
+ * @ejb:bean type="Stateless"
+ *           name="jmx/ejb/Adaptor"
+ *           jndi-name="ejb/jmx/ejb/Adaptor"
+ * @ejb:env-entry description="JNDI-Name of the MBeanServer to be used to look it up. If 'null' the first of all listed local MBeanServer is taken"
+ *                name="Server-Name"
+ *                value="null"
+ * @ejb:transaction type="Supports"
+ *
+ */
 public class EJBAdaptorBean
    implements SessionBean
 {
+   protected static final Logger log = Logger.getLogger(EJBAdaptorBean.class);   
 
-   // -------------------------------------------------------------------------
-   // Static
-   // -------------------------------------------------------------------------
-   
-   // -------------------------------------------------------------------------
-   // Members 
-   // -------------------------------------------------------------------------
-   
    private SessionContext mContext;
    
    /**
@@ -181,14 +177,17 @@ public class EJBAdaptorBean
       RemoteException
    {
       try {
-      System.out.println( "Class: " + pClassName + ", name: " + pName +
+      log.debug( "Class: " + pClassName + ", name: " + pName +
          ", params: " + java.util.Arrays.asList( pParams ) +
          ", signature: " + java.util.Arrays.asList( pSignature )
       );
       return mConnector.createMBean( pClassName, pName, pParams, pSignature );
       }
       catch( Exception e ) {
-         e.printStackTrace();
+
+         // SHOULD NOT HIDE EXCEPTION HERE!!!!
+         
+         log.error("Failed to create MBean", e);
          return null;
       }
    }
@@ -952,6 +951,3 @@ public class EJBAdaptorBean
       
    }
 }
-
-// ----------------------------------------------------------------------------
-// EOF

@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.adaptor.xml;
 
 import java.beans.PropertyEditor;
@@ -29,21 +30,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import org.jboss.logging.Logger;
+
 /**
-* XML Adaptor Implementation interpreting the XML wrapped JMX commands.
-*
-* @author Andreas Schaefer (andreas.schaefer@madplanet.com)
-* @created June 22, 2001
-* @version $Revision: 1.2 $
-*/
-public class XMLAdaptorImpl {
-  // Constants -----------------------------------------------------
-
-  // Attributes ----------------------------------------------------
+ * XML Adaptor Implementation interpreting the XML wrapped JMX commands.
+ *
+ * @author Andreas Schaefer (andreas.schaefer@madplanet.com)
+ * @created June 22, 2001
+ * @version $Revision: 1.3 $
+ */
+public class XMLAdaptorImpl
+{
+   protected static final Logger log = Logger.getLogger(XMLAdaptorImpl.class);
+   
   MBeanServer mServer;
-
-
-  // Static --------------------------------------------------------
 
   /** Primitive type name -> class map. */
   private static Hashtable mPrimitives = new Hashtable();
@@ -60,19 +60,15 @@ public class XMLAdaptorImpl {
     mPrimitives.put( "char", Character.TYPE );
   }
 
-   // Constructors --------------------------------------------------
-
   /**
-  *  Constructor for the XMLAdaptorImpl object
-  *
-  *@param pServer MBeanServer this adaptor executes its calls on
-  */
+   * Constructor for the XMLAdaptorImpl object
+   *
+   * @param pServer MBeanServer this adaptor executes its calls on
+   */
   public XMLAdaptorImpl( MBeanServer pServer ) {
     super();
     mServer = pServer;
   }
-
-  // Public --------------------------------------------------------
 
   /**
   * Performs a set of calls to the MBean Server and returns
@@ -90,7 +86,7 @@ public class XMLAdaptorImpl {
     NodeList lRoot = pJmxOperations.getChildNodes();
     if( lRoot.getLength() > 0 ) {
       Element lRootElement = (Element) lRoot.item( 0 );
-      System.out.println( "XMLAdaptorImpl.invokeXML(), root: " + lRootElement );
+      log.debug( "XMLAdaptorImpl.invokeXML(), root: " + lRootElement );
       NodeList lOperations = lRootElement.getChildNodes();
       for( int i = 0; i < lOperations.getLength(); i++ ) {
         Element lChildElement = (Element) lOperations.item( i );
@@ -115,7 +111,7 @@ public class XMLAdaptorImpl {
     }
     // Get the requested operation
     String lTag = pJmxOperation.getTagName();
-    System.out.println( "XMLAdaptorImpl.invokeXML(), Tag: " + lTag );
+    log.debug( "XMLAdaptorImpl.invokeXML(), Tag: " + lTag );
     if( "create-mbean".equals( lTag ) ) {
       return createMBean(
         pJmxOperation.getAttribute( "code" ),
@@ -186,7 +182,7 @@ public class XMLAdaptorImpl {
     NodeList pConstructor,
     NodeList pAttributes
   ) {
-    System.out.println( "XMLAdaptorImpl.createMBean(), code: " + pCodebase + ", name: " + pName );
+    log.debug( "XMLAdaptorImpl.createMBean(), code: " + pCodebase + ", name: " + pName );
     ObjectName lReturn = null;
     // Check Codebase
     if( pCodebase != null && !pCodebase.equals( "" ) ) {
@@ -194,7 +190,7 @@ public class XMLAdaptorImpl {
         if( pName != null ) {
           ObjectInstance lNew = null;
           if( pConstructor.getLength() == 0 ) {
-            System.out.println( "XMLAdaptorImpl.createMBean(), create w/o arguments" );
+            log.debug( "XMLAdaptorImpl.createMBean(), create w/o arguments" );
             lNew = mServer.createMBean( pCodebase, pName );
           }
           else {
@@ -202,7 +198,7 @@ public class XMLAdaptorImpl {
             Object[][] lAttributes = getAttributes(
               ( (Element) pConstructor.item( 0 ) ).getElementsByTagName( "argument" )
             );
-            System.out.println( "XMLAdaptorImpl.createMBean(), create with arguments" );
+            log.debug( "XMLAdaptorImpl.createMBean(), create with arguments" );
             lNew = mServer.createMBean(
               pCodebase,
               pName,
@@ -222,11 +218,11 @@ public class XMLAdaptorImpl {
           );
           
           lReturn = lNew.getObjectName();
-          System.out.println( "XMLAdaptorImpl.createMBean(), Object Name to return: " + lReturn );
+          log.debug( "XMLAdaptorImpl.createMBean(), Object Name to return: " + lReturn );
         }
       }
       catch( Exception e ) {
-        e.printStackTrace();
+        log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
       }
     }
     return lReturn;
@@ -234,7 +230,7 @@ public class XMLAdaptorImpl {
 
   public Object invoke( String pOperation, ObjectName pName, NodeList pAttributes ) {
     Object lReturn = null;
-    System.out.println( "XMLAdaptorImpl.invoke(), Operation: " + pOperation );
+    log.debug( "XMLAdaptorImpl.invoke(), Operation: " + pOperation );
     if( pOperation != null && !pOperation.equals( "" ) && pName != null  ) {
       try {
         if( pAttributes != null && pAttributes.getLength() > 0 ) {
@@ -260,7 +256,7 @@ public class XMLAdaptorImpl {
         }
       }
       catch( Exception e ) {
-        e.printStackTrace();
+        log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
       }
     }
     return lReturn;
@@ -275,7 +271,7 @@ public class XMLAdaptorImpl {
       }
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -288,7 +284,7 @@ public class XMLAdaptorImpl {
       }
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -298,7 +294,7 @@ public class XMLAdaptorImpl {
       return mServer.getMBeanInfo( pName );
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -308,7 +304,7 @@ public class XMLAdaptorImpl {
       return mServer.getObjectInstance( pName );
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -318,7 +314,7 @@ public class XMLAdaptorImpl {
       return new Boolean( mServer.isInstanceOf( pName, pCodebase ) );
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -328,7 +324,7 @@ public class XMLAdaptorImpl {
       return new Boolean( mServer.isRegistered( pName ) );
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -338,7 +334,7 @@ public class XMLAdaptorImpl {
       mServer.unregisterMBean( pName );
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }
@@ -354,16 +350,16 @@ public class XMLAdaptorImpl {
     try {
       // Create ObjectName
       if( pName != null && !pName.equals( "" ) ) {
-        System.out.println( "XMLAdaptorImpl.getObjectName(), name: " + pName );
+        log.debug( "XMLAdaptorImpl.getObjectName(), name: " + pName );
         lName = createObjectName( pName );
       }
       else if( pObjectName != null && pObjectName.getLength() > 0 ) {
-        System.out.println( "XMLAdaptorImpl.getObjectName(), name element: " + pObjectName.item( 0 ) );
+        log.debug( "XMLAdaptorImpl.getObjectName(), name element: " + pObjectName.item( 0 ) );
         lName = createObjectName( (Element) pObjectName.item( 0 ) );
       }
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return lName;
   }
@@ -434,7 +430,7 @@ public class XMLAdaptorImpl {
         lTypes[ i ] = lClass.getName();
       }
       catch( Exception e ) {
-        e.printStackTrace();
+        log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
       }
     }
     lReturn[ 0 ] = lValues;
@@ -485,7 +481,7 @@ public class XMLAdaptorImpl {
       }
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     lReturn[ 0 ] = lValues;
     lReturn[ 1 ] = lNames;
@@ -513,7 +509,7 @@ public class XMLAdaptorImpl {
       }
     }
     catch( Exception e ) {
-      e.printStackTrace();
+      log.error("operation failed... SHOULD NOT MASK THIS EXCEPTION", e);
     }
     return null;
   }

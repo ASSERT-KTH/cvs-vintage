@@ -1,9 +1,10 @@
 /*
-* JBoss, the OpenSource J2EE webOS
-*
-* Distributable under LGPL license.
-* See terms of license at gnu.org.
-*/
+ * JBoss, the OpenSource J2EE webOS
+ *
+ * Distributable under LGPL license.
+ * See terms of license at gnu.org.
+ */
+
 package org.jboss.jmx.connector;
 
 import java.util.Iterator;
@@ -19,36 +20,27 @@ import org.jboss.jmx.connector.RemoteMBeanServer;
 import org.jboss.system.ServiceMBeanSupport;
 
 /**
-* Factory delivering a list of servers and its available protocol connectors
-* and after selected to initiate the connection
-*
-* This is just the (incomplete) interface of it
-*
-* @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
-**/
+ * Factory delivering a list of servers and its available protocol connectors
+ * and after selected to initiate the connection
+ *
+ * This is just the (incomplete) interface of it
+ *
+ * @author <A href="mailto:andreas.schaefer@madplanet.com">Andreas &quot;Mad&quot; Schaefer</A>
+ */
 public class ConnectorFactoryService
-	extends ServiceMBeanSupport
-	implements ConnectorFactoryServiceMBean
+   extends ServiceMBeanSupport
+   implements ConnectorFactoryServiceMBean
 {
+   private static final String JNDI_NAME = "jxm:connector:factory";
 
-	// Constants -----------------------------------------------------
-	private static final String				JNDI_NAME = "jxm:connector:factory";
-	
-	// Static --------------------------------------------------------
-
-	// Attributes ----------------------------------------------------
-	/** Local MBeanServer this service is registered to **/
-	private MBeanServer				mServer;
-	/** Connector Factory instance **/
-	private ConnectorFactoryImpl	mFactory;
+   /** Connector Factory instance **/
+   private ConnectorFactoryImpl	mFactory;
    private int mNotificationType;
    private String mJMSName;
    private String mEJBAdaptorName;
 
-	// Public --------------------------------------------------------
-	
-	public ConnectorFactoryService() {
-	}
+   public ConnectorFactoryService() {
+   }
 	
    public int getNotificationType() {
       return mNotificationType;
@@ -78,47 +70,38 @@ public class ConnectorFactoryService
       }
    }
 
-   public Iterator getConnectors( Hashtable pProperties, ConnectorFactoryImpl.IConnectorTester pTester ) {
-		return mFactory.getConnectors( pProperties, pTester );
+   public Iterator getConnectors( Hashtable pProperties, ConnectorFactoryImpl.IConnectorTester pTester )
+   {
+      return mFactory.getConnectors( pProperties, pTester );
    }
 
-   public RemoteMBeanServer createConnection(
-      ConnectorFactoryImpl.ConnectorName pConnector
-   ) {
-		return mFactory.createConnection( pConnector );
+   public RemoteMBeanServer createConnection(ConnectorFactoryImpl.ConnectorName pConnector)
+   {
+      return mFactory.createConnection( pConnector );
    }
 
-   public void removeConnection(
-      ConnectorFactoryImpl.ConnectorName pConnector
-   ) {
+   public void removeConnection(ConnectorFactoryImpl.ConnectorName pConnector)
+   {
 		mFactory.removeConnection( pConnector );
    }
 
-	public ObjectName getObjectName(
-		MBeanServer pServer, 
-		ObjectName pName
-	) throws javax.management.MalformedObjectNameException {
-		mServer = pServer;
-		System.out.println(
-         "ConnectorFactoryService.getObjectName(), server: " + mServer +
-			", object name: " + OBJECT_NAME +
-			", instance: " + OBJECT_NAME
-      );
-		return OBJECT_NAME;
-	}
-	
-	public String getName() {
-		return "JMX Client Connector Factory";
-	}
-	
-	// Protected -----------------------------------------------------
+   public ObjectName getObjectName(MBeanServer pServer, ObjectName pName)
+      throws javax.management.MalformedObjectNameException
+   {
+      log.debug(
+         "ConnectorFactoryService.getObjectName(), server: " + server +
+         ", object name: " + OBJECT_NAME +
+         ", instance: " + OBJECT_NAME
+         );
+      return OBJECT_NAME;
+   }
 	
    protected void startService() throws Exception 
    {
-      System.out.println( "Init Connector Factory mNotificationTypeService: " +
-                          "NT: " + mNotificationType + ", JMS: " + mJMSName
-                          );
-      mFactory = new ConnectorFactoryImpl( mServer, mNotificationType, mJMSName, mEJBAdaptorName );
+      log.debug( "Init Connector Factory mNotificationTypeService: " +
+                 "NT: " + mNotificationType + ", JMS: " + mJMSName
+                 );
+      mFactory = new ConnectorFactoryImpl( server, mNotificationType, mJMSName, mEJBAdaptorName );
    }
 	
 }
